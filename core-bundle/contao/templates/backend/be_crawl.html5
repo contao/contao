@@ -38,6 +38,12 @@
               <p class="tl_help tl_tip"><?= $this->trans('tl_maintenance.crawlSubscribers.1') ?></p>
             <?php endif; ?>
           </div>
+          <div>
+            <?= $this->maxDepthWidget->parse() ?>
+            <?php if (!$this->maxDepthWidget->hasErrors()): ?>
+              <p class="tl_help tl_tip"><?= $this->trans('tl_maintenance.crawlDepth.1') ?></p>
+            <?php endif; ?>
+          </div>
           <?php if ($this->memberWidget): ?>
             <div>
               <?= $this->memberWidget->parse() ?>

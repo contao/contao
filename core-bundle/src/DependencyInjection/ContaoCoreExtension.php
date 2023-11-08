@@ -297,6 +297,10 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             ->addTag('contao.escargot_subscriber')
         ;
 
+        $container->setParameter('contao.crawl.concurrency', $config['crawl']['concurrency']);
+        $container->setParameter('contao.crawl.max_depth', $config['crawl']['max_depth']);
+        $container->setParameter('contao.crawl.max_requests', $config['crawl']['max_requests']);
+
         if (!$container->hasDefinition('contao.crawl.escargot.factory')) {
             return;
         }

@@ -62,7 +62,9 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 
 		$factory = System::getContainer()->get('contao.crawl.escargot.factory');
 		$subscriberNames = $factory->getSubscriberNames();
+
 		$subscribersWidget = $this->generateSubscribersWidget($subscriberNames);
+		$maxDepthWidget = $this->generateMaxDepthWidget();
 		$memberWidget = null;
 
 		if (System::getContainer()->getParameter('contao.search.index_protected'))
@@ -73,6 +75,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 		$template = new BackendTemplate('be_crawl');
 		$template->isActive = $this->isActive();
 		$template->subscribersWidget = $subscribersWidget;
+		$template->maxDepthWidget = $maxDepthWidget;
 		$template->memberWidget = $memberWidget;
 
 		if (!$this->isActive())
@@ -190,9 +193,9 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 
 		// Configure with sane defaults for the back end (maybe we should make this configurable one day)
 		$escargot = $escargot
-			->withConcurrency(5)
-			->withMaxDepth(10)
-			->withMaxRequests(20)
+			->withConcurrency(System::getContainer()->getParameter('contao.crawl.concurrency'))
+			->withMaxDepth($maxDepthWidget->value)
+			->withMaxRequests(System::getContainer()->getParameter('contao.crawl.max_requests'))
 			->withLogger($this->createLogger($factory, $activeSubscribers, $jobId, $debugLogPath));
 
 		if (Environment::get('isAjaxRequest'))
@@ -343,6 +346,42 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 		if (1 === \count($options))
 		{
 			$options[0]['default'] = true;
+		}
+
+		$widget->options = $options;
+
+		if ($this->isActive())
+		{
+			$widget->validate();
+
+			if ($widget->hasErrors())
+			{
+				$this->valid = false;
+			}
+		}
+
+		return $widget;
+	}
+
+	private function generateMaxDepthWidget(): Widget
+	{
+		$name = 'crawl_depth';
+
+		$widget = new SelectMenu();
+		$widget->id = $name;
+		$widget->name = $name;
+		$widget->label = $GLOBALS['TL_LANG']['tl_maintenance']['crawlDepth'][0];
+		$widget->setInputCallback($this->getInputCallback($name));
+
+		$options = array();
+		$default = System::getContainer()->getParameter('contao.crawl.max_depth');
+
+		for ($i = 1; $i <= 20; ++$i) {
+			$options[$i] = array(
+				'value' => $i,
+				'label' => $i,
+				'default' => $i === $default,
+			);
 		}
 
 		$widget->options = $options;
