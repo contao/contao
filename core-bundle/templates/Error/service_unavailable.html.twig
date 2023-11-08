@@ -9,27 +9,31 @@
 
 {% block body_end %}
     <script id="maintenance-script" type="text/javascript" data-labels="{{ defaultLabels|json_encode() }}">
-        (function(n,d) {
+        (function (n, d) {
             let language = n.language;
             let data = JSON.parse(d.getElementById('maintenance-script').dataset.labels);
-
-            d.querySelectorAll('[data-trans]').forEach((el) => {
+            function translate(key) {
                 if (data[language] === undefined) {
                     language = new Intl.Locale(language).language;
-
                     if (data[language] === undefined) {
-                        return;
+                        return null;
                     }
                 }
-
-                if (data[language][el.dataset.trans] === undefined) {
-                    return;
+                if (data[language][key] === undefined) {
+                    return null;
                 }
-
-                el.innerHTML = data[language][el.dataset.trans];
+                return data[language][key];
+            }
+            d.querySelectorAll('[data-trans]').forEach(el => {
+                let trans = translate(el.dataset.trans);
+                if (trans) {
+                    el.innerHTML = trans;
+                }
             });
-
-            d.title = data[language].title;
-        })(navigator,document);
+            let trans = translate('title');
+            if (trans) {
+                d.title = data[language].title;
+            }
+        })(navigator, document);
     </script>
 {% endblock %}
