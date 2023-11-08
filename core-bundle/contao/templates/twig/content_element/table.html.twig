@@ -10,5 +10,5 @@
 {% endblock -%}
 
 {%- block table_cell_content %}
-    {{- cell|trim|replace({'\n': '<br>\n'})|insert_tag(as_editor_view)|raw -}}
+    {{- cell|trim|replace({'\n': '<br>\n'})|insert_tag|raw -}}
 {% endblock -%}

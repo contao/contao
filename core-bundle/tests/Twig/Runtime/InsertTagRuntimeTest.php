@@ -47,7 +47,10 @@ class InsertTagRuntimeTest extends TestCase
 
         $runtime = new InsertTagRuntime($insertTags);
 
-        $this->assertSame('foo replaced-tag', $runtime->replaceInsertTags('foo {{tag}}'));
+        $this->assertSame(
+            'foo replaced-tag',
+            $runtime->replaceInsertTags(['as_editor_view' => false], 'foo {{tag}}'),
+        );
     }
 
     public function testReplaceInsertTagsChunkedRaw(): void
@@ -62,7 +65,10 @@ class InsertTagRuntimeTest extends TestCase
 
         $runtime = new InsertTagRuntime($insertTags);
 
-        $this->assertSame('<replaced-tag> foo', (string) $runtime->replaceInsertTagsChunkedRaw('{{tag}} foo'));
+        $this->assertSame(
+            '<replaced-tag> foo',
+            (string) $runtime->replaceInsertTagsChunkedRaw(['as_editor_view' => false], '{{tag}} foo'),
+        );
     }
 
     public function testDoesNotReplaceInsertTagsInEditorView(): void
@@ -75,7 +81,10 @@ class InsertTagRuntimeTest extends TestCase
 
         $runtime = new InsertTagRuntime($insertTags);
 
-        $this->assertSame('foo {{tag}}', $runtime->replaceInsertTags('foo {{tag}}', true));
+        $this->assertSame(
+            'foo {{tag}}',
+            $runtime->replaceInsertTags(['as_editor_view' => true], 'foo {{tag}}'),
+        );
     }
 
     public function testDoesNotReplaceInsertTagsChunkedRawInEditorView(): void
@@ -88,6 +97,27 @@ class InsertTagRuntimeTest extends TestCase
 
         $runtime = new InsertTagRuntime($insertTags);
 
-        $this->assertSame('{{tag}} foo', (string) $runtime->replaceInsertTagsChunkedRaw('{{tag}} foo', true));
+        $this->assertSame(
+            '{{tag}} foo',
+            (string) $runtime->replaceInsertTagsChunkedRaw(['as_editor_view' => true], '{{tag}} foo'),
+        );
+    }
+
+    public function testAllowsToOverrideTheEditorView(): void
+    {
+        $insertTags = $this->createMock(InsertTagParser::class);
+        $insertTags
+            ->expects($this->once())
+            ->method('replaceInline')
+            ->with('foo {{tag}}')
+            ->willReturn('foo replaced-tag')
+        ;
+
+        $runtime = new InsertTagRuntime($insertTags);
+
+        $this->assertSame(
+            'foo replaced-tag',
+            $runtime->replaceInsertTags(['as_editor_view' => true], 'foo {{tag}}', false),
+        );
     }
 }
