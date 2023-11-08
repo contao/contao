@@ -32,9 +32,7 @@ final class InsertTagRuntime implements RuntimeExtensionInterface
 
     public function replaceInsertTags(array $context, string $text, bool|null $asEditorView = null): string
     {
-        if (null === $asEditorView) {
-            $asEditorView = $context['as_editor_view'] ?? false;
-        }
+        $asEditorView ??= $context['as_editor_view'] ?? false;
 
         if ($asEditorView) {
             return $text;
@@ -45,9 +43,7 @@ final class InsertTagRuntime implements RuntimeExtensionInterface
 
     public function replaceInsertTagsChunkedRaw(array $context, string $text, bool|null $asEditorView = null): ChunkedText
     {
-        if (null === $asEditorView) {
-            $asEditorView = $context['as_editor_view'] ?? false;
-        }
+        $asEditorView ??= $context['as_editor_view'] ?? false;
 
         if ($asEditorView) {
             return new ChunkedText([$text, '']);
