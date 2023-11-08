@@ -94,6 +94,14 @@ class PageUrlListener
         return $value;
     }
 
+    #[AsCallback(table: 'tl_page', target: 'config.oncopy')]
+    public function generateAliasOnCopy(string $insertId, DataContainer $dc): void
+    {
+        $dc->id = (int) $insertId;
+
+        $this->connection->update('tl_page', ['alias' => $this->generateAlias('', $dc)], ['id' => $insertId]);
+    }
+
     #[AsCallback(table: 'tl_page', target: 'fields.urlPrefix.save')]
     public function validateUrlPrefix(string $value, DataContainer $dc): string
     {
