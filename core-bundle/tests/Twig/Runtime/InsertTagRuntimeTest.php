@@ -64,4 +64,30 @@ class InsertTagRuntimeTest extends TestCase
 
         $this->assertSame('<replaced-tag> foo', (string) $runtime->replaceInsertTagsChunkedRaw('{{tag}} foo'));
     }
+
+    public function testDoesNotReplaceInsertTagsInEditorView(): void
+    {
+        $insertTags = $this->createMock(InsertTagParser::class);
+        $insertTags
+            ->expects($this->never())
+            ->method('replaceInline')
+        ;
+
+        $runtime = new InsertTagRuntime($insertTags);
+
+        $this->assertSame('foo {{tag}}', $runtime->replaceInsertTags('foo {{tag}}', true));
+    }
+
+    public function testDoesNotReplaceInsertTagsChunkedRawInEditorView(): void
+    {
+        $insertTags = $this->createMock(InsertTagParser::class);
+        $insertTags
+            ->expects($this->never())
+            ->method('replaceChunked')
+        ;
+
+        $runtime = new InsertTagRuntime($insertTags);
+
+        $this->assertSame('{{tag}} foo', (string) $runtime->replaceInsertTagsChunkedRaw('{{tag}} foo', true));
+    }
 }

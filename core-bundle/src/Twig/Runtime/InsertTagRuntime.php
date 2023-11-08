@@ -30,13 +30,21 @@ final class InsertTagRuntime implements RuntimeExtensionInterface
         return $this->insertTagParser->renderTag($insertTag)->getValue();
     }
 
-    public function replaceInsertTags(string $text): string
+    public function replaceInsertTags(string $text, bool $asEditorView = false): string
     {
+        if ($asEditorView) {
+            return $text;
+        }
+
         return $this->insertTagParser->replaceInline($text);
     }
 
-    public function replaceInsertTagsChunkedRaw(string $text): ChunkedText
+    public function replaceInsertTagsChunkedRaw(string $text, bool $asEditorView = false): ChunkedText
     {
+        if ($asEditorView) {
+            return new ChunkedText([$text, '']);
+        }
+
         return $this->insertTagParser->replaceChunked($text);
     }
 }
