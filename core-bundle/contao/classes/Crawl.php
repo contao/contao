@@ -191,13 +191,13 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 			Controller::redirect(str_replace('&jobId=' . $jobId, '', Environment::get('requestUri')));
 		}
 
-		$concurrency = System::getContainer()->getParameter('contao.backend.crawl.concurrency');
+		$concurrency = System::getContainer()->getParameter('contao.backend.crawl_concurrency');
 
 		// Configure with sane defaults for the back end (maybe we should make this configurable one day)
 		$escargot = $escargot
 			->withConcurrency($concurrency)
 			->withMaxDepth($maxDepthWidget->value)
-			->withMaxRequests(System::getContainer()->getParameter('contao.backend.crawl.max_requests'))
+			->withMaxRequests(20 * $concurrency)
 			->withLogger($this->createLogger($factory, $activeSubscribers, $jobId, $debugLogPath));
 
 		$template->hint = sprintf($GLOBALS['TL_LANG']['tl_maintenance']['crawlHint'], $concurrency);
