@@ -493,7 +493,7 @@ abstract class Events extends Module
 			'startDate' => $objEvent->addTime ? date('Y-m-d\TH:i:sP', $objEvent->startTime) : date('Y-m-d', $objEvent->startTime)
 		);
 
-		if ($objEvent->endDate)
+		if ($objEvent->startTime !== $objEvent->endTime)
 		{
 			$jsonLd['endDate'] = $objEvent->addTime ? date('Y-m-d\TH:i:sP', $objEvent->endTime) : date('Y-m-d', $objEvent->endTime);
 		}
