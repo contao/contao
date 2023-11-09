@@ -378,14 +378,12 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 		$widget->setInputCallback($this->getInputCallback($name));
 
 		$options = array();
-		$default = System::getContainer()->getParameter('contao.backend.crawl.max_depth');
 
-		for ($i = 3; $i <= 7; ++$i)
+		for ($i = 3; $i <= 10; ++$i)
 		{
 			$options[$i] = array(
 				'value' => $i,
 				'label' => $i,
-				'default' => $i === $default,
 			);
 		}
 

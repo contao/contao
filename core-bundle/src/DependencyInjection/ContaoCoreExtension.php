@@ -132,7 +132,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('contao.backend.badge_title', $config['backend']['badge_title']);
         $container->setParameter('contao.backend.route_prefix', $config['backend']['route_prefix']);
         $container->setParameter('contao.backend.crawl.concurrency', $config['backend']['crawl']['concurrency']);
-        $container->setParameter('contao.backend.crawl.max_depth', $config['backend']['crawl']['max_depth']);
         $container->setParameter('contao.backend.crawl.max_requests', $config['backend']['crawl']['max_requests']);
         $container->setParameter('contao.intl.locales', $config['intl']['locales']);
         $container->setParameter('contao.intl.enabled_locales', $config['intl']['enabled_locales']);
