@@ -158,7 +158,7 @@
         "symfony/var-dumper": "^6.3",
         "symfony/web-profiler-bundle": "^6.3",
         "symfony/yaml": "^6.3",
-        "terminal42/escargot": "^1.6.0",
+        "terminal42/escargot": "^1.6",
         "terminal42/service-annotation-bundle": "^1.1",
         "toflar/psr6-symfony-http-cache-store": "^4.0",
         "twig/extra-bundle": "^3.0",
