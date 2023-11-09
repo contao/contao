@@ -1,7 +1,9 @@
 
 <div class="layout_latest arc_<?= $this->archive->id ?> block<?= $this->class ?>">
 
-  <p class="info"><time datetime="<?= $this->datetime ?>"><?= $this->date ?></time> <?= $this->author ?></p>
+  <?php $this->block('info'); ?>
+    <p class="info"><time datetime="<?= $this->datetime ?>"><?= $this->date ?></time> <?= $this->author ?></p>
+  <?php $this->endblock(); ?>
 
   <?php if ($this->addImage): ?>
     <?php $this->insert('image', $this->arrData); ?>
