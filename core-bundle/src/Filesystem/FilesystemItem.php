@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Filesystem;
 
 use Contao\CoreBundle\File\Metadata;
-use Contao\CoreBundle\File\MetadataBag;
 use League\Flysystem\FileAttributes;
 use League\Flysystem\StorageAttributes;
 use Symfony\Component\Filesystem\Path;
