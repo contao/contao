@@ -191,13 +191,13 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 			Controller::redirect(str_replace('&jobId=' . $jobId, '', Environment::get('requestUri')));
 		}
 
-		$concurrency = System::getContainer()->getParameter('contao.crawl.concurrency');
+		$concurrency = System::getContainer()->getParameter('contao.backend.crawl.concurrency');
 
 		// Configure with sane defaults for the back end (maybe we should make this configurable one day)
 		$escargot = $escargot
 			->withConcurrency($concurrency)
 			->withMaxDepth($maxDepthWidget->value)
-			->withMaxRequests(System::getContainer()->getParameter('contao.crawl.max_requests'))
+			->withMaxRequests(System::getContainer()->getParameter('contao.backend.crawl.max_requests'))
 			->withLogger($this->createLogger($factory, $activeSubscribers, $jobId, $debugLogPath));
 
 		$template->hint = sprintf($GLOBALS['TL_LANG']['tl_maintenance']['crawlHint'], $concurrency);
@@ -378,7 +378,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 		$widget->setInputCallback($this->getInputCallback($name));
 
 		$options = array();
-		$default = System::getContainer()->getParameter('contao.crawl.max_depth');
+		$default = System::getContainer()->getParameter('contao.backend.crawl.max_depth');
 
 		for ($i = 3; $i <= 7; ++$i)
 		{
