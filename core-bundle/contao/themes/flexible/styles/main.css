@@ -926,6 +926,7 @@ h2.sub_headline {
 }
 
 #tl_crawl .debug-log {
+	display: none;
 	margin-top: 11px;
 }
 
