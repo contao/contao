@@ -23,11 +23,7 @@
     {% block text %}
         {% set text_attributes = attrs(text_attributes|default).addClass('rte') %}
         <div{% block text_attributes %}{{ text_attributes }}{% endblock %}>
-            {% if as_editor_view %}
-                {{ text|raw }}
-            {% else %}
-                {{ text|insert_tag|raw }}
-            {% endif %}
+            {{ text|insert_tag|raw }}
         </div>
     {% endblock %}
 {% endblock %}
