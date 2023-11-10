@@ -1197,7 +1197,7 @@
         <source>Back end keyboard shortcuts</source>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href="https://to.contao.org/shortcuts" target="_blank" rel="noreferrer noopener"&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <source>Learn more about speeding up your workflow by using &lt;a href="%s" target="_blank" rel="noreferrer noopener"&gt;keyboard shortcuts&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
