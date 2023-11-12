@@ -48,6 +48,12 @@ class RouteLoader implements RouteLoaderInterface
             if ($routes instanceof RouteCollection) {
                 $collection->addCollection($routes);
             }
+        } elseif (is_dir($path = Path::join($this->projectDir, 'src/Controller'))) {
+            $routes = $this->loader->getResolver()->resolve($path)->load($path);
+
+            if ($routes instanceof RouteCollection) {
+                $collection->addCollection($routes);
+            }
         }
 
         $collection = array_reduce(
