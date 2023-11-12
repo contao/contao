@@ -1593,7 +1593,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$session = $objSession->all();
 		$ids = $session['CURRENT']['IDS'] ?? array();
 
-		if (\is_array($ids) && \strlen($ids[0]))
+		if (\is_array($ids) && \array_filter($ids))
 		{
 			foreach ($ids as $id)
 			{
