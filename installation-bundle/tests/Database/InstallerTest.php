@@ -219,6 +219,7 @@ class InstallerTest extends TestCase
         $fromSchema
             ->createTable('tl_bar')
             ->addOption('engine', 'InnoDB')
+            ->addOption('row_format', 'COMPACT')
             ->addOption('charset', 'utf8mb4')
             ->addOption('collate', 'utf8mb4_unicode_ci')
             ->addOption('Create_options', 'row_format=COMPACT')
@@ -562,6 +563,7 @@ class InstallerTest extends TestCase
                             if ($table->hasOption('engine')) {
                                 return [
                                     'Engine' => $table->getOption('engine'),
+                                    'Row_format' => $table->hasOption('row_format') ? $table->getOption('row_format') : '',
                                     'Create_options' => implode(', ', $table->getOption('create_options')),
                                     'Collation' => $table->hasOption('collate') ? $table->getOption('collate') : '',
                                 ];

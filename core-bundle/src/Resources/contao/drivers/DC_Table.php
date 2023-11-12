@@ -862,6 +862,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						{
 							$v = Encryption::encrypt($v);
 						}
+
+						// Cast boolean to integers (see #6473)
+						if (\is_bool($v))
+						{
+							$v = (int) $v;
+						}
 					}
 
 					$this->set[$k] = $v;

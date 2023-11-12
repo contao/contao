@@ -515,7 +515,7 @@
       </trans-unit>
       <trans-unit id="tl_content.playerColor.0">
         <source>Controls color</source>
-        <target>Farben der Steuererlemente</target>
+        <target>Farben der Steuerelemente</target>
       </trans-unit>
       <trans-unit id="tl_content.playerColor.1">
         <source>Here you can enter a hexadecimal color (e.g. ff0000) for the video controls.</source>

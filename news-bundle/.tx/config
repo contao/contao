@@ -1,48 +1,65 @@
 [main]
-host = https://www.transifex.com
+host = https://app.transifex.com
 
 [o:contao:p:news-bundle:r:v4_13-default]
 file_filter = src/Resources/contao/languages/<lang>/default.xlf
 source_file = src/Resources/contao/languages/en/default.xlf
+type = XLIFF
 source_lang = en
+resource_name = v4_13-default
 
 [o:contao:p:news-bundle:r:v4_13-modules]
 file_filter = src/Resources/contao/languages/<lang>/modules.xlf
 source_file = src/Resources/contao/languages/en/modules.xlf
+type = XLIFF
 source_lang = en
+resource_name = v4_13-modules
 
 [o:contao:p:news-bundle:r:v4_13-tl_layout]
 file_filter = src/Resources/contao/languages/<lang>/tl_layout.xlf
 source_file = src/Resources/contao/languages/en/tl_layout.xlf
+type = XLIFF
 source_lang = en
+resource_name = v4_13-tl_layout
 
 [o:contao:p:news-bundle:r:v4_13-tl_module]
 file_filter = src/Resources/contao/languages/<lang>/tl_module.xlf
 source_file = src/Resources/contao/languages/en/tl_module.xlf
+type = XLIFF
 source_lang = en
+resource_name = v4_13-tl_module
 
 [o:contao:p:news-bundle:r:v4_13-tl_news]
 file_filter = src/Resources/contao/languages/<lang>/tl_news.xlf
 source_file = src/Resources/contao/languages/en/tl_news.xlf
+type = XLIFF
 source_lang = en
+resource_name = v4_13-tl_news
 
 [o:contao:p:news-bundle:r:v4_13-tl_news_archive]
 file_filter = src/Resources/contao/languages/<lang>/tl_news_archive.xlf
 source_file = src/Resources/contao/languages/en/tl_news_archive.xlf
+type = XLIFF
 source_lang = en
+resource_name = v4_13-tl_news_archive
 
 [o:contao:p:news-bundle:r:v4_13-tl_news_feed]
 file_filter = src/Resources/contao/languages/<lang>/tl_news_feed.xlf
 source_file = src/Resources/contao/languages/en/tl_news_feed.xlf
+type = XLIFF
 source_lang = en
+resource_name = v4_13-tl_news_feed
 
 [o:contao:p:news-bundle:r:v4_13-tl_user]
 file_filter = src/Resources/contao/languages/<lang>/tl_user.xlf
 source_file = src/Resources/contao/languages/en/tl_user.xlf
+type = XLIFF
 source_lang = en
+resource_name = v4_13-tl_user
 
 [o:contao:p:news-bundle:r:v4_13-tl_user_group]
 file_filter = src/Resources/contao/languages/<lang>/tl_user_group.xlf
 source_file = src/Resources/contao/languages/en/tl_user_group.xlf
+type = XLIFF
 source_lang = en
-
+resource_name = v4_13-tl_user_group

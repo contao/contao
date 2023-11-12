@@ -680,19 +680,17 @@ h2.sub_headline {
 #tl_crawl .results p {
 	margin-bottom:6px;
 }
-#tl_crawl .results .spinner {
-	margin:0;
-	padding:10px;
-	background:url("icons/loading.svg") no-repeat left center;
-	background-size:16px;
-}
 #tl_crawl .subscriber-log {
 	display:none;
 	padding:5px 0;
 	margin-bottom:0;
 }
 #tl_crawl .wait {
-	margin-top:18px;
+	margin-top:9px;
+	color:#999;
+}
+#tl_crawl .debug-log {
+	margin-top:11px;
 }
 #tl_crawl .results.running .show-when-finished,#tl_crawl .results.finished .show-when-running {
 	display:none;
