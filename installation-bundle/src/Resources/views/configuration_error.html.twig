@@ -6,10 +6,10 @@
     <h3>{{ 'an_error_occurred'|trans }}</h3>
     {% if errorCode == 1 %}
       <p class="tl_error">{{ 'unsupported_version'|trans }}</p>
-      <p>{{ 'unsupported_version_explain'|trans|format(version) }}</p>
+      <p>{{ 'unsupported_version_explain'|trans([version]) }}</p>
     {% elseif errorCode == 2 %}
       <p class="tl_error">{{ 'unsupported_collation'|trans }}</p>
-      <p>{{ 'unsupported_collation_explain'|trans|format(collation)|raw }}</p>
+      <p>{{ 'unsupported_collation_explain'|trans([collation])|raw }}</p>
       <div id="sql_wrapper">
         <pre>doctrine:
     dbal:
@@ -21,7 +21,7 @@
       </div>
     {% elseif errorCode == 3 %}
       <p class="tl_error">{{ 'unsupported_engine'|trans }}</p>
-      <p>{{ 'unsupported_engine_explain'|trans|format(engine)|raw }}</p>
+      <p>{{ 'unsupported_engine_explain'|trans([engine])|raw }}</p>
       <div id="sql_wrapper">
         <pre>doctrine:
     dbal:
@@ -33,7 +33,7 @@
       </div>
     {% elseif errorCode == 4 %}
       <p class="tl_error">{{ 'engine_mismatch'|trans }}</p>
-      <p>{{ 'engine_mismatch_explain'|trans|format(engine)|raw }}</p>
+      <p>{{ 'engine_mismatch_explain'|trans([engine])|raw }}</p>
       <div id="sql_wrapper">
         <pre>doctrine:
     dbal:
