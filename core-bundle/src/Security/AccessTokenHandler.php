@@ -93,11 +93,7 @@ class AccessTokenHandler implements AccessTokenHandlerInterface
             return false;
         }
 
-        if ($username !== $claims->get('username')) {
-            return false;
-        }
-
-        return true;
+        return $username === $claims->get('username');
     }
 
     public function getUserBadgeFrom(string $accessToken): UserBadge
@@ -105,7 +101,7 @@ class AccessTokenHandler implements AccessTokenHandlerInterface
         $token = $this->accessTokenRepository->findByToken($accessToken);
         $unencryptedToken = $this->parseToken($token->getToken());
 
-        if (null === $unencryptedToken || !$this->validateToken($unencryptedToken, $token->getUsername())) {
+        if (!$unencryptedToken || !$this->validateToken($unencryptedToken, $token->getUsername())) {
             throw new BadCredentialsException('Invalid credentials.');
         }
 
