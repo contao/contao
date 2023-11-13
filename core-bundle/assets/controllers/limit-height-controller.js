@@ -136,11 +136,7 @@ export default class extends Controller {
         this.updateOperation(event);
     }
 
-    invertAll (event) {
-        this.updateOperation(event);
-    }
-
-    revertAll (event) {
+    keypress (event) {
         this.updateOperation(event);
     }
 
@@ -148,6 +144,9 @@ export default class extends Controller {
         if (!this.hasOperationTarget) {
             return;
         }
+
+        const hasTogglers = !!this.elementTargets.find((el) => this.togglerMap.has(el));
+        this.operationTarget.style.display = hasTogglers ? '' : 'none';
 
         if (this.hasExpanded() ^ (event ? event.altKey : false)) {
             this.operationTarget.innerText = this.collapseAllValue;

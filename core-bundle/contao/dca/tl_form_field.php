@@ -67,7 +67,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'toggleNodes' => array
 			(
-				'button_callback'     => static fn () => '<button class="header_toggle" data-contao--limit-height-target="operation" data-action="contao--limit-height#toggleAll keydown@window->contao--limit-height#invertAll keyup@window->contao--limit-height#revertAll"></button>',
+				'button_callback'     => static fn () => '<button class="header_toggle" data-contao--limit-height-target="operation" data-action="contao--limit-height#toggleAll keydown@window->contao--limit-height#keypress keyup@window->contao--limit-height#keypress"></button>',
 				'showOnSelect'        => true
 			),
 			'all'
