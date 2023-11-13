@@ -13,3 +13,10 @@
 {% block list_item %}
     {% with {download: item} %}{{ block('download_component') }}{% endwith %}
 {% endblock %}
+
+{# Add metadata #}
+{% block metadata %}
+    {% for download in downloads %}
+        {% do add_schema_org(download.file.schemaOrgData|default) %}
+    {% endfor %}
+{% endblock %}
