@@ -19,7 +19,7 @@ use Symfony\Component\Messenger\Event\WorkerMessageFailedEvent;
 
 class MessageListener
 {
-    public function __construct(private LoggerInterface $logger)
+    public function __construct(private readonly LoggerInterface $logger)
     {
     }
 
@@ -32,7 +32,7 @@ class MessageListener
 
         $this->logger->error(
             sprintf('Message "%s" failed. Reason: "%s"',
-                \get_class($event->getEnvelope()->getMessage()),
+                $event->getEnvelope()->getMessage()::class,
                 $event->getThrowable()->getMessage(),
             ),
             [
