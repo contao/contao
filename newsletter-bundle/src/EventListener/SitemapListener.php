@@ -72,7 +72,7 @@ class SitemapListener
             }
 
             // The target page is protected (see #8416)
-            if ($objParent->protected  && !$this->authorizationChecker->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objParent->groups)) {
+            if ($objParent->protected && !$this->authorizationChecker->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objParent->groups)) {
                 continue;
             }
 
