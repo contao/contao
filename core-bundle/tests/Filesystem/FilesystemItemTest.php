@@ -107,9 +107,14 @@ class FilesystemItemTest extends TestCase
             $mimeType,
             [
                 'uuid' => Uuid::fromString('2fcae369-c955-4b43-bcf9-d069f9d25542'),
-                'metadata' => new MetadataBag(['en' => new Metadata([
-                    Metadata::VALUE_TITLE => 'My title!',
-                ])], ['en']),
+                'metadata' => new MetadataBag(
+                    [
+                        'en' => new Metadata([
+                            Metadata::VALUE_TITLE => 'My title!',
+                        ]),
+                    ],
+                    ['en'],
+                ),
             ],
         );
 

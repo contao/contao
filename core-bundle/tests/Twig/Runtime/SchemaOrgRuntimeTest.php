@@ -37,7 +37,9 @@ class SchemaOrgRuntimeTest extends TestCase
             '@type' => 'ImageObject',
             'identifier' => 'https://assets.url/files/public/foo.jpg',
         ]);
-        $runtime->add(null); // Also test null works which simplifies using the runtime in the templates
+
+        // Also test that null works, which simplifies using the runtime in the templates
+        $runtime->add(null);
 
         $graph = $manager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->toArray();
 
