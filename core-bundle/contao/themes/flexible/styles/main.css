@@ -834,15 +834,14 @@ h2.sub_headline {
 }
 
 #tl_crawl .tl_tbox {
+	margin-top: 0;
 	padding-top: 0;
-}
-
-#tl_crawl .tl_tbox > div {
-	max-width: 562px;
+	padding-right: 0;
+	padding-left: 0;
 }
 
 #tl_crawl .tl_checkbox_container {
-	margin-top: 9px;
+	margin-top: 6px;
 }
 
 #tl_crawl .inner {
@@ -891,6 +890,11 @@ h2.sub_headline {
 	margin-bottom: 6px;
 }
 
+#tl_crawl .crawl-hint {
+	margin-top: -2px;
+	line-height: 1.3;
+}
+
 #tl_crawl .subscriber-log {
 	display: none;
 	padding: 5px 0;
@@ -903,6 +907,7 @@ h2.sub_headline {
 }
 
 #tl_crawl .debug-log {
+	display: none;
 	margin-top: 11px;
 }
 
@@ -2646,6 +2651,7 @@ fieldset.tl_tbox, fieldset.tl_box {
 	border-top: none;
 	border-left: 0;
 	border-right: 0;
+	margin-inline: 0;
 }
 
 fieldset.tl_tbox.nolegend, fieldset.tl_box.nolegend {
