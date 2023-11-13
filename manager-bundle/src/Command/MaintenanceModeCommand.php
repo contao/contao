@@ -129,7 +129,7 @@ class MaintenanceModeCommand extends Command
     {
         $labels = [];
 
-        foreach (array_keys($this->locales->getEnabledLocales()) as $locale) {
+        foreach ($this->locales->getEnabledLocaleIds() as $locale) {
             $labels[$locale] = [
                 'title' => $this->translator->trans('XPT.unavailable', [], 'contao_exception', $locale),
                 'XPT.maintenance' => $this->translator->trans('XPT.maintenance', [], 'contao_exception', $locale),
