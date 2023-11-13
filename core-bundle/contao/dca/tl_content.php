@@ -1267,7 +1267,7 @@ class tl_content extends Backend
 
 		return '
 <div class="cte_type ' . $key . '">' . $type . '</div>
-<div class="' . $class . '"' . (!$isWrapper && !Config::get('doNotCollapse') ? ' data-contao--limit-height-target="element"' : '') . '>' . $preview . '</div>';
+<div class="' . $class . '">' . $preview . '</div>';
 	}
 
 	/**

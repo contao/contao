@@ -81,14 +81,6 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 			'format'                  => '%s',
 			'label_callback'          => array('tl_comments', 'listComments')
 		),
-		'global_operations' => array
-		(
-			'toggleNodes' => array
-			(
-				'button_callback'     => static fn () => '<button class="header_toggle" data-contao--limit-height-target="operation" data-action="contao--limit-height#toggleAll keydown@window->contao--limit-height#keypress keyup@window->contao--limit-height#keypress"></button>',
-				'showOnSelect'        => true
-			)
-		),
 		'operations' => array
 		(
 			'edit' => array
@@ -565,7 +557,7 @@ class tl_comments extends Backend
 
 		return '
 <div class="cte_type ' . $key . '"><a href="mailto:' . Idna::decodeEmail($arrRow['email']) . '" title="' . StringUtil::specialchars(Idna::decodeEmail($arrRow['email'])) . '">' . $arrRow['name'] . '</a>' . ($arrRow['website'] ? ' (<a href="' . $arrRow['website'] . '" title="' . StringUtil::specialchars($arrRow['website']) . '" target="_blank" rel="noreferrer noopener">' . $GLOBALS['TL_LANG']['MSC']['com_website'] . '</a>)' : '') . ' – ' . Date::parse(Config::get('datimFormat'), $arrRow['date']) . ' – IP ' . StringUtil::specialchars($arrRow['ip']) . '<br>' . $title . '</div>
-<div class="cte_preview"' . (!Config::get('doNotCollapse') ? ' data-contao--limit-height-target="element"' : '') . '">
+<div class="cte_preview">
 ' . $arrRow['comment'] . '
 </div>' . "\n    ";
 	}

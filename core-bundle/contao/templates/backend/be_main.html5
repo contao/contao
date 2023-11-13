@@ -70,16 +70,7 @@
       <?php $this->block('main'); ?>
         <main id="main" aria-labelledby="main_headline">
           <h1 id="main_headline"><?= $this->headline ?></h1>
-          <div class="content"
-               data-controller="contao--limit-height"
-               <?php if ($this->limitHeight): ?>data-contao--limit-height-max-value="<?= $this->limitHeight ?>"<?php endif; ?>
-               data-contao--limit-height-expand-value="<?= $this->trans('MSC.expandNode') ?>"
-               data-contao--limit-height-collapse-value="<?= $this->trans('MSC.collapseNode') ?>"
-               data-contao--limit-height-expand-all-value="<?= $this->trans('DCA.expandNodes.0') ?>"
-               data-contao--limit-height-expand-all-title-value="<?= $this->trans('DCA.expandNodes.1') ?>"
-               data-contao--limit-height-collapse-all-value="<?= $this->trans('DCA.collapseNodes.0') ?>"
-               data-contao--limit-height-collapse-all-title-value="<?= $this->trans('DCA.collapseNodes.0') ?>"
-          >
+          <div class="content">
             <?php if ($this->pickerMenu): ?>
               <div id="picker-menu">
                 <?= $this->pickerMenu ?>

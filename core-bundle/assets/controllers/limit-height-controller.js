@@ -14,7 +14,7 @@ export default class extends Controller {
         collapseAllTitle: String,
     }
 
-    static targets = ['operation', 'element'];
+    static targets = ['operation', 'node'];
 
     initialize () {
         super.initialize();
@@ -29,7 +29,7 @@ export default class extends Controller {
             document.querySelectorAll('div.limit_height').forEach((div) => {
                 const parent = div.parentNode.closest('.tl_content');
 
-                // Return if the element is a wrapper
+                // Return if the node is a wrapper
                 if (parent && (parent.classList.contains('wrapper_start') || parent.classList.contains('wrapper_stop'))) return;
 
                 const hgt = Number(div.className.replace(/[^0-9]*/, ''))
@@ -40,7 +40,7 @@ export default class extends Controller {
                 // Use the last found max height as the controller value
                 this.maxValue = hgt;
 
-                div.setAttribute(this.application.schema.targetAttributeForScope(this.identifier), 'element');
+                div.setAttribute(this.application.schema.targetAttributeForScope(this.identifier), 'node');
             });
         };
 
@@ -56,18 +56,19 @@ export default class extends Controller {
         this.updateOperation();
     }
 
-    elementTargetConnected (element) {
-        const style = window.getComputedStyle(element, null);
+    nodeTargetConnected (node) {
+        const style = window.getComputedStyle(node, null);
         const padding = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
-        const height = element.clientHeight - padding;
+        const height = node.clientHeight - padding;
 
         // Resize the element if it is higher than the maximum height
         if (this.maxValue > height) {
             return;
         }
 
-        element.style.overflow = 'hidden';
-        element.style.maxHeight = `${this.maxValue}px`;
+        node.style.position = 'relative';
+        node.style.overflow = 'hidden';
+        node.style.maxHeight = `${this.maxValue}px`;
 
         const button = document.createElement('button');
         button.setAttribute('type', 'button');
@@ -77,7 +78,7 @@ export default class extends Controller {
 
         button.addEventListener('click', (event) => {
             event.preventDefault();
-            this.toggle(element);
+            this.toggle(node);
             this.updateOperation(event);
         });
 
@@ -85,51 +86,52 @@ export default class extends Controller {
         toggler.classList.add('limit_toggler');
         toggler.append(button);
 
-        this.togglerMap.set(element, toggler);
+        this.togglerMap.set(node, toggler);
 
-        element.append(toggler);
+        node.append(toggler);
     }
 
-    elementTargetDisconnected (element) {
-        if (!this.togglerMap.has(element)) {
+    nodeTargetDisconnected (node) {
+        if (!this.togglerMap.has(node)) {
             return;
         }
 
-        this.togglerMap.get(element).remove();
-        this.togglerMap.delete(element);
-        element.style.maxHeight = '';
-        element.style.overflow = '';
+        this.togglerMap.get(node).remove();
+        this.togglerMap.delete(node);
+        node.style.position = '';
+        node.style.overflow = '';
+        node.style.maxHeight = '';
     }
 
-    toggle (element) {
-        if (element.style.maxHeight === '') {
-            this.collapse(element);
+    toggle (node) {
+        if (node.style.maxHeight === '') {
+            this.collapse(node);
         } else {
-            this.expand(element);
+            this.expand(node);
         }
 
-        console.log(element.style.maxHeight);
+        console.log(node.style.maxHeight);
     }
 
-    expand (element) {
-        element.style.maxHeight = '';
-        this.setButtonTitle(element, this.collapseValue);
+    expand (node) {
+        node.style.maxHeight = '';
+        this.setButtonTitle(node, this.collapseValue);
     }
 
-    collapse (element) {
-        element.style.maxHeight = `${this.maxValue}px`;
-        this.setButtonTitle(element, this.expandValue);
+    collapse (node) {
+        node.style.maxHeight = `${this.maxValue}px`;
+        this.setButtonTitle(node, this.expandValue);
     }
 
     toggleAll (event) {
         event.preventDefault();
         const isExpanded = this.hasExpanded() ^ event.altKey;
 
-        this.elementTargets.forEach((element) => {
+        this.nodeTargets.forEach((node) => {
             if (isExpanded) {
-                this.collapse(element);
+                this.collapse(node);
             } else {
-                this.expand(element);
+                this.expand(node);
             }
         });
 
@@ -145,7 +147,7 @@ export default class extends Controller {
             return;
         }
 
-        const hasTogglers = !!this.elementTargets.find((el) => this.togglerMap.has(el));
+        const hasTogglers = !!this.nodeTargets.find((el) => this.togglerMap.has(el));
         this.operationTarget.style.display = hasTogglers ? '' : 'none';
 
         if (this.hasExpanded() ^ (event ? event.altKey : false)) {
@@ -158,21 +160,21 @@ export default class extends Controller {
     }
 
     maxValueChanged () {
-        this.elementTargets.forEach((element) => {
-            this.elementTargetDisconnected(element);
-            this.elementTargetConnected(element);
+        this.nodeTargets.forEach((node) => {
+            this.nodeTargetDisconnected(node);
+            this.nodeTargetConnected(node);
         })
     }
 
     hasExpanded () {
-        return !!this.elementTargets.find((el) => this.togglerMap.has(el) && el.style.maxHeight === '');
+        return !!this.nodeTargets.find((el) => this.togglerMap.has(el) && el.style.maxHeight === '');
     }
 
-    setButtonTitle (element, title) {
-        if (!this.togglerMap.has(element)) {
+    setButtonTitle (node, title) {
+        if (!this.togglerMap.has(node)) {
             return;
         }
 
-        this.togglerMap.get(element).querySelector('button').title = this.collapseValue;
+        this.togglerMap.get(node).querySelector('button').title = title;
     }
 }
