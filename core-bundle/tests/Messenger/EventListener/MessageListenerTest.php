@@ -43,7 +43,7 @@ class MessageListenerTest extends TestCase
         $logger
             ->expects($this->once())
             ->method('error')
-            ->with('Message "stdClass" failed. Reason: "error!"')
+            ->with('Message "stdClass" failed: "error!"')
         ;
 
         $listener = new MessageListener($logger);
