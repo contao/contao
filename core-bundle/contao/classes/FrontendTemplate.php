@@ -47,8 +47,7 @@ class FrontendTemplate extends Template
 		{
 			foreach ($GLOBALS['TL_HOOKS']['parseFrontendTemplate'] as $callback)
 			{
-				$this->import($callback[0]);
-				$strBuffer = $this->{$callback[0]}->{$callback[1]}($strBuffer, $this->strTemplate, $this);
+				$strBuffer = System::importStatic($callback[0])->{$callback[1]}($strBuffer, $this->strTemplate, $this);
 			}
 		}
 
@@ -94,8 +93,7 @@ class FrontendTemplate extends Template
 		{
 			foreach ($GLOBALS['TL_HOOKS']['outputFrontendTemplate'] as $callback)
 			{
-				$this->import($callback[0]);
-				$this->strBuffer = $this->{$callback[0]}->{$callback[1]}($this->strBuffer, $this->strTemplate);
+				$this->strBuffer = System::importStatic($callback[0])->{$callback[1]}($this->strBuffer, $this->strTemplate);
 			}
 		}
 
@@ -106,8 +104,7 @@ class FrontendTemplate extends Template
 		{
 			foreach ($GLOBALS['TL_HOOKS']['modifyFrontendPage'] as $callback)
 			{
-				$this->import($callback[0]);
-				$this->strBuffer = $this->{$callback[0]}->{$callback[1]}($this->strBuffer, $this->strTemplate);
+				$this->strBuffer = System::importStatic($callback[0])->{$callback[1]}($this->strBuffer, $this->strTemplate);
 			}
 		}
 
@@ -129,8 +126,7 @@ class FrontendTemplate extends Template
 		// Replace literal insert tags (see #670, #3249)
 		$this->strBuffer = preg_replace_callback(
 			'/<script[^>]*>.*?<\/script[^>]*>|\[[{}]]/is',
-			static function ($matches)
-			{
+			static function ($matches) {
 				return $matches[0][0] === '<' ? $matches[0] : '&#' . \ord($matches[0][1]) . ';&#' . \ord($matches[0][1]) . ';';
 			},
 			$this->strBuffer

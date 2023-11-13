@@ -40,7 +40,7 @@ class DumperTest extends ContaoTestCase
 
         $dumper = new Dumper();
         $connection = $this->mockConnection($tables, $views, $queries);
-        $config = (new CreateConfig($backup));
+        $config = new CreateConfig($backup);
 
         $this->assertSame($expectedDump, iterator_to_array($dumper->dump($connection, $config), false));
     }
@@ -275,12 +275,10 @@ class DumperTest extends ContaoTestCase
     }
 
     /**
-     * @param array $tables<Table>
-     * @param array $views<View>
-     *
-     * @return Connection&MockObject
+     * @param array<Table> $tables
+     * @param array<View>  $views
      */
-    private function mockConnection(array $tables, array $views, array $queries): Connection
+    private function mockConnection(array $tables, array $views, array $queries): Connection&MockObject
     {
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
         $schemaManager

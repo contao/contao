@@ -215,8 +215,7 @@ trait TemplateInheritance
 			// Combine the contents of the child blocks
 			elseif (\is_array($this->arrBlocks[$name]))
 			{
-				$callback = static function ($current, $parent) use ($nonce)
-				{
+				$callback = static function ($current, $parent) use ($nonce) {
 					return str_replace("[[TL_PARENT_$nonce]]", $parent, $current);
 				};
 
@@ -364,7 +363,7 @@ trait TemplateInheritance
 	{
 		$container = System::getContainer();
 
-		if (null === ($twig = $container->get('twig', ContainerInterface::NULL_ON_INVALID_REFERENCE)))
+		if (!$twig = $container->get('twig', ContainerInterface::NULL_ON_INVALID_REFERENCE))
 		{
 			return null;
 		}

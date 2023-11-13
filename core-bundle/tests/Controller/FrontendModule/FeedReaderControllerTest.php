@@ -32,10 +32,12 @@ use FeedIo\Reader\Document;
 use FeedIo\Reader\Result;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Contracts\Cache\CacheInterface;
 use Twig\Environment as TwigEnvironment;
 use Twig\Loader\LoaderInterface;
@@ -50,6 +52,8 @@ class FeedReaderControllerTest extends TestCase
 
         $this->container = $this->getContainerWithContaoConfiguration();
         $this->container->set('contao.cache.entity_tags', $this->createMock(EntityCacheTags::class));
+        $this->container->set('monolog.logger.contao.error', new NullLogger());
+        $this->container->set('fragment.handler', $this->createMock(FragmentHandler::class));
 
         System::setContainer($this->container);
     }
@@ -283,17 +287,19 @@ class FeedReaderControllerTest extends TestCase
         $item = $feed->newItem();
         $item->setTitle('Example item');
         $item->setContent('Example content');
+
         $feed->add($item);
 
         $item = $feed->newItem();
         $item->setTitle('Example item 2');
         $item->setContent('Example content 2');
+
         $feed->add($item);
 
         return $feed;
     }
 
-    private function getController(FeedIo $feedIo, CacheInterface $cache, RequestStack $requestStack, LoggerInterface $logger = null, ContainerInterface $container = null): FeedReaderController
+    private function getController(FeedIo $feedIo, CacheInterface $cache, RequestStack $requestStack, LoggerInterface|null $logger = null, ContainerInterface|null $container = null): FeedReaderController
     {
         $logger = $logger ?? $this->createMock(LoggerInterface::class);
 
@@ -304,7 +310,7 @@ class FeedReaderControllerTest extends TestCase
         return $controller;
     }
 
-    private function mockContainer(RequestStack $requestStack = null, callable $assertTwigContext = null): ContainerBuilder
+    private function mockContainer(RequestStack|null $requestStack = null, callable|null $assertTwigContext = null): ContainerBuilder
     {
         $loader = $this->createMock(LoaderInterface::class);
         $loader
@@ -320,7 +326,7 @@ class FeedReaderControllerTest extends TestCase
                 ->method('render')
                 ->with(
                     '@Contao/frontend_module/feed_reader.html.twig',
-                    $this->callback($assertTwigContext)
+                    $this->callback($assertTwigContext),
                 )
                 ->willReturn('rendered frontend_module/feed_reader')
             ;

@@ -31,10 +31,9 @@ class BackendPreviewControllerTest extends TestCase
             '/preview.php',
             $this->createMock(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
-            $this->mockAuthorizationChecker()
+            $this->mockAuthorizationChecker(),
         );
 
-        /** @var RedirectResponse $response */
         $response = $controller(new Request());
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
@@ -47,14 +46,13 @@ class BackendPreviewControllerTest extends TestCase
             '/preview.php',
             $this->createMock(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
-            $this->mockAuthorizationChecker()
+            $this->mockAuthorizationChecker(),
         );
 
         $request = Request::create('https://localhost/managed-edition/public/contao/preview?page=123');
         $request->server->set('SCRIPT_NAME', '/managed-edition/public/index.php');
         $request->server->set('SCRIPT_FILENAME', '/managed-edition/public/index.php');
 
-        /** @var RedirectResponse $response */
         $response = $controller($request);
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
@@ -67,7 +65,7 @@ class BackendPreviewControllerTest extends TestCase
             '/preview.php',
             $this->createMock(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
-            $this->mockAuthorizationChecker(false)
+            $this->mockAuthorizationChecker(false),
         );
 
         $request = Request::create('https://localhost/preview.php/en/');
@@ -76,7 +74,7 @@ class BackendPreviewControllerTest extends TestCase
 
         $response = $controller($request);
 
-        $this->assertSame($response->getStatusCode(), Response::HTTP_FORBIDDEN);
+        $this->assertSame(Response::HTTP_FORBIDDEN, $response->getStatusCode());
     }
 
     public function testAuthenticatesWhenUserParameterGiven(): void
@@ -89,15 +87,16 @@ class BackendPreviewControllerTest extends TestCase
         ;
 
         $request = Request::create('https://localhost/managed-edition/preview.php/en/');
+        $request->query->set('user', '9');
+
         $request->server->set('SCRIPT_NAME', '/managed-edition/preview.php');
         $request->server->set('SCRIPT_FILENAME', '/managed-edition/preview.php');
-        $request->query->set('user', '9');
 
         $controller = new BackendPreviewController(
             '/preview.php',
             $previewAuthenticator,
             new EventDispatcher(),
-            $this->mockAuthorizationChecker()
+            $this->mockAuthorizationChecker(),
         );
 
         $response = $controller($request);
@@ -118,14 +117,13 @@ class BackendPreviewControllerTest extends TestCase
             '/preview.php',
             $this->createMock(FrontendPreviewAuthenticator::class),
             $dispatcher,
-            $this->mockAuthorizationChecker()
+            $this->mockAuthorizationChecker(),
         );
 
         $request = Request::create('https://localhost/preview.php/en/');
         $request->server->set('SCRIPT_NAME', '/preview.php');
         $request->server->set('SCRIPT_FILENAME', '/preview.php');
 
-        /** @var RedirectResponse $response */
         $response = $controller($request);
 
         $this->assertTrue($response->isRedirection());
@@ -137,24 +135,20 @@ class BackendPreviewControllerTest extends TestCase
             '/preview.php',
             $this->createMock(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
-            $this->mockAuthorizationChecker()
+            $this->mockAuthorizationChecker(),
         );
 
         $request = Request::create('https://localhost/preview.php/en/');
         $request->server->set('SCRIPT_NAME', '/preview.php');
         $request->server->set('SCRIPT_FILENAME', '/preview.php');
 
-        /** @var RedirectResponse $response */
         $response = $controller($request);
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('/preview.php/', $response->getTargetUrl());
     }
 
-    /**
-     * @return AuthorizationCheckerInterface&MockObject
-     */
-    private function mockAuthorizationChecker(bool $granted = true): AuthorizationCheckerInterface
+    private function mockAuthorizationChecker(bool $granted = true): AuthorizationCheckerInterface&MockObject
     {
         $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
         $authorizationChecker

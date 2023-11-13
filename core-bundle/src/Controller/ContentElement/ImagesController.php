@@ -22,9 +22,9 @@ use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\FrontendUser;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Security;
 
 #[AsContentElement('image', category: 'media')]
 #[AsContentElement('gallery', category: 'media')]
@@ -34,29 +34,32 @@ class ImagesController extends AbstractContentElementController
         private readonly Security $security,
         private readonly VirtualFilesystem $filesStorage,
         private readonly Studio $studio,
+        private readonly array $validExtensions,
     ) {
     }
 
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
-        // Find filesystem items
-        $filesystemItems = FilesystemUtil::listContentsFromSerialized($this->filesStorage, $this->getSources($model));
+        // Find all images (see #5911)
+        $filesystemItems = FilesystemUtil::listContentsFromSerialized($this->filesStorage, $this->getSources($model))
+            ->filter(fn ($item) => \in_array($item->getExtension(true), $this->validExtensions, true))
+        ;
 
         // Sort elements; relay to client-side logic if list should be randomized
-        if (null !== ($sortMode = SortMode::tryFrom($sortBy = $model->sortBy))) {
+        if ($sortMode = SortMode::tryFrom($model->sortBy)) {
             $filesystemItems = $filesystemItems->sort($sortMode);
         }
 
         $template->set('sort_mode', $sortMode);
-        $template->set('randomize_order', $randomize = ('random' === $sortBy));
+        $template->set('randomize_order', $randomize = 'random' === $model->sortBy);
 
         // Limit elements; use client-side logic for only displaying the first
         // $limit elements in case we are dealing with a random order
-        if (($limit = $model->numberOfItems) > 0 && !$randomize) {
-            $filesystemItems = $filesystemItems->limit($limit);
+        if ($model->numberOfItems > 0 && !$randomize) {
+            $filesystemItems = $filesystemItems->limit($model->numberOfItems);
         }
 
-        $template->set('limit', $limit > 0 && $randomize ? $limit : null);
+        $template->set('limit', $model->numberOfItems > 0 && $randomize ? $model->numberOfItems : null);
 
         // Compile list of images
         $figureBuilder = $this->studio
@@ -67,17 +70,17 @@ class ImagesController extends AbstractContentElementController
         ;
 
         if ('image' === $model->type) {
-            $figureBuilder->setMetadata($model->getOverwriteMetadata());
+            $figureBuilder->setOverwriteMetadata($model->getOverwriteMetadata());
         }
 
         $imageList = array_map(
             fn (FilesystemItem $filesystemItem): Figure => $figureBuilder
                 ->fromStorage($this->filesStorage, $filesystemItem->getPath())
                 ->build(),
-            iterator_to_array($filesystemItems)
+            iterator_to_array($filesystemItems),
         );
 
-        if (empty($imageList)) {
+        if (!$imageList) {
             return new Response();
         }
 
@@ -97,13 +100,12 @@ class ImagesController extends AbstractContentElementController
             return [$model->singleSRC];
         }
 
-        if (
-            $model->useHomeDir
-            && ($user = $this->security->getUser()) instanceof FrontendUser
-            && $user->assignDir
-            && $user->homeDir
-        ) {
-            return $user->homeDir;
+        if ($model->useHomeDir) {
+            $user = $this->security->getUser();
+
+            if ($user instanceof FrontendUser && $user->assignDir && $user->homeDir) {
+                return $user->homeDir;
+            }
         }
 
         return $model->multiSRC ?? [];

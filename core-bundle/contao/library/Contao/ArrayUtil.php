@@ -110,9 +110,8 @@ class ArrayUtil
 			}
 		}
 
-		// Remove empty (unreplaced) entries
-		$arrOrder = array_filter($arrOrder, static function ($item)
-		{
+		// Remove empty (not replaced) entries
+		$arrOrder = array_filter($arrOrder, static function ($item) {
 			return $item !== null;
 		});
 
@@ -124,5 +123,25 @@ class ArrayUtil
 
 		// Append the left-over images at the end
 		return array_merge(array_values($arrOrder), array_values($arrItems));
+	}
+
+	public static function flattenToString(array $arrArray): string
+	{
+		$iterator = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($arrArray));
+		$result = array();
+
+		foreach ($iterator as $leafValue)
+		{
+			$keys = array();
+
+			foreach (range(0, $iterator->getDepth()) as $depth)
+			{
+				$keys[] = $iterator->getSubIterator($depth)->key();
+			}
+
+			$result[] = implode('.', $keys) . ': ' . $leafValue;
+		}
+
+		return implode(', ', $result);
 	}
 }

@@ -67,7 +67,7 @@ class DebugPagesCommandTest extends TestCase
     {
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
         $schemaManager
-            ->method('createSchema')
+            ->method('introspectSchema')
             ->willReturn(new Schema())
         ;
 

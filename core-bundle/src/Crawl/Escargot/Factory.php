@@ -43,10 +43,10 @@ class Factory
      * @param array<string> $additionalUris
      */
     public function __construct(
-        private Connection $connection,
-        private ContaoFramework $framework,
-        private array $additionalUris = [],
-        private array $defaultHttpClientOptions = [],
+        private readonly Connection $connection,
+        private readonly ContaoFramework $framework,
+        private readonly array $additionalUris = [],
+        private readonly array $defaultHttpClientOptions = [],
     ) {
     }
 
@@ -62,13 +62,13 @@ class Factory
      */
     public function getSubscribers(array $selectedSubscribers = []): array
     {
-        if (0 === \count($selectedSubscribers)) {
+        if (!$selectedSubscribers) {
             return $this->subscribers;
         }
 
         return array_filter(
             $this->subscribers,
-            static fn (EscargotSubscriberInterface $subscriber): bool => \in_array($subscriber->getName(), $selectedSubscribers, true)
+            static fn (EscargotSubscriberInterface $subscriber): bool => \in_array($subscriber->getName(), $selectedSubscribers, true),
         );
     }
 
@@ -79,7 +79,7 @@ class Factory
     {
         return array_map(
             static fn (EscargotSubscriberInterface $subscriber): string => $subscriber->getName(),
-            $this->subscribers
+            $this->subscribers,
         );
     }
 
@@ -87,7 +87,7 @@ class Factory
     {
         return new LazyQueue(
             new InMemoryQueue(),
-            new DoctrineQueue($this->connection, static fn (): string => Uuid::v4()->toRfc4122(), 'tl_crawl_queue')
+            new DoctrineQueue($this->connection, static fn (): string => Uuid::v4()->toRfc4122(), 'tl_crawl_queue'),
         );
     }
 
@@ -166,8 +166,8 @@ class Factory
                     ],
                     'max_duration' => 10, // Ignore requests that take longer than 10 seconds
                 ],
-                array_merge_recursive($this->getDefaultHttpClientOptions(), $options)
-            )
+                array_merge_recursive($this->getDefaultHttpClientOptions(), $options),
+            ),
         );
     }
 
@@ -190,7 +190,7 @@ class Factory
     {
         $selectedSubscribers = array_intersect($this->getSubscriberNames(), $selectedSubscribers);
 
-        if (0 === \count($selectedSubscribers)) {
+        if (!$selectedSubscribers) {
             throw new \InvalidArgumentException('You have to specify at least one valid subscriber name. Valid subscribers are: '.implode(', ', $this->getSubscriberNames()));
         }
 

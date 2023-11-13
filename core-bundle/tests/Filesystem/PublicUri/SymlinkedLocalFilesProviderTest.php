@@ -40,7 +40,7 @@ class SymlinkedLocalFilesProviderTest extends TestCase
         $uri = $provider->getUri($adapter, 'path/to/resource.txt', null);
 
         $this->assertNotNull($uri);
-        $this->assertSame('https://example.com/upload/dir/path/to/resource.txt', $uri->__toString());
+        $this->assertSame('https://example.com/upload/dir/path/to/resource.txt', (string) $uri);
     }
 
     public function testGetUriWithNonMatchingAdapter(): void
@@ -48,13 +48,13 @@ class SymlinkedLocalFilesProviderTest extends TestCase
         $provider = new SymlinkedLocalFilesProvider(
             $this->createMock(FilesystemAdapter::class),
             'upload/dir',
-            $this->createMock(RequestStack::class)
+            $this->createMock(RequestStack::class),
         );
 
         $uri = $provider->getUri(
             $this->createMock(FilesystemAdapter::class),
             'path/to/resource.txt',
-            null
+            null,
         );
 
         $this->assertNull($uri);

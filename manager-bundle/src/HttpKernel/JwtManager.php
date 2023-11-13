@@ -29,9 +29,9 @@ class JwtManager
 {
     final public const COOKIE_NAME = 'contao_settings';
 
-    private Configuration $config;
+    private readonly Configuration $config;
 
-    public function __construct(string $projectDir, Filesystem $filesystem = null, Configuration $config = null)
+    public function __construct(string $projectDir, Filesystem|null $filesystem = null, Configuration|null $config = null)
     {
         $secret = null;
         $filesystem ??= new Filesystem();
@@ -128,7 +128,7 @@ class JwtManager
 
                 return (string) $value;
             },
-            $token->claims()->all()
+            $token->claims()->all(),
         );
     }
 

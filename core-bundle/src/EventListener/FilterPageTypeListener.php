@@ -20,7 +20,7 @@ use Doctrine\DBAL\Connection;
  */
 class FilterPageTypeListener
 {
-    public function __construct(private Connection $connection)
+    public function __construct(private readonly Connection $connection)
     {
     }
 
@@ -56,7 +56,7 @@ class FilterPageTypeListener
 
         $siblingTypes = $this->connection->fetchFirstColumn(
             'SELECT DISTINCT(type) FROM tl_page WHERE pid=? AND id!=?',
-            [$currentRecord['pid'] ?? null, $currentRecord['id'] ?? null]
+            [$currentRecord['pid'] ?? null, $currentRecord['id'] ?? null],
         );
 
         foreach (array_intersect(['error_401', 'error_403', 'error_404', 'error_503'], $siblingTypes) as $type) {

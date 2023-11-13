@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Image\Preview;
 
 use Contao\Image\ImageDimensions;
+use Imagine\Driver\InfoProvider;
 use Imagine\Factory\ClassFactoryInterface;
 use Imagine\Gd\Imagine as GdImagine;
 use Imagine\Gmagick\Imagine as GmagickImagine;
@@ -27,7 +28,7 @@ use Imagine\Imagick\Imagine as ImagickImagine;
 
 class ImaginePreviewProvider implements PreviewProviderInterface
 {
-    public function __construct(private ImagineInterface $imagine)
+    public function __construct(private readonly ImagineInterface $imagine)
     {
     }
 
@@ -93,18 +94,13 @@ class ImaginePreviewProvider implements PreviewProviderInterface
         return new ImageDimensions(
             new Box(
                 (int) round($width * $scaleFactor),
-                (int) round($height * $scaleFactor)
-            )
+                (int) round($height * $scaleFactor),
+            ),
         );
     }
 
     private function imagineSupportsFormat(string $format): bool
     {
-        // TODO: Use once Imagine 1.3.0 was released
-        //if ($this->imagine instanceof InfoProvider) {
-        //    return $this->imagine->getDriverInfo()->isFormatSupported($format);
-        //}
-
         if ($this->imagine instanceof ImagickImagine) {
             return \in_array(strtoupper($format), \Imagick::queryFormats(strtoupper($format)), true);
         }
@@ -115,6 +111,10 @@ class ImaginePreviewProvider implements PreviewProviderInterface
 
         if ($this->imagine instanceof GdImagine) {
             return \function_exists('image'.$format);
+        }
+
+        if ($this->imagine instanceof InfoProvider) {
+            return $this->imagine->getDriverInfo()->isFormatSupported($format);
         }
 
         throw new \RuntimeException(sprintf('Unsupported Imagine implementation "%s"', $this->imagine::class));
@@ -142,6 +142,12 @@ class ImaginePreviewProvider implements PreviewProviderInterface
         $pagedPath = $sourcePath.'['.($firstPage - 1).'-'.($lastPage - 1).']';
         $magick = new $magickClass();
 
+        if (\is_callable([$magick, 'setOption'])) {
+            $magick->setOption('pdf:use-trimbox', 'true');
+        } elseif (\is_callable([$magick, 'setImageOption'])) {
+            $magick->setImageOption('pdf', 'use-cropbox', 'true');
+        }
+
         if (\is_callable([$magick, 'setResolution'])) {
             $resolution = 72;
             $magick->setResolution($resolution, $resolution);
@@ -161,6 +167,12 @@ class ImaginePreviewProvider implements PreviewProviderInterface
 
                 $magick = new $magickClass();
                 $magick->setResolution($resolution, $resolution);
+
+                if (\is_callable([$magick, 'setOption'])) {
+                    $magick->setOption('pdf:use-trimbox', 'true');
+                } elseif (\is_callable([$magick, 'setImageOption'])) {
+                    $magick->setImageOption('pdf', 'use-cropbox', 'true');
+                }
             }
         }
 

@@ -44,12 +44,6 @@
       <trans-unit id="tl_settings.maxResultsPerPage.1">
         <source>This overall limit takes effect if a user chooses the "show all records" option.</source>
       </trans-unit>
-      <trans-unit id="tl_settings.doNotCollapse.0">
-        <source>Do not collapse elements</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.doNotCollapse.1">
-        <source>Do not collapse elements in the back end preview.</source>
-      </trans-unit>
       <trans-unit id="tl_settings.allowedTags.0">
         <source>Allowed HTML tags</source>
       </trans-unit>

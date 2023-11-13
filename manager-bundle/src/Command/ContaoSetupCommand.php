@@ -25,24 +25,30 @@ use Symfony\Component\Process\Process;
 
 #[AsCommand(
     name: 'contao:setup',
-    description: 'Sets up a Contao Managed Edition. This command will be run when executing the "contao-setup" binary.'
+    description: 'Sets up a Contao Managed Edition. This command will be run when executing the "contao-setup" binary.',
 )]
 class ContaoSetupCommand extends Command
 {
-    private string $webDir;
-    private string $consolePath;
-    private string|false $phpPath;
+    private readonly string $webDir;
+
+    private readonly string $consolePath;
+
+    private readonly string|false $phpPath;
 
     /**
      * @var \Closure(array<string>):Process
      */
-    private \Closure $createProcessHandler;
+    private readonly \Closure $createProcessHandler;
 
     /**
      * @param (\Closure(array<string>):Process)|null $createProcessHandler
      */
-    public function __construct(private string $projectDir, string $webDir, #[\SensitiveParameter] private string|null $kernelSecret, \Closure $createProcessHandler = null)
-    {
+    public function __construct(
+        private readonly string $projectDir,
+        string $webDir,
+        #[\SensitiveParameter] private readonly string|null $kernelSecret,
+        \Closure|null $createProcessHandler = null,
+    ) {
         $this->webDir = Path::makeRelative($webDir, $projectDir);
         $this->phpPath = (new PhpExecutableFinder())->find();
         $this->consolePath = Path::canonicalize(__DIR__.'/../../bin/contao-console');
@@ -62,7 +68,7 @@ class ContaoSetupCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         // Auto-generate a kernel secret if none was set
-        if (empty($this->kernelSecret) || 'ThisTokenIsNotSoSecretChangeIt' === $this->kernelSecret) {
+        if (!$this->kernelSecret || 'ThisTokenIsNotSoSecretChangeIt' === $this->kernelSecret) {
             $filesystem = new Filesystem();
 
             $dotenv = new DotenvDumper(Path::join($this->projectDir, '.env.local'), $filesystem);
@@ -108,7 +114,7 @@ class ContaoSetupCommand extends Command
         ]);
 
         foreach ($commands as $command) {
-            $this->executeCommand(array_merge($php, [$this->consolePath], $command, $commandFlags), $output);
+            $this->executeCommand([...$php, $this->consolePath, ...$command, ...$commandFlags], $output);
         }
 
         $io->info('Done! Please run the contao:migrate command to make sure the database is up-to-date.');
@@ -121,7 +127,6 @@ class ContaoSetupCommand extends Command
      */
     private function executeCommand(array $command, OutputInterface $output): void
     {
-        /** @var Process $process */
         $process = ($this->createProcessHandler)($command);
 
         // Increase the timeout according to contao/manager-bundle (see #54)
@@ -130,7 +135,7 @@ class ContaoSetupCommand extends Command
         $process->run(
             static function (string $type, string $buffer) use ($output): void {
                 $output->write($buffer);
-            }
+            },
         );
 
         if (!$process->isSuccessful()) {

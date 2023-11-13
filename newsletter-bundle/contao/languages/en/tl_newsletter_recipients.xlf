@@ -74,8 +74,14 @@
       <trans-unit id="tl_newsletter_recipients.delete">
         <source>Delete recipient ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_newsletter_recipients.toggle">
-        <source>Activate/deactivate recipient ID %s</source>
+      <trans-unit id="tl_newsletter_recipients.toggle.0">
+        <source>Activate/deactivate recipient</source>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.toggle.1">
+        <source>Deactivate recipient ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.toggle.2">
+        <source>Activate recipient ID %s</source>
       </trans-unit>
     </body>
   </file>

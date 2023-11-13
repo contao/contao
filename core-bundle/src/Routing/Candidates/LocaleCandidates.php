@@ -19,7 +19,7 @@ class LocaleCandidates extends AbstractCandidates
 {
     private bool $initialized = false;
 
-    public function __construct(private PageRegistry $pageRegistry)
+    public function __construct(private readonly PageRegistry $pageRegistry)
     {
         parent::__construct([''], []);
     }

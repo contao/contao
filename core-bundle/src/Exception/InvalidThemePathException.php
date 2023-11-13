@@ -17,8 +17,10 @@ class InvalidThemePathException extends \InvalidArgumentException
     /**
      * @param array<string> $invalidCharacters
      */
-    public function __construct(private string $path, private array $invalidCharacters)
-    {
+    public function __construct(
+        private readonly string $path,
+        private array $invalidCharacters,
+    ) {
         $this->invalidCharacters = array_unique($invalidCharacters);
 
         parent::__construct(
@@ -26,7 +28,7 @@ class InvalidThemePathException extends \InvalidArgumentException
                 'The theme path "%s" contains one or more invalid characters: "%s"',
                 $path,
                 implode('", "', $this->invalidCharacters),
-            )
+            ),
         );
     }
 

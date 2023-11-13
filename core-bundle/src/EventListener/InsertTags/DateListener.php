@@ -59,8 +59,10 @@ use Symfony\Component\HttpFoundation\RequestStack;
 #[AsHook('replaceInsertTags')]
 class DateListener
 {
-    public function __construct(private ContaoFramework $framework, private RequestStack $requestStack)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly RequestStack $requestStack,
+    ) {
     }
 
     public function __invoke(string $insertTag): bool|string
@@ -124,11 +126,15 @@ class DateListener
 
         $key = $dateFormat.'Format';
 
-        if (null !== ($request = $this->requestStack->getCurrentRequest())) {
+        if ($request = $this->requestStack->getCurrentRequest()) {
             $attributes = $request->attributes;
 
-            if ($attributes->has('pageModel') && ($page = $attributes->get('pageModel')) instanceof PageModel) {
-                return $page->{$key};
+            if ($attributes->has('pageModel')) {
+                $page = $attributes->get('pageModel');
+
+                if ($page instanceof PageModel) {
+                    return $page->{$key};
+                }
             }
         }
 

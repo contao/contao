@@ -47,7 +47,7 @@ class SchemaOrgRuntimeTest extends TestCase
                     '@id' => 'https://assets.url/files/public/foo.jpg',
                 ]],
             ],
-            $graph
+            $graph,
         );
     }
 

@@ -76,21 +76,25 @@
         <p><?= $this->trans('MSC.noTrustedDevices') ?></p>
       <?php else: ?>
         <div class="tl_listing_container">
-          <table class="tl_listing showColumns zebra-table zebra-table--with-header">
-            <tr>
-              <th class="tl_folder_tlist"><?= $this->trans('MSC.device') ?></th>
-              <th class="tl_folder_tlist"><?= $this->trans('MSC.browser') ?></th>
-              <th class="tl_folder_tlist"><?= $this->trans('MSC.operatingSystem') ?></th>
-              <th class="tl_folder_tlist"><?= $this->trans('MSC.createdOn') ?></th>
-            </tr>
-            <?php foreach ($this->trustedDevices as $trustedDevice): ?>
-              <tr class="hover-row">
-                <td class="tl_file_list"><?= $trustedDevice->getDeviceFamily() ?></td>
-                <td class="tl_file_list"><?= $trustedDevice->getUaFamily() ?></td>
-                <td class="tl_file_list"><?= $trustedDevice->getOsFamily() ?></td>
-                <td class="tl_file_list"><?= $trustedDevice->getCreated()->format(Contao\Config::get('datimFormat')) ?></td>
+          <table class="tl_listing showColumns with-border with-padding">
+            <thead>
+              <tr>
+                <th><?= $this->trans('MSC.device') ?></th>
+                <th><?= $this->trans('MSC.browser') ?></th>
+                <th><?= $this->trans('MSC.operatingSystem') ?></th>
+                <th><?= $this->trans('MSC.createdOn') ?></th>
               </tr>
-            <?php endforeach; ?>
+            </thead>
+            <tbody>
+              <?php foreach ($this->trustedDevices as $trustedDevice): ?>
+                <tr class="hover-row">
+                  <td><?= $trustedDevice->getDeviceFamily() ?></td>
+                  <td><?= $trustedDevice->getUaFamily() ?></td>
+                  <td><?= $trustedDevice->getOsFamily() ?></td>
+                  <td><?= $trustedDevice->getCreated()->format(Contao\Config::get('datimFormat')) ?></td>
+                </tr>
+              <?php endforeach; ?>
+            </tbody>
           </table>
         </div>
         <form action="<?= $this->action ?>" class="tl_two_factor_form" method="post">

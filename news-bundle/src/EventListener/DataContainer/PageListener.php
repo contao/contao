@@ -18,12 +18,14 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\DataContainer;
 use Contao\NewsBundle\Controller\Page\NewsFeedController;
 use Doctrine\DBAL\Connection;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class PageListener
 {
-    public function __construct(private Connection $connection, private Security $security)
-    {
+    public function __construct(
+        private readonly Connection $connection,
+        private readonly Security $security,
+    ) {
     }
 
     #[AsCallback('tl_page', target: 'config.onload')]

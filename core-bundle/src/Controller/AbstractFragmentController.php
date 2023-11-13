@@ -33,6 +33,7 @@ use Symfony\Component\HttpFoundation\Response;
 abstract class AbstractFragmentController extends AbstractController implements FragmentOptionsAwareInterface
 {
     protected array $options = [];
+
     private string|null $view = null;
 
     public function setFragmentOptions(array $options): void
@@ -57,9 +58,13 @@ abstract class AbstractFragmentController extends AbstractController implements 
 
     protected function getPageModel(): PageModel|null
     {
-        $request = $this->container->get('request_stack')->getCurrentRequest();
+        if (!$request = $this->container->get('request_stack')->getCurrentRequest()) {
+            return null;
+        }
 
-        if (null !== $request && ($pageModel = $request->attributes->get('pageModel')) instanceof PageModel) {
+        $pageModel = $request->attributes->get('pageModel');
+
+        if ($pageModel instanceof PageModel) {
             return $pageModel;
         }
 
@@ -88,7 +93,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
             $this->view = $templateNameToView($templateName);
         }
 
-        $onGetResponse = function (FragmentTemplate $template, Response|null $preBuiltResponse) use ($templateNameToView, $templateName, $isLegacyTemplate): Response {
+        $onGetResponse = function (FragmentTemplate $template, Response|null $preBuiltResponse) use ($isLegacyTemplate, $templateName, $templateNameToView): Response {
             if ($isLegacyTemplate) {
                 // Render using the legacy framework
                 $legacyTemplate = $this->container->get('contao.framework')->createInstance(FrontendTemplate::class, [$templateName]);
@@ -106,7 +111,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
                     throw $e;
                 }
 
-                if (null !== $preBuiltResponse) {
+                if ($preBuiltResponse) {
                     return $preBuiltResponse->setContent($response->getContent());
                 }
 
@@ -149,8 +154,8 @@ abstract class AbstractFragmentController extends AbstractController implements 
         $this->triggerDeprecationIfCallingFromCustomClass(__METHOD__);
 
         $data = StringUtil::deserialize($headline);
-        $template->headline = \is_array($data) ? $data['value'] : $data;
-        $template->hl = \is_array($data) ? $data['unit'] : 'h1';
+        $template->headline = \is_array($data) ? $data['value'] ?? '' : $data;
+        $template->hl = \is_array($data) && isset($data['unit']) ? $data['unit'] : 'h1';
     }
 
     /**
@@ -159,7 +164,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
      *           Attributes data is always added to the context of modern
      *           fragment templates.
      */
-    protected function addCssAttributesToTemplate(Template $template, string $templateName, array|string|null $cssID, array $classes = null): void
+    protected function addCssAttributesToTemplate(Template $template, string $templateName, array|string|null $cssID, array|null $classes = null): void
     {
         $this->triggerDeprecationIfCallingFromCustomClass(__METHOD__);
 
@@ -167,7 +172,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
         $template->class = trim($templateName.' '.($data[1] ?? ''));
         $template->cssID = !empty($data[0]) ? ' id="'.$data[0].'"' : '';
 
-        if (!empty($classes)) {
+        if ($classes) {
             $template->class .= ' '.implode(' ', $classes);
         }
     }
@@ -231,11 +236,11 @@ abstract class AbstractFragmentController extends AbstractController implements 
      * same page. Pass a prebuilt Response if you want to have full control -
      * no headers will be set then.
      */
-    protected function render(string|null $view = null, array $parameters = [], Response $response = null): Response
+    protected function render(string|null $view = null, array $parameters = [], Response|null $response = null): Response
     {
         $view ??= $this->view ?? throw new \InvalidArgumentException('Cannot derive template name, please make sure createTemplate() was called before or specify the template explicitly.');
 
-        if (null === $response) {
+        if (!$response) {
             $response = new Response();
 
             $this->markResponseForInternalCaching($response);
@@ -244,7 +249,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
         return parent::render($view, $parameters, $response);
     }
 
-    protected function isBackendScope(Request $request = null): bool
+    protected function isBackendScope(Request|null $request = null): bool
     {
         $request ??= $this->container->get('request_stack')->getCurrentRequest();
 
@@ -276,14 +281,13 @@ abstract class AbstractFragmentController extends AbstractController implements 
             ->exists("@Contao/$template.html.twig")
         ;
 
-        $shouldUseVariantTemplate = fn (string $variantTemplate): bool => $this->isLegacyTemplate($variantTemplate) ?
-            !$this->isBackendScope() :
-            $exists($variantTemplate)
-        ;
+        $shouldUseVariantTemplate = fn (string $variantTemplate): bool => $this->isLegacyTemplate($variantTemplate)
+            ? !$this->isBackendScope()
+            : $exists($variantTemplate);
 
         // Prefer using a custom variant template if defined and applicable
-        if (($variantTemplate = $model->customTpl) && $shouldUseVariantTemplate($variantTemplate)) {
-            return $variantTemplate;
+        if ($model->customTpl && $shouldUseVariantTemplate($model->customTpl)) {
+            return $model->customTpl;
         }
 
         $definedTemplateName = $this->options['template'] ?? null;

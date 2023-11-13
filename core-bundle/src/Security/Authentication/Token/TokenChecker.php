@@ -30,20 +30,21 @@ use Symfony\Component\Security\Http\FirewallMapInterface;
 class TokenChecker
 {
     private const FRONTEND_FIREWALL = 'contao_frontend';
+
     private const BACKEND_FIREWALL = 'contao_backend';
 
     private array $previewLinks = [];
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.security.token_checker" service instead
+     * @internal
      */
     public function __construct(
-        private RequestStack $requestStack,
-        private FirewallMapInterface $firewallMap,
-        private TokenStorageInterface $tokenStorage,
-        private AuthenticationTrustResolverInterface $trustResolver,
-        private VoterInterface $roleVoter,
-        private Connection $connection,
+        private readonly RequestStack $requestStack,
+        private readonly FirewallMapInterface $firewallMap,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly AuthenticationTrustResolverInterface $trustResolver,
+        private readonly VoterInterface $roleVoter,
+        private readonly Connection $connection,
     ) {
     }
 
@@ -54,7 +55,7 @@ class TokenChecker
     {
         $token = $this->getToken(self::FRONTEND_FIREWALL);
 
-        return null !== $token && VoterInterface::ACCESS_GRANTED === $this->roleVoter->vote($token, null, ['ROLE_MEMBER']);
+        return $token && VoterInterface::ACCESS_GRANTED === $this->roleVoter->vote($token, null, ['ROLE_MEMBER']);
     }
 
     /**
@@ -64,7 +65,7 @@ class TokenChecker
     {
         $token = $this->getToken(self::BACKEND_FIREWALL);
 
-        return null !== $token && VoterInterface::ACCESS_GRANTED === $this->roleVoter->vote($token, null, ['ROLE_USER']);
+        return $token && VoterInterface::ACCESS_GRANTED === $this->roleVoter->vote($token, null, ['ROLE_USER']);
     }
 
     /**
@@ -90,13 +91,17 @@ class TokenChecker
      */
     public function getFrontendUsername(): string|null
     {
-        $token = $this->getToken(self::FRONTEND_FIREWALL);
-
-        if (null === $token || !$token->getUser() instanceof FrontendUser) {
+        if (!$token = $this->getToken(self::FRONTEND_FIREWALL)) {
             return null;
         }
 
-        return $token->getUser()->getUserIdentifier();
+        $user = $token->getUser();
+
+        if (!$user instanceof FrontendUser) {
+            return null;
+        }
+
+        return $user->getUserIdentifier();
     }
 
     /**
@@ -104,13 +109,17 @@ class TokenChecker
      */
     public function getBackendUsername(): string|null
     {
-        $token = $this->getToken(self::BACKEND_FIREWALL);
-
-        if (null === $token || !$token->getUser() instanceof BackendUser) {
+        if (!$token = $this->getToken(self::BACKEND_FIREWALL)) {
             return null;
         }
 
-        return $token->getUser()->getUserIdentifier();
+        $user = $token->getUser();
+
+        if (!$user instanceof BackendUser) {
+            return null;
+        }
+
+        return $user->getUserIdentifier();
     }
 
     /**
@@ -128,7 +137,7 @@ class TokenChecker
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (null === $request || !$request->attributes->get('_preview', false) || !$this->canAccessPreview()) {
+        if (!$request || !$request->attributes->get('_preview', false) || !$this->canAccessPreview()) {
             return false;
         }
 
@@ -147,11 +156,21 @@ class TokenChecker
         return (bool) $preview['showUnpublished'];
     }
 
+    public function isFrontendFirewall(): bool
+    {
+        return self::FRONTEND_FIREWALL === $this->getFirewallContext();
+    }
+
+    public function isBackendFirewall(): bool
+    {
+        return self::BACKEND_FIREWALL === $this->getFirewallContext();
+    }
+
     private function getToken(string $context): TokenInterface|null
     {
         $token = $this->getTokenFromStorage($context);
 
-        if (null === $token) {
+        if (!$token) {
             $token = $this->getTokenFromSession('_security_'.$context);
         }
 
@@ -168,24 +187,35 @@ class TokenChecker
 
     private function getTokenFromStorage(string $context): TokenInterface|null
     {
-        $request = $this->requestStack->getCurrentRequest();
-
-        if (!$this->firewallMap instanceof FirewallMap || null === $request) {
-            return null;
-        }
-
-        $config = $this->firewallMap->getFirewallConfig($request);
-
-        if (!$config instanceof FirewallConfig || $config->getContext() !== $context) {
+        if ($this->getFirewallContext() !== $context) {
             return null;
         }
 
         return $this->tokenStorage->getToken();
     }
 
+    private function getFirewallContext(): string|null
+    {
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (!$request || !$this->firewallMap instanceof FirewallMap) {
+            return null;
+        }
+
+        $config = $this->firewallMap->getFirewallConfig($request);
+
+        if (!$config instanceof FirewallConfig) {
+            return null;
+        }
+
+        return $config->getContext();
+    }
+
     private function getTokenFromSession(string $sessionKey): TokenInterface|null
     {
-        if ((!$request = $this->requestStack->getCurrentRequest()) || !$request->hasSession()) {
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (!$request || !$request->hasSession()) {
             return null;
         }
 
@@ -219,7 +249,7 @@ class TokenChecker
 
         if (!isset($this->previewLinks[$id])) {
             $this->previewLinks[$id] = $this->connection->fetchAssociative(
-                "
+                '
                     SELECT
                         url,
                         showUnpublished,
@@ -227,9 +257,9 @@ class TokenChecker
                     FROM tl_preview_link
                     WHERE
                         id = :id
-                        AND published = '1'
+                        AND published = 1
                         AND expiresAt > UNIX_TIMESTAMP()
-                ",
+                ',
                 ['id' => $id],
             );
         }

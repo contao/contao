@@ -27,29 +27,31 @@ class TemplateLocator
 {
     final public const FILE_MARKER_NAMESPACE_ROOT = '.twig-root';
 
-    private Filesystem $filesystem;
+    private readonly Filesystem $filesystem;
+
     private array|null $themeDirectories = null;
-    private string $globalTemplateDirectory;
+
+    private readonly string $globalTemplateDirectory;
 
     /**
      * @param array<string, string>                $bundles
      * @param array<string, array<string, string>> $bundlesMetadata
      */
     public function __construct(
-        private string $projectDir,
-        private array $bundles,
-        private array $bundlesMetadata,
-        private ThemeNamespace $themeNamespace,
-        private Connection $connection,
+        private readonly string $projectDir,
+        private readonly array $bundles,
+        private readonly array $bundlesMetadata,
+        private readonly ThemeNamespace $themeNamespace,
+        private readonly Connection $connection,
     ) {
         $this->filesystem = new Filesystem();
         $this->globalTemplateDirectory = Path::join($this->projectDir, 'templates');
     }
 
     /**
-     * @throws InvalidThemePathException
-     *
      * @return array<string, string>
+     *
+     * @throws InvalidThemePathException
      */
     public function findThemeDirectories(): array
     {
@@ -86,7 +88,7 @@ class TemplateLocator
         $paths = [];
 
         $add = function (string $group, string $basePath) use (&$paths): void {
-            $paths[$group] = array_merge($paths[$group] ?? [], $this->expandSubdirectories($basePath));
+            $paths[$group] = [...$paths[$group] ?? [], ...$this->expandSubdirectories($basePath)];
         };
 
         if (is_dir($path = Path::join($this->projectDir, 'contao/templates'))) {
@@ -129,7 +131,7 @@ class TemplateLocator
                 // Never list templates from theme directories unless $path is
                 // a theme path. This ensures that you can still have theme
                 // directories inside any directory that is a namespace root.
-                fn (\SplFileInfo $info): bool => $isThemePath || !$this->isThemePath($info->getPath())
+                fn (\SplFileInfo $info): bool => $isThemePath || !$this->isThemePath($info->getPath()),
             )
             ->sortByName()
         ;
@@ -153,6 +155,12 @@ class TemplateLocator
      */
     private function expandSubdirectories(string $path): array
     {
+        $paths = [$path];
+
+        if ($this->isNamespaceRoot($path)) {
+            return $paths;
+        }
+
         $namespaceRoots = [];
 
         $finder = (new Finder())
@@ -174,11 +182,9 @@ class TemplateLocator
                     }
 
                     return true;
-                }
+                },
             )
         ;
-
-        $paths = [$path];
 
         foreach ($finder as $item) {
             $paths[] = Path::canonicalize($item->getPathname());

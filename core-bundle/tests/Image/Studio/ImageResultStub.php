@@ -18,9 +18,11 @@ use Contao\Image\PictureInterface;
 
 class ImageResultStub extends ImageResult
 {
-    public function __construct(private readonly array $img, private readonly array $sources = [])
-    {
-        // do not call parent constructor
+    public function __construct(
+        private readonly array $img,
+        private readonly array $sources = [],
+    ) {
+        // Do not call parent constructor
     }
 
     public function getPicture(): PictureInterface

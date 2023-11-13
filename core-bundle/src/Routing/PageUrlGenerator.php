@@ -26,8 +26,11 @@ use Symfony\Component\Routing\RouteCollection;
 
 class PageUrlGenerator extends SymfonyUrlGenerator
 {
-    public function __construct(private RouteProviderInterface $provider, private PageRegistry $pageRegistry, LoggerInterface $logger = null)
-    {
+    public function __construct(
+        private readonly RouteProviderInterface $provider,
+        private readonly PageRegistry $pageRegistry,
+        LoggerInterface|null $logger = null,
+    ) {
         parent::__construct(new RouteCollection(), new RequestContext(), $logger);
     }
 
@@ -71,10 +74,10 @@ class PageUrlGenerator extends SymfonyUrlGenerator
 
         if (
             $route instanceof PageRoute
-            && 0 === \count(array_intersect_key(
-                array_filter(array_merge($route->getDefaults(), $parameters)),
-                array_flip($compiledRoute->getVariables())
-            ))
+            && !array_intersect_key(
+                array_filter([...$route->getDefaults(), ...$parameters]),
+                array_flip($compiledRoute->getVariables()),
+            )
         ) {
             $staticPrefix = $compiledRoute->getStaticPrefix();
             $indexPath = ($route->getUrlPrefix() ? '/'.$route->getUrlPrefix() : '').'/index';
@@ -96,7 +99,7 @@ class PageUrlGenerator extends SymfonyUrlGenerator
                 $route->getDefault('_canonical_route') ?: $name,
                 $referenceType,
                 $compiledRoute->getHostTokens(),
-                $route->getSchemes()
+                $route->getSchemes(),
             );
         } catch (ExceptionInterface $exception) {
             throw new RouteParametersException($route, $parameters, $referenceType, $exception);

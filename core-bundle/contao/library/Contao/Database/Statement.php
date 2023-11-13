@@ -81,11 +81,6 @@ class Statement
 			case 'query':
 				return $this->strQuery;
 
-			case 'error':
-				$info = $this->statement->errorInfo();
-
-				return 'SQLSTATE ' . $info[0] . ': error ' . $info[1] . ': ' . $info[2];
-
 			case 'affectedRows':
 				return $this->statement->rowCount();
 
@@ -142,8 +137,7 @@ class Statement
 		$this->arrSetParams = array_values($arrParams);
 
 		$arrParamNames = array_map(
-			static function ($strName)
-			{
+			static function ($strName) {
 				if (!preg_match('/^(?:[A-Za-z0-9_$]+|`[^`]+`)$/', $strName))
 				{
 					throw new \RuntimeException(sprintf('Invalid column name "%s" in %s()', $strName, __METHOD__));
@@ -245,8 +239,7 @@ class Statement
 		}
 
 		$arrParams = array_map(
-			static function ($varParam) use ($arrTypes)
-			{
+			static function ($varParam) use ($arrTypes) {
 				// Automatically cast boolean to integer when no types are defined, otherwise
 				// PDO will convert "false" to an empty string (see https://bugs.php.net/bug.php?id=57157)
 				if (empty($arrTypes) && \is_bool($varParam))

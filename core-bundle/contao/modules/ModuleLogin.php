@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Nyholm\Psr7\Uri;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvents;
@@ -65,14 +66,28 @@ class ModuleLogin extends Module
 		{
 			$this->targetPath = base64_decode($request->request->get('_target_path'));
 		}
-		elseif ($this->redirectBack && $request && $request->query->has('redirect'))
+		elseif ($request && $this->redirectBack)
 		{
-			$uriSigner = System::getContainer()->get('uri_signer');
-
-			// We cannot use $request->getUri() here as we want to work with the original URI (no query string reordering)
-			if ($uriSigner->check($request->getSchemeAndHttpHost() . $request->getBaseUrl() . $request->getPathInfo() . (null !== ($qs = $request->server->get('QUERY_STRING')) ? '?' . $qs : '')))
+			if ($request->query->has('redirect'))
 			{
-				$this->targetPath = $request->query->get('redirect');
+				$uriSigner = System::getContainer()->get('uri_signer');
+
+				// We cannot use $request->getUri() here as we want to work with the original URI (no query string reordering)
+				if ($uriSigner->check($request->getSchemeAndHttpHost() . $request->getBaseUrl() . $request->getPathInfo() . (null !== ($qs = $request->server->get('QUERY_STRING')) ? '?' . $qs : '')))
+				{
+					$this->targetPath = $request->query->get('redirect');
+				}
+			}
+			elseif ($referer = $request->headers->get('referer'))
+			{
+				$refererUri = new Uri($referer);
+				$requestUri = new Uri($request->getUri());
+
+				// Use the HTTP referer as a fallback, but only if scheme and host matches with the current request (see #5860)
+				if ($refererUri->getScheme() === $requestUri->getScheme() && $refererUri->getHost() === $requestUri->getHost() && $refererUri->getPort() === $requestUri->getPort())
+				{
+					$this->targetPath = (string) $refererUri;
+				}
 			}
 		}
 
@@ -104,8 +119,6 @@ class ModuleLogin extends Module
 
 		if ($authorizationChecker->isGranted('ROLE_MEMBER'))
 		{
-			$this->import(FrontendUser::class, 'User');
-
 			$strRedirect = Environment::get('uri');
 
 			// Redirect to last page visited
@@ -120,16 +133,18 @@ class ModuleLogin extends Module
 				$strRedirect = Environment::get('base');
 			}
 
+			$user = FrontendUser::getInstance();
+
 			$this->Template->logout = true;
 			$this->Template->formId = 'tl_logout_' . $this->id;
 			$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['logout']);
-			$this->Template->loggedInAs = sprintf($GLOBALS['TL_LANG']['MSC']['loggedInAs'], $this->User->username);
+			$this->Template->loggedInAs = sprintf($GLOBALS['TL_LANG']['MSC']['loggedInAs'], $user->username);
 			$this->Template->action = $container->get('security.logout_url_generator')->getLogoutPath();
 			$this->Template->targetPath = StringUtil::specialchars($strRedirect);
 
-			if ($this->User->lastLogin > 0)
+			if ($user->lastLogin > 0)
 			{
-				$this->Template->lastLogin = sprintf($GLOBALS['TL_LANG']['MSC']['lastLogin'][1], Date::parse($objPage->datimFormat, $this->User->lastLogin));
+				$this->Template->lastLogin = sprintf($GLOBALS['TL_LANG']['MSC']['lastLogin'][1], Date::parse($objPage->datimFormat, $user->lastLogin));
 			}
 
 			return;

@@ -16,12 +16,13 @@ use Contao\CoreBundle\Messenger\Transport\AutoFallbackTransport;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Container\ContainerInterface;
-use Symfony\Component\Mailer\Transport\TransportInterface;
 
 class AutoFallbackNotifier
 {
-    public function __construct(private CacheItemPoolInterface $cache, private ContainerInterface $messengerTransportLocator)
-    {
+    public function __construct(
+        private readonly CacheItemPoolInterface $cache,
+        private readonly ContainerInterface $messengerTransportLocator,
+    ) {
     }
 
     public function ping(string $transportName): void
@@ -51,7 +52,6 @@ class AutoFallbackNotifier
             return false;
         }
 
-        /** @var TransportInterface $transport */
         $transport = $this->messengerTransportLocator->get($transportName);
 
         return $transport instanceof AutoFallbackTransport;

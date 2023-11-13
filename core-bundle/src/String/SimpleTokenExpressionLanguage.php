@@ -17,9 +17,9 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 class SimpleTokenExpressionLanguage extends ExpressionLanguage
 {
-    public function __construct(CacheItemPoolInterface $cache = null, \IteratorAggregate $taggedProviders = null)
+    public function __construct(CacheItemPoolInterface|null $cache = null, \IteratorAggregate|null $taggedProviders = null)
     {
-        $providers = null !== $taggedProviders ? iterator_to_array($taggedProviders->getIterator()) : [];
+        $providers = $taggedProviders ? iterator_to_array($taggedProviders->getIterator()) : [];
 
         parent::__construct($cache, $providers);
 
@@ -29,7 +29,7 @@ class SimpleTokenExpressionLanguage extends ExpressionLanguage
             static fn () => "throw new \\InvalidArgumentException('Cannot use the constant() function in the expression for security reasons.');",
             static function (): never {
                 throw new \InvalidArgumentException('Cannot use the constant() function in the expression for security reasons.');
-            }
+            },
         );
     }
 }

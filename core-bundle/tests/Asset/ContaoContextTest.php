@@ -66,7 +66,7 @@ class ContaoContextTest extends TestCase
             [
                 'SCRIPT_FILENAME' => '/foobar/index.php',
                 'SCRIPT_NAME' => '/foobar/index.php',
-            ]
+            ],
         );
 
         $request->attributes->set('pageModel', $page);
@@ -195,7 +195,7 @@ class ContaoContextTest extends TestCase
 
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
         $schemaManager
-            ->method('createSchema')
+            ->method('introspectSchema')
             ->willReturn(new Schema())
         ;
 
@@ -220,7 +220,7 @@ class ContaoContextTest extends TestCase
         return $page->loadDetails();
     }
 
-    private function getContaoContext(string $field, RequestStack $requestStack = null): ContaoContext
+    private function getContaoContext(string $field, RequestStack|null $requestStack = null): ContaoContext
     {
         $requestStack ??= new RequestStack();
 

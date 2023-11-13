@@ -31,20 +31,22 @@ use Symfony\Component\Finder\SplFileInfo;
 
 #[AsCommand(
     name: 'contao:symlinks',
-    description: 'Symlinks the public resources into the public directory.'
+    description: 'Symlinks the public resources into the public directory.',
 )]
 class SymlinksCommand extends Command
 {
     private array $rows = [];
+
     private string|null $webDir = null;
+
     private int $statusCode = Command::SUCCESS;
 
     public function __construct(
-        private string $projectDir,
-        private string $uploadPath,
-        private string $logsDir,
-        private ResourceFinderInterface $resourceFinder,
-        private EventDispatcherInterface $eventDispatcher,
+        private readonly string $projectDir,
+        private readonly string $uploadPath,
+        private readonly string $logsDir,
+        private readonly ResourceFinderInterface $resourceFinder,
+        private readonly EventDispatcherInterface $eventDispatcher,
     ) {
         parent::__construct();
     }
@@ -60,7 +62,7 @@ class SymlinksCommand extends Command
 
         $this->generateSymlinks();
 
-        if (!empty($this->rows)) {
+        if ($this->rows) {
             $io = new SymfonyStyle($input, $output);
             $io->newLine();
             $io->table(['', 'Symlink', 'Target / Error'], $this->rows);
@@ -96,7 +98,7 @@ class SymlinksCommand extends Command
         if ($fs->exists(Path::join($this->projectDir, 'vendor/scrivo/highlight.php/styles'))) {
             $this->symlink(
                 'vendor/scrivo/highlight.php/styles',
-                Path::join($this->webDir, 'vendor/scrivo/highlight_php/styles')
+                Path::join($this->webDir, 'vendor/scrivo/highlight_php/styles'),
             );
         }
 
@@ -107,7 +109,7 @@ class SymlinksCommand extends Command
     {
         $this->createSymlinksFromFinder(
             $this->findIn(Path::join($this->projectDir, $uploadPath))->files()->depth('> 0')->name('.public'),
-            $uploadPath
+            $uploadPath,
         );
     }
 
@@ -117,13 +119,12 @@ class SymlinksCommand extends Command
 
         $this->createSymlinksFromFinder(
             $this->findIn(Path::join($this->projectDir, 'system/modules'))->files()->filter($filter)->name('.htaccess'),
-            'system/modules'
+            'system/modules',
         );
     }
 
     private function symlinkThemes(): void
     {
-        /** @var array<SplFileInfo> $themes */
         $themes = $this->resourceFinder->findIn('themes')->depth(0)->directories();
 
         foreach ($themes as $theme) {
@@ -170,7 +171,7 @@ class SymlinksCommand extends Command
             $this->rows[] = [
                 sprintf(
                     '<fg=green;options=bold>%s</>',
-                    '\\' === \DIRECTORY_SEPARATOR ? 'OK' : "\xE2\x9C\x94" // HEAVY CHECK MARK (U+2714)
+                    '\\' === \DIRECTORY_SEPARATOR ? 'OK' : "\xE2\x9C\x94", // HEAVY CHECK MARK (U+2714)
                 ),
                 $link,
                 $target,
@@ -181,7 +182,7 @@ class SymlinksCommand extends Command
             $this->rows[] = [
                 sprintf(
                     '<fg=red;options=bold>%s</>',
-                    '\\' === \DIRECTORY_SEPARATOR ? 'ERROR' : "\xE2\x9C\x98" // HEAVY BALLOT X (U+2718)
+                    '\\' === \DIRECTORY_SEPARATOR ? 'ERROR' : "\xE2\x9C\x98", // HEAVY BALLOT X (U+2718)
                 ),
                 $link,
                 sprintf('<error>%s</error>', $e->getMessage()),
@@ -202,7 +203,7 @@ class SymlinksCommand extends Command
                     $countB = substr_count(Path::normalize($b->getRelativePath()), '/');
 
                     return $countA <=> $countB;
-                }
+                },
             )
             ->followLinks()
             ->in($path)
@@ -216,13 +217,12 @@ class SymlinksCommand extends Command
      */
     private function filterNestedPaths(Finder $finder, string $prepend): array
     {
+        /** @var array<string, SplFileInfo> $files */
         $files = iterator_to_array($finder);
 
-        /** @var SplFileInfo $file */
         foreach ($files as $key => $file) {
             $path = $file->getRelativePath();
 
-            /** @var SplFileInfo $otherFile */
             foreach ($files as $otherFile) {
                 $otherPath = $otherFile->getRelativePath();
 

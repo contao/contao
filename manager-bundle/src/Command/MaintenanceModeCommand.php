@@ -24,16 +24,15 @@ use Twig\Environment;
 
 #[AsCommand(
     name: 'contao:maintenance-mode',
-    description: 'Changes the state of the system maintenance mode.'
+    description: 'Changes the state of the system maintenance mode.',
 )]
 class MaintenanceModeCommand extends Command
 {
-    private Filesystem $filesystem;
-
-    public function __construct(private string $maintenanceFilePath, private Environment $twig, Filesystem $filesystem = null)
-    {
-        $this->filesystem = $filesystem ?? new Filesystem();
-
+    public function __construct(
+        private readonly string $maintenanceFilePath,
+        private readonly Environment $twig,
+        private readonly Filesystem $filesystem = new Filesystem(),
+    ) {
         parent::__construct();
     }
 
@@ -77,14 +76,16 @@ class MaintenanceModeCommand extends Command
         // Render the template and write it to maintenance.html
         $this->filesystem->dumpFile(
             $this->maintenanceFilePath,
-            $this->twig->render($templateName, array_merge(
+
+            $this->twig->render(
+                $templateName,
                 [
                     'statusCode' => 503,
                     'language' => 'en',
                     'template' => $templateName,
+                    ...json_decode($templateVars, true, 512, JSON_THROW_ON_ERROR),
                 ],
-                json_decode($templateVars, true)
-            ))
+            ),
         );
     }
 
@@ -101,7 +102,7 @@ class MaintenanceModeCommand extends Command
                     'enabled' => $enabled,
                     'maintenanceFilePath' => $this->maintenanceFilePath,
                 ],
-                JSON_THROW_ON_ERROR
+                JSON_THROW_ON_ERROR,
             ));
 
             return;

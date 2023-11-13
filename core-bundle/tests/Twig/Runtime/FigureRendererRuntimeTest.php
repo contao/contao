@@ -37,7 +37,7 @@ class FigureRendererRuntimeTest extends TestCase
 
         $this->assertSame(
             $figure,
-            (new FigureRuntime($figureRenderer))->buildFigure('123', '_my_size', ['foo' => 'bar'])
+            (new FigureRuntime($figureRenderer))->buildFigure('123', '_my_size', ['foo' => 'bar']),
         );
     }
 

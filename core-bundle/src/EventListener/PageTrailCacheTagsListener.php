@@ -19,13 +19,15 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 class PageTrailCacheTagsListener
 {
-    public function __construct(private ScopeMatcher $scopeMatcher, private ResponseTagger|null $responseTagger = null)
-    {
+    public function __construct(
+        private readonly ScopeMatcher $scopeMatcher,
+        private readonly ResponseTagger|null $responseTagger = null,
+    ) {
     }
 
     public function __invoke(ResponseEvent $event): void
     {
-        if (null === $this->responseTagger || !$this->scopeMatcher->isFrontendMainRequest($event)) {
+        if (!$this->responseTagger || !$this->scopeMatcher->isFrontendMainRequest($event)) {
             return;
         }
 
@@ -41,7 +43,7 @@ class PageTrailCacheTagsListener
             $tags[] = 'contao.db.tl_page.'.$trail;
         }
 
-        if (\count($tags)) {
+        if ($tags) {
             $this->responseTagger->addTags($tags);
         }
     }

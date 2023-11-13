@@ -24,10 +24,10 @@
         <source>Field "%s" must not be longer than %d characters!</source>
       </trans-unit>
       <trans-unit id="ERR.minval">
-        <source>Field "%s" has to be at least %d!</source>
+        <source>Field "%s" has to be at least %s!</source>
       </trans-unit>
       <trans-unit id="ERR.maxval">
-        <source>Field "%s" must not be greater than %d!</source>
+        <source>Field "%s" must not be greater than %s!</source>
       </trans-unit>
       <trans-unit id="ERR.digit">
         <source>Please enter digits only!</source>
@@ -1472,6 +1472,9 @@
       <trans-unit id="MSC.fileMeta">
         <source>Metadata</source>
       </trans-unit>
+      <trans-unit id="MSC.imageMetadata">
+        <source>%s metadata</source>
+      </trans-unit>
       <trans-unit id="MSC.versioning">
         <source>Version management</source>
       </trans-unit>
@@ -2108,6 +2111,9 @@
       <trans-unit id="MSC.showFromTo">
         <source>visible from %s to %s</source>
       </trans-unit>
+      <trans-unit id="MSC.editImageSize">
+        <source>Edit the image size</source>
+      </trans-unit>
       <trans-unit id="MSC.booleanNot">
         <source>Not %s</source>
       </trans-unit>
@@ -2258,8 +2264,14 @@
       <trans-unit id="DCA.children">
         <source>Edit the child elements of element ID %s</source>
       </trans-unit>
-      <trans-unit id="DCA.toggle">
-        <source>Publish/unpublish element ID %s</source>
+      <trans-unit id="DCA.toggle.0">
+        <source>Publish/unpublish element</source>
+      </trans-unit>
+      <trans-unit id="DCA.toggle.1">
+        <source>Unpublish element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.toggle.2">
+        <source>Publish element ID %s</source>
       </trans-unit>
       <trans-unit id="DCA.pasteinto.0">
         <source>Paste at the top</source>

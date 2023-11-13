@@ -20,6 +20,7 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
  * Annotation class for @Page().
  *
  * @Annotation
+ *
  * @Target({"CLASS", "METHOD"})
  *
  * @see Route
@@ -27,12 +28,19 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
 final class Page implements ServiceTagInterface
 {
     private string|null $type = null;
+
     private bool $contentComposition = true;
+
     private string|null $urlSuffix = null;
+
     private array $requirements = [];
+
     private array $options = [];
+
     private array $defaults = [];
+
     private array $methods = [];
+
     private bool|string|null $path = null;
 
     public function __construct(array $data)

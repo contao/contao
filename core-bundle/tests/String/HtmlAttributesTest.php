@@ -58,14 +58,29 @@ class HtmlAttributesTest extends TestCase
             ['foo' => 'bar', 'baz' => '42'],
         ];
 
+        yield 'AlpineJS attributes' => [
+            '@click="open = true" x-on:click="open = !open"',
+            ['@click' => 'open = true', 'x-on:click' => 'open = !open'],
+        ];
+
+        yield 'Vue.js attributes' => [
+            'v-html="raw" v-bind:id="id" :disabled="dis" :[attr]="val" :[\'data-\'+key]="val"',
+            ['v-html' => 'raw', 'v-bind:id' => 'id', ':disabled' => 'dis', ':[attr]' => 'val', ":['data-'+key]" => 'val'],
+        ];
+
+        yield 'Vue.js events' => [
+            '@click.prevent="start"  @[event]="run"',
+            ['@click.prevent' => 'start', '@[event]' => 'run'],
+        ];
+
         yield 'special html parsing rules' => [
-            "/X===.._-/\n/y/",
-            ['x' => '==.._-/', 'y' => ''],
+            "/X===.._-/\n/Y/-==",
+            ['x' => '==.._-/', 'y' => '', '-' => '='],
         ];
 
         yield 'skip closing and keep opening tags as per html parsing rules' => [
-            '>foo=<bar>baz>/</<ignore=<this-one',
-            ['foo' => '<bar', 'baz' => ''],
+            '>foo=<bar>baz>/</<attr=<value',
+            ['foo' => '<bar', 'baz' => '', '<' => '', '<attr' => '<value'],
         ];
 
         yield 'skip unclosed attributes completely' => [
@@ -100,7 +115,7 @@ class HtmlAttributesTest extends TestCase
 
         yield 'inline svg single quotes' => [
             'style="background: url(\'data:image/svg+xml;utf8,<svg/>\');"',
-            ['style' => 'background:url(\'data:image/svg+xml;utf8,<svg/>\')'],
+            ['style' => "background:url('data:image/svg+xml;utf8,<svg/>')"],
         ];
 
         yield 'inline svg double quotes' => [
@@ -126,6 +141,16 @@ class HtmlAttributesTest extends TestCase
         yield 'escaped string' => [
             "style=\"color: 'r\\'ed'\"",
             ['style' => "color:'r\\'ed'"],
+        ];
+
+        yield 'escaped string hacking' => [
+            "style=\"color: 'r\\'; eval : foo '\"",
+            ['style' => "color:'r\\'; eval : foo '"],
+        ];
+
+        yield 'escaped string hacking double quotes' => [
+            "style='color: \"r\\\"; eval : foo \"'",
+            ['style' => 'color:"r\\"; eval : foo "'],
         ];
 
         yield 'newline' => [
@@ -162,12 +187,12 @@ class HtmlAttributesTest extends TestCase
 
         $this->assertSame(
             $expectedProperties,
-            iterator_to_array(new HtmlAttributes($properties))
+            iterator_to_array(new HtmlAttributes($properties)),
         );
 
         $this->assertSame(
             $expectedProperties,
-            iterator_to_array(new HtmlAttributes(new \ArrayIterator($properties)))
+            iterator_to_array(new HtmlAttributes(new \ArrayIterator($properties))),
         );
     }
 
@@ -235,7 +260,7 @@ class HtmlAttributesTest extends TestCase
     public function testRejectsInvalidAttributeNamesWhenConstructingFromArray(string $name): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessageMatches('/A HTML attribute name must only consist of the characters \[a-z0-9_-\], must start with a letter, must not end with a underscore\/hyphen and must not contain two underscores\/hyphens in a row, got ".*"\./');
+        $this->expectExceptionMessageMatches('/An HTML attribute name must be valid UTF-8 and not contain the characters >, \/, = or whitespace, got ".*"\./');
 
         new HtmlAttributes([$name => 'bar']);
     }
@@ -248,24 +273,17 @@ class HtmlAttributesTest extends TestCase
         $attributes = new HtmlAttributes();
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessageMatches('/A HTML attribute name must only consist of the characters \[a-z0-9_-\], must start with a letter, must not end with a underscore\/hyphen and must not contain two underscores\/hyphens in a row, got ".*"\./');
+        $this->expectExceptionMessageMatches('/An HTML attribute name must be valid UTF-8 and not contain the characters >, \/, = or whitespace, got ".*"\./');
 
         $attributes->set($name, 'bar');
     }
 
     public function provideInvalidAttributeNames(): \Generator
     {
-        yield 'invalid character' => ['föö'];
         yield 'invalid non-utf8 character' => ["f\xC2"];
-        yield 'does not start with a-z' => ['2foo'];
-        yield 'ends with a hyphen' => ['foo-'];
-        yield 'contains two hyphens in a row' => ['foo--bar'];
-        yield 'ends with an underscore' => ['foo_'];
-        yield 'contains two underscores in a row' => ['foo__bar'];
-        yield 'opening tag only' => ['<'];
-        yield 'contains opening tag as first char' => ['<foo'];
-        yield 'contains opening tag as second char' => ['f<oo'];
-        yield 'contains opening tag as last char' => ['foo<'];
+        yield 'empty string' => [''];
+        yield 'equal sign' => ['='];
+        yield 'starts with an equal sign' => ['=foo'];
     }
 
     public function testSetAndUnsetProperties(): void
@@ -304,6 +322,12 @@ class HtmlAttributesTest extends TestCase
         $attributes->setIfExists('f', false); // should not alter the list
 
         $this->assertSame(['e' => ' ', 'f' => 'abc'], iterator_to_array($attributes));
+
+        // Uppercase names
+        $attributes->set('E', 'UPPER');
+        $attributes->unset('F');
+
+        $this->assertSame(['e' => 'UPPER'], iterator_to_array($attributes));
     }
 
     public function testSetAndUnsetConditionalProperties(): void
@@ -511,16 +535,24 @@ class HtmlAttributesTest extends TestCase
             'property-without-value' => null,
         ]);
 
+        $expectedString = 'a="A B C" b="&#123;&#123;b&#125;&#125;" c="foo&amp;bar" d="foo&amp;bar" property-without-value';
+
+        $this->assertSame(" $expectedString", (string) $attributes);
+        $this->assertSame(" $expectedString", $attributes->toString());
+        $this->assertSame($expectedString, $attributes->toString(false));
+
+        // With double encoding
+        $this->assertSame($attributes, $attributes->setDoubleEncoding(true));
         $expectedString = 'a="A B C" b="&#123;&#123;b&#125;&#125;" c="foo&amp;bar" d="foo&amp;amp;bar" property-without-value';
 
-        $this->assertSame(" $expectedString", $attributes->__toString());
+        $this->assertSame(" $expectedString", (string) $attributes);
         $this->assertSame(" $expectedString", $attributes->toString());
         $this->assertSame($expectedString, $attributes->toString(false));
     }
 
     public function testStripsLeadingWhitespaceIfEmpty(): void
     {
-        $this->assertSame('', (new HtmlAttributes())->__toString());
+        $this->assertSame('', (string) new HtmlAttributes());
         $this->assertSame('', (new HtmlAttributes())->toString());
         $this->assertSame('', (new HtmlAttributes())->toString(false));
     }
@@ -556,9 +588,9 @@ class HtmlAttributesTest extends TestCase
         $attributes = new HtmlAttributes();
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('A HTML attribute name must only consist of the characters [a-z0-9_-], must start with a letter, must not end with a underscore/hyphen and must not contain two underscores/hyphens in a row, got "foo--2000".');
+        $this->expectExceptionMessage('An HTML attribute name must be valid UTF-8 and not contain the characters >, /, = or whitespace, got "=foo".');
 
-        $attributes['foo--2000'] = 'bar';
+        $attributes['=foo'] = 'bar';
     }
 
     public function testThrowsIfPropertyDoesNotExistWhenUsingArrayAccess(): void

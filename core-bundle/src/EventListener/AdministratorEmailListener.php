@@ -15,9 +15,9 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -26,17 +26,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class AdministratorEmailListener
 {
     public function __construct(
-        private ContaoFramework $framework,
-        private TranslatorInterface $translator,
-        private RouterInterface $router,
-        private RequestStack $requestStack,
-        private Security $security,
+        private readonly ContaoFramework $framework,
+        private readonly TranslatorInterface $translator,
+        private readonly RouterInterface $router,
+        private readonly RequestStack $requestStack,
+        private readonly Security $security,
     ) {
     }
 
     public function __invoke(): string|null
     {
-        /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
 
         if ($config->get('adminEmail')) {

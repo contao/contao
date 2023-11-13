@@ -24,11 +24,11 @@ use Symfony\Component\Filesystem\Path;
 
 #[AsCommand(
     name: 'dot-env:remove',
-    description: 'Removes a parameter from the .env file.'
+    description: 'Removes a parameter from the .env file.',
 )]
 class RemoveDotEnvCommand extends Command
 {
-    private string $projectDir;
+    private readonly string $projectDir;
 
     public function __construct(Application $application)
     {

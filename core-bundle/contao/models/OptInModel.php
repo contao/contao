@@ -30,6 +30,7 @@ use Contao\Model\Registry;
  * @method static OptInModel|null findById($id, array $opt=array())
  * @method static OptInModel|null findByPk($id, array $opt=array())
  * @method static OptInModel|null findByIdOrAlias($val, array $opt=array())
+ * @method static OptInModel|null findByToken($val, array $opt=array())
  * @method static OptInModel|null findOneBy($col, $val, array $opt=array())
  * @method static OptInModel|null findOneByTstamp($val, array $opt=array())
  * @method static OptInModel|null findOneByToken($val, array $opt=array())
@@ -41,18 +42,17 @@ use Contao\Model\Registry;
  * @method static OptInModel|null findOneByEmailSubject($val, array $opt=array())
  * @method static OptInModel|null findOneByEmailText($val, array $opt=array())
  *
- * @method static Collection|OptInModel[]|OptInModel|null findByTstamp($val, array $opt=array())
- * @method static Collection|OptInModel[]|OptInModel|null findByToken($val, array $opt=array())
- * @method static Collection|OptInModel[]|OptInModel|null findByCreatedOn($val, array $opt=array())
- * @method static Collection|OptInModel[]|OptInModel|null findByConfirmedOn($val, array $opt=array())
- * @method static Collection|OptInModel[]|OptInModel|null findByRemoveOn($val, array $opt=array())
- * @method static Collection|OptInModel[]|OptInModel|null findByInvalidatedThrough($val, array $opt=array())
- * @method static Collection|OptInModel[]|OptInModel|null findByEmail($val, array $opt=array())
- * @method static Collection|OptInModel[]|OptInModel|null findByEmailSubject($val, array $opt=array())
- * @method static Collection|OptInModel[]|OptInModel|null findByEmailText($val, array $opt=array())
- * @method static Collection|OptInModel[]|OptInModel|null findMultipleByIds($val, array $opt=array())
- * @method static Collection|OptInModel[]|OptInModel|null findBy($col, $val, array $opt=array())
- * @method static Collection|OptInModel[]|OptInModel|null findAll(array $opt=array())
+ * @method static Collection<OptInModel>|OptInModel[]|null findByTstamp($val, array $opt=array())
+ * @method static Collection<OptInModel>|OptInModel[]|null findByCreatedOn($val, array $opt=array())
+ * @method static Collection<OptInModel>|OptInModel[]|null findByConfirmedOn($val, array $opt=array())
+ * @method static Collection<OptInModel>|OptInModel[]|null findByRemoveOn($val, array $opt=array())
+ * @method static Collection<OptInModel>|OptInModel[]|null findByInvalidatedThrough($val, array $opt=array())
+ * @method static Collection<OptInModel>|OptInModel[]|null findByEmail($val, array $opt=array())
+ * @method static Collection<OptInModel>|OptInModel[]|null findByEmailSubject($val, array $opt=array())
+ * @method static Collection<OptInModel>|OptInModel[]|null findByEmailText($val, array $opt=array())
+ * @method static Collection<OptInModel>|OptInModel[]|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection<OptInModel>|OptInModel[]|null findBy($col, $val, array $opt=array())
+ * @method static Collection<OptInModel>|OptInModel[]|null findAll(array $opt=array())
  *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByTstamp($val, array $opt=array())
@@ -78,7 +78,7 @@ class OptInModel extends Model
 	 *
 	 * @param array $arrOptions
 	 *
-	 * @return Collection|OptInModel[]|OptInModel|null
+	 * @return Collection<OptInModel>|OptInModel[]|null
 	 */
 	public static function findExpiredTokens(array $arrOptions=array())
 	{
@@ -94,7 +94,7 @@ class OptInModel extends Model
 	 * @param array  $arrIds
 	 * @param array  $arrOptions
 	 *
-	 * @return Collection|OptInModel[]|OptInModel|null
+	 * @return Collection<OptInModel>|OptInModel[]|null
 	 */
 	public static function findByRelatedTableAndIds($strTable, array $arrIds, array $arrOptions=array())
 	{

@@ -31,7 +31,7 @@ class FilesystemItemTest extends TestCase
             123450,
             1024,
             'image/png',
-            ['foo' => 'bar', 'uuid' => $uuid]
+            ['foo' => 'bar', 'uuid' => $uuid],
         );
 
         $this->assertTrue($fileItem->isFile());
@@ -131,7 +131,7 @@ class FilesystemItemTest extends TestCase
             null,
             123450,
             'image/png',
-            ['foo' => 'bar']
+            ['foo' => 'bar'],
         );
 
         $fileItem = FilesystemItem::fromStorageAttributes($fileAttributes);
@@ -146,7 +146,7 @@ class FilesystemItemTest extends TestCase
         $directoryAttributes = new DirectoryAttributes(
             'foo/bar',
             null,
-            123450
+            123450,
         );
 
         $directoryItem = FilesystemItem::fromStorageAttributes($directoryAttributes);
@@ -209,7 +209,7 @@ class FilesystemItemTest extends TestCase
             null,
             static function (): never {
                 throw VirtualFilesystemException::unableToRetrieveMetadata('some/file.txt');
-            }
+            },
         );
 
         $this->expectException(VirtualFilesystemException::class);
@@ -227,7 +227,7 @@ class FilesystemItemTest extends TestCase
             null,
             static function (): never {
                 throw VirtualFilesystemException::unableToRetrieveMetadata('some/file.txt');
-            }
+            },
         );
 
         $this->assertSame('text/plain', $item->getMimeType('text/plain'));

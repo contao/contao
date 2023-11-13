@@ -45,7 +45,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
     /**
      * @dataProvider shouldRequestProvider
      */
-    public function testShouldRequest(CrawlUri $crawlUri, string $expectedDecision, string $expectedLogLevel = '', string $expectedLogMessage = '', CrawlUri $foundOnUri = null): void
+    public function testShouldRequest(CrawlUri $crawlUri, string $expectedDecision, string $expectedLogLevel = '', string $expectedLogMessage = '', CrawlUri|null $foundOnUri = null): void
     {
         $logger = $this->createMock(LoggerInterface::class);
 
@@ -62,8 +62,8 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
                             $this->assertSame(BrokenLinkCheckerSubscriber::class, $context['source']);
 
                             return true;
-                        }
-                    )
+                        },
+                    ),
                 )
             ;
         } else {
@@ -93,18 +93,18 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
     public function shouldRequestProvider(): \Generator
     {
         yield 'Test skips URIs that do not belong to our base URI collection' => [
-            (new CrawlUri(new Uri('https://github.com'), 0)),
+            new CrawlUri(new Uri('https://github.com'), 0),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
             'Did not check because it is not part of the base URI collection or was not found on one of that is.',
         ];
 
         yield 'Test skips URIs that were found on an URI that did not belong to our base URI collection' => [
-            (new CrawlUri(new Uri('https://gitlab.com'), 1, false, new Uri('https://github.com'))),
+            new CrawlUri(new Uri('https://gitlab.com'), 1, false, new Uri('https://github.com')),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
             'Did not check because it is not part of the base URI collection or was not found on one of that is.',
-            (new CrawlUri(new Uri('https://github.com'), 0, true)),
+            new CrawlUri(new Uri('https://github.com'), 0, true),
         ];
 
         yield 'Test skips URIs that were marked to be skipped by the data attribue' => [
@@ -112,11 +112,11 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
             'Did not check because it was marked to be skipped using the data-skip-broken-link-checker attribute.',
-            (new CrawlUri(new Uri('https://github.com'), 0, true)),
+            new CrawlUri(new Uri('https://github.com'), 0, true),
         ];
 
         yield 'Test requests if everything is okay' => [
-            (new CrawlUri(new Uri('https://contao.org/foobar'), 0)),
+            new CrawlUri(new Uri('https://contao.org/foobar'), 0),
             SubscriberInterface::DECISION_POSITIVE,
         ];
     }
@@ -141,8 +141,8 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
                             $this->assertSame(BrokenLinkCheckerSubscriber::class, $context['source']);
 
                             return true;
-                        }
-                    )
+                        },
+                    ),
                 )
             ;
         } else {
@@ -165,7 +165,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
 
         $previousResult = null;
 
-        if (0 !== \count($previousStats)) {
+        if ($previousStats) {
             $previousResult = new SubscriberResult(true, 'foobar');
             $previousResult->addInfo('stats', $previousStats);
         }
@@ -253,8 +253,8 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
                             $this->assertSame(BrokenLinkCheckerSubscriber::class, $context['source']);
 
                             return true;
-                        }
-                    )
+                        },
+                    ),
                 )
             ;
         } else {
@@ -274,7 +274,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
 
         $previousResult = null;
 
-        if (0 !== \count($previousStats)) {
+        if ($previousStats) {
             $previousResult = new SubscriberResult(true, 'foobar');
             $previousResult->addInfo('stats', $previousStats);
         }
@@ -315,8 +315,8 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
                             $this->assertSame(BrokenLinkCheckerSubscriber::class, $context['source']);
 
                             return true;
-                        }
-                    )
+                        },
+                    ),
                 )
             ;
         } else {
@@ -336,7 +336,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
 
         $previousResult = null;
 
-        if (0 !== \count($previousStats)) {
+        if ($previousStats) {
             $previousResult = new SubscriberResult(true, 'foobar');
             $previousResult->addInfo('stats', $previousStats);
         }
@@ -367,10 +367,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         ];
     }
 
-    /**
-     * @return ResponseInterface&MockObject
-     */
-    private function mockResponse(int $statusCode = 200, string $url = 'https://contao.org'): ResponseInterface
+    private function mockResponse(int $statusCode = 200, string $url = 'https://contao.org'): ResponseInterface&MockObject
     {
         $response = $this->createMock(ResponseInterface::class);
         $response
@@ -395,17 +392,14 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
                     }
 
                     throw new \InvalidArgumentException('Invalid key: '.$key);
-                }
+                },
             )
         ;
 
         return $response;
     }
 
-    /**
-     * @return TranslatorInterface&MockObject
-     */
-    private function mockTranslator(): TranslatorInterface
+    private function mockTranslator(): TranslatorInterface&MockObject
     {
         $translator = $this->createMock(TranslatorInterface::class);
         $translator

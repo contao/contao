@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Framework\Adapter;
+
 /**
  * Provide methods to render a pagination menu.
  */
@@ -147,6 +149,7 @@ class Pagination
 		$this->lblLast = $GLOBALS['TL_LANG']['MSC']['last'];
 		$this->lblTotal = $GLOBALS['TL_LANG']['MSC']['totalPages'];
 
+		/** @var Adapter<Input>&Input $input */
 		$input = System::getContainer()->get('contao.framework')->getAdapter(Input::class);
 
 		if ($input->get($strParameter) > 0)
@@ -219,6 +222,7 @@ class Pagination
 			return '';
 		}
 
+		/** @var Adapter<Environment>&Environment $environment */
 		$environment = System::getContainer()->get('contao.framework')->getAdapter(Environment::class);
 
 		$blnQuery = false;
@@ -268,14 +272,14 @@ class Pagination
 		(
 			'link' => $this->lblPrevious,
 			'href' => $this->linkToPage($this->intPage - 1),
-			'title' => sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), ($this->intPage - 1))
+			'title' => sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), $this->intPage - 1)
 		);
 
 		$objTemplate->next = array
 		(
 			'link' => $this->lblNext,
 			'href' => $this->linkToPage($this->intPage + 1),
-			'title' => sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), ($this->intPage + 1))
+			'title' => sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), $this->intPage + 1)
 		);
 
 		$objTemplate->last = array

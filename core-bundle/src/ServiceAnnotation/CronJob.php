@@ -21,7 +21,9 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
  * Annotation to register a Contao cron job.
  *
  * @Annotation
+ *
  * @Target({"CLASS", "METHOD"})
+ *
  * @Attributes({
  *     @Attribute("value", type="string", required=true)
  * })

@@ -57,8 +57,6 @@ class ModuleChangePassword extends Module
 	 */
 	protected function compile()
 	{
-		$this->import(FrontendUser::class, 'User');
-
 		System::loadLanguageFile('tl_member');
 		$this->loadDataContainer('tl_member');
 
@@ -69,8 +67,7 @@ class ModuleChangePassword extends Module
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}();
+					System::importStatic($callback[0])->{$callback[1]}();
 				}
 				elseif (\is_callable($callback))
 				{
@@ -95,7 +92,8 @@ class ModuleChangePassword extends Module
 
 		$strFields = '';
 		$doNotSubmit = false;
-		$objMember = MemberModel::findByPk($this->User->id);
+		$user = FrontendUser::getInstance();
+		$objMember = MemberModel::findByPk($user->id);
 		$strFormId = 'tl_change_password_' . $this->id;
 		$strTable = $objMember->getTable();
 		$session = System::getContainer()->get('request_stack')->getSession();
@@ -104,7 +102,6 @@ class ModuleChangePassword extends Module
 		// Initialize the versioning (see #8301)
 		$objVersions = new Versions($strTable, $objMember->id);
 		$objVersions->setUsername($objMember->username);
-		$objVersions->setUserId(0);
 		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>$objMember->id)));
 		$objVersions->initialize();
 
@@ -180,13 +177,12 @@ class ModuleChangePassword extends Module
 			{
 				foreach ($GLOBALS['TL_HOOKS']['setNewPassword'] as $callback)
 				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($objMember, $objNewPassword->value, $this);
+					System::importStatic($callback[0])->{$callback[1]}($objMember, $objNewPassword->value, $this);
 				}
 			}
 
 			// Update the current user, so they are not logged out automatically
-			$this->User->findBy('id', $objMember->id);
+			$user->findBy('id', $objMember->id);
 
 			// Check whether there is a jumpTo page
 			if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)

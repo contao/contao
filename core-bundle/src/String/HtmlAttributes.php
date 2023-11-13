@@ -23,6 +23,8 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      */
     private array $attributes = [];
 
+    private bool $doubleEncoding = false;
+
     /**
      * @param iterable<string, string|int|bool|\Stringable|null>|string|self|null $attributes
      */
@@ -100,8 +102,12 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
 
         $name = strtolower($name);
 
-        if (1 !== preg_match('/^[a-z](?:[_-]?[a-z0-9])*$/', $name)) {
-            throw new \InvalidArgumentException(sprintf('A HTML attribute name must only consist of the characters [a-z0-9_-], must start with a letter, must not end with a underscore/hyphen and must not contain two underscores/hyphens in a row, got "%s".', $name));
+        // Even though the HTML 5 parser supports attribute names starting with
+        // an equal sign, we have to disallow that in order to support
+        // serializing boolean attributes. Otherwise, serializing and parsing
+        // back something like `hidden="" =attr="value"` would fail the roundtrip.
+        if (1 !== preg_match('(^[^>\s/=]+$)', $name) || 1 !== preg_match('//u', $name)) {
+            throw new \InvalidArgumentException(sprintf('An HTML attribute name must be valid UTF-8 and not contain the characters >, /, = or whitespace, got "%s".', $name));
         }
 
         // Unset if value is set to false
@@ -146,7 +152,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             return $this;
         }
 
-        unset($this->attributes[$name]);
+        unset($this->attributes[strtolower($name)]);
 
         return $this;
     }
@@ -170,7 +176,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
 
         $this->attributes['class'] = implode(
             ' ',
-            array_unique($this->split(($this->attributes['class'] ?? '').' '.$classes))
+            array_unique($this->split(($this->attributes['class'] ?? '').' '.$classes)),
         );
 
         if (empty($this->attributes['class'])) {
@@ -201,8 +207,8 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             ' ',
             array_diff(
                 $this->split($this->attributes['class'] ?? ''),
-                $this->split($classes)
-            )
+                $this->split($classes),
+            ),
         );
 
         if (empty($this->attributes['class'])) {
@@ -219,7 +225,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      *
      * If a falsy $condition is specified, the method is a no-op.
      *
-     * @param string|array<string,string> $styles
+     * @param string|array<string, string> $styles
      */
     public function addStyle(array|string $styles, mixed $condition = true): self
     {
@@ -237,10 +243,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             $styles = implode(';', $styles);
         }
 
-        $mergedStyles = array_merge(
-            $this->parseStyles($this->attributes['style'] ?? ''),
-            $this->parseStyles($styles),
-        );
+        $mergedStyles = [...$this->parseStyles($this->attributes['style'] ?? ''), ...$this->parseStyles($styles)];
 
         $this->attributes['style'] = $this->serializeStyles($mergedStyles);
 
@@ -259,7 +262,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      *
      * If a falsy $condition is specified, the method is a no-op.
      *
-     * @param string|list<string>|array<string,string> $styles
+     * @param string|list<string>|array<string, string> $styles
      */
     public function removeStyle(array|string $styles, mixed $condition = true): self
     {
@@ -289,6 +292,13 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         if (empty($this->attributes['style'])) {
             unset($this->attributes['style']);
         }
+
+        return $this;
+    }
+
+    public function setDoubleEncoding(bool $doubleEncoding): self
+    {
+        $this->doubleEncoding = $doubleEncoding;
 
         return $this;
     }
@@ -354,7 +364,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     private function test(mixed $condition): bool
     {
         if ($condition instanceof \Stringable) {
-            $condition = $condition->__toString();
+            $condition = (string) $condition;
         }
 
         return (bool) $condition;
@@ -376,21 +386,20 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     private function parseString(string $attributesString): \Generator
     {
         // Regular expression to match attributes according to https://html.spec.whatwg.org/#before-attribute-name-state
-        $attributeRegex = <<<'EOD'
-            (
-                [\s/]*+                                 # Optional white space including slash
-                ([^>\s/][^>\s/=]*+)                     # Attribute name
-                [\s]*+                                  # Optional white space
-                (?:=                                    # Assignment
-                    [\s]*+                              # Optional white space
-                    (?|                                 # Value
-                        "([^"]*)(?:"|$(*SKIP)(*FAIL))   # Double quoted value
-                        |'([^']*)(?:'|$(*SKIP)(*FAIL))  # Or single quoted value
-                        |([^\s>]*+)                     # Or unquoted or missing value
-                    )                                   # Value end
-                )?+                                     # Assignment is optional
-            )ix
-            EOD;
+        $attributeRegex = '(
+            [\s/]*+                                    # Optional white space including slash
+            ([^>\s/][^>\s/=]*+)                        # Attribute name
+            \s*+                                       # Optional white space
+            (?:
+                =                                      # Assignment
+                \s*+                                   # Optional white space
+                (?|                                    # Value
+                    "([^"]*)(?:"|$(*SKIP)(*FAIL))      # Double quoted value
+                    |\'([^\']*)(?:\'|$(*SKIP)(*FAIL))  # Or single quoted value
+                    |([^\s>]*+)                        # Or unquoted or missing value
+                )                                      # Value end
+            )?+                                        # Assignment is optional
+        )ix';
 
         preg_match_all($attributeRegex, $attributesString, $matches, PREG_SET_ORDER | PREG_UNMATCHED_AS_NULL);
 
@@ -405,7 +414,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             throw new \RuntimeException(sprintf('The value of property "%s" is not a valid UTF-8 string.', $name));
         }
 
-        $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE);
+        $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, null, $this->doubleEncoding);
 
         return str_replace(['{{', '}}'], ['&#123;&#123;', '&#125;&#125;'], $value);
     }
@@ -413,34 +422,30 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     private function parseStyles(string $styles): array
     {
         // Regular expression to match declarations according to https://www.w3.org/TR/css-syntax-3/#declaration-list-diagram
-        $declarationRegex = <<<'EOD'
-            (
-                (?:
-                    \\.                           # Escape
-                    |"(?:\\.|[^"\n])*+(?:"|\n|$)  # String token double quotes
-                    |'(?:\\.|[^'\n])*+(?:'|\n|$)  # String token single quotes
-                    |\{(?:(?R)|[^}])*+(?:\}|$)    # {}-block
-                    |\[(?:(?R)|[^]])*+(?:\]|$)    # []-block
-                    |\((?:(?R)|[^\)])*+(?:\)|$)   # ()-block
-                    |[^;{}\[\]()"']               # Anything else
-                )++
-            )ixs
-            EOD;
+        $declarationRegex = '/
+            (?:
+                \.                                # Escape
+                |"(?:\\\.|[^"\n])*+(?:"|\n|$)     # String token double quotes
+                |\'(?:\\\.|[^\'\n])*+(?:\'|\n|$)  # String token single quotes
+                |\{(?:(?R)|[^}])*+(?:}|$)         # {}-block
+                |\[(?:(?R)|[^]])*+(?:]|$)         # []-block
+                |\((?:(?R)|[^)])*+(?:\)|$)        # ()-block
+                |[^;{}\[\]()"\']                  # Anything else
+            )++
+        /ixs';
 
         // Regular expression to match an <ident-token> according to https://www.w3.org/TR/css-syntax-3/#ident-token-diagram
-        $propertyRegex = <<<'EOD'
-            (
-                ^
-                (?!\d)                             # Must not start with a digit
-                (?!-\d)                            # Must not start with a dash followed by a digit
-                -?+                                # Optional leading dash
-                (?:
-                    [a-z0-9\x80-\xFF_-]
-                    |\\(?:[0-9a-f]{1,6}\s?|[^\n])  # Escape
-                )++
-                $
-            )ixs
-            EOD;
+        $propertyRegex = '/
+            ^
+            (?!\d)                              # Must not start with a digit
+            (?!-\d)                             # Must not start with a dash followed by a digit
+            -?+                                 # Optional leading dash
+            (?:
+                [a-z0-9\x80-\xFF_-]
+                |\\\(?:[0-9a-f]{1,6}\s?|[^\n])  # Escape
+            )++
+            $
+        /ixs';
 
         preg_match_all($declarationRegex, $styles, $matches, PREG_SET_ORDER | PREG_UNMATCHED_AS_NULL);
 

@@ -60,8 +60,7 @@ class ModuleLostPassword extends Module
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}();
+					System::importStatic($callback[0])->{$callback[1]}();
 				}
 				elseif (\is_callable($callback))
 				{
@@ -211,7 +210,6 @@ class ModuleLostPassword extends Module
 		// Initialize the versioning (see #8301)
 		$objVersions = new Versions('tl_member', $objMember->id);
 		$objVersions->setUsername($objMember->username);
-		$objVersions->setUserId(0);
 		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>$objMember->id)));
 		$objVersions->initialize();
 
@@ -258,8 +256,7 @@ class ModuleLostPassword extends Module
 				{
 					foreach ($GLOBALS['TL_HOOKS']['setNewPassword'] as $callback)
 					{
-						$this->import($callback[0]);
-						$this->{$callback[0]}->{$callback[1]}($objMember, $objWidget->value, $this);
+						System::importStatic($callback[0])->{$callback[1]}($objMember, $objWidget->value, $this);
 					}
 				}
 

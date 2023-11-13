@@ -37,14 +37,17 @@ window.tinymce && tinymce.init({
         'id': 'tl_listing',
         'title': document.getElement('.tox-dialog__title').get('text'),
         'url': Contao.routes.backend_picker + '?context=' + (meta.filetype == 'file' ? 'link' : 'file') + '&amp;extras[fieldType]=radio&amp;extras[filesOnly]=true&amp;extras[source]=<?= $this->source ?>&amp;value=' + value + '&amp;popup=1',
-        'callback': function(table, val) { callback(val.join(',')); }
+        'callback': function(table, val) {
+          document.getElement('.tox-dialog input')?.focus();
+          callback(val.join(','));
+        }
       });
     },
     file_picker_types: '<?= $this->fileBrowserTypes ?>',
   <?php $this->endblock(); ?>
 
   <?php $this->block('content_css'); ?>
-    content_css: 'system/themes/<?= Backend::getTheme() ?>/' + (document.documentElement.dataset.colorScheme === 'dark' ? 'tinymce-dark.min.css' :  'tinymce.min.css'),
+    content_css: document.documentElement.dataset.colorScheme === 'dark' ? '<?= $this->asset('tinymce-dark.css', 'system/themes/'.Backend::getTheme()) ?>' :  '<?= $this->asset('tinymce.css', 'system/themes/'.Backend::getTheme()) ?>',
   <?php $this->endblock(); ?>
 
   <?php $this->block('plugins'); ?>
@@ -73,6 +76,10 @@ window.tinymce && tinymce.init({
 
   <?php $this->block('custom'); ?>
   <?php $this->endblock(); ?>
+
+  <?php if ($this->readonly): ?>
+    readonly: true,
+  <?php endif; ?>
 
   browser_spellcheck: true,
   importcss_append: true

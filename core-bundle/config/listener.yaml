@@ -13,12 +13,6 @@ services:
         tags:
             - { name: contao.hook, hook: getSystemMessages }
 
-    contao.listener.data_container.backend_favorites:
-        class: Contao\CoreBundle\EventListener\DataContainer\BackendFavoritesListener
-        arguments:
-            - '@security.helper'
-            - '@request_stack'
-
     contao.listener.backend_locale:
         class: Contao\CoreBundle\EventListener\BackendLocaleListener
         arguments:
@@ -69,6 +63,12 @@ services:
         tags:
             - kernel.event_subscriber
 
+    contao.listener.data_container.backend_favorites:
+        class: Contao\CoreBundle\EventListener\DataContainer\BackendFavoritesListener
+        arguments:
+            - '@security.helper'
+            - '@request_stack'
+
     contao.listener.data_container.content_composition:
         class: Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener
         public: true
@@ -103,8 +103,6 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\LayoutOptionsListener
         arguments:
             - '@database_connection'
-        tags:
-            - { name: kernel.reset, method: reset }
 
     contao.listener.data_container.member_groups:
         class: Contao\CoreBundle\EventListener\DataContainer\MemberGroupsListener
@@ -281,6 +279,7 @@ services:
     contao.listener.insecure_installation:
         class: Contao\CoreBundle\EventListener\InsecureInstallationListener
         arguments:
+            - '%kernel.secret%'
             - '%contao.web_dir%'
         tags:
             - kernel.event_listener
@@ -381,18 +380,12 @@ services:
         tags:
             - { name: kernel.event_listener, priority: -48 }
 
-    contao.listener.messenger.worker:
-        class: Contao\CoreBundle\Messenger\EventListener\WorkerListener
-        arguments:
-            - '@contao.messenger.auto_fallback_notifier'
-
     contao.listener.merge_http_headers:
         class: Contao\CoreBundle\EventListener\MergeHttpHeadersListener
         arguments:
             - '@contao.framework'
         tags:
             - { name: kernel.event_listener, priority: 256 }
-            - { name: kernel.reset, method: reset }
 
     contao.listener.module_template_options:
         class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
@@ -434,6 +427,7 @@ services:
             - '@security.helper'
             - '@contao.routing.page_registry'
             - '@http_kernel'
+            - '@contao.routing.page_finder'
         tags:
             # The priority must be higher than the one of the Twig exception listener (defaults to -128)
             - { name: kernel.event_listener, priority: -96 }
@@ -473,7 +467,6 @@ services:
     contao.listener.preview_url_create:
         class: Contao\CoreBundle\EventListener\PreviewUrlCreateListener
         arguments:
-            - '@request_stack'
             - '@contao.framework'
         tags:
             - kernel.event_listener
@@ -539,6 +532,13 @@ services:
             - kernel.event_listener
             - { name: monolog.logger, channel: contao.access }
 
+    contao.listener.security.token_deauthenticated:
+        class: Contao\CoreBundle\EventListener\Security\TokenDeauthenticatedListener
+        arguments:
+            - '@contao.repository.remember_me'
+        tags:
+            - kernel.event_listener
+
     contao.listener.security.two_factor_frontend:
         class: Contao\CoreBundle\EventListener\Security\TwoFactorFrontendListener
         arguments:
@@ -570,7 +570,13 @@ services:
         class: Contao\CoreBundle\EventListener\SubrequestCacheSubscriber
         tags:
             - kernel.event_subscriber
-            - { name: kernel.reset, method: reset }
+
+    contao.listener.unwrap_twig_exception:
+        class: Contao\CoreBundle\EventListener\UnwrapTwigExceptionListener
+        tags:
+            # The priority must be higher than the Symfony exception converter listener (defaults to 96)
+            # and higher than the Sentry error listener (defaults to 128)
+            - { name: kernel.event_listener, priority: 256 }
 
     contao.listener.user_session:
         class: Contao\CoreBundle\EventListener\UserSessionListener
@@ -598,3 +604,8 @@ services:
             - '@database_connection'
             - '@router'
             - '@translator'
+
+    contao.messenger.worker_listener:
+        class: Contao\CoreBundle\Messenger\EventListener\WorkerListener
+        arguments:
+            - '@contao.messenger.auto_fallback_notifier'

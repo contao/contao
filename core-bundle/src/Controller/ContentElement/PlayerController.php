@@ -41,6 +41,7 @@ use Symfony\Component\HttpFoundation\Response;
 class PlayerController extends AbstractContentElementController
 {
     private const VIDEO_TYPES = ['webm', 'mp4', 'm4v', 'mov', 'wmv', 'ogv'];
+
     private const AUDIO_TYPES = ['m4a', 'mp3', 'wma', 'mpeg', 'wav', 'ogg'];
 
     /**
@@ -65,8 +66,7 @@ class PlayerController extends AbstractContentElementController
         // Compile data
         $figureData = $isVideo
             ? $this->buildVideoFigureData($model, $sourceFiles)
-            : $this->buildAudioFigureData($model, $sourceFiles)
-        ;
+            : $this->buildAudioFigureData($model, $sourceFiles);
 
         $template->set('figure', (object) $figureData);
         $template->set('source_files', $sourceFiles);
@@ -77,7 +77,7 @@ class PlayerController extends AbstractContentElementController
     /**
      * @param list<FilesystemItem> $sourceFiles
      *
-     * @return array<string, array<string,string|HtmlAttributes|list<HtmlAttributes>>|string>
+     * @return array<string, array<string, string|HtmlAttributes|list<HtmlAttributes>>|string>
      *
      * @phpstan-return FigureData
      */
@@ -101,21 +101,20 @@ class PlayerController extends AbstractContentElementController
 
         $range = $model->playerStart || $model->playerStop
             ? sprintf('#t=%s', implode(',', [$model->playerStart ?: '', $model->playerStop ?: '']))
-            : ''
-        ;
+            : '';
 
         $captions = [$model->playerCaption];
 
         $sources = array_map(
-            function (FilesystemItem $item) use ($range, &$captions): HtmlAttributes {
+            function (FilesystemItem $item) use (&$captions, $range): HtmlAttributes {
                 $captions[] = ($item->getExtraMetadata()['metadata'] ?? null)?->getDefault()?->getCaption();
 
                 return (new HtmlAttributes())
                     ->setIfExists('type', $item->getMimeType(''))
-                    ->set('src', ((string) $this->publicUriByStoragePath[$item->getPath()]).$range)
+                    ->set('src', $this->publicUriByStoragePath[$item->getPath()].$range)
                 ;
             },
-            $sourceFiles
+            $sourceFiles,
         );
 
         return [
@@ -133,7 +132,7 @@ class PlayerController extends AbstractContentElementController
     /**
      * @param list<FilesystemItem> $sourceFiles
      *
-     * @return array<string, array<string,string|HtmlAttributes|list<HtmlAttributes>>|string>
+     * @return array<string, array<string, string|HtmlAttributes|list<HtmlAttributes>>|string>
      *
      * @phpstan-return FigureData
      */
@@ -155,7 +154,7 @@ class PlayerController extends AbstractContentElementController
                     ->set('src', (string) $this->publicUriByStoragePath[$item->getPath()])
                 ;
             },
-            $sourceFiles
+            $sourceFiles,
         );
 
         return [
@@ -199,7 +198,7 @@ class PlayerController extends AbstractContentElementController
                 continue;
             }
 
-            if (null === ($publicUri = $this->filesStorage->generatePublicUri($item->getPath()))) {
+            if (!$publicUri = $this->filesStorage->generatePublicUri($item->getPath())) {
                 continue;
             }
 

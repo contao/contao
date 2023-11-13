@@ -21,6 +21,7 @@ use Contao\PageModel;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Scheb\TwoFactorBundle\Security\Http\Authenticator\Passport\Credentials\TwoFactorCodeCredentials;
 use Scheb\TwoFactorBundle\Security\Http\Authenticator\TwoFactorAuthenticator;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -34,7 +35,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
@@ -52,38 +52,36 @@ use Symfony\Component\Security\Http\ParameterBagUtils;
 
 class ContaoLoginAuthenticator extends AbstractAuthenticator implements AuthenticationEntryPointInterface, InteractiveAuthenticatorInterface
 {
-    private array $options;
+    private readonly array $options;
 
     public function __construct(
-        private UserProviderInterface $userProvider,
-        private AuthenticationSuccessHandlerInterface $successHandler,
-        private AuthenticationFailureHandlerInterface $failureHandler,
-        private ScopeMatcher $scopeMatcher,
-        private RouterInterface $router,
-        private UriSigner $uriSigner,
-        private ContaoFramework $framework,
-        private TokenStorageInterface $tokenStorage,
-        private PageRegistry $pageRegistry,
-        private HttpKernelInterface $httpKernel,
-        private RequestStack $requestStack,
-        private TwoFactorAuthenticator $twoFactorAuthenticator,
+        private readonly UserProviderInterface $userProvider,
+        private readonly AuthenticationSuccessHandlerInterface $successHandler,
+        private readonly AuthenticationFailureHandlerInterface $failureHandler,
+        private readonly ScopeMatcher $scopeMatcher,
+        private readonly RouterInterface $router,
+        private readonly UriSigner $uriSigner,
+        private readonly ContaoFramework $framework,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly PageRegistry $pageRegistry,
+        private readonly HttpKernelInterface $httpKernel,
+        private readonly RequestStack $requestStack,
+        private readonly TwoFactorAuthenticator $twoFactorAuthenticator,
         array $options,
     ) {
-        $this->options = array_merge(
-            [
-                'username_parameter' => 'username',
-                'password_parameter' => 'password',
-                'check_path' => '/login_check',
-                'post_only' => true,
-                'enable_csrf' => false,
-                'csrf_parameter' => '_csrf_token',
-                'csrf_token_id' => 'authenticate',
-            ],
-            $options
-        );
+        $this->options = [
+            'username_parameter' => 'username',
+            'password_parameter' => 'password',
+            'check_path' => '/login_check',
+            'post_only' => true,
+            'enable_csrf' => false,
+            'csrf_parameter' => '_csrf_token',
+            'csrf_token_id' => 'authenticate',
+            ...$options,
+        ];
     }
 
-    public function start(Request $request, AuthenticationException $authException = null): RedirectResponse|Response
+    public function start(Request $request, AuthenticationException|null $authException = null): RedirectResponse|Response
     {
         if ($this->scopeMatcher->isBackendRequest($request)) {
             return $this->redirectToBackend($request);
@@ -122,9 +120,9 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         $credentials = $this->getCredentials($request);
 
         $passport = new Passport(
-            new UserBadge($credentials['username'], [$this->userProvider, 'loadUserByIdentifier']),
+            new UserBadge($credentials['username'], $this->userProvider->loadUserByIdentifier(...)),
             new PasswordCredentials($credentials['password']),
-            [new RememberMeBadge()]
+            [new RememberMeBadge()],
         );
 
         if ($this->options['enable_csrf']) {
@@ -170,19 +168,13 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
 
     public function isInteractive(): bool
     {
-        $request = $this->requestStack->getCurrentRequest();
-
-        if (null === $request) {
+        if (!$request = $this->requestStack->getCurrentRequest()) {
             return false;
         }
 
         $page = $request->attributes->get('pageModel');
 
-        if (!$page instanceof PageModel) {
-            return false;
-        }
-
-        return true;
+        return $page instanceof PageModel;
     }
 
     private function getCredentials(Request $request): array
@@ -199,7 +191,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
 
         $credentials['username'] = trim($credentials['username']);
 
-        if (\strlen($credentials['username']) > Security::MAX_USERNAME_LENGTH) {
+        if (\strlen($credentials['username']) > UserBadge::MAX_USERNAME_LENGTH) {
             throw new BadCredentialsException('Invalid username.');
         }
 
@@ -213,7 +205,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         $url = $this->router->generate(
             'contao_backend_login',
             ['redirect' => $request->getUri()],
-            UrlGeneratorInterface::ABSOLUTE_URL
+            UrlGeneratorInterface::ABSOLUTE_URL,
         );
 
         return new RedirectResponse($this->uriSigner->sign($url));
@@ -223,13 +215,14 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
     {
         $page = $request->attributes->get('pageModel');
         $page->loadDetails();
+
         $page->protected = false;
 
-        if (null === $this->tokenStorage->getToken()) {
+        if (!$this->tokenStorage->getToken()) {
             $pageAdapter = $this->framework->getAdapter(PageModel::class);
             $errorPage = $pageAdapter->findFirstPublishedByTypeAndPid('error_401', $page->rootId);
 
-            if (null === $errorPage) {
+            if (!$errorPage) {
                 throw new PageNotFoundException('No error page found.');
             }
 

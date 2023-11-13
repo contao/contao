@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 abstract class AbstractFrontendModuleController extends AbstractFragmentController
 {
-    public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null): Response
+    public function __invoke(Request $request, ModuleModel $model, string $section, array|null $classes = null): Response
     {
         if ($this->isBackendScope($request)) {
             return $this->getBackendWildcard($model);

@@ -80,9 +80,9 @@ class ModuleFaqList extends Module
 	 */
 	protected function compile()
 	{
-		$objFaq = FaqModel::findPublishedByPids($this->faq_categories);
+		$objFaqs = FaqModel::findPublishedByPids($this->faq_categories);
 
-		if ($objFaq === null)
+		if ($objFaqs === null)
 		{
 			$this->Template->faq = array();
 
@@ -93,8 +93,10 @@ class ModuleFaqList extends Module
 		$arrFaq = array_fill_keys($this->faq_categories, array());
 
 		// Add FAQs
-		while ($objFaq->next())
+		while ($objFaqs->next())
 		{
+			$objFaq = $objFaqs->current();
+
 			$arrTemp = $objFaq->row();
 			$arrTemp['title'] = StringUtil::specialchars($objFaq->question, true);
 			$arrTemp['href'] = $this->generateFaqLink($objFaq);
@@ -102,9 +104,12 @@ class ModuleFaqList extends Module
 			/** @var FaqCategoryModel $objPid */
 			$objPid = $objFaq->getRelated('pid');
 
+			if (empty($arrFaq[$objFaq->pid]))
+			{
+				$arrFaq[$objFaq->pid] = $objPid->row();
+			}
+
 			$arrFaq[$objFaq->pid]['items'][] = $arrTemp;
-			$arrFaq[$objFaq->pid]['headline'] = $objPid->headline;
-			$arrFaq[$objFaq->pid]['title'] = $objPid->title;
 
 			$tags[] = 'contao.db.tl_faq.' . $objFaq->id;
 		}

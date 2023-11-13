@@ -22,7 +22,7 @@ class RememberMeTokenProvider implements TokenProviderInterface
 {
     private RememberMeRepository|null $repository = null;
 
-    public function __construct(private \Closure $repositoryClosure)
+    public function __construct(private readonly \Closure $repositoryClosure)
     {
     }
 
@@ -35,7 +35,7 @@ class RememberMeTokenProvider implements TokenProviderInterface
             $rememberMe->getUserIdentifier(),
             $rememberMe->getSeries(),
             $rememberMe->getValue(),
-            \DateTime::createFromInterface($rememberMe->getLastUsed())
+            \DateTime::createFromInterface($rememberMe->getLastUsed()),
         );
     }
 
@@ -61,14 +61,14 @@ class RememberMeTokenProvider implements TokenProviderInterface
                 $token->getUserIdentifier(),
                 $token->getSeries(),
                 $token->getTokenValue(),
-                $token->getLastUsed()
-            )
+                $token->getLastUsed(),
+            ),
         );
     }
 
     private function getRepository(): RememberMeRepository
     {
-        if (null === $this->repository) {
+        if (!$this->repository) {
             $this->repository = ($this->repositoryClosure)();
         }
 

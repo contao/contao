@@ -21,13 +21,18 @@ use Contao\StringUtil;
 class DataContainerOperation implements \ArrayAccess
 {
     private array $operation;
+
     private string|null $html = null;
 
     /**
      * @internal
      */
-    public function __construct(private readonly string $name, array $operation, private readonly array $record, private readonly DataContainer $dataContainer)
-    {
+    public function __construct(
+        private readonly string $name,
+        array $operation,
+        private readonly array $record,
+        private readonly DataContainer $dataContainer,
+    ) {
         $id = StringUtil::specialchars(rawurldecode((string) $record['id']));
 
         // Dereference pointer to $GLOBALS['TL_LANG']

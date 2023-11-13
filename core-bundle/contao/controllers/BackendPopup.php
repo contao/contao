@@ -40,7 +40,6 @@ class BackendPopup extends Backend
 	 */
 	public function __construct()
 	{
-		$this->import(BackendUser::class, 'User');
 		parent::__construct();
 
 		if (!System::getContainer()->get('security.authorization_checker')->isGranted('ROLE_USER'))
@@ -66,13 +65,13 @@ class BackendPopup extends Backend
 	{
 		if (!$this->strFile)
 		{
-			die('No file given');
+			exit('No file given');
 		}
 
 		// Make sure there are no attempts to hack the file system
 		if (preg_match('@^\.+@', $this->strFile) || preg_match('@\.+/@', $this->strFile) || preg_match('@(://)+@', $this->strFile))
 		{
-			die('Invalid file name');
+			exit('Invalid file name');
 		}
 
 		$container = System::getContainer();
@@ -80,7 +79,7 @@ class BackendPopup extends Backend
 		// Limit preview to the files directory
 		if (!preg_match('@^' . preg_quote($container->getParameter('contao.upload_path'), '@') . '@i', $this->strFile))
 		{
-			die('Invalid path');
+			exit('Invalid path');
 		}
 
 		$projectDir = $container->getParameter('kernel.project_dir');
@@ -88,13 +87,13 @@ class BackendPopup extends Backend
 		// Check whether the file exists
 		if (!file_exists($projectDir . '/' . $this->strFile))
 		{
-			die('File not found');
+			exit('File not found');
 		}
 
 		// Check whether the file is mounted (thanks to Marko Cupic)
-		if (!$this->User->hasAccess($this->strFile, 'filemounts'))
+		if (!BackendUser::getInstance()->hasAccess($this->strFile, 'filemounts'))
 		{
-			die('Permission denied');
+			exit('Permission denied');
 		}
 
 		// Open the download dialogue
@@ -135,6 +134,16 @@ class BackendPopup extends Backend
 				$objTemplate->height = $objFile->height;
 				$objTemplate->src = $this->urlEncode($this->strFile);
 				$objTemplate->dataUri = $objFile->dataUri;
+
+				try
+				{
+					$readerWriter = System::getContainer()->get('contao.image.metadata');
+					$objTemplate->metadata = $readerWriter->toReadable($readerWriter->parse($projectDir . '/' . $this->strFile));
+				}
+				catch (\Throwable)
+				{
+					// Ignore
+				}
 			}
 			else
 			{
@@ -145,31 +154,20 @@ class BackendPopup extends Backend
 					$pictureSize = (new PictureConfiguration())
 						->setSize(
 							(new PictureConfigurationItem())
-								->setResizeConfig((new ResizeConfiguration())->setWidth(864 / 4))
+								->setResizeConfig((new ResizeConfiguration())->setWidth(864))
 								->setDensities('1x, 2x')
 						)
 					;
 
-					$previewPictures = array();
-					$pictures = $container->get('contao.image.preview_factory')->createPreviewPictures($projectDir . '/' . $this->strFile, $pictureSize);
-
-					if (($previewCount = \count(is_countable($pictures) ? $pictures : iterator_to_array($pictures))) < 4)
-					{
-						$pictureSize->getSize()->getResizeConfig()->setWidth((int) floor(864 / ($previewCount ?: 1)));
-						$pictures = $container->get('contao.image.preview_factory')->createPreviewPictures($projectDir . '/' . $this->strFile, $pictureSize);
-					}
-
+					$picture = $container->get('contao.image.preview_factory')->createPreviewPicture($projectDir . '/' . $this->strFile, $pictureSize);
 					$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
 
-					foreach ($pictures as $picture)
-					{
-						$previewPictures[] = array(
+					$objTemplate->previewPictures = array(
+						array(
 							'img' => $picture->getImg($projectDir, $staticUrl),
 							'sources' => $picture->getSources($projectDir, $staticUrl),
-						);
-					}
-
-					$objTemplate->previewPictures = $previewPictures;
+						)
+					);
 				}
 				catch (UnableToGeneratePreviewException|MissingPreviewProviderException $exception)
 				{

@@ -25,9 +25,9 @@ use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ContentCompositionListener
@@ -35,20 +35,20 @@ class ContentCompositionListener
     /**
      * @var Adapter<Image>
      */
-    private Adapter $image;
+    private readonly Adapter $image;
 
     /**
      * @var Adapter<Backend>
      */
-    private Adapter $backend;
+    private readonly Adapter $backend;
 
     public function __construct(
-        private ContaoFramework $framework,
-        private Security $security,
-        private PageRegistry $pageRegistry,
-        private TranslatorInterface $translator,
-        private Connection $connection,
-        private RequestStack $requestStack,
+        private readonly ContaoFramework $framework,
+        private readonly Security $security,
+        private readonly PageRegistry $pageRegistry,
+        private readonly TranslatorInterface $translator,
+        private readonly Connection $connection,
+        private readonly RequestStack $requestStack,
     ) {
         $this->image = $this->framework->getAdapter(Image::class);
         $this->backend = $this->framework->getAdapter(Backend::class);
@@ -66,14 +66,14 @@ class ContentCompositionListener
         $pageModel->setRow($row);
 
         if (!$this->pageRegistry->supportsContentComposition($pageModel) || !$this->hasArticlesInLayout($pageModel)) {
-            return null !== $icon ? $this->image->getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ' : '';
+            return null !== $icon ? $this->image->getHtml(str_replace('.svg', '--disabled.svg', $icon)).' ' : '';
         }
 
         return sprintf(
             '<a href="%s" title="%s">%s</a> ',
             $this->backend->addToUrl($href.'&amp;pn='.$row['id']),
             StringUtil::specialchars($title),
-            $this->image->getHtml($icon, $label)
+            $this->image->getHtml($icon, $label),
         );
     }
 
@@ -88,7 +88,7 @@ class ContentCompositionListener
         $currentRecord = $dc->getCurrentRecord();
 
         // Return if there is no current record (override all)
-        if (null === $currentRecord || null === $request || !$user instanceof BackendUser || !$request->hasSession()) {
+        if (null === $currentRecord || !$request || !$user instanceof BackendUser || !$request->hasSession()) {
             return;
         }
 
@@ -140,7 +140,7 @@ class ContentCompositionListener
     }
 
     #[AsCallback(table: 'tl_article', target: 'list.sorting.paste_button')]
-    public function renderArticlePasteButton(DataContainer $dc, array $row, string $table, bool $cr, array $clipboard = null): string
+    public function renderArticlePasteButton(DataContainer $dc, array $row, string $table, bool $cr, array|null $clipboard = null): string
     {
         if ($table === ($GLOBALS['TL_DCA'][$dc->table]['config']['ptable'] ?? null)) {
             return $this->renderArticlePasteIntoButton($dc, $row, $cr, $clipboard);
@@ -149,7 +149,7 @@ class ContentCompositionListener
         return $this->renderArticlePasteAfterButton($dc, $row, $cr, $clipboard);
     }
 
-    private function renderArticlePasteIntoButton(DataContainer $dc, array $row, bool $cr, array $clipboard = null): string
+    private function renderArticlePasteIntoButton(DataContainer $dc, array $row, bool $cr, array|null $clipboard = null): string
     {
         $pageModel = $this->framework->createInstance(PageModel::class);
         $pageModel->preventSaving(false);
@@ -161,25 +161,25 @@ class ContentCompositionListener
         }
 
         if ($cr || !$this->security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, $row)) {
-            return $this->image->getHtml('pasteinto_.svg').' ';
+            return $this->image->getHtml('pasteinto--disabled.svg').' ';
         }
 
         return sprintf(
             '<a href="%s" title="%s" onclick="Backend.getScrollOffset()">%s</a> ',
             $this->backend->addToUrl('act='.$clipboard['mode'].'&amp;mode=2&amp;pid='.$row['id'].(!\is_array($clipboard['id'] ?? null) ? '&amp;id='.$clipboard['id'] : '')),
             StringUtil::specialchars($this->translator->trans($dc->table.'.pasteinto.1', [$row['id']], 'contao_'.$dc->table)),
-            $this->image->getHtml('pasteinto.svg', $this->translator->trans($dc->table.'.pasteinto.1', [$row['id']], 'contao_'.$dc->table))
+            $this->image->getHtml('pasteinto.svg', $this->translator->trans($dc->table.'.pasteinto.1', [$row['id']], 'contao_'.$dc->table)),
         );
     }
 
-    private function renderArticlePasteAfterButton(DataContainer $dc, array $row, bool $cr, array $clipboard = null): string
+    private function renderArticlePasteAfterButton(DataContainer $dc, array $row, bool $cr, array|null $clipboard = null): string
     {
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
         $pageModel = $pageAdapter->findByPk($row['pid']);
 
         // Do not show paste button for pages without content composition or articles in layout
         if (
-            null === $pageModel
+            !$pageModel
             || !$this->pageRegistry->supportsContentComposition($pageModel)
             || !$this->hasArticlesInLayout($pageModel)
         ) {
@@ -192,14 +192,14 @@ class ContentCompositionListener
             || ('cutAll' === $clipboard['mode'] && \in_array($row['id'], $clipboard['id'], true))
             || !$this->security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, $pageModel)
         ) {
-            return $this->image->getHtml('pasteafter_.svg').' ';
+            return $this->image->getHtml('pasteafter--disabled.svg').' ';
         }
 
         return sprintf(
             '<a href="%s" title="%s" onclick="Backend.getScrollOffset()">%s</a> ',
             $this->backend->addToUrl('act='.$clipboard['mode'].'&amp;mode=1&amp;pid='.$row['id'].(!\is_array($clipboard['id']) ? '&amp;id='.$clipboard['id'] : '')),
             StringUtil::specialchars($this->translator->trans($dc->table.'.pasteafter.1', [$row['id']], 'contao_'.$dc->table)),
-            $this->image->getHtml('pasteafter.svg', $this->translator->trans($dc->table.'.pasteafter.1', [$row['id']], 'contao_'.$dc->table))
+            $this->image->getHtml('pasteafter.svg', $this->translator->trans($dc->table.'.pasteafter.1', [$row['id']], 'contao_'.$dc->table)),
         );
     }
 
@@ -212,10 +212,9 @@ class ContentCompositionListener
     {
         $pageModel->loadDetails();
 
-        /** @var LayoutModel|null $layout */
         $layout = $pageModel->getRelated('layout');
 
-        if (null === $layout) {
+        if (!$layout instanceof LayoutModel) {
             return 'main';
         }
 

@@ -55,7 +55,7 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
             return false;
         }
 
-        return false === $this->bubble;
+        return !$this->bubble;
     }
 
     protected function write(array $record): void
@@ -86,10 +86,11 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
 
     private function getConnection(): Connection
     {
-        if (null === $this->container || !$this->container->has($this->dbalServiceName)) {
+        if (!$this->container || !$this->container->has($this->dbalServiceName)) {
             throw new \RuntimeException('The container has not been injected or the database service is missing');
         }
 
+        /** @var Connection */
         return $this->container->get($this->dbalServiceName);
     }
 }

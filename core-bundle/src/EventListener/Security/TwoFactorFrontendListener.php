@@ -32,10 +32,10 @@ class TwoFactorFrontendListener
     use TargetPathTrait;
 
     public function __construct(
-        private ContaoFramework $framework,
-        private ScopeMatcher $scopeMatcher,
-        private TokenStorageInterface $tokenStorage,
-        private array $supportedTokens,
+        private readonly ContaoFramework $framework,
+        private readonly ScopeMatcher $scopeMatcher,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly array $supportedTokens,
     ) {
     }
 
@@ -45,9 +45,7 @@ class TwoFactorFrontendListener
             return;
         }
 
-        $token = $this->tokenStorage->getToken();
-
-        if (null === $token) {
+        if (!$token = $this->tokenStorage->getToken()) {
             return;
         }
 

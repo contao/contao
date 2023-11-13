@@ -40,8 +40,7 @@ class BackendTemplate extends Template
 		{
 			foreach ($GLOBALS['TL_HOOKS']['parseBackendTemplate'] as $callback)
 			{
-				$this->import($callback[0]);
-				$strBuffer = $this->{$callback[0]}->{$callback[1]}($strBuffer, $this->strTemplate);
+				$strBuffer = System::importStatic($callback[0])->{$callback[1]}($strBuffer, $this->strTemplate);
 			}
 		}
 
@@ -74,25 +73,11 @@ class BackendTemplate extends Template
 		if (!empty($GLOBALS['TL_CSS']) && \is_array($GLOBALS['TL_CSS']))
 		{
 			$strStyleSheets = '';
-			$objCombiner = new Combiner();
 
 			foreach (array_unique($GLOBALS['TL_CSS']) as $stylesheet)
 			{
 				$options = StringUtil::resolveFlaggedUrl($stylesheet);
-
-				if ($options->static)
-				{
-					$objCombiner->add($stylesheet, $options->mtime, $options->media);
-				}
-				else
-				{
-					$strStyleSheets .= Template::generateStyleTag($this->addStaticUrlTo($stylesheet), $options->media, $options->mtime);
-				}
-			}
-
-			if ($objCombiner->hasEntries())
-			{
-				$strStyleSheets = Template::generateStyleTag($objCombiner->getCombinedFile(), 'all') . $strStyleSheets;
+				$strStyleSheets .= Template::generateStyleTag($this->addStaticUrlTo($stylesheet), $options->media, $options->mtime);
 			}
 
 			$this->stylesheets .= $strStyleSheets;
@@ -101,32 +86,12 @@ class BackendTemplate extends Template
 		// JavaScripts
 		if (!empty($GLOBALS['TL_JAVASCRIPT']) && \is_array($GLOBALS['TL_JAVASCRIPT']))
 		{
-			$objCombiner = new Combiner();
-			$objCombinerAsync = new Combiner();
 			$strJavaScripts = '';
 
 			foreach (array_unique($GLOBALS['TL_JAVASCRIPT']) as $javascript)
 			{
 				$options = StringUtil::resolveFlaggedUrl($javascript);
-
-				if ($options->static)
-				{
-					$options->async ? $objCombinerAsync->add($javascript, $options->mtime) : $objCombiner->add($javascript, $options->mtime);
-				}
-				else
-				{
-					$strJavaScripts .= Template::generateScriptTag($this->addStaticUrlTo($javascript), $options->async, $options->mtime);
-				}
-			}
-
-			if ($objCombiner->hasEntries())
-			{
-				$strJavaScripts = Template::generateScriptTag($objCombiner->getCombinedFile()) . $strJavaScripts;
-			}
-
-			if ($objCombinerAsync->hasEntries())
-			{
-				$strJavaScripts = Template::generateScriptTag($objCombinerAsync->getCombinedFile(), true) . $strJavaScripts;
+				$strJavaScripts .= Template::generateScriptTag($this->addStaticUrlTo($javascript), $options->async, $options->mtime);
 			}
 
 			$this->javascripts .= $strJavaScripts;
@@ -145,8 +110,7 @@ class BackendTemplate extends Template
 		{
 			foreach ($GLOBALS['TL_HOOKS']['outputBackendTemplate'] as $callback)
 			{
-				$this->import($callback[0]);
-				$strBuffer = $this->{$callback[0]}->{$callback[1]}($strBuffer, $this->strTemplate);
+				$strBuffer = System::importStatic($callback[0])->{$callback[1]}($strBuffer, $this->strTemplate);
 			}
 		}
 
@@ -180,7 +144,14 @@ class BackendTemplate extends Template
 
 			if (!empty($css) && \is_array($css))
 			{
-				if (!\is_array($GLOBALS['TL_CSS']))
+				$packages = System::getContainer()->get('assets.packages');
+
+				foreach ($css as $k => $v)
+				{
+					$css[$k] = $packages->getUrl($v);
+				}
+
+				if (!\is_array($GLOBALS['TL_CSS'] ?? null))
 				{
 					$GLOBALS['TL_CSS'] = array();
 				}
@@ -195,7 +166,14 @@ class BackendTemplate extends Template
 
 			if (!empty($js) && \is_array($js))
 			{
-				if (!\is_array($GLOBALS['TL_JAVASCRIPT']))
+				$packages = System::getContainer()->get('assets.packages');
+
+				foreach ($js as $k => $v)
+				{
+					$js[$k] = $packages->getUrl($v);
+				}
+
+				if (!\is_array($GLOBALS['TL_JAVASCRIPT'] ?? null))
 				{
 					$GLOBALS['TL_JAVASCRIPT'] = array();
 				}

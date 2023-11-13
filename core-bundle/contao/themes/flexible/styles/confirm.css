@@ -1,0 +1,65 @@
+@import 'fonts.css';
+@import 'basic.css';
+
+/* Body */
+body {
+	background: var(--body-bg) url("icons/stop.svg") center 3em no-repeat;
+}
+
+/* Container */
+#container {
+	width: 620px;
+	margin: 15em auto 0;
+	background: var(--content-bg);
+	border-radius: 2px;
+}
+
+/* Elements */
+h1 {
+	margin-bottom: 1em;
+}
+
+p {
+	line-height: 1.3;
+}
+
+.link {
+	word-wrap: break-word;
+}
+
+.tl_formbody_edit {
+	padding: 45px;
+}
+
+.submit_container {
+	margin-top: 1.5em;
+}
+
+.submit_container a {
+	vertical-align: middle;
+}
+
+.tl_submit {
+	margin-right: 6px;
+}
+
+table {
+	margin: 0 18px 18px;
+}
+
+th, td {
+	padding: 2px;
+}
+
+th {
+	padding-right: 12px;
+}
+
+/* Handheld */
+@media (max-width: 767px) {
+	#container {
+		width: auto;
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+}

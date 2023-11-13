@@ -119,7 +119,7 @@ class ZipReader
 	 *
 	 * @throws \Exception If $strFile does not exist or cannot be opened
 	 */
-	public function __construct($strFile)
+	public function __construct($strFile, $blnSkipRootFolder = false)
 	{
 		// Handle open_basedir restrictions
 		if ($strFile == '.')
@@ -144,7 +144,7 @@ class ZipReader
 			throw new \Exception("Could not open file $strFile");
 		}
 
-		$this->readCentralDirectory();
+		$this->readCentralDirectory($blnSkipRootFolder);
 	}
 
 	/**
@@ -359,7 +359,7 @@ class ZipReader
 		$arrEFL = unpack('v', @fread($this->resFile, 2));
 
 		// Reposition pointer
-		fseek($this->resFile, ($this->arrFiles[$this->intIndex]['file_name_length'] + $arrEFL[1]), SEEK_CUR);
+		fseek($this->resFile, $this->arrFiles[$this->intIndex]['file_name_length'] + $arrEFL[1], SEEK_CUR);
 
 		// Empty file
 		if ($this->arrFiles[$this->intIndex]['compressed_size'] < 1)
@@ -416,7 +416,7 @@ class ZipReader
 	 *
 	 * @throws \Exception If the central directory cannot be found
 	 */
-	protected function readCentralDirectory()
+	protected function readCentralDirectory($blnSkipRootFolder = false)
 	{
 		$strMbCharset = null;
 
@@ -447,7 +447,7 @@ class ZipReader
 		while ($fseek != -1 && ($pos = strpos($strBuffer, self::CENTRAL_DIR_END)) === false);
 
 		// Reposition pointer
-		fseek($this->resFile, ($intOffset + $pos), SEEK_END);
+		fseek($this->resFile, $intOffset + $pos, SEEK_END);
 		$strSignature = @fread($this->resFile, 4);
 
 		// Read archive header
@@ -519,7 +519,7 @@ class ZipReader
 
 			// Split file path
 			$arrFile['file_basename'] = basename($arrFile['file_name']);
-			$arrFile['file_dirname'] = (($path = \dirname($arrFile['file_name'])) != '.' ? $path : '');
+			$arrFile['file_dirname'] = ($path = \dirname($arrFile['file_name'])) != '.' ? $path : '';
 
 			// Add UNIX time
 			$arrFile['last_mod_file_unix'] = $this->decToUnix((int) $arrFile['last_mod_file_time'], (int) $arrFile['last_mod_file_date']);
@@ -529,10 +529,30 @@ class ZipReader
 			$this->arrFiles[] = $arrFile;
 		}
 
-		$this->intLast = (\count($this->arrFiles) - 1);
+		$this->intLast = \count($this->arrFiles) - 1;
 
 		// Restore the mbstring encoding (see #5842)
 		$strMbCharset && mb_internal_encoding($strMbCharset);
+
+		if ($blnSkipRootFolder && !empty($this->arrFiles))
+		{
+			$strRoot = strtok($this->arrFiles[0]['file_name'], '/') . '/';
+
+			foreach ($this->arrFiles as $file)
+			{
+				if (!str_starts_with($file['file_name'], $strRoot))
+				{
+					return;
+				}
+			}
+
+			$offset = \strlen($strRoot);
+
+			foreach ($this->arrFiles as &$file)
+			{
+				$file['file_name'] = substr($file['file_name'], $offset);
+			}
+		}
 	}
 
 	/**
@@ -551,7 +571,7 @@ class ZipReader
 			($intTime & 0x07E0) >>  5,
 			($intTime & 0x001F) <<  1,
 			($intDate & 0x01E0) >>  5,
-			($intDate & 0x001F),
+			$intDate & 0x001F,
 			(($intDate & 0xFE00) >>  9) + 1980
 		);
 	}

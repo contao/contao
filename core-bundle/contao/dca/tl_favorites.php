@@ -103,6 +103,7 @@ $GLOBALS['TL_DCA']['tl_favorites'] = array
 		),
 		'title' => array
 		(
+			'exclude'                 => false,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
@@ -110,6 +111,7 @@ $GLOBALS['TL_DCA']['tl_favorites'] = array
 		),
 		'url' => array
 		(
+			'exclude'                 => false,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'readonly'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>1022, 'tl_class'=>'w50'),

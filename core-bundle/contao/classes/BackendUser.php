@@ -155,6 +155,8 @@ class BackendUser extends User
 	 */
 	public function hasAccess($field, $array)
 	{
+		trigger_deprecation('contao/core-bundle', '5.2', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the "ContaoCorePermissions::USER_CAN_ACCESS_*" permissions instead.', __METHOD__);
+
 		if ($this->isAdmin)
 		{
 			return true;
@@ -179,6 +181,15 @@ class BackendUser extends User
 				{
 					return true;
 				}
+			}
+		}
+		elseif ($array == 'pagemounts')
+		{
+			$childIds = Database::getInstance()->getChildRecords($this->pagemounts, 'tl_page');
+
+			if (!empty($childIds) && array_intersect($field, $childIds))
+			{
+				return true;
 			}
 		}
 
@@ -248,12 +259,14 @@ class BackendUser extends User
 		// Merge permissions
 		$inherit = \in_array($this->inherit, array('group', 'extend')) ? array_merge($always, $depends) : $always;
 		$time = Date::floorToMinute();
+		$db = Database::getInstance();
 
 		foreach ($this->groups as $id)
 		{
-			$objGroup = $this->Database->prepare("SELECT * FROM tl_user_group WHERE id=? AND disable=0 AND (start='' OR start<='$time') AND (stop='' OR stop>'$time')")
-									   ->limit(1)
-									   ->execute($id);
+			$objGroup = $db
+				->prepare("SELECT * FROM tl_user_group WHERE id=? AND disable=0 AND (start='' OR start<=$time) AND (stop='' OR stop>$time)")
+				->limit(1)
+				->execute($id);
 
 			if ($objGroup->numRows > 0)
 			{
@@ -264,7 +277,7 @@ class BackendUser extends User
 					// The new page/file picker can return integers instead of arrays, so use empty() instead of is_array() and StringUtil::deserialize(true) here
 					if (!empty($value))
 					{
-						$this->$field = array_merge((\is_array($this->$field) ? $this->$field : ($this->$field ? array($this->$field) : array())), $value);
+						$this->$field = array_merge(\is_array($this->$field) ? $this->$field : ($this->$field ? array($this->$field) : array()), $value);
 						$this->$field = array_unique($this->$field);
 					}
 				}
@@ -360,8 +373,7 @@ class BackendUser extends User
 		{
 			foreach ($GLOBALS['TL_HOOKS']['getUserNavigation'] as $callback)
 			{
-				$this->import($callback[0]);
-				$arrModules = $this->{$callback[0]}->{$callback[1]}($arrModules, true);
+				$arrModules = System::importStatic($callback[0])->{$callback[1]}($arrModules, true);
 			}
 		}
 

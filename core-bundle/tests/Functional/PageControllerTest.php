@@ -39,6 +39,7 @@ class PageControllerTest extends FunctionalTestCase
 
         $pageController = new TestPageController();
         $pageController->setContainer($container);
+
         $container->set(TestPageController::class, $pageController);
 
         $pathRegex = null;
@@ -71,11 +72,11 @@ class PageControllerTest extends FunctionalTestCase
                             $request,
                             $withDefault ? 'yes' : 'no',
                             $withSuffix ? 'yes' : 'no',
-                            $withAlias ? 'yes' : 'no'
+                            $withAlias ? 'yes' : 'no',
                         );
 
                         yield $description => [
-                            ['theme', ($withSuffix ? 'root-with-suffix' : 'root-without-suffix'), ($withAlias ? 'page-with-alias' : 'page-without-alias')],
+                            ['theme', $withSuffix ? 'root-with-suffix' : 'root-without-suffix', $withAlias ? 'page-with-alias' : 'page-without-alias'],
                             $request.($withSuffix ? '.html' : ''),
                             '/test/{slug'.($withDefault ? '' : '?').'}',
                             ['slug' => '.+'],
@@ -98,7 +99,7 @@ class PageControllerTest extends FunctionalTestCase
 
         static::loadFixtures(array_map(
             static fn ($file) => __DIR__.'/../Fixtures/Functional/PageController/'.$file.'.yaml',
-            $fileNames
+            $fileNames,
         ));
     }
 }

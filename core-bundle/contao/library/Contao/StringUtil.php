@@ -110,12 +110,12 @@ class StringUtil
 			$buffer = $arrChunks[$i];
 
 			// Get the substring of the current text
-			if (!$arrChunks[$i] = static::substr($arrChunks[$i], ($intNumberOfChars - $intCharCount), false))
+			if (!$arrChunks[$i] = static::substr($arrChunks[$i], $intNumberOfChars - $intCharCount, false))
 			{
 				break;
 			}
 
-			$blnModified = ($buffer !== $arrChunks[$i]);
+			$blnModified = $buffer !== $arrChunks[$i];
 			$intCharCount += mb_strlen(static::decodeEntities($arrChunks[$i]));
 
 			if ($intCharCount <= $intNumberOfChars)
@@ -363,8 +363,7 @@ class StringUtil
 		unset($strEmail);
 
 		// Encode opening arrow brackets (see #3998)
-		$strString = preg_replace_callback('@</?([^\s<>/]*)@', static function ($matches) use ($strAllowedTags)
-		{
+		$strString = preg_replace_callback('@</?([^\s<>/]*)@', static function ($matches) use ($strAllowedTags) {
 			if (!$matches[1] || stripos($strAllowedTags, '<' . strtolower($matches[1]) . '>') === false)
 			{
 				$matches[0] = str_replace('<', '&lt;', $matches[0]);
@@ -628,7 +627,7 @@ class StringUtil
 			}
 			else
 			{
-				$return .= $paths[$i+2] . '="' . $paths[$i+3] . $paths[$i+4] . '"';
+				$return .= $paths[$i+1];
 			}
 		}
 
@@ -891,7 +890,13 @@ class StringUtil
 			!preg_match('(^(?:' . implode('|', array_map('preg_quote', $arrAllowedUrlProtocols)) . '):)i', self::decodeEntities($strString))
 			&& preg_match($colonRegEx, self::stripInsertTags($strString))
 		) {
-			$strString = preg_replace($colonRegEx, '%3A', $strString);
+			$arrChunks = preg_split('/({{[^{}]*}})/', $strString, -1, PREG_SPLIT_DELIM_CAPTURE);
+			$strString = '';
+
+			foreach ($arrChunks as $index => $strChunk)
+			{
+				$strString .= ($index % 2) ? $strChunk : preg_replace($colonRegEx, '%3A', $strChunk);
+			}
 		}
 
 		return $strString;
@@ -1072,7 +1077,7 @@ class StringUtil
 	 */
 	public static function ampersand($strString, $blnEncode=true): string
 	{
-		return preg_replace('/&(amp;)?/i', ($blnEncode ? '&amp;' : '&'), $strString);
+		return preg_replace('/&(amp;)?/i', $blnEncode ? '&amp;' : '&', $strString);
 	}
 
 	/**

@@ -21,7 +21,7 @@ use Doctrine\DBAL\Schema\Table;
  */
 class MysqlInnodbRowSizeCalculator
 {
-    public function __construct(private Connection $connection)
+    public function __construct(private readonly Connection $connection)
     {
     }
 
@@ -192,9 +192,7 @@ class MysqlInnodbRowSizeCalculator
             $sql .= ' NOT';
         }
 
-        $sql .= ' NULL';
-
-        return $sql;
+        return $sql.' NULL';
     }
 
     private function isTableTooLarge(array $columns, string $rowFormat = 'DYNAMIC'): bool
@@ -221,7 +219,7 @@ class MysqlInnodbRowSizeCalculator
     }
 
     /**
-     * @return array<int,string>
+     * @return array<int, string>
      */
     private function getMysqlColumnDefinitions(int $sizeInBits): array
     {
@@ -246,6 +244,7 @@ class MysqlInnodbRowSizeCalculator
             if ($i === $bits - 1) {
                 $colSize += $bytes % $bits;
             }
+
             $columns[] = "col$i VARCHAR($colSize) CHARACTER SET latin1 NULL";
         }
 
@@ -253,7 +252,7 @@ class MysqlInnodbRowSizeCalculator
     }
 
     /**
-     * @return array<int,string>
+     * @return array<int, string>
      */
     private function getInnodbColumnDefinitions(int $sizeInBits): array
     {

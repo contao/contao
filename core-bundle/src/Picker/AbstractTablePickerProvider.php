@@ -24,23 +24,23 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 abstract class AbstractTablePickerProvider implements PickerProviderInterface, DcaPickerProviderInterface, PickerMenuInterface
 {
     private const PREFIX = 'dc.';
+
     private const PREFIX_LENGTH = 3;
 
     public function __construct(
-        private ContaoFramework $framework,
-        private FactoryInterface $menuFactory,
-        private RouterInterface $router,
-        private TranslatorInterface $translator,
-        private Connection $connection,
+        private readonly ContaoFramework $framework,
+        private readonly FactoryInterface $menuFactory,
+        private readonly RouterInterface $router,
+        private readonly TranslatorInterface $translator,
+        private readonly Connection $connection,
     ) {
     }
 
     public function getUrl(PickerConfig $config): string
     {
         $table = $this->getTableFromContext($config->getContext());
-        $modules = $this->getModulesForTable($table);
 
-        if (0 === \count($modules)) {
+        if (!$modules = $this->getModulesForTable($table)) {
             throw new \RuntimeException(sprintf('Table "%s" is not in any back end module (context: %s)', $table, $config->getContext()));
         }
 
@@ -87,7 +87,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
                     'linkAttributes' => ['class' => $name],
                     'current' => $this->isCurrent($config) && $name === substr($config->getCurrent(), \strlen($this->getName().'.')),
                     'uri' => $this->router->generate('contao_backend', $params),
-                ]
+                ],
             ));
         }
     }
@@ -115,7 +115,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         $dcName = $this->getDataContainer();
 
         return ($dcName === DataContainer::getDriverForTable($table) || $dcName === $GLOBALS['TL_DCA'][$table]['config']['dataContainer'])
-            && 0 !== \count($this->getModulesForTable($table));
+            && [] !== $this->getModulesForTable($table);
     }
 
     public function supportsValue(PickerConfig $config): bool
@@ -128,9 +128,9 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         return str_starts_with($config->getCurrent(), $this->getName().'.');
     }
 
-    public function getDcaTable(PickerConfig $config = null): string
+    public function getDcaTable(PickerConfig|null $config = null): string
     {
-        if (null === $config) {
+        if (!$config) {
             return '';
         }
 
@@ -181,7 +181,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         return substr($context, self::PREFIX_LENGTH);
     }
 
-    protected function getUrlForValue(PickerConfig $config, string $module, string $table = null, int $pid = null): string
+    protected function getUrlForValue(PickerConfig $config, string $module, string|null $table = null, int|null $pid = null): string
     {
         $params = [
             'do' => $module,

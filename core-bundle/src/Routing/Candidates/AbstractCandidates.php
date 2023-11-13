@@ -26,14 +26,13 @@ class AbstractCandidates implements CandidatesInterface
      */
     private const LIMIT = 20;
 
-    public function __construct(protected array $urlPrefixes, protected array $urlSuffixes)
-    {
+    public function __construct(
+        protected array $urlPrefixes,
+        protected array $urlSuffixes,
+    ) {
     }
 
-    /**
-     * @param string $name
-     */
-    public function isCandidate($name): bool
+    public function isCandidate(string $name): bool
     {
         return str_starts_with($name, 'tl_page.');
     }

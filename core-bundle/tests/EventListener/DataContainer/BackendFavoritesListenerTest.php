@@ -15,9 +15,9 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 use Contao\BackendUser;
 use Contao\CoreBundle\EventListener\DataContainer\BackendFavoritesListener;
 use Contao\CoreBundle\Tests\TestCase;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class BackendFavoritesListenerTest extends TestCase
@@ -31,7 +31,7 @@ class BackendFavoritesListenerTest extends TestCase
 
     public function testAllowsAddingNewFavorites(): void
     {
-        /** @var array $GLOBALS (signals PHPStan that the array shape may change) */
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_favorites'] = [
             'config' => [
                 'notCreatable' => true,
@@ -82,7 +82,7 @@ class BackendFavoritesListenerTest extends TestCase
 
     public function testDoesNotAllowAddingNewFavoritesIfThereIsNoData(): void
     {
-        /** @var array $GLOBALS (signals PHPStan that the array shape may change) */
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_favorites'] = [
             'config' => [
                 'notCreatable' => true,
@@ -120,7 +120,7 @@ class BackendFavoritesListenerTest extends TestCase
 
     public function testShowsNothingIfThereIsNoUser(): void
     {
-        /** @var array $GLOBALS (signals PHPStan that the array shape may change) */
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_favorites'] = [
             'list' => [
                 'sorting' => [

@@ -89,13 +89,6 @@ class Database
 	{
 		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s->%s" has been deprecated and will no longer work in Contao 6.0.', __CLASS__, $strKey);
 
-		if ($strKey == 'error')
-		{
-			$info = $this->resConnection->errorInfo();
-
-			return 'SQLSTATE ' . $info[0] . ': error ' . $info[1] . ': ' . $info[2];
-		}
-
 		return null;
 	}
 
@@ -335,7 +328,7 @@ class Database
 				$arrReturn[$objIndex->Key_name]['name'] = $objIndex->Key_name;
 				$arrReturn[$objIndex->Key_name]['type'] = 'index';
 				$arrReturn[$objIndex->Key_name]['index_fields'][] = $strColumnName;
-				$arrReturn[$objIndex->Key_name]['index'] = (($objIndex->Non_unique == 0) ? 'UNIQUE' : 'KEY');
+				$arrReturn[$objIndex->Key_name]['index'] = ($objIndex->Non_unique == 0) ? 'UNIQUE' : 'KEY';
 			}
 
 			$this->arrCache[$strTable] = $arrReturn;
@@ -468,12 +461,14 @@ class Database
 			$arrParentIds = array($arrParentIds);
 		}
 
+		// Remove zero IDs
+		$arrParentIds = array_filter(array_map('\intval', $arrParentIds));
+
 		if (empty($arrParentIds))
 		{
 			return $arrReturn;
 		}
 
-		$arrParentIds = array_map('\intval', $arrParentIds);
 		$objChilds = $this->query("SELECT id, pid FROM " . $strTable . " WHERE pid IN(" . implode(',', $arrParentIds) . ")" . ($strWhere ? " AND $strWhere" : "") . ($blnSorting ? " ORDER BY " . $this->findInSet('pid', $arrParentIds) . ", sorting" : ""));
 
 		if ($objChilds->numRows > 0)

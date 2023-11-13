@@ -24,7 +24,7 @@ class FilesystemItemIterator implements \IteratorAggregate
      */
     public function __construct(private iterable $listing)
     {
-        if (!\is_array($listing)) {
+        if ($listing instanceof \Traversable) {
             $this->listing = new CachingTraversable($listing);
         }
     }

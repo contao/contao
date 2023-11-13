@@ -1,0 +1,46 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_favorites.php" source-language="en" target-language="de">
+    <body>
+      <trans-unit id="tl_favorites.title.0">
+        <source>Title</source>
+        <target>Titel</target>
+      </trans-unit>
+      <trans-unit id="tl_favorites.title.1">
+        <source>The menu item title.</source>
+        <target>Der Titel des Menüpunkts.</target>
+      </trans-unit>
+      <trans-unit id="tl_favorites.url.0">
+        <source>URL</source>
+        <target>URL</target>
+      </trans-unit>
+      <trans-unit id="tl_favorites.url.1">
+        <source>The menu item URL.</source>
+        <target>Die URL des Menüpunkts.</target>
+      </trans-unit>
+      <trans-unit id="tl_favorites.url_legend">
+        <source>Title and URL</source>
+        <target>Titel und URL</target>
+      </trans-unit>
+      <trans-unit id="tl_favorites.show">
+        <source>Show the details of favorite ID %s</source>
+        <target>Details des Favoriten ID %s anzeigen</target>
+      </trans-unit>
+      <trans-unit id="tl_favorites.edit">
+        <source>Edit favorite ID %s</source>
+        <target>Favorit ID %s bearbeiten</target>
+      </trans-unit>
+      <trans-unit id="tl_favorites.cut">
+        <source>Move favorite ID %s</source>
+        <target>Favorit ID %s verschieben</target>
+      </trans-unit>
+      <trans-unit id="tl_favorites.copy">
+        <source>Duplicate favorite ID %s</source>
+        <target>Favorit ID %s duplizieren</target>
+      </trans-unit>
+      <trans-unit id="tl_favorites.delete">
+        <source>Delete favorite ID %s</source>
+        <target>Favorit ID %s löschen</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

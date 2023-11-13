@@ -5,22 +5,21 @@
         "@hotwired/stimulus": "^3.2.1",
         "@hotwired/stimulus-webpack-helpers": "^1.0.1",
         "@symfony/webpack-encore": "^4.2.0",
+        "css-loader": "^6.7.0",
+        "cypress": "^12.17.0",
         "gulp": "^4.0.2",
-        "gulp-csso": "^4.0.1",
-        "gulp-ignore": "^3.0",
-        "gulp-rename": "^2.0",
         "gulp-svgo": "^2.2.1",
-        "gulp-uglify-es": "^3.0",
         "pump": "^3.0",
         "webpack": "^5.75.0",
         "webpack-cli": "^5.0.1"
     },
     "private": true,
     "scripts": {
-        "dev-server": "encore dev-server",
-        "dev": "encore dev",
+        "build": "encore production --progress",
         "watch": "encore dev --watch",
-        "build": "encore production --progress"
+        "pree2e-tests": "rm -rf cypress/webspace/vendor/contao/manager-bundle && composer up --working-dir=cypress/webspace",
+        "e2e-tests": "symfony server:start --port=8765 --dir=cypress/webspace --daemon && yarn cypress run",
+        "poste2e-tests": "symfony server:stop --dir=cypress/webspace"
     },
     "browserslist": [
         "defaults"

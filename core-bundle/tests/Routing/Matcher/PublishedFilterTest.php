@@ -13,17 +13,15 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Routing\Matcher;
 
 use Contao\CoreBundle\Routing\Matcher\PublishedFilter;
-use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 class PublishedFilterTest extends TestCase
 {
-    public function testDoesNotFilterInPreviewMode(): void
+    public function testDoesNotFilterInPreviewEntryPoint(): void
     {
         $collection = $this->createMock(RouteCollection::class);
         $collection
@@ -31,8 +29,11 @@ class PublishedFilterTest extends TestCase
             ->method('all')
         ;
 
-        $filter = new PublishedFilter($this->mockTokenChecker(true));
-        $filter->filter($collection, $this->createMock(Request::class));
+        $request = new Request();
+        $request->attributes->set('_preview', true);
+
+        $filter = new PublishedFilter();
+        $filter->filter($collection, $request);
     }
 
     public function testSkipsRoutesWithoutPageModel(): void
@@ -57,8 +58,8 @@ class PublishedFilterTest extends TestCase
             ->method('remove')
         ;
 
-        $filter = new PublishedFilter($this->mockTokenChecker());
-        $filter->filter($collection, $this->createMock(Request::class));
+        $filter = new PublishedFilter();
+        $filter->filter($collection, new Request());
     }
 
     public function testRemovesARouteIfThePageHasNotBeenPublished(): void
@@ -88,8 +89,8 @@ class PublishedFilterTest extends TestCase
             ->with('foo')
         ;
 
-        $filter = new PublishedFilter($this->mockTokenChecker());
-        $filter->filter($collection, $this->createMock(Request::class));
+        $filter = new PublishedFilter();
+        $filter->filter($collection, new Request());
     }
 
     public function testRemovesARouteIfTheRootPageHasNotBeenPublished(): void
@@ -119,8 +120,8 @@ class PublishedFilterTest extends TestCase
             ->with('foo')
         ;
 
-        $filter = new PublishedFilter($this->mockTokenChecker());
-        $filter->filter($collection, $this->createMock(Request::class));
+        $filter = new PublishedFilter();
+        $filter->filter($collection, new Request());
     }
 
     public function testDoesNotRemoveARouteIfThePageHasBeenPublished(): void
@@ -149,26 +150,7 @@ class PublishedFilterTest extends TestCase
             ->method('remove')
         ;
 
-        $filter = new PublishedFilter($this->mockTokenChecker());
-        $filter->filter($collection, $this->createMock(Request::class));
-    }
-
-    /**
-     * @return TokenChecker&MockObject
-     */
-    private function mockTokenChecker(bool $isPreviewMode = false): TokenChecker
-    {
-        $tokenChecker = $this->createMock(TokenChecker::class);
-        $tokenChecker
-            ->method('hasBackendUser')
-            ->willReturn($isPreviewMode)
-        ;
-
-        $tokenChecker
-            ->method('isPreviewMode')
-            ->willReturn($isPreviewMode)
-        ;
-
-        return $tokenChecker;
+        $filter = new PublishedFilter();
+        $filter->filter($collection, new Request());
     }
 }

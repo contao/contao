@@ -17,6 +17,7 @@ use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\DC_Table;
@@ -139,12 +140,12 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'hyperlink'                   => '{type_legend},type,headline;{link_legend},url,target,linkTitle,embed,titleText,rel;{imglink_legend:hide},useImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'toplink'                     => '{type_legend},type;{link_legend},linkTitle;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'image'                       => '{type_legend},type,headline;{source_legend},singleSRC,size,fullsize,overwriteMeta;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'gallery'                     => '{type_legend},type,headline;{source_legend},multiSRC,sortBy,metaIgnore;{image_legend},size,perRow,perPage,numberOfItems,fullsize;{template_legend:hide},galleryTpl,customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID,useHomeDir;{invisible_legend:hide},invisible,start,stop',
+		'gallery'                     => '{type_legend},type,headline;{source_legend},multiSRC,useHomeDir,sortBy,metaIgnore;{image_legend},size,perRow,perPage,numberOfItems,fullsize;{template_legend:hide},galleryTpl,customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'player'                      => '{type_legend},type,headline;{source_legend},playerSRC;{player_legend},playerOptions,playerSize,playerPreload,playerCaption,playerStart,playerStop;{poster_legend:hide},posterSRC;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'youtube'                     => '{type_legend},type,headline;{source_legend},youtube;{player_legend},youtubeOptions,playerSize,playerAspect,playerCaption,playerStart,playerStop;{splash_legend},splashImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'vimeo'                       => '{type_legend},type,headline;{source_legend},vimeo;{player_legend},vimeoOptions,playerSize,playerAspect,playerCaption,playerStart,playerColor;{splash_legend},splashImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'download'                    => '{type_legend},type,headline;{source_legend},singleSRC;{download_legend},inline,overwriteLink;{preview_legend},showPreview;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'downloads'                   => '{type_legend},type,headline;{source_legend},multiSRC;{download_legend},inline,sortBy,metaIgnore;{preview_legend},showPreview;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID,useHomeDir;{invisible_legend:hide},invisible,start,stop',
+		'downloads'                   => '{type_legend},type,headline;{source_legend},multiSRC,useHomeDir;{download_legend},inline,sortBy,metaIgnore;{preview_legend},showPreview;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'alias'                       => '{type_legend},type;{include_legend},cteAlias;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'article'                     => '{type_legend},type;{include_legend},articleAlias;{protected_legend:hide},protected;{invisible_legend:hide},invisible,start,stop',
 		'teaser'                      => '{type_legend},type;{include_legend},article;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
@@ -152,7 +153,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'module'                      => '{type_legend},type;{include_legend},module;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop'
 	),
 
-	// Subpalettes
+	// Sub-palettes
 	'subpalettes' => array
 	(
 		'addImage'                    => 'singleSRC,fullsize,size,floating,overwriteMeta',
@@ -209,14 +210,14 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'search'                  => true,
 			'inputType'               => 'inputUnit',
 			'options'                 => array('h1', 'h2', 'h3', 'h4', 'h5', 'h6'),
-			'eval'                    => array('maxlength'=>200, 'tl_class'=>'w50 clr'),
+			'eval'                    => array('maxlength'=>200, 'basicEntities'=>true, 'tl_class'=>'w50 clr'),
 			'sql'                     => "varchar(255) NOT NULL default 'a:2:{s:5:\"value\";s:0:\"\";s:4:\"unit\";s:2:\"h2\";}'"
 		),
 		'text' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('mandatory'=>true, 'rte'=>'tinyMCE', 'helpwizard'=>true),
+			'eval'                    => array('mandatory'=>true, 'basicEntities'=>true, 'rte'=>'tinyMCE', 'helpwizard'=>true),
 			'explanation'             => 'insertTags',
 			'sql'                     => "mediumtext NULL"
 		),
@@ -330,7 +331,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'listitems' => array
 		(
 			'inputType'               => 'listWizard',
-			'eval'                    => array('allowHtml'=>true, 'tl_class'=>'clr'),
+			'eval'                    => array('multiple'=>true, 'allowHtml'=>true, 'tl_class'=>'clr'),
 			'xlabel' => array
 			(
 				array('tl_content', 'listImportWizard')
@@ -340,7 +341,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'tableitems' => array
 		(
 			'inputType'               => 'tableWizard',
-			'eval'                    => array('allowHtml'=>true, 'doNotSaveEmpty'=>true, 'style'=>'width:142px;height:66px'),
+			'eval'                    => array('multiple'=>true, 'allowHtml'=>true, 'doNotSaveEmpty'=>true, 'style'=>'width:142px;height:66px'),
 			'xlabel' => array
 			(
 				array('tl_content', 'tableImportWizard')
@@ -414,7 +415,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'highlight' => array
 		(
 			'inputType'               => 'select',
-			'options'                 => array('Apache', 'Bash', 'C#', 'C++', 'CSS', 'Diff', 'HTML', 'HTTP', 'Ini', 'JSON', 'Java', 'JavaScript', 'Markdown', 'Nginx', 'Perl', 'PHP', 'PowerShell', 'Python', 'Ruby', 'SCSS', 'SQL', 'YAML', 'XML'),
+			'options'                 => array('Apache', 'Bash', 'C#', 'C++', 'CSS', 'Diff', 'HTML', 'HTTP', 'Ini', 'JSON', 'Java', 'JavaScript', 'Markdown', 'Nginx', 'Perl', 'PHP', 'PowerShell', 'Python', 'Ruby', 'SCSS', 'SQL', 'Twig', 'YAML', 'XML'),
 			'eval'                    => array('includeBlankOption'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(32) COLLATE ascii_bin NOT NULL default ''"
 		),
@@ -455,7 +456,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'overwriteLink' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['overwriteMeta'],
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true, 'tl_class'=>'w50 clr'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
@@ -506,7 +506,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'useHomeDir' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('submitOnChange'=>true),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'perRow' => array
@@ -546,8 +546,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'galleryTpl' => array
 		(
 			'inputType'               => 'select',
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return Controller::getTemplateGroup('gallery_');
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
@@ -585,7 +584,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			(
 				array('tl_content', 'extractVimeoId')
 			),
-			'sql'                     => "varchar(16) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'posterSRC' => array
 		(
@@ -803,6 +802,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 // Dynamically add the permission check
 if (Input::get('do') == 'article')
 {
+	System::loadLanguageFile('tl_article');
+
 	array_unshift($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'], array('tl_content', 'checkPermission'));
 }
 
@@ -814,33 +815,28 @@ if (Input::get('do') == 'article')
 class tl_content extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Check permissions to edit table tl_content
 	 *
 	 * @param DataContainer $dc
 	 */
 	public function checkPermission(DataContainer $dc)
 	{
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
+		$db = Database::getInstance();
+
 		// Get the pagemounts
 		$pagemounts = array();
 
-		foreach ($this->User->pagemounts as $root)
+		foreach ($user->pagemounts as $root)
 		{
 			$pagemounts[] = array($root);
-			$pagemounts[] = $this->Database->getChildRecords($root, 'tl_page');
+			$pagemounts[] = $db->getChildRecords($root, 'tl_page');
 		}
 
 		if (!empty($pagemounts))
@@ -869,11 +865,12 @@ class tl_content extends Backend
 				// Check access to the parent element if a content element is moved
 				if (in_array(Input::get('act'), array('cutAll', 'copyAll')))
 				{
-					$this->checkAccessToElement(Input::get('pid'), $pagemounts, (Input::get('mode') == 2));
+					$this->checkAccessToElement(Input::get('pid'), $pagemounts, Input::get('mode') == 2);
 				}
 
-				$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE ptable='tl_article' AND pid=?")
-										 ->execute($dc->currentPid);
+				$objCes = $db
+					->prepare("SELECT id FROM tl_content WHERE ptable='tl_article' AND pid=?")
+					->execute($dc->currentPid);
 
 				$objSession = System::getContainer()->get('request_stack')->getSession();
 
@@ -885,7 +882,7 @@ class tl_content extends Backend
 			case 'cut':
 			case 'copy':
 				// Check access to the parent element if a content element is moved
-				$this->checkAccessToElement(Input::get('pid'), $pagemounts, (Input::get('mode') == 2));
+				$this->checkAccessToElement(Input::get('pid'), $pagemounts, Input::get('mode') == 2);
 				// no break
 
 			default:
@@ -908,15 +905,17 @@ class tl_content extends Backend
 	{
 		if ($blnIsPid)
 		{
-			$objPage = $this->Database->prepare("SELECT p.id, p.pid, p.includeChmod, p.chmod, p.cuser, p.cgroup, a.id AS aid FROM tl_article a, tl_page p WHERE a.id=? AND a.pid=p.id")
-									  ->limit(1)
-									  ->execute($id);
+			$objPage = Database::getInstance()
+				->prepare("SELECT p.id, p.pid, p.includeChmod, p.chmod, p.cuser, p.cgroup, a.id AS aid FROM tl_article a, tl_page p WHERE a.id=? AND a.pid=p.id")
+				->limit(1)
+				->execute($id);
 		}
 		else
 		{
-			$objPage = $this->Database->prepare("SELECT p.id, p.pid, p.includeChmod, p.chmod, p.cuser, p.cgroup, a.id AS aid FROM tl_content c, tl_article a, tl_page p WHERE c.id=? AND c.pid=a.id AND a.pid=p.id")
-									  ->limit(1)
-									  ->execute($id);
+			$objPage = Database::getInstance()
+				->prepare("SELECT p.id, p.pid, p.includeChmod, p.chmod, p.cuser, p.cgroup, a.id AS aid FROM tl_content c, tl_article a, tl_page p WHERE c.id=? AND c.pid=a.id AND a.pid=p.id")
+				->limit(1)
+				->execute($id);
 		}
 
 		// Invalid ID
@@ -1019,10 +1018,13 @@ class tl_content extends Backend
 	 */
 	public function preserveReferenced()
 	{
+		$db = Database::getInstance();
+
 		if (Input::get('act') == 'delete')
 		{
-			$objCes = $this->Database->prepare("SELECT COUNT(*) AS cnt FROM tl_content WHERE type='alias' AND cteAlias=? AND ptable='tl_article'")
-									 ->execute(Input::get('id'));
+			$objCes = $db
+				->prepare("SELECT COUNT(*) AS cnt FROM tl_content WHERE type='alias' AND cteAlias=? AND ptable='tl_article'")
+				->execute(Input::get('id'));
 
 			if ($objCes->cnt > 0)
 			{
@@ -1032,8 +1034,9 @@ class tl_content extends Backend
 
 		if (Input::get('act') == 'deleteAll')
 		{
-			$objCes = $this->Database->prepare("SELECT cteAlias FROM tl_content WHERE type='alias' AND ptable='tl_article'")
-									 ->execute();
+			$objCes = $db
+				->prepare("SELECT cteAlias FROM tl_content WHERE type='alias' AND ptable='tl_article'")
+				->execute();
 
 			$objSession = System::getContainer()->get('request_stack')->getSession();
 			$session = $objSession->all();
@@ -1047,30 +1050,34 @@ class tl_content extends Backend
 	 */
 	public function filterContentElements()
 	{
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
-		if (empty($this->User->elements))
+		if (empty($user->elements))
 		{
 			$GLOBALS['TL_DCA']['tl_content']['config']['closed'] = true;
 			$GLOBALS['TL_DCA']['tl_content']['config']['notEditable'] = true;
 		}
-		elseif (!in_array($GLOBALS['TL_DCA']['tl_content']['fields']['type']['sql']['default'] ?? null, $this->User->elements))
+		elseif (!in_array($GLOBALS['TL_DCA']['tl_content']['fields']['type']['sql']['default'] ?? null, $user->elements))
 		{
-			$GLOBALS['TL_DCA']['tl_content']['fields']['type']['default'] = $this->User->elements[0];
+			$GLOBALS['TL_DCA']['tl_content']['fields']['type']['default'] = $user->elements[0];
 		}
 
+		$db = Database::getInstance();
 		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Prevent editing content elements with not allowed types
 		if (Input::get('act') == 'edit' || Input::get('act') == 'toggle' || Input::get('act') == 'delete' || (Input::get('act') == 'paste' && Input::get('mode') == 'copy'))
 		{
-			$objCes = $this->Database->prepare("SELECT type FROM tl_content WHERE id=?")
-									 ->execute(Input::get('id'));
+			$objCes = $db
+				->prepare("SELECT type FROM tl_content WHERE id=?")
+				->execute(Input::get('id'));
 
-			if ($objCes->numRows && !in_array($objCes->type, $this->User->elements))
+			if ($objCes->numRows && !in_array($objCes->type, $user->elements))
 			{
 				throw new AccessDeniedException('Not enough permissions to modify content elements of type "' . $objCes->type . '".');
 			}
@@ -1083,14 +1090,15 @@ class tl_content extends Backend
 
 			if (!empty($session['CURRENT']['IDS']) && is_array($session['CURRENT']['IDS']))
 			{
-				if (empty($this->User->elements))
+				if (empty($user->elements))
 				{
 					$session['CURRENT']['IDS'] = array();
 				}
 				else
 				{
-					$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE id IN(" . implode(',', array_map('\intval', $session['CURRENT']['IDS'])) . ") AND type IN(" . implode(',', array_fill(0, count($this->User->elements), '?')) . ")")
-											 ->execute(...$this->User->elements);
+					$objCes = $db
+						->prepare("SELECT id FROM tl_content WHERE id IN(" . implode(',', array_map('\intval', $session['CURRENT']['IDS'])) . ") AND type IN(" . implode(',', array_fill(0, count($user->elements), '?')) . ")")
+						->execute(...$user->elements);
 
 					$session['CURRENT']['IDS'] = array_intersect($session['CURRENT']['IDS'], $objCes->fetchEach('id'));
 				}
@@ -1106,14 +1114,15 @@ class tl_content extends Backend
 
 			if (!empty($session['CLIPBOARD']['tl_content']['id']) && is_array($session['CLIPBOARD']['tl_content']['id']))
 			{
-				if (empty($this->User->elements))
+				if (empty($user->elements))
 				{
 					$session['CLIPBOARD']['tl_content']['id'] = array();
 				}
 				else
 				{
-					$objCes = $this->Database->prepare("SELECT id, type FROM tl_content WHERE id IN(" . implode(',', array_map('\intval', $session['CLIPBOARD']['tl_content']['id'])) . ") AND type IN(" . implode(',', array_fill(0, count($this->User->elements), '?')) . ")")
-											 ->execute(...$this->User->elements);
+					$objCes = $db
+						->prepare("SELECT id, type FROM tl_content WHERE id IN(" . implode(',', array_map('\intval', $session['CLIPBOARD']['tl_content']['id'])) . ") AND type IN(" . implode(',', array_fill(0, count($user->elements), '?')) . ")")
+						->execute(...$user->elements);
 
 					$session['CLIPBOARD']['tl_content']['id'] = array_intersect($session['CLIPBOARD']['tl_content']['id'], $objCes->fetchEach('id'));
 				}
@@ -1334,13 +1343,15 @@ class tl_content extends Backend
 	 */
 	public function getForms()
 	{
-		if (!$this->User->isAdmin && !is_array($this->User->forms))
+		$user = BackendUser::getInstance();
+
+		if (!$user->isAdmin && !is_array($user->forms))
 		{
 			return array();
 		}
 
 		$arrForms = array();
-		$objForms = $this->Database->execute("SELECT id, title FROM tl_form ORDER BY title");
+		$objForms = Database::getInstance()->execute("SELECT id, title FROM tl_form ORDER BY title");
 		$security = System::getContainer()->get('security.helper');
 
 		while ($objForms->next())
@@ -1382,7 +1393,7 @@ class tl_content extends Backend
 	public function getModules()
 	{
 		$arrModules = array();
-		$objModules = $this->Database->execute("SELECT m.id, m.name, t.name AS theme FROM tl_module m LEFT JOIN tl_theme t ON m.pid=t.id ORDER BY t.name, m.name");
+		$objModules = Database::getInstance()->execute("SELECT m.id, m.name, t.name AS theme FROM tl_module m LEFT JOIN tl_theme t ON m.pid=t.id ORDER BY t.name, m.name");
 
 		while ($objModules->next())
 		{
@@ -1423,6 +1434,7 @@ class tl_content extends Backend
 			case 'Scala':
 			case 'SQL':
 			case 'Text':
+			case 'Twig':
 			case 'YAML':
 				$syntax = strtolower($dc->activeRecord->highlight);
 				break;
@@ -1485,7 +1497,7 @@ class tl_content extends Backend
 	 */
 	public function disableButton($row, $href, $label, $title, $icon, $attributes)
 	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $row['type']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $row['type']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -1522,14 +1534,15 @@ class tl_content extends Backend
 		// Disable the button if the element type is not allowed
 		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $row['type']))
 		{
-			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+			return Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 		}
 
-		$objElement = $this->Database->prepare("SELECT id FROM tl_content WHERE type='alias' AND cteAlias=?")
-									 ->limit(1)
-									 ->execute($row['id']);
+		$objElement = Database::getInstance()
+			->prepare("SELECT id FROM tl_content WHERE type='alias' AND cteAlias=?")
+			->limit(1)
+			->execute($row['id']);
 
-		return $objElement->numRows ? Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ' : '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ';
+		return $objElement->numRows ? Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ' : '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ';
 	}
 
 	/**
@@ -1585,11 +1598,13 @@ class tl_content extends Backend
 				case 'gallery':
 					$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['isGallery'] = true;
 					$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = '%contao.image.valid_extensions%';
+					$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['mandatory'] = !$dc->activeRecord->useHomeDir;
 					break;
 
 				case 'downloads':
 					$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['isDownloads'] = true;
 					$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Config::get('allowedDownload');
+					$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['mandatory'] = !$dc->activeRecord->useHomeDir;
 					break;
 			}
 		}
@@ -1634,9 +1649,17 @@ class tl_content extends Backend
 		{
 			$matches = array();
 
-			if (preg_match('%vimeo\.com/(?:channels/(?:\w+/)?|groups/(?:[^/]+)/videos/|album/(?:\d+)/video/)?(\d+)(?:$|/|\?)%i', $varValue, $matches))
+			if (preg_match('%vimeo\.com/(?:channels/(?:\w+/)?|groups/(?:[^/]+)/videos/|album/(?:\d+)/video/|video/)?(\d+)(?:$|/|\?)%i', $varValue, $matches))
 			{
-				$varValue = $matches[1];
+				// Unlisted video privacy hash
+				if (preg_match('%[?&]h=([0-9a-z]+)%i', $varValue, $matchesHash))
+				{
+					$varValue = $matches[1] . '?h=' . $matchesHash[1];
+				}
+				else
+				{
+					$varValue = $matches[1];
+				}
 			}
 		}
 
@@ -1667,7 +1690,7 @@ class tl_content extends Backend
 		// Disable the button if the element type is not allowed
 		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $row['type']))
 		{
-			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+			return Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 		}
 
 		$href .= '&amp;id=' . $row['id'];
@@ -1677,6 +1700,8 @@ class tl_content extends Backend
 			$icon = 'invisible.svg';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
+		$titleDisabled = (is_array($GLOBALS['TL_DCA']['tl_content']['list']['operations']['toggle']['label']) && isset($GLOBALS['TL_DCA']['tl_content']['list']['operations']['toggle']['label'][2])) ? sprintf($GLOBALS['TL_DCA']['tl_content']['list']['operations']['toggle']['label'][2], $row['id']) : $title;
+
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars(!$row['invisible'] ? $title : $titleDisabled) . '" data-title="' . StringUtil::specialchars($title) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
 	}
 }

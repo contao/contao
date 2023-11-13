@@ -10,6 +10,7 @@
 
 use Contao\Backend;
 use Contao\Controller;
+use Contao\Database;
 use Contao\System;
 
 // Add palettes to tl_module
@@ -69,8 +70,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['list_info_where'] = array
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_layout'] = array
 (
 	'inputType'               => 'select',
-	'options_callback' => static function ()
-	{
+	'options_callback' => static function () {
 		return Controller::getTemplateGroup('list_');
 	},
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
@@ -80,8 +80,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['list_layout'] = array
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_info_layout'] = array
 (
 	'inputType'               => 'select',
-	'options_callback' => static function ()
-	{
+	'options_callback' => static function () {
 		return Controller::getTemplateGroup('info_');
 	},
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
@@ -102,7 +101,7 @@ class tl_module_listing extends Backend
 	 */
 	public function getAllTables()
 	{
-		$arrTables = $this->Database->listTables();
+		$arrTables = Database::getInstance()->listTables();
 		$arrViews = System::getContainer()->get('database_connection')->createSchemaManager()->listViews();
 
 		if (!empty($arrViews))

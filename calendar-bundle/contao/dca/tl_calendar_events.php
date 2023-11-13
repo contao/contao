@@ -16,6 +16,7 @@ use Contao\CalendarModel;
 use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\DC_Table;
@@ -125,7 +126,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		'external'                    => '{title_legend},title,featured,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,url,target,linkText;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments;{publish_legend},published,start,stop'
 	),
 
-	// Subpalettes
+	// Sub-palettes
 	'subpalettes' => array
 	(
 		'addTime'                     => 'startTime,endTime',
@@ -158,7 +159,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'basicEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'featured' => array
@@ -209,7 +210,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			(
 				array('tl_calendar_events', 'loadTime')
 			),
-			'sql'                     => "int(10) NULL"
+			'sql'                     => "bigint(20) NULL"
 		),
 		'endTime' => array
 		(
@@ -224,19 +225,19 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			(
 				array('tl_calendar_events', 'setEmptyEndTime')
 			),
-			'sql'                     => "int(10) NULL"
+			'sql'                     => "bigint(20) NULL"
 		),
 		'startDate' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'date', 'mandatory'=>true, 'doNotCopy'=>true, 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => "int(10) unsigned NULL"
+			'sql'                     => "bigint(20) NULL"
 		),
 		'endDate' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'date', 'doNotCopy'=>true, 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => "int(10) unsigned NULL"
+			'sql'                     => "bigint(20) NULL"
 		),
 		'pageTitle' => array
 		(
@@ -285,7 +286,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('rte'=>'tinyMCE', 'tl_class'=>'clr'),
+			'eval'                    => array('rte'=>'tinyMCE', 'basicEntities'=>true, 'tl_class'=>'clr'),
 			'sql'                     => "text NULL"
 		),
 		'addImage' => array
@@ -330,8 +331,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50 clr'),
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return System::getContainer()->get('contao.image.sizes')->getOptionsForUser(BackendUser::getInstance());
 			},
 			'sql'                     => "varchar(64) NOT NULL default ''"
@@ -498,15 +498,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 class tl_calendar_events extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Check permissions to edit table tl_calendar_events
 	 *
 	 * @param DataContainer $dc
@@ -524,19 +515,21 @@ class tl_calendar_events extends Backend
 			unset($GLOBALS['TL_DCA']['tl_calendar_events']['list']['sorting']['headerFields'][$key], $GLOBALS['TL_DCA']['tl_calendar_events']['fields']['noComments']);
 		}
 
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
 		// Set root IDs
-		if (empty($this->User->calendars) || !is_array($this->User->calendars))
+		if (empty($user->calendars) || !is_array($user->calendars))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->calendars;
+			$root = $user->calendars;
 		}
 
 		$id = strlen(Input::get('id')) ? Input::get('id') : $dc->currentPid;
@@ -572,9 +565,10 @@ class tl_calendar_events extends Backend
 			case 'show':
 			case 'delete':
 			case 'toggle':
-				$objCalendar = $this->Database->prepare("SELECT pid FROM tl_calendar_events WHERE id=?")
-											  ->limit(1)
-											  ->execute($id);
+				$objCalendar = Database::getInstance()
+					->prepare("SELECT pid FROM tl_calendar_events WHERE id=?")
+					->limit(1)
+					->execute($id);
 
 				if ($objCalendar->numRows < 1)
 				{
@@ -597,9 +591,7 @@ class tl_calendar_events extends Backend
 					throw new AccessDeniedException('Not enough permissions to access calendar ID ' . $id . '.');
 				}
 
-				$objCalendar = $this->Database->prepare("SELECT id FROM tl_calendar_events WHERE pid=?")
-											  ->execute($id);
-
+				$objCalendar = Database::getInstance()->prepare("SELECT id FROM tl_calendar_events WHERE pid=?")->execute($id);
 				$objSession = System::getContainer()->get('request_stack')->getSession();
 
 				$session = $objSession->all();
@@ -633,9 +625,12 @@ class tl_calendar_events extends Backend
 	 */
 	public function generateAlias($varValue, DataContainer $dc)
 	{
-		$aliasExists = function (string $alias) use ($dc): bool
-		{
-			return $this->Database->prepare("SELECT id FROM tl_calendar_events WHERE alias=? AND id!=?")->execute($alias, $dc->id)->numRows > 0;
+		$aliasExists = static function (string $alias) use ($dc): bool {
+			$result = Database::getInstance()
+				->prepare("SELECT id FROM tl_calendar_events WHERE alias=? AND id!=?")
+				->execute($alias, $dc->id);
+
+			return $result->numRows > 0;
 		};
 
 		// Generate the alias if there is none
@@ -761,8 +756,7 @@ class tl_calendar_events extends Backend
 		$title = implode(
 			'%s',
 			array_map(
-				static function ($strVal)
-				{
+				static function ($strVal) {
 					return str_replace('%', '%%', System::getContainer()->get('contao.insert_tag.parser')->replaceInline($strVal));
 				},
 				explode('{{page::pageTitle}}', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}', 2)
@@ -787,7 +781,7 @@ class tl_calendar_events extends Backend
 
 		if ($span > 0)
 		{
-			$date = Date::parse(Config::get(($arrRow['addTime'] ? 'datimFormat' : 'dateFormat')), $arrRow['startTime']) . $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . Date::parse(Config::get(($arrRow['addTime'] ? 'datimFormat' : 'dateFormat')), $arrRow['endTime']);
+			$date = Date::parse(Config::get($arrRow['addTime'] ? 'datimFormat' : 'dateFormat'), $arrRow['startTime']) . $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . Date::parse(Config::get($arrRow['addTime'] ? 'datimFormat' : 'dateFormat'), $arrRow['endTime']);
 		}
 		elseif ($arrRow['startTime'] == $arrRow['endTime'])
 		{
@@ -813,12 +807,15 @@ class tl_calendar_events extends Backend
 		$arrPids = array();
 		$arrAlias = array();
 
-		if (!$this->User->isAdmin)
+		$db = Database::getInstance();
+		$user = BackendUser::getInstance();
+
+		if (!$user->isAdmin)
 		{
-			foreach ($this->User->pagemounts as $id)
+			foreach ($user->pagemounts as $id)
 			{
 				$arrPids[] = array($id);
-				$arrPids[] = $this->Database->getChildRecords($id, 'tl_page');
+				$arrPids[] = $db->getChildRecords($id, 'tl_page');
 			}
 
 			if (!empty($arrPids))
@@ -830,11 +827,11 @@ class tl_calendar_events extends Backend
 				return $arrAlias;
 			}
 
-			$objAlias = $this->Database->execute("SELECT a.id, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid WHERE a.pid IN(" . implode(',', array_map('\intval', array_unique($arrPids))) . ") ORDER BY parent, a.sorting");
+			$objAlias = $db->execute("SELECT a.id, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid WHERE a.pid IN(" . implode(',', array_map('\intval', array_unique($arrPids))) . ") ORDER BY parent, a.sorting");
 		}
 		else
 		{
-			$objAlias = $this->Database->execute("SELECT a.id, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid ORDER BY parent, a.sorting");
+			$objAlias = $db->execute("SELECT a.id, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid ORDER BY parent, a.sorting");
 		}
 
 		if ($objAlias->numRows)
@@ -859,7 +856,7 @@ class tl_calendar_events extends Backend
 	 */
 	public function getSourceOptions(DataContainer $dc)
 	{
-		if ($this->User->isAdmin)
+		if (BackendUser::getInstance()->isAdmin)
 		{
 			return array('default', 'internal', 'article', 'external');
 		}
@@ -896,7 +893,7 @@ class tl_calendar_events extends Backend
 	}
 
 	/**
-	 * Adjust start end end time of the event based on date, span, startTime and endTime
+	 * Adjust the start and end time of the event based on date, span, startTime and endTime
 	 *
 	 * @param DataContainer $dc
 	 */
@@ -936,7 +933,7 @@ class tl_calendar_events extends Backend
 		// Adjust end time of "all day" events
 		elseif (($dc->activeRecord->endDate && $arrSet['endDate'] == $arrSet['endTime']) || $arrSet['startTime'] == $arrSet['endTime'])
 		{
-			$arrSet['endTime'] = (strtotime('+ 1 day', $arrSet['endTime']) - 1);
+			$arrSet['endTime'] = strtotime('+ 1 day', $arrSet['endTime']) - 1;
 		}
 
 		$arrSet['repeatEnd'] = 0;
@@ -964,7 +961,7 @@ class tl_calendar_events extends Backend
 			}
 		}
 
-		$this->Database->prepare("UPDATE tl_calendar_events %s WHERE id=?")->set($arrSet)->execute($dc->id);
+		Database::getInstance()->prepare("UPDATE tl_calendar_events %s WHERE id=?")->set($arrSet)->execute($dc->id);
 	}
 
 	/**
@@ -988,11 +985,11 @@ class tl_calendar_events extends Backend
 			$request->attributes->set('_scope', 'frontend');
 		}
 
-		$this->import(Calendar::class, 'Calendar');
+		$calendar = new Calendar();
 
 		foreach ($session as $id)
 		{
-			$this->Calendar->generateFeedsByCalendar($id);
+			$calendar->generateFeedsByCalendar($id);
 		}
 
 		if ($request)
@@ -1037,6 +1034,12 @@ class tl_calendar_events extends Backend
 	public function addSitemapCacheInvalidationTag($dc, array $tags)
 	{
 		$calendar = CalendarModel::findByPk($dc->activeRecord->pid);
+
+		if ($calendar === null)
+		{
+			return $tags;
+		}
+
 		$pageModel = PageModel::findWithDetails($calendar->jumpTo);
 
 		if ($pageModel === null)

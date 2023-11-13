@@ -153,9 +153,17 @@
         <source>Delete question ID %s</source>
         <target>Ta bort fråga med ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq.toggle">
-        <source>Publish/unpublish question ID %s</source>
-        <target>Publicera / avpublicera fråga med ID %s</target>
+      <trans-unit id="tl_faq.toggle.0">
+        <source>Publish/unpublish question</source>
+        <target>Publicera / avpublicera fråga</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.toggle.1">
+        <source>Unpublish question ID %s</source>
+        <target>Avpublicera fråga ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.toggle.2">
+        <source>Publish question ID %s</source>
+        <target>Publicera fråga ID %s</target>
       </trans-unit>
       <trans-unit id="tl_faq.pasteafter.0">
         <source>Paste at the top</source>

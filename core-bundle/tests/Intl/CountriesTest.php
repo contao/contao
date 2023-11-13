@@ -70,7 +70,7 @@ class CountriesTest extends TestCase
                     $this->assertSame('contao_countries', $domain);
 
                     return 'CNT.de' === $label;
-                }
+                },
             )
         ;
 
@@ -84,7 +84,7 @@ class CountriesTest extends TestCase
         $translator
             ->method('trans')
             ->willReturnCallback(
-                function (string $label, array $parameters, string $domain, string $locale = null) {
+                function (string $label, array $parameters, string $domain, string|null $locale = null) {
                     $this->assertSame('contao_countries', $domain);
                     $this->assertSame('de', $locale);
 
@@ -93,7 +93,7 @@ class CountriesTest extends TestCase
                     }
 
                     return $label;
-                }
+                },
             )
         ;
 
@@ -158,7 +158,7 @@ class CountriesTest extends TestCase
 
         yield [
             ['+ZZ', '+ZY'],
-            array_merge(SymfonyCountries::getCountryCodes(), ['ZY', 'ZZ']),
+            [...SymfonyCountries::getCountryCodes(), 'ZY', 'ZZ'],
         ];
 
         yield [
@@ -172,9 +172,9 @@ class CountriesTest extends TestCase
         ];
     }
 
-    private function getCountriesService(Translator $translator = null, array $configCountries = []): Countries
+    private function getCountriesService(Translator|null $translator = null, array $configCountries = []): Countries
     {
-        if (null === $translator) {
+        if (!$translator) {
             $translator = $this->createMock(Translator::class);
             $translator
                 ->method('getCatalogue')

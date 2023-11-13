@@ -42,8 +42,11 @@ use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 
 class FigureBuilderTest extends TestCase
 {
@@ -192,6 +195,7 @@ class FigureBuilderTest extends TestCase
 
         $filesModelAdapter = $this->mockAdapter(['findByPath']);
         $filesModelAdapter
+            ->expects($this->once())
             ->method('findByPath')
             ->with($absoluteFilePath)
             ->willReturn($model)
@@ -213,6 +217,7 @@ class FigureBuilderTest extends TestCase
 
         $filesModelAdapter = $this->mockAdapter(['findByPath']);
         $filesModelAdapter
+            ->expects($this->once())
             ->method('findByPath')
             ->with($absoluteFilePath)
             ->willReturn($model)
@@ -239,6 +244,101 @@ class FigureBuilderTest extends TestCase
         $this->expectExceptionObject($exception);
 
         $figureBuilder->build();
+    }
+
+    public function testFromUrl(): void
+    {
+        [, , , , $webDir] = $this->getTestFilePaths();
+
+        $studio = $this->mockStudioForImage(Path::join($webDir, 'images/dummy_public.jpg'));
+
+        $this->getFigureBuilder($studio)->fromUrl('images/d%75mmy_public.jpg')->build();
+    }
+
+    public function testFromPathAbsoluteUrl(): void
+    {
+        [, , , , $webDir] = $this->getTestFilePaths();
+
+        $studio = $this->mockStudioForImage(Path::join($webDir, 'images/dummy_public.jpg'));
+
+        $this->getFigureBuilder($studio)->fromUrl('/images/d%75mmy_public.jpg')->build();
+    }
+
+    public function testFromUrlRelativeToBaseUrl(): void
+    {
+        [, , , , $webDir] = $this->getTestFilePaths();
+
+        $studio = $this->mockStudioForImage(Path::join($webDir, 'images/dummy_public.jpg'));
+
+        $this->getFigureBuilder($studio)
+            ->fromUrl(
+                'https://example.com/folder/images/d%75mmy_public.jpg',
+                ['https://not.example.com', 'https://example.com/folder/'],
+            )
+            ->build()
+        ;
+    }
+
+    public function testFromUrlRelativeToRelativeBaseUrl(): void
+    {
+        [, , , , $webDir] = $this->getTestFilePaths();
+
+        $studio = $this->mockStudioForImage(Path::join($webDir, 'images/dummy_public.jpg'));
+
+        $this->getFigureBuilder($studio)
+            ->fromUrl(
+                'folder/subfolder/images/d%75mmy_public.jpg',
+                ['folder/subfolder'],
+            )
+            ->build()
+        ;
+    }
+
+    public function testFromUrlNotRelativeToBaseUrl(): void
+    {
+        $this->expectException(InvalidResourceException::class);
+        $this->expectExceptionMessageMatches('/outside of base URLs/');
+
+        $this->getFigureBuilder()
+            ->fromUrl(
+                'https://example.com/images/d%75mmy_public.jpg',
+                ['https://not.example.com'],
+            )
+            ->build()
+        ;
+    }
+
+    public function testFromUrlNotRelativeToNoBaseUrl(): void
+    {
+        $this->expectException(InvalidResourceException::class);
+        $this->expectExceptionMessageMatches('/outside of base URLs/');
+
+        $this->getFigureBuilder()
+            ->fromUrl('https://example.com/images/d%75mmy_public.jpg')
+            ->build()
+        ;
+    }
+
+    public function testFromUrlInvalidPercentEncoding(): void
+    {
+        $this->expectException(InvalidResourceException::class);
+        $this->expectExceptionMessageMatches('/contains invalid percent encoding/');
+
+        $this->getFigureBuilder()
+            ->fromUrl('images%2Fdummy.jpg')
+            ->build()
+        ;
+    }
+
+    public function testFromUrlNotRelativeToWebDir(): void
+    {
+        $this->expectException(InvalidResourceException::class);
+        $this->expectExceptionMessageMatches('/No resource could be located at path/');
+
+        $this->getFigureBuilder()
+            ->fromUrl('images/dummy.jpg')
+            ->build()
+        ;
     }
 
     public function testFromImage(): void
@@ -554,7 +654,7 @@ class FigureBuilderTest extends TestCase
 
             $this->assertNull(
                 $figureBuilder->getLastException(),
-                'setting a valid resource clears the last exception'
+                'setting a valid resource clears the last exception',
             );
         }
 
@@ -606,7 +706,7 @@ class FigureBuilderTest extends TestCase
         $figure = $this->getFigure(
             static function (FigureBuilder $builder) use ($metadata): void {
                 $builder->setMetadata($metadata);
-            }
+            },
         );
 
         $this->assertSame($metadata, $figure->getMetadata());
@@ -620,7 +720,7 @@ class FigureBuilderTest extends TestCase
                     ->setMetadata(new Metadata(['foo' => 'bar']))
                     ->disableMetadata()
                 ;
-            }
+            },
         );
 
         $this->assertFalse($figure->hasMetadata());
@@ -629,10 +729,10 @@ class FigureBuilderTest extends TestCase
     /**
      * @dataProvider provideMetadataAutoFetchCases
      */
-    public function testAutoFetchMetadataFromFilesModel(string $serializedMetadata, string|null $locale, array $expectedMetadata): void
+    public function testAutoFetchMetadataFromFilesModel(string $serializedMetadata, string|null $locale, array $expectedMetadata, Metadata|null $overwriteMetadata = null): void
     {
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class)));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class)));
 
         System::setContainer($container);
 
@@ -667,6 +767,7 @@ class FigureBuilderTest extends TestCase
         $figure = $this->getFigureBuilder($studio, $framework)
             ->fromFilesModel($filesModel)
             ->setLocale($locale)
+            ->setOverwriteMetadata($overwriteMetadata)
             ->build()
         ;
 
@@ -766,6 +867,20 @@ class FigureBuilderTest extends TestCase
                 Metadata::VALUE_CAPTION => '',
             ],
         ];
+
+        yield 'overwrite metadata keeping the other values as they are' => [
+            serialize([
+                'en' => ['title' => 't', 'alt' => 'a', 'link' => 'l', 'caption' => 'c'],
+            ]),
+            'en',
+            [
+                Metadata::VALUE_TITLE => 'tt',
+                Metadata::VALUE_ALT => 'a',
+                Metadata::VALUE_URL => 'l',
+                Metadata::VALUE_CAPTION => 'c',
+            ],
+            new Metadata([Metadata::VALUE_TITLE => 'tt']),
+        ];
     }
 
     public function testAutoFetchMetadataFromFilesModelFailsIfNoPage(): void
@@ -857,7 +972,7 @@ class FigureBuilderTest extends TestCase
     {
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
 
-        $getFilesModel = function (array $metaData, ?string $uuid) use ($relativeFilePath) {
+        $getFilesModel = function (array $metaData, string|null $uuid) use ($relativeFilePath) {
             $filesModel = $this->mockClassWithProperties(FilesModel::class, except: ['getMetadata']);
             $filesModel->setRow([
                 'type' => 'file',
@@ -924,7 +1039,7 @@ class FigureBuilderTest extends TestCase
         $figure = $this->getFigure(
             static function (FigureBuilder $builder): void {
                 $builder->setLinkAttribute('foo', 'bar');
-            }
+            },
         );
 
         $this->assertSame(['foo' => 'bar'], iterator_to_array($figure->getLinkAttributes()));
@@ -937,7 +1052,7 @@ class FigureBuilderTest extends TestCase
                 $builder->setLinkAttribute('foo', 'bar');
                 $builder->setLinkAttribute('foobar', 'test');
                 $builder->setLinkAttribute('foo', null);
-            }
+            },
         );
 
         $this->assertSame(['foobar' => 'test'], iterator_to_array($figure->getLinkAttributes()));
@@ -948,7 +1063,7 @@ class FigureBuilderTest extends TestCase
         $figure = $this->getFigure(
             static function (FigureBuilder $builder): void {
                 $builder->setLinkAttributes(['foo' => 'bar', 'foobar' => 'test']);
-            }
+            },
         );
 
         $this->assertSame(['foo' => 'bar', 'foobar' => 'test'], iterator_to_array($figure->getLinkAttributes()));
@@ -959,7 +1074,7 @@ class FigureBuilderTest extends TestCase
         $figure = $this->getFigure(
             static function (FigureBuilder $builder): void {
                 $builder->setLinkAttributes(new HtmlAttributes(['foo' => 'bar', 'foobar' => 'test']));
-            }
+            },
         );
 
         $this->assertSame(['foo' => 'bar', 'foobar' => 'test'], iterator_to_array($figure->getLinkAttributes()));
@@ -989,7 +1104,7 @@ class FigureBuilderTest extends TestCase
         $figure = $this->getFigure(
             static function (FigureBuilder $builder): void {
                 $builder->setLinkHref('https://example.com');
-            }
+            },
         );
 
         $this->assertSame('https://example.com', $figure->getLinkHref());
@@ -1000,10 +1115,21 @@ class FigureBuilderTest extends TestCase
         $figure = $this->getFigure(
             static function (FigureBuilder $builder): void {
                 $builder
+                    ->setLinkHref('https://exampe.com/this-is-no-image')
+                    ->enableLightbox()
+                ;
+            },
+        );
+
+        $this->assertSame('_blank', $figure->getLinkAttributes()['target']);
+
+        $figure = $this->getFigure(
+            static function (FigureBuilder $builder): void {
+                $builder
                     ->setLightboxResourceOrUrl('https://exampe.com/this-is-no-image')
                     ->enableLightbox()
                 ;
-            }
+            },
         );
 
         $this->assertSame('_blank', $figure->getLinkAttributes()['target']);
@@ -1034,7 +1160,7 @@ class FigureBuilderTest extends TestCase
                     ->enableLightbox()
                 ;
             },
-            $studio
+            $studio,
         );
 
         $this->assertSame($hasLightbox, $figure->hasLightbox());
@@ -1120,7 +1246,7 @@ class FigureBuilderTest extends TestCase
                     ->enableLightbox()
                 ;
             },
-            $studio
+            $studio,
         );
 
         $this->assertTrue($figure->hasLightbox());
@@ -1159,7 +1285,7 @@ class FigureBuilderTest extends TestCase
                     ->enableLightbox()
                 ;
             },
-            $studio
+            $studio,
         );
 
         $this->assertTrue($figure->hasLightbox());
@@ -1179,7 +1305,7 @@ class FigureBuilderTest extends TestCase
                     ->enableLightbox()
                 ;
             },
-            $studio
+            $studio,
         );
 
         $this->assertTrue($figure->hasLightbox());
@@ -1199,7 +1325,7 @@ class FigureBuilderTest extends TestCase
                     ->enableLightbox()
                 ;
             },
-            $studio
+            $studio,
         );
 
         $this->assertTrue($figure->hasLightbox());
@@ -1210,7 +1336,7 @@ class FigureBuilderTest extends TestCase
         $figure = $this->getFigure(
             static function (FigureBuilder $builder): void {
                 $builder->setOptions(['foo' => 'bar']);
-            }
+            },
         );
 
         $this->assertSame(['foo' => 'bar'], $figure->getOptions());
@@ -1288,7 +1414,7 @@ class FigureBuilderTest extends TestCase
                 $this->assertSame([Metadata::VALUE_TITLE => 'foo'], $event->getMetadata()->all());
 
                 $event->setMetadata(new Metadata([Metadata::VALUE_TITLE => 'bar']));
-            }
+            },
         );
 
         $figure = $this->getFigureBuilder($studio, null, $eventDispatcher)
@@ -1300,24 +1426,21 @@ class FigureBuilderTest extends TestCase
         $this->assertSame([Metadata::VALUE_TITLE => 'bar'], $figure->getMetadata()->all());
     }
 
-    private function getFigure(\Closure $configureBuilderCallback = null, Studio $studio = null): Figure
+    private function getFigure(\Closure|null $configureBuilderCallback = null, Studio|null $studio = null): Figure
     {
         [$absoluteFilePath] = $this->getTestFilePaths();
 
         $studio ??= $this->mockStudioForImage($absoluteFilePath);
         $builder = $this->getFigureBuilder($studio)->fromPath($absoluteFilePath, false);
 
-        if (null !== $configureBuilderCallback) {
+        if ($configureBuilderCallback) {
             $configureBuilderCallback($builder);
         }
 
         return $builder->build();
     }
 
-    /**
-     * @return Studio&MockObject
-     */
-    private function mockStudioForImage(string $expectedFilePath, string $expectedSizeConfiguration = null, ResizeOptions $resizeOptions = null): Studio
+    private function mockStudioForImage(string $expectedFilePath, string|null $expectedSizeConfiguration = null, ResizeOptions|null $resizeOptions = null): Studio&MockObject
     {
         $image = $this->createMock(ImageResult::class);
 
@@ -1332,10 +1455,7 @@ class FigureBuilderTest extends TestCase
         return $studio;
     }
 
-    /**
-     * @return Studio&MockObject
-     */
-    private function mockStudioForLightbox(ImageInterface|string|null $expectedResource, string|null $expectedUrl, string $expectedSizeConfiguration = null, string $expectedGroupIdentifier = null, ResizeOptions $resizeOptions = null): Studio
+    private function mockStudioForLightbox(ImageInterface|string|null $expectedResource, string|null $expectedUrl, string|null $expectedSizeConfiguration = null, string|null $expectedGroupIdentifier = null, ResizeOptions|null $resizeOptions = null): Studio&MockObject
     {
         $lightbox = $this->createMock(LightboxResult::class);
 
@@ -1350,9 +1470,9 @@ class FigureBuilderTest extends TestCase
         return $studio;
     }
 
-    private function getFigureBuilder(Studio $studio = null, ContaoFramework $framework = null, EventDispatcher $eventDispatcher = null): FigureBuilder
+    private function getFigureBuilder(Studio|null $studio = null, ContaoFramework|null $framework = null, EventDispatcher|null $eventDispatcher = null): FigureBuilder
     {
-        [, , $projectDir, $uploadPath] = $this->getTestFilePaths();
+        [, , $projectDir, $uploadPath, $webDir] = $this->getTestFilePaths();
         $validExtensions = $this->getTestFileExtensions();
 
         $locator = $this->createMock(ContainerInterface::class);
@@ -1365,7 +1485,7 @@ class FigureBuilderTest extends TestCase
             ])
         ;
 
-        return new FigureBuilder($locator, $projectDir, $uploadPath, $validExtensions);
+        return new FigureBuilder($locator, $projectDir, $uploadPath, $webDir, $validExtensions);
     }
 
     private function getTestFilePaths(): array
@@ -1374,8 +1494,9 @@ class FigureBuilderTest extends TestCase
         $uploadPath = 'files';
         $relativeFilePath = Path::join($uploadPath, 'public/foo.jpg');
         $absoluteFilePath = Path::join($projectDir, $relativeFilePath);
+        $webDir = Path::join($projectDir, 'public');
 
-        return [$absoluteFilePath, $relativeFilePath, $projectDir, $uploadPath];
+        return [$absoluteFilePath, $relativeFilePath, $projectDir, $uploadPath, $webDir];
     }
 
     private function getTestFileExtensions(): array

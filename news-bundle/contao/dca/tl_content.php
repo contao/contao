@@ -11,6 +11,7 @@
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\Input;
 use Contao\News;
@@ -19,6 +20,8 @@ use Contao\System;
 // Dynamically add the permission check and other callbacks
 if (Input::get('do') == 'news')
 {
+	System::loadLanguageFile('tl_news');
+
 	array_unshift($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'], array('tl_content_news', 'checkPermission'));
 }
 
@@ -32,34 +35,27 @@ if (Input::get('do') == 'news')
 class tl_content_news extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Check permissions to edit table tl_content
 	 *
 	 * @param DataContainer $dc
 	 */
 	public function checkPermission(DataContainer $dc)
 	{
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
 		// Set the root IDs
-		if (empty($this->User->news) || !is_array($this->User->news))
+		if (empty($user->news) || !is_array($user->news))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->news;
+			$root = $user->news;
 		}
 
 		// Check the current action
@@ -74,7 +70,7 @@ class tl_content_news extends Backend
 
 			case 'create':
 				// Check access to the parent element if a content element is created
-				$this->checkAccessToElement(Input::get('pid'), $root, (Input::get('mode') == 2));
+				$this->checkAccessToElement(Input::get('pid'), $root, Input::get('mode') == 2);
 				break;
 
 			case 'editAll':
@@ -85,11 +81,12 @@ class tl_content_news extends Backend
 				// Check access to the parent element if a content element is moved
 				if (in_array(Input::get('act'), array('cutAll', 'copyAll')))
 				{
-					$this->checkAccessToElement(Input::get('pid'), $root, (Input::get('mode') == 2));
+					$this->checkAccessToElement(Input::get('pid'), $root, Input::get('mode') == 2);
 				}
 
-				$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE ptable='tl_news' AND pid=?")
-										 ->execute($dc->currentPid);
+				$objCes = Database::getInstance()
+					->prepare("SELECT id FROM tl_content WHERE ptable='tl_news' AND pid=?")
+					->execute($dc->currentPid);
 
 				$objSession = System::getContainer()->get('request_stack')->getSession();
 
@@ -101,7 +98,7 @@ class tl_content_news extends Backend
 			case 'cut':
 			case 'copy':
 				// Check access to the parent element if a content element is moved
-				$this->checkAccessToElement(Input::get('pid'), $root, (Input::get('mode') == 2));
+				$this->checkAccessToElement(Input::get('pid'), $root, Input::get('mode') == 2);
 				// no break
 
 			default:
@@ -124,15 +121,17 @@ class tl_content_news extends Backend
 	{
 		if ($blnIsPid)
 		{
-			$objArchive = $this->Database->prepare("SELECT a.id, n.id AS nid FROM tl_news n, tl_news_archive a WHERE n.id=? AND n.pid=a.id")
-										 ->limit(1)
-										 ->execute($id);
+			$objArchive = Database::getInstance()
+				->prepare("SELECT a.id, n.id AS nid FROM tl_news n, tl_news_archive a WHERE n.id=? AND n.pid=a.id")
+				->limit(1)
+				->execute($id);
 		}
 		else
 		{
-			$objArchive = $this->Database->prepare("SELECT a.id, n.id AS nid FROM tl_content c, tl_news n, tl_news_archive a WHERE c.id=? AND c.pid=n.id AND n.pid=a.id")
-										 ->limit(1)
-										 ->execute($id);
+			$objArchive = Database::getInstance()
+				->prepare("SELECT a.id, n.id AS nid FROM tl_content c, tl_news n, tl_news_archive a WHERE c.id=? AND c.pid=n.id AND n.pid=a.id")
+				->limit(1)
+				->execute($id);
 		}
 
 		// Invalid ID

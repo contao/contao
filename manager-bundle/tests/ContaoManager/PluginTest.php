@@ -15,7 +15,6 @@ namespace Contao\ManagerBundle\Tests\ContaoManager;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\ManagerBundle\ContaoManager\Plugin;
 use Contao\ManagerBundle\ContaoManagerBundle;
-use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\DelegatingParser;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
@@ -39,7 +38,6 @@ use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Mailer\Transport\NativeTransportFactory;
 use Symfony\Component\Routing\Route;
@@ -83,8 +81,6 @@ class PluginTest extends ContaoTestCase
     public function testReturnsTheBundles(): void
     {
         $plugin = new Plugin();
-
-        /** @var array<BundleConfig> $bundles */
         $bundles = $plugin->getBundles(new DelegatingParser());
 
         $this->assertCount(13, $bundles);
@@ -187,7 +183,7 @@ class PluginTest extends ContaoTestCase
 
                         $resource($container);
                     }
-                }
+                },
             )
         ;
 
@@ -215,7 +211,7 @@ class PluginTest extends ContaoTestCase
 
                         $resource($container);
                     }
-                }
+                },
             )
         ;
 
@@ -252,7 +248,7 @@ class PluginTest extends ContaoTestCase
                     $collection->add(basename($file).'_foobar', new Route('/foobar'));
 
                     return $collection;
-                }
+                },
             )
         ;
 
@@ -286,11 +282,10 @@ class PluginTest extends ContaoTestCase
             ->in(__DIR__.'/../../src/ContaoManager/ApiCommand')
         ;
 
-        /** @var SplFileInfo $file */
         foreach ($files as $file) {
             $this->assertContains(
                 'Contao\ManagerBundle\ContaoManager\ApiCommand\\'.$file->getBasename('.php'),
-                (new Plugin())->getApiCommands()
+                (new Plugin())->getApiCommands(),
             );
         }
     }
@@ -317,7 +312,7 @@ class PluginTest extends ContaoTestCase
                     'debug',
                 ],
             ],
-            (new Plugin())->getApiFeatures()
+            (new Plugin())->getApiFeatures(),
         );
     }
 
@@ -673,23 +668,21 @@ class PluginTest extends ContaoTestCase
             $userExtensionConfig,
         ];
 
-        $expect = array_merge(
-            $extensionConfigs,
+        $expect = [
+            ...$extensionConfigs,
             [
-                [
-                    'dbal' => [
-                        'connections' => [
-                            'default' => [
-                                'default_table_options' => [
-                                    'collate' => 'utf8_unicode_ci',
-                                    'collation' => 'utf8_unicode_ci',
-                                ],
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'default_table_options' => [
+                                'collate' => 'utf8_unicode_ci',
+                                'collation' => 'utf8_unicode_ci',
                             ],
                         ],
                     ],
                 ],
-            ]
-        );
+            ],
+        ];
 
         $container = $this->getContainer();
         $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
@@ -1020,15 +1013,14 @@ class PluginTest extends ContaoTestCase
         $expect = $extensionConfigs;
 
         if ($shouldAdd) {
-            $expect = array_merge(
-                $extensionConfigs,
-                [[
+            $expect = [
+                ...$extensionConfigs,
+                [
                     'orm' => [
                         'entity_managers' => [
                             $defaultEntityManager => [
                                 'mappings' => [
                                     'App' => [
-                                        'type' => 'annotation',
                                         'dir' => '%kernel.project_dir%/src/Entity',
                                         'is_bundle' => false,
                                         'prefix' => 'App\Entity',
@@ -1038,8 +1030,8 @@ class PluginTest extends ContaoTestCase
                             ],
                         ],
                     ],
-                ]]
-            );
+                ],
+            ];
         }
 
         $plugin = new Plugin();

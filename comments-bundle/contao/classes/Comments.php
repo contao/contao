@@ -50,7 +50,7 @@ class Comments extends Frontend
 
 			// Calculate the key (e.g. tl_form_field becomes page_cff12)
 			$key = '';
-			$chunks = explode('_', substr($strSource, ((strncmp($strSource, 'tl_', 3) === 0) ? 3 : 0)));
+			$chunks = explode('_', substr($strSource, (strncmp($strSource, 'tl_', 3) === 0) ? 3 : 0));
 
 			foreach ($chunks as $chunk)
 			{
@@ -81,11 +81,11 @@ class Comments extends Frontend
 		// Get all published comments
 		if ($limit)
 		{
-			$objComments = CommentsModel::findPublishedBySourceAndParent($strSource, $intParent, ($objConfig->order == 'descending'), $limit, $offset);
+			$objComments = CommentsModel::findPublishedBySourceAndParent($strSource, $intParent, $objConfig->order == 'descending', $limit, $offset);
 		}
 		else
 		{
-			$objComments = CommentsModel::findPublishedBySourceAndParent($strSource, $intParent, ($objConfig->order == 'descending'));
+			$objComments = CommentsModel::findPublishedBySourceAndParent($strSource, $intParent, $objConfig->order == 'descending');
 		}
 
 		// Parse the comments
@@ -154,8 +154,6 @@ class Comments extends Frontend
 	 */
 	protected function renderCommentForm(FrontendTemplate $objTemplate, \stdClass $objConfig, $strSource, $intParent, $varNotifies)
 	{
-		$this->import(FrontendUser::class, 'User');
-
 		// Access control
 		if ($objConfig->requireLogin && !System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
 		{
@@ -173,6 +171,8 @@ class Comments extends Frontend
 			return;
 		}
 
+		$user = FrontendUser::getInstance();
+
 		// Form fields
 		$arrFields = array
 		(
@@ -180,7 +180,7 @@ class Comments extends Frontend
 			(
 				'name'      => 'name',
 				'label'     => $GLOBALS['TL_LANG']['MSC']['com_name'],
-				'value'     => trim($this->User->firstname . ' ' . $this->User->lastname),
+				'value'     => trim($user->firstname . ' ' . $user->lastname),
 				'inputType' => 'text',
 				'eval'      => array('mandatory'=>true, 'maxlength'=>64)
 			),
@@ -188,7 +188,7 @@ class Comments extends Frontend
 			(
 				'name'      => 'email',
 				'label'     => $GLOBALS['TL_LANG']['MSC']['com_email'],
-				'value'     => $this->User->email,
+				'value'     => $user->email,
 				'inputType' => 'text',
 				'eval'      => array('rgxp'=>'email', 'mandatory'=>true, 'maxlength'=>255, 'decodeEntities'=>true)
 			),
@@ -352,8 +352,7 @@ class Comments extends Frontend
 			{
 				foreach ($GLOBALS['TL_HOOKS']['addComment'] as $callback)
 				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($objComment->id, $arrSet, $this);
+					System::importStatic($callback[0])->{$callback[1]}($objComment->id, $arrSet, $this);
 				}
 			}
 

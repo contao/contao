@@ -32,17 +32,15 @@ final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
 {
     private array|null $escaperFilterNodes = null;
 
-    /**
-     * We evaluate affected templates on the fly so that rules can be adjusted
-     * after building the container. Expects a list of regular expressions to
-     * be returned. A template counts as "affected" if it matches any of the
-     * rules.
-     */
-    private \Closure $rules;
-
-    public function __construct(\Closure $rules)
-    {
-        $this->rules = $rules;
+    public function __construct(
+        /**
+         * We evaluate affected templates on the fly so that rules can be
+         * adjusted after building the container. Expects a list of regular
+         * expressions to be returned. A template counts as "affected" if it
+         * matches any of the rules.
+         */
+        private readonly \Closure $rules,
+    ) {
     }
 
     /**
@@ -69,10 +67,11 @@ final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
 
         if ($node instanceof ModuleNode && $isAffected(($this->rules)(), $node->getTemplateName() ?? '')) {
             $this->escaperFilterNodes = [];
-        } elseif (null !== $this->escaperFilterNodes && $this->isEscaperFilterExpression($node, $strategy)) {
-            if (\in_array($strategy, ['html', 'html_attr'], true)) {
-                $this->escaperFilterNodes[] = [$node, $strategy];
-            }
+        } elseif (
+            null !== $this->escaperFilterNodes && $this->isEscaperFilterExpression($node, $strategy)
+            && \in_array($strategy, ['html', 'html_attr'], true)
+        ) {
+            $this->escaperFilterNodes[] = [$node, $strategy];
         }
 
         return $node;
@@ -94,16 +93,21 @@ final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
     /**
      * @param-out string $type
      */
-    private function isEscaperFilterExpression(Node $node, string &$type = null): bool
+    private function isEscaperFilterExpression(Node $node, string|null &$type = null): bool
     {
-        if (
-            !$node instanceof FilterExpression
-            || !$node->getNode('arguments')->hasNode('0')
-            || !($argument = $node->getNode('arguments')->getNode('0')) instanceof ConstantExpression
-            || !\in_array($node->getNode('filter')->getAttribute('value'), ['escape', 'e'], true)
-        ) {
-            $type = '';
+        $type = '';
 
+        if (!$node instanceof FilterExpression || !$node->getNode('arguments')->hasNode('0')) {
+            return false;
+        }
+
+        $argument = $node->getNode('arguments')->getNode('0');
+
+        if (!$argument instanceof ConstantExpression) {
+            return false;
+        }
+
+        if (!\in_array($node->getNode('filter')->getAttribute('value'), ['escape', 'e'], true)) {
             return false;
         }
 

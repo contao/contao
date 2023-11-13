@@ -9,7 +9,6 @@
  */
 
 use Contao\Backend;
-use Contao\BackendUser;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Image;
@@ -66,7 +65,7 @@ $GLOBALS['TL_DCA']['tl_member_group'] = array
 		'default'                     => '{title_legend},name;{redirect_legend:hide},redirect;{account_legend},disable,start,stop',
 	),
 
-	// Subpalettes
+	// Sub-palettes
 	'subpalettes' => array
 	(
 		'redirect'                    => 'jumpTo',
@@ -135,15 +134,6 @@ $GLOBALS['TL_DCA']['tl_member_group'] = array
 class tl_member_group extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Add an image to each record
 	 *
 	 * @param array  $row
@@ -155,17 +145,18 @@ class tl_member_group extends Backend
 	{
 		$image = 'mgroup';
 		$disabled = ($row['start'] !== '' && $row['start'] > time()) || ($row['stop'] !== '' && $row['stop'] <= time());
+		$icon = $image;
 
 		if ($disabled || $row['disable'])
 		{
-			$image .= '_';
+			$image .= '--disabled';
 		}
 
 		return sprintf(
 			'<div class="list_icon" style="background-image:url(\'%s\')" data-icon="%s" data-icon-disabled="%s">%s</div>',
 			Image::getUrl($image),
-			Image::getUrl($disabled ? $image : rtrim($image, '_')),
-			Image::getUrl(rtrim($image, '_') . '_'),
+			Image::getUrl($icon),
+			Image::getUrl($icon . '--disabled'),
 			$label
 		);
 	}

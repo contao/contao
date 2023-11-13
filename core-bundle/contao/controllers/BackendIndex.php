@@ -37,7 +37,6 @@ class BackendIndex extends Backend
 	 */
 	public function __construct()
 	{
-		$this->import(BackendUser::class, 'User');
 		parent::__construct();
 
 		System::loadLanguageFile('default');

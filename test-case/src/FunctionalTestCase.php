@@ -22,8 +22,11 @@ use Symfony\Component\Yaml\Yaml;
 abstract class FunctionalTestCase extends WebTestCase
 {
     private static array $tableColumns = [];
+
     private static array $tableSchemas = [];
+
     private static int $alterCount = -1;
+
     private static bool $supportsAlterCount;
 
     protected static function loadFixtures(array $yamlFiles): void
@@ -83,7 +86,7 @@ abstract class FunctionalTestCase extends WebTestCase
             }
         }
 
-        if (!empty(self::$tableColumns)) {
+        if (self::$tableColumns) {
             if (!self::$supportsAlterCount || $getAlterCount() !== self::$alterCount) {
                 $allColumns = $connection->fetchAllNumeric('
                     SELECT TABLE_NAME, COLUMN_NAME, COLUMN_DEFAULT, IS_NULLABLE, COLUMN_TYPE, COLLATION_NAME
@@ -126,7 +129,7 @@ abstract class FunctionalTestCase extends WebTestCase
         if ($tables) {
             $connection->executeStatement('DROP TABLE '.implode(
                 ', ',
-                array_map(static fn (Table $table) => $connection->quoteIdentifier($table->getName()), $tables)
+                array_map(static fn (Table $table) => $connection->quoteIdentifier($table->getName()), $tables),
             ));
         }
 

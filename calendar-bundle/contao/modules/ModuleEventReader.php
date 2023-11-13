@@ -14,6 +14,7 @@ use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Util\UrlUtil;
 
 /**
  * Front end module "event reader".
@@ -96,7 +97,8 @@ class ModuleEventReader extends Events
 		}
 
 		// Redirect if the event has a target URL (see #1498)
-		switch ($objEvent->source) {
+		switch ($objEvent->source)
+		{
 			case 'internal':
 				if ($page = PageModel::findPublishedById($objEvent->jumpTo))
 				{
@@ -116,7 +118,10 @@ class ModuleEventReader extends Events
 			case 'external':
 				if ($objEvent->url)
 				{
-					throw new RedirectResponseException($objEvent->url, 301);
+					$url = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objEvent->url);
+					$url = UrlUtil::makeAbsolute($url, Environment::get('base'));
+
+					throw new RedirectResponseException($url, 301);
 				}
 
 				throw new InternalServerErrorException('Empty target URL');
@@ -266,8 +271,7 @@ class ModuleEventReader extends Events
 		{
 			$id = $objEvent->id;
 
-			$objTemplate->details = function () use ($id)
-			{
+			$objTemplate->details = function () use ($id) {
 				$strDetails = '';
 				$objElement = ContentModel::findPublishedByPidAndTable($id, 'tl_calendar_events');
 
@@ -282,8 +286,7 @@ class ModuleEventReader extends Events
 				return $strDetails;
 			};
 
-			$objTemplate->hasDetails = static function () use ($id)
-			{
+			$objTemplate->hasDetails = static function () use ($id) {
 				return ContentModel::countPublishedByPidAndTable($id, 'tl_calendar_events') > 0;
 			};
 		}
@@ -312,7 +315,7 @@ class ModuleEventReader extends Events
 				->createFigureBuilder()
 				->from($objEvent->singleSRC)
 				->setSize($imgSize)
-				->setMetadata($objEvent->getOverwriteMetadata())
+				->setOverwriteMetadata($objEvent->getOverwriteMetadata())
 				->enableLightbox($objEvent->fullsize)
 				->buildIfResourceExists();
 
@@ -328,8 +331,7 @@ class ModuleEventReader extends Events
 		}
 
 		// Add a function to retrieve upcoming dates (see #175)
-		$objTemplate->getUpcomingDates = function ($recurrences) use ($objEvent, $objPage, $intStartTime, $intEndTime, $arrRange, $span)
-		{
+		$objTemplate->getUpcomingDates = function ($recurrences) use ($objEvent, $objPage, $intStartTime, $intEndTime, $arrRange, $span) {
 			if (!$objEvent->recurring || !isset($arrRange['unit'], $arrRange['value']))
 			{
 				return array();
@@ -366,8 +368,7 @@ class ModuleEventReader extends Events
 		};
 
 		// Add a function to retrieve past dates (see #175)
-		$objTemplate->getPastDates = function ($recurrences) use ($objEvent, $objPage, $intStartTime, $intEndTime, $arrRange, $span)
-		{
+		$objTemplate->getPastDates = function ($recurrences) use ($objEvent, $objPage, $intStartTime, $intEndTime, $arrRange, $span) {
 			if (!$objEvent->recurring || !isset($arrRange['unit'], $arrRange['value']))
 			{
 				return array();
@@ -404,8 +405,7 @@ class ModuleEventReader extends Events
 		};
 
 		// schema.org information
-		$objTemplate->getSchemaOrgData = static function () use ($objTemplate, $objEvent): array
-		{
+		$objTemplate->getSchemaOrgData = static function () use ($objTemplate, $objEvent): array {
 			$jsonLd = Events::getSchemaOrgData($objEvent);
 
 			if ($objTemplate->addImage && $objTemplate->figure)
@@ -449,7 +449,6 @@ class ModuleEventReader extends Events
 		$intHl = min((int) str_replace('h', '', $this->hl), 5);
 		$this->Template->hlc = 'h' . ($intHl + 1);
 
-		$this->import(Comments::class, 'Comments');
 		$arrNotifies = array();
 
 		// Notify the system administrator
@@ -474,7 +473,7 @@ class ModuleEventReader extends Events
 		$objConfig->bbcode = $objCalendar->bbcode;
 		$objConfig->moderate = $objCalendar->moderate;
 
-		$this->Comments->addCommentsToTemplate($this->Template, $objConfig, 'tl_calendar_events', $objEvent->id, $arrNotifies);
+		(new Comments())->addCommentsToTemplate($this->Template, $objConfig, 'tl_calendar_events', $objEvent->id, $arrNotifies);
 	}
 
 	/**

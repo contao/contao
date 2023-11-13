@@ -20,6 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\Finder\Finder;
 
 /**
  * @internal
@@ -55,25 +56,50 @@ class AddAssetsPackagesPass implements CompilerPassInterface
         $meta = $container->getParameter('kernel.bundles_metadata');
 
         foreach (array_keys($bundles) as $name) {
-            if (null === ($path = $this->findBundlePath($meta, $name))) {
-                continue;
+            // Add the "public" folder
+            if (null !== ($path = $this->findPublicPath($meta, $name))) {
+                $packageVersion = $version;
+                $packageName = $this->getBundlePackageName($name);
+                $serviceId = 'assets._package_'.$packageName;
+                $basePath = Path::join('bundles', preg_replace('/bundle$/', '', strtolower($name)));
+
+                if (is_file($manifestPath = Path::join($path, 'manifest.json'))) {
+                    $def = new ChildDefinition('assets.json_manifest_version_strategy');
+                    $def->replaceArgument(0, $manifestPath);
+
+                    $container->setDefinition('assets._version_'.$packageName, $def);
+                    $packageVersion = new Reference('assets._version_'.$packageName);
+                }
+
+                $container->setDefinition($serviceId, $this->createPackageDefinition($basePath, $packageVersion, $context));
+                $packages->addMethodCall('addPackage', [$packageName, new Reference($serviceId)]);
             }
 
-            $packageVersion = $version;
-            $packageName = $this->getBundlePackageName($name);
-            $serviceId = 'assets._package_'.$packageName;
-            $basePath = Path::join('bundles', preg_replace('/bundle$/', '', strtolower($name)));
+            // Add the "contao/themes" folder
+            if (is_dir($path = Path::join($meta[$name]['path'], 'contao/themes'))) {
+                $themes = Finder::create()
+                    ->directories()
+                    ->depth(0)
+                    ->in($path)
+                ;
 
-            if (is_file($manifestPath = Path::join($path, 'manifest.json'))) {
-                $def = new ChildDefinition('assets.json_manifest_version_strategy');
-                $def->replaceArgument(0, $manifestPath);
+                foreach ($themes as $theme) {
+                    $packageVersion = $version;
+                    $packageName = 'system/themes/'.$theme->getBasename();
+                    $serviceId = 'assets._package_'.$packageName;
 
-                $container->setDefinition('assets._version_'.$packageName, $def);
-                $packageVersion = new Reference('assets._version_'.$packageName);
+                    if (is_file($manifestPath = Path::join($path, $theme->getBasename(), 'manifest.json'))) {
+                        $def = new ChildDefinition('assets.json_manifest_version_strategy');
+                        $def->replaceArgument(0, $manifestPath);
+
+                        $container->setDefinition('assets._version_'.$packageName, $def);
+                        $packageVersion = new Reference('assets._version_'.$packageName);
+                    }
+
+                    $container->setDefinition($serviceId, $this->createPackageDefinition($packageName, $packageVersion, $context));
+                    $packages->addMethodCall('addPackage', [$packageName, new Reference($serviceId)]);
+                }
             }
-
-            $container->setDefinition($serviceId, $this->createPackageDefinition($basePath, $packageVersion, $context));
-            $packages->addMethodCall('addPackage', [$packageName, new Reference($serviceId)]);
         }
     }
 
@@ -103,7 +129,7 @@ class AddAssetsPackagesPass implements CompilerPassInterface
         $definition = $this->createPackageDefinition(
             'vendor/scrivo/highlight_php/styles',
             $this->createVersionStrategy($container, 'scrivo/highlight.php'),
-            new Reference('contao.assets.assets_context')
+            new Reference('contao.assets.assets_context'),
         );
 
         $container->setDefinition($serviceId, $definition);
@@ -146,7 +172,7 @@ class AddAssetsPackagesPass implements CompilerPassInterface
         return Container::underscore($className);
     }
 
-    private function findBundlePath(array $meta, string $name): string|null
+    private function findPublicPath(array $meta, string $name): string|null
     {
         if (is_dir($path = Path::join($meta[$name]['path'], 'Resources/public'))) {
             return $path;

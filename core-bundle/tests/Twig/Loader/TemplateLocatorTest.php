@@ -32,14 +32,11 @@ class TemplateLocatorTest extends TestCase
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
 
-        $locator = $this->getTemplateLocator(
-            $projectDir,
-            [
-                'templates/my/theme',
-                'themes/foo',
-                'templates/non-existing',
-            ]
-        );
+        $locator = $this->getTemplateLocator($projectDir, [
+            'templates/my/theme',
+            'themes/foo',
+            'templates/non-existing',
+        ]);
 
         $expectedThemeDirectories = [
             'my_theme' => Path::join($projectDir, 'templates/my/theme'),
@@ -76,7 +73,7 @@ class TemplateLocatorTest extends TestCase
             [],
             [],
             $this->createMock(ThemeNamespace::class),
-            $connection
+            $connection,
         );
 
         $this->assertEmpty($locator->findThemeDirectories());
@@ -142,6 +139,18 @@ class TemplateLocatorTest extends TestCase
         $this->assertSame(array_values($expectedResourcePaths), array_values($paths));
     }
 
+    public function testFindsResourcesPathsIgnoresSubdirectoriesInNamespaceRoots(): void
+    {
+        $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/explicit-roots');
+        $locator = $this->getTemplateLocator($projectDir);
+
+        $this->assertSame(
+            ['App' => [Path::join($projectDir, 'contao/templates')]],
+            $locator->findResourcesPaths(),
+            'should not contain the "content_element" sub-directory',
+        );
+    }
+
     public function testFindsTemplates(): void
     {
         $path = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/vendor-bundles/InvalidBundle1/templates');
@@ -182,19 +191,19 @@ class TemplateLocatorTest extends TestCase
 
         $this->assertEmpty(
             $locator->findTemplates(Path::join($projectDir, 'contao/templates')),
-            'expect single depth without implicit root'
+            'expect single depth without implicit root',
         );
 
         $this->assertSame(
             $expectedTemplates,
             $locator->findTemplates(Path::join($projectDir, 'templates')),
-            'expect templates with directory structure but no theme templates'
+            'expect templates with directory structure but no theme templates',
         );
 
         $this->assertSame(
             $expectedThemeTemplates,
             $locator->findTemplates(Path::join($projectDir, 'templates/my/theme')),
-            'expect theme templates with directory structure'
+            'expect theme templates with directory structure',
         );
     }
 
@@ -218,7 +227,7 @@ class TemplateLocatorTest extends TestCase
             $bundles,
             $bundlesMetadata,
             new ThemeNamespace(),
-            $connection
+            $connection,
         );
     }
 }

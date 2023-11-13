@@ -100,7 +100,7 @@ abstract class Model
 	protected $blnPreventSaving = false;
 
 	/**
-	 * @var array<string,array<string,string>>
+	 * @var array<string, array<string, string>>
 	 */
 	private static $arrColumnCastTypes = array();
 
@@ -154,6 +154,11 @@ abstract class Model
 			// Create the related models
 			foreach ($arrRelated as $key=>$row)
 			{
+				if (!isset($this->arrRelations[$key]['table']))
+				{
+					throw new \Exception('Incomplete relation defined for ' . static::$strTable . '.' . $key);
+				}
+
 				$table = $this->arrRelations[$key]['table'];
 
 				/** @var static $strClass */
@@ -390,25 +395,24 @@ abstract class Model
 	/**
 	 * @internal
 	 *
-	 * @return array<string,array<string,string>>
+	 * @return array<string, array<string, string>>
 	 */
 	public static function getColumnCastTypesFromDatabase(): array
 	{
-		return static::getColumnCastTypesFromSchema(
-			System::getContainer()->get('database_connection')->createSchemaManager()->createSchema(),
-		);
+		$schemaManager = System::getContainer()->get('database_connection')->createSchemaManager();
+		$schema = $schemaManager->introspectSchema();
+
+		return static::getColumnCastTypesFromSchema($schema);
 	}
 
 	/**
 	 * @internal
 	 *
-	 * @return array<string,array<string,string>>
+	 * @return array<string, array<string, string>>
 	 */
 	public static function getColumnCastTypesFromDca(): array
 	{
-		return static::getColumnCastTypesFromSchema(
-			System::getContainer()->get('contao.doctrine.schema_provider')->createSchema(),
-		);
+		return static::getColumnCastTypesFromSchema(System::getContainer()->get('contao.doctrine.schema_provider')->createSchema());
 	}
 
 	private static function getColumnCastTypesFromSchema(Schema $schema): array
@@ -423,7 +427,7 @@ abstract class Model
 
 				if (\in_array($type, array(Types::INTEGER, Types::SMALLINT, Types::FLOAT, Types::BOOLEAN), true))
 				{
-					$types[strtolower($table->getName())][strtolower($column->getName())] = $type;
+					$types[$table->getName()][$column->getName()] = $type;
 				}
 			}
 		}
@@ -463,7 +467,7 @@ abstract class Model
 			}
 		}
 
-		return match (self::$arrColumnCastTypes[strtolower(static::$strTable)][strtolower($strKey)] ?? null)
+		return match (self::$arrColumnCastTypes[static::$strTable][$strKey] ?? null)
 		{
 			Types::INTEGER, Types::SMALLINT => (int) $varValue,
 			Types::FLOAT => (float) $varValue,
@@ -584,7 +588,7 @@ abstract class Model
 
 			if (static::$strPk == 'id')
 			{
-				$this->id = $stmt->insertId;
+				$this->id = (int) $stmt->insertId;
 			}
 
 			$this->postSave(self::INSERT);
@@ -654,7 +658,7 @@ abstract class Model
 	 * @param string $strKey     The property name
 	 * @param array  $arrOptions An optional options array
 	 *
-	 * @return static|Collection|null The model or a model collection if there are multiple rows
+	 * @return Collection<static>|static|null The model or a model collection if there are multiple rows
 	 *
 	 * @throws \Exception If $strKey is not a related field
 	 */
@@ -834,7 +838,7 @@ abstract class Model
 	 * @param int|string|null $varValue   The property value
 	 * @param array           $arrOptions An optional options array
 	 *
-	 * @return static The model or null if the result is empty
+	 * @return static|null The model or null if the result is empty
 	 */
 	public static function findByPk($varValue, array $arrOptions=array())
 	{
@@ -870,7 +874,7 @@ abstract class Model
 	 * @param mixed $varId      The ID or alias
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return static The model or null if the result is empty
+	 * @return static|null The model or null if the result is empty
 	 */
 	public static function findByIdOrAlias($varId, array $arrOptions=array())
 	{
@@ -910,7 +914,7 @@ abstract class Model
 	 * @param array $arrIds     An array of IDs
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Collection|null The model collection or null if there are no records
+	 * @return Collection<static>|null The model collection or null if there are no records
 	 */
 	public static function findMultipleByIds($arrIds, array $arrOptions=array())
 	{
@@ -978,10 +982,10 @@ abstract class Model
 	 * Find a single record by various criteria
 	 *
 	 * @param mixed $strColumn  The property name
-	 * @param mixed $varValue   The property value
+	 * @param mixed $varValue   The property value, NULL is interpreted as "no value", use array(null) to query for NULL values
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return static The model or null if the result is empty
+	 * @return static|null The model or null if the result is empty
 	 */
 	public static function findOneBy($strColumn, $varValue, array $arrOptions=array())
 	{
@@ -1004,10 +1008,10 @@ abstract class Model
 	 * Find records by various criteria
 	 *
 	 * @param mixed $strColumn  The property name
-	 * @param mixed $varValue   The property value
+	 * @param mixed $varValue   The property value, NULL is interpreted as "no value", use array(null) to query for NULL values
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return static|Collection|null A model, model collection or null if the result is empty
+	 * @return Collection<static>|static|null A model, model collection or null if the result is empty
 	 */
 	public static function findBy($strColumn, $varValue, array $arrOptions=array())
 	{
@@ -1038,7 +1042,7 @@ abstract class Model
 	 *
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Collection|null The model collection or null if the result is empty
+	 * @return Collection<static>|null The model collection or null if the result is empty
 	 */
 	public static function findAll(array $arrOptions=array())
 	{
@@ -1060,7 +1064,7 @@ abstract class Model
 	 * @param string $name The method name
 	 * @param array  $args The passed arguments
 	 *
-	 * @return static|Collection|integer|null A model or model collection
+	 * @return Collection<static>|integer|static|null A model, model collection or the number of matching rows
 	 *
 	 * @throws \Exception If the method name is invalid
 	 */
@@ -1104,7 +1108,7 @@ abstract class Model
 	 *
 	 * @param array $arrOptions The options array
 	 *
-	 * @return Model|Model[]|Collection|null A model, model collection or null if the result is empty
+	 * @return Collection<static>|static[]|static|null A model, model collection or null if the result is empty
 	 */
 	protected static function find(array $arrOptions)
 	{
@@ -1167,15 +1171,22 @@ abstract class Model
 
 		if (!isset($arrOptions['value']))
 		{
-			$arrOptions['value'] = array();
+			$arrOptions['value'] = \is_string($arrOptions['column'] ?? null) ? array(null) : array();
 		}
 
 		$objStatement = static::preFind($objStatement);
-		$objResult = $objStatement->execute(...(array) ($arrOptions['value']));
+		$objResult = $objStatement->execute(...(array) $arrOptions['value']);
 
 		if ($objResult->numRows < 1)
 		{
-			return ($arrOptions['return'] ?? null) == 'Array' ? array() : null;
+			if (($arrOptions['return'] ?? null) == 'Array')
+			{
+				trigger_deprecation('contao/core-bundle', '5.2', 'Using "Array" as return type for model queries has been deprecated and will no longer work in Contao 6. Use the getModels() method instead.');
+
+				return array();
+			}
+
+			return null;
 		}
 
 		$objResult = static::postFind($objResult);
@@ -1195,6 +1206,8 @@ abstract class Model
 
 		if (($arrOptions['return'] ?? null) == 'Array')
 		{
+			trigger_deprecation('contao/core-bundle', '5.2', 'Using "Array" as return type for model queries has been deprecated and will no longer work in Contao 6. Use the getModels() method instead.');
+
 			return static::createCollectionFromDbResult($objResult, static::$strTable)->getModels();
 		}
 
@@ -1332,7 +1345,7 @@ abstract class Model
 	 * @param array  $arrModels An array of models
 	 * @param string $strTable  The table name
 	 *
-	 * @return Collection The Collection object
+	 * @return Collection<static> The Collection object
 	 */
 	protected static function createCollection(array $arrModels, $strTable)
 	{
@@ -1345,7 +1358,7 @@ abstract class Model
 	 * @param Result $objResult The database result object
 	 * @param string $strTable  The table name
 	 *
-	 * @return Collection The model collection
+	 * @return Collection<static> The model collection
 	 */
 	protected static function createCollectionFromDbResult(Result $objResult, $strTable)
 	{

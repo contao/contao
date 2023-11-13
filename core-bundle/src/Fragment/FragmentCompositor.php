@@ -57,8 +57,8 @@ class FragmentCompositor
             }
 
             if (
-                !empty($this->slotsByIdentifier[$identifier][$child->slot]['allowedTypes']) &&
-                !\in_array($child->type, $this->slotsByIdentifier[$identifier][$child->slot]['allowedTypes'], true)
+                !empty($this->slotsByIdentifier[$identifier][$child->slot]['allowedTypes'])
+                && !\in_array($child->type, $this->slotsByIdentifier[$identifier][$child->slot]['allowedTypes'], true)
             ) {
                 continue;
             }
@@ -68,7 +68,7 @@ class FragmentCompositor
                 'main',
                 [],
                 !Registry::getInstance()->isRegistered($child),
-                $this->getNestedContentElements(ContentElementReference::TAG_NAME.'.'.$child->type, $child->id)
+                $this->getNestedContentElements(ContentElementReference::TAG_NAME.'.'.$child->type, $child->id),
             );
         }
 

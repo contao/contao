@@ -35,7 +35,7 @@ class MaintenanceModeCommandTest extends ContaoTestCase
     /**
      * @dataProvider enableProvider
      */
-    public function testEnable(string $expectedTemplateName, array $expectedTemplateVars, string $customTemplateName = null, string $customTemplateVars = null): void
+    public function testEnable(string $expectedTemplateName, array $expectedTemplateVars, string|null $customTemplateName = null, string|null $customTemplateVars = null): void
     {
         $twig = $this->mockEnvironment();
         $twig
@@ -177,10 +177,7 @@ class MaintenanceModeCommandTest extends ContaoTestCase
         ];
     }
 
-    /**
-     * @return Filesystem&MockObject
-     */
-    private function mockFilesystem(): Filesystem
+    private function mockFilesystem(): Filesystem&MockObject
     {
         return $this
             ->getMockBuilder(Filesystem::class)
@@ -189,10 +186,7 @@ class MaintenanceModeCommandTest extends ContaoTestCase
         ;
     }
 
-    /**
-     * @return Environment&MockObject
-     */
-    private function mockEnvironment(): Environment
+    private function mockEnvironment(): Environment&MockObject
     {
         return $this
             ->getMockBuilder(Environment::class)

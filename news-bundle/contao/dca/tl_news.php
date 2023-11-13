@@ -13,6 +13,7 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Input;
@@ -116,7 +117,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		'external'                    => '{title_legend},headline,featured,alias,author;{date_legend},date,time;{source_legend},source,url,target,linkText;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments;{publish_legend},published,start,stop'
 	),
 
-	// Subpalettes
+	// Sub-palettes
 	'subpalettes' => array
 	(
 		'addImage'                    => 'singleSRC,fullsize,size,floating,overwriteMeta',
@@ -147,7 +148,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'basicEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'featured' => array
@@ -246,7 +247,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('rte'=>'tinyMCE', 'tl_class'=>'clr'),
+			'eval'                    => array('rte'=>'tinyMCE', 'basicEntities'=>true, 'tl_class'=>'clr'),
 			'sql'                     => "text NULL"
 		),
 		'addImage' => array
@@ -291,8 +292,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50 clr'),
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return System::getContainer()->get('contao.image.sizes')->getOptionsForUser(BackendUser::getInstance());
 			},
 			'sql'                     => "varchar(64) NOT NULL default ''"
@@ -435,15 +435,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 class tl_news extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Check permissions to edit table tl_news
 	 *
 	 * @param DataContainer $dc
@@ -461,19 +452,21 @@ class tl_news extends Backend
 			unset($GLOBALS['TL_DCA']['tl_news']['list']['sorting']['headerFields'][$key], $GLOBALS['TL_DCA']['tl_news']['fields']['noComments']);
 		}
 
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
 		// Set the root IDs
-		if (empty($this->User->news) || !is_array($this->User->news))
+		if (empty($user->news) || !is_array($user->news))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->news;
+			$root = $user->news;
 		}
 
 		$id = strlen(Input::get('id')) ? Input::get('id') : $dc->currentPid;
@@ -501,9 +494,10 @@ class tl_news extends Backend
 			case 'copy':
 				if (Input::get('act') == 'cut' && Input::get('mode') == 1)
 				{
-					$objArchive = $this->Database->prepare("SELECT pid FROM tl_news WHERE id=?")
-												 ->limit(1)
-												 ->execute(Input::get('pid'));
+					$objArchive = Database::getInstance()
+						->prepare("SELECT pid FROM tl_news WHERE id=?")
+						->limit(1)
+						->execute(Input::get('pid'));
 
 					if ($objArchive->numRows < 1)
 					{
@@ -527,9 +521,10 @@ class tl_news extends Backend
 			case 'show':
 			case 'delete':
 			case 'toggle':
-				$objArchive = $this->Database->prepare("SELECT pid FROM tl_news WHERE id=?")
-											 ->limit(1)
-											 ->execute($id);
+				$objArchive = Database::getInstance()
+					->prepare("SELECT pid FROM tl_news WHERE id=?")
+					->limit(1)
+					->execute($id);
 
 				if ($objArchive->numRows < 1)
 				{
@@ -552,9 +547,7 @@ class tl_news extends Backend
 					throw new AccessDeniedException('Not enough permissions to access news archive ID ' . $id . '.');
 				}
 
-				$objArchive = $this->Database->prepare("SELECT id FROM tl_news WHERE pid=?")
-											 ->execute($id);
-
+				$objArchive = Database::getInstance()->prepare("SELECT id FROM tl_news WHERE pid=?")->execute($id);
 				$objSession = System::getContainer()->get('request_stack')->getSession();
 
 				$session = $objSession->all();
@@ -588,9 +581,12 @@ class tl_news extends Backend
 	 */
 	public function generateAlias($varValue, DataContainer $dc)
 	{
-		$aliasExists = function (string $alias) use ($dc): bool
-		{
-			return $this->Database->prepare("SELECT id FROM tl_news WHERE alias=? AND id!=?")->execute($alias, $dc->id)->numRows > 0;
+		$aliasExists = static function (string $alias) use ($dc): bool {
+			$result = Database::getInstance()
+				->prepare("SELECT id FROM tl_news WHERE alias=? AND id!=?")
+				->execute($alias, $dc->id);
+
+			return $result->numRows > 0;
 		};
 
 		// Generate alias if there is none
@@ -683,8 +679,7 @@ class tl_news extends Backend
 		$title = implode(
 			'%s',
 			array_map(
-				static function ($strVal)
-				{
+				static function ($strVal) {
 					return str_replace('%', '%%', System::getContainer()->get('contao.insert_tag.parser')->replaceInline($strVal));
 				},
 				explode('{{page::pageTitle}}', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}', 2)
@@ -708,12 +703,15 @@ class tl_news extends Backend
 		$arrPids = array();
 		$arrAlias = array();
 
-		if (!$this->User->isAdmin)
+		$db = Database::getInstance();
+		$user = BackendUser::getInstance();
+
+		if (!$user->isAdmin)
 		{
-			foreach ($this->User->pagemounts as $id)
+			foreach ($user->pagemounts as $id)
 			{
 				$arrPids[] = array($id);
-				$arrPids[] = $this->Database->getChildRecords($id, 'tl_page');
+				$arrPids[] = $db->getChildRecords($id, 'tl_page');
 			}
 
 			if (!empty($arrPids))
@@ -725,11 +723,11 @@ class tl_news extends Backend
 				return $arrAlias;
 			}
 
-			$objAlias = $this->Database->execute("SELECT a.id, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid WHERE a.pid IN(" . implode(',', array_map('\intval', array_unique($arrPids))) . ") ORDER BY parent, a.sorting");
+			$objAlias = $db->execute("SELECT a.id, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid WHERE a.pid IN(" . implode(',', array_map('\intval', array_unique($arrPids))) . ") ORDER BY parent, a.sorting");
 		}
 		else
 		{
-			$objAlias = $this->Database->execute("SELECT a.id, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid ORDER BY parent, a.sorting");
+			$objAlias = $db->execute("SELECT a.id, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid ORDER BY parent, a.sorting");
 		}
 
 		if ($objAlias->numRows)
@@ -738,7 +736,7 @@ class tl_news extends Backend
 
 			while ($objAlias->next())
 			{
-				$arrAlias[$objAlias->parent][$objAlias->id] = $objAlias->title . ' (' . ($GLOBALS['TL_LANG']['COLS'][$objAlias->inColumn] ?: $objAlias->inColumn) . ', ID ' . $objAlias->id . ')';
+				$arrAlias[$objAlias->parent][$objAlias->id] = $objAlias->title . ' (' . ($GLOBALS['TL_LANG']['COLS'][$objAlias->inColumn] ?? $objAlias->inColumn) . ', ID ' . $objAlias->id . ')';
 			}
 		}
 
@@ -754,7 +752,7 @@ class tl_news extends Backend
 	 */
 	public function getSourceOptions(DataContainer $dc)
 	{
-		if ($this->User->isAdmin)
+		if (BackendUser::getInstance()->isAdmin)
 		{
 			return array('default', 'internal', 'article', 'external');
 		}
@@ -806,7 +804,7 @@ class tl_news extends Backend
 		$arrSet['date'] = strtotime(date('Y-m-d', $dc->activeRecord->date) . ' ' . date('H:i:s', $dc->activeRecord->time));
 		$arrSet['time'] = $arrSet['date'];
 
-		$this->Database->prepare("UPDATE tl_news %s WHERE id=?")->set($arrSet)->execute($dc->id);
+		Database::getInstance()->prepare("UPDATE tl_news %s WHERE id=?")->set($arrSet)->execute($dc->id);
 	}
 
 	/**

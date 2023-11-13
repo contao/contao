@@ -141,7 +141,9 @@ class ModuleListing extends Module
 		}
 
 		$strQuery .= $strWhere;
-		$objTotal = $this->Database->prepare($strQuery)->execute(...$varKeyword);
+
+		$db = Database::getInstance();
+		$objTotal = $db->prepare($strQuery)->execute(...$varKeyword);
 
 		// Validate the page count
 		$id = 'page_l' . $this->id;
@@ -172,8 +174,7 @@ class ModuleListing extends Module
 		$strQuery .= $strWhere;
 
 		// Cast date fields to int (see #5609)
-		$isInt = function ($field)
-		{
+		$isInt = function ($field) {
 			return ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['eval']['rgxp'] ?? null) == 'date' || ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['eval']['rgxp'] ?? null) == 'time' || ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['eval']['rgxp'] ?? null) == 'datim';
 		};
 
@@ -215,16 +216,16 @@ class ModuleListing extends Module
 			}
 		}
 
-		$objDataStmt = $this->Database->prepare($strQuery);
+		$objDataStmt = $db->prepare($strQuery);
 
 		// Limit
 		if ($per_page)
 		{
-			$objDataStmt->limit($per_page, (($page - 1) * $per_page));
+			$objDataStmt->limit($per_page, ($page - 1) * $per_page);
 		}
 		elseif ($this->perPage)
 		{
-			$objDataStmt->limit($this->perPage, (($page - 1) * $per_page));
+			$objDataStmt->limit($this->perPage, ($page - 1) * $per_page);
 		}
 
 		$objData = $objDataStmt->execute(...$varKeyword);
@@ -359,9 +360,10 @@ class ModuleListing extends Module
 		$this->list_info = StringUtil::deserialize($this->list_info);
 		$this->list_info_where = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($this->list_info_where);
 
-		$objRecord = $this->Database->prepare("SELECT " . implode(', ', array_map(Database::quoteIdentifier(...), StringUtil::trimsplit(',', $this->list_info))) . " FROM " . $this->list_table . " WHERE " . ($this->list_info_where ? "(" . $this->list_info_where . ") AND " : "") . Database::quoteIdentifier($this->strPk) . "=?")
-									->limit(1)
-									->execute($id);
+		$objRecord = Database::getInstance()
+			->prepare("SELECT " . implode(', ', array_map(Database::quoteIdentifier(...), StringUtil::trimsplit(',', $this->list_info))) . " FROM " . $this->list_table . " WHERE " . ($this->list_info_where ? "(" . $this->list_info_where . ") AND " : "") . Database::quoteIdentifier($this->strPk) . "=?")
+			->limit(1)
+			->execute($id);
 
 		if ($objRecord->numRows < 1)
 		{

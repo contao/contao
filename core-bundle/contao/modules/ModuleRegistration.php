@@ -71,8 +71,7 @@ class ModuleRegistration extends Module
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}();
+					System::importStatic($callback[0])->{$callback[1]}();
 				}
 				elseif (\is_callable($callback))
 				{
@@ -166,6 +165,8 @@ class ModuleRegistration extends Module
 		$arrFields = array();
 		$hasUpload = false;
 
+		$db = Database::getInstance();
+
 		// Build the form
 		foreach ($this->editable as $field)
 		{
@@ -242,9 +243,9 @@ class ModuleRegistration extends Module
 				}
 
 				// Make sure that unique fields are unique (check the eval setting first -> #3063)
-				if (($arrData['eval']['unique'] ?? null) && (\is_array($varValue) || (string) $varValue !== '') && !$this->Database->isUniqueValue('tl_member', $field, $varValue))
+				if (($arrData['eval']['unique'] ?? null) && (\is_array($varValue) || (string) $varValue !== '') && !$db->isUniqueValue('tl_member', $field, $varValue))
 				{
-					$objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $field));
+					$objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?? $field));
 				}
 
 				// Save callback
@@ -256,8 +257,7 @@ class ModuleRegistration extends Module
 						{
 							if (\is_array($callback))
 							{
-								$this->import($callback[0]);
-								$varValue = $this->{$callback[0]}->{$callback[1]}($varValue, null);
+								$varValue = System::importStatic($callback[0])->{$callback[1]}($varValue, null);
 							}
 							elseif (\is_callable($callback))
 							{
@@ -388,8 +388,7 @@ class ModuleRegistration extends Module
 
 			if ($objHomeDir !== null)
 			{
-				$this->import(Files::class, 'Files');
-				$strUserDir = StringUtil::standardize($arrData['username']) ?: 'user_' . $objNewUser->id;
+				$strUserDir = StringUtil::standardize($arrData['username'] ?? '') ?: 'user_' . $objNewUser->id;
 
 				// Add the user ID if the directory exists
 				while (is_dir(System::getContainer()->getParameter('kernel.project_dir') . '/' . $objHomeDir->path . '/' . $strUserDir))
@@ -414,15 +413,13 @@ class ModuleRegistration extends Module
 		{
 			foreach ($GLOBALS['TL_HOOKS']['createNewUser'] as $callback)
 			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($objNewUser->id, $arrData, $this);
+				System::importStatic($callback[0])->{$callback[1]}($objNewUser->id, $arrData, $this);
 			}
 		}
 
 		// Create the initial version (see #7816)
 		$objVersions = new Versions('tl_member', $objNewUser->id);
 		$objVersions->setUsername($objNewUser->username);
-		$objVersions->setUserId(0);
 		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>$objNewUser->id)));
 		$objVersions->initialize();
 
@@ -521,8 +518,7 @@ class ModuleRegistration extends Module
 		{
 			foreach ($GLOBALS['TL_HOOKS']['activateAccount'] as $callback)
 			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($objMember, $this);
+				System::importStatic($callback[0])->{$callback[1]}($objMember, $this);
 			}
 		}
 

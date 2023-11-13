@@ -24,6 +24,8 @@ use Contao\Image\Image;
 use Contao\Image\ImageDimensions;
 use Contao\Image\ImageInterface;
 use Contao\Image\ImportantPart;
+use Contao\Image\Metadata\ExifFormat;
+use Contao\Image\Metadata\IptcFormat;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeOptions;
 use Contao\Image\ResizerInterface;
@@ -49,7 +51,7 @@ class ImageFactoryTest extends TestCase
         foreach (['assets', 'images'] as $directory) {
             $filesystem->mirror(
                 Path::join((new self())->getFixturesDir(), $directory),
-                Path::join(self::getTempDir(), $directory)
+                Path::join(self::getTempDir(), $directory),
             );
         }
 
@@ -80,7 +82,7 @@ class ImageFactoryTest extends TestCase
                         $this->assertSame($path, $image->getPath());
 
                         return true;
-                    }
+                    },
                 ),
                 $this->callback(
                     function (ResizeConfiguration $config): bool {
@@ -89,15 +91,15 @@ class ImageFactoryTest extends TestCase
                         $this->assertSame(ResizeConfiguration::MODE_BOX, $config->getMode());
 
                         return true;
-                    }
+                    },
                 ),
                 $this->callback(
                     function (ResizeOptions $options): bool {
                         $this->assertFalse($options->getSkipIfDimensionsMatch());
 
                         return true;
-                    }
-                )
+                    },
+                ),
             )
             ->willReturn($imageMock)
         ;
@@ -135,22 +137,22 @@ class ImageFactoryTest extends TestCase
                         $this->assertSame($path, $image->getPath());
 
                         return true;
-                    }
+                    },
                 ),
                 $this->callback(
                     function (ResizeConfiguration $config): bool {
                         $this->assertTrue($config->isEmpty());
 
                         return true;
-                    }
+                    },
                 ),
                 $this->callback(
                     function (ResizeOptions $options): bool {
                         $this->assertTrue($options->getSkipIfDimensionsMatch());
 
                         return true;
-                    }
-                )
+                    },
+                ),
             )
             ->willReturn($imageMock)
         ;
@@ -203,11 +205,11 @@ class ImageFactoryTest extends TestCase
 
                         $this->assertSameImportantPart(
                             new ImportantPart(0.5, 0.5, 0.25, 0.25),
-                            $image->getImportantPart()
+                            $image->getImportantPart(),
                         );
 
                         return true;
-                    }
+                    },
                 ),
                 $this->callback(
                     function (ResizeConfiguration $config): bool {
@@ -217,20 +219,36 @@ class ImageFactoryTest extends TestCase
                         $this->assertSame(50, $config->getZoomLevel());
 
                         return true;
-                    }
+                    },
                 ),
                 $this->callback(
                     function (ResizeOptions $options): bool {
-                        $this->assertSame([
-                            'jpeg_quality' => 80,
-                            'interlace' => ImagineImageInterface::INTERLACE_PLANE,
-                        ], $options->getImagineOptions());
+                        $this->assertSame(
+                            [
+                                'jpeg_quality' => 77,
+                                'interlace' => ImagineImageInterface::INTERLACE_PLANE,
+                                'quality' => 77,
+                                'webp_quality' => 77,
+                                'avif_quality' => 77,
+                                'heic_quality' => 77,
+                                'jxl_quality' => 77,
+                            ],
+                            $options->getImagineOptions(),
+                        );
+
+                        $this->assertSame(
+                            [
+                                ExifFormat::NAME => ExifFormat::DEFAULT_PRESERVE_KEYS,
+                                IptcFormat::NAME => IptcFormat::DEFAULT_PRESERVE_KEYS,
+                            ],
+                            $options->getPreserveCopyrightMetadata(),
+                        );
 
                         $this->assertSame(Path::join($this->getTempDir(), 'target/path.jpg'), $options->getTargetPath());
 
                         return true;
-                    }
-                )
+                    },
+                ),
             )
             ->willReturn($imageMock)
         ;
@@ -240,6 +258,12 @@ class ImageFactoryTest extends TestCase
             'height' => 200,
             'resizeMode' => ResizeConfiguration::MODE_BOX,
             'zoom' => 50,
+            'imageQuality' => 77,
+            'preserveMetadata' => 'overwrite',
+            'preserveMetadataFields' => serialize([
+                serialize([ExifFormat::NAME => ExifFormat::DEFAULT_PRESERVE_KEYS]),
+                serialize([IptcFormat::NAME => IptcFormat::DEFAULT_PRESERVE_KEYS]),
+            ]),
         ];
 
         $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class, $imageSizeProperties);
@@ -289,7 +313,7 @@ class ImageFactoryTest extends TestCase
                     $this->assertTrue($config->isEmpty());
 
                     return $image;
-                }
+                },
             )
         ;
 
@@ -308,6 +332,14 @@ class ImageFactoryTest extends TestCase
                 'height' => 200,
                 'resizeMode' => ResizeConfiguration::MODE_BOX,
                 'zoom' => 50,
+                'imagineOptions' => [
+                    'jpeg_quality' => 77,
+                    'jxl_quality' => 66,
+                ],
+                'preserveMetadataFields' => [
+                    ExifFormat::NAME => [],
+                    IptcFormat::NAME => ['2#116', '2#080'],
+                ],
             ],
         ];
 
@@ -323,7 +355,7 @@ class ImageFactoryTest extends TestCase
                         $this->assertSameImage($imageMock, $image);
 
                         return true;
-                    }
+                    },
                 ),
                 $this->callback(
                     function (ResizeConfiguration $config) use ($predefinedSizes): bool {
@@ -333,23 +365,34 @@ class ImageFactoryTest extends TestCase
                         $this->assertSame($predefinedSizes['foobar']['zoom'], $config->getZoomLevel());
 
                         return true;
-                    }
+                    },
                 ),
                 $this->callback(
-                    function (ResizeOptions $options): bool {
+                    function (ResizeOptions $options) use ($predefinedSizes): bool {
                         $this->assertSame(
                             [
-                                'jpeg_quality' => 80,
+                                'jpeg_quality' => 77,
                                 'interlace' => ImagineImageInterface::INTERLACE_PLANE,
+                                'jxl_quality' => 66,
                             ],
-                            $options->getImagineOptions()
+                            $options->getImagineOptions(),
+                        );
+
+                        $this->assertSame(
+                            $predefinedSizes['foobar']['preserveMetadataFields'][ExifFormat::NAME],
+                            $options->getPreserveCopyrightMetadata()[ExifFormat::NAME],
+                        );
+
+                        $this->assertSame(
+                            $predefinedSizes['foobar']['preserveMetadataFields'][IptcFormat::NAME],
+                            $options->getPreserveCopyrightMetadata()[IptcFormat::NAME],
                         );
 
                         $this->assertSame(Path::join($this->getTempDir(), 'target/path.jpg'), $options->getTargetPath());
 
                         return true;
-                    }
-                )
+                    },
+                ),
             )
             ->willReturn($imageMock)
         ;
@@ -383,7 +426,7 @@ class ImageFactoryTest extends TestCase
                         $this->assertSameImage($imageMock, $image);
 
                         return true;
-                    }
+                    },
                 ),
                 $this->callback(
                     function (ResizeConfiguration $config) use ($resizeConfig): bool {
@@ -394,7 +437,7 @@ class ImageFactoryTest extends TestCase
                         $this->assertSame($resizeConfig->getZoomLevel(), $config->getZoomLevel());
 
                         return true;
-                    }
+                    },
                 ),
                 $this->callback(
                     function (ResizeOptions $options): bool {
@@ -406,8 +449,8 @@ class ImageFactoryTest extends TestCase
                         $this->assertSame(Path::join($this->getTempDir(), 'target/path.jpg'), $options->getTargetPath());
 
                         return true;
-                    }
-                )
+                    },
+                ),
             )
             ->willReturn($imageMock)
         ;
@@ -481,13 +524,13 @@ class ImageFactoryTest extends TestCase
                                 $expected[0],
                                 $expected[1],
                                 $expected[2],
-                                $expected[3]
+                                $expected[3],
                             ),
-                            $image->getImportantPart()
+                            $image->getImportantPart(),
                         );
 
                         return true;
-                    }
+                    },
                 ),
                 $this->callback(
                     function (ResizeConfiguration $config): bool {
@@ -497,8 +540,8 @@ class ImageFactoryTest extends TestCase
                         $this->assertSame(0, $config->getZoomLevel());
 
                         return true;
-                    }
-                )
+                    },
+                ),
             )
             ->willReturn($imageMock)
         ;
@@ -542,9 +585,9 @@ class ImageFactoryTest extends TestCase
                 $expected[0],
                 $expected[1],
                 $expected[2],
-                $expected[3]
+                $expected[3],
             ),
-            $imageFactory->getImportantPartFromLegacyMode($imageMock, $mode)
+            $imageFactory->getImportantPartFromLegacyMode($imageMock, $mode),
         );
     }
 
@@ -585,7 +628,7 @@ class ImageFactoryTest extends TestCase
         $this->assertSame($path, $image->getPath());
     }
 
-    private function getImageFactory(ResizerInterface $resizer = null, ImagineInterface $imagine = null, ImagineInterface $imagineSvg = null, Filesystem $filesystem = null, ContaoFramework $framework = null, bool $bypassCache = null, array $imagineOptions = null, array $validExtensions = null, string $uploadDir = null): ImageFactory
+    private function getImageFactory(ResizerInterface|null $resizer = null, ImagineInterface|null $imagine = null, ImagineInterface|null $imagineSvg = null, Filesystem|null $filesystem = null, ContaoFramework|null $framework = null, bool|null $bypassCache = null, array|null $imagineOptions = null, array|null $validExtensions = null, string|null $uploadDir = null): ImageFactory
     {
         $resizer ??= $this->createMock(ResizerInterface::class);
         $imagine ??= $this->createMock(ImagineInterface::class);
@@ -614,7 +657,7 @@ class ImageFactoryTest extends TestCase
             $bypassCache,
             $imagineOptions,
             $validExtensions,
-            $uploadDir
+            $uploadDir,
         );
     }
 

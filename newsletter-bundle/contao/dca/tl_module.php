@@ -11,6 +11,7 @@
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Controller;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\NewsletterBundle\Security\ContaoNewsletterPermissions;
 use Contao\System;
@@ -78,8 +79,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_unsubscribe'] = array
 $GLOBALS['TL_DCA']['tl_module']['fields']['nl_template'] = array
 (
 	'inputType'               => 'select',
-	'options_callback' => static function ()
-	{
+	'options_callback' => static function () {
 		return Controller::getTemplateGroup('nl_');
 	},
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
@@ -93,15 +93,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_template'] = array
  */
 class tl_module_newsletter extends Backend
 {
-	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
 	/**
 	 * Load the default subscribe text
 	 *
@@ -143,7 +134,9 @@ class tl_module_newsletter extends Backend
 	 */
 	public function getChannels(DataContainer $dc)
 	{
-		if (!$this->User->isAdmin && !is_array($this->User->newsletters))
+		$user = BackendUser::getInstance();
+
+		if (!$user->isAdmin && !is_array($user->newsletters))
 		{
 			return array();
 		}
@@ -159,7 +152,7 @@ class tl_module_newsletter extends Backend
 		$strQuery .= " ORDER BY title";
 
 		$arrChannels = array();
-		$objChannels = $this->Database->execute($strQuery);
+		$objChannels = Database::getInstance()->execute($strQuery);
 		$security = System::getContainer()->get('security.helper');
 
 		while ($objChannels->next())

@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
 use Contao\CoreBundle\Controller\ContentElement\ImagesController;
 use Contao\StringUtil;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class ImagesControllerTest extends ContentElementTestCase
 {
@@ -23,7 +23,7 @@ class ImagesControllerTest extends ContentElementTestCase
         $security = $this->createMock(Security::class);
 
         $response = $this->renderWithModelData(
-            new ImagesController($security, $this->getDefaultStorage(), $this->getDefaultStudio()),
+            new ImagesController($security, $this->getDefaultStorage(), $this->getDefaultStudio(), ['jpg']),
             [
                 'type' => 'image',
                 'singleSRC' => StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE1),
@@ -33,15 +33,13 @@ class ImagesControllerTest extends ContentElementTestCase
                 'fullsize' => true,
                 'perPage' => '4',
                 'perRow' => '2',
-                'overwriteMeta' => true,
-                'alt' => 'alt text',
             ],
         );
 
         $expectedOutput = <<<'HTML'
             <div class="content-image">
                 <figure>
-                    <img src="files/image1.jpg" alt="alt text">
+                    <img src="files/image1.jpg" alt>
                 </figure>
             </div>
             HTML;
@@ -54,7 +52,7 @@ class ImagesControllerTest extends ContentElementTestCase
         $security = $this->createMock(Security::class);
 
         $response = $this->renderWithModelData(
-            new ImagesController($security, $this->getDefaultStorage(), $this->getDefaultStudio()),
+            new ImagesController($security, $this->getDefaultStorage(), $this->getDefaultStudio(), ['jpg']),
             [
                 'type' => 'gallery',
                 'multiSRC' => serialize([
@@ -91,12 +89,48 @@ class ImagesControllerTest extends ContentElementTestCase
         $this->assertSameHtml($expectedOutput, $response->getContent());
     }
 
+    public function testIgnoresInvalidTypes(): void
+    {
+        $security = $this->createMock(Security::class);
+
+        $response = $this->renderWithModelData(
+            new ImagesController($security, $this->getDefaultStorage(), $this->getDefaultStudio(), ['svg', 'jpg', 'png']),
+            [
+                'type' => 'gallery',
+                'multiSRC' => serialize([
+                    StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE1),
+                    StringUtil::uuidToBin(ContentElementTestCase::FILE_VIDEO_MP4),
+                ]),
+                'sortBy' => 'name_desc',
+                'numberOfItems' => 0,
+                'size' => '',
+                'fullsize' => true,
+                'perPage' => 1,
+                'perRow' => 1,
+            ],
+        );
+
+        $expectedOutput = <<<'HTML'
+            <div class="content-gallery--cols-1 content-gallery">
+                <ul>
+                    <li>
+                        <figure>
+                            <img src="files/image1.jpg" alt>
+                        </figure>
+                    </li>
+                </ul>
+            </div>
+            HTML;
+
+        $this->assertSameHtml($expectedOutput, $response->getContent());
+    }
+
     public function testDoesNotOutputAnythingWithoutImages(): void
     {
         $security = $this->createMock(Security::class);
 
         $response = $this->renderWithModelData(
-            new ImagesController($security, $this->getDefaultStorage(), $this->getDefaultStudio()),
+            new ImagesController($security, $this->getDefaultStorage(), $this->getDefaultStudio(), ['jpg']),
             [
                 'type' => 'image',
                 'singleSRC' => null,
@@ -108,7 +142,7 @@ class ImagesControllerTest extends ContentElementTestCase
         $this->assertSame('', $response->getContent());
 
         $response = $this->renderWithModelData(
-            new ImagesController($security, $this->getDefaultStorage(), $this->getDefaultStudio()),
+            new ImagesController($security, $this->getDefaultStorage(), $this->getDefaultStudio(), ['jpg']),
             [
                 'type' => 'gallery',
                 'multiSRC' => null,

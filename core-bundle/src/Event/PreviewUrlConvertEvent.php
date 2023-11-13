@@ -19,9 +19,10 @@ use Symfony\Contracts\EventDispatcher\Event;
 class PreviewUrlConvertEvent extends Event
 {
     private string|null $url = null;
+
     private Response|null $response = null;
 
-    public function __construct(private Request $request)
+    public function __construct(private readonly Request $request)
     {
     }
 

@@ -212,11 +212,11 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 				// Overwrite the upload folder with user's home directory
 				if ($this->useHomeDir && System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
 				{
-					$this->import(FrontendUser::class, 'User');
+					$user = FrontendUser::getInstance();
 
-					if ($this->User->assignDir && $this->User->homeDir)
+					if ($user->assignDir && $user->homeDir)
 					{
-						$intUploadFolder = $this->User->homeDir;
+						$intUploadFolder = $user->homeDir;
 					}
 				}
 
@@ -234,8 +234,6 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 				// Store the file if the upload folder exists
 				if ($strUploadFolder && is_dir($projectDir . '/' . $strUploadFolder))
 				{
-					$this->import(Files::class, 'Files');
-
 					// Do not overwrite existing files
 					if ($this->doNotOverwrite && file_exists($projectDir . '/' . $strUploadFolder . '/' . $file['name']))
 					{
@@ -249,7 +247,7 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 							if (preg_match('/__[0-9]+\.' . preg_quote($objFile->extension, '/') . '$/', $strFile))
 							{
 								$strFile = str_replace('.' . $objFile->extension, '', $strFile);
-								$intValue = (int) substr($strFile, (strrpos($strFile, '_') + 1));
+								$intValue = (int) substr($strFile, strrpos($strFile, '_') + 1);
 
 								$offset = max($offset, $intValue);
 							}
@@ -259,8 +257,9 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 					}
 
 					// Move the file to its destination
-					$this->Files->move_uploaded_file($file['tmp_name'], $strUploadFolder . '/' . $file['name']);
-					$this->Files->chmod($strUploadFolder . '/' . $file['name'], 0666 & ~umask());
+					$filesObj = Files::getInstance();
+					$filesObj->move_uploaded_file($file['tmp_name'], $strUploadFolder . '/' . $file['name']);
+					$filesObj->chmod($strUploadFolder . '/' . $file['name'], 0666 & ~umask());
 
 					$strUuid = null;
 					$strFile = $strUploadFolder . '/' . $file['name'];
@@ -311,7 +310,7 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 			'<input type="file" name="%s" id="ctrl_%s" class="upload%s"%s%s',
 			$this->strName,
 			$this->strId,
-			($this->strClass ? ' ' . $this->strClass : ''),
+			$this->strClass ? ' ' . $this->strClass : '',
 			$this->getAttributes(),
 			$this->strTagEnding
 		);

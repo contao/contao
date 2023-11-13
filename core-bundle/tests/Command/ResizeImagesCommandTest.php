@@ -109,7 +109,7 @@ class ResizeImagesCommandTest extends TestCase
                     sleep(1);
 
                     return $this->createMock(ImageInterface::class);
-                }
+                },
             )
         ;
 
@@ -135,13 +135,13 @@ class ResizeImagesCommandTest extends TestCase
         $this->assertDoesNotMatchRegularExpression('/image2.jpg/', $display);
     }
 
-    private function getCommand(ImageFactoryInterface $factory = null, DeferredResizerInterface $resizer = null, DeferredImageStorageInterface $storage = null): ResizeImagesCommand
+    private function getCommand(ImageFactoryInterface|null $factory = null, DeferredResizerInterface|null $resizer = null, DeferredImageStorageInterface|null $storage = null): ResizeImagesCommand
     {
         return new ResizeImagesCommand(
             $factory ?? $this->createMock(ImageFactoryInterface::class),
             $resizer ?? $this->createMock(DeferredResizerInterface::class),
             Path::join($this->getTempDir(), 'assets/images'),
-            $storage ?? $this->createMock(DeferredImageStorageInterface::class)
+            $storage ?? $this->createMock(DeferredImageStorageInterface::class),
         );
     }
 }

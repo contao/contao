@@ -305,7 +305,7 @@ class SimpleTokenParserTest extends TestCase
     {
         $this->assertSame(
             $match ? 'match' : 'no-match',
-            $this->getParser()->parse('{if value}match{else}no-match{endif}', ['value' => $value])
+            $this->getParser()->parse('{if value}match{else}no-match{endif}', ['value' => $value]),
         );
     }
 
@@ -342,7 +342,7 @@ class SimpleTokenParserTest extends TestCase
 
         $this->assertSame(
             $match ? 'match' : 'no-match',
-            $parser->parse("{if $condition}match{else}no-match{endif}", ['foobar' => 1])
+            $parser->parse("{if $condition}match{else}no-match{endif}", ['foobar' => 1]),
         );
     }
 
@@ -478,7 +478,7 @@ class SimpleTokenParserTest extends TestCase
         yield '(<?)' => ['This <? var_dump() ?> is a test.'];
         yield '(<%)' => ['This <% var_dump() ?> is a test.'];
         yield '(<script language="php">)' => ['This <script language="php"> var_dump() </script> is a test.'];
-        yield '(<script language=\'php\'>)' => ['This <script language=\'php\'> var_dump() </script> is a test.'];
+        yield "(<script language='php'>)" => ["This <script language='php'> var_dump() </script> is a test."];
     }
 
     /**
@@ -496,7 +496,7 @@ class SimpleTokenParserTest extends TestCase
         yield '(<?)' => [['foo' => 'This <? var_dump() ?> is a test.']];
         yield '(<%)' => [['foo' => 'This <% var_dump() ?> is a test.']];
         yield '(<script language="php">)' => [['foo' => 'This <script language="php"> var_dump() </script> is a test.']];
-        yield '(<script language=\'php\'>)' => [['foo' => 'This <script language=\'php\'> var_dump() </script> is a test.']];
+        yield "(<script language='php'>)" => [['foo' => "This <script language='php'> var_dump() </script> is a test."]];
     }
 
     public function testDoesNotExecutePhpCodeInCombinedTokens(): void
@@ -509,7 +509,7 @@ class SimpleTokenParserTest extends TestCase
 
         $this->assertSame(
             'This is <?php echo "I am evil";?> evil',
-            $this->getParser()->parse('This is ##open####open2####close## evil', $data)
+            $this->getParser()->parse('This is ##open####open2####close## evil', $data),
         );
     }
 
@@ -534,11 +534,11 @@ class SimpleTokenParserTest extends TestCase
     public function parseSimpleTokensInvalidComparison(): \Generator
     {
         yield 'Not closed string (")' => ['{if foo=="bar}{endif}'];
-        yield 'Not closed string (\')' => ['{if foo==\'bar}{endif}'];
+        yield "Not closed string (')" => ["{if foo=='bar}{endif}"];
         yield 'Additional chars after string ("/)' => ['{if foo=="bar"/}{endif}'];
-        yield 'Additional chars after string (\'/)' => ['{if foo==\'bar\'/}{endif}'];
+        yield "Additional chars after string ('/)" => ["{if foo=='bar'/}{endif}"];
         yield 'Additional chars after string ("*)' => ['{if foo=="bar"*}{endif}'];
-        yield 'Additional chars after string (\'*)' => ['{if foo==\'bar\'*}{endif}'];
+        yield "Additional chars after string ('*)" => ["{if foo=='bar'*}{endif}"];
         yield 'Unknown operator (=)' => ['{if foo="bar"}{endif}'];
         yield 'Unknown operator (====)' => ['{if foo===="bar"}{endif}'];
         yield 'Unknown operator (<==)' => ['{if foo<=="bar"}{endif}'];
@@ -554,16 +554,16 @@ class SimpleTokenParserTest extends TestCase
         };
 
         $simpleTokenParser = $this->getParser(
-            new SimpleTokenExpressionLanguage(null, new IteratorAggregateStub([$stringExtensionProvider]))
+            new SimpleTokenExpressionLanguage(null, new IteratorAggregateStub([$stringExtensionProvider])),
         );
 
         $this->assertSame(
             'Custom function evaluated!',
-            $simpleTokenParser->parse("Custom function {if strtoupper(token) === 'FOO'}evaluated!{endif}", ['token' => 'foo'])
+            $simpleTokenParser->parse("Custom function {if strtoupper(token) === 'FOO'}evaluated!{endif}", ['token' => 'foo']),
         );
     }
 
-    private function getParser(SimpleTokenExpressionLanguage $expressionLanguage = null): SimpleTokenParser
+    private function getParser(SimpleTokenExpressionLanguage|null $expressionLanguage = null): SimpleTokenParser
     {
         return new SimpleTokenParser($expressionLanguage ?? new SimpleTokenExpressionLanguage());
     }

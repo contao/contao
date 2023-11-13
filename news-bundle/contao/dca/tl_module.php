@@ -11,6 +11,7 @@
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Controller;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\NewsBundle\Security\ContaoNewsPermissions;
 use Contao\System;
@@ -64,8 +65,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_readerModule'] = array
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_template'] = array
 (
 	'inputType'               => 'select',
-	'options_callback' => static function ()
-	{
+	'options_callback' => static function () {
 		return Controller::getTemplateGroup('news_');
 	},
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
@@ -121,28 +121,21 @@ if (isset($bundles['ContaoCommentsBundle']))
 class tl_module_news extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Get all news archives and return them as array
 	 *
 	 * @return array
 	 */
 	public function getNewsArchives()
 	{
-		if (!$this->User->isAdmin && !is_array($this->User->news))
+		$user = BackendUser::getInstance();
+
+		if (!$user->isAdmin && !is_array($user->news))
 		{
 			return array();
 		}
 
 		$arrArchives = array();
-		$objArchives = $this->Database->execute("SELECT id, title FROM tl_news_archive ORDER BY title");
+		$objArchives = Database::getInstance()->execute("SELECT id, title FROM tl_news_archive ORDER BY title");
 		$security = System::getContainer()->get('security.helper');
 
 		while ($objArchives->next())
@@ -164,7 +157,7 @@ class tl_module_news extends Backend
 	public function getReaderModules()
 	{
 		$arrModules = array();
-		$objModules = $this->Database->execute("SELECT m.id, m.name, t.name AS theme FROM tl_module m LEFT JOIN tl_theme t ON m.pid=t.id WHERE m.type='newsreader' ORDER BY t.name, m.name");
+		$objModules = Database::getInstance()->execute("SELECT m.id, m.name, t.name AS theme FROM tl_module m LEFT JOIN tl_theme t ON m.pid=t.id WHERE m.type='newsreader' ORDER BY t.name, m.name");
 
 		while ($objModules->next())
 		{

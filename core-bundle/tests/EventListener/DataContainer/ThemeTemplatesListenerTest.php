@@ -58,12 +58,12 @@ class ThemeTemplatesListenerTest extends TestCase
         $listener('<bad-path>');
     }
 
-    private function getListener(ContaoFilesystemLoaderWarmer $filesystemLoaderWarmer = null, ThemeNamespace $themeNamespace = null, TranslatorInterface $translator = null): ThemeTemplatesListener
+    private function getListener(ContaoFilesystemLoaderWarmer|null $filesystemLoaderWarmer = null, ThemeNamespace|null $themeNamespace = null, TranslatorInterface|null $translator = null): ThemeTemplatesListener
     {
         return new ThemeTemplatesListener(
             $filesystemLoaderWarmer ?? $this->createMock(ContaoFilesystemLoaderWarmer::class),
             $themeNamespace ?? $this->createMock(ThemeNamespace::class),
-            $translator ?? $this->createMock(TranslatorInterface::class)
+            $translator ?? $this->createMock(TranslatorInterface::class),
         );
     }
 }

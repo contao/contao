@@ -27,14 +27,14 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  * requested front end page while ensuring that the /preview.php entry point is
  * used. When requested, the front end user gets authenticated.
  */
-#[Route(path: '%contao.backend.route_prefix%', defaults: ['_scope' => 'backend', '_allow_preview' => true])]
+#[Route('%contao.backend.route_prefix%', defaults: ['_scope' => 'backend', '_allow_preview' => true])]
 class BackendPreviewController
 {
     public function __construct(
-        private string $previewScript,
-        private FrontendPreviewAuthenticator $previewAuthenticator,
-        private EventDispatcherInterface $dispatcher,
-        private AuthorizationCheckerInterface $authorizationChecker,
+        private readonly string $previewScript,
+        private readonly FrontendPreviewAuthenticator $previewAuthenticator,
+        private readonly EventDispatcherInterface $dispatcher,
+        private readonly AuthorizationCheckerInterface $authorizationChecker,
     ) {
     }
 
@@ -53,11 +53,10 @@ class BackendPreviewController
             return new Response('Access denied', Response::HTTP_FORBIDDEN);
         }
 
+        $frontendUser = $request->query->get('user');
+
         // Switch to a particular member (see contao/core#6546)
-        if (
-            ($frontendUser = $request->query->get('user'))
-            && !$this->previewAuthenticator->authenticateFrontendUser($frontendUser, false)
-        ) {
+        if ($frontendUser && !$this->previewAuthenticator->authenticateFrontendUser($frontendUser, false)) {
             $this->previewAuthenticator->removeFrontendAuthentication();
         }
 
@@ -65,7 +64,7 @@ class BackendPreviewController
 
         $this->dispatcher->dispatch($urlConvertEvent, ContaoCoreEvents::PREVIEW_URL_CONVERT);
 
-        if (null !== ($response = $urlConvertEvent->getResponse())) {
+        if ($response = $urlConvertEvent->getResponse()) {
             return $response;
         }
 

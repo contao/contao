@@ -12,45 +12,47 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\HttpKernel;
 
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\Model;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
+use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
-class ModelArgumentResolver implements ArgumentValueResolverInterface
+class ModelArgumentResolver implements ValueResolverInterface
 {
     /**
-     * @internal Do not inherit from this class; decorate the "contao.model_argument_resolver" service instead
+     * @internal
      */
-    public function __construct(private ContaoFramework $framework, private ScopeMatcher $scopeMatcher)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly ScopeMatcher $scopeMatcher,
+    ) {
     }
 
-    public function supports(Request $request, ArgumentMetadata $argument): bool
+    public function resolve(Request $request, ArgumentMetadata $argument): array
     {
         if (!$this->scopeMatcher->isContaoRequest($request)) {
-            return false;
+            return [];
         }
 
         $this->framework->initialize();
 
         if (!is_a($argument->getType(), Model::class, true)) {
-            return false;
+            return [];
         }
 
-        if (!$argument->isNullable() && null === $this->fetchModel($request, $argument)) {
-            return false;
+        if (!$argument->isNullable() && !$this->fetchModel($request, $argument)) {
+            return [];
         }
 
-        return true;
-    }
+        if (!$model = $this->fetchModel($request, $argument)) {
+            return [];
+        }
 
-    public function resolve(Request $request, ArgumentMetadata $argument): \Generator
-    {
-        yield $this->fetchModel($request, $argument);
+        return [$model];
     }
 
     private function fetchModel(Request $request, ArgumentMetadata $argument): Model|null
@@ -79,7 +81,7 @@ class ModelArgumentResolver implements ArgumentValueResolverInterface
             return $GLOBALS['objPage'];
         }
 
-        /** @var Model $model */
+        /** @var Adapter<Model> $model */
         $model = $this->framework->getAdapter($type);
 
         return $model->findByPk((int) $value);

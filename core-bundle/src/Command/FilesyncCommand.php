@@ -25,11 +25,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'contao:filesync',
-    description: 'Synchronizes the registered DBAFS with the virtual filesystem.'
+    description: 'Synchronizes the registered DBAFS with the virtual filesystem.',
 )]
 class FilesyncCommand extends Command
 {
-    public function __construct(private DbafsManager $dbafsManager)
+    public function __construct(private readonly DbafsManager $dbafsManager)
     {
         parent::__construct();
     }
@@ -103,8 +103,8 @@ class FilesyncCommand extends Command
                 ' Total items added: %s | updated/moved: %s | deleted: %s',
                 \count($changeSet->getItemsToCreate()),
                 \count($changeSet->getItemsToUpdate()),
-                \count($changeSet->getItemsToDelete())
-            )
+                \count($changeSet->getItemsToDelete()),
+            ),
         );
     }
 }

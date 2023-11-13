@@ -14,6 +14,7 @@ use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Util\UrlUtil;
 
 /**
  * Front end module "newsreader".
@@ -92,7 +93,8 @@ class ModuleNewsReader extends ModuleNews
 		}
 
 		// Redirect if the news item has a target URL (see #1498)
-		switch ($objArticle->source) {
+		switch ($objArticle->source)
+		{
 			case 'internal':
 				if ($page = PageModel::findPublishedById($objArticle->jumpTo))
 				{
@@ -112,7 +114,10 @@ class ModuleNewsReader extends ModuleNews
 			case 'external':
 				if ($objArticle->url)
 				{
-					throw new RedirectResponseException($objArticle->url, 301);
+					$url = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objArticle->url);
+					$url = UrlUtil::makeAbsolute($url, Environment::get('base'));
+
+					throw new RedirectResponseException($url, 301);
 				}
 
 				throw new InternalServerErrorException('Empty target URL');
@@ -184,7 +189,6 @@ class ModuleNewsReader extends ModuleNews
 		$intHl = min((int) str_replace('h', '', $this->hl), 5);
 		$this->Template->hlc = 'h' . ($intHl + 1);
 
-		$this->import(Comments::class, 'Comments');
 		$arrNotifies = array();
 
 		// Notify the system administrator
@@ -200,7 +204,6 @@ class ModuleNewsReader extends ModuleNews
 		}
 
 		$objConfig = new \stdClass();
-
 		$objConfig->perPage = $objArchive->perPage;
 		$objConfig->order = $objArchive->sortOrder;
 		$objConfig->template = $this->com_template;
@@ -209,6 +212,6 @@ class ModuleNewsReader extends ModuleNews
 		$objConfig->bbcode = $objArchive->bbcode;
 		$objConfig->moderate = $objArchive->moderate;
 
-		$this->Comments->addCommentsToTemplate($this->Template, $objConfig, 'tl_news', $objArticle->id, $arrNotifies);
+		(new Comments())->addCommentsToTemplate($this->Template, $objConfig, 'tl_news', $objArticle->id, $arrNotifies);
 	}
 }

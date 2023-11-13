@@ -23,8 +23,10 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class PreviewUrlCreateListener
 {
-    public function __construct(private RequestStack $requestStack, private ContaoFramework $framework)
-    {
+    public function __construct(
+        private readonly RequestStack $requestStack,
+        private readonly ContaoFramework $framework,
+    ) {
     }
 
     /**
@@ -36,9 +38,7 @@ class PreviewUrlCreateListener
             return;
         }
 
-        $request = $this->requestStack->getCurrentRequest();
-
-        if (null === $request) {
+        if (!$request = $this->requestStack->getCurrentRequest()) {
             throw new \RuntimeException('The request stack did not contain a request');
         }
 

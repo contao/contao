@@ -1,0 +1,46 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_favorites.php" source-language="en" target-language="ja">
+    <body>
+      <trans-unit id="tl_favorites.title.0">
+        <source>Title</source>
+        <target>題名</target>
+      </trans-unit>
+      <trans-unit id="tl_favorites.title.1">
+        <source>The menu item title.</source>
+        <target>メニューの項目の題名です。</target>
+      </trans-unit>
+      <trans-unit id="tl_favorites.url.0">
+        <source>URL</source>
+        <target>URL</target>
+      </trans-unit>
+      <trans-unit id="tl_favorites.url.1">
+        <source>The menu item URL.</source>
+        <target>メニューの項目のURLです。</target>
+      </trans-unit>
+      <trans-unit id="tl_favorites.url_legend">
+        <source>Title and URL</source>
+        <target>題名とURL</target>
+      </trans-unit>
+      <trans-unit id="tl_favorites.show">
+        <source>Show the details of favorite ID %s</source>
+        <target>ID %sのお気に入りの詳細を表示</target>
+      </trans-unit>
+      <trans-unit id="tl_favorites.edit">
+        <source>Edit favorite ID %s</source>
+        <target>ID %sのお気に入りを編集</target>
+      </trans-unit>
+      <trans-unit id="tl_favorites.cut">
+        <source>Move favorite ID %s</source>
+        <target>ID %sのお気に入りを移動</target>
+      </trans-unit>
+      <trans-unit id="tl_favorites.copy">
+        <source>Duplicate favorite ID %s</source>
+        <target>ID %sのお気に入りを複製</target>
+      </trans-unit>
+      <trans-unit id="tl_favorites.delete">
+        <source>Delete favorite ID %s</source>
+        <target>ID %sのお気に入りを削除</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

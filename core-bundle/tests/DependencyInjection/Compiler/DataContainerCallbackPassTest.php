@@ -51,7 +51,7 @@ class DataContainerCallbackPassTest extends TestCase
                     ],
                 ],
             ],
-            $this->getCallbacksFromDefinition($container)[0]
+            $this->getCallbacksFromDefinition($container)[0],
         );
     }
 
@@ -106,7 +106,7 @@ class DataContainerCallbackPassTest extends TestCase
                     ],
                 ],
             ],
-            $this->getCallbacksFromDefinition($container)[0]
+            $this->getCallbacksFromDefinition($container)[0],
         );
     }
 
@@ -137,7 +137,7 @@ class DataContainerCallbackPassTest extends TestCase
                     ],
                 ],
             ],
-            $this->getCallbacksFromDefinition($container)[0]
+            $this->getCallbacksFromDefinition($container)[0],
         );
     }
 
@@ -161,14 +161,12 @@ class DataContainerCallbackPassTest extends TestCase
         $this->assertSame(
             [
                 'tl_page' => [
-                    'config.onload_callback' => [
-                        0 => [
-                            ['test.callback_listener', 'onLoadPage'],
-                        ],
-                    ],
+                    'config.onload_callback' => [[
+                        ['test.callback_listener', 'onLoadPage'],
+                    ]],
                 ],
             ],
-            $this->getCallbacksFromDefinition($container)[0]
+            $this->getCallbacksFromDefinition($container)[0],
         );
     }
 
@@ -200,7 +198,7 @@ class DataContainerCallbackPassTest extends TestCase
                     ],
                 ],
             ],
-            $this->getCallbacksFromDefinition($container)[0]
+            $this->getCallbacksFromDefinition($container)[0],
         );
     }
 
@@ -232,7 +230,7 @@ class DataContainerCallbackPassTest extends TestCase
                     ],
                 ],
             ],
-            $this->getCallbacksFromDefinition($container)[0]
+            $this->getCallbacksFromDefinition($container)[0],
         );
     }
 
@@ -264,7 +262,7 @@ class DataContainerCallbackPassTest extends TestCase
                     ],
                 ],
             ],
-            $this->getCallbacksFromDefinition($container)[0]
+            $this->getCallbacksFromDefinition($container)[0],
         );
     }
 
@@ -288,14 +286,12 @@ class DataContainerCallbackPassTest extends TestCase
         $this->assertSame(
             [
                 'tl_content' => [
-                    'list.sorting.panel_callback.foobar' => [
-                        0 => [
-                            ['test.callback_listener', 'onFoobarCallback'],
-                        ],
-                    ],
+                    'list.sorting.panel_callback.foobar' => [[
+                        ['test.callback_listener', 'onFoobarCallback'],
+                    ]],
                 ],
             ],
-            $this->getCallbacksFromDefinition($container)[0]
+            $this->getCallbacksFromDefinition($container)[0],
         );
     }
 
@@ -303,47 +299,32 @@ class DataContainerCallbackPassTest extends TestCase
     {
         $definition = new Definition(TestListener::class);
 
-        $definition->addTag(
-            'contao.callback',
-            [
-                'table' => 'tl_page',
-                'target' => 'config.onload',
-                'method' => 'loadFirst',
-            ]
-        );
+        $definition->addTag('contao.callback', [
+            'table' => 'tl_page',
+            'target' => 'config.onload',
+            'method' => 'loadFirst',
+        ]);
 
-        $definition->addTag(
-            'contao.callback',
-            [
-                'table' => 'tl_page',
-                'target' => 'config.onload',
-                'method' => 'loadSecond',
-            ]
-        );
+        $definition->addTag('contao.callback', [
+            'table' => 'tl_page',
+            'target' => 'config.onload',
+            'method' => 'loadSecond',
+        ]);
 
-        $definition->addTag(
-            'contao.callback',
-            [
-                'table' => 'tl_article',
-                'target' => 'fields.title.load',
-            ]
-        );
+        $definition->addTag('contao.callback', [
+            'table' => 'tl_article',
+            'target' => 'fields.title.load',
+        ]);
 
-        $definition->addTag(
-            'contao.callback',
-            [
-                'table' => 'tl_article',
-                'target' => 'fields.title.save',
-            ]
-        );
+        $definition->addTag('contao.callback', [
+            'table' => 'tl_article',
+            'target' => 'fields.title.save',
+        ]);
 
-        $definition->addTag(
-            'contao.callback',
-            [
-                'table' => 'tl_content',
-                'target' => 'list.label.label_callback',
-            ]
-        );
+        $definition->addTag('contao.callback', [
+            'table' => 'tl_content',
+            'target' => 'list.sorting.child_record_callback',
+        ]);
 
         $container = $this->getContainerBuilder();
         $container->setDefinition('test.callback_listener', $definition);
@@ -354,34 +335,26 @@ class DataContainerCallbackPassTest extends TestCase
         $this->assertSame(
             [
                 'tl_page' => [
-                    'config.onload_callback' => [
-                        0 => [
-                            ['test.callback_listener', 'loadFirst'],
-                            ['test.callback_listener', 'loadSecond'],
-                        ],
-                    ],
+                    'config.onload_callback' => [[
+                        ['test.callback_listener', 'loadFirst'],
+                        ['test.callback_listener', 'loadSecond'],
+                    ]],
                 ],
                 'tl_article' => [
-                    'fields.title.load_callback' => [
-                        0 => [
-                            ['test.callback_listener', 'onLoadCallback'],
-                        ],
-                    ],
-                    'fields.title.save_callback' => [
-                        0 => [
-                            ['test.callback_listener', 'onSaveCallback'],
-                        ],
-                    ],
+                    'fields.title.load_callback' => [[
+                        ['test.callback_listener', 'onLoadCallback'],
+                    ]],
+                    'fields.title.save_callback' => [[
+                        ['test.callback_listener', 'onSaveCallback'],
+                    ]],
                 ],
                 'tl_content' => [
-                    'list.label.label_callback' => [
-                        0 => [
-                            ['test.callback_listener', 'onLabelCallback'],
-                        ],
-                    ],
+                    'list.sorting.child_record_callback' => [[
+                        ['test.callback_listener', 'onChildRecordCallback'],
+                    ]],
                 ],
             ],
-            $this->getCallbacksFromDefinition($container)[0]
+            $this->getCallbacksFromDefinition($container)[0],
         );
     }
 
@@ -389,36 +362,27 @@ class DataContainerCallbackPassTest extends TestCase
     {
         $definitionA = new Definition(TestListener::class);
 
-        $definitionA->addTag(
-            'contao.callback',
-            [
-                'table' => 'tl_page',
-                'target' => 'config.onload',
-                'priority' => 10,
-            ]
-        );
+        $definitionA->addTag('contao.callback', [
+            'table' => 'tl_page',
+            'target' => 'config.onload',
+            'priority' => 10,
+        ]);
 
         $definitionB = new Definition(TestListener::class);
 
-        $definitionB->addTag(
-            'contao.callback',
-            [
-                'table' => 'tl_page',
-                'target' => 'config.onload',
-                'method' => 'onLoadFirst',
-                'priority' => 10,
-            ]
-        );
+        $definitionB->addTag('contao.callback', [
+            'table' => 'tl_page',
+            'target' => 'config.onload',
+            'method' => 'onLoadFirst',
+            'priority' => 10,
+        ]);
 
-        $definitionB->addTag(
-            'contao.callback',
-            [
-                'table' => 'tl_page',
-                'target' => 'config.onload',
-                'method' => 'onLoadSecond',
-                'priority' => 100,
-            ]
-        );
+        $definitionB->addTag('contao.callback', [
+            'table' => 'tl_page',
+            'target' => 'config.onload',
+            'method' => 'onLoadSecond',
+            'priority' => 100,
+        ]);
 
         $container = $this->getContainerBuilder();
         $container->setDefinition('test.callback_listener.a', $definitionA);
@@ -441,7 +405,7 @@ class DataContainerCallbackPassTest extends TestCase
                     ],
                 ],
             ],
-            $this->getCallbacksFromDefinition($container)[0]
+            $this->getCallbacksFromDefinition($container)[0],
         );
     }
 
@@ -509,14 +473,11 @@ class DataContainerCallbackPassTest extends TestCase
     {
         $definition = new Definition(TestListener::class);
 
-        $definition->addTag(
-            'contao.callback',
-            [
-                'table' => 'tl_page',
-                'target' => 'tl_page.config.foo',
-                'method' => 'onFooCallback',
-            ]
-        );
+        $definition->addTag('contao.callback', [
+            'table' => 'tl_page',
+            'target' => 'tl_page.config.foo',
+            'method' => 'onFooCallback',
+        ]);
 
         $container = $this->getContainerBuilder();
         $container->setDefinition('test.callback_listener', $definition);
@@ -533,14 +494,11 @@ class DataContainerCallbackPassTest extends TestCase
     {
         $definition = new Definition(TestListener::class);
 
-        $definition->addTag(
-            'contao.callback',
-            [
-                'table' => 'tl_page',
-                'target' => 'tl_page.config.foo',
-                'method' => 'onPrivateCallback',
-            ]
-        );
+        $definition->addTag('contao.callback', [
+            'table' => 'tl_page',
+            'target' => 'tl_page.config.foo',
+            'method' => 'onPrivateCallback',
+        ]);
 
         $container = $this->getContainerBuilder();
         $container->setDefinition('test.callback_listener', $definition);
@@ -603,7 +561,7 @@ class DataContainerCallbackPassTest extends TestCase
     }
 
     /**
-     * Returns the container builder with a dummy contao.framework definition.
+     * Returns the container builder with a dummy "contao.framework" definition.
      */
     private function getContainerBuilder(): ContainerBuilder
     {
@@ -611,7 +569,7 @@ class DataContainerCallbackPassTest extends TestCase
 
         $container->setDefinition(
             'contao.listener.data_container_callback',
-            new Definition(DataContainerCallbackListener::class, [])
+            new Definition(DataContainerCallbackListener::class, []),
         );
 
         return $container;

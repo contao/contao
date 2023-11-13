@@ -18,13 +18,16 @@ namespace Contao\CoreBundle\Filesystem\Dbafs\Hashing;
 final class Context
 {
     private int|null $newLastModified;
+
     private bool|string|null $result = false;
 
     /**
      * @internal
      */
-    public function __construct(private string|null $oldHash = null, private int|null $oldLastModified = null)
-    {
+    public function __construct(
+        private readonly string|null $oldHash = null,
+        private readonly int|null $oldLastModified = null,
+    ) {
         $this->newLastModified = $oldLastModified;
     }
 

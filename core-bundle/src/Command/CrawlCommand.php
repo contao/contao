@@ -45,14 +45,16 @@ use Terminal42\Escargot\Subscriber\SubscriberInterface;
 
 #[AsCommand(
     name: 'contao:crawl',
-    description: 'Crawls the Contao root pages with the desired subscribers.'
+    description: 'Crawls the Contao root pages with the desired subscribers.',
 )]
 class CrawlCommand extends Command
 {
     private Escargot|null $escargot = null;
 
-    public function __construct(private Factory $escargotFactory, private Filesystem $filesystem)
-    {
+    public function __construct(
+        private readonly Factory $escargotFactory,
+        private readonly Filesystem $filesystem,
+    ) {
         parent::__construct();
     }
 
@@ -65,11 +67,12 @@ class CrawlCommand extends Command
     {
         $this
             ->addArgument('job', InputArgument::OPTIONAL, 'An optional existing job ID')
+            ->addOption('queue', null, InputArgument::OPTIONAL, 'Queue to use ("memory" or "doctrine")', 'memory')
             ->addOption('subscribers', 's', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'A list of subscribers to enable', $this->escargotFactory->getSubscriberNames())
-            ->addOption('concurrency', 'c', InputOption::VALUE_REQUIRED, 'The number of concurrent requests that are going to be executed', '10')
+            ->addOption('concurrency', 'c', InputOption::VALUE_REQUIRED, 'The number of concurrent requests that are going to be executed', '5')
             ->addOption('delay', null, InputOption::VALUE_REQUIRED, 'The number of microseconds to wait between requests (0 = throttling is disabled)', '0')
             ->addOption('max-requests', null, InputOption::VALUE_REQUIRED, 'The maximum number of requests to execute (0 = no limit)', '0')
-            ->addOption('max-depth', null, InputOption::VALUE_REQUIRED, 'The maximum depth to crawl for (0 = no limit)', '10')
+            ->addOption('max-depth', null, InputOption::VALUE_REQUIRED, 'The maximum depth to crawl for (0 = no limit)', '3')
             ->addOption('no-progress', null, InputOption::VALUE_NONE, 'Disables the progress bar output')
             ->addOption('enable-debug-csv', null, InputOption::VALUE_NONE, 'Writes the crawl debug log into a separate CSV file')
             ->addOption('debug-csv-path', null, InputOption::VALUE_REQUIRED, 'The path of the debug log CSV file', Path::join(getcwd(), 'crawl_debug_log.csv'))
@@ -83,11 +86,25 @@ class CrawlCommand extends Command
         $io->title('Contao Crawler');
 
         $subscribers = $input->getOption('subscribers');
-        $queue = new InMemoryQueue();
         $baseUris = $this->escargotFactory->getCrawlUriCollection();
 
         if ($baseUris->containsHost('localhost')) {
             $io->warning('You are going to crawl localhost URIs. This is likely not desired and due to a missing domain configuration in your root page settings. You may also configure a fallback request context using "router.request_context.*" if you want to execute all CLI commands with the same request context.');
+        }
+
+        switch ($input->getOption('queue')) {
+            case 'memory':
+                $queue = new InMemoryQueue();
+                break;
+
+            case 'doctrine':
+                $queue = $this->escargotFactory->createLazyQueue();
+                break;
+
+            default:
+                $io->error('Only "memory" or "doctrine" are allowed for the "queue" option.');
+
+                return 1;
         }
 
         try {
@@ -124,7 +141,13 @@ class CrawlCommand extends Command
 
         $output->writeln('');
         $output->writeln('');
-        $io->comment('Finished crawling! Find the details for each subscriber below:');
+
+        $io->comment(
+            sprintf(
+                '[Job ID: %s] Finished crawling! Find the details for each subscriber below:',
+                $this->escargot->getJobId(),
+            ),
+        );
 
         $errored = false;
 
@@ -191,7 +214,7 @@ class CrawlCommand extends Command
         return new class($progressBar) implements SubscriberInterface, EscargotAwareInterface, FinishedCrawlingSubscriberInterface {
             use EscargotAwareTrait;
 
-            public function __construct(private ProgressBar|null $progressBar)
+            public function __construct(private readonly ProgressBar|null $progressBar)
             {
             }
 

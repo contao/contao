@@ -17,10 +17,12 @@ final class RetentionPolicy implements RetentionPolicyInterface
     /**
      * @var array<string, \DateInterval>
      */
-    private array $keepIntervals;
+    private readonly array $keepIntervals;
 
-    public function __construct(private int $keepMax, array $keepIntervals = [])
-    {
+    public function __construct(
+        private readonly int $keepMax,
+        array $keepIntervals = [],
+    ) {
         $this->keepIntervals = self::validateAndSortIntervals($keepIntervals);
     }
 
@@ -29,7 +31,7 @@ final class RetentionPolicy implements RetentionPolicyInterface
         $toKeep = $allBackups;
 
         // Cleanup according to retention policy first
-        if (0 !== \count($this->keepIntervals)) {
+        if ($this->keepIntervals) {
             $latestDateTime = $latestBackup->getCreatedAt();
             $assignedPerInterval = array_fill_keys(array_keys($this->keepIntervals), null);
 

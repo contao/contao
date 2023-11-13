@@ -22,11 +22,13 @@ use Contao\CoreBundle\Twig\Inheritance\DynamicUseTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaper;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
+use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNode;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
 use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
 use Contao\CoreBundle\Twig\Runtime\FigureRuntime;
 use Contao\CoreBundle\Twig\Runtime\FormatterRuntime;
+use Contao\CoreBundle\Twig\Runtime\FragmentRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlightResult;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
@@ -53,16 +55,15 @@ final class ContaoExtension extends AbstractExtension
     private array $contaoEscaperFilterRules = [];
 
     public function __construct(
-        private Environment $environment,
-        private TemplateHierarchyInterface $hierarchy,
+        private readonly Environment $environment,
+        private readonly TemplateHierarchyInterface $hierarchy,
         ContaoCsrfTokenManager $tokenManager,
     ) {
         $contaoEscaper = new ContaoEscaper();
 
-        /** @var EscaperExtension $escaperExtension */
         $escaperExtension = $environment->getExtension(EscaperExtension::class);
-        $escaperExtension->setEscaper('contao_html', [$contaoEscaper, 'escapeHtml']);
-        $escaperExtension->setEscaper('contao_html_attr', [$contaoEscaper, 'escapeHtmlAttr']);
+        $escaperExtension->setEscaper('contao_html', $contaoEscaper->escapeHtml(...));
+        $escaperExtension->setEscaper('contao_html_attr', $contaoEscaper->escapeHtmlAttr(...));
 
         // Use our escaper on all templates in the "@Contao" and "@Contao_*"
         // namespaces, as well as the existing bundle templates we're already
@@ -77,7 +78,7 @@ final class ContaoExtension extends AbstractExtension
         $this->environment->addGlobal(
             'request_token',
             new class($tokenManager) implements \Stringable {
-                public function __construct(private ContaoCsrfTokenManager $tokenManager)
+                public function __construct(private readonly ContaoCsrfTokenManager $tokenManager)
                 {
                 }
 
@@ -85,7 +86,7 @@ final class ContaoExtension extends AbstractExtension
                 {
                     return $this->tokenManager->getDefaultTokenValue();
                 }
-            }
+            },
         );
     }
 
@@ -111,7 +112,7 @@ final class ContaoExtension extends AbstractExtension
             // Enables the "contao_twig" escaper for Contao templates with
             // input encoding
             new ContaoEscaperNodeVisitor(
-                fn () => $this->contaoEscaperFilterRules
+                fn () => $this->contaoEscaperFilterRules,
             ),
             // Allows rendering PHP templates with the legacy framework by
             // installing proxy nodes
@@ -150,7 +151,7 @@ final class ContaoExtension extends AbstractExtension
 
                     return $includeFunctionCallable(...$args);
                 },
-                ['needs_environment' => true, 'needs_context' => true, 'is_safe' => ['all']]
+                ['needs_environment' => true, 'needs_context' => true, 'is_safe' => ['all']],
             ),
             new TwigFunction(
                 'attrs',
@@ -163,11 +164,11 @@ final class ContaoExtension extends AbstractExtension
             new TwigFunction(
                 'contao_figure',
                 [FigureRuntime::class, 'renderFigure'],
-                ['is_safe' => ['html']]
+                ['is_safe' => ['html']],
             ),
             new TwigFunction(
                 'picture_config',
-                [PictureConfigurationRuntime::class, 'fromArray']
+                [PictureConfigurationRuntime::class, 'fromArray'],
             ),
             new TwigFunction(
                 'insert_tag',
@@ -175,21 +176,31 @@ final class ContaoExtension extends AbstractExtension
             ),
             new TwigFunction(
                 'add_schema_org',
-                [SchemaOrgRuntime::class, 'add']
+                [SchemaOrgRuntime::class, 'add'],
             ),
             new TwigFunction(
                 'contao_sections',
                 [LegacyTemplateFunctionsRuntime::class, 'renderLayoutSections'],
-                ['needs_context' => true, 'is_safe' => ['html']]
+                ['needs_context' => true, 'is_safe' => ['html']],
             ),
             new TwigFunction(
                 'contao_section',
                 [LegacyTemplateFunctionsRuntime::class, 'renderLayoutSection'],
-                ['needs_context' => true, 'is_safe' => ['html']]
+                ['needs_context' => true, 'is_safe' => ['html']],
             ),
             new TwigFunction(
                 'prefix_url',
                 [UrlRuntime::class, 'prefixUrl'],
+            ),
+            new TwigFunction(
+                'frontend_module',
+                [FragmentRuntime::class, 'renderModule'],
+                ['is_safe' => ['html']],
+            ),
+            new TwigFunction(
+                'content_element',
+                [FragmentRuntime::class, 'renderContent'],
+                ['is_safe' => ['html']],
             ),
         ];
     }
@@ -217,22 +228,22 @@ final class ContaoExtension extends AbstractExtension
             new TwigFilter(
                 'escape',
                 $escaperFilter,
-                ['needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe']
+                ['needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe'],
             ),
             new TwigFilter(
                 'e',
                 $escaperFilter,
-                ['needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe']
+                ['needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe'],
             ),
             new TwigFilter(
                 'insert_tag',
                 [InsertTagRuntime::class, 'replaceInsertTags'],
-                ['preserves_safety' => ['html']]
+                ['needs_context' => true, 'preserves_safety' => ['html']],
             ),
             new TwigFilter(
                 'insert_tag_raw',
                 [InsertTagRuntime::class, 'replaceInsertTagsChunkedRaw'],
-                ['preserves_safety' => ['html']]
+                ['needs_context' => true, 'preserves_safety' => ['html']],
             ),
             new TwigFilter(
                 'highlight',
@@ -245,12 +256,12 @@ final class ContaoExtension extends AbstractExtension
             new TwigFilter(
                 'format_bytes',
                 [FormatterRuntime::class, 'formatBytes'],
-                ['is_safe' => ['html']]
+                ['is_safe' => ['html']],
             ),
             new TwigFilter(
                 'sanitize_html',
                 [SanitizerRuntime::class, 'sanitizeHtml'],
-                ['is_safe' => ['html']]
+                ['is_safe' => ['html']],
             ),
         ];
     }

@@ -23,13 +23,15 @@
       </trans-unit>
       <trans-unit id="tl_form.jumpTo.1">
         <source>Please choose the page to which visitors will be redirected after submitting the form.</source>
-        <target>Ett formulär postas vanligtvis till en annan sida, som processar datan eller visar ett &quot;Tack&quot;-meddelande. &lt;br /&gt; Du kan välja denna sida här.</target>
+        <target>Vänligen välj den sida som besökare ska omdirigeras till efter att du har skickat formuläret.</target>
       </trans-unit>
       <trans-unit id="tl_form.confirmation.0">
         <source>Confirmation message</source>
+        <target>Bekräftelsemeddelande</target>
       </trans-unit>
       <trans-unit id="tl_form.confirmation.1">
         <source>Here you can enter the confirmation message that will be displayed after submitting the form. You can use the submitted form data as simple tokens, e.g. &lt;code&gt;##field_name##&lt;/code&gt;. The confirmation message is also available as &lt;code&gt;{{form_confirmation}}&lt;/code&gt; insert tag.</source>
+        <target>Här kan du ange bekräftelsemeddelandet som kommer att visas efter att du har skickat in formuläret. Du kan använda inlämnad formulärdata som simple tokens, t.ex. &lt;code&gt;##field_name##&lt;/code&gt;. Bekräftelsemeddelandet är också tillgängligt som &lt;code&gt;{{form_confirmation}}&lt;/code&gt; insert tag.</target>
       </trans-unit>
       <trans-unit id="tl_form.sendViaEmail.0">
         <source>Send form data via e-mail</source>
@@ -193,9 +195,11 @@
       </trans-unit>
       <trans-unit id="tl_form.ajax.0">
         <source>Submit via Ajax</source>
+        <target>Skicka in via Ajax</target>
       </trans-unit>
       <trans-unit id="tl_form.ajax.1">
         <source>Submit the form via Ajax instead of reloading the page.</source>
+        <target>Skicka formuläret via Ajax istället för att ladda om sidan.</target>
       </trans-unit>
       <trans-unit id="tl_form.tstamp.0">
         <source>Revision date</source>

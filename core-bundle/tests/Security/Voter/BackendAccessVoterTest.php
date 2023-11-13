@@ -16,6 +16,7 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\Voter\BackendAccessVoter;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\Database;
 use Contao\PageModel;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -74,6 +75,30 @@ class BackendAccessVoterTest extends TestCase
         $this->assertSame(VoterInterface::ACCESS_DENIED, $this->voter->vote($token, 'foo', ['contao_user.alexf']));
     }
 
+    public function testGrantsAccessIfTheSubjectIsNullAndTheFieldIsNotEmpty(): void
+    {
+        $token = $this->createMock(TokenInterface::class);
+        $token
+            ->expects($this->once())
+            ->method('getUser')
+            ->willReturn($this->mockClassWithProperties(BackendUser::class, ['fields' => ['text', 'select']]))
+        ;
+
+        $this->assertSame(VoterInterface::ACCESS_GRANTED, $this->voter->vote($token, null, ['contao_user.fields']));
+    }
+
+    public function testDeniesAccessIfTheSubjectIsNullAndTheFieldIsEmpty(): void
+    {
+        $token = $this->createMock(TokenInterface::class);
+        $token
+            ->expects($this->once())
+            ->method('getUser')
+            ->willReturn($this->mockClassWithProperties(BackendUser::class, ['fields' => []]))
+        ;
+
+        $this->assertSame(VoterInterface::ACCESS_DENIED, $this->voter->vote($token, null, ['contao_user.fields']));
+    }
+
     public function testDeniesAccessIfTheSubjectIsNotAScalarOrArray(): void
     {
         $token = $this->createMock(TokenInterface::class);
@@ -86,14 +111,12 @@ class BackendAccessVoterTest extends TestCase
         $this->assertSame(VoterInterface::ACCESS_DENIED, $this->voter->vote($token, new \stdClass(), ['contao_user.alexf']));
     }
 
-    public function testDeniesAccessIfTheUserObjectDeniesAccess(): void
+    /**
+     * @dataProvider userDataProvider
+     */
+    public function testGrantsAccessIfTheUserDataIntersects(array $userData, string $attribute, int|string|null $subject): void
     {
-        $user = $this->createMock(BackendUser::class);
-        $user
-            ->expects($this->once())
-            ->method('hasAccess')
-            ->willReturn(false)
-        ;
+        $user = $this->mockClassWithProperties(BackendUser::class, $userData);
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -102,18 +125,76 @@ class BackendAccessVoterTest extends TestCase
             ->willReturn($user)
         ;
 
-        $this->assertSame(VoterInterface::ACCESS_DENIED, $this->voter->vote($token, 'foo', ['contao_user.alexf']));
+        $this->assertSame(VoterInterface::ACCESS_GRANTED, $this->voter->vote($token, $subject, [$attribute]));
     }
 
-    public function testGrantsAccessIfTheUserObjectGrantsAccess(): void
+    /**
+     * @dataProvider userDataProvider
+     */
+    public function testDeniesAccessIfTheUserDataDoesNotIntersect(array $userData, string $attribute, int|string|null $subject): void
     {
-        $user = $this->createMock(BackendUser::class);
-        $user
+        $userData = array_fill_keys(array_keys($userData), []);
+
+        $token = $this->createMock(TokenInterface::class);
+        $token
             ->expects($this->once())
-            ->method('hasAccess')
-            ->with('foo', 'alexf')
-            ->willReturn(true)
+            ->method('getUser')
+            ->willReturn($this->mockClassWithProperties(BackendUser::class, $userData))
         ;
+
+        $database = $this->createMock(Database::class);
+        $database
+            ->method('getChildRecords')
+            ->willReturn([])
+        ;
+
+        $voter = new BackendAccessVoter($this->mockContaoFramework([], [Database::class => $database]));
+
+        $this->assertSame(VoterInterface::ACCESS_DENIED, $voter->vote($token, $subject, [$attribute]));
+    }
+
+    public function userDataProvider(): \Generator
+    {
+        yield 'Check access on table fields' => [
+            ['alexf' => ['tl_user.field']],
+            ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE,
+            'tl_user.field',
+        ];
+
+        yield 'Check access on content elements' => [
+            ['elements' => ['text']],
+            ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE,
+            'text',
+        ];
+
+        yield 'Compares numeric strings and integers' => [
+            ['forms' => [15]],
+            ContaoCorePermissions::USER_CAN_ACCESS_FORM,
+            '15',
+        ];
+
+        yield 'Uses subject from permission' => [
+            ['themes' => ['theme_export', 'theme_import']],
+            ContaoCorePermissions::USER_CAN_EXPORT_THEMES,
+            null,
+        ];
+
+        yield 'Check permission on mounted folder' => [
+            ['filemounts' => ['files/foobar']],
+            ContaoCorePermissions::USER_CAN_ACCESS_PATH,
+            'files/foobar',
+        ];
+
+        yield 'Check permission on mounted pages' => [
+            ['pagemounts' => [17]],
+            ContaoCorePermissions::USER_CAN_ACCESS_PAGE,
+            17,
+        ];
+    }
+
+    public function testGrantsAccessToSubfolders(): void
+    {
+        $user = $this->mockClassWithProperties(BackendUser::class, ['filemounts' => ['/foo/bar']]);
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -122,7 +203,33 @@ class BackendAccessVoterTest extends TestCase
             ->willReturn($user)
         ;
 
-        $this->assertSame(VoterInterface::ACCESS_GRANTED, $this->voter->vote($token, 'foo', ['contao_user.alexf']));
+        $this->assertSame(
+            VoterInterface::ACCESS_GRANTED,
+            $this->voter->vote($token, '/foo/bar/baz', [ContaoCorePermissions::USER_CAN_ACCESS_PATH]),
+        );
+    }
+
+    public function testGrantsAccessToChildPages(): void
+    {
+        $user = $this->mockClassWithProperties(BackendUser::class, ['pagemounts' => [1, 2, 3]]);
+
+        $token = $this->createMock(TokenInterface::class);
+        $token
+            ->expects($this->once())
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
+        $database = $this->createMock(Database::class);
+        $database
+            ->expects($this->once())
+            ->method('getChildRecords')
+            ->willReturn([4, 5, 6])
+        ;
+
+        $voter = new BackendAccessVoter($this->mockContaoFramework([], [Database::class => $database]));
+
+        $this->assertSame(VoterInterface::ACCESS_GRANTED, $voter->vote($token, 5, [ContaoCorePermissions::USER_CAN_ACCESS_PAGE]));
     }
 
     public function testDeniesAccessIfUserCannotEditFieldsOfTable(): void

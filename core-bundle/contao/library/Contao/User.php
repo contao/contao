@@ -146,15 +146,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	protected $roles = array();
 
 	/**
-	 * Import the database object
-	 */
-	protected function __construct()
-	{
-		parent::__construct();
-		$this->import(Database::class, 'Database');
-	}
-
-	/**
 	 * Prevent cloning of the object (Singleton)
 	 */
 	final public function __clone()
@@ -256,12 +247,14 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function findBy($strColumn, $varValue)
 	{
-		$objResult = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE " . Database::quoteIdentifier($strColumn) . "=?")
-									->limit(1)
-									->execute($varValue);
+		$objResult = Database::getInstance()
+			->prepare("SELECT * FROM " . $this->strTable . " WHERE " . Database::quoteIdentifier($strColumn) . "=?")
+			->limit(1)
+			->execute($varValue);
 
 		if ($objResult->numRows > 0)
 		{
+			/** @var class-string<Model> $strModelClass */
 			$strModelClass = Model::getClassFromTable($this->strTable);
 			$this->arrData = array();
 
@@ -281,12 +274,12 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function save()
 	{
-		$arrFields = $this->Database->getFieldNames($this->strTable);
+		$db = Database::getInstance();
+
+		$arrFields = $db->getFieldNames($this->strTable);
 		$arrSet = array_intersect_key($this->arrData, array_flip($arrFields));
 
-		$this->Database->prepare("UPDATE " . $this->strTable . " %s WHERE id=?")
-					   ->set($arrSet)
-					   ->execute($this->id);
+		$db->prepare("UPDATE " . $this->strTable . " %s WHERE id=?")->set($arrSet)->execute($this->id);
 	}
 
 	/**

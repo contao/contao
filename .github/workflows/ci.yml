@@ -2,89 +2,35 @@ name: CI
 
 on:
     pull_request: ~
-    push:
-        branches:
-            - 5.x
-        tags:
-            - '*'
-    schedule:
-        - cron: 0 13 * * MON,THU
 
 permissions: read-all
 
 jobs:
-    coverage:
-        name: Coverage
+    rector:
+        name: Rector
         runs-on: ubuntu-latest
-        if: github.event_name != 'schedule'
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.1
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
-                  coverage: pcov
-              env:
-                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-            - name: Checkout
-              uses: actions/checkout@v3
-
-            - name: Install the dependencies
-              run: composer install --no-interaction --no-progress
-
-            - name: Generate the coverage report
-              run: php -d pcov.enabled=1 vendor/bin/phpunit --testsuite=coverage --coverage-clover=clover.xml --colors=always
-
-            - name: Upload the coverage report
-              uses: codecov/codecov-action@v3
-              with:
-                  files: ./clover.xml
-                  fail_ci_if_error: true
-                  token: ${{ secrets.CODECOV_TOKEN }}
-
-    windows:
-        name: Windows
-        runs-on: windows-latest
-        if: github.event_name != 'push'
-        steps:
-            - name: Setup PHP
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: 8.1
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
-                  ini-values: memory_limit=1G
                   coverage: none
-              env:
-                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-            - name: Adjust the Git autocrlf setting
-              run: git config --global core.autocrlf false
 
             - name: Checkout
               uses: actions/checkout@v3
 
-            - name: Get the Composer cache directory
-              id: composer-cache
-              run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-            - name: Cache the dependencies
-              uses: actions/cache@v3
-              with:
-                  path: ${{ steps.composer-cache.outputs.dir }}
-                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-                  restore-keys: ${{ runner.os }}-composer-
-
             - name: Install the dependencies
-              run: composer install --no-interaction --no-progress
+              run: |
+                  composer install --no-interaction --no-progress
+                  composer bin rector install --no-interaction --no-progress
 
-            - name: Run the unit tests
-              run: vendor/bin/phpunit.bat --colors=always
+            - name: Run Rector
+              run: tools/rector/vendor/bin/rector --config tools/rector/config/rector.php --dry-run --no-progress-bar
 
     ecs:
         name: ECS
         runs-on: ubuntu-latest
-        if: github.event_name != 'push'
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -92,8 +38,6 @@ jobs:
                   php-version: 8.1
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
-              env:
-                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Checkout
               uses: actions/checkout@v3
@@ -107,9 +51,8 @@ jobs:
               run: tools/ecs/vendor/bin/ecs check */bin */src */tests tools/*/bin tools/*/config tools/*/src --config tools/ecs/config/default.php --no-progress-bar --ansi
 
     ecs-legacy:
-        name: ECS Legacy
+        name: ECS legacy
         runs-on: ubuntu-latest
-        if: github.event_name != 'push'
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -117,8 +60,6 @@ jobs:
                   php-version: 8.1
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
-              env:
-                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Checkout
               uses: actions/checkout@v3
@@ -136,7 +77,6 @@ jobs:
     phpstan:
         name: PHPStan
         runs-on: ubuntu-latest
-        if: github.event_name != 'push'
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -144,8 +84,6 @@ jobs:
                   php-version: 8.1
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
-              env:
-                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Checkout
               uses: actions/checkout@v3
@@ -156,37 +94,11 @@ jobs:
                   composer bin phpstan install --no-interaction --no-progress
 
             - name: Run PHPStan
-              run: tools/phpstan/vendor/bin/phpstan analyse --no-progress
-
-    rector:
-        name: Rector
-        runs-on: ubuntu-latest
-        if: github.event_name != 'push'
-        steps:
-            - name: Setup PHP
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: 8.1
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
-                  coverage: none
-              env:
-                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-            - name: Checkout
-              uses: actions/checkout@v3
-
-            - name: Install the dependencies
-              run: |
-                  composer install --no-interaction --no-progress
-                  composer bin rector install --no-interaction --no-progress
-
-            - name: Run Rector
-              run: tools/rector/vendor/bin/rector --config tools/rector/config/rector.php --dry-run --no-progress-bar
+              run: tools/phpstan/vendor/bin/phpstan analyse -c tools/phpstan/config/contao.neon --no-progress
 
     yamllint:
         name: YAMLlint
         runs-on: ubuntu-latest
-        if: github.event_name != 'push'
         steps:
             - name: Checkout
               uses: actions/checkout@v3
@@ -198,41 +110,9 @@ jobs:
                   python3 -m pip install --upgrade yamllint
                   /home/runner/.local/bin/yamllint .
 
-    require-checker:
-        name: Require Checker
-        runs-on: ubuntu-latest
-        if: github.event_name != 'push'
-        steps:
-            - name: Setup PHP
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: 8.1
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
-                  coverage: none
-              env:
-                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-            - name: Checkout
-              uses: actions/checkout@v3
-              with:
-                  fetch-depth: 0
-
-            - name: Install the dependencies
-              run: |
-                  composer install --no-interaction --no-progress
-                  composer -dcore-bundle install --no-interaction --no-progress
-                  composer bin require-checker install --no-interaction --no-progress
-
-            - name: Run the require checker for contao/contao
-              run: tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config/config.json composer.json --ansi
-
-            - name: Run the require checker for contao/core-bundle
-              run: tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config/config.json core-bundle/composer.json --ansi
-
     service-linter:
-        name: Service Linter
+        name: Service linter
         runs-on: ubuntu-latest
-        if: github.event_name != 'push'
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -240,8 +120,6 @@ jobs:
                   php-version: 8.1
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
-              env:
-                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Checkout
               uses: actions/checkout@v3
@@ -254,10 +132,37 @@ jobs:
             - name: Run the service linter
               run: tools/service-linter/bin/lint-service-ids --ansi
 
+    require-checker:
+        name: Require checker
+        runs-on: ubuntu-latest
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.1
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  coverage: none
+
+            - name: Checkout
+              uses: actions/checkout@v3
+              with:
+                  fetch-depth: 0
+
+            - name: Install the dependencies
+              run: |
+                  composer install --no-interaction --no-progress
+                  composer -dcore-bundle install --no-interaction --no-progress
+                  composer bin require-checker install --no-interaction --no-progress
+
+            - name: Check for unknown symbols (contao/contao)
+              run: tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config/config.json composer.json --ansi
+
+            - name: Check for unknown symbols (contao/core-bundle)
+              run: tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config/config.json core-bundle/composer.json --ansi
+
     tests:
         name: PHP ${{ matrix.php }}
         runs-on: ubuntu-latest
-        if: github.event_name != 'push'
         strategy:
             fail-fast: false
             matrix:
@@ -269,8 +174,6 @@ jobs:
                   php-version: ${{ matrix.php }}
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
-              env:
-                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Initialize the database
               run: |
@@ -297,9 +200,8 @@ jobs:
                   DATABASE_URL: mysqli://root:root@127.0.0.1:3306/contao_test
 
     reverse:
-        name: PHP 8.1 Reverse Order
+        name: PHP 8.1 reverse order
         runs-on: ubuntu-latest
-        if: github.event_name != 'push'
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -307,8 +209,6 @@ jobs:
                   php-version: 8.1
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
-              env:
-                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Checkout
               uses: actions/checkout@v3
@@ -322,7 +222,6 @@ jobs:
     nightly:
         name: PHP 8.3
         runs-on: ubuntu-latest
-        if: github.event_name != 'push'
         continue-on-error: true
         steps:
             - name: Setup PHP
@@ -331,8 +230,6 @@ jobs:
                   php-version: 8.3
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
-              env:
-                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Initialize the database
               run: |
@@ -354,9 +251,8 @@ jobs:
                   DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
 
     prefer-lowest:
-        name: Prefer Lowest
+        name: Prefer lowest
         runs-on: ubuntu-latest
-        if: github.event_name != 'push'
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -364,8 +260,6 @@ jobs:
                   php-version: 8.1
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
-              env:
-                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Initialize the database
               run: |
@@ -394,7 +288,6 @@ jobs:
     bundles:
         name: Bundles
         runs-on: ubuntu-latest
-        if: github.event_name != 'push'
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -402,8 +295,6 @@ jobs:
                   php-version: 8.1
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
-              env:
-                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Checkout
               uses: actions/checkout@v3
@@ -437,7 +328,6 @@ jobs:
     dependencies:
         name: Dependencies
         runs-on: ubuntu-latest
-        if: github.event_name != 'push'
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -445,8 +335,6 @@ jobs:
                   php-version: 8.1
                   extensions: json, zlib
                   coverage: none
-              env:
-                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Checkout
               uses: actions/checkout@v3
@@ -458,62 +346,3 @@ jobs:
 
             - name: Validate the composer.json files
               run: tools/monorepo/vendor/bin/monorepo-tools composer-json --validate --ansi
-
-    inspect:
-        name: Inspect Unit Tests
-        runs-on: ubuntu-latest
-        if: github.event_name == 'schedule'
-        steps:
-            - name: Setup PHP
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: 8.1
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
-                  coverage: none
-              env:
-                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-            - name: Checkout
-              uses: actions/checkout@v3
-
-            - name: Install the dependencies
-              run: |
-                  composer install --no-interaction --no-progress
-                  composer bin isolated-tests install --no-interaction --no-progress
-
-            - name: Run the unit tests
-              run: vendor/bin/phpunit --extensions Contao\\CoreBundle\\Tests\\PhpunitExtension\\GlobalStateWatcher --colors=always
-
-            - name: Run the unit tests isolated
-              run: tools/isolated-tests/bin/run-tests-isolated --ansi
-
-    monorepo-split:
-        name: Monorepo Split
-        runs-on: ubuntu-latest
-        if: github.event_name == 'push'
-        steps:
-            - name: Setup PHP
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: 8.1
-                  extensions: json, zlib
-                  coverage: none
-              env:
-                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-            - name: Checkout
-              uses: actions/checkout@v3
-
-            - name: Cache the monorepo split
-              uses: actions/cache@v1
-              with:
-                  path: .monorepo-split-cache
-                  key: dev-${GITHUB_REF##*/}
-
-            - name: Install the dependencies
-              run: composer global require contao/monorepo-tools:dev-main
-
-            - name: Split the monorepo
-              run: $HOME/.composer/vendor/bin/monorepo-tools split ${GITHUB_REF##*/}
-              env:
-                  GITHUB_TOKEN: ${{ secrets.MONOREPO_SPLIT_TOKEN }}
