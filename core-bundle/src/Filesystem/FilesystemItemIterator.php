@@ -190,29 +190,17 @@ class FilesystemItemIterator implements \IteratorAggregate
 
     private static function sortByMediaTypePriority(FilesystemItem $a, FilesystemItem $b): int
     {
-        if (!$a->isFile() && !$b->isFile()) {
-            return 0;
-        }
-
-        if (!$a->isFile() || !$b->isFile()) {
-            if ($b->isFile()) {
-                return 1;
+            $aIsFile = $a->isFile();
+        
+            if(0 !== ($sort = ($b->isFile() <=> $aIsFile))) {
+                return $sort;
+            } else if(!$aIsFile) {
+                return 0;
             }
 
-            return -1;
-        }
+            $sortOrderA = array_search($a->getMimeType(), MEDIA_TYPE_SORT_ORDER, true);
+            $sortOrderB = array_search($b->getMimeType(), MEDIA_TYPE_SORT_ORDER, true);
 
-        $sortOrderA = array_search($a->getMimeType(), self::MEDIA_TYPE_SORT_ORDER, true);
-        $sortOrderB = array_search($b->getMimeType(), self::MEDIA_TYPE_SORT_ORDER, true);
-
-        if (false === $sortOrderA) {
-            return 1;
-        }
-
-        if (false === $sortOrderB) {
-            return -1;
-        }
-
-        return $sortOrderB < $sortOrderA ? 1 : -1;
+            return ($sortOrderA === false ? PHP_INT_MAX : $sortOrderA) <=> ($sortOrderB === false ? PHP_INT_MAX : $sortOrderB);
     }
 }
