@@ -44,7 +44,19 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         }
 
         $module = array_keys($modules)[0];
-        [$ptable, $pid, $dynamicPtable] = $this->getPtableAndPid($table, $config->getValue());
+
+        if (!$config->getValue()) {
+            $ptable = $this->findTopMostParent($table);
+
+            // If the table is the first in the module, we do not need to add table=xy to the URL
+            if (0 === array_search($ptable, $modules[$module], true)) {
+                return $this->getUrlForValue($config, $module);
+            }
+
+            return $this->getUrlForValue($config, $module, $ptable);
+        }
+
+        [$ptable, $pid] = $this->getPtableAndPid($table, $config->getValue());
 
         if ($ptable) {
             foreach ($modules as $key => $tables) {
@@ -57,11 +69,6 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
 
         // If the table is the first in the module, we do not need to add table=xy to the URL
         if (0 === array_search($table, $modules[$module], true)) {
-            return $this->getUrlForValue($config, $module);
-        }
-
-        // If the pid is missing for a child table do not add table=xy to the URL
-        if (($ptable || $dynamicPtable) && !$pid) {
             return $this->getUrlForValue($config, $module);
         }
 
@@ -208,10 +215,10 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         $this->framework->createInstance(DcaLoader::class, [$table])->load();
 
         $ptable = $GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null;
-        $dynamicPtable = (bool) ($GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? false);
+        $dynamicPtable = $GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? false;
 
         if (!$ptable && !$dynamicPtable) {
-            return [null, null, $dynamicPtable];
+            return [null, null];
         }
 
         $data = false;
@@ -232,14 +239,32 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         }
 
         if (false === $data) {
-            return [$ptable, null, $dynamicPtable];
+            return [$ptable, null];
         }
 
-        return [$ptable, (int) $data['pid'], $dynamicPtable];
+        return [$ptable, (int) $data['pid']];
     }
 
     /**
      * Returns the DataContainer fully qualified class name (FQCN) supported by this picker (e.g. "Contao\DC_Table" for DC_Table).
      */
     abstract protected function getDataContainer(): string;
+
+    private function findTopMostParent(string $table): string|null
+    {
+        $this->framework->initialize();
+        $this->framework->createInstance(DcaLoader::class, [$table])->load();
+
+        if (($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null) !== DataContainer::MODE_PARENT) {
+            return $table;
+        }
+
+        $ptable = $GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null;
+
+        if ($ptable && $ptable !== $table) {
+            return $this->findTopMostParent($ptable);
+        }
+
+        return null;
+    }
 }
