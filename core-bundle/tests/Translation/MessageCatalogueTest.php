@@ -323,7 +323,7 @@ class MessageCatalogueTest extends TestCase
         unset($GLOBALS['TL_LANG']);
         $string = $catalogue->getGlobalsString('contao_tl_content');
 
-        $this->assertSame("\$GLOBALS['TL_LANG']['tl_content']['headline'][0] = 'Headline';\n", $string);
+        $this->assertSame("\$GLOBALS['TL_LANG']['tl_content']['headline']['0'] = 'Headline';\n", $string);
     }
 
     public function testReturnsEmptyGlobalsStringRepresentationFromSymfonyTranslationsOfNonContaoDomain(): void
