@@ -68,6 +68,14 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'child_record_callback'   => array('tl_content', 'addCteType'),
 			'renderAsGrid'            => true
 		),
+		'global_operations' => array
+		(
+			'toggle_limit' => array
+			(
+				'button_callback' => static fn () => '<button class="header_toggle" data-contao--limit-height-target="operation" data-action="contao--limit-height#toggleAll keydown@window->contao--limit-height#invertAll keyup@window->contao--limit-height#revertAll" title="Expand all elements">Expand elements</button>',
+			),
+			'all'
+		),
 		'operations' => array
 		(
 			'edit' => array
@@ -1257,7 +1265,7 @@ class tl_content extends Backend
 
 		return '
 <div class="cte_type ' . $key . '">' . $type . '</div>
-<div class="' . $class . '"' .(!$isWrapper && !Config::get('doNotCollapse') ? ' data-controller="contao--limit-height" data-contao--limit-height-max-value="112"' : '') . '>' . $preview . '</div>';
+<div class="' . $class . '"' . (!$isWrapper && !Config::get('doNotCollapse') ? ' data-contao--limit-height-target="element"' : '') . '>' . $preview . '</div>';
 	}
 
 	/**
