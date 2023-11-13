@@ -30,13 +30,12 @@ class MessageListener
         }
 
         $this->logger->error(
-            sprintf('Message "%s" failed. Reason: "%s"',
+            sprintf(
+                'Message "%s" failed. Reason: "%s"',
                 $event->getEnvelope()->getMessage()::class,
                 $event->getThrowable()->getMessage(),
             ),
-            [
-                'exception' => $event->getThrowable(),
-            ],
+            ['exception' => $event->getThrowable()],
         );
     }
 }
