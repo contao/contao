@@ -44,10 +44,10 @@ final class LegacyGlobalsProcessor
         $string = "\$GLOBALS['TL_LANG']";
 
         foreach ($parts as $part) {
-            $string .= '['.self::quoteKey($part).']';
+            $string .= '['.var_export($part).']';
         }
 
-        return $string.' = '.self::quoteValue($value).";\n";
+        return $string.' = '.var_export($value).";\n";
     }
 
     /**
@@ -66,29 +66,5 @@ final class LegacyGlobalsProcessor
         }
 
         $data = $value;
-    }
-
-    private static function quoteKey(string $key): int|string
-    {
-        if ('0' === $key) {
-            return 0;
-        }
-
-        if (is_numeric($key)) {
-            return (int) $key;
-        }
-
-        return "'".str_replace("'", "\\'", $key)."'";
-    }
-
-    private static function quoteValue(string $value): string
-    {
-        $value = str_replace("\n", '\n', $value);
-
-        if (str_contains($value, '\n')) {
-            return '"'.str_replace(['$', '"'], ['\\$', '\\"'], $value).'"';
-        }
-
-        return "'".str_replace("'", "\\'", $value)."'";
     }
 }
