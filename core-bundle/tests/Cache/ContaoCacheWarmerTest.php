@@ -19,6 +19,8 @@ use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Translation\MessageCatalogue;
+use Contao\CoreBundle\Translation\Translator;
 use Contao\DcaExtractor;
 use Contao\DcaLoader;
 use Contao\System;
@@ -27,6 +29,7 @@ use Doctrine\DBAL\Schema\Schema;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ContaoCacheWarmerTest extends TestCase
 {
@@ -140,10 +143,41 @@ class ContaoCacheWarmerTest extends TestCase
         $this->assertFileDoesNotExist(Path::join($this->getTempDir(), 'var/cache/contao'));
     }
 
-    private function getCacheWarmer(Connection|null $connection = null, ContaoFramework|null $framework = null, string $bundle = 'test-bundle'): ContaoCacheWarmer
+    public function testWritesSymfonyTranslationsIntoCache(): void
+    {
+        $catalogue = $this->createMock(MessageCatalogue::class);
+        $catalogue
+            ->expects($this->once())
+            ->method('getDomains')
+            ->willReturn(['contao_default'])
+        ;
+
+        $catalogue
+            ->expects($this->once())
+            ->method('populateGlobalsFromSymfony')
+            ->willReturn("<?php\n\$GLOBALS['TL_LANG']['foobar'] = 'foobar';")
+        ;
+
+        $translator = $this->createMock(Translator::class);
+        $translator
+            ->expects($this->once())
+            ->method('getCatalogue')
+            ->willReturn($catalogue)
+        ;
+
+        $warmer->warmUp(Path::join($this->getTempDir(), 'var/cache'));
+
+        $this->assertStringContainsString(
+            "<?php\n\$GLOBALS['TL_LANG']['foobar'] = 'foobar';",
+            file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/languages/en/default.php')),
+        );
+    }
+
+    private function getCacheWarmer(Connection|null $connection = null, ContaoFramework|null $framework = null, string $bundle = 'test-bundle', Translator|null $translator = null): ContaoCacheWarmer
     {
         $connection ??= $this->createMock(Connection::class);
         $framework ??= $this->mockContaoFramework();
+        $translator ??= $this->createMock(Translator::class);
 
         $fixtures = Path::join($this->getFixturesDir(), 'vendor/contao/'.$bundle.'/Resources/contao');
 
@@ -157,6 +191,6 @@ class ContaoCacheWarmerTest extends TestCase
             ->willReturn(['en-US', 'en'])
         ;
 
-        return new ContaoCacheWarmer($filesystem, $finder, $locator, $fixtures, $connection, $framework, $locales);
+        return new ContaoCacheWarmer($filesystem, $finder, $locator, $fixtures, $connection, $framework, $translator, $locales);
     }
 }

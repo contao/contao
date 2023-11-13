@@ -18,6 +18,7 @@ use Contao\CoreBundle\Config\Loader\XliffFileLoader;
 use Contao\CoreBundle\Config\ResourceFinderInterface;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Intl\Locales;
+use Contao\CoreBundle\Translation\MessageCatalogue;
 use Contao\DcaExtractor;
 use Contao\Model;
 use Doctrine\DBAL\Connection;
@@ -29,6 +30,8 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
+use Symfony\Component\Translation\TranslatorBagInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ContaoCacheWarmer implements CacheWarmerInterface
 {
@@ -44,6 +47,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         private readonly string $projectDir,
         private readonly Connection $connection,
         private readonly ContaoFramework $framework,
+        private readonly TranslatorInterface&TranslatorBagInterface $translator,
         Locales $locales,
     ) {
         $this->locales = $locales->getEnabledLocaleIds();
@@ -143,6 +147,28 @@ class ContaoCacheWarmer implements CacheWarmerInterface
                     );
                 } catch (\OutOfBoundsException) {
                     continue;
+                }
+            }
+
+            // Also cache Symfony translations of the 'contao_' domains.
+            $catalogue = $this->translator->getCatalogue($language);
+
+            if ($catalogue instanceof MessageCatalogue) {
+                foreach (array_unique($catalogue->getDomains()) as $domain) {
+                    $php = $catalogue->populateGlobalsFromSymfony($domain);
+
+                    if (!$php) {
+                        continue;
+                    }
+
+                    $php = sprintf("\n// translations/%s.%s\n", $domain, $language).$php;
+                    $path = Path::join($cacheDir, 'contao', 'languages', $language, substr($domain, 7).'.php');
+
+                    if ($this->filesystem->exists($path)) {
+                        $this->filesystem->appendToFile($path, $php);
+                    } else {
+                        $this->filesystem->dumpFile($path, "<?php\n".$php);
+                    }
                 }
             }
         }

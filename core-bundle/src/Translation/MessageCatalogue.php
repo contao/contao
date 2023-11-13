@@ -139,6 +139,77 @@ final class MessageCatalogue implements MessageCatalogueInterface
         $this->inner->addResource($resource);
     }
 
+    /**
+     * Populates $GLOBALS['TL_LANG'] with all translations for the given domain
+     * and also returns the PHP string representation.
+     */
+    public function populateGlobalsFromSymfony(string $domain): string
+    {
+        if (!$this->isContaoDomain($domain)) {
+            return '';
+        }
+
+        $translations = $this->inner->all($domain);
+        $return = '';
+
+        foreach ($translations as $k => $v) {
+            preg_match_all('/(?:\\\\[\\\\.]|[^.])++/', $k, $matches);
+
+            $parts = preg_replace('/\\\\([\\\\.])/', '$1', $matches[0]);
+
+            $item = &$GLOBALS['TL_LANG'];
+
+            foreach ($parts as $part) {
+                $item = &$item[$part];
+            }
+
+            $item = $v;
+
+            $return .= $this->getStringRepresentation($parts, $v);
+        }
+
+        return $return;
+    }
+
+    private function getStringRepresentation(array $parts, string $value): string
+    {
+        if (!$parts) {
+            return '';
+        }
+
+        $string = "\$GLOBALS['TL_LANG']";
+
+        foreach ($parts as $part) {
+            $string .= '['.$this->quoteKey($part).']';
+        }
+
+        return $string . (' = '.$this->quoteValue($value).";\n");
+    }
+
+    private function quoteKey(string $key): int|string
+    {
+        if ('0' === $key) {
+            return 0;
+        }
+
+        if (is_numeric($key)) {
+            return (int) $key;
+        }
+
+        return "'".str_replace("'", "\\'", $key)."'";
+    }
+
+    private function quoteValue(string $value): string
+    {
+        $value = str_replace("\n", '\n', $value);
+
+        if (str_contains($value, '\n')) {
+            return '"'.str_replace(['$', '"'], ['\\$', '\\"'], $value).'"';
+        }
+
+        return "'".str_replace("'", "\\'", $value)."'";
+    }
+
     private function isContaoDomain(string|null $domain): bool
     {
         return str_starts_with($domain ?? '', 'contao_');
