@@ -321,10 +321,10 @@ class ContentElementTestCase extends TestCase
                                 ),
                             ],
                         ),
-                        self::FILE_IMAGE2 => new FilesystemItem(true, 'image2.jpg'),
-                        self::FILE_IMAGE3 => new FilesystemItem(true, 'image3.jpg'),
-                        self::FILE_VIDEO_MP4 => new FilesystemItem(true, 'video.mp4'),
-                        self::FILE_VIDEO_OGV => new FilesystemItem(true, 'video.ogv'),
+                        self::FILE_IMAGE2 => new FilesystemItem(true, 'image2.jpg', null, null, 'image/jpeg'),
+                        self::FILE_IMAGE3 => new FilesystemItem(true, 'image3.jpg', null, null, 'image/jpeg'),
+                        self::FILE_VIDEO_MP4 => new FilesystemItem(true, 'video.mp4', null, null, 'video/mp4'),
+                        self::FILE_VIDEO_OGV => new FilesystemItem(true, 'video.ogv', null, null, 'video/ogg'),
                     ];
 
                     return $storageMap[$uuid->toRfc4122()] ?? null;
