@@ -44,10 +44,10 @@ final class LegacyGlobalsProcessor
         $string = "\$GLOBALS['TL_LANG']";
 
         foreach ($parts as $part) {
-            $string .= '['.var_export($part).']';
+            $string .= '['.var_export($part, true).']';
         }
 
-        return $string.' = '.var_export($value).";\n";
+        return $string.' = '.var_export($value, true).";\n";
     }
 
     /**
