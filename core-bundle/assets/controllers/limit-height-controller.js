@@ -21,37 +21,6 @@ export default class extends Controller {
         this.togglerMap = new WeakMap();
     }
 
-    /**
-     * Automatically register target on all legacy ".limit_height" classes
-     */
-    connect () {
-        const registerLegacy = () => {
-            document.querySelectorAll('div.limit_height').forEach((div) => {
-                const parent = div.parentNode.closest('.tl_content');
-
-                // Return if the node is a wrapper
-                if (parent && (parent.classList.contains('wrapper_start') || parent.classList.contains('wrapper_stop'))) return;
-
-                const hgt = Number(div.className.replace(/[^0-9]*/, ''))
-
-                // Return if there is no height value
-                if (!hgt) return;
-
-                // Use the last found max height as the controller value
-                this.maxValue = hgt;
-
-                div.setAttribute(this.application.schema.targetAttributeForScope(this.identifier), 'node');
-            });
-        };
-
-        // called as soon as registered so DOM may not have loaded yet
-        if (document.readyState === "loading") {
-            document.addEventListener("DOMContentLoaded", registerLegacy)
-        } else {
-            registerLegacy()
-        }
-    }
-
     operationTargetConnected () {
         this.updateOperation();
     }

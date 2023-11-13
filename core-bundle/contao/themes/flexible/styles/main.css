@@ -1593,6 +1593,10 @@ table.tl_listing {
 	border-top: 1px solid var(--border);
 }
 
+.limit_height {
+	overflow: hidden;
+}
+
 .limit_toggler {
 	width: 100%;
 	position: absolute;
@@ -1802,6 +1806,11 @@ label.tl_change_selected {
 .selector_container img {
 	max-width: 320px;
 	height: auto;
+}
+
+.selector_container .limit_height {
+	height: auto !important;
+	max-height: 190px;
 }
 
 .selector_container .limit_toggler {
