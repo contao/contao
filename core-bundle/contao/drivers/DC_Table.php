@@ -5178,6 +5178,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <a href="' . ($this->ptable ? $this->addToUrl('act=create' . ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) < self::MODE_PARENT) ? '&amp;mode=2' : '') . '&amp;pid=' . $this->intId) : $this->addToUrl('act=create')) . '" class="header_new" title="' . StringUtil::specialchars($labelNew[1] ?? '') . '" accesskey="n" onclick="Backend.getScrollOffset()">' . $labelNew[0] . '</a> ' : '') . ($limitHeight ? '
 <button class="header_toggle" data-contao--limit-height-target="operation" data-action="contao--limit-height#toggleAll keydown@window->contao--limit-height#keypress keyup@window->contao--limit-height#keypress">'.$GLOBALS['TL_LANG']['DCA']['expandNodes'][0].'</button>' : '') . $this->generateGlobalButtons();
 
+		$return = '';
+
 		if ($limitHeight)
 		{
 			$return = '<div

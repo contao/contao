@@ -67,7 +67,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'headerFields'            => array('title', 'headline', 'author', 'tstamp', 'start', 'stop'),
 			'child_record_callback'   => array('tl_content', 'addCteType'),
 			'renderAsGrid'            => true,
-			'limitHeight'             => 112
+			'limitHeight'             => 144
 		),
 		'global_operations' => array
 		(

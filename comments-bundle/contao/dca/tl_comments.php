@@ -73,7 +73,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 			'fields'                  => array('date'),
 			'panelLayout'             => 'filter;sort,search,limit',
 			'defaultSearchField'      => 'comment',
-			'limitHeight'             => 60
+			'limitHeight'             => 100
 		),
 		'label' => array
 		(
