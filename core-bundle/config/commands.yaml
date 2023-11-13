@@ -103,6 +103,14 @@ services:
             - '@contao.image.deferred_image_storage'
             - '@?filesystem'
 
+    contao.command.supervise_workers:
+        class: Contao\CoreBundle\Command\SuperviseWorkersCommand
+        arguments:
+            - '@messenger.receiver_locator'
+            - '@contao.process_util'
+            - '%kernel.cache_dir%/worker-supervisor'
+            - ~
+
     contao.command.symlinks:
         class: Contao\CoreBundle\Command\SymlinksCommand
         public: true
