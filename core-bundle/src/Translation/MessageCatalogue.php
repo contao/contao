@@ -153,61 +153,14 @@ final class MessageCatalogue implements MessageCatalogueInterface
         $return = '';
 
         foreach ($translations as $k => $v) {
-            preg_match_all('/(?:\\\\[\\\\.]|[^.])++/', $k, $matches);
+            $parts = LegacyGlobalsProcessor::getPartsFromKey($k);
 
-            $parts = preg_replace('/\\\\([\\\\.])/', '$1', $matches[0]);
+            $return .= LegacyGlobalsProcessor::getStringRepresentation($parts, $v);
 
-            $item = &$GLOBALS['TL_LANG'];
-
-            foreach ($parts as $part) {
-                $item = &$item[$part];
-            }
-
-            $item = $v;
-
-            $return .= $this->getStringRepresentation($parts, $v);
+            LegacyGlobalsProcessor::addGlobal($parts, $v);
         }
 
         return $return;
-    }
-
-    private function getStringRepresentation(array $parts, string $value): string
-    {
-        if (!$parts) {
-            return '';
-        }
-
-        $string = "\$GLOBALS['TL_LANG']";
-
-        foreach ($parts as $part) {
-            $string .= '['.$this->quoteKey($part).']';
-        }
-
-        return $string . (' = '.$this->quoteValue($value).";\n");
-    }
-
-    private function quoteKey(string $key): int|string
-    {
-        if ('0' === $key) {
-            return 0;
-        }
-
-        if (is_numeric($key)) {
-            return (int) $key;
-        }
-
-        return "'".str_replace("'", "\\'", $key)."'";
-    }
-
-    private function quoteValue(string $value): string
-    {
-        $value = str_replace("\n", '\n', $value);
-
-        if (str_contains($value, '\n')) {
-            return '"'.str_replace(['$', '"'], ['\\$', '\\"'], $value).'"';
-        }
-
-        return "'".str_replace("'", "\\'", $value)."'";
     }
 
     private function isContaoDomain(string|null $domain): bool
@@ -222,32 +175,6 @@ final class MessageCatalogue implements MessageCatalogueInterface
         $system = $this->framework->getAdapter(System::class);
         $system->loadLanguageFile(substr($domain, 7), $this->getLocale());
 
-        return $this->getFromGlobals($id);
-    }
-
-    /**
-     * Returns the labels from $GLOBALS['TL_LANG'] based on a message ID like "MSC.view".
-     */
-    private function getFromGlobals(string $id): string|null
-    {
-        // Split the ID into chunks allowing escaped dots (\.) and backslashes (\\)
-        preg_match_all('/(?:\\\\[\\\\.]|[^.])++/', $id, $matches);
-
-        $parts = preg_replace('/\\\\([\\\\.])/', '$1', $matches[0]);
-        $item = &$GLOBALS['TL_LANG'];
-
-        foreach ($parts as $part) {
-            if (!\is_array($item) || !isset($item[$part])) {
-                return null;
-            }
-
-            $item = &$item[$part];
-        }
-
-        if (\is_array($item)) {
-            return null;
-        }
-
-        return (string) $item;
+        return LegacyGlobalsProcessor::getFromGlobalsByKey($id);
     }
 }
