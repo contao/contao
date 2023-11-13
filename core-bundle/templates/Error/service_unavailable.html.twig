@@ -27,7 +27,7 @@
             d.querySelectorAll('[data-trans]').forEach(el => {
                 let trans = translate(el.dataset.trans);
                 if (trans) {
-                    el.innerHTML = trans;
+                    el.textContent = trans;
                 }
             });
             let trans = translate('title');
