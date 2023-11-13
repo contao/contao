@@ -29,7 +29,8 @@ use Doctrine\DBAL\Schema\Schema;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 
 class ContaoCacheWarmerTest extends TestCase
 {
@@ -145,30 +146,49 @@ class ContaoCacheWarmerTest extends TestCase
 
     public function testWritesSymfonyTranslationsIntoCache(): void
     {
-        $catalogue = $this->createMock(MessageCatalogue::class);
-        $catalogue
-            ->expects($this->once())
+        $parentCatalogue = $this->createMock(MessageCatalogueInterface::class);
+        $parentCatalogue
+            ->expects($this->exactly(2))
             ->method('getDomains')
             ->willReturn(['contao_default'])
         ;
 
-        $catalogue
-            ->expects($this->once())
-            ->method('populateGlobalsFromSymfony')
-            ->willReturn("<?php\n\$GLOBALS['TL_LANG']['foobar'] = 'foobar';")
+        $parentCatalogue
+            ->expects($this->exactly(2))
+            ->method('all')
+            ->with('contao_default')
+            ->willReturn(['MSC.goBack' => 'Foobar'])
         ;
+
+        $framework = $this->mockContaoFramework();
+
+        $finder = $this->createMock(Finder::class);
+        $finder
+            ->method('getIterator')
+            ->willReturn(new \ArrayIterator([]))
+        ;
+
+        $resourceFinder = $this->createMock(ResourceFinder::class);
+        $resourceFinder
+            ->expects($this->exactly(2))
+            ->method('findIn')
+            ->willReturn($finder)
+        ;
+
+        $catalogue = new MessageCatalogue($parentCatalogue, $framework, $resourceFinder);
 
         $translator = $this->createMock(Translator::class);
         $translator
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('getCatalogue')
             ->willReturn($catalogue)
         ;
 
+        $warmer = $this->getCacheWarmer(translator: $translator);
         $warmer->warmUp(Path::join($this->getTempDir(), 'var/cache'));
 
         $this->assertStringContainsString(
-            "<?php\n\$GLOBALS['TL_LANG']['foobar'] = 'foobar';",
+            "\n\$GLOBALS['TL_LANG']['MSC']['goBack'] = 'Foobar';",
             file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/languages/en/default.php')),
         );
     }

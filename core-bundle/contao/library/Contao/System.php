@@ -481,14 +481,11 @@ abstract class System
 				}
 
 				// Also populate $GLOBALS['TL_LANG'] with the Symfony translations of the 'contao_' domains.
-				if ($container->has('translator'))
-				{
-					$catalogue = $container->get('translator')->getCatalogue($strLanguage);
+				$catalogue = $container->get('translator', ContainerInterface::NULL_ON_INVALID_REFERENCE)?->getCatalogue($strLanguage);
 
-					if ($catalogue instanceof MessageCatalogue)
-					{
-						$catalogue->populateGlobalsFromSymfony('contao_' . $strName);
-					}
+				if ($catalogue instanceof MessageCatalogue)
+				{
+					$catalogue->populateGlobals('contao_' . $strName);
 				}
 			}
 		}

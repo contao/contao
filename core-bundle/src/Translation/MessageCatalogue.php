@@ -140,10 +140,27 @@ final class MessageCatalogue implements MessageCatalogueInterface
     }
 
     /**
-     * Populates $GLOBALS['TL_LANG'] with all translations for the given domain
-     * and also returns the PHP string representation.
+     * Populates $GLOBALS['TL_LANG'] with all translations for the given domain.
      */
-    public function populateGlobalsFromSymfony(string $domain): string
+    public function populateGlobals(string $domain): void
+    {
+        if (!$this->isContaoDomain($domain)) {
+            return;
+        }
+
+        $translations = $this->inner->all($domain);
+
+        foreach ($translations as $k => $v) {
+            $parts = LegacyGlobalsProcessor::getPartsFromKey($k);
+
+            LegacyGlobalsProcessor::addGlobal($parts, $v);
+        }
+    }
+
+    /**
+     * Returns the $GLOBALS['TL_LANG'] PHP string representation for all translations of a given domain.
+     */
+    public function getGlobalsString(string $domain): string
     {
         if (!$this->isContaoDomain($domain)) {
             return '';
@@ -156,8 +173,6 @@ final class MessageCatalogue implements MessageCatalogueInterface
             $parts = LegacyGlobalsProcessor::getPartsFromKey($k);
 
             $return .= LegacyGlobalsProcessor::getStringRepresentation($parts, $v);
-
-            LegacyGlobalsProcessor::addGlobal($parts, $v);
         }
 
         return $return;
@@ -175,6 +190,29 @@ final class MessageCatalogue implements MessageCatalogueInterface
         $system = $this->framework->getAdapter(System::class);
         $system->loadLanguageFile(substr($domain, 7), $this->getLocale());
 
-        return LegacyGlobalsProcessor::getFromGlobalsByKey($id);
+        return $this->getFromGlobals($id);
+    }
+
+    /**
+     * Returns the labels from $GLOBALS['TL_LANG'] based on a message ID like "MSC.view".
+     */
+    private function getFromGlobals(string $id): string|null
+    {
+        $parts = LegacyGlobalsProcessor::getPartsFromKey($id);
+        $item = &$GLOBALS['TL_LANG'];
+
+        foreach ($parts as $part) {
+            if (!\is_array($item) || !isset($item[$part])) {
+                return null;
+            }
+
+            $item = &$item[$part];
+        }
+
+        if (\is_array($item)) {
+            return null;
+        }
+
+        return (string) $item;
     }
 }

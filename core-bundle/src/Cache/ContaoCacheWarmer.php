@@ -155,19 +155,18 @@ class ContaoCacheWarmer implements CacheWarmerInterface
 
             if ($catalogue instanceof MessageCatalogue) {
                 foreach (array_unique($catalogue->getDomains()) as $domain) {
-                    $php = $catalogue->populateGlobalsFromSymfony($domain);
+                    $php = $catalogue->getGlobalsString($domain);
 
                     if (!$php) {
                         continue;
                     }
 
-                    $php = sprintf("\n// translations/%s.%s\n", $domain, $language).$php;
                     $path = Path::join($cacheDir, 'contao', 'languages', $language, substr($domain, 7).'.php');
 
                     if ($this->filesystem->exists($path)) {
-                        $this->filesystem->appendToFile($path, $php);
+                        $this->filesystem->appendToFile($path, "\n".$php);
                     } else {
-                        $this->filesystem->dumpFile($path, "<?php\n".$php);
+                        $this->filesystem->dumpFile($path, "<?php\n\n".$php);
                     }
                 }
             }

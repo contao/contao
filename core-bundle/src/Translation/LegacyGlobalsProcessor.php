@@ -1,32 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Translation;
 
 final class LegacyGlobalsProcessor
 {
-    /**
-     * Returns the labels from $GLOBALS['TL_LANG'] based on a translation key like "MSC.view".
-     */
-    public static function getFromGlobalsByKey(string $key): string|null
-    {
-        $parts = self::getPartsFromKey($key);
-        $item = &$GLOBALS['TL_LANG'];
-
-        foreach ($parts as $part) {
-            if (!\is_array($item) || !isset($item[$part])) {
-                return null;
-            }
-
-            $item = &$item[$part];
-        }
-
-        if (\is_array($item)) {
-            return null;
-        }
-
-        return (string) $item;
-    }
-
     /**
      * Splits the translation key and returns the parts.
      */
@@ -35,7 +22,14 @@ final class LegacyGlobalsProcessor
         // Split the key into chunks allowing escaped dots (\.) and backslashes (\\)
         preg_match_all('/(?:\\\\[\\\\.]|[^.])++/', $key, $matches);
 
-        return preg_replace('/\\\\([\\\\.])/', '$1', $matches[0]);
+        $parts = preg_replace('/\\\\([\\\\.])/', '$1', $matches[0]);
+
+        // Handle keys with dots in tl_layout
+        if (preg_match('/tl_layout\.[a-z]+\.css\./', $key)) {
+            $parts = [$parts[0], $parts[1].'.'.$parts[2], ...array_splice($parts, 3)];
+        }
+
+        return $parts;
     }
 
     /**
@@ -53,7 +47,7 @@ final class LegacyGlobalsProcessor
             $string .= '['.self::quoteKey($part).']';
         }
 
-        return $string . (' = '.self::quoteValue($value).";\n");
+        return $string.' = '.self::quoteValue($value).";\n";
     }
 
     /**

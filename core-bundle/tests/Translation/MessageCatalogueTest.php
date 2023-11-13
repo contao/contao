@@ -275,6 +275,42 @@ class MessageCatalogueTest extends TestCase
         ];
     }
 
+    public function testPopulatesGlobalsFromSymfonyTranslations(): void
+    {
+        $parentCatalogue = $this->createMock(MessageCatalogueInterface::class);
+        $parentCatalogue
+            ->expects($this->once())
+            ->method('all')
+            ->with('contao_tl_content')
+            ->willReturn(['tl_content.headline.0' => 'Headline'])
+        ;
+
+        $catalogue = $this->createCatalogue($parentCatalogue);
+
+        unset($GLOBALS['TL_LANG']);
+        $catalogue->populateGlobals('contao_tl_content');
+
+        $this->assertSame('Headline', $GLOBALS['TL_LANG']['tl_content']['headline'][0]);
+    }
+
+    public function testReturnsGlobalsStringRepresentationFromSymfonyTranslations(): void
+    {
+        $parentCatalogue = $this->createMock(MessageCatalogueInterface::class);
+        $parentCatalogue
+            ->expects($this->once())
+            ->method('all')
+            ->with('contao_tl_content')
+            ->willReturn(['tl_content.headline.0' => 'Headline'])
+        ;
+
+        $catalogue = $this->createCatalogue($parentCatalogue);
+
+        unset($GLOBALS['TL_LANG']);
+        $string = $catalogue->getGlobalsString('contao_tl_content');
+
+        $this->assertSame("\$GLOBALS['TL_LANG']['tl_content']['headline'][0] = 'Headline';\n", $string);
+    }
+
     private function createCatalogue(MessageCatalogueInterface|null $catalogue = null, ContaoFramework|null $framework = null, ResourceFinder|null $resourceFinder = null): MessageCatalogue
     {
         if (!$catalogue) {

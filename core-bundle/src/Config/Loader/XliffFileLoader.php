@@ -74,7 +74,7 @@ class XliffFileLoader extends Loader
                 continue;
             }
 
-            $chunks = $this->getChunksFromUnit($unit);
+            $chunks = LegacyGlobalsProcessor::getPartsFromKey($unit->getAttribute('id'));
             $value = $this->fixClosingTags($node->item(0));
 
             $return .= LegacyGlobalsProcessor::getStringRepresentation($chunks, $value);
@@ -106,20 +106,5 @@ class XliffFileLoader extends Loader
     private function fixClosingTags(\DOMNode $node): string
     {
         return str_replace('</ em>', '</em>', $node->nodeValue);
-    }
-
-    /**
-     * Splits the ID attribute and returns the chunks.
-     */
-    private function getChunksFromUnit(\DOMElement $unit): array
-    {
-        $chunks = LegacyGlobalsProcessor::getPartsFromKey($unit->getAttribute('id'));
-
-        // Handle keys with dots
-        if (preg_match('/tl_layout\.[a-z]+\.css\./', $unit->getAttribute('id'))) {
-            $chunks = [$chunks[0], $chunks[1].'.'.$chunks[2], $chunks[3]];
-        }
-
-        return $chunks;
     }
 }
