@@ -157,9 +157,10 @@ class ContaoCacheWarmer implements CacheWarmerInterface
                         continue;
                     }
 
-                    $path = Path::join($cacheDir, 'contao', 'languages', $language, substr($domain, 7).'.php');
+                    $name = substr($domain, 7);
+                    $path = Path::join($cacheDir, 'contao', 'languages', $language, $name.'.php');
 
-                    if ($this->filesystem->exists($path)) {
+                    if (\in_array($name, $processed, true)) {
                         $this->filesystem->appendToFile($path, "\n".$php);
                     } else {
                         $this->filesystem->dumpFile($path, "<?php\n\n".$php);
