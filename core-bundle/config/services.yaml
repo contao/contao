@@ -834,6 +834,7 @@ services:
         arguments:
             - '@contao.repository.access_token'
             - '@database_connection'
+            - '@http_client'
             - '%kernel.secret%'
 
     contao.security.authentication_failure_handler:
