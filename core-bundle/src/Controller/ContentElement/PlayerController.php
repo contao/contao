@@ -54,14 +54,13 @@ class PlayerController extends AbstractContentElementController
     {
         // Find and order source files
         $filesystemItems = FilesystemUtil::listContentsFromSerialized($this->filesStorage, $model->playerSRC ?: '');
-        $isVideo = $filesystemItems->first()?->isVideo() ?? false;
 
         if (!$sourceFiles = $this->getSourceFiles($filesystemItems)) {
             return new Response();
         }
 
         // Compile data
-        $figureData = $isVideo
+        $figureData = $filesystemItems->first()?->isVideo() ?? false
             ? $this->buildVideoFigureData($model, $sourceFiles)
             : $this->buildAudioFigureData($model, $sourceFiles);
 
