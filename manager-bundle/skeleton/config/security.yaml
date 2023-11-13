@@ -37,6 +37,7 @@ security:
             login_throttling: ~
             access_token:
                 token_handler: contao.security.access_token_handler
+                success_handler: contao.security.access_token.authentication_success_handler
 
             contao_login:
                 remember_me: true
