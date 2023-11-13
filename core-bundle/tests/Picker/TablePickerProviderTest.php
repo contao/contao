@@ -418,6 +418,7 @@ class TablePickerProviderTest extends ContaoTestCase
     public function testGetUrlAddsTableIfItsNotFirstInModule(): void
     {
         $GLOBALS['BE_MOD']['foo']['article'] = ['tables' => ['tl_article', 'tl_content']];
+
         $GLOBALS['TL_DCA']['tl_content'] = [
             'config' => ['dataContainer' => DC_Table::class, 'ptable' => 'tl_article'],
             'list' => ['sorting' => ['mode' => DataContainer::MODE_PARENT]],
