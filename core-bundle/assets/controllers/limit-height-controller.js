@@ -128,13 +128,6 @@ export default class extends Controller {
         }
     }
 
-    maxValueChanged () {
-        this.nodeTargets.forEach((node) => {
-            this.nodeTargetDisconnected(node);
-            this.nodeTargetConnected(node);
-        })
-    }
-
     hasExpanded () {
         return !!this.nodeTargets.find((el) => this.togglerMap.has(el) && el.style.maxHeight === '');
     }
