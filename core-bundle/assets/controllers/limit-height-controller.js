@@ -16,12 +16,17 @@ export default class extends Controller {
 
     static targets = ['operation', 'element'];
 
+    initialize () {
+        super.initialize();
+        this.togglerMap = new WeakMap();
+    }
+
     /**
      * Automatically register target on all legacy ".limit_height" classes
      */
-    static afterLoad(identifier, application) {
+    connect () {
         const registerLegacy = () => {
-            document.querySelectorAll('div.limit_height').forEach(function(div) {
+            document.querySelectorAll('div.limit_height').forEach((div) => {
                 const parent = div.parentNode.closest('.tl_content');
 
                 // Return if the element is a wrapper
@@ -32,9 +37,12 @@ export default class extends Controller {
                 // Return if there is no height value
                 if (!hgt) return;
 
-                div.setAttribute(application.schema.targetAttributeForScope(identifier), 'element');
+                // Use the last found max height as the controller value
+                this.maxValue = hgt;
+
+                div.setAttribute(this.application.schema.targetAttributeForScope(this.identifier), 'element');
             });
-        }
+        };
 
         // called as soon as registered so DOM may not have loaded yet
         if (document.readyState === "loading") {
@@ -44,18 +52,20 @@ export default class extends Controller {
         }
     }
 
-    initialize () {
-        super.initialize();
-        this.togglerMap = new WeakMap();
-        this.expanded = 0;
-    }
-
     operationTargetConnected () {
         this.updateOperation();
     }
 
     elementTargetConnected (element) {
+        const style = window.getComputedStyle(element, null);
+        const padding = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+        const height = element.clientHeight - padding;
+
         // Resize the element if it is higher than the maximum height
+        if (this.maxValue > height) {
+            return;
+        }
+
         element.style.maxHeight = `${this.maxValue}px`;
 
         const button = document.createElement('button');
@@ -95,6 +105,8 @@ export default class extends Controller {
         } else {
             this.expand(element);
         }
+
+        console.log(element.style.maxHeight);
     }
 
     expand (element) {
@@ -110,8 +122,6 @@ export default class extends Controller {
     toggleAll (event) {
         event.preventDefault();
         const isExpanded = this.hasExpanded() ^ event.altKey;
-
-        console.log(isExpanded);
 
         this.elementTargets.forEach((element) => {
             if (isExpanded) {
@@ -133,7 +143,7 @@ export default class extends Controller {
     }
 
     updateOperation (event) {
-        if (!this.operationTarget) {
+        if (!this.hasOperationTarget) {
             return;
         }
 
@@ -146,8 +156,15 @@ export default class extends Controller {
         }
     }
 
+    maxValueChanged () {
+        this.elementTargets.forEach((element) => {
+            this.elementTargetDisconnected(element);
+            this.elementTargetConnected(element);
+        })
+    }
+
     hasExpanded () {
-        return !!this.elementTargets.find((el) => el.style.maxHeight === 'none');
+        return !!this.elementTargets.find((el) => this.togglerMap.has(el) && el.style.maxHeight === 'none');
     }
 
     setButtonTitle (element, title) {

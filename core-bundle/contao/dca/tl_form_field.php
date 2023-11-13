@@ -60,7 +60,16 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'defaultSearchField'      => 'label',
 			'headerFields'            => array('title', 'tstamp', 'formID', 'storeValues', 'sendViaEmail', 'recipient', 'subject'),
 			'child_record_callback'   => array('tl_form_field', 'listFormFields'),
-			'renderAsGrid'            => true
+			'renderAsGrid'            => true,
+			'limitHeight'             => 52
+		),
+		'global_operations' => array
+		(
+			'toggleNodes' => array
+			(
+				'button_callback' => static fn () => '<button class="header_toggle" data-contao--limit-height-target="operation" data-action="contao--limit-height#toggleAll keydown@window->contao--limit-height#invertAll keyup@window->contao--limit-height#revertAll"></button>',
+			),
+			'all'
 		),
 		'operations' => array
 		(
@@ -633,7 +642,7 @@ class tl_form_field extends Backend
 
 		$strType = '
 <div class="cte_type ' . $key . '">' . $GLOBALS['TL_LANG']['FFL'][$arrRow['type']][0] . ($objWidget->submitInput() && $arrRow['name'] ? ' (' . $arrRow['name'] . ')' : '') . '</div>
-<div class="cte_preview limit_height' . (!Config::get('doNotCollapse') ? ' h52' : '') . '">';
+<div class="cte_preview"' . (!Config::get('doNotCollapse') ? ' data-contao--limit-height-target="element"' : '') . '>';
 
 		$strWidget = $objWidget->parse();
 		$strWidget = preg_replace('/ name="[^"]+"/i', '', $strWidget);

@@ -66,13 +66,14 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'defaultSearchField'      => 'text',
 			'headerFields'            => array('title', 'headline', 'author', 'tstamp', 'start', 'stop'),
 			'child_record_callback'   => array('tl_content', 'addCteType'),
-			'renderAsGrid'            => true
+			'renderAsGrid'            => true,
+			'limitHeight'             => 112
 		),
 		'global_operations' => array
 		(
-			'toggle_limit' => array
+			'toggleNodes' => array
 			(
-				'button_callback' => static fn () => '<button class="header_toggle" data-contao--limit-height-target="operation" data-action="contao--limit-height#toggleAll keydown@window->contao--limit-height#invertAll keyup@window->contao--limit-height#revertAll" title="Expand all elements">Expand elements</button>',
+				'button_callback' => static fn () => '<button class="header_toggle" data-contao--limit-height-target="operation" data-action="contao--limit-height#toggleAll keydown@window->contao--limit-height#invertAll keyup@window->contao--limit-height#revertAll"></button>',
 			),
 			'all'
 		),

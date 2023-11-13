@@ -72,6 +72,7 @@
           <h1 id="main_headline"><?= $this->headline ?></h1>
           <div class="content"
                data-controller="contao--limit-height"
+               <?php if ($this->limitHeight): ?>data-contao--limit-height-max-value="<?= $this->limitHeight ?>"<?php endif; ?>
                data-contao--limit-height-expand-value="<?= $this->trans('MSC.expandNode') ?>"
                data-contao--limit-height-collapse-value="<?= $this->trans('MSC.collapseNode') ?>"
                data-contao--limit-height-expand-all-value="<?= $this->trans('DCA.expandNodes.0') ?>"

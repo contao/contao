@@ -545,6 +545,11 @@ abstract class Backend extends Controller
 				}
 			}
 
+			if (isset($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['limitHeight']))
+			{
+				$this->Template->limitHeight = (int) $GLOBALS['TL_DCA'][$strTable]['list']['sorting']['limitHeight'];
+			}
+
 			return $dc->$act();
 		}
 
