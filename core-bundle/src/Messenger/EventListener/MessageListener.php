@@ -29,13 +29,11 @@ class MessageListener
             return;
         }
 
+        $exception = $event->getThrowable();
+
         $this->logger->error(
-            sprintf(
-                'Message "%s" failed: "%s"',
-                $event->getEnvelope()->getMessage()::class,
-                $event->getThrowable()->getMessage(),
-            ),
-            ['exception' => $event->getThrowable()],
+            sprintf('Message "%s" failed: "%s"', $event->getEnvelope()->getMessage()::class, $exception->getMessage()),
+            ['exception' => $exception],
         );
     }
 }
