@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Crawl\Escargot\Factory;
 use Contao\CoreBundle\Crawl\Monolog\CrawlCsvLogHandler;
+use Contao\CoreBundle\Security\AccessTokenHandler;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\GroupHandler;
 use Monolog\Logger;
@@ -53,6 +54,7 @@ class CrawlCommand extends Command
     public function __construct(
         private readonly Factory $escargotFactory,
         private readonly Filesystem $filesystem,
+        private readonly AccessTokenHandler $accessTokenHandler,
     ) {
         parent::__construct();
     }
@@ -75,6 +77,7 @@ class CrawlCommand extends Command
             ->addOption('no-progress', null, InputOption::VALUE_NONE, 'Disables the progress bar output')
             ->addOption('enable-debug-csv', null, InputOption::VALUE_NONE, 'Writes the crawl debug log into a separate CSV file')
             ->addOption('debug-csv-path', null, InputOption::VALUE_REQUIRED, 'The path of the debug log CSV file', Path::join(getcwd(), 'crawl_debug_log.csv'))
+            ->addOption('username', 'u', InputOption::VALUE_REQUIRED, 'Username of the frontend member to crawl protected pages')
             ->setHelp('You can add additional URIs via the <info>contao.crawl.additional_uris</info> parameter.')
         ;
     }
@@ -110,7 +113,17 @@ class CrawlCommand extends Command
             if ($jobId = $input->getArgument('job')) {
                 $this->escargot = $this->escargotFactory->createFromJobId($jobId, $queue, $subscribers);
             } else {
-                $this->escargot = $this->escargotFactory->create($baseUris, $queue, $subscribers);
+                $clientOptions = [];
+
+                if ($username = $input->getOption('username')) {
+                    $clientOptions = [
+                        'headers' => [
+                            'Cookie' => $this->accessTokenHandler->getAuthenticatedSessionCookie($baseUris, $username),
+                        ],
+                    ];
+                }
+
+                $this->escargot = $this->escargotFactory->create($baseUris, $queue, $subscribers, $clientOptions);
             }
         } catch (InvalidJobIdException) {
             $io->error('Could not find the given job ID.');

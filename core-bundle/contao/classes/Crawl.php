@@ -14,6 +14,7 @@ use Contao\CoreBundle\Crawl\Escargot\Factory;
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\SubscriberResult;
 use Contao\CoreBundle\Crawl\Monolog\CrawlCsvLogHandler;
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Security\AccessTokenHandler;
 use Monolog\Handler\GroupHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
@@ -114,37 +115,26 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 			throw new ResponseException($response);
 		}
 
-		$objAuthenticator = System::getContainer()->get('contao.security.frontend_preview_authenticator');
+		$baseUris = $factory->getCrawlUriCollection();
+
+		/** @var AccessTokenHandler $accessTokenHandler */
+		$accessTokenHandler = System::getContainer()->get('contao.security.access_token_handler');
+		$clientOptions = array();
 
 		if ($memberWidget && $memberWidget->value)
 		{
 			$objMember = Database::getInstance()->prepare('SELECT username FROM tl_member WHERE id=?')
-												->execute((int) $memberWidget->value);
+				->execute((int) $memberWidget->value);
 
-			if (!$objAuthenticator->authenticateFrontendUser($objMember->username, false))
-			{
-				$objAuthenticator->removeFrontendAuthentication();
-				$clientOptions = array();
-			}
-			else
-			{
-				$session = System::getContainer()->get('request_stack')->getSession();
-				$clientOptions = array('headers' => array('Cookie' => sprintf('%s=%s', $session->getName(), $session->getId())));
-
-				// Closing the session is necessary here as otherwise we run into our own session lock
-				// TODO: we need a way to authenticate with a token instead of our own cookie
-				$session->save();
-			}
-		}
-		else
-		{
-			$objAuthenticator->removeFrontendAuthentication();
-			$clientOptions = array();
+			$clientOptions = array(
+				'headers' => array(
+					'Cookie' => $accessTokenHandler->getAuthenticatedSessionCookie($baseUris, $objMember->username),
+				),
+			);
 		}
 
 		if (!$jobId)
 		{
-			$baseUris = $factory->getCrawlUriCollection();
 			$escargot = $factory->create($baseUris, $queue, $activeSubscribers, $clientOptions);
 
 			Controller::redirect(Controller::addToUrl('&jobId=' . $escargot->getJobId()));

@@ -7,6 +7,17 @@ services:
             calls:
                 - [setFramework, ['@contao.framework']]
 
+    contao.command.access_token_create:
+        class: Contao\CoreBundle\Command\AccessTokenCreateCommand
+        arguments:
+            - '@contao.security.access_token_handler'
+            - '@contao.repository.access_token'
+
+    contao.command.access_token_remove_expired:
+        class: Contao\CoreBundle\Command\AccessTokenRemoveExpiredCommand
+        arguments:
+            - '@contao.repository.access_token'
+
     contao.command.automator:
         class: Contao\CoreBundle\Command\AutomatorCommand
         arguments:
@@ -37,6 +48,7 @@ services:
         arguments:
             - '@contao.crawl.escargot.factory'
             - '@filesystem'
+            - '@contao.security.access_token_handler'
 
     contao.command.cron:
         class: Contao\CoreBundle\Command\CronCommand

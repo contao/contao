@@ -821,11 +821,19 @@ services:
             - !tagged_iterator security.voter
             - '@contao.security.priority_strategy'
 
+    contao.security.access_token.authentication_success_handler:
+        class: Contao\CoreBundle\Security\Authentication\AccessToken\AuthenticationSuccessHandler
+        arguments:
+            - '@security.token_storage'
+            - '@contao.security.token_checker'
+            - '@request_stack'
+
     contao.security.access_token_handler:
         class: Contao\CoreBundle\Security\AccessTokenHandler
         public: true
         arguments:
             - '@contao.repository.access_token'
+            - '@database_connection'
             - '%kernel.secret%'
 
     contao.security.authentication_failure_handler:
