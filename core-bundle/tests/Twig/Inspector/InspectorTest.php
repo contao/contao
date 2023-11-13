@@ -31,19 +31,26 @@ class InspectorTest extends TestCase
 
         $cache = new ArrayAdapter();
         $cacheItem = $cache->getItem(Inspector::CACHE_KEY);
+
         $cacheItem->set([
             'foo.html.twig' => [
                 'slots' => ['main', 'aside'],
+                'parent' => 'bar.html.twig',
+            ],
+            'bar.html.twig' => [
+                'slots' => ['header'],
+                'parent' => null,
             ],
         ]);
+
         $cache->save($cacheItem);
 
         $information = (new Inspector($twig, $cache))->inspectTemplate('foo.html.twig');
 
         $this->assertSame('foo.html.twig', $information->getName());
-        $this->assertSame(['foo', 'bar'], $information->getBlocks());
+        $this->assertSame(['bar', 'foo'], $information->getBlocks());
         $this->assertSame('{% block foo %}{% block bar %}[…]{% endblock %}{% endblock %}', $information->getCode());
-        $this->assertSame(['main', 'aside'], $information->getSlots());
+        $this->assertSame(['aside', 'header', 'main'], $information->getSlots());
     }
 
     public function testCapturesErrorsWhenFailingToInspect(): void

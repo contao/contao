@@ -43,12 +43,30 @@ class Inspector
             throw new InspectionException($name, $e);
         }
 
-        $data = $this->cachePool->getItem(self::CACHE_KEY)->get()[$name] ?? throw new InspectionException($name, reason: 'No recorded information was found. Please clear the Twig template cache to make sure templates are recompiled.');
+        $currentTemplateName = $name;
+        $slots = [];
+
+        // Accumulate data for all set parents as well
+        do {
+            $data = $this->getData($currentTemplateName);
+
+            $slots = [...$slots, ...$data['slots']];
+            $currentTemplateName = $data['parent'] ?? false;
+        } while ($currentTemplateName);
+
+        sort($blocks);
+        sort($slots);
 
         return new TemplateInformation(
             $source,
             $blocks,
-            $data['slots'] ?? [],
+            $slots,
         );
+    }
+
+    private function getData(string $templateName)
+    {
+        return $this->cachePool->getItem(self::CACHE_KEY)->get()[$templateName] ??
+            throw new InspectionException($templateName, reason: 'No recorded information was found. Please clear the Twig template cache to make sure templates are recompiled.');
     }
 }

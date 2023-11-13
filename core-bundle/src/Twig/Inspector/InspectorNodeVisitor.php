@@ -7,6 +7,7 @@ namespace Contao\CoreBundle\Twig\Inspector;
 use Contao\CoreBundle\Twig\Slots\SlotNode;
 use Psr\Cache\CacheItemPoolInterface;
 use Twig\Environment;
+use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\NodeVisitor\NodeVisitorInterface;
@@ -36,9 +37,25 @@ final class InspectorNodeVisitor implements NodeVisitorInterface
 
     public function leaveNode(Node $node, Environment $env): Node|null
     {
-        if ($node instanceof ModuleNode) {
-            $this->compileAndPersistData($node->getTemplateName());
+        if (!$node instanceof ModuleNode) {
+            return $node;
         }
+
+        // Retrieve the parent template if it was set statically
+        $getParent = static function (ModuleNode $node): string|null {
+            if (!$node->hasNode('parent') || !($parent = $node->getNode('parent')) instanceof ConstantExpression) {
+                return null;
+            }
+
+            return $parent->getAttribute('value');
+        };
+
+        $this->persist($node->getTemplateName(), [
+            'slots' => array_unique($this->slots),
+            'parent' => $getParent($node),
+        ]);
+
+        $this->slots = [];
 
         return $node;
     }
@@ -51,22 +68,6 @@ final class InspectorNodeVisitor implements NodeVisitorInterface
     public function getPriority(): int
     {
         return 128;
-    }
-
-    private function compileAndPersistData(string $templateName): void
-    {
-        $normalizeList = static function (array $list): array {
-            $list = array_unique($list);
-            sort($list);
-
-            return $list;
-        };
-
-        $this->persist($templateName, [
-            'slots' => $normalizeList($this->slots),
-        ]);
-
-        $this->slots = [];
     }
 
     private function persist(string $templateName, array $data): void
