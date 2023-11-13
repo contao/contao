@@ -605,6 +605,11 @@ services:
             - '@router'
             - '@translator'
 
+    contao.messenger.message_listener:
+        class: Contao\CoreBundle\Messenger\EventListener\MessageListener
+        arguments:
+            - '@logger'
+
     contao.messenger.worker_listener:
         class: Contao\CoreBundle\Messenger\EventListener\WorkerListener
         arguments:
