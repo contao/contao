@@ -289,8 +289,23 @@ class MessageCatalogueTest extends TestCase
 
         unset($GLOBALS['TL_LANG']);
         $catalogue->populateGlobals('contao_tl_content');
-
         $this->assertSame('Headline', $GLOBALS['TL_LANG']['tl_content']['headline'][0]);
+    }
+
+    public function testDoesNotPopulateGlobalsFromSymfonyTranslationsOfNonContaoDomain(): void
+    {
+        $parentCatalogue = $this->createMock(MessageCatalogueInterface::class);
+        $parentCatalogue
+            ->expects($this->never())
+            ->method('all')
+        ;
+
+        $catalogue = $this->createCatalogue($parentCatalogue);
+
+        unset($GLOBALS['TL_LANG']);
+        $catalogue->populateGlobals('foobar');
+
+        $this->assertEmpty($GLOBALS['TL_LANG'] ?? null);
     }
 
     public function testReturnsGlobalsStringRepresentationFromSymfonyTranslations(): void
@@ -309,6 +324,22 @@ class MessageCatalogueTest extends TestCase
         $string = $catalogue->getGlobalsString('contao_tl_content');
 
         $this->assertSame("\$GLOBALS['TL_LANG']['tl_content']['headline'][0] = 'Headline';\n", $string);
+    }
+
+    public function testReturnsEmptyGlobalsStringRepresentationFromSymfonyTranslationsOfNonContaoDomain(): void
+    {
+        $parentCatalogue = $this->createMock(MessageCatalogueInterface::class);
+        $parentCatalogue
+            ->expects($this->never())
+            ->method('all')
+        ;
+
+        $catalogue = $this->createCatalogue($parentCatalogue);
+
+        unset($GLOBALS['TL_LANG']);
+        $string = $catalogue->getGlobalsString('foobar');
+
+        $this->assertSame('', $string);
     }
 
     private function createCatalogue(MessageCatalogueInterface|null $catalogue = null, ContaoFramework|null $framework = null, ResourceFinder|null $resourceFinder = null): MessageCatalogue
