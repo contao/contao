@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Messenger\EventListener;
 
 use Contao\CoreBundle\Messenger\EventListener\MessageListener;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Envelope;
@@ -44,17 +43,7 @@ class MessageListenerTest extends TestCase
         $logger
             ->expects($this->once())
             ->method('error')
-            ->with(
-                'Message "stdClass" failed. Reason: "error!"',
-                $this->callback(
-                    function (array $context) {
-                        $this->assertInstanceOf(ContaoContext::class, $context['contao']);
-                        $this->assertSame(ContaoContext::ERROR, $context['contao']->getAction());
-
-                        return true;
-                    },
-                ),
-            )
+            ->with('Message "stdClass" failed. Reason: "error!"')
         ;
 
         $listener = new MessageListener($logger);

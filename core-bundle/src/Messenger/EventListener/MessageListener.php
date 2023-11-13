@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Messenger\EventListener;
 
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Messenger\Event\WorkerMessageFailedEvent;
@@ -37,7 +36,6 @@ class MessageListener
             ),
             [
                 'exception' => $event->getThrowable(),
-                'contao' => new ContaoContext(__METHOD__, ContaoContext::ERROR),
             ],
         );
     }

@@ -608,7 +608,7 @@ services:
     contao.messenger.message_listener:
         class: Contao\CoreBundle\Messenger\EventListener\MessageListener
         arguments:
-            - '@logger'
+            - '@monolog.logger.contao.error'
 
     contao.messenger.worker_listener:
         class: Contao\CoreBundle\Messenger\EventListener\WorkerListener
