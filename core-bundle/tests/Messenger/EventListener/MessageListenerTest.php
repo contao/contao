@@ -52,7 +52,7 @@ class MessageListenerTest extends TestCase
                         $this->assertSame(ContaoContext::ERROR, $context['contao']->getAction());
 
                         return true;
-                    }
+                    },
                 ),
             )
         ;
