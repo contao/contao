@@ -66,6 +66,7 @@ export default class extends Controller {
             return;
         }
 
+        element.style.overflow = 'hidden';
         element.style.maxHeight = `${this.maxValue}px`;
 
         const button = document.createElement('button');
@@ -96,11 +97,12 @@ export default class extends Controller {
 
         this.togglerMap.get(element).remove();
         this.togglerMap.delete(element);
-        element.style.maxHeight = 'none';
+        element.style.maxHeight = '';
+        element.style.overflow = '';
     }
 
     toggle (element) {
-        if (element.style.maxHeight === 'none') {
+        if (element.style.maxHeight === '') {
             this.collapse(element);
         } else {
             this.expand(element);
@@ -110,7 +112,7 @@ export default class extends Controller {
     }
 
     expand (element) {
-        element.style.maxHeight = 'none';
+        element.style.maxHeight = '';
         this.setButtonTitle(element, this.collapseValue);
     }
 
@@ -164,7 +166,7 @@ export default class extends Controller {
     }
 
     hasExpanded () {
-        return !!this.elementTargets.find((el) => this.togglerMap.has(el) && el.style.maxHeight === 'none');
+        return !!this.elementTargets.find((el) => this.togglerMap.has(el) && el.style.maxHeight === '');
     }
 
     setButtonTitle (element, title) {
