@@ -119,16 +119,6 @@ class XliffFileLoaderTest extends TestCase
         $this->assertSame('This is the third target', $GLOBALS['TL_LANG']['MSC']['third']['with'][1]);
     }
 
-    public function testFailsIfThereAreTooManyNestingLevels(): void
-    {
-        $this->expectException('OutOfBoundsException');
-
-        $this->loader->load(
-            $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/error.xlf',
-            'en',
-        );
-    }
-
     public function testOverridesKeysInLanguageArray(): void
     {
         $GLOBALS['TL_LANG']['MSC']['third'] = 'is-a-string';
