@@ -57,6 +57,8 @@ class AccessTokenHandler implements AccessTokenHandlerInterface
             throw new UserNotFoundException('User not found.');
         }
 
+        $this->accessTokenRepository->removeExpired();
+
         $plainToken = $this->issueToken(['username' => $username]);
         $claims = $plainToken->claims();
 
@@ -76,7 +78,7 @@ class AccessTokenHandler implements AccessTokenHandlerInterface
 
         return $builder
             ->issuedAt(new \DateTimeImmutable())
-            ->expiresAt(new \DateTimeImmutable('now +30 minutes'))
+            ->expiresAt(new \DateTimeImmutable('now +10 seconds'))
             ->getToken($this->configuration->signer(), $this->configuration->signingKey())
         ;
     }
