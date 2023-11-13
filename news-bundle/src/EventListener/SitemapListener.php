@@ -14,18 +14,22 @@ namespace Contao\NewsBundle\EventListener;
 
 use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
 use Contao\NewsArchiveModel;
 use Contao\NewsModel;
 use Contao\PageModel;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @internal
  */
 class SitemapListener
 {
-    public function __construct(private readonly ContaoFramework $framework)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly AuthorizationCheckerInterface $authorizationChecker,
+    ) {
     }
 
     public function __invoke(SitemapEvent $event): void
@@ -72,7 +76,7 @@ class SitemapListener
             }
 
             // The target page is protected (see #8416)
-            if ($objParent->protected) {
+            if ($objParent->protected && !$this->authorizationChecker->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objParent->groups)) {
                 continue;
             }
 

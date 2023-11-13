@@ -16,5 +16,6 @@ services:
         class: Contao\NewsletterBundle\EventListener\SitemapListener
         arguments:
             - '@contao.framework'
+            - '@security.authorization_checker'
         tags:
             - kernel.event_listener
