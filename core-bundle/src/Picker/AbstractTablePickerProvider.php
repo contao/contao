@@ -44,7 +44,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         }
 
         $module = array_keys($modules)[0];
-        [$ptable, $pid] = $this->getPtableAndPid($table, $config->getValue());
+        [$ptable, $pid, $dynamicPtable] = $this->getPtableAndPid($table, $config->getValue());
 
         if ($ptable) {
             foreach ($modules as $key => $tables) {
@@ -61,7 +61,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         }
 
         // If the pid is missing for a child table do not add table=xy to the URL
-        if ($ptable && !$pid) {
+        if (($ptable || $dynamicPtable) && !$pid) {
             return $this->getUrlForValue($config, $module);
         }
 
@@ -208,10 +208,10 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         $this->framework->createInstance(DcaLoader::class, [$table])->load();
 
         $ptable = $GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null;
-        $dynamicPtable = $GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? false;
+        $dynamicPtable = (bool) ($GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? false);
 
         if (!$ptable && !$dynamicPtable) {
-            return [null, null];
+            return [null, null, $dynamicPtable];
         }
 
         $data = false;
@@ -232,10 +232,10 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         }
 
         if (false === $data) {
-            return [$ptable, null];
+            return [$ptable, null, $dynamicPtable];
         }
 
-        return [$ptable, (int) $data['pid']];
+        return [$ptable, (int) $data['pid'], $dynamicPtable];
     }
 
     /**
