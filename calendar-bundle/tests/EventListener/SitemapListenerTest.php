@@ -20,6 +20,7 @@ use Contao\Database;
 use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class SitemapListenerTest extends ContaoTestCase
 {
@@ -94,7 +95,7 @@ class SitemapListenerTest extends ContaoTestCase
 
         $framework = $this->mockContaoFramework($adapters, $instances);
 
-        return new SitemapListener($framework);
+        return new SitemapListener($framework, $this->createMock(AuthorizationCheckerInterface::class));
     }
 
     private function createSitemapEvent(array $rootPages): SitemapEvent
