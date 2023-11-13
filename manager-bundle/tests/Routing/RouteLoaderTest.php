@@ -33,7 +33,7 @@ class RouteLoaderTest extends ContaoTestCase
         $loader
             ->expects($this->once())
             ->method('load')
-            ->with(dirname(__DIR__).'/Fixtures/Routing/WithRoutingYaml/config/routes.yaml')
+            ->with(\dirname(__DIR__).'/Fixtures/Routing/WithRoutingYaml/config/routes.yaml')
         ;
 
         $loaderResolver = $this->createMock(LoaderResolverInterface::class);
@@ -74,7 +74,7 @@ class RouteLoaderTest extends ContaoTestCase
         $loader
             ->expects($this->once())
             ->method('load')
-            ->with(dirname(__DIR__).'/Fixtures/Routing/WithAppController/src/Controller')
+            ->with(\dirname(__DIR__).'/Fixtures/Routing/WithAppController/src/Controller')
         ;
 
         $loaderResolver = $this->createMock(LoaderResolverInterface::class);
