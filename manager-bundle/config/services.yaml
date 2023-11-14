@@ -22,6 +22,8 @@ services:
         arguments:
             - '%kernel.project_dir%/var/maintenance.html'
             - '@twig'
+            - '@contao.intl.locales'
+            - '@translator'
 
     contao_manager.command.setup:
         class: Contao\ManagerBundle\Command\ContaoSetupCommand
