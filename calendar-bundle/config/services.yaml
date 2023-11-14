@@ -52,7 +52,7 @@ services:
         class: Contao\CalendarBundle\EventListener\SitemapListener
         arguments:
             - '@contao.framework'
-            - '@security.authorization_checker'
+            - '@security.helper'
         tags:
             - kernel.event_listener
 
