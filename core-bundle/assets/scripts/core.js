@@ -49,6 +49,8 @@ window.AjaxRequest =
 	 * @returns {boolean}
 	 */
 	toggleStructure: function(el, id, level, mode) {
+		window.console && console.warn('AjaxRequest.toggleStructure() is deprecated. Please use the stimulus controller instead.');
+
 		el.blur();
 
 		var item = $(id);
@@ -144,6 +146,8 @@ window.AjaxRequest =
 	 * @returns {boolean}
 	 */
 	toggleFileManager: function(el, id, folder, level) {
+		window.console && console.warn('AjaxRequest.toggleFileManager() is deprecated. Please use the stimulus controller instead.');
+
 		el.blur();
 
 		var item = $(id);
