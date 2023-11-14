@@ -25,3 +25,10 @@
         {% endfor %}
     </{{ figure.media.type }}>
 {% endblock %}
+
+{# Add metadata #}
+{% block metadata %}
+    {% for source_file in source_files %}
+        {% do add_schema_org(source_file.schemaOrgData|default) %}
+    {% endfor %}
+{% endblock %}
