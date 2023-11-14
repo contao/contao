@@ -125,9 +125,6 @@ class AccessTokenHandler implements AccessTokenHandlerInterface
         return new UserBadge($token->getUsername());
     }
 
-    /**
-     * @param array<UriInterface> $uris
-     */
     public function getAuthenticatedFrontendSessionCookie(array $uris, string $username): Cookie|null
     {
         $userExists = $this->connection
@@ -143,9 +140,6 @@ class AccessTokenHandler implements AccessTokenHandlerInterface
         return $this->getAuthenticatedSessionCookie($uris, $username);
     }
 
-    /**
-     * @param array<UriInterface> $uris
-     */
     public function getAuthenticatedBackendSessionCookie(array $uris, string $username): Cookie|null
     {
         $userExists = $this->connection
@@ -161,9 +155,6 @@ class AccessTokenHandler implements AccessTokenHandlerInterface
         return $this->getAuthenticatedSessionCookie($uris, $username);
     }
 
-    /**
-     * @param array<UriInterface> $uris
-     */
     private function getAuthenticatedSessionCookie(array $uris, string $username): Cookie|null
     {
         $cookieJar = new CookieJar();
