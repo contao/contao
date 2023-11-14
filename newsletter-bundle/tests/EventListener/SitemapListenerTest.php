@@ -50,7 +50,7 @@ class SitemapListenerTest extends ContaoTestCase
         $jumpToPage = $this->mockClassWithProperties(PageModel::class, [
             'published' => 1,
             'protected' => 1,
-            'groups' => [1]
+            'groups' => [1],
         ]);
 
         $jumpToPage
