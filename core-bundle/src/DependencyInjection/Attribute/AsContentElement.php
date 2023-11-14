@@ -21,10 +21,14 @@ class AsContentElement
     public array $attributes;
 
     /**
-     * @param array<string, array{allowedTypes?:list<string>}> $slots
+     * @param array{default?:array{allowedTypes?:list<string>}} $slots
      */
     public function __construct(string|null $type = null, string $category = 'miscellaneous', string|null $template = null, string|null $method = null, string|null $renderer = null, array $slots = [], mixed ...$attributes)
     {
+        if ($slots && array_keys($slots) !== ['default']) {
+            throw new \InvalidArgumentException(sprintf('Only the slot "default" is supported, got "%s".', implode('", "', array_keys($slots))));
+        }
+
         $attributes['type'] = $type;
         $attributes['category'] = $category;
         $attributes['template'] = $template;

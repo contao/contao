@@ -62,8 +62,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'sorting' => array
 		(
 			'mode'                    => DataContainer::MODE_PARENT,
-			'fields'                  => array('slot', 'sorting'),
-			'slots'                   => array('main', 'image'),
+			'fields'                  => array('sorting'),
 			'panelLayout'             => 'filter;search,limit',
 			'defaultSearchField'      => 'text',
 			'headerFields'            => array('title', 'headline', 'author', 'tstamp', 'start', 'stop'),
@@ -191,10 +190,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'tstamp' => array
 		(
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
-		),
-		'slot' => array
-		(
-			'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default 'main'"
 		),
 		'type' => array
 		(

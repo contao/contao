@@ -19,9 +19,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 #[AsContentElement(category: 'texts', slots: [
-    'main' => [],
-    'image' => [
-        'allowedTypes' => ['image'],
+    'default' => [
+        'allowedTypes' => ['image', 'text'],
     ],
 ])]
 class RapperController extends AbstractContentElementController

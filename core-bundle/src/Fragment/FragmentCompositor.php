@@ -48,22 +48,22 @@ class FragmentCompositor
         $rendered = [];
 
         foreach (array_keys($this->slotsByIdentifier[$identifier]) as $slot) {
+            if ('default' !== $slot) {
+                throw new \InvalidArgumentException(sprintf('Only the slot "default" is supported, got "%s".', $slot));
+            }
+
             $rendered[$slot] = [];
         }
 
         foreach ($children ?? [] as $child) {
-            if (!isset($this->slotsByIdentifier[$identifier][$child->slot])) {
-                continue;
-            }
-
             if (
-                !empty($this->slotsByIdentifier[$identifier][$child->slot]['allowedTypes'])
-                && !\in_array($child->type, $this->slotsByIdentifier[$identifier][$child->slot]['allowedTypes'], true)
+                !empty($this->slotsByIdentifier[$identifier]['default']['allowedTypes'])
+                && !\in_array($child->type, $this->slotsByIdentifier[$identifier]['default']['allowedTypes'], true)
             ) {
                 continue;
             }
 
-            $rendered[$child->slot ?: 'main'][] = new ContentElementReference(
+            $rendered['default'][] = new ContentElementReference(
                 $child,
                 'main',
                 [],
