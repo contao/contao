@@ -65,7 +65,7 @@ class SitemapListener
                 continue;
             }
 
-            if ($isMember && !$this->security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objCalendar->groups)) {
+            if ($isMember && $objCalendar->protected && !$this->security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objCalendar->groups)) {
                 continue;
             }
 

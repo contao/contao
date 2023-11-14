@@ -68,7 +68,7 @@ class SitemapListener
                 continue;
             }
 
-            if ($isMember && !$this->security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objArchive->groups)) {
+            if ($isMember && $objArchive->protected && !$this->security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objArchive->groups)) {
                 continue;
             }
 
