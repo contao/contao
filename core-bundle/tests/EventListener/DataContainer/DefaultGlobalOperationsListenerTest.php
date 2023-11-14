@@ -12,21 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
-use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\EventListener\DataContainer\DefaultGlobalOperationsListener;
-use Contao\CoreBundle\EventListener\DataContainer\DefaultOperationsListener;
-use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\Security\DataContainer\AbstractAction;
-use Contao\CoreBundle\Security\DataContainer\CreateAction;
-use Contao\CoreBundle\Security\DataContainer\DeleteAction;
-use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\DC_Folder;
 use Contao\DC_Table;
-use Doctrine\DBAL\Connection;
-use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Bundle\SecurityBundle\Security;
 
 class DefaultGlobalOperationsListenerTest extends TestCase
 {
