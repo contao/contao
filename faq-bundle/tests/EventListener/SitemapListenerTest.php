@@ -98,7 +98,7 @@ class SitemapListenerTest extends ContaoTestCase
         $framework = $this->mockContaoFramework($adapters, $instances);
         $security = $this->createMock(Security::class);
 
-        if (!empty($allPages)) {
+        if ($allPages !== []) {
             $security
                 ->expects($this->once())
                 ->method('isGranted')
