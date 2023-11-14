@@ -63,15 +63,6 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'renderAsGrid'            => true,
 			'limitHeight'             => 84
 		),
-		'global_operations' => array
-		(
-			'toggleNodes' => array
-			(
-				'button_callback'     => static fn () => '<button class="header_toggle" data-contao--limit-height-target="operation" data-action="contao--limit-height#toggleAll keydown@window->contao--limit-height#keypress keyup@window->contao--limit-height#keypress"></button>',
-				'showOnSelect'        => true
-			),
-			'all'
-		),
 		'operations' => array
 		(
 			'edit' => array

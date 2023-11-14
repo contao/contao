@@ -58,6 +58,7 @@ export default class extends Controller {
         this.togglerMap.set(node, toggler);
 
         node.append(toggler);
+        this.updateOperation();
     }
 
     nodeTargetDisconnected (node) {
