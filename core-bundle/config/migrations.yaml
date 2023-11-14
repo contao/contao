@@ -14,7 +14,7 @@ services:
             - '@database_connection'
             - '@contao.doctrine.schema_provider'
 
-    contao.migration.environment.dns_migration:
+    contao.migration.environment.dns:
         class: Contao\CoreBundle\Migration\Environment\DnsMigration
         arguments:
             - '@database_connection'
