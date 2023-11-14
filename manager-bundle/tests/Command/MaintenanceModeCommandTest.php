@@ -111,7 +111,9 @@ class MaintenanceModeCommandTest extends ContaoTestCase
             ->willReturn(true)
         ;
 
-        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->mockEnvironment(),
+        $command = new MaintenanceModeCommand(
+            '/path/to/var/maintenance.html',
+            $this->mockEnvironment(),
             $this->createMock(Locales::class),
             $this->createMock(TranslatorInterface::class), $filesystem);
 
