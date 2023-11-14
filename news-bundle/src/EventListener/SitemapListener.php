@@ -19,7 +19,7 @@ use Contao\Database;
 use Contao\NewsArchiveModel;
 use Contao\NewsModel;
 use Contao\PageModel;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 
 /**
  * @internal
@@ -28,7 +28,7 @@ class SitemapListener
 {
     public function __construct(
         private readonly ContaoFramework $framework,
-        private readonly AuthorizationCheckerInterface $authorizationChecker,
+        private readonly Security $security,
     ) {
     }
 
@@ -76,7 +76,7 @@ class SitemapListener
             }
 
             // The target page is protected (see #8416)
-            if ($objParent->protected && !$this->authorizationChecker->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objParent->groups)) {
+            if ($objParent->protected && !$this->security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objParent->groups)) {
                 continue;
             }
 
