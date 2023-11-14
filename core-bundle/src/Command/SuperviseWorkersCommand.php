@@ -62,7 +62,7 @@ class SuperviseWorkersCommand extends Command
 
         $io->info('Starting to supervise workers for a minute.');
         $this->supervisor->supervise();
-        $io->info('Done. Restart this command to spin up the workers and have them being supervised them again.');
+        $io->info('Done. Restart this command to spin up the workers and have them being supervised again.');
 
         return Command::SUCCESS;
     }
