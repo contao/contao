@@ -136,6 +136,7 @@ class ContentElementTestCase extends TestCase
                 if ('service_container' === $serviceId) {
                     continue;
                 }
+
                 $container->set($serviceId, $adjustedContainer->get($serviceId));
             }
         }

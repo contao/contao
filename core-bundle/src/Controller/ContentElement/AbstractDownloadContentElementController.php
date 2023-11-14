@@ -76,7 +76,7 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
         $response = $this->container->get('contao.filesystem.file_download_helper')->handle(
             $request,
             $this->getVirtualFilesystem(),
-            function (FilesystemItem $item, array $context) use ($request, $model): Response|null {
+            function (FilesystemItem $item, array $context) use ($model, $request): Response|null {
                 // Do not handle downloads from other DownloadController
                 // elements on the same page (see #5568)
                 if ($model->id !== ($context['id'] ?? null)) {
@@ -153,7 +153,7 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
         $figureBuilder = $this->container->get('contao.image.studio')
             ->createFigureBuilder()
             ->setSize($size = $model->size)
-            ->enableLightbox($fullsize = (bool) $model->fullsize)
+            ->enableLightbox($fullsize = $model->fullsize)
             ->disableMetadata()
             ->setLightboxGroupIdentifier(sprintf('dl_%s_%s', $model->id, md5($filesystemItem->getPath())))
         ;
