@@ -478,6 +478,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$icon = !empty($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['icon']) ? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['icon'] : 'filemounts.svg';
 		$label = Image::getHtml($icon) . ' <label>' . $label . '</label>';
 		$requestToken = htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue());
+		$strRefererId = System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
 
 		$security = System::getContainer()->get('security.helper');
 
@@ -615,6 +616,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					data-contao--toggle-nodes-toggle-action-value="toggleFileManager"
 					data-contao--toggle-nodes-load-action-value="loadFileManager"
 					data-contao--toggle-nodes-request-token-value="' . $requestToken . '"
+					data-contao--toggle-nodes-referer-id-value="' . $strRefererId . '"
 					data-contao--toggle-nodes-expand-value="' . $GLOBALS['TL_LANG']['MSC']['expandNode'] . '"
 					data-contao--toggle-nodes-collapse-value="' . $GLOBALS['TL_LANG']['MSC']['collapseNode'] . '"
 					data-contao--toggle-nodes-expand-all-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][0] . '"

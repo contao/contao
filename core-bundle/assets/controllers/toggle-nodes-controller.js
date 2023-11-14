@@ -9,6 +9,7 @@ export default class extends Controller {
         toggleAction: String,
         loadAction: String,
         requestToken: String,
+        refererId: String,
         expand: String,
         collapse: String,
         expandAll: String,
@@ -77,74 +78,73 @@ export default class extends Controller {
     }
 
     async fetchChild (el, id, level, folder) {
-        return new Promise((resolve) => {
-            new Request.Contao({
-                field: el,
-                evalScripts: true,
-                onRequest: () => {
-                    this.loadToggler(el, true);
-                },
-                onSuccess: (txt) => {
-                    const target = level === 0 ? 'child rootChild' : 'child';
-                    var li = new Element('li', {
-                        'id': id,
-                        'class': 'parent',
-                        'styles': {
-                            'display': 'inline'
-                        },
-                        [`data-${this.identifier}-target`]: target
-                    });
+        this.loadToggler(el, true);
 
-                    new Element('ul', {
-                        'class': 'level_' + level,
-                        'html': txt
-                    }).inject(li, 'bottom');
+        const url = new URL(location.href);
+        const search = url.searchParams;
+        search.set('ref', this.refererIdValue);
+        url.search = search.toString();
 
-                    if (this.modeValue === 5) {
-                        li.inject($(el).getParent('li'), 'after');
-                    } else {
-                        var isFolder = false,
-                            parent = $(el).getParent('li'),
-                            next;
-
-                        while (typeOf(parent) === 'element' && (next = parent.getNext('li'))) {
-                            parent = next;
-                            if (parent.hasClass('tl_folder')) {
-                                isFolder = true;
-                                break;
-                            }
-                        }
-
-                        if (isFolder) {
-                            li.inject(parent, 'before');
-                        } else {
-                            li.inject(parent, 'after');
-                        }
-                    }
-
-                    // Update the referer ID
-                    li.getElements('a').each(function(el) {
-                        el.href = el.href.replace(/&ref=[a-f0-9]+/, '&ref=' + Contao.referer_id);
-                    });
-
-                    window.fireEvent('structure');
-                    this.loadToggler(el, false);
-                    this.expandToggler(el);
-
-                    // HOOK
-                    window.fireEvent('ajax_change');
-
-                    resolve();
-                }
-            }).post({
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: new URLSearchParams({
                 'action': this.loadActionValue,
                 'id': id,
                 'level': level,
                 'folder': folder,
                 'state': 1,
                 'REQUEST_TOKEN': this.requestTokenValue
-            });
+            })
         });
+
+        if (response.ok) {
+            const txt = await response.text();
+
+            const li = document.createElement('li');
+            li.id = id;
+            li.classList.add('parent');
+            li.style.display = 'inline';
+            li.setAttribute(`data-${this.identifier}-target`, level === 0 ? 'child rootChild' : 'child')
+
+            const ul = document.createElement('ul');
+            ul.classList.add('level_' + level);
+            ul.innerHTML = txt;
+            li.append(ul);
+
+            if (this.modeValue === 5) {
+                el.closest('li').after(li);
+            } else {
+                let isFolder = false,
+                    parent = el.closest('li'),
+                    next;
+
+                while (typeOf(parent) === 'element' && parent.tagName === 'LI' && (next = parent.nextElementSibling)) {
+                    parent = next;
+                    if (parent.classList.contains('tl_folder')) {
+                        isFolder = true;
+                        break;
+                    }
+                }
+
+                if (isFolder) {
+                    parent.before(li);
+                } else {
+                    parent.after(li);
+                }
+            }
+
+            window.dispatchEvent(new CustomEvent('structure'));
+            this.expandToggler(el);
+
+            // HOOK
+            window.dispatchEvent(new CustomEvent('ajax_change'));
+        }
+
+        this.loadToggler(el, false);
     }
 
     async toggleAll (event) {
@@ -183,27 +183,23 @@ export default class extends Controller {
     }
 
     async updateState (el, id, state) {
-        return new Promise((resolve) => {
-            new Request.Contao({
-                field: el,
-                onComplete: resolve
-            }).post({
+        await fetch(location.href, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: new URLSearchParams({
                 'action': this.toggleActionValue,
                 'id': id,
                 'state': state,
                 'REQUEST_TOKEN': this.requestTokenValue
-            });
+            })
         });
     }
 
     async updateAllState (href, state) {
-        return new Promise((resolve) => {
-            new Request.Contao({
-                url:`${href}&state=${state}`,
-                followRedirects: false,
-                onComplete: resolve
-            }).get();
-        });
+        await fetch(`${href}&state=${state}`);
     }
 
     updateOperation (event) {
