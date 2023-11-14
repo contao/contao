@@ -18,6 +18,7 @@ use Contao\NewsArchiveModel;
 use Contao\NewsBundle\EventListener\SitemapListener;
 use Contao\NewsModel;
 use Contao\PageModel;
+use Contao\StringUtil;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -75,6 +76,7 @@ class SitemapListenerTest extends ContaoTestCase
                     ]),
                 ],
             ]),
+            StringUtil::class => $this->mockConfiguredAdapter(['deserialize' => [1]]),
         ];
 
         $sitemapEvent = $this->createSitemapEvent([1]);
