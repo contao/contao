@@ -106,6 +106,23 @@ class ContaoCacheWarmerTest extends TestCase
             "\$this->arrFields = array (\n  'id' => 'int(10) unsigned NOT NULL auto_increment',\n);",
             file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/sql/tl_test.php'))
         );
+
+        $this->assertSame(
+            <<<'TXT'
+            <?php
+            
+            return array (
+              'en' => 
+              array (
+                'default' => true,
+                'error' => true,
+                'tl_test' => true,
+              ),
+            );
+            
+            TXT,
+            file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/config/available-language-files.php'))
+        );
     }
 
     public function testIsAnOptionalWarmer(): void
