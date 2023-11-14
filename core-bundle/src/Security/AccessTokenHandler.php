@@ -6,10 +6,7 @@ namespace Contao\CoreBundle\Security;
 
 use Contao\CoreBundle\Entity\AccessToken;
 use Contao\CoreBundle\Repository\AccessTokenRepository;
-use Contao\FrontendUser;
-use Contao\User;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Exception;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Encoding\CannotDecodeContent;
 use Lcobucci\JWT\Encoding\JoseEncoder;
@@ -22,7 +19,6 @@ use Lcobucci\JWT\Token\RegisteredClaims;
 use Lcobucci\JWT\Token\UnsupportedHeaderFound;
 use Lcobucci\JWT\UnencryptedToken;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
-use Psr\Http\Message\UriInterface;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\BrowserKit\CookieJar;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
