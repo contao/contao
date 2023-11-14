@@ -80,6 +80,9 @@ services:
             - '@database_connection'
             - '@request_stack'
 
+    contao.listener.data_container.default_global_operations:
+        class: Contao\CoreBundle\EventListener\DataContainer\DefaultGlobalOperationsListener
+
     contao.listener.data_container.default_operations:
         class: Contao\CoreBundle\EventListener\DataContainer\DefaultOperationsListener
         arguments:

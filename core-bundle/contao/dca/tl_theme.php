@@ -73,12 +73,7 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 				'class'               => 'header_store',
 				'button_callback'     => array('tl_theme', 'themeStore')
 			),
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
+			'all'
 		),
 		'operations' => array
 		(
