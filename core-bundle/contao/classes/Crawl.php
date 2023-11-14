@@ -128,7 +128,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 
 			$clientOptions = array(
 				'headers' => array(
-					'Cookie' => $accessTokenHandler->getAuthenticatedSessionCookie($baseUris, $objMember->username),
+					'Cookie' => $accessTokenHandler->getAuthenticatedFrontendSessionCookie($baseUris->all(), $objMember->username),
 				),
 			);
 		}

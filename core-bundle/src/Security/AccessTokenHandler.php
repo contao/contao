@@ -6,7 +6,10 @@ namespace Contao\CoreBundle\Security;
 
 use Contao\CoreBundle\Entity\AccessToken;
 use Contao\CoreBundle\Repository\AccessTokenRepository;
+use Contao\FrontendUser;
+use Contao\User;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Encoding\CannotDecodeContent;
 use Lcobucci\JWT\Encoding\JoseEncoder;
@@ -31,7 +34,6 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Terminal42\Escargot\BaseUriCollection;
 
 class AccessTokenHandler implements AccessTokenHandlerInterface
 {
@@ -49,18 +51,8 @@ class AccessTokenHandler implements AccessTokenHandlerInterface
         $this->configuration->setValidationConstraints(new SignedWith($this->configuration->signer(), $this->configuration->signingKey()));
     }
 
-    public function createTokenForUsername(string $username): string
+    public function createTokenForUser(string $username): string
     {
-        $userExists = $this->connection
-            ->prepare('SELECT COUNT(id) FROM tl_member WHERE username = :username')
-            ->executeQuery(['username' => $username])
-            ->fetchOne()
-        ;
-
-        if (!$userExists) {
-            throw new UserNotFoundException('User not found.');
-        }
-
         $this->accessTokenRepository->removeExpired();
 
         $plainToken = $this->issueToken(['username' => $username]);
@@ -133,15 +125,53 @@ class AccessTokenHandler implements AccessTokenHandlerInterface
         return new UserBadge($token->getUsername());
     }
 
-    public function getAuthenticatedSessionCookie(BaseUriCollection $baseUriCollection, string $username): Cookie|null
+    /**
+     * @param array<UriInterface> $uris
+     */
+    public function getAuthenticatedFrontendSessionCookie(array $uris, string $username): Cookie|null
+    {
+        $userExists = $this->connection
+            ->prepare('SELECT COUNT(id) FROM tl_member WHERE username = :username')
+            ->executeQuery(['username' => $username])
+            ->fetchOne()
+        ;
+
+        if (!$userExists) {
+            throw new UserNotFoundException('User not found.');
+        }
+
+        return $this->getAuthenticatedSessionCookie($uris, $username);
+    }
+
+    /**
+     * @param array<UriInterface> $uris
+     */
+    public function getAuthenticatedBackendSessionCookie(array $uris, string $username): Cookie|null
+    {
+        $userExists = $this->connection
+            ->prepare('SELECT COUNT(id) FROM tl_user WHERE username = :username')
+            ->executeQuery(['username' => $username])
+            ->fetchOne()
+        ;
+
+        if (!$userExists) {
+            throw new UserNotFoundException('User not found.');
+        }
+
+        return $this->getAuthenticatedSessionCookie($uris, $username);
+    }
+
+    /**
+     * @param array<UriInterface> $uris
+     */
+    private function getAuthenticatedSessionCookie(array $uris, string $username): Cookie|null
     {
         $cookieJar = new CookieJar();
-        $accessToken = $this->createTokenForUsername($username);
+        $accessToken = $this->createTokenForUser($username);
 
-        /** @var UriInterface $baseUri */
-        foreach ($baseUriCollection as $baseUri) {
+        foreach ($uris as $uri) {
             try {
-                $response = $this->httpClient->request('GET', (string) $baseUri, ['auth_bearer' => $accessToken]);
+                $response = $this->httpClient->request('GET', (string) $uri, ['auth_bearer' => $accessToken]);
 
                 if (200 !== $response->getStatusCode()) {
                     continue;

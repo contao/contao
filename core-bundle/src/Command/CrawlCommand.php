@@ -118,7 +118,7 @@ class CrawlCommand extends Command
                 if ($username = $input->getOption('username')) {
                     $clientOptions = [
                         'headers' => [
-                            'Cookie' => $this->accessTokenHandler->getAuthenticatedSessionCookie($baseUris, $username),
+                            'Cookie' => $this->accessTokenHandler->getAuthenticatedFrontendSessionCookie($baseUris->all(), $username),
                         ],
                     ];
                 }
