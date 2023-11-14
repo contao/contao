@@ -19,12 +19,16 @@ use Lcobucci\JWT\Token\RegisteredClaims;
 use Lcobucci\JWT\Token\UnsupportedHeaderFound;
 use Lcobucci\JWT\UnencryptedToken;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
+use Psr\Http\Message\UriInterface;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\BrowserKit\CookieJar;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Http\AccessToken\AccessTokenHandlerInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Terminal42\Escargot\BaseUriCollection;
@@ -131,22 +135,22 @@ class AccessTokenHandler implements AccessTokenHandlerInterface
 
     public function getAuthenticatedSessionCookie(BaseUriCollection $baseUriCollection, string $username): Cookie|null
     {
-        $accessToken = $this->createTokenForUsername($username);
         $cookieJar = new CookieJar();
+        $accessToken = $this->createTokenForUsername($username);
 
         /** @var UriInterface $baseUri */
         foreach ($baseUriCollection as $baseUri) {
             try {
-                $response = $this->httpClient->request('GET', $baseUri->__toString(), ['auth_bearer' => $accessToken]);
-            } catch (TransportExceptionInterface) {
+                $response = $this->httpClient->request('GET', (string) $baseUri, ['auth_bearer' => $accessToken]);
+
+                if (200 !== $response->getStatusCode()) {
+                    continue;
+                }
+
+                $headers = $response->getHeaders();
+            } catch (TransportExceptionInterface|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface) {
                 continue;
             }
-
-            if (200 !== $response->getStatusCode()) {
-                continue;
-            }
-
-            $headers = $response->getHeaders();
 
             if (\array_key_exists('set-cookie', $headers)) {
                 $cookieJar->updateFromSetCookie($headers['set-cookie']);
