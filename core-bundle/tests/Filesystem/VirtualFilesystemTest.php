@@ -29,6 +29,7 @@ class VirtualFilesystemTest extends TestCase
 {
     private Uuid $defaultUuid;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

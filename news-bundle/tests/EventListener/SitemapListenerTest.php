@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SitemapListenerTest extends ContaoTestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_CONFIG']);

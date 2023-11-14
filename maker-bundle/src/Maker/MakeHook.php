@@ -38,16 +38,19 @@ class MakeHook extends AbstractMaker
     ) {
     }
 
+    #[\Override]
     public static function getCommandName(): string
     {
         return 'make:contao:hook';
     }
 
+    #[\Override]
     public static function getCommandDescription(): string
     {
         return 'Creates a new hook listener';
     }
 
+    #[\Override]
     public function configureCommand(Command $command, InputConfiguration $inputConfig): void
     {
         $command
@@ -55,6 +58,7 @@ class MakeHook extends AbstractMaker
         ;
     }
 
+    #[\Override]
     public function interact(InputInterface $input, ConsoleStyle $io, Command $command): void
     {
         $command->addArgument('hook', InputArgument::REQUIRED);
@@ -71,10 +75,12 @@ class MakeHook extends AbstractMaker
         $input->setArgument('hook', $io->askQuestion($question));
     }
 
+    #[\Override]
     public function configureDependencies(DependencyBuilder $dependencies): void
     {
     }
 
+    #[\Override]
     public function generate(InputInterface $input, ConsoleStyle $io, Generator $generator): void
     {
         $hook = $input->getArgument('hook');

@@ -28,6 +28,7 @@ class RemoveDotEnvCommandTest extends ContaoTestCase
 
     private RemoveDotEnvCommand $command;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -45,6 +46,7 @@ class RemoveDotEnvCommandTest extends ContaoTestCase
         $this->command = new RemoveDotEnvCommand($application);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         parent::tearDown();

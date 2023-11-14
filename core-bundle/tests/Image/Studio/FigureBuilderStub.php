@@ -35,6 +35,7 @@ class FigureBuilderStub extends FigureBuilder
     /**
      * @param array<string, ImageResult> $imageMap
      */
+    #[\Override]
     public function __construct(
         private readonly array $imageMap,
         private readonly array $uuidMap = [],
@@ -42,6 +43,7 @@ class FigureBuilderStub extends FigureBuilder
         // Do not call parent constructor
     }
 
+    #[\Override]
     public function fromPath(string $path, bool $autoDetectDbafsPaths = true): FigureBuilder
     {
         $this->path = $path;
@@ -49,6 +51,7 @@ class FigureBuilderStub extends FigureBuilder
         return $this;
     }
 
+    #[\Override]
     public function fromFilesModel(FilesModel $filesModel): FigureBuilder
     {
         $this->path = $filesModel->path;
@@ -56,6 +59,7 @@ class FigureBuilderStub extends FigureBuilder
         return $this;
     }
 
+    #[\Override]
     public function fromUuid(string $uuid): FigureBuilder
     {
         $this->path = $this->uuidMap[StringUtil::binToUuid($uuid)] ?? null;
@@ -63,16 +67,19 @@ class FigureBuilderStub extends FigureBuilder
         return $this;
     }
 
+    #[\Override]
     public function fromId(int $id): FigureBuilder
     {
         throw new \RuntimeException('not implemented');
     }
 
+    #[\Override]
     public function fromImage(ImageInterface $image): FigureBuilder
     {
         throw new \RuntimeException('not implemented');
     }
 
+    #[\Override]
     public function fromStorage(VirtualFilesystemInterface $storage, Uuid|string $location): FigureBuilder
     {
         if (!\is_string($location)) {
@@ -84,6 +91,7 @@ class FigureBuilderStub extends FigureBuilder
         return $this;
     }
 
+    #[\Override]
     public function setMetadata(Metadata|null $metadata): FigureBuilder
     {
         $this->metadata = $metadata;
@@ -91,6 +99,7 @@ class FigureBuilderStub extends FigureBuilder
         return $this;
     }
 
+    #[\Override]
     public function setLinkAttributes(HtmlAttributes|array $attributes): FigureBuilder
     {
         $this->linkAttributes = $attributes instanceof HtmlAttributes ? iterator_to_array($attributes) : $attributes;
@@ -98,6 +107,7 @@ class FigureBuilderStub extends FigureBuilder
         return $this;
     }
 
+    #[\Override]
     public function build(): Figure
     {
         if (null === $this->path) {
@@ -107,6 +117,7 @@ class FigureBuilderStub extends FigureBuilder
         return new Figure($this->imageMap[$this->path], $this->metadata, $this->linkAttributes);
     }
 
+    #[\Override]
     public function buildIfResourceExists(): Figure|null
     {
         if (null === $this->path) {

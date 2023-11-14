@@ -19,6 +19,7 @@ class DataContainerCallbackListenerTest extends TestCase
 {
     private DataContainerCallbackListener $listener;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -26,6 +27,7 @@ class DataContainerCallbackListenerTest extends TestCase
         $this->listener = new DataContainerCallbackListener();
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_DCA']);

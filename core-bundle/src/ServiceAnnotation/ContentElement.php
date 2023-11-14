@@ -34,6 +34,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  */
 final class ContentElement extends AbstractFragmentAnnotation
 {
+    #[\Override]
     public function getName(): string
     {
         return ContentElementReference::TAG_NAME;

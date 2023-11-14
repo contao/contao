@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class ToggleNodesLabelListenerTest extends TestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         $GLOBALS['TL_LANG']['DCA'] = [
@@ -31,6 +32,7 @@ class ToggleNodesLabelListenerTest extends TestCase
         ];
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         parent::tearDown();

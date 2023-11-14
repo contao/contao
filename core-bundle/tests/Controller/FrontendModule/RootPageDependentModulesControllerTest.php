@@ -31,6 +31,7 @@ class RootPageDependentModulesControllerTest extends TestCase
 {
     private ContainerBuilder $container;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -41,6 +42,7 @@ class RootPageDependentModulesControllerTest extends TestCase
         System::setContainer($this->container);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_MIME']);

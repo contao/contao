@@ -33,6 +33,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  */
 final class FrontendModule extends AbstractFragmentAnnotation
 {
+    #[\Override]
     public function getName(): string
     {
         return FrontendModuleReference::TAG_NAME;

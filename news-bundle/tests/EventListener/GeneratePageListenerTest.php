@@ -23,6 +23,7 @@ use Contao\TestCase\ContaoTestCase;
 
 class GeneratePageListenerTest extends ContaoTestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -30,6 +31,7 @@ class GeneratePageListenerTest extends ContaoTestCase
         $GLOBALS['TL_HEAD'] = [];
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_CONFIG'], $GLOBALS['TL_HEAD']);

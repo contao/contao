@@ -23,6 +23,7 @@ use Symfony\Component\Routing\RouteCollection;
 
 class RouteProvider extends AbstractPageRouteProvider
 {
+    #[\Override]
     public function getRouteCollectionForRequest(Request $request): RouteCollection
     {
         $this->framework->initialize();
@@ -51,6 +52,7 @@ class RouteProvider extends AbstractPageRouteProvider
         return $this->createCollectionForRoutes($routes, $request->getLanguages());
     }
 
+    #[\Override]
     public function getRouteByName(string $name): Route
     {
         $this->framework->initialize();
@@ -77,6 +79,7 @@ class RouteProvider extends AbstractPageRouteProvider
         return $routes[$name];
     }
 
+    #[\Override]
     public function getRoutesByNames($names = null): iterable
     {
         $this->framework->initialize();

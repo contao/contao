@@ -40,6 +40,7 @@ class FeedReaderController extends AbstractFrontendModuleController
     ) {
     }
 
+    #[\Override]
     protected function getResponse(FragmentTemplate $template, ModuleModel $model, Request $request): Response
     {
         $this->initializeContaoFramework();

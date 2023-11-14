@@ -30,6 +30,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class ContaoContextTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);

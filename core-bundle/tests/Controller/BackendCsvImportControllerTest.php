@@ -36,6 +36,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BackendCsvImportControllerTest extends TestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -50,6 +51,7 @@ class BackendCsvImportControllerTest extends TestCase
         System::setContainer($container);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_MIME']);

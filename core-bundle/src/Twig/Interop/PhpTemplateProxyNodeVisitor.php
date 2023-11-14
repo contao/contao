@@ -28,16 +28,19 @@ final class PhpTemplateProxyNodeVisitor extends AbstractNodeVisitor
     {
     }
 
+    #[\Override]
     public function getPriority(): int
     {
         return 0;
     }
 
+    #[\Override]
     protected function doEnterNode(Node $node, Environment $env): Node
     {
         return $node;
     }
 
+    #[\Override]
     protected function doLeaveNode(Node $node, Environment $env): Node
     {
         if ($node instanceof ModuleNode && ContaoTwigUtil::isLegacyTemplate($node->getTemplateName() ?? '')) {

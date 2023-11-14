@@ -36,6 +36,7 @@ use Symfony\Component\HttpFoundation\Response;
 #[AsContentElement(category: 'texts')]
 class MarkdownController extends AbstractContentElementController
 {
+    #[\Override]
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();
@@ -45,6 +46,7 @@ class MarkdownController extends AbstractContentElementController
         return $services;
     }
 
+    #[\Override]
     protected function getResponse(Template $template, ContentModel $model, Request $request): Response
     {
         $this->initializeContaoFramework();

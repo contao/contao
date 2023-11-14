@@ -22,6 +22,7 @@ class LegacyElement extends ContentElement
     {
     }
 
+    #[\Override]
     protected function compile(): void
     {
     }

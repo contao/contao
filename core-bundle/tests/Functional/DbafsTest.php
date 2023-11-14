@@ -31,6 +31,7 @@ class DbafsTest extends FunctionalTestCase
 
     private FilesystemAdapter $adapter;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

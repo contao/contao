@@ -80,12 +80,14 @@ class Application extends BaseApplication
         $this->managerConfig = $managerConfig;
     }
 
+    #[\Override]
     protected function configureIO(InputInterface $input, OutputInterface $output): void
     {
         $output->setDecorated(false);
         $input->setInteractive(false);
     }
 
+    #[\Override]
     protected function getDefaultInputDefinition(): InputDefinition
     {
         return new InputDefinition([
@@ -93,6 +95,7 @@ class Application extends BaseApplication
         ]);
     }
 
+    #[\Override]
     protected function getDefaultCommands(): array
     {
         $commands = parent::getDefaultCommands();

@@ -34,11 +34,13 @@ class DebugDcaCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->addArgument('table', InputArgument::REQUIRED, 'The table name');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $table = $input->getArgument('table');

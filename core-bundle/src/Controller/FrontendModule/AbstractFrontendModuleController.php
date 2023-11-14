@@ -43,6 +43,7 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
         return $this->getResponse($template, $model, $request);
     }
 
+    #[\Override]
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();

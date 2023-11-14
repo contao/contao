@@ -35,6 +35,7 @@ final class FragmentTemplate extends Template
      *
      * @internal
      */
+    #[\Override]
     public function __construct(
         private string $templateName,
         private readonly \Closure $onGetResponse,
@@ -45,6 +46,7 @@ final class FragmentTemplate extends Template
     /**
      * @param string $key
      */
+    #[\Override]
     public function __set($key, $value): void
     {
         $this->set($key, $value);
@@ -53,6 +55,7 @@ final class FragmentTemplate extends Template
     /**
      * @param string $key
      */
+    #[\Override]
     public function __get($key)
     {
         return $this->get($key);
@@ -61,11 +64,13 @@ final class FragmentTemplate extends Template
     /**
      * @param string $key
      */
+    #[\Override]
     public function __isset($key): bool
     {
         return $this->has($key);
     }
 
+    #[\Override]
     public function __call($strKey, $arrParams): never
     {
         self::throwOnAccess();
@@ -89,6 +94,7 @@ final class FragmentTemplate extends Template
     /**
      * @param array<string, mixed> $data
      */
+    #[\Override]
     public function setData($data): void
     {
         $this->context = $data;
@@ -97,6 +103,7 @@ final class FragmentTemplate extends Template
     /**
      * @return array<string, mixed>
      */
+    #[\Override]
     public function getData(): array
     {
         return $this->context;
@@ -105,11 +112,13 @@ final class FragmentTemplate extends Template
     /**
      * @param string $name
      */
+    #[\Override]
     public function setName($name): void
     {
         $this->templateName = $name;
     }
 
+    #[\Override]
     public function getName(): string
     {
         return $this->templateName;
@@ -125,6 +134,7 @@ final class FragmentTemplate extends Template
      * prebuilt Response if you want to have full control - no headers will be
      * set then.
      */
+    #[\Override]
     public function getResponse(Response|null $preBuiltResponse = null): Response
     {
         return ($this->onGetResponse)($this, $preBuiltResponse);
@@ -138,6 +148,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function getContainer(): never
     {
         self::throwOnAccess();
@@ -146,6 +157,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function setContainer(ContainerInterface $container): never
     {
         self::throwOnAccess();
@@ -154,6 +166,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public function inherit(): never
     {
         self::throwOnAccess();
@@ -162,6 +175,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function getTemplate($strTemplate): never
     {
         self::throwOnAccess();
@@ -170,6 +184,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function getTemplateGroup($strPrefix, array $arrAdditionalMapper = [], $strDefaultTemplate = ''): never
     {
         self::throwOnAccess();
@@ -178,6 +193,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function getFrontendModule($intId, $strColumn = 'main'): never
     {
         self::throwOnAccess();
@@ -186,6 +202,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function getArticle($varId, $blnMultiMode = false, $blnIsInsertTag = false, $strColumn = 'main'): never
     {
         self::throwOnAccess();
@@ -194,6 +211,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function getContentElement($intId, $strColumn = 'main'): never
     {
         self::throwOnAccess();
@@ -202,6 +220,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function getForm($varId, $strColumn = 'main', $blnModule = false): never
     {
         self::throwOnAccess();
@@ -210,6 +229,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function getPageStatusIcon($objPage): never
     {
         self::throwOnAccess();
@@ -218,6 +238,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function isVisibleElement(Model $objElement): never
     {
         self::throwOnAccess();
@@ -226,6 +247,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function replaceDynamicScriptTags($strBuffer): never
     {
         self::throwOnAccess();
@@ -234,6 +256,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function reload(): never
     {
         self::throwOnAccess();
@@ -242,6 +265,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function redirect($strLocation, $intStatus = 303): never
     {
         self::throwOnAccess();
@@ -250,6 +274,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function convertRelativeUrls($strContent, $strBase = '', $blnHrefOnly = false): never
     {
         self::throwOnAccess();
@@ -258,6 +283,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function sendFileToBrowser($strFile, $inline = false): never
     {
         self::throwOnAccess();
@@ -266,6 +292,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function loadDataContainer($strTable): never
     {
         self::throwOnAccess();
@@ -274,6 +301,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function resetControllerCache(): never
     {
         self::throwOnAccess();
@@ -282,6 +310,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function addEnclosuresToTemplate($objTemplate, $arrItem, $strKey = 'enclosure'): never
     {
         self::throwOnAccess();
@@ -290,6 +319,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function addStaticUrlTo($script, ContaoContext|null $context = null): never
     {
         self::throwOnAccess();
@@ -298,6 +328,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function addAssetsUrlTo($script): never
     {
         self::throwOnAccess();
@@ -306,6 +337,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function addFilesUrlTo($script): never
     {
         self::throwOnAccess();
@@ -314,6 +346,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public function parse(): never
     {
         self::throwOnAccess();
@@ -322,6 +355,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function addToUrl($strRequest, $blnIgnoreParams = false, $arrUnset = []): never
     {
         self::throwOnAccess();
@@ -330,6 +364,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function importStatic($strClass, $strKey = null, $blnForce = false): never
     {
         self::throwOnAccess();
@@ -338,6 +373,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function getReferer($blnEncodeAmpersands = false, $strTable = null): never
     {
         self::throwOnAccess();
@@ -346,6 +382,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function loadLanguageFile($strName, $strLanguage = null, $blnNoCache = false): never
     {
         self::throwOnAccess();
@@ -354,6 +391,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function isInstalledLanguage($strLanguage): never
     {
         self::throwOnAccess();
@@ -362,6 +400,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function urlEncode($strPath): never
     {
         self::throwOnAccess();
@@ -370,6 +409,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function setCookie($strName, $varValue, $intExpires, $strPath = null, $strDomain = null, $blnSecure = null, $blnHttpOnly = false): never
     {
         self::throwOnAccess();
@@ -378,6 +418,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function getReadableSize($intSize, $intDecimals = 1): never
     {
         self::throwOnAccess();
@@ -386,6 +427,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function getFormattedNumber($varNumber, $intDecimals = 2): never
     {
         self::throwOnAccess();
@@ -394,6 +436,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function anonymizeIp($strIp): never
     {
         self::throwOnAccess();
@@ -402,6 +445,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public function setFormat($strFormat): never
     {
         self::throwOnAccess();
@@ -410,6 +454,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public function getFormat(): never
     {
         self::throwOnAccess();
@@ -418,6 +463,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public function dumpTemplateVars(): never
     {
         self::throwOnAccess();
@@ -426,6 +472,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public function route($strName, $arrParams = []): never
     {
         self::throwOnAccess();
@@ -434,6 +481,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public function previewRoute($strName, $arrParams = []): never
     {
         self::throwOnAccess();
@@ -442,6 +490,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public function trans($strId, array $arrParams = [], $strDomain = 'contao_default', $locale = null): never
     {
         self::throwOnAccess();
@@ -450,6 +499,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public function rawPlainText(string $value, bool $removeInsertTags = false): never
     {
         self::throwOnAccess();
@@ -458,6 +508,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public function rawHtmlToPlainText(string $value, bool $removeInsertTags = false): never
     {
         self::throwOnAccess();
@@ -466,6 +517,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public function addSchemaOrg(array $jsonLd): never
     {
         self::throwOnAccess();
@@ -474,6 +526,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public function figure($from, $size, $configuration = [], $template = 'image'): never
     {
         self::throwOnAccess();
@@ -482,6 +535,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public function asset($path, $packageName = null): never
     {
         self::throwOnAccess();
@@ -490,6 +544,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public function assetVersion($path, $packageName = null): never
     {
         self::throwOnAccess();
@@ -498,6 +553,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public function param($strKey): never
     {
         self::throwOnAccess();
@@ -506,6 +562,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public function prefixUrl($strKey): never
     {
         self::throwOnAccess();
@@ -514,6 +571,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public function minifyHtml($strHtml): never
     {
         self::throwOnAccess();
@@ -522,6 +580,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function generateStyleTag($href, $media = null, $mtime = false): never
     {
         self::throwOnAccess();
@@ -530,6 +589,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function generateInlineStyle($script): never
     {
         self::throwOnAccess();
@@ -538,6 +598,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function generateScriptTag($src, $async = false, $mtime = false, $hash = null, $crossorigin = null, $referrerpolicy = null, $defer = false): never
     {
         self::throwOnAccess();
@@ -546,6 +607,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function generateInlineScript($script): never
     {
         self::throwOnAccess();
@@ -554,6 +616,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public static function generateFeedTag($href, $format, $title): never
     {
         self::throwOnAccess();
@@ -562,6 +625,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public function setDebug(bool|null $debug = null): never
     {
         self::throwOnAccess();
@@ -570,6 +634,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public function extend($name): never
     {
         self::throwOnAccess();
@@ -578,6 +643,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public function parent(): never
     {
         self::throwOnAccess();
@@ -586,6 +652,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public function block($name): never
     {
         self::throwOnAccess();
@@ -594,6 +661,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public function endblock(): never
     {
         self::throwOnAccess();
@@ -602,6 +670,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    #[\Override]
     public function insert($name, array|null $data = null): never
     {
         self::throwOnAccess();

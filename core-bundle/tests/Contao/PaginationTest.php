@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class PaginationTest extends TestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -37,6 +38,7 @@ class PaginationTest extends TestCase
         System::setContainer($this->getContainerWithContaoConfiguration());
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_LANG']);

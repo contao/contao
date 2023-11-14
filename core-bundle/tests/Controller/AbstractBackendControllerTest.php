@@ -36,6 +36,7 @@ use Twig\Environment;
 
 class AbstractBackendControllerTest extends TestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -43,6 +44,7 @@ class AbstractBackendControllerTest extends TestCase
         $this->backupServerEnvGetPost();
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_LANG'], $GLOBALS['TL_LANGUAGE'], $GLOBALS['TL_MIME']);

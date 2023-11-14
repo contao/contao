@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
 #[AsContentElement(category: 'includes')]
 class TemplateController extends AbstractContentElementController
 {
+    #[\Override]
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
         $data = StringUtil::deserialize($model->data, true);

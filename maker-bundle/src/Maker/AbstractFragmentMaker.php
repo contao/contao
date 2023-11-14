@@ -41,6 +41,7 @@ abstract class AbstractFragmentMaker extends AbstractMaker
     ) {
     }
 
+    #[\Override]
     public function interact(InputInterface $input, ConsoleStyle $io, Command $command): void
     {
         $this->askForCategory($input, $io, $command);
@@ -69,6 +70,7 @@ abstract class AbstractFragmentMaker extends AbstractMaker
         }
     }
 
+    #[\Override]
     public function configureDependencies(DependencyBuilder $dependencies): void
     {
     }

@@ -25,6 +25,7 @@ class EmptyPtableMigration extends AbstractMigration
     {
     }
 
+    #[\Override]
     public function shouldRun(): bool
     {
         $schemaManager = $this->connection->createSchemaManager();
@@ -38,6 +39,7 @@ class EmptyPtableMigration extends AbstractMigration
         return false !== $test;
     }
 
+    #[\Override]
     public function run(): MigrationResult
     {
         $this->connection->update('tl_content', ['ptable' => 'tl_article'], ['ptable' => '']);

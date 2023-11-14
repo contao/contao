@@ -29,6 +29,7 @@ use FOS\HttpCache\ResponseTagger;
 
 class EntityCacheTagsTest extends DoctrineTestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         $this->resetStaticProperties([[AnnotationRegistry::class, ['failedToAutoload']], DocParser::class]);

@@ -37,6 +37,7 @@ class RunTestsIsolatedCommand extends Command
         $this->phpPath = (new PhpExecutableFinder())->find();
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->addOption('depth', null, InputOption::VALUE_REQUIRED, '1 for test classes, 2 for test methods, 3 for every single provider data set', '3');
@@ -51,6 +52,7 @@ class RunTestsIsolatedCommand extends Command
         );
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (false === $this->phpPath) {

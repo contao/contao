@@ -32,6 +32,7 @@ class FileDownloadHelperTest extends TestCase
 {
     private string $phpIniIgnoreUserAbort = '';
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -39,6 +40,7 @@ class FileDownloadHelperTest extends TestCase
         $this->phpIniIgnoreUserAbort = \ini_get('ignore_user_abort');
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         ini_set('ignore_user_abort', $this->phpIniIgnoreUserAbort);

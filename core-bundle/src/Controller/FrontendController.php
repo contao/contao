@@ -99,6 +99,7 @@ class FrontendController extends AbstractController
         return $response;
     }
 
+    #[\Override]
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();

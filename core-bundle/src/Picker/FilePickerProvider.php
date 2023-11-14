@@ -41,16 +41,19 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         parent::__construct($menuFactory, $router, $translator);
     }
 
+    #[\Override]
     public function getName(): string
     {
         return 'filePicker';
     }
 
+    #[\Override]
     public function supportsContext(string $context): bool
     {
         return \in_array($context, ['file', 'link'], true) && $this->security->isGranted('contao_user.modules', 'files');
     }
 
+    #[\Override]
     public function supportsValue(PickerConfig $config): bool
     {
         if ('file' === $config->getContext()) {
@@ -90,11 +93,13 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return $value;
     }
 
+    #[\Override]
     protected function getRouteParameters(PickerConfig|null $config = null): array
     {
         return ['do' => 'files'];
     }
 
+    #[\Override]
     protected function getDefaultInsertTag(): string
     {
         return '{{file::%s}}';

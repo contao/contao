@@ -31,6 +31,7 @@ class HyperlinkController extends AbstractContentElementController
     ) {
     }
 
+    #[\Override]
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
         // Link with attributes

@@ -30,6 +30,7 @@ class RouteProviderTest extends TestCase
 {
     private int $pageModelAutoIncrement = 0;
 
+    #[\Override]
     protected function tearDown(): void
     {
         parent::tearDown();

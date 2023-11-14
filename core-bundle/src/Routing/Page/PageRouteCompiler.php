@@ -18,6 +18,7 @@ use Symfony\Component\Routing\RouteCompiler;
 
 class PageRouteCompiler extends RouteCompiler
 {
+    #[\Override]
     public static function compile(Route $route): CompiledRoute
     {
         if (!$route instanceof PageRoute || '' === $route->getUrlSuffix()) {

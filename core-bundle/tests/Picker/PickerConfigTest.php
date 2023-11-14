@@ -19,6 +19,7 @@ class PickerConfigTest extends TestCase
 {
     private PickerConfig $config;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

@@ -19,6 +19,7 @@ use Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator;
  */
 class TokenGenerator extends UriSafeTokenGenerator
 {
+    #[\Override]
     public function generateToken(): string
     {
         return substr(parent::generateToken(), 0, 8);

@@ -46,6 +46,7 @@ class FeedReaderControllerTest extends TestCase
 {
     private ContainerBuilder $container;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -58,6 +59,7 @@ class FeedReaderControllerTest extends TestCase
         System::setContainer($this->container);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_MIME'], $GLOBALS['TL_LANG']);

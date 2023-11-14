@@ -17,6 +17,7 @@ namespace Contao\CoreBundle\Migration\Version500;
  */
 class GuestsMigration extends AbstractGuestsMigration
 {
+    #[\Override]
     protected function getTables(): array
     {
         return [

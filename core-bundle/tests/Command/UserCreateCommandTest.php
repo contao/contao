@@ -27,6 +27,7 @@ use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 
 class UserCreateCommandTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         $this->resetStaticProperties([Terminal::class]);

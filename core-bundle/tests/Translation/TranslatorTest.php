@@ -27,6 +27,7 @@ class TranslatorTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_LANG']);

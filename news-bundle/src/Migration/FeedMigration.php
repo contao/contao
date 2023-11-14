@@ -25,6 +25,7 @@ class FeedMigration extends AbstractMigration
     ) {
     }
 
+    #[\Override]
     public function shouldRun(): bool
     {
         if (!$this->connection->createSchemaManager()->tablesExist(['tl_news_feed'])) {
@@ -34,6 +35,7 @@ class FeedMigration extends AbstractMigration
         return $this->connection->fetchOne('SELECT COUNT(*) FROM tl_news_feed') > 0;
     }
 
+    #[\Override]
     public function run(): MigrationResult
     {
         $schemaManager = $this->connection->createSchemaManager();

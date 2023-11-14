@@ -29,6 +29,7 @@ class BackupStreamContentCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
@@ -50,6 +51,7 @@ class BackupStreamContentCommand extends Command
         return Command::SUCCESS;
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this

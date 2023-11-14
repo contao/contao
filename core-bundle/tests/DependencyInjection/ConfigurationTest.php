@@ -28,6 +28,7 @@ class ConfigurationTest extends TestCase
 
     private Configuration $configuration;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

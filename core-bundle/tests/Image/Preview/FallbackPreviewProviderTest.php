@@ -21,6 +21,7 @@ use Symfony\Component\Filesystem\Path;
 
 class FallbackPreviewProviderTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         parent::tearDown();

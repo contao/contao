@@ -21,6 +21,7 @@ class SearchTest extends FunctionalTestCase
 {
     use ContaoDatabaseTrait;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -30,6 +31,7 @@ class SearchTest extends FunctionalTestCase
         System::setContainer(static::getContainer());
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_LANGUAGE']);

@@ -33,6 +33,7 @@ class BackupManagerTest extends ContaoTestCase
 {
     private VirtualFilesystemInterface $vfs;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

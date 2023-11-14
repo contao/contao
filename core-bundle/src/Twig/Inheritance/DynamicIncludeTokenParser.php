@@ -35,6 +35,7 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
     {
     }
 
+    #[\Override]
     public function parse(Token $token): IncludeNode
     {
         $expr = $this->parser->getExpressionParser()->parseExpression();
@@ -46,6 +47,7 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
         return new IncludeNode($expr, $variables, $only, $ignoreMissing, $token->getLine(), $this->getTag());
     }
 
+    #[\Override]
     public function getTag(): string
     {
         return 'include';

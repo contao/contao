@@ -36,6 +36,7 @@ use Symfony\Component\Filesystem\Path;
 
 class PreviewFactoryTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         parent::tearDown();

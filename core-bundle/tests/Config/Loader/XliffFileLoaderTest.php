@@ -19,6 +19,7 @@ class XliffFileLoaderTest extends TestCase
 {
     private XliffFileLoader $loader;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -26,6 +27,7 @@ class XliffFileLoaderTest extends TestCase
         $this->loader = new XliffFileLoader($this->getFixturesDir());
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_LANG']);

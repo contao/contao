@@ -31,6 +31,7 @@ class TemplateLoaderTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -64,6 +65,7 @@ class TemplateLoaderTest extends TestCase
         System::setContainer($container);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         (new Filesystem())->remove(Path::join($this->getTempDir(), 'templates'));

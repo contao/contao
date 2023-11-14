@@ -23,6 +23,7 @@ use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
 class ModelArgumentResolverTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['objPage']);

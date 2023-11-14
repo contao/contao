@@ -23,6 +23,7 @@ class DeleteAction extends AbstractAction
         parent::__construct($dataSource);
     }
 
+    #[\Override]
     protected function getSubjectInfo(): array
     {
         $subject = parent::getSubjectInfo();

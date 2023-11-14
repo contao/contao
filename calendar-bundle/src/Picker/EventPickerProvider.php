@@ -40,16 +40,19 @@ class EventPickerProvider extends AbstractInsertTagPickerProvider implements Dca
         parent::__construct($menuFactory, $router, $translator);
     }
 
+    #[\Override]
     public function getName(): string
     {
         return 'eventPicker';
     }
 
+    #[\Override]
     public function supportsContext(string $context): bool
     {
         return 'link' === $context && $this->security->isGranted('contao_user.modules', 'calendar');
     }
 
+    #[\Override]
     public function supportsValue(PickerConfig $config): bool
     {
         return $this->isMatchingInsertTag($config);
@@ -80,6 +83,7 @@ class EventPickerProvider extends AbstractInsertTagPickerProvider implements Dca
         return sprintf($this->getInsertTag($config), $value);
     }
 
+    #[\Override]
     protected function getRouteParameters(PickerConfig|null $config = null): array
     {
         $params = ['do' => 'calendar'];
@@ -96,6 +100,7 @@ class EventPickerProvider extends AbstractInsertTagPickerProvider implements Dca
         return $params;
     }
 
+    #[\Override]
     protected function getDefaultInsertTag(): string
     {
         return '{{event_url::%s}}';

@@ -35,6 +35,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class TemplateOptionsListenerTest extends TestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -52,6 +53,7 @@ class TemplateOptionsListenerTest extends TestCase
         ];
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_CTE'], $GLOBALS['FE_MOD']);

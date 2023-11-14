@@ -27,11 +27,13 @@ class XliffFileLoader extends Loader
         parent::__construct();
     }
 
+    #[\Override]
     public function load(mixed $resource, string|null $type = null): string
     {
         return $this->convertXlfToPhp((string) $resource, $type ?: 'en');
     }
 
+    #[\Override]
     public function supports(mixed $resource, string|null $type = null): bool
     {
         return 'xlf' === Path::getExtension((string) $resource, true);

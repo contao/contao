@@ -25,11 +25,13 @@ class ImagesLoader extends Loader
     /**
      * @internal
      */
+    #[\Override]
     public function __construct(string $projectDir, string $imageTargetDir)
     {
         $this->pathPrefix = Path::makeRelative($imageTargetDir, $projectDir);
     }
 
+    #[\Override]
     public function load(mixed $resource, string|null $type = null): RouteCollection
     {
         $route = new Route(
@@ -47,6 +49,7 @@ class ImagesLoader extends Loader
         return $routes;
     }
 
+    #[\Override]
     public function supports($resource, string|null $type = null): bool
     {
         return 'contao_images' === $type;

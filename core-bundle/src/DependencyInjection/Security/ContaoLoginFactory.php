@@ -32,6 +32,7 @@ class ContaoLoginFactory extends AbstractFactory
         $this->defaultFailureHandlerOptions = [];
     }
 
+    #[\Override]
     public function getPriority(): int
     {
         return 0;
@@ -42,11 +43,13 @@ class ContaoLoginFactory extends AbstractFactory
         return 'form';
     }
 
+    #[\Override]
     public function getKey(): string
     {
         return 'contao-login';
     }
 
+    #[\Override]
     public function createAuthenticator(ContainerBuilder $container, string $firewallName, array $config, string $userProviderId): string
     {
         $twoFactorAuthenticatorId = TwoFactorFactory::AUTHENTICATOR_ID_PREFIX.$firewallName;
@@ -84,11 +87,13 @@ class ContaoLoginFactory extends AbstractFactory
         return $authenticatorId;
     }
 
+    #[\Override]
     protected function createAuthenticationSuccessHandler(ContainerBuilder $container, string $id, array $config): string
     {
         return 'contao.security.authentication_success_handler';
     }
 
+    #[\Override]
     protected function createAuthenticationFailureHandler(ContainerBuilder $container, string $id, array $config): string
     {
         return 'contao.security.authentication_failure_handler';

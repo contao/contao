@@ -25,6 +25,7 @@ use Symfony\Component\Filesystem\Path;
 
 class DcaExtractorTest extends TestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -47,6 +48,7 @@ class DcaExtractorTest extends TestCase
         System::setContainer($container);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_MIME'], $GLOBALS['TL_TEST'], $GLOBALS['TL_LANG'], $GLOBALS['TL_DCA']);

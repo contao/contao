@@ -19,6 +19,7 @@ use Doctrine\Common\Annotations\DocParser;
 
 class SchemaProviderTest extends DoctrineTestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         $this->resetStaticProperties([[AnnotationRegistry::class, ['failedToAutoload']], DocParser::class]);

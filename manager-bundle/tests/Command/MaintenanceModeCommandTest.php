@@ -27,6 +27,7 @@ class MaintenanceModeCommandTest extends ContaoTestCase
 {
     use ExpectDeprecationTrait;
 
+    #[\Override]
     protected function tearDown(): void
     {
         $this->resetStaticProperties([Terminal::class]);

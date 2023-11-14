@@ -23,6 +23,7 @@ class MemberGroupVoterTest extends TestCase
 {
     private MemberGroupVoter $voter;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

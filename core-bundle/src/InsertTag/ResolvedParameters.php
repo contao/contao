@@ -45,6 +45,7 @@ final class ResolvedParameters extends InsertTagParameters
         return array_map($this->toScalar(...), $this->all($name));
     }
 
+    #[\Override]
     public function hasInsertTags(): bool
     {
         return false;

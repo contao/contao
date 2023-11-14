@@ -28,6 +28,7 @@ class PageCandidates extends AbstractCandidates
         parent::__construct([], []);
     }
 
+    #[\Override]
     public function getCandidates(Request $request): array
     {
         $this->initialize();

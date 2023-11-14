@@ -24,6 +24,7 @@ class ScopeMatcherTest extends TestCase
 {
     private ScopeMatcher $matcher;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

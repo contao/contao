@@ -41,6 +41,7 @@ class DataCollectorTranslator extends SymfonyDataCollectorTranslator implements 
      * Gets the translation from Contao’s $GLOBALS['TL_LANG'] array if the message
      * domain starts with "contao_". The locale parameter is ignored in this case.
      */
+    #[\Override]
     public function trans(string|null $id, array $parameters = [], string|null $domain = null, string|null $locale = null): string
     {
         $translated = $this->translator->trans($id, $parameters, $domain, $locale);
@@ -55,16 +56,19 @@ class DataCollectorTranslator extends SymfonyDataCollectorTranslator implements 
         return $translated;
     }
 
+    #[\Override]
     public function setLocale(string $locale): void
     {
         $this->translator->setLocale($locale);
     }
 
+    #[\Override]
     public function getLocale(): string
     {
         return $this->translator->getLocale();
     }
 
+    #[\Override]
     public function getCatalogue(string|null $locale = null): MessageCatalogueInterface
     {
         return $this->translator->getCatalogue($locale);
@@ -73,6 +77,7 @@ class DataCollectorTranslator extends SymfonyDataCollectorTranslator implements 
     /**
      * Merges the collected messages from the decorated translator.
      */
+    #[\Override]
     public function getCollectedMessages(): array
     {
         if (method_exists($this->translator, 'getCollectedMessages')) {
@@ -87,6 +92,7 @@ class DataCollectorTranslator extends SymfonyDataCollectorTranslator implements 
         $this->messages = [];
     }
 
+    #[\Override]
     private function collectMessage(string $locale, string $domain, string $id, string $translation, array $parameters = []): void
     {
         if ($id === $translation) {

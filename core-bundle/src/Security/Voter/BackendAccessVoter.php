@@ -44,11 +44,13 @@ class BackendAccessVoter extends Voter implements ResetInterface
         $this->pagePermissionsCache = [];
     }
 
+    #[\Override]
     protected function supports(string $attribute, mixed $subject): bool
     {
         return str_starts_with($attribute, 'contao_user.');
     }
 
+    #[\Override]
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();

@@ -24,16 +24,19 @@ use Twig\NodeVisitor\AbstractNodeVisitor;
  */
 class DeprecationsNodeVisitor extends AbstractNodeVisitor
 {
+    #[\Override]
     public function getPriority(): int
     {
         return 10;
     }
 
+    #[\Override]
     protected function doEnterNode(Node $node, Environment $env): Node
     {
         return $node;
     }
 
+    #[\Override]
     protected function doLeaveNode(Node $node, Environment $env): Node
     {
         return $this->handleDeprecatedInsertTagUsage($node);

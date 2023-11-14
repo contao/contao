@@ -25,6 +25,7 @@ class AlwaysForwardMigration extends AbstractMigration
     {
     }
 
+    #[\Override]
     public function shouldRun(): bool
     {
         $schemaManager = $this->connection->createSchemaManager();
@@ -38,6 +39,7 @@ class AlwaysForwardMigration extends AbstractMigration
         return !isset($columns['alwaysforward']);
     }
 
+    #[\Override]
     public function run(): MigrationResult
     {
         $this->connection->executeStatement('

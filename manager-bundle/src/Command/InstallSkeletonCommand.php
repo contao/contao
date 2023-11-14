@@ -38,11 +38,13 @@ class InstallSkeletonCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->addArgument('web-dir', InputArgument::OPTIONAL, 'The web directory (defaults to "public")');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->fs = new Filesystem();

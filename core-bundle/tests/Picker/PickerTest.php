@@ -25,6 +25,7 @@ class PickerTest extends TestCase
 {
     private Picker $picker;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

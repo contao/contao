@@ -31,6 +31,7 @@ class ConfigureFilesystemPassTest extends TestCase
 {
     private string|false $cwdBackup = false;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -38,6 +39,7 @@ class ConfigureFilesystemPassTest extends TestCase
         $this->cwdBackup = getcwd();
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         chdir($this->cwdBackup);

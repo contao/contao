@@ -23,16 +23,19 @@ use Symfony\Component\DependencyInjection\Container;
 
 class MakeContentElement extends AbstractFragmentMaker
 {
+    #[\Override]
     public static function getCommandName(): string
     {
         return 'make:contao:content-element';
     }
 
+    #[\Override]
     public static function getCommandDescription(): string
     {
         return 'Creates a new content element';
     }
 
+    #[\Override]
     public function configureCommand(Command $command, InputConfiguration $inputConfig): void
     {
         $command
@@ -40,6 +43,7 @@ class MakeContentElement extends AbstractFragmentMaker
         ;
     }
 
+    #[\Override]
     public function generate(InputInterface $input, ConsoleStyle $io, Generator $generator): void
     {
         $category = $input->getArgument('category');
@@ -118,11 +122,13 @@ class MakeContentElement extends AbstractFragmentMaker
         $this->writeSuccessMessage($io);
     }
 
+    #[\Override]
     protected function getGlobalsRegistryKey(): string
     {
         return 'TL_CTE';
     }
 
+    #[\Override]
     protected function getTemplatePrefix(): string
     {
         return 'ce';

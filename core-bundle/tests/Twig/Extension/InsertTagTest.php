@@ -34,6 +34,7 @@ use Twig\RuntimeLoader\FactoryRuntimeLoader;
 
 class InsertTagTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_MIME']);

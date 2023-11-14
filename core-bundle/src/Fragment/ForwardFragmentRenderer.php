@@ -26,6 +26,7 @@ use Symfony\Component\HttpKernel\Fragment\InlineFragmentRenderer;
  */
 class ForwardFragmentRenderer extends InlineFragmentRenderer
 {
+    #[\Override]
     public function getName(): string
     {
         return 'forward';
@@ -34,6 +35,7 @@ class ForwardFragmentRenderer extends InlineFragmentRenderer
     /**
      * @param ControllerReference|string $uri
      */
+    #[\Override]
     protected function createSubRequest($uri, Request $request): Request
     {
         return $request->duplicate();

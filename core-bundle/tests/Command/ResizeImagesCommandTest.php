@@ -29,6 +29,7 @@ use Symfony\Component\Process\Process;
 
 class ResizeImagesCommandTest extends TestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -36,6 +37,7 @@ class ResizeImagesCommandTest extends TestCase
         (new Filesystem())->mkdir(Path::join($this->getTempDir(), 'assets/images'));
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         (new Filesystem())->remove(Path::join($this->getTempDir(), 'assets/images'));

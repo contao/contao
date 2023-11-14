@@ -40,6 +40,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class NewsFeedListenerTest extends ContaoTestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         parent::tearDown();

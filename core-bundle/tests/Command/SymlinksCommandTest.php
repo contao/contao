@@ -24,6 +24,7 @@ use Symfony\Component\Filesystem\Path;
 
 class SymlinksCommandTest extends TestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -38,6 +39,7 @@ class SymlinksCommandTest extends TestCase
         }
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         (new Filesystem())->remove([

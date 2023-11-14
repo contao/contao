@@ -18,6 +18,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class DotenvDumperTest extends ContaoTestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         (new Filesystem())->remove([$this->getTempDir().'/.env', $this->getTempDir().'/.env.local']);

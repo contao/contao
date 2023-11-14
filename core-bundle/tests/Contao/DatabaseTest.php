@@ -22,6 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class DatabaseTest extends ContaoTestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         $this->resetStaticProperties([Database::class, System::class]);

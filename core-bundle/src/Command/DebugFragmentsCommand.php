@@ -41,6 +41,7 @@ class DebugFragmentsCommand extends Command
         $this->attributes[$identifier] = $attributes;
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $rows = [];

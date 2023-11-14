@@ -26,6 +26,7 @@ class GenerateJwtCookieCommandTest extends ContaoTestCase
 
     private GenerateJwtCookieCommand $command;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

@@ -34,6 +34,7 @@ final class DynamicUseTokenParser extends AbstractTokenParser
     {
     }
 
+    #[\Override]
     public function parse(Token $token): Node
     {
         $template = $this->parser->getExpressionParser()->parseExpression();
@@ -71,6 +72,7 @@ final class DynamicUseTokenParser extends AbstractTokenParser
         return new Node();
     }
 
+    #[\Override]
     public function getTag(): string
     {
         return 'use';

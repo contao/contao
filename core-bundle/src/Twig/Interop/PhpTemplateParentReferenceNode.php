@@ -22,6 +22,7 @@ use Twig\Node\NodeOutputInterface;
  */
 final class PhpTemplateParentReferenceNode extends Node implements NodeOutputInterface
 {
+    #[\Override]
     public function compile(Compiler $compiler): void
     {
         // echo sprintf('[[TL_PARENT_%s]]', \[…]\ContaoFramework::getNonce());'

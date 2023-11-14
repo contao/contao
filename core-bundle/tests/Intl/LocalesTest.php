@@ -25,6 +25,7 @@ class LocalesTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -32,6 +33,7 @@ class LocalesTest extends TestCase
         \Locale::setDefault('und');
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         \Locale::setDefault('');

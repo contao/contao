@@ -38,6 +38,7 @@ class ImagesController extends AbstractContentElementController
     ) {
     }
 
+    #[\Override]
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
         // Find all images (see #5911)

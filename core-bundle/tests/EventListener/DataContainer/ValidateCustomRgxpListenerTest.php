@@ -20,6 +20,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ValidateCustomRgxpListenerTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         $this->resetStaticProperties([[AnnotationRegistry::class, ['failedToAutoload']], DocParser::class]);

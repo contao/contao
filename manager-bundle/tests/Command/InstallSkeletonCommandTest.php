@@ -30,6 +30,7 @@ class InstallSkeletonCommandTest extends ContaoTestCase
 
     private Finder $webFiles;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -41,6 +42,7 @@ class InstallSkeletonCommandTest extends ContaoTestCase
         $this->webFiles = Finder::create()->files()->in(__DIR__.'/../../skeleton/public');
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         $this->filesystem->remove($this->getTempDir().'/bin');

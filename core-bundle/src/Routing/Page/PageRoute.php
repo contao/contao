@@ -87,6 +87,7 @@ class PageRoute extends Route implements RouteObjectInterface
         return $this->pageModel;
     }
 
+    #[\Override]
     public function getPath(): string
     {
         $path = parent::getPath();

@@ -35,11 +35,13 @@ class GenerateJwtCookieCommand extends Command
         $this->jwtManager = $jwtManager ?: new JwtManager($application->getProjectDir());
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->addOption('debug', null, InputOption::VALUE_NONE, 'Enable debug mode in the JWT cookie');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $cookie = $this->jwtManager->createCookie(['debug' => $input->getOption('debug')]);

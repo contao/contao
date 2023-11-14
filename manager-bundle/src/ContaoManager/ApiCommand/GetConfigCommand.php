@@ -34,6 +34,7 @@ class GetConfigCommand extends Command
         $this->managerConfig = $application->getManagerConfig();
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->write(json_encode($this->managerConfig->all(), JSON_THROW_ON_ERROR));

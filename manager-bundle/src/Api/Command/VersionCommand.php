@@ -30,6 +30,7 @@ class VersionCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->write(json_encode(

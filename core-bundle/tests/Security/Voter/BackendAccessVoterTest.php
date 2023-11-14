@@ -26,6 +26,7 @@ class BackendAccessVoterTest extends TestCase
 {
     private BackendAccessVoter $voter;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

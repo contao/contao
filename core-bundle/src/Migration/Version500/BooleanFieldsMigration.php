@@ -33,6 +33,7 @@ class BooleanFieldsMigration extends AbstractMigration
     ) {
     }
 
+    #[\Override]
     public function shouldRun(): bool
     {
         foreach ($this->getTargets() as [$table, $column]) {
@@ -46,6 +47,7 @@ class BooleanFieldsMigration extends AbstractMigration
         return false;
     }
 
+    #[\Override]
     public function run(): MigrationResult
     {
         foreach ($this->getTargets() as [$table, $column]) {

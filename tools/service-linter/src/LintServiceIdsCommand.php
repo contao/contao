@@ -83,6 +83,7 @@ class LintServiceIdsCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $files = Finder::create()

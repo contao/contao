@@ -27,6 +27,7 @@ class EnvironmentTest extends TestCase
 
     private string $projectDir;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -48,6 +49,7 @@ class EnvironmentTest extends TestCase
         require __DIR__.'/../../contao/config/default.php';
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         $this->restoreServerEnvGetPost();

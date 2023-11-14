@@ -23,6 +23,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class DebugFragmentsCommandTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         $this->resetStaticProperties([Table::class, Terminal::class]);

@@ -80,6 +80,7 @@ class ContentCompositionListenerTest extends TestCase
         'published' => 1,
     ];
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -111,6 +112,7 @@ class ContentCompositionListenerTest extends TestCase
         );
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_DCA']);

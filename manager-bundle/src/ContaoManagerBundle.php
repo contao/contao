@@ -18,6 +18,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class ContaoManagerBundle extends Bundle
 {
+    #[\Override]
     public function build(ContainerBuilder $container): void
     {
         parent::build($container);
@@ -25,6 +26,7 @@ class ContaoManagerBundle extends Bundle
         $container->addCompilerPass(new ContaoManagerPass());
     }
 
+    #[\Override]
     public function getPath(): string
     {
         return \dirname(__DIR__);

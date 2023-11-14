@@ -40,6 +40,7 @@ class ContaoKernelTest extends ContaoTestCase
 
     private array|string|false $shellVerbosityBackup;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -51,6 +52,7 @@ class ContaoKernelTest extends ContaoTestCase
         $this->shellVerbosityBackup = getenv('SHELL_VERBOSITY');
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         $filesystem = new Filesystem();

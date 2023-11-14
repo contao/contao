@@ -40,6 +40,7 @@ class MigrateCommandTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
+    #[\Override]
     protected function tearDown(): void
     {
         $this->resetStaticProperties([Terminal::class]);

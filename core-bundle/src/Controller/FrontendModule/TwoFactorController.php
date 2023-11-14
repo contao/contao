@@ -39,6 +39,7 @@ class TwoFactorController extends AbstractFrontendModuleController
 {
     protected PageModel|null $pageModel = null;
 
+    #[\Override]
     public function __invoke(Request $request, ModuleModel $model, string $section, array|null $classes = null, PageModel|null $pageModel = null): Response
     {
         if (!$this->container->get('security.helper')->isGranted('IS_AUTHENTICATED_FULLY')) {
@@ -55,6 +56,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         return parent::__invoke($request, $model, $section, $classes);
     }
 
+    #[\Override]
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();
@@ -71,6 +73,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         return $services;
     }
 
+    #[\Override]
     protected function getResponse(Template $template, ModuleModel $model, Request $request): Response
     {
         $user = $this->container->get('security.helper')->getUser();

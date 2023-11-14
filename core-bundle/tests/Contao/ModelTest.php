@@ -23,6 +23,7 @@ use Doctrine\DBAL\Types\Types;
 
 class ModelTest extends TestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -51,6 +52,7 @@ class ModelTest extends TestCase
         System::setContainer($container);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         $this->resetStaticProperties([Model::class, System::class]);
@@ -108,6 +110,7 @@ class ModelTest extends TestCase
         $fooModel = new class() extends Model {
             protected static $strTable = 'tl_Foo';
 
+            #[\Override]
             public function __construct()
             {
             }

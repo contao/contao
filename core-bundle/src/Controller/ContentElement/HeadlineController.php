@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
 #[AsContentElement(category: 'texts')]
 class HeadlineController extends AbstractContentElementController
 {
+    #[\Override]
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
         return $template->getResponse();

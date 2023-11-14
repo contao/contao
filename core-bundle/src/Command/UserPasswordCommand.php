@@ -44,6 +44,7 @@ class UserPasswordCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this
@@ -53,6 +54,7 @@ class UserPasswordCommand extends Command
         ;
     }
 
+    #[\Override]
     protected function interact(InputInterface $input, OutputInterface $output): void
     {
         if (null === $input->getArgument('username')) {
@@ -73,6 +75,7 @@ class UserPasswordCommand extends Command
         $input->setOption('password', $password);
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (null === $input->getArgument('username') || null === $input->getOption('password')) {

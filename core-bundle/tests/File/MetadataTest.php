@@ -27,6 +27,7 @@ use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 
 class MetadataTest extends TestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -41,6 +42,7 @@ class MetadataTest extends TestCase
         ];
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_DCA'], $GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);

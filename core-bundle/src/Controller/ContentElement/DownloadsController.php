@@ -37,6 +37,7 @@ class DownloadsController extends AbstractDownloadContentElementController
     ) {
     }
 
+    #[\Override]
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
         $filesystemItems = $this->getFilesystemItems($request, $model);
@@ -74,6 +75,7 @@ class DownloadsController extends AbstractDownloadContentElementController
      * Retrieve selected filesystem items but filter out those, that do not
      * match the current DCA and configuration constraints.
      */
+    #[\Override]
     protected function getFilesystemItems(Request $request, ContentModel $model): FilesystemItemIterator
     {
         $homeDir = null;
@@ -107,6 +109,7 @@ class DownloadsController extends AbstractDownloadContentElementController
         return $this->applyDownloadableFileExtensionsFilter($filesystemItems);
     }
 
+    #[\Override]
     protected function getVirtualFilesystem(): VirtualFilesystemInterface
     {
         return $this->filesStorage;

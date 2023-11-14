@@ -33,6 +33,7 @@ class CrawlCsvLogHandler extends StreamHandler
         return $this;
     }
 
+    #[\Override]
     protected function streamWrite($stream, array $record): void
     {
         if (!isset($record['context']['source'])) {

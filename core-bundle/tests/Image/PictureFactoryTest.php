@@ -35,6 +35,7 @@ class PictureFactoryTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -42,6 +43,7 @@ class PictureFactoryTest extends TestCase
         System::setContainer($this->getContainerWithContaoConfiguration());
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         $this->resetStaticProperties([System::class]);

@@ -24,6 +24,7 @@ use Symfony\Component\Filesystem\Path;
 
 class Resizer extends DeferredResizer
 {
+    #[\Override]
     public function resize(ImageInterface $image, ResizeConfiguration $config, ResizeOptions $options): ImageInterface
     {
         try {
@@ -33,6 +34,7 @@ class Resizer extends DeferredResizer
         }
     }
 
+    #[\Override]
     public function resizeDeferredImage(DeferredImageInterface $image, bool $blocking = true): ImageInterface|null
     {
         try {

@@ -50,6 +50,7 @@ use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 
 class FigureBuilderTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_DCA'], $GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);

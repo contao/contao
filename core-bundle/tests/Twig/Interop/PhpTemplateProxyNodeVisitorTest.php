@@ -27,6 +27,7 @@ use Twig\Source;
 
 class PhpTemplateProxyNodeVisitorTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         $this->resetStaticProperties([ContaoFramework::class]);

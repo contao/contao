@@ -29,6 +29,7 @@ abstract class AbstractBackupCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this

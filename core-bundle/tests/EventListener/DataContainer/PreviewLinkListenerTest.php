@@ -30,6 +30,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PreviewLinkListenerTest extends TestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -37,6 +38,7 @@ class PreviewLinkListenerTest extends TestCase
         ClockMock::register(PreviewLinkListener::class);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_DCA']);

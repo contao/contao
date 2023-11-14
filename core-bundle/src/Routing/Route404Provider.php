@@ -36,6 +36,7 @@ class Route404Provider extends AbstractPageRouteProvider
         parent::__construct($framework, $candidates, $pageRegistry);
     }
 
+    #[\Override]
     public function getRouteCollectionForRequest(Request $request): RouteCollection
     {
         $this->framework->initialize();
@@ -54,6 +55,7 @@ class Route404Provider extends AbstractPageRouteProvider
         return $collection;
     }
 
+    #[\Override]
     public function getRouteByName(string $name): Route
     {
         $this->framework->initialize();
@@ -83,6 +85,7 @@ class Route404Provider extends AbstractPageRouteProvider
         return $routes[$name];
     }
 
+    #[\Override]
     public function getRoutesByNames(array|null $names = null): array
     {
         $this->framework->initialize();

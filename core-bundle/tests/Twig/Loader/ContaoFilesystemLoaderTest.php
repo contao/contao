@@ -30,6 +30,7 @@ use Twig\Error\LoaderError;
 
 class ContaoFilesystemLoaderTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['objPage']);

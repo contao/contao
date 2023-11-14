@@ -42,6 +42,7 @@ class ImageFactoryTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -58,6 +59,7 @@ class ImageFactoryTest extends TestCase
         System::setContainer($this->getContainerWithContaoConfiguration(self::getTempDir()));
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         (new Filesystem())->remove(Path::join($this->getTempDir(), 'assets/images'));

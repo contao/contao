@@ -100,6 +100,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         }
     }
 
+    #[\Override]
     public function supports(Request $request): bool|null
     {
         return $request->isMethod('POST')
@@ -107,6 +108,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
             && preg_match('/^tl_login(_\d+)?$/', (string) $request->request->get('FORM_SUBMIT'));
     }
 
+    #[\Override]
     public function authenticate(Request $request): Passport
     {
         // When the firewall is lazy, the token is not initialized in the "supports" stage, so this check does only work
@@ -136,6 +138,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         return $passport;
     }
 
+    #[\Override]
     public function createToken(Passport $passport, string $firewallName): TokenInterface
     {
         $credentialsBadge = $passport->getBadge(TwoFactorCodeCredentials::class);
@@ -156,11 +159,13 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         return $twoFactorToken;
     }
 
+    #[\Override]
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): Response|null
     {
         return $this->successHandler->onAuthenticationSuccess($request, $token);
     }
 
+    #[\Override]
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response|null
     {
         return $this->failureHandler->onAuthenticationFailure($request, $exception);

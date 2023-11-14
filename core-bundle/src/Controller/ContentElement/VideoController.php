@@ -38,6 +38,7 @@ class VideoController extends AbstractContentElementController
     {
     }
 
+    #[\Override]
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
         // Video source data, size and aspect ratio

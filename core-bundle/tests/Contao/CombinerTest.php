@@ -24,6 +24,7 @@ class CombinerTest extends TestCase
 {
     private Filesystem $filesystem;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -47,6 +48,7 @@ class CombinerTest extends TestCase
         System::setContainer($container);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         $this->resetStaticProperties([System::class, Files::class, Dbafs::class]);

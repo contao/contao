@@ -21,11 +21,13 @@ class AbstractMigrationTest extends TestCase
     public function testGetNameUsesClassName(): void
     {
         $migration = new class() extends AbstractMigration {
+            #[\Override]
             public function shouldRun(): bool
             {
                 return true;
             }
 
+            #[\Override]
             public function run(): MigrationResult
             {
                 return $this->createResult(true);
@@ -38,16 +40,19 @@ class AbstractMigrationTest extends TestCase
     public function testCreateResultDefault(): void
     {
         $migration = new class() extends AbstractMigration {
+            #[\Override]
             public function getName(): string
             {
                 return 'Test Migration';
             }
 
+            #[\Override]
             public function shouldRun(): bool
             {
                 return true;
             }
 
+            #[\Override]
             public function run(): MigrationResult
             {
                 return $this->createResult(true);
@@ -62,16 +67,19 @@ class AbstractMigrationTest extends TestCase
     public function testCreateResultFailed(): void
     {
         $migration = new class() extends AbstractMigration {
+            #[\Override]
             public function getName(): string
             {
                 return 'Test Migration';
             }
 
+            #[\Override]
             public function shouldRun(): bool
             {
                 return true;
             }
 
+            #[\Override]
             public function run(): MigrationResult
             {
                 return $this->createResult(false);
@@ -86,16 +94,19 @@ class AbstractMigrationTest extends TestCase
     public function testCreateResultCustomMessage(): void
     {
         $migration = new class() extends AbstractMigration {
+            #[\Override]
             public function getName(): string
             {
                 return 'Test Migration';
             }
 
+            #[\Override]
             public function shouldRun(): bool
             {
                 return true;
             }
 
+            #[\Override]
             public function run(): MigrationResult
             {
                 return $this->createResult(true, 'Custom Message');

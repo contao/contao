@@ -41,6 +41,7 @@ class DbafsTest extends TestCase
 
     private int $codePageBackup = 0;
 
+    #[\Override]
     protected function setUp(): void
     {
         if (\function_exists('sapi_windows_cp_get')) {
@@ -50,6 +51,7 @@ class DbafsTest extends TestCase
         parent::setUp();
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         parent::tearDown();

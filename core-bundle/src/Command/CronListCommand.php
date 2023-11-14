@@ -32,11 +32,13 @@ class CronListCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt, json)', 'txt');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $format = $input->getOption('format');

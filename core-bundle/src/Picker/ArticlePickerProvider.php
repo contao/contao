@@ -31,16 +31,19 @@ class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements D
         parent::__construct($menuFactory, $router, $translator);
     }
 
+    #[\Override]
     public function getName(): string
     {
         return 'articlePicker';
     }
 
+    #[\Override]
     public function supportsContext(string $context): bool
     {
         return 'link' === $context && $this->security->isGranted('contao_user.modules', 'article');
     }
 
+    #[\Override]
     public function supportsValue(PickerConfig $config): bool
     {
         return $this->isMatchingInsertTag($config);
@@ -71,11 +74,13 @@ class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements D
         return sprintf($this->getInsertTag($config), $value);
     }
 
+    #[\Override]
     protected function getRouteParameters(PickerConfig|null $config = null): array
     {
         return ['do' => 'article'];
     }
 
+    #[\Override]
     protected function getDefaultInsertTag(): string
     {
         return '{{article_url::%s}}';

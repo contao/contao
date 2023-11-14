@@ -25,6 +25,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AdministratorEmailListenerTest extends TestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -32,6 +33,7 @@ class AdministratorEmailListenerTest extends TestCase
         $GLOBALS['BE_MOD']['system']['settings']['tables'] = ['tl_settings'];
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         parent::tearDown();

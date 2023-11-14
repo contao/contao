@@ -22,6 +22,7 @@ final class ResolvedInsertTag extends InsertTag
         parent::__construct($name, $parameters, $flags);
     }
 
+    #[\Override]
     public function getParameters(): ResolvedParameters
     {
         $parameters = parent::getParameters();

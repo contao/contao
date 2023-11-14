@@ -40,6 +40,7 @@ class MaintenanceModeCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this
@@ -50,6 +51,7 @@ class MaintenanceModeCommand extends Command
         ;
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $state = $input->getArgument('state');

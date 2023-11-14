@@ -49,6 +49,7 @@ class UserCreateCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this
@@ -63,6 +64,7 @@ class UserCreateCommand extends Command
         ;
     }
 
+    #[\Override]
     protected function interact(InputInterface $input, OutputInterface $output): void
     {
         if (null === $input->getOption('username')) {
@@ -150,6 +152,7 @@ class UserCreateCommand extends Command
         }
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);

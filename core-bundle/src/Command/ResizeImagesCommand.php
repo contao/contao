@@ -65,6 +65,7 @@ class ResizeImagesCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this
@@ -76,6 +77,7 @@ class ResizeImagesCommand extends Command
         ;
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (!$this->resizer instanceof DeferredResizerInterface) {

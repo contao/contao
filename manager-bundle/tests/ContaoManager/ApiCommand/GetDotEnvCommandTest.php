@@ -28,6 +28,7 @@ class GetDotEnvCommandTest extends ContaoTestCase
 
     private GetDotEnvCommand $command;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -45,6 +46,7 @@ class GetDotEnvCommandTest extends ContaoTestCase
         $this->command = new GetDotEnvCommand($application);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         parent::tearDown();

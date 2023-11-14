@@ -43,16 +43,19 @@ class MakeDcaCallback extends AbstractMaker
     ) {
     }
 
+    #[\Override]
     public static function getCommandName(): string
     {
         return 'make:contao:dca-callback';
     }
 
+    #[\Override]
     public static function getCommandDescription(): string
     {
         return 'Creates a new DCA callback listener';
     }
 
+    #[\Override]
     public function configureCommand(Command $command, InputConfiguration $inputConfig): void
     {
         $command
@@ -60,16 +63,19 @@ class MakeDcaCallback extends AbstractMaker
         ;
     }
 
+    #[\Override]
     public function interact(InputInterface $input, ConsoleStyle $io, Command $command): void
     {
         $this->askForTable($input, $io, $command);
         $this->askForTarget($input, $io, $command);
     }
 
+    #[\Override]
     public function configureDependencies(DependencyBuilder $dependencies): void
     {
     }
 
+    #[\Override]
     public function generate(InputInterface $input, ConsoleStyle $io, Generator $generator): void
     {
         $table = $input->getArgument('table');

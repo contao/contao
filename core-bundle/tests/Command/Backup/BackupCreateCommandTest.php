@@ -24,6 +24,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class BackupCreateCommandTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         $this->resetStaticProperties([Terminal::class]);

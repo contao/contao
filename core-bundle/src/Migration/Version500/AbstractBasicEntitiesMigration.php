@@ -29,6 +29,7 @@ abstract class AbstractBasicEntitiesMigration extends AbstractMigration
     {
     }
 
+    #[\Override]
     public function shouldRun(): bool
     {
         $schemaManager = $this->connection->createSchemaManager();
@@ -64,6 +65,7 @@ abstract class AbstractBasicEntitiesMigration extends AbstractMigration
         return false;
     }
 
+    #[\Override]
     public function run(): MigrationResult
     {
         $schemaManager = $this->connection->createSchemaManager();

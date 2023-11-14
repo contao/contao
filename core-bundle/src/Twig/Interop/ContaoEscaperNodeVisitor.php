@@ -48,11 +48,13 @@ final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
      *
      * @see EscaperNodeVisitor
      */
+    #[\Override]
     public function getPriority(): int
     {
         return 1;
     }
 
+    #[\Override]
     protected function doEnterNode(Node $node, Environment $env): Node
     {
         $isAffected = static function (array $rules, string $name): bool {
@@ -77,6 +79,7 @@ final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
         return $node;
     }
 
+    #[\Override]
     protected function doLeaveNode(Node $node, Environment $env): Node|null
     {
         if ($node instanceof ModuleNode && null !== $this->escaperFilterNodes) {

@@ -49,11 +49,13 @@ class ContaoCache extends HttpCache implements CacheInvalidation
         $this->addSubscriber(new CleanupCacheTagsListener());
     }
 
+    #[\Override]
     public function fetch(Request $request, $catch = false): Response
     {
         return parent::fetch($request, $catch);
     }
 
+    #[\Override]
     protected function getOptions(): array
     {
         $options = parent::getOptions();
@@ -67,6 +69,7 @@ class ContaoCache extends HttpCache implements CacheInvalidation
         return $options;
     }
 
+    #[\Override]
     protected function createStore(): Psr6Store
     {
         $cacheDir = $this->cacheDir ?: Path::join($this->kernel->getCacheDir(), 'http_cache');

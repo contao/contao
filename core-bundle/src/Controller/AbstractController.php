@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 abstract class AbstractController extends SymfonyAbstractController
 {
+    #[\Override]
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();

@@ -40,6 +40,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class DebugPagesCommandTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_LANG'], $GLOBALS['TL_MIME'], $GLOBALS['TL_DCA']);

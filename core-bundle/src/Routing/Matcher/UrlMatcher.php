@@ -43,6 +43,7 @@ class UrlMatcher extends RedirectableUrlMatcher implements FinalMatcherInterface
         return $this->matchRequest($request);
     }
 
+    #[\Override]
     public function redirect($path, $route, $scheme = null): array
     {
         return [
@@ -56,6 +57,7 @@ class UrlMatcher extends RedirectableUrlMatcher implements FinalMatcherInterface
         ];
     }
 
+    #[\Override]
     protected function getAttributes(Route $route, string $name, array $attributes): array
     {
         $attributes[RouteObjectInterface::ROUTE_NAME] = $name;

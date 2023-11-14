@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
 #[AsFrontendModule(category: 'miscellaneous')]
 class TemplateController extends AbstractFrontendModuleController
 {
+    #[\Override]
     protected function getResponse(FragmentTemplate $template, ModuleModel $model, Request $request): Response
     {
         $data = StringUtil::deserialize($model->data, true);

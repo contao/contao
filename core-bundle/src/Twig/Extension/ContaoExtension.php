@@ -106,6 +106,7 @@ final class ContaoExtension extends AbstractExtension
         $this->contaoEscaperFilterRules[] = $regularExpression;
     }
 
+    #[\Override]
     public function getNodeVisitors(): array
     {
         return [
@@ -123,6 +124,7 @@ final class ContaoExtension extends AbstractExtension
         ];
     }
 
+    #[\Override]
     public function getTokenParsers(): array
     {
         return [
@@ -136,6 +138,7 @@ final class ContaoExtension extends AbstractExtension
         ];
     }
 
+    #[\Override]
     public function getFunctions(): array
     {
         $includeFunctionCallable = $this->getTwigIncludeFunction()->getCallable();
@@ -205,6 +208,7 @@ final class ContaoExtension extends AbstractExtension
         ];
     }
 
+    #[\Override]
     public function getFilters(): array
     {
         $escaperFilter = static function (Environment $env, $string, $strategy = 'html', $charset = null, $autoescape = false) {
@@ -285,11 +289,13 @@ final class ContaoExtension extends AbstractExtension
                 $this->arrBlocks = array_map(static fn ($block) => \is_array($block) ? $block : [$block], $blocks);
             }
 
+            #[\Override]
             public function parse(): string
             {
                 return $this->inherit();
             }
 
+            #[\Override]
             protected function renderTwigSurrogateIfExists(): string|null
             {
                 return null;

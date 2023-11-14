@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class WidgetTest extends TestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -37,6 +38,7 @@ class WidgetTest extends TestCase
         System::setContainer($container);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         $this->resetStaticProperties([Input::class, System::class]);

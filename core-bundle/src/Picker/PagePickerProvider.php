@@ -31,16 +31,19 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         parent::__construct($menuFactory, $router, $translator);
     }
 
+    #[\Override]
     public function getName(): string
     {
         return 'pagePicker';
     }
 
+    #[\Override]
     public function supportsContext(string $context): bool
     {
         return \in_array($context, ['page', 'link'], true) && $this->security->isGranted('contao_user.modules', 'page');
     }
 
+    #[\Override]
     public function supportsValue(PickerConfig $config): bool
     {
         if ('page' === $config->getContext()) {
@@ -96,11 +99,13 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return sprintf($this->getInsertTag($config), $value);
     }
 
+    #[\Override]
     protected function getRouteParameters(PickerConfig|null $config = null): array
     {
         return ['do' => 'page'];
     }
 
+    #[\Override]
     protected function getDefaultInsertTag(): string
     {
         return '{{link_url::%s}}';

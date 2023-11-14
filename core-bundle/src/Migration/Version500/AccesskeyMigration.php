@@ -28,6 +28,7 @@ class AccesskeyMigration extends AbstractMigration
     {
     }
 
+    #[\Override]
     public function shouldRun(): bool
     {
         foreach (self::$affectedTables as $table) {
@@ -39,6 +40,7 @@ class AccesskeyMigration extends AbstractMigration
         return false;
     }
 
+    #[\Override]
     public function run(): MigrationResult
     {
         foreach (self::$affectedTables as $table) {

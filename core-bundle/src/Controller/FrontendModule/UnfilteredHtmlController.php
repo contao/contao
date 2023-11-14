@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
 #[AsFrontendModule(category: 'miscellaneous')]
 class UnfilteredHtmlController extends AbstractFrontendModuleController
 {
+    #[\Override]
     protected function getResponse(FragmentTemplate $template, ModuleModel $model, Request $request): Response
     {
         $template->set('html', $model->unfilteredHtml ?? '');

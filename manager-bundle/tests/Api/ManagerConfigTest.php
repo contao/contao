@@ -27,6 +27,7 @@ class ManagerConfigTest extends ContaoTestCase
 
     private ManagerConfig $config;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -37,6 +38,7 @@ class ManagerConfigTest extends ContaoTestCase
         $this->config = new ManagerConfig($this->tempdir);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         parent::tearDown();

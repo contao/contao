@@ -27,6 +27,7 @@ use Twig\Source;
 
 class DebugContaoTwigCommandTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         $this->resetStaticProperties([Table::class, Terminal::class]);

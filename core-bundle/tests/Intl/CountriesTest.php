@@ -25,6 +25,7 @@ class CountriesTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
+    #[\Override]
     protected function tearDown(): void
     {
         parent::tearDown();

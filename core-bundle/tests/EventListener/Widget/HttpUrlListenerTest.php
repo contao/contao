@@ -21,6 +21,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class HttpUrlListenerTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         $this->resetStaticProperties([[AnnotationRegistry::class, ['failedToAutoload']], DocParser::class]);

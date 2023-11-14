@@ -17,6 +17,7 @@ namespace Contao\CoreBundle\Migration\Version500;
  */
 class BasicEntitiesMigration extends AbstractBasicEntitiesMigration
 {
+    #[\Override]
     protected function getDatabaseColumns(): array
     {
         return [

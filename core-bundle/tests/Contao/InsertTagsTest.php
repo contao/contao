@@ -38,6 +38,7 @@ class InsertTagsTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -54,6 +55,7 @@ class InsertTagsTest extends TestCase
         System::setContainer($container);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_HOOKS'], $GLOBALS['TL_MIME']);

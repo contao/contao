@@ -21,6 +21,7 @@ use Symfony\Component\Console\Input\ArgvInput;
 
 class ContaoApplicationTest extends ContaoTestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -30,6 +31,7 @@ class ContaoApplicationTest extends ContaoTestCase
         unset($_SERVER['APP_ENV'], $_ENV['APP_ENV']);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         $this->restoreServerEnvGetPost();

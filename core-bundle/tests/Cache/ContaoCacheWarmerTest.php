@@ -30,6 +30,7 @@ use Symfony\Component\Filesystem\Path;
 
 class ContaoCacheWarmerTest extends TestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -52,6 +53,7 @@ class ContaoCacheWarmerTest extends TestCase
         System::setContainer($container);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         (new Filesystem())->remove(Path::join($this->getTempDir(), 'var/cache/contao'));

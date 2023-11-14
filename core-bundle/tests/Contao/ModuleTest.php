@@ -32,6 +32,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class ModuleTest extends TestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -67,6 +68,7 @@ class ModuleTest extends TestCase
         $GLOBALS['TL_MODELS']['tl_page'] = PageModel::class;
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_MODELS'], $GLOBALS['TL_LANG'], $GLOBALS['TL_MIME'], $GLOBALS['TL_DCA']);
@@ -105,10 +107,12 @@ class ModuleTest extends TestCase
         $this->mockDatabase($database);
 
         $moduleInstance = new class() extends Module {
+            #[\Override]
             public function __construct()
             {
             }
 
+            #[\Override]
             protected function compile(): void
             {
             }

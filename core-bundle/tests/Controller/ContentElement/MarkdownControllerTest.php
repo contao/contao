@@ -30,6 +30,7 @@ use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 
 class MarkdownControllerTest extends ContentElementTestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         $this->resetStaticProperties([System::class]);

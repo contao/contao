@@ -36,6 +36,7 @@ final class AddNode extends Node implements NodeOutputInterface
         );
     }
 
+    #[\Override]
     public function compile(Compiler $compiler): void
     {
         // if ($this->env->isDebug()) { ob_start(); } else { ob_start(static function () { return ''; }); }

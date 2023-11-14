@@ -27,6 +27,7 @@ class ControllerTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -34,6 +35,7 @@ class ControllerTest extends TestCase
         Controller::resetControllerCache();
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);

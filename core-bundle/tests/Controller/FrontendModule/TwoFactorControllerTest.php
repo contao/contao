@@ -38,6 +38,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TwoFactorControllerTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         $this->resetStaticProperties([System::class]);

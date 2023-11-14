@@ -34,6 +34,7 @@ class PageUrlGenerator extends SymfonyUrlGenerator
         parent::__construct(new RouteCollection(), new RequestContext(), $logger);
     }
 
+    #[\Override]
     public function generate(string $name, array $parameters = [], int $referenceType = self::ABSOLUTE_PATH): string
     {
         if (

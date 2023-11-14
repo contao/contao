@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
 #[AsContentElement(category: 'links')]
 class ToplinkController extends AbstractContentElementController
 {
+    #[\Override]
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
         $template->set('link_text', $model->linkTitle);

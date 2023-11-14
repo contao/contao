@@ -23,6 +23,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class AutomatorCommandTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         $this->resetStaticProperties([Terminal::class]);

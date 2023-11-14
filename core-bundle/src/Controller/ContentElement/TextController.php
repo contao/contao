@@ -26,6 +26,7 @@ class TextController extends AbstractContentElementController
     {
     }
 
+    #[\Override]
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
         $template->set('text', $model->text ?: '');

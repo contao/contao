@@ -19,6 +19,7 @@ use Contao\CoreBundle\Tests\TestCase;
 
 class PaletteManipulatorTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_DCA']);

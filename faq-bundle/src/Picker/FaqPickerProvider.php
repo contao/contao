@@ -40,16 +40,19 @@ class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPi
         parent::__construct($menuFactory, $router, $translator);
     }
 
+    #[\Override]
     public function getName(): string
     {
         return 'faqPicker';
     }
 
+    #[\Override]
     public function supportsContext(string $context): bool
     {
         return 'link' === $context && $this->security->isGranted('contao_user.modules', 'faq');
     }
 
+    #[\Override]
     public function supportsValue(PickerConfig $config): bool
     {
         return $this->isMatchingInsertTag($config);
@@ -80,6 +83,7 @@ class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPi
         return sprintf($this->getInsertTag($config), $value);
     }
 
+    #[\Override]
     protected function getRouteParameters(PickerConfig|null $config = null): array
     {
         $params = ['do' => 'faq'];
@@ -96,6 +100,7 @@ class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPi
         return $params;
     }
 
+    #[\Override]
     protected function getDefaultInsertTag(): string
     {
         return '{{faq_url::%s}}';

@@ -44,6 +44,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
     /**
      * @return array<string>
      */
+    #[\Override]
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();
@@ -236,6 +237,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
      * same page. Pass a prebuilt Response if you want to have full control -
      * no headers will be set then.
      */
+    #[\Override]
     protected function render(string|null $view = null, array $parameters = [], Response|null $response = null): Response
     {
         $view ??= $this->view ?? throw new \InvalidArgumentException('Cannot derive template name, please make sure createTemplate() was called before or specify the template explicitly.');

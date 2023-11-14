@@ -24,6 +24,7 @@ use Doctrine\DBAL\Result;
 
 class RecordPreviewListenerTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_DCA']);

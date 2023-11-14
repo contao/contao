@@ -32,6 +32,7 @@ use Symfony\Component\HttpKernel\Fragment\FragmentRendererInterface;
 
 class FragmentHandlerTest extends TestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -39,6 +40,7 @@ class FragmentHandlerTest extends TestCase
         System::setContainer($this->getContainerWithContaoConfiguration());
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         $this->resetStaticProperties([System::class]);

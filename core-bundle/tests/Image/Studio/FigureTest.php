@@ -34,6 +34,7 @@ use Symfony\Component\Filesystem\Path;
 
 class FigureTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_MIME']);

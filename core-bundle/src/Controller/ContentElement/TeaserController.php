@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 #[AsContentElement(category: 'includes')]
 class TeaserController extends AbstractContentElementController
 {
+    #[\Override]
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
         if (null === ($articleAndPage = $this->getArticleAndPage($model))) {

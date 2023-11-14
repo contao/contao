@@ -22,6 +22,7 @@ class RoutingTest extends FunctionalTestCase
 
     private static array|null $lastImport = null;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

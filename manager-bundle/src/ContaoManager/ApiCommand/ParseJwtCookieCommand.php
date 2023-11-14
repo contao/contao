@@ -35,11 +35,13 @@ class ParseJwtCookieCommand extends Command
         $this->jwtManager = $jwtManager ?: new JwtManager($application->getProjectDir());
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->addArgument('content', InputArgument::REQUIRED, 'The JWT cookie content');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $payload = $this->jwtManager->parseCookie($input->getArgument('content'));

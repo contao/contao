@@ -19,6 +19,7 @@ class PhpFileLoaderTest extends TestCase
 {
     private PhpFileLoader $loader;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

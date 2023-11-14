@@ -22,6 +22,7 @@ class BinaryStringType extends Type
 {
     final public const NAME = 'binary_string';
 
+    #[\Override]
     public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
     {
         if (!empty($column['fixed'])) {
@@ -31,11 +32,13 @@ class BinaryStringType extends Type
         return $platform->getBlobTypeDeclarationSQL($column);
     }
 
+    #[\Override]
     public function getName(): string
     {
         return self::NAME;
     }
 
+    #[\Override]
     public function requiresSQLCommentHint(AbstractPlatform $platform): bool
     {
         return true;

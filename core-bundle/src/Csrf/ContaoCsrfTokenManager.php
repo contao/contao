@@ -46,6 +46,7 @@ class ContaoCsrfTokenManager extends CsrfTokenManager implements ResetInterface
         return $this->usedTokenValues;
     }
 
+    #[\Override]
     public function getToken($tokenId): CsrfToken
     {
         $token = parent::getToken($tokenId);
@@ -54,6 +55,7 @@ class ContaoCsrfTokenManager extends CsrfTokenManager implements ResetInterface
         return $token;
     }
 
+    #[\Override]
     public function refreshToken($tokenId): CsrfToken
     {
         $token = parent::refreshToken($tokenId);
@@ -62,6 +64,7 @@ class ContaoCsrfTokenManager extends CsrfTokenManager implements ResetInterface
         return $token;
     }
 
+    #[\Override]
     public function isTokenValid(CsrfToken $token): bool
     {
         if (

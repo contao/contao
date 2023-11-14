@@ -25,6 +25,7 @@ class MemberCountryUppercaseMigration extends AbstractMigration
     {
     }
 
+    #[\Override]
     public function shouldRun(): bool
     {
         $schemaManager = $this->connection->createSchemaManager();
@@ -42,6 +43,7 @@ class MemberCountryUppercaseMigration extends AbstractMigration
         return false !== $test;
     }
 
+    #[\Override]
     public function run(): MigrationResult
     {
         $this->connection->executeStatement('UPDATE tl_member SET country=UPPER(country) WHERE BINARY country!=BINARY UPPER(country)');

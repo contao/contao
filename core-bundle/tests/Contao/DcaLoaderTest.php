@@ -20,6 +20,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class DcaLoaderTest extends TestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -28,6 +29,7 @@ class DcaLoaderTest extends TestCase
         System::setContainer($container);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_DCA'], $GLOBALS['TL_MIME']);

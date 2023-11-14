@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
 #[AsContentElement(category: 'texts')]
 class TableController extends AbstractContentElementController
 {
+    #[\Override]
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
         // Table fields

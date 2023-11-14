@@ -22,6 +22,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class BackendFavoritesListenerTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_DCA']);

@@ -31,6 +31,7 @@ class CronCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this
@@ -43,6 +44,7 @@ class CronCommand extends Command
         ;
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $force = $input->getOption('force');

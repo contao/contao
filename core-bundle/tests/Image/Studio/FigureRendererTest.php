@@ -37,6 +37,7 @@ use Twig\Environment;
 
 class FigureRendererTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_MIME']);

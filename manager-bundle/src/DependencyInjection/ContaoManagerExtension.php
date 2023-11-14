@@ -19,6 +19,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class ContaoManagerExtension extends Extension
 {
+    #[\Override]
     public function load(array $configs, ContainerBuilder $container): void
     {
         $config = $this->processConfiguration(new Configuration(), $configs);

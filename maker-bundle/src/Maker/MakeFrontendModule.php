@@ -24,16 +24,19 @@ use Symfony\Component\DependencyInjection\Container;
 
 class MakeFrontendModule extends AbstractFragmentMaker
 {
+    #[\Override]
     public static function getCommandName(): string
     {
         return 'make:contao:frontend-module';
     }
 
+    #[\Override]
     public static function getCommandDescription(): string
     {
         return 'Creates a new front end module';
     }
 
+    #[\Override]
     public function configureCommand(Command $command, InputConfiguration $inputConfig): void
     {
         $command
@@ -41,6 +44,7 @@ class MakeFrontendModule extends AbstractFragmentMaker
         ;
     }
 
+    #[\Override]
     public function generate(InputInterface $input, ConsoleStyle $io, Generator $generator): void
     {
         $category = $input->getArgument('category');
@@ -119,15 +123,18 @@ class MakeFrontendModule extends AbstractFragmentMaker
         $this->writeSuccessMessage($io);
     }
 
+    #[\Override]
     public function configureDependencies(DependencyBuilder $dependencies): void
     {
     }
 
+    #[\Override]
     protected function getGlobalsRegistryKey(): string
     {
         return 'FE_MOD';
     }
 
+    #[\Override]
     protected function getTemplatePrefix(): string
     {
         return 'mod';

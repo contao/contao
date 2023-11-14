@@ -26,6 +26,7 @@ use Twig\Error\RuntimeError;
 
 class ContaoEscaperTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         $this->resetStaticProperties([System::class]);

@@ -37,11 +37,13 @@ class RemoveDotEnvCommand extends Command
         $this->projectDir = $application->getProjectDir();
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->addArgument('key', InputArgument::REQUIRED, 'The variable name');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $dotenv = new Dotenv();

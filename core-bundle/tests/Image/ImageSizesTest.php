@@ -31,6 +31,7 @@ class ImageSizesTest extends TestCase
 
     private EventDispatcherInterface&MockObject $eventDispatcher;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

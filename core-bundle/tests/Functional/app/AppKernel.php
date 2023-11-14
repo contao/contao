@@ -31,6 +31,7 @@ use Terminal42\ServiceAnnotationBundle\Terminal42ServiceAnnotationBundle;
 
 class AppKernel extends Kernel
 {
+    #[\Override]
     public function registerBundles(): array
     {
         return [
@@ -49,26 +50,31 @@ class AppKernel extends Kernel
         ];
     }
 
+    #[\Override]
     public function getProjectDir(): string
     {
         return \dirname(__DIR__, 3).'/var';
     }
 
+    #[\Override]
     public function getCacheDir(): string
     {
         return $this->getProjectDir().'/cache/'.$this->environment;
     }
 
+    #[\Override]
     public function getLogDir(): string
     {
         return $this->getProjectDir().'/logs';
     }
 
+    #[\Override]
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load(__DIR__.'/config/config_'.$this->environment.'.yaml');
     }
 
+    #[\Override]
     protected function build(ContainerBuilder $container): void
     {
         $container->register('monolog.logger.contao', NullLogger::class);

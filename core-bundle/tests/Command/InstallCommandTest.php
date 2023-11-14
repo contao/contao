@@ -20,6 +20,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class InstallCommandTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         $fs = new Filesystem();

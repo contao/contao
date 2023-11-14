@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
 #[AsContentElement(category: 'texts')]
 class ListController extends AbstractContentElementController
 {
+    #[\Override]
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
         $template->set('items', StringUtil::deserialize($model->listitems, true));

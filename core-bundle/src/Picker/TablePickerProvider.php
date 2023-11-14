@@ -16,11 +16,13 @@ use Contao\DC_Table;
 
 class TablePickerProvider extends AbstractTablePickerProvider
 {
+    #[\Override]
     public function getName(): string
     {
         return 'tablePicker';
     }
 
+    #[\Override]
     public function getDcaAttributes(PickerConfig $config): array
     {
         $attributes = parent::getDcaAttributes($config);
@@ -32,6 +34,7 @@ class TablePickerProvider extends AbstractTablePickerProvider
         return $attributes;
     }
 
+    #[\Override]
     protected function getDataContainer(): string
     {
         return DC_Table::class;

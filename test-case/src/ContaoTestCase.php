@@ -34,6 +34,7 @@ abstract class ContaoTestCase extends TestCase
 
     private array $backupServerEnvGetPost = [];
 
+    #[\Override]
     public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
@@ -53,6 +54,7 @@ abstract class ContaoTestCase extends TestCase
         unset(self::$tempDirs[$key]);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         // Unset TL_CONFIG as we populate it in loadDefaultConfiguration (see #4656)

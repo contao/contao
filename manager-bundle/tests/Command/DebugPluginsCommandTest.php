@@ -28,6 +28,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class DebugPluginsCommandTest extends ContaoTestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         $this->resetStaticProperties([Table::class, Terminal::class]);

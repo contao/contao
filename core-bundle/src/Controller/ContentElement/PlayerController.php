@@ -50,6 +50,7 @@ class PlayerController extends AbstractContentElementController
     {
     }
 
+    #[\Override]
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
         // Find and order source files

@@ -32,6 +32,7 @@ class TableAccessVoterTest extends TestCase
 
     private TokenInterface&MockObject $token;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -43,6 +44,7 @@ class TableAccessVoterTest extends TestCase
         unset($GLOBALS['TL_DCA']);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         parent::tearDown();

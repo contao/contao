@@ -29,6 +29,7 @@ class PageUrlGeneratorTest extends TestCase
 
     private PageRegistry&MockObject $pageRegistry;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

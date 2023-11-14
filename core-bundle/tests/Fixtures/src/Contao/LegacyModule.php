@@ -22,6 +22,7 @@ class LegacyModule extends Module
     {
     }
 
+    #[\Override]
     protected function compile(): void
     {
     }

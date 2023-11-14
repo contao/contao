@@ -28,6 +28,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ContaoDataCollectorTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         $this->resetStaticProperties([Model::class, Registry::class]);

@@ -25,6 +25,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class BackupCreateCommand extends AbstractBackupCommand
 {
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);

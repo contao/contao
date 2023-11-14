@@ -44,6 +44,7 @@ class DebugContaoTwigCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this
@@ -53,6 +54,7 @@ class DebugContaoTwigCommand extends Command
         ;
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // Make sure the template hierarchy is up-to-date

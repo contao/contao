@@ -21,6 +21,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DisableAppConfiguredSettingsListenerTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_DCA']);

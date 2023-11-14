@@ -26,6 +26,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class BackupRestoreCommand extends AbstractBackupCommand
 {
+    #[\Override]
     protected function configure(): void
     {
         parent::configure();
@@ -33,6 +34,7 @@ class BackupRestoreCommand extends AbstractBackupCommand
         $this->addOption('force', null, InputOption::VALUE_NONE, 'By default, this command only restores backup that have been generated with Contao. Use --force to bypass this check.');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);

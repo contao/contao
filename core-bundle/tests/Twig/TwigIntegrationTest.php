@@ -34,6 +34,7 @@ use Twig\RuntimeLoader\FactoryRuntimeLoader;
 
 class TwigIntegrationTest extends TestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -50,6 +51,7 @@ class TwigIntegrationTest extends TestCase
         ];
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         (new Filesystem())->remove(Path::join($this->getTempDir(), 'templates'));

@@ -35,11 +35,13 @@ class SetConfigCommand extends Command
         $this->managerConfig = $application->getManagerConfig();
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->addArgument('json', InputArgument::REQUIRED, 'The configuration as JSON string');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $data = json_decode($input->getArgument('json'), true, 512, JSON_THROW_ON_ERROR);

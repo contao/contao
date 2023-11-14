@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class TestController extends AbstractContentElementController
 {
+    #[\Override]
     protected function getResponse(Template $template, ContentModel $model, Request $request): Response
     {
         return new JsonResponse(array_merge($template->getData(), ['templateName' => $template->getName()]));

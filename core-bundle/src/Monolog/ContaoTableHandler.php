@@ -36,6 +36,7 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
         $this->dbalServiceName = $name;
     }
 
+    #[\Override]
     public function handle(array $record): bool
     {
         if (!$this->isHandling($record)) {
@@ -58,6 +59,7 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
         return !$this->bubble;
     }
 
+    #[\Override]
     protected function write(array $record): void
     {
         /** @var \DateTime $date */
@@ -79,6 +81,7 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
         ]);
     }
 
+    #[\Override]
     protected function getDefaultFormatter(): FormatterInterface
     {
         return new LineFormatter('%message%');

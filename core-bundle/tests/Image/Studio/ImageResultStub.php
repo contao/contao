@@ -18,6 +18,7 @@ use Contao\Image\PictureInterface;
 
 class ImageResultStub extends ImageResult
 {
+    #[\Override]
     public function __construct(
         private readonly array $img,
         private readonly array $sources = [],
@@ -25,26 +26,31 @@ class ImageResultStub extends ImageResult
         // Do not call parent constructor
     }
 
+    #[\Override]
     public function getPicture(): PictureInterface
     {
         throw new \RuntimeException('not implemented');
     }
 
+    #[\Override]
     public function getSources(): array
     {
         return $this->sources;
     }
 
+    #[\Override]
     public function getImg(): array
     {
         return $this->img;
     }
 
+    #[\Override]
     public function getOriginalDimensions(): ImageDimensions
     {
         throw new \RuntimeException('not implemented');
     }
 
+    #[\Override]
     public function createIfDeferred(): void
     {
         throw new \RuntimeException('not implemented');

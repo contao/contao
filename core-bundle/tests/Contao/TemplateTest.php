@@ -31,6 +31,7 @@ use Symfony\Component\VarDumper\VarDumper;
 
 class TemplateTest extends TestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -43,6 +44,7 @@ class TemplateTest extends TestCase
         System::setContainer($container);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         (new Filesystem())->remove(Path::join($this->getTempDir(), 'templates'));
@@ -342,6 +344,7 @@ class TemplateTest extends TestCase
                 parent::__construct();
             }
 
+            #[\Override]
             public function parse(): string
             {
                 return $this->testBuffer;
@@ -354,6 +357,7 @@ class TemplateTest extends TestCase
                 return $this->strBuffer;
             }
 
+            #[\Override]
             public static function replaceDynamicScriptTags($strBuffer)
             {
                 return $strBuffer; // ignore dynamic script tags

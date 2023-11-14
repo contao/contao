@@ -32,6 +32,7 @@ final class ParsedParameters extends InsertTagParameters
         parent::__construct(array_values($parameters));
     }
 
+    #[\Override]
     public function hasInsertTags(): bool
     {
         foreach ($this->all() as $sequence) {

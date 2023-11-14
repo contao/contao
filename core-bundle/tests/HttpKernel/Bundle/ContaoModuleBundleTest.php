@@ -20,6 +20,7 @@ class ContaoModuleBundleTest extends TestCase
 {
     private ContaoModuleBundle $bundle;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

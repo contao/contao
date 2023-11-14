@@ -91,6 +91,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      * @param string $path      A path where to look for templates
      * @param string $namespace A "Contao" or "Contao_*" path namespace
      */
+    #[\Override]
     public function addPath(string $path, string $namespace = 'Contao', bool $trackTemplates = false): void
     {
         if (null === ContaoTwigUtil::parseContaoName("@$namespace")) {
@@ -117,6 +118,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      * @param string $path      A path where to look for templates
      * @param string $namespace A "Contao" or "Contao_*" path namespace
      */
+    #[\Override]
     public function prependPath(string $path, string $namespace = 'Contao'): void
     {
         if (null === ContaoTwigUtil::parseContaoName("@$namespace")) {
@@ -130,6 +132,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         }
     }
 
+    #[\Override]
     public function getPaths(string $namespace = 'Contao'): array
     {
         return parent::getPaths($namespace);
@@ -172,6 +175,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      *
      * @return string The cache key
      */
+    #[\Override]
     public function getCacheKey(string $name): string
     {
         $templateName = $this->getThemeTemplateName($name) ?? $name;
@@ -191,6 +195,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      *
      * @param string $name The template logical name
      */
+    #[\Override]
     public function getSourceContext(string $name): Source
     {
         $templateName = $this->getThemeTemplateName($name) ?? $name;
@@ -236,6 +241,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      *
      * @return bool If the template source code is handled by this loader or not
      */
+    #[\Override]
     public function exists(string $name): bool
     {
         if (parent::exists($name)) {
@@ -262,6 +268,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      *
      * @return bool true if the template is fresh, false otherwise
      */
+    #[\Override]
     public function isFresh(string $name, int $time): bool
     {
         if ((null !== ($themeTemplate = $this->getThemeTemplateName($name))) && !parent::isFresh($themeTemplate, $time)) {

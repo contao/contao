@@ -24,6 +24,7 @@ use Twig\Environment;
 
 class LabelListenerTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_DCA'], $GLOBALS['BE_MOD'], $GLOBALS['TL_LANG']);

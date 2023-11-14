@@ -187,16 +187,19 @@ class Dumper implements DumperInterface
     private function getCompatibleKeywords(): KeywordList
     {
         return new class() extends KeywordList {
+            #[\Override]
             public function isKeyword($word): bool
             {
                 return true;
             }
 
+            #[\Override]
             protected function getKeywords(): array
             {
                 return [];
             }
 
+            #[\Override]
             public function getName(): string
             {
                 return 'AllWordsAreKeywords';

@@ -31,6 +31,7 @@ class BackupStreamContentCommandTest extends TestCase
 {
     private VirtualFilesystemInterface $vfs;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -41,6 +42,7 @@ class BackupStreamContentCommandTest extends TestCase
         );
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         $this->resetStaticProperties([Terminal::class]);

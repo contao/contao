@@ -60,48 +60,57 @@ class MigrationCollectionTest extends TestCase
     {
         return [
             new class() extends AbstractMigration {
+                #[\Override]
                 public function getName(): string
                 {
                     return 'Successful Migration';
                 }
 
+                #[\Override]
                 public function shouldRun(): bool
                 {
                     return true;
                 }
 
+                #[\Override]
                 public function run(): MigrationResult
                 {
                     return $this->createResult(true, 'successful');
                 }
             },
             new class() extends AbstractMigration {
+                #[\Override]
                 public function getName(): string
                 {
                     return 'Failing Migration';
                 }
 
+                #[\Override]
                 public function shouldRun(): bool
                 {
                     return true;
                 }
 
+                #[\Override]
                 public function run(): MigrationResult
                 {
                     return $this->createResult(false, 'failing');
                 }
             },
             new class() extends AbstractMigration {
+                #[\Override]
                 public function getName(): string
                 {
                     return 'Inactive Migration';
                 }
 
+                #[\Override]
                 public function shouldRun(): bool
                 {
                     return false;
                 }
 
+                #[\Override]
                 public function run(): MigrationResult
                 {
                     throw new \LogicException('Should never be executed');

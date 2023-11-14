@@ -51,11 +51,13 @@ class SymlinksCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->addArgument('target', InputArgument::OPTIONAL, 'The target directory');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->webDir = $input->getArgument('target') ?? 'public';

@@ -32,11 +32,13 @@ class ContaoPageSchema extends BaseType
         $this->setFePreview($fePreview);
     }
 
+    #[\Override]
     public function getContext(): string
     {
         return 'https://schema.contao.org/';
     }
 
+    #[\Override]
     public function getType(): string
     {
         return 'Page';

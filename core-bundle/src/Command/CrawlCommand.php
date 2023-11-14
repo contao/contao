@@ -63,6 +63,7 @@ class CrawlCommand extends Command
         return $this->escargot;
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this
@@ -80,6 +81,7 @@ class CrawlCommand extends Command
         ;
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);

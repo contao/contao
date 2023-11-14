@@ -21,6 +21,7 @@ class BinaryStringTypeTest extends TestCase
 {
     private Type $type;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

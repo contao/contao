@@ -30,6 +30,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 abstract class AbstractDownloadContentElementController extends AbstractContentElementController
 {
+    #[\Override]
     public function __invoke(Request $request, ContentModel $model, string $section, array|null $classes = null): Response
     {
         // TODO: Remove method and move logic into its own action, once we have
@@ -43,6 +44,7 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
     /**
      * @return array<string>
      */
+    #[\Override]
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();

@@ -31,6 +31,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TablePickerProviderTest extends ContaoTestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         parent::tearDown();

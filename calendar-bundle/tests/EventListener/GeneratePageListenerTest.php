@@ -24,6 +24,7 @@ use Contao\TestCase\ContaoTestCase;
 
 class GeneratePageListenerTest extends ContaoTestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_CONFIG'], $GLOBALS['TL_HEAD']);

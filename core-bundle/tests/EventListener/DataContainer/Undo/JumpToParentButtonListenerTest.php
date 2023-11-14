@@ -37,6 +37,7 @@ class JumpToParentButtonListenerTest extends TestCase
      */
     private Adapter&MockObject $imageAdapter;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -53,6 +54,7 @@ class JumpToParentButtonListenerTest extends TestCase
         $this->connection = $this->createMock(Connection::class);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         parent::tearDown();

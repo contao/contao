@@ -58,11 +58,13 @@ class ContaoCoreBundle extends Bundle
 
     final public const SCOPE_FRONTEND = 'frontend';
 
+    #[\Override]
     public function getContainerExtension(): ContaoCoreExtension
     {
         return new ContaoCoreExtension();
     }
 
+    #[\Override]
     public function build(ContainerBuilder $container): void
     {
         parent::build($container);
@@ -139,6 +141,7 @@ class ContaoCoreBundle extends Bundle
         return $version;
     }
 
+    #[\Override]
     public function getPath(): string
     {
         return \dirname(__DIR__);

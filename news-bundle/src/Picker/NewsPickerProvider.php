@@ -40,16 +40,19 @@ class NewsPickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         parent::__construct($menuFactory, $router, $translator);
     }
 
+    #[\Override]
     public function getName(): string
     {
         return 'newsPicker';
     }
 
+    #[\Override]
     public function supportsContext(string $context): bool
     {
         return 'link' === $context && $this->security->isGranted('contao_user.modules', 'news');
     }
 
+    #[\Override]
     public function supportsValue(PickerConfig $config): bool
     {
         return $this->isMatchingInsertTag($config);
@@ -80,6 +83,7 @@ class NewsPickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return sprintf($this->getInsertTag($config), $value);
     }
 
+    #[\Override]
     protected function getRouteParameters(PickerConfig|null $config = null): array
     {
         $params = ['do' => 'news'];
@@ -96,6 +100,7 @@ class NewsPickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return $params;
     }
 
+    #[\Override]
     protected function getDefaultInsertTag(): string
     {
         return '{{news_url::%s}}';

@@ -37,16 +37,19 @@ class MakeEventListener extends AbstractMaker
     ) {
     }
 
+    #[\Override]
     public static function getCommandName(): string
     {
         return 'make:contao:event-listener';
     }
 
+    #[\Override]
     public static function getCommandDescription(): string
     {
         return 'Creates a new event listener';
     }
 
+    #[\Override]
     public function configureCommand(Command $command, InputConfiguration $inputConfig): void
     {
         $command
@@ -54,6 +57,7 @@ class MakeEventListener extends AbstractMaker
         ;
     }
 
+    #[\Override]
     public function interact(InputInterface $input, ConsoleStyle $io, Command $command): void
     {
         $command->addArgument('event', InputArgument::OPTIONAL);
@@ -69,10 +73,12 @@ class MakeEventListener extends AbstractMaker
         $input->setArgument('event', $io->askQuestion($question));
     }
 
+    #[\Override]
     public function configureDependencies(DependencyBuilder $dependencies): void
     {
     }
 
+    #[\Override]
     public function generate(InputInterface $input, ConsoleStyle $io, Generator $generator): void
     {
         $event = $input->getArgument('event');

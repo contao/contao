@@ -23,6 +23,7 @@ class AddTokenParser extends AbstractTokenParser
     {
     }
 
+    #[\Override]
     public function parse(Token $token): Node
     {
         $stream = $this->parser->getStream();
@@ -62,6 +63,7 @@ class AddTokenParser extends AbstractTokenParser
         return $token->test('endadd');
     }
 
+    #[\Override]
     public function getTag(): string
     {
         return 'add';

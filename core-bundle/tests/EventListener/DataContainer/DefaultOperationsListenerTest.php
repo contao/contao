@@ -31,6 +31,7 @@ class DefaultOperationsListenerTest extends TestCase
 
     private DefaultOperationsListener $listener;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -41,6 +42,7 @@ class DefaultOperationsListenerTest extends TestCase
         $this->listener = new DefaultOperationsListener($this->security, $this->createMock(Connection::class));
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         parent::tearDown();

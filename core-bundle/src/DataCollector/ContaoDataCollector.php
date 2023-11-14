@@ -35,6 +35,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     {
     }
 
+    #[\Override]
     public function collect(Request $request, Response $response, \Throwable|null $exception = null): void
     {
         $this->data = ['contao_version' => ContaoCoreBundle::getVersion()];
@@ -111,11 +112,13 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         return $data;
     }
 
+    #[\Override]
     public function getName(): string
     {
         return 'contao';
     }
 
+    #[\Override]
     public function reset(): void
     {
         $this->data = [];

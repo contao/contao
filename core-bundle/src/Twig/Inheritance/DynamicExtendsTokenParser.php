@@ -35,6 +35,7 @@ final class DynamicExtendsTokenParser extends AbstractTokenParser
     {
     }
 
+    #[\Override]
     public function parse(Token $token): Node
     {
         $stream = $this->parser->getStream();
@@ -64,6 +65,7 @@ final class DynamicExtendsTokenParser extends AbstractTokenParser
         return new Node();
     }
 
+    #[\Override]
     public function getTag(): string
     {
         return 'extends';

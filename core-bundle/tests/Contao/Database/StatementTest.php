@@ -25,6 +25,7 @@ class StatementTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
+    #[\Override]
     protected function tearDown(): void
     {
         $this->resetStaticProperties([System::class]);

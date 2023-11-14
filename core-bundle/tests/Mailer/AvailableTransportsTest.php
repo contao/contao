@@ -20,6 +20,7 @@ use Doctrine\Common\Annotations\DocParser;
 
 class AvailableTransportsTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         $this->resetStaticProperties([[AnnotationRegistry::class, ['failedToAutoload']], DocParser::class]);

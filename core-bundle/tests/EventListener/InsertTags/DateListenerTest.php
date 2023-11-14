@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class DateListenerTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         $this->resetStaticProperties([[AnnotationRegistry::class, ['failedToAutoload']], DocParser::class]);

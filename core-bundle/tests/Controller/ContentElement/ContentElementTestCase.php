@@ -85,6 +85,7 @@ class ContentElementTestCase extends TestCase
 
     final public const PAGE1 = 5;
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);

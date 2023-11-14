@@ -28,6 +28,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class AuthenticatorTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         $this->resetStaticProperties([SquareModule::class, Fill::class, EyeFill::class, Encoder::class, AbstractEnum::class, Version::class, Close::class]);

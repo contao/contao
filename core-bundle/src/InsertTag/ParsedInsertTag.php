@@ -22,6 +22,7 @@ final class ParsedInsertTag extends InsertTag
         parent::__construct($name, $parameters, $flags);
     }
 
+    #[\Override]
     public function getParameters(): ParsedParameters
     {
         $parameters = parent::getParameters();

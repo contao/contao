@@ -33,6 +33,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class CoreResponseContextFactoryTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         $this->resetStaticProperties([System::class]);

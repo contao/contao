@@ -51,6 +51,7 @@ class PluginTest extends ContaoTestCase
 {
     use ExpectDeprecationTrait;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -60,6 +61,7 @@ class PluginTest extends ContaoTestCase
         unset($_SERVER['DATABASE_URL'], $_SERVER['APP_SECRET'], $_ENV['DATABASE_URL']);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         Plugin::autoloadModules('');

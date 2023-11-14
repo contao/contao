@@ -31,6 +31,7 @@ use Terminal42\Escargot\Queue\LazyQueue;
 
 class CrawlCommandTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         $this->resetStaticProperties([ProgressBar::class, Terminal::class]);

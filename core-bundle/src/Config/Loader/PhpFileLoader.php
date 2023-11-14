@@ -37,6 +37,7 @@ use Symfony\Component\Filesystem\Path;
  */
 class PhpFileLoader extends Loader
 {
+    #[\Override]
     public function load(mixed $resource, string|null $type = null): string
     {
         [$code, $namespace] = $this->parseFile((string) $resource);
@@ -48,6 +49,7 @@ class PhpFileLoader extends Loader
         return $code;
     }
 
+    #[\Override]
     public function supports(mixed $resource, string|null $type = null): bool
     {
         return 'php' === Path::getExtension((string) $resource, true);
@@ -68,6 +70,7 @@ class PhpFileLoader extends Loader
         $namespaceResolver = new NameResolver();
 
         $nodeStripper = new class() extends NodeVisitorAbstract {
+            #[\Override]
             public function leaveNode(Node $node): array|int|null
             {
                 // Drop namespace and use declarations

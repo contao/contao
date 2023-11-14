@@ -25,6 +25,7 @@ final class PhpTemplateProxyNode extends Node
         parent::__construct([], ['extension_name' => $extensionName]);
     }
 
+    #[\Override]
     public function compile(Compiler $compiler): void
     {
         // echo $this->extensions["Contao\\…\\ContaoExtension"]->renderLegacyTemplate(

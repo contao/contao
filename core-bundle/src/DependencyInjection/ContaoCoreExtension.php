@@ -50,11 +50,13 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class ContaoCoreExtension extends Extension implements PrependExtensionInterface, ConfigureFilesystemInterface
 {
+    #[\Override]
     public function getAlias(): string
     {
         return 'contao';
     }
 
+    #[\Override]
     public function getConfiguration(array $config, ContainerBuilder $container): Configuration
     {
         return new Configuration((string) $container->getParameter('kernel.project_dir'));
@@ -88,6 +90,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         }
     }
 
+    #[\Override]
     public function load(array $configs, ContainerBuilder $container): void
     {
         if ('UTF-8' !== $container->getParameter('kernel.charset')) {

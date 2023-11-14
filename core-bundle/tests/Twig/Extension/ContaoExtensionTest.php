@@ -49,6 +49,7 @@ use Twig\TwigFunction;
 
 class ContaoExtensionTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_MIME']);

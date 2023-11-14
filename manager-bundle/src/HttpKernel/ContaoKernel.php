@@ -49,6 +49,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
     private ContaoCache|null $httpCache = null;
 
+    #[\Override]
     public function shutdown(): void
     {
         // Reset bundle loader to re-calculate bundle order after cache:clear
@@ -59,6 +60,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         parent::shutdown();
     }
 
+    #[\Override]
     public function registerBundles(): array
     {
         $bundles = [];
@@ -68,6 +70,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         return $bundles;
     }
 
+    #[\Override]
     public function getProjectDir(): string
     {
         if (null === self::$projectDir) {
@@ -77,11 +80,13 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         return self::$projectDir;
     }
 
+    #[\Override]
     public function getCacheDir(): string
     {
         return Path::join($this->getProjectDir(), 'var/cache', $this->getEnvironment());
     }
 
+    #[\Override]
     public function getLogDir(): string
     {
         return Path::join($this->getProjectDir(), 'var/logs');
@@ -148,6 +153,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         $this->managerConfig = $managerConfig;
     }
 
+    #[\Override]
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load(
@@ -279,6 +285,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         return static::create($projectDir, $env);
     }
 
+    #[\Override]
     protected function getContainerBuilder(): PluginContainerBuilder
     {
         $container = new PluginContainerBuilder($this->getPluginLoader(), []);
@@ -287,6 +294,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         return $container;
     }
 
+    #[\Override]
     protected function initializeContainer(): void
     {
         parent::initializeContainer();

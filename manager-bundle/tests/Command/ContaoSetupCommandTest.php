@@ -25,6 +25,7 @@ use Symfony\Component\Process\Process;
 
 class ContaoSetupCommandTest extends ContaoTestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         $this->resetStaticProperties([Terminal::class]);

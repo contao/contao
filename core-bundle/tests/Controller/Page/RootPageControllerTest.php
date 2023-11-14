@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RootPageControllerTest extends TestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -30,6 +31,7 @@ class RootPageControllerTest extends TestCase
         System::setContainer($this->getContainerWithContaoConfiguration());
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         $this->resetStaticProperties([System::class]);

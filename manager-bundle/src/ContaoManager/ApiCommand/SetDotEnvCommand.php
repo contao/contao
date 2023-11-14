@@ -37,6 +37,7 @@ class SetDotEnvCommand extends Command
         $this->projectDir = $application->getProjectDir();
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this
@@ -45,6 +46,7 @@ class SetDotEnvCommand extends Command
         ;
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $path = Path::join($this->projectDir, '.env');

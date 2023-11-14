@@ -39,11 +39,13 @@ class AutomatorCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->addArgument('task', InputArgument::OPTIONAL, "The name of the task:\n  - ".implode("\n  - ", $this->getCommands()));
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->framework->initialize();
