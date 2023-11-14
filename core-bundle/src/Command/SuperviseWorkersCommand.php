@@ -57,7 +57,7 @@ class SuperviseWorkersCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         foreach ($this->workers as $k => $worker) {
-            $this->supervisor = $this->supervisor->withCommand($this->createCommandForWorker('worker-'.$k + 1, $worker));
+            $this->supervisor = $this->supervisor->withCommand($this->createCommandForWorker('worker-'.($k + 1), $worker));
         }
 
         $io->info('Starting to supervise workers for a minute.');
