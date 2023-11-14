@@ -455,7 +455,7 @@ services:
         class: Contao\CoreBundle\Monolog\ContaoTableHandler
         arguments:
             - debug
-            - false
+            - true
         tags:
             - { name: monolog.logger, channel: contao }
 
