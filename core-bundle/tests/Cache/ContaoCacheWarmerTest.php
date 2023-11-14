@@ -112,10 +112,9 @@ class ContaoCacheWarmerTest extends TestCase
                 <?php
 
                 return array (
-                  'en' =>
+                  'en' => 
                   array (
                     'default' => true,
-                    'error' => true,
                     'tl_test' => true,
                   ),
                 );
