@@ -20,6 +20,7 @@ use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -531,10 +532,18 @@ abstract class System
 		// Prepare the XLIFF loader
 		$xlfLoader = new XliffFileLoader(static::getContainer()->getParameter('kernel.project_dir'), true);
 		$strCacheDir = static::getContainer()->getParameter('kernel.cache_dir');
+		$availLangFilesPath = Path::join($strCacheDir, 'contao/config/available-language-files.php');
+		$availLangFiles = file_exists($availLangFilesPath) ? include $availLangFilesPath : null;
 
 		// Load the language(s)
 		foreach ($arrCreateLangs as $strCreateLang)
 		{
+			// Skip languages that are not available (#6454)
+			if (null !== $availLangFiles && !isset($availLangFiles[$strCreateLang][$strName]))
+			{
+				continue;
+			}
+
 			// Try to load from cache
 			if (file_exists($strCacheDir . '/contao/languages/' . $strCreateLang . '/' . $strName . '.php'))
 			{
