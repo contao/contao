@@ -59,15 +59,6 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'child_record_callback'   => array('tl_newsletter', 'listNewsletters'),
 			'renderAsGrid'            => true
 		),
-		'global_operations' => array
-		(
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
-		),
 		'operations' => array
 		(
 			'edit' => array
