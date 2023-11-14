@@ -44,8 +44,13 @@ class SitemapListener
         $arrPages = [];
         $time = time();
 
-        // Get all news archives
-        $objArchives = $this->framework->getAdapter(NewsArchiveModel::class)->findAll();
+        if ($isMember = $this->security->isGranted('ROLE_MEMBER')) {
+            // Get all news archives
+            $objArchives = $this->framework->getAdapter(NewsArchiveModel::class)->findAll();
+        } else {
+            // Get all unprotected news archives
+            $objArchives = $this->framework->getAdapter(NewsArchiveModel::class)->findByProtected('');
+        }
 
         if (null === $objArchives) {
             return;
@@ -60,6 +65,10 @@ class SitemapListener
 
             // Skip news archives outside the root nodes
             if (!\in_array($objArchive->jumpTo, $arrRoot, true)) {
+                continue;
+            }
+
+            if ($isMember && !$this->security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objArchive->groups)) {
                 continue;
             }
 

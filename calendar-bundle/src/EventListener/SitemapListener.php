@@ -41,8 +41,13 @@ class SitemapListener
         $arrPages = [];
         $time = time();
 
-        // Get all calendars
-        $objCalendars = $this->framework->getAdapter(CalendarModel::class)->findAll();
+        if ($isMember = $this->security->isGranted('ROLE_MEMBER')) {
+            // Get all calendars
+            $objCalendars = $this->framework->getAdapter(CalendarModel::class)->findAll();
+        } else {
+            // Get all unprotected calendars
+            $objCalendars = $this->framework->getAdapter(CalendarModel::class)->findByProtected('');
+        }
 
         if (null === $objCalendars) {
             return;
@@ -57,6 +62,10 @@ class SitemapListener
 
             // Skip calendars outside the root nodes
             if (!\in_array($objCalendar->jumpTo, $arrRoot, true)) {
+                continue;
+            }
+
+            if ($isMember && !$this->security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objCalendar->groups)) {
                 continue;
             }
 

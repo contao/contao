@@ -44,12 +44,12 @@ class SitemapListenerTest extends ContaoTestCase
         $this->assertStringNotContainsString('<url><loc>', (string) $sitemapEvent->getDocument()->saveXML());
     }
 
-    public function testCalendarEventIsAdded(): void
+    /**
+     * @dataProvider getCalendarEvents
+     */
+    public function testCalendarEventIsAdded(array $pageProperties, array $calendarProperties, bool $hasAuthenticatedMember): void
     {
-        $jumpToPage = $this->mockClassWithProperties(PageModel::class, [
-            'published' => 1,
-            'protected' => 0,
-        ]);
+        $jumpToPage = $this->mockClassWithProperties(PageModel::class, $pageProperties);
 
         $jumpToPage
             ->method('getAbsoluteUrl')
@@ -58,10 +58,11 @@ class SitemapListenerTest extends ContaoTestCase
 
         $adapters = [
             CalendarModel::class => $this->mockConfiguredAdapter([
+                'findByProtected' => [
+                    $this->mockClassWithProperties(CalendarModel::class, $calendarProperties),
+                ],
                 'findAll' => [
-                    $this->mockClassWithProperties(CalendarModel::class, [
-                        'jumpTo' => 42,
-                    ]),
+                    $this->mockClassWithProperties(CalendarModel::class, $calendarProperties),
                 ],
             ]),
             PageModel::class => $this->mockConfiguredAdapter([
@@ -75,13 +76,52 @@ class SitemapListenerTest extends ContaoTestCase
         ];
 
         $sitemapEvent = $this->createSitemapEvent([1]);
-        $listener = $this->createListener([1, 42], $adapters);
+        $listener = $this->createListener([1, 42], $adapters, $hasAuthenticatedMember);
         $listener($sitemapEvent);
 
         $this->assertStringContainsString('<url><loc>https://contao.org</loc></url>', (string) $sitemapEvent->getDocument()->saveXML());
     }
 
-    private function createListener(array $allPages, array $adapters): SitemapListener
+    public function getCalendarEvents(): \Generator
+    {
+        yield [
+            [
+                'published' => 1,
+                'protected' => 0,
+            ],
+            [
+                'jumpTo' => 42,
+            ],
+            false,
+        ];
+
+        yield [
+            [
+                'published' => 1,
+                'protected' => 1,
+                'groups' => [1],
+            ],
+            [
+                'jumpTo' => 42,
+            ],
+            true,
+        ];
+
+        yield [
+            [
+                'published' => 1,
+                'protected' => 0,
+            ],
+            [
+                'jumpTo' => 42,
+                'protected' => 1,
+                'groups' => [1],
+            ],
+            true,
+        ];
+    }
+
+    private function createListener(array $allPages, array $adapters, bool $hasAuthenticatedMember = false): SitemapListener
     {
         $database = $this->createMock(Database::class);
         $database
@@ -94,8 +134,17 @@ class SitemapListenerTest extends ContaoTestCase
         ];
 
         $framework = $this->mockContaoFramework($adapters, $instances);
+        $security = $this->createMock(Security::class);
 
-        return new SitemapListener($framework, $this->createMock(Security::class));
+        if ([] !== $allPages) {
+            $security
+                ->expects($this->atLeastOnce())
+                ->method('isGranted')
+                ->willReturn($hasAuthenticatedMember)
+            ;
+        }
+
+        return new SitemapListener($framework, $security);
     }
 
     private function createSitemapEvent(array $rootPages): SitemapEvent
