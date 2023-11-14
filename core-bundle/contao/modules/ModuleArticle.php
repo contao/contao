@@ -106,6 +106,8 @@ class ModuleArticle extends Module
 		/** @var PageModel $objPage */
 		global $objPage;
 
+		$g = $objPage->templateGroup;
+
 		$id = 'article-' . $this->id;
 
 		// Generate the CSS ID if it is not set

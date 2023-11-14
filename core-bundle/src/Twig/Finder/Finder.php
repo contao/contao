@@ -36,6 +36,8 @@ final class Finder implements \IteratorAggregate, \Countable
 
     private bool $variants = false;
 
+    private bool $wildcardSupport = false;
+
     /**
      * @var array<string, list<string>>
      */
@@ -79,6 +81,13 @@ final class Finder implements \IteratorAggregate, \Countable
     {
         $this->identifier = ContaoTwigUtil::getIdentifier($name);
         $this->extension = ContaoTwigUtil::getExtension($name);
+
+        return $this;
+    }
+
+    public function enableWildcardSupport(): self
+    {
+        $this->wildcardSupport = true;
 
         return $this;
     }
@@ -182,15 +191,17 @@ final class Finder implements \IteratorAggregate, \Countable
         $this->sources = [];
 
         $matchIdentifier = function (string $identifier): bool {
-            if (!$this->variantsExclusive && $this->identifier === $identifier) {
-                return true;
+            $pattern = preg_quote($this->identifier, '/');
+
+            if ($this->variants) {
+                $pattern .= $this->variantsExclusive ? '\/.+' : '(?:\/.+)?';
             }
 
-            if (!$this->variants) {
-                return false;
+            if ($this->wildcardSupport) {
+                $pattern = str_replace('\*', '[^\/\.]+', $pattern);
             }
 
-            return str_starts_with($identifier, "$this->identifier/");
+            return 1 === preg_match("/^$pattern$/", $identifier);
         };
 
         foreach ($chains as $identifier => $chain) {

@@ -1111,6 +1111,7 @@ services:
         arguments:
             - '@twig'
             - '@cache.system'
+            - '@contao.twig.filesystem_loader'
 
     contao.twig.inspector.node_visitor:
         class: Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor

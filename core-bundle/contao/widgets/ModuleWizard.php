@@ -81,54 +81,66 @@ class ModuleWizard extends Widget
 			$modules[$k] = $v;
 		}
 
-		$objRow = $db
-			->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
-			->limit(1)
-			->execute($this->currentRecord);
-
-		$cols = array('main');
-
-		if (\in_array($objRow->rows, array('2rwh', '3rw')))
+		if (null !== ($slots = $this->arrConfiguration['slots'] ?? null))
 		{
-			$cols[] = 'header';
-		}
+			$cols = array();
 
-		if (\in_array($objRow->cols, array('2cll', '3cl')))
-		{
-			$cols[] = 'left';
-		}
-
-		if (\in_array($objRow->cols, array('2clr', '3cl')))
-		{
-			$cols[] = 'right';
-		}
-
-		if (\in_array($objRow->rows, array('2rwf', '3rw')))
-		{
-			$cols[] = 'footer';
-		}
-
-		$positions = array();
-
-		// Add custom layout sections
-		if ($objRow->sections)
-		{
-			$arrSections = StringUtil::deserialize($objRow->sections);
-
-			if (!empty($arrSections) && \is_array($arrSections))
+			foreach ($slots as $slot)
 			{
-				foreach ($arrSections as $v)
+				$cols[$slot] = "{% slot $slot %}";
+			}
+		}
+		else
+		{
+			$objRow = $db
+				->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
+				->limit(1)
+				->execute($this->currentRecord);
+
+			$cols = array('main');
+
+			if (\in_array($objRow->rows, array('2rwh', '3rw')))
+			{
+				$cols[] = 'header';
+			}
+
+			if (\in_array($objRow->cols, array('2cll', '3cl')))
+			{
+				$cols[] = 'left';
+			}
+
+			if (\in_array($objRow->cols, array('2clr', '3cl')))
+			{
+				$cols[] = 'right';
+			}
+
+			if (\in_array($objRow->rows, array('2rwf', '3rw')))
+			{
+				$cols[] = 'footer';
+			}
+
+			$positions = array();
+
+			// Add custom layout sections
+			if ($objRow->sections)
+			{
+				$arrSections = StringUtil::deserialize($objRow->sections);
+
+				if (!empty($arrSections) && \is_array($arrSections))
 				{
-					if (!empty($v['id']))
+					foreach ($arrSections as $v)
 					{
-						$cols[] = $v['id'];
-						$positions[$v['id']] = $v['position'];
+						if (!empty($v['id']))
+						{
+							$cols[] = $v['id'];
+							$positions[$v['id']] = $v['position'];
+						}
 					}
 				}
 			}
-		}
 
-		$cols = Backend::convertLayoutSectionIdsToAssociativeArray($cols);
+			$cols = Backend::convertLayoutSectionIdsToAssociativeArray($cols);
+		}
 
 		// Get the new value
 		if (Input::post('FORM_SUBMIT') == $this->strTable)

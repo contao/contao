@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+{% set html_attributes = attrs()
+    .set('lang', language|default)
+    .set('dir', 'rtl', rtl) %}
+<html{{ html_attributes }}>
+    <head>
+        {% block head %}
+            <meta charset="UTF-8">
+            <title>{{ head.title }}</title>
+
+            {% block meta %}
+                <meta name="robots" content="{{ head.metaRobots }}">
+                <meta name="description" content="{{ head.metaDescription|u.slice(0, 320) }}">
+                <meta name="generator" content="Contao Open Source CMS">
+            {% endblock %}
+
+            {% if page.enableCanonical %}
+                <link rel="canonical" href="{{ head.canonicalUriForRequest(app.request) }}">
+            {% endif %}
+
+            {% block viewport %}
+                <meta name="viewport" content="width=device-width,initial-scale=1.0">
+            {% endblock %}
+        {% endblock %}
+    </head>
+    <body id="top">
+        {% block body %}
+            <div id="wrapper">
+                {% block wrapper %}
+                    <header id="header">{% slot header %}</header>
+                    <main id="main">{% slot main %}</main>
+                    <header id="footer">{% slot footer %}</header>
+                {% endblock %}
+            </div>
+        {% endblock %}
+    </body>
+</html>

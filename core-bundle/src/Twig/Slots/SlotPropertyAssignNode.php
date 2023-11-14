@@ -23,6 +23,5 @@ final class SlotPropertyAssignNode extends Node
     public function compile(Compiler $compiler): void
     {
         $compiler->write('$this->slots = $context[\'_slots\'] ?? [];'."\n");
-        $compiler->write('unset($context[\'_slots\']);'."\n");
     }
 }

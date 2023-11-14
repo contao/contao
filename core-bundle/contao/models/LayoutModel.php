@@ -50,6 +50,7 @@ use Contao\Model\Collection;
  * @property boolean           $static
  * @property string|array      $width
  * @property string|array      $align
+ * @property string            $version
  *
  * @method static LayoutModel|null findById($id, array $opt=array())
  * @method static LayoutModel|null findByPk($id, array $opt=array())

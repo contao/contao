@@ -27,7 +27,6 @@ class SlotPropertyAssignNodeTest extends TestCase
 
         $expectedSource = <<<'SOURCE'
             $this->slots = $context['_slots'] ?? [];
-            unset($context['_slots']);
 
             SOURCE;
 

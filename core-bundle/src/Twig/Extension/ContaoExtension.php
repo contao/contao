@@ -209,7 +209,7 @@ final class ContaoExtension extends AbstractExtension
             new TwigFunction(
                 'frontend_module',
                 [FragmentRuntime::class, 'renderModule'],
-                ['is_safe' => ['html']],
+                ['needs_context' => true, 'is_safe' => ['html']],
             ),
             new TwigFunction(
                 'content_element',

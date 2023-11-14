@@ -124,4 +124,19 @@ abstract class AbstractController extends SymfonyAbstractController
 
         return $response;
     }
+
+    protected function getPageModel(): PageModel|null
+    {
+        if (!$request = $this->container->get('request_stack')->getCurrentRequest()) {
+            return null;
+        }
+
+        $pageModel = $request->attributes->get('pageModel');
+
+        if ($pageModel instanceof PageModel) {
+            return $pageModel;
+        }
+
+        return null;
+    }
 }

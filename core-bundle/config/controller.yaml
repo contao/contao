@@ -20,6 +20,13 @@ services:
             tags:
                 - { name: container.service_subscriber, id: contao.csrf.token_manager }
 
+        Contao\CoreBundle\Controller\Page\AbstractPageController:
+            tags:
+                - { name: container.service_subscriber, id: contao.routing.response_context_factory }
+                - { name: container.service_subscriber, id: contao.security.token_checker }
+                - { name: container.service_subscriber, id: contao.image.picture_factory }
+                - { name: container.service_subscriber, id: contao.image.preview_factory }
+
     # We explicitly allow autowiring and FQCN service IDs in controllers
     Contao\CoreBundle\Controller\BackendController: ~
 
@@ -172,6 +179,8 @@ services:
             - '@?logger'
         tags:
             - { name: monolog.logger, channel: contao.error }
+
+    Contao\CoreBundle\Controller\Page\DefaultPageController: ~
 
     Contao\CoreBundle\Controller\PreviewLinkController:
         arguments:

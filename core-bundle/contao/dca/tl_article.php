@@ -210,7 +210,6 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		(
 			'filter'                  => true,
 			'inputType'               => 'select',
-			'options_callback'        => array('tl_article', 'getActiveLayoutSections'),
 			'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['COLS'],
 			'sql'                     => "varchar(32) NOT NULL default 'main'"

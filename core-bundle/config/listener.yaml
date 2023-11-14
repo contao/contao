@@ -63,6 +63,12 @@ services:
         tags:
             - kernel.event_subscriber
 
+    contao.listener.data_container.article_slot:
+        class: Contao\CoreBundle\EventListener\DataContainer\ArticleSlotListener
+        arguments:
+            - '@contao.twig.inspector'
+            - '@contao.framework'
+
     contao.listener.data_container.backend_favorites:
         class: Contao\CoreBundle\EventListener\DataContainer\BackendFavoritesListener
         arguments:
@@ -103,6 +109,13 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\LayoutOptionsListener
         arguments:
             - '@database_connection'
+
+    contao.listener.data_container.layout_template:
+        class: Contao\CoreBundle\EventListener\DataContainer\LayoutTemplateListener
+        arguments:
+            - '@contao.twig.finder_factory'
+            - '@contao.twig.inspector'
+            - '@contao.framework'
 
     contao.listener.data_container.member_groups:
         class: Contao\CoreBundle\EventListener\DataContainer\MemberGroupsListener

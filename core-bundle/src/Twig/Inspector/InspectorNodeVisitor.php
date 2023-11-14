@@ -50,7 +50,7 @@ final class InspectorNodeVisitor implements NodeVisitorInterface
             return $parent->getAttribute('value');
         };
 
-        $this->persist($node->getTemplateName(), [
+        $this->persist($node->getSourceContext()->getPath(), [
             'slots' => array_unique($this->slots),
             'parent' => $getParent($node),
         ]);
