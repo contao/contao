@@ -19,7 +19,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
 use Contao\PageModel;
-use Contao\StringUtil;
 use Symfony\Bundle\SecurityBundle\Security;
 
 class SitemapListener
@@ -66,7 +65,7 @@ class SitemapListener
                 continue;
             }
 
-            if ($isMember && $objCalendar->protected && !$this->security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $this->framework->getAdapter(StringUtil::class)->deserialize($objCalendar->groups, true))) {
+            if ($isMember && $objCalendar->protected && !$this->security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objCalendar->groups)) {
                 continue;
             }
 

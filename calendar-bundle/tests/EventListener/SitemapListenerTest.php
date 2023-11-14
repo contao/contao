@@ -18,7 +18,6 @@ use Contao\CalendarModel;
 use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\Database;
 use Contao\PageModel;
-use Contao\StringUtil;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -74,7 +73,6 @@ class SitemapListenerTest extends ContaoTestCase
                     $this->mockClassWithProperties(CalendarEventsModel::class),
                 ],
             ]),
-            StringUtil::class => $this->mockConfiguredAdapter(['deserialize' => [1]]),
         ];
 
         $sitemapEvent = $this->createSitemapEvent([1]);

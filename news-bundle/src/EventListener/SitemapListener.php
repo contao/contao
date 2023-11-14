@@ -19,7 +19,6 @@ use Contao\Database;
 use Contao\NewsArchiveModel;
 use Contao\NewsModel;
 use Contao\PageModel;
-use Contao\StringUtil;
 use Symfony\Bundle\SecurityBundle\Security;
 
 /**
@@ -69,7 +68,7 @@ class SitemapListener
                 continue;
             }
 
-            if ($isMember && $objArchive->protected && !$this->security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $this->framework->getAdapter(StringUtil::class)->deserialize($objArchive->groups, true))) {
+            if ($isMember && $objArchive->protected && !$this->security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objArchive->groups)) {
                 continue;
             }
 
