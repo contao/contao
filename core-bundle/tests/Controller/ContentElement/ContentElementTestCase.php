@@ -57,6 +57,7 @@ use Symfony\Bridge\Twig\Extension\AssetExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Cache\Adapter\NullAdapter;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -104,7 +105,7 @@ class ContentElementTestCase extends TestCase
      *
      * @param-out array<string, array<int|string, string>> $responseContextData
      */
-    protected function renderWithModelData(AbstractContentElementController $controller, array $modelData, string|null $template = null, bool $asEditorView = false, array|null &$responseContextData = null): Response
+    protected function renderWithModelData(AbstractContentElementController $controller, array $modelData, string|null $template = null, bool $asEditorView = false, array|null &$responseContextData = null, ContainerBuilder|null $adjustedContainer = null): Response
     {
         // Setup Twig environment
         $loader = $this->getContaoFilesystemLoader();
@@ -127,6 +128,18 @@ class ContentElementTestCase extends TestCase
         $container->set('contao.framework', $this->getDefaultFramework());
         $container->set('monolog.logger.contao.error', $this->createMock(LoggerInterface::class));
         $container->set('fragment.handler', $this->createMock(FragmentHandler::class));
+
+        if ($adjustedContainer) {
+            $container->merge($adjustedContainer);
+
+            foreach ($adjustedContainer->getServiceIds() as $serviceId) {
+                if ('service_container' === $serviceId) {
+                    continue;
+                }
+
+                $container->set($serviceId, $adjustedContainer->get($serviceId));
+            }
+        }
 
         $controller->setContainer($container);
         System::setContainer($container);
