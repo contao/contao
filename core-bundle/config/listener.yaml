@@ -89,6 +89,9 @@ services:
             - '@security.helper'
             - '@database_connection'
 
+    contao.listener.data_container.default_global_operations:
+        class: Contao\CoreBundle\EventListener\DataContainer\DefaultGlobalOperationsListener
+
     contao.listener.data_container.disable_app_configured_settings:
         class: Contao\CoreBundle\EventListener\DataContainer\DisableAppConfiguredSettingsListener
         arguments:
@@ -187,14 +190,6 @@ services:
             - '@contao.twig.filesystem_loader_warmer'
             - '@contao.twig.loader.theme_namespace'
             - '@translator'
-
-    contao.listener.data_container.toggle_nodes_label:
-        class: Contao\CoreBundle\EventListener\DataContainer\ToggleNodesLabelListener
-        arguments:
-            - '@request_stack'
-            - '@contao.routing.scope_matcher'
-        tags:
-            - { name: contao.hook, hook: loadDataContainer }
 
     contao.listener.data_container.undo.jump_to_parent_button:
         class: Contao\CoreBundle\EventListener\DataContainer\Undo\JumpToParentButtonListener
