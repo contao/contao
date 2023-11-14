@@ -64,6 +64,10 @@ export default class extends Controller {
         el.title = this.expandValue;
     }
 
+    loadToggler (el, enabled) {
+        el.classList[enabled ? 'add' : 'remove']('foldable--loading');
+    }
+
     showChild (item) {
         item.style.display = '';
     }
@@ -77,8 +81,8 @@ export default class extends Controller {
             new Request.Contao({
                 field: el,
                 evalScripts: true,
-                onRequest: function() {
-                    AjaxRequest.displayBox(Contao.lang.loading + ' …');
+                onRequest: () => {
+                    this.loadToggler(el, true);
                 },
                 onSuccess: (txt) => {
                     const target = level === 0 ? 'child rootChild' : 'child';
@@ -124,8 +128,7 @@ export default class extends Controller {
                     });
 
                     window.fireEvent('structure');
-                    AjaxRequest.hideBox();
-
+                    this.loadToggler(el, false);
                     this.expandToggler(el);
 
                     // HOOK
@@ -147,17 +150,17 @@ export default class extends Controller {
     async toggleAll (event) {
         event.preventDefault();
 
-        AjaxRequest.displayBox(Contao.lang.loading + ' …');
-
         const href = event.currentTarget.href;
 
         if (this.hasExpandedRoot() ^ (event ? event.altKey : false)) {
-            await this.updateAllState(href, 0);
+            this.updateAllState(href, 0);
             this.toggleTargets.forEach((el) => this.collapseToggler(el));
             this.childTargets.forEach((item) => item.style.display = 'none');
         } else {
-            await this.updateAllState(href, 1);
             this.childTargets.forEach((el) => el.remove());
+            this.toggleTargets.forEach((el) => this.loadToggler(el, true));
+
+            await this.updateAllState(href, 1);
             const promises = [];
 
             this.toggleTargets.forEach((el) => {
@@ -171,8 +174,6 @@ export default class extends Controller {
 
             await Promise.all(promises);
         }
-
-        AjaxRequest.hideBox();
 
         this.updateOperation();
     }

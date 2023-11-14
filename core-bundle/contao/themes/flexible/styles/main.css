@@ -2494,6 +2494,24 @@ time[title] {
 	transform: rotateZ(90deg);
 }
 
+.foldable--loading {
+	position: relative;
+	pointer-events: none;
+}
+
+.foldable--loading img {
+	visibility: hidden;
+}
+
+.foldable--loading::after {
+	content: "";
+	position: absolute;
+	inset: 1px auto auto 1px;
+	width: 15px;
+	height: 15px;
+	background: url("icons/loading.svg") 0 0/contain no-repeat
+}
+
 /* Default icon classes */
 .header_icon, .header_clipboard, .header_back, .header_new, .header_rss, .header_edit_all, .header_delete_all,
 .header_new_folder, .header_css_import, .header_theme_import, .header_store, .header_toggle, .header_sync {
