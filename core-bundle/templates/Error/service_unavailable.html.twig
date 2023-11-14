@@ -11,7 +11,7 @@
     <script data-labels="{{ defaultLabels|json_encode() }}">
         (function (n, d) {
             let language = n.language;
-            let data = JSON.parse(d.currentScript.dataset.labels);
+            const data = JSON.parse(d.currentScript.dataset.labels);
             function translate(key) {
                 if (data[language] === undefined) {
                     language = new Intl.Locale(language).language;
