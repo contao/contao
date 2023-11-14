@@ -22,6 +22,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\ParameterBag\ContainerBag;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -104,6 +105,7 @@ abstract class ContaoTestCase extends TestCase
 
         $container = new ContainerBuilder();
         $container->merge($cachedContainers[$projectDir]);
+        $container->set('parameter_bag', new ContainerBag($container));
 
         return $container;
     }

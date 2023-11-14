@@ -187,7 +187,7 @@ class Feed
 		$xml .= '<subtitle>' . StringUtil::specialchars($this->description) . '</subtitle>';
 		$xml .= '<link rel="alternate" href="' . StringUtil::specialchars($this->link) . '" />';
 		$xml .= '<id>' . StringUtil::specialchars($this->link) . '</id>';
-		$xml .= '<updated>' . preg_replace('/00$/', ':00', date('Y-m-d\TH:i:sO', $this->published)) . '</updated>';
+		$xml .= '<updated>' . date('Y-m-d\TH:i:sP', $this->published) . '</updated>';
 		$xml .= '<generator>Contao Open Source CMS</generator>';
 		$xml .= '<link href="' . StringUtil::specialchars(Environment::get('base') . 'share/' . $this->strName) . '.xml" rel="self" />';
 
@@ -197,7 +197,7 @@ class Feed
 			$xml .= '<title>' . StringUtil::specialchars(strip_tags(StringUtil::stripInsertTags($objItem->title))) . '</title>';
 			$xml .= '<content type="html">' . preg_replace('/[\n\r]+/', ' ', htmlspecialchars($objItem->description, ENT_XML1, 'UTF-8')) . '</content>';
 			$xml .= '<link rel="alternate" href="' . StringUtil::specialchars($objItem->link) . '" />';
-			$xml .= '<updated>' . preg_replace('/00$/', ':00', date('Y-m-d\TH:i:sO', $objItem->published)) . '</updated>';
+			$xml .= '<updated>' . date('Y-m-d\TH:i:sP', $objItem->published) . '</updated>';
 			$xml .= '<id>' . ($objItem->guid ?: StringUtil::specialchars($objItem->link)) . '</id>';
 
 			if ($objItem->author)

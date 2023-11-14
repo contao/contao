@@ -14,23 +14,31 @@ namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
 use Contao\CoreBundle\Controller\ContentElement\DownloadsController;
 use Contao\CoreBundle\Filesystem\FileDownloadHelper;
-use Contao\CoreBundle\Image\Preview\PreviewFactory;
 use Contao\StringUtil;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class DownloadsControllerTest extends ContentElementTestCase
 {
     public function testOutputsSingleDownload(): void
     {
-        $response = $this->renderWithModelData($this->getDownloadsController(), [
-            'type' => 'download',
-            'singleSRC' => StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE1),
-            'sortBy' => '',
-            'numberOfItems' => '0',
-            'showPreview' => '',
-            'overwriteLink' => '',
-            'inline' => false,
-        ]);
+        $response = $this->renderWithModelData(
+            $this->getDownloadsController(),
+            [
+                'type' => 'download',
+                'singleSRC' => StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE1),
+                'sortBy' => '',
+                'numberOfItems' => '0',
+                'showPreview' => '',
+                'overwriteLink' => '',
+                'inline' => false,
+                'fullsize' => false,
+            ],
+            null,
+            false,
+            $responseContext,
+            $this->getAdjustedContainer(),
+        );
 
         $expectedOutput = <<<'HTML'
             <div class="download-element ext-jpg content-download">
@@ -43,17 +51,25 @@ class DownloadsControllerTest extends ContentElementTestCase
 
     public function testOutputsSingleDownloadWithCustomMetadata(): void
     {
-        $response = $this->renderWithModelData($this->getDownloadsController(), [
-            'type' => 'download',
-            'singleSRC' => StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE1),
-            'sortBy' => '',
-            'numberOfItems' => '0',
-            'showPreview' => '',
-            'overwriteLink' => '1',
-            'linkTitle' => 'Download the file',
-            'titleText' => 'The file',
-            'inline' => false,
-        ]);
+        $response = $this->renderWithModelData(
+            $this->getDownloadsController(),
+            [
+                'type' => 'download',
+                'singleSRC' => StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE1),
+                'sortBy' => '',
+                'numberOfItems' => '0',
+                'showPreview' => '',
+                'overwriteLink' => '1',
+                'linkTitle' => 'Download the file',
+                'titleText' => 'The file',
+                'inline' => false,
+                'fullsize' => false,
+            ],
+            null,
+            false,
+            $responseContext,
+            $this->getAdjustedContainer(),
+        );
 
         $expectedOutput = <<<'HTML'
             <div class="download-element ext-jpg content-download">
@@ -66,11 +82,19 @@ class DownloadsControllerTest extends ContentElementTestCase
 
     public function testFiltersFileExtensions(): void
     {
-        $response = $this->renderWithModelData($this->getDownloadsController(), [
-            'type' => 'download',
-            'singleSRC' => StringUtil::uuidToBin(ContentElementTestCase::FILE_VIDEO_MP4),
-            'sortBy' => '',
-        ]);
+        $response = $this->renderWithModelData(
+            $this->getDownloadsController(),
+            [
+                'type' => 'download',
+                'singleSRC' => StringUtil::uuidToBin(ContentElementTestCase::FILE_VIDEO_MP4),
+                'sortBy' => '',
+                'fullsize' => false,
+            ],
+            null,
+            false,
+            $responseContext,
+            $this->getAdjustedContainer(),
+        );
 
         $expectedOutput = <<<'HTML'
             <div class="content-download">
@@ -82,18 +106,26 @@ class DownloadsControllerTest extends ContentElementTestCase
 
     public function testOutputsDownloadsList(): void
     {
-        $response = $this->renderWithModelData($this->getDownloadsController(), [
-            'type' => 'downloads',
-            'multiSRC' => serialize([
-                StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE1),
-                StringUtil::uuidToBin(ContentElementTestCase::FILE_VIDEO_MP4),
-                StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE2),
-            ]),
-            'sortBy' => '',
-            'numberOfItems' => 2,
-            'showPreview' => '',
-            'inline' => false,
-        ]);
+        $response = $this->renderWithModelData(
+            $this->getDownloadsController(),
+            [
+                'type' => 'downloads',
+                'multiSRC' => serialize([
+                    StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE1),
+                    StringUtil::uuidToBin(ContentElementTestCase::FILE_VIDEO_MP4),
+                    StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE2),
+                ]),
+                'sortBy' => '',
+                'numberOfItems' => 2,
+                'showPreview' => '',
+                'inline' => false,
+                'fullsize' => false,
+            ],
+            null,
+            false,
+            $responseContext,
+            $this->getAdjustedContainer(),
+        );
 
         $expectedOutput = <<<'HTML'
             <div class="content-downloads">
@@ -102,7 +134,7 @@ class DownloadsControllerTest extends ContentElementTestCase
                         <a href="https://example.com/files/image1.jpg" title="translated(contao_default:MSC.download[image1 title])" type="image/jpg">image1 title</a>
                     </li>
                     <li class="download-element ext-jpg">
-                        <a href="https://example.com/files/image2.jpg" title="translated(contao_default:MSC.download[image2.jpg])">image2.jpg</a>
+                        <a href="https://example.com/files/image2.jpg" title="translated(contao_default:MSC.download[image2.jpg])" type="image/jpeg">image2.jpg</a>
                     </li>
                 </ul>
             </div>
@@ -114,16 +146,19 @@ class DownloadsControllerTest extends ContentElementTestCase
     private function getDownloadsController(): DownloadsController
     {
         $security = $this->createMock(Security::class);
-        $fileDownloadHelper = $this->createMock(FileDownloadHelper::class);
 
         return new DownloadsController(
             $security,
             $this->getDefaultStorage(),
-            $fileDownloadHelper,
-            $this->createMock(PreviewFactory::class),
-            $this->getDefaultStudio(),
-            'project/dir',
-            ['jpg', 'txt'],
         );
+    }
+
+    private function getAdjustedContainer(): ContainerBuilder
+    {
+        $container = new ContainerBuilder();
+        $container->set('contao.filesystem.file_download_helper', $this->createMock(FileDownloadHelper::class));
+        $container->setParameter('contao.downloadable_files', ['jpg', 'txt']);
+
+        return $container;
     }
 }
