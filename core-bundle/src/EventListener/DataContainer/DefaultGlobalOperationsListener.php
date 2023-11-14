@@ -64,10 +64,10 @@ class DefaultGlobalOperationsListener
     private function getDefaults(string $table): array
     {
         // Supports DC_Table/DC_Folder and all subclasses (e.g. DC_Multilingual)
-        $isDCTable = is_a(DataContainer::getDriverForTable($table), DC_Table::class, true);
-        $isDCFolder = is_a(DataContainer::getDriverForTable($table), DC_Folder::class, true);
+        $isDcTable = is_a(DataContainer::getDriverForTable($table), DC_Table::class, true);
+        $isDcFolder = is_a(DataContainer::getDriverForTable($table), DC_Folder::class, true);
 
-        if (!$isDCTable && !$isDCFolder) {
+        if (!$isDcTable && !$isDcFolder) {
             return [];
         }
 
@@ -79,10 +79,10 @@ class DefaultGlobalOperationsListener
         $canEdit = !($GLOBALS['TL_DCA'][$table]['config']['notEditable'] ?? false);
         $canCopy = !($GLOBALS['TL_DCA'][$table]['config']['closed'] ?? false) && !($GLOBALS['TL_DCA'][$table]['config']['notCopyable'] ?? false);
 
-        if ($isDCFolder || $isTreeMode || $isExtendedTreeMode) {
+        if ($isDcFolder || $isTreeMode || $isExtendedTreeMode) {
             $operations += [
                 'toggleNodes' => [
-                    'href' => $isDCFolder ? 'tg=all' : 'ptg=all',
+                    'href' => $isDcFolder ? 'tg=all' : 'ptg=all',
                     'class' => 'header_toggle',
                     'showOnSelect' => true,
                 ],
