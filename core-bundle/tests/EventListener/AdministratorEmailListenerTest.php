@@ -17,10 +17,10 @@ use Contao\CoreBundle\EventListener\AdministratorEmailListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Tests\TestCase;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AdministratorEmailListenerTest extends TestCase
@@ -86,7 +86,7 @@ class AdministratorEmailListenerTest extends TestCase
 
     private function createAdministratorEmailListener(ContaoFramework|null $framework = null, Security|null $security = null): AdministratorEmailListener
     {
-        if (null === $framework) {
+        if (!$framework) {
             $configAdapter = $this->mockAdapter(['get']);
             $configAdapter
                 ->method('get')
@@ -118,7 +118,7 @@ class AdministratorEmailListenerTest extends TestCase
             ->willReturn(new Request())
         ;
 
-        if (null === $security) {
+        if (!$security) {
             $security = $this->createMock(Security::class);
             $security
                 ->method('isGranted')

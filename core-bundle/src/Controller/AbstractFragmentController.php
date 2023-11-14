@@ -33,6 +33,7 @@ use Symfony\Component\HttpFoundation\Response;
 abstract class AbstractFragmentController extends AbstractController implements FragmentOptionsAwareInterface
 {
     protected array $options = [];
+
     private string|null $view = null;
 
     public function setFragmentOptions(array $options): void
@@ -57,9 +58,13 @@ abstract class AbstractFragmentController extends AbstractController implements 
 
     protected function getPageModel(): PageModel|null
     {
-        $request = $this->container->get('request_stack')->getCurrentRequest();
+        if (!$request = $this->container->get('request_stack')->getCurrentRequest()) {
+            return null;
+        }
 
-        if (null !== $request && ($pageModel = $request->attributes->get('pageModel')) instanceof PageModel) {
+        $pageModel = $request->attributes->get('pageModel');
+
+        if ($pageModel instanceof PageModel) {
             return $pageModel;
         }
 
@@ -106,7 +111,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
                     throw $e;
                 }
 
-                if (null !== $preBuiltResponse) {
+                if ($preBuiltResponse) {
                     return $preBuiltResponse->setContent($response->getContent());
                 }
 
@@ -235,7 +240,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
     {
         $view ??= $this->view ?? throw new \InvalidArgumentException('Cannot derive template name, please make sure createTemplate() was called before or specify the template explicitly.');
 
-        if (null === $response) {
+        if (!$response) {
             $response = new Response();
 
             $this->markResponseForInternalCaching($response);
@@ -281,8 +286,8 @@ abstract class AbstractFragmentController extends AbstractController implements 
             : $exists($variantTemplate);
 
         // Prefer using a custom variant template if defined and applicable
-        if (($variantTemplate = $model->customTpl) && $shouldUseVariantTemplate($variantTemplate)) {
-            return $variantTemplate;
+        if ($model->customTpl && $shouldUseVariantTemplate($model->customTpl)) {
+            return $model->customTpl;
         }
 
         $definedTemplateName = $this->options['template'] ?? null;

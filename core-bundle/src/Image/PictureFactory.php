@@ -41,8 +41,11 @@ class PictureFactory implements PictureFactoryInterface
     ];
 
     private array $imageSizeItemsCache = [];
+
     private string $defaultDensities = '';
+
     private array $predefinedSizes = [];
+
     private array $preserveMetadataFields;
 
     /**
@@ -154,7 +157,7 @@ class PictureFactory implements PictureFactoryInterface
 
                 $config->setSize($this->createConfigItem($imageSizes?->row()));
 
-                if (null !== $imageSizes) {
+                if ($imageSizes) {
                     $options->setSkipIfDimensionsMatch((bool) $imageSizes->skipIfDimensionsMatch);
 
                     if ('delete' === $imageSizes->preserveMetadata) {
@@ -213,7 +216,7 @@ class PictureFactory implements PictureFactoryInterface
 
                             usort(
                                 $formats[$source],
-                                static fn ($a, $b) => (self::FORMATS_ORDER[$a] ?? $a) <=> (self::FORMATS_ORDER[$b] ?? $b)
+                                static fn ($a, $b) => (self::FORMATS_ORDER[$a] ?? $a) <=> (self::FORMATS_ORDER[$b] ?? $b),
                             );
                         }
                     }

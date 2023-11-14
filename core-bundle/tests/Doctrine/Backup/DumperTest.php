@@ -275,12 +275,10 @@ class DumperTest extends ContaoTestCase
     }
 
     /**
-     * @param array $tables<Table>
-     * @param array $views<View>
-     *
-     * @return Connection&MockObject
+     * @param array<Table> $tables
+     * @param array<View>  $views
      */
-    private function mockConnection(array $tables, array $views, array $queries): Connection
+    private function mockConnection(array $tables, array $views, array $queries): Connection&MockObject
     {
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
         $schemaManager

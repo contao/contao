@@ -33,12 +33,12 @@ use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\FrontendUser;
 use Contao\LayoutModel;
 use Contao\StringUtil;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\Security\Core\Security;
 
 #[AsContentElement('download', category: 'files')]
 #[AsContentElement('downloads', category: 'files')]
@@ -65,20 +65,20 @@ class DownloadsController extends AbstractContentElementController
         $filesystemItems = $this->getFilesystemItems($model);
 
         // Sort elements; relay to client-side logic if list should be randomized
-        if (null !== ($sortMode = SortMode::tryFrom($sortBy = $model->sortBy))) {
+        if ($sortMode = SortMode::tryFrom($model->sortBy)) {
             $filesystemItems = $filesystemItems->sort($sortMode);
         }
 
         $template->set('sort_mode', $sortMode);
-        $template->set('randomize_order', $randomize = ('random' === $sortBy));
+        $template->set('randomize_order', $randomize = 'random' === $model->sortBy);
 
         // Limit elements; use client-side logic for only displaying the first
         // $limit elements in case we are dealing with a random order
-        if (($limit = $model->numberOfItems) > 0 && !$randomize) {
-            $filesystemItems = $filesystemItems->limit($limit);
+        if ($model->numberOfItems > 0 && !$randomize) {
+            $filesystemItems = $filesystemItems->limit($model->numberOfItems);
         }
 
-        $template->set('limit', $limit > 0 && $randomize ? $limit : null);
+        $template->set('limit', $model->numberOfItems > 0 && $randomize ? $model->numberOfItems : null);
 
         // Compile list of downloads
         $showPreviews = $model->showPreview;
@@ -90,7 +90,7 @@ class DownloadsController extends AbstractContentElementController
                 'show_file_previews' => $showPreviews,
                 'file_previews' => $this->getPreviews($filesystemItem, $model),
             ],
-            iterator_to_array($filesystemItems)
+            iterator_to_array($filesystemItems),
         );
 
         // Explicitly define title/text metadata for a single file
@@ -112,8 +112,12 @@ class DownloadsController extends AbstractContentElementController
     {
         $homeDir = null;
 
-        if ($model->useHomeDir && ($user = $this->security->getUser()) instanceof FrontendUser && $user->assignDir) {
-            $homeDir = $user->homeDir;
+        if ($model->useHomeDir) {
+            $user = $this->security->getUser();
+
+            if ($user instanceof FrontendUser && $user->assignDir && $user->homeDir) {
+                $homeDir = $user->homeDir;
+            }
         }
 
         $sources = match (true) {
@@ -130,7 +134,7 @@ class DownloadsController extends AbstractContentElementController
                 static fn (FilesystemItem $item): bool =>
                     /** @var MetadataBag|null $metadata */
                     null !== ($metadata = $item->getExtraMetadata()['metadata'] ?? null)
-                    && null !== $metadata->getDefault()
+                    && null !== $metadata->getDefault(),
             );
         }
 
@@ -149,8 +153,8 @@ class DownloadsController extends AbstractContentElementController
             static fn (FilesystemItem $item): bool => \in_array(
                 Path::getExtension($item->getPath(), true),
                 array_map('strtolower', $getAllowedFileExtensions()),
-                true
-            )
+                true,
+            ),
         );
     }
 
@@ -164,7 +168,7 @@ class DownloadsController extends AbstractContentElementController
         $path = $filesystemItem->getPath();
         $inline = $model->inline;
 
-        if (null !== ($publicUri = $this->filesStorage->generatePublicUri($path, new ContentDispositionOption($inline)))) {
+        if ($publicUri = $this->filesStorage->generatePublicUri($path, new ContentDispositionOption($inline))) {
             return (string) $publicUri;
         }
 
@@ -199,7 +203,7 @@ class DownloadsController extends AbstractContentElementController
         $getLightboxSize = function (): string|null {
             $this->initializeContaoFramework();
 
-            if (null === ($page = $this->getPageModel()) || null === $page->layout) {
+            if ((!$page = $this->getPageModel()) || null === $page->layout) {
                 return null;
             }
 
@@ -210,14 +214,14 @@ class DownloadsController extends AbstractContentElementController
 
         try {
             $previewSize = $this->previewFactory->getPreviewSizeFromImageSize(
-                $fullsize ? $getLightboxSize() ?? $size : $size
+                $fullsize ? $getLightboxSize() ?? $size : $size,
             );
 
             $previews = $this->previewFactory->createPreviews(
                 // TODO: As soon as our image libraries support this case, read from the public path instead.
                 Path::join($this->projectDir, $this->filesStorage->getPrefix(), $path),
                 $previewSize,
-                $model->numberOfItems ?: PHP_INT_MAX
+                $model->numberOfItems ?: PHP_INT_MAX,
             );
 
             foreach ($previews as $image) {
@@ -245,7 +249,7 @@ class DownloadsController extends AbstractContentElementController
                 }
 
                 return null;
-            }
+            },
         );
 
         if ($response instanceof StreamedResponse || $response instanceof BinaryFileResponse) {

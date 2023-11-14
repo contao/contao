@@ -31,12 +31,14 @@ use Symfony\Component\Finder\SplFileInfo;
 
 #[AsCommand(
     name: 'contao:symlinks',
-    description: 'Symlinks the public resources into the public directory.'
+    description: 'Symlinks the public resources into the public directory.',
 )]
 class SymlinksCommand extends Command
 {
     private array $rows = [];
+
     private string|null $webDir = null;
+
     private int $statusCode = Command::SUCCESS;
 
     public function __construct(
@@ -96,7 +98,7 @@ class SymlinksCommand extends Command
         if ($fs->exists(Path::join($this->projectDir, 'vendor/scrivo/highlight.php/styles'))) {
             $this->symlink(
                 'vendor/scrivo/highlight.php/styles',
-                Path::join($this->webDir, 'vendor/scrivo/highlight_php/styles')
+                Path::join($this->webDir, 'vendor/scrivo/highlight_php/styles'),
             );
         }
 
@@ -107,7 +109,7 @@ class SymlinksCommand extends Command
     {
         $this->createSymlinksFromFinder(
             $this->findIn(Path::join($this->projectDir, $uploadPath))->files()->depth('> 0')->name('.public'),
-            $uploadPath
+            $uploadPath,
         );
     }
 
@@ -117,7 +119,7 @@ class SymlinksCommand extends Command
 
         $this->createSymlinksFromFinder(
             $this->findIn(Path::join($this->projectDir, 'system/modules'))->files()->filter($filter)->name('.htaccess'),
-            'system/modules'
+            'system/modules',
         );
     }
 
@@ -169,7 +171,7 @@ class SymlinksCommand extends Command
             $this->rows[] = [
                 sprintf(
                     '<fg=green;options=bold>%s</>',
-                    '\\' === \DIRECTORY_SEPARATOR ? 'OK' : "\xE2\x9C\x94" // HEAVY CHECK MARK (U+2714)
+                    '\\' === \DIRECTORY_SEPARATOR ? 'OK' : "\xE2\x9C\x94", // HEAVY CHECK MARK (U+2714)
                 ),
                 $link,
                 $target,
@@ -180,7 +182,7 @@ class SymlinksCommand extends Command
             $this->rows[] = [
                 sprintf(
                     '<fg=red;options=bold>%s</>',
-                    '\\' === \DIRECTORY_SEPARATOR ? 'ERROR' : "\xE2\x9C\x98" // HEAVY BALLOT X (U+2718)
+                    '\\' === \DIRECTORY_SEPARATOR ? 'ERROR' : "\xE2\x9C\x98", // HEAVY BALLOT X (U+2718)
                 ),
                 $link,
                 sprintf('<error>%s</error>', $e->getMessage()),
@@ -201,7 +203,7 @@ class SymlinksCommand extends Command
                     $countB = substr_count(Path::normalize($b->getRelativePath()), '/');
 
                     return $countA <=> $countB;
-                }
+                },
             )
             ->followLinks()
             ->in($path)

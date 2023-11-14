@@ -89,7 +89,7 @@ class IntlInstalledLocalesAndCountriesPass implements CompilerPassInterface
 
         foreach ($resourceBundle['languageData'] ?? [] as $language => $data) {
             if (
-                (!$regions = ($data['primary']['territories'] ?? null))
+                (!$regions = $data['primary']['territories'] ?? null)
                 || \Locale::getDisplayName($language, 'en') === $language
             ) {
                 continue;

@@ -28,7 +28,9 @@ class TemplateLocator
     final public const FILE_MARKER_NAMESPACE_ROOT = '.twig-root';
 
     private readonly Filesystem $filesystem;
+
     private array|null $themeDirectories = null;
+
     private readonly string $globalTemplateDirectory;
 
     /**
@@ -129,7 +131,7 @@ class TemplateLocator
                 // Never list templates from theme directories unless $path is
                 // a theme path. This ensures that you can still have theme
                 // directories inside any directory that is a namespace root.
-                fn (\SplFileInfo $info): bool => $isThemePath || !$this->isThemePath($info->getPath())
+                fn (\SplFileInfo $info): bool => $isThemePath || !$this->isThemePath($info->getPath()),
             )
             ->sortByName()
         ;
@@ -180,7 +182,7 @@ class TemplateLocator
                     }
 
                     return true;
-                }
+                },
             )
         ;
 

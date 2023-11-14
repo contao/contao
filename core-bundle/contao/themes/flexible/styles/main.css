@@ -796,10 +796,6 @@ h2.sub_headline {
 	border-top: 1px solid var(--border);
 }
 
-.maintenance_inactive:last-child {
-	padding-bottom: 9px;
-}
-
 .maintenance_inactive .tl_tbox {
 	border: 0 !important;
 	padding: 6px 15px 14px;
@@ -810,32 +806,13 @@ h2.sub_headline {
 }
 
 .maintenance_inactive h2.sub_headline {
-	margin: 18px 15px 3px;
+	margin: 16px 15px 3px;
 }
 
 .maintenance_inactive .tl_submit_container {
 	background: none;
 	padding: 0 15px 24px;
 	border: 0;
-}
-
-.maintenance_inactive:last-of-type .tl_submit_container {
-	padding-bottom: 10px;
-}
-
-#tl_maintenance_mode .tl_message {
-	margin-bottom: 12px;
-}
-
-#tl_maintenance_mode .tl_message > p {
-	padding-top: 0;
-	padding-bottom: 0;
-	background-color: transparent;
-	background-position-y: center;
-}
-
-#tl_maintenance_index .tl_tbox {
-	margin-top: -12px;
 }
 
 /* Crawler */
@@ -857,15 +834,14 @@ h2.sub_headline {
 }
 
 #tl_crawl .tl_tbox {
+	margin-top: 0;
 	padding-top: 0;
-}
-
-#tl_crawl .tl_tbox > div {
-	max-width: 562px;
+	padding-right: 0;
+	padding-left: 0;
 }
 
 #tl_crawl .tl_checkbox_container {
-	margin-top: 9px;
+	margin-top: 6px;
 }
 
 #tl_crawl .inner {
@@ -912,6 +888,11 @@ h2.sub_headline {
 
 #tl_crawl .results p {
 	margin-bottom: 6px;
+}
+
+#tl_crawl .crawl-hint {
+	margin-top: -2px;
+	line-height: 1.3;
 }
 
 #tl_crawl .subscriber-log {
@@ -1878,7 +1859,7 @@ ul.sgallery li {
 }
 
 #tl_soverview > div {
-	padding: 4px 15px;
+	padding: 5px 15px;
 	border-bottom: 1px solid var(--border);
 }
 
@@ -1886,17 +1867,25 @@ ul.sgallery li {
 	border-bottom: 0;
 }
 
-#tl_messages h2, #tl_shortcuts h2, #tl_versions h2 {
-	margin: 14px 0 6px;
+#tl_messages h2, #tl_shortcuts h2 {
+	margin: 14px 0 10px;
 }
 
-#tl_messages p:not([class]) {
-	margin-top: 6px;
+#tl_versions h2 {
+	margin: 14px 0 12px;
+}
+
+#tl_messages p {
+	margin-bottom: .5em;
+}
+
+#tl_messages p:last-child {
+	margin-bottom: 1em;
 }
 
 #tl_messages .tl_error, #tl_messages .tl_confirm, #tl_messages .tl_info, #tl_messages .tl_new {
-	padding: 3px 6px 3px 21px;
-	background-position: left 4px;
+	padding: 0 0 0 21px;
+	background-position: left 1px;
 	background-color: transparent;
 }
 
@@ -2662,6 +2651,7 @@ fieldset.tl_tbox, fieldset.tl_box {
 	border-top: none;
 	border-left: 0;
 	border-right: 0;
+	margin-inline: 0;
 }
 
 fieldset.tl_tbox.nolegend, fieldset.tl_box.nolegend {

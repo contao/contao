@@ -32,7 +32,7 @@ class RewireTwigPathsPass implements CompilerPassInterface
 
         $calls = array_filter(
             $original->getMethodCalls(),
-            static fn (array $call): bool => 'addPath' === $call[0]
+            static fn (array $call): bool => 'addPath' === $call[0],
         );
 
         if (!$calls) {

@@ -139,13 +139,10 @@ class AddCronJobsPassTest extends TestCase
     {
         $definition = new Definition(TestCronJob::class);
 
-        $definition->addTag(
-            'contao.cronjob',
-            [
-                'interval' => 'minutely',
-                'method' => 'customMethod',
-            ]
-        );
+        $definition->addTag('contao.cronjob', [
+            'interval' => 'minutely',
+            'method' => 'customMethod',
+        ]);
 
         $container = $this->getContainerBuilder();
         $container->setDefinition(TestCronJob::class, $definition);

@@ -49,7 +49,7 @@ class RegisterHookListenersPassTest extends TestCase
                     ],
                 ],
             ],
-            $this->getHookListenersFromDefinition($container)[0]
+            $this->getHookListenersFromDefinition($container)[0],
         );
     }
 
@@ -96,7 +96,7 @@ class RegisterHookListenersPassTest extends TestCase
                     ['test.hook_listener', 'onGeneratePage'],
                 ]],
             ],
-            $this->getHookListenersFromDefinition($container)[0]
+            $this->getHookListenersFromDefinition($container)[0],
         );
     }
 
@@ -121,7 +121,7 @@ class RegisterHookListenersPassTest extends TestCase
                     ['test.hook_listener', '__invoke'],
                 ]],
             ],
-            $this->getHookListenersFromDefinition($container)[0]
+            $this->getHookListenersFromDefinition($container)[0],
         );
     }
 
@@ -147,7 +147,7 @@ class RegisterHookListenersPassTest extends TestCase
                     ['test.hook_listener', 'onInitializeSystem'],
                 ]],
             ],
-            $this->getHookListenersFromDefinition($container)[0]
+            $this->getHookListenersFromDefinition($container)[0],
         );
     }
 
@@ -155,37 +155,25 @@ class RegisterHookListenersPassTest extends TestCase
     {
         $definition = new Definition(TestListener::class);
 
-        $definition->addTag(
-            'contao.hook',
-            [
-                'hook' => 'initializeSystem',
-                'method' => 'onInitializeSystemFirst',
-            ]
-        );
+        $definition->addTag('contao.hook', [
+            'hook' => 'initializeSystem',
+            'method' => 'onInitializeSystemFirst',
+        ]);
 
-        $definition->addTag(
-            'contao.hook',
-            [
-                'hook' => 'generatePage',
-                'method' => 'onGeneratePage',
-            ]
-        );
+        $definition->addTag('contao.hook', [
+            'hook' => 'generatePage',
+            'method' => 'onGeneratePage',
+        ]);
 
-        $definition->addTag(
-            'contao.hook',
-            [
-                'hook' => 'initializeSystem',
-                'method' => 'onInitializeSystemSecond',
-            ]
-        );
+        $definition->addTag('contao.hook', [
+            'hook' => 'initializeSystem',
+            'method' => 'onInitializeSystemSecond',
+        ]);
 
-        $definition->addTag(
-            'contao.hook',
-            [
-                'hook' => 'parseTemplate',
-                'method' => 'onParseTemplate',
-            ]
-        );
+        $definition->addTag('contao.hook', [
+            'hook' => 'parseTemplate',
+            'method' => 'onParseTemplate',
+        ]);
 
         $container = $this->getContainerBuilder();
         $container->setDefinition('test.hook_listener', $definition);
@@ -206,7 +194,7 @@ class RegisterHookListenersPassTest extends TestCase
                     ['test.hook_listener', 'onParseTemplate'],
                 ]],
             ],
-            $this->getHookListenersFromDefinition($container)[0]
+            $this->getHookListenersFromDefinition($container)[0],
         );
     }
 
@@ -214,34 +202,25 @@ class RegisterHookListenersPassTest extends TestCase
     {
         $definitionA = new Definition(TestListener::class);
 
-        $definitionA->addTag(
-            'contao.hook',
-            [
-                'hook' => 'initializeSystem',
-                'method' => 'onInitializeSystem',
-                'priority' => 10,
-            ]
-        );
+        $definitionA->addTag('contao.hook', [
+            'hook' => 'initializeSystem',
+            'method' => 'onInitializeSystem',
+            'priority' => 10,
+        ]);
 
         $definitionB = new Definition(TestListener::class);
 
-        $definitionB->addTag(
-            'contao.hook',
-            [
-                'hook' => 'initializeSystem',
-                'method' => 'onInitializeSystemLow',
-                'priority' => 10,
-            ]
-        );
+        $definitionB->addTag('contao.hook', [
+            'hook' => 'initializeSystem',
+            'method' => 'onInitializeSystemLow',
+            'priority' => 10,
+        ]);
 
-        $definitionB->addTag(
-            'contao.hook',
-            [
-                'hook' => 'initializeSystem',
-                'method' => 'onInitializeSystemHigh',
-                'priority' => 100,
-            ]
-        );
+        $definitionB->addTag('contao.hook', [
+            'hook' => 'initializeSystem',
+            'method' => 'onInitializeSystemHigh',
+            'priority' => 100,
+        ]);
 
         $container = $this->getContainerBuilder();
         $container->setDefinition('test.hook_listener.a', $definitionA);
@@ -262,7 +241,7 @@ class RegisterHookListenersPassTest extends TestCase
                     ],
                 ],
             ],
-            $this->getHookListenersFromDefinition($container)[0]
+            $this->getHookListenersFromDefinition($container)[0],
         );
     }
 

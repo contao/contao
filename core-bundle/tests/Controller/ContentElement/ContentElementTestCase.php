@@ -69,12 +69,19 @@ use Twig\RuntimeLoader\FactoryRuntimeLoader;
 class ContentElementTestCase extends TestCase
 {
     final public const FILE_IMAGE1 = '0a2073bc-c966-4e7b-83b9-163a06aa87e7';
+
     final public const FILE_IMAGE2 = '7ebca224-553f-4f36-b853-e6f3af3eff42';
+
     final public const FILE_IMAGE3 = '3045209c-b73d-4a69-b30b-cda8c8008099';
+
     final public const FILE_VIDEO_MP4 = 'e802b519-8e08-4075-913c-7603ec6f2376';
+
     final public const FILE_VIDEO_OGV = 'd950e33a-dacc-42ad-ba97-6387d05348c4';
+
     final public const ARTICLE1 = 123;
+
     final public const ARTICLE2 = 456;
+
     final public const PAGE1 = 5;
 
     protected function tearDown(): void
@@ -145,7 +152,7 @@ class ContentElementTestCase extends TestCase
                     }
 
                     return new Metadata(array_intersect_key($data, array_flip(['title', 'alt', 'link', 'caption', 'license'])));
-                }
+                },
             )
         ;
 
@@ -206,7 +213,7 @@ class ContentElementTestCase extends TestCase
         $this->assertSame(
             $this->normalizeWhiteSpaces($expected),
             $this->normalizeWhiteSpaces($actual),
-            $message
+            $message,
         );
     }
 
@@ -219,7 +226,7 @@ class ContentElementTestCase extends TestCase
             ['ContaoCore' => ContaoCoreBundle::class],
             ['ContaoCore' => ['path' => $resourceBasePath]],
             $themeNamespace = new ThemeNamespace(),
-            $this->createMock(Connection::class)
+            $this->createMock(Connection::class),
         );
 
         $loader = new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $themeNamespace);
@@ -246,8 +253,8 @@ class ContentElementTestCase extends TestCase
                     'translated(%s%s%s)',
                     null !== $domain ? "$domain:" : '',
                     $id,
-                    $parameters ? '['.implode(', ', $parameters).']' : ''
-                )
+                    $parameters ? '['.implode(', ', $parameters).']' : '',
+                ),
             )
         ;
 
@@ -265,8 +272,8 @@ class ContentElementTestCase extends TestCase
             new ContaoExtension(
                 $environment,
                 $contaoFilesystemLoader,
-                $this->createMock(ContaoCsrfTokenManager::class)
-            )
+                $this->createMock(ContaoCsrfTokenManager::class),
+            ),
         );
 
         // Runtime loaders
@@ -280,7 +287,7 @@ class ContentElementTestCase extends TestCase
                 HighlighterRuntime::class => static fn () => new HighlighterRuntime(),
                 SchemaOrgRuntime::class => static fn () => new SchemaOrgRuntime($responseContextAccessor),
                 FormatterRuntime::class => static fn () => new FormatterRuntime($framework),
-            ])
+            ]),
         );
 
         $environment->enableStrictVariables();
@@ -310,18 +317,18 @@ class ContentElementTestCase extends TestCase
                             [
                                 'metadata' => new MetadataBag(
                                     ['en' => new Metadata([Metadata::VALUE_TITLE => 'image1 title'])],
-                                    ['en']
+                                    ['en'],
                                 ),
                             ],
                         ),
-                        self::FILE_IMAGE2 => new FilesystemItem(true, 'image2.jpg'),
-                        self::FILE_IMAGE3 => new FilesystemItem(true, 'image3.jpg'),
-                        self::FILE_VIDEO_MP4 => new FilesystemItem(true, 'video.mp4'),
-                        self::FILE_VIDEO_OGV => new FilesystemItem(true, 'video.ogv'),
+                        self::FILE_IMAGE2 => new FilesystemItem(true, 'image2.jpg', null, null, 'image/jpeg'),
+                        self::FILE_IMAGE3 => new FilesystemItem(true, 'image3.jpg', null, null, 'image/jpeg'),
+                        self::FILE_VIDEO_MP4 => new FilesystemItem(true, 'video.mp4', null, null, 'video/mp4'),
+                        self::FILE_VIDEO_OGV => new FilesystemItem(true, 'video.ogv', null, null, 'video/ogg'),
                     ];
 
                     return $storageMap[$uuid->toRfc4122()] ?? null;
-                }
+                },
             )
         ;
 
@@ -338,7 +345,7 @@ class ContentElementTestCase extends TestCase
                     ];
 
                     return $publicUriMap[$path] ?? null;
-                }
+                },
             )
         ;
 
@@ -366,7 +373,7 @@ class ContentElementTestCase extends TestCase
                     self::FILE_IMAGE1 => 'files/image1.jpg',
                     self::FILE_IMAGE2 => 'files/image2.jpg',
                     self::FILE_IMAGE3 => 'files/image3.jpg',
-                ]
+                ],
             ))
         ;
 
@@ -378,7 +385,7 @@ class ContentElementTestCase extends TestCase
         $replaceDemo = static fn (string $input): string => str_replace(
             ['{{demo}}', '{{br}}'],
             ['demo', '<br>'],
-            $input
+            $input,
         );
 
         $insertTagParser = $this->createMock(InsertTagParser::class);
@@ -401,7 +408,7 @@ class ContentElementTestCase extends TestCase
                     }
 
                     return new ChunkedText([$replaceDemo($input)]);
-                }
+                },
             )
         ;
 
@@ -428,7 +435,7 @@ class ContentElementTestCase extends TestCase
                         ['key' => '*', 'value' => 'data-*,id,class'],
                         ['key' => 'a', 'value' => 'href,rel,target'],
                     ]),
-                ][$key] ?? null
+                ][$key] ?? null,
             )
         ;
 

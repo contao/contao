@@ -17,13 +17,13 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\FrontendUser;
 use Contao\StringUtil;
 use Psr\Log\LoggerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class FrontendPreviewAuthenticator
@@ -45,9 +45,7 @@ class FrontendPreviewAuthenticator
 
     public function authenticateFrontendUser(string $username, bool $showUnpublished): bool
     {
-        $user = $this->loadFrontendUser($username);
-
-        if (null === $user) {
+        if (!$user = $this->loadFrontendUser($username)) {
             return false;
         }
 
@@ -103,7 +101,7 @@ class FrontendPreviewAuthenticator
     {
         if ($this->tokenChecker->isFrontendFirewall()) {
             $this->tokenStorage->setToken($token);
-        } elseif (null === $token) {
+        } elseif (!$token) {
             $this->getSession()?->remove('_security_contao_frontend');
         } else {
             $this->getSession()?->set('_security_contao_frontend', serialize($token));
@@ -125,7 +123,7 @@ class FrontendPreviewAuthenticator
         } catch (UserNotFoundException) {
             $this->logger?->info(
                 sprintf('Could not find a front end user with the username "%s"', $username),
-                ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, '')]
+                ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, '')],
             );
 
             return null;

@@ -31,14 +31,14 @@ class FragmentRuntimeTest extends TestCase
                     $this->assertSame(['type' => 'navigation', 'foo' => 'bar'], $model->row());
 
                     return true;
-                }
+                },
             ))
             ->willReturn('runtime-result')
         ;
 
         $framework = $this->mockContaoFramework(
             [Controller::class => $controllerAdapter],
-            [ModuleModel::class => $this->mockClassWithProperties(ModuleModel::class)]
+            [ModuleModel::class => $this->mockClassWithProperties(ModuleModel::class)],
         );
 
         $runtime = new FragmentRuntime($framework);
@@ -58,7 +58,7 @@ class FragmentRuntimeTest extends TestCase
                     $this->assertSame(['id' => 42, 'type' => 'navigation', 'foo' => 'bar'], $model->row());
 
                     return true;
-                }
+                },
             ))
             ->willReturn('runtime-result')
         ;
@@ -93,14 +93,14 @@ class FragmentRuntimeTest extends TestCase
                     $this->assertSame(['type' => 'text', 'foo' => 'bar', 'headline' => serialize(['unit' => 'h2', 'value' => 'Test'])], $model->row());
 
                     return true;
-                }
+                },
             ))
             ->willReturn('runtime-result')
         ;
 
         $framework = $this->mockContaoFramework(
             [Controller::class => $controllerAdapter],
-            [ContentModel::class => $this->mockClassWithProperties(ContentModel::class)]
+            [ContentModel::class => $this->mockClassWithProperties(ContentModel::class)],
         );
 
         $runtime = new FragmentRuntime($framework);
@@ -120,7 +120,7 @@ class FragmentRuntimeTest extends TestCase
                     $this->assertSame(['id' => 42, 'type' => 'text', 'foo' => 'bar'], $model->row());
 
                     return true;
-                }
+                },
             ))
             ->willReturn('runtime-result')
         ;

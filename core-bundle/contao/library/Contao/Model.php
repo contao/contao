@@ -400,16 +400,7 @@ abstract class Model
 	public static function getColumnCastTypesFromDatabase(): array
 	{
 		$schemaManager = System::getContainer()->get('database_connection')->createSchemaManager();
-
-		// Backwards compatibility with doctrine/dbal < 3.5
-		if (method_exists($schemaManager, 'introspectSchema'))
-		{
-			$schema = $schemaManager->introspectSchema();
-		}
-		else
-		{
-			$schema = $schemaManager->createSchema();
-		}
+		$schema = $schemaManager->introspectSchema();
 
 		return static::getColumnCastTypesFromSchema($schema);
 	}

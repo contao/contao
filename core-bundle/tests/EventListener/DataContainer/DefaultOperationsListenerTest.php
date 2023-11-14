@@ -23,14 +23,11 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class DefaultOperationsListenerTest extends TestCase
 {
-    /**
-     * @var Security&MockObject
-     */
-    private Security $security;
+    private Security&MockObject $security;
 
     private DefaultOperationsListener $listener;
 
@@ -551,8 +548,8 @@ class DefaultOperationsListenerTest extends TestCase
                         }
 
                         return true;
-                    }
-                )
+                    },
+                ),
             )
             ->willReturn(true)
         ;

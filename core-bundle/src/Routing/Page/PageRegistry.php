@@ -20,6 +20,7 @@ class PageRegistry
     private const DISABLE_CONTENT_COMPOSITION = ['redirect', 'forward', 'logout'];
 
     private array|null $urlPrefixes = null;
+
     private array|null $urlSuffixes = null;
 
     /**
@@ -142,15 +143,14 @@ class PageRegistry
         // Override existing pages with the same identifier
         $this->routeConfigs[$type] = $config;
 
-        if (null !== $routeEnhancer) {
+        if ($routeEnhancer) {
             $this->routeEnhancers[$type] = $routeEnhancer;
         }
 
-        if (null !== $contentComposition) {
-            $this->contentComposition[$type] = $contentComposition;
-        }
+        $this->contentComposition[$type] = $contentComposition;
 
-        $this->urlPrefixes = $this->urlSuffixes = null;
+        $this->urlPrefixes = null;
+        $this->urlSuffixes = null;
 
         return $this;
     }
@@ -217,7 +217,7 @@ class PageRegistry
             array_column($results, 'urlSuffix'),
             array_filter(array_map(
                 static fn (RouteConfig $config) => $config->getUrlSuffix(),
-                $this->routeConfigs
+                $this->routeConfigs,
             )),
         ];
 

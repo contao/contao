@@ -102,7 +102,7 @@ class DebugPluginsCommandTest extends ContaoTestCase
 
         $this->assertSame(
             '[ERROR] The "Contao\ManagerBundle\Tests\Fixtures\ContaoManager\Plugin" plugin does not implement the "Contao\ManagerPlugin\Bundle\BundlePluginInterface" interface.',
-            $this->normalizeDisplay($commandTester->getDisplay(true))
+            $this->normalizeDisplay($commandTester->getDisplay(true)),
         );
     }
 
@@ -117,7 +117,7 @@ class DebugPluginsCommandTest extends ContaoTestCase
 
         $this->assertSame(
             '[ERROR] No plugin with the class or package name "foo/baz-bundle" found.',
-            $this->normalizeDisplay($commandTester->getDisplay(true))
+            $this->normalizeDisplay($commandTester->getDisplay(true)),
         );
     }
 

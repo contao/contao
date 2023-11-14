@@ -120,8 +120,8 @@ class RobotsTxtListenerTest extends TestCase
             ->expects($this->exactly(2))
             ->method('add')
             ->withConsecutive(
-                [$this->callback(static fn (Directive $directive) => ((string) $directive) === 'disallow:'.$routePrefix.'/')],
-                ['disallow:/_contao/']
+                [$this->callback(static fn (Directive $directive) => (string) $directive === 'disallow:'.$routePrefix.'/')],
+                ['disallow:/_contao/'],
             )
         ;
 

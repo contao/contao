@@ -40,7 +40,7 @@ class ConfigureFilesystemPass implements CompilerPassInterface
     {
         return array_filter(
             $container->getExtensions(),
-            static fn (ExtensionInterface $extension): bool => $extension instanceof ConfigureFilesystemInterface
+            static fn (ExtensionInterface $extension): bool => $extension instanceof ConfigureFilesystemInterface,
         );
     }
 

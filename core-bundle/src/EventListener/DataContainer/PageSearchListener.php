@@ -79,7 +79,7 @@ class PageSearchListener
     {
         $urls = $this->connection->fetchFirstColumn(
             'SELECT url FROM tl_search WHERE pid=:pageId',
-            ['pageId' => $pageId]
+            ['pageId' => $pageId],
         );
 
         $search = $this->framework->getAdapter(Search::class);

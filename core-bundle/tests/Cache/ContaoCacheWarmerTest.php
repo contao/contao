@@ -83,27 +83,27 @@ class ContaoCacheWarmerTest extends TestCase
 
         $this->assertStringContainsString(
             "\$GLOBALS['TL_TEST'] = \\true;",
-            file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/config/config.php'))
+            file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/config/config.php')),
         );
 
         $this->assertStringContainsString(
             "'dummy' => 'templates'",
-            file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/config/templates.php'))
+            file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/config/templates.php')),
         );
 
         $this->assertStringContainsString(
             "\$GLOBALS['TL_DCA']['tl_test'] = [",
-            file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/dca/tl_test.php'))
+            file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/dca/tl_test.php')),
         );
 
         $this->assertStringContainsString(
             "\$GLOBALS['TL_LANG']['MSC']['first']",
-            file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/languages/en/default.php'))
+            file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/languages/en/default.php')),
         );
 
         $this->assertStringContainsString(
             "\$this->arrFields = array (\n  'id' => 'int(10) unsigned NOT NULL auto_increment',\n);",
-            file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/sql/tl_test.php'))
+            file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/sql/tl_test.php')),
         );
     }
 

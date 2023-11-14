@@ -215,7 +215,7 @@ class PreviewUrlConverterListenerTest extends TestCase
         $listener = new PreviewUrlConvertListener(
             $framework,
             $this->mockPageRegistry($route),
-            $uriSigner
+            $uriSigner,
         );
 
         $listener($event);
@@ -231,14 +231,11 @@ class PreviewUrlConverterListenerTest extends TestCase
 
     public function testReturnsEmptyUrlForPagesThatRequireAnItem(): void
     {
-        $pageModel = $this->mockClassWithProperties(
-            PageModel::class,
-            [
-                'id' => 42,
-                'rootLanguage' => 'en',
-                'requireItem' => '1',
-            ]
-        );
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 42,
+            'rootLanguage' => 'en',
+            'requireItem' => '1',
+        ]);
 
         $route = new PageRoute($pageModel);
 
@@ -250,8 +247,8 @@ class PreviewUrlConverterListenerTest extends TestCase
                     $route,
                     [],
                     UrlGeneratorInterface::ABSOLUTE_URL,
-                    new MissingMandatoryParametersException()
-                )
+                    new MissingMandatoryParametersException('tl_page.42', ['requireItem']),
+                ),
             )
         ;
 
@@ -274,7 +271,7 @@ class PreviewUrlConverterListenerTest extends TestCase
         $listener = new PreviewUrlConvertListener(
             $framework,
             $this->mockPageRegistry(),
-            $uriSigner
+            $uriSigner,
         );
 
         $listener($event);
@@ -283,14 +280,11 @@ class PreviewUrlConverterListenerTest extends TestCase
         $this->assertNull($event->getUrl());
     }
 
-    /**
-     * @return PageRegistry&MockObject
-     */
-    private function mockPageRegistry(PageRoute|null $route = null): PageRegistry
+    private function mockPageRegistry(PageRoute|null $route = null): PageRegistry&MockObject
     {
         $pageRegistry = $this->createMock(PageRegistry::class);
 
-        if (null === $route) {
+        if (!$route) {
             $pageRegistry
                 ->expects($this->never())
                 ->method('getRoute')

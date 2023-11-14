@@ -53,11 +53,10 @@ class BackendPreviewController
             return new Response('Access denied', Response::HTTP_FORBIDDEN);
         }
 
+        $frontendUser = $request->query->get('user');
+
         // Switch to a particular member (see contao/core#6546)
-        if (
-            ($frontendUser = $request->query->get('user'))
-            && !$this->previewAuthenticator->authenticateFrontendUser($frontendUser, false)
-        ) {
+        if ($frontendUser && !$this->previewAuthenticator->authenticateFrontendUser($frontendUser, false)) {
             $this->previewAuthenticator->removeFrontendAuthentication();
         }
 
@@ -65,7 +64,7 @@ class BackendPreviewController
 
         $this->dispatcher->dispatch($urlConvertEvent, ContaoCoreEvents::PREVIEW_URL_CONVERT);
 
-        if (null !== ($response = $urlConvertEvent->getResponse())) {
+        if ($response = $urlConvertEvent->getResponse()) {
             return $response;
         }
 

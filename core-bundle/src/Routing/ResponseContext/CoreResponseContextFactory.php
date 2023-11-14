@@ -58,7 +58,7 @@ class CoreResponseContextFactory
                 $manager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->add(new WebPage());
 
                 return $manager;
-            }
+            },
         );
 
         return $context;
@@ -109,8 +109,8 @@ class CoreResponseContextFactory
                     $pageModel->noSearch,
                     $pageModel->protected,
                     array_map('intval', array_filter((array) $pageModel->groups)),
-                    $this->tokenChecker->isPreviewMode()
-                )
+                    $this->tokenChecker->isPreviewMode(),
+                ),
             )
         ;
 

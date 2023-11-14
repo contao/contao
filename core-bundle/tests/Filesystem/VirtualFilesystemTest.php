@@ -41,7 +41,7 @@ class VirtualFilesystemTest extends TestCase
         $virtualFilesystem = new VirtualFilesystem(
             $this->createMock(MountManager::class),
             $this->createMock(DbafsManager::class),
-            'some/prefix'
+            'some/prefix',
         );
 
         $this->assertSame('some/prefix', $virtualFilesystem->getPrefix());
@@ -72,14 +72,14 @@ class VirtualFilesystemTest extends TestCase
             $this->createMock(MountManager::class),
             $this->createMock(DbafsManager::class),
             '',
-            false
+            false,
         );
 
         $readOnlyFilesystem = new VirtualFilesystem(
             $this->createMock(MountManager::class),
             $this->createMock(DbafsManager::class),
             '',
-            true
+            true,
         );
 
         $this->assertFalse($filesystem->isReadOnly());
@@ -94,7 +94,7 @@ class VirtualFilesystemTest extends TestCase
         $filesystem = new VirtualFilesystem(
             $this->createMock(MountManager::class),
             $this->createMock(DbafsManager::class),
-            'prefix'
+            'prefix',
         );
 
         $this->expectException(\OutOfBoundsException::class);
@@ -118,7 +118,7 @@ class VirtualFilesystemTest extends TestCase
         $filesystem = new VirtualFilesystem(
             $this->createMock(MountManager::class),
             $dbafsManager,
-            'prefix'
+            'prefix',
         );
 
         $this->expectException(\OutOfBoundsException::class);
@@ -166,7 +166,7 @@ class VirtualFilesystemTest extends TestCase
         $filesystem = new VirtualFilesystem(
             $this->createMock(MountManager::class),
             $dbafsManager,
-            'prefix'
+            'prefix',
         );
 
         $this->assertSame($resourceExists, $filesystem->fileExists($uuid));
@@ -187,7 +187,7 @@ class VirtualFilesystemTest extends TestCase
     {
         $filesystem = new VirtualFilesystem(
             $this->createMock(MountManager::class),
-            $this->createMock(DbafsManager::class)
+            $this->createMock(DbafsManager::class),
         );
 
         $this->expectException(\LogicException::class);
@@ -203,7 +203,7 @@ class VirtualFilesystemTest extends TestCase
     {
         $filesystem = new VirtualFilesystem(
             $this->createMock(MountManager::class),
-            $this->createMock(DbafsManager::class)
+            $this->createMock(DbafsManager::class),
         );
 
         $this->expectException(\LogicException::class);
@@ -219,7 +219,7 @@ class VirtualFilesystemTest extends TestCase
     {
         $filesystem = new VirtualFilesystem(
             $this->createMock(MountManager::class),
-            $this->createMock(DbafsManager::class)
+            $this->createMock(DbafsManager::class),
         );
 
         $this->expectException(\LogicException::class);
@@ -275,12 +275,12 @@ class VirtualFilesystemTest extends TestCase
         foreach (['has', 'fileExists', 'directoryExists'] as $method) {
             $this->assertSame(
                 $resourceExists,
-                $filesystem->$method('path', VirtualFilesystemInterface::FORCE_SYNC)
+                $filesystem->$method('path', VirtualFilesystemInterface::FORCE_SYNC),
             );
 
             $this->assertSame(
                 $resourceExists,
-                $filesystem->$method('path', VirtualFilesystemInterface::FORCE_SYNC | VirtualFilesystemInterface::BYPASS_DBAFS)
+                $filesystem->$method('path', VirtualFilesystemInterface::FORCE_SYNC | VirtualFilesystemInterface::BYPASS_DBAFS),
             );
         }
     }
@@ -444,7 +444,7 @@ class VirtualFilesystemTest extends TestCase
                     ++$handlerInvocationCount;
 
                     return 54321;
-                }
+                },
             )
         ;
 
@@ -455,7 +455,7 @@ class VirtualFilesystemTest extends TestCase
                     ++$handlerInvocationCount;
 
                     return 2048;
-                }
+                },
             )
         ;
 
@@ -466,7 +466,7 @@ class VirtualFilesystemTest extends TestCase
                     ++$handlerInvocationCount;
 
                     return 'text/csv';
-                }
+                },
             )
         ;
 
@@ -509,7 +509,7 @@ class VirtualFilesystemTest extends TestCase
                     ];
 
                     return $items[$path] ?? null;
-                }
+                },
             )
         ;
 
@@ -602,7 +602,7 @@ class VirtualFilesystemTest extends TestCase
         // Normalize listing for comparison
         $listing = array_map(
             static fn (FilesystemItem $i): string => sprintf('%s (%s)', $i->getPath(), $i->isFile() ? 'file' : 'dir'),
-            $listedContents
+            $listedContents,
         );
 
         sort($listing);
@@ -684,7 +684,7 @@ class VirtualFilesystemTest extends TestCase
         // Normalize listing for comparison
         $listing = array_map(
             static fn (FilesystemItem $i): string => sprintf('%s (%s)', $i->getPath(), $i->isFile() ? 'file' : 'dir'),
-            $listedContents
+            $listedContents,
         );
 
         sort($listing);
@@ -703,7 +703,7 @@ class VirtualFilesystemTest extends TestCase
                     null,
                     null,
                     null,
-                    ['extra' => 'data']
+                    ['extra' => 'data'],
                 ),
                 new FilesystemItem(false, 'prefix/foo/bar/things'),
             ],
@@ -722,7 +722,7 @@ class VirtualFilesystemTest extends TestCase
                     null,
                     null,
                     null,
-                    ['extra' => 'data']
+                    ['extra' => 'data'],
                 ),
                 new FilesystemItem(false, 'prefix/foo/bar/things'),
                 new FilesystemItem(true, 'prefix/foo/bar/things/a'),
@@ -819,7 +819,7 @@ class VirtualFilesystemTest extends TestCase
         $filesystem = new VirtualFilesystem(
             $this->createMock(MountManager::class),
             $dbafsManager,
-            'prefix'
+            'prefix',
         );
 
         $expected = $shouldReadFromDbafs ? ['extra' => 'data'] : [];
@@ -866,7 +866,7 @@ class VirtualFilesystemTest extends TestCase
         $filesystem = new VirtualFilesystem(
             $this->createMock(MountManager::class),
             $dbafsManager,
-            'prefix'
+            'prefix',
         );
 
         $filesystem->setExtraMetadata('path', ['extra' => 'data']);
@@ -884,7 +884,7 @@ class VirtualFilesystemTest extends TestCase
             $this->createMock(MountManager::class),
             $this->createMock(DbafsManager::class),
             '',
-            true
+            true,
         );
 
         $this->expectException(\LogicException::class);
@@ -939,7 +939,7 @@ class VirtualFilesystemTest extends TestCase
 
         $filesystem = new VirtualFilesystem(
             (new MountManager())->mount(new InMemoryFilesystemAdapter()),
-            $this->createMock(DbafsManager::class)
+            $this->createMock(DbafsManager::class),
         );
 
         $filesystem->createDirectory("b\xE4r");
@@ -972,7 +972,7 @@ class VirtualFilesystemTest extends TestCase
             ->expects($shouldSync ? $this->exactly(3) : $this->never())
             ->method('sync')
             ->with($this->callback(
-                static fn (string $path) => \in_array($path, ['prefix/path1', 'prefix/path2'], true)
+                static fn (string $path) => \in_array($path, ['prefix/path1', 'prefix/path2'], true),
             ))
         ;
 

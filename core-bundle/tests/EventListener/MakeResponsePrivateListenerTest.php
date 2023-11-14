@@ -39,7 +39,7 @@ class MakeResponsePrivateListenerTest extends TestCase
             $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::SUB_REQUEST,
-            $response
+            $response,
         );
 
         $listener = new MakeResponsePrivateListener($this->createScopeMatcher(false));
@@ -59,7 +59,7 @@ class MakeResponsePrivateListenerTest extends TestCase
             $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MAIN_REQUEST,
-            $response
+            $response,
         );
 
         $listener = new MakeResponsePrivateListener($this->createScopeMatcher(true));
@@ -84,7 +84,7 @@ class MakeResponsePrivateListenerTest extends TestCase
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MAIN_REQUEST,
-            $response
+            $response,
         );
 
         $listener = new MakeResponsePrivateListener($this->createScopeMatcher(true));
@@ -108,7 +108,7 @@ class MakeResponsePrivateListenerTest extends TestCase
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MAIN_REQUEST,
-            $response
+            $response,
         );
 
         $listener = new MakeResponsePrivateListener($this->createScopeMatcher(true));
@@ -132,7 +132,7 @@ class MakeResponsePrivateListenerTest extends TestCase
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MAIN_REQUEST,
-            $response
+            $response,
         );
 
         $listener = new MakeResponsePrivateListener($this->createScopeMatcher(true));
@@ -163,7 +163,7 @@ class MakeResponsePrivateListenerTest extends TestCase
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MAIN_REQUEST,
-            $response
+            $response,
         );
 
         $listener = new MakeResponsePrivateListener($this->createScopeMatcher(true));
@@ -187,7 +187,7 @@ class MakeResponsePrivateListenerTest extends TestCase
             $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MAIN_REQUEST,
-            $response
+            $response,
         );
 
         $listener = new MakeResponsePrivateListener($this->createScopeMatcher(true));
@@ -209,7 +209,7 @@ class MakeResponsePrivateListenerTest extends TestCase
             $this->createMock(KernelInterface::class),
             new Request([], [], [], ['super-cookie' => 'value']),
             HttpKernelInterface::MAIN_REQUEST,
-            $response
+            $response,
         );
 
         $listener = new MakeResponsePrivateListener($this->createScopeMatcher(true));
@@ -231,7 +231,7 @@ class MakeResponsePrivateListenerTest extends TestCase
             $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MAIN_REQUEST,
-            $response
+            $response,
         );
 
         $listener = new MakeResponsePrivateListener($this->createScopeMatcher(true));

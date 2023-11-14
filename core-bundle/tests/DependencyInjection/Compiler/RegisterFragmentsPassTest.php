@@ -200,7 +200,7 @@ class RegisterFragmentsPassTest extends TestCase
 
         $this->assertSame(
             'contao.fragment._contao.content_element.fragment_pre_handler_interface',
-            (string) $arguments[0]['contao.content_element.fragment_pre_handler_interface']
+            (string) $arguments[0]['contao.content_element.fragment_pre_handler_interface'],
         );
     }
 
@@ -257,7 +257,7 @@ class RegisterFragmentsPassTest extends TestCase
                     ],
                 ],
             ],
-            $definition->getTags()
+            $definition->getTags(),
         );
 
         $this->assertSame(
@@ -268,7 +268,7 @@ class RegisterFragmentsPassTest extends TestCase
                     ],
                 ],
             ],
-            $definition->getArguments()[0]
+            $definition->getArguments()[0],
         );
 
         $this->assertTrue($definition->isPublic());
@@ -307,7 +307,7 @@ class RegisterFragmentsPassTest extends TestCase
 
         $pass = new RegisterFragmentsPass(
             ContentElementReference::TAG_NAME,
-            templateOptionsListener: 'contao.listener.element_template_options'
+            templateOptionsListener: 'contao.listener.element_template_options',
         );
 
         $pass->process($container);

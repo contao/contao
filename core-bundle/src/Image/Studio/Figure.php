@@ -271,7 +271,7 @@ final class Figure
                 unset($linkAttributes['title']);
             } else {
                 // Map "imageTitle" to "linkTitle"
-                $templateData['linkTitle'] = ($templateData['imageTitle'] ?? null) ?? StringUtil::specialchars($metadata->getTitle());
+                $templateData['linkTitle'] = $templateData['imageTitle'] ?? StringUtil::specialchars($metadata->getTitle());
                 unset($templateData['imageTitle']);
             }
         } elseif ($metadata->has(Metadata::VALUE_TITLE)) {
@@ -282,7 +282,7 @@ final class Figure
             $htmlAttributes = array_map(
                 static fn (string $attribute, string $value) => sprintf('%s="%s"', $attribute, $value),
                 array_keys($linkAttributes),
-                $linkAttributes
+                $linkAttributes,
             );
 
             $templateData['attributes'] = ' '.implode(' ', $htmlAttributes);

@@ -467,7 +467,6 @@ services:
     contao.listener.preview_url_create:
         class: Contao\CoreBundle\EventListener\PreviewUrlCreateListener
         arguments:
-            - '@request_stack'
             - '@contao.framework'
         tags:
             - kernel.event_listener
@@ -605,6 +604,11 @@ services:
             - '@database_connection'
             - '@router'
             - '@translator'
+
+    contao.messenger.message_listener:
+        class: Contao\CoreBundle\Messenger\EventListener\MessageListener
+        arguments:
+            - '@monolog.logger.contao.error'
 
     contao.messenger.worker_listener:
         class: Contao\CoreBundle\Messenger\EventListener\WorkerListener

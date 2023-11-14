@@ -14,6 +14,8 @@ namespace Contao\CoreBundle\HttpKernel\Header;
 
 /**
  * Handles HTTP headers in memory (for unit tests).
+ *
+ * @internal
  */
 class MemoryHeaderStorage implements HeaderStorageInterface
 {

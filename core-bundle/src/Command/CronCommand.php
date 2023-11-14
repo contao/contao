@@ -22,7 +22,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 #[AsCommand(
     name: 'contao:cron',
-    description: 'Runs cron jobs on the command line.'
+    description: 'Runs cron jobs on the command line.',
 )]
 class CronCommand extends Command
 {

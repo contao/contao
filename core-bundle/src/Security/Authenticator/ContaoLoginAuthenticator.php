@@ -21,6 +21,7 @@ use Contao\PageModel;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Scheb\TwoFactorBundle\Security\Http\Authenticator\Passport\Credentials\TwoFactorCodeCredentials;
 use Scheb\TwoFactorBundle\Security\Http\Authenticator\TwoFactorAuthenticator;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -34,7 +35,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
@@ -122,7 +122,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         $passport = new Passport(
             new UserBadge($credentials['username'], $this->userProvider->loadUserByIdentifier(...)),
             new PasswordCredentials($credentials['password']),
-            [new RememberMeBadge()]
+            [new RememberMeBadge()],
         );
 
         if ($this->options['enable_csrf']) {
@@ -168,9 +168,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
 
     public function isInteractive(): bool
     {
-        $request = $this->requestStack->getCurrentRequest();
-
-        if (null === $request) {
+        if (!$request = $this->requestStack->getCurrentRequest()) {
             return false;
         }
 
@@ -193,7 +191,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
 
         $credentials['username'] = trim($credentials['username']);
 
-        if (\strlen($credentials['username']) > Security::MAX_USERNAME_LENGTH) {
+        if (\strlen($credentials['username']) > UserBadge::MAX_USERNAME_LENGTH) {
             throw new BadCredentialsException('Invalid username.');
         }
 
@@ -207,7 +205,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         $url = $this->router->generate(
             'contao_backend_login',
             ['redirect' => $request->getUri()],
-            UrlGeneratorInterface::ABSOLUTE_URL
+            UrlGeneratorInterface::ABSOLUTE_URL,
         );
 
         return new RedirectResponse($this->uriSigner->sign($url));
@@ -220,11 +218,11 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
 
         $page->protected = false;
 
-        if (null === $this->tokenStorage->getToken()) {
+        if (!$this->tokenStorage->getToken()) {
             $pageAdapter = $this->framework->getAdapter(PageModel::class);
             $errorPage = $pageAdapter->findFirstPublishedByTypeAndPid('error_401', $page->rootId);
 
-            if (null === $errorPage) {
+            if (!$errorPage) {
                 throw new PageNotFoundException('No error page found.');
             }
 

@@ -48,7 +48,7 @@ class AutoFallbackTransportFactoryTest extends TestCase
         $transport = $factory->createTransport(
             'contao-auto-fallback://my_transport_name?target=target_transport&fallback=fallback_transport',
             [],
-            $this->createMock(SerializerInterface::class)
+            $this->createMock(SerializerInterface::class),
         );
 
         $this->assertSame('my_transport_name', $transport->getSelfTransportName());
@@ -71,7 +71,7 @@ class AutoFallbackTransportFactoryTest extends TestCase
         $factory->createTransport(
             'contao-auto-fallback://my_transport_name?target=target_transport&fallback=fallback_transport',
             [],
-            $this->createMock(SerializerInterface::class)
+            $this->createMock(SerializerInterface::class),
         );
     }
 
@@ -90,7 +90,7 @@ class AutoFallbackTransportFactoryTest extends TestCase
         $factory->createTransport(
             'contao-auto-fallback://my_transport_name?target=target_transport&fallback=fallback_transport',
             [],
-            $this->createMock(SerializerInterface::class)
+            $this->createMock(SerializerInterface::class),
         );
     }
 
@@ -109,7 +109,7 @@ class AutoFallbackTransportFactoryTest extends TestCase
         $factory->createTransport(
             'contao-auto-fallback://my_transport_name?target=target_transport&fallback=fallback_transport',
             [],
-            $this->createMock(SerializerInterface::class)
+            $this->createMock(SerializerInterface::class),
         );
     }
 }

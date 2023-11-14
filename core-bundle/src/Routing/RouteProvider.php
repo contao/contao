@@ -62,7 +62,7 @@ class RouteProvider extends AbstractPageRouteProvider
         $pageModel = $this->framework->getAdapter(PageModel::class);
         $page = $pageModel->findByPk($ids[0]);
 
-        if (null === $page || !$this->pageRegistry->isRoutable($page)) {
+        if (!$page || !$this->pageRegistry->isRoutable($page)) {
             throw new RouteNotFoundException(sprintf('Page ID "%s" not found', $ids[0]));
         }
 
@@ -183,7 +183,7 @@ class RouteProvider extends AbstractPageRouteProvider
             $route->getOptions(),
             $route->getHost(),
             $route->getSchemes(),
-            $route->getMethods()
+            $route->getMethods(),
         );
 
         // Do not create ".fallback" route if `disableLanguageRedirect` is enabled
@@ -203,7 +203,7 @@ class RouteProvider extends AbstractPageRouteProvider
             $route->getOptions(),
             $route->getHost(),
             $route->getSchemes(),
-            $route->getMethods()
+            $route->getMethods(),
         );
     }
 
@@ -248,7 +248,7 @@ class RouteProvider extends AbstractPageRouteProvider
                 }
 
                 return $this->compareRoutes($a, $b, $languages);
-            }
+            },
         );
     }
 

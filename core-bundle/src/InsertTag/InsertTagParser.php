@@ -188,12 +188,8 @@ class InsertTagParser implements ResetInterface
             }
         }
 
-        if (null !== $tag) {
-            $result = $this->renderSubscription($tag, false);
-
-            if (null !== $result) {
-                return $result;
-            }
+        if ($tag && ($result = $this->renderSubscription($tag, false))) {
+            return $result;
         }
 
         // Fallback to old implementation
@@ -228,7 +224,7 @@ class InsertTagParser implements ResetInterface
 
     public function parse(string $input): ParsedSequence
     {
-        if (null === $this->insertTags) {
+        if (!$this->insertTags) {
             $this->framework->initialize();
             $this->insertTags = new InsertTags();
         }
@@ -282,7 +278,7 @@ class InsertTagParser implements ResetInterface
         $tag = new ParsedInsertTag(
             $name,
             new ParsedParameters($parameters),
-            array_map(static fn ($flag) => new InsertTagFlag($flag), $flags)
+            array_map(static fn ($flag) => new InsertTagFlag($flag), $flags),
         );
 
         if ($tag->getParameters()->hasInsertTags()) {
@@ -465,7 +461,7 @@ class InsertTagParser implements ResetInterface
         $esiTag = $this->fragmentHandler->render(
             new ControllerReference(InsertTagsController::class.'::renderAction', $attributes, $query),
             'esi',
-            ['ignore_errors' => false] // see #48
+            ['ignore_errors' => false], // see #48
         );
 
         return new InsertTagResult($esiTag, OutputType::html);
@@ -550,7 +546,7 @@ class InsertTagParser implements ResetInterface
 
     private function callLegacyClass(string $input, bool $allowEsiTags): ChunkedText
     {
-        if (null === $this->insertTags) {
+        if (!$this->insertTags) {
             $this->framework->initialize();
             $this->insertTags = new InsertTags();
         }

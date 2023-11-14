@@ -21,9 +21,9 @@ use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Security\Voter\DataContainer\FavoritesVoter;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
-use Symfony\Component\Security\Core\Security;
 
 class FavoritesVoterTest extends TestCase
 {
@@ -46,7 +46,7 @@ class FavoritesVoterTest extends TestCase
                     42 => 2, // current user
                     17 => 3, // different user
                     default => 0,
-                }
+                },
             )
         ;
 
@@ -66,8 +66,8 @@ class FavoritesVoterTest extends TestCase
             $voter->vote(
                 $token,
                 new ReadAction('foo', ['id' => 42]),
-                ['whatever']
-            )
+                ['whatever'],
+            ),
         );
 
         // Permission granted, so abstain! Our voters either deny or abstain,
@@ -77,8 +77,8 @@ class FavoritesVoterTest extends TestCase
             $voter->vote(
                 $token,
                 new ReadAction('foo', ['id' => 42]),
-                [ContaoCorePermissions::DC_PREFIX.'tl_favorites']
-            )
+                [ContaoCorePermissions::DC_PREFIX.'tl_favorites'],
+            ),
         );
 
         // Permission denied
@@ -87,8 +87,8 @@ class FavoritesVoterTest extends TestCase
             $voter->vote(
                 $token,
                 new ReadAction('foo', ['id' => 17]),
-                [ContaoCorePermissions::DC_PREFIX.'tl_favorites']
-            )
+                [ContaoCorePermissions::DC_PREFIX.'tl_favorites'],
+            ),
         );
     }
 }
