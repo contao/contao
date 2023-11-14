@@ -20,6 +20,7 @@ use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Routing\Loader\AnnotationDirectoryLoader;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\Route;
@@ -33,7 +34,7 @@ class RouteLoaderTest extends ContaoTestCase
         $loader
             ->expects($this->once())
             ->method('load')
-            ->with(\dirname(__DIR__).'/Fixtures/Routing/WithRoutingYaml/config/routes.yaml')
+            ->with(Path::join(__DIR__, '../Fixtures/Routing/WithRoutingYaml/config/routes.yaml'))
         ;
 
         $loaderResolver = $this->createMock(LoaderResolverInterface::class);
@@ -74,7 +75,7 @@ class RouteLoaderTest extends ContaoTestCase
         $loader
             ->expects($this->once())
             ->method('load')
-            ->with(\dirname(__DIR__).'/Fixtures/Routing/WithAppController/src/Controller')
+            ->with(Path::join(__DIR__, '../Fixtures/Routing/WithAppController/src/Controller'))
         ;
 
         $loaderResolver = $this->createMock(LoaderResolverInterface::class);
