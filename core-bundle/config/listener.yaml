@@ -86,6 +86,9 @@ services:
             - '@security.helper'
             - '@database_connection'
 
+    contao.listener.data_container.default_global_operations:
+        class: Contao\CoreBundle\EventListener\DataContainer\DefaultGlobalOperationsListener
+
     contao.listener.data_container.disable_app_configured_settings:
         class: Contao\CoreBundle\EventListener\DataContainer\DisableAppConfiguredSettingsListener
         arguments:
