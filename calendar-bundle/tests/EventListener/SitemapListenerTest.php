@@ -34,7 +34,7 @@ class SitemapListenerTest extends ContaoTestCase
     public function testNothingIsAddedIfNoPublishedCalendar(): void
     {
         $adapters = [
-            CalendarModel::class => $this->mockConfiguredAdapter(['findByProtected' => null]),
+            CalendarModel::class => $this->mockConfiguredAdapter(['findAll' => null]),
         ];
 
         $sitemapEvent = $this->createSitemapEvent([]);
@@ -58,7 +58,7 @@ class SitemapListenerTest extends ContaoTestCase
 
         $adapters = [
             CalendarModel::class => $this->mockConfiguredAdapter([
-                'findByProtected' => [
+                'findAll' => [
                     $this->mockClassWithProperties(CalendarModel::class, [
                         'jumpTo' => 42,
                     ]),

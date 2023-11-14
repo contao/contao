@@ -34,7 +34,7 @@ class SitemapListenerTest extends ContaoTestCase
     public function testNothingIsAddedIfNoPublishedArchive(): void
     {
         $adapters = [
-            NewsArchiveModel::class => $this->mockConfiguredAdapter(['findByProtected' => null]),
+            NewsArchiveModel::class => $this->mockConfiguredAdapter(['findAll' => null]),
         ];
 
         $sitemapEvent = $this->createSitemapEvent([]);
@@ -58,7 +58,7 @@ class SitemapListenerTest extends ContaoTestCase
 
         $adapters = [
             NewsArchiveModel::class => $this->mockConfiguredAdapter([
-                'findByProtected' => [
+                'findAll' => [
                     $this->mockClassWithProperties(NewsArchiveModel::class, [
                         'jumpTo' => 42,
                     ]),
