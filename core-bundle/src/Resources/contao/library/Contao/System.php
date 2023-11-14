@@ -112,6 +112,12 @@ abstract class System
 	protected static $arrImageSizes = array();
 
 	/**
+	 * Available language files
+	 * @var array|false|null
+	 */
+	protected static $arrAvailableLanguageFiles;
+
+	/**
 	 * Import the Config instance
 	 */
 	protected function __construct()
@@ -532,14 +538,18 @@ abstract class System
 		// Prepare the XLIFF loader
 		$xlfLoader = new XliffFileLoader(static::getContainer()->getParameter('kernel.project_dir'), true);
 		$strCacheDir = static::getContainer()->getParameter('kernel.cache_dir');
-		$availLangFilesPath = Path::join($strCacheDir, 'contao/config/available-language-files.php');
-		$availLangFiles = file_exists($availLangFilesPath) ? include $availLangFilesPath : null;
+
+		if (null === self::$arrAvailableLanguageFiles)
+		{
+			$availLangFilesPath = Path::join($strCacheDir, 'contao/config/available-language-files.php');
+			self::$arrAvailableLanguageFiles = file_exists($availLangFilesPath) ? include $availLangFilesPath : false;
+		}
 
 		// Load the language(s)
 		foreach ($arrCreateLangs as $strCreateLang)
 		{
 			// Skip languages that are not available (#6454)
-			if (null !== $availLangFiles && !isset($availLangFiles[$strCreateLang][$strName]))
+			if (\is_array(self::$arrAvailableLanguageFiles) && !isset(self::$arrAvailableLanguageFiles[$strCreateLang][$strName]))
 			{
 				continue;
 			}
