@@ -36,23 +36,32 @@ class SuperviseWorkersCommand extends Command
     public function __construct(
         private readonly ContainerInterface $messengerTransportLocator,
         private readonly ProcessUtil $processUtil,
-        private readonly string $stateDirectory,
+        private Supervisor $supervisor,
         private readonly array $workers,
     ) {
         parent::__construct();
     }
 
+    public static function create(ContainerInterface $messengerTransportLocator, ProcessUtil $processUtil, string $storageDirectory, array $workers): self
+    {
+        return new self(
+            $messengerTransportLocator,
+            $processUtil,
+            new Supervisor($storageDirectory),
+            $workers,
+        );
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $supervisor = new Supervisor($this->stateDirectory);
 
         foreach ($this->workers as $k => $worker) {
-            $supervisor = $supervisor->withCommand($this->createCommandForWorker('worker-'.$k + 1, $worker));
+            $this->supervisor = $this->supervisor->withCommand($this->createCommandForWorker('worker-'.$k + 1, $worker));
         }
 
         $io->info('Starting to supervise workers for a minute.');
-        $supervisor->supervise();
+        $this->supervisor->supervise();
         $io->info('Done. Restart this command to spin up the workers and have them being supervised them again.');
 
         return Command::SUCCESS;
@@ -68,13 +77,13 @@ class SuperviseWorkersCommand extends Command
 
         if ($worker['autoscale']['enabled']) {
             $totalMessages = $this->collectTotalMessages($worker['transports']);
-            $desiredWorkers = ceil($totalMessages / $worker['autoscale']['desired_size']);
+            $desiredWorkers = (int) round(ceil($totalMessages / $worker['autoscale']['desired_size']));
 
             // Never more than the max
-            $desiredWorkers = min($desiredWorkers, $worker['autoscale']['max']);
+            $desiredWorkers = (int) min($desiredWorkers, $worker['autoscale']['max']);
 
             // Never less than the min
-            $desiredWorkers = max($worker['autoscale']['min'], $desiredWorkers);
+            $desiredWorkers = (int) max($worker['autoscale']['min'], $desiredWorkers);
         }
 
         return new BasicCommand(
@@ -86,7 +95,7 @@ class SuperviseWorkersCommand extends Command
                     ...$worker['options'],
                     ...$worker['transports'],
                 );
-            }
+            },
         );
     }
 
