@@ -45,7 +45,7 @@ class SitemapListener
         $time = time();
 
         // Get all news archives
-        $objArchives = $this->framework->getAdapter(NewsArchiveModel::class)->findByProtected('');
+        $objArchives = $this->framework->getAdapter(NewsArchiveModel::class)->findAll();
 
         if (null === $objArchives) {
             return;

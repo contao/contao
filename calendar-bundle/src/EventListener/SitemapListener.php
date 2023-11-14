@@ -42,7 +42,7 @@ class SitemapListener
         $time = time();
 
         // Get all calendars
-        $objCalendars = $this->framework->getAdapter(CalendarModel::class)->findByProtected('');
+        $objCalendars = $this->framework->getAdapter(CalendarModel::class)->findAll();
 
         if (null === $objCalendars) {
             return;
