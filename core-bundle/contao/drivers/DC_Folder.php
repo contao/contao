@@ -318,8 +318,10 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Get the session data and toggle the nodes
 		if (Input::get('tg') == 'all')
 		{
+			$state = Input::get('state');
+
 			// Expand tree
-			if (empty($session['filetree']) || !\is_array($session['filetree']) || current($session['filetree']) != 1)
+			if ($state || (null === $state && (empty($session['filetree']) || !\is_array($session['filetree']) || current($session['filetree']) != 1)))
 			{
 				$session['filetree'] = $this->getMD5Folders($this->strUploadPath);
 			}
@@ -475,6 +477,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		$icon = !empty($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['icon']) ? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['icon'] : 'filemounts.svg';
 		$label = Image::getHtml($icon) . ' <label>' . $label . '</label>';
+		$requestToken = htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue());
 
 		$security = System::getContainer()->get('security.helper');
 
@@ -490,7 +493,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 <form id="tl_select" class="tl_form' . ((Input::get('act') == 'select') ? ' unselectable' : '') . '" method="post" novalidate>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_select">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">' : '') . ($blnClipboard ? '
+<input type="hidden" name="REQUEST_TOKEN" value="' . $requestToken . '">' : '') . ($blnClipboard ? '
 <div id="paste_hint" data-add-to-scroll-offset="20">
   <p>' . $GLOBALS['TL_LANG']['MSC']['selectNewPosition'] . '</p>
 </div>' : '') . '
@@ -604,6 +607,22 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				'url' => html_entity_decode($this->addToUrl('act=cut&mode=2&pid=' . urlencode($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'][0] ?? $this->strUploadPath))),
 			)) . ')</script>'
 		;
+
+		if (isset($GLOBALS['TL_DCA'][$this->strTable]['list']['global_operations']['toggleNodes']))
+		{
+			$return = '<div
+					data-controller="contao--toggle-nodes"
+					data-contao--toggle-nodes-toggle-action-value="toggleFileManager"
+					data-contao--toggle-nodes-load-action-value="loadFileManager"
+					data-contao--toggle-nodes-request-token-value="' . $requestToken . '"
+					data-contao--toggle-nodes-expand-value="' . $GLOBALS['TL_LANG']['MSC']['expandNode'] . '"
+					data-contao--toggle-nodes-collapse-value="' . $GLOBALS['TL_LANG']['MSC']['collapseNode'] . '"
+					data-contao--toggle-nodes-expand-all-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][0] . '"
+					data-contao--toggle-nodes-expand-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][1] . '"
+					data-contao--toggle-nodes-collapse-all-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][0] . '"
+					data-contao--toggle-nodes-collapse-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][0] . '"
+				>' . $return . '</div>';
+		}
 
 		return $return;
 	}
@@ -2498,7 +2517,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$arrClipboard = null;
 		}
 
-		return $this->generateTree($this->strRootDir . '/' . $strFolder, $level * 18, false, $this->isProtectedPath($strFolder), $blnClipboard ? $arrClipboard : false);
+		return $this->generateTree($this->strRootDir . '/' . $strFolder, ($level + 1) * 18, false, $this->isProtectedPath($strFolder), $blnClipboard ? $arrClipboard : false);
 	}
 
 	/**
@@ -2539,7 +2558,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$files = array();
 		$folders = array();
 		$intSpacing = 18;
-		$level = $intMargin / $intSpacing + 1;
+		$level = $intMargin / $intSpacing;
 
 		// Mount folder
 		if ($mount)
@@ -2657,7 +2676,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			{
 				$class = $blnIsOpen ? 'foldable foldable--open' : 'foldable';
 				$alt = $blnIsOpen ? $GLOBALS['TL_LANG']['MSC']['collapseNode'] : $GLOBALS['TL_LANG']['MSC']['expandNode'];
-				$return .= '<a href="' . $this->addToUrl('tg=' . $md5) . '" title="' . StringUtil::specialchars($alt) . '" class="' . $class . '" onclick="Backend.getScrollOffset(); return AjaxRequest.toggleFileManager(this, \'filetree_' . $md5 . '\', \'' . $currentFolder . '\', ' . $level . ')">' . Image::getHtml('chevron-right.svg') . '</a>';
+				$return .= '<a href="' . $this->addToUrl('tg=' . $md5) . '" title="' . StringUtil::specialchars($alt) . '" class="' . $class . '" data-contao--toggle-nodes-target="toggle" data-action="contao--toggle-nodes#toggle" data-contao--toggle-nodes-id-param="filetree_' . $md5 . '" data-contao--toggle-nodes-folder-param="' . $currentFolder . '" data-contao--toggle-nodes-level-param="' . $level . '">' . Image::getHtml('chevron-right.svg') . '</a>';
 			}
 
 			$protected = $blnProtected;
@@ -2726,7 +2745,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Call the next node
 			if (!empty($content) && $blnIsOpen)
 			{
-				$return .= '<li class="parent" id="filetree_' . $md5 . '"><ul class="level_' . $level . '">';
+				$return .= '<li class="parent" id="filetree_' . $md5 . '" data-contao--toggle-nodes-target="child' . ($level === 0 ? ' rootChild' : '') . '"><ul class="level_' . $level . '">';
 				$return .= $this->generateTree($folders[$f], $intMargin + $intSpacing, false, $protected, $arrClipboard, $arrFound);
 				$return .= '</ul></li>';
 			}
