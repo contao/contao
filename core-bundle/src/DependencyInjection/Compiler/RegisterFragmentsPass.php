@@ -111,8 +111,8 @@ class RegisterFragmentsPass implements CompilerPassInterface
                 $registry->addMethodCall('add', [$identifier, $config]);
                 $command?->addMethodCall('add', [$identifier, $config, $attributes]);
 
-                if ($attributes['slots'] ?? null) {
-                    $compositor->addMethodCall('add', [$identifier, $attributes['slots']]);
+                if ($attributes['nestedElements'] ?? null) {
+                    $compositor->addMethodCall('add', [$identifier, $attributes['nestedElements']]);
                 }
 
                 $childDefinition->setTags($definition->getTags());

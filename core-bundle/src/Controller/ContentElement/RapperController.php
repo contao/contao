@@ -18,10 +18,8 @@ use Contao\CoreBundle\Twig\FragmentTemplate;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-#[AsContentElement(category: 'texts', slots: [
-    'default' => [
-        'allowedTypes' => ['image', 'text'],
-    ],
+#[AsContentElement(category: 'texts', nestedElements: [
+    'allowedTypes' => ['image', 'text'],
 ])]
 class RapperController extends AbstractContentElementController
 {

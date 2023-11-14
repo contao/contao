@@ -4,8 +4,8 @@
 
 {% block inner %}
     <fieldset>
-        <legend>Slot default</legend>
-        {% for element in nested_elements.default|default([]) %}
+        <legend>Nested elements:</legend>
+        {% for element in nested_elements|default([]) %}
             {{ render(element) }}
         {% endfor %}
     </fieldset>

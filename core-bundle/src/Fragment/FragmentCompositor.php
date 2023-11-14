@@ -18,7 +18,7 @@ use Contao\Model\Registry;
 
 class FragmentCompositor
 {
-    private array $slotsByIdentifier = [];
+    private array $nestedByIdentifier = [];
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.fragment.compositor" service instead
@@ -27,19 +27,19 @@ class FragmentCompositor
     {
     }
 
-    public function add(string $identifier, array $slots): void
+    public function add(string $identifier, array $nestedElements): void
     {
-        $this->slotsByIdentifier[$identifier] = $slots;
+        $this->nestedByIdentifier[$identifier] = $nestedElements;
     }
 
     public function isNested(string $identifier): bool
     {
-        return isset($this->slotsByIdentifier[$identifier]);
+        return isset($this->nestedByIdentifier[$identifier]);
     }
 
     public function getNestedContentElements(string $identifier, int $id): array
     {
-        if (!isset($this->slotsByIdentifier[$identifier])) {
+        if (!isset($this->nestedByIdentifier[$identifier])) {
             return [];
         }
 
@@ -47,23 +47,15 @@ class FragmentCompositor
 
         $rendered = [];
 
-        foreach (array_keys($this->slotsByIdentifier[$identifier]) as $slot) {
-            if ('default' !== $slot) {
-                throw new \InvalidArgumentException(sprintf('Only the slot "default" is supported, got "%s".', $slot));
-            }
-
-            $rendered[$slot] = [];
-        }
-
         foreach ($children ?? [] as $child) {
             if (
-                !empty($this->slotsByIdentifier[$identifier]['default']['allowedTypes'])
-                && !\in_array($child->type, $this->slotsByIdentifier[$identifier]['default']['allowedTypes'], true)
+                !empty($this->nestedByIdentifier[$identifier]['allowedTypes'])
+                && !\in_array($child->type, $this->nestedByIdentifier[$identifier]['allowedTypes'], true)
             ) {
                 continue;
             }
 
-            $rendered['default'][] = new ContentElementReference(
+            $rendered[] = new ContentElementReference(
                 $child,
                 'main',
                 [],

@@ -21,20 +21,16 @@ class AsContentElement
     public array $attributes;
 
     /**
-     * @param array{default?:array{allowedTypes?:list<string>}} $slots
+     * @param array{allowedTypes?:list<string>} $nestedElements
      */
-    public function __construct(string|null $type = null, string $category = 'miscellaneous', string|null $template = null, string|null $method = null, string|null $renderer = null, array $slots = [], mixed ...$attributes)
+    public function __construct(string|null $type = null, string $category = 'miscellaneous', string|null $template = null, string|null $method = null, string|null $renderer = null, array $nestedElements = [], mixed ...$attributes)
     {
-        if ($slots && array_keys($slots) !== ['default']) {
-            throw new \InvalidArgumentException(sprintf('Only the slot "default" is supported, got "%s".', implode('", "', array_keys($slots))));
-        }
-
         $attributes['type'] = $type;
         $attributes['category'] = $category;
         $attributes['template'] = $template;
         $attributes['method'] = $method;
         $attributes['renderer'] = $renderer;
-        $attributes['slots'] = $slots;
+        $attributes['nestedElements'] = $nestedElements;
 
         $this->attributes = $attributes;
     }
