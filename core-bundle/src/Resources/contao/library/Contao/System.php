@@ -542,7 +542,7 @@ abstract class System
 		if (null === self::$arrAvailableLanguageFiles)
 		{
 			$availLangFilesPath = Path::join($strCacheDir, 'contao/config/available-language-files.php');
-			self::$arrAvailableLanguageFiles = file_exists($availLangFilesPath) ? include_once $availLangFilesPath : false;
+			self::$arrAvailableLanguageFiles = file_exists($availLangFilesPath) ? include $availLangFilesPath : false;
 		}
 
 		// Load the language(s)
