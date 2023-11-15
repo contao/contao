@@ -121,8 +121,8 @@ class ContaoCacheWarmerTest extends TestCase
             TXT;
 
         $this->assertSame(
-            preg_replace('~\s+~', '', $expected),
-            preg_replace('~\s+~', '', file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/config/available-language-files.php')))
+            preg_replace('~\s+~', ' ', $expected),
+            preg_replace('~\s+~', ' ', file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/config/available-language-files.php')))
         );
     }
 
