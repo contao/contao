@@ -125,13 +125,9 @@ services:
             - '@contao.csrf.token_storage'
             - ~
             - '%contao.csrf_token_name%'
-        tags:
-            - { name: kernel.reset, method: reset }
 
     contao.csrf.token_storage:
         class: Contao\CoreBundle\Csrf\MemoryTokenStorage
-        tags:
-            - { name: kernel.reset, method: reset }
 
     contao.data_collector:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
@@ -257,8 +253,6 @@ services:
             - '%kernel.project_dir%'
             - '%contao.error_level%'
             - '%contao.legacy_routing%'
-        tags:
-            - { name: kernel.reset, method: reset }
 
     contao.image.deferred_image_storage:
         class: Contao\Image\DeferredImageStorageFilesystem
@@ -360,8 +354,6 @@ services:
             - '@event_dispatcher'
             - '@contao.framework'
             - '@contao.translation.translator'
-        tags:
-            - { name: kernel.reset, method: reset }
 
     contao.image.studio:
         class: Contao\CoreBundle\Image\Studio\Studio
@@ -762,8 +754,6 @@ services:
         class: Contao\CoreBundle\Security\Voter\BackendAccessVoter
         arguments:
             - '@contao.framework'
-        tags:
-            - { name: kernel.reset, method: reset }
 
     contao.security.backend_user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
@@ -979,7 +969,6 @@ services:
             - '%kernel.project_dir%'
         tags:
             - { name: twig.loader, priority: 2 }
-            - { name: kernel.reset, method: reset }
 
     contao.twig.filesystem_loader_warmer:
         class: Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer

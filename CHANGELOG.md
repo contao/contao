@@ -2,6 +2,50 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.34] (2023-11-06)
+
+**Fixed issues:**
+
+- [#6492] Fix the arguments of the `contao.command.user_list` service ([xprojects-de])
+
+## [4.13.33] (2023-11-06)
+
+**Fixed issues:**
+
+- [#6490] Focus the TinyMCE dialog after using the picker ([ausi])
+- [#6487] Fixed debug log not shown when crawler is running ([Toflar])
+- [#6345] Fix redirect to language without URL prefix ([aschempp])
+- [#6473] Cast boolean to integer in `DC_Table::copy` ([fritzmg])
+- [#6466] Correctly handle metadata in Dbafs ([aschempp])
+- [#6467] Compare the actual row format instead of the create options ([ausi])
+- [#6459] Correctly reset the context when generating preview URL fails ([aschempp])
+- [#6462] Remove the `kernel.reset` tag ([aschempp])
+- [#6457] Add member login preview links to known limitations ([ausi])
+- [#6417] Change user commands to not use models ([aschempp])
+- [#6444] Enable code highlighting for Twig ([m-vo])
+
+## [4.13.32] (2023-10-17)
+
+**Fixed issues:**
+
+- [#6437] Support themes from ZIP files ([aschempp])
+- [#6431] Make sure valid URLs start with a slash ([aschempp])
+- [#6425] Do not set `database_version` in the install tool ([aschempp])
+
+## [4.13.31] (2023-10-09)
+
+**Fixed issues:**
+
+- [#6419] Use `href` for lightbox resource ([fritzmg])
+- [#6422] Correctly tag cached responses with forms ([aschempp])
+- [#6401] Create one `<script>` block per JSON-LD context ([leofeyer])
+- [#6391] Do not forward pages with parameters by default ([leofeyer])
+- [#6393] Generate the file tree preview images with a 1x, 2x source set ([leofeyer])
+- [#6390] Do not allow route parameters for redirect pages ([leofeyer])
+- [#6349] Fix an "access array offset on value of type null" error in the help wizard ([leofeyer])
+- [#6384] Fix legacy route matching for unpublished pages ([fritzmg])
+- [#6352] Fix a PHP8 warning on undefined `$GLOBALS['TL_CSS']` ([aschempp])
+
 ## [4.13.30] (2023-08-30)
 
 **Fixed issues:**
@@ -807,6 +851,10 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.34]: https://github.com/contao/contao/releases/tag/4.13.34
+[4.13.33]: https://github.com/contao/contao/releases/tag/4.13.33
+[4.13.32]: https://github.com/contao/contao/releases/tag/4.13.32
+[4.13.31]: https://github.com/contao/contao/releases/tag/4.13.31
 [4.13.30]: https://github.com/contao/contao/releases/tag/4.13.30
 [4.13.29]: https://github.com/contao/contao/releases/tag/4.13.29
 [4.13.28]: https://github.com/contao/contao/releases/tag/4.13.28
@@ -1488,4 +1536,28 @@ This project adheres to [Semantic Versioning].
 [#6332]: https://github.com/contao/contao/pull/6332
 [#6333]: https://github.com/contao/contao/pull/6333
 [#6343]: https://github.com/contao/contao/pull/6343
+[#6345]: https://github.com/contao/contao/pull/6345
 [#6348]: https://github.com/contao/contao/pull/6348
+[#6349]: https://github.com/contao/contao/pull/6349
+[#6352]: https://github.com/contao/contao/pull/6352
+[#6384]: https://github.com/contao/contao/pull/6384
+[#6390]: https://github.com/contao/contao/pull/6390
+[#6391]: https://github.com/contao/contao/pull/6391
+[#6393]: https://github.com/contao/contao/pull/6393
+[#6401]: https://github.com/contao/contao/pull/6401
+[#6417]: https://github.com/contao/contao/pull/6417
+[#6419]: https://github.com/contao/contao/pull/6419
+[#6422]: https://github.com/contao/contao/pull/6422
+[#6425]: https://github.com/contao/contao/pull/6425
+[#6431]: https://github.com/contao/contao/pull/6431
+[#6437]: https://github.com/contao/contao/pull/6437
+[#6444]: https://github.com/contao/contao/pull/6444
+[#6457]: https://github.com/contao/contao/pull/6457
+[#6459]: https://github.com/contao/contao/pull/6459
+[#6462]: https://github.com/contao/contao/pull/6462
+[#6466]: https://github.com/contao/contao/pull/6466
+[#6467]: https://github.com/contao/contao/pull/6467
+[#6473]: https://github.com/contao/contao/pull/6473
+[#6487]: https://github.com/contao/contao/pull/6487
+[#6490]: https://github.com/contao/contao/pull/6490
+[#6492]: https://github.com/contao/contao/pull/6492

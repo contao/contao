@@ -138,15 +138,11 @@ class ContaoCacheWarmer implements CacheWarmerInterface
                     ->name("/^$name\\.(php|xlf)$/")
                 ;
 
-                try {
-                    $dumper->dump(
-                        iterator_to_array($subfiles),
-                        Path::join('languages', $language, "$name.php"),
-                        ['type' => $language]
-                    );
-                } catch (\OutOfBoundsException $e) {
-                    continue;
-                }
+                $dumper->dump(
+                    iterator_to_array($subfiles),
+                    Path::join('languages', $language, "$name.php"),
+                    ['type' => $language]
+                );
             }
         }
     }

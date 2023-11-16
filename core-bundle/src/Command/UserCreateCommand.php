@@ -16,7 +16,6 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Intl\Locales;
-use Contao\UserGroupModel;
 use Contao\Validator;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Console\Command\Command;
@@ -243,16 +242,7 @@ class UserCreateCommand extends Command
 
     private function getGroups(): array
     {
-        $this->framework->initialize();
-
-        $userGroupModel = $this->framework->getAdapter(UserGroupModel::class);
-        $groups = $userGroupModel->findAll();
-
-        if (null === $groups) {
-            return [];
-        }
-
-        return $groups->fetchEach('name');
+        return $this->connection->fetchAllKeyValue('SELECT id, name FROM tl_user_group');
     }
 
     private function persistUser(string $username, string $name, string $email, string $password, string $language, bool $isAdmin = false, array $groups = null, bool $pwChange = false): void
