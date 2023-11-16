@@ -1113,6 +1113,7 @@ table.tl_listing {
 }
 
 .tl_file, .tl_file_list {
+	position: relative;
 	padding: 5px 6px;
 	border-bottom: 1px solid var(--border);
 	background: var(--content-bg);
@@ -1600,6 +1601,7 @@ table.tl_listing {
 .limit_toggler {
 	width: 100%;
 	position: absolute;
+	z-index: 10;
 	bottom: 0;
 	left: 0;
 	background: var(--content-bg);
@@ -1615,7 +1617,6 @@ table.tl_listing {
 	width: 24px;
 	line-height: 8px;
 	color: var(--gray);
-	outline: none;
 	border-top-left-radius: 2px;
 	border-top-right-radius: 2px;
 }

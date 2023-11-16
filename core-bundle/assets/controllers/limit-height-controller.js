@@ -16,6 +16,7 @@ export default class extends Controller {
     initialize () {
         super.initialize();
         this.togglerMap = new WeakMap();
+        this.nextId = 1;
     }
 
     operationTargetConnected () {
@@ -32,7 +33,10 @@ export default class extends Controller {
             return;
         }
 
-        node.style.position = 'relative';
+        if (!node.id) {
+            node.id = `limit-height-${this.nextId++}`;
+        }
+
         node.style.overflow = 'hidden';
         node.style.maxHeight = `${this.maxValue}px`;
 
@@ -41,6 +45,8 @@ export default class extends Controller {
         button.title = this.expandValue;
         button.innerHTML = '<span>...</span>';
         button.classList.add('unselectable');
+        button.setAttribute('aria-expanded', 'false');
+        button.setAttribute('aria-controls', node.id);
 
         button.addEventListener('click', (event) => {
             event.preventDefault();
@@ -54,7 +60,7 @@ export default class extends Controller {
 
         this.togglerMap.set(node, toggler);
 
-        node.append(toggler);
+        node.before(toggler);
         this.updateOperation();
     }
 
@@ -65,7 +71,6 @@ export default class extends Controller {
 
         this.togglerMap.get(node).remove();
         this.togglerMap.delete(node);
-        node.style.position = '';
         node.style.overflow = '';
         node.style.maxHeight = '';
     }
@@ -76,18 +81,28 @@ export default class extends Controller {
         } else {
             this.expand(node);
         }
-
-        console.log(node.style.maxHeight);
     }
 
     expand (node) {
+        if (!this.togglerMap.has(node)) {
+            return;
+        }
+
         node.style.maxHeight = '';
-        this.setButtonTitle(node, this.collapseValue);
+        const button = this.togglerMap.get(node).querySelector('button');
+        button.title = this.collapseValue;
+        button.setAttribute('aria-expanded', 'true');
     }
 
     collapse (node) {
+        if (!this.togglerMap.has(node)) {
+            return;
+        }
+
         node.style.maxHeight = `${this.maxValue}px`;
-        this.setButtonTitle(node, this.expandValue);
+        const button = this.togglerMap.get(node).querySelector('button');
+        button.title = this.expandValue;
+        button.setAttribute('aria-expanded', 'false');
     }
 
     toggleAll (event) {
@@ -115,9 +130,13 @@ export default class extends Controller {
         }
 
         const hasTogglers = !!this.nodeTargets.find((el) => this.togglerMap.has(el));
-        this.operationTarget.style.display = hasTogglers ? '' : 'none';
+        const expanded = this.hasExpanded();
 
-        if (this.hasExpanded() ^ (event ? event.altKey : false)) {
+        this.operationTarget.style.display = hasTogglers ? '' : 'none';
+        this.operationTarget.setAttribute('aria-controls', this.nodeTargets.map((el) => el.id).join(' '));
+        this.operationTarget.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+
+        if (expanded ^ (event ? event.altKey : false)) {
             this.operationTarget.innerText = this.collapseAllValue;
             this.operationTarget.title = this.collapseAllTitleValue;
         } else {
@@ -128,13 +147,5 @@ export default class extends Controller {
 
     hasExpanded () {
         return !!this.nodeTargets.find((el) => this.togglerMap.has(el) && el.style.maxHeight === '');
-    }
-
-    setButtonTitle (node, title) {
-        if (!this.togglerMap.has(node)) {
-            return;
-        }
-
-        this.togglerMap.get(node).querySelector('button').title = title;
     }
 }
