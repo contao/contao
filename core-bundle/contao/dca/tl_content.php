@@ -1176,10 +1176,9 @@ class tl_content extends Backend
 	{
 		$key = $arrRow['invisible'] ? 'unpublished' : 'published';
 		$type = $GLOBALS['TL_LANG']['CTE'][$arrRow['type']][0] ?? $arrRow['type'];
-		$isWrapper = in_array($arrRow['type'], $GLOBALS['TL_WRAPPERS']['start']) || in_array($arrRow['type'], $GLOBALS['TL_WRAPPERS']['separator']) || in_array($arrRow['type'], $GLOBALS['TL_WRAPPERS']['stop']);
 
 		// Remove the class if it is a wrapper element
-		if ($isWrapper)
+		if (in_array($arrRow['type'], $GLOBALS['TL_WRAPPERS']['start']) || in_array($arrRow['type'], $GLOBALS['TL_WRAPPERS']['separator']) || in_array($arrRow['type'], $GLOBALS['TL_WRAPPERS']['stop']))
 		{
 			if (($group = $this->getContentElementGroup($arrRow['type'])) !== null)
 			{
