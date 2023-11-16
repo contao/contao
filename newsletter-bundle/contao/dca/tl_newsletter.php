@@ -57,7 +57,8 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'panelLayout'             => 'filter;sort,search,limit',
 			'defaultSearchField'      => 'subject',
 			'child_record_callback'   => array('tl_newsletter', 'listNewsletters'),
-			'renderAsGrid'            => true
+			'renderAsGrid'            => true,
+			'limitHeight'             => 144
 		),
 		'operations' => array
 		(
@@ -394,7 +395,7 @@ class tl_newsletter extends Backend
 	{
 		return '
 <div class="cte_type ' . (($arrRow['sent'] && $arrRow['date']) ? 'published' : 'unpublished') . '"><strong>' . $arrRow['subject'] . '</strong> - ' . (($arrRow['sent'] && $arrRow['date']) ? sprintf($GLOBALS['TL_LANG']['tl_newsletter']['sentOn'], Date::parse(Config::get('datimFormat'), $arrRow['date'])) : $GLOBALS['TL_LANG']['tl_newsletter']['notSent']) . '</div>
-<div class="cte_preview limit_height' . (!Config::get('doNotCollapse') ? ' h112' : '') . '">' . (!$arrRow['sendText'] ? '
+<div class="cte_preview">' . (!$arrRow['sendText'] ? '
 ' . StringUtil::insertTagToSrc($arrRow['content']) . '<hr>' : '') . '
 <pre style="white-space:pre-wrap">' . $arrRow['text'] . '</pre>
 </div>' . "\n";
