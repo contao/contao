@@ -342,7 +342,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('valid_extensions')
                     ->prototype('scalar')->end()
-                    ->defaultValue(['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp'])
+                    ->defaultValue(['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp', 'heic'])
                 ->end()
                 ->arrayNode('preview')
                     ->addDefaultsIfNotSet()
