@@ -31,8 +31,7 @@ class CoreResponseContextFactory
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly TokenChecker $tokenChecker,
         private readonly HtmlDecoder $htmlDecoder,
-        private readonly RequestStack $requestStack,
-        private readonly InsertTagParser $insertTagParser,
+        private readonly UrlUtil $urlUtil,
     ) {
     }
 
@@ -82,18 +81,7 @@ class CoreResponseContextFactory
         }
 
         if ($pageModel->enableCanonical && $pageModel->canonicalLink) {
-            $url = $this->insertTagParser->replaceInline($pageModel->canonicalLink);
-
-            // Ensure absolute links
-            if (!preg_match('#^https?://#', $url)) {
-                if (!$request = $this->requestStack->getCurrentRequest()) {
-                    throw new \RuntimeException('The request stack did not contain a request');
-                }
-
-                $url = UrlUtil::makeAbsolute($url, $request->getUri());
-            }
-
-            $htmlHeadBag->setCanonicalUri($url);
+            $htmlHeadBag->setCanonicalUri($this->urlUtil->parseContaoUrl($pageModel->canonicalLink));
         }
 
         if ($pageModel->enableCanonical && $pageModel->canonicalKeepParams) {

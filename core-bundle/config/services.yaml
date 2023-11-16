@@ -760,8 +760,7 @@ services:
             - '@event_dispatcher'
             - '@contao.security.token_checker'
             - '@contao.string.html_decoder'
-            - '@request_stack'
-            - '@contao.insert_tag.parser'
+            - '@contao.url_util'
 
     contao.routing.route_404_provider:
         class: Contao\CoreBundle\Routing\Route404Provider
@@ -1149,6 +1148,13 @@ services:
         arguments:
             - '@request_stack'
 
+    contao.url_util:
+        class: Contao\CoreBundle\Util\UrlUtil
+        public: true
+        arguments:
+            - '@contao.insert_tag.parser'
+            - '@request_stack'
+
     # Autowiring aliases
     Contao\CoreBundle\Cache\EntityCacheTags: '@contao.cache.entity_tags'
     Contao\CoreBundle\Config\ResourceFinderInterface: '@contao.resource_finder'
@@ -1180,3 +1186,4 @@ services:
     Contao\CoreBundle\Twig\Interop\ContextFactory: '@contao.twig.interop.context_factory'
     Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader: '@contao.twig.filesystem_loader'
     Contao\CoreBundle\Util\ProcessUtil: '@contao.process_util'
+    Contao\CoreBundle\Util\UrlUtil: '@contao.url_util'

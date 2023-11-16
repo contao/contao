@@ -12,11 +12,45 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Util;
 
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Util\UrlUtil;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class UrlUtilTest extends TestCase
 {
+    /**
+     * @dataProvider parseContaoUrlProvider
+     */
+    public function testParseContaoUrl(string $url, string $expected): void
+    {
+        $insertTagsParser = $this->createMock(InsertTagParser::class);
+        $insertTagsParser
+            ->expects($this->once())
+            ->method('replaceInline')
+            ->with('{{link_url::42}}')
+            ->willReturn($url)
+        ;
+
+        $requestStack = new RequestStack();
+        $requestStack->push(Request::create('https://example.com/'));
+
+        $urlUtil = new UrlUtil($insertTagsParser, $requestStack);
+
+        $this->assertSame($expected, $urlUtil->parseContaoUrl('{{link_url::42}}'));
+    }
+
+    public function parseContaoUrlProvider(): \Generator
+    {
+        yield ['//example.de/foobar.html', 'https://example.de/foobar.html'];
+        yield ['/de/foobar.html', 'https://example.com/de/foobar.html'];
+        yield ['de/foobar.html', 'https://example.com/de/foobar.html'];
+        yield ['foobar.html', 'https://example.com/foobar.html'];
+        yield ['https://example.de/foobar.html', 'https://example.de/foobar.html'];
+        yield ['http://example.de/foobar.html', 'http://example.de/foobar.html'];
+    }
+
     /**
      * @dataProvider getMakeAbsolute
      */

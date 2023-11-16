@@ -12,11 +12,35 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Util;
 
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Nyholm\Psr7\Uri;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class UrlUtil
 {
+    public function __construct(
+        private readonly InsertTagParser $insertTagParser,
+        private readonly RequestStack $requestStack,
+    ) {
+    }
+
+    public function parseContaoUrl(string $url): string
+    {
+        $url = $this->insertTagParser->replaceInline($url);
+
+        // Ensure absolute links
+        if (!preg_match('#^https?://#', $url)) {
+            if (!$request = $this->requestStack->getCurrentRequest()) {
+                throw new \RuntimeException('The request stack did not contain a request');
+            }
+
+            $url = static::makeAbsolute($url, $request->getUri());
+        }
+
+        return $url;
+    }
+
     /**
      * Creates an absolute URL from the given relative and base URL according to the URL standard.
      *
