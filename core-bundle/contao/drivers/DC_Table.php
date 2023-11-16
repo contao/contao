@@ -4500,7 +4500,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$labelPasteNew = $GLOBALS['TL_LANG'][$this->strTable]['pastenew'] ?? $GLOBALS['TL_LANG']['DCA']['pastenew'];
 		$labelPasteAfter = $GLOBALS['TL_LANG'][$this->strTable]['pasteafter'] ?? $GLOBALS['TL_LANG']['DCA']['pasteafter'];
 		$labelEditHeader = $GLOBALS['TL_LANG'][$this->ptable]['edit'] ?? $GLOBALS['TL_LANG']['DCA']['edit'];
-		$limitHeight = Config::get('doNotCollapse') ? false : (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['limitHeight'] ?? 0);
+		$limitHeight = BackendUser::getInstance()->doNotCollapse ? false : (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['limitHeight'] ?? 0);
 
 		$db = Database::getInstance();
 		$security = System::getContainer()->get('security.helper');
@@ -5047,7 +5047,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		// Check the default labels (see #509)
 		$labelNew = $GLOBALS['TL_LANG'][$this->strTable]['new'] ?? $GLOBALS['TL_LANG']['DCA']['new'];
-		$limitHeight = Config::get('doNotCollapse') ? false : (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['limitHeight'] ?? 0);
+		$limitHeight = BackendUser::getInstance()->doNotCollapse ? false : (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['limitHeight'] ?? 0);
 
 		$query = "SELECT * FROM " . $this->strTable;
 
