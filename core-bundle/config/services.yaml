@@ -557,14 +557,6 @@ services:
             - '@security.token_storage'
             - '@contao.routing.scope_matcher'
 
-    contao.monolog.web_processor:
-        class: Symfony\Bridge\Monolog\Processor\WebProcessor
-        arguments:
-            - { url: REQUEST_URI }
-        tags:
-            - { name: monolog.processor }
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-
     contao.opt_in:
         class: Contao\CoreBundle\OptIn\OptIn
         public: true

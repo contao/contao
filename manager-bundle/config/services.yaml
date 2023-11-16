@@ -54,6 +54,14 @@ services:
         tags:
             - { name: doctrine.event_listener, event: onSchemaAlterTableRenameColumn }
 
+    contao_manager.monolog.web_processor:
+        class: Symfony\Bridge\Monolog\Processor\WebProcessor
+        arguments:
+            - { request_uri: REQUEST_URI, request_method: REQUEST_METHOD }
+        tags:
+            - { name: monolog.processor }
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
     contao_manager.plugin_loader:
         public: true
         synthetic: true
