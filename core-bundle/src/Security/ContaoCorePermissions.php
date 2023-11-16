@@ -165,7 +165,7 @@ final class ContaoCorePermissions
     public const USER_CAN_ACCESS_IMAGE_SIZE = 'contao_user.imageSizes';
 
     /**
-     * @deprecated use USER_CAN_EDIT_FORM instead.
+     * @deprecated use USER_CAN_EDIT_FORM instead
      */
     public const USER_CAN_ACCESS_FORM = 'contao_user.forms';
 
