@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Util\UrlUtil;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -29,8 +28,7 @@ class PageRedirect extends Frontend
 	{
 		$this->prepare($objPage);
 
-		$url = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objPage->url);
-		$url = UrlUtil::makeAbsolute($url, Environment::get('base'));
+		$url = System::getContainer()->get('contao.routing.url_resolver')->resolve($objPage->url, true);
 
 		return new RedirectResponse($url, $this->getRedirectStatusCode($objPage));
 	}

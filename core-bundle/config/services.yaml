@@ -760,8 +760,7 @@ services:
             - '@event_dispatcher'
             - '@contao.security.token_checker'
             - '@contao.string.html_decoder'
-            - '@request_stack'
-            - '@contao.insert_tag.parser'
+            - '@contao.routing.url_resolver'
 
     contao.routing.route_404_provider:
         class: Contao\CoreBundle\Routing\Route404Provider
@@ -786,6 +785,14 @@ services:
 
     contao.routing.url_matcher:
         class: Contao\CoreBundle\Routing\Matcher\UrlMatcher
+
+    contao.routing.url_resolver:
+        class: Contao\CoreBundle\Routing\UrlResolver
+        public: true
+        arguments:
+            - '@contao.insert_tag.parser'
+            - '@router.request_context'
+            - '@request_stack'
 
     contao.search.default_indexer:
         class: Contao\CoreBundle\Search\Indexer\DefaultIndexer
@@ -1169,6 +1176,7 @@ services:
     Contao\CoreBundle\Routing\Page\PageRegistry: '@contao.routing.page_registry'
     Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor: '@contao.routing.response_context_accessor'
     Contao\CoreBundle\Routing\ScopeMatcher: '@contao.routing.scope_matcher'
+    Contao\CoreBundle\Routing\UrlResolver: '@contao.routing.url_resolver'
     Contao\CoreBundle\Security\Authentication\Token\TokenChecker: '@contao.security.token_checker'
     Contao\CoreBundle\Security\TwoFactor\Authenticator: '@contao.security.two_factor.authenticator'
     Contao\CoreBundle\Security\TwoFactor\BackupCodeManager: '@contao.security.two_factor.backup_code_manager'

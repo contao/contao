@@ -373,14 +373,7 @@ class Calendar extends Frontend
 		switch ($objEvent->source)
 		{
 			case 'external':
-				$url = $objEvent->url;
-
-				if (Validator::isRelativeUrl($url))
-				{
-					$url = Environment::get('path') . '/' . $url;
-				}
-
-				$link = $url;
+				$link = System::getContainer()->get('contao.routing.url_resolver')->resolve($objEvent->url);
 				break;
 
 			case 'internal':

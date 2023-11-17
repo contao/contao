@@ -24,6 +24,7 @@ use Contao\System;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
+use Symfony\Component\Routing\RequestContext;
 
 class MetadataTest extends TestCase
 {
@@ -32,6 +33,7 @@ class MetadataTest extends TestCase
         parent::setUp();
 
         $container = $this->getContainerWithContaoConfiguration();
+        $container->set('router.request_context', $this->createMock(RequestContext::class));
         $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class)));
 
         System::setContainer($container);
@@ -136,7 +138,7 @@ class MetadataTest extends TestCase
                 Metadata::VALUE_ALT => 'foo alt',
                 Metadata::VALUE_CAPTION => 'foo caption',
                 Metadata::VALUE_TITLE => 'foo title',
-                Metadata::VALUE_URL => 'foo://bar',
+                Metadata::VALUE_URL => 'foo://bar/',
             ],
             $model->getOverwriteMetadata()->all(),
         );
@@ -183,7 +185,7 @@ class MetadataTest extends TestCase
             [
                 Metadata::VALUE_TITLE => 'bar title',
                 Metadata::VALUE_ALT => 'bar alt',
-                Metadata::VALUE_URL => 'foo://bar',
+                Metadata::VALUE_URL => 'foo://bar/',
                 Metadata::VALUE_CAPTION => 'bar caption',
                 'custom' => 'foobar',
             ],

@@ -27,6 +27,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
+use Symfony\Component\Routing\RequestContext;
 
 class MarkdownControllerTest extends ContentElementTestCase
 {
@@ -200,6 +201,7 @@ class MarkdownControllerTest extends ContentElementTestCase
         $container->set('contao.cache.entity_tags', $this->createMock(EntityCacheTags::class));
         $container->set('monolog.logger.contao.error', $this->createMock(LoggerInterface::class));
         $container->set('fragment.handler', $this->createMock(FragmentHandler::class));
+        $container->set('router.request_context', $this->createMock(RequestContext::class));
 
         return $container;
     }

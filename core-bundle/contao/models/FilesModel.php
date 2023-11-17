@@ -444,7 +444,7 @@ class FilesModel extends Model
 			// Make sure we resolve insert tags pointing to files
 			if (isset($data[Metadata::VALUE_URL]))
 			{
-				$data[Metadata::VALUE_URL] = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($data[Metadata::VALUE_URL] ?? '');
+				$data[Metadata::VALUE_URL] = System::getContainer()->get('contao.routing.url_resolver')->resolve($data[Metadata::VALUE_URL] ?? '');
 			}
 
 			// Fill missing meta fields with empty values

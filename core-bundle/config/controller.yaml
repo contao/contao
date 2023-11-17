@@ -83,7 +83,7 @@ services:
     Contao\CoreBundle\Controller\ContentElement\HyperlinkController:
         arguments:
             - '@contao.image.studio'
-            - '@contao.insert_tag.parser'
+            - '@contao.routing.url_resolver'
 
     Contao\CoreBundle\Controller\ContentElement\ImagesController:
         arguments:

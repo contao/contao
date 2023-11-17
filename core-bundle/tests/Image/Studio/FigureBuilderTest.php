@@ -47,6 +47,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
+use Symfony\Component\Routing\RequestContext;
 
 class FigureBuilderTest extends TestCase
 {
@@ -732,6 +733,7 @@ class FigureBuilderTest extends TestCase
     public function testAutoFetchMetadataFromFilesModel(string $serializedMetadata, string|null $locale, array $expectedMetadata, Metadata|null $overwriteMetadata = null): void
     {
         $container = $this->getContainerWithContaoConfiguration();
+        $container->set('router.request_context', $this->createMock(RequestContext::class));
         $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class)));
 
         System::setContainer($container);
@@ -786,7 +788,7 @@ class FigureBuilderTest extends TestCase
             [
                 Metadata::VALUE_TITLE => 't',
                 Metadata::VALUE_ALT => 'a',
-                Metadata::VALUE_URL => 'l',
+                Metadata::VALUE_URL => '/l',
                 Metadata::VALUE_CAPTION => 'c',
             ],
         ];
@@ -876,7 +878,7 @@ class FigureBuilderTest extends TestCase
             [
                 Metadata::VALUE_TITLE => 'tt',
                 Metadata::VALUE_ALT => 'a',
-                Metadata::VALUE_URL => 'l',
+                Metadata::VALUE_URL => '/l',
                 Metadata::VALUE_CAPTION => 'c',
             ],
             new Metadata([Metadata::VALUE_TITLE => 'tt']),

@@ -19,6 +19,7 @@ use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+use Contao\CoreBundle\Routing\UrlResolver;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\CoreBundle\Tests\TestCase;
@@ -29,6 +30,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
+use Symfony\Component\Routing\RequestContext;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class CoreResponseContextFactoryTest extends TestCase
@@ -53,8 +55,7 @@ class CoreResponseContextFactoryTest extends TestCase
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(TokenChecker::class),
             new HtmlDecoder($this->createMock(InsertTagParser::class)),
-            $this->createMock(RequestStack::class),
-            $this->createMock(InsertTagParser::class),
+            $this->createMock(UrlResolver::class),
         );
 
         $responseContext = $factory->createResponseContext();
@@ -75,8 +76,7 @@ class CoreResponseContextFactoryTest extends TestCase
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(TokenChecker::class),
             new HtmlDecoder($this->createMock(InsertTagParser::class)),
-            $this->createMock(RequestStack::class),
-            $this->createMock(InsertTagParser::class),
+            $this->createMock(UrlResolver::class),
         );
 
         $responseContext = $factory->createWebpageResponseContext();
@@ -111,15 +111,19 @@ class CoreResponseContextFactoryTest extends TestCase
             ->method('setResponseContext')
         ;
 
+        $urlResolver = $this->createMock(UrlResolver::class);
+        $urlResolver
+            ->method('resolve')
+            ->with('{{link_url::42}}', true)
+            ->willReturn('https://example.com/de/foobar.html')
+        ;
+
         $insertTagsParser = $this->createMock(InsertTagParser::class);
         $insertTagsParser
             ->method('replaceInline')
             ->withConsecutive(['My title'], ['My description'], ['{{link_url::42}}'])
             ->willReturnOnConsecutiveCalls('My title', 'My description', 'de/foobar.html')
         ;
-
-        $requestStack = new RequestStack();
-        $requestStack->push(Request::create('https://example.com/'));
 
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 0;
@@ -136,8 +140,7 @@ class CoreResponseContextFactoryTest extends TestCase
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(TokenChecker::class),
             new HtmlDecoder($insertTagsParser),
-            $requestStack,
-            $insertTagsParser,
+            $urlResolver,
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
@@ -183,12 +186,18 @@ class CoreResponseContextFactoryTest extends TestCase
         $insertTagsParser = $this->createMock(InsertTagParser::class);
         $insertTagsParser
             ->method('replaceInline')
-            ->withConsecutive([''], [''], ['{{link_url::42}}'])
-            ->willReturnOnConsecutiveCalls('My title', 'My description', $url)
+            ->with('{{link_url::42}}')
+            ->willReturn($url)
         ;
 
         $requestStack = new RequestStack();
         $requestStack->push(Request::create('https://example.com/'));
+
+        $urlResolver = new UrlResolver(
+            $insertTagsParser,
+            RequestContext::fromUri('https://example.com/'),
+            $requestStack,
+        );
 
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 0;
@@ -201,9 +210,8 @@ class CoreResponseContextFactoryTest extends TestCase
             $responseAccessor,
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(TokenChecker::class),
-            new HtmlDecoder($insertTagsParser),
-            $requestStack,
-            $insertTagsParser,
+            $this->createMock(HtmlDecoder::class),
+            $urlResolver,
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
@@ -246,8 +254,7 @@ class CoreResponseContextFactoryTest extends TestCase
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(TokenChecker::class),
             new HtmlDecoder($insertTagsParser),
-            $this->createMock(RequestStack::class),
-            $insertTagsParser,
+            $this->createMock(UrlResolver::class),
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);

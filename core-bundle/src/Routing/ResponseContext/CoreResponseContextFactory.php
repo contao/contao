@@ -12,16 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\ResponseContext;
 
-use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
+use Contao\CoreBundle\Routing\UrlResolver;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\String\HtmlDecoder;
-use Contao\CoreBundle\Util\UrlUtil;
 use Contao\PageModel;
 use Spatie\SchemaOrg\WebPage;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class CoreResponseContextFactory
@@ -31,8 +29,7 @@ class CoreResponseContextFactory
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly TokenChecker $tokenChecker,
         private readonly HtmlDecoder $htmlDecoder,
-        private readonly RequestStack $requestStack,
-        private readonly InsertTagParser $insertTagParser,
+        private readonly UrlResolver $urlResolver,
     ) {
     }
 
@@ -82,18 +79,7 @@ class CoreResponseContextFactory
         }
 
         if ($pageModel->enableCanonical && $pageModel->canonicalLink) {
-            $url = $this->insertTagParser->replaceInline($pageModel->canonicalLink);
-
-            // Ensure absolute links
-            if (!preg_match('#^https?://#', $url)) {
-                if (!$request = $this->requestStack->getCurrentRequest()) {
-                    throw new \RuntimeException('The request stack did not contain a request');
-                }
-
-                $url = UrlUtil::makeAbsolute($url, $request->getUri());
-            }
-
-            $htmlHeadBag->setCanonicalUri($url);
+            $htmlHeadBag->setCanonicalUri($this->urlResolver->resolve($pageModel->canonicalLink, true));
         }
 
         if ($pageModel->enableCanonical && $pageModel->canonicalKeepParams) {

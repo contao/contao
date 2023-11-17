@@ -16,7 +16,7 @@ use Contao\Config;
 use Contao\ContentModel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\CoreBundle\InsertTag\CommonMarkExtension;
-use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Routing\UrlResolver;
 use Contao\FilesModel;
 use Contao\Input;
 use Contao\Template;
@@ -40,7 +40,7 @@ class MarkdownController extends AbstractContentElementController
     {
         $services = parent::getSubscribedServices();
 
-        $services['contao.insert_tag.parser'] = InsertTagParser::class;
+        $services['contao.routing.url_resolver'] = UrlResolver::class;
 
         return $services;
     }
@@ -85,7 +85,7 @@ class MarkdownController extends AbstractContentElementController
             ],
         ]);
 
-        $environment->addExtension(new CommonMarkExtension($this->container->get('contao.insert_tag.parser')));
+        $environment->addExtension(new CommonMarkExtension($this->container->get('contao.routing.url_resolver')));
         $environment->addExtension(new CommonMarkCoreExtension());
 
         // Support GitHub flavoured Markdown (using the individual extensions because we don't want the

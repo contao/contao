@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\InsertTag;
 
+use Contao\CoreBundle\Routing\UrlResolver;
 use League\CommonMark\Environment\EnvironmentBuilderInterface;
 use League\CommonMark\Event\DocumentParsedEvent;
 use League\CommonMark\Extension\CommonMark\Node\Inline\Link;
@@ -20,7 +21,7 @@ use League\CommonMark\Util\UrlEncoder;
 
 class CommonMarkExtension implements ExtensionInterface
 {
-    public function __construct(private readonly InsertTagParser $insertTagParser)
+    public function __construct(private readonly UrlResolver $urlResolver)
     {
     }
 
@@ -37,7 +38,7 @@ class CommonMarkExtension implements ExtensionInterface
                     // Parser already encodes link contents, so we have to
                     // decode it first in order to replace insert tags
                     $url = rawurldecode($link->getUrl());
-                    $url = $this->insertTagParser->replaceInline($url);
+                    $url = $this->urlResolver->resolve($url);
 
                     $link->setUrl(UrlEncoder::unescapeAndEncode($url));
                 }

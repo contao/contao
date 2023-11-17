@@ -422,14 +422,7 @@ abstract class Events extends Module
 				}
 				else
 				{
-					$url = $objEvent->url;
-
-					if (Validator::isRelativeUrl($url))
-					{
-						$url = Environment::get('path') . '/' . $url;
-					}
-
-					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($url);
+					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand(System::getContainer()->get('contao.routing.url_resolver')->resolve($objEvent->url));
 				}
 				break;
 

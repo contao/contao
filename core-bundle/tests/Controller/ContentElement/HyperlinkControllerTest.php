@@ -13,14 +13,17 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
 use Contao\CoreBundle\Controller\ContentElement\HyperlinkController;
+use Contao\CoreBundle\Routing\UrlResolver;
 use Contao\StringUtil;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RequestContext;
 
 class HyperlinkControllerTest extends ContentElementTestCase
 {
     public function testOutputsSimpleLink(): void
     {
         $response = $this->renderWithModelData(
-            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser()),
+            new HyperlinkController($this->getDefaultStudio(), $this->getUrlResolver()),
             [
                 'type' => 'hyperlink',
                 'url' => 'my-link.html',
@@ -46,7 +49,7 @@ class HyperlinkControllerTest extends ContentElementTestCase
     public function testOutputsLinkWithBeforeAndAfterText(): void
     {
         $response = $this->renderWithModelData(
-            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser()),
+            new HyperlinkController($this->getDefaultStudio(), $this->getUrlResolver()),
             [
                 'type' => 'hyperlink',
                 'url' => 'https://www.php.net/manual/en/function.sprintf.php',
@@ -74,7 +77,7 @@ class HyperlinkControllerTest extends ContentElementTestCase
     public function testOutputsImageLink(): void
     {
         $response = $this->renderWithModelData(
-            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser()),
+            new HyperlinkController($this->getDefaultStudio(), $this->getUrlResolver()),
             [
                 'type' => 'hyperlink',
                 'url' => 'foo.html#{{demo}}',
@@ -106,7 +109,7 @@ class HyperlinkControllerTest extends ContentElementTestCase
     public function testOutputsEmptyLinkIfUrlIsNull(): void
     {
         $response = $this->renderWithModelData(
-            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser()),
+            new HyperlinkController($this->getDefaultStudio(), $this->getUrlResolver()),
             [
                 'type' => 'hyperlink',
                 'url' => null,
@@ -122,10 +125,19 @@ class HyperlinkControllerTest extends ContentElementTestCase
 
         $expectedOutput = <<<'HTML'
             <div class="content-hyperlink">
-                <a href></a>
+                <a href="/">/</a>
             </div>
             HTML;
 
         $this->assertSameHtml($expectedOutput, $response->getContent());
+    }
+
+    private function getUrlResolver(): UrlResolver
+    {
+        return new UrlResolver(
+            $this->getDefaultInsertTagParser(),
+            $this->createMock(RequestContext::class),
+            $this->createMock(RequestStack::class),
+        );
     }
 }

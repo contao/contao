@@ -15,10 +15,9 @@ namespace Contao\CoreBundle\Controller\ContentElement;
 use Contao\ContentModel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\CoreBundle\Image\Studio\Studio;
-use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Routing\UrlResolver;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Twig\FragmentTemplate;
-use Contao\Validator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -27,18 +26,13 @@ class HyperlinkController extends AbstractContentElementController
 {
     public function __construct(
         private readonly Studio $studio,
-        private readonly InsertTagParser $insertTagParser,
+        private readonly UrlResolver $urlResolver,
     ) {
     }
 
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
-        // Link with attributes
-        $href = $this->insertTagParser->replaceInline($model->url ?? '');
-
-        if (Validator::isRelativeUrl($href)) {
-            $href = $request->getBasePath().'/'.$href;
-        }
+        $href = $this->urlResolver->resolve($model->url ?? '');
 
         $linkAttributes = (new HtmlAttributes())
             ->set('href', $href)
