@@ -14,7 +14,6 @@ use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
-use Contao\CoreBundle\Util\UrlUtil;
 
 /**
  * Front end module "event reader".
@@ -119,6 +118,7 @@ class ModuleEventReader extends Events
 				if ($objEvent->url)
 				{
 					$url = System::getContainer()->get('contao.url_util')->parseContaoUrl($objEvent->url);
+
 
 					throw new RedirectResponseException($url, 301);
 				}

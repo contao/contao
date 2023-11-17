@@ -14,7 +14,6 @@ use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
-use Contao\CoreBundle\Util\UrlUtil;
 
 /**
  * Front end module "newsreader".

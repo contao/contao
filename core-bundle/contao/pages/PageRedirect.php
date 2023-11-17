@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Util\UrlUtil;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
