@@ -166,6 +166,8 @@ class ModuleEventlist extends Events
 		}
 
 		list($intStart, $intEnd, $strEmpty) = $this->getDatesFromFormat($this->Date, $this->cal_format);
+
+		// Use the start of the day when filtering events in line 197 (see #4476)
 		$intStartFloored = strtotime(date('Y-m-d', $intStart) . ' 00:00:00');
 
 		// Get all events

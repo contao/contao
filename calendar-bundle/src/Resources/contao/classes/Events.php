@@ -306,8 +306,7 @@ abstract class Events extends Module
 		$arrEvent['details'] = '';
 		$arrEvent['hasTeaser'] = false;
 
-		// Set open-end events to 23:59:59 to be a running event until the end
-		// of the day (see #4476)
+		// Set open-end events to 23:59:59, so they run until the end of the day (see #4476)
 		if ($intStart == $intEnd && $objEvents->addTime)
 		{
 			$arrEvent['endTime'] = strtotime(date('Y-m-d', $arrEvent['endTime']) . ' 23:59:59');
