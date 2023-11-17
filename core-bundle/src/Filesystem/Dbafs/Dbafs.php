@@ -169,22 +169,14 @@ class Dbafs implements DbafsInterface, ResetInterface
         ];
 
         $columnFilter = array_flip($this->getExtraMetadataColumns());
-
-        $event = new StoreDbafsMetadataEvent(
-            $this->table,
-            $row,
-            // Remove non-matching columns before dispatching event
-            array_intersect_key($metadata, $columnFilter)
-        );
+        $event = new StoreDbafsMetadataEvent($this->table, $row, $metadata);
 
         $this->eventDispatcher->dispatch($event);
 
-        $this->connection->update(
-            $this->table,
-            // Filter columns again before performing the query
-            array_intersect_key($event->getRow(), $columnFilter),
-            ['uuid' => $uuid]
-        );
+        // Filter columns again before performing the query
+        if ($data = array_intersect_key($event->getRow(), $columnFilter)) {
+            $this->connection->update($this->table, $data, ['uuid' => $uuid]);
+        }
 
         // Update the cache
         $this->records[$path]['extra'] = $event->getExtraMetadata();

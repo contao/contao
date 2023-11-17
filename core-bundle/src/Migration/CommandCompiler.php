@@ -139,7 +139,7 @@ class CommandCompiler
 
                 $deleteIndexes = true;
                 $commands[] = $command;
-            } elseif ($innodb && $dynamic && false === stripos($tableOptions['Create_options'], 'row_format=dynamic')) {
+            } elseif ($innodb && $dynamic && 'dynamic' !== strtolower($tableOptions['Row_format'])) {
                 $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine.' ROW_FORMAT = DYNAMIC';
 
                 if (false !== stripos($tableOptions['Create_options'], 'key_block_size=')) {

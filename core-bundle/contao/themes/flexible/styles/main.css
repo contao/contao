@@ -914,13 +914,6 @@ h2.sub_headline {
 	margin-bottom: 6px;
 }
 
-#tl_crawl .results .spinner {
-	margin: 0;
-	padding: 10px;
-	background: url("icons/loading.svg") no-repeat left center;
-	background-size: 16px;
-}
-
 #tl_crawl .subscriber-log {
 	display: none;
 	padding: 5px 0;
@@ -928,7 +921,13 @@ h2.sub_headline {
 }
 
 #tl_crawl .wait {
-	margin-top: 18px;
+	margin-top: 9px;
+	color: var(--gray);
+}
+
+#tl_crawl .debug-log {
+	display: none;
+	margin-top: 11px;
 }
 
 #tl_crawl .results.running .show-when-finished, #tl_crawl .results.finished .show-when-running {

@@ -200,7 +200,7 @@ class FeedMigrationTest extends ContaoTestCase
             ->willReturnMap([
                 ['SELECT COUNT(*) FROM tl_news_feed', [], [], 1],
                 ["SELECT id FROM tl_page WHERE type = 'root' AND dns = :dns AND language = :language LIMIT 1", ['dns' => 'example.org', 'language' => 'en'], [], []],
-                ["SELECT id FROM tl_page WHERE type = 'root' AND fallback = '1' ORDER BY sorting ASC LIMIT 1", [], [], 2],
+                ["SELECT id FROM tl_page WHERE type = 'root' AND fallback = 1 ORDER BY sorting ASC LIMIT 1", [], [], 2],
             ])
         ;
 
