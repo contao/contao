@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Picker;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Picker\PickerConfig;
 use Contao\CoreBundle\Picker\TablePickerProvider;
+use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\DcaLoader;
 use Contao\TestCase\ContaoTestCase;
@@ -417,7 +418,11 @@ class TablePickerProviderTest extends ContaoTestCase
     public function testGetUrlAddsTableIfItsNotFirstInModule(): void
     {
         $GLOBALS['BE_MOD']['foo']['article'] = ['tables' => ['tl_article', 'tl_content']];
-        $GLOBALS['TL_DCA']['tl_content'] = ['config' => ['dataContainer' => DC_Table::class, 'ptable' => 'tl_article']];
+
+        $GLOBALS['TL_DCA']['tl_content'] = [
+            'config' => ['dataContainer' => DC_Table::class, 'ptable' => 'tl_article'],
+            'list' => ['sorting' => ['mode' => DataContainer::MODE_PARENT]],
+        ];
 
         $params = [
             'do' => 'article',
@@ -428,7 +433,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $config = $this->mockPickerConfig('tl_content');
 
         $provider = $this->createTableProvider(
-            $this->mockFrameworkWithDcaLoader('tl_content'),
+            $this->mockFrameworkWithDcaLoader('tl_content', 'tl_article'),
             $this->mockRouterWithExpectedParams($params),
             $this->mockUnusedConnection(),
         );
@@ -543,19 +548,23 @@ class TablePickerProviderTest extends ContaoTestCase
         return $config;
     }
 
-    private function mockFrameworkWithDcaLoader(string $table): ContaoFramework&MockObject
+    private function mockFrameworkWithDcaLoader(string ...$tables): ContaoFramework&MockObject
     {
         $dcaLoader = $this->createMock(DcaLoader::class);
         $dcaLoader
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('load')
         ;
 
         $framework = $this->createMock(ContaoFramework::class);
+
         $framework
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('createInstance')
-            ->with(DcaLoader::class, [$table])
+            ->with(
+                DcaLoader::class,
+                $this->callback(static fn (array $args) => \in_array($args[0], $tables, true)),
+            )
             ->willReturn($dcaLoader)
         ;
 

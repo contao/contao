@@ -76,10 +76,10 @@ class CrawlCommandTest extends TestCase
         $code = $tester->execute([]);
 
         $this->assertSame(0, $code);
-        $this->assertSame(10, $command->getEscargot()->getConcurrency());
+        $this->assertSame(5, $command->getEscargot()->getConcurrency());
         $this->assertSame(0, $command->getEscargot()->getRequestDelay());
         $this->assertSame(0, $command->getEscargot()->getMaxRequests());
-        $this->assertSame(10, $command->getEscargot()->getMaxDepth());
+        $this->assertSame(3, $command->getEscargot()->getMaxDepth());
 
         // Test options
         $escargot = Escargot::create($this->getBaseUriCollection(), new InMemoryQueue())->withHttpClient($client);

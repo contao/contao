@@ -81,18 +81,8 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 				'class'               => 'header_sync',
 				'button_callback'     => array('tl_files', 'syncFiles')
 			),
-			'toggleNodes' => array
-			(
-				'href'                => 'tg=all',
-				'class'               => 'header_toggle',
-				'showOnSelect'        => true
-			),
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
+			'toggleNodes',
+			'all'
 		),
 		'operations' => array
 		(

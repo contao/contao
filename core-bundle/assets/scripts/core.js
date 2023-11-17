@@ -2006,17 +2006,34 @@ window.Backend =
 			crawl = $('tl_crawl'),
 			progressBar = crawl.getElement('div.progress-bar'),
 			progressCount = crawl.getElement('p.progress-count'),
-			results = crawl.getElement('div.results');
+			results = crawl.getElement('div.results'),
+			debugLog = crawl.getElement('p.debug-log');
 
 		function updateData(response) {
-			var done = response.total - response.pending,
-				percentage = response.total > 0 ? parseInt(done / response.total * 100, 10) : 100,
+			var total = response.total,
+				done = total - response.pending,
+				percentage = total > 0 ? parseInt(done / total * 100, 10) : 100,
 				result;
+
+			// Initialize the status bar at 10%
+			if (done < 1 && percentage < 1) {
+				done = 1;
+				percentage = 10;
+				total = 10;
+			}
 
 			progressBar.setStyle('width', percentage + '%');
 			progressBar.set('html', percentage + '%');
 			progressBar.setAttribute('aria-valuenow', percentage);
-			progressCount.set('html', done + ' / ' + response.total);
+			progressCount.set('html', done + ' / ' + total);
+
+			if (response.hasDebugLog) {
+				debugLog.setStyle('display', 'block');
+			}
+
+			if (response.hasDebugLog) {
+				debugLog.setStyle('display', 'block');
+			}
 
 			if (!response.finished) {
 				return;

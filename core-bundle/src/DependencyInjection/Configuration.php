@@ -715,6 +715,11 @@ class Configuration implements ConfigurationInterface
                     ->example('/admin')
                     ->defaultValue('/contao')
                 ->end()
+                ->integerNode('crawl_concurrency')
+                    ->info('The number of concurrent requests that are executed. Defaults to 5.')
+                    ->min(1)
+                    ->defaultValue(5)
+                ->end()
             ->end()
         ;
     }

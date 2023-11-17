@@ -63,15 +63,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'headerFields'            => array('title', 'headline', 'jumpTo', 'tstamp', 'allowComments'),
 			'child_record_callback'   => array('tl_faq', 'listQuestions'),
 			'renderAsGrid'            => true
-		),
-		'global_operations' => array
-		(
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
 		)
 	),
 

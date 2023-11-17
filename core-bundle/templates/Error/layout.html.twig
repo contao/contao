@@ -123,7 +123,7 @@
     <div id="content">
         <div class="wrap">
             <div class="error">
-                {% block message %}<h1>{{ block('title') }}</h1>{% endblock %}
+                {% block message %}<h1 data-trans="title">{{ block('title') }}</h1>{% endblock %}
                 <div class="block-error">
                     <div class="inner">
                         <div class="text-error">
@@ -131,21 +131,21 @@
                                 {% if block('matter') is defined %}
                                     {% set _block = block('matter') %}
                                     {% if _block|trim is not empty %}
-                                        <h2>{{ 'XPT.matter'|trans }}</h2>
+                                        <h2 data-trans="XPT.matter">{{ 'XPT.matter'|trans }}</h2>
                                         {{ _block|raw }}
                                     {% endif %}
                                 {% endif %}
                                 {% if block('howToFix') is defined %}
                                     {% set _block = block('howToFix') %}
                                     {% if _block|trim is not empty %}
-                                        <h2>{{ 'XPT.howToFix'|trans }}</h2>
+                                        <h2 data-trans="XPT.howToFix">{{ 'XPT.howToFix'|trans }}</h2>
                                         {{ _block|raw }}
                                     {% endif %}
                                 {% endif %}
                                 {% if block('explain') is defined %}
                                     {% set _block = block('explain') %}
                                     {% if _block|trim is not empty %}
-                                        <h3>{{ 'XPT.more'|trans }}</h3>
+                                        <h3 data-trans="XPT.more">{{ 'XPT.more'|trans }}</h3>
                                         {{ _block|raw }}
                                     {% endif %}
                                 {% endif %}
@@ -158,8 +158,10 @@
     </div>
     <div id="footer">
         <div class="wrap">
-            {% block hint %}{{ 'XPT.hint'|trans|format(template)|raw }}{% endblock %}
+            {% block hint %}{{ 'XPT.hint'|trans([template])|raw }}{% endblock %}
         </div>
     </div>
+
+    {% block body_end %}{% endblock %}
 </body>
 </html>
