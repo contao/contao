@@ -114,8 +114,7 @@ class ModuleNewsReader extends ModuleNews
 			case 'external':
 				if ($objArticle->url)
 				{
-					$url = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objArticle->url);
-					$url = UrlUtil::makeAbsolute($url, Environment::get('base'));
+					$url = System::getContainer()->get('contao.url_util')->parseContaoUrl($objArticle->url);
 
 					throw new RedirectResponseException($url, 301);
 				}

@@ -118,8 +118,7 @@ class ModuleEventReader extends Events
 			case 'external':
 				if ($objEvent->url)
 				{
-					$url = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objEvent->url);
-					$url = UrlUtil::makeAbsolute($url, Environment::get('base'));
+					$url = System::getContainer()->get('contao.url_util')->parseContaoUrl($objEvent->url);
 
 					throw new RedirectResponseException($url, 301);
 				}
