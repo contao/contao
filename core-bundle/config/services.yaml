@@ -1153,7 +1153,7 @@ services:
         public: true
         arguments:
             - '@contao.insert_tag.parser'
-            - '@request_stack'
+            - '@router.request_context'
 
     # Autowiring aliases
     Contao\CoreBundle\Cache\EntityCacheTags: '@contao.cache.entity_tags'

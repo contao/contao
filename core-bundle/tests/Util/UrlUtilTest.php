@@ -15,8 +15,7 @@ namespace Contao\CoreBundle\Tests\Util;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Util\UrlUtil;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RequestContext;
 
 class UrlUtilTest extends TestCase
 {
@@ -33,10 +32,14 @@ class UrlUtilTest extends TestCase
             ->willReturn($url)
         ;
 
-        $requestStack = new RequestStack();
-        $requestStack->push(Request::create('https://example.com/'));
+        $requestContext = $this->createMock(RequestContext::class);
+        $requestContext
+            ->expects($this->once())
+            ->method('getBaseUrl')
+            ->willReturn('https://example.com/')
+        ;
 
-        $urlUtil = new UrlUtil($insertTagsParser, $requestStack);
+        $urlUtil = new UrlUtil($insertTagsParser, $requestContext);
 
         $this->assertSame($expected, $urlUtil->parseContaoUrl('{{link_url::42}}'));
     }
