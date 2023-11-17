@@ -23,6 +23,8 @@ services:
     # We explicitly allow autowiring and FQCN service IDs in controllers
     Contao\CoreBundle\Controller\BackendController: ~
 
+    Contao\CoreBundle\Controller\BackendImportExportController: ~
+
     Contao\CoreBundle\Controller\BackendCsvImportController:
         public: true
         arguments:

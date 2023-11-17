@@ -106,7 +106,13 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 				'icon'                => 'visible.svg',
 				'button_callback'     => array('tl_content', 'toggleIcon')
 			),
-			'show'
+			'show',
+			'export' => array
+			(
+				'href'                => 'act=edit',
+				'icon'                => 'theme_export.svg',
+				'attributes'          => 'class="export-row" data-table="tl_content"',
+			),
 		),
 	),
 
