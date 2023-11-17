@@ -109,7 +109,6 @@ class ContaoCacheWarmerTest extends TestCase
 
         $expected = <<<'TXT'
             <?php
-
             return array (
               'en' =>
               array (
@@ -120,10 +119,9 @@ class ContaoCacheWarmerTest extends TestCase
 
             TXT;
 
-        $this->assertSame(
-            preg_replace('~\s+~', ' ', $expected),
-            preg_replace('~\s+~', ' ', file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/config/available-language-files.php')))
-        );
+        $file = Path::join($this->getTempDir(), 'var/cache/contao/config/available-language-files.php');
+
+        $this->assertSame($expected, preg_replace('/\s+\n/', "\n", file_get_contents($file)));
     }
 
     public function testIsAnOptionalWarmer(): void

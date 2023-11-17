@@ -118,6 +118,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         );
 
         $dumper->setHeader("<?php\n");
+
         $processed = [];
 
         foreach ($this->locales as $language) {
@@ -146,7 +147,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
             }
         }
 
-        // Cache the available Contao language files (#6454)
+        // Cache the available Contao language files (see #6454)
         $this->filesystem->dumpFile(
             Path::join($cacheDir, 'contao/config/available-language-files.php'),
             sprintf("<?php\n\nreturn %s;\n", var_export($processed, true)),
