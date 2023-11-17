@@ -54,7 +54,7 @@ class AccessTokenHandler implements AccessTokenHandlerInterface
         $plainToken = $this->issueToken(['username' => $username]);
         $claims = $plainToken->claims();
 
-        $accessToken = new AccessToken($plainToken->toString(), $username, $claims->get(RegisteredClaims::EXPIRATION_TIME));
+        $accessToken = new AccessToken(hash('sha256', $plainToken->toString()), $username, $claims->get(RegisteredClaims::EXPIRATION_TIME));
         $this->accessTokenRepository->persist($accessToken);
 
         return $plainToken->toString();

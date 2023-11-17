@@ -40,6 +40,7 @@ class AccessTokenCreateCommand extends Command
     {
         $this
             ->addOption('username', 'u', InputOption::VALUE_REQUIRED, 'The username to create the access token for')
+            ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt, json)', 'txt')
         ;
     }
 
@@ -67,8 +68,18 @@ class AccessTokenCreateCommand extends Command
             return Command::FAILURE;
         }
 
-        $token = $this->accessTokenHandler->createTokenForUsername($username);
+        $token = $this->accessTokenHandler->createTokenForUser($username);
         $accessToken = $this->accessTokenRepository->findByToken($token);
+
+        if ($this->isJson($input)) {
+            $io->writeln(json_encode([
+                'username' => $username,
+                'token' => $token,
+                'expiresAt' => $accessToken->getExpiresAt()->format('Y-m-d H:i:s'),
+            ], JSON_THROW_ON_ERROR));
+
+            return Command::SUCCESS;
+        }
 
         $io->success([
             sprintf('Access token for user %s created:', $username),
@@ -77,5 +88,16 @@ class AccessTokenCreateCommand extends Command
         ]);
 
         return Command::SUCCESS;
+    }
+
+    protected function isJson(InputInterface $input): bool
+    {
+        $format = $input->getOption('format');
+
+        if (!\in_array($format, ['json', 'txt'], true)) {
+            throw new \InvalidArgumentException('This command only supports the "txt" and "json" formats.');
+        }
+
+        return 'json' === $format;
     }
 }

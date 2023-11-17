@@ -34,7 +34,7 @@ class AccessTokenRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('a');
         $qb
             ->where('a.token = :token')
-            ->setParameter('token', $token)
+            ->setParameter('token', hash('sha256', $token))
         ;
 
         $rows = $qb->getQuery()->getResult();
