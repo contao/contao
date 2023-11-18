@@ -63,7 +63,15 @@ class AccessTokenCreateCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         if (null === $username = $input->getOption('username')) {
-            $io->error('Please provide at least and each of: username, name, email, password');
+            $error = 'Please provide at least and each of: username, name, email, password';
+
+            if ($this->isJson($input)) {
+                $io->writeln(json_encode(['error' => $error], JSON_THROW_ON_ERROR));
+
+                return Command::FAILURE;
+            }
+
+            $io->error($error);
 
             return Command::FAILURE;
         }

@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Authentication\AccessToken;
 
-use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\User;
+use League\Uri\Modifier;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Scheb\TwoFactorBundle\Security\Http\Authenticator\TwoFactorAuthenticator;
 use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,7 +23,6 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
 {
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,
-        private readonly TokenChecker $tokenChecker,
         private readonly RequestStack $requestStack,
     ) {
     }
@@ -40,10 +40,12 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
             $authenticatedToken = $token->getAuthenticatedToken();
             $authenticatedToken->setAttribute(TwoFactorAuthenticator::FLAG_2FA_COMPLETE, true);
 
-            if ($this->tokenChecker->isFrontendFirewall()) {
-                $this->tokenStorage->setToken($authenticatedToken);
-            } else {
-                $this->getSession()?->set('_security_contao_frontend', serialize($authenticatedToken));
+            $this->tokenStorage->setToken($authenticatedToken);
+
+            if ($request->query->has('access_token')) {
+                $redirect = Modifier::from($request->getRequestUri())->removeQueryParameters('access_token');
+
+                return new RedirectResponse((string) $redirect);
             }
         }
 

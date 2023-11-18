@@ -40,7 +40,7 @@ class AccessTokenRepository extends ServiceEntityRepository
         $rows = $qb->getQuery()->getResult();
 
         if (0 === \count($rows)) {
-            throw new TokenNotFoundException('No token found');
+            throw new TokenNotFoundException('Token not found.');
         }
 
         return $rows[0];

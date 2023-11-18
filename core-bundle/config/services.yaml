@@ -825,7 +825,6 @@ services:
         class: Contao\CoreBundle\Security\Authentication\AccessToken\AuthenticationSuccessHandler
         arguments:
             - '@security.token_storage'
-            - '@contao.security.token_checker'
             - '@request_stack'
 
     contao.security.access_token_handler:

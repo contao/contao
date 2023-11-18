@@ -21,7 +21,8 @@ use Lcobucci\JWT\UnencryptedToken;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\BrowserKit\CookieJar;
-use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\TokenNotFoundException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Http\AccessToken\AccessTokenHandlerInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
@@ -111,11 +112,16 @@ class AccessTokenHandler implements AccessTokenHandlerInterface
 
     public function getUserBadgeFrom(string $accessToken): UserBadge
     {
-        $token = $this->accessTokenRepository->findByToken($accessToken);
-        $unencryptedToken = $this->parseToken($token->getToken());
+        try {
+            $token = $this->accessTokenRepository->findByToken($accessToken);
+        } catch (TokenNotFoundException $e) {
+            throw new AuthenticationException('Token not found.');
+        }
+
+        $unencryptedToken = $this->parseToken($accessToken);
 
         if (!$unencryptedToken || !$this->validateToken($unencryptedToken, $token->getUsername())) {
-            throw new BadCredentialsException('Invalid credentials.');
+            throw new AuthenticationException('Invalid credentials.');
         }
 
         return new UserBadge($token->getUsername());
