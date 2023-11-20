@@ -422,11 +422,11 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'articleId' => array
 		(
-			'inputType'               => 'select',
-			'options_callback'        => array('tl_calendar_events', 'getArticleAlias'),
-			'eval'                    => array('chosen'=>true, 'mandatory'=>true, 'tl_class'=>'w50'),
+			'inputType'               => 'picker',
+			'foreignKey'              => 'tl_article.title',
+			'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0",
-			'relation'                => array('table'=>'tl_article', 'type'=>'hasOne', 'load'=>'lazy'),
+			'relation'                => array('type'=>'hasOne', 'load'=>'lazy'),
 		),
 		'url' => array
 		(
@@ -856,14 +856,18 @@ class tl_calendar_events extends Backend
 		$security = System::getContainer()->get('security.helper');
 
 		// Add the "internal" option
-		if ($security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_calendar_events::jumpTo'))
-		{
+		if (
+			$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_calendar_events::jumpTo')
+			&& $security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'page')
+		) {
 			$arrOptions[] = 'internal';
 		}
 
 		// Add the "article" option
-		if ($security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_calendar_events::articleId'))
-		{
+		if (
+			$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_calendar_events::articleId')
+			&& $security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'article')
+		) {
 			$arrOptions[] = 'article';
 		}
 
