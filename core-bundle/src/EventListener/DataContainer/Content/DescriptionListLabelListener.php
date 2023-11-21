@@ -21,7 +21,7 @@ class DescriptionListLabelListener
     {
     }
 
-    public function __invoke(array $attributes, DataContainer $dc = null): array
+    public function __invoke(array $attributes, DataContainer|null $dc = null): array
     {
         if (null === $dc || 'description_list' !== ($dc->getCurrentRecord()['type'] ?? null)) {
             return $attributes;
