@@ -289,6 +289,7 @@ class MessageCatalogueTest extends TestCase
 
         unset($GLOBALS['TL_LANG']);
         $catalogue->populateGlobals('contao_tl_content');
+
         $this->assertSame('Headline', $GLOBALS['TL_LANG']['tl_content']['headline'][0]);
     }
 
