@@ -72,7 +72,7 @@ abstract class Events extends Module
 
 			while ($objCalendar->next())
 			{
-				if ($objCalendar->protected && !$security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, StringUtil::deserialize($objCalendar->groups, true)))
+				if ($objCalendar->protected && !$security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objCalendar->groups))
 				{
 					continue;
 				}

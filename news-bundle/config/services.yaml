@@ -82,6 +82,7 @@ services:
         class: Contao\NewsBundle\EventListener\SitemapListener
         arguments:
             - '@contao.framework'
+            - '@security.helper'
         tags:
             - kernel.event_listener
 
