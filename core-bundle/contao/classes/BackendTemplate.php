@@ -40,8 +40,7 @@ class BackendTemplate extends Template
 		{
 			foreach ($GLOBALS['TL_HOOKS']['parseBackendTemplate'] as $callback)
 			{
-				$this->import($callback[0]);
-				$strBuffer = $this->{$callback[0]}->{$callback[1]}($strBuffer, $this->strTemplate);
+				$strBuffer = System::importStatic($callback[0])->{$callback[1]}($strBuffer, $this->strTemplate);
 			}
 		}
 
@@ -111,8 +110,7 @@ class BackendTemplate extends Template
 		{
 			foreach ($GLOBALS['TL_HOOKS']['outputBackendTemplate'] as $callback)
 			{
-				$this->import($callback[0]);
-				$strBuffer = $this->{$callback[0]}->{$callback[1]}($strBuffer, $this->strTemplate);
+				$strBuffer = System::importStatic($callback[0])->{$callback[1]}($strBuffer, $this->strTemplate);
 			}
 		}
 
@@ -146,7 +144,14 @@ class BackendTemplate extends Template
 
 			if (!empty($css) && \is_array($css))
 			{
-				if (!\is_array($GLOBALS['TL_CSS']))
+				$packages = System::getContainer()->get('assets.packages');
+
+				foreach ($css as $k => $v)
+				{
+					$css[$k] = $packages->getUrl($v);
+				}
+
+				if (!\is_array($GLOBALS['TL_CSS'] ?? null))
 				{
 					$GLOBALS['TL_CSS'] = array();
 				}
@@ -161,7 +166,14 @@ class BackendTemplate extends Template
 
 			if (!empty($js) && \is_array($js))
 			{
-				if (!\is_array($GLOBALS['TL_JAVASCRIPT']))
+				$packages = System::getContainer()->get('assets.packages');
+
+				foreach ($js as $k => $v)
+				{
+					$js[$k] = $packages->getUrl($v);
+				}
+
+				if (!\is_array($GLOBALS['TL_JAVASCRIPT'] ?? null))
 				{
 					$GLOBALS['TL_JAVASCRIPT'] = array();
 				}

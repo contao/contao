@@ -28,6 +28,7 @@ use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\ClassExistenceResource;
 use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\EnvPlaceholderParameterBag;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -150,7 +151,7 @@ class ContaoKernelTest extends ContaoTestCase
 
         $this->assertSame(
             Path::normalize($kernel->getProjectDir()).'/var/cache/prod',
-            Path::normalize($kernel->getCacheDir())
+            Path::normalize($kernel->getCacheDir()),
         );
     }
 
@@ -160,7 +161,7 @@ class ContaoKernelTest extends ContaoTestCase
 
         $this->assertSame(
             Path::normalize($kernel->getProjectDir()).'/var/logs',
-            Path::normalize($kernel->getLogDir())
+            Path::normalize($kernel->getLogDir()),
         );
     }
 
@@ -194,13 +195,25 @@ class ContaoKernelTest extends ContaoTestCase
     {
         $files = [];
 
+        $container = $this->createMock(ContainerBuilder::class);
+        $container
+            ->method('fileExists')
+            ->willReturnCallback(static fn (string $path) => \in_array(basename($path), $expectedResult, true))
+        ;
+
         $loader = $this->createMock(LoaderInterface::class);
         $loader
             ->method('load')
             ->willReturnCallback(
-                static function ($resource) use (&$files): void {
+                static function ($resource) use ($container, $env, &$files) {
+                    if ($resource instanceof \Closure) {
+                        return $resource($container, $env);
+                    }
+
                     $files[] = basename($resource);
-                }
+
+                    return null;
+                },
             )
         ;
 
@@ -263,7 +276,21 @@ class ContaoKernelTest extends ContaoTestCase
 
     public function testRegisterContainerConfigurationLoadsPlugins(): void
     {
+        $container = $this->createMock(ContainerBuilder::class);
+
         $loader = $this->createMock(LoaderInterface::class);
+        $loader
+            ->method('load')
+            ->willReturnCallback(
+                static function ($resource) use ($container) {
+                    if ($resource instanceof \Closure) {
+                        return $resource($container, 'prod');
+                    }
+
+                    return null;
+                },
+            )
+        ;
 
         $pluginLoader = $this->createMock(PluginLoader::class);
         $pluginLoader
@@ -440,10 +467,7 @@ class ContaoKernelTest extends ContaoTestCase
         return $kernel;
     }
 
-    /**
-     * @return ConfigPluginInterface&MockObject
-     */
-    private function mockConfigPlugin(LoaderInterface $loader): ConfigPluginInterface
+    private function mockConfigPlugin(LoaderInterface $loader): ConfigPluginInterface&MockObject
     {
         $plugin = $this->createMock(ConfigPluginInterface::class);
         $plugin

@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Controller\FrontendModule;
 
 use Contao\Controller;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\ModuleModel;
 use Contao\StringUtil;
 use Contao\Template;
@@ -23,27 +24,30 @@ use Symfony\Component\HttpFoundation\Response;
 #[AsFrontendModule(category: 'miscellaneous')]
 class RootPageDependentModulesController extends AbstractFrontendModuleController
 {
-    public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null): Response
+    public function __invoke(Request $request, ModuleModel $model, string $section, array|null $classes = null): Response
     {
         if ($this->container->get('contao.routing.scope_matcher')->isBackendRequest($request)) {
             return $this->getBackendWildcard($model);
         }
 
         if (!$pageModel = $this->getPageModel()) {
-            return new Response('');
+            return new Response();
         }
 
-        $modules = StringUtil::deserialize($model->rootPageDependentModules);
+        $modules = StringUtil::deserialize($model->rootPageDependentModules, true);
 
-        if (empty($modules) || !\is_array($modules) || !\array_key_exists($pageModel->rootId, $modules)) {
-            return new Response('');
+        if (empty($modules[$pageModel->rootId])) {
+            return new Response();
         }
 
         $framework = $this->container->get('contao.framework');
 
-        /** @var ModuleModel $moduleModel */
+        /** @var Adapter<ModuleModel> $moduleModel */
         $moduleModel = $framework->getAdapter(ModuleModel::class);
-        $module = $moduleModel->findByPk($modules[$pageModel->rootId]);
+
+        if (!$module = $moduleModel->findByPk($modules[$pageModel->rootId])) {
+            return new Response();
+        }
 
         $cssID = StringUtil::deserialize($module->cssID, true);
 
@@ -55,7 +59,7 @@ class RootPageDependentModulesController extends AbstractFrontendModuleControlle
 
         $module->cssID = $cssID;
 
-        /** @var Controller $controller */
+        /** @var Adapter<Controller> $controller */
         $controller = $framework->getAdapter(Controller::class);
         $content = $controller->getFrontendModule($module);
 

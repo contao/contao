@@ -29,11 +29,10 @@ use Symfony\Component\Filesystem\Path;
  */
 class FilesystemConfiguration
 {
-    private AdapterDefinitionFactory $adapterDefinitionFactory;
-
-    public function __construct(private ContainerBuilder $container)
-    {
-        $this->adapterDefinitionFactory = new AdapterDefinitionFactory();
+    public function __construct(
+        private readonly ContainerBuilder $container,
+        private readonly AdapterDefinitionFactory|null $adapterDefinitionFactory = new AdapterDefinitionFactory(),
+    ) {
     }
 
     public function getContainer(): ContainerBuilder
@@ -81,12 +80,12 @@ class FilesystemConfiguration
      * If you do not set a name, the id/alias for the adapter service will be
      * derived from the mount path.
      */
-    public function mountAdapter(string $adapter, array $options, string $mountPath, string $name = null): self
+    public function mountAdapter(string $adapter, array $options, string $mountPath, string|null $name = null): self
     {
         $name ??= str_replace(['.', '/', '-'], '_', Container::underscore($mountPath));
         $adapterId = "contao.filesystem.adapter.$name";
 
-        if (null !== ($adapterDefinition = $this->adapterDefinitionFactory->createDefinition($adapter, $options))) {
+        if ($adapterDefinition = $this->adapterDefinitionFactory->createDefinition($adapter, $options)) {
             // Native adapter
             $this->container
                 ->setDefinition($adapterId, $adapterDefinition)
@@ -122,7 +121,7 @@ class FilesystemConfiguration
      * If you do not set a name, the id for the adapter service will be derived
      * from the mount path.
      */
-    public function mountLocalAdapter(string $filesystemPath, string $mountPath, string $name = null): self
+    public function mountLocalAdapter(string $filesystemPath, string $mountPath, string|null $name = null): self
     {
         $path = Path::isAbsolute($filesystemPath)
             ? Path::canonicalize($filesystemPath)
@@ -137,7 +136,7 @@ class FilesystemConfiguration
                 'skip_links' => true,
             ],
             Path::normalize($mountPath),
-            $name
+            $name,
         );
 
         return $this;
@@ -177,7 +176,7 @@ class FilesystemConfiguration
         // Add an individual hash generator
         $this->container->setDefinition(
             $hashGeneratorId = "contao.filesystem.hash_generator.$virtualFilesystemName",
-            new Definition(HashGenerator::class, [$hashFunction, $useLastModified])
+            new Definition(HashGenerator::class, [$hashFunction, $useLastModified]),
         );
 
         // Add the DBAFS service
@@ -185,7 +184,7 @@ class FilesystemConfiguration
 
         $definition = new Definition(
             Dbafs::class,
-            [new Reference($virtualFilesystemId), new Reference($hashGeneratorId), $table]
+            [new Reference($virtualFilesystemId), new Reference($hashGeneratorId), $table],
         );
 
         $definition->setFactory(new Reference('contao.filesystem.dbafs_factory'));

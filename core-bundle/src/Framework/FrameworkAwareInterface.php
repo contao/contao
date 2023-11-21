@@ -14,5 +14,5 @@ namespace Contao\CoreBundle\Framework;
 
 interface FrameworkAwareInterface
 {
-    public function setFramework(ContaoFramework $framework = null): void;
+    public function setFramework(ContaoFramework|null $framework = null): void;
 }

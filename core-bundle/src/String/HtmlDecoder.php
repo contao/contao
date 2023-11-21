@@ -17,7 +17,7 @@ use Contao\StringUtil;
 
 class HtmlDecoder
 {
-    public function __construct(private InsertTagParser $insertTagParser)
+    public function __construct(private readonly InsertTagParser $insertTagParser)
     {
     }
 
@@ -63,7 +63,7 @@ class HtmlDecoder
         $val = preg_replace(
             ['/[\r\n]+/', '/<\/?(?:br|blockquote|div|dl|figcaption|figure|footer|h\d|header|hr|li|p|pre|tr)\b/i'],
             [' ', "\n$0"],
-            $val
+            $val,
         );
 
         $val = $this->inputEncodedToPlainText($val, true);

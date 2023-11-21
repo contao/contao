@@ -12,21 +12,37 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\PhpunitExtension;
 
+use Composer\InstalledVersions;
+use Contao\CoreBundle\Util\LocaleUtil;
+use Doctrine\Deprecations\Deprecation;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Runner\AfterTestHook;
 use PHPUnit\Runner\BeforeTestHook;
 use SebastianBergmann\Diff\Differ;
 use SebastianBergmann\Diff\Output\StrictUnifiedDiffOutputBuilder;
+use Symfony\Component\Config\Resource\ComposerResource;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ParameterBag\EnvPlaceholderParameterBag;
+use Symfony\Component\HttpClient\Internal\CurlClientState;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\MimeTypes;
 
 final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
 {
     private string $globalKeys;
+
     private string $globals;
+
     private string $staticMembers;
+
     private string $phpIni;
+
     private string $setFunctions;
+
     private string $fileSystem;
+
     private string $constants;
+
     private string $env;
 
     public function executeBeforeTest(string $test): void
@@ -96,7 +112,7 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
                 'http_response_code' => http_response_code(),
                 'headers_list' => headers_list(),
             ],
-            true
+            true,
         );
     }
 
@@ -127,7 +143,7 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
                 static fn ($key) => !\in_array($key, ['SYMFONY_DEPRECATIONS_SERIALIZE', 'SYMFONY_EXPECTED_DEPRECATIONS_SERIALIZE'], true),
                 ARRAY_FILTER_USE_KEY,
             ),
-            true
+            true,
         );
     }
 
@@ -137,9 +153,10 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
 
         foreach (get_declared_classes() as $class) {
             foreach ([
-                'Composer\InstalledVersions',
-                'Contao\CoreBundle\Util\LocaleUtil',
+                InstalledVersions::class,
+                LocaleUtil::class,
                 'Contao\TestCase\\',
+                Deprecation::class,
                 'Doctrine\Instantiator\\',
                 'Imagine\\',
                 'Mock_',
@@ -148,14 +165,15 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
                 'SebastianBergmann\\',
                 'Symfony\Bridge\PhpUnit\\',
                 'Symfony\Component\Cache\Adapter\\',
-                'Symfony\Component\Config\Resource\ComposerResource',
+                ComposerResource::class,
                 'Symfony\Component\Console\Helper\\',
-                'Symfony\Component\DependencyInjection\ParameterBag\EnvPlaceholderParameterBag',
+                Container::class,
+                EnvPlaceholderParameterBag::class,
                 'Symfony\Component\ErrorHandler\\',
                 'Symfony\Component\Filesystem\\',
-                'Symfony\Component\HttpClient\Internal\CurlClientState',
-                'Symfony\Component\Mime\Address',
-                'Symfony\Component\Mime\MimeTypes',
+                CurlClientState::class,
+                Address::class,
+                MimeTypes::class,
                 'Symfony\Component\String\\',
                 'Symfony\Component\VarDumper\\',
                 'Symfony\Component\Yaml\\',

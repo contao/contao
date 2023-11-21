@@ -24,7 +24,7 @@ final class FigureRuntime implements RuntimeExtensionInterface
     /**
      * @internal
      */
-    public function __construct(private FigureRenderer $figureRenderer)
+    public function __construct(private readonly FigureRenderer $figureRenderer)
     {
     }
 

@@ -25,7 +25,7 @@ class MakeResponsePrivateListener
 {
     final public const DEBUG_HEADER = 'Contao-Private-Response-Reason';
 
-    public function __construct(private ScopeMatcher $scopeMatcher)
+    public function __construct(private readonly ScopeMatcher $scopeMatcher)
     {
     }
 
@@ -73,15 +73,13 @@ class MakeResponsePrivateListener
         }
 
         // 3) The response sets a cookie (same reason as 2 but for other cookies than the session cookie)
-        $cookies = $response->headers->getCookies();
-
-        if (0 !== \count($cookies)) {
+        if ($cookies = $response->headers->getCookies()) {
             $this->makePrivate(
                 $response,
                 sprintf(
                     'response-cookies (%s)',
-                    implode(', ', array_map(static fn (Cookie $cookie) => $cookie->getName(), $cookies))
-                )
+                    implode(', ', array_map(static fn (Cookie $cookie) => $cookie->getName(), $cookies)),
+                ),
             );
 
             return;
@@ -91,7 +89,7 @@ class MakeResponsePrivateListener
         if ($request->cookies->count() && \in_array('cookie', array_map('strtolower', $response->getVary()), true)) {
             $this->makePrivate(
                 $response,
-                sprintf('request-cookies (%s)', implode(', ', array_keys($request->cookies->all())))
+                sprintf('request-cookies (%s)', implode(', ', array_keys($request->cookies->all()))),
             );
         }
     }

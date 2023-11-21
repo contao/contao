@@ -16,6 +16,7 @@ framework:
     csrf_protection: ~
     default_locale: '%locale%'
     session:
+        handler_id: ~
         storage_factory_id: session.storage.factory.mock_file
     fragments: { path: /_fragment }
     http_method_override: false

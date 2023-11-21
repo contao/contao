@@ -136,8 +136,7 @@ class DcaLoader extends Controller
 		{
 			foreach ($GLOBALS['TL_HOOKS']['loadDataContainer'] as $callback)
 			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($this->strTable);
+				System::importStatic($callback[0])->{$callback[1]}($this->strTable);
 			}
 		}
 
@@ -159,7 +158,7 @@ class DcaLoader extends Controller
 
 			foreach ($GLOBALS['TL_DCA'][$this->strTable]['list'][$key] as $k=>&$v)
 			{
-				if (\is_array($v) && \array_key_exists('label', $v))
+				if (!\is_array($v) || \array_key_exists('label', $v))
 				{
 					continue;
 				}

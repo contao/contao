@@ -46,8 +46,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($this);
+					System::importStatic($callback[0])->{$callback[1]}($this);
 				}
 				elseif (\is_callable($callback))
 				{
@@ -200,7 +199,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 					if (preg_match('/^\[.*]$/', $vv))
 					{
 						$thisId = 'sub_' . substr($vv, 1, -1);
-						$blnAjax = ($ajaxId == $thisId && Environment::get('isAjaxRequest'));
+						$blnAjax = $ajaxId == $thisId && Environment::get('isAjaxRequest');
 						$return .= "\n  " . '<div id="' . $thisId . '" class="subpal cf">';
 
 						continue;
@@ -226,8 +225,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 						{
 							if (\is_array($callback))
 							{
-								$this->import($callback[0]);
-								$this->varValue = $this->{$callback[0]}->{$callback[1]}($this->varValue, $this);
+								$this->varValue = System::importStatic($callback[0])->{$callback[1]}($this->varValue, $this);
 							}
 							elseif (\is_callable($callback))
 							{
@@ -265,8 +263,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$arrButtons = $this->{$callback[0]}->{$callback[1]}($arrButtons, $this);
+					$arrButtons = System::importStatic($callback[0])->{$callback[1]}($arrButtons, $this);
 				}
 				elseif (\is_callable($callback))
 				{
@@ -306,8 +303,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 				{
 					if (\is_array($callback))
 					{
-						$this->import($callback[0]);
-						$this->{$callback[0]}->{$callback[1]}($this);
+						System::importStatic($callback[0])->{$callback[1]}($this);
 					}
 					elseif (\is_callable($callback))
 					{
@@ -383,12 +379,6 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 				$objDate = new Date($varValue, Date::getFormatFromRgxp($arrData['eval']['rgxp']));
 				$varValue = $objDate->tstamp;
 			}
-
-			// Handle entities
-			if (($arrData['inputType'] ?? null) == 'text' || ($arrData['inputType'] ?? null) == 'textarea')
-			{
-				$varValue = StringUtil::deserialize($varValue);
-			}
 		}
 
 		// Trigger the save_callback
@@ -398,8 +388,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$varValue = $this->{$callback[0]}->{$callback[1]}($varValue, $this);
+					$varValue = System::importStatic($callback[0])->{$callback[1]}($varValue, $this);
 				}
 				elseif (\is_callable($callback))
 				{
@@ -527,7 +516,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 				}
 			}
 
-			// Include subpalettes
+			// Include sub-palettes
 			foreach ($subpalettes as $k=>$v)
 			{
 				$strPalette = preg_replace('/\b' . preg_quote($k, '/') . '\b/i', $k . ',[' . $k . '],' . $v . ',[EOF]', $strPalette);

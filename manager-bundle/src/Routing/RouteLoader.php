@@ -26,10 +26,10 @@ class RouteLoader implements RouteLoaderInterface
      * @internal
      */
     public function __construct(
-        private LoaderInterface $loader,
-        private PluginLoader $pluginLoader,
-        private KernelInterface $kernel,
-        private string $projectDir,
+        private readonly LoaderInterface $loader,
+        private readonly PluginLoader $pluginLoader,
+        private readonly KernelInterface $kernel,
+        private readonly string $projectDir,
     ) {
     }
 
@@ -48,6 +48,12 @@ class RouteLoader implements RouteLoaderInterface
             if ($routes instanceof RouteCollection) {
                 $collection->addCollection($routes);
             }
+        } elseif (is_dir($path = Path::join($this->projectDir, 'src/Controller'))) {
+            $routes = $this->loader->getResolver()->resolve($path)->load($path);
+
+            if ($routes instanceof RouteCollection) {
+                $collection->addCollection($routes);
+            }
         }
 
         $collection = array_reduce(
@@ -61,7 +67,7 @@ class RouteLoader implements RouteLoaderInterface
 
                 return $collection;
             },
-            $collection
+            $collection,
         );
 
         // Make sure the Contao frontend routes are always loaded last

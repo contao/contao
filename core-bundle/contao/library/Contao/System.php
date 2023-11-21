@@ -22,20 +22,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
 /**
  * Abstract library base class
  *
- * The class provides miscellaneous methods that are used all throughout the
- * application. It is the base class of the Contao library which provides the
- * central "import" method to load other library classes.
- *
- * Usage:
- *
- *     class MyClass extends System
- *     {
- *         public function __construct()
- *         {
- *             $this->import('Database');
- *         }
- *     }
- *
  * @property Automator                $Automator   The automator object
  * @property Config                   $Config      The config object
  * @property Database                 $Database    The database object
@@ -101,14 +87,11 @@ abstract class System
 	 */
 	protected function __construct()
 	{
-		$this->import(Config::class, 'Config');
+		$this->import(Config::class, 'Config'); // backwards compatibility
 	}
 
 	/**
 	 * Get an object property
-	 *
-	 * Lazy load the Input and Environment libraries (which are now static) and
-	 * only include them as object property if an old module requires it
 	 *
 	 * @param string $strKey The property name
 	 *
@@ -118,16 +101,10 @@ abstract class System
 	{
 		if (!isset($this->arrObjects[$strKey]))
 		{
-			/** @var Input|Environment|Session|string $strKey */
-			if ($strKey == 'Input' || $strKey == 'Environment' || $strKey == 'Session')
-			{
-				$this->arrObjects[$strKey] = $strKey::getInstance();
-			}
-			else
-			{
-				return null;
-			}
+			return null;
 		}
+
+		trigger_deprecation('contao/core-bundle', '5.2', 'Using objects that have been imported via "Contao\System::import()" has been deprecated and will no longer work in Contao 6. Use "Contao\System::importStatic()" or dependency injection instead.');
 
 		return $this->arrObjects[$strKey];
 	}
@@ -585,6 +562,8 @@ abstract class System
 	 */
 	public static function setCookie($strName, $varValue, $intExpires, $strPath=null, $strDomain=null, $blnSecure=null, $blnHttpOnly=false)
 	{
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "Contao\System::setCookie()" has been deprecated and will no longer work in Contao 6. Use Symfony\'s HttpFoundation and kernel.response events instead.');
+
 		if (!$strPath)
 		{
 			$strPath = Environment::get('path') ?: '/'; // see #4390
@@ -613,6 +592,8 @@ abstract class System
 		// HOOK: allow adding custom logic
 		if (isset($GLOBALS['TL_HOOKS']['setCookie']) && \is_array($GLOBALS['TL_HOOKS']['setCookie']))
 		{
+			trigger_deprecation('contao/core-bundle', '5.3', 'Using the "setCookie" hook has been deprecated and will no longer work in Contao 6. Use kernel.response events instead.');
+
 			foreach ($GLOBALS['TL_HOOKS']['setCookie'] as $callback)
 			{
 				$objCookie = static::importStatic($callback[0])->{$callback[1]}($objCookie);

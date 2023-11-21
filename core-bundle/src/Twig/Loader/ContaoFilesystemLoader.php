@@ -44,25 +44,26 @@ use Twig\Source;
 class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarchyInterface, ResetInterface
 {
     private const CACHE_KEY_PATHS = 'contao.twig.loader_paths';
+
     private const CACHE_KEY_HIERARCHY = 'contao.twig.template_hierarchy';
 
     private string|false|null $currentThemeSlug = null;
 
     /**
-     * @var array<string,string>
+     * @var array<string, string>
      */
     private array $trackedTemplatesPaths = [];
 
     /**
-     * @var array<string,array<string,string>>|null
+     * @var array<string, array<string, string>>|null
      */
     private array|null $inheritanceChains = null;
 
     public function __construct(
-        private CacheItemPoolInterface $cachePool,
-        private TemplateLocator $templateLocator,
-        private ThemeNamespace $themeNamespace,
-        string $rootPath = null,
+        private readonly CacheItemPoolInterface $cachePool,
+        private readonly TemplateLocator $templateLocator,
+        private readonly ThemeNamespace $themeNamespace,
+        string|null $rootPath = null,
     ) {
         parent::__construct([], $rootPath);
 
@@ -151,10 +152,12 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
     {
         $pathsItem = $this->cachePool->getItem(self::CACHE_KEY_PATHS);
         $pathsItem->set($this->paths);
+
         $this->cachePool->save($pathsItem);
 
         $hierarchyItem = $this->cachePool->getItem(self::CACHE_KEY_HIERARCHY);
         $hierarchyItem->set($this->inheritanceChains);
+
         $this->cachePool->save($hierarchyItem);
     }
 
@@ -207,7 +210,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
             1 === preg_match(
                 '/\$this\s*->\s*extend\s*\(\s*[\'"]([a-z0-9_-]+)[\'"]\s*\)/i',
                 (string) file_get_contents($source->getPath()),
-                $match
+                $match,
             )
             && '@Contao/'.$match[1].'.html5' !== $name
         ) {
@@ -217,7 +220,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         preg_match_all(
             '/\$this\s*->\s*block\s*\(\s*[\'"]([a-z0-9_-]+)[\'"]\s*\)/i',
             (string) file_get_contents($source->getPath()),
-            $matches
+            $matches,
         );
 
         return new Source(implode("\n", $matches[1] ?? []), $source->getName(), $source->getPath());
@@ -288,7 +291,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         $this->currentThemeSlug = null;
     }
 
-    public function getDynamicParent(string $shortNameOrIdentifier, string $sourcePath, string $themeSlug = null): string
+    public function getDynamicParent(string $shortNameOrIdentifier, string $sourcePath, string|null $themeSlug = null): string
     {
         $hierarchy = $this->getInheritanceChains($themeSlug);
         $identifier = ContaoTwigUtil::getIdentifier($shortNameOrIdentifier);
@@ -308,7 +311,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         return $next;
     }
 
-    public function getFirst(string $shortNameOrIdentifier, string $themeSlug = null): string
+    public function getFirst(string $shortNameOrIdentifier, string|null $themeSlug = null): string
     {
         $identifier = ContaoTwigUtil::getIdentifier($shortNameOrIdentifier);
         $hierarchy = $this->getInheritanceChains($themeSlug);
@@ -320,7 +323,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         return $chain[array_key_first($chain)];
     }
 
-    public function getInheritanceChains(string $themeSlug = null): array
+    public function getInheritanceChains(string|null $themeSlug = null): array
     {
         if (null === $this->inheritanceChains) {
             $this->buildInheritanceChains();

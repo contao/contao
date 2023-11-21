@@ -26,9 +26,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class RootPageDependentSelectListener
 {
     public function __construct(
-        private Connection $connection,
-        private UrlGeneratorInterface $router,
-        private TranslatorInterface $translator,
+        private readonly Connection $connection,
+        private readonly UrlGeneratorInterface $router,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -49,7 +49,7 @@ class RootPageDependentSelectListener
             FROM tl_module m
             WHERE m.type != 'root_page_dependent_modules' AND m.pid = ?
             ORDER BY m.name",
-            [$pid]
+            [$pid],
         );
 
         foreach ($rows->iterateAssociative() as $module) {
@@ -64,7 +64,7 @@ class RootPageDependentSelectListener
     }
 
     #[AsCallback(table: 'tl_module', target: 'fields.rootPageDependentModules.save')]
-    public function saveCallback(mixed $value, DataContainer $dataContainer): string
+    public function saveCallback(mixed $value): string
     {
         $values = StringUtil::deserialize($value);
 
@@ -105,7 +105,7 @@ class RootPageDependentSelectListener
                 StringUtil::specialcharsUrl($href),
                 StringUtil::specialchars($title),
                 StringUtil::specialchars(str_replace("'", "\\'", $title)),
-                Image::getHtml('alias.svg', $title)
+                Image::getHtml('alias.svg', $title),
             );
         }
 

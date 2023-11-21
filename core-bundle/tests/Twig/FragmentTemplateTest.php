@@ -29,11 +29,12 @@ class FragmentTemplateTest extends TestCase
         $template->setData(['foobar' => 'foobar']);
         $template->set('foo', 'f');
         $template->set('bar', 42);
+
         $template->baz = true;
 
         $this->assertSame(
             ['foobar' => 'foobar', 'foo' => 'f', 'bar' => 42, 'baz' => true],
-            $template->getData()
+            $template->getData(),
         );
 
         $this->assertSame('f', $template->get('foo'));
@@ -51,7 +52,7 @@ class FragmentTemplateTest extends TestCase
         $returnedResponse = new Response();
         $preBuiltResponse = new Response();
 
-        $callback = function (FragmentTemplate $reference, Response|null $response) use ($returnedResponse, $preBuiltResponse): Response {
+        $callback = function (FragmentTemplate $reference, Response|null $response) use ($preBuiltResponse, $returnedResponse): Response {
             $this->assertSame('content_element/text', $reference->getName());
             $this->assertSame($preBuiltResponse, $response);
 
@@ -87,7 +88,9 @@ class FragmentTemplateTest extends TestCase
 
             $args = array_map(
                 function (\ReflectionParameter $parameter) {
-                    if (!($type = $parameter->getType()) instanceof \ReflectionNamedType) {
+                    $type = $parameter->getType();
+
+                    if (!$type instanceof \ReflectionNamedType) {
                         return null;
                     }
 
@@ -96,19 +99,19 @@ class FragmentTemplateTest extends TestCase
                         'string' => '',
                         'array' => [],
                         /** @phpstan-ignore-next-line because mocked type cannot be inferred */
-                        default => $this->createMock($name)
+                        default => $this->createMock($name),
                     };
                 },
-                $method->getParameters()
+                $method->getParameters(),
             );
 
             yield "accessing $name()" => [$name, $args];
         }
     }
 
-    private function getFragmentTemplate(\Closure $callback = null): FragmentTemplate
+    private function getFragmentTemplate(\Closure|null $callback = null): FragmentTemplate
     {
-        $callback ??= (static fn () => new Response());
+        $callback ??= static fn () => new Response();
 
         return new FragmentTemplate('content_element/text', $callback);
     }

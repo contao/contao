@@ -32,10 +32,7 @@ class AddCronJobsPass implements CompilerPassInterface
         $serviceIds = $container->findTaggedServiceIds('contao.cronjob');
         $definition = $container->findDefinition('contao.cron');
 
-        /** @var array<Definition> $sync */
         $sync = [];
-
-        /** @var array<Definition> $async */
         $async = [];
 
         foreach ($serviceIds as $serviceId => $tags) {
@@ -52,7 +49,7 @@ class AddCronJobsPass implements CompilerPassInterface
                 $interval = str_replace(
                     ['minutely', 'hourly', 'daily', 'weekly', 'monthly', 'yearly'],
                     ['* * * * *', '@hourly', '@daily', '@weekly', '@monthly', '@yearly'],
-                    $interval
+                    $interval,
                 );
 
                 // Validate the cron expression

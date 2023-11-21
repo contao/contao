@@ -25,14 +25,14 @@ use UAParser\Parser;
 
 class TrustedDeviceManager implements TrustedDeviceManagerInterface
 {
-    public function __construct(private RequestStack $requestStack, private TrustedDeviceTokenStorage $trustedTokenStorage, private EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private readonly RequestStack $requestStack,
+        private readonly TrustedDeviceTokenStorage $trustedTokenStorage,
+        private readonly EntityManagerInterface $entityManager,
+    ) {
     }
 
-    /**
-     * @param mixed $user
-     */
-    public function addTrustedDevice($user, string $firewallName): void
+    public function addTrustedDevice(object $user, string $firewallName): void
     {
         if (!$user instanceof User) {
             return;
@@ -62,12 +62,9 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
         $this->entityManager->flush();
     }
 
-    /**
-     * @param mixed $user
-     */
-    public function isTrustedDevice($user, string $firewallName): bool
+    public function isTrustedDevice(object $user, string $firewallName): bool
     {
-        if (!($user instanceof User)) {
+        if (!$user instanceof User) {
             return false;
         }
 
@@ -106,10 +103,7 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
         ;
     }
 
-    /**
-     * @param mixed $user
-     */
-    public function canSetTrustedDevice($user, Request $request, string $firewallName): bool
+    public function canSetTrustedDevice(object $user, Request $request, string $firewallName): bool
     {
         return true;
     }

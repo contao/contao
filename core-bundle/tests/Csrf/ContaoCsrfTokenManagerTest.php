@@ -33,7 +33,7 @@ class ContaoCsrfTokenManagerTest extends TestCase
             $this->createMock(TokenGeneratorInterface::class),
             $storage,
             '',
-            'contao_csrf_token'
+            'contao_csrf_token',
         );
 
         $token = new CsrfToken('contao_csrf_token', $tokenManager->getDefaultTokenValue());

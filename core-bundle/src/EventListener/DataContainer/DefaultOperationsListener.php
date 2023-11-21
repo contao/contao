@@ -20,7 +20,7 @@ use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\DataContainer;
 use Doctrine\DBAL\Connection;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 /**
  * @internal
@@ -28,12 +28,19 @@ use Symfony\Component\Security\Core\Security;
 #[AsHook('loadDataContainer', priority: 200)]
 class DefaultOperationsListener
 {
-    public function __construct(private readonly Security $security, private readonly Connection $connection)
-    {
+    public function __construct(
+        private readonly Security $security,
+        private readonly Connection $connection,
+    ) {
     }
 
     public function __invoke(string $table): void
     {
+        // Do not add default operations if a DCA was "loaded" that does not exist
+        if (!isset($GLOBALS['TL_DCA'][$table])) {
+            return;
+        }
+
         $GLOBALS['TL_DCA'][$table]['list']['operations'] = $this->getForTable($table);
     }
 
@@ -49,7 +56,7 @@ class DefaultOperationsListener
         $operations = [];
 
         // If none of the defined operations are name-only, we append the operations to the defaults.
-        if (empty(array_filter($dca, static fn ($v, $k) => isset($defaults[$k]) || (\is_string($v) && isset($defaults[$v])), ARRAY_FILTER_USE_BOTH))) {
+        if (!array_filter($dca, static fn ($v, $k) => isset($defaults[$k]) || (\is_string($v) && isset($defaults[$v])), ARRAY_FILTER_USE_BOTH)) {
             $operations = $defaults;
         }
 
@@ -69,7 +76,7 @@ class DefaultOperationsListener
     {
         $operations = [];
 
-        $isTreeMode = ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null) === DataContainer::MODE_TREE;
+        $isTreeMode = DataContainer::MODE_TREE === ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null);
         $hasPtable = !empty($GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null);
         $ctable = $GLOBALS['TL_DCA'][$table]['config']['ctable'][0] ?? null;
 
@@ -177,7 +184,7 @@ class DefaultOperationsListener
 
             $childCount = $this->connection->fetchOne(
                 "SELECT COUNT(*) FROM $table WHERE pid=?",
-                [(string) $operation->getRecord()['id']]
+                [(string) $operation->getRecord()['id']],
             );
 
             if ($childCount < 1) {
@@ -193,7 +200,7 @@ class DefaultOperationsListener
     {
         $field = null;
 
-        foreach (($GLOBALS['TL_DCA'][$table]['fields'] ?? []) as $name => $config) {
+        foreach ($GLOBALS['TL_DCA'][$table]['fields'] ?? [] as $name => $config) {
             if (!($config['toggle'] ?? false) && !($config['reverseToggle'] ?? false)) {
                 continue;
             }
@@ -227,6 +234,15 @@ class DefaultOperationsListener
         unset($new['id']);
         $new['tstamp'] = 0;
 
+        // Unset the PID field for the copy operation (act=paste&mode=copy), so a voter can differentiate
+        // between the copy operation (without PID) and the paste operation (with new target PID)
+        if (
+            DataContainer::MODE_TREE === ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null)
+            || !empty($GLOBALS['TL_DCA'][$table]['config']['ptable'])
+        ) {
+            unset($new['pid'], $new['sorting']);
+        }
+
         return new CreateAction($table, $new);
     }
 
@@ -235,7 +251,7 @@ class DefaultOperationsListener
         unset($operation['route'], $operation['href']);
 
         if (isset($operation['icon'])) {
-            $operation['icon'] = preg_replace('/(\.svg)$/i', '_.svg', $operation['icon']);
+            $operation['icon'] = str_replace('.svg', '--disabled.svg', $operation['icon']);
         }
     }
 }

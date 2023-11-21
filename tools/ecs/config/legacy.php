@@ -13,6 +13,7 @@ declare(strict_types=1);
 use Contao\EasyCodingStandard\Fixer\MultiLineLambdaFunctionArgumentsFixer;
 use Contao\EasyCodingStandard\Fixer\TypeHintOrderFixer;
 use Contao\EasyCodingStandard\Sniffs\UseSprintfInExceptionsSniff;
+use PhpCsFixer\Fixer\Alias\ModernizeStrposFixer;
 use PhpCsFixer\Fixer\ArrayNotation\ArraySyntaxFixer;
 use PhpCsFixer\Fixer\Basic\CurlyBracesPositionFixer;
 use PhpCsFixer\Fixer\Basic\PsrAutoloadingFixer;
@@ -23,8 +24,10 @@ use PhpCsFixer\Fixer\ControlStructure\ControlStructureContinuationPositionFixer;
 use PhpCsFixer\Fixer\ControlStructure\TrailingCommaInMultilineFixer;
 use PhpCsFixer\Fixer\ControlStructure\YodaStyleFixer;
 use PhpCsFixer\Fixer\FunctionNotation\NoSpacesAfterFunctionNameFixer;
+use PhpCsFixer\Fixer\FunctionNotation\NullableTypeDeclarationForDefaultNullValueFixer;
 use PhpCsFixer\Fixer\FunctionNotation\UseArrowFunctionsFixer;
 use PhpCsFixer\Fixer\FunctionNotation\VoidReturnFixer;
+use PhpCsFixer\Fixer\LanguageConstruct\GetClassToClassKeywordFixer;
 use PhpCsFixer\Fixer\ListNotation\ListSyntaxFixer;
 use PhpCsFixer\Fixer\Operator\BinaryOperatorSpacesFixer;
 use PhpCsFixer\Fixer\Operator\ConcatSpaceFixer;
@@ -61,12 +64,15 @@ return static function (ECSConfig $ecsConfig): void {
         DeclareStrictTypesFixer::class,
         DisallowArrayTypeHintSyntaxSniff::class,
         DuplicateSpacesSniff::class,
+        GetClassToClassKeywordFixer::class,
         IncrementStyleFixer::class,
         MethodChainingIndentationFixer::class,
+        ModernizeStrposFixer::class,
         MultiLineLambdaFunctionArgumentsFixer::class,
         MultilineWhitespaceBeforeSemicolonsFixer::class,
         NoSpacesAfterFunctionNameFixer::class,
         NoSuperfluousPhpdocTagsFixer::class,
+        NullableTypeDeclarationForDefaultNullValueFixer::class,
         OrderedClassElementsFixer::class,
         PhpdocOrderFixer::class,
         PhpdocScalarFixer::class,

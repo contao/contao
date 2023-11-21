@@ -10,10 +10,11 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\Tools\ServiceIdLinter;
+namespace Contao\Tools\ServiceLinter;
 
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Csrf\MemoryTokenStorage;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -22,27 +23,36 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
 
+#[AsCommand(
+    name: 'contao:lint-service-ids',
+    description: 'Checks the Contao service IDs.',
+)]
 class LintServiceIdsCommand extends Command
 {
-    protected static $defaultName = 'contao:lint-service-ids';
-    protected static $defaultDescription = 'Checks the Contao service IDs.';
-
     /**
      * Strip from name if the alias is part of the namespace.
+     *
+     * @var array<string, string>
      */
     private static array $aliasNames = [
         'subscriber' => 'listener',
     ];
 
+    /**
+     * @var array<string, string>
+     */
     private static array $renameNamespaces = [
         'authentication' => '',
         'contao_core' => 'contao',
         'event_listener' => 'listener',
         'http_kernel' => '',
+        'util' => '',
     ];
 
     /**
      * Strip these prefixes from the last chunk of the service ID.
+     *
+     * @var array<string>
      */
     private static array $stripPrefixes = [
         'contao_table_',
@@ -52,12 +62,17 @@ class LintServiceIdsCommand extends Command
     /**
      * Classes that are not meant to be a single service and can therefore not
      * derive the service ID from the class name.
+     *
+     * @var array<string>
      */
     private static array $generalServiceClasses = [
         ResourceFinder::class,
         MemoryTokenStorage::class,
     ];
 
+    /**
+     * @var array<string>
+     */
     private static array $exceptions = [
         'contao.listener.menu.backend',
         'contao.migration.version_400.version_400_update',
@@ -74,8 +89,16 @@ class LintServiceIdsCommand extends Command
             ->files()
             ->name('*.yaml')
             ->name('*.yml')
-            ->path('src/Resources/config')
-            ->in($this->projectDir)
+            ->in([
+                $this->projectDir.'/calendar-bundle/config',
+                $this->projectDir.'/comments-bundle/config',
+                $this->projectDir.'/core-bundle/config',
+                $this->projectDir.'/faq-bundle/config',
+                $this->projectDir.'/maker-bundle/config',
+                $this->projectDir.'/manager-bundle/config',
+                $this->projectDir.'/news-bundle/config',
+                $this->projectDir.'/newsletter-bundle/config',
+            ])
         ;
 
         $hasError = false;
@@ -111,6 +134,7 @@ class LintServiceIdsCommand extends Command
         }
 
         foreach ($files as $file) {
+            /** @var array{services: array<string, array>} $yaml */
             $yaml = Yaml::parseFile($file->getPathname(), Yaml::PARSE_CUSTOM_TAGS);
 
             if (!isset($yaml['services'])) {
@@ -127,7 +151,7 @@ class LintServiceIdsCommand extends Command
                 if (
                     !\is_string($config) // autowiring aliases
                     && !isset($config['alias'])
-                    && str_contains((string) $serviceId, '\\')
+                    && str_contains($serviceId, '\\')
                     && !str_ends_with($serviceId, 'Controller')
                 ) {
                     $hasError = true;
@@ -163,7 +187,7 @@ class LintServiceIdsCommand extends Command
                         $config['class'],
                         $file->getRelativePathname(),
                         $id,
-                        $serviceId
+                        $serviceId,
                     ));
                 }
             }
@@ -230,7 +254,7 @@ class LintServiceIdsCommand extends Command
         // Strip prefixes from the name.
         foreach (self::$stripPrefixes as $prefix) {
             if (str_starts_with($name, $prefix)) {
-                $name = substr($name, \strlen((string) $prefix));
+                $name = substr($name, \strlen($prefix));
             }
         }
 

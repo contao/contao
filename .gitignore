@@ -6,6 +6,13 @@
 /tools/*/vendor
 /tools/monorepo/composer.lock
 
+# Cypress
+/cypress/screenshots/
+/cypress/videos/
+/cypress/webspace/*
+!/cypress/webspace/.env
+!/cypress/webspace/composer.json
+
 # Monorepo Tools
 /.monorepo-split-cache/
 
@@ -18,6 +25,3 @@
 
 # CS fixer
 /.php_cs.cache
-
-# Ignore the symlinks required for upstream merging
-/*-bundle/src/Resources/

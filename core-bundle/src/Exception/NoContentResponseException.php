@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class NoContentResponseException extends ResponseException
 {
-    public function __construct(\Exception $previous = null)
+    public function __construct(\Exception|null $previous = null)
     {
         parent::__construct(new Response('', 204), $previous);
     }

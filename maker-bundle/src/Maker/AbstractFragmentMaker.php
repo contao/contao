@@ -82,7 +82,7 @@ abstract class AbstractFragmentMaker extends AbstractMaker
         return Path::join(
             $this->projectDir,
             'contao/templates',
-            sprintf('%s_%s.html5', $this->getTemplatePrefix(), Container::underscore($className))
+            sprintf('%s_%s.html5', $this->getTemplatePrefix(), Container::underscore($className)),
         );
     }
 
@@ -116,7 +116,7 @@ abstract class AbstractFragmentMaker extends AbstractMaker
 
         $question = new Question('Choose a category');
         $question->setAutocompleterValues($categories);
-        $question->setValidator([Validator::class, 'notBlank']);
+        $question->setValidator(Validator::notBlank(...));
 
         $input->setArgument('category', $io->askQuestion($question));
     }
@@ -144,7 +144,7 @@ abstract class AbstractFragmentMaker extends AbstractMaker
         $command->addArgument('source-name', InputArgument::OPTIONAL);
 
         $question = new Question('Enter the English name');
-        $question->setValidator([Validator::class, 'notBlank']);
+        $question->setValidator(Validator::notBlank(...));
 
         $input->setArgument('source-name', $io->askQuestion($question));
     }
@@ -154,7 +154,7 @@ abstract class AbstractFragmentMaker extends AbstractMaker
         $command->addArgument('source-description', InputArgument::OPTIONAL);
 
         $question = new Question('Enter the English description');
-        $question->setValidator([Validator::class, 'notBlank']);
+        $question->setValidator(Validator::notBlank(...));
 
         $input->setArgument('source-description', $io->askQuestion($question));
     }
@@ -173,7 +173,7 @@ abstract class AbstractFragmentMaker extends AbstractMaker
         $command->addArgument('language-'.$count, InputArgument::OPTIONAL);
 
         $question = new Question('Which language do you want to add? (e.g. <fg=yellow>de</>)');
-        $question->setValidator([Validator::class, 'notBlank']);
+        $question->setValidator(Validator::notBlank(...));
 
         $input->setArgument('language-'.$count, $io->askQuestion($question));
     }
@@ -183,7 +183,7 @@ abstract class AbstractFragmentMaker extends AbstractMaker
         $command->addArgument('target-name-'.$count, InputArgument::OPTIONAL);
 
         $question = new Question('Enter the translated name');
-        $question->setValidator([Validator::class, 'notBlank']);
+        $question->setValidator(Validator::notBlank(...));
 
         $input->setArgument('target-name-'.$count, $io->askQuestion($question));
     }
@@ -193,7 +193,7 @@ abstract class AbstractFragmentMaker extends AbstractMaker
         $command->addArgument('target-description-'.$count, InputArgument::OPTIONAL);
 
         $question = new Question('Enter the translated description');
-        $question->setValidator([Validator::class, 'notBlank']);
+        $question->setValidator(Validator::notBlank(...));
 
         $input->setArgument('target-description-'.$count, $io->askQuestion($question));
     }

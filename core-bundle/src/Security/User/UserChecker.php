@@ -26,7 +26,7 @@ class UserChecker implements UserCheckerInterface
     /**
      * @internal
      */
-    public function __construct(private ContaoFramework $framework)
+    public function __construct(private readonly ContaoFramework $framework)
     {
     }
 
@@ -88,14 +88,14 @@ class UserChecker implements UserCheckerInterface
         if ($notActiveYet) {
             $logMessage = sprintf(
                 'The account is not active yet (activation date: %s)',
-                Date::parse($config->get('dateFormat'), $start)
+                Date::parse($config->get('dateFormat'), $start),
             );
         }
 
         if ($notActiveAnymore) {
             $logMessage = sprintf(
                 'The account is not active anymore (deactivation date: %s)',
-                Date::parse($config->get('dateFormat'), $stop)
+                Date::parse($config->get('dateFormat'), $stop),
             );
         }
 

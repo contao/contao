@@ -44,7 +44,7 @@ class VideoController extends AbstractContentElementController
         $sourceParameters = match ($type = $template->get('type')) {
             'vimeo' => $this->getVimeoSourceParameters($model),
             'youtube' => $this->getYoutubeSourceParameters($model, $request->getLocale()),
-            default => throw new \InvalidArgumentException(sprintf('Unknown video provider "%s".', $type))
+            default => throw new \InvalidArgumentException(sprintf('Unknown video provider "%s".', $type)),
         };
 
         $template->set('source', $sourceParameters);
@@ -80,6 +80,13 @@ class VideoController extends AbstractContentElementController
     {
         $options = [];
 
+        parse_str(explode('?', $model->vimeo)[1] ?? '', $videoIdParams);
+
+        // Privacy hash must be the first parameter
+        if ($privacyHash = $videoIdParams['h'] ?? null) {
+            $options['h'] = $privacyHash;
+        }
+
         foreach (StringUtil::deserialize($model->vimeoOptions, true) as $option) {
             [$option, $value] = match ($option) {
                 'vimeo_portrait', 'vimeo_title', 'vimeo_byline' => [substr($option, 6), '0'],
@@ -102,11 +109,11 @@ class VideoController extends AbstractContentElementController
 
         return [
             'provider' => 'vimeo',
-            'video_id' => $videoId = $model->vimeo,
+            'video_id' => $videoId = explode('?', $model->vimeo)[0],
             'options' => $options,
-            'base_url' => $baseUrl = "https://player.vimeo.com/video/$videoId",
+            'base_url' => "https://player.vimeo.com/video/$model->vimeo",
             'query' => $query,
-            'url' => empty($query) ? $baseUrl : "$baseUrl?$query",
+            'url' => "https://player.vimeo.com/video/$videoId".($query ? "?$query" : ''),
         ];
     }
 
@@ -151,7 +158,7 @@ class VideoController extends AbstractContentElementController
             'options' => $options,
             'base_url' => $baseUrl = "$domain/embed/$videoId",
             'query' => $query = http_build_query($options),
-            'url' => empty($query) ? $baseUrl : "$baseUrl?$query",
+            'url' => $query ? "$baseUrl?$query" : $baseUrl,
         ];
     }
 }

@@ -20,7 +20,7 @@ use Contao\PageModel;
 #[AsCallback('tl_layout', target: 'fields.newsfeeds.options')]
 class LayoutFeedOptionsListener
 {
-    public function __construct(private ContaoFramework $framework)
+    public function __construct(private readonly ContaoFramework $framework)
     {
     }
 

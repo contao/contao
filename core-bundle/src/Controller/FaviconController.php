@@ -14,45 +14,43 @@ namespace Contao\CoreBundle\Controller;
 
 use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\FilesModel;
-use Contao\PageModel;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @internal
  */
-#[Route(defaults: ['_scope' => 'frontend'])]
+#[Route('/favicon.ico', defaults: ['_scope' => 'frontend'])]
 class FaviconController
 {
-    public function __construct(private ContaoFramework $framework, private string $projectDir, private EntityCacheTags $entityCacheTags)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly PageFinder $pageFinder,
+        private readonly string $projectDir,
+        private readonly EntityCacheTags $entityCacheTags,
+    ) {
     }
 
-    #[Route('/favicon.ico')]
     public function __invoke(Request $request): Response
     {
-        $this->framework->initialize();
+        $rootPage = $this->pageFinder->findRootPageForHostAndLanguage($request->getHost());
 
-        $pageModel = $this->framework->getAdapter(PageModel::class);
-
-        $rootPage = $pageModel->findPublishedFallbackByHostname(
-            $request->getHost(),
-            ['fallbackToEmpty' => true]
-        );
-
-        if (null === $rootPage || null === ($favicon = $rootPage->favicon)) {
-            return new Response('', Response::HTTP_NOT_FOUND);
+        if (!$rootPage || null === ($favicon = $rootPage->favicon)) {
+            throw new NotFoundHttpException();
         }
 
-        $filesModel = $this->framework->getAdapter(FilesModel::class);
-        $faviconModel = $filesModel->findByUuid($favicon);
+        $this->framework->initialize();
 
-        if (null === $faviconModel) {
-            return new Response('', Response::HTTP_NOT_FOUND);
+        $filesModel = $this->framework->getAdapter(FilesModel::class);
+
+        if (!$faviconModel = $filesModel->findByUuid($favicon)) {
+            throw new NotFoundHttpException();
         }
 
         // Cache the response for 1 year and tag it, so it is invalidated when the settings are edited

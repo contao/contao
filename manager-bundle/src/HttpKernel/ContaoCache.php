@@ -23,18 +23,16 @@ use FOS\HttpCache\TagHeaderFormatter\TagHeaderFormatter;
 use Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Adapter\TagAwareAdapter;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\TerminableInterface;
 use Toflar\Psr6HttpCacheStore\Psr6Store;
 
 class ContaoCache extends HttpCache implements CacheInvalidation
 {
     use EventDispatchingHttpCache;
 
-    public function __construct(ContaoKernel $kernel, string $cacheDir = null)
+    public function __construct(ContaoKernel $kernel, string|null $cacheDir = null)
     {
         parent::__construct($kernel, $cacheDir);
 
@@ -51,38 +49,9 @@ class ContaoCache extends HttpCache implements CacheInvalidation
         $this->addSubscriber(new CleanupCacheTagsListener());
     }
 
-    /**
-     * Overwrites the getEventDispatcher() method of the EventDispatchingHttpCache
-     * trait, so the LegacyEventDispatcherProxy is not used. Once we have upgraded
-     * to Symfony 6, the method can be removed again.
-     */
-    public function getEventDispatcher(): EventDispatcher
-    {
-        return $this->eventDispatcher ??= new EventDispatcher();
-    }
-
     public function fetch(Request $request, $catch = false): Response
     {
         return parent::fetch($request, $catch);
-    }
-
-    /**
-     * Override default terminate method in order to never call the
-     * "kernel.terminate" event on cache hit.
-     *
-     * @todo Remove once symfony/http-kernel is required in at least ^6.2
-     */
-    public function terminate(Request $request, Response $response): void
-    {
-        $traces = $this->getTraces();
-
-        if (\in_array('fresh', $traces[$this->getTraceKey($request)] ?? [], true)) {
-            return;
-        }
-
-        if ($this->getKernel() instanceof TerminableInterface) {
-            $this->getKernel()->terminate($request, $response);
-        }
     }
 
     protected function getOptions(): array
@@ -91,6 +60,9 @@ class ContaoCache extends HttpCache implements CacheInvalidation
 
         $options['trace_level'] = $_SERVER['TRACE_LEVEL'] ?? 'short';
         $options['trace_header'] = 'Contao-Cache';
+
+        // TODO: Remove once symfony/http-kernel is required in at least ^7.0
+        $options['terminate_on_cache_hit'] = false;
 
         return $options;
     }
@@ -110,21 +82,5 @@ class ContaoCache extends HttpCache implements CacheInvalidation
     private function readEnvCsv(string $key): array
     {
         return array_filter(explode(',', (string) ($_SERVER[$key] ?? '')));
-    }
-
-    /**
-     * Unfortunately, we need to copy this from the parent as it is private.
-     *
-     * @todo Remove once symfony/http-kernel is required in at least ^6.2
-     */
-    private function getTraceKey(Request $request): string
-    {
-        $path = $request->getPathInfo();
-
-        if ($qs = $request->getQueryString()) {
-            $path .= '?'.$qs;
-        }
-
-        return $request->getMethod().' '.$path;
     }
 }

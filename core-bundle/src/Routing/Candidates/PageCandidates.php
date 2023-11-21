@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Routing\Candidates;
 
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\Result;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -22,8 +21,10 @@ class PageCandidates extends AbstractCandidates
 {
     private bool $initialized = false;
 
-    public function __construct(private Connection $connection, private PageRegistry $pageRegistry)
-    {
+    public function __construct(
+        private readonly Connection $connection,
+        private readonly PageRegistry $pageRegistry,
+    ) {
         parent::__construct([], []);
     }
 
@@ -40,10 +41,9 @@ class PageCandidates extends AbstractCandidates
         $hasRegex = $this->addRegexQuery($qb, $request->getPathInfo());
 
         if ($hasRoot || $hasRegex) {
-            /** @var Result $result */
             $result = $qb->executeQuery();
 
-            return array_unique(array_merge($candidates, $result->fetchFirstColumn()));
+            return array_unique([...$candidates, ...$result->fetchFirstColumn()]);
         }
 
         return $candidates;
@@ -65,16 +65,14 @@ class PageCandidates extends AbstractCandidates
 
     private function addRegexQuery(QueryBuilder $queryBuilder, string $pathInfo): bool
     {
-        $pathMap = $this->pageRegistry->getPathRegex();
-
-        if (empty($pathMap)) {
+        if (!$pathMap = $this->pageRegistry->getPathRegex()) {
             return false;
         }
 
         $paths = [];
 
         foreach ($pathMap as $type => $pathRegex) {
-            // Remove existing named subpatterns
+            // Remove existing named sub-patterns
             $pathRegex = preg_replace('/\?P<[^>]+>/', '', $pathRegex);
 
             $path = '(?P<'.$type.'>'.substr($pathRegex, 2, strrpos($pathRegex, '$') - 2).')';
@@ -89,18 +87,18 @@ class PageCandidates extends AbstractCandidates
 
         $prefixes = array_map(
             static fn ($prefix) => $prefix ? preg_quote('/'.$prefix, '#') : '',
-            $this->urlPrefixes
+            $this->urlPrefixes,
         );
 
         preg_match_all(
             '#^('.implode('|', $prefixes).')('.implode('|', $paths).')('.implode('|', array_map('preg_quote', $this->urlSuffixes)).')$#sD',
             $pathInfo,
-            $matches
+            $matches,
         );
 
         $types = array_keys(array_intersect_key($pathMap, array_filter($matches)));
 
-        if (empty($types)) {
+        if (!$types) {
             return false;
         }
 

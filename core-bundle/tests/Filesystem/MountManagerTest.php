@@ -39,7 +39,7 @@ class MountManagerTest extends TestCase
                 '' => $rootAdapter,
             ],
             $manager->getMounts(),
-            'mounts root adapter by default'
+            'mounts root adapter by default',
         );
 
         $manager->mount($filesAdapter = new InMemoryFilesystemAdapter(), 'files');
@@ -52,7 +52,7 @@ class MountManagerTest extends TestCase
                 '' => $rootAdapter,
             ],
             $manager->getMounts(),
-            'lists in descending specificity'
+            'lists in descending specificity',
         );
 
         $manager->mount($newFilesAdapter = new InMemoryFilesystemAdapter(), 'files');
@@ -64,7 +64,7 @@ class MountManagerTest extends TestCase
                 '' => $rootAdapter,
             ],
             $manager->getMounts(),
-            'allows overwriting existing mount points'
+            'allows overwriting existing mount points',
         );
     }
 
@@ -397,7 +397,7 @@ class MountManagerTest extends TestCase
         // Normalize listing for comparison
         $listing = array_map(
             static fn (FilesystemItem $i): string => sprintf('%s (%s)', $i->getPath(), $i->isFile() ? 'file' : 'dir'),
-            [...$manager->listContents($path, $deep)]
+            [...$manager->listContents($path, $deep)],
         );
 
         sort($listing);
@@ -510,7 +510,7 @@ class MountManagerTest extends TestCase
                     }
 
                     $this->fail('Uncovered listing path.');
-                }
+                },
             )
         ;
 
@@ -589,7 +589,7 @@ class MountManagerTest extends TestCase
             ->expects($this->exactly(2))
             ->method('getUri')
             ->willReturnCallback(
-                function (FilesystemAdapter $adapter, string $adapterPath, ?OptionsInterface $options) use ($fooAdapter): ?UriInterface {
+                function (FilesystemAdapter $adapter, string $adapterPath, OptionsInterface|null $options) use ($fooAdapter): UriInterface|null {
                     if ('bar/baz.jpg' !== $adapterPath) {
                         return null;
                     }
@@ -598,7 +598,7 @@ class MountManagerTest extends TestCase
                     $this->assertNull($options);
 
                     return new Uri('https://example.com/files/bar/baz.jpg');
-                }
+                },
             )
         ;
 
@@ -617,12 +617,12 @@ class MountManagerTest extends TestCase
 
         $this->assertSame(
             'https://example.com/files/bar/baz.jpg',
-            (string) $mountManager->generatePublicUri('foo/bar/baz.jpg')
+            (string) $mountManager->generatePublicUri('foo/bar/baz.jpg'),
         );
 
         $this->assertSame(
             'https://some-service.org/user42/other.jpg',
-            (string) $mountManager->generatePublicUri('foo/other.jpg', $options)
+            (string) $mountManager->generatePublicUri('foo/other.jpg', $options),
         );
     }
 
@@ -664,7 +664,7 @@ class MountManagerTest extends TestCase
 
                         $this->assertSame($expectedArguments[$index], $argument);
                     }
-                }
+                },
             )
         ;
 

@@ -295,7 +295,7 @@ abstract class DataContainer extends Backend
 
 	/**
 	 * Current record cache
-	 * @var array<int|string, array<string,mixed>|AccessDeniedException>
+	 * @var array<int|string, array<string, mixed>|AccessDeniedException>
 	 */
 	private static $arrCurrentRecordCache = array();
 
@@ -320,6 +320,14 @@ abstract class DataContainer extends Backend
 
 			case 'id':
 				$this->intId = $varValue;
+				break;
+
+			case 'field':
+				$this->strField = $varValue;
+				break;
+
+			case 'inputName':
+				$this->strInputName = $varValue;
 				break;
 
 			default:
@@ -408,8 +416,7 @@ abstract class DataContainer extends Backend
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$xlabel .= $this->{$callback[0]}->{$callback[1]}($this);
+					$xlabel .= System::importStatic($callback[0])->{$callback[1]}($this);
 				}
 				elseif (\is_callable($callback))
 				{
@@ -421,9 +428,7 @@ abstract class DataContainer extends Backend
 		// Input field callback
 		if (\is_array($arrData['input_field_callback'] ?? null))
 		{
-			$this->import($arrData['input_field_callback'][0]);
-
-			return $this->{$arrData['input_field_callback'][0]}->{$arrData['input_field_callback'][1]}($this, $xlabel);
+			return System::importStatic($arrData['input_field_callback'][0])->{$arrData['input_field_callback'][1]}($this, $xlabel);
 		}
 
 		if (\is_callable($arrData['input_field_callback'] ?? null))
@@ -624,8 +629,7 @@ abstract class DataContainer extends Backend
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$wizard .= $this->{$callback[0]}->{$callback[1]}($this);
+					$wizard .= System::importStatic($callback[0])->{$callback[1]}($this);
 				}
 				elseif (\is_callable($callback))
 				{
@@ -696,6 +700,7 @@ abstract class DataContainer extends Backend
 			$objTemplate->type = $type;
 			$objTemplate->fileBrowserTypes = implode(' ', $fileBrowserTypes);
 			$objTemplate->source = $this->strTable . '.' . $this->intId;
+			$objTemplate->readonly = (bool) ($arrData['eval']['readonly'] ?? false);
 
 			$updateMode = $objTemplate->parse();
 
@@ -903,17 +908,16 @@ abstract class DataContainer extends Backend
 			// Call a custom function instead of using the default button
 			if (\is_array($v['button_callback'] ?? null))
 			{
-				$this->import($v['button_callback'][0]);
-
-				$ref = new \ReflectionMethod($this->{$v['button_callback'][0]}, $v['button_callback'][1]);
+				$callback = System::importStatic($v['button_callback'][0]);
+				$ref = new \ReflectionMethod($callback, $v['button_callback'][1]);
 
 				if ($ref->getNumberOfParameters() === 1 && ($type = $ref->getParameters()[0]->getType()) && $type->getName() === DataContainerOperation::class)
 				{
-					$this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($config);
+					$callback->{$v['button_callback'][1]}($config);
 				}
 				else
 				{
-					$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this);
+					$return .= $callback->{$v['button_callback'][1]}($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this);
 					continue;
 				}
 			}
@@ -993,7 +997,16 @@ abstract class DataContainer extends Backend
 				}
 				else
 				{
-					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($config['title']) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $config['label'], 'data-icon="' . $icon . '" data-icon-disabled="' . $_icon . '" data-state="' . $state . '"') . '</a> ';
+					if (isset($config['titleDisabled']))
+					{
+						$titleDisabled = $config['titleDisabled'];
+					}
+					else
+					{
+						$titleDisabled = (\is_array($v['label']) && isset($v['label'][2])) ? sprintf($v['label'][2], $arrRow['id']) : $config['title'];
+					}
+
+					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($state ? $config['title'] : $titleDisabled) . '" data-title="' . StringUtil::specialchars($config['title']) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $config['label'], 'data-icon="' . $icon . '" data-icon-disabled="' . $_icon . '" data-state="' . $state . '"') . '</a> ';
 				}
 			}
 			elseif ($href === null)
@@ -1068,8 +1081,7 @@ abstract class DataContainer extends Backend
 			// Call a custom function instead of using the default button
 			if (\is_array($v['button_callback'] ?? null))
 			{
-				$this->import($v['button_callback'][0]);
-				$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($v['href'] ?? null, $label, $title, $v['class'] ?? null, $attributes, $this->strTable, $this->root);
+				$return .= System::importStatic($v['button_callback'][0])->{$v['button_callback'][1]}($v['href'] ?? null, $label, $title, $v['class'] ?? null, $attributes, $this->strTable, $this->root);
 				continue;
 			}
 
@@ -1160,8 +1172,7 @@ abstract class DataContainer extends Backend
 			// Call a custom function instead of using the default button
 			if (\is_array($v['button_callback'] ?? null))
 			{
-				$this->import($v['button_callback'][0]);
-				$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($arrRow, $v['href'], $label, $title, $v['icon'], $attributes, $strPtable, array(), null, false, null, null, $this);
+				$return .= System::importStatic($v['button_callback'][0])->{$v['button_callback'][1]}($arrRow, $v['href'], $label, $title, $v['icon'], $attributes, $strPtable, array(), null, false, null, null, $this);
 				continue;
 			}
 
@@ -1219,7 +1230,9 @@ abstract class DataContainer extends Backend
 					$state = $arrRow[$params['field']] ? 0 : 1;
 				}
 
-				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this)">' . Image::getHtml($state ? $icon : $_icon, $label, 'data-icon="' . $icon . '" data-icon-disabled="' . $_icon . '" data-state="' . $state . '"') . '</a> ';
+				$titleDisabled = (\is_array($v['label']) && isset($v['label'][2])) ? sprintf($v['label'][2], $arrRow['id']) : $title;
+
+				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($state ? $title : $titleDisabled) . '" data-title="' . StringUtil::specialchars($title) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $label, 'data-icon="' . $icon . '" data-icon-disabled="' . $_icon . '" data-state="' . $state . '"') . '</a> ';
 			}
 			else
 			{
@@ -1370,7 +1383,7 @@ abstract class DataContainer extends Backend
 						break;
 
 					case 'filter':
-						// Multiple filter subpanels can be defined to split the fields across panels
+						// Multiple filter sub-panels can be defined to split the fields across panels
 						$panel = $this->filterMenu(++$intFilterPanel);
 						break;
 
@@ -1380,8 +1393,7 @@ abstract class DataContainer extends Backend
 
 						if (\is_array($arrCallback))
 						{
-							$this->import($arrCallback[0]);
-							$panel = $this->{$arrCallback[0]}->{$arrCallback[1]}($this);
+							$panel = System::importStatic($arrCallback[0])->{$arrCallback[1]}($this);
 						}
 						elseif (\is_callable($arrCallback))
 						{
@@ -1482,8 +1494,7 @@ abstract class DataContainer extends Backend
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$tags = $this->{$callback[0]}->{$callback[1]}($this, $tags);
+					$tags = System::importStatic($callback[0])->{$callback[1]}($this, $tags);
 				}
 				elseif (\is_callable($callback))
 				{
@@ -1511,8 +1522,9 @@ abstract class DataContainer extends Backend
 
 		Controller::loadDataContainer($ptable);
 
-		$objPid = $this->Database->prepare('SELECT pid FROM ' . Database::quoteIdentifier($strTable) . ' WHERE id=?')
-								 ->execute($intId);
+		$objPid = Database::getInstance()
+			->prepare('SELECT pid FROM ' . Database::quoteIdentifier($strTable) . ' WHERE id=?')
+			->execute($intId);
 
 		if (!$objPid->numRows || $objPid->pid == 0)
 		{
@@ -1648,7 +1660,7 @@ abstract class DataContainer extends Backend
 						$args_k[] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$option] ?? $option;
 					}
 
-					$args[$k] = implode(', ', $args_k);
+					$args[$k] = implode(', ', iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($args_k)), false));
 				}
 				elseif (isset($GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$row[$v]]))
 				{
@@ -1680,7 +1692,7 @@ abstract class DataContainer extends Backend
 
 		// Remove empty brackets (), [], {}, <> and empty tags from the label
 		$label = preg_replace('/\( *\) ?|\[ *] ?|{ *} ?|< *> ?/', '', $label);
-		$label = preg_replace('/<[^>]+>\s*<\/[^>]+>/', '', $label);
+		$label = preg_replace('/<[^\/!][^>]+>\s*<\/[^>]+>/', '', $label);
 
 		$mode = $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? self::MODE_SORTED;
 
@@ -1689,33 +1701,33 @@ abstract class DataContainer extends Backend
 		{
 			if (\in_array($mode, array(self::MODE_TREE, self::MODE_TREE_EXTENDED)))
 			{
-				if (\is_array($labelConfig['label_callback'] ?? null))
+				if (\is_array($labelConfig['label_callback']))
 				{
 					$label = System::importStatic($labelConfig['label_callback'][0])->{$labelConfig['label_callback'][1]}($row, $label, $this, '', false, $protected, $isVisibleRootTrailPage);
 				}
-				else
+				elseif (\is_callable($labelConfig['label_callback']))
 				{
 					$label = $labelConfig['label_callback']($row, $label, $this, '', false, $protected, $isVisibleRootTrailPage);
 				}
 			}
 			elseif ($mode === self::MODE_PARENT)
 			{
-				if (\is_array($labelConfig['label_callback'] ?? null))
+				if (\is_array($labelConfig['label_callback']))
 				{
 					$label = System::importStatic($labelConfig['label_callback'][0])->{$labelConfig['label_callback'][1]}($row, $label, $this);
 				}
-				else
+				elseif (\is_callable($labelConfig['label_callback']))
 				{
 					$label = $labelConfig['label_callback']($row, $label, $this);
 				}
 			}
 			else
 			{
-				if (\is_array($labelConfig['label_callback'] ?? null))
+				if (\is_array($labelConfig['label_callback']))
 				{
 					$label = System::importStatic($labelConfig['label_callback'][0])->{$labelConfig['label_callback'][1]}($row, $label, $this, $args);
 				}
-				else
+				elseif (\is_callable($labelConfig['label_callback']))
 				{
 					$label = $labelConfig['label_callback']($row, $label, $this, $args);
 				}
@@ -1732,6 +1744,17 @@ abstract class DataContainer extends Backend
 		}
 
 		return $label;
+	}
+
+	protected function markAsCopy(string $label, string $value): string
+	{
+		// Do not mark as copy more than once (see #6058)
+		if (preg_match('/' . preg_quote(sprintf($label, ''), '/') . '/', StringUtil::decodeEntities($value)))
+		{
+			return $value;
+		}
+
+		return sprintf($label, $value);
 	}
 
 	/**

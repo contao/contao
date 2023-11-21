@@ -244,16 +244,14 @@
         <target>Activar el</target>
       </trans-unit>
       <trans-unit id="tl_user.start.1">
-        <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Si desea evitar que la cuenta esté activa antes de una determinada fecha/hora, puede ingresarla aquí. De lo contrario, deje el campo en blanco.</target>
+        <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_user.stop.0">
         <source>Deactivate on</source>
         <target>Deactivate on</target>
       </trans-unit>
       <trans-unit id="tl_user.stop.1">
-        <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Si desea evitar que la cuenta esté activa después de una determinada fecha/hora, puede ingresarla aquí. De lo contrario, deje el campo en blanco.</target>
+        <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_user.session.0">
         <source>Purge data</source>
@@ -387,9 +385,15 @@
         <source>Delete user ID %s</source>
         <target>Eliminar usuario con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_user.toggle">
-        <source>Activate/deactivate user ID %s</source>
-        <target>Activar/deshabilitar usuario con ID%s</target>
+      <trans-unit id="tl_user.toggle.0">
+        <source>Activate/deactivate user</source>
+        <target>Activar/deshabilitar usuario</target>
+      </trans-unit>
+      <trans-unit id="tl_user.toggle.1">
+        <source>Deactivate user ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_user.toggle.2">
+        <source>Activate user ID %s</source>
       </trans-unit>
       <trans-unit id="tl_user.su">
         <source>Switch to user ID %s</source>

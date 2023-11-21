@@ -32,10 +32,14 @@ class SchemaOrgRuntimeTest extends TestCase
             ->willReturn($context)
         ;
 
-        (new SchemaOrgRuntime($accessor))->add([
+        $runtime = new SchemaOrgRuntime($accessor);
+        $runtime->add([
             '@type' => 'ImageObject',
             'identifier' => 'https://assets.url/files/public/foo.jpg',
         ]);
+
+        // Also test that null works, which simplifies using the runtime in the templates
+        $runtime->add(null);
 
         $graph = $manager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->toArray();
 
@@ -47,7 +51,7 @@ class SchemaOrgRuntimeTest extends TestCase
                     '@id' => 'https://assets.url/files/public/foo.jpg',
                 ]],
             ],
-            $graph
+            $graph,
         );
     }
 

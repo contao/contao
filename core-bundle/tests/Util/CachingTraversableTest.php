@@ -20,7 +20,7 @@ class CachingTraversableTest extends TestCase
     /**
      * @dataProvider provideItems
      *
-     * @param list<array{0:mixed,1:mixed}> $items
+     * @param list<array{0:mixed, 1:mixed}> $items
      */
     public function testIterateMultipleTimes(array $items): void
     {
@@ -80,7 +80,7 @@ class CachingTraversableTest extends TestCase
                 [['II', 'II'], [2, 2]],
                 [['III', 'III'], [3, 3]],
             ],
-            $consumedItems
+            $consumedItems,
         );
 
         $this->assertGeneratedItems(3, $generatorLog);
@@ -124,13 +124,13 @@ class CachingTraversableTest extends TestCase
      * @template TKey
      * @template TValue
      *
-     * @param list<array{0:TKey,1:TValue}> $items
+     * @param list<array{0:TKey, 1:TValue}> $items
      *
      * @param-out list<int> $generatorLog
      *
      * @return \Generator<TKey, TValue>
      */
-    private function generateItems(array $items, array &$generatorLog = null): \Generator
+    private function generateItems(array $items, array|null &$generatorLog = null): \Generator
     {
         $generatorLog = [];
 
@@ -146,7 +146,7 @@ class CachingTraversableTest extends TestCase
      *
      * @param \Traversable<TKey, TValue> $items
      *
-     * @return list<array{0:TKey,1:TValue}>
+     * @return list<array{0:TKey, 1:TValue}>
      */
     private function consumeItems(\Traversable $items, int $limit = PHP_INT_MAX): array
     {

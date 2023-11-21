@@ -73,7 +73,7 @@ class GeneratePageListenerTest extends ContaoTestCase
 
         $this->assertSame(
             ['<link type="application/rss+xml" rel="alternate" href="http://localhost/news.xml" title="Latest news">'],
-            $GLOBALS['TL_HEAD']
+            $GLOBALS['TL_HEAD'],
         );
     }
 

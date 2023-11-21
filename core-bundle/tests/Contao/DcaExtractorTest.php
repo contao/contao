@@ -64,8 +64,8 @@ class DcaExtractorTest extends TestCase
 
         $this->assertTrue(isset($GLOBALS['TL_DCA']['tl_test_with_sql_config']));
         $this->assertTrue($extractor->isDbTable());
-        $this->assertSame($extractor->getKeys(), ['id' => 'primary']);
-        $this->assertSame($extractor->getFields(), ['id' => 'int(10) unsigned NOT NULL auto_increment']);
+        $this->assertSame(['id' => 'primary'], $extractor->getKeys());
+        $this->assertSame(['id' => 'int(10) unsigned NOT NULL auto_increment'], $extractor->getFields());
     }
 
     public function testDoesNotCreateTableWithoutSqlConfig(): void
@@ -74,8 +74,8 @@ class DcaExtractorTest extends TestCase
 
         $this->assertTrue(isset($GLOBALS['TL_DCA']['tl_test_without_sql_config']));
         $this->assertFalse($extractor->isDbTable());
-        $this->assertSame($extractor->getKeys(), []);
-        $this->assertSame($extractor->getFields(), []);
+        $this->assertSame([], $extractor->getKeys());
+        $this->assertSame([], $extractor->getFields());
     }
 
     public function testDoesCreateTableWithSqlConfigWithoutDriver(): void
@@ -84,8 +84,8 @@ class DcaExtractorTest extends TestCase
 
         $this->assertTrue(isset($GLOBALS['TL_DCA']['tl_test_with_sql_config_without_driver']));
         $this->assertTrue($extractor->isDbTable());
-        $this->assertSame($extractor->getKeys(), ['id' => 'primary']);
-        $this->assertSame($extractor->getFields(), ['id' => 'int(10) unsigned NOT NULL auto_increment']);
+        $this->assertSame(['id' => 'primary'], $extractor->getKeys());
+        $this->assertSame(['id' => 'int(10) unsigned NOT NULL auto_increment'], $extractor->getFields());
     }
 
     public function testDoesNotCreateTableWithFileDriver(): void
@@ -94,8 +94,8 @@ class DcaExtractorTest extends TestCase
 
         $this->assertTrue(isset($GLOBALS['TL_DCA']['tl_test_with_file_driver']));
         $this->assertFalse($extractor->isDbTable());
-        $this->assertSame($extractor->getKeys(), []);
-        $this->assertSame($extractor->getFields(), []);
+        $this->assertSame([], $extractor->getKeys());
+        $this->assertSame([], $extractor->getFields());
     }
 
     public function testDoesCreateTableWithDatabaseAssistedFolderDriver(): void
@@ -104,8 +104,8 @@ class DcaExtractorTest extends TestCase
 
         $this->assertTrue(isset($GLOBALS['TL_DCA']['tl_test_with_database_assisted_folder_driver']));
         $this->assertTrue($extractor->isDbTable());
-        $this->assertSame($extractor->getKeys(), ['id' => 'primary']);
-        $this->assertSame($extractor->getFields(), ['id' => 'int(10) unsigned NOT NULL auto_increment']);
+        $this->assertSame(['id' => 'primary'], $extractor->getKeys());
+        $this->assertSame(['id' => 'int(10) unsigned NOT NULL auto_increment'], $extractor->getFields());
     }
 
     public function testDoesNotCreateTableWithNonDatabaseAssistedFolderDriver(): void
@@ -114,7 +114,7 @@ class DcaExtractorTest extends TestCase
 
         $this->assertTrue(isset($GLOBALS['TL_DCA']['tl_test_with_non_database_assisted_folder_driver']));
         $this->assertFalse($extractor->isDbTable());
-        $this->assertSame($extractor->getKeys(), []);
-        $this->assertSame($extractor->getFields(), []);
+        $this->assertSame([], $extractor->getKeys());
+        $this->assertSame([], $extractor->getFields());
     }
 }

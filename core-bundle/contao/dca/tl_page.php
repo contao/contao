@@ -15,6 +15,7 @@ use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Idna;
@@ -93,21 +94,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'format'                  => '%s',
 			'label_callback'          => array('tl_page', 'addIcon')
 		),
-		'global_operations' => array
-		(
-			'toggleNodes' => array
-			(
-				'href'                => 'ptg=all',
-				'class'               => 'header_toggle',
-				'showOnSelect'        => true
-			),
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
-		),
 		'operations' => array
 		(
 			'edit' => array
@@ -174,7 +160,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'__selector__'                => array('type', 'fallback', 'autoforward', 'protected', 'includeLayout', 'includeCache', 'includeChmod', 'enforceTwoFactor'),
 		'default'                     => '{title_legend},title,type',
 		'regular'                     => '{title_legend},title,type;{routing_legend},alias,requireItem,routePath,routePriority,routeConflicts;{meta_legend},pageTitle,robots,description,serpPreview;{canonical_legend:hide},canonicalLink,canonicalKeepParams;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,noSearch;{tabnav_legend:hide},accesskey;{publish_legend},published,start,stop',
-		'forward'                     => '{title_legend},title,type;{routing_legend},alias,routePath,routePriority,routeConflicts;{meta_legend},pageTitle,robots;{redirect_legend},jumpTo,redirect;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide;{tabnav_legend:hide},accesskey;{publish_legend},published,start,stop',
+		'forward'                     => '{title_legend},title,type;{routing_legend},alias,routePath,routePriority,routeConflicts;{meta_legend},pageTitle,robots;{redirect_legend},jumpTo,redirect,alwaysForward;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide;{tabnav_legend:hide},accesskey;{publish_legend},published,start,stop',
 		'redirect'                    => '{title_legend},title,type;{routing_legend},alias,routePath,routePriority,routeConflicts;{meta_legend},pageTitle,robots;{redirect_legend},redirect,url,target;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide;{tabnav_legend:hide},accesskey;{publish_legend},published,start,stop',
 		'root'                        => '{title_legend},title,type;{routing_legend},alias;{meta_legend},pageTitle;{url_legend},dns,useSSL,urlPrefix,urlSuffix,validAliasCharacters,useFolderUrl;{language_legend},language,fallback,disableLanguageRedirect;{website_legend:hide},maintenanceMode;{global_legend:hide},mailerTransport,enableCanonical,adminEmail,dateFormat,timeFormat,datimFormat,staticFiles,staticPlugins;{protected_legend:hide},protected;{layout_legend},includeLayout;{twoFactor_legend:hide},enforceTwoFactor;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{publish_legend},published,start,stop',
 		'rootfallback'                => '{title_legend},title,type;{routing_legend},alias;{meta_legend},pageTitle;{url_legend},dns,useSSL,urlPrefix,urlSuffix,validAliasCharacters,useFolderUrl;{language_legend},language,fallback,disableLanguageRedirect;{website_legend:hide},favicon,robotsTxt,maintenanceMode;{global_legend:hide},mailerTransport,enableCanonical,adminEmail,dateFormat,timeFormat,datimFormat,staticFiles,staticPlugins;{protected_legend:hide},protected;{layout_legend},includeLayout;{twoFactor_legend:hide},enforceTwoFactor;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{publish_legend},published,start,stop',
@@ -185,7 +171,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'error_503'                   => '{title_legend},title,type;{meta_legend},pageTitle,robots,description;{forward_legend},autoforward;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass;{publish_legend},published,start,stop'
 	),
 
-	// Subpalettes
+	// Sub-palettes
 	'subpalettes' => array
 	(
 		'autoforward'                 => 'jumpTo',
@@ -314,6 +300,13 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'eval'                    => array('tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_page'],
 			'sql'                     => "varchar(32) NOT NULL default 'permanent'"
+		),
+		'alwaysForward' => array
+		(
+			'exclude'                 => true,
+			'inputType'               => 'checkbox',
+			'eval'                    => array('tl_class'=>'w50 m12'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'jumpTo' => array
 		(
@@ -708,22 +701,15 @@ if (Input::get('popup'))
 class tl_page extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Check permissions to edit table tl_page
 	 *
 	 * @throws AccessDeniedException
 	 */
 	public function checkPermission()
 	{
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
@@ -732,21 +718,23 @@ class tl_page extends Backend
 		$session = $objSession->all();
 
 		// Set the default page user and group
-		$GLOBALS['TL_DCA']['tl_page']['fields']['cuser']['default'] = (int) Config::get('defaultUser') ?: $this->User->id;
-		$GLOBALS['TL_DCA']['tl_page']['fields']['cgroup']['default'] = (int) Config::get('defaultGroup') ?: (int) $this->User->groups[0];
+		$GLOBALS['TL_DCA']['tl_page']['fields']['cuser']['default'] = (int) Config::get('defaultUser') ?: $user->id;
+		$GLOBALS['TL_DCA']['tl_page']['fields']['cgroup']['default'] = (int) Config::get('defaultGroup') ?: (int) $user->groups[0];
 
 		// Restrict the page tree
-		if (empty($this->User->pagemounts) || !is_array($this->User->pagemounts))
+		if (empty($user->pagemounts) || !is_array($user->pagemounts))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->pagemounts;
+			$root = $user->pagemounts;
 		}
 
 		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['rootPaste'] = false;
 		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = $root;
+
+		$db = Database::getInstance();
 		$security = System::getContainer()->get('security.helper');
 
 		// Set allowed page IDs (edit multiple)
@@ -757,9 +745,10 @@ class tl_page extends Backend
 
 			foreach ($session['CURRENT']['IDS'] as $id)
 			{
-				$objPage = $this->Database->prepare("SELECT id, pid, type, includeChmod, chmod, cuser, cgroup FROM tl_page WHERE id=?")
-										  ->limit(1)
-										  ->execute($id);
+				$objPage = $db
+					->prepare("SELECT id, pid, type, includeChmod, chmod, cuser, cgroup FROM tl_page WHERE id=?")
+					->limit(1)
+					->execute($id);
 
 				if ($objPage->numRows < 1 || !$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $objPage->type))
 				{
@@ -774,7 +763,7 @@ class tl_page extends Backend
 				}
 
 				// Mounted pages cannot be deleted
-				if ($security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_PAGE, $row) && !$this->User->hasAccess($id, 'pagemounts'))
+				if ($security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_PAGE, $row) && !$user->hasAccess($id, 'pagemounts'))
 				{
 					$delete_all[] = $id;
 				}
@@ -790,9 +779,10 @@ class tl_page extends Backend
 
 			foreach ($session['CLIPBOARD']['tl_page']['id'] as $id)
 			{
-				$objPage = $this->Database->prepare("SELECT id, pid, type, includeChmod, chmod, cuser, cgroup FROM tl_page WHERE id=?")
-										  ->limit(1)
-										  ->execute($id);
+				$objPage = $db
+					->prepare("SELECT id, pid, type, includeChmod, chmod, cuser, cgroup FROM tl_page WHERE id=?")
+					->limit(1)
+					->execute($id);
 
 				if ($objPage->numRows < 1 || !$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $objPage->type))
 				{
@@ -814,9 +804,10 @@ class tl_page extends Backend
 		// Check permissions to save and create new
 		if (Input::get('act') == 'edit')
 		{
-			$objPage = $this->Database->prepare("SELECT * FROM tl_page WHERE id=(SELECT pid FROM tl_page WHERE id=?)")
-									  ->limit(1)
-									  ->execute(Input::get('id'));
+			$objPage = $db
+				->prepare("SELECT * FROM tl_page WHERE id=(SELECT pid FROM tl_page WHERE id=?)")
+				->limit(1)
+				->execute(Input::get('id'));
 
 			if ($objPage->numRows && !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, $objPage->row()))
 			{
@@ -854,9 +845,10 @@ class tl_page extends Backend
 					// Check the parent's parent page in "paste after" mode
 					else
 					{
-						$objPage = $this->Database->prepare("SELECT pid FROM tl_page WHERE id=?")
-												  ->limit(1)
-												  ->execute(Input::get('pid'));
+						$objPage = $db
+							->prepare("SELECT pid FROM tl_page WHERE id=?")
+							->limit(1)
+							->execute(Input::get('pid'));
 
 						$ids[] = $objPage->pid;
 					}
@@ -871,14 +863,14 @@ class tl_page extends Backend
 			$pagemounts = array();
 
 			// Get all allowed pages for the current user
-			foreach ($this->User->pagemounts as $root)
+			foreach ($user->pagemounts as $root)
 			{
 				if (Input::get('act') != 'delete')
 				{
 					$pagemounts[] = array($root);
 				}
 
-				$pagemounts[] = $this->Database->getChildRecords($root, 'tl_page');
+				$pagemounts[] = $db->getChildRecords($root, 'tl_page');
 			}
 
 			if (!empty($pagemounts))
@@ -888,8 +880,8 @@ class tl_page extends Backend
 
 			$pagemounts = array_unique($pagemounts);
 
-			// Do not allow pasting after pages on the root level (pagemounts)
-			if (Input::get('mode') == 1 && (Input::get('act') == 'cut' || Input::get('act') == 'cutAll') && in_array(Input::get('pid'), $this->eliminateNestedPages($this->User->pagemounts)))
+			// Do not allow pasting after pages on the root level (page mounts)
+			if (Input::get('mode') == 1 && (Input::get('act') == 'cut' || Input::get('act') == 'cutAll') && in_array(Input::get('pid'), $this->eliminateNestedPages($user->pagemounts)))
 			{
 				throw new AccessDeniedException('Not enough permissions to paste page ID ' . Input::get('id') . ' after mounted page ID ' . Input::get('pid') . ' (root level).');
 			}
@@ -968,9 +960,10 @@ class tl_page extends Backend
 		}
 		elseif (Input::get('mode') == 1)
 		{
-			$objPage = $this->Database->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")
-									  ->limit(1)
-									  ->execute(Input::get('pid'));
+			$objPage = Database::getInstance()
+				->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")
+				->limit(1)
+				->execute(Input::get('pid'));
 
 			if ($objPage->pid == 0)
 			{
@@ -1049,9 +1042,10 @@ class tl_page extends Backend
 	 */
 	public function makeRedirectPageMandatory(DataContainer $dc)
 	{
-		$objPage = $this->Database->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")
-								  ->limit(1)
-								  ->execute($dc->id);
+		$objPage = Database::getInstance()
+			->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")
+			->limit(1)
+			->execute($dc->id);
 
 		if ($objPage->numRows && $objPage->type == 'logout')
 		{
@@ -1104,9 +1098,7 @@ class tl_page extends Backend
 		}
 
 		$varValue = StringUtil::standardize($varValue); // see #5096
-
-		$this->import(Automator::class, 'Automator');
-		$arrFeeds = $this->Automator->purgeXmlFiles(true);
+		$arrFeeds = (new Automator())->purgeXmlFiles(true);
 
 		// Alias exists
 		if (in_array($varValue, $arrFeeds))
@@ -1187,8 +1179,9 @@ class tl_page extends Backend
 			return '';
 		}
 
-		$objPage = $this->Database->prepare("SELECT id FROM tl_page WHERE type='root' AND fallback=1 AND dns=? AND id!=?")
-								  ->execute($dc->activeRecord->dns, $dc->activeRecord->id);
+		$objPage = Database::getInstance()
+			->prepare("SELECT id FROM tl_page WHERE type='root' AND fallback=1 AND dns=? AND id!=?")
+			->execute($dc->activeRecord->dns, $dc->activeRecord->id);
 
 		if ($objPage->numRows)
 		{
@@ -1249,7 +1242,7 @@ class tl_page extends Backend
 	{
 		$security = System::getContainer()->get('security.helper');
 
-		return ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -1274,7 +1267,7 @@ class tl_page extends Backend
 
 		$security = System::getContainer()->get('security.helper');
 
-		return ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -1300,7 +1293,7 @@ class tl_page extends Backend
 		$security = System::getContainer()->get('security.helper');
 		$objSubpages = PageModel::findByPid($row['id']);
 
-		return ($objSubpages !== null && $objSubpages->count() > 0 && $security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return ($objSubpages !== null && $objSubpages->count() > 0 && $security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -1319,7 +1312,7 @@ class tl_page extends Backend
 	{
 		$security = System::getContainer()->get('security.helper');
 
-		return ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -1350,9 +1343,10 @@ class tl_page extends Backend
 		// Prevent adding non-root pages on top-level
 		if (empty($row['pid']) && Input::get('mode') != 'create')
 		{
-			$objPage = $this->Database->prepare("SELECT * FROM " . $table . " WHERE id=?")
-									  ->limit(1)
-									  ->execute(Input::get('id'));
+			$objPage = Database::getInstance()
+				->prepare("SELECT * FROM " . $table . " WHERE id=?")
+				->limit(1)
+				->execute(Input::get('id'));
 
 			if ($objPage->type != 'root')
 			{
@@ -1366,7 +1360,7 @@ class tl_page extends Backend
 		}
 
 		// Check permissions if the user is not an administrator
-		if (!$this->User->isAdmin)
+		if (!BackendUser::getInstance()->isAdmin)
 		{
 			// Disable "paste into" button if there is no permission 2 (move) or 1 (create) for the current page
 			if (!$disablePI)
@@ -1404,10 +1398,10 @@ class tl_page extends Backend
 
 		if ($row['id'] > 0)
 		{
-			$return = $disablePA ? Image::getHtml('pasteafter_.svg') . ' ' : '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row['id'] . (!is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$table]['pasteafter'][1], $row['id'])) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a> ';
+			$return = $disablePA ? Image::getHtml('pasteafter--disabled.svg') . ' ' : '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row['id'] . (!is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$table]['pasteafter'][1], $row['id'])) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a> ';
 		}
 
-		return $return . ($disablePI ? Image::getHtml('pasteinto_.svg') . ' ' : '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $row['id'] . (!is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$table]['pasteinto'][$row['id'] > 0 ? 1 : 0], $row['id'])) . '" onclick="Backend.getScrollOffset()">' . $imagePasteInto . '</a> ');
+		return $return . ($disablePI ? Image::getHtml('pasteinto--disabled.svg') . ' ' : '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $row['id'] . (!is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$table]['pasteinto'][$row['id'] > 0 ? 1 : 0], $row['id'])) . '" onclick="Backend.getScrollOffset()">' . $imagePasteInto . '</a> ');
 	}
 
 	/**
@@ -1427,7 +1421,7 @@ class tl_page extends Backend
 		$root = func_get_arg(7);
 		$security = System::getContainer()->get('security.helper');
 
-		return ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) && $security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_PAGE, $row) && ($this->User->isAdmin || !in_array($row['id'], $root))) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) && $security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_PAGE, $row) && (BackendUser::getInstance()->isAdmin || !in_array($row['id'], $root))) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -1473,8 +1467,7 @@ class tl_page extends Backend
 					{
 						if (is_array($callback))
 						{
-							$this->import($callback[0]);
-							$strAlias = $this->{$callback[0]}->{$callback[1]}($strAlias, $dc);
+							$strAlias = System::importStatic($callback[0])->{$callback[1]}($strAlias, $dc);
 						}
 						elseif (is_callable($callback))
 						{
@@ -1494,8 +1487,9 @@ class tl_page extends Backend
 				$objVersions->initialize();
 
 				// Store the new alias
-				$this->Database->prepare("UPDATE tl_page SET alias=? WHERE id=?")
-							   ->execute($strAlias, $id);
+				Database::getInstance()
+					->prepare("UPDATE tl_page SET alias=? WHERE id=?")
+					->execute($strAlias, $id);
 
 				// Create a new version
 				$objVersions->create();
@@ -1544,7 +1538,9 @@ class tl_page extends Backend
 			return Image::getHtml($icon) . ' ';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
+		$titleDisabled = (is_array($GLOBALS['TL_DCA']['tl_page']['list']['operations']['toggle']['label']) && isset($GLOBALS['TL_DCA']['tl_page']['list']['operations']['toggle']['label'][2])) ? sprintf($GLOBALS['TL_DCA']['tl_page']['list']['operations']['toggle']['label'][2], $row['id']) : $title;
+
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($row['published'] ? $title : $titleDisabled) . '" data-title="' . StringUtil::specialchars($title) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
 	}
 
 	/**

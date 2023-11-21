@@ -143,6 +143,7 @@ abstract class ModuleNews extends Module
 		if (($objAuthor = $objArticle->getRelated('author')) instanceof UserModel)
 		{
 			$objTemplate->author = $GLOBALS['TL_LANG']['MSC']['by'] . ' ' . $objAuthor->name;
+			$objTemplate->authorModel = $objAuthor;
 		}
 
 		if (!$objArticle->noComments && $objArticle->source == 'default' && isset(System::getContainer()->getParameter('kernel.bundles')['ContaoCommentsBundle']))
@@ -180,7 +181,7 @@ abstract class ModuleNews extends Module
 				->createFigureBuilder()
 				->from($objArticle->singleSRC)
 				->setSize($imgSize)
-				->setMetadata($objArticle->getOverwriteMetadata())
+				->setOverwriteMetadata($objArticle->getOverwriteMetadata())
 				->enableLightbox($objArticle->fullsize);
 
 			// If the external link is opened in a new window, open the image link in a new window as well (see #210)
@@ -221,8 +222,7 @@ abstract class ModuleNews extends Module
 		{
 			foreach ($GLOBALS['TL_HOOKS']['parseArticles'] as $callback)
 			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($objTemplate, $objArticle->row(), $this);
+				System::importStatic($callback[0])->{$callback[1]}($objTemplate, $objArticle->row(), $this);
 			}
 		}
 

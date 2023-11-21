@@ -26,12 +26,13 @@ use Symfony\Component\Messenger\MessageBusInterface;
 class SearchIndexListener
 {
     final public const FEATURE_INDEX = 0b01;
+
     final public const FEATURE_DELETE = 0b10;
 
     public function __construct(
-        private MessageBusInterface $messageBus,
-        private string $fragmentPath = '_fragment',
-        private int $enabledFeatures = self::FEATURE_INDEX | self::FEATURE_DELETE,
+        private readonly MessageBusInterface $messageBus,
+        private readonly string $fragmentPath = '_fragment',
+        private readonly int $enabledFeatures = self::FEATURE_INDEX | self::FEATURE_DELETE,
     ) {
     }
 
@@ -93,9 +94,7 @@ class SearchIndexListener
             // No meta robots tag found
         }
 
-        $lds = $document->extractJsonLdScripts();
-
         // If there are no json ld scripts at all, this should not be handled by our indexer
-        return 0 !== \count($lds);
+        return [] !== $document->extractJsonLdScripts();
     }
 }

@@ -31,11 +31,13 @@ class InsertTagsListener
         'news_teaser',
     ];
 
-    public function __construct(private ContaoFramework $framework, private LoggerInterface $logger)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly LoggerInterface $logger,
+    ) {
     }
 
-    public function __invoke(string $tag, bool $useCache, $cacheValue, array $flags): string|false
+    public function __invoke(string $tag, bool $useCache, mixed $cacheValue, array $flags): string|false
     {
         $elements = explode('::', $tag);
         $key = strtolower($elements[0]);
@@ -47,7 +49,7 @@ class InsertTagsListener
         }
 
         if (\in_array($key, self::SUPPORTED_TAGS, true)) {
-            return $this->replaceNewsInsertTags($key, $elements[1], array_merge($flags, \array_slice($elements, 2)));
+            return $this->replaceNewsInsertTags($key, $elements[1], [...$flags, ...\array_slice($elements, 2)]);
         }
 
         return false;
@@ -71,13 +73,13 @@ class InsertTagsListener
                 $news->generateNewsUrl($model, false, \in_array('absolute', $arguments, true)) ?: './',
                 StringUtil::specialcharsAttribute($model->headline),
                 \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : '',
-                $model->headline
+                $model->headline,
             ),
             'news_open' => sprintf(
                 '<a href="%s" title="%s"%s>',
                 $news->generateNewsUrl($model, false, \in_array('absolute', $arguments, true)) ?: './',
                 StringUtil::specialcharsAttribute($model->headline),
-                \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : ''
+                \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : '',
             ),
             'news_url' => $news->generateNewsUrl($model, false, \in_array('absolute', $arguments, true)) ?: './',
             'news_title' => StringUtil::specialcharsAttribute($model->headline),

@@ -24,8 +24,10 @@ final class TemplateInformation
      *
      * @internal
      */
-    public function __construct(private readonly Source $source, private readonly array $blocks)
-    {
+    public function __construct(
+        private readonly Source $source,
+        private readonly array $blocks,
+    ) {
     }
 
     public function getName(): string

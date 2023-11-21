@@ -40,15 +40,15 @@ class ThemeNamespace
 
                 // Check for invalid characters (see #3354)
                 if (0 !== preg_match_all('%[^a-zA-Z0-9-]%', $chunk, $matches)) {
-                    $invalidCharacters = array_merge($invalidCharacters, $matches[0]);
+                    $invalidCharacters = [...$invalidCharacters, ...$matches[0]];
                 }
 
                 return $chunk;
             },
-            explode('/', $path)
+            explode('/', $path),
         ));
 
-        if (!empty($invalidCharacters)) {
+        if ($invalidCharacters) {
             throw new InvalidThemePathException($path, $invalidCharacters);
         }
 

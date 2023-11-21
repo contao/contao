@@ -3,8 +3,8 @@
 
   <div id="tl_messages">
     <h2><?= $this->systemMessages ?></h2>
-    <?= $this->messages ?>
     <p><?= $this->loginMsg ?></p>
+    <?= $this->messages ?>
   </div>
 
   <div id="tl_shortcuts">
@@ -15,7 +15,7 @@
   <div id="tl_versions">
     <h2><?= $this->trans('MSC.latestChanges') ?></h2>
     <?php if (!empty($this->versions)): ?>
-      <table class="tl_listing zebra-table">
+      <table class="tl_listing with-border">
       <thead>
         <tr>
           <th><?= $this->trans('MSC.date') ?></th>
@@ -43,12 +43,12 @@
                 <?php if ($version['editUrl']): ?>
                   <a href="<?= $version['editUrl'] ?>" title="<?= $this->editElement ?>" class="edit"><?= Contao\Image::getHtml('edit.svg', '', 'style="padding:0 2px"') ?></a>
                 <?php else: ?>
-                  <?= Contao\Image::getHtml('edit_.svg', '', 'style="padding:0 2px"') ?>
+                  <?= Contao\Image::getHtml('edit--disabled.svg', '', 'style="padding:0 2px"') ?>
                 <?php endif; ?>
                 <?php if ($version['to'] > 1): ?>
                   <a href="<?= $version['editUrl'] ?>&amp;from=<?= $version['from'] ?>&amp;to=<?= $version['to'] ?>&amp;versions=1&amp;popup=1" title="<?= $this->showDifferences ?>" onclick="Backend.openModalIframe({'title':'<?= sprintf($this->recordOfTable, $version['pid'], $version['fromTable']) ?>','url':this.href});return false"><?= Contao\Image::getHtml('diff.svg') ?></a>
                 <?php else: ?>
-                  <?= Contao\Image::getHtml('diff_.svg') ?>
+                  <?= Contao\Image::getHtml('diff--disabled.svg') ?>
                 <?php endif; ?>
               <?php endif; ?>
             </td>

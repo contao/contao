@@ -25,7 +25,7 @@ jobs:
               uses: actions/checkout@v3
 
             - name: Cache the monorepo split
-              uses: actions/cache@v1
+              uses: actions/cache@v3
               with:
                   path: .monorepo-split-cache
                   key: dev-${GITHUB_REF##*/}
@@ -34,6 +34,6 @@ jobs:
               run: composer global require contao/monorepo-tools:dev-main
 
             - name: Split the monorepo
-              run: $HOME/.composer/vendor/bin/monorepo-tools split ${GITHUB_REF##*/}
+              run: $HOME/.composer/vendor/bin/monorepo-tools split ${GITHUB_REF##*/} ${{ github.event.forced && '--force-push' || '' }}
               env:
                   GITHUB_TOKEN: ${{ secrets.MONOREPO_SPLIT_TOKEN }}

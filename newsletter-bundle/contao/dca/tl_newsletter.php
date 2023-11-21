@@ -13,6 +13,7 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\DC_Table;
@@ -58,15 +59,6 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'child_record_callback'   => array('tl_newsletter', 'listNewsletters'),
 			'renderAsGrid'            => true
 		),
-		'global_operations' => array
-		(
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
-		),
 		'operations' => array
 		(
 			'edit' => array
@@ -110,7 +102,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		'default'                     => '{title_legend},subject,alias;{html_legend},content;{text_legend:hide},text;{attachment_legend},addFile;{template_legend:hide},template;{sender_legend:hide},sender,senderName,mailerTransport;{expert_legend:hide},sendText,externalImages'
 	),
 
-	// Subpalettes
+	// Sub-palettes
 	'subpalettes' => array
 	(
 		'addFile'                     => 'files'
@@ -268,15 +260,6 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 class tl_newsletter extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Check permissions to edit table tl_newsletter
 	 *
 	 * @param DataContainer $dc
@@ -285,21 +268,24 @@ class tl_newsletter extends Backend
 	 */
 	public function checkPermission(DataContainer $dc)
 	{
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
 		// Set root IDs
-		if (empty($this->User->newsletters) || !is_array($this->User->newsletters))
+		if (empty($user->newsletters) || !is_array($user->newsletters))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->newsletters;
+			$root = $user->newsletters;
 		}
 
+		$db = Database::getInstance();
 		$id = strlen(Input::get('id')) ? Input::get('id') : $dc->currentPid;
 
 		// Check current action
@@ -332,9 +318,10 @@ class tl_newsletter extends Backend
 			case 'edit':
 			case 'show':
 			case 'delete':
-				$objChannel = $this->Database->prepare("SELECT pid FROM tl_newsletter WHERE id=?")
-											 ->limit(1)
-											 ->execute($id);
+				$objChannel = $db
+					->prepare("SELECT pid FROM tl_newsletter WHERE id=?")
+					->limit(1)
+					->execute($id);
 
 				if ($objChannel->numRows < 1)
 				{
@@ -357,9 +344,7 @@ class tl_newsletter extends Backend
 					throw new AccessDeniedException('Not enough permissions to access newsletter channel ID ' . $id . '.');
 				}
 
-				$objChannel = $this->Database->prepare("SELECT id FROM tl_newsletter WHERE pid=?")
-											 ->execute($id);
-
+				$objChannel = $db->prepare("SELECT id FROM tl_newsletter WHERE pid=?")->execute($id);
 				$objSession = System::getContainer()->get('request_stack')->getSession();
 
 				$session = $objSession->all();
@@ -375,9 +360,10 @@ class tl_newsletter extends Backend
 
 				if (Input::get('key') == 'send')
 				{
-					$objChannel = $this->Database->prepare("SELECT pid FROM tl_newsletter WHERE id=?")
-												 ->limit(1)
-												 ->execute($id);
+					$objChannel = $db
+						->prepare("SELECT pid FROM tl_newsletter WHERE id=?")
+						->limit(1)
+						->execute($id);
 
 					if ($objChannel->numRows < 1)
 					{
@@ -450,8 +436,12 @@ class tl_newsletter extends Backend
 	 */
 	public function generateAlias($varValue, DataContainer $dc)
 	{
-		$aliasExists = function (string $alias) use ($dc): bool {
-			return $this->Database->prepare("SELECT id FROM tl_newsletter WHERE alias=? AND id!=?")->execute($alias, $dc->id)->numRows > 0;
+		$aliasExists = static function (string $alias) use ($dc): bool {
+			$result = Database::getInstance()
+				->prepare("SELECT id FROM tl_newsletter WHERE alias=? AND id!=?")
+				->execute($alias, $dc->id);
+
+			return $result->numRows > 0;
 		};
 
 		// Generate alias if there is none
@@ -483,8 +473,9 @@ class tl_newsletter extends Backend
 	{
 		if ($dc->activeRecord && $dc->activeRecord->pid)
 		{
-			$objChannel = $this->Database->prepare("SELECT sender FROM tl_newsletter_channel WHERE id=?")
-										 ->execute($dc->activeRecord->pid);
+			$objChannel = Database::getInstance()
+				->prepare("SELECT sender FROM tl_newsletter_channel WHERE id=?")
+				->execute($dc->activeRecord->pid);
 
 			$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['placeholder'] = $objChannel->sender;
 		}
@@ -504,8 +495,9 @@ class tl_newsletter extends Backend
 	{
 		if ($dc->activeRecord && $dc->activeRecord->pid)
 		{
-			$objChannel = $this->Database->prepare("SELECT senderName FROM tl_newsletter_channel WHERE id=?")
-										 ->execute($dc->activeRecord->pid);
+			$objChannel = Database::getInstance()
+				->prepare("SELECT senderName FROM tl_newsletter_channel WHERE id=?")
+				->execute($dc->activeRecord->pid);
 
 			$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['placeholder'] = $objChannel->senderName;
 		}

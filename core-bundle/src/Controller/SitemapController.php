@@ -16,6 +16,7 @@ use Contao\ArticleModel;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,28 +27,21 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
 /**
  * @internal
  */
-#[Route(defaults: ['_scope' => 'frontend'])]
+#[Route('/sitemap.xml', defaults: ['_scope' => 'frontend'])]
 class SitemapController extends AbstractController
 {
-    public function __construct(private PageRegistry $pageRegistry)
-    {
+    public function __construct(
+        private readonly PageRegistry $pageRegistry,
+        private readonly PageFinder $pageFinder,
+    ) {
     }
 
-    #[Route('/sitemap.xml')]
     public function __invoke(Request $request): Response
     {
-        $this->initializeContaoFramework();
+        $rootPages = $this->pageFinder->findRootPagesForHost($request->getHost());
 
-        $pageModel = $this->getContaoAdapter(PageModel::class);
-        $rootPages = $pageModel->findPublishedRootPages(['dns' => $request->getHost()]);
-
-        if (null === $rootPages) {
-            // We did not find root pages by matching host name, let's fetch those that do not have any domain configured
-            $rootPages = $pageModel->findPublishedRootPages(['dns' => '']);
-
-            if (null === $rootPages) {
-                return new Response('', Response::HTTP_NOT_FOUND);
-            }
+        if (!$rootPages) {
+            throw $this->createNotFoundException();
         }
 
         $urls = [];
@@ -55,7 +49,7 @@ class SitemapController extends AbstractController
         $tags = ['contao.sitemap'];
 
         foreach ($rootPages as $rootPage) {
-            $urls = array_merge($urls, $this->getPageAndArticleUrls((int) $rootPage->id));
+            $urls = [...$urls, ...$this->getPageAndArticleUrls($rootPage->id)];
 
             $rootPageIds[] = $rootPage->id;
             $tags[] = 'contao.sitemap.'.$rootPage->id;
@@ -68,8 +62,10 @@ class SitemapController extends AbstractController
         $urlSet = $sitemap->createElementNS('https://www.sitemaps.org/schemas/sitemap/0.9', 'urlset');
 
         foreach ($urls as $url) {
-            $loc = $sitemap->createElement('loc', $url);
-            $urlEl = $sitemap->createElement('url');
+            $loc = $sitemap->createElementNS($urlSet->namespaceURI, 'loc');
+            $loc->appendChild($sitemap->createTextNode($url));
+
+            $urlEl = $sitemap->createElementNS($urlSet->namespaceURI, 'url');
             $urlEl->appendChild($loc);
             $urlSet->appendChild($urlEl);
         }
@@ -130,7 +126,7 @@ class SitemapController extends AbstractController
                     $urls = [$pageModel->getAbsoluteUrl()];
 
                     // Get articles with teaser
-                    if (null !== ($articleModels = $articleModelAdapter->findPublishedWithTeaserByPid($pageModel->id, ['ignoreFePreview' => true]))) {
+                    if ($articleModels = $articleModelAdapter->findPublishedWithTeaserByPid($pageModel->id, ['ignoreFePreview' => true])) {
                         foreach ($articleModels as $articleModel) {
                             $urls[] = $pageModel->getAbsoluteUrl('/articles/'.($articleModel->alias ?: $articleModel->id));
                         }

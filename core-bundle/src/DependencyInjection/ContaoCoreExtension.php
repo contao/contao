@@ -14,11 +14,14 @@ namespace Contao\CoreBundle\DependencyInjection;
 
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\EscargotSubscriberInterface;
 use Contao\CoreBundle\Cron\CronJob;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsBlockInsertTag;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTag;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTagFlag;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
 use Contao\CoreBundle\DependencyInjection\Filesystem\ConfigureFilesystemInterface;
@@ -128,6 +131,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('contao.backend.custom_js', $config['backend']['custom_js']);
         $container->setParameter('contao.backend.badge_title', $config['backend']['badge_title']);
         $container->setParameter('contao.backend.route_prefix', $config['backend']['route_prefix']);
+        $container->setParameter('contao.backend.crawl_concurrency', $config['backend']['crawl_concurrency']);
         $container->setParameter('contao.intl.locales', $config['intl']['locales']);
         $container->setParameter('contao.intl.enabled_locales', $config['intl']['enabled_locales']);
         $container->setParameter('contao.intl.countries', $config['intl']['countries']);
@@ -138,6 +142,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleSearchConfig($config, $container);
         $this->handleCrawlConfig($config, $container);
         $this->setPredefinedImageSizes($config, $container);
+        $this->setPreserveMetadataFields($config, $container);
         $this->setImagineService($config, $container);
         $this->handleTokenCheckerConfig($container);
         $this->handleBackup($config, $container);
@@ -158,14 +163,14 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             AsContentElement::class,
             static function (ChildDefinition $definition, AsContentElement $attribute): void {
                 $definition->addTag(ContentElementReference::TAG_NAME, $attribute->attributes);
-            }
+            },
         );
 
         $container->registerAttributeForAutoconfiguration(
             AsFrontendModule::class,
             static function (ChildDefinition $definition, AsFrontendModule $attribute): void {
                 $definition->addTag(FrontendModuleReference::TAG_NAME, $attribute->attributes);
-            }
+            },
         );
 
         $attributesForAutoconfiguration = [
@@ -174,6 +179,9 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             AsCronJob::class => 'contao.cronjob',
             AsHook::class => 'contao.hook',
             AsCallback::class => 'contao.callback',
+            AsInsertTag::class => 'contao.insert_tag',
+            AsBlockInsertTag::class => 'contao.block_insert_tag',
+            AsInsertTagFlag::class => 'contao.insert_tag_flag',
         ];
 
         foreach ($attributesForAutoconfiguration as $attributeClass => $tag) {
@@ -191,7 +199,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
                     }
 
                     $definition->addTag($tag, $tagAttributes);
-                }
+                },
             );
         }
 
@@ -318,13 +326,18 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
             if (isset($config['image']['sizes']['_defaults'])) {
                 // Make sure that arrays defined under _defaults will take precedence over empty arrays (see #2783)
-                $value = array_merge(
-                    $config['image']['sizes']['_defaults'],
-                    array_filter($value, static fn ($v) => !\is_array($v) || !empty($v))
-                );
+                $value = [
+                    ...$config['image']['sizes']['_defaults'],
+                    ...array_filter($value, static fn ($v) => [] !== $v),
+                ];
             }
 
             $imageSizes['_'.$name] = $this->camelizeKeys($value);
+
+            // Do not camelize imagine options keys
+            if ($value['imagine_options'] ?? false) {
+                $imageSizes['_'.$name]['imagineOptions'] = $value['imagine_options'];
+            }
         }
 
         $services = ['contao.image.sizes', 'contao.image.factory', 'contao.image.picture_factory', 'contao.image.preview_factory'];
@@ -332,6 +345,21 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         foreach ($services as $service) {
             if (method_exists((string) $container->getDefinition($service)->getClass(), 'setPredefinedSizes')) {
                 $container->getDefinition($service)->addMethodCall('setPredefinedSizes', [$imageSizes]);
+            }
+        }
+    }
+
+    private function setPreserveMetadataFields(array $config, ContainerBuilder $container): void
+    {
+        if (!isset($config['image']['preserve_metadata_fields'])) {
+            return;
+        }
+
+        $services = ['contao.image.factory', 'contao.image.picture_factory'];
+
+        foreach ($services as $service) {
+            if (method_exists((string) $container->getDefinition($service)->getClass(), 'setPreserveMetadataFields')) {
+                $container->getDefinition($service)->addMethodCall('setPreserveMetadataFields', [$config['image']['preserve_metadata_fields']]);
             }
         }
     }

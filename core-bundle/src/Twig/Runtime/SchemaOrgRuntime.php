@@ -22,15 +22,19 @@ final class SchemaOrgRuntime implements RuntimeExtensionInterface
     /**
      * @internal
      */
-    public function __construct(private ResponseContextAccessor $responseContextAccessor)
+    public function __construct(private readonly ResponseContextAccessor $responseContextAccessor)
     {
     }
 
     /**
      * Adds schema.org JSON-LD data to the current response context.
      */
-    public function add(array $jsonLd): void
+    public function add(array|null $jsonLd): void
     {
+        if (null === $jsonLd) {
+            return;
+        }
+
         $responseContext = $this->responseContextAccessor->getResponseContext();
 
         if (!$responseContext || !$responseContext->has(JsonLdManager::class)) {

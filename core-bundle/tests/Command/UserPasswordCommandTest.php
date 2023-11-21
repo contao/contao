@@ -184,7 +184,7 @@ class UserPasswordCommandTest extends TestCase
                     'password' => '$argon2id$v=19$m=65536,t=6,p=1$T+WK0xPOk21CQ2dX9AFplw$2uCrfvt7Tby81Dhc8Y7wHQQGP1HnPC3nDEb4FtXsfrQ',
                     'pwChange' => 0,
                 ],
-                ['username' => $username]
+                ['username' => $username],
             )
             ->willReturn(1)
         ;
@@ -220,7 +220,7 @@ class UserPasswordCommandTest extends TestCase
                     'password' => '$argon2id$v=19$m=65536,t=6,p=1$T+WK0xPOk21CQ2dX9AFplw$2uCrfvt7Tby81Dhc8Y7wHQQGP1HnPC3nDEb4FtXsfrQ',
                     'pwChange' => 1,
                 ],
-                ['username' => $username]
+                ['username' => $username],
             )
             ->willReturn(1)
         ;
@@ -236,7 +236,7 @@ class UserPasswordCommandTest extends TestCase
         (new CommandTester($command))->execute($input, ['interactive' => false]);
     }
 
-    private function getCommand(Connection $connection = null, string $password = null): UserPasswordCommand
+    private function getCommand(Connection|null $connection = null, string|null $password = null): UserPasswordCommand
     {
         $connection ??= $this->createMock(Connection::class);
         $password ??= '12345678';

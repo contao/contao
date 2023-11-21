@@ -177,9 +177,17 @@
         <source>Delete comment ID %s</source>
         <target>Удалить комментарий ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_comments.toggle">
-        <source>Publish/unpublish comment ID %s</source>
-        <target>Опубликовать/изъять комментарий ID %s</target>
+      <trans-unit id="tl_comments.toggle.0">
+        <source>Publish/unpublish comment</source>
+        <target>Опубликовать/изъять комментарий</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.toggle.1">
+        <source>Unpublish comment ID %s</source>
+        <target>Отменить публикацию комментария ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.toggle.2">
+        <source>Publish comment ID %s</source>
+        <target>Опубликовать комментарий ID %s</target>
       </trans-unit>
     </body>
   </file>

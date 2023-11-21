@@ -34,7 +34,7 @@ class ProcessUtil implements ResetInterface
     public function createPromise(Process $process, bool $start = true): PromiseInterface
     {
         $promise = new Promise(
-            static function () use (&$promise, $process): void {
+            static function () use ($process, &$promise): void {
                 $process->wait();
 
                 if ($process->isSuccessful()) {
@@ -42,7 +42,7 @@ class ProcessUtil implements ResetInterface
                 } else {
                     $promise->reject($process->getErrorOutput() ?: $process->getOutput());
                 }
-            }
+            },
         );
 
         if ($start) {
@@ -54,7 +54,7 @@ class ProcessUtil implements ResetInterface
 
     public function createSymfonyConsoleProcess(string $command, string ...$commandArguments): Process
     {
-        return new Process(array_merge([$this->getPhpBinary(), $this->consolePath, $command], $commandArguments));
+        return new Process([$this->getPhpBinary(), $this->getConsolePath(), $command, ...$commandArguments]);
     }
 
     public function reset(): void
@@ -62,7 +62,12 @@ class ProcessUtil implements ResetInterface
         $this->phpBinary = null;
     }
 
-    private function getPhpBinary(): string
+    public function getConsolePath(): string
+    {
+        return $this->consolePath;
+    }
+
+    public function getPhpBinary(): string
     {
         if (null === $this->phpBinary) {
             $executableFinder = new PhpExecutableFinder();

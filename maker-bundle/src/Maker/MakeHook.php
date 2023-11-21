@@ -32,9 +32,9 @@ use Symfony\Component\Yaml\Yaml;
 class MakeHook extends AbstractMaker
 {
     public function __construct(
-        private ClassGenerator $classGenerator,
-        private SignatureGenerator $signatureGenerator,
-        private ImportExtractor $importExtractor,
+        private readonly ClassGenerator $classGenerator,
+        private readonly SignatureGenerator $signatureGenerator,
+        private readonly ImportExtractor $importExtractor,
     ) {
     }
 
@@ -66,7 +66,7 @@ class MakeHook extends AbstractMaker
 
         $question = new Question('Choose the hook to listen for');
         $question->setAutocompleterValues(array_keys($hooks));
-        $question->setValidator([Validator::class, 'notBlank']);
+        $question->setValidator(Validator::notBlank(...));
 
         $input->setArgument('hook', $io->askQuestion($question));
     }
@@ -87,7 +87,6 @@ class MakeHook extends AbstractMaker
             return;
         }
 
-        /** @var MethodDefinition $definition */
         $definition = $hooks[$hook];
         $elementDetails = $generator->createClassNameDetails($name, 'EventListener\\');
 

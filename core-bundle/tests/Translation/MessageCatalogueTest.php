@@ -275,9 +275,9 @@ class MessageCatalogueTest extends TestCase
         ];
     }
 
-    private function createCatalogue(MessageCatalogueInterface $catalogue = null, ContaoFramework $framework = null, ResourceFinder $resourceFinder = null): MessageCatalogue
+    private function createCatalogue(MessageCatalogueInterface|null $catalogue = null, ContaoFramework|null $framework = null, ResourceFinder|null $resourceFinder = null): MessageCatalogue
     {
-        if (null === $catalogue) {
+        if (!$catalogue) {
             $catalogue = $this->createMock(MessageCatalogueInterface::class);
             $catalogue
                 ->method('getLocale')

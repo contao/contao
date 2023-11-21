@@ -182,16 +182,16 @@
         <target>Aktivovat</target>
       </trans-unit>
       <trans-unit id="tl_member.start.1">
-        <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Pokud chcete zabránit aktivaci účtu před jistým datem/časem, můžete to zadat tady. Jinak ponechte dané pole prázdné.</target>
+        <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Pokud chcete zabránit aktivaci účtu před jistým datem/dobou, můžete to zadat tady. Jinak ponechte dané pole prázdné.</target>
       </trans-unit>
       <trans-unit id="tl_member.stop.0">
         <source>Deactivate on</source>
         <target>Deaktivovat</target>
       </trans-unit>
       <trans-unit id="tl_member.stop.1">
-        <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Pokud chcete zabránit aktivaci účtu po jistém datu/času, můžete to zadat tady. Jinak ponechte dané pole prázdné.</target>
+        <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Pokud chcete zabránit aktivaci účtu po jistém datu/době, můžete to zadat tady. Jinak ponechte dané pole prázdné.</target>
       </trans-unit>
       <trans-unit id="tl_member.useTwoFactor">
         <source>Use two-factor authentication</source>
@@ -265,9 +265,17 @@
         <source>Delete member ID %s</source>
         <target>Smazat člena ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_member.toggle">
-        <source>Activate/deactivate member ID %s</source>
-        <target>Aktivovat / deaktivovat člena ID %s</target>
+      <trans-unit id="tl_member.toggle.0">
+        <source>Activate/deactivate member</source>
+        <target>Aktivovat / deaktivovat</target>
+      </trans-unit>
+      <trans-unit id="tl_member.toggle.1">
+        <source>Deactivate member ID %s</source>
+        <target>Deaktivovat člena ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_member.toggle.2">
+        <source>Activate member ID %s</source>
+        <target>Aktivovat člena ID %s</target>
       </trans-unit>
       <trans-unit id="tl_member.su">
         <source>Preview the front end as member ID %s</source>

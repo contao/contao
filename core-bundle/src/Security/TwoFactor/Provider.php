@@ -22,7 +22,7 @@ class Provider implements TwoFactorProviderInterface
     /**
      * @internal
      */
-    public function __construct(private Authenticator $authenticator)
+    public function __construct(private readonly Authenticator $authenticator)
     {
     }
 
@@ -37,20 +37,13 @@ class Provider implements TwoFactorProviderInterface
         return (bool) $user->useTwoFactor;
     }
 
-    /**
-     * @param mixed $user
-     */
-    public function validateAuthenticationCode($user, string $authenticationCode): bool
+    public function validateAuthenticationCode(object $user, string $authenticationCode): bool
     {
         if (!$user instanceof User) {
             return false;
         }
 
-        if (!$this->authenticator->validateCode($user, $authenticationCode)) {
-            return false;
-        }
-
-        return true;
+        return $this->authenticator->validateCode($user, $authenticationCode);
     }
 
     public function getFormRenderer(): TwoFactorFormRendererInterface
@@ -58,10 +51,7 @@ class Provider implements TwoFactorProviderInterface
         throw new \RuntimeException('The "contao" two-factor provider does not support forms');
     }
 
-    /**
-     * @param mixed $user
-     */
-    public function prepareAuthentication($user): void
+    public function prepareAuthentication(object $user): void
     {
     }
 }

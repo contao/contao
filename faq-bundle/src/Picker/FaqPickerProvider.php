@@ -20,8 +20,8 @@ use Contao\CoreBundle\Picker\PickerConfig;
 use Contao\FaqCategoryModel;
 use Contao\FaqModel;
 use Knp\Menu\FactoryInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
@@ -31,8 +31,12 @@ class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPi
     /**
      * @internal
      */
-    public function __construct(FactoryInterface $menuFactory, RouterInterface $router, TranslatorInterface|null $translator, private Security $security)
-    {
+    public function __construct(
+        FactoryInterface $menuFactory,
+        RouterInterface $router,
+        TranslatorInterface|null $translator,
+        private readonly Security $security,
+    ) {
         parent::__construct($menuFactory, $router, $translator);
     }
 
@@ -41,7 +45,7 @@ class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPi
         return 'faqPicker';
     }
 
-    public function supportsContext($context): bool
+    public function supportsContext(string $context): bool
     {
         return 'link' === $context && $this->security->isGranted('contao_user.modules', 'faq');
     }
@@ -51,7 +55,7 @@ class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPi
         return $this->isMatchingInsertTag($config);
     }
 
-    public function getDcaTable(PickerConfig $config = null): string
+    public function getDcaTable(PickerConfig|null $config = null): string
     {
         return 'tl_faq';
     }
@@ -71,16 +75,16 @@ class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPi
         return $attributes;
     }
 
-    public function convertDcaValue(PickerConfig $config, $value): string
+    public function convertDcaValue(PickerConfig $config, mixed $value): string
     {
         return sprintf($this->getInsertTag($config), $value);
     }
 
-    protected function getRouteParameters(PickerConfig $config = null): array
+    protected function getRouteParameters(PickerConfig|null $config = null): array
     {
         $params = ['do' => 'faq'];
 
-        if (null === $config || !$config->getValue() || !$this->supportsValue($config)) {
+        if (!$config || !$config->getValue() || !$this->supportsValue($config)) {
             return $params;
         }
 
@@ -100,12 +104,15 @@ class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPi
     private function getFaqCategoryId(int|string $id): int|null
     {
         $faqAdapter = $this->framework->getAdapter(FaqModel::class);
+        $faqModel = $faqAdapter->findById($id);
 
-        if (!($faqModel = $faqAdapter->findById($id)) instanceof FaqModel) {
+        if (!$faqModel instanceof FaqModel) {
             return null;
         }
 
-        if (!($faqCategory = $faqModel->getRelated('pid')) instanceof FaqCategoryModel) {
+        $faqCategory = $faqModel->getRelated('pid');
+
+        if (!$faqCategory instanceof FaqCategoryModel) {
             return null;
         }
 

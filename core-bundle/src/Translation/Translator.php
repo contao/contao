@@ -25,15 +25,15 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
     /**
      * @var \SplObjectStorage<MessageCatalogueInterface, MessageCatalogue>
      */
-    private \SplObjectStorage $catalogues;
+    private readonly \SplObjectStorage $catalogues;
 
     /**
      * @internal
      */
     public function __construct(
-        private LocaleAwareInterface|TranslatorBagInterface|TranslatorInterface $translator,
-        private ContaoFramework $framework,
-        private ResourceFinder $resourceFinder,
+        private readonly LocaleAwareInterface|TranslatorBagInterface|TranslatorInterface $translator,
+        private readonly ContaoFramework $framework,
+        private readonly ResourceFinder $resourceFinder,
     ) {
         $this->catalogues = new \SplObjectStorage();
     }
@@ -44,7 +44,7 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
      * Gets the translation from Contao’s $GLOBALS['TL_LANG'] array if the message
      * domain starts with "contao_".
      */
-    public function trans(string $id, array $parameters = [], string $domain = null, string $locale = null): string
+    public function trans(string $id, array $parameters = [], string|null $domain = null, string|null $locale = null): string
     {
         // Forward to the default translator
         if (null === $domain || !str_starts_with($domain, 'contao_')) {
@@ -53,7 +53,7 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
 
         $translated = $this->getCatalogue($locale)->get($id, $domain);
 
-        if (!empty($parameters)) {
+        if ($parameters) {
             $translated = vsprintf($translated, $parameters);
         }
 
@@ -76,14 +76,14 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
         return $this->translator->getLocale();
     }
 
-    public function getCatalogue(string $locale = null): MessageCatalogueInterface
+    public function getCatalogue(string|null $locale = null): MessageCatalogueInterface
     {
         $parentCatalog = $this->translator->getCatalogue($locale);
 
         if (!$this->catalogues->contains($parentCatalog)) {
             $this->catalogues->attach(
                 $parentCatalog,
-                new MessageCatalogue($parentCatalog, $this->framework, $this->resourceFinder)
+                new MessageCatalogue($parentCatalog, $this->framework, $this->resourceFinder),
             );
         }
 

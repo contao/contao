@@ -20,17 +20,19 @@ use Symfony\Component\Filesystem\Path;
  */
 class XliffFileLoader extends Loader
 {
-    public function __construct(private string $projectDir, private bool $addToGlobals = false)
-    {
+    public function __construct(
+        private readonly string $projectDir,
+        private readonly bool $addToGlobals = false,
+    ) {
         parent::__construct();
     }
 
-    public function load(mixed $resource, string $type = null): string
+    public function load(mixed $resource, string|null $type = null): string
     {
         return $this->convertXlfToPhp((string) $resource, $type ?: 'en');
     }
 
-    public function supports(mixed $resource, string $type = null): bool
+    public function supports(mixed $resource, string|null $type = null): bool
     {
         return 'xlf' === Path::getExtension((string) $resource, true);
     }
@@ -67,7 +69,7 @@ class XliffFileLoader extends Loader
         foreach ($units as $unit) {
             $node = $unit->getElementsByTagName($tagName);
 
-            if (null === $node->item(0)) {
+            if (!$node->item(0)) {
                 continue;
             }
 
@@ -123,36 +125,30 @@ class XliffFileLoader extends Loader
      */
     private function getStringRepresentation(array $chunks, string $value): string
     {
-        switch (\count($chunks)) {
-            case 2:
-                return sprintf(
-                    "\$GLOBALS['TL_LANG']['%s'][%s] = %s;\n",
-                    $chunks[0],
-                    $this->quoteKey($chunks[1]),
-                    $this->quoteValue($value)
-                );
-
-            case 3:
-                return sprintf(
-                    "\$GLOBALS['TL_LANG']['%s'][%s][%s] = %s;\n",
-                    $chunks[0],
-                    $this->quoteKey($chunks[1]),
-                    $this->quoteKey($chunks[2]),
-                    $this->quoteValue($value)
-                );
-
-            case 4:
-                return sprintf(
-                    "\$GLOBALS['TL_LANG']['%s'][%s][%s][%s] = %s;\n",
-                    $chunks[0],
-                    $this->quoteKey($chunks[1]),
-                    $this->quoteKey($chunks[2]),
-                    $this->quoteKey($chunks[3]),
-                    $this->quoteValue($value)
-                );
-        }
-
-        throw new \OutOfBoundsException('Cannot load less than 2 or more than 4 levels in XLIFF language files.');
+        return match (\count($chunks)) {
+            2 => sprintf(
+                "\$GLOBALS['TL_LANG']['%s'][%s] = %s;\n",
+                $chunks[0],
+                $this->quoteKey($chunks[1]),
+                $this->quoteValue($value),
+            ),
+            3 => sprintf(
+                "\$GLOBALS['TL_LANG']['%s'][%s][%s] = %s;\n",
+                $chunks[0],
+                $this->quoteKey($chunks[1]),
+                $this->quoteKey($chunks[2]),
+                $this->quoteValue($value),
+            ),
+            4 => sprintf(
+                "\$GLOBALS['TL_LANG']['%s'][%s][%s][%s] = %s;\n",
+                $chunks[0],
+                $this->quoteKey($chunks[1]),
+                $this->quoteKey($chunks[2]),
+                $this->quoteKey($chunks[3]),
+                $this->quoteValue($value),
+            ),
+            default => throw new \OutOfBoundsException('Cannot load less than 2 or more than 4 levels in XLIFF language files.'),
+        };
     }
 
     /**
@@ -160,7 +156,7 @@ class XliffFileLoader extends Loader
      */
     private function addGlobal(array $chunks, string $value): void
     {
-        if (false === $this->addToGlobals) {
+        if (!$this->addToGlobals) {
             return;
         }
 

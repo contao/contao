@@ -28,15 +28,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class ImagesController
 {
-    private Filesystem $filesystem;
-
     public function __construct(
-        private ImageFactoryInterface $imageFactory,
-        private ResizerInterface $resizer,
-        private string $targetDir,
-        Filesystem $filesystem = null,
+        private readonly ImageFactoryInterface $imageFactory,
+        private readonly ResizerInterface $resizer,
+        private readonly string $targetDir,
+        private readonly Filesystem $filesystem = new Filesystem(),
     ) {
-        $this->filesystem = $filesystem ?? new Filesystem();
     }
 
     /**

@@ -73,7 +73,7 @@ class TemplateOptionsListener
         // explicit definition of a template in the service tag) used with a
         // "ce_foo.html.twig" template - although this template will be
         // rendered for BC reasons, the template selection won't be possible.
-        if (0 === \count($templateOptions)) {
+        if (!$templateOptions) {
             $guessedType = $this->legacyTemplatePrefix.$type;
 
             if (isset($this->hierarchy->getInheritanceChains()[$guessedType])) {
@@ -148,7 +148,7 @@ class TemplateOptionsListener
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (null === $request || !$request->query->has('act')) {
+        if (!$request || !$request->query->has('act')) {
             return false;
         }
 
@@ -167,7 +167,7 @@ class TemplateOptionsListener
         $result = $this->connection->executeQuery(
             "SELECT type FROM $table WHERE id IN (?) GROUP BY type LIMIT 2",
             [$affectedIds],
-            [Connection::PARAM_INT_ARRAY]
+            [Connection::PARAM_INT_ARRAY],
         );
 
         if (1 !== $result->rowCount()) {

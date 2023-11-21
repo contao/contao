@@ -158,8 +158,14 @@
       <trans-unit id="tl_article.delete">
         <source>Delete article ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_article.toggle">
-        <source>Publish/unpublish article ID %s</source>
+      <trans-unit id="tl_article.toggle.0">
+        <source>Publish/unpublish article</source>
+      </trans-unit>
+      <trans-unit id="tl_article.toggle.1">
+        <source>Unpublish article ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_article.toggle.2">
+        <source>Publish article ID %s</source>
       </trans-unit>
       <trans-unit id="tl_article.pasteafter.1">
         <source>Paste after article ID %s</source>

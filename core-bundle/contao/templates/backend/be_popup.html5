@@ -22,7 +22,7 @@
 
   <div id="container">
     <main id="main">
-      <table class="tl_show zebra-table zebra-table--with-padding zebra-table--no-border">
+      <table class="tl_show with-padding with-zebra">
         <tr>
           <td><span class="tl_label"><?= $this->labels->fileCreated ?>:</span></td>
           <td><?= $this->ctime ?></td>
@@ -88,6 +88,21 @@
             <img src="<?= $this->dataUri ?>" alt="" style="image-orientation:from-image"<?php if ($this->width && $this->height): ?> width="<?= $this->width ?>" height="<?= $this->height ?>"<?php endif; ?>>
           </div>
         </div>
+      <?php endif; ?>
+      <?php if ($this->metadata): ?>
+        <?php foreach ($this->metadata as $format => $table): ?>
+          <table class="tl_show with-padding with-zebra">
+            <caption><?= $this->trans('MSC.imageMetadata', ['%s' => Contao\StringUtil::specialchars(strtoupper('iptc' === $format ? 'IPTC IIM' : $format))]) ?></caption>
+            <?php foreach ($table as $label => $values): ?>
+              <?php if (array_filter($values, \strlen(...))): ?>
+                <tr>
+                  <td><span class="tl_label"><?= Contao\StringUtil::specialchars($label) ?></span></td>
+                  <td><?= Contao\StringUtil::specialchars(implode(', ', $values)) ?></td>
+                </tr>
+              <?php endif; ?>
+            <?php endforeach; ?>
+          </table>
+        <?php endforeach; ?>
       <?php endif; ?>
       <?php if ($this->hasPreview): ?>
         <div id="preview">

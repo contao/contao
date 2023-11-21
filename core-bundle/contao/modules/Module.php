@@ -293,6 +293,8 @@ abstract class Module extends Frontend
 		$objTemplate->level = 'level_' . $level++;
 		$objTemplate->module = $this; // see #155
 
+		$db = Database::getInstance();
+
 		/** @var PageModel $objPage */
 		global $objPage;
 
@@ -319,7 +321,7 @@ abstract class Module extends Frontend
 			if (!$objSubpage->protected || $this->showProtected || ($this instanceof ModuleSitemap && $objSubpage->sitemap == 'map_always') || $security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objSubpage->groups))
 			{
 				// Check whether there will be subpages
-				if ($blnHasSubpages && (!$this->showLevel || $this->showLevel >= $level || (!$this->hardLimit && ($objPage->id == $objSubpage->id || \in_array($objPage->id, $this->Database->getChildRecords($objSubpage->id, 'tl_page'))))))
+				if ($blnHasSubpages && (!$this->showLevel || $this->showLevel >= $level || (!$this->hardLimit && ($objPage->id == $objSubpage->id || \in_array($objPage->id, $db->getChildRecords($objSubpage->id, 'tl_page'))))))
 				{
 					$subitems = $this->renderNavigation($objSubpage->id, $level, $host, $language);
 				}
@@ -470,7 +472,7 @@ abstract class Module extends Frontend
 	 * @param boolean $blnShowHidden If true, hidden pages will be included
 	 * @param boolean $blnIsSitemap  If true, the sitemap settings apply
 	 *
-	 * @return array<array{page:PageModel,hasSubpages:bool}>|null
+	 * @return array<array{page:PageModel, hasSubpages:bool}>|null
 	 */
 	protected static function getPublishedSubpagesByPid($intPid, $blnShowHidden=false, $blnIsSitemap=false): array|null
 	{
@@ -479,7 +481,7 @@ abstract class Module extends Frontend
 		$blnBeUserLoggedIn = $tokenChecker->isPreviewMode();
 		$unroutableTypes = System::getContainer()->get('contao.routing.page_registry')->getUnroutableTypes();
 
-		$arrPages = Database::getInstance()->prepare("SELECT p1.id, EXISTS(SELECT * FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type NOT IN ('" . implode("', '", $unroutableTypes) . "')" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide=0 OR sitemap='map_always')" : " AND p2.hide=0") : "") . (!$blnBeUserLoggedIn ? " AND p2.published=1 AND (p2.start='' OR p2.start<='$time') AND (p2.stop='' OR p2.stop>'$time')" : "") . ") AS hasSubpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type NOT IN ('" . implode("', '", $unroutableTypes) . "')" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide=0 OR sitemap='map_always')" : " AND p1.hide=0") : "") . (!$blnBeUserLoggedIn ? " AND p1.published=1 AND (p1.start='' OR p1.start<='$time') AND (p1.stop='' OR p1.stop>'$time')" : "") . " ORDER BY p1.sorting")
+		$arrPages = Database::getInstance()->prepare("SELECT p1.id, EXISTS(SELECT * FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type NOT IN ('" . implode("', '", $unroutableTypes) . "')" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide=0 OR sitemap='map_always')" : " AND p2.hide=0") : "") . (!$blnBeUserLoggedIn ? " AND p2.published=1 AND (p2.start='' OR p2.start<=$time) AND (p2.stop='' OR p2.stop>$time)" : "") . ") AS hasSubpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type NOT IN ('" . implode("', '", $unroutableTypes) . "')" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide=0 OR sitemap='map_always')" : " AND p1.hide=0") : "") . (!$blnBeUserLoggedIn ? " AND p1.published=1 AND (p1.start='' OR p1.start<=$time) AND (p1.stop='' OR p1.stop>$time)" : "") . " ORDER BY p1.sorting")
 										   ->execute($intPid)
 										   ->fetchAllAssoc();
 

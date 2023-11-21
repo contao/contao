@@ -115,12 +115,14 @@ abstract class Events extends Module
 
 			while ($objEvents->next())
 			{
-				$this->addEvent($objEvents, $objEvents->startTime, $objEvents->endTime, $intStart, $intEnd, $id);
+				$objEvent = $objEvents->current();
+
+				$this->addEvent($objEvent, $objEvent->startTime, $objEvent->endTime, $intStart, $intEnd, $id);
 
 				// Recurring events
-				if ($objEvents->recurring)
+				if ($objEvent->recurring)
 				{
-					$arrRepeat = StringUtil::deserialize($objEvents->repeatEach);
+					$arrRepeat = StringUtil::deserialize($objEvent->repeatEach);
 
 					if (!isset($arrRepeat['unit'], $arrRepeat['value']) || $arrRepeat['value'] < 1)
 					{
@@ -128,13 +130,13 @@ abstract class Events extends Module
 					}
 
 					$count = 0;
-					$intStartTime = $objEvents->startTime;
-					$intEndTime = $objEvents->endTime;
+					$intStartTime = $objEvent->startTime;
+					$intEndTime = $objEvent->endTime;
 					$strtotime = '+ ' . $arrRepeat['value'] . ' ' . $arrRepeat['unit'];
 
 					while ($intEndTime < $intEnd)
 					{
-						if ($objEvents->recurrences > 0 && $count++ >= $objEvents->recurrences)
+						if ($objEvent->recurrences > 0 && $count++ >= $objEvent->recurrences)
 						{
 							break;
 						}
@@ -154,7 +156,7 @@ abstract class Events extends Module
 							continue;
 						}
 
-						$this->addEvent($objEvents, $intStartTime, $intEndTime, $intStart, $intEnd, $id);
+						$this->addEvent($objEvent, $intStartTime, $intEndTime, $intStart, $intEnd, $id);
 					}
 				}
 			}
@@ -171,8 +173,7 @@ abstract class Events extends Module
 		{
 			foreach ($GLOBALS['TL_HOOKS']['getAllEvents'] as $callback)
 			{
-				$this->import($callback[0]);
-				$this->arrEvents = $this->{$callback[0]}->{$callback[1]}($this->arrEvents, $arrCalendars, $intStart, $intEnd, $this);
+				$this->arrEvents = System::importStatic($callback[0])->{$callback[1]}($this->arrEvents, $arrCalendars, $intStart, $intEnd, $this);
 			}
 		}
 
@@ -491,6 +492,11 @@ abstract class Events extends Module
 			'url' => self::generateEventUrl($objEvent),
 			'startDate' => $objEvent->addTime ? date('Y-m-d\TH:i:sP', $objEvent->startTime) : date('Y-m-d', $objEvent->startTime)
 		);
+
+		if ($objEvent->startTime !== $objEvent->endTime)
+		{
+			$jsonLd['endDate'] = $objEvent->addTime ? date('Y-m-d\TH:i:sP', $objEvent->endTime) : date('Y-m-d', $objEvent->endTime);
+		}
 
 		if ($objEvent->teaser)
 		{

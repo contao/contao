@@ -208,7 +208,6 @@ class ContaoTableProcessorTest extends TestCase
 
         $record = $processor($data);
 
-        /** @var ContaoContext $context */
         $context = $record['extra']['contao'];
 
         $this->assertSame('foobar', $context->getUsername());
@@ -227,7 +226,6 @@ class ContaoTableProcessorTest extends TestCase
 
         $record = $processor($data);
 
-        /** @var ContaoContext $context */
         $context = $record['extra']['contao'];
 
         $this->assertSame('k.jones', $context->getUsername());
@@ -248,7 +246,6 @@ class ContaoTableProcessorTest extends TestCase
 
         $record = $processor($data);
 
-        /** @var ContaoContext $context */
         $context = $record['extra']['contao'];
 
         $this->assertSame('N/A', $context->getUsername());
@@ -283,7 +280,6 @@ class ContaoTableProcessorTest extends TestCase
         $processor = $this->getContaoTableProcessor($requestStack);
         $result = $processor($data);
 
-        /** @var ContaoContext $context */
         $context = $result['extra']['contao'];
 
         $this->assertSame($expectedSource, $context->getSource());
@@ -305,7 +301,7 @@ class ContaoTableProcessorTest extends TestCase
     /**
      * @dataProvider requestProvider
      */
-    public function testAddsTheRequestUri(Request $request = null, string $uri = null): void
+    public function testAddsTheRequestUri(Request|null $request = null, string|null $uri = null): void
     {
         $requestStack = new RequestStack();
 
@@ -328,7 +324,6 @@ class ContaoTableProcessorTest extends TestCase
         $processor = $this->getContaoTableProcessor($requestStack);
         $record = $processor($data);
 
-        /** @var ContaoContext $context */
         $context = $record['extra']['contao'];
 
         $this->assertSame($uri, $context->getUri());
@@ -352,7 +347,7 @@ class ContaoTableProcessorTest extends TestCase
     /**
      * @dataProvider requestWithPageIdProvider
      */
-    public function testAddsThePageId(Request $request = null, int $pageId = null): void
+    public function testAddsThePageId(Request|null $request = null, int|null $pageId = null): void
     {
         $requestStack = new RequestStack();
 
@@ -375,7 +370,6 @@ class ContaoTableProcessorTest extends TestCase
         $processor = $this->getContaoTableProcessor($requestStack);
         $record = $processor($data);
 
-        /** @var ContaoContext $context */
         $context = $record['extra']['contao'];
 
         $this->assertSame($pageId, $context->getPageId());
@@ -391,7 +385,7 @@ class ContaoTableProcessorTest extends TestCase
         yield 'no request' => [null, null];
     }
 
-    private function getContaoTableProcessor(RequestStack $requestStack = null, TokenStorageInterface $tokenStorage = null): ContaoTableProcessor
+    private function getContaoTableProcessor(RequestStack|null $requestStack = null, TokenStorageInterface|null $tokenStorage = null): ContaoTableProcessor
     {
         $requestStack ??= $this->createMock(RequestStack::class);
         $tokenStorage ??= $this->createMock(TokenStorageInterface::class);

@@ -151,7 +151,7 @@ class UserCreateCommandTest extends TestCase
         yield ['k.jones', 'Kevin Jones', 'k.jones@example.org', 'kevinjones'];
     }
 
-    private function getCommand(Connection $connection = null, string $password = null): UserCreateCommand
+    private function getCommand(Connection|null $connection = null, string|null $password = null): UserCreateCommand
     {
         $connection ??= $this->createMock(Connection::class);
         $password ??= '12345678';

@@ -52,43 +52,48 @@ class NewsFeedListenerTest extends ContaoTestCase
      */
     public function testFetchesArticlesFromArchives(string $feedFeatured, bool|null $featuredOnly): void
     {
-        $collection = [$this->mockClassWithProperties(NewsModel::class)];
         $insertTags = $this->createMock(InsertTagParser::class);
         $imageFactory = $this->createMock(ImageFactoryInterface::class);
         $cacheTags = $this->createMock(EntityCacheTags::class);
+        $newsModel = $this->createMock(NewsModel::class);
 
-        $newsModel = $this->mockAdapter(['findPublishedByPids']);
-        $newsModel
+        $collection = $this->createMock(Collection::class);
+        $collection
+            ->expects($this->once())
+            ->method('getModels')
+            ->willReturn([$newsModel])
+        ;
+
+        $newsAdapter = $this->mockAdapter(['findPublishedByPids']);
+        $newsAdapter
             ->expects($this->once())
             ->method('findPublishedByPids')
-            ->with([1], $featuredOnly, 0, 0)
+            ->with([1], $featuredOnly, 0)
             ->willReturn($collection)
         ;
 
+        $framework = $this->mockContaoFramework([NewsModel::class => $newsAdapter]);
         $feed = $this->createMock(Feed::class);
         $request = $this->createMock(Request::class);
 
-        $pageModel = $this->mockClassWithProperties(
-            PageModel::class,
-            [
-                'newsArchives' => serialize([1]),
-                'feedFeatured' => $feedFeatured,
-                'maxFeedItems' => 0,
-            ]
-        );
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'newsArchives' => serialize([1]),
+            'feedFeatured' => $feedFeatured,
+            'maxFeedItems' => 0,
+        ]);
 
         $event = new FetchArticlesForFeedEvent($feed, $request, $pageModel);
 
-        $listener = new NewsFeedListener($this->mockContaoFramework([NewsModel::class => $newsModel]), $imageFactory, $insertTags, $this->getTempDir(), $cacheTags);
+        $listener = new NewsFeedListener($framework, $imageFactory, $insertTags, $this->getTempDir(), $cacheTags, 'UTF-8');
         $listener->onFetchArticlesForFeed($event);
 
-        $this->assertSame($collection, $event->getArticles());
+        $this->assertSame([$newsModel], $event->getArticles());
     }
 
     /**
      * @dataProvider getFeedSource
      */
-    public function testTransformsArticlesToFeedItems(string $feedSource, string $expecedContent): void
+    public function testTransformsArticlesToFeedItems(string $feedSource, array $headline, array $content): void
     {
         $imageDir = Path::join($this->getTempDir(), 'files');
 
@@ -139,7 +144,7 @@ class NewsFeedListenerTest extends ContaoTestCase
         $insertTags
             ->expects($this->once())
             ->method('replaceInline')
-            ->willReturn($expecedContent)
+            ->willReturn($content[0])
         ;
 
         $element = $this->mockClassWithProperties(ContentModel::class, [
@@ -157,8 +162,8 @@ class NewsFeedListenerTest extends ContaoTestCase
         $article = $this->mockClassWithProperties(NewsModel::class, [
             'id' => 42,
             'date' => 1656578758,
-            'headline' => 'Example title',
-            'teaser' => 'Example teaser',
+            'headline' => $headline[0],
+            'teaser' => $content[0],
             'singleSRC' => 'binary_uuid',
             'addEnclosure' => serialize(['binary_uuid2']),
         ]);
@@ -183,7 +188,7 @@ class NewsFeedListenerTest extends ContaoTestCase
         $controller = $this->mockAdapter(['getContentElement', 'convertRelativeUrls']);
         $controller
             ->method('convertRelativeUrls')
-            ->willReturn($expecedContent)
+            ->willReturn($content[0])
         ;
 
         $filesModel = $this->mockAdapter(['findMultipleByUuids']);
@@ -196,8 +201,8 @@ class NewsFeedListenerTest extends ContaoTestCase
                         $this->mockClassWithProperties(FilesModel::class, ['path' => 'files/foo.jpg']),
                         $this->mockClassWithProperties(FilesModel::class, ['path' => 'files/bar.jpg']),
                     ],
-                    'tl_files'
-                )
+                    'tl_files',
+                ),
             )
         ;
 
@@ -217,28 +222,25 @@ class NewsFeedListenerTest extends ContaoTestCase
         $feed = $this->createMock(Feed::class);
         $cacheTags = $this->createMock(EntityCacheTags::class);
 
-        $pageModel = $this->mockClassWithProperties(
-            PageModel::class,
-            [
-                'feedSource' => $feedSource,
-                'imgSize' => serialize([100, 100, 'crop']),
-            ]
-        );
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'feedSource' => $feedSource,
+            'imgSize' => serialize([100, 100, 'crop']),
+        ]);
 
         $request = $this->createMock(Request::class);
         $baseUrl = 'example.org';
         $event = new TransformArticleForFeedEvent($article, $feed, $pageModel, $request, $baseUrl);
 
-        $listener = new NewsFeedListener($framework, $imageFactory, $insertTags, $this->getTempDir(), $cacheTags);
+        $listener = new NewsFeedListener($framework, $imageFactory, $insertTags, $this->getTempDir(), $cacheTags, 'UTF-8');
         $listener->onTransformArticleForFeed($event);
 
         $item = $event->getItem();
 
-        $this->assertSame('Example title', $item->getTitle());
+        $this->assertSame($headline[1], $item->getTitle());
         $this->assertSame(1656578758, $item->getLastModified()->getTimestamp());
         $this->assertSame('https://example.org/news/example-title', $item->getLink());
         $this->assertSame('https://example.org/news/example-title', $item->getPublicId());
-        $this->assertSame($expecedContent, $item->getContent());
+        $this->assertSame($content[1], $item->getContent());
         $this->assertSame('Jane Doe', $item->getAuthor()->getName());
         $this->assertCount(2, $item->getMedias());
 
@@ -254,7 +256,16 @@ class NewsFeedListenerTest extends ContaoTestCase
 
     public function getFeedSource(): \Generator
     {
-        yield 'Teaser only' => ['source_teaser', 'Example teaser'];
-        yield 'Text' => ['source_text', 'Example content'];
+        yield 'Teaser' => [
+            'source_teaser',
+            ['Example title &#40;Episode 1&#41;', 'Example title (Episode 1)'],
+            ['Example teaser &#40;Episode 1&#41;', 'Example teaser &#40;Episode 1&#41;'],
+        ];
+
+        yield 'Text' => [
+            'source_text',
+            ['Example title &#40;Episode 1&#41;', 'Example title (Episode 1)'],
+            ['Example content &#40;Episode 1&#41;', 'Example content &#40;Episode 1&#41;'],
+        ];
     }
 }

@@ -17,9 +17,9 @@ use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\DataContainer;
 use Contao\DC_File;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
-use Symfony\Component\Security\Core\Security;
 
 /**
  * @internal
@@ -58,7 +58,7 @@ class TableAccessVoter implements CacheableVoterInterface
 
             // Intentionally do not load DCA, it should already be loaded. If DCA is not loaded,
             // the voter just always abstains because it can't decide.
-            foreach (($GLOBALS['TL_DCA'][$subject->getDataSource()]['fields'] ?? []) as $config) {
+            foreach ($GLOBALS['TL_DCA'][$subject->getDataSource()]['fields'] ?? [] as $config) {
                 if (!($config['exclude'] ?? true)) {
                     $hasNotExcluded = true;
                     break;

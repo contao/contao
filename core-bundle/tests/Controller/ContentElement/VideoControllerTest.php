@@ -39,7 +39,7 @@ class VideoControllerTest extends ContentElementTestCase
             ],
             null,
             false,
-            $responseContextData
+            $responseContextData,
         );
 
         $expectedOutput = <<<'HTML'
@@ -68,7 +68,7 @@ class VideoControllerTest extends ContentElementTestCase
                 'type' => 'vimeo',
                 'playerSize' => serialize([1600, 900]),
                 'playerAspect' => '',
-                'vimeo' => '12345678',
+                'vimeo' => '12345678?h=123abc',
                 'vimeoOptions' => serialize([
                     'vimeo_autoplay',
                     'vimeo_portrait',
@@ -81,7 +81,7 @@ class VideoControllerTest extends ContentElementTestCase
             ],
             null,
             false,
-            $responseContextData
+            $responseContextData,
         );
 
         $expectedOutput = <<<'HTML'
@@ -94,7 +94,7 @@ class VideoControllerTest extends ContentElementTestCase
                         <iframe
                             width="1600"
                             height="900"
-                            src="https://player.vimeo.com/video/12345678?autoplay=1&amp;portrait=0&amp;color=f47c00#t=30s"
+                            src="https://player.vimeo.com/video/12345678?h=123abc&amp;autoplay=1&amp;portrait=0&amp;color=f47c00#t=30s"
                             allowfullscreen></iframe>
                     </template>
                 </button>
@@ -109,7 +109,7 @@ class VideoControllerTest extends ContentElementTestCase
         $this->assertCount(1, $additionalBodyCode);
         $this->assertMatchesRegularExpression(
             '/<script>[^<]+button\.insertAdjacentHTML[^<]+<\/script>/',
-            $additionalBodyCode['splash_screen_script']
+            $additionalBodyCode['splash_screen_script'],
         );
     }
 }

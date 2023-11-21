@@ -25,10 +25,10 @@ class AccessDecisionManager implements AccessDecisionManagerInterface
      * @internal
      */
     public function __construct(
-        private AccessDecisionManagerInterface $inner,
-        private AccessDecisionManagerInterface $contaoAccessDecisionManager,
-        private RequestStack $requestStack,
-        private FirewallMapInterface $firewallMap,
+        private readonly AccessDecisionManagerInterface $inner,
+        private readonly AccessDecisionManagerInterface $contaoAccessDecisionManager,
+        private readonly RequestStack $requestStack,
+        private readonly FirewallMapInterface $firewallMap,
     ) {
     }
 
@@ -47,7 +47,7 @@ class AccessDecisionManager implements AccessDecisionManagerInterface
         // their own firewall in Symfony
         $request = $this->requestStack->getMainRequest();
 
-        if (!$this->firewallMap instanceof FirewallMap || null === $request) {
+        if (!$request || !$this->firewallMap instanceof FirewallMap) {
             return false;
         }
 

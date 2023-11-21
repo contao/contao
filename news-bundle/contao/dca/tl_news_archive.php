@@ -10,6 +10,7 @@
 
 use Contao\Backend;
 use Contao\BackendUser;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\News;
@@ -68,15 +69,6 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 		(
 			'fields'                  => array('title'),
 			'format'                  => '%s'
-		),
-		'global_operations' => array
-		(
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
 		)
 	),
 
@@ -87,7 +79,7 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 		'default'                     => '{title_legend},title,jumpTo;{protected_legend:hide},protected;{comments_legend:hide},allowComments'
 	),
 
-	// Subpalettes
+	// Sub-palettes
 	'subpalettes' => array
 	(
 		'protected'                   => 'groups',
@@ -201,15 +193,6 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 class tl_news_archive extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Set root IDs and unset allowComments field if no comments bundle available.
 	 */
 	public function adjustDca()
@@ -222,19 +205,21 @@ class tl_news_archive extends Backend
 			unset($GLOBALS['TL_DCA']['tl_news_archive']['fields']['allowComments']);
 		}
 
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
 		// Set root IDs
-		if (empty($this->User->news) || !is_array($this->User->news))
+		if (empty($user->news) || !is_array($user->news))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->news;
+			$root = $user->news;
 		}
 
 		$GLOBALS['TL_DCA']['tl_news_archive']['list']['sorting']['root'] = $root;
@@ -253,19 +238,21 @@ class tl_news_archive extends Backend
 			$insertId = func_get_arg(1);
 		}
 
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
 		// Set root IDs
-		if (empty($this->User->news) || !is_array($this->User->news))
+		if (empty($user->news) || !is_array($user->news))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->news;
+			$root = $user->news;
 		}
 
 		// The archive is enabled already
@@ -274,17 +261,18 @@ class tl_news_archive extends Backend
 			return;
 		}
 
+		$db = Database::getInstance();
+
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
-
 		$arrNew = $objSessionBag->get('new_records');
 
 		if (is_array($arrNew['tl_news_archive']) && in_array($insertId, $arrNew['tl_news_archive']))
 		{
 			// Add the permissions on group level
-			if ($this->User->inherit != 'custom')
+			if ($user->inherit != 'custom')
 			{
-				$objGroup = $this->Database->execute("SELECT id, news, newp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $this->User->groups)) . ")");
+				$objGroup = $db->execute("SELECT id, news, newp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $user->groups)) . ")");
 
 				while ($objGroup->next())
 				{
@@ -295,18 +283,18 @@ class tl_news_archive extends Backend
 						$arrNews = StringUtil::deserialize($objGroup->news, true);
 						$arrNews[] = $insertId;
 
-						$this->Database->prepare("UPDATE tl_user_group SET news=? WHERE id=?")
-									   ->execute(serialize($arrNews), $objGroup->id);
+						$db->prepare("UPDATE tl_user_group SET news=? WHERE id=?")->execute(serialize($arrNews), $objGroup->id);
 					}
 				}
 			}
 
 			// Add the permissions on user level
-			if ($this->User->inherit != 'group')
+			if ($user->inherit != 'group')
 			{
-				$objUser = $this->Database->prepare("SELECT news, newp FROM tl_user WHERE id=?")
-										   ->limit(1)
-										   ->execute($this->User->id);
+				$objUser = $db
+					->prepare("SELECT news, newp FROM tl_user WHERE id=?")
+					->limit(1)
+					->execute($user->id);
 
 				$arrNewp = StringUtil::deserialize($objUser->newp);
 
@@ -315,14 +303,13 @@ class tl_news_archive extends Backend
 					$arrNews = StringUtil::deserialize($objUser->news, true);
 					$arrNews[] = $insertId;
 
-					$this->Database->prepare("UPDATE tl_user SET news=? WHERE id=?")
-								   ->execute(serialize($arrNews), $this->User->id);
+					$db->prepare("UPDATE tl_user SET news=? WHERE id=?")->execute(serialize($arrNews), $user->id);
 				}
 			}
 
 			// Add the new element to the user object
 			$root[] = $insertId;
-			$this->User->news = $root;
+			$user->news = $root;
 		}
 	}
 

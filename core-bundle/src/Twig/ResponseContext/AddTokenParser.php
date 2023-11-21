@@ -39,10 +39,10 @@ class AddTokenParser extends AbstractTokenParser
         $locationToken = $stream->expect(Token::NAME_TYPE, null, '');
         $locationString = $locationToken->getValue();
 
-        if (null === ($location = DocumentLocation::tryFrom($locationString))) {
+        if (!$location = DocumentLocation::tryFrom($locationString)) {
             $validLocations = array_map(
                 static fn (DocumentLocation $location): string => $location->value,
-                DocumentLocation::cases()
+                DocumentLocation::cases(),
             );
 
             throw new SyntaxError(sprintf('The parameter "%s" is not a valid location for the "add" tag, use "%s" instead.', $locationString, implode('" or "', $validLocations)));
@@ -51,7 +51,7 @@ class AddTokenParser extends AbstractTokenParser
         $stream->expect(Token::BLOCK_END_TYPE);
 
         // Parse closing tag: {% endadd %}
-        $body = $this->parser->subparse([$this, 'decideAddEnd'], true);
+        $body = $this->parser->subparse($this->decideAddEnd(...), true);
         $stream->expect(Token::BLOCK_END_TYPE);
 
         return new AddNode($this->extensionName, $body, $identifier, $location, $token->getLine());

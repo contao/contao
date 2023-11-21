@@ -2,8 +2,6 @@ name: CI
 
 on:
     pull_request: ~
-    schedule:
-        - cron: 0 13 * * MON,THU
 
 permissions: read-all
 
@@ -96,7 +94,7 @@ jobs:
                   composer bin phpstan install --no-interaction --no-progress
 
             - name: Run PHPStan
-              run: tools/phpstan/vendor/bin/phpstan analyse --no-progress
+              run: tools/phpstan/vendor/bin/phpstan analyse -c tools/phpstan/config/contao.neon --no-progress
 
     yamllint:
         name: YAMLlint

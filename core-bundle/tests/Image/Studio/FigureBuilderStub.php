@@ -27,14 +27,18 @@ use Symfony\Component\Uid\Uuid;
 class FigureBuilderStub extends FigureBuilder
 {
     private string|null $path = null;
+
     private Metadata|null $metadata = null;
+
     private array $linkAttributes = [];
 
     /**
      * @param array<string, ImageResult> $imageMap
      */
-    public function __construct(private readonly array $imageMap, private readonly array $uuidMap = [])
-    {
+    public function __construct(
+        private readonly array $imageMap,
+        private readonly array $uuidMap = [],
+    ) {
         // Do not call parent constructor
     }
 

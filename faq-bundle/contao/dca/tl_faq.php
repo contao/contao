@@ -13,6 +13,7 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\DC_Table;
@@ -62,15 +63,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'headerFields'            => array('title', 'headline', 'jumpTo', 'tstamp', 'allowComments'),
 			'child_record_callback'   => array('tl_faq', 'listQuestions'),
 			'renderAsGrid'            => true
-		),
-		'global_operations' => array
-		(
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
 		)
 	),
 
@@ -81,7 +73,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		'default'                     => '{title_legend},question,alias,author;{meta_legend},pageTitle,robots,description,serpPreview;{answer_legend},answer;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},noComments;{publish_legend},published'
 	),
 
-	// Subpalettes
+	// Sub-palettes
 	'subpalettes' => array
 	(
 		'addImage'                    => 'singleSRC,fullsize,size,floating,overwriteMeta',
@@ -297,15 +289,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 class tl_faq extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Check permissions to edit table tl_faq
 	 *
 	 * @param DataContainer $dc
@@ -321,19 +304,21 @@ class tl_faq extends Backend
 			unset($GLOBALS['TL_DCA']['tl_faq']['list']['sorting']['headerFields'][$key], $GLOBALS['TL_DCA']['tl_faq']['fields']['noComments']);
 		}
 
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
 		// Set the root IDs
-		if (empty($this->User->faqs) || !is_array($this->User->faqs))
+		if (empty($user->faqs) || !is_array($user->faqs))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->faqs;
+			$root = $user->faqs;
 		}
 
 		$id = strlen(Input::get('id')) ? Input::get('id') : $dc->currentPid;
@@ -353,9 +338,10 @@ class tl_faq extends Backend
 			case 'create':
 				if (Input::get('mode') == 1)
 				{
-					$objFaq = $this->Database->prepare("SELECT pid FROM tl_faq WHERE id=?")
-											 ->limit(1)
-											 ->execute(Input::get('pid'));
+					$objFaq = Database::getInstance()
+						->prepare("SELECT pid FROM tl_faq WHERE id=?")
+						->limit(1)
+						->execute(Input::get('pid'));
 
 					if ($objFaq->numRows < 1)
 					{
@@ -379,9 +365,10 @@ class tl_faq extends Backend
 			case 'copy':
 				if (Input::get('act') == 'cut' && Input::get('mode') == 1)
 				{
-					$objFaq = $this->Database->prepare("SELECT pid FROM tl_faq WHERE id=?")
-											 ->limit(1)
-											 ->execute(Input::get('pid'));
+					$objFaq = Database::getInstance()
+						->prepare("SELECT pid FROM tl_faq WHERE id=?")
+						->limit(1)
+						->execute(Input::get('pid'));
 
 					if ($objFaq->numRows < 1)
 					{
@@ -405,9 +392,10 @@ class tl_faq extends Backend
 			case 'show':
 			case 'delete':
 			case 'toggle':
-				$objFaq = $this->Database->prepare("SELECT pid FROM tl_faq WHERE id=?")
-										 ->limit(1)
-										 ->execute($id);
+				$objFaq = Database::getInstance()
+					->prepare("SELECT pid FROM tl_faq WHERE id=?")
+					->limit(1)
+					->execute($id);
 
 				if ($objFaq->numRows < 1)
 				{
@@ -430,9 +418,7 @@ class tl_faq extends Backend
 					throw new AccessDeniedException('Not enough permissions to access FAQ category ID ' . $id . '.');
 				}
 
-				$objFaq = $this->Database->prepare("SELECT id FROM tl_faq WHERE pid=?")
-										 ->execute($id);
-
+				$objFaq = Database::getInstance()->prepare("SELECT id FROM tl_faq WHERE pid=?")->execute($id);
 				$objSession = System::getContainer()->get('request_stack')->getSession();
 
 				$session = $objSession->all();
@@ -461,7 +447,7 @@ class tl_faq extends Backend
 	 */
 	public function removeMetaFields(DataContainer $dc)
 	{
-		$objFaqCategory = $this->Database
+		$objFaqCategory = Database::getInstance()
 			->prepare('SELECT c.jumpTo FROM tl_faq f LEFT JOIN tl_faq_category c ON f.pid=c.id WHERE f.id=?')
 			->execute($dc->id);
 
@@ -485,8 +471,12 @@ class tl_faq extends Backend
 	 */
 	public function generateAlias($varValue, DataContainer $dc)
 	{
-		$aliasExists = function (string $alias) use ($dc): bool {
-			return $this->Database->prepare("SELECT id FROM tl_faq WHERE alias=? AND id!=?")->execute($alias, $dc->id)->numRows > 0;
+		$aliasExists = static function (string $alias) use ($dc): bool {
+			$result = Database::getInstance()
+				->prepare("SELECT id FROM tl_faq WHERE alias=? AND id!=?")
+				->execute($alias, $dc->id);
+
+			return $result->numRows > 0;
 		};
 
 		// Generate alias if there is none

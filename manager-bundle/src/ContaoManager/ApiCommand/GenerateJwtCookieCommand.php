@@ -22,13 +22,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 #[AsCommand(
     name: 'jwt-cookie:generate',
-    description: 'Generates a JWT cookie for the preview entry point.'
+    description: 'Generates a JWT cookie for the preview entry point.',
 )]
 class GenerateJwtCookieCommand extends Command
 {
-    private JwtManager $jwtManager;
+    private readonly JwtManager $jwtManager;
 
-    public function __construct(Application $application, JwtManager $jwtManager = null)
+    public function __construct(Application $application, JwtManager|null $jwtManager = null)
     {
         parent::__construct();
 

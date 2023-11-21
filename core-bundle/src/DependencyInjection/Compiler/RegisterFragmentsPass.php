@@ -37,10 +37,10 @@ class RegisterFragmentsPass implements CompilerPassInterface
     use PriorityTaggedServiceTrait;
 
     public function __construct(
-        private string|null $tag,
-        private string|null $globalsKey = null,
-        private string|null $proxyClass = null,
-        private string|null $templateOptionsListener = null,
+        private readonly string|null $tag,
+        private readonly string|null $globalsKey = null,
+        private readonly string|null $proxyClass = null,
+        private readonly string|null $templateOptionsListener = null,
     ) {
     }
 
@@ -133,14 +133,11 @@ class RegisterFragmentsPass implements CompilerPassInterface
 
     protected function getFragmentConfig(ContainerBuilder $container, Reference $reference, array $attributes): Reference
     {
-        $definition = new Definition(
-            FragmentConfig::class,
-            [
-                $this->getControllerName($reference, $attributes),
-                $attributes['renderer'] ?? 'forward',
-                array_merge(['ignore_errors' => false], $attributes['options'] ?? []),
-            ]
-        );
+        $definition = new Definition(FragmentConfig::class, [
+            $this->getControllerName($reference, $attributes),
+            $attributes['renderer'] ?? 'forward',
+            ['ignore_errors' => false, ...$attributes['options'] ?? []],
+        ]);
 
         $serviceId = 'contao.fragment._config_'.ContainerBuilder::hash($definition);
         $container->setDefinition($serviceId, $definition);
@@ -173,7 +170,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
         }
 
         $definition = $container->getDefinition('contao.fragment.pre_handlers');
-        $definition->setArgument(0, array_merge($definition->getArgument(0), $handlers));
+        $definition->setArgument(0, [...$definition->getArgument(0), ...$handlers]);
     }
 
     protected function getFragmentType(Definition $definition, array $attributes): string
@@ -194,7 +191,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
 
     private function addGlobalsMapListener(array $globals, ContainerBuilder $container): void
     {
-        if (empty($globals)) {
+        if (!$globals) {
             return;
         }
 

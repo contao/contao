@@ -19,18 +19,19 @@ use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Doctrine\DBAL\Connection;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
-use Symfony\Component\Security\Core\Security;
 
 /**
  * @internal
  */
-class FavoritesVoter implements VoterInterface, CacheableVoterInterface
+class FavoritesVoter implements CacheableVoterInterface
 {
-    public function __construct(private Security $security, private Connection $connection)
-    {
+    public function __construct(
+        private readonly Security $security,
+        private readonly Connection $connection,
+    ) {
     }
 
     public function supportsAttribute(string $attribute): bool
@@ -58,7 +59,9 @@ class FavoritesVoter implements VoterInterface, CacheableVoterInterface
                 default => false,
             };
 
-            return $isGranted ? self::ACCESS_GRANTED : self::ACCESS_DENIED;
+            if (!$isGranted) {
+                return self::ACCESS_DENIED;
+            }
         }
 
         return self::ACCESS_ABSTAIN;
@@ -71,7 +74,7 @@ class FavoritesVoter implements VoterInterface, CacheableVoterInterface
 
         $createdBy = (int) $this->connection->fetchOne(
             'SELECT user FROM tl_favorites WHERE id = :id',
-            ['id' => $subject->getCurrentId()]
+            ['id' => $subject->getCurrentId()],
         );
 
         return $createdBy === $userId;

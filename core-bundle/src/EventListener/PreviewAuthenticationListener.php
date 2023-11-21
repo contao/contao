@@ -25,10 +25,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class PreviewAuthenticationListener
 {
     public function __construct(
-        private ScopeMatcher $scopeMatcher,
-        private TokenChecker $tokenChecker,
-        private UrlGeneratorInterface $router,
-        private UriSigner $uriSigner,
+        private readonly ScopeMatcher $scopeMatcher,
+        private readonly TokenChecker $tokenChecker,
+        private readonly UrlGeneratorInterface $router,
+        private readonly UriSigner $uriSigner,
     ) {
     }
 
@@ -60,7 +60,7 @@ class PreviewAuthenticationListener
         $url = $this->router->generate(
             'contao_backend_login',
             ['redirect' => $request->getUri()],
-            UrlGeneratorInterface::ABSOLUTE_URL
+            UrlGeneratorInterface::ABSOLUTE_URL,
         );
 
         $context->setBaseUrl($baseUrl);

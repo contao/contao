@@ -355,7 +355,7 @@ abstract class Controller extends System
 			}
 
 			$return = '';
-			$blnMultiMode = ($objArticles->count() > 1);
+			$blnMultiMode = $objArticles->count() > 1;
 
 			while ($objArticles->next())
 			{
@@ -398,7 +398,7 @@ abstract class Controller extends System
 
 		$strStopWatchId = 'contao.frontend_module.' . $objRow->type . ' (ID ' . $objRow->id . ')';
 
-		if (System::getContainer()->getParameter('kernel.debug'))
+		if (System::getContainer()->getParameter('kernel.debug') && System::getContainer()->has('debug.stopwatch'))
 		{
 			$objStopwatch = System::getContainer()->get('debug.stopwatch');
 			$objStopwatch->start($strStopWatchId, 'contao.layout');
@@ -487,7 +487,7 @@ abstract class Controller extends System
 
 		$strStopWatchId = 'contao.article (ID ' . $objRow->id . ')';
 
-		if (System::getContainer()->getParameter('kernel.debug'))
+		if (System::getContainer()->getParameter('kernel.debug') && System::getContainer()->has('debug.stopwatch'))
 		{
 			$objStopwatch = System::getContainer()->get('debug.stopwatch');
 			$objStopwatch->start($strStopWatchId, 'contao.layout');
@@ -558,7 +558,7 @@ abstract class Controller extends System
 		$objRow->typePrefix = 'ce_';
 		$strStopWatchId = 'contao.content_element.' . $objRow->type . ' (ID ' . $objRow->id . ')';
 
-		if ($objRow->type != 'module' && System::getContainer()->getParameter('kernel.debug'))
+		if ($objRow->type != 'module' && System::getContainer()->getParameter('kernel.debug') && System::getContainer()->has('debug.stopwatch'))
 		{
 			$objStopwatch = System::getContainer()->get('debug.stopwatch');
 			$objStopwatch->start($strStopWatchId, 'contao.layout');
@@ -1093,7 +1093,7 @@ abstract class Controller extends System
 			$strAttribute = $arrUrls[$i+2];
 			$strUrl = $arrUrls[$i+3];
 
-			if (!preg_match('@^(?:[a-z0-9]+:|#)@i', $strUrl))
+			if (!preg_match('@^(?:[a-z0-9]+:|#|{{)@i', $strUrl))
 			{
 				$strUrl = $strBase . (($strUrl != '/') ? $strUrl : '');
 			}
@@ -1236,14 +1236,16 @@ abstract class Controller extends System
 			return '';
 		}
 
+		$db = Database::getInstance();
 		$arrParent = array();
 
 		do
 		{
 			// Get the pid
-			$objParent = $this->Database->prepare("SELECT pid FROM " . $strTable . " WHERE id=?")
-										->limit(1)
-										->execute($intId);
+			$objParent = $db
+				->prepare("SELECT pid FROM " . $strTable . " WHERE id=?")
+				->limit(1)
+				->execute($intId);
 
 			if ($objParent->numRows < 1)
 			{
@@ -1324,7 +1326,7 @@ abstract class Controller extends System
 
 		// Thanks to Andreas Schempp (see #2475 and #3423)
 		$arrPages = array_filter(array_map('intval', $arrPages));
-		$arrPages = array_values(array_diff($arrPages, $this->Database->getChildRecords($arrPages, $strTable, $blnSorting)));
+		$arrPages = array_values(array_diff($arrPages, Database::getInstance()->getChildRecords($arrPages, $strTable, $blnSorting)));
 
 		return $arrPages;
 	}

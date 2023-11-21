@@ -75,7 +75,7 @@ class ModuleQuicknav extends Module
 			$objRootPage = PageModel::findWithDetails($this->rootPage);
 
 			// Set the domain
-			if ($objRootPage->rootId != $objPage->rootId && $objRootPage->domain && $objRootPage->domain != $objPage->domain)
+			if ($objRootPage && $objRootPage->rootId != $objPage->rootId && $objRootPage->domain && $objRootPage->domain != $objPage->domain)
 			{
 				$host = $objRootPage->domain;
 			}
@@ -113,8 +113,10 @@ class ModuleQuicknav extends Module
 		}
 
 		++$level;
+
 		$container = System::getContainer();
 		$security = $container->get('security.helper');
+		$db = Database::getInstance();
 
 		foreach ($objSubpages as $objSubpage)
 		{
@@ -153,7 +155,7 @@ class ModuleQuicknav extends Module
 					);
 
 					// Subpages
-					if (!$this->showLevel || $this->showLevel >= $level || (!$this->hardLimit && ($objPage->id == $objSubpage->id || \in_array($objPage->id, $this->Database->getChildRecords($objSubpage->id, 'tl_page')))))
+					if (!$this->showLevel || $this->showLevel >= $level || (!$this->hardLimit && ($objPage->id == $objSubpage->id || \in_array($objPage->id, $db->getChildRecords($objSubpage->id, 'tl_page')))))
 					{
 						$subpages = $this->getQuicknavPages($objSubpage->id, $level);
 

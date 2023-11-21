@@ -62,7 +62,6 @@ class Versions extends Controller
 	 */
 	public function __construct($strTable, $intPid)
 	{
-		$this->import(Database::class, 'Database');
 		parent::__construct();
 
 		$this->loadDataContainer($strTable);
@@ -118,9 +117,10 @@ class Versions extends Controller
 			return null;
 		}
 
-		$objVersion = $this->Database->prepare("SELECT MAX(version) AS version FROM tl_version WHERE fromTable=? AND pid=?")
-									 ->limit(1)
-									 ->execute($this->strTable, $this->intPid);
+		$objVersion = Database::getInstance()
+			->prepare("SELECT MAX(version) AS version FROM tl_version WHERE fromTable=? AND pid=?")
+			->limit(1)
+			->execute($this->strTable, $this->intPid);
 
 		return (int) $objVersion->version;
 	}
@@ -135,9 +135,10 @@ class Versions extends Controller
 			return;
 		}
 
-		$objVersion = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_version WHERE fromTable=? AND pid=?")
-									 ->limit(1)
-									 ->execute($this->strTable, $this->intPid);
+		$objVersion = Database::getInstance()
+			->prepare("SELECT COUNT(*) AS count FROM tl_version WHERE fromTable=? AND pid=?")
+			->limit(1)
+			->execute($this->strTable, $this->intPid);
 
 		if ($objVersion->count > 0)
 		{
@@ -160,9 +161,10 @@ class Versions extends Controller
 		}
 
 		// Get the new record
-		$objRecord = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
-									->limit(1)
-									->execute($this->intPid);
+		$objRecord = Database::getInstance()
+			->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
+			->limit(1)
+			->execute($this->intPid);
 
 		if ($objRecord->numRows < 1 || $objRecord->tstamp < 1)
 		{
@@ -216,18 +218,22 @@ class Versions extends Controller
 			$strDescription = $data['subject'];
 		}
 
+		$db = Database::getInstance();
 		$strDescription = mb_substr($strDescription, 0, System::getContainer()->get('database_connection')->getSchemaManager()->listTableColumns('tl_version')['description']->getLength());
 
-		$intId = $this->Database->prepare("INSERT INTO tl_version (pid, tstamp, version, fromTable, username, userid, description, editUrl, active, data) VALUES (?, ?, IFNULL((SELECT MAX(version) FROM (SELECT version FROM tl_version WHERE pid=? AND fromTable=?) v), 0) + 1, ?, ?, ?, ?, ?, 1, ?)")
-								->execute($this->intPid, time(), $this->intPid, $this->strTable, $this->strTable, $blnHideUser ? null : $this->getUsername(), $blnHideUser ? 0 : $this->getUserId(), $strDescription, $this->getEditUrl(), serialize($data))
-								->insertId;
+		$intId = $db
+			->prepare("INSERT INTO tl_version (pid, tstamp, version, fromTable, username, userid, description, editUrl, active, data) VALUES (?, ?, IFNULL((SELECT MAX(version) FROM (SELECT version FROM tl_version WHERE pid=? AND fromTable=?) v), 0) + 1, ?, ?, ?, ?, ?, 1, ?)")
+			->execute($this->intPid, time(), $this->intPid, $this->strTable, $this->strTable, $blnHideUser ? null : $this->getUsername(), $blnHideUser ? 0 : $this->getUserId(), $strDescription, $this->getEditUrl(), serialize($data))
+			->insertId;
 
-		$this->Database->prepare("UPDATE tl_version SET active=0 WHERE pid=? AND fromTable=? AND id!=?")
-					   ->execute($this->intPid, $this->strTable, $intId);
+		$db
+			->prepare("UPDATE tl_version SET active=0 WHERE pid=? AND fromTable=? AND id!=?")
+			->execute($this->intPid, $this->strTable, $intId);
 
-		$intVersion = $this->Database->prepare("SELECT version FROM tl_version WHERE id=?")
-									 ->execute($intId)
-									 ->version;
+		$intVersion = $db
+			->prepare("SELECT version FROM tl_version WHERE id=?")
+			->execute($intId)
+			->version;
 
 		// Trigger the oncreate_version_callback
 		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['oncreate_version_callback'] ?? null))
@@ -236,8 +242,7 @@ class Versions extends Controller
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($this->strTable, $this->intPid, $intVersion, $data);
+					System::importStatic($callback[0])->{$callback[1]}($this->strTable, $this->intPid, $intVersion, $data);
 				}
 				elseif (\is_callable($callback))
 				{
@@ -261,9 +266,12 @@ class Versions extends Controller
 			return;
 		}
 
-		$objData = $this->Database->prepare("SELECT * FROM tl_version WHERE fromTable=? AND pid=? AND version=?")
-								  ->limit(1)
-								  ->execute($this->strTable, $this->intPid, $intVersion);
+		$db = Database::getInstance();
+
+		$objData = $db
+			->prepare("SELECT * FROM tl_version WHERE fromTable=? AND pid=? AND version=?")
+			->limit(1)
+			->execute($this->strTable, $this->intPid, $intVersion);
 
 		if ($objData->numRows < 1)
 		{
@@ -278,7 +286,7 @@ class Versions extends Controller
 		}
 
 		// Get the currently available fields
-		$arrFields = array_flip($this->Database->getFieldNames($this->strTable));
+		$arrFields = array_flip($db->getFieldNames($this->strTable));
 
 		// Unset fields that do not exist (see #5219)
 		$data = array_intersect_key($data, $arrFields);
@@ -301,8 +309,9 @@ class Versions extends Controller
 			// Reset unique fields if the restored value already exists (see #698)
 			if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['unique'] ?? null) === true)
 			{
-				$objResult = $this->Database->prepare("SELECT COUNT(*) AS cnt FROM " . $this->strTable . " WHERE " . Database::quoteIdentifier($k) . "=? AND id!=?")
-											->execute($v, $this->intPid);
+				$objResult = $db
+					->prepare("SELECT COUNT(*) AS cnt FROM " . $this->strTable . " WHERE " . Database::quoteIdentifier($k) . "=? AND id!=?")
+					->execute($v, $this->intPid);
 
 				if ($objResult->cnt > 0)
 				{
@@ -313,9 +322,10 @@ class Versions extends Controller
 
 		try
 		{
-			$this->Database->prepare("UPDATE " . $this->strTable . " %s WHERE id=?")
-						   ->set($data)
-						   ->execute($this->intPid);
+			$db
+				->prepare("UPDATE " . $this->strTable . " %s WHERE id=?")
+				->set($data)
+				->execute($this->intPid);
 		}
 		catch (\Exception $e)
 		{
@@ -328,11 +338,13 @@ class Versions extends Controller
 			Controller::reload();
 		}
 
-		$this->Database->prepare("UPDATE tl_version SET active=0 WHERE fromTable=? AND pid=?")
-					   ->execute($this->strTable, $this->intPid);
+		$db
+			->prepare("UPDATE tl_version SET active=0 WHERE fromTable=? AND pid=?")
+			->execute($this->strTable, $this->intPid);
 
-		$this->Database->prepare("UPDATE tl_version SET active=1 WHERE fromTable=? AND pid=? AND version=?")
-					   ->execute($this->strTable, $this->intPid, $intVersion);
+		$db
+			->prepare("UPDATE tl_version SET active=1 WHERE fromTable=? AND pid=? AND version=?")
+			->execute($this->strTable, $this->intPid, $intVersion);
 
 		// Trigger the onrestore_version_callback
 		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onrestore_version_callback'] ?? null))
@@ -341,8 +353,7 @@ class Versions extends Controller
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($this->strTable, $this->intPid, $intVersion, $data);
+					System::importStatic($callback[0])->{$callback[1]}($this->strTable, $this->intPid, $intVersion, $data);
 				}
 				elseif (\is_callable($callback))
 				{
@@ -370,8 +381,9 @@ class Versions extends Controller
 		$intTo = 0;
 		$intFrom = 0;
 
-		$objVersions = $this->Database->prepare("SELECT * FROM tl_version WHERE pid=? AND fromTable=? ORDER BY version DESC")
-									  ->execute($this->intPid, $this->strTable);
+		$objVersions = Database::getInstance()
+			->prepare("SELECT * FROM tl_version WHERE pid=? AND fromTable=? ORDER BY version DESC")
+			->execute($this->intPid, $this->strTable);
 
 		if ($objVersions->numRows < 2)
 		{
@@ -608,8 +620,9 @@ class Versions extends Controller
 	 */
 	public function renderDropdown()
 	{
-		$objVersion = $this->Database->prepare("SELECT tstamp, version, username, active FROM tl_version WHERE fromTable=? AND pid=? ORDER BY version DESC")
-									 ->execute($this->strTable, $this->intPid);
+		$objVersion = Database::getInstance()
+			->prepare("SELECT tstamp, version, username, active FROM tl_version WHERE fromTable=? AND pid=? ORDER BY version DESC")
+			->execute($this->strTable, $this->intPid);
 
 		if ($objVersion->numRows < 2)
 		{
@@ -717,7 +730,7 @@ class Versions extends Controller
 				$objDeleted = $objDatabase->prepare("SELECT COUNT(*) AS count FROM " . $v['fromTable'] . " WHERE id=?")
 										  ->execute($v['pid']);
 
-				$arrVersions[$k]['deleted'] = ($objDeleted->count < 1);
+				$arrVersions[$k]['deleted'] = $objDeleted->count < 1;
 			}
 			catch (\Exception $e)
 			{

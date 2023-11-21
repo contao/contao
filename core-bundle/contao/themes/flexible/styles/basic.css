@@ -12,7 +12,7 @@
 	--blue: #006494;
 	--orange: #f90;
 	--contao: #f47c00;
-	--border: #e6e6e8;
+	--border: #eaeaec;
 	--nav: #d3d6da;
 	--nav-hover: #eaedf1;
 	--nav-bg: #0f1c26;
@@ -80,7 +80,7 @@ html[data-color-scheme="dark"] {
 	--blue: #0073a8;
 	--orange: #d68c23;
 	--contao: #f47c00;
-	--border: #3a3c40;
+	--border: #303236;
 	--nav-bg: #1b1d21;
 	--nav-hover-bg: #1b325f;
 	--nav-current: #272a30;
@@ -169,6 +169,10 @@ input, select, label, img, a.tl_submit, .tl_select {
 
 button {
 	cursor: pointer;
+}
+
+button[disabled] {
+	cursor: default;
 }
 
 nav ul, nav li {
@@ -289,65 +293,29 @@ p {
 }
 
 /* Tables */
-.zebra-table th, .zebra-table td {
+table.with-border th, table.with-border td {
 	border: solid var(--border);
 	border-width: 1px 0;
 }
 
-.zebra-table th {
+table.with-border th {
 	background-color: var(--table-header);
 }
 
-.zebra-table tr:nth-child(odd) td {
-	background-color: var(--table-odd);
-}
-
-.zebra-table tr:nth-child(even) td {
-	background-color: var(--table-even);
-}
-
-.zebra-table--with-padding th {
+table.with-padding th, table.with-padding td {
 	padding: 6px;
 }
 
-.zebra-table--with-padding td {
-	padding: 4px 6px;
-}
-
-.zebra-table--with-header tr:nth-child(odd) td {
-	background-color: var(--table-even);
-}
-
-.zebra-table--with-header tr:nth-child(even) td {
-	background-color: var(--table-odd);
-}
-
-.zebra-table--no-border th {
-	border-top: 0;
-}
-
-.zebra-table--no-border td {
-	border: 0;
-}
-
-.zebra-table--no-border th {
+table.with-zebra th {
 	background-color: var(--table-nb-header);
 }
 
-.zebra-table--no-border tr:nth-child(odd) td {
+table.with-zebra tbody tr:nth-child(odd) td {
 	background-color: var(--table-nb-odd);
 }
 
-.zebra-table--no-border tr:nth-child(even) td {
+table.with-zebra tbody tr:nth-child(even) td {
 	background-color: var(--table-nb-even);
-}
-
-.zebra-table--with-header.zebra-table--no-border tr:nth-child(odd) td {
-	background-color: var(--table-nb-even);
-}
-
-.zebra-table--with-header.zebra-table--no-border tr:nth-child(even) td {
-	background-color: var(--table-nb-odd);
 }
 
 /* Invisible elements */
@@ -471,6 +439,10 @@ fieldset.tl_checkbox_container legend, fieldset.tl_radio_container legend {
 
 fieldset.tl_checkbox_container .check-all {
 	color: var(--gray);
+}
+
+fieldset.tl_checkbox_container button {
+	vertical-align: middle;
 }
 
 fieldset.checkbox_container, fieldset.radio_container {
@@ -718,10 +690,6 @@ select[multiple] {
 	margin: 0 1px 0 0;
 }
 
-.win .tl_radio {
-	margin: 1px 1px 3px 0; /* see #4599 */
-}
-
 .tl_tree_radio {
 	margin: 1px 1px 1px 0;
 }
@@ -843,12 +811,16 @@ a.tl_submit {
 	vertical-align: middle;
 }
 
-.wizard .tl_text, .wizard .tl_select {
+.wizard .tl_text, .wizard .tl_select, .wizard .tl_image_size {
 	width: calc(100% - 24px);
 }
 
 .wizard .tl_text_2 {
 	width: 45%;
+}
+
+.wizard .tl_image_size {
+	display: inline-block;
 }
 
 .wizard img {

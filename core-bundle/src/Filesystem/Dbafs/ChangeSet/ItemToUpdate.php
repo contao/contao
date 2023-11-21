@@ -18,10 +18,10 @@ class ItemToUpdate
      * @internal
      */
     public function __construct(
-        private string $existingPath,
-        private string|null $newHash,
-        private string|null $newPath,
-        private int|false|null $lastModified = false,
+        private readonly string $existingPath,
+        private readonly string|null $newHash,
+        private readonly string|null $newPath,
+        private readonly int|false|null $lastModified = false,
     ) {
     }
 

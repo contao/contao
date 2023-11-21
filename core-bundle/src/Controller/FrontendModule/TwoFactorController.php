@@ -24,10 +24,10 @@ use Contao\PageModel;
 use Contao\Template;
 use ParagonIE\ConstantTime\Base32;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -39,21 +39,18 @@ class TwoFactorController extends AbstractFrontendModuleController
 {
     protected PageModel|null $pageModel = null;
 
-    public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null, PageModel $pageModel = null): Response
+    public function __invoke(Request $request, ModuleModel $model, string $section, array|null $classes = null, PageModel|null $pageModel = null): Response
     {
         if (!$this->container->get('security.helper')->isGranted('IS_AUTHENTICATED_FULLY')) {
             // TODO: front end users should be able to re-authenticate after REMEMBERME
             return new Response('', Response::HTTP_NO_CONTENT);
         }
 
-        $this->pageModel = $pageModel;
-
-        if (
-            $this->pageModel instanceof PageModel
-            && $this->container->get('contao.routing.scope_matcher')->isFrontendRequest($request)
-        ) {
-            $this->pageModel->loadDetails();
+        if ($pageModel && $this->container->get('contao.routing.scope_matcher')->isFrontendRequest($request)) {
+            $pageModel->loadDetails();
         }
+
+        $this->pageModel = $pageModel;
 
         return parent::__invoke($request, $model, $section, $classes);
     }
@@ -96,30 +93,34 @@ class TwoFactorController extends AbstractFrontendModuleController
             $template->message = $translator->trans('MSC.twoFactorEnforced', [], 'contao_default');
         }
 
-        if ((!$user->useTwoFactor && $this->pageModel->enforceTwoFactor) || 'enable' === $request->get('2fa')) {
-            $response = $this->enableTwoFactor($template, $request, $user, $return);
+        $enable = 'enable' === $request->get('2fa');
 
-            if (null !== $response) {
-                return $response;
-            }
+        if (!$user->useTwoFactor && $this->pageModel->enforceTwoFactor) {
+            $enable = true;
         }
 
-        if ('tl_two_factor_disable' === $request->request->get('FORM_SUBMIT')) {
-            $response = $this->disableTwoFactor($user);
-
-            if (null !== $response) {
-                return $response;
-            }
+        if ($enable && ($response = $this->enableTwoFactor($template, $request, $user, $return))) {
+            return $response;
         }
 
-        $template->backupCodes = json_decode((string) $user->backupCodes, true) ?? [];
+        $formId = $request->request->get('FORM_SUBMIT');
 
-        if ('tl_two_factor_generate_backup_codes' === $request->request->get('FORM_SUBMIT')) {
+        if ('tl_two_factor_disable' === $formId && ($response = $this->disableTwoFactor($user))) {
+            return $response;
+        }
+
+        try {
+            $template->backupCodes = json_decode((string) $user->backupCodes, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            $template->backupCodes = [];
+        }
+
+        if ('tl_two_factor_generate_backup_codes' === $formId) {
             $template->showBackupCodes = true;
             $template->backupCodes = $this->container->get('contao.security.two_factor.backup_code_manager')->generateBackupCodes($user);
         }
 
-        if ('tl_two_factor_clear_trusted_devices' === $request->request->get('FORM_SUBMIT')) {
+        if ('tl_two_factor_clear_trusted_devices' === $formId) {
             $this->container->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
         }
 

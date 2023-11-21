@@ -38,7 +38,7 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
 
     private array $stats = ['ok' => 0, 'error' => 0];
 
-    public function __construct(private TranslatorInterface $translator)
+    public function __construct(private readonly TranslatorInterface $translator)
     {
     }
 
@@ -53,7 +53,7 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
             $this->logWithCrawlUri(
                 $crawlUri,
                 LogLevel::DEBUG,
-                'Did not check because it was marked to be skipped using the data-skip-broken-link-checker attribute.'
+                'Did not check because it was marked to be skipped using the data-skip-broken-link-checker attribute.',
             );
 
             return SubscriberInterface::DECISION_NEGATIVE;
@@ -62,7 +62,7 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
         // Only check URIs that are part of our base collection or were found on one
         $fromBaseUriCollection = $this->escargot->getBaseUris()->containsHost($crawlUri->getUri()->getHost());
 
-        $foundOnBaseUriCollection = null !== $crawlUri->getFoundOn()
+        $foundOnBaseUriCollection = $crawlUri->getFoundOn()
             && ($originalCrawlUri = $this->escargot->getCrawlUri($crawlUri->getFoundOn()))
             && $this->escargot->getBaseUris()->containsHost($originalCrawlUri->getUri()->getHost());
 
@@ -70,7 +70,7 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
             $this->logWithCrawlUri(
                 $crawlUri,
                 LogLevel::DEBUG,
-                'Did not check because it is not part of the base URI collection or was not found on one of that is.'
+                'Did not check because it is not part of the base URI collection or was not found on one of that is.',
             );
 
             return SubscriberInterface::DECISION_NEGATIVE;
@@ -113,18 +113,18 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
         // noop
     }
 
-    public function getResult(SubscriberResult $previousResult = null): SubscriberResult
+    public function getResult(SubscriberResult|null $previousResult = null): SubscriberResult
     {
         $stats = $this->stats;
 
-        if (null !== $previousResult) {
+        if ($previousResult) {
             $stats['ok'] += $previousResult->getInfo('stats')['ok'];
             $stats['error'] += $previousResult->getInfo('stats')['error'];
         }
 
         $result = new SubscriberResult(
             0 === $stats['error'],
-            $this->translator->trans('CRAWL.brokenLinkChecker.summary', [$stats['ok'], $stats['error']], 'contao_default')
+            $this->translator->trans('CRAWL.brokenLinkChecker.summary', [$stats['ok'], $stats['error']], 'contao_default'),
         );
 
         $result->addInfo('stats', $stats);

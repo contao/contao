@@ -19,9 +19,9 @@ use Contao\StringUtil;
 use Contao\System;
 use Contao\Validator;
 use Knp\Menu\FactoryInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
@@ -35,8 +35,8 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         FactoryInterface $menuFactory,
         RouterInterface $router,
         TranslatorInterface $translator,
-        private Security $security,
-        private string $uploadPath,
+        private readonly Security $security,
+        private readonly string $uploadPath,
     ) {
         parent::__construct($menuFactory, $router, $translator);
     }
@@ -60,7 +60,7 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return $this->isMatchingInsertTag($config) || Path::isBasePath($this->uploadPath, $config->getValue());
     }
 
-    public function getDcaTable(PickerConfig $config = null): string
+    public function getDcaTable(PickerConfig|null $config = null): string
     {
         return 'tl_files';
     }
@@ -90,7 +90,7 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return $value;
     }
 
-    protected function getRouteParameters(PickerConfig $config = null): array
+    protected function getRouteParameters(PickerConfig|null $config = null): array
     {
         return ['do' => 'files'];
     }
@@ -105,9 +105,14 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
      */
     private function convertValueToPath(string $value): string
     {
-        $filesAdapter = $this->framework->getAdapter(FilesModel::class);
+        if (!Validator::isUuid($value)) {
+            return $value;
+        }
 
-        if (Validator::isUuid($value) && ($filesModel = $filesAdapter->findByUuid($value)) instanceof FilesModel) {
+        $filesAdapter = $this->framework->getAdapter(FilesModel::class);
+        $filesModel = $filesAdapter->findByUuid($value);
+
+        if ($filesModel instanceof FilesModel) {
             return $filesModel->path;
         }
 
@@ -125,13 +130,13 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
     }
 
     /**
-     * @return array<string,string|bool>
+     * @return array<string, string|bool>
      */
     private function getFileDcaAttributes(PickerConfig $config): array
     {
         $attributes = array_intersect_key(
             $config->getExtras(),
-            array_flip(['fieldType', 'files', 'filesOnly', 'path', 'extensions'])
+            array_flip(['fieldType', 'files', 'filesOnly', 'path', 'extensions']),
         );
 
         if (!isset($attributes['fieldType'])) {
@@ -152,7 +157,7 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
     }
 
     /**
-     * @return array<string,array|string|bool>
+     * @return array<string, array|string|bool>
      */
     private function getLinkDcaAttributes(PickerConfig $config): array
     {

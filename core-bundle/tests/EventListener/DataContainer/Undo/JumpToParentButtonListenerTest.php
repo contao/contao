@@ -26,25 +26,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class JumpToParentButtonListenerTest extends TestCase
 {
+    private TranslatorInterface&MockObject $translator;
+
+    private ContaoFramework&MockObject $framework;
+
+    private Connection&MockObject $connection;
+
     /**
      * @var Adapter<Image>&MockObject
      */
-    private Adapter $imageAdapter;
-
-    /**
-     * @var TranslatorInterface&MockObject
-     */
-    private TranslatorInterface $translator;
-
-    /**
-     * @var ContaoFramework&MockObject
-     */
-    private ContaoFramework $framework;
-
-    /**
-     * @var Connection&MockObject
-     */
-    private Connection $connection;
+    private Adapter&MockObject $imageAdapter;
 
     protected function setUp(): void
     {
@@ -105,7 +96,7 @@ class JumpToParentButtonListenerTest extends TestCase
 
         $this->assertSame(
             "<a href=\"\" title=\"Show origin of Content element ID 42\" onclick=\"Backend.openModalIframe({'title':'Show origin of Content element ID 42','url': this.href });return false\"><img src=\"parent.svg\"></a> ",
-            $listener($row, '', 'jumpToParent', 'jumpToParent', 'parent.svg')
+            $listener($row, '', 'jumpToParent', 'jumpToParent', 'parent.svg'),
         );
     }
 
@@ -145,7 +136,7 @@ class JumpToParentButtonListenerTest extends TestCase
 
         $this->assertSame(
             "<a href=\"\" title=\"Go to parent of tl_form_field ID 42\" onclick=\"Backend.openModalIframe({'title':'Go to parent of tl_form_field ID 42','url': this.href });return false\"><img src=\"parent.svg\"></a> ",
-            $listener($row, '', 'jumpToParent', 'jumpToParent', 'parent.svg')
+            $listener($row, '', 'jumpToParent', 'jumpToParent', 'parent.svg'),
         );
     }
 
@@ -154,8 +145,8 @@ class JumpToParentButtonListenerTest extends TestCase
         $this->imageAdapter
             ->expects($this->once())
             ->method('getHtml')
-            ->with('parent_.svg')
-            ->willReturn('<img src="parent_.svg">')
+            ->with('parent--disabled.svg')
+            ->willReturn('<img src="parent--disabled.svg">')
         ;
 
         $this->connection
@@ -179,8 +170,8 @@ class JumpToParentButtonListenerTest extends TestCase
         $listener = new JumpToParentButtonListener($this->framework, $this->connection, $this->translator);
 
         $this->assertSame(
-            '<img src="parent_.svg"> ',
-            $listener($row, '', 'jumpToParent', 'jumpToParent', 'parent.svg')
+            '<img src="parent--disabled.svg"> ',
+            $listener($row, '', 'jumpToParent', 'jumpToParent', 'parent.svg'),
         );
     }
 
@@ -189,8 +180,8 @@ class JumpToParentButtonListenerTest extends TestCase
         $this->imageAdapter
             ->expects($this->once())
             ->method('getHtml')
-            ->with('parent_.svg')
-            ->willReturn('<img src="parent_.svg">')
+            ->with('parent--disabled.svg')
+            ->willReturn('<img src="parent--disabled.svg">')
         ;
 
         $this->connection
@@ -224,7 +215,7 @@ class JumpToParentButtonListenerTest extends TestCase
 
         $listener = new JumpToParentButtonListener($this->framework, $this->connection, $this->translator);
 
-        $this->assertSame('<img src="parent_.svg"> ', $listener($row, '', '', '', 'parent.svg'));
+        $this->assertSame('<img src="parent--disabled.svg"> ', $listener($row, '', '', '', 'parent.svg'));
     }
 
     public function testRendersDisabledJumpToParentButton(): void
@@ -232,16 +223,16 @@ class JumpToParentButtonListenerTest extends TestCase
         $this->imageAdapter
             ->expects($this->once())
             ->method('getHtml')
-            ->with('parent_.svg')
-            ->willReturn('<img src="parent_.svg">')
+            ->with('parent--disabled.svg')
+            ->willReturn('<img src="parent--disabled.svg">')
         ;
 
         $row = $this->setupForDataSetWithoutParent();
         $listener = new JumpToParentButtonListener($this->framework, $this->connection, $this->translator);
 
         $this->assertSame(
-            '<img src="parent_.svg"> ',
-            $listener($row, '', 'jumpToParent', 'jumpToParent', 'parent.svg')
+            '<img src="parent--disabled.svg"> ',
+            $listener($row, '', 'jumpToParent', 'jumpToParent', 'parent.svg'),
         );
     }
 

@@ -25,8 +25,11 @@ class ContaoTableProcessor implements ProcessorInterface
     /**
      * @internal
      */
-    public function __construct(private RequestStack $requestStack, private TokenStorageInterface $tokenStorage, private ScopeMatcher $scopeMatcher)
-    {
+    public function __construct(
+        private readonly RequestStack $requestStack,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ScopeMatcher $scopeMatcher,
+    ) {
     }
 
     /**
@@ -68,13 +71,13 @@ class ContaoTableProcessor implements ProcessorInterface
         }
     }
 
-    private function updateBrowser(ContaoContext $context, Request $request = null): void
+    private function updateBrowser(ContaoContext $context, Request|null $request = null): void
     {
         if (null !== $context->getBrowser()) {
             return;
         }
 
-        $context->setBrowser(null === $request ? 'N/A' : (string) $request->server->get('HTTP_USER_AGENT'));
+        $context->setBrowser($request ? (string) $request->server->get('HTTP_USER_AGENT') : 'N/A');
     }
 
     private function updateUsername(ContaoContext $context): void
@@ -85,30 +88,30 @@ class ContaoTableProcessor implements ProcessorInterface
 
         $token = $this->tokenStorage->getToken();
 
-        $context->setUsername(null === $token ? 'N/A' : $token->getUserIdentifier());
+        $context->setUsername($token ? $token->getUserIdentifier() : 'N/A');
     }
 
-    private function updateSource(ContaoContext $context, Request $request = null): void
+    private function updateSource(ContaoContext $context, Request|null $request = null): void
     {
         if (null !== $context->getSource()) {
             return;
         }
 
-        $context->setSource(null !== $request && $this->scopeMatcher->isBackendRequest($request) ? 'BE' : 'FE');
+        $context->setSource($request && $this->scopeMatcher->isBackendRequest($request) ? 'BE' : 'FE');
     }
 
-    private function updateUri(ContaoContext $context, Request $request = null): void
+    private function updateUri(ContaoContext $context, Request|null $request = null): void
     {
-        if (null === $request) {
+        if (!$request) {
             return;
         }
 
         $context->setUri($request->getUri());
     }
 
-    private function updatePageId(ContaoContext $context, Request $request = null): void
+    private function updatePageId(ContaoContext $context, Request|null $request = null): void
     {
-        if (null === $request || !$request->attributes->has('pageModel')) {
+        if (!$request || !$request->attributes->has('pageModel')) {
             return;
         }
 

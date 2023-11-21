@@ -38,26 +38,28 @@ use Symfony\Component\Process\Process;
 
 #[AsCommand(
     name: 'contao:resize-images',
-    description: 'Resizes deferred images that have not been processed yet.'
+    description: 'Resizes deferred images that have not been processed yet.',
 )]
 class ResizeImagesCommand extends Command
 {
-    private DeferredResizerInterface|null $resizer;
-    private Filesystem $filesystem;
-    private int $terminalWidth;
+    private readonly DeferredResizerInterface|null $resizer;
+
+    private readonly int $terminalWidth;
+
     private SymfonyStyle|null $io = null;
+
     private ConsoleSectionOutput|null $tableOutput = null;
+
     private Table|null $table = null;
 
     public function __construct(
-        private ImageFactoryInterface $imageFactory,
+        private readonly ImageFactoryInterface $imageFactory,
         ResizerInterface $resizer,
-        private string $targetDir,
-        private DeferredImageStorageInterface $storage,
-        Filesystem $filesystem = null,
+        private readonly string $targetDir,
+        private readonly DeferredImageStorageInterface $storage,
+        private readonly Filesystem $filesystem = new Filesystem(),
     ) {
         $this->resizer = $resizer instanceof DeferredResizerInterface ? $resizer : null;
-        $this->filesystem = $filesystem ?? new Filesystem();
         $this->terminalWidth = (new Terminal())->getWidth();
 
         parent::__construct();
@@ -161,7 +163,7 @@ class ResizeImagesCommand extends Command
 
         $this->io->warning(
             "Running this command without sub processes.\n"
-            .'This can lead to memory leaks and eventually let the execution fail.'
+            .'This can lead to memory leaks and eventually let the execution fail.',
         );
 
         return $this->executeInCurrentProcess($timeLimit, $concurrent, $preserveMissing);
@@ -175,7 +177,7 @@ class ResizeImagesCommand extends Command
             return false;
         }
 
-        $process = new Process(array_merge([$phpPath], $_SERVER['argv'], ['--help']));
+        $process = new Process([$phpPath, ...$_SERVER['argv'], '--help']);
 
         return 0 === $process->run();
     }
@@ -249,7 +251,7 @@ class ResizeImagesCommand extends Command
                 }
 
                 foreach ($processes as $index => $process) {
-                    if (null !== $process) {
+                    if ($process) {
                         if ($process->isRunning()) {
                             continue;
                         }
@@ -268,7 +270,7 @@ class ResizeImagesCommand extends Command
                         }
                     }
 
-                    $process = new Process(array_merge([$phpPath], $_SERVER['argv'], ['--image='.$path]));
+                    $process = new Process([$phpPath, ...$_SERVER['argv'], '--image='.$path]);
                     $process->setTimeout(null);
                     $process->start();
 
@@ -290,7 +292,7 @@ class ResizeImagesCommand extends Command
         }
 
         foreach ($processes as $index => $process) {
-            if (null === $process) {
+            if (!$process) {
                 continue;
             }
 

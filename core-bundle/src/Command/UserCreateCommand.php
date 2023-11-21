@@ -16,7 +16,6 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Intl\Locales;
-use Contao\UserGroupModel;
 use Contao\Validator;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Types;
@@ -33,16 +32,16 @@ use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 
 #[AsCommand(
     name: 'contao:user:create',
-    description: 'Create a new Contao back end user.'
+    description: 'Create a new Contao back end user.',
 )]
 class UserCreateCommand extends Command
 {
-    private array $locales;
+    private readonly array $locales;
 
     public function __construct(
-        private ContaoFramework $framework,
-        private Connection $connection,
-        private PasswordHasherFactoryInterface $passwordHasherFactory,
+        private readonly ContaoFramework $framework,
+        private readonly Connection $connection,
+        private readonly PasswordHasherFactoryInterface $passwordHasherFactory,
         Locales $locales,
     ) {
         $this->locales = $locales->getEnabledLocaleIds();
@@ -104,7 +103,7 @@ class UserCreateCommand extends Command
         $minLength = $config->get('minPasswordLength');
         $username = $input->getOption('username');
 
-        $passwordCallback = static function ($value) use ($username, $minLength): string {
+        $passwordCallback = static function ($value) use ($minLength, $username): string {
             if ('' === trim($value)) {
                 throw new \RuntimeException('The password cannot be empty');
             }
@@ -144,13 +143,8 @@ class UserCreateCommand extends Command
             $input->setOption('admin', 'yes' === $answer);
         }
 
-        if (false === $input->getOption('admin') && ($options = $this->getGroups()) && 0 !== \count($options)) {
-            $answer = $this->askMultipleChoice(
-                'Assign which groups to the user (select multiple comma-separated)?',
-                $options,
-                $input,
-                $output
-            );
+        if (false === $input->getOption('admin') && ($options = $this->getGroups())) {
+            $answer = $this->askForUserGroups($options, $input, $output);
 
             $input->setOption('group', array_values(array_intersect_key(array_flip($options), array_flip($answer))));
         }
@@ -181,7 +175,7 @@ class UserCreateCommand extends Command
             $input->getOption('language') ?? 'en',
             $isAdmin,
             $input->getOption('group'),
-            $input->getOption('change-password')
+            $input->getOption('change-password'),
         );
 
         $io->success(sprintf('User %s%s created.', $username, $isAdmin ? ' with admin permissions' : ''));
@@ -189,7 +183,7 @@ class UserCreateCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function ask(string $label, InputInterface $input, OutputInterface $output, callable $callback = null): string
+    private function ask(string $label, InputInterface $input, OutputInterface $output, callable|null $callback = null): string
     {
         $question = new Question($label);
         $question->setMaxAttempts(3);
@@ -225,9 +219,9 @@ class UserCreateCommand extends Command
         return $helper->ask($input, $output, $question);
     }
 
-    private function askMultipleChoice(string $label, array $options, InputInterface $input, OutputInterface $output): array
+    private function askForUserGroups(array $options, InputInterface $input, OutputInterface $output): array
     {
-        $question = new ChoiceQuestion($label, $options);
+        $question = new ChoiceQuestion('Assign which groups to the user (select multiple comma-separated)?', $options);
         $question->setAutocompleterValues($options);
         $question->setMultiselect(true);
 
@@ -239,19 +233,10 @@ class UserCreateCommand extends Command
 
     private function getGroups(): array
     {
-        $this->framework->initialize();
-
-        $userGroupModel = $this->framework->getAdapter(UserGroupModel::class);
-        $groups = $userGroupModel->findAll();
-
-        if (null === $groups) {
-            return [];
-        }
-
-        return $groups->fetchEach('name');
+        return $this->connection->fetchAllKeyValue('SELECT id, name FROM tl_user_group');
     }
 
-    private function persistUser(string $username, string $name, string $email, string $password, string $language, bool $isAdmin = false, array $groups = null, bool $pwChange = false): void
+    private function persistUser(string $username, string $name, string $email, string $password, string $language, bool $isAdmin = false, array|null $groups = null, bool $pwChange = false): void
     {
         $time = time();
         $hash = $this->passwordHasherFactory->getPasswordHasher(BackendUser::class)->hash($password);
@@ -269,7 +254,7 @@ class UserCreateCommand extends Command
             'dateAdded' => $time,
         ];
 
-        if (!$isAdmin && !empty($groups)) {
+        if (!$isAdmin && $groups) {
             $data[$this->connection->quoteIdentifier('groups')] = serialize(array_map('strval', $groups));
         }
 

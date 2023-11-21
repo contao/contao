@@ -31,10 +31,10 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
 class PreviewUrlConvertListener
 {
     public function __construct(
-        private ContaoFramework $framework,
-        private PageRegistry $pageRegistry,
-        private UriSigner $signer,
-        private string $fragmentPath = '/_fragment',
+        private readonly ContaoFramework $framework,
+        private readonly PageRegistry $pageRegistry,
+        private readonly UriSigner $signer,
+        private readonly string $fragmentPath = '/_fragment',
     ) {
     }
 
@@ -60,7 +60,7 @@ class PreviewUrlConvertListener
             }
 
             try {
-                $event->setUrl($page->getPreviewUrl($this->getParams($request)));
+                $event->setUrl($page->getPreviewUrl($this->getParams($request, $page->id)));
             } catch (RouteParametersException $e) {
                 $route = $e->getRoute();
 
@@ -75,7 +75,7 @@ class PreviewUrlConvertListener
         }
     }
 
-    private function getParams(Request $request): string|null
+    private function getParams(Request $request, int $pageId): string|null
     {
         if (!$request->query->has('article')) {
             return null;
@@ -83,7 +83,7 @@ class PreviewUrlConvertListener
 
         $articleAdapter = $this->framework->getAdapter(ArticleModel::class);
 
-        if (!$article = $articleAdapter->findByAlias($request->query->get('article'))) {
+        if (!$article = $articleAdapter->findByIdOrAliasAndPid($request->query->get('article'), $pageId)) {
             return null;
         }
 

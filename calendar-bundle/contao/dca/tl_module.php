@@ -12,6 +12,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\CalendarBundle\Security\ContaoCalendarPermissions;
 use Contao\Controller;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\System;
 
@@ -150,28 +151,21 @@ if (isset($bundles['ContaoCommentsBundle']))
 class tl_module_calendar extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Get all calendars and return them as array
 	 *
 	 * @return array
 	 */
 	public function getCalendars()
 	{
-		if (!$this->User->isAdmin && !is_array($this->User->calendars))
+		$user = BackendUser::getInstance();
+
+		if (!$user->isAdmin && !is_array($user->calendars))
 		{
 			return array();
 		}
 
 		$arrCalendars = array();
-		$objCalendars = $this->Database->execute("SELECT id, title FROM tl_calendar ORDER BY title");
+		$objCalendars = Database::getInstance()->execute("SELECT id, title FROM tl_calendar ORDER BY title");
 		$security = System::getContainer()->get('security.helper');
 
 		while ($objCalendars->next())
@@ -193,7 +187,7 @@ class tl_module_calendar extends Backend
 	public function getReaderModules()
 	{
 		$arrModules = array();
-		$objModules = $this->Database->execute("SELECT m.id, m.name, t.name AS theme FROM tl_module m LEFT JOIN tl_theme t ON m.pid=t.id WHERE m.type='eventreader' ORDER BY t.name, m.name");
+		$objModules = Database::getInstance()->execute("SELECT m.id, m.name, t.name AS theme FROM tl_module m LEFT JOIN tl_theme t ON m.pid=t.id WHERE m.type='eventreader' ORDER BY t.name, m.name");
 
 		while ($objModules->next())
 		{

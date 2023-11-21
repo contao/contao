@@ -87,10 +87,7 @@ class RefererIdListenerTest extends TestCase
         $this->assertSame('testValue', $request->attributes->get('_contao_referer_id'));
     }
 
-    /**
-     * @return TokenGeneratorInterface&MockObject
-     */
-    private function mockTokenGenerator(): TokenGeneratorInterface
+    private function mockTokenGenerator(): TokenGeneratorInterface&MockObject
     {
         $tokenGenerator = $this->createMock(TokenGeneratorInterface::class);
         $tokenGenerator
