@@ -47,7 +47,8 @@ class DnsMigration extends AbstractMigration
             $from = $this->parseHost($from);
             $to = $this->parseHost($to);
 
-            $qb = $this->db->createQueryBuilder()
+            $qb = $this->db
+                ->createQueryBuilder()
                 ->select('TRUE')
                 ->from('tl_page')
                 ->where("type = 'root'")
