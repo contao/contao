@@ -50,7 +50,6 @@ class SitemapListenerTest extends ContaoTestCase
     public function testCalendarEventIsAdded(array $pageProperties, array $calendarProperties, bool $hasAuthenticatedMember): void
     {
         $jumpToPage = $this->mockClassWithProperties(PageModel::class, $pageProperties);
-
         $jumpToPage
             ->method('getAbsoluteUrl')
             ->willReturn('https://contao.org')

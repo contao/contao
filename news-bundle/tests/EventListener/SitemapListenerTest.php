@@ -50,7 +50,6 @@ class SitemapListenerTest extends ContaoTestCase
     public function testNewsArticleIsAdded(array $pageProperties, array $newsArchiveProperties, bool $hasAuthenticatedMember): void
     {
         $jumpToPage = $this->mockClassWithProperties(PageModel::class, $pageProperties);
-
         $jumpToPage
             ->method('getAbsoluteUrl')
             ->willReturn('https://contao.org')
