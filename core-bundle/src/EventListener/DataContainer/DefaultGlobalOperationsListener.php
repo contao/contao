@@ -73,6 +73,7 @@ class DefaultGlobalOperationsListener
 
         $operations = [];
 
+        $hasLimitHeight = ($GLOBALS['TL_DCA'][$table]['list']['sorting']['limitHeight'] ?? null) > 0;
         $isTreeMode = DataContainer::MODE_TREE === ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null);
         $isExtendedTreeMode = DataContainer::MODE_TREE_EXTENDED === ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null);
 
@@ -84,6 +85,13 @@ class DefaultGlobalOperationsListener
                 'toggleNodes' => [
                     'href' => $isDcFolder ? 'tg=all' : 'ptg=all',
                     'class' => 'header_toggle',
+                    'showOnSelect' => true,
+                ],
+            ];
+        } elseif ($hasLimitHeight) {
+            $operations += [
+                'toggleNodes' => [
+                    'button_callback' => static fn () => '<button class="header_toggle" data-contao--limit-height-target="operation" data-action="contao--limit-height#toggleAll keydown@window->contao--limit-height#keypress keyup@window->contao--limit-height#keypress" style="display:none">'.$GLOBALS['TL_LANG']['DCA']['toggleNodes'][0].'</button> ',
                     'showOnSelect' => true,
                 ],
             ];
