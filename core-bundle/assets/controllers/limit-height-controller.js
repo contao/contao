@@ -60,7 +60,7 @@ export default class extends Controller {
 
         this.togglerMap.set(node, toggler);
 
-        node.before(toggler);
+        node.append(toggler);
         this.updateOperation();
     }
 

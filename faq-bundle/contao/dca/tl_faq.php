@@ -63,7 +63,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'headerFields'            => array('title', 'headline', 'jumpTo', 'tstamp', 'allowComments'),
 			'child_record_callback'   => array('tl_faq', 'listQuestions'),
 			'renderAsGrid'            => true,
-			'limitHeight'             => 144
+			'limitHeight'             => 160
 		)
 	),
 

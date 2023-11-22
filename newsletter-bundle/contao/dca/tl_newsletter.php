@@ -58,7 +58,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'defaultSearchField'      => 'subject',
 			'child_record_callback'   => array('tl_newsletter', 'listNewsletters'),
 			'renderAsGrid'            => true,
-			'limitHeight'             => 144
+			'limitHeight'             => 160
 		),
 		'operations' => array
 		(

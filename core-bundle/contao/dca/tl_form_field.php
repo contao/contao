@@ -61,7 +61,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'headerFields'            => array('title', 'tstamp', 'formID', 'storeValues', 'sendViaEmail', 'recipient', 'subject'),
 			'child_record_callback'   => array('tl_form_field', 'listFormFields'),
 			'renderAsGrid'            => true,
-			'limitHeight'             => 84
+			'limitHeight'             => 104
 		),
 		'operations' => array
 		(

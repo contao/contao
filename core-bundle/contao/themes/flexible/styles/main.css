@@ -474,7 +474,7 @@ body.popup {
 /* Buttons */
 #tl_buttons {
 	margin: 0;
-	padding: 12px 15px;
+	padding: 9px 15px;
 	text-align: right;
 }
 
@@ -1601,7 +1601,6 @@ table.tl_listing {
 .limit_toggler {
 	width: 100%;
 	position: absolute;
-	z-index: 10;
 	bottom: 0;
 	left: 0;
 	background: var(--content-bg);
