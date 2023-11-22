@@ -1,27 +1,26 @@
 {
     "devDependencies": {
-        "@babel/core": "^7.20.12",
-        "@babel/preset-env": "^7.20.2",
-        "@hotwired/stimulus": "^3.2.1",
+        "@babel/core": "^7.23.3",
+        "@babel/preset-env": "^7.23.3",
+        "@hotwired/stimulus": "^3.2.2",
         "@hotwired/stimulus-webpack-helpers": "^1.0.1",
-        "@symfony/webpack-encore": "^4.2.0",
-        "css-loader": "^6.7.0",
-        "cypress": "^12.17.0",
+        "@symfony/webpack-encore": "^4.5.0",
+        "css-loader": "^6.8.1",
+        "cypress": "^13.5.0",
         "gulp": "^4.0.2",
         "gulp-svgo": "^2.2.1",
-        "pump": "^3.0",
-        "webpack": "^5.75.0",
-        "webpack-cli": "^5.0.1"
+        "pump": "^3.0.0",
+        "webpack": "^5.89.0",
+        "webpack-cli": "^5.1.4"
     },
     "private": true,
     "scripts": {
         "build": "encore production --progress",
         "watch": "encore dev --watch",
-        "pree2e-tests": "rm -rf cypress/webspace/vendor/contao/manager-bundle && composer up --working-dir=cypress/webspace",
-        "e2e-tests": "symfony server:start --port=8765 --dir=cypress/webspace --daemon && yarn cypress run",
-        "poste2e-tests": "symfony server:stop --dir=cypress/webspace"
+        "e2e-tests": "cypress/bin/run-e2e"
     },
     "browserslist": [
         "defaults"
-    ]
+    ],
+    "packageManager": "yarn@4.0.1"
 }
