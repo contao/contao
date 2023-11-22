@@ -100,7 +100,7 @@ class DnsMigration extends AbstractMigration
             ;
 
             if ($from['scheme']) {
-                $qb->andWhere('https:' === $from['scheme'] ? 'useSSL = 1' : 'useSSL != 1');
+                $qb->andWhere('https:' === $from['scheme'] ? 'useSSL = 1' : 'useSSL = 0');
             }
 
             if (null !== $from['host']) {
