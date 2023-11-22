@@ -4522,6 +4522,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$labelPasteNew = $GLOBALS['TL_LANG'][$this->strTable]['pastenew'] ?? $GLOBALS['TL_LANG']['DCA']['pastenew'];
 		$labelPasteAfter = $GLOBALS['TL_LANG'][$this->strTable]['pasteafter'] ?? $GLOBALS['TL_LANG']['DCA']['pasteafter'];
 		$labelEditHeader = $GLOBALS['TL_LANG'][$this->ptable]['edit'] ?? $GLOBALS['TL_LANG']['DCA']['edit'];
+		$limitHeight = BackendUser::getInstance()->doNotCollapse ? false : (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['limitHeight'] ?? 0);
 
 		$db = Database::getInstance();
 		$security = System::getContainer()->get('security.helper');
@@ -4842,7 +4843,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				$return .= '
 <div class="tl_content' . ($blnWrapperStart ? ' wrapper_start' : '') . ($blnWrapperSeparator ? ' wrapper_separator' : '') . ($blnWrapperStop ? ' wrapper_stop' : '') . ($blnIndent ? ' indent indent_' . $intWrapLevel : '') . ($blnIndentFirst ? ' indent_first' : '') . ($blnIndentLast ? ' indent_last' : '') . ((string) $row[$i]['tstamp'] === '0' ? ' draft' : '') . (!empty($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class']) ? ' ' . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class'] : '') . ' click2edit toggle_select">
-<div class="inside hover-div">
+<div class="inside hover-div"' . ($limitHeight && !$blnWrapperStart && !$blnWrapperStop && !$blnWrapperSeparator ? ' data-contao--limit-height-target="node"' : '') . '>
 <div class="tl_content_right">';
 
 				// Opening wrappers
@@ -5032,6 +5033,20 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </form>';
 		}
 
+		if ($limitHeight)
+		{
+			$return = '<div
+				data-controller="contao--limit-height"
+				data-contao--limit-height-max-value="' . $limitHeight . '"
+				data-contao--limit-height-expand-value="' . $GLOBALS['TL_LANG']['MSC']['expandNode'] . '"
+				data-contao--limit-height-collapse-value="' . $GLOBALS['TL_LANG']['MSC']['collapseNode'] . '"
+				data-contao--limit-height-expand-all-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][0] . '"
+				data-contao--limit-height-expand-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][1] . '"
+				data-contao--limit-height-collapse-all-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][0] . '"
+				data-contao--limit-height-collapse-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][0] . '"
+			>' . $return . '</div>';
+		}
+
 		return $return;
 	}
 
@@ -5054,6 +5069,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		// Check the default labels (see #509)
 		$labelNew = $GLOBALS['TL_LANG'][$this->strTable]['new'] ?? $GLOBALS['TL_LANG']['DCA']['new'];
+		$limitHeight = BackendUser::getInstance()->doNotCollapse ? false : (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['limitHeight'] ?? 0);
 
 		$query = "SELECT * FROM " . $this->strTable;
 
@@ -5338,7 +5354,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 				else
 				{
-					$return .= '<td class="tl_file_list">' . $label . '</td>';
+					$return .= '<td class="tl_file_list">' . ($limitHeight ? '<div data-contao--limit-height-target="node">' : '') . $label . ($limitHeight ? '</div>' : '') . '</td>';
 				}
 
 				// Buttons ($row, $table, $root, $blnCircularReference, $childs, $previous, $next)
@@ -5437,6 +5453,20 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </div>
 </form>';
 			}
+		}
+
+		if ($limitHeight)
+		{
+			$return = '<div
+				data-controller="contao--limit-height"
+				data-contao--limit-height-max-value="' . $limitHeight . '"
+				data-contao--limit-height-expand-value="' . $GLOBALS['TL_LANG']['MSC']['expandNode'] . '"
+				data-contao--limit-height-collapse-value="' . $GLOBALS['TL_LANG']['MSC']['collapseNode'] . '"
+				data-contao--limit-height-expand-all-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][0] . '"
+				data-contao--limit-height-expand-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][1] . '"
+				data-contao--limit-height-collapse-all-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][0] . '"
+				data-contao--limit-height-collapse-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][0] . '"
+			>' . $return . '</div>';
 		}
 
 		return $return;

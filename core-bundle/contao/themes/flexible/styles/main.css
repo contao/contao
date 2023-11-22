@@ -474,7 +474,7 @@ body.popup {
 /* Buttons */
 #tl_buttons {
 	margin: 0;
-	padding: 12px 15px;
+	padding: 9px 15px;
 	text-align: right;
 }
 
@@ -1113,6 +1113,7 @@ table.tl_listing {
 }
 
 .tl_file, .tl_file_list {
+	position: relative;
 	padding: 5px 6px;
 	border-bottom: 1px solid var(--border);
 	background: var(--content-bg);
@@ -1615,7 +1616,6 @@ table.tl_listing {
 	width: 24px;
 	line-height: 8px;
 	color: var(--gray);
-	outline: none;
 	border-top-left-radius: 2px;
 	border-top-right-radius: 2px;
 }
@@ -2515,9 +2515,12 @@ time[title] {
 /* Default icon classes */
 .header_icon, .header_clipboard, .header_back, .header_new, .header_rss, .header_edit_all, .header_delete_all,
 .header_new_folder, .header_css_import, .header_theme_import, .header_store, .header_toggle, .header_sync {
+	display: inline-block;
 	padding: 3px 0 3px 21px;
+	background-color: transparent;
 	background-position: left center;
 	background-repeat: no-repeat;
+	border: none;
 	margin-left: 15px;
 }
 
