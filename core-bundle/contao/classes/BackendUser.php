@@ -257,7 +257,7 @@ class BackendUser extends User
 		}
 
 		// Merge permissions
-		$inherit = \in_array($this->inherit, array('group', 'extend')) ? array_merge($always, $depends) : $always;
+		$inherit = \in_array($this->inherit, array('group', 'extend')) ? array(...$always, ...$depends) : $always;
 		$time = Date::floorToMinute();
 		$db = Database::getInstance();
 

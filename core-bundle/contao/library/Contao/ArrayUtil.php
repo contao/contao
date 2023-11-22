@@ -122,7 +122,7 @@ class ArrayUtil
 		}
 
 		// Append the left-over images at the end
-		return array_merge(array_values($arrOrder), array_values($arrItems));
+		return array(...array_values($arrOrder), ...array_values($arrItems));
 	}
 
 	public static function flattenToString(array $arrArray): string

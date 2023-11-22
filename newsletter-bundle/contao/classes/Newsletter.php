@@ -827,7 +827,7 @@ class Newsletter extends Backend
 		$arrDelete = array_values(array_diff($arrChannel, $varValue));
 
 		// Delete existing recipients
-		if (!empty($arrDelete) && \is_array($arrDelete))
+		if (!empty($arrDelete))
 		{
 			$db
 				->prepare("DELETE FROM tl_newsletter_recipients WHERE pid IN(" . implode(',', array_map('\intval', $arrDelete)) . ") AND email=?")

@@ -2359,7 +2359,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 
 			// Handle multi-select fields in "override all" mode
-			if ($this->objActiveRecord !== null && (($arrData['inputType'] ?? null) == 'checkbox' || ($arrData['inputType'] ?? null) == 'checkboxWizard') && ($arrData['eval']['multiple'] ?? null) && Input::get('act') == 'overrideAll')
+			if ((($arrData['inputType'] ?? null) == 'checkbox' || ($arrData['inputType'] ?? null) == 'checkboxWizard') && ($arrData['eval']['multiple'] ?? null) && Input::get('act') == 'overrideAll')
 			{
 				$new = StringUtil::deserialize($varValue, true);
 				$old = StringUtil::deserialize($this->objActiveRecord->{$this->strField}, true);

@@ -286,8 +286,6 @@ class MessageCatalogueTest extends TestCase
         ;
 
         $catalogue = $this->createCatalogue($parentCatalogue);
-
-        unset($GLOBALS['TL_LANG']);
         $catalogue->populateGlobals('contao_tl_content');
 
         $this->assertSame('Headline', $GLOBALS['TL_LANG']['tl_content']['headline'][0]);
@@ -302,8 +300,6 @@ class MessageCatalogueTest extends TestCase
         ;
 
         $catalogue = $this->createCatalogue($parentCatalogue);
-
-        unset($GLOBALS['TL_LANG']);
         $catalogue->populateGlobals('foobar');
 
         $this->assertEmpty($GLOBALS['TL_LANG'] ?? null);
@@ -320,8 +316,6 @@ class MessageCatalogueTest extends TestCase
         ;
 
         $catalogue = $this->createCatalogue($parentCatalogue);
-
-        unset($GLOBALS['TL_LANG']);
         $string = $catalogue->getGlobalsString('contao_tl_content');
 
         $this->assertSame("\$GLOBALS['TL_LANG']['tl_content']['headline']['0'] = 'Headline';\n", $string);
@@ -336,8 +330,6 @@ class MessageCatalogueTest extends TestCase
         ;
 
         $catalogue = $this->createCatalogue($parentCatalogue);
-
-        unset($GLOBALS['TL_LANG']);
         $string = $catalogue->getGlobalsString('foobar');
 
         $this->assertSame('', $string);
