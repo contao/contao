@@ -2506,9 +2506,9 @@ time[title] {
 .foldable--loading::after {
 	content: "";
 	position: absolute;
-	inset: 1px auto auto 1px;
-	width: 15px;
-	height: 15px;
+	inset: 2px auto auto 2px;
+	width: 14px;
+	height: 14px;
 	background: url("icons/loading.svg") 0 0/contain no-repeat
 }
 
