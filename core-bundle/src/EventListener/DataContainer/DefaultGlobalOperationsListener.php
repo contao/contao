@@ -85,6 +85,7 @@ class DefaultGlobalOperationsListener
                 'toggleNodes' => [
                     'href' => $isDcFolder ? 'tg=all' : 'ptg=all',
                     'class' => 'header_toggle',
+                    'attributes' => ' data-contao--toggle-nodes-target="operation" data-action="contao--toggle-nodes#toggleAll keydown@window->contao--toggle-nodes#keypress keyup@window->contao--toggle-nodes#keypress"',
                     'showOnSelect' => true,
                 ],
             ];
