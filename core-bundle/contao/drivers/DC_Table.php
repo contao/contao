@@ -245,7 +245,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 * requests. This was unreliable and caused several issues, like for
 	 * example if the user used multiple browser tabs at the same time.
 	 */
-	private function findCurrentPid(): ?int
+	private function findCurrentPid(): int|null
 	{
 		if (!$this->ptable)
 		{
@@ -406,7 +406,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'] ?? null))
 		{
-			$allowedFields = array_unique(array_merge($allowedFields, array_keys($GLOBALS['TL_DCA'][$this->strTable]['fields'])));
+			$allowedFields = array_unique(array(...$allowedFields, ...array_keys($GLOBALS['TL_DCA'][$this->strTable]['fields'])));
 		}
 
 		// Use the field order of the DCA file
@@ -5844,7 +5844,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Build options
 			if ($this->total > 0)
 			{
-				$options = '';
 				$options_total = ceil($this->total / Config::get('resultsPerPage'));
 
 				// Reset limit if other parameters have decreased the number of results
@@ -6009,7 +6008,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['csv']))
 						{
 							$this->procedure[] = $db->findInSet('?', $field, true);
-							$this->values[] = $session['filter'][$filter][$field] ?? null;
+							$this->values[] = $session['filter'][$filter][$field];
 						}
 						else
 						{
@@ -6022,7 +6021,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					else
 					{
 						$this->procedure[] = $what . '=?';
-						$this->values[] = $session['filter'][$filter][$field] ?? null;
+						$this->values[] = $session['filter'][$filter][$field];
 					}
 				}
 			}
@@ -6485,10 +6484,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$remoteNew = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options'][$value] ?? null;
 			}
-			else
-			{
-				$remoteNew = $value;
-			}
 
 			if (\is_array($remoteNew))
 			{
@@ -6598,7 +6593,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			// Get root records from global configuration file
-			elseif (\is_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] ?? null))
+			elseif (\is_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['root']))
 			{
 				if ($GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] == array(0))
 				{

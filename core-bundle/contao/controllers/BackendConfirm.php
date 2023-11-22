@@ -139,7 +139,7 @@ class BackendConfirm extends Backend
 		}
 		elseif (!empty($GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['act']]))
 		{
-			$arrInfo['act'] = \is_array($GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['act']] ?? null) ? $GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['act']][0] : ($GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['act']] ?? null);
+			$arrInfo['act'] = \is_array($GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['act']]) ? $GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['act']][0] : $GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['act']];
 		}
 
 		// Replace the ID wildcard
