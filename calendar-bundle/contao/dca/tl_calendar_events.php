@@ -787,58 +787,6 @@ class tl_calendar_events extends Backend
 	}
 
 	/**
-	 * Get all articles and return them as array
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @return array
-	 */
-	public function getArticleAlias(DataContainer $dc)
-	{
-		$arrPids = array();
-		$arrAlias = array();
-
-		$db = Database::getInstance();
-		$user = BackendUser::getInstance();
-
-		if (!$user->isAdmin)
-		{
-			foreach ($user->pagemounts as $id)
-			{
-				$arrPids[] = array($id);
-				$arrPids[] = $db->getChildRecords($id, 'tl_page');
-			}
-
-			if (!empty($arrPids))
-			{
-				$arrPids = array_merge(...$arrPids);
-			}
-			else
-			{
-				return $arrAlias;
-			}
-
-			$objAlias = $db->execute("SELECT a.id, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid WHERE a.pid IN(" . implode(',', array_map('\intval', array_unique($arrPids))) . ") ORDER BY parent, a.sorting");
-		}
-		else
-		{
-			$objAlias = $db->execute("SELECT a.id, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid ORDER BY parent, a.sorting");
-		}
-
-		if ($objAlias->numRows)
-		{
-			System::loadLanguageFile('tl_article');
-
-			while ($objAlias->next())
-			{
-				$arrAlias[$objAlias->parent][$objAlias->id] = $objAlias->title . ' (' . ($GLOBALS['TL_LANG']['COLS'][$objAlias->inColumn] ?? $objAlias->inColumn) . ', ID ' . $objAlias->id . ')';
-			}
-		}
-
-		return $arrAlias;
-	}
-
-	/**
 	 * Add the source options depending on the allowed fields (see #5498)
 	 *
 	 * @param DataContainer $dc
