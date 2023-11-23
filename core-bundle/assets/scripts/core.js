@@ -15,7 +15,9 @@ window.AjaxRequest =
 	 * @returns {boolean}
 	 */
 	toggleNavigation: function(el, id, url) {
-		window.console && console.warn('AjaxRequest.toggleNavigation() is deprecated. Please use the stimulus controller instead.');
+		if (window.console) {
+			console.warn('AjaxRequest.toggleNavigation() is deprecated. Please use the stimulus controller instead.');
+		}
 
 		var item = $(id),
 			parent = $(el).getParent('li');
@@ -49,6 +51,10 @@ window.AjaxRequest =
 	 * @returns {boolean}
 	 */
 	toggleStructure: function(el, id, level, mode) {
+		if (window.console) {
+			console.warn('AjaxRequest.toggleStructure() is deprecated. Please use the stimulus controller instead.');
+		}
+
 		el.blur();
 
 		var item = $(id);
@@ -144,6 +150,10 @@ window.AjaxRequest =
 	 * @returns {boolean}
 	 */
 	toggleFileManager: function(el, id, folder, level) {
+		if (window.console) {
+			console.warn('AjaxRequest.toggleFileManager() is deprecated. Please use the stimulus controller instead.');
+		}
+
 		el.blur();
 
 		var item = $(id);
@@ -689,12 +699,7 @@ window.Backend =
 
 		if (!offset) return;
 
-		var header = window.document.getElementById('header'),
-			additionalOffset = 0;
-
-		if (header) {
-			header.addClass('down');
-		}
+		var additionalOffset = 0;
 
 		$$('[data-add-to-scroll-offset]').each(function(el) {
 			var offset = el.get('data-add-to-scroll-offset'),
@@ -2286,44 +2291,6 @@ window.Theme =
 	},
 
 	/**
-	 * Hide the menu on scroll
-	 */
-	hideMenuOnScroll: function() {
-		var header = $('header');
-		if (!header) return;
-
-		var wh = window.getSize().y,
-			dh = window.getScrollSize().y - wh,
-			anchor = 0;
-
-		if (!('ontouchmove' in window) || wh >= dh) {
-			header.removeClass('down');
-			return;
-		}
-
-		window
-			.addEvent('touchmove', function() {
-				var ws = window.getScroll().y;
-
-				if (Math.abs(anchor - ws) < 20) return;
-
-				if (ws > 0 && ws > anchor) {
-					header.addClass('down');
-				} else {
-					header.removeClass('down');
-				}
-
-				anchor = ws;
-			})
-			.addEvent('scroll', function() {
-				if (window.getScroll().y < 1) {
-					header.removeClass('down');
-				}
-			})
-		;
-	},
-
-	/**
 	 * Set up the split button toggle
 	 */
 	setupSplitButtonToggle: function() {
@@ -2394,7 +2361,6 @@ window.addEvent('domready', function() {
 	Theme.setupTextareaResizing();
 	Theme.setupMenuToggle();
 	Theme.setupProfileToggle();
-	Theme.hideMenuOnScroll();
 	Theme.setupSplitButtonToggle();
 });
 

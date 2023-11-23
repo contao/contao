@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
+use Contao\CoreBundle\Translation\MessageCatalogue;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database\Installer;
 use Symfony\Component\DependencyInjection\Container;
@@ -444,8 +445,9 @@ abstract class System
 		$arrCreateLangs = ($strLanguage == 'en') ? array('en') : array('en', $strLanguage);
 
 		// Prepare the XLIFF loader
-		$xlfLoader = new XliffFileLoader(static::getContainer()->getParameter('kernel.project_dir'), true);
-		$strCacheDir = static::getContainer()->getParameter('kernel.cache_dir');
+		$container = static::getContainer();
+		$xlfLoader = new XliffFileLoader($container->getParameter('kernel.project_dir'), true);
+		$strCacheDir = $container->getParameter('kernel.cache_dir');
 
 		// Load the language(s)
 		foreach ($arrCreateLangs as $strCreateLang)
@@ -458,7 +460,7 @@ abstract class System
 			else
 			{
 				// Find the given filename either as .php or .xlf file
-				$finder = static::getContainer()->get('contao.resource_finder')->findIn('languages/' . $strCreateLang)->name('/^' . $strName . '\.(php|xlf)$/');
+				$finder = $container->get('contao.resource_finder')->findIn('languages/' . $strCreateLang)->name('/^' . $strName . '\.(php|xlf)$/');
 
 				/** @var SplFileInfo $file */
 				foreach ($finder as $file)
@@ -476,6 +478,14 @@ abstract class System
 						default:
 							throw new \RuntimeException(sprintf('Invalid language file extension: %s', $file->getExtension()));
 					}
+				}
+
+				// Also populate $GLOBALS['TL_LANG'] with the Symfony translations of the 'contao_' domains.
+				$catalogue = $container->get('translator', ContainerInterface::NULL_ON_INVALID_REFERENCE)?->getCatalogue($strLanguage);
+
+				if ($catalogue instanceof MessageCatalogue)
+				{
+					$catalogue->populateGlobals('contao_' . $strName);
 				}
 			}
 		}

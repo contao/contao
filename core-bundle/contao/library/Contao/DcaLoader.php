@@ -167,7 +167,7 @@ class DcaLoader extends Controller
 				{
 					$v['label'] = &$GLOBALS['TL_LANG'][$this->strTable][$k];
 				}
-				elseif (isset($GLOBALS['TL_LANG']['DCA'][$k]))
+				else
 				{
 					$v['label'] = &$GLOBALS['TL_LANG']['DCA'][$k];
 				}
