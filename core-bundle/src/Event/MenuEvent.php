@@ -39,21 +39,18 @@ class MenuEvent extends Event
 
     public function moveItem(?ItemInterface $parentNode, ItemInterface $node, int $newIndex): void
     {
-        if (null === $parentNode)
-        {
+        if (null === $parentNode) {
             return;
         }
 
-        if (!$parentNode->hasChildren())
-        {
+        if (!$parentNode->hasChildren()) {
             return;
         }
 
         $name = $node->getName();
         $arrChildren = $parentNode->getChildren();
 
-        if (!\array_key_exists($name, $arrChildren))
-        {
+        if (!\array_key_exists($name, $arrChildren)) {
             return;
         }
 

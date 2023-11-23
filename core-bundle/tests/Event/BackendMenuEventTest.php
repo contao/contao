@@ -62,8 +62,7 @@ class BackendMenuEventTest extends TestCase
 
     private function createMenuItems(MenuItem $node, FactoryInterface $factory): void
     {
-        for ($i = 0; $i < 9; $i++)
-        {
+        for ($i = 0; $i < 9; $i++) {
             $node->addChild(new MenuItem('child_' . $i, $factory));
         }
     }
