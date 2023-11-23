@@ -26,7 +26,7 @@ class RedirectController
     {
     }
 
-    public function urlRedirectAction(Request $request, string $path, bool $permanent = false, string $scheme = null, int $httpPort = null, int $httpsPort = null, bool $keepRequestMethod = false): Response
+    public function urlRedirectAction(Request $request, string $path, bool $permanent = false, string|null $scheme = null, int|null $httpPort = null, int|null $httpsPort = null, bool $keepRequestMethod = false): Response
     {
         $response = $this->controller->urlRedirectAction($request, $path, $permanent, $scheme, $httpPort, $httpsPort, $keepRequestMethod);
         $pageModel = $request->attributes->get('pageModel');

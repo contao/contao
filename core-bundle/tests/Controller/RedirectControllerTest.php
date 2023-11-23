@@ -16,16 +16,16 @@ use Contao\CoreBundle\Controller\RedirectController;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Symfony\Bundle\FrameworkBundle\Controller\RedirectController as SymfonyRedirectController;
-use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 class RedirectControllerTest extends TestCase
 {
     public function testAddsTheHeader(): void
     {
         $response = $this->createMock(RedirectResponse::class);
-        $response->headers = $this->createMock(HeaderBag::class);
+        $response->headers = $this->createMock(ResponseHeaderBag::class);
         $response->headers
             ->expects($this->once())
             ->method('set')
@@ -50,7 +50,7 @@ class RedirectControllerTest extends TestCase
     public function testDoesNotAddTheHeaderForInsecureRequess(): void
     {
         $response = $this->createMock(RedirectResponse::class);
-        $response->headers = $this->createMock(HeaderBag::class);
+        $response->headers = $this->createMock(ResponseHeaderBag::class);
         $response->headers
             ->expects($this->never())
             ->method('set')
@@ -74,7 +74,7 @@ class RedirectControllerTest extends TestCase
     public function testDoesNotAddTheHeaderWithoutPageModel(): void
     {
         $response = $this->createMock(RedirectResponse::class);
-        $response->headers = $this->createMock(HeaderBag::class);
+        $response->headers = $this->createMock(ResponseHeaderBag::class);
         $response->headers
             ->expects($this->never())
             ->method('set')
@@ -96,7 +96,7 @@ class RedirectControllerTest extends TestCase
     public function testDoesNotAddTheHeaderIfRootPageUsesSSL(): void
     {
         $response = $this->createMock(RedirectResponse::class);
-        $response->headers = $this->createMock(HeaderBag::class);
+        $response->headers = $this->createMock(ResponseHeaderBag::class);
         $response->headers
             ->expects($this->never())
             ->method('set')
