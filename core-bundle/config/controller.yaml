@@ -182,6 +182,11 @@ services:
         tags:
             - controller.service_arguments
 
+    Contao\CoreBundle\Controller\RedirectController:
+        public: true
+        arguments:
+            - '@Symfony\Bundle\FrameworkBundle\Controller\RedirectController'
+
     Contao\CoreBundle\Controller\RobotsTxtController:
         arguments:
             - '@contao.routing.page_finder'
