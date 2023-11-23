@@ -852,7 +852,6 @@ h2.sub_headline {
 #tl_crawl .progress {
 	display: flex;
 	height: 20px;
-	overflow: hidden;
 	background-color: var(--tree-header);
 	border-radius: 2px;
 }
@@ -1283,7 +1282,6 @@ table.tl_listing {
 
 .tl_content {
 	border-bottom: 1px solid var(--border);
-	overflow: hidden;
 	position: relative;
 }
 
@@ -1594,6 +1592,7 @@ table.tl_listing {
 	border-top: 1px solid var(--border);
 }
 
+/* Backwards compatibility */
 .limit_height {
 	overflow: hidden;
 }
@@ -1752,7 +1751,7 @@ label.tl_change_selected {
 #tl_breadcrumb {
 	margin: 0 0 12px;
 	padding: 4px 6px;
-	overflow: hidden;
+	display: flow-root;
 	background: var(--active-bg);
 	border: 1px solid var(--active-border);
 	border-radius: 2px;
@@ -1786,7 +1785,6 @@ label.tl_change_selected {
 	margin: 0 0 1px;
 	padding: 0;
 	list-style-type: none;
-	overflow: hidden;
 }
 
 .selector_container > ul > li {
@@ -1835,7 +1833,7 @@ label.tl_change_selected {
 }
 
 ul.sgallery {
-	overflow: hidden;
+	display: flow-root;
 }
 
 ul.sgallery li {
@@ -2146,7 +2144,6 @@ ul.sgallery li {
 }
 
 .tl_metawizard li {
-	overflow: hidden;
 	margin-bottom: 2px;
 	padding: 9px;
 }
@@ -2329,7 +2326,7 @@ ul.sgallery li {
 
 /* Misc */
 .ce_gallery ul {
-	overflow: hidden;
+	display: flow-root;
 }
 
 .ce_gallery li {
@@ -2739,7 +2736,7 @@ fieldset.collapsed > legend {
 
 /* Pagination */
 .pagination {
-	overflow: hidden;
+	display: flow-root;
 	background: var(--panel-bg);
 	margin-bottom: 18px;
 	border: solid var(--border);
@@ -2775,24 +2772,6 @@ fieldset.collapsed > legend {
 }
 
 /* File synchronization */
-#sync-results {
-	overflow: hidden;
-	margin: 18px 15px 0;
-}
-
-#sync-results p {
-	margin-bottom: 0;
-}
-
-#sync-results .left {
-	float: left;
-	padding: 2px 0;
-}
-
-#sync-results .right {
-	float: right;
-}
-
 #result-list {
 	margin: 15px;
 }
@@ -2907,12 +2886,10 @@ fieldset.collapsed > legend {
 	#container {
 		display: block;
 		padding-top: 40px;
-		overflow: hidden;
 	}
 
 	#main, #left {
 		float: none;
-		overflow: hidden;
 	}
 
 	#main {
