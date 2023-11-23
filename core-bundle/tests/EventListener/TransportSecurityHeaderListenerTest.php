@@ -37,12 +37,36 @@ class TransportSecurityHeaderListenerTest extends TestCase
     public function testIgnoresContaoMainRequestsThatAreNotSecure(): void
     {
         $response = new Response();
-        $request = Request::create('http://contao.org'); // This is the key for this test
+        $request = Request::create('http://contao.org');
 
         $listener = new TransportSecurityHeaderListener($this->createScopeMatcher(true), 31536000);
         $listener($this->createEvent($request, $response));
 
         $this->assertFalse($response->headers->has('Strict-Transport-Security'));
+    }
+
+    public function testIgnoresNonSafeRequests(): void
+    {
+        $response = new Response();
+        $request = Request::create('https://contao.org', 'POST');
+
+        $listener = new TransportSecurityHeaderListener($this->createScopeMatcher(true), 31536000);
+        $listener($this->createEvent($request, $response));
+
+        $this->assertFalse($response->headers->has('Strict-Transport-Security'));
+    }
+
+    public function testIgnoresIfTheResponseAlreadyHasAnStsHeaderPresent(): void
+    {
+        $response = new Response();
+        $response->headers->set('Strict-Transport-Security', 'max-age=500; includeSubDomains; preload');
+        $request = Request::create('https://contao.org');
+
+        $listener = new TransportSecurityHeaderListener($this->createScopeMatcher(true), 31536000);
+        $listener($this->createEvent($request, $response));
+
+        $this->assertTrue($response->headers->has('Strict-Transport-Security'));
+        $this->assertSame('max-age=500; includeSubDomains; preload', $response->headers->get('Strict-Transport-Security'));
     }
 
     public function testAppliesCorrectTtl(): void
@@ -55,6 +79,9 @@ class TransportSecurityHeaderListenerTest extends TestCase
 
         $this->assertTrue($response->headers->has('Strict-Transport-Security'));
         $this->assertSame('max-age=31536000', $response->headers->get('Strict-Transport-Security'));
+
+        $response = new Response();
+        $request = Request::create('https://contao.org');
 
         $listener = new TransportSecurityHeaderListener($this->createScopeMatcher(true), 500);
         $listener($this->createEvent($request, $response));

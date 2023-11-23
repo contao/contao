@@ -28,7 +28,12 @@ class TransportSecurityHeaderListener
 
     public function __invoke(ResponseEvent $event): void
     {
-        if (!$this->scopeMatcher->isContaoMainRequest($event) || !$event->getRequest()->isSecure()) {
+        if (
+            !$this->scopeMatcher->isContaoMainRequest($event)
+            || !$event->getRequest()->isSecure()
+            || !$event->getRequest()->isMethodSafe()
+            || $event->getResponse()->headers->has('Strict-Transport-Security')
+        ) {
             return;
         }
 
