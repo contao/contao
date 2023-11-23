@@ -53,6 +53,9 @@ body.popup {
 	min-height: 40px;
 	text-align: left;
 	background: var(--header-bg);
+	position: sticky;
+	top: 0;
+	z-index: 4;
 }
 
 #header h1 {
@@ -2871,21 +2874,8 @@ fieldset.collapsed > legend {
 
 /* Tablet */
 @media (max-width: 991px) {
-	#header {
-		width: 100%;
-		padding: 0;
-		position: fixed;
-		top: 0;
-		z-index: 2;
-		transition: transform .2s ease;
-		-webkit-transform: none;
-		transform: none;
-		will-change: transform;
-	}
-
 	#container {
 		display: block;
-		padding-top: 40px;
 	}
 
 	#main, #left {
@@ -2930,11 +2920,6 @@ fieldset.collapsed > legend {
 
 /* Handheld */
 @media (max-width: 767px) {
-	#header.down {
-		-webkit-transform: translateY(-40px);
-		transform: translateY(-40px);
-	}
-
 	#header h1 a {
 		min-width: 22px;
 		padding: 12px;
