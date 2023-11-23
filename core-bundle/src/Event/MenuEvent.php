@@ -37,20 +37,20 @@ class MenuEvent extends Event
         return $this->tree;
     }
 
-    public function moveItem(?ItemInterface $contentNode, ItemInterface $node, int $newIndex): void
+    public function moveItem(?ItemInterface $parentNode, ItemInterface $node, int $newIndex): void
     {
-        if (null === $contentNode)
+        if (null === $parentNode)
         {
             return;
         }
 
-        if (!$contentNode->hasChildren())
+        if (!$parentNode->hasChildren())
         {
             return;
         }
 
         $name = $node->getName();
-        $arrChildren = $contentNode->getChildren();
+        $arrChildren = $parentNode->getChildren();
 
         if (!\array_key_exists($name, $arrChildren))
         {
@@ -67,6 +67,6 @@ class MenuEvent extends Event
         $arrBuffer = array_splice($arrChildren, 0, $newIndex);
         $arrChildren = array_merge_recursive($arrBuffer, $arrNew, $arrChildren);
 
-        $contentNode->reorderChildren(array_keys($arrChildren));
+        $parentNode->reorderChildren(array_keys($arrChildren));
     }
 }
