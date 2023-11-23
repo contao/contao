@@ -15,6 +15,8 @@ namespace Contao\CoreBundle\Tests\Event;
 use Contao\CoreBundle\Event\MenuEvent;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
+use Knp\Menu\MenuFactory;
+use Knp\Menu\MenuItem;
 use PHPUnit\Framework\TestCase;
 
 class BackendMenuEventTest extends TestCase
@@ -35,5 +37,34 @@ class BackendMenuEventTest extends TestCase
         $event = new MenuEvent($factory, $tree);
 
         $this->assertSame($tree, $event->getTree());
+    }
+
+    public function testMovesTheLastMenuItemToSecondIndex(): void
+    {
+        $factory = new MenuFactory();
+        $tree = new MenuItem('content', $factory);
+        $event = new MenuEvent($factory, $tree);
+
+        $newIndex = 2;
+        $this->createMenuItems($tree, $factory);
+
+        // Save last item for testing
+        $lastMenuItem = $tree->getLastChild();
+
+        $event->moveItem($tree, $lastMenuItem, $newIndex);
+
+        // Reset keys to get the test object by index
+        $children = array_values($tree->getChildren());
+        $testItem = $children[$newIndex];
+
+        $this->assertSame($lastMenuItem, $testItem);
+    }
+
+    private function createMenuItems(MenuItem $node, FactoryInterface $factory): void
+    {
+        for ($i = 0; $i < 9; $i++)
+        {
+            $node->addChild(new MenuItem('child_' . $i, $factory));
+        }
     }
 }

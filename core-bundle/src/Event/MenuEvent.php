@@ -36,4 +36,37 @@ class MenuEvent extends Event
     {
         return $this->tree;
     }
+
+    public function moveItem(?ItemInterface $contentNode, ItemInterface $node, int $newIndex): void
+    {
+        if (null === $contentNode)
+        {
+            return;
+        }
+
+        if (!$contentNode->hasChildren())
+        {
+            return;
+        }
+
+        $name = $node->getName();
+        $arrChildren = $contentNode->getChildren();
+
+        if (!\array_key_exists($name, $arrChildren))
+        {
+            return;
+        }
+
+        $arrNew = $arrChildren;
+
+        // Get offset of the menu item and splice it into $arrNew
+        $intOffset = array_search($name, array_keys($arrChildren), true);
+        $arrChildren = array_splice($arrNew, 0, $intOffset);
+
+        // Split current menu items again to insert the item at the given index
+        $arrBuffer = array_splice($arrChildren, 0, $newIndex);
+        $arrChildren = array_merge_recursive($arrBuffer, $arrNew, $arrChildren);
+
+        $contentNode->reorderChildren(array_keys($arrChildren));
+    }
 }
