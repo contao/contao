@@ -14,6 +14,7 @@ use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Util\UrlUtil;
 
 /**
  * Front end module "newsreader".
@@ -162,7 +163,18 @@ class ModuleNewsReader extends ModuleNews
 
 			if ($objArticle->canonicalLink)
 			{
-				$htmlHeadBag->setCanonicalUri($objArticle->canonicalLink);
+				$url = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objArticle->canonicalLink);
+
+				// Ensure absolute links
+				if (!preg_match('#^https?://#', $url)) {
+					if (!$request = System::getContainer()->get('request_stack')->getCurrentRequest()) {
+						throw new \RuntimeException('The request stack did not contain a request');
+					}
+
+					$url = UrlUtil::makeAbsolute($url, $request->getUri());
+				}
+
+				$htmlHeadBag->setCanonicalUri($url);
 			}
 		}
 
