@@ -150,7 +150,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>256, 'tl_class'=>'w100'),
+			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'content' => array
