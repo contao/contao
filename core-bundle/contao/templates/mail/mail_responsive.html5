@@ -1,4 +1,4 @@
-<?php /* @see https://github.com/leemunroe/responsive-html-email-template */ ?>
+<?php /** @see https://github.com/leemunroe/responsive-html-email-template */ ?>
 <!doctype html>
 <html>
   <head>
