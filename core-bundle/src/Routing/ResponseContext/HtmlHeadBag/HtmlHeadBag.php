@@ -12,8 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag;
 
-use Contao\CoreBundle\InsertTag\InsertTagParser;
-use Contao\CoreBundle\Util\UrlUtil;
 use Symfony\Component\HttpFoundation\Request;
 
 final class HtmlHeadBag
@@ -91,20 +89,11 @@ final class HtmlHeadBag
         return $this->canonicalUri;
     }
 
-    public function getCanonicalUriForRequest(Request $request, InsertTagParser|null $insertTagParser = null): string
+    public function getCanonicalUriForRequest(Request $request): string
     {
         if ($this->canonicalUri) {
-            if (null !== $insertTagParser) {
-                $url = $insertTagParser->replaceInline($this->canonicalUri);
-            }
-
-            // Ensure absolute links
-            if (!preg_match('#^https?://#', $url)) {
-                $url = UrlUtil::makeAbsolute($url, $request->getUri());
-            }
-
             // Make sure the custom URI is normalized as well
-            return Request::create($url)->getUri();
+            return Request::create($this->canonicalUri)->getUri();
         }
 
         $params = [];
