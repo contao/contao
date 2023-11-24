@@ -55,8 +55,8 @@ class DisableAppConfiguredSettingsListener
             '',
             sprintf(
                 'title="%s"',
-                StringUtil::specialchars($this->translator->trans('tl_settings.configuredInApp', [], 'contao_tl_settings'))
-            )
+                StringUtil::specialchars($this->translator->trans('tl_settings.configuredInApp', [], 'contao_tl_settings')),
+            ),
         );
     }
 }

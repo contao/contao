@@ -20,11 +20,96 @@ use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
+use Symfony\Component\Filesystem\Path;
+use Symfony\Component\Routing\Loader\AnnotationDirectoryLoader;
+use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 class RouteLoaderTest extends ContaoTestCase
 {
+    public function testLoadsRoutesYaml(): void
+    {
+        $loader = $this->createMock(YamlFileLoader::class);
+        $loader
+            ->expects($this->once())
+            ->method('load')
+            ->with(Path::join(__DIR__, '../Fixtures/Routing/WithRoutingYaml/config/routes.yaml'))
+        ;
+
+        $loaderResolver = $this->createMock(LoaderResolverInterface::class);
+        $loaderResolver
+            ->expects($this->once())
+            ->method('resolve')
+            ->willReturn($loader)
+        ;
+
+        $loader = $this->createMock(LoaderInterface::class);
+        $loader
+            ->expects($this->exactly(1))
+            ->method('getResolver')
+            ->willReturn($loaderResolver)
+        ;
+
+        $pluginLoader = $this->createMock(PluginLoader::class);
+        $pluginLoader
+            ->expects($this->once())
+            ->method('getInstancesOf')
+            ->with(PluginLoader::ROUTING_PLUGINS, true)
+            ->willReturn([])
+        ;
+
+        $routeLoader = new RouteLoader(
+            $loader,
+            $pluginLoader,
+            $this->createMock(ContaoKernel::class),
+            __DIR__.'/../Fixtures/Routing/WithRoutingYaml',
+        );
+
+        $routeLoader->loadFromPlugins();
+    }
+
+    public function testLoadsAppController(): void
+    {
+        $loader = $this->createMock(AnnotationDirectoryLoader::class);
+        $loader
+            ->expects($this->once())
+            ->method('load')
+            ->with(Path::join(__DIR__, '../Fixtures/Routing/WithAppController/src/Controller'))
+        ;
+
+        $loaderResolver = $this->createMock(LoaderResolverInterface::class);
+        $loaderResolver
+            ->expects($this->once())
+            ->method('resolve')
+            ->willReturn($loader)
+        ;
+
+        $loader = $this->createMock(LoaderInterface::class);
+        $loader
+            ->expects($this->exactly(1))
+            ->method('getResolver')
+            ->willReturn($loaderResolver)
+        ;
+
+        $pluginLoader = $this->createMock(PluginLoader::class);
+        $pluginLoader
+            ->expects($this->once())
+            ->method('getInstancesOf')
+            ->with(PluginLoader::ROUTING_PLUGINS, true)
+            ->willReturn([])
+        ;
+
+        $routeLoader = new RouteLoader(
+            $loader,
+            $pluginLoader,
+            $this->createMock(ContaoKernel::class),
+            __DIR__.'/../Fixtures/Routing/WithAppController',
+        );
+
+        $routeLoader->loadFromPlugins();
+    }
+
     public function testLoadFromPlugins(): void
     {
         $loaderResolver = $this->createMock(LoaderResolverInterface::class);
@@ -51,7 +136,7 @@ class RouteLoaderTest extends ContaoTestCase
             $loader,
             $pluginLoader,
             $this->createMock(ContaoKernel::class),
-            $this->getTempDir()
+            $this->getTempDir(),
         );
 
         $collection = $routeLoader->loadFromPlugins();
@@ -91,7 +176,7 @@ class RouteLoaderTest extends ContaoTestCase
             $loader,
             $pluginLoader,
             $this->createMock(ContaoKernel::class),
-            $this->getTempDir()
+            $this->getTempDir(),
         );
 
         $routes = $routeLoader->loadFromPlugins()->all();
@@ -101,10 +186,7 @@ class RouteLoaderTest extends ContaoTestCase
         $this->assertSame(3, array_search('contao_catch_all', array_keys($routes), true));
     }
 
-    /**
-     * @return RoutingPluginInterface&MockObject
-     */
-    private function mockRoutePlugin(string $routeName, string $routePath): RoutingPluginInterface
+    private function mockRoutePlugin(string $routeName, string $routePath): RoutingPluginInterface&MockObject
     {
         $collection = new RouteCollection();
         $collection->add($routeName, new Route($routePath));

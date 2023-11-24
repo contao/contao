@@ -16,13 +16,17 @@ use Contao\CalendarEventsModel;
 use Contao\CalendarModel;
 use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
 use Contao\PageModel;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class SitemapListener
 {
-    public function __construct(private readonly ContaoFramework $framework)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly Security $security,
+    ) {
     }
 
     public function __invoke(SitemapEvent $event): void
@@ -37,8 +41,13 @@ class SitemapListener
         $arrPages = [];
         $time = time();
 
-        // Get all calendars
-        $objCalendars = $this->framework->getAdapter(CalendarModel::class)->findByProtected('');
+        if ($isMember = $this->security->isGranted('ROLE_MEMBER')) {
+            // Get all calendars
+            $objCalendars = $this->framework->getAdapter(CalendarModel::class)->findAll();
+        } else {
+            // Get all unprotected calendars
+            $objCalendars = $this->framework->getAdapter(CalendarModel::class)->findByProtected('');
+        }
 
         if (null === $objCalendars) {
             return;
@@ -56,10 +65,14 @@ class SitemapListener
                 continue;
             }
 
+            if ($isMember && $objCalendar->protected && !$this->security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objCalendar->groups)) {
+                continue;
+            }
+
             $objParent = $this->framework->getAdapter(PageModel::class)->findWithDetails($objCalendar->jumpTo);
 
             // The target page does not exist
-            if (null === $objParent) {
+            if (!$objParent) {
                 continue;
             }
 
@@ -69,7 +82,7 @@ class SitemapListener
             }
 
             // The target page is protected (see #8416)
-            if ($objParent->protected) {
+            if ($objParent->protected && !$this->security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objParent->groups)) {
                 continue;
             }
 

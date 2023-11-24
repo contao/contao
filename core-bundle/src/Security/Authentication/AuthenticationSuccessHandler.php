@@ -21,7 +21,6 @@ use Contao\User;
 use Psr\Log\LoggerInterface;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterface;
-use Symfony\Bundle\SecurityBundle\Security\FirewallConfig;
 use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -81,7 +80,6 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         $this->user->save();
 
         if ($request->request->has('trusted')) {
-            /** @var FirewallConfig $firewallConfig */
             $firewallConfig = $this->firewallMap->getFirewallConfig($request);
 
             if (!$this->trustedDeviceManager->isTrustedDevice($user, $firewallConfig->getName())) {
@@ -93,7 +91,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
 
         $this->logger?->info(
             sprintf('User "%s" has logged in', $this->user->username),
-            ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, $this->user->username)]
+            ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, $this->user->username)],
         );
 
         if ($request->hasSession() && method_exists($token, 'getFirewallName')) {

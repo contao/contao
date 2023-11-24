@@ -72,7 +72,7 @@ return static function (ContainerConfigurator $configurator) use ($container): v
         }
 
         // Class does not have a constructor, nothing to worry about
-        if (!($constructor = $ref->getConstructor())) {
+        if (!$constructor = $ref->getConstructor()) {
             continue;
         }
 

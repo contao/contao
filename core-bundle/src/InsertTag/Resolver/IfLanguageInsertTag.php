@@ -31,7 +31,10 @@ class IfLanguageInsertTag implements BlockInsertTagResolverNestedResolvedInterfa
     public function __invoke(ResolvedInsertTag $insertTag, ParsedSequence $wrappedContent): ParsedSequence
     {
         $inverse = 'iflng' !== $insertTag->getName();
-        $language = $insertTag->getParameters()->get(0) ?: throw new InvalidInsertTagException(sprintf('Missing language parameter in %s insert tag', $insertTag->getName()));
+
+        if (!$language = $insertTag->getParameters()->get(0)) {
+            throw new InvalidInsertTagException(sprintf('Missing language parameter in %s insert tag', $insertTag->getName()));
+        }
 
         if ($this->languageMatchesPage($language)) {
             return $inverse ? new ParsedSequence([]) : $wrappedContent;

@@ -43,6 +43,7 @@ class NewsFeedListener
         private readonly InsertTagParser $insertTags,
         private readonly string $projectDir,
         private readonly EntityCacheTags $cacheTags,
+        private readonly string $charset,
     ) {
     }
 
@@ -59,9 +60,9 @@ class NewsFeedListener
         };
 
         $newsModel = $this->framework->getAdapter(NewsModel::class);
-        $articles = $newsModel->findPublishedByPids($archives, $featured, $pageModel->maxFeedItems, 0, ['return' => 'Array']);
+        $articles = $newsModel->findPublishedByPids($archives, $featured, $pageModel->maxFeedItems);
 
-        $event->setArticles($articles);
+        $event->setArticles($articles->getModels());
     }
 
     #[AsEventListener(TransformArticleForFeedEvent::class)]
@@ -70,13 +71,10 @@ class NewsFeedListener
         $article = $event->getArticle();
 
         $item = new Item();
-        $item
-            ->setTitle($article->headline)
-            ->setLastModified((new \DateTime())->setTimestamp($article->date))
-            ->setLink($this->getLink($article))
-            ->setContent($this->getContent($article, $item, $event))
-        ;
-
+        $item->setTitle(html_entity_decode($article->headline, ENT_QUOTES, $this->charset));
+        $item->setLastModified((new \DateTime())->setTimestamp($article->date));
+        $item->setLink($this->getLink($article));
+        $item->setContent($this->getContent($article, $item, $event));
         $item->setPublicId($item->getLink());
 
         if ($author = $this->getAuthor($article)) {
@@ -134,8 +132,9 @@ class NewsFeedListener
 
     private function getAuthor(NewsModel $article): AuthorInterface|null
     {
-        /** @var UserModel $authorModel */
-        if ($authorModel = $article->getRelated('author')) {
+        $authorModel = $article->getRelated('author');
+
+        if ($authorModel instanceof UserModel) {
             return (new Author())->setName($authorModel->name);
         }
 
@@ -154,14 +153,14 @@ class NewsFeedListener
             $uuids = [...$uuids, ...StringUtil::deserialize($article->enclosure, true)];
         }
 
-        if (0 === \count($uuids)) {
+        if (!$uuids) {
             return [];
         }
 
         $filesAdapter = $this->framework->getAdapter(FilesModel::class);
-        $files = $filesAdapter->findMultipleByUuids($uuids);
+        $fileModels = $filesAdapter->findMultipleByUuids($uuids);
 
-        if (null === $files) {
+        if (null === $fileModels) {
             return [];
         }
 
@@ -170,8 +169,8 @@ class NewsFeedListener
         $size = StringUtil::deserialize($pageModel->imgSize, true);
         $enclosures = [];
 
-        while ($files->next()) {
-            $file = new File($files->path);
+        foreach ($fileModels as $fileModel) {
+            $file = new File($fileModel->path);
 
             if (!$file->exists()) {
                 continue;

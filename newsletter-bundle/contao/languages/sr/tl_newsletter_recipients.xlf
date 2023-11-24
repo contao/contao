@@ -97,9 +97,15 @@
         <source>Delete recipient ID %s</source>
         <target>Обриши примаоца ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_recipients.toggle">
-        <source>Activate/deactivate recipient ID %s</source>
-        <target>Активирај/деактивирај примаоца ID %s</target>
+      <trans-unit id="tl_newsletter_recipients.toggle.0">
+        <source>Activate/deactivate recipient</source>
+        <target>Активирај/деактивирај примаоца</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.toggle.1">
+        <source>Deactivate recipient ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.toggle.2">
+        <source>Activate recipient ID %s</source>
       </trans-unit>
     </body>
   </file>

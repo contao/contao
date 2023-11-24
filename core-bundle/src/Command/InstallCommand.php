@@ -23,12 +23,14 @@ use Symfony\Component\Filesystem\Path;
 
 #[AsCommand(
     name: 'contao:install',
-    description: 'Installs the required Contao directories.'
+    description: 'Installs the required Contao directories.',
 )]
 class InstallCommand extends Command
 {
     private Filesystem|null $fs = null;
+
     private array $rows = [];
+
     private string|null $webDir = null;
 
     public function __construct(
@@ -51,7 +53,7 @@ class InstallCommand extends Command
 
         $this->addEmptyDirs();
 
-        if (!empty($this->rows)) {
+        if ($this->rows) {
             $io = new SymfonyStyle($input, $output);
             $io->newLine();
             $io->listing($this->rows);

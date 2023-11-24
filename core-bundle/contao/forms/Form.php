@@ -38,6 +38,7 @@ use Symfony\Component\HttpFoundation\Response;
 class Form extends Hybrid
 {
 	public const SESSION_KEY = 'contao.form.data';
+
 	public const SESSION_CONFIRMATION_KEY = 'contao.form.confirmation';
 
 	/**
@@ -187,6 +188,8 @@ class Form extends Hybrid
 					$arrFields[] = $objFields->current();
 				}
 			}
+
+			System::getContainer()->get('contao.cache.entity_tags')->tagWith($objFields);
 		}
 
 		// HOOK: compile form fields
@@ -308,7 +311,7 @@ class Form extends Hybrid
 					$file->delete();
 				}
 
-				if (is_file($upload['tmp_name']))
+				if (isset($upload['tmp_name']) && is_file($upload['tmp_name']))
 				{
 					unlink($upload['tmp_name']);
 				}
@@ -493,6 +496,9 @@ class Form extends Hybrid
 			// Attach XML file
 			if ($this->format == 'xml')
 			{
+				// Encode the values (see #6053)
+				array_walk_recursive($fields, static function (&$value) { $value = htmlspecialchars($value, ENT_QUOTES|ENT_SUBSTITUTE|ENT_XML1); });
+
 				$objTemplate = new FrontendTemplate('form_xml');
 				$objTemplate->fields = $fields;
 				$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');

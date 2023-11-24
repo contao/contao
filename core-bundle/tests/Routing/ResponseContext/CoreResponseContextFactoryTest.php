@@ -54,7 +54,7 @@ class CoreResponseContextFactoryTest extends TestCase
             $this->createMock(TokenChecker::class),
             new HtmlDecoder($this->createMock(InsertTagParser::class)),
             $this->createMock(RequestStack::class),
-            $this->createMock(InsertTagParser::class)
+            $this->createMock(InsertTagParser::class),
         );
 
         $responseContext = $factory->createResponseContext();
@@ -76,7 +76,7 @@ class CoreResponseContextFactoryTest extends TestCase
             $this->createMock(TokenChecker::class),
             new HtmlDecoder($this->createMock(InsertTagParser::class)),
             $this->createMock(RequestStack::class),
-            $this->createMock(InsertTagParser::class)
+            $this->createMock(InsertTagParser::class),
         );
 
         $responseContext = $factory->createWebpageResponseContext();
@@ -97,7 +97,7 @@ class CoreResponseContextFactoryTest extends TestCase
                     ],
                 ],
             ],
-            $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->toArray()
+            $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->toArray(),
         );
 
         $this->assertTrue($responseContext->isInitialized(JsonLdManager::class));
@@ -121,7 +121,6 @@ class CoreResponseContextFactoryTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push(Request::create('https://example.com/'));
 
-        /** @var PageModel $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 0;
         $pageModel->title = 'My title';
@@ -138,7 +137,7 @@ class CoreResponseContextFactoryTest extends TestCase
             $this->createMock(TokenChecker::class),
             new HtmlDecoder($insertTagsParser),
             $requestStack,
-            $insertTagsParser
+            $insertTagsParser,
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
@@ -166,7 +165,7 @@ class CoreResponseContextFactoryTest extends TestCase
                 'groups' => [],
                 'fePreview' => false,
             ],
-            $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class)->toArray()
+            $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class)->toArray(),
         );
     }
 
@@ -191,7 +190,6 @@ class CoreResponseContextFactoryTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push(Request::create('https://example.com/'));
 
-        /** @var PageModel $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 0;
         $pageModel->enableCanonical = true;
@@ -205,7 +203,7 @@ class CoreResponseContextFactoryTest extends TestCase
             $this->createMock(TokenChecker::class),
             new HtmlDecoder($insertTagsParser),
             $requestStack,
-            $insertTagsParser
+            $insertTagsParser,
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
@@ -230,7 +228,6 @@ class CoreResponseContextFactoryTest extends TestCase
 
         System::setContainer($container);
 
-        /** @var PageModel $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 0;
         $pageModel->title = 'We went from Alpha &#62; Omega';
@@ -250,7 +247,7 @@ class CoreResponseContextFactoryTest extends TestCase
             $this->createMock(TokenChecker::class),
             new HtmlDecoder($insertTagsParser),
             $this->createMock(RequestStack::class),
-            $insertTagsParser
+            $insertTagsParser,
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
@@ -272,7 +269,7 @@ class CoreResponseContextFactoryTest extends TestCase
                 'groups' => [],
                 'fePreview' => false,
             ],
-            $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class)->toArray()
+            $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class)->toArray(),
         );
     }
 }

@@ -23,7 +23,9 @@ use Symfony\Component\Uid\Uuid;
 interface VirtualFilesystemInterface
 {
     public const NONE = 0;
+
     public const BYPASS_DBAFS = 1 << 0;
+
     public const FORCE_SYNC = 1 << 1;
 
     /**

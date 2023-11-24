@@ -106,9 +106,15 @@ class InsertTagsTest extends TestCase
 
     /**
      * @dataProvider insertTagsProvider
+     *
+     * @group legacy
      */
-    public function testInsertTags(string $source, string $expected): void
+    public function testInsertTags(string $source, string $expected, bool $expectDeprecation = true): void
     {
+        if ($expectDeprecation) {
+            $this->expectDeprecation('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
+        }
+
         InsertTags::reset();
 
         $insertTagParser = System::getContainer()->get('contao.insert_tag.parser');
@@ -165,16 +171,19 @@ class InsertTagsTest extends TestCase
         yield 'Nested invalid 1' => [
             'foo{{plain::1{{plain::2{3}}4}}baz',
             'foo{{plain::1{{plain::2{3}}4}}baz',
+            false,
         ];
 
         yield 'Nested invalid 2' => [
             'foo{{plain::1{{plain::2}3}}4}}baz',
             'foo{{plain::1{{plain::2}3}}4}}baz',
+            false,
         ];
 
         yield 'Nested invalid 3' => [
             'foo{{plain::1{{plain::2{}3}}4}}baz',
             'foo{{plain::1{{plain::2{}3}}4}}baz',
+            false,
         ];
 
         yield 'Recursive' => [
@@ -193,7 +202,7 @@ class InsertTagsTest extends TestCase
         ];
 
         yield 'Flag addslashes' => [
-            '{{plain::f\'oo|addslashes}}',
+            "{{plain::f'oo|addslashes}}",
             'f\\\'oo',
         ];
 
@@ -296,7 +305,7 @@ class InsertTagsTest extends TestCase
                     $usedArguments = $arguments;
 
                     return '<figure>foo</figure>';
-                }
+                },
             )
         ;
 
@@ -526,12 +535,12 @@ class InsertTagsTest extends TestCase
     public function testEncodeHtmlAttributes(string $source, string $expected): void
     {
         $reflectionClass = new \ReflectionClass(InsertTags::class);
-
-        /** @var InsertTags $insertTags */
         $insertTags = $reflectionClass->newInstanceWithoutConstructor();
+
         $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class), $insertTags);
         $insertTagParser->addFlagCallback('attr', new StringUtilFlag(), 'attr');
         $insertTagParser->addFlagCallback('urlattr', new StringUtilFlag(), 'urlattr');
+
         $output = $insertTagParser->replaceInline($source);
 
         $this->assertSame($expected, $output);
@@ -561,7 +570,7 @@ class InsertTagsTest extends TestCase
 
         yield 'Quote in attribute' => [
             '<span title=\'{{plain::"}}\'>',
-            '<span title=\'&quot;\'>',
+            "<span title='&quot;'>",
         ];
 
         yield 'Quote in unquoted attribute' => [
@@ -761,7 +770,6 @@ class InsertTagsTest extends TestCase
 
         $reflectionClass = new \ReflectionClass(InsertTags::class);
 
-        /** @var InsertTags $insertTags */
         $insertTags = $reflectionClass->newInstanceWithoutConstructor();
         $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class), $insertTags);
 
@@ -1032,8 +1040,13 @@ class InsertTagsTest extends TestCase
         ];
     }
 
+    /**
+     * @group legacy
+     */
     public function testInfiniteNestedInsertTag(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
+
         InsertTags::reset();
 
         $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
@@ -1046,8 +1059,13 @@ class InsertTagsTest extends TestCase
         $insertTagParser->replaceInline('{{infinite-nested::1}}');
     }
 
+    /**
+     * @group legacy
+     */
     public function testInfiniteRecursionInsertTag(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
+
         InsertTags::reset();
 
         $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
@@ -1058,8 +1076,13 @@ class InsertTagsTest extends TestCase
         $insertTagParser->replaceInline('{{infinite-recursion::1}}');
     }
 
+    /**
+     * @group legacy
+     */
     public function testInfiniteRecursionWithCatchInsertTag(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
+
         InsertTags::reset();
 
         $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
@@ -1068,8 +1091,13 @@ class InsertTagsTest extends TestCase
         $this->assertSame('[{]infinite-try-catch::66[}]', $output);
     }
 
+    /**
+     * @group legacy
+     */
     public function testInfiniteRecursionWithCatchAndRetryInsertTag(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
+
         InsertTags::reset();
 
         $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
@@ -1080,8 +1108,13 @@ class InsertTagsTest extends TestCase
         $insertTagParser->replaceInline('{{infinite-retry::1}}');
     }
 
+    /**
+     * @group legacy
+     */
     public function testPcreBacktrackLimit(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
+
         InsertTags::reset();
 
         $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));

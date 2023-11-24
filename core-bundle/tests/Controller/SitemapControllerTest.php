@@ -55,6 +55,7 @@ class SitemapControllerTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('event_dispatcher', $eventDispatcher);
+
         $registry = new PageRegistry($this->createMock(Connection::class));
 
         $this->expectException(NotFoundHttpException::class);
@@ -75,7 +76,7 @@ class SitemapControllerTest extends TestCase
                 'published' => true,
                 'rootLanguage' => 'en',
             ],
-            ['' => 'https://www.foobar.com:8000/en/page1.html']
+            ['' => 'https://www.foobar.com:8000/en/page1.html'],
         );
 
         $framework = $this->mockFrameworkWithPages([42 => [$page1], 43 => null, 21 => null], [43 => null]);
@@ -87,6 +88,7 @@ class SitemapControllerTest extends TestCase
 
         $controller = new SitemapController($registry, $pageFinder);
         $controller->setContainer($container);
+
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
@@ -105,7 +107,7 @@ class SitemapControllerTest extends TestCase
                 'published' => true,
                 'rootLanguage' => 'en',
             ],
-            ['' => 'https://www.foobar.com/en/page1.html']
+            ['' => 'https://www.foobar.com/en/page1.html'],
         );
 
         $framework = $this->mockFrameworkWithPages([42 => [$page1], 43 => null, 21 => null], [43 => null]);
@@ -115,6 +117,7 @@ class SitemapControllerTest extends TestCase
 
         $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
+
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
@@ -133,7 +136,7 @@ class SitemapControllerTest extends TestCase
                 'published' => true,
                 'rootLanguage' => 'en',
             ],
-            ['' => 'https://www.foobar.com/en/page1.html']
+            ['' => 'https://www.foobar.com/en/page1.html'],
         );
 
         $page2 = $this->mockPage(
@@ -145,7 +148,7 @@ class SitemapControllerTest extends TestCase
                 'published' => true,
                 'rootLanguage' => 'en',
             ],
-            ['' => 'https://www.foobar.com/en/page2.html']
+            ['' => 'https://www.foobar.com/en/page2.html'],
         );
 
         $pages = [
@@ -162,6 +165,7 @@ class SitemapControllerTest extends TestCase
 
         $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
+
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
@@ -195,7 +199,7 @@ class SitemapControllerTest extends TestCase
                 'published' => true,
                 'rootLanguage' => 'en',
             ],
-            ['' => 'https://www.foobar.com/en/page2.html']
+            ['' => 'https://www.foobar.com/en/page2.html'],
         );
 
         $pages = [
@@ -215,6 +219,7 @@ class SitemapControllerTest extends TestCase
 
         $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
+
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
@@ -243,7 +248,7 @@ class SitemapControllerTest extends TestCase
                 'published' => true,
                 'rootLanguage' => 'en',
             ],
-            ['' => 'https://www.foobar.com/en/page2.html']
+            ['' => 'https://www.foobar.com/en/page2.html'],
         );
 
         $pages = [
@@ -263,6 +268,7 @@ class SitemapControllerTest extends TestCase
 
         $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
+
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
@@ -290,7 +296,7 @@ class SitemapControllerTest extends TestCase
                 'published' => true,
                 'rootLanguage' => 'en',
             ],
-            ['' => 'https://www.foobar.com/en/page2.html']
+            ['' => 'https://www.foobar.com/en/page2.html'],
         );
 
         $pages = [
@@ -324,6 +330,7 @@ class SitemapControllerTest extends TestCase
 
         $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
+
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
@@ -351,7 +358,7 @@ class SitemapControllerTest extends TestCase
                 'published' => true,
                 'rootLanguage' => 'en',
             ],
-            ['' => 'https://www.foobar.com/en/page2.html']
+            ['' => 'https://www.foobar.com/en/page2.html'],
         );
 
         $pages = [
@@ -382,6 +389,7 @@ class SitemapControllerTest extends TestCase
 
         $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
+
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
@@ -415,7 +423,7 @@ class SitemapControllerTest extends TestCase
                 'published' => '1',
                 'rootLanguage' => 'en',
             ],
-            ['' => 'https://www.foobar.com/en/page2.html']
+            ['' => 'https://www.foobar.com/en/page2.html'],
         );
 
         $pages = [
@@ -446,6 +454,7 @@ class SitemapControllerTest extends TestCase
 
         $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
+
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
@@ -465,7 +474,7 @@ class SitemapControllerTest extends TestCase
                 'published' => true,
                 'rootLanguage' => 'en',
             ],
-            ['' => 'https://www.foobar.com/en/page1.html']
+            ['' => 'https://www.foobar.com/en/page1.html'],
         );
 
         $page2 = $this->mockPage([
@@ -488,7 +497,7 @@ class SitemapControllerTest extends TestCase
                 'published' => true,
                 'rootLanguage' => 'en',
             ],
-            ['' => 'https://www.foobar.com/en/page3.html']
+            ['' => 'https://www.foobar.com/en/page3.html'],
         );
 
         $pages = [
@@ -505,6 +514,7 @@ class SitemapControllerTest extends TestCase
 
         $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
+
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
@@ -533,7 +543,7 @@ class SitemapControllerTest extends TestCase
             [
                 '' => 'https://www.foobar.com/en/page1.html',
                 '/articles/foobar' => 'https://www.foobar.com/en/page1/articles/foobar.html',
-            ]
+            ],
         );
 
         $article1 = $this->mockClassWithProperties(ArticleModel::class, [
@@ -549,6 +559,7 @@ class SitemapControllerTest extends TestCase
 
         $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
+
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
@@ -571,7 +582,7 @@ class SitemapControllerTest extends TestCase
             [
                 '' => 'https://www.foobar.com/en/page1.html',
                 '/articles/1' => 'https://www.foobar.com/en/page1/articles/1.html',
-            ]
+            ],
         );
 
         $article1 = $this->mockClassWithProperties(ArticleModel::class, [
@@ -587,6 +598,7 @@ class SitemapControllerTest extends TestCase
 
         $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
+
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
@@ -606,7 +618,7 @@ class SitemapControllerTest extends TestCase
                 'robots' => 'index,follow',
                 'rootLanguage' => 'en',
             ],
-            ['' => 'https://www.foobar.com/en/page1.html']
+            ['' => 'https://www.foobar.com/en/page1.html'],
         );
 
         $page2 = $this->mockPage([
@@ -633,6 +645,7 @@ class SitemapControllerTest extends TestCase
 
         $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
+
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
@@ -660,7 +673,7 @@ class SitemapControllerTest extends TestCase
                 'published' => true,
                 'rootLanguage' => 'en',
             ],
-            ['' => 'https://www.foobar.com/en/page2.html']
+            ['' => 'https://www.foobar.com/en/page2.html'],
         );
 
         $pages = [
@@ -680,6 +693,7 @@ class SitemapControllerTest extends TestCase
 
         $controller = new SitemapController($registry, $this->mockPageFinder($request));
         $controller->setContainer($container);
+
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
@@ -699,19 +713,13 @@ class SitemapControllerTest extends TestCase
   </url>";
         }
 
-        $result .= '
+        return $result.'
 </urlset>
 ';
-
-        return $result;
     }
 
-    /**
-     * @return PageFinder&MockObject
-     */
-    private function mockPageFinder(Request $request): PageFinder
+    private function mockPageFinder(Request $request): PageFinder&MockObject
     {
-        /** @var PageModel $rootPage1 */
         $rootPage1 = $this->mockClassWithProperties(PageModel::class);
         $rootPage1->id = 42;
         $rootPage1->dns = 'www.foobar.com';
@@ -719,7 +727,6 @@ class SitemapControllerTest extends TestCase
         $rootPage1->language = 'en';
         $rootPage1->fallback = true;
 
-        /** @var PageModel $rootPage2 */
         $rootPage2 = $this->mockClassWithProperties(PageModel::class);
         $rootPage2->id = 21;
         $rootPage2->dns = 'www.foobar.com';
@@ -738,10 +745,7 @@ class SitemapControllerTest extends TestCase
         return $pageFinder;
     }
 
-    /**
-     * @return ContaoFramework&MockObject
-     */
-    private function mockFrameworkWithPages(array $pages, array $articles): ContaoFramework
+    private function mockFrameworkWithPages(array $pages, array $articles): ContaoFramework&MockObject
     {
         $pageModelAdapter = $this->mockAdapter(['findPublishedRootPages', 'findByPid']);
 
@@ -750,7 +754,7 @@ class SitemapControllerTest extends TestCase
             ->method('findByPid')
             ->withConsecutive(...array_map(
                 static fn ($parentId) => [$parentId, ['order' => 'sorting']],
-                array_keys($pages)
+                array_keys($pages),
             ))
             ->willReturnOnConsecutiveCalls(...$pages)
         ;
@@ -761,7 +765,7 @@ class SitemapControllerTest extends TestCase
             ->method('findPublishedWithTeaserByPid')
             ->withConsecutive(...array_map(
                 static fn ($pageId) => [$pageId, ['ignoreFePreview' => true]],
-                array_keys($articles)
+                array_keys($articles),
             ))
             ->willReturnOnConsecutiveCalls(...$articles)
         ;
@@ -787,7 +791,7 @@ class SitemapControllerTest extends TestCase
                     $this->assertSame([42, 21], $event->getRootPageIds());
 
                     return true;
-                }
+                },
             ))
         ;
 
@@ -805,8 +809,8 @@ class SitemapControllerTest extends TestCase
                     function (string $attribute, array $pageGroups) use ($allowedPageIds) {
                         $this->assertSame(ContaoCorePermissions::MEMBER_IN_GROUPS, $attribute);
 
-                        return \count(array_intersect(array_map('intval', $pageGroups), $allowedPageIds)) > 0;
-                    }
+                        return [] !== array_intersect(array_map('intval', $pageGroups), $allowedPageIds);
+                    },
                 )
             ;
         }

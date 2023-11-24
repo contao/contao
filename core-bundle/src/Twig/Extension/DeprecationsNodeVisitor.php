@@ -45,13 +45,17 @@ class DeprecationsNodeVisitor extends AbstractNodeVisitor
      */
     private function handleDeprecatedInsertTagUsage(Node $node): Node
     {
-        $insertTagMisusePattern = '/{{([^}]+)}}/';
+        if (!$node instanceof PrintNode) {
+            return $node;
+        }
 
-        if (
-            !$node instanceof PrintNode
-            || !($expression = $node->getNode('expr')) instanceof ConstantExpression
-            || 1 !== preg_match($insertTagMisusePattern, (string) $expression->getAttribute('value'), $matches)
-        ) {
+        $expression = $node->getNode('expr');
+
+        if (!$expression instanceof ConstantExpression) {
+            return $node;
+        }
+
+        if (1 !== preg_match('/{{([^}]+)}}/', (string) $expression->getAttribute('value'), $matches)) {
             return $node;
         }
 
@@ -71,7 +75,7 @@ class DeprecationsNodeVisitor extends AbstractNodeVisitor
         $deprecatedNode = new DeprecatedNode(
             new ConstantExpression("Since contao/core-bundle 4.13: $message", $line),
             $line,
-            $node->getNodeTag()
+            $node->getNodeTag(),
         );
 
         // Set the source context, so that the template name can be inserted

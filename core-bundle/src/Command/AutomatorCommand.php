@@ -28,7 +28,7 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
  */
 #[AsCommand(
     name: 'contao:automator',
-    description: 'Runs automator tasks on the command line.'
+    description: 'Runs automator tasks on the command line.',
 )]
 class AutomatorCommand extends Command
 {
@@ -72,7 +72,7 @@ class AutomatorCommand extends Command
      */
     private function getCommands(): array
     {
-        if (empty($this->commands)) {
+        if (!$this->commands) {
             $this->commands = $this->generateCommandMap();
         }
 

@@ -18,7 +18,6 @@ use Contao\CoreBundle\Mailer\TransportConfig;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Reference;
 
 class AddAvailableTransportsPassTest extends TestCase
 {
@@ -107,10 +106,7 @@ class AddAvailableTransportsPassTest extends TestCase
 
         $this->assertCount(2, $transports);
 
-        /** @var Definition $transportConfig1 */
         $transportConfig1 = $transports[0][0];
-
-        /** @var Definition $transportConfig2 */
         $transportConfig2 = $transports[1][0];
 
         $this->assertSame('main', $transportConfig1->getArgument(0));
@@ -152,10 +148,7 @@ class AddAvailableTransportsPassTest extends TestCase
 
         $this->assertCount(2, $transports);
 
-        /** @var Definition $transportConfig1 */
         $transportConfig1 = $transports[0][0];
-
-        /** @var Definition $transportConfig2 */
         $transportConfig2 = $transports[1][0];
 
         $this->assertSame('main', $transportConfig1->getArgument(0));
@@ -173,7 +166,7 @@ class AddAvailableTransportsPassTest extends TestCase
     }
 
     /**
-     * @return array<int, array<int, Reference|string>>
+     * @return array<int, array<int, Definition|string>>
      */
     private function getTransportsFromDefinition(ContainerBuilder $container): array
     {

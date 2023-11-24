@@ -108,7 +108,7 @@ class ContaoCoreBundleTest extends TestCase
                     $this->assertContains($pass::class, $passes);
 
                     return true;
-                }
+                },
             ))
         ;
 

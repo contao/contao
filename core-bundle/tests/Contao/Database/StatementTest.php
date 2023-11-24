@@ -93,7 +93,7 @@ class StatementTest extends TestCase
 
                             return $param ?? 'NULL';
                         },
-                        $params
+                        $params,
                     );
 
                     $builtQuery = '';
@@ -106,7 +106,7 @@ class StatementTest extends TestCase
                     $this->assertSame($expected, $builtQuery);
 
                     return $doctrineResult;
-                }
+                },
             )
         ;
 
@@ -151,7 +151,7 @@ class StatementTest extends TestCase
         yield [
             'SELECT id FROM tl_content WHERE boolCol = ? AND intCol = ? AND floatCol = ? AND stringCol = ?',
             "SELECT id FROM tl_content WHERE boolCol = 1 AND intCol = 123456 AND floatCol = 123.456 AND stringCol = 'foo''bar'",
-            [true, 123456, 123.456, 'foo\'bar'],
+            [true, 123456, 123.456, "foo'bar"],
         ];
 
         yield [
@@ -180,7 +180,7 @@ class StatementTest extends TestCase
                 'boolCol' => true,
                 'intCol' => 123456,
                 'floatCol' => 123.456,
-                'stringCol' => 'foo\'bar',
+                'stringCol' => "foo'bar",
                 'nullCol' => null,
             ],
         ];
@@ -193,7 +193,7 @@ class StatementTest extends TestCase
                 'boolCol' => true,
                 'intCol' => 123456,
                 'floatCol' => 123.456,
-                'stringCol' => 'foo\'bar',
+                'stringCol' => "foo'bar",
                 'nullCol' => null,
             ],
         ];

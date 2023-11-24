@@ -60,7 +60,7 @@ class PreviewAuthenticationListener
         $url = $this->router->generate(
             'contao_backend_login',
             ['redirect' => $request->getUri()],
-            UrlGeneratorInterface::ABSOLUTE_URL
+            UrlGeneratorInterface::ABSOLUTE_URL,
         );
 
         $context->setBaseUrl($baseUrl);

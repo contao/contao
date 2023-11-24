@@ -22,13 +22,13 @@ class CrawlerPassTest extends TestCase
 {
     public function testAddsTheSubscribersIfTheFactoryExistsAndSubscribersAreRegistered(): void
     {
-        $container = new ContainerBuilder();
-        $container->setDefinition('contao.crawl.escargot.factory', new Definition());
-        $container->setDefinition('contao.command.crawl', new Definition());
-
         $definition = new Definition();
         $definition->addTag('contao.escargot_subscriber');
+
+        $container = new ContainerBuilder();
         $container->setDefinition('contao.search.subscriber.super-subscriber', $definition);
+        $container->setDefinition('contao.crawl.escargot.factory', new Definition());
+        $container->setDefinition('contao.command.crawl', new Definition());
 
         $pass = new CrawlerPass();
         $pass->process($container);

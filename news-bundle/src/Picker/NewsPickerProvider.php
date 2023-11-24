@@ -20,8 +20,8 @@ use Contao\CoreBundle\Picker\PickerConfig;
 use Contao\NewsArchiveModel;
 use Contao\NewsModel;
 use Knp\Menu\FactoryInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class NewsPickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
@@ -45,7 +45,7 @@ class NewsPickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return 'newsPicker';
     }
 
-    public function supportsContext($context): bool
+    public function supportsContext(string $context): bool
     {
         return 'link' === $context && $this->security->isGranted('contao_user.modules', 'news');
     }
@@ -75,7 +75,7 @@ class NewsPickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return $attributes;
     }
 
-    public function convertDcaValue(PickerConfig $config, $value): string
+    public function convertDcaValue(PickerConfig $config, mixed $value): string
     {
         return sprintf($this->getInsertTag($config), $value);
     }
@@ -84,7 +84,7 @@ class NewsPickerProvider extends AbstractInsertTagPickerProvider implements DcaP
     {
         $params = ['do' => 'news'];
 
-        if (null === $config || !$config->getValue() || !$this->supportsValue($config)) {
+        if (!$config || !$config->getValue() || !$this->supportsValue($config)) {
             return $params;
         }
 
@@ -104,12 +104,15 @@ class NewsPickerProvider extends AbstractInsertTagPickerProvider implements DcaP
     private function getNewsArchiveId(int|string $id): int|null
     {
         $newsAdapter = $this->framework->getAdapter(NewsModel::class);
+        $newsModel = $newsAdapter->findById($id);
 
-        if (!($newsModel = $newsAdapter->findById($id)) instanceof NewsModel) {
+        if (!$newsModel instanceof NewsModel) {
             return null;
         }
 
-        if (!($newsArchive = $newsModel->getRelated('pid')) instanceof NewsArchiveModel) {
+        $newsArchive = $newsModel->getRelated('pid');
+
+        if (!$newsArchive instanceof NewsArchiveModel) {
             return null;
         }
 

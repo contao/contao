@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\EventListener;
 use Contao\CoreBundle\EventListener\ClearSessionDataListener;
 use Contao\CoreBundle\Session\Attribute\AutoExpiringAttribute;
 use Contao\CoreBundle\Tests\TestCase;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -22,7 +23,6 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Security\Core\Security;
 
 class ClearSessionDataListenerTest extends TestCase
 {
@@ -38,7 +38,7 @@ class ClearSessionDataListenerTest extends TestCase
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MAIN_REQUEST,
-            new Response()
+            new Response(),
         );
 
         $session->set(Security::AUTHENTICATION_ERROR, 'error');
@@ -63,19 +63,19 @@ class ClearSessionDataListenerTest extends TestCase
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MAIN_REQUEST,
-            new Response()
+            new Response(),
         );
 
         $nonExpired = new AutoExpiringAttribute(
             20,
             'foobar',
-            new \DateTime('-10 seconds')
+            new \DateTime('-10 seconds'),
         );
 
         $expired = new AutoExpiringAttribute(
             5,
             'foobar',
-            new \DateTime('-10 seconds')
+            new \DateTime('-10 seconds'),
         );
 
         $session->set('non-expired-attribute', $nonExpired);

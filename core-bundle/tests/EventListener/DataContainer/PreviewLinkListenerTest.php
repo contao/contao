@@ -22,10 +22,10 @@ use Contao\Message;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ClockMock;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PreviewLinkListenerTest extends TestCase
@@ -56,7 +56,7 @@ class PreviewLinkListenerTest extends TestCase
             $this->createMock(TranslatorInterface::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
-            ''
+            '',
         );
 
         $listener->unloadModuleWithoutPreviewScript();
@@ -78,7 +78,7 @@ class PreviewLinkListenerTest extends TestCase
             $this->createMock(TranslatorInterface::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
-            ''
+            '',
         );
 
         $listener->unloadTableWithoutPreviewScript('tl_preview_link');
@@ -98,7 +98,7 @@ class PreviewLinkListenerTest extends TestCase
             $this->createMock(TranslatorInterface::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
-            ''
+            '',
         );
 
         $listener->unloadTableWithoutPreviewScript('tl_member');
@@ -134,7 +134,7 @@ class PreviewLinkListenerTest extends TestCase
             $this->createMock(TranslatorInterface::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
-            '/preview.php'
+            '/preview.php',
         );
 
         $dc = $this->mockClassWithProperties(DataContainer::class);
@@ -184,7 +184,7 @@ class PreviewLinkListenerTest extends TestCase
             $this->createMock(TranslatorInterface::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
-            '/preview.php'
+            '/preview.php',
         );
 
         $dc = $this->mockClassWithProperties(DataContainer::class);
@@ -210,7 +210,7 @@ class PreviewLinkListenerTest extends TestCase
             $this->createMock(TranslatorInterface::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
-            '/preview.php'
+            '/preview.php',
         );
 
         $dc = $this->mockClassWithProperties(DataContainer::class);
@@ -220,10 +220,7 @@ class PreviewLinkListenerTest extends TestCase
         $this->assertTrue($GLOBALS['TL_DCA']['tl_preview_link']['config']['notCreatable']);
     }
 
-    /**
-     * @return Security&MockObject
-     */
-    private function mockSecurity(int $userId = 42): Security
+    private function mockSecurity(int $userId = 42): Security&MockObject
     {
         $user = $this->mockClassWithProperties(BackendUser::class, ['id' => $userId]);
 
@@ -247,7 +244,7 @@ class PreviewLinkListenerTest extends TestCase
     /**
      * @return Adapter<Input>&MockObject
      */
-    private function mockInputAdapter(array $inputData): Adapter
+    private function mockInputAdapter(array $inputData): Adapter&MockObject
     {
         $inputAdapter = $this->mockAdapter(['get']);
         $inputAdapter

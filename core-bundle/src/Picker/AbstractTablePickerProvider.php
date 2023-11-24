@@ -24,6 +24,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 abstract class AbstractTablePickerProvider implements PickerProviderInterface, DcaPickerProviderInterface, PickerMenuInterface
 {
     private const PREFIX = 'dc.';
+
     private const PREFIX_LENGTH = 3;
 
     public function __construct(
@@ -38,14 +39,19 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
     public function getUrl(PickerConfig $config): string
     {
         $table = $this->getTableFromContext($config->getContext());
-        $modules = $this->getModulesForTable($table);
 
-        if (0 === \count($modules)) {
+        if (!$modules = $this->getModulesForTable($table)) {
             throw new \RuntimeException(sprintf('Table "%s" is not in any back end module (context: %s)', $table, $config->getContext()));
         }
 
         $module = array_keys($modules)[0];
-        [$ptable, $pid] = $this->getPtableAndPid($table, $config->getValue());
+        [$ptable, $pid, $id] = $this->getPtableAndPid($table, $config->getValue());
+
+        // If we have no selected entry, we need to start at the topmost parent table.
+        // This can also result in setting it to null for dynamic parent tables.
+        if (!$id) {
+            $table = $this->findTopMostParent($table);
+        }
 
         if ($ptable) {
             foreach ($modules as $key => $tables) {
@@ -58,11 +64,6 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
 
         // If the table is the first in the module, we do not need to add table=xy to the URL
         if (0 === array_search($table, $modules[$module], true)) {
-            return $this->getUrlForValue($config, $module);
-        }
-
-        // If the pid is missing for a child table do not add table=xy to the URL
-        if ($ptable && !$pid) {
             return $this->getUrlForValue($config, $module);
         }
 
@@ -87,7 +88,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
                     'linkAttributes' => ['class' => $name],
                     'current' => $this->isCurrent($config) && $name === substr($config->getCurrent(), \strlen($this->getName().'.')),
                     'uri' => $this->router->generate('contao_backend', $params),
-                ]
+                ],
             ));
         }
     }
@@ -115,7 +116,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         $dcName = $this->getDataContainer();
 
         return ($dcName === DataContainer::getDriverForTable($table) || $dcName === $GLOBALS['TL_DCA'][$table]['config']['dataContainer'])
-            && 0 !== \count($this->getModulesForTable($table));
+            && [] !== $this->getModulesForTable($table);
     }
 
     public function supportsValue(PickerConfig $config): bool
@@ -130,7 +131,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
 
     public function getDcaTable(PickerConfig|null $config = null): string
     {
-        if (null === $config) {
+        if (!$config) {
             return '';
         }
 
@@ -210,16 +211,11 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
 
         $ptable = $GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null;
         $dynamicPtable = $GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? false;
-
-        if (!$ptable && !$dynamicPtable) {
-            return [null, null];
-        }
-
         $data = false;
 
         if ($id) {
             $qb = $this->connection->createQueryBuilder();
-            $qb->select('pid')->from($table)->where($qb->expr()->eq('id', $id));
+            $qb->select(['id', 'pid'])->from($table)->where($qb->expr()->eq('id', $id));
 
             if ($dynamicPtable) {
                 $qb->addSelect('ptable');
@@ -228,15 +224,29 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
             $data = $qb->executeQuery()->fetchAssociative();
         }
 
-        if ($dynamicPtable && !empty($data['ptable'])) {
-            $ptable = $data['ptable'];
+        return [
+            $data['ptable'] ?? $ptable ?? null,
+            (int) ($data['pid'] ?? 0) ?: null,
+            (int) ($data['id'] ?? 0) ?: null,
+        ];
+    }
+
+    protected function findTopMostParent(string $table): string|null
+    {
+        $this->framework->initialize();
+        $this->framework->createInstance(DcaLoader::class, [$table])->load();
+
+        if (DataContainer::MODE_PARENT !== ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null)) {
+            return $table;
         }
 
-        if (false === $data) {
-            return [$ptable, null];
+        $ptable = $GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null;
+
+        if ($ptable && $ptable !== $table) {
+            return $this->findTopMostParent($ptable);
         }
 
-        return [$ptable, (int) $data['pid']];
+        return null;
     }
 
     /**

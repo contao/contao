@@ -151,7 +151,7 @@ class ContaoKernelTest extends ContaoTestCase
 
         $this->assertSame(
             Path::normalize($kernel->getProjectDir()).'/var/cache/prod',
-            Path::normalize($kernel->getCacheDir())
+            Path::normalize($kernel->getCacheDir()),
         );
     }
 
@@ -161,7 +161,7 @@ class ContaoKernelTest extends ContaoTestCase
 
         $this->assertSame(
             Path::normalize($kernel->getProjectDir()).'/var/logs',
-            Path::normalize($kernel->getLogDir())
+            Path::normalize($kernel->getLogDir()),
         );
     }
 
@@ -213,7 +213,7 @@ class ContaoKernelTest extends ContaoTestCase
                     $files[] = basename($resource);
 
                     return null;
-                }
+                },
             )
         ;
 
@@ -288,7 +288,7 @@ class ContaoKernelTest extends ContaoTestCase
                     }
 
                     return null;
-                }
+                },
             )
         ;
 
@@ -467,10 +467,7 @@ class ContaoKernelTest extends ContaoTestCase
         return $kernel;
     }
 
-    /**
-     * @return ConfigPluginInterface&MockObject
-     */
-    private function mockConfigPlugin(LoaderInterface $loader): ConfigPluginInterface
+    private function mockConfigPlugin(LoaderInterface $loader): ConfigPluginInterface&MockObject
     {
         $plugin = $this->createMock(ConfigPluginInterface::class);
         $plugin

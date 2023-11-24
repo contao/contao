@@ -253,7 +253,7 @@ class FormText extends Widget
 		{
 			$targetFormat = Date::getNumericDateFormat();
 
-			// Check if date format matches the HTML5 standard
+			// Check if the value matches the HTML5 date format
 			if (self::HTML5_DATE_FORMAT !== $targetFormat && preg_match('~^' . Date::getRegexp(self::HTML5_DATE_FORMAT) . '$~i', $varInput ?? ''))
 			{
 				// Transform to defined date format (see #5918)
@@ -279,9 +279,33 @@ class FormText extends Widget
 			$this->strId,
 			$this->hideInput ? ' password' : '',
 			$this->strClass ? ' ' . $this->strClass : '',
-			StringUtil::specialchars($this->value),
+			StringUtil::specialchars($this->convertDate($this->value)),
 			$this->getAttributes(),
 			$this->strTagEnding
 		);
+	}
+
+	/**
+	 * Convert date values into the HTML5 date format (see #6389)
+	 */
+	protected function convertDate($varValue)
+	{
+		if (!$varValue || $this->rgxp != 'date')
+		{
+			return $varValue;
+		}
+
+		$targetFormat = Date::getNumericDateFormat();
+
+		// Return if the value does not match the defined date format
+		if (self::HTML5_DATE_FORMAT === $targetFormat || !preg_match('~^' . Date::getRegexp($targetFormat) . '$~i', $varValue))
+		{
+			return $varValue;
+		}
+
+		// Transform to HTML5 date format (see #5918)
+		$date = \DateTimeImmutable::createFromFormat($targetFormat, $this->varValue);
+
+		return $date->format(self::HTML5_DATE_FORMAT);
 	}
 }

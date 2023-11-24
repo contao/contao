@@ -44,12 +44,15 @@ class BackendRebuildCacheMessageListener
             return;
         }
 
-        /** @var Session $session */
         $session = $request->getSession();
+
+        if (!$session instanceof Session) {
+            return;
+        }
 
         $session->getFlashBag()->add(
             'contao.BE.info',
-            $this->translator->trans('ERR.applicationCache', [], 'contao_default')
+            $this->translator->trans('ERR.applicationCache', [], 'contao_default'),
         );
     }
 }

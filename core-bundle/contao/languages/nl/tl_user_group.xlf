@@ -30,16 +30,16 @@
         <target>Activeer op</target>
       </trans-unit>
       <trans-unit id="tl_user_group.start.1">
-        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Als u wilt voorkomen dat de groep vóór een bepaalde datum / tijd actief is, kunt u dit hier invoeren. Laat het veld anders leeg.</target>
+        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Als je wilt voorkomen dat de groep voor een bepaalde datum/tijd actief is, kun je dat hier invullen. Laat anders het veld leeg.</target>
       </trans-unit>
       <trans-unit id="tl_user_group.stop.0">
         <source>Deactivate on</source>
         <target>Deactiveer op</target>
       </trans-unit>
       <trans-unit id="tl_user_group.stop.1">
-        <source>If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Als u wilt voorkomen dat de groep na een bepaalde datum / tijd actief is, kunt u dit hier invoeren. Laat het veld anders leeg.</target>
+        <source>If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Als u wilt voorkomen dat de groep na een bepaalde datum/tijd actief is, kunt u dat hier invullen. Laat anders het veld leeg.</target>
       </trans-unit>
       <trans-unit id="tl_user_group.title_legend">
         <source>Title</source>
@@ -105,9 +105,17 @@
         <source>Delete user group ID %s</source>
         <target>Verwijder gebruikersgroep ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.toggle">
-        <source>Activate/deactivate user group ID %s</source>
-        <target>Activeer/deactiveer gebruikersgroep ID %s</target>
+      <trans-unit id="tl_user_group.toggle.0">
+        <source>Activate/deactivate user group</source>
+        <target>Activeer/deactiveer gebruikersgroep</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.toggle.1">
+        <source>Deactivate user group ID %s</source>
+        <target>Deactiveer gebruikersgroep ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.toggle.2">
+        <source>Activate user group ID %s</source>
+        <target>Activeer gebruikersgroep ID %s</target>
       </trans-unit>
     </body>
   </file>

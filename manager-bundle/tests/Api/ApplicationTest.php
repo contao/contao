@@ -106,7 +106,6 @@ class ApplicationTest extends ContaoTestCase
         $application = $this->getApplication();
         $application->setPluginLoader($pluginLoader);
 
-        /** @var array $commands */
         $commands = $application->all();
 
         $this->assertArrayHasKey('config:get', $commands);

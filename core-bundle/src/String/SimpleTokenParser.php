@@ -51,7 +51,7 @@ class SimpleTokenParser implements LoggerAwareInterface
                 : '/({[^{}]+})\n?/',
             $subject,
             -1,
-            PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY
+            PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY,
         );
 
         // Parse the tokens
@@ -110,7 +110,7 @@ class SimpleTokenParser implements LoggerAwareInterface
 
                 return $data[$matches[1]];
             },
-            $subject
+            $subject,
         );
     }
 
@@ -118,7 +118,7 @@ class SimpleTokenParser implements LoggerAwareInterface
     {
         $unmatchedVariables = array_diff($this->getVariables($expression), array_keys($data));
 
-        if (!empty($unmatchedVariables)) {
+        if ($unmatchedVariables) {
             $this->logUnmatchedVariables(...$unmatchedVariables);
 
             // Define variables that weren't provided with the value 'null'
@@ -137,7 +137,6 @@ class SimpleTokenParser implements LoggerAwareInterface
 
     private function getVariables(string $expression): array
     {
-        /** @var array<Token> $tokens */
         $tokens = [];
 
         try {
@@ -183,13 +182,9 @@ class SimpleTokenParser implements LoggerAwareInterface
 
     private function logUnmatchedVariables(string ...$tokenNames): void
     {
-        if (null === $this->logger) {
-            return;
-        }
-
-        $this->logger->log(
+        $this->logger?->log(
             LogLevel::INFO,
-            sprintf('Tried to evaluate unknown simple token(s): "%s".', implode('", "', $tokenNames))
+            sprintf('Tried to evaluate unknown simple token(s): "%s".', implode('", "', $tokenNames)),
         );
     }
 }

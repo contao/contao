@@ -35,7 +35,7 @@ class InsertTagsListener
     {
     }
 
-    public function __invoke(string $tag, bool $useCache, $cacheValue, array $flags): string|false
+    public function __invoke(string $tag, bool $useCache, mixed $cacheValue, array $flags): string|false
     {
         $elements = explode('::', $tag);
         $key = strtolower($elements[0]);
@@ -57,7 +57,7 @@ class InsertTagsListener
 
         $adapter = $this->framework->getAdapter(CalendarFeedModel::class);
 
-        if (null === ($feed = $adapter->findByPk($feedId))) {
+        if (!$feed = $adapter->findByPk($feedId)) {
             return '';
         }
 
@@ -70,7 +70,7 @@ class InsertTagsListener
 
         $adapter = $this->framework->getAdapter(CalendarEventsModel::class);
 
-        if (null === ($model = $adapter->findByIdOrAlias($idOrAlias))) {
+        if (!$model = $adapter->findByIdOrAlias($idOrAlias)) {
             return '';
         }
 
@@ -82,13 +82,13 @@ class InsertTagsListener
                 $events->generateEventUrl($model, \in_array('absolute', $arguments, true)) ?: './',
                 StringUtil::specialcharsAttribute($model->title),
                 \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : '',
-                $model->title
+                $model->title,
             ),
             'event_open' => sprintf(
                 '<a href="%s" title="%s"%s>',
                 $events->generateEventUrl($model, \in_array('absolute', $arguments, true)) ?: './',
                 StringUtil::specialcharsAttribute($model->title),
-                \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : ''
+                \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : '',
             ),
             'event_url' => $events->generateEventUrl($model, \in_array('absolute', $arguments, true)) ?: './',
             'event_title' => StringUtil::specialcharsAttribute($model->title),

@@ -17,10 +17,7 @@ use Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeManagerInterface;
 
 class BackupCodeManager implements BackupCodeManagerInterface
 {
-    /**
-     * @param mixed $user
-     */
-    public function isBackupCode($user, string $code): bool
+    public function isBackupCode(object $user, string $code): bool
     {
         if (!$user instanceof User) {
             return false;
@@ -30,9 +27,9 @@ class BackupCodeManager implements BackupCodeManagerInterface
             return false;
         }
 
-        $backupCodes = json_decode($user->backupCodes, true);
-
-        if (null === $backupCodes) {
+        try {
+            $backupCodes = json_decode($user->backupCodes, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
             return false;
         }
 
@@ -45,17 +42,19 @@ class BackupCodeManager implements BackupCodeManagerInterface
         return false;
     }
 
-    /**
-     * @param mixed $user
-     */
-    public function invalidateBackupCode($user, string $code): void
+    public function invalidateBackupCode(object $user, string $code): void
     {
         if (!$user instanceof User) {
             return;
         }
 
         $codeToInvalidate = false;
-        $backupCodes = array_values(json_decode($user->backupCodes, true));
+
+        try {
+            $backupCodes = array_values(json_decode($user->backupCodes, true, 512, JSON_THROW_ON_ERROR));
+        } catch (\JsonException) {
+            return;
+        }
 
         foreach ($backupCodes as $backupCode) {
             if (password_verify($code, $backupCode)) {
@@ -76,7 +75,7 @@ class BackupCodeManager implements BackupCodeManagerInterface
 
         unset($backupCodes[$key]);
 
-        $user->backupCodes = json_encode(array_values($backupCodes));
+        $user->backupCodes = json_encode(array_values($backupCodes), JSON_THROW_ON_ERROR);
         $user->save();
     }
 
@@ -91,9 +90,9 @@ class BackupCodeManager implements BackupCodeManagerInterface
         $user->backupCodes = json_encode(
             array_map(
                 static fn ($backupCode) => password_hash($backupCode, PASSWORD_DEFAULT),
-                $backupCodes
+                $backupCodes,
             ),
-            JSON_THROW_ON_ERROR
+            JSON_THROW_ON_ERROR,
         );
 
         $user->save();

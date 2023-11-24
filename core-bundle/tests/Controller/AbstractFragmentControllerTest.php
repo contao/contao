@@ -63,9 +63,9 @@ class AbstractFragmentControllerTest extends TestCase
         // Create and modify template
         $template = $fragmentController->doCreateTemplate($this->mockClassWithProperties(Model::class));
         $template->setName('modified/template');
+        $template->set('some', 'data');
 
         // Get response of modified template
-        $template->set('some', 'data');
         $response = $template->getResponse();
 
         $this->assertSame('rendered modified/template', $response->getContent());
@@ -109,7 +109,7 @@ class AbstractFragmentControllerTest extends TestCase
             ->willReturn(true)
         ;
 
-        if (null === $twig) {
+        if (!$twig) {
             $twig = $this->createMock(Environment::class);
             $twig
                 ->method('render')

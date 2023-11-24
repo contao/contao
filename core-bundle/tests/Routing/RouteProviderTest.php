@@ -325,7 +325,6 @@ class RouteProviderTest extends TestCase
         ksort($pages);
 
         foreach ($collection as $name => $route) {
-            /** @var PageModel $routedPage */
             $routedPage = $route->getDefault('pageModel');
 
             $this->assertInstanceOf(PageModel::class, $routedPage);
@@ -340,8 +339,8 @@ class RouteProviderTest extends TestCase
                     $pages[$i]->rootLanguage,
                     $pages[$i]->alias,
                     $routedPage->rootLanguage,
-                    $routedPage->alias
-                )
+                    $routedPage->alias,
+                ),
             );
 
             ++$i;
@@ -532,7 +531,6 @@ class RouteProviderTest extends TestCase
         ksort($pages);
 
         foreach ($collection as $name => $route) {
-            /** @var PageModel $routedPage */
             $routedPage = $route->getDefault('pageModel');
 
             if ($i > $c - 1) {
@@ -555,8 +553,8 @@ class RouteProviderTest extends TestCase
                     $page->rootLanguage,
                     $page->alias,
                     $routedPage->rootLanguage,
-                    $routedPage->alias
-                )
+                    $routedPage->alias,
+                ),
             );
 
             ++$i;
@@ -785,10 +783,7 @@ class RouteProviderTest extends TestCase
         $this->assertEmpty($routes);
     }
 
-    /**
-     * @return Request&MockObject
-     */
-    private function mockRequestWithPath(string $path, array $languages = ['en']): Request
+    private function mockRequestWithPath(string $path, array $languages = ['en']): Request&MockObject
     {
         $request = $this->createMock(Request::class);
         $request
@@ -811,18 +806,13 @@ class RouteProviderTest extends TestCase
 
     /**
      * @param Adapter<PageModel> $pageAdapter
-     *
-     * @return ContaoFramework&MockObject
      */
-    private function mockFramework(Adapter|null $pageAdapter = null): ContaoFramework
+    private function mockFramework(Adapter|null $pageAdapter = null): ContaoFramework&MockObject
     {
         return $this->mockContaoFramework([PageModel::class => $pageAdapter]);
     }
 
-    /**
-     * @return PageModel&MockObject
-     */
-    private function mockPage(string $language, string $alias, bool $fallback = true, string $domain = '', string|null $scheme = null, string $urlSuffix = '.html'): PageModel
+    private function mockPage(string $language, string $alias, bool $fallback = true, string $domain = '', string|null $scheme = null, string $urlSuffix = '.html'): PageModel&MockObject
     {
         mt_srand(++$this->pageModelAutoIncrement);
 
@@ -847,10 +837,7 @@ class RouteProviderTest extends TestCase
         return $page;
     }
 
-    /**
-     * @return PageModel&MockObject
-     */
-    private function mockRootPage(string $language, string $alias, bool $fallback = true): PageModel
+    private function mockRootPage(string $language, string $alias, bool $fallback = true): PageModel&MockObject
     {
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = ++$this->pageModelAutoIncrement;
@@ -883,7 +870,7 @@ class RouteProviderTest extends TestCase
 
         $framework ??= $this->mockContaoFramework();
 
-        if (null === $pageRegistry) {
+        if (!$pageRegistry) {
             $pageRegistry = $this->createMock(PageRegistry::class);
             $pageRegistry
                 ->method('isRoutable')

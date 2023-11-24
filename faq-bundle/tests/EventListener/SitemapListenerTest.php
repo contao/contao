@@ -13,12 +13,14 @@ declare(strict_types=1);
 namespace Contao\FaqBundle\Tests\EventListener;
 
 use Contao\CoreBundle\Event\SitemapEvent;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
 use Contao\FaqBundle\EventListener\SitemapListener;
 use Contao\FaqCategoryModel;
 use Contao\FaqModel;
 use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class SitemapListenerTest extends ContaoTestCase
@@ -47,7 +49,8 @@ class SitemapListenerTest extends ContaoTestCase
     {
         $jumpToPage = $this->mockClassWithProperties(PageModel::class, [
             'published' => 1,
-            'protected' => 0,
+            'protected' => 1,
+            'groups' => [1],
         ]);
 
         $jumpToPage
@@ -58,9 +61,7 @@ class SitemapListenerTest extends ContaoTestCase
         $adapters = [
             FaqCategoryModel::class => $this->mockConfiguredAdapter([
                 'findAll' => [
-                    $this->mockClassWithProperties(FaqCategoryModel::class, [
-                        'jumpTo' => 42,
-                    ]),
+                    $this->mockClassWithProperties(FaqCategoryModel::class, ['jumpTo' => 42]),
                 ],
             ]),
             PageModel::class => $this->mockConfiguredAdapter([
@@ -68,7 +69,7 @@ class SitemapListenerTest extends ContaoTestCase
             ]),
             FaqModel::class => $this->mockConfiguredAdapter([
                 'findPublishedByPid' => [
-                    $this->mockClassWithProperties(FaqModel::class, []),
+                    $this->mockClassWithProperties(FaqModel::class),
                 ],
             ]),
         ];
@@ -93,8 +94,18 @@ class SitemapListenerTest extends ContaoTestCase
         ];
 
         $framework = $this->mockContaoFramework($adapters, $instances);
+        $security = $this->createMock(Security::class);
 
-        return new SitemapListener($framework);
+        if ([] !== $allPages) {
+            $security
+                ->expects($this->once())
+                ->method('isGranted')
+                ->with(ContaoCorePermissions::MEMBER_IN_GROUPS, [1])
+                ->willReturn(true)
+            ;
+        }
+
+        return new SitemapListener($framework, $security);
     }
 
     private function createSitemapEvent(array $rootPages): SitemapEvent

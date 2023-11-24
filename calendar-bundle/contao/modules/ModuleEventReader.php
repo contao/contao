@@ -118,7 +118,10 @@ class ModuleEventReader extends Events
 			case 'external':
 				if ($objEvent->url)
 				{
-					throw new RedirectResponseException($objEvent->url, 301);
+					$url = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objEvent->url);
+					$url = UrlUtil::makeAbsolute($url, Environment::get('base'));
+
+					throw new RedirectResponseException($url, 301);
 				}
 
 				throw new InternalServerErrorException('Empty target URL');

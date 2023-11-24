@@ -15,15 +15,21 @@ namespace Contao\CoreBundle\Tests\Fixtures\Twig;
 class ParentClassWithMembersStub
 {
     final public const PARENT_PUBLIC_CONSTANT = 3;
+
     protected const PARENT_PROTECTED_CONSTANT = 2;
+
     private const PARENT_PRIVATE_CONSTANT = 1;
 
     public string $parentPublicField = 'c';
+
     public static string $parentPublicStaticField = 'C';
+
     protected string $parentProtectedField = 'b';
+
     protected static string $parentProtectedStaticField = 'B';
 
     private string $parentPrivateField = 'a';
+
     private static string $parentPrivateStaticField = 'A';
 
     public function __construct()

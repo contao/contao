@@ -133,14 +133,11 @@ class RegisterFragmentsPass implements CompilerPassInterface
 
     protected function getFragmentConfig(ContainerBuilder $container, Reference $reference, array $attributes): Reference
     {
-        $definition = new Definition(
-            FragmentConfig::class,
-            [
-                $this->getControllerName($reference, $attributes),
-                $attributes['renderer'] ?? 'forward',
-                ['ignore_errors' => false, ...$attributes['options'] ?? []],
-            ]
-        );
+        $definition = new Definition(FragmentConfig::class, [
+            $this->getControllerName($reference, $attributes),
+            $attributes['renderer'] ?? 'forward',
+            ['ignore_errors' => false, ...$attributes['options'] ?? []],
+        ]);
 
         $serviceId = 'contao.fragment._config_'.ContainerBuilder::hash($definition);
         $container->setDefinition($serviceId, $definition);
@@ -194,7 +191,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
 
     private function addGlobalsMapListener(array $globals, ContainerBuilder $container): void
     {
-        if (empty($globals)) {
+        if (!$globals) {
             return;
         }
 

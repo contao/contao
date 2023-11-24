@@ -16,7 +16,7 @@ use Contao\BackendUser;
 use Contao\CoreBundle\EventListener\ImageSizeOptionsListener;
 use Contao\CoreBundle\Image\ImageSizes;
 use Contao\CoreBundle\Tests\TestCase;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class ImageSizeOptionsListenerTest extends TestCase
 {

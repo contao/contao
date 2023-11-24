@@ -57,9 +57,9 @@ class MessengerCronTest extends TestCase
                     return $promise = new Promise(
                         static function () use (&$promise, $process): void {
                             $promise->resolve($process);
-                        }
+                        },
                     );
-                }
+                },
             )
         ;
 
@@ -71,7 +71,7 @@ class MessengerCronTest extends TestCase
         $promise->then(
             static function (array $realProcesses) use (&$processes): void {
                 $processes = $realProcesses;
-            }
+            },
         );
 
         $promise->wait();
@@ -180,7 +180,7 @@ class MessengerCronTest extends TestCase
         foreach ($processes as $process) {
             // Remove the PHP binary path and undo proper quoting (not relevant for
             // this test and required for easier cross-platform CI runs
-            $unwrapped[] = str_replace(['\'', '"'], '', trim(strstr($process->getCommandLine(), ' ')));
+            $unwrapped[] = str_replace(["'", '"'], '', trim(strstr($process->getCommandLine(), ' ')));
         }
 
         return $unwrapped;

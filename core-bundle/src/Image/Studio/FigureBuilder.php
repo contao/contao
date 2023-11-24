@@ -44,6 +44,7 @@ use Symfony\Component\Uid\Uuid;
 class FigureBuilder
 {
     private readonly Filesystem $filesystem;
+
     private InvalidResourceException|null $lastException = null;
 
     /**
@@ -176,9 +177,7 @@ class FigureBuilder
     {
         $this->lastException = null;
 
-        $filesModel = $this->getFilesModelAdapter()->findByUuid($uuid);
-
-        if (null === $filesModel) {
+        if (!$filesModel = $this->getFilesModelAdapter()->findByUuid($uuid)) {
             $this->lastException = new InvalidResourceException(sprintf('DBAFS item with UUID "%s" could not be found.', $uuid));
 
             return $this;
@@ -194,10 +193,7 @@ class FigureBuilder
     {
         $this->lastException = null;
 
-        /** @var FilesModel|null $filesModel */
-        $filesModel = $this->getFilesModelAdapter()->findByPk($id);
-
-        if (null === $filesModel) {
+        if (!$filesModel = $this->getFilesModelAdapter()->findByPk($id)) {
             $this->lastException = new InvalidResourceException(sprintf('DBAFS item with ID "%s" could not be found.', $id));
 
             return $this;
@@ -234,7 +230,7 @@ class FigureBuilder
         if ($autoDetectDbafsPaths && null !== ($dbafsPath = $getDbafsPath($path))) {
             $filesModel = $this->getFilesModelAdapter()->findByPath($dbafsPath);
 
-            if (null !== $filesModel) {
+            if ($filesModel) {
                 return $this->fromFilesModel($filesModel);
             }
         }
@@ -583,7 +579,7 @@ class FigureBuilder
      */
     public function build(): Figure
     {
-        if (null !== $this->lastException) {
+        if ($this->lastException) {
             throw $this->lastException;
         }
 
@@ -596,7 +592,7 @@ class FigureBuilder
      */
     public function buildIfResourceExists(): Figure|null
     {
-        if (null !== $this->lastException) {
+        if ($this->lastException) {
             return null;
         }
 
@@ -642,17 +638,17 @@ class FigureBuilder
 
                     return $event->getMetadata();
                 },
-                $settings
+                $settings,
             ),
             \Closure::bind(
                 fn (Figure $figure): array => $this->onDefineLinkAttributes($figure),
-                $settings
+                $settings,
             ),
             \Closure::bind(
                 fn (Figure $figure): LightboxResult|null => $this->onDefineLightboxResult($figure),
-                $settings
+                $settings,
             ),
-            $settings->options
+            $settings->options,
         );
     }
 
@@ -666,7 +662,7 @@ class FigureBuilder
         }
 
         $getUuid = static function (FilesModel|null $filesModel): string|null {
-            if (null === $filesModel || null === $filesModel->uuid) {
+            if (!$filesModel || null === $filesModel->uuid) {
                 return null;
             }
 
@@ -678,11 +674,11 @@ class FigureBuilder
 
         $fileReferenceData = array_filter([Metadata::VALUE_UUID => $getUuid($this->filesModel)]);
 
-        if (null !== $this->metadata) {
+        if ($this->metadata) {
             return $this->metadata->with($fileReferenceData);
         }
 
-        if (null === $this->filesModel) {
+        if (!$this->filesModel) {
             return null;
         }
 
@@ -691,7 +687,7 @@ class FigureBuilder
         $metadata = $this->filesModel->getMetadata(...$locales);
         $overwriteMetadata = $this->overwriteMetadata ? $this->overwriteMetadata->all() : [];
 
-        if (null !== $metadata) {
+        if ($metadata) {
             return $metadata
                 ->with($fileReferenceData)
                 ->with($overwriteMetadata)
@@ -772,8 +768,8 @@ class FigureBuilder
             return [$filePath, null];
         };
 
-        // Use explicitly set data (1), fall back to using metadata (2) or use the base resource (3) if empty
-        $lightboxResourceOrUrl = $this->lightboxResourceOrUrl ?? $getMetadataUrl() ?? $this->filePath;
+        // Use explicitly set href (1) or lightbox resource (2), fall back to using metadata (3) or use the base resource (4) if empty
+        $lightboxResourceOrUrl = $this->additionalLinkAttributes['href'] ?? $this->lightboxResourceOrUrl ?? $getMetadataUrl() ?? $this->filePath;
 
         [$filePathOrImage, $url] = $getResourceOrUrl($lightboxResourceOrUrl);
 
@@ -788,7 +784,7 @@ class FigureBuilder
                 $url,
                 $this->lightboxSizeConfiguration,
                 $this->lightboxGroupIdentifier,
-                $this->lightboxResizeOptions
+                $this->lightboxResizeOptions,
             )
         ;
     }

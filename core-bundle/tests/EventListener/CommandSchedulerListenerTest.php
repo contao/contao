@@ -90,8 +90,6 @@ class CommandSchedulerListenerTest extends TestCase
         ;
 
         $ref = new \ReflectionClass(Request::class);
-
-        /** @var Request $request */
         $request = $ref->newInstance();
 
         $pathInfo = $ref->getProperty('pathInfo');
@@ -121,10 +119,7 @@ class CommandSchedulerListenerTest extends TestCase
         $listener($this->getTerminateEvent('contao_backend'));
     }
 
-    /**
-     * @return Connection&MockObject
-     */
-    private function mockConnection(): Connection
+    private function mockConnection(): Connection&MockObject
     {
         $schemaManager = $this->createMock(MySQLSchemaManager::class);
         $schemaManager

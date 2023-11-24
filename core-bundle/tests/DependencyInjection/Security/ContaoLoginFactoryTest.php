@@ -34,7 +34,7 @@ class ContaoLoginFactoryTest extends TestCase
             $container,
             'contao_frontend',
             ['remember_me' => true],
-            'contao.security.frontend_user_provider'
+            'contao.security.frontend_user_provider',
         );
 
         $twoFactorAuthenticatorId = TwoFactorFactory::AUTHENTICATOR_ID_PREFIX.'contao_frontend';

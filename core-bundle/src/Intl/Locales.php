@@ -28,11 +28,8 @@ class Locales
      */
     private readonly array $enabledLocales;
 
-    /**
-     * @param TranslatorInterface&TranslatorBagInterface $translator
-     */
     public function __construct(
-        private readonly TranslatorInterface $translator,
+        private readonly TranslatorInterface&TranslatorBagInterface $translator,
         private readonly RequestStack $requestStack,
         array $defaultLocales,
         array $defaultEnabledLocales,
@@ -65,7 +62,7 @@ class Locales
      */
     public function getLanguages(string|null $displayLocale = null, bool $addNativeSuffix = false): array
     {
-        if (null === $displayLocale && null !== ($request = $this->requestStack->getCurrentRequest())) {
+        if (null === $displayLocale && ($request = $this->requestStack->getCurrentRequest())) {
             $displayLocale = $request->getLocale();
         }
 
@@ -99,10 +96,10 @@ class Locales
                     array_intersect_key(
                         \Locale::parseLocale($localeId),
                         [\Locale::LANG_TAG => null, \Locale::SCRIPT_TAG => null],
-                    )
+                    ),
                 );
             },
-            $this->locales
+            $this->locales,
         );
 
         $localeIds = array_values(array_unique(array_filter($localeIds)));
@@ -117,7 +114,7 @@ class Locales
      */
     public function getDisplayNames(array $localeIds, string|null $displayLocale = null, bool $addNativeSuffix = false): array
     {
-        if (null === $displayLocale && null !== ($request = $this->requestStack->getCurrentRequest())) {
+        if (null === $displayLocale && ($request = $this->requestStack->getCurrentRequest())) {
             $displayLocale = $request->getLocale();
         }
 

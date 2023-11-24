@@ -41,16 +41,15 @@ class FaviconController
     {
         $rootPage = $this->pageFinder->findRootPageForHostAndLanguage($request->getHost());
 
-        if (null === $rootPage || null === ($favicon = $rootPage->favicon)) {
+        if (!$rootPage || null === ($favicon = $rootPage->favicon)) {
             throw new NotFoundHttpException();
         }
 
         $this->framework->initialize();
 
         $filesModel = $this->framework->getAdapter(FilesModel::class);
-        $faviconModel = $filesModel->findByUuid($favicon);
 
-        if (null === $faviconModel) {
+        if (!$faviconModel = $filesModel->findByUuid($favicon)) {
             throw new NotFoundHttpException();
         }
 

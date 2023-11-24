@@ -44,6 +44,7 @@ use Twig\Source;
 class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarchyInterface, ResetInterface
 {
     private const CACHE_KEY_PATHS = 'contao.twig.loader_paths';
+
     private const CACHE_KEY_HIERARCHY = 'contao.twig.template_hierarchy';
 
     private string|false|null $currentThemeSlug = null;
@@ -151,10 +152,12 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
     {
         $pathsItem = $this->cachePool->getItem(self::CACHE_KEY_PATHS);
         $pathsItem->set($this->paths);
+
         $this->cachePool->save($pathsItem);
 
         $hierarchyItem = $this->cachePool->getItem(self::CACHE_KEY_HIERARCHY);
         $hierarchyItem->set($this->inheritanceChains);
+
         $this->cachePool->save($hierarchyItem);
     }
 
@@ -207,7 +210,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
             1 === preg_match(
                 '/\$this\s*->\s*extend\s*\(\s*[\'"]([a-z0-9_-]+)[\'"]\s*\)/i',
                 (string) file_get_contents($source->getPath()),
-                $match
+                $match,
             )
             && '@Contao/'.$match[1].'.html5' !== $name
         ) {
@@ -217,7 +220,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         preg_match_all(
             '/\$this\s*->\s*block\s*\(\s*[\'"]([a-z0-9_-]+)[\'"]\s*\)/i',
             (string) file_get_contents($source->getPath()),
-            $matches
+            $matches,
         );
 
         return new Source(implode("\n", $matches[1] ?? []), $source->getName(), $source->getPath());

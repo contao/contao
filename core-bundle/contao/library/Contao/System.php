@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
+use Contao\CoreBundle\Translation\MessageCatalogue;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database\Installer;
 use Symfony\Component\DependencyInjection\Container;
@@ -444,8 +445,9 @@ abstract class System
 		$arrCreateLangs = ($strLanguage == 'en') ? array('en') : array('en', $strLanguage);
 
 		// Prepare the XLIFF loader
-		$xlfLoader = new XliffFileLoader(static::getContainer()->getParameter('kernel.project_dir'), true);
-		$strCacheDir = static::getContainer()->getParameter('kernel.cache_dir');
+		$container = static::getContainer();
+		$xlfLoader = new XliffFileLoader($container->getParameter('kernel.project_dir'), true);
+		$strCacheDir = $container->getParameter('kernel.cache_dir');
 
 		// Load the language(s)
 		foreach ($arrCreateLangs as $strCreateLang)
@@ -458,7 +460,7 @@ abstract class System
 			else
 			{
 				// Find the given filename either as .php or .xlf file
-				$finder = static::getContainer()->get('contao.resource_finder')->findIn('languages/' . $strCreateLang)->name('/^' . $strName . '\.(php|xlf)$/');
+				$finder = $container->get('contao.resource_finder')->findIn('languages/' . $strCreateLang)->name('/^' . $strName . '\.(php|xlf)$/');
 
 				/** @var SplFileInfo $file */
 				foreach ($finder as $file)
@@ -476,6 +478,14 @@ abstract class System
 						default:
 							throw new \RuntimeException(sprintf('Invalid language file extension: %s', $file->getExtension()));
 					}
+				}
+
+				// Also populate $GLOBALS['TL_LANG'] with the Symfony translations of the 'contao_' domains.
+				$catalogue = $container->get('translator', ContainerInterface::NULL_ON_INVALID_REFERENCE)?->getCatalogue($strLanguage);
+
+				if ($catalogue instanceof MessageCatalogue)
+				{
+					$catalogue->populateGlobals('contao_' . $strName);
 				}
 			}
 		}
@@ -562,6 +572,8 @@ abstract class System
 	 */
 	public static function setCookie($strName, $varValue, $intExpires, $strPath=null, $strDomain=null, $blnSecure=null, $blnHttpOnly=false)
 	{
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "Contao\System::setCookie()" has been deprecated and will no longer work in Contao 6. Use Symfony\'s HttpFoundation and kernel.response events instead.');
+
 		if (!$strPath)
 		{
 			$strPath = Environment::get('path') ?: '/'; // see #4390
@@ -590,6 +602,8 @@ abstract class System
 		// HOOK: allow adding custom logic
 		if (isset($GLOBALS['TL_HOOKS']['setCookie']) && \is_array($GLOBALS['TL_HOOKS']['setCookie']))
 		{
+			trigger_deprecation('contao/core-bundle', '5.3', 'Using the "setCookie" hook has been deprecated and will no longer work in Contao 6. Use kernel.response events instead.');
+
 			foreach ($GLOBALS['TL_HOOKS']['setCookie'] as $callback)
 			{
 				$objCookie = static::importStatic($callback[0])->{$callback[1]}($objCookie);

@@ -109,7 +109,7 @@ class ResizeImagesCommandTest extends TestCase
                     sleep(1);
 
                     return $this->createMock(ImageInterface::class);
-                }
+                },
             )
         ;
 
@@ -141,7 +141,7 @@ class ResizeImagesCommandTest extends TestCase
             $factory ?? $this->createMock(ImageFactoryInterface::class),
             $resizer ?? $this->createMock(DeferredResizerInterface::class),
             Path::join($this->getTempDir(), 'assets/images'),
-            $storage ?? $this->createMock(DeferredImageStorageInterface::class)
+            $storage ?? $this->createMock(DeferredImageStorageInterface::class),
         );
     }
 }

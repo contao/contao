@@ -36,7 +36,6 @@ class PurgeSubscriptionsCron
             return;
         }
 
-        /** @var CommentsNotifyModel $subscription */
         foreach ($subscriptions as $subscription) {
             $subscription->delete();
         }

@@ -206,7 +206,7 @@ class FinderTest extends TestCase
                     }
 
                     return $chains;
-                }
+                },
             )
         ;
 
@@ -224,9 +224,9 @@ class FinderTest extends TestCase
                     return match ($id) {
                         'MSC.templatesTheme' => sprintf('Theme %s', $parameters[0]),
                         'MSC.global' => 'Global',
-                        default => throw new \LogicException('Unsupported translation id.')
+                        default => throw new \LogicException('Unsupported translation id.'),
                     };
-                }
+                },
             )
         ;
 
@@ -238,7 +238,7 @@ class FinderTest extends TestCase
                     $this->assertSame('templates', $domain);
 
                     return \array_key_exists($id, $translations);
-                }
+                },
             )
         ;
 

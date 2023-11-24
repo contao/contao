@@ -245,8 +245,14 @@
       <trans-unit id="tl_news.toggle.2">
         <source>Publish news item ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_news.feature">
+      <trans-unit id="tl_news.feature.0">
         <source>Feature/unfeature news item ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_news.feature.1">
+        <source>Unfeature news item ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_news.feature.2">
+        <source>Feature news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>

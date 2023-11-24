@@ -8,7 +8,9 @@ $GLOBALS['TL_CSS'][] = $this->asset('css/handorgel.min.css', 'contao-components/
 <script src="<?= $this->asset('js/handorgel.min.js', 'contao-components/handorgel') ?>"></script>
 <script>
   (function () {
-    const initAccordion = function (selector) {
+    // DO NOT CHANGE THIS FUNCTION!
+    // Set the Handorgel.js options in the function call below.
+    const initAccordion = function (selector, options) {
       const headerElements = document.querySelectorAll(selector);
       const contentElements = [];
 
@@ -25,10 +27,9 @@ $GLOBALS['TL_CSS'][] = $this->asset('css/handorgel.min.css', 'contao-components/
         contentElements.push(toggler.nextElementSibling);
       });
 
-      new handorgel(document.body, {
+      new handorgel(document.body, Object.assign({
         headerElements,
         contentElements,
-        multiSelectable: false,
         headerOpenClass: 'open',
         contentOpenClass: 'open',
         headerOpenedClass: 'active',
@@ -37,11 +38,14 @@ $GLOBALS['TL_CSS'][] = $this->asset('css/handorgel.min.css', 'contao-components/
         contentFocusClass: 'focus',
         headerDisabledClass: 'disabled',
         contentDisabledClass: 'disabled',
-      });
+      }, options || {}));
     }
 
     // Change this selector according to your template, or duplicate
     // the line if you use multiple accordion element classes.
-    initAccordion('.ce_accordion > .toggler');
+    initAccordion('.ce_accordion > .toggler', {
+      // Put custom options here
+      multiSelectable: false
+    });
   })();
 </script>

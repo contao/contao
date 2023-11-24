@@ -75,10 +75,7 @@ class DomainFilterTest extends TestCase
         $filter->filter($collection, $request);
     }
 
-    /**
-     * @return Route&MockObject
-     */
-    private function mockRouteWithHost(string $host): Route
+    private function mockRouteWithHost(string $host): Route&MockObject
     {
         $route = $this->createMock(Route::class);
         $route

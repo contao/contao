@@ -85,7 +85,7 @@ class FilesystemConfiguration
         $name ??= str_replace(['.', '/', '-'], '_', Container::underscore($mountPath));
         $adapterId = "contao.filesystem.adapter.$name";
 
-        if (null !== ($adapterDefinition = $this->adapterDefinitionFactory->createDefinition($adapter, $options))) {
+        if ($adapterDefinition = $this->adapterDefinitionFactory->createDefinition($adapter, $options)) {
             // Native adapter
             $this->container
                 ->setDefinition($adapterId, $adapterDefinition)
@@ -136,7 +136,7 @@ class FilesystemConfiguration
                 'skip_links' => true,
             ],
             Path::normalize($mountPath),
-            $name
+            $name,
         );
 
         return $this;
@@ -176,7 +176,7 @@ class FilesystemConfiguration
         // Add an individual hash generator
         $this->container->setDefinition(
             $hashGeneratorId = "contao.filesystem.hash_generator.$virtualFilesystemName",
-            new Definition(HashGenerator::class, [$hashFunction, $useLastModified])
+            new Definition(HashGenerator::class, [$hashFunction, $useLastModified]),
         );
 
         // Add the DBAFS service
@@ -184,7 +184,7 @@ class FilesystemConfiguration
 
         $definition = new Definition(
             Dbafs::class,
-            [new Reference($virtualFilesystemId), new Reference($hashGeneratorId), $table]
+            [new Reference($virtualFilesystemId), new Reference($hashGeneratorId), $table],
         );
 
         $definition->setFactory(new Reference('contao.filesystem.dbafs_factory'));

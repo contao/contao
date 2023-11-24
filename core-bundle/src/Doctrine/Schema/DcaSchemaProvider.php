@@ -63,16 +63,16 @@ class DcaSchemaProvider
             }
 
             if (isset($definitions['SCHEMA_FIELDS'])) {
-                foreach ($definitions['SCHEMA_FIELDS'] as $fieldName => $config) {
+                foreach ($definitions['SCHEMA_FIELDS'] as $fieldName => $conf) {
                     if ($table->hasColumn($fieldName)) {
                         continue;
                     }
 
-                    $options = $config;
+                    $options = $conf;
                     unset($options['name'], $options['type']);
 
                     // Use the binary collation if the "case_sensitive" option is set
-                    if ($this->isCaseSensitive($config)) {
+                    if ($this->isCaseSensitive($conf)) {
                         $options['platformOptions']['collation'] = $this->getBinaryCollation($table);
                     }
 
@@ -88,7 +88,7 @@ class DcaSchemaProvider
                         $options['platformOptions']['collation'] = $options['customSchemaOptions']['collation'];
                     }
 
-                    $table->addColumn($config['name'], $config['type'], $options);
+                    $table->addColumn($conf['name'], $conf['type'], $options);
                 }
             }
 

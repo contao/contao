@@ -25,12 +25,14 @@ use Symfony\Component\Process\Process;
 
 #[AsCommand(
     name: 'contao:setup',
-    description: 'Sets up a Contao Managed Edition. This command will be run when executing the "contao-setup" binary.'
+    description: 'Sets up a Contao Managed Edition. This command will be run when executing the "contao-setup" binary.',
 )]
 class ContaoSetupCommand extends Command
 {
     private readonly string $webDir;
+
     private readonly string $consolePath;
+
     private readonly string|false $phpPath;
 
     /**
@@ -66,7 +68,7 @@ class ContaoSetupCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         // Auto-generate a kernel secret if none was set
-        if (empty($this->kernelSecret) || 'ThisTokenIsNotSoSecretChangeIt' === $this->kernelSecret) {
+        if (!$this->kernelSecret || 'ThisTokenIsNotSoSecretChangeIt' === $this->kernelSecret) {
             $filesystem = new Filesystem();
 
             $dotenv = new DotenvDumper(Path::join($this->projectDir, '.env.local'), $filesystem);
@@ -125,7 +127,6 @@ class ContaoSetupCommand extends Command
      */
     private function executeCommand(array $command, OutputInterface $output): void
     {
-        /** @var Process $process */
         $process = ($this->createProcessHandler)($command);
 
         // Increase the timeout according to contao/manager-bundle (see #54)
@@ -134,7 +135,7 @@ class ContaoSetupCommand extends Command
         $process->run(
             static function (string $type, string $buffer) use ($output): void {
                 $output->write($buffer);
-            }
+            },
         );
 
         if (!$process->isSuccessful()) {

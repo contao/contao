@@ -319,7 +319,7 @@ class ConfigurationTest extends TestCase
                     ],
                 ],
             ],
-            $configuration['messenger']
+            $configuration['messenger'],
         );
 
         try {
@@ -341,7 +341,7 @@ class ConfigurationTest extends TestCase
         } catch (InvalidConfigurationException $exception) {
             $this->assertStringContainsString(
                 'The child config "desired_size" under "contao.messenger.workers.0.autoscale" must be configured',
-                $exception->getMessage()
+                $exception->getMessage(),
             );
         }
 
@@ -365,7 +365,7 @@ class ConfigurationTest extends TestCase
         } catch (InvalidConfigurationException $exception) {
             $this->assertStringContainsString(
                 'The child config "max" under "contao.messenger.workers.0.autoscale" must be configured',
-                $exception->getMessage()
+                $exception->getMessage(),
             );
         }
     }
@@ -427,9 +427,12 @@ class ConfigurationTest extends TestCase
                 $this->checkKeys($value->getChildren());
             }
 
-            /** @var ArrayNode $prototype */
-            if ($value instanceof PrototypedArrayNode && ($prototype = $value->getPrototype()) instanceof ArrayNode) {
-                $this->checkKeys($prototype->getChildren());
+            if ($value instanceof PrototypedArrayNode) {
+                $prototype = $value->getPrototype();
+
+                if ($prototype instanceof ArrayNode) {
+                    $this->checkKeys($prototype->getChildren());
+                }
             }
 
             if (\is_string($key) && !$value->isDeprecated()) {

@@ -88,14 +88,14 @@ class TemplateLoaderTest extends TestCase
                 'mod_article' => 'mod_article',
                 'mod_article_custom' => 'mod_article_custom (global)',
             ],
-            Controller::getTemplateGroup('mod_article')
+            Controller::getTemplateGroup('mod_article'),
         );
 
         $this->assertSame(
             [
                 'mod_article_custom' => 'mod_article_custom (global)',
             ],
-            Controller::getTemplateGroup('mod_article_')
+            Controller::getTemplateGroup('mod_article_'),
         );
     }
 
@@ -109,14 +109,14 @@ class TemplateLoaderTest extends TestCase
                 'mod_article' => 'mod_article',
                 'mod_article_custom' => 'mod_article_custom',
             ],
-            Controller::getTemplateGroup('mod_article')
+            Controller::getTemplateGroup('mod_article'),
         );
 
         $this->assertSame(
             [
                 'mod_article_custom' => 'mod_article_custom',
             ],
-            Controller::getTemplateGroup('mod_article_')
+            Controller::getTemplateGroup('mod_article_'),
         );
     }
 
@@ -130,14 +130,14 @@ class TemplateLoaderTest extends TestCase
                 'mod_article' => 'mod_article',
                 'mod_article_custom' => 'mod_article_custom',
             ],
-            Controller::getTemplateGroup('mod_article')
+            Controller::getTemplateGroup('mod_article'),
         );
 
         $this->assertSame(
             [
                 'mod_article_custom' => 'mod_article_custom',
             ],
-            Controller::getTemplateGroup('mod_article_')
+            Controller::getTemplateGroup('mod_article_'),
         );
     }
 
@@ -152,7 +152,7 @@ class TemplateLoaderTest extends TestCase
                 'ctlg_view_master' => 'ctlg_view_master',
                 'ctlg_view_teaser' => 'ctlg_view_teaser',
             ],
-            Controller::getTemplateGroup('ctlg_view')
+            Controller::getTemplateGroup('ctlg_view'),
         );
 
         $this->assertSame(
@@ -160,7 +160,7 @@ class TemplateLoaderTest extends TestCase
                 'ctlg_view_master' => 'ctlg_view_master',
                 'ctlg_view_teaser' => 'ctlg_view_teaser',
             ],
-            Controller::getTemplateGroup('ctlg_view_')
+            Controller::getTemplateGroup('ctlg_view_'),
         );
     }
 
@@ -183,7 +183,7 @@ class TemplateLoaderTest extends TestCase
                 'mod_article_custom' => 'mod_article_custom (global)',
                 'mod_article_foo' => 'mod_article_foo',
             ],
-            Controller::getTemplateGroup('mod_article')
+            Controller::getTemplateGroup('mod_article'),
         );
 
         $this->assertSame(
@@ -192,7 +192,7 @@ class TemplateLoaderTest extends TestCase
                 'mod_article_custom' => 'mod_article_custom (global)',
                 'mod_article_foo' => 'mod_article_foo',
             ],
-            Controller::getTemplateGroup('mod_article_')
+            Controller::getTemplateGroup('mod_article_'),
         );
 
         $this->assertSame(
@@ -200,14 +200,14 @@ class TemplateLoaderTest extends TestCase
                 'mod_article_list' => 'mod_article_list',
                 'mod_article_list_custom' => 'mod_article_list_custom (global)',
             ],
-            Controller::getTemplateGroup('mod_article_list')
+            Controller::getTemplateGroup('mod_article_list'),
         );
 
         $this->assertSame(
             [
                 'mod_article_list_custom' => 'mod_article_list_custom (global)',
             ],
-            Controller::getTemplateGroup('mod_article_list_')
+            Controller::getTemplateGroup('mod_article_list_'),
         );
     }
 
@@ -226,14 +226,14 @@ class TemplateLoaderTest extends TestCase
                 'ctlg_view' => 'ctlg_view',
                 'ctlg_view_details' => 'ctlg_view_details',
             ],
-            Controller::getTemplateGroup('ctlg_view')
+            Controller::getTemplateGroup('ctlg_view'),
         );
 
         $this->assertSame(
             [
                 'ctlg_view' => 'ctlg_view',
             ],
-            Controller::getTemplateGroup('ctlg_view', ['ctlg' => array_keys($GLOBALS['CTLG'])])
+            Controller::getTemplateGroup('ctlg_view', ['ctlg' => array_keys($GLOBALS['CTLG'])]),
         );
 
         unset($GLOBALS['CTLG']);
@@ -275,14 +275,14 @@ class TemplateLoaderTest extends TestCase
                 'mod_article' => 'mod_article',
                 'mod_article_custom' => 'mod_article_custom',
             ],
-            Controller::getTemplateGroup('mod_article')
+            Controller::getTemplateGroup('mod_article'),
         );
 
         $this->assertSame(
             [
                 'mod_article_custom' => 'mod_article_custom',
             ],
-            Controller::getTemplateGroup('mod_article_')
+            Controller::getTemplateGroup('mod_article_'),
         );
     }
 

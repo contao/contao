@@ -25,6 +25,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class DataCollectorTranslator extends SymfonyDataCollectorTranslator implements ResetInterface
 {
     private array $messages = [];
+
     private readonly LocaleAwareInterface|TranslatorBagInterface|TranslatorInterface $translator;
 
     public function __construct(TranslatorInterface $translator)

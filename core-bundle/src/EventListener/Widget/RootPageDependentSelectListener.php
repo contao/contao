@@ -49,7 +49,7 @@ class RootPageDependentSelectListener
             FROM tl_module m
             WHERE m.type != 'root_page_dependent_modules' AND m.pid = ?
             ORDER BY m.name",
-            [$pid]
+            [$pid],
         );
 
         foreach ($rows->iterateAssociative() as $module) {
@@ -105,7 +105,7 @@ class RootPageDependentSelectListener
                 StringUtil::specialcharsUrl($href),
                 StringUtil::specialchars($title),
                 StringUtil::specialchars(str_replace("'", "\\'", $title)),
-                Image::getHtml('alias.svg', $title)
+                Image::getHtml('alias.svg', $title),
             );
         }
 

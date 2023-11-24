@@ -84,7 +84,6 @@ class MakeDcaCallback extends AbstractMaker
             return;
         }
 
-        /** @var MethodDefinition $definition */
         $definition = $targets[$target];
         $elementDetails = $generator->createClassNameDetails($name, 'EventListener\DataContainer\\');
 
@@ -178,7 +177,7 @@ class MakeDcaCallback extends AbstractMaker
 
         $tables = array_map(
             static fn (SplFileInfo $input) => str_replace('.php', '', $input->getRelativePathname()),
-            iterator_to_array($files->getIterator())
+            iterator_to_array($files->getIterator()),
         );
 
         $tables = array_values($tables);

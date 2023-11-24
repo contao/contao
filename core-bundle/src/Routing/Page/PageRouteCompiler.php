@@ -54,7 +54,7 @@ class PageRouteCompiler extends RouteCompiler
             $compiledRoute->getHostRegex(),
             $compiledRoute->getHostTokens(),
             $compiledRoute->getHostVariables(),
-            $compiledRoute->getVariables()
+            $compiledRoute->getVariables(),
         );
     }
 }

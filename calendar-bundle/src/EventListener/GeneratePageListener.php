@@ -44,8 +44,9 @@ class GeneratePageListener
         $this->framework->initialize();
 
         $adapter = $this->framework->getAdapter(CalendarFeedModel::class);
+        $feeds = $adapter->findByIds($calendarfeeds);
 
-        if (!($feeds = $adapter->findByIds($calendarfeeds)) instanceof Collection) {
+        if (!$feeds instanceof Collection) {
             return;
         }
 
@@ -56,7 +57,7 @@ class GeneratePageListener
             $GLOBALS['TL_HEAD'][] = $template->generateFeedTag(
                 sprintf('%sshare/%s.xml', $feed->feedBase ?: $environment->get('base'), $feed->alias),
                 $feed->format,
-                $feed->title
+                $feed->title,
             );
         }
     }

@@ -26,7 +26,9 @@ use Psr\Log\LoggerInterface;
 class Cron
 {
     final public const MINUTELY_CACHE_KEY = 'contao.cron.minutely_run';
+
     final public const SCOPE_WEB = 'web';
+
     final public const SCOPE_CLI = 'cli';
 
     /**
@@ -57,8 +59,10 @@ class Cron
             throw new CronExecutionSkippedException();
         }
 
+        // 70 instead of 60 seconds to give some time for stale caches
         $cacheItem = $this->cachePool->getItem(self::MINUTELY_CACHE_KEY);
-        $cacheItem->expiresAfter(70); // 70 instead of 60 seconds to give some time for stale caches
+        $cacheItem->expiresAfter(70);
+
         $this->cachePool->saveDeferred($cacheItem);
 
         // Using a promise here not because the cache file takes forever to create but in order to make sure
@@ -68,7 +72,7 @@ class Cron
             function () use (&$promise): void {
                 $this->cachePool->commit();
                 $promise->resolve('Saved cache item.');
-            }
+            },
         );
     }
 
@@ -119,13 +123,8 @@ class Cron
             throw new \InvalidArgumentException('Invalid scope "'.$scope.'"');
         }
 
-        /** @var CronJobRepository $repository */
         $repository = ($this->repository)();
-
-        /** @var EntityManagerInterface $entityManager */
         $entityManager = ($this->entityManager)();
-
-        /** @var array<CronJob> $cronJobsToBeRun */
         $cronJobsToBeRun = [];
 
         $now = new \DateTimeImmutable();
@@ -143,7 +142,7 @@ class Cron
                 $lastRunDate = null;
                 $lastRunEntity = $repository->findOneByName($name);
 
-                if (null !== $lastRunEntity) {
+                if ($lastRunEntity) {
                     $lastRunDate = $lastRunEntity->getLastRun();
                 } else {
                     $lastRunEntity = new CronJobEntity($name);
@@ -153,7 +152,7 @@ class Cron
                 // Check if the cron should be run
                 $expression = CronExpression::factory($interval);
 
-                if (!$force && null !== $lastRunDate && $now < $expression->getNextRunDate($lastRunDate)) {
+                if (!$force && $lastRunDate && $now < $expression->getNextRunDate($lastRunDate)) {
                     continue;
                 }
 
@@ -176,6 +175,7 @@ class Cron
         $onSkip = static function (CronJob $cron) use ($repository, $entityManager): void {
             $lastRunEntity = $repository->findOneByName($cron->getName());
             $lastRunEntity->setLastRun($cron->getPreviousRun());
+
             $entityManager->flush();
         };
 
@@ -187,7 +187,6 @@ class Cron
      */
     private function executeCrons(array $crons, string $scope, \Closure $onSkip): void
     {
-        /** @var array<string, PromiseInterface> $promises */
         $promises = [];
         $exception = null;
 
@@ -211,7 +210,7 @@ class Cron
                         } else {
                             $this->logger?->debug(sprintf('Asynchronous cron job "%s" failed: %s', $cron->getName(), $reason));
                         }
-                    }
+                    },
                 );
 
                 $promises[] = $promise;
@@ -221,18 +220,18 @@ class Cron
                 // Catch any exceptions so that other cronjobs are still executed
                 $this->logger?->error((string) $e);
 
-                if (null === $exception) {
+                if (!$exception) {
                     $exception = $e;
                 }
             }
         }
 
-        if (0 !== \count($promises)) {
+        if ($promises) {
             Utils::settle($promises)->wait();
         }
 
         // Throw the first exception
-        if (null !== $exception) {
+        if ($exception) {
             throw $exception;
         }
     }

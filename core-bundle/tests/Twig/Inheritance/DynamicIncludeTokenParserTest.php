@@ -53,7 +53,7 @@ class DynamicIncludeTokenParserTest extends TestCase
                     }
 
                     throw new \LogicException('Template not found in hierarchy.');
-                }
+                },
             )
         ;
 
@@ -139,7 +139,7 @@ class DynamicIncludeTokenParserTest extends TestCase
         $parser = new Parser($environment);
         $includeNode = $parser->parse($tokenStream)->getNode('body')->getNode('0');
 
-        if (null !== $variables) {
+        if ($variables) {
             $this->assertSame((string) $variables, (string) $includeNode->getNode('variables'));
         } else {
             $this->assertFalse($includeNode->hasNode('variables'));

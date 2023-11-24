@@ -49,7 +49,7 @@ class AddAvailableTransportsPass implements CompilerPassInterface
 
                 $definition->addMethodCall(
                     'addTransport',
-                    [new Definition(TransportConfig::class, [$transportName, $from])]
+                    [new Definition(TransportConfig::class, [$transportName, $from])],
                 );
             }
         }

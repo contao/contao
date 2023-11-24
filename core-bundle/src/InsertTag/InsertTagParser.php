@@ -40,15 +40,15 @@ use Symfony\Contracts\Service\ResetInterface;
  */
 class InsertTagParser implements ResetInterface
 {
-    private const TAG_REGEX = /** @lang RegExp */ '
-        (?<it>                 # Named capturing group "it"
+    private const TAG_REGEX = '
+        (?\'it\'               # Named capturing group "it"
             {{                 # Starts with two opening curly braces
             [a-z0-9\x80-\xFF]  # The first letter must not be a reserved character of Twig, Mustache or similar template engines (see #805)
             (?>[^{}]|(?&it))*  # Match any character not curly brace or a nested insert tag
             }}                 # Ends with two closing curly braces
         )';
 
-    private const PARAMETER_REGEX = /** @lang RegExp */ '
+    private const PARAMETER_REGEX = '
         ::                        # Starts with double colon
         (?:
             [^{}|:]               # Match any character not curly brace, pipe or colon
@@ -188,12 +188,8 @@ class InsertTagParser implements ResetInterface
             }
         }
 
-        if (null !== $tag) {
-            $result = $this->renderSubscription($tag, false);
-
-            if (null !== $result) {
-                return $result;
-            }
+        if ($tag && ($result = $this->renderSubscription($tag, false))) {
+            return $result;
         }
 
         // Fallback to old implementation
@@ -228,7 +224,7 @@ class InsertTagParser implements ResetInterface
 
     public function parse(string $input): ParsedSequence
     {
-        if (null === $this->insertTags) {
+        if (!$this->insertTags) {
             $this->framework->initialize();
             $this->insertTags = new InsertTags();
         }
@@ -265,7 +261,6 @@ class InsertTagParser implements ResetInterface
                 $parameterMatches[0][$index] = substr($parameterMatch, 2);
             }
 
-            /** @var list<ParsedSequence> $parameters */
             $parameters = array_map($this->parse(...), $parameterMatches[0]);
         }
 
@@ -283,7 +278,7 @@ class InsertTagParser implements ResetInterface
         $tag = new ParsedInsertTag(
             $name,
             new ParsedParameters($parameters),
-            array_map(static fn ($flag) => new InsertTagFlag($flag), $flags)
+            array_map(static fn ($flag) => new InsertTagFlag($flag), $flags),
         );
 
         if ($tag->getParameters()->hasInsertTags()) {
@@ -367,7 +362,7 @@ class InsertTagParser implements ResetInterface
 
                 // Reprocess non-empty end tags to enable chaining block insert tags
                 // E.g. `{{iflng::de}}…{{iflng::en}}…{{iflng}}`
-                if (!\count($item->getParameters()->all())) {
+                if (!$item->getParameters()->all()) {
                     continue;
                 }
             }
@@ -466,7 +461,7 @@ class InsertTagParser implements ResetInterface
         $esiTag = $this->fragmentHandler->render(
             new ControllerReference(InsertTagsController::class.'::renderAction', $attributes, $query),
             'esi',
-            ['ignore_errors' => false] // see #48
+            ['ignore_errors' => false], // see #48
         );
 
         return new InsertTagResult($esiTag, OutputType::html);
@@ -551,7 +546,7 @@ class InsertTagParser implements ResetInterface
 
     private function callLegacyClass(string $input, bool $allowEsiTags): ChunkedText
     {
-        if (null === $this->insertTags) {
+        if (!$this->insertTags) {
             $this->framework->initialize();
             $this->insertTags = new InsertTags();
         }

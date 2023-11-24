@@ -1238,12 +1238,13 @@ abstract class Controller extends System
 
 		$db = Database::getInstance();
 		$arrParent = array();
+		$strParentTable = $strTable;
 
 		do
 		{
 			// Get the pid
 			$objParent = $db
-				->prepare("SELECT pid FROM " . $strTable . " WHERE id=?")
+				->prepare("SELECT pid FROM " . $strParentTable . " WHERE id=?")
 				->limit(1)
 				->execute($intId);
 
@@ -1253,16 +1254,16 @@ abstract class Controller extends System
 			}
 
 			// Store the parent table information
-			$strTable = $GLOBALS['TL_DCA'][$strTable]['config']['ptable'];
+			$strParentTable = $GLOBALS['TL_DCA'][$strParentTable]['config']['ptable'];
 			$intId = $objParent->pid;
 
 			// Add the log entry
-			$arrParent[] = $strTable . '.id=' . $intId;
+			$arrParent[] = $strParentTable . '.id=' . $intId;
 
 			// Load the data container of the parent table
-			$this->loadDataContainer($strTable);
+			$this->loadDataContainer($strParentTable);
 		}
-		while ($intId && !empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']));
+		while ($intId && !empty($GLOBALS['TL_DCA'][$strParentTable]['config']['ptable']));
 
 		if (empty($arrParent))
 		{
@@ -1283,7 +1284,7 @@ abstract class Controller extends System
 	{
 		$arrPaths = array_filter($arrPaths);
 
-		if (empty($arrPaths) || !\is_array($arrPaths))
+		if (empty($arrPaths))
 		{
 			return array();
 		}
