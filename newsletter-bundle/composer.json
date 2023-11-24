@@ -30,7 +30,8 @@
         "php": "^8.1",
         "contao/core-bundle": "self.version",
         "symfony/deprecation-contracts": "^3.0",
-        "symfony/http-kernel": "^6.3"
+        "symfony/http-kernel": "^6.3",
+        "tijsverkoyen/css-to-inline-styles": "^2.0"
     },
     "require-dev": {
         "contao/manager-plugin": "^2.3.1",
