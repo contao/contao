@@ -105,7 +105,7 @@ use Contao\Model\Collection;
  * @method static Collection<NewsModel>|NewsModel[]|null findByPageTitle($val, array $opt=array())
  * @method static Collection<NewsModel>|NewsModel[]|null findByDescription($val, array $opt=array())
  * @method static Collection<NewsModel>|NewsModel[]|null findByCanonicalLink($val, array $opt=array())
- * @method static Collection|NewsModel[]|NewsModel|null findByRobots($val, array $opt=array())
+ * @method static Collection|NewsModel[]|NewsModel|null  findByRobots($val, array $opt=array())
  * @method static Collection<NewsModel>|NewsModel[]|null findBySubheadline($val, array $opt=array())
  * @method static Collection<NewsModel>|NewsModel[]|null findByTeaser($val, array $opt=array())
  * @method static Collection<NewsModel>|NewsModel[]|null findByAddImage($val, array $opt=array())

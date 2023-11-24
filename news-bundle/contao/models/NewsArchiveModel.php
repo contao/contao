@@ -54,7 +54,7 @@ use Contao\Model\Collection;
  * @method static Collection<NewsArchiveModel>|NewsArchiveModel[]|null findByTitle($val, array $opt=array())
  * @method static Collection<NewsArchiveModel>|NewsArchiveModel[]|null findByJumpTo($val, array $opt=array())
  * @method static Collection<NewsArchiveModel>|NewsArchiveModel[]|null findByEnableCanonical($val, array $opt=array())
- * @method static Collection|NewsArchiveModel[]|NewsArchiveModel|null findByProtected($val, array $opt=array())
+ * @method static Collection|NewsArchiveModel[]|NewsArchiveModel|null  findByProtected($val, array $opt=array())
  * @method static Collection<NewsArchiveModel>|NewsArchiveModel[]|null findByGroups($val, array $opt=array())
  * @method static Collection<NewsArchiveModel>|NewsArchiveModel[]|null findByAllowComments($val, array $opt=array())
  * @method static Collection<NewsArchiveModel>|NewsArchiveModel[]|null findByNotify($val, array $opt=array())

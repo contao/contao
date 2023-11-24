@@ -125,7 +125,7 @@ use Contao\Model\Collection;
  * @method static Collection<CalendarEventsModel>|CalendarEventsModel[]|null findByRobots($val, array $opt=array())
  * @method static Collection<CalendarEventsModel>|CalendarEventsModel[]|null findByDescription($val, array $opt=array())
  * @method static Collection<CalendarEventsModel>|CalendarEventsModel[]|null findByCanonicalLink($val, array $opt=array())
- * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByLocation($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null  findByLocation($val, array $opt=array())
  * @method static Collection<CalendarEventsModel>|CalendarEventsModel[]|null findByAddress($val, array $opt=array())
  * @method static Collection<CalendarEventsModel>|CalendarEventsModel[]|null findByTeaser($val, array $opt=array())
  * @method static Collection<CalendarEventsModel>|CalendarEventsModel[]|null findByAddImage($val, array $opt=array())

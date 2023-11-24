@@ -167,8 +167,10 @@ class ModuleEventReader extends Events
 				$url = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objEvent->canonicalLink);
 
 				// Ensure absolute links
-				if (!preg_match('#^https?://#', $url)) {
-					if (!$request = System::getContainer()->get('request_stack')->getCurrentRequest()) {
+				if (!preg_match('#^https?://#', $url))
+				{
+					if (!$request = System::getContainer()->get('request_stack')->getCurrentRequest())
+					{
 						throw new \RuntimeException('The request stack did not contain a request');
 					}
 
