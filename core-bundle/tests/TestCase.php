@@ -12,32 +12,17 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests;
 
+use Contao\CoreBundle\Routing\Matcher\BackendMatcher;
+use Contao\CoreBundle\Routing\Matcher\FrontendMatcher;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\TestCase\ContaoTestCase;
-use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 abstract class TestCase extends ContaoTestCase
 {
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-
-        if (!\defined('TL_FILES_URL')) {
-            \define('TL_FILES_URL', '');
-        }
-    }
-
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['TL_CONFIG']);
-
-        parent::tearDown();
-    }
-
     protected function getFixturesDir(): string
     {
         return __DIR__.\DIRECTORY_SEPARATOR.'Fixtures';
@@ -48,10 +33,7 @@ abstract class TestCase extends ContaoTestCase
      */
     protected function mockScopeMatcher(): ScopeMatcher
     {
-        return new ScopeMatcher(
-            new RequestMatcher(null, null, null, null, ['_scope' => 'backend']),
-            new RequestMatcher(null, null, null, null, ['_scope' => 'frontend'])
-        );
+        return new ScopeMatcher(new BackendMatcher(), new FrontendMatcher());
     }
 
     /**

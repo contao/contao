@@ -13,18 +13,18 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command\Backup;
 
 use Contao\CoreBundle\Doctrine\Backup\BackupManagerException;
+use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-/**
- * @internal
- */
+#[AsCommand(
+    name: 'contao:backup:create',
+    description: 'Creates a new database backup.',
+)]
 class BackupCreateCommand extends AbstractBackupCommand
 {
-    protected static $defaultName = 'contao:backup:create';
-    protected static $defaultDescription = 'Creates a new database backup.';
-
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
@@ -36,22 +36,22 @@ class BackupCreateCommand extends AbstractBackupCommand
             $this->backupManager->create($config);
         } catch (BackupManagerException $e) {
             if ($this->isJson($input)) {
-                $io->writeln(json_encode(['error' => $e->getMessage()]));
+                $io->writeln(json_encode(['error' => $e->getMessage()], JSON_THROW_ON_ERROR));
             } else {
                 $io->error($e->getMessage());
             }
 
-            return 1;
+            return Command::FAILURE;
         }
 
         if ($this->isJson($input)) {
-            $io->writeln(json_encode($config->getBackup()->toArray()));
+            $io->writeln(json_encode($config->getBackup()->toArray(), JSON_THROW_ON_ERROR));
 
-            return 0;
+            return Command::SUCCESS;
         }
 
         $io->success(sprintf('Successfully created SQL dump "%s".', $config->getBackup()->getFilename()));
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

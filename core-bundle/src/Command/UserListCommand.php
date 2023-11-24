@@ -12,26 +12,21 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Command;
 
-use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\Model\Collection;
-use Contao\UserModel;
+use Doctrine\DBAL\Connection;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-/**
- * Lists Contao back end users.
- *
- * @internal
- */
+#[AsCommand(
+    name: 'contao:user:list',
+    description: 'Lists Contao back end users.',
+)]
 class UserListCommand extends Command
 {
-    protected static $defaultName = 'contao:user:list';
-    protected static $defaultDescription = 'Lists Contao back end users.';
-
-    public function __construct(private ContaoFramework $framework)
+    public function __construct(private readonly Connection $connection)
     {
         parent::__construct();
     }
@@ -49,7 +44,7 @@ class UserListCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        if ($input->getOption('admins')) {
+        if ($input->getOption('admins') && 'json' !== $input->getOption('format')) {
             $io->note('Only showing admin accounts');
         }
 
@@ -58,10 +53,10 @@ class UserListCommand extends Command
 
         switch ($input->getOption('format')) {
             case 'txt':
-                if (!$users || 0 === $users->count()) {
+                if ([] === $users) {
                     $io->note('No accounts found.');
 
-                    return 0;
+                    return Command::SUCCESS;
                 }
 
                 $rows = $this->formatTableRows($users, $columns);
@@ -72,32 +67,31 @@ class UserListCommand extends Command
             case 'json':
                 $data = $this->formatJson($users, $columns);
 
-                $io->write(json_encode($data));
+                $io->write(json_encode($data, JSON_THROW_ON_ERROR));
                 break;
 
             default:
                 throw new \LogicException('Invalid format: '.$input->getOption('format'));
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
-    private function getUsers(bool $onlyAdmins = false): Collection|null
+    private function getUsers(bool $onlyAdmins = false): array
     {
-        $this->framework->initialize();
-
-        $userModel = $this->framework->getAdapter(UserModel::class);
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('*')->from('tl_user');
 
         if ($onlyAdmins) {
-            return $userModel->findBy('admin', '1');
+            $qb->where('admin = 1');
         }
 
-        return $userModel->findAll();
+        return $qb->fetchAllAssociative();
     }
 
-    private function formatTableRows(Collection $users, array &$columns): array
+    private function formatTableRows(array $users, array &$columns): array
     {
-        if ([] === $columns) {
+        if (!$columns) {
             $columns = ['username', 'name', 'admin', 'dateAdded', 'lastLogin'];
         }
 
@@ -109,39 +103,39 @@ class UserListCommand extends Command
                     $check = '\\' === \DIRECTORY_SEPARATOR ? '1' : "\xE2\x9C\x94";
 
                     if (\in_array($field, ['tstamp', 'dateAdded', 'lastLogin'], true)) {
-                        return $user->{$field} ? date('Y-m-d H:i:s', (int) $user->{$field}) : '';
+                        return $user[$field] ? date('Y-m-d H:i:s', (int) $user[$field]) : '';
                     }
 
                     if (\in_array($field, ['admin', 'pwChange', 'disable', 'useTwoFactor', 'locked'], true)) {
-                        return $user->{$field} ? $check : '';
+                        return $user[$field] ? $check : '';
                     }
 
-                    return $user->{$field} ?? '';
+                    return $user[$field] ?? '';
                 },
-                $columns
+                $columns,
             );
         }
 
         return $rows;
     }
 
-    private function formatJson(Collection|null $users, array $columns): array
+    private function formatJson(array $users, array $columns): array
     {
         if (!$users) {
             return [];
         }
 
-        if ([] === $columns) {
-            return $users->fetchAll();
+        if (!$columns) {
+            $columns = ['username', 'name', 'admin', 'dateAdded', 'lastLogin'];
         }
 
         $data = [];
 
-        foreach ($users->fetchAll() as $user) {
+        foreach ($users as $user) {
             $data[] = array_filter(
                 $user,
                 static fn ($key) => \in_array($key, $columns, true),
-                ARRAY_FILTER_USE_KEY
+                ARRAY_FILTER_USE_KEY,
             );
         }
 

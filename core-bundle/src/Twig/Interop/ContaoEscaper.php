@@ -81,7 +81,7 @@ final class ContaoEscaper
 
                 // The following replaces characters undefined in HTML with the
                 // hex entity for the Unicode replacement character.
-                if (($ord <= 0x1f && "\t" !== $chr && "\n" !== $chr && "\r" !== $chr) || ($ord >= 0x7f && $ord <= 0x9f)) {
+                if (($ord <= 0x1F && "\t" !== $chr && "\n" !== $chr && "\r" !== $chr) || ($ord >= 0x7F && $ord <= 0x9F)) {
                     return '&#xFFFD;';
                 }
 
@@ -106,7 +106,7 @@ final class ContaoEscaper
                 // characters where a named entity does not exist.
                 return sprintf('&#x%04X;', mb_ord($chr, 'UTF-8'));
             },
-            $string
+            $string,
         );
     }
 }

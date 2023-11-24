@@ -19,26 +19,43 @@ class GlobalsMapListenerTest extends TestCase
 {
     /**
      * @dataProvider getValuesData
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
-    public function testMergesTheValuesIntoTheGlobalsArray(string $key, array|string|null $existing, array|string $new): void
+    public function testMergesTheValuesIntoTheGlobalsArray(array $existing, array $new, array $expected): void
     {
-        $GLOBALS[$key] = $existing;
+        $GLOBALS['TL_CTE'] = $existing;
 
-        $listener = new GlobalsMapListener([$key => $new]);
+        $listener = new GlobalsMapListener(['TL_CTE' => $new]);
         $listener->onInitializeSystem();
 
-        $this->assertSame($new, $GLOBALS[$key]);
+        $this->assertSame($expected, $GLOBALS['TL_CTE']);
+
+        unset($GLOBALS['TL_CTE']);
     }
 
     public function getValuesData(): \Generator
     {
-        yield ['foo', null, 'bar'];
-        yield ['foo', 'bar', 'baz'];
+        yield 'add single' => [
+            [],
+            ['text' => 'HeadlineFragment'],
+            ['text' => 'HeadlineFragment'],
+        ];
 
-        yield ['TL_CTE', null, ['foo' => 'bar']];
-        yield ['TL_CTE', ['foo' => 'bar'], ['foo' => 'baz']];
+        yield 'add group' => [
+            [],
+            ['texts' => ['headline' => 'HeadlineFragment']],
+            ['texts' => ['headline' => 'HeadlineFragment']],
+        ];
+
+        yield 'add to existing group' => [
+            ['texts' => ['text' => 'LegacyText']],
+            ['texts' => ['headline' => 'HeadlineFragment']],
+            ['texts' => ['headline' => 'HeadlineFragment', 'text' => 'LegacyText']],
+        ];
+
+        yield 'prefer existing entries' => [
+            ['texts' => ['headline' => 'LegacyHeadline']],
+            ['texts' => ['headline' => 'HeadlineFragment']],
+            ['texts' => ['headline' => 'LegacyHeadline']],
+        ];
     }
 }

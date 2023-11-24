@@ -25,7 +25,7 @@ class DefaultIndexerTest extends TestCase
     /**
      * @dataProvider indexProvider
      */
-    public function testIndexesADocument(Document $document, array|null $expectedIndexParams, string $expectedMessage = null, bool $indexProtected = false): void
+    public function testIndexesADocument(Document $document, array|null $expectedIndexParams, string|null $expectedMessage = null, bool $indexProtected = false): void
     {
         $searchAdapter = $this->mockAdapter(['indexPage']);
 
@@ -109,7 +109,7 @@ class DefaultIndexerTest extends TestCase
             [
                 'url' => 'https://example.com/valid',
                 'content' => '<html><body><script type="application/ld+json">{"@context":"https:\/\/schema.contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>',
-                'protected' => '',
+                'protected' => false,
                 'groups' => [],
                 'pid' => 2,
                 'title' => 'undefined',
@@ -133,7 +133,7 @@ class DefaultIndexerTest extends TestCase
             [
                 'url' => 'https://example.com/valid',
                 'content' => '<html lang="de"><head><title>Foo title</title></head><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/schema.contao.org\/"},"@type":"contao:Page","contao:pageId":2,"contao:noSearch":false,"contao:protected":true,"contao:groups":[42],"contao:fePreview":false}</script></body></html>',
-                'protected' => '1',
+                'protected' => true,
                 'groups' => [42],
                 'pid' => 2,
                 'title' => 'Foo title',
@@ -159,7 +159,7 @@ class DefaultIndexerTest extends TestCase
             [
                 'url' => 'https://example.com/valid',
                 'content' => '<html lang="de"><head><title>HTML page title</title></head><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/schema.contao.org\/"},"@type":"contao:Page","contao:title":"JSON-LD page title","contao:pageId":2,"contao:noSearch":false,"contao:protected":true,"contao:groups":[42],"contao:fePreview":false}</script></body></html>',
-                'protected' => '1',
+                'protected' => true,
                 'groups' => [42],
                 'pid' => 2,
                 'title' => 'JSON-LD page title',
@@ -186,7 +186,7 @@ class DefaultIndexerTest extends TestCase
             [
                 'url' => 'https://example.com/valid',
                 'content' => '<html lang="de"><head><title>HTML page title</title><link rel="canonical" href="https://example.com/valid" /></head><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/schema.contao.org\/"},"@type":"contao:Page","contao:title":"JSON-LD page title","contao:pageId":2,"contao:noSearch":false,"contao:protected":true,"contao:groups":[42],"contao:fePreview":false}</script></body></html>',
-                'protected' => '1',
+                'protected' => true,
                 'groups' => [42],
                 'pid' => 2,
                 'title' => 'JSON-LD page title',
@@ -211,20 +211,22 @@ class DefaultIndexerTest extends TestCase
 
     public function testDeletesADocument(): void
     {
+        $connection = $this->createMock(Connection::class);
+
         $searchAdapter = $this->mockAdapter(['removeEntry']);
         $searchAdapter
             ->expects($this->once())
             ->method('removeEntry')
-            ->with('https://example.com')
+            ->with('https://example.com', $connection)
         ;
 
         $framework = $this->mockContaoFramework([Search::class => $searchAdapter]);
         $framework
-            ->expects($this->once())
+            ->expects($this->never())
             ->method('initialize')
         ;
 
-        $indexer = new DefaultIndexer($framework, $this->createMock(Connection::class));
+        $indexer = new DefaultIndexer($framework, $connection);
         $indexer->delete(new Document(new Uri('https://example.com'), 200, [], ''));
     }
 
@@ -239,7 +241,7 @@ class DefaultIndexerTest extends TestCase
             ->withConsecutive(
                 ['TRUNCATE TABLE tl_search'],
                 ['TRUNCATE TABLE tl_search_index'],
-                ['TRUNCATE TABLE tl_search_term']
+                ['TRUNCATE TABLE tl_search_term'],
             )
         ;
 

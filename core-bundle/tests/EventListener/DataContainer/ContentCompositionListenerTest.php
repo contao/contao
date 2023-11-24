@@ -28,63 +28,48 @@ use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ClockMock;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ContentCompositionListenerTest extends TestCase
 {
     private ContentCompositionListener $listener;
 
-    /**
-     * @var Security&MockObject
-     */
-    private Security $security;
+    private Security&MockObject $security;
+
+    private ContaoFramework&MockObject $framework;
+
+    private PageRegistry&MockObject $pageRegistry;
+
+    private Connection&MockObject $connection;
+
+    private RequestStack&MockObject $requestStack;
 
     /**
      * @var Adapter<Image>&MockObject
      */
-    private Adapter $imageAdapter;
+    private Adapter&MockObject $imageAdapter;
 
     /**
      * @var Adapter<Backend>&MockObject
      */
-    private Adapter $backendAdapter;
+    private Adapter&MockObject $backendAdapter;
 
     /**
      * @var Adapter<PageModel>&MockObject
      */
-    private Adapter $pageModelAdapter;
-
-    /**
-     * @var ContaoFramework&MockObject
-     */
-    private ContaoFramework $framework;
-
-    /**
-     * @var PageRegistry&MockObject
-     */
-    private PageRegistry $pageRegistry;
-
-    /**
-     * @var Connection&MockObject
-     */
-    private Connection $connection;
-
-    /**
-     * @var RequestStack&MockObject
-     */
-    private RequestStack $requestStack;
+    private Adapter&MockObject $pageModelAdapter;
 
     private array $pageRecord = [
         'id' => 17,
         'alias' => 'foo/bar',
         'type' => 'foo',
         'title' => 'foo',
-        'published' => '1',
+        'published' => 1,
     ];
 
     private array $articleRecord = [
@@ -92,7 +77,7 @@ class ContentCompositionListenerTest extends TestCase
         'pid' => 17,
         'alias' => 'foo-bar',
         'title' => 'foo',
-        'published' => '1',
+        'published' => 1,
     ];
 
     protected function setUp(): void
@@ -122,7 +107,7 @@ class ContentCompositionListenerTest extends TestCase
             $this->pageRegistry,
             $this->createMock(TranslatorInterface::class),
             $this->connection,
-            $this->requestStack
+            $this->requestStack,
         );
     }
 
@@ -161,8 +146,8 @@ class ContentCompositionListenerTest extends TestCase
         $this->imageAdapter
             ->expects($this->once())
             ->method('getHtml')
-            ->with('foo_.svg')
-            ->willReturn('<img src="foo_.svg">')
+            ->with('foo--disabled.svg')
+            ->willReturn('<img src="foo--disabled.svg">')
         ;
 
         $this->backendAdapter
@@ -171,8 +156,8 @@ class ContentCompositionListenerTest extends TestCase
         ;
 
         $this->assertSame(
-            '<img src="foo_.svg"> ',
-            $this->listener->renderPageArticlesOperation($this->pageRecord, '', '', '', 'foo.svg')
+            '<img src="foo--disabled.svg"> ',
+            $this->listener->renderPageArticlesOperation($this->pageRecord, '', '', '', 'foo.svg'),
         );
     }
 
@@ -192,8 +177,8 @@ class ContentCompositionListenerTest extends TestCase
         $this->imageAdapter
             ->expects($this->once())
             ->method('getHtml')
-            ->with('foo_.svg')
-            ->willReturn('<img src="foo_.svg">')
+            ->with('foo--disabled.svg')
+            ->willReturn('<img src="foo--disabled.svg">')
         ;
 
         $this->backendAdapter
@@ -202,8 +187,8 @@ class ContentCompositionListenerTest extends TestCase
         ;
 
         $this->assertSame(
-            '<img src="foo_.svg"> ',
-            $this->listener->renderPageArticlesOperation($this->pageRecord, '', '', '', 'foo.svg')
+            '<img src="foo--disabled.svg"> ',
+            $this->listener->renderPageArticlesOperation($this->pageRecord, '', '', '', 'foo.svg'),
         );
     }
 
@@ -287,7 +272,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '<a href="linkWithPn" title="title"><img src="foo.svg" alt="label"></a> ',
-            $this->listener->renderPageArticlesOperation($this->pageRecord, 'link', 'label', 'title', 'foo.svg')
+            $this->listener->renderPageArticlesOperation($this->pageRecord, 'link', 'label', 'title', 'foo.svg'),
         );
     }
 
@@ -320,11 +305,11 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '<a href="linkWithPn" title="title"><img src="foo.svg" alt="label"></a> ',
-            $this->listener->renderPageArticlesOperation($this->pageRecord, 'link', 'label', 'title', 'foo.svg')
+            $this->listener->renderPageArticlesOperation($this->pageRecord, 'link', 'label', 'title', 'foo.svg'),
         );
     }
 
-    public function testDoesNotGenerateArticleWithoutActiveRecord(): void
+    public function testDoesNotGenerateArticleWithoutCurrentRecord(): void
     {
         $this->requestStack
             ->expects($this->once())
@@ -339,7 +324,11 @@ class ContentCompositionListenerTest extends TestCase
             ->method('createInstance')
         ;
 
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['activeRecord' => null]);
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(null)
+        ;
 
         $this->listener->generateArticleForPage($dc);
     }
@@ -359,7 +348,11 @@ class ContentCompositionListenerTest extends TestCase
             ->method('createInstance')
         ;
 
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['activeRecord' => (object) ['id' => 17]]);
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['id' => 17])
+        ;
 
         $this->listener->generateArticleForPage($dc);
     }
@@ -391,7 +384,11 @@ class ContentCompositionListenerTest extends TestCase
             ->method('createInstance')
         ;
 
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['activeRecord' => (object) ['id' => 17]]);
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['id' => 17])
+        ;
 
         $this->listener->generateArticleForPage($dc);
     }
@@ -406,7 +403,11 @@ class ContentCompositionListenerTest extends TestCase
             ->method('createInstance')
         ;
 
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['activeRecord' => (object) ['id' => 17]]);
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['id' => 17])
+        ;
 
         $this->listener->generateArticleForPage($dc);
     }
@@ -424,7 +425,11 @@ class ContentCompositionListenerTest extends TestCase
             ->method('supportsContentComposition')
         ;
 
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['activeRecord' => (object) $this->pageRecord]);
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn($this->pageRecord)
+        ;
 
         $this->listener->generateArticleForPage($dc);
     }
@@ -438,7 +443,11 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->expectSupportsContentComposition(false, $page);
 
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['activeRecord' => (object) $this->pageRecord]);
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn($this->pageRecord)
+        ;
 
         $this->listener->generateArticleForPage($dc);
     }
@@ -452,7 +461,11 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->expectSupportsContentComposition(true, $page);
 
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['activeRecord' => (object) $this->pageRecord]);
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn($this->pageRecord)
+        ;
 
         $this->listener->generateArticleForPage($dc);
     }
@@ -466,7 +479,11 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->expectSupportsContentComposition(true, $page);
 
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['activeRecord' => (object) $this->pageRecord]);
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn($this->pageRecord)
+        ;
 
         $this->listener->generateArticleForPage($dc);
     }
@@ -480,7 +497,11 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->expectSupportsContentComposition(true, $page);
 
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['activeRecord' => (object) $this->pageRecord]);
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn($this->pageRecord)
+        ;
 
         $this->listener->generateArticleForPage($dc);
     }
@@ -500,7 +521,11 @@ class ContentCompositionListenerTest extends TestCase
             ->method('insert')
         ;
 
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_foo', 'activeRecord' => (object) $this->pageRecord]);
+        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_foo']);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn($this->pageRecord)
+        ;
 
         $this->listener->generateArticleForPage($dc);
     }
@@ -525,7 +550,7 @@ class ContentCompositionListenerTest extends TestCase
             'inColumn' => 'main',
             'title' => 'foo',
             'alias' => 'foo-bar', // Expect folder alias conversion
-            'published' => '1',
+            'published' => 1,
         ];
 
         $this->connection
@@ -534,7 +559,11 @@ class ContentCompositionListenerTest extends TestCase
             ->with('tl_article', $article)
         ;
 
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_foo', 'activeRecord' => (object) $this->pageRecord]);
+        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_foo']);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn($this->pageRecord)
+        ;
 
         $this->listener->generateArticleForPage($dc);
 
@@ -571,7 +600,7 @@ class ContentCompositionListenerTest extends TestCase
             'inColumn' => $expectedColumn,
             'title' => 'foo',
             'alias' => 'foo-bar', // Expect folder alias conversion
-            'published' => '1',
+            'published' => 1,
         ];
 
         $this->connection
@@ -580,7 +609,11 @@ class ContentCompositionListenerTest extends TestCase
             ->with('tl_article', $article)
         ;
 
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_foo', 'activeRecord' => (object) $this->pageRecord]);
+        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_foo']);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn($this->pageRecord)
+        ;
 
         $this->listener->generateArticleForPage($dc);
 
@@ -629,7 +662,11 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->expectSupportsContentComposition(false, $page);
 
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article', 'activeRecord' => (object) $this->pageRecord]);
+        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn($this->pageRecord)
+        ;
 
         $this->imageAdapter
             ->expects($this->never())
@@ -650,7 +687,11 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->expectSupportsContentComposition(true, $page);
 
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article', 'activeRecord' => (object) $this->pageRecord]);
+        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn($this->pageRecord)
+        ;
 
         $this->imageAdapter
             ->expects($this->never())
@@ -674,8 +715,8 @@ class ContentCompositionListenerTest extends TestCase
         $this->imageAdapter
             ->expects($this->once())
             ->method('getHtml')
-            ->with('pasteinto_.svg')
-            ->willReturn('<img src="pasteinto_.svg">')
+            ->with('pasteinto--disabled.svg')
+            ->willReturn('<img src="pasteinto--disabled.svg">')
         ;
 
         $this->security
@@ -683,11 +724,15 @@ class ContentCompositionListenerTest extends TestCase
             ->method('isGranted')
         ;
 
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article', 'activeRecord' => (object) $this->pageRecord]);
+        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn($this->pageRecord)
+        ;
 
         $this->assertSame(
-            '<img src="pasteinto_.svg"> ',
-            $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', true)
+            '<img src="pasteinto--disabled.svg"> ',
+            $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', true),
         );
     }
 
@@ -707,15 +752,19 @@ class ContentCompositionListenerTest extends TestCase
         $this->imageAdapter
             ->expects($this->once())
             ->method('getHtml')
-            ->with('pasteinto_.svg')
-            ->willReturn('<img src="pasteinto_.svg">')
+            ->with('pasteinto--disabled.svg')
+            ->willReturn('<img src="pasteinto--disabled.svg">')
         ;
 
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article', 'activeRecord' => (object) $this->pageRecord]);
+        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn($this->pageRecord)
+        ;
 
         $this->assertSame(
-            '<img src="pasteinto_.svg"> ',
-            $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', false)
+            '<img src="pasteinto--disabled.svg"> ',
+            $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', false),
         );
     }
 
@@ -745,11 +794,15 @@ class ContentCompositionListenerTest extends TestCase
             ->willReturn('link')
         ;
 
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article', 'activeRecord' => (object) $this->pageRecord]);
+        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn($this->pageRecord)
+        ;
 
         $this->assertSame(
             '<a href="link" title="" onclick="Backend.getScrollOffset()"><img src="pasteinto.svg"></a> ',
-            $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', false, ['mode' => 'paste', 'id' => 17])
+            $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', false, ['mode' => 'paste', 'id' => 17]),
         );
     }
 
@@ -771,7 +824,11 @@ class ContentCompositionListenerTest extends TestCase
             ->method('isGranted')
         ;
 
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article', 'activeRecord' => (object) $this->articleRecord]);
+        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn($this->articleRecord)
+        ;
 
         $this->imageAdapter
             ->expects($this->never())
@@ -780,7 +837,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '',
-            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false)
+            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false),
         );
     }
 
@@ -790,7 +847,11 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->expectSupportsContentComposition(false, $page);
 
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article', 'activeRecord' => (object) $this->articleRecord]);
+        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn($this->articleRecord)
+        ;
 
         $this->security
             ->expects($this->never())
@@ -804,7 +865,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '',
-            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false)
+            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false),
         );
     }
 
@@ -814,7 +875,11 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->expectSupportsContentComposition(true, $page);
 
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article', 'activeRecord' => (object) $this->articleRecord]);
+        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn($this->articleRecord)
+        ;
 
         $this->security
             ->expects($this->never())
@@ -828,7 +893,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '',
-            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false)
+            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false),
         );
     }
 
@@ -838,7 +903,11 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->expectSupportsContentComposition(true, $page);
 
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article', 'activeRecord' => (object) $this->articleRecord]);
+        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn($this->articleRecord)
+        ;
 
         $this->security
             ->expects($this->never())
@@ -848,13 +917,13 @@ class ContentCompositionListenerTest extends TestCase
         $this->imageAdapter
             ->expects($this->once())
             ->method('getHtml')
-            ->with('pasteafter_.svg')
-            ->willReturn('<img src="pasteafter_.svg">')
+            ->with('pasteafter--disabled.svg')
+            ->willReturn('<img src="pasteafter--disabled.svg">')
         ;
 
         $this->assertSame(
-            '<img src="pasteafter_.svg"> ',
-            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false, ['mode' => 'cut', 'id' => 2])
+            '<img src="pasteafter--disabled.svg"> ',
+            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false, ['mode' => 'cut', 'id' => 2]),
         );
     }
 
@@ -864,7 +933,11 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->expectSupportsContentComposition(true, $page);
 
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article', 'activeRecord' => (object) $this->articleRecord]);
+        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn($this->articleRecord)
+        ;
 
         $this->security
             ->expects($this->never())
@@ -874,13 +947,13 @@ class ContentCompositionListenerTest extends TestCase
         $this->imageAdapter
             ->expects($this->once())
             ->method('getHtml')
-            ->with('pasteafter_.svg')
-            ->willReturn('<img src="pasteafter_.svg">')
+            ->with('pasteafter--disabled.svg')
+            ->willReturn('<img src="pasteafter--disabled.svg">')
         ;
 
         $this->assertSame(
-            '<img src="pasteafter_.svg"> ',
-            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false, ['mode' => 'cutAll', 'id' => [2]])
+            '<img src="pasteafter--disabled.svg"> ',
+            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false, ['mode' => 'cutAll', 'id' => [2]]),
         );
     }
 
@@ -890,7 +963,11 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->expectSupportsContentComposition(true, $page);
 
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article', 'activeRecord' => (object) $this->articleRecord]);
+        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn($this->articleRecord)
+        ;
 
         $this->security
             ->expects($this->never())
@@ -900,13 +977,13 @@ class ContentCompositionListenerTest extends TestCase
         $this->imageAdapter
             ->expects($this->once())
             ->method('getHtml')
-            ->with('pasteafter_.svg')
-            ->willReturn('<img src="pasteafter_.svg">')
+            ->with('pasteafter--disabled.svg')
+            ->willReturn('<img src="pasteafter--disabled.svg">')
         ;
 
         $this->assertSame(
-            '<img src="pasteafter_.svg"> ',
-            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', true, ['mode' => 'paste', 'id' => 17])
+            '<img src="pasteafter--disabled.svg"> ',
+            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', true, ['mode' => 'paste', 'id' => 17]),
         );
     }
 
@@ -916,7 +993,11 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->expectSupportsContentComposition(true, $page);
 
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article', 'activeRecord' => (object) $this->articleRecord]);
+        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn($this->articleRecord)
+        ;
 
         $this->security
             ->expects($this->once())
@@ -928,13 +1009,13 @@ class ContentCompositionListenerTest extends TestCase
         $this->imageAdapter
             ->expects($this->once())
             ->method('getHtml')
-            ->with('pasteafter_.svg')
-            ->willReturn('<img src="pasteafter_.svg">')
+            ->with('pasteafter--disabled.svg')
+            ->willReturn('<img src="pasteafter--disabled.svg">')
         ;
 
         $this->assertSame(
-            '<img src="pasteafter_.svg"> ',
-            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false, ['mode' => 'paste', 'id' => 17])
+            '<img src="pasteafter--disabled.svg"> ',
+            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false, ['mode' => 'paste', 'id' => 17]),
         );
     }
 
@@ -944,7 +1025,11 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->expectSupportsContentComposition(true, $pageModel);
 
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article', 'activeRecord' => (object) $this->articleRecord]);
+        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn($this->articleRecord)
+        ;
 
         $this->security
             ->expects($this->once())
@@ -968,7 +1053,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '<a href="link" title="" onclick="Backend.getScrollOffset()"><img src="pasteafter.svg"></a> ',
-            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false, ['mode' => 'paste', 'id' => 17])
+            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false, ['mode' => 'paste', 'id' => 17]),
         );
     }
 
@@ -983,7 +1068,7 @@ class ContentCompositionListenerTest extends TestCase
         ;
     }
 
-    private function expectRequest(bool $hasSession, array $newRecords = null): void
+    private function expectRequest(bool $hasSession, array|null $newRecords = null): void
     {
         $request = $this->createMock(Request::class);
         $request
@@ -1024,10 +1109,7 @@ class ContentCompositionListenerTest extends TestCase
         ;
     }
 
-    /**
-     * @return PageModel&MockObject
-     */
-    private function mockPageWithRow(int|false|null $moduleId = false): PageModel
+    private function mockPageWithRow(int|false|null $moduleId = false): PageModel&MockObject
     {
         $page = $this->mockClassWithProperties(PageModel::class, $this->pageRecord);
         $page
@@ -1044,12 +1126,9 @@ class ContentCompositionListenerTest extends TestCase
 
         if (false !== $moduleId) {
             if (null !== $moduleId) {
-                $moduleId = $this->mockClassWithProperties(
-                    LayoutModel::class,
-                    [
-                        'modules' => serialize([['mod' => $moduleId, 'col' => 'main']]),
-                    ]
-                );
+                $moduleId = $this->mockClassWithProperties(LayoutModel::class, [
+                    'modules' => serialize([['mod' => $moduleId, 'col' => 'main']]),
+                ]);
             }
 
             $page
@@ -1070,10 +1149,7 @@ class ContentCompositionListenerTest extends TestCase
         return $page;
     }
 
-    /**
-     * @return PageModel&MockObject
-     */
-    private function MockPageFindByPk(int|false|null $moduleId = false): PageModel
+    private function MockPageFindByPk(int|false|null $moduleId = false): PageModel&MockObject
     {
         $page = $this->mockClassWithProperties(PageModel::class, $this->pageRecord);
         $page
@@ -1083,12 +1159,9 @@ class ContentCompositionListenerTest extends TestCase
 
         if (false !== $moduleId) {
             if (null !== $moduleId) {
-                $moduleId = $this->mockClassWithProperties(
-                    LayoutModel::class,
-                    [
-                        'modules' => serialize([['mod' => $moduleId, 'col' => 'main']]),
-                    ]
-                );
+                $moduleId = $this->mockClassWithProperties(LayoutModel::class, [
+                    'modules' => serialize([['mod' => $moduleId, 'col' => 'main']]),
+                ]);
             }
 
             $page

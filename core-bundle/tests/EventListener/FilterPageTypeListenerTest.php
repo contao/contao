@@ -82,7 +82,7 @@ class FilterPageTypeListenerTest extends TestCase
 
         $event = new FilterPageTypeEvent(
             ['foo', 'root', 'error_401', 'error_403', 'error_404', 'error_503'],
-            $this->mockDataContainer(17)
+            $this->mockDataContainer(17),
         );
 
         $listener = new FilterPageTypeListener($connection);
@@ -110,7 +110,7 @@ class FilterPageTypeListenerTest extends TestCase
 
         $event = new FilterPageTypeEvent(
             ['foo', 'root', 'error_401', 'error_403', 'error_404'],
-            $this->mockDataContainer(1, 2)
+            $this->mockDataContainer(1, 2),
         );
 
         $listener = new FilterPageTypeListener($connection);
@@ -119,16 +119,17 @@ class FilterPageTypeListenerTest extends TestCase
         $this->assertSame(['foo', 'error_404'], $event->getOptions());
     }
 
-    /**
-     * @return DataContainer&MockObject
-     */
-    private function mockDataContainer(int|null $pid, int $id = null): DataContainer
+    private function mockDataContainer(int|null $pid, int|null $id = null): DataContainer&MockObject
     {
-        $activeRecord = array_filter(['id' => $id, 'pid' => $pid], static fn ($v): bool => null !== $v);
+        $currentRecord = array_filter(['id' => $id, 'pid' => $pid], static fn ($v): bool => null !== $v);
 
-        return $this->mockClassWithProperties(
-            DataContainer::class,
-            ['activeRecord' => empty($activeRecord) ? null : (object) $activeRecord]
-        );
+        $mock = $this->createMock(DataContainer::class);
+        $mock
+            ->expects($this->once())
+            ->method('getCurrentRecord')
+            ->willReturn($currentRecord ?: null)
+        ;
+
+        return $mock;
     }
 }

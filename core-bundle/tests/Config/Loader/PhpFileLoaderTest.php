@@ -30,14 +30,14 @@ class PhpFileLoaderTest extends TestCase
     {
         $this->assertTrue(
             $this->loader->supports(
-                $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/config/config.php'
-            )
+                $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/config/config.php',
+            ),
         );
 
         $this->assertFalse(
             $this->loader->supports(
-                $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf'
-            )
+                $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf',
+            ),
         );
     }
 
@@ -51,7 +51,7 @@ class PhpFileLoaderTest extends TestCase
 
         $this->assertSame(
             $expects,
-            $this->loader->load($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/config/config.php')
+            $this->loader->load($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/config/config.php'),
         );
 
         $content = <<<'EOF'
@@ -62,7 +62,7 @@ class PhpFileLoaderTest extends TestCase
 
         $this->assertSame(
             $content,
-            $this->loader->load($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/dca/tl_test.php')
+            $this->loader->load($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/dca/tl_test.php'),
         );
     }
 
@@ -71,7 +71,7 @@ class PhpFileLoaderTest extends TestCase
         $expects = <<<'EOF'
 
             namespace Foo\Bar {
-            $GLOBALS['TL_DCA']['tl_test']['config']['dataContainer'] = \Contao\DC_Table::class;
+            $GLOBALS['TL_DCA']['tl_test_with_namespace1']['config']['dataContainer'] = \Contao\DC_Table::class;
             }
 
             EOF;
@@ -80,14 +80,14 @@ class PhpFileLoaderTest extends TestCase
             $expects,
             $this->loader->load(
                 $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/dca/tl_test_with_namespace1.php',
-                'namespaced'
-            )
+                'namespaced',
+            ),
         );
 
         $expects = <<<'EOF'
 
             namespace {
-            $GLOBALS['TL_DCA']['tl_test']['config']['dataContainer'] = \Contao\DC_Table::class;
+            $GLOBALS['TL_DCA']['tl_test_with_namespace2']['config']['dataContainer'] = \Contao\DC_Table::class;
             }
 
             EOF;
@@ -96,8 +96,8 @@ class PhpFileLoaderTest extends TestCase
             $expects,
             $this->loader->load(
                 $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/dca/tl_test_with_namespace2.php',
-                'namespaced'
-            )
+                'namespaced',
+            ),
         );
 
         $expects = <<<'EOF'
@@ -112,8 +112,8 @@ class PhpFileLoaderTest extends TestCase
             $expects,
             $this->loader->load(
                 $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/tl_test.php',
-                'namespaced'
-            )
+                'namespaced',
+            ),
         );
     }
 
@@ -122,36 +122,33 @@ class PhpFileLoaderTest extends TestCase
      */
     public function testStripsDeclareStrictTypes(string $file): void
     {
-        $content = <<<'EOF'
+        $content = <<<EOF
 
-            $GLOBALS['TL_DCA']['tl_test'] = ['config' => ['dataContainer' => \Contao\DC_Table::class, 'sql' => ['keys' => ['id' => 'primary']]], 'fields' => ['id' => ['sql' => "int(10) unsigned NOT NULL auto_increment"]]];
+            \$GLOBALS['TL_DCA']['$file'] = ['config' => ['dataContainer' => \\Contao\\DC_Table::class, 'sql' => ['keys' => ['id' => 'primary']]], 'fields' => ['id' => ['sql' => "int(10) unsigned NOT NULL auto_increment"]]];
 
             EOF;
 
         $this->assertSame(
             $content,
             $this->loader->load(
-                $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/dca/'.$file.'.php'
-            )
+                $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/dca/'.$file.'.php',
+            ),
         );
     }
 
-    /**
-     * @dataProvider loadWithDeclareStatementsStrictType
-     */
     public function testIgnoresDeclareStatementsInComments(): void
     {
         $content = <<<'EOF'
 
-            $GLOBALS['TL_DCA']['tl_test'] = ['config' => ['dataContainer' => \Contao\DC_Table::class, 'sql' => ['keys' => ['id' => 'primary']]], 'fields' => ['id' => ['sql' => "int(10) unsigned NOT NULL auto_increment"]]];
+            $GLOBALS['TL_DCA']['tl_test_with_declare3'] = ['config' => ['dataContainer' => \Contao\DC_Table::class, 'sql' => ['keys' => ['id' => 'primary']]], 'fields' => ['id' => ['sql' => "int(10) unsigned NOT NULL auto_increment"]]];
 
             EOF;
 
         $this->assertSame(
             $content,
             $this->loader->load(
-                $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/dca/tl_test_with_declare3.php'
-            )
+                $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/dca/tl_test_with_declare3.php',
+            ),
         );
     }
 
@@ -166,18 +163,18 @@ class PhpFileLoaderTest extends TestCase
      */
     public function testPreservesOtherDeclareDefinitions(string $file): void
     {
-        $content = <<<'EOF'
+        $content = <<<EOF
 
             declare (ticks=1);
-            $GLOBALS['TL_DCA']['tl_test'] = ['config' => ['dataContainer' => \Contao\DC_Table::class, 'sql' => ['keys' => ['id' => 'primary']]], 'fields' => ['id' => ['sql' => "int(10) unsigned NOT NULL auto_increment"]]];
+            \$GLOBALS['TL_DCA']['$file'] = ['config' => ['dataContainer' => \\Contao\\DC_Table::class, 'sql' => ['keys' => ['id' => 'primary']]], 'fields' => ['id' => ['sql' => "int(10) unsigned NOT NULL auto_increment"]]];
 
             EOF;
 
         $this->assertSame(
             $content,
             $this->loader->load(
-                $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/dca/'.$file.'.php'
-            )
+                $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/dca/'.$file.'.php',
+            ),
         );
     }
 

@@ -14,8 +14,8 @@ namespace Contao\CoreBundle\Tests\Command;
 
 use Contao\CoreBundle\Command\UserListCommand;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\Model\Collection;
-use Contao\UserModel;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Query\QueryBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\Table;
@@ -33,7 +33,7 @@ class UserListCommandTest extends TestCase
 
     public function testDefinition(): void
     {
-        $command = $this->getCommand();
+        $command = $this->getCommand($this->createMock(QueryBuilder::class));
 
         $this->assertNotEmpty($command->getDescription());
 
@@ -43,125 +43,157 @@ class UserListCommandTest extends TestCase
         $this->assertTrue($definition->hasOption('admins'));
     }
 
-    public function testTakesAdminsFlagAsArgument(): void
+    public function testThrowsExceptionOnInvalidFormat(): void
     {
-        $command = $this->getCommand();
+        $command = $this->getCommand($this->mockQueryBuilder([]));
 
-        $input = [
-            '--admins' => true,
-        ];
-
-        $code = (new CommandTester($command))->execute($input);
-
-        $this->assertSame(0, $code);
+        $this->expectException(\LogicException::class);
+        $this->executeCommand($command, ['--format' => 'foo'], 1);
     }
 
-    public function testReturnsValidJson(): void
+    /**
+     * @dataProvider listsUsersProvider
+     */
+    public function testListsUsers(array $input, array $data, string $expected): void
     {
-        $command = $this->getCommand();
+        $command = $this->getCommand($this->mockQueryBuilder($data));
+        $output = $this->executeCommand($command, $input);
 
-        $input = [
-            '--format' => 'json',
-        ];
-
-        $commandTester = new CommandTester($command);
-
-        $code = $commandTester->execute($input);
-        $output = $commandTester->getDisplay();
-
-        $this->assertSame(0, $code);
-        $this->assertNotNull(json_decode($output, true));
+        $this->assertStringContainsString($expected, $output);
     }
 
-    public function testReturnsValidJsonWithSubset(): void
+    /**
+     * @dataProvider listsUsersProvider
+     */
+    public function testListsUsersAsJson(array $input, array $data, string $expectedTxt, array $expected): void
     {
-        $command = $this->getCommand();
+        $input['--format'] = 'json';
 
-        $input = [
-            '--format' => 'json',
-            '--column' => ['name', 'username'],
-        ];
+        $command = $this->getCommand($this->mockQueryBuilder($data));
+        $output = json_decode($this->executeCommand($command, $input), true, 512, JSON_THROW_ON_ERROR);
 
-        $commandTester = new CommandTester($command);
-
-        $code = $commandTester->execute($input);
-        $output = $commandTester->getDisplay();
-
-        $this->assertSame(0, $code);
-        $this->assertNotNull(json_decode($output, true));
+        $this->assertSame($expected, $output);
     }
 
-    public function testTakesColumnAsArgument(): void
+    public function listsUsersProvider(): \Generator
     {
-        $command = $this->getCommand();
-
-        $input = [
-            '--column' => ['username', 'name'],
+        yield 'Returns empty result' => [
+            [],
+            [],
+            'No accounts found.',
+            [],
         ];
 
-        $code = (new CommandTester($command))->execute($input);
+        yield 'Returns empty result with column argument' => [
+            ['--column' => ['firstname', 'lastname']],
+            [],
+            'No accounts found.',
+            [],
+        ];
 
-        $this->assertSame(0, $code);
+        yield 'Returns default fields from data' => [
+            [],
+            [['id' => 42, 'username' => 'k.jones', 'name' => 'Kevin Jones', 'admin' => '1', 'dateAdded' => 1697459597, 'lastLogin' => 1697459597]],
+            'k.jones    Kevin Jones',
+            [['username' => 'k.jones', 'name' => 'Kevin Jones', 'admin' => '1', 'dateAdded' => 1697459597, 'lastLogin' => 1697459597]],
+        ];
+
+        yield 'Returns custom columns' => [
+            ['--column' => ['id', 'username']],
+            [['id' => 42, 'username' => 'k.jones', 'name' => 'Kevin Jones', 'admin' => '1', 'dateAdded' => time(), 'lastLogin' => time()]],
+            '42   k.jones',
+            [['id' => 42, 'username' => 'k.jones']],
+        ];
+
+        yield 'Ignores non-existing columns' => [
+            ['--column' => ['id', 'username', 'foobar']],
+            [['id' => 42, 'username' => 'k.jones', 'name' => 'Kevin Jones', 'admin' => '1', 'dateAdded' => time(), 'lastLogin' => time()]],
+            '42   k.jones',
+            [['id' => 42, 'username' => 'k.jones']],
+        ];
+
+        $tstamp = time();
+        $formatted = date('Y-m-d H:i:s', $tstamp);
+
+        yield 'Formats timestamp fields' => [
+            ['--column' => ['tstamp', 'dateAdded', 'lastLogin', 'foobar']],
+            [['tstamp' => $tstamp, 'dateAdded' => $tstamp, 'lastLogin' => $tstamp, 'foobar' => $tstamp]],
+            "$formatted   $formatted   $formatted   $tstamp",
+            [['tstamp' => $tstamp, 'dateAdded' => $tstamp, 'lastLogin' => $tstamp, 'foobar' => $tstamp]],
+        ];
+
+        $check = '\\' === \DIRECTORY_SEPARATOR ? '1' : "\xE2\x9C\x94";
+
+        yield 'Formats checkbox fields on Unix' => [
+            [],
+            [['id' => 42, 'username' => 'k.jones', 'name' => 'Kevin Jones', 'admin' => '1', 'dateAdded' => 1697459597, 'lastLogin' => 1697459597]],
+            'k.jones    Kevin Jones   '.$check,
+            [['username' => 'k.jones', 'name' => 'Kevin Jones', 'admin' => '1', 'dateAdded' => 1697459597, 'lastLogin' => 1697459597]],
+        ];
     }
 
-    private function getCommand(): UserListCommand
+    public function testAdminArgumentAffectsQueryBuilder(): void
     {
-        $collection = new Collection([$this->mockAdminUser(), $this->mockContaoUser()], 'tl_user');
-
-        $userModelAdapter = $this->mockAdapter(['findBy', 'findAll']);
-        $userModelAdapter
-            ->method('findAll')
-            ->willReturn($collection, null)
+        $queryBuilder = $this->mockQueryBuilder([]);
+        $queryBuilder
+            ->expects($this->once())
+            ->method('where')
+            ->with('admin = 1')
+            ->willReturnSelf()
         ;
 
-        $collection = new Collection([$this->mockAdminUser()], 'tl_user');
+        $command = $this->getCommand($queryBuilder);
 
-        $userModelAdapter
-            ->method('findBy')
-            ->with('admin', '1')
-            ->willReturn($collection, null)
+        $this->executeCommand($command, ['--admins' => true]);
+    }
+
+    private function getCommand(QueryBuilder $queryBuilder): UserListCommand
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('createQueryBuilder')
+            ->willReturn($queryBuilder)
         ;
 
-        $command = new UserListCommand($this->mockContaoFramework([UserModel::class => $userModelAdapter]));
+        $command = new UserListCommand($connection);
         $command->setApplication(new Application());
 
         return $command;
     }
 
-    /**
-     * @return UserModel&MockObject
-     */
-    private function mockContaoUser(): UserModel
+    private function mockQueryBuilder(array $result): QueryBuilder&MockObject
     {
-        $userModel = $this->mockClassWithProperties(UserModel::class);
-        $userModel->id = 2;
-        $userModel->username = 'j.doe';
-        $userModel->name = 'John Doe';
-
-        $userModel
-            ->method('row')
-            ->willReturn((array) $userModel)
+        $queryBuilder = $this->createMock(QueryBuilder::class);
+        $queryBuilder
+            ->expects($this->once())
+            ->method('select')
+            ->with('*')
+            ->willReturnSelf()
         ;
 
-        return $userModel;
+        $queryBuilder
+            ->expects($this->once())
+            ->method('from')
+            ->with('tl_user')
+            ->willReturnSelf()
+        ;
+
+        $queryBuilder
+            ->expects($this->once())
+            ->method('fetchAllAssociative')
+            ->willReturn($result)
+        ;
+
+        return $queryBuilder;
     }
 
-    /**
-     * @return UserModel&MockObject
-     */
-    private function mockAdminUser(): UserModel
+    private function executeCommand(UserListCommand $command, array $input = [], int $expectedExitCode = 0): string
     {
-        $userModel = $this->mockClassWithProperties(UserModel::class);
-        $userModel->id = 1;
-        $userModel->username = 'j.doe';
-        $userModel->name = 'John Doe';
-        $userModel->admin = '1';
+        $commandTester = new CommandTester($command);
+        $code = $commandTester->execute($input);
 
-        $userModel
-            ->method('row')
-            ->willReturn((array) $userModel)
-        ;
+        $this->assertSame($expectedExitCode, $code);
 
-        return $userModel;
+        return $commandTester->getDisplay();
     }
 }

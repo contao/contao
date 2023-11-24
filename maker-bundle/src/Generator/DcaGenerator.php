@@ -18,8 +18,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DcaGenerator implements GeneratorInterface
 {
-    public function __construct(private FileManager $fileManager, private string $projectDir)
-    {
+    public function __construct(
+        private readonly FileManager $fileManager,
+        private readonly string $projectDir,
+    ) {
     }
 
     public function generate(array $options): string
@@ -30,13 +32,11 @@ class DcaGenerator implements GeneratorInterface
         $target = Path::join($this->projectDir, 'contao/dca', $options['domain'].'.php');
         $fileExists = $this->fileManager->fileExists($target);
 
-        $variables = array_merge(
-            [
-                'append' => $fileExists,
-                'element_name' => $options['element'],
-            ],
-            $options['variables']
-        );
+        $variables = [
+            'append' => $fileExists,
+            'element_name' => $options['element'],
+            ...$options['variables'],
+        ];
 
         $contents = $this->fileManager->parseTemplate($source, $variables);
         $contents = ltrim($contents);
@@ -61,6 +61,6 @@ class DcaGenerator implements GeneratorInterface
 
     private function getSourcePath(string $path): string
     {
-        return Path::join(__DIR__, '../Resources/skeleton', $path);
+        return Path::join(__DIR__.'/../../skeleton', $path);
     }
 }

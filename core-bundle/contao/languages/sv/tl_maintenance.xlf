@@ -1,0 +1,178 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_maintenance.php" source-language="en" target-language="sv">
+    <body>
+      <trans-unit id="tl_maintenance.cacheTables.0">
+        <source>Purge data</source>
+        <target>Ta bort sessiondata</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.cacheTables.1">
+        <source>Please select the data you want to purge or rebuild.</source>
+        <target>Välj vilken/vilka cache-tabell(er) som du vill rensa.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.job">
+        <source>Job</source>
+        <target>Åtgärd</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.description">
+        <source>Description</source>
+        <target>Beskrivning</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.clearCache">
+        <source>Purge data</source>
+        <target>Ta bort sessiondata</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.cacheCleared">
+        <source>The data has been purged</source>
+        <target>Cachen har rensats</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.updateHelp">
+        <source>Please enter your %s here.</source>
+        <target>Vänligen ange din %s här.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.index.0">
+        <source>Purge the search index</source>
+        <target>Rensa sökindex</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.index.1">
+        <source>Truncates the tables &lt;code&gt;tl_search&lt;/code&gt;, &lt;code&gt;tl_search_index&lt;/code&gt; and &lt;code&gt;tl_search_term&lt;/code&gt;. Afterwards, you have to rebuild the search index (see above).</source>
+        <target>Rensar tabellerna &lt;code&gt;tl_search&lt;/code&gt;, &lt;code&gt;tl_search_index&lt;/code&gt; och &lt;code&gt;tl_search_term&lt;/code&gt;. Efteråt måste du bygga om sökindexet (se ovan).</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.undo.0">
+        <source>Purge the undo table</source>
+        <target>Rensa ångra-tabell</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.undo.1">
+        <source>Truncates the &lt;code&gt;tl_undo&lt;/code&gt; table which stores the deleted records. This job permanently deletes these records.</source>
+        <target>Rensar tabellen &lt;em&gt;tl_undo&lt;/em&gt; som lagrar raderade poster. Detta raderar posterna permanent.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.versions.0">
+        <source>Purge the version table</source>
+        <target>Rensa versionstabell</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.versions.1">
+        <source>Truncates the &lt;code&gt;tl_version&lt;/code&gt; table which stores the previous versions of a record. This job permanently deletes these records.</source>
+        <target>Rensar tabellen &lt;em&gt;tl_version&lt;/em&gt; som lagrar tidigare versioner av poster. Detta raderar posterna permanent.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.log.0">
+        <source>Purge the system log</source>
+        <target>Rensa systemlogg</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.log.1">
+        <source>Truncates the &lt;code&gt;tl_log&lt;/code&gt; table which stores all the system log entries. This job permanently deletes these records.</source>
+        <target>Rensar tabellen &lt;em&gt;tl_log&lt;/em&gt; som lagrar alla systemloggar. Detta raderar posterna permanent.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.crawl_queue.0">
+        <source>Purge the crawl queue</source>
+        <target>Rensa genomsökningskön</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.crawl_queue.1">
+        <source>Truncates the &lt;code&gt;tl_crawl_queue&lt;/code&gt; table which stores all the queue information from crawl processes.</source>
+        <target>Rensar tabellen &lt;code&gt;tl_crawl_queue&lt;/code&gt; som lagrar all köinformation från genomsökningsprocesser.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.images.0">
+        <source>Purge the image cache</source>
+        <target>Rensa bild-cache</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.images.1">
+        <source>Removes the automatically generated images and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Tar bort de automatiskt genererade bilderna och rensar sedan den delade cachen, så det finns inga länkar till raderade resurser.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.previews.0">
+        <source>Purge the preview cache</source>
+        <target>Rensa förhandsgranskningscachen</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.previews.1">
+        <source>Removes the automatically generated preview images and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Tar bort de automatiskt genererade förhandsgranskningsbilderna och rensar sedan den delade cachen, så att det inte finns några länkar till borttagna resurser.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.scripts.0">
+        <source>Purge the script cache</source>
+        <target>Rensa skript-cache</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.scripts.1">
+        <source>Removes the automatically generated &lt;code&gt;.css&lt;/code&gt; and &lt;code&gt;.js&lt;/code&gt; files and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Tar bort de automatiskt genererade &lt;code&gt;.css&lt;/code&gt;- och &lt;code&gt;.js&lt;/code&gt;-filerna och rensar sedan den delade cachen, så att det inte finns några länkar till borttagna resurser.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.pages.0">
+        <source>Purge the shared cache</source>
+        <target>Rensa den delade cachen</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.pages.1">
+        <source>Removes the cached versions of the front end pages.</source>
+        <target>Rensar cache:ade versioner av frontend-sidor.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.temp.0">
+        <source>Purge the temp folder</source>
+        <target>Rensa temp-folder</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.temp.1">
+        <source>Removes the temporary files.</source>
+        <target>Rensar bort temporära filer.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.xml.0">
+        <source>Recreate the XML files</source>
+        <target>Återskapa XML-filer</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.xml.1">
+        <source>Recreates the XML files in the &lt;code&gt;shared&lt;/code&gt; folder and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Återskapar XML-filerna i den &lt;code&gt;shared&lt;/code&gt; mappen och rensar sedan den shared cachen, så att det inte finns några länkar till borttagna resurser.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.symlinks.0">
+        <source>Recreate the symlinks</source>
+        <target>Återskapar symlinks</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.symlinks.1">
+        <source>Recreates the symlinks in the public folder (document root).</source>
+        <target>Återskapar symlänkar i den offentliga mappen (dokumentrot).</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawler">
+        <source>Crawler</source>
+        <target>Sökrobot</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.startCrawling">
+        <source>Start crawling</source>
+        <target>Börja genomsökning</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlSubscribers.0">
+        <source>Enabled features</source>
+        <target>Aktiverade funktioner</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlSubscribers.1">
+        <source>The crawler crawls all URLs it finds. Here you can decide what to do with these results.</source>
+        <target>Sökroboten genomsöker alla webbadresser som den hittar. Här kan du bestämma vad du ska göra med dessa resultat.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlMember.0">
+        <source>Front end member</source>
+        <target>Frontend- medlem</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlMember.1">
+        <source>Automatically log in a front end member to index protected pages.</source>
+        <target>Logga automatiskt in en frontend-medlem för att indexera skyddade sidor.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlWaitToBeFinished">
+        <source>The crawler is currently working. Please wait for it to finish to see the results.</source>
+        <target>Sökroboten arbetar för närvarande. Vänta tills det är klart för att se resultaten.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDebugLog">
+        <source>Debug log</source>
+        <target>Felsökningslogg</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDebugLogExplain">
+        <source>If errors occurred or pages were skipped, check the debug log for more information.</source>
+        <target>Om fel uppstod eller sidor hoppades över, kontrollera felsökningsloggen för mer information.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDownloadLog">
+        <source>Download log</source>
+        <target>Ladda ner logg</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlSubscriberNames.search-index">
+        <source>Update the search index</source>
+        <target>Uppdatera sökindexet</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlSubscriberNames.broken-link-checker">
+        <source>Check for broken links</source>
+        <target>Sök efter trasiga länkar</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

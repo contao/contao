@@ -1,0 +1,186 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_faq.php" source-language="en" target-language="ja">
+    <body>
+      <trans-unit id="tl_faq.question.0">
+        <source>Question</source>
+        <target>質問</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.question.1">
+        <source>Please enter the question.</source>
+        <target>質問を入力してください。</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.alias.0">
+        <source>FAQ alias</source>
+        <target>FAQのエイリアス</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.alias.1">
+        <source>The FAQ alias is a unique reference to the FAQ which can be called instead of its numeric ID.</source>
+        <target>FAQのエイリアスは、その数値のIDの代わりにFAQを参照できる、重複しない名前です。</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.author.0">
+        <source>Author</source>
+        <target>作成者</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.author.1">
+        <source>Here you can change the author of the FAQ.</source>
+        <target>FAQの作成者をここで変更できます。</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.answer.0">
+        <source>Answer</source>
+        <target>回答</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.answer.1">
+        <source>Please enter the answer.</source>
+        <target>回答を入力してください。</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.addImage.0">
+        <source>Add an image</source>
+        <target>画像を追加</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.addImage.1">
+        <source>Add an image to the FAQ.</source>
+        <target>回答に画像を追加します。</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.pageTitle.0">
+        <source>Meta title</source>
+        <target>メタタイトル</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.pageTitle.1">
+        <source>Here you can add a custom meta title to overwrite the default page title.</source>
+        <target>独自のメタタイトルを追加して、ページの題名の初期値を上書きできます。</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.robots.0">
+        <source>Robots tag</source>
+        <target>robotsタグ</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.robots.1">
+        <source>Here you can overwrite how search engines handle the FAQ.</source>
+        <target>検索エンジンがFAQを扱う方法を上書きできます。</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.description.0">
+        <source>Meta description</source>
+        <target>メタデスクリプション</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.description.1">
+        <source>Here you can add a custom meta description to overwrite the default page description.</source>
+        <target>独自のメタデスクリプションを追加して、ページの説明の初期値を上書きできます。</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.addEnclosure.0">
+        <source>Add enclosures</source>
+        <target>エンクロージャーを追加</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.addEnclosure.1">
+        <source>Add one or more downloadable files to the FAQ.</source>
+        <target>ダウンロードできるファイルを1つ以上回答に追加します。</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.enclosure.0">
+        <source>Enclosures</source>
+        <target>エンクロージャー</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.enclosure.1">
+        <source>Please choose the files you want to attach.</source>
+        <target>RSSのエンクロージャーとして添付したいファイルを選択してください。</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.noComments.0">
+        <source>Disable comments</source>
+        <target>コメントを不使用</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.noComments.1">
+        <source>Do not allow comments for this particular FAQ.</source>
+        <target>この特定のFAQにコメントを許可しません。</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.published.0">
+        <source>Publish the FAQ</source>
+        <target>FAQを公開</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.published.1">
+        <source>Make the FAQ publicly visible on the website.</source>
+        <target>FAQをウェブサイトにFAQを公開します。</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.title_legend">
+        <source>Title and author</source>
+        <target>題名と作成者</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.answer_legend">
+        <source>Answer</source>
+        <target>回答</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.meta_legend">
+        <source>Metadata</source>
+        <target>メタデータ</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.image_legend">
+        <source>Image settings</source>
+        <target>画像の設定</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.enclosure_legend">
+        <source>Enclosures</source>
+        <target>エンクロージャー</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.expert_legend">
+        <source>Expert settings</source>
+        <target>専門的な設定</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.publish_legend">
+        <source>Publish settings</source>
+        <target>公開の設定</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.new.0">
+        <source>New</source>
+        <target>新規作成</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.new.1">
+        <source>Create a new question</source>
+        <target>新しい質問を作成</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.show">
+        <source>Show the details of question ID %s</source>
+        <target>ID %sの質問の詳細を表示</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.edit">
+        <source>Edit question ID %s</source>
+        <target>ID %sの質問を編集</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.copy">
+        <source>Duplicate question ID %s</source>
+        <target>ID %sの質問を複製</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.cut">
+        <source>Move question ID %s</source>
+        <target>ID %sの質問を移動</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.delete">
+        <source>Delete question ID %s</source>
+        <target>ID %sの質問を削除</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.toggle.0">
+        <source>Publish/unpublish question</source>
+        <target>質問を公開または非公開</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.toggle.1">
+        <source>Unpublish question ID %s</source>
+        <target>ID %sの質問を非公開</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.toggle.2">
+        <source>Publish question ID %s</source>
+        <target>ID %sの質問を公開</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.pasteafter.0">
+        <source>Paste at the top</source>
+        <target>先頭に貼り付け</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.pasteafter.1">
+        <source>Paste after question ID %s</source>
+        <target>ID %sの質問の後に貼り付け</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.pastenew.0">
+        <source>Create a new question at the top</source>
+        <target>先頭に新しい質問を作成</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.pastenew.1">
+        <source>Create a new question after question ID %s</source>
+        <target>ID %sの質問の後に新しい質問を作成</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -17,6 +17,8 @@ use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\ImageInterface;
+use Contao\Image\Metadata\ExifFormat;
+use Contao\Image\Metadata\IptcFormat;
 use Contao\Image\Picture;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureConfigurationItem;
@@ -27,9 +29,12 @@ use Contao\ImageSizeItemModel;
 use Contao\ImageSizeModel;
 use Contao\Model\Collection;
 use Contao\System;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class PictureFactoryTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -60,7 +65,7 @@ class PictureFactoryTest extends TestCase
                         $this->assertSame($imageMock, $image);
 
                         return true;
-                    }
+                    },
                 ),
                 $this->callback(
                     function (PictureConfiguration $pictureConfig): bool {
@@ -73,7 +78,6 @@ class PictureFactoryTest extends TestCase
                         $this->assertSame('1x, 2x', $size->getDensities());
                         $this->assertSame('100vw', $size->getSizes());
 
-                        /** @var PictureConfigurationItem $sizeItem */
                         $sizeItem = $pictureConfig->getSizeItems()[0];
 
                         $this->assertSame(50, $sizeItem->getResizeConfig()->getWidth());
@@ -88,8 +92,25 @@ class PictureFactoryTest extends TestCase
                         $this->assertSame(['webp', 'png', 'jpg'], $pictureConfig->getFormats()['webp']);
 
                         return true;
-                    }
-                )
+                    },
+                ),
+                $this->callback(
+                    function (ResizeOptions $options): bool {
+                        $this->assertSame(
+                            [
+                                ExifFormat::NAME => ExifFormat::DEFAULT_PRESERVE_KEYS,
+                                IptcFormat::NAME => IptcFormat::DEFAULT_PRESERVE_KEYS,
+                            ],
+                            $options->getPreserveCopyrightMetadata(),
+                        );
+
+                        $this->assertTrue($options->getSkipIfDimensionsMatch());
+                        $this->assertSame(77, $options->getImagineOptions()['jpeg_quality']);
+                        $this->assertSame(77, $options->getImagineOptions()['jxl_quality']);
+
+                        return true;
+                    },
+                ),
             )
             ->willReturn($pictureMock)
         ;
@@ -104,15 +125,15 @@ class PictureFactoryTest extends TestCase
                         $this->assertSame($path, $imagePath);
 
                         return true;
-                    }
+                    },
                 ),
                 $this->callback(
-                    function (?ResizeConfiguration $size): bool {
+                    function (ResizeConfiguration|null $size): bool {
                         $this->assertNull($size);
 
                         return true;
-                    }
-                )
+                    },
+                ),
             )
             ->willReturn($imageMock)
         ;
@@ -127,6 +148,13 @@ class PictureFactoryTest extends TestCase
             'cssClass' => 'my-size',
             'lazyLoading' => true,
             'formats' => serialize(['gif:webp,gif', 'webp:webp,png', 'webp:webp,jpg']),
+            'skipIfDimensionsMatch' => true,
+            'imageQuality' => 77,
+            'preserveMetadata' => 'overwrite',
+            'preserveMetadataFields' => serialize([
+                serialize([ExifFormat::NAME => ExifFormat::DEFAULT_PRESERVE_KEYS]),
+                serialize([IptcFormat::NAME => IptcFormat::DEFAULT_PRESERVE_KEYS]),
+            ]),
         ];
 
         $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class, $imageSizeProperties);
@@ -166,9 +194,9 @@ class PictureFactoryTest extends TestCase
         $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory, $framework);
         $picture = $pictureFactory->create($path, 1);
 
-        $this->assertSame($imageMock, $picture->getImg()['src']);
-        $this->assertSame('my-size', $picture->getImg()['class']);
-        $this->assertSame('lazy', $picture->getImg()['loading']);
+        $this->assertSame($imageMock, $picture->getRawImg()['src']);
+        $this->assertSame('my-size', $picture->getRawImg()['class']);
+        $this->assertSame('lazy', $picture->getRawImg()['loading']);
     }
 
     public function testCorrectlyHandlesEmptyImageFormats(): void
@@ -188,8 +216,8 @@ class PictureFactoryTest extends TestCase
                         $this->assertSame([PictureConfiguration::FORMAT_DEFAULT => [PictureConfiguration::FORMAT_DEFAULT]], $pictureConfig->getFormats());
 
                         return true;
-                    }
-                )
+                    },
+                ),
             )
             ->willReturn($pictureMock)
         ;
@@ -245,8 +273,16 @@ class PictureFactoryTest extends TestCase
                 'cssClass' => 'foobar-class',
                 'lazyLoading' => true,
                 'skipIfDimensionsMatch' => true,
+                'imagineOptions' => [
+                    'jpeg_quality' => 77,
+                    'jxl_quality' => 66,
+                ],
                 'formats' => [
                     'jpg' => ['webp', 'jpg'],
+                ],
+                'preserveMetadataFields' => [
+                    ExifFormat::NAME => [],
+                    IptcFormat::NAME => ['2#116', '2#080'],
                 ],
                 'items' => [
                     [
@@ -275,7 +311,7 @@ class PictureFactoryTest extends TestCase
                         $this->assertSame($imageMock, $image);
 
                         return true;
-                    }
+                    },
                 ),
                 $this->callback(
                     function (PictureConfiguration $config) use ($predefinedSizes): bool {
@@ -291,7 +327,6 @@ class PictureFactoryTest extends TestCase
                         $this->assertSame($predefinedSizes['foobar']['sizes'], $size->getSizes());
                         $this->assertSame($predefinedSizes['foobar']['sizes'], $size->getSizes());
 
-                        /** @var PictureConfigurationItem $sizeItem */
                         $sizeItem = $config->getSizeItems()[0];
 
                         $this->assertSame($predefinedSizes['foobar']['items'][0]['width'], $sizeItem->getResizeConfig()->getWidth());
@@ -302,15 +337,27 @@ class PictureFactoryTest extends TestCase
                         $this->assertSame($predefinedSizes['foobar']['items'][0]['sizes'], $sizeItem->getSizes());
 
                         return true;
-                    }
+                    },
                 ),
                 $this->callback(
-                    function (ResizeOptions $options): bool {
+                    function (ResizeOptions $options) use ($predefinedSizes): bool {
+                        $this->assertSame(
+                            $predefinedSizes['foobar']['preserveMetadataFields'][ExifFormat::NAME],
+                            $options->getPreserveCopyrightMetadata()[ExifFormat::NAME],
+                        );
+
+                        $this->assertSame(
+                            $predefinedSizes['foobar']['preserveMetadataFields'][IptcFormat::NAME],
+                            $options->getPreserveCopyrightMetadata()[IptcFormat::NAME],
+                        );
+
                         $this->assertTrue($options->getSkipIfDimensionsMatch());
+                        $this->assertSame(77, $options->getImagineOptions()['jpeg_quality']);
+                        $this->assertSame(66, $options->getImagineOptions()['jxl_quality']);
 
                         return true;
-                    }
-                )
+                    },
+                ),
             )
             ->willReturn($pictureMock)
         ;
@@ -320,9 +367,9 @@ class PictureFactoryTest extends TestCase
 
         $picture = $pictureFactory->create($imageMock, [null, null, 'foobar']);
 
-        $this->assertSame($imageMock, $picture->getImg()['src']);
-        $this->assertSame($predefinedSizes['foobar']['cssClass'], $picture->getImg()['class']);
-        $this->assertSame('lazy', $picture->getImg()['loading']);
+        $this->assertSame($imageMock, $picture->getRawImg()['src']);
+        $this->assertSame($predefinedSizes['foobar']['cssClass'], $picture->getRawImg()['class']);
+        $this->assertSame('lazy', $picture->getRawImg()['loading']);
     }
 
     public function testCreatesAPictureObjectFromAnImageObjectWithAPictureConfiguration(): void
@@ -335,10 +382,10 @@ class PictureFactoryTest extends TestCase
                             ->setWidth(100)
                             ->setHeight(200)
                             ->setMode(ResizeConfiguration::MODE_BOX)
-                            ->setZoomLevel(50)
+                            ->setZoomLevel(50),
                     )
                     ->setDensities('1x, 2x')
-                    ->setSizes('100vw')
+                    ->setSizes('100vw'),
             )
             ->setSizeItems([
                 (new PictureConfigurationItem())
@@ -347,7 +394,7 @@ class PictureFactoryTest extends TestCase
                             ->setWidth(50)
                             ->setHeight(50)
                             ->setMode(ResizeConfiguration::MODE_CROP)
-                            ->setZoomLevel(100)
+                            ->setZoomLevel(100),
                     )
                     ->setDensities('0.5x, 2x')
                     ->setSizes('50vw')
@@ -368,15 +415,15 @@ class PictureFactoryTest extends TestCase
                         $this->assertSame($imageMock, $image);
 
                         return true;
-                    }
+                    },
                 ),
                 $this->callback(
                     function (PictureConfiguration $config) use ($pictureConfig): bool {
                         $this->assertSame($pictureConfig, $config);
 
                         return true;
-                    }
-                )
+                    },
+                ),
             )
             ->willReturn($pictureMock)
         ;
@@ -384,9 +431,12 @@ class PictureFactoryTest extends TestCase
         $pictureFactory = $this->getPictureFactory($pictureGenerator);
         $picture = $pictureFactory->create($imageMock, $pictureConfig);
 
-        $this->assertSame($imageMock, $picture->getImg()['src']);
+        $this->assertSame($imageMock, $picture->getRawImg()['src']);
     }
 
+    /**
+     * @group legacy
+     */
     public function testCreatesAPictureObjectInLegacyMode(): void
     {
         $path = $this->getTempDir().'/images/dummy.jpg';
@@ -401,18 +451,18 @@ class PictureFactoryTest extends TestCase
                 $this->callback(static fn (): bool => true),
                 $this->callback(
                     function (PictureConfiguration $config): bool {
-                        $this->assertSame($config->getSizeItems(), []);
+                        $this->assertSame([], $config->getSizeItems());
                         $this->assertSame(
                             ResizeConfiguration::MODE_CROP,
-                            $config->getSize()->getResizeConfig()->getMode()
+                            $config->getSize()->getResizeConfig()->getMode(),
                         );
                         $this->assertSame(100, $config->getSize()->getResizeConfig()->getWidth());
                         $this->assertSame(200, $config->getSize()->getResizeConfig()->getHeight());
 
                         return true;
-                    }
+                    },
                 ),
-                $this->callback(static fn (): bool => true)
+                $this->callback(static fn (): bool => true),
             )
             ->willReturn($pictureMock)
         ;
@@ -426,7 +476,7 @@ class PictureFactoryTest extends TestCase
                     $this->assertSame($path, $imagePath);
 
                     return true;
-                }
+                },
             ))
             ->willReturn($imageMock)
         ;
@@ -441,17 +491,19 @@ class PictureFactoryTest extends TestCase
                         $this->assertSame('left_top', $mode);
 
                         return true;
-                    }
-                )
+                    },
+                ),
             )
         ;
+
+        $this->expectDeprecation('%slegacy resize mode "left_top" has been deprecated%s');
 
         $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory);
         $picture = $pictureFactory->create($path, [100, 200, 'left_top']);
         $pictureFromSerializedConfig = $pictureFactory->create($path, serialize([100, 200, 'left_top']));
 
-        $this->assertSame($imageMock, $picture->getImg()['src']);
-        $this->assertSame($imageMock, $pictureFromSerializedConfig->getImg()['src']);
+        $this->assertSame($imageMock, $picture->getRawImg()['src']);
+        $this->assertSame($imageMock, $pictureFromSerializedConfig->getRawImg()['src']);
     }
 
     public function testCreatesAPictureObjectWithoutAModel(): void
@@ -471,7 +523,7 @@ class PictureFactoryTest extends TestCase
                         $this->assertSame($imageMock, $image);
 
                         return true;
-                    }
+                    },
                 ),
                 $this->callback(
                     function (PictureConfiguration $pictureConfig) use (&$defaultDensities): bool {
@@ -480,7 +532,7 @@ class PictureFactoryTest extends TestCase
 
                         $this->assertSame(
                             ResizeConfiguration::MODE_BOX,
-                            $pictureConfig->getSize()->getResizeConfig()->getMode()
+                            $pictureConfig->getSize()->getResizeConfig()->getMode(),
                         );
 
                         $this->assertSame(0, $pictureConfig->getSize()->getResizeConfig()->getZoomLevel());
@@ -488,15 +540,15 @@ class PictureFactoryTest extends TestCase
                         $this->assertSame('', $pictureConfig->getSize()->getSizes());
 
                         return true;
-                    }
+                    },
                 ),
                 $this->callback(
                     function (ResizeOptions $options): bool {
                         $this->assertFalse($options->getSkipIfDimensionsMatch());
 
                         return true;
-                    }
-                )
+                    },
+                ),
             )
             ->willReturn($pictureMock)
         ;
@@ -511,15 +563,15 @@ class PictureFactoryTest extends TestCase
                         $this->assertSame($path, $imagePath);
 
                         return true;
-                    }
+                    },
                 ),
                 $this->callback(
-                    function (?ResizeConfiguration $size): bool {
+                    function (ResizeConfiguration|null $size): bool {
                         $this->assertNull($size);
 
                         return true;
-                    }
-                )
+                    },
+                ),
             )
             ->willReturn($imageMock)
         ;
@@ -527,13 +579,13 @@ class PictureFactoryTest extends TestCase
         $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory);
         $picture = $pictureFactory->create($path, [100, 200, ResizeConfiguration::MODE_BOX]);
 
-        $this->assertSame($imageMock, $picture->getImg()['src']);
+        $this->assertSame($imageMock, $picture->getRawImg()['src']);
 
         $defaultDensities = '1x, 2x';
         $pictureFactory->setDefaultDensities($defaultDensities);
         $picture = $pictureFactory->create($path, [100, 200, ResizeConfiguration::MODE_BOX]);
 
-        $this->assertSame($imageMock, $picture->getImg()['src']);
+        $this->assertSame($imageMock, $picture->getRawImg()['src']);
     }
 
     public function testCreatesAPictureObjectWithEmptyConfig(): void
@@ -553,7 +605,7 @@ class PictureFactoryTest extends TestCase
                         $this->assertSame($imageMock, $image);
 
                         return true;
-                    }
+                    },
                 ),
                 $this->callback(
                     function (PictureConfiguration $pictureConfig) use (&$defaultDensities): bool {
@@ -563,15 +615,15 @@ class PictureFactoryTest extends TestCase
                         $this->assertSame('', $pictureConfig->getSize()->getSizes());
 
                         return true;
-                    }
+                    },
                 ),
                 $this->callback(
                     function (ResizeOptions $options): bool {
                         $this->assertTrue($options->getSkipIfDimensionsMatch());
 
                         return true;
-                    }
-                )
+                    },
+                ),
             )
             ->willReturn($pictureMock)
         ;
@@ -586,15 +638,15 @@ class PictureFactoryTest extends TestCase
                         $this->assertSame($path, $imagePath);
 
                         return true;
-                    }
+                    },
                 ),
                 $this->callback(
-                    function (?ResizeConfiguration $size): bool {
+                    function (ResizeConfiguration|null $size): bool {
                         $this->assertNull($size);
 
                         return true;
-                    }
-                )
+                    },
+                ),
             )
             ->willReturn($imageMock)
         ;
@@ -602,13 +654,13 @@ class PictureFactoryTest extends TestCase
         $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory);
         $picture = $pictureFactory->create($path, ['', '', '']);
 
-        $this->assertSame($imageMock, $picture->getImg()['src']);
+        $this->assertSame($imageMock, $picture->getRawImg()['src']);
 
         $defaultDensities = '1x, 2x';
         $pictureFactory->setDefaultDensities($defaultDensities);
         $picture = $pictureFactory->create($path, [0, 0, ResizeConfiguration::MODE_BOX]);
 
-        $this->assertSame($imageMock, $picture->getImg()['src']);
+        $this->assertSame($imageMock, $picture->getRawImg()['src']);
     }
 
     /**
@@ -624,11 +676,11 @@ class PictureFactoryTest extends TestCase
             ->expects($this->once())
             ->method('generate')
             ->willReturnCallback(
-                function (ImageInterface $image, PictureConfiguration $config, ResizeOptions $options) use ($imageMock, $expected) {
+                function (ImageInterface $image, PictureConfiguration $config, ResizeOptions $options) use ($expected, $imageMock) {
                     $this->assertSame($expected, $options->getSkipIfDimensionsMatch());
 
                     return new Picture(['src' => $imageMock, 'srcset' => []], []);
-                }
+                },
             )
         ;
 
@@ -732,15 +784,15 @@ class PictureFactoryTest extends TestCase
                         'srcset' => [[$imageMock]],
                         'width' => $sourceWidth,
                         'height' => $sourceHeight,
-                    ]]
-                )
+                    ]],
+                ),
             )
         ;
 
         $pictureFactory = $this->getPictureFactory($pictureGenerator);
         $picture = $pictureFactory->create($imageMock, $pictureConfig);
 
-        $this->assertSame($expected, $picture->getImg()['hasSingleAspectRatio']);
+        $this->assertSame($expected, $picture->getRawImg()['hasSingleAspectRatio']);
     }
 
     public function getAspectRatios(): \Generator
@@ -767,7 +819,7 @@ class PictureFactoryTest extends TestCase
         yield [false, 20, 100, 22, 100];
     }
 
-    private function getPictureFactory(PictureGeneratorInterface $pictureGenerator = null, ImageFactoryInterface $imageFactory = null, ContaoFramework $framework = null): PictureFactory
+    private function getPictureFactory(PictureGeneratorInterface|null $pictureGenerator = null, ImageFactoryInterface|null $imageFactory = null, ContaoFramework|null $framework = null): PictureFactory
     {
         $pictureGenerator ??= $this->createMock(PictureGeneratorInterface::class);
         $imageFactory ??= $this->createMock(ImageFactoryInterface::class);

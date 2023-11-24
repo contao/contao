@@ -1,0 +1,63 @@
+
+<div class="event layout_full block<?= $this->class ?>">
+
+  <h1><?= $this->title ?></h1>
+
+  <?php if ($this->recurring): ?>
+    <p class="info recurring"><?= $this->recurring ?></p>
+  <?php else: ?>
+    <p class="info"><time datetime="<?= $this->datetime ?>"><?= $this->date ?><?php if ($this->time): ?> <?= $this->time ?><?php endif; ?></time></p>
+  <?php endif; ?>
+
+  <?php if ($this->location): ?>
+    <p class="location"><?= $this->location ?><?php if ($this->address): ?> (<?= $this->address ?>)<?php endif; ?></p>
+  <?php endif; ?>
+
+  <?php if ($this->details): ?>
+    <?= $this->details ?>
+  <?php else: ?>
+    <div class="ce_text block">
+      <?php if (!$this->addBefore): ?>
+        <?= $this->teaser ?>
+      <?php endif; ?>
+
+      <?php if ($this->addImage): ?>
+        <?php $this->insert('image', $this->arrData); ?>
+      <?php endif; ?>
+
+      <?php if ($this->addBefore): ?>
+        <?= $this->teaser ?>
+      <?php endif; ?>
+    </div>
+  <?php endif; ?>
+
+  <?php if ($this->enclosure): ?>
+    <ul class="enclosure">
+      <?php foreach ($this->enclosure as $enclosure): ?>
+        <li class="download-element ext-<?= $enclosure['extension'] ?>">
+           <a href="<?= $enclosure['href'] ?>" title="<?= $enclosure['title'] ?>"><?= $enclosure['link'] ?> <span class="size">(<?= $enclosure['filesize'] ?>)</span></a>
+        </li>
+      <?php endforeach; ?>
+    </ul>
+  <?php endif; ?>
+
+</div>
+
+<?php
+
+$schemaOrg = $this->getSchemaOrgData();
+
+if ($this->hasDetails) {
+    $schemaOrg['description'] = $this->rawHtmlToPlainText($this->details);
+}
+
+$this->addSchemaOrg($schemaOrg);
+
+if ($this->figure) {
+    $primaryImage = [
+        '@type' => 'WebPage',
+        'primaryImageOfPage' => $this->figure->getSchemaOrgData(),
+    ];
+
+    $this->addSchemaOrg($primaryImage);
+}

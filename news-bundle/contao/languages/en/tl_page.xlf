@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_page.php" source-language="en">
+    <body>
+      <trans-unit id="tl_page.newsArchives.0">
+        <source>News archives</source>
+      </trans-unit>
+      <trans-unit id="tl_page.newsArchives.1">
+        <source>Here you can choose the news archives to be included in the feed.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.feedFormat.0">
+        <source>Feed format</source>
+      </trans-unit>
+      <trans-unit id="tl_page.feedFormat.1">
+        <source>Please choose a feed format.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.feedSource.0">
+        <source>Export settings</source>
+      </trans-unit>
+      <trans-unit id="tl_page.feedSource.1">
+        <source>Here you can choose what will be exported.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.maxFeedItems.0">
+        <source>Maximum number of items</source>
+      </trans-unit>
+      <trans-unit id="tl_page.maxFeedItems.1">
+        <source>Here you can limit the number of feed items. Set to 0 to export all.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.feedFeatured.0">
+        <source>Featured items</source>
+      </trans-unit>
+      <trans-unit id="tl_page.feedFeatured.1">
+        <source>Here you can choose how featured items are handled.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.feedDescription.0">
+        <source>Feed description</source>
+      </trans-unit>
+      <trans-unit id="tl_page.feedDescription.1">
+        <source>Here you can enter a short description of the news feed.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.archives_legend">
+        <source>News archives</source>
+      </trans-unit>
+      <trans-unit id="tl_page.feed_legend">
+        <source>Feed settings</source>
+      </trans-unit>
+      <trans-unit id="tl_page.image_legend">
+        <source>Image settings</source>
+      </trans-unit>
+      <trans-unit id="tl_page.source_teaser">
+        <source>News teasers</source>
+      </trans-unit>
+      <trans-unit id="tl_page.source_text">
+        <source>Full stories</source>
+      </trans-unit>
+      <trans-unit id="tl_page.all_items">
+        <source>Show all items</source>
+      </trans-unit>
+      <trans-unit id="tl_page.featured">
+        <source>Show featured items only</source>
+      </trans-unit>
+      <trans-unit id="tl_page.unfeatured">
+        <source>Skip featured items</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

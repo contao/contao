@@ -19,8 +19,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class LanguageFileGenerator implements GeneratorInterface
 {
-    public function __construct(private FileManager $fileManager, private XliffMerger $xliffMerger, private string $projectDir)
-    {
+    public function __construct(
+        private readonly FileManager $fileManager,
+        private readonly XliffMerger $xliffMerger,
+        private readonly string $projectDir,
+    ) {
     }
 
     public function generate(array $options): string
@@ -59,6 +62,6 @@ class LanguageFileGenerator implements GeneratorInterface
 
     private function getSourcePath(string $path): string
     {
-        return Path::join(__DIR__, '../Resources/skeleton', $path);
+        return Path::join(__DIR__.'/../../skeleton', $path);
     }
 }

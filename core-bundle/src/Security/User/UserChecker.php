@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Security\User;
 
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Security\Exception\LockedException;
 use Contao\Date;
 use Contao\FrontendUser;
 use Contao\User;
@@ -25,9 +24,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class UserChecker implements UserCheckerInterface
 {
     /**
-     * @internal Do not inherit from this class; decorate the "contao.security.user_checker" service instead
+     * @internal
      */
-    public function __construct(private ContaoFramework $framework)
+    public function __construct(private readonly ContaoFramework $framework)
     {
     }
 
@@ -37,7 +36,6 @@ class UserChecker implements UserCheckerInterface
             return;
         }
 
-        $this->checkIfAccountIsLocked($user);
         $this->checkIfAccountIsDisabled($user);
         $this->checkIfLoginIsAllowed($user);
         $this->checkIfAccountIsActive($user);
@@ -45,24 +43,6 @@ class UserChecker implements UserCheckerInterface
 
     public function checkPostAuth(UserInterface $user): void
     {
-    }
-
-    private function checkIfAccountIsLocked(User $user): void
-    {
-        $lockedSeconds = $user->locked - time();
-
-        if ($lockedSeconds <= 0) {
-            return;
-        }
-
-        $ex = new LockedException(
-            $lockedSeconds,
-            sprintf('User "%s" is still locked for %s seconds', $user->username, $lockedSeconds)
-        );
-
-        $ex->setUser($user);
-
-        throw $ex;
     }
 
     private function checkIfAccountIsDisabled(User $user): void
@@ -108,14 +88,14 @@ class UserChecker implements UserCheckerInterface
         if ($notActiveYet) {
             $logMessage = sprintf(
                 'The account is not active yet (activation date: %s)',
-                Date::parse($config->get('dateFormat'), $start)
+                Date::parse($config->get('dateFormat'), $start),
             );
         }
 
         if ($notActiveAnymore) {
             $logMessage = sprintf(
                 'The account is not active anymore (deactivation date: %s)',
-                Date::parse($config->get('dateFormat'), $stop)
+                Date::parse($config->get('dateFormat'), $stop),
             );
         }
 

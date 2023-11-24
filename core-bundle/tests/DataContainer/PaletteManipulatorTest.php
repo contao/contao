@@ -34,17 +34,17 @@ class PaletteManipulatorTest extends TestCase
 
         $this->assertSame(
             '{config_legend},foo,bar',
-            $pm->applyToString('{config_legend},bar')
+            $pm->applyToString('{config_legend},bar'),
         );
 
         $this->assertSame(
             '{config_legend},foo,bar;{foo_legend},baz',
-            $pm->applyToString('{config_legend},bar;{foo_legend},baz')
+            $pm->applyToString('{config_legend},bar;{foo_legend},baz'),
         );
 
         $this->assertSame(
             '{foo_legend},baz;{config_legend},foo',
-            $pm->applyToString('{foo_legend},baz')
+            $pm->applyToString('{foo_legend},baz'),
         );
     }
 
@@ -56,17 +56,17 @@ class PaletteManipulatorTest extends TestCase
 
         $this->assertSame(
             '{config_legend},foo,bar',
-            $pm->applyToString('{config_legend},foo')
+            $pm->applyToString('{config_legend},foo'),
         );
 
         $this->assertSame(
             '{config_legend},foo,bar;{foo_legend},baz',
-            $pm->applyToString('{config_legend},foo;{foo_legend},baz')
+            $pm->applyToString('{config_legend},foo;{foo_legend},baz'),
         );
 
         $this->assertSame(
             '{foo_legend},baz;{config_legend},bar',
-            $pm->applyToString('{foo_legend},baz')
+            $pm->applyToString('{foo_legend},baz'),
         );
     }
 
@@ -79,12 +79,12 @@ class PaletteManipulatorTest extends TestCase
 
         $this->assertSame(
             '{config_legend},foo;{foo_legend},baz',
-            $pm->applyToString('{foo_legend},baz')
+            $pm->applyToString('{foo_legend},baz'),
         );
 
         $this->assertSame(
             '{bar_legend},baz;{config_legend},foo',
-            $pm->applyToString('{bar_legend},baz')
+            $pm->applyToString('{bar_legend},baz'),
         );
     }
 
@@ -97,12 +97,12 @@ class PaletteManipulatorTest extends TestCase
 
         $this->assertSame(
             '{foo_legend},baz;{config_legend},foo',
-            $pm->applyToString('{foo_legend},baz')
+            $pm->applyToString('{foo_legend},baz'),
         );
 
         $this->assertSame(
             '{bar_legend},baz;{config_legend},foo',
-            $pm->applyToString('{bar_legend},baz')
+            $pm->applyToString('{bar_legend},baz'),
         );
     }
 
@@ -114,12 +114,12 @@ class PaletteManipulatorTest extends TestCase
 
         $this->assertSame(
             '{config_legend},bar,foo',
-            $pm->applyToString('{config_legend},foo')
+            $pm->applyToString('{config_legend},foo'),
         );
 
         $this->assertSame(
             '{config_legend},baz,bar',
-            $pm->applyToString('{config_legend},baz')
+            $pm->applyToString('{config_legend},baz'),
         );
     }
 
@@ -131,12 +131,12 @@ class PaletteManipulatorTest extends TestCase
 
         $this->assertSame(
             '{config_legend},foo,bar',
-            $pm->applyToString('{config_legend},foo')
+            $pm->applyToString('{config_legend},foo'),
         );
 
         $this->assertSame(
             '{config_legend},baz,bar',
-            $pm->applyToString('{config_legend},baz')
+            $pm->applyToString('{config_legend},baz'),
         );
     }
 
@@ -153,7 +153,7 @@ class PaletteManipulatorTest extends TestCase
 
         $this->assertSame(
             'first,field1,field2,field3,field4,foobar',
-            $pm->applyToString('field1', true)
+            $pm->applyToString('field1', true),
         );
     }
 
@@ -165,7 +165,7 @@ class PaletteManipulatorTest extends TestCase
 
         $this->assertSame(
             '{foobar_legend},foo,bar',
-            $pm->applyToString('{foobar_legend},foo')
+            $pm->applyToString('{foobar_legend},foo'),
         );
     }
 
@@ -199,7 +199,7 @@ class PaletteManipulatorTest extends TestCase
 
         $this->assertSame(
             '{name_legend},name;foo,bar',
-            $pm->applyToString('{name_legend},name;foo')
+            $pm->applyToString('{name_legend},name;foo'),
         );
     }
 
@@ -212,7 +212,7 @@ class PaletteManipulatorTest extends TestCase
 
         $this->assertSame(
             '{foobar_legend},foo,bar',
-            $pm->applyToString('{foobar_legend},bar')
+            $pm->applyToString('{foobar_legend},bar'),
         );
     }
 
@@ -225,7 +225,7 @@ class PaletteManipulatorTest extends TestCase
 
         $this->assertSame(
             '{bar_legend},bar;{foo_legend},foo',
-            $pm->applyToString('{bar_legend},bar;;')
+            $pm->applyToString('{bar_legend},bar;;'),
         );
     }
 
@@ -238,7 +238,7 @@ class PaletteManipulatorTest extends TestCase
 
         $this->assertSame(
             '{foobar_legend},foo,bar;{other_legend},other',
-            $pm->applyToString('{foobar_legend},foo;{other_legend},other')
+            $pm->applyToString('{foobar_legend},foo;{other_legend},other'),
         );
     }
 
@@ -251,7 +251,7 @@ class PaletteManipulatorTest extends TestCase
 
         $this->assertSame(
             '{name_legend},name;{foobar_legend:hide},foo,bar',
-            $pm->applyToString('{name_legend},name')
+            $pm->applyToString('{name_legend},name'),
         );
     }
 
@@ -268,7 +268,7 @@ class PaletteManipulatorTest extends TestCase
 
         $this->assertSame(
             '{name_legend},name;{foobar_legend},foo,bar',
-            $GLOBALS['TL_DCA']['tl_test']['palettes']['default']
+            $GLOBALS['TL_DCA']['tl_test']['palettes']['default'],
         );
     }
 
@@ -284,7 +284,7 @@ class PaletteManipulatorTest extends TestCase
 
         $this->assertSame(
             'firstname,lastname,foo,bar',
-            $GLOBALS['TL_DCA']['tl_test']['subpalettes']['name']
+            $GLOBALS['TL_DCA']['tl_test']['subpalettes']['name'],
         );
     }
 
@@ -316,7 +316,7 @@ class PaletteManipulatorTest extends TestCase
                     $this->assertArrayHasKey('fields', $action);
                     $this->assertArrayHasKey('parents', $action);
                     $this->assertArrayHasKey('position', $action);
-                }
+                },
             )
         ;
 
@@ -380,17 +380,17 @@ class PaletteManipulatorTest extends TestCase
 
         $this->assertSame(
             '{foo_legend},baz;{config_legend},test',
-            $pm->applyToString('{foo_legend},baz;{config_legend},foo,test')
+            $pm->applyToString('{foo_legend},baz;{config_legend},foo,test'),
         );
 
         $this->assertSame(
             '{foo_legend},baz',
-            $pm->applyToString('{foo_legend},baz;{config_legend},foo')
+            $pm->applyToString('{foo_legend},baz;{config_legend},foo'),
         );
 
         $this->assertSame(
             '{foo_legend},baz',
-            $pm->applyToString('{foo_legend},foo,baz;{config_legend},foo')
+            $pm->applyToString('{foo_legend},foo,baz;{config_legend},foo'),
         );
     }
 
@@ -408,7 +408,7 @@ class PaletteManipulatorTest extends TestCase
 
         $this->assertSame(
             '{foo_legend},foo,baz',
-            $pm->applyToString('{foo_legend},foo,baz;{config_legend},foo')
+            $pm->applyToString('{foo_legend},foo,baz;{config_legend},foo'),
         );
     }
 
@@ -421,7 +421,7 @@ class PaletteManipulatorTest extends TestCase
 
         $this->assertSame(
             '{foo_legend},lastname',
-            $GLOBALS['TL_DCA']['tl_test']['palettes']['name']
+            $GLOBALS['TL_DCA']['tl_test']['palettes']['name'],
         );
     }
 
@@ -444,7 +444,57 @@ class PaletteManipulatorTest extends TestCase
 
         $this->assertSame(
             '{contact_legend},title,lastname',
-            $pm->applyToString('{contact_legend},firstname,lastname')
+            $pm->applyToString('{contact_legend},firstname,lastname'),
+        );
+    }
+
+    public function testAddsLegendToEndIfParentDoesNotExist(): void
+    {
+        $pm = PaletteManipulator::create()
+            ->addLegend('config_legend', 'notexist_legend')
+            ->addField('foo', 'config_legend', 'append')
+        ;
+
+        $this->assertSame(
+            '{foo_legend},baz;{config_legend},foo',
+            $pm->applyToString('{foo_legend},baz'),
+        );
+    }
+
+    public function testAddsLegendToEndIfParentIsNull(): void
+    {
+        $pm = PaletteManipulator::create()
+            ->addLegend('config_legend')
+            ->addField('foo', 'config_legend', 'append')
+        ;
+
+        $this->assertSame(
+            '{foo_legend},baz;{config_legend},foo',
+            $pm->applyToString('{foo_legend},baz'),
+        );
+    }
+
+    public function testAddsFieldToEndIfParentDoesNotExist(): void
+    {
+        $pm = PaletteManipulator::create()
+            ->addField('foo', 'notexist')
+        ;
+
+        $this->assertSame(
+            '{config_legend},baz,foo',
+            $pm->applyToString('{config_legend},baz'),
+        );
+    }
+
+    public function testAddsFieldToEndIfParentIsNull(): void
+    {
+        $pm = PaletteManipulator::create()
+            ->addField('foo')
+        ;
+
+        $this->assertSame(
+            '{config_legend},baz,foo',
+            $pm->applyToString('{config_legend},baz'),
         );
     }
 }

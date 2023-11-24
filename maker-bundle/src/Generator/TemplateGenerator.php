@@ -18,7 +18,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TemplateGenerator implements GeneratorInterface
 {
-    public function __construct(private Generator $generator)
+    public function __construct(private readonly Generator $generator)
     {
     }
 
@@ -29,7 +29,7 @@ class TemplateGenerator implements GeneratorInterface
         $this->generator->generateFile(
             $options['target'],
             $this->getSourcePath($options['source']),
-            $options['variables']
+            $options['variables'],
         );
 
         return $options['target'];
@@ -46,6 +46,6 @@ class TemplateGenerator implements GeneratorInterface
 
     private function getSourcePath(string $path): string
     {
-        return Path::join(__DIR__, '../Resources/skeleton', $path);
+        return Path::join(__DIR__.'/../../skeleton', $path);
     }
 }

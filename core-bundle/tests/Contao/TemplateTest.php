@@ -14,16 +14,19 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\BackendTemplate;
 use Contao\Config;
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\System;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\VarDumper\VarDumper;
 
 class TemplateTest extends TestCase
@@ -35,7 +38,7 @@ class TemplateTest extends TestCase
         (new Filesystem())->mkdir(Path::join($this->getTempDir(), 'templates'));
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class)));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class)));
 
         System::setContainer($container);
     }
@@ -55,7 +58,7 @@ class TemplateTest extends TestCase
     {
         (new Filesystem())->dumpFile(
             Path::join($this->getTempDir(), 'templates/test_template.html5'),
-            '<?= $this->value ?>'
+            '<?= $this->value ?>',
         );
 
         $template = new BackendTemplate('test_template');
@@ -70,7 +73,7 @@ class TemplateTest extends TestCase
     {
         (new Filesystem())->dumpFile(
             Path::join($this->getTempDir(), 'templates/test_template.html5'),
-            'test<?php throw new Exception ?>'
+            'test<?php throw new Exception ?>',
         );
 
         $template = new BackendTemplate('test_template');
@@ -103,7 +106,7 @@ class TemplateTest extends TestCase
                     $this->block('c');
                     echo 'test4';
                     throw new Exception;
-                EOF
+                EOF,
         );
 
         $template = new BackendTemplate('test_template');
@@ -144,7 +147,7 @@ class TemplateTest extends TestCase
                     $this->block('e');
                     echo 'test6';
                     throw new Exception;
-                EOF
+                EOF,
         );
 
         $filesystem->dumpFile(
@@ -164,7 +167,7 @@ class TemplateTest extends TestCase
                     echo 'test6';
                     $this->endblock('b');
                     echo 'test7';
-                EOF
+                EOF,
         );
 
         $template = new BackendTemplate('test_template');
@@ -203,7 +206,7 @@ class TemplateTest extends TestCase
                     echo 'test5';
                     $this->endblock('a');
                     echo 'test6';
-                EOF
+                EOF,
         );
 
         $template = new BackendTemplate('test_template');
@@ -220,61 +223,6 @@ class TemplateTest extends TestCase
 
         $this->assertSame('', ob_get_clean());
         $this->assertSame($obLevel, ob_get_level());
-    }
-
-    public function testStripsLeadingSlashFromAssetUrl(): void
-    {
-        $packages = $this->createMock(Packages::class);
-        $packages
-            ->expects($this->once())
-            ->method('getUrl')
-            ->with('/path/to/asset', 'package_name')
-            ->willReturnArgument(0)
-        ;
-
-        $container = $this->getContainerWithContaoConfiguration();
-        $container->set('assets.packages', $packages);
-
-        System::setContainer($container);
-
-        $template = new FrontendTemplate();
-        $url = $template->asset('/path/to/asset', 'package_name');
-
-        $this->assertSame('path/to/asset', $url);
-    }
-
-    public function testStripsTheBasePathFromAssetUrl(): void
-    {
-        $packages = $this->createMock(Packages::class);
-        $packages
-            ->expects($this->once())
-            ->method('getUrl')
-            ->with('/path/to/asset', 'package_name')
-            ->willReturn('/foo/path/to/asset')
-        ;
-
-        $request = Request::create(
-            'https://example.com/foo/index.php',
-            'GET',
-            [],
-            [],
-            [],
-            [
-                'SCRIPT_FILENAME' => '/foo/index.php',
-                'SCRIPT_NAME' => '/foo/index.php',
-            ]
-        );
-
-        $container = $this->getContainerWithContaoConfiguration();
-        $container->set('assets.packages', $packages);
-        $container->get('request_stack')->push($request);
-
-        System::setContainer($container);
-
-        $template = new FrontendTemplate();
-        $url = $template->asset('/path/to/asset', 'package_name');
-
-        $this->assertSame('path/to/asset', $url);
     }
 
     public function testDoesNotModifyAbsoluteAssetUrl(): void
@@ -308,7 +256,7 @@ class TemplateTest extends TestCase
         VarDumper::setHandler(
             static function ($var) use (&$dump): void {
                 $dump = $var;
-            }
+            },
         );
 
         $template->dumpTemplateVars();
@@ -320,7 +268,7 @@ class TemplateTest extends TestCase
     {
         (new Filesystem())->dumpFile(
             Path::join($this->getTempDir(), 'templates/test_template.html5'),
-            '<?= $this->value ?>'
+            '<?= $this->value ?>',
         );
 
         $template = new BackendTemplate('test_template');
@@ -389,7 +337,7 @@ class TemplateTest extends TestCase
         $GLOBALS['objPage'] = $page;
 
         $template = new class($buffer) extends FrontendTemplate {
-            public function __construct(private string|null $testBuffer)
+            public function __construct(private readonly string|null $testBuffer)
             {
                 parent::__construct();
             }
@@ -401,7 +349,7 @@ class TemplateTest extends TestCase
 
             public function testCompile(): string
             {
-                $this->compile();
+                $this->getResponse();
 
                 return $this->strBuffer;
             }
@@ -438,5 +386,37 @@ class TemplateTest extends TestCase
             '[{][}]<script>[{][}]</script>[{][}]<script>[{][}]</script>[{][}]',
             '&#123;&#123;&#125;&#125;<script>[{][}]</script>&#123;&#123;&#125;&#125;<script>[{][}]</script>&#123;&#123;&#125;&#125;',
         ];
+    }
+
+    public function testUsesGlobalRequestToken(): void
+    {
+        $tokenManager = $this->createMock(ContaoCsrfTokenManager::class);
+        $tokenManager
+            ->expects($this->exactly(2))
+            ->method('getDefaultTokenValue')
+            ->willReturn('tokenValue"<')
+        ;
+
+        System::getContainer()->set('contao.csrf.token_manager', $tokenManager);
+
+        (new Filesystem())->dumpFile(
+            Path::join($this->getTempDir(), 'templates/test_template.html5'),
+            '<?php var_export(isset($this->requestToken)) ?>, <?php var_export($this->requestToken) ?>',
+        );
+
+        $this->assertSame("true, 'tokenValue&quot;&lt;'", (new FrontendTemplate('test_template'))->parse());
+        $this->assertSame("true, 'tokenValue&quot;&lt;'", (new BackendTemplate('test_template'))->parse());
+
+        $template = new FrontendTemplate('test_template');
+        $template->setData(['requestToken' => 'custom"<']);
+        $this->assertSame("true, 'custom\"<'", $template->parse());
+
+        $template = new FrontendTemplate('test_template');
+        $template->setData(['requestToken' => ['foo', 'bar']]);
+        $this->assertSame("true, array (\n  0 => 'foo',\n  1 => 'bar',\n)", $template->parse());
+
+        $template = new FrontendTemplate('test_template');
+        $template->setData(['requestToken' => null]);
+        $this->assertSame('false, NULL', $template->parse());
     }
 }

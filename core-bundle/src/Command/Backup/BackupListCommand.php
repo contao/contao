@@ -13,18 +13,18 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command\Backup;
 
 use Contao\CoreBundle\Doctrine\Backup\Backup;
+use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-/**
- * @internal
- */
+#[AsCommand(
+    name: 'contao:backup:list',
+    description: 'Lists the existing database backups.',
+)]
 class BackupListCommand extends AbstractBackupCommand
 {
-    protected static $defaultName = 'contao:backup:list';
-    protected static $defaultDescription = 'Lists the existing database backups.';
-
     public static function getFormattedTimeZoneOffset(\DateTimeZone $timeZone): string
     {
         $offset = $timeZone->getOffset(new \DateTime('now', new \DateTimeZone('UTC'))) / 3600;
@@ -40,17 +40,17 @@ class BackupListCommand extends AbstractBackupCommand
         if ($this->isJson($input)) {
             $io->writeln($this->formatForJson($this->backupManager->listBackups()));
 
-            return 0;
+            return Command::SUCCESS;
         }
 
         $timeZone = new \DateTimeZone(date_default_timezone_get());
 
         $io->table(
             [sprintf('Created (%s)', self::getFormattedTimeZoneOffset($timeZone)), 'Size', 'Name'],
-            $this->formatForTable($this->backupManager->listBackups(), $timeZone)
+            $this->formatForTable($this->backupManager->listBackups(), $timeZone),
         );
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     /**
@@ -61,8 +61,7 @@ class BackupListCommand extends AbstractBackupCommand
         $formatted = [];
 
         foreach ($backups as $backup) {
-            // TODO: Change this to \DateTime::createFromInterface($backup->getCreatedAt()) as soon as we require PHP >=8.0
-            $localeDateTime = new \DateTime('@'.$backup->getCreatedAt()->getTimestamp(), $backup->getCreatedAt()->getTimezone());
+            $localeDateTime = \DateTime::createFromInterface($backup->getCreatedAt());
             $localeDateTime->setTimezone($timeZone);
 
             $formatted[] = [
@@ -86,7 +85,7 @@ class BackupListCommand extends AbstractBackupCommand
             $json[] = $backup->toArray();
         }
 
-        return json_encode($json);
+        return json_encode($json, JSON_THROW_ON_ERROR);
     }
 
     /**

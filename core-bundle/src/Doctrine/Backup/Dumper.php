@@ -115,6 +115,7 @@ class Dumper implements DumperInterface
         $tableName = $table->getName();
         $rows = $connection->executeQuery("SELECT $values FROM `$tableName`");
 
+        /** @var array<string, float|int|string|null> $row[] */
         foreach ($rows->iterateAssociative() as $row) {
             $insertColumns = [];
             $insertValues = [];
@@ -126,7 +127,7 @@ class Dumper implements DumperInterface
                     $value,
                     $columnBindingTypes[$columnName],
                     $columnUtf8Charsets[$columnName],
-                    $connection
+                    $connection,
                 );
             }
 

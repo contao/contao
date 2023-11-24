@@ -21,6 +21,9 @@ use Contao\DcaLoader;
 use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\System;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\AbstractSchemaManager;
+use Doctrine\DBAL\Schema\Schema;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -63,7 +66,7 @@ class ContaoContextTest extends TestCase
             [
                 'SCRIPT_FILENAME' => '/foobar/index.php',
                 'SCRIPT_NAME' => '/foobar/index.php',
-            ]
+            ],
         );
 
         $request->attributes->set('pageModel', $page);
@@ -134,11 +137,11 @@ class ContaoContextTest extends TestCase
         $this->assertSame('https://example.com/foo/', $context->getStaticUrl());
     }
 
-    public function testReturnsAnEmptyStaticUrlIfTheBasePathIsEmpty(): void
+    public function testReturnsASlashIfTheBasePathIsEmpty(): void
     {
         $context = new ContaoContext(new RequestStack(), 'staticPlugins');
 
-        $this->assertSame('', $context->getStaticUrl());
+        $this->assertSame('/', $context->getStaticUrl());
     }
 
     public function testReadsTheSslConfigurationFromThePage(): void
@@ -190,21 +193,34 @@ class ContaoContextTest extends TestCase
     {
         $finder = new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao');
 
+        $schemaManager = $this->createMock(AbstractSchemaManager::class);
+        $schemaManager
+            ->method('introspectSchema')
+            ->willReturn(new Schema())
+        ;
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('createSchemaManager')
+            ->willReturn($schemaManager)
+        ;
+
         $container = $this->getContainerWithContaoConfiguration();
+        $container->set('database_connection', $connection);
         $container->set('contao.resource_finder', $finder);
         $container->setParameter('kernel.project_dir', $this->getFixturesDir());
 
         System::setContainer($container);
 
-        $page = new PageModel();
+        $page = (new \ReflectionClass(PageModel::class))->newInstanceWithoutConstructor();
         $page->type = 'root';
-        $page->fallback = '1';
+        $page->fallback = true;
         $page->staticPlugins = '';
 
         return $page->loadDetails();
     }
 
-    private function getContaoContext(string $field, RequestStack $requestStack = null): ContaoContext
+    private function getContaoContext(string $field, RequestStack|null $requestStack = null): ContaoContext
     {
         $requestStack ??= new RequestStack();
 

@@ -23,8 +23,10 @@ class RefererIdListener
 {
     private string|null $token = null;
 
-    public function __construct(private TokenGeneratorInterface $tokenGenerator, private ScopeMatcher $scopeMatcher)
-    {
+    public function __construct(
+        private readonly TokenGeneratorInterface $tokenGenerator,
+        private readonly ScopeMatcher $scopeMatcher,
+    ) {
     }
 
     /**
@@ -39,7 +41,11 @@ class RefererIdListener
         $request = $event->getRequest();
 
         if (null === $this->token) {
-            $this->token = $this->tokenGenerator->generateToken();
+            if ($request->isXmlHttpRequest() && $request->query->has('ref')) {
+                $this->token = $request->query->get('ref');
+            } else {
+                $this->token = $this->tokenGenerator->generateToken();
+            }
         }
 
         $request->attributes->set('_contao_referer_id', $this->token);

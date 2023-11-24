@@ -12,17 +12,33 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\Config;
+use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\Database;
+use Contao\DcaExtractor;
+use Contao\DcaLoader;
+use Contao\FilesModel;
 use Contao\Input;
+use Contao\Model;
+use Contao\Model\Registry;
 use Contao\StringUtil;
 use Contao\System;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\AbstractSchemaManager;
+use Doctrine\DBAL\Schema\Schema;
+use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Filesystem\Path;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 
 class StringUtilTest extends TestCase
 {
@@ -41,14 +57,25 @@ class StringUtilTest extends TestCase
         $container->set('request_stack', new RequestStack());
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
         $container->set('monolog.logger.contao', new NullLogger());
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class)));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class)));
 
         System::setContainer($container);
     }
 
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([Input::class, System::class]);
+        $this->resetStaticProperties([
+            Input::class,
+            System::class,
+            Registry::class,
+            Model::class,
+            Config::class,
+            DcaLoader::class,
+            Database::class,
+            DcaExtractor::class,
+        ]);
+
+        unset($GLOBALS['TL_DCA'], $GLOBALS['TL_MODELS'], $GLOBALS['TL_MIME'], $GLOBALS['TL_TEST'], $GLOBALS['TL_LANG']);
 
         parent::tearDown();
     }
@@ -263,11 +290,12 @@ class StringUtilTest extends TestCase
     /**
      * @dataProvider getRevertInputEncoding
      */
-    public function testRevertInputEncoding(string $source, string $expected = null): void
+    public function testRevertInputEncoding(string $source, string|null $expected = null): void
     {
-        Input::setGet('value', $source);
+        System::getContainer()->set('request_stack', $stack = new RequestStack());
+        $stack->push(new Request(['value' => $source]));
+
         $inputEncoded = Input::get('value');
-        Input::setGet('value', null);
 
         // Test input encoding round trip
         $this->assertSame($expected ?? $source, StringUtil::revertInputEncoding($inputEncoded));
@@ -282,18 +310,25 @@ class StringUtilTest extends TestCase
         yield ['I <3 Contao'];
         yield ['Remove unexpected <span>HTML tags'];
         yield ['Keep non-HTML <tags> intact'];
-        yield ['Basic [&] entities [nbsp]', "Basic & entities \u{A0}"];
+        yield ['Basic &amp; entities &nbsp;', "Basic & entities \u{A0}"];
         yield ["Cont\xE4o invalid UTF-8", "Cont\u{FFFD}o invalid UTF-8"];
     }
 
     /**
      * @dataProvider validEncodingsProvider
      */
-    public function testConvertsEncodingOfAString(mixed $string, string $toEncoding, string $expected, string $fromEncoding = null): void
+    public function testConvertsEncodingOfAString(mixed $string, string $toEncoding, string $expected, string|null $fromEncoding = null): void
     {
+        $prevSubstituteCharacter = mb_substitute_character();
+
+        // Enforce substitute character for these tests (see #5011)
+        mb_substitute_character(0x3F);
+
         $result = StringUtil::convertEncoding($string, $toEncoding, $fromEncoding);
 
         $this->assertSame($expected, $result);
+
+        mb_substitute_character($prevSubstituteCharacter);
     }
 
     public function validEncodingsProvider(): \Generator
@@ -301,14 +336,14 @@ class StringUtilTest extends TestCase
         yield 'From UTF-8 to ISO-8859-1' => [
             '𝚏ōȏճăᴦ',
             'ISO-8859-1',
-            utf8_decode('𝚏ōȏճăᴦ'),
+            '??????',
             'UTF-8',
         ];
 
         yield 'From ISO-8859-1 to UTF-8' => [
             '𝚏ōȏճăᴦ',
             'UTF-8',
-            utf8_encode('𝚏ōȏճăᴦ'),
+            'ðÅÈÕ³Äá´¦',
             'ISO-8859-1',
         ];
 
@@ -374,7 +409,7 @@ class StringUtilTest extends TestCase
 
         yield 'Stringable argument' => [
             new class('foobar') implements \Stringable {
-                public function __construct(private string $value)
+                public function __construct(private readonly string $value)
                 {
                 }
 
@@ -390,23 +425,204 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * @group legacy
-     *
-     * @dataProvider invalidEncodingsProvider
+     * @dataProvider getAddBasePathData
      */
-    public function testReturnsEmptyStringAndTriggersDeprecationWhenEncodingNonStringableValues(array|object $value): void
+    public function testAddsTheBasePath(string $expected, string $data): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 4.9: Passing a non-stringable argument to StringUtil::convertEncoding() has been deprecated %s.');
-
-        /** @phpstan-ignore-next-line */
-        $result = StringUtil::convertEncoding($value, 'UTF-8');
-
-        $this->assertSame('', $result);
+        $this->assertSame($expected, StringUtil::addBasePath($data));
     }
 
-    public function invalidEncodingsProvider(): \Generator
+    public function getAddBasePathData(): \Generator
     {
-        yield 'Array' => [[]];
-        yield 'Non-stringable object' => [new \stdClass()];
+        yield [
+            '<p><a href="{{env::base_path}}/en/foo.html"><img src="{{env::base_path}}/files/img.jpg" alt></a></p>',
+            '<p><a href="en/foo.html"><img src="files/img.jpg" alt></a></p>',
+        ];
+
+        yield [
+            '<p><a href="#top"><img src="data:img" alt></a></p>',
+            '<p><a href="#top"><img src="data:img" alt></a></p>',
+        ];
+
+        yield [
+            '<p><a href="/en/foo.html"><img src="https://localhost/files/img.jpg" alt></a></p>',
+            '<p><a href="/en/foo.html"><img src="https://localhost/files/img.jpg" alt></a></p>',
+        ];
+    }
+
+    /**
+     * @dataProvider getRemoveBasePathData
+     */
+    public function testRemovesTheBasePath(string $expected, string $data): void
+    {
+        $this->assertSame($expected, StringUtil::removeBasePath($data));
+    }
+
+    public function getRemoveBasePathData(): \Generator
+    {
+        yield [
+            '<p><a href="en/foo.html"><img src="files/img.jpg" alt></a></p>',
+            '<p><a href="{{env::base_path}}/en/foo.html"><img src="{{env::base_path}}/files/img.jpg" alt></a></p>',
+        ];
+
+        yield [
+            '<p><a href="/en/foo.html"><img src="data:img" alt></a></p>',
+            '<p><a href="/en/foo.html"><img src="data:img" alt></a></p>',
+        ];
+
+        yield [
+            '<p><a href="{{env::path}}/en/foo.html"><img src="https://localhost/files/img.jpg" alt></a></p>',
+            '<p><a href="{{env::path}}/en/foo.html"><img src="https://localhost/files/img.jpg" alt></a></p>',
+        ];
+    }
+
+    /**
+     * @dataProvider numberToStringProvider
+     */
+    public function testNumberToString(float|int $source, string $expected, int|null $precision = null): void
+    {
+        $this->assertSame($expected, StringUtil::numberToString($source, $precision));
+    }
+
+    public function numberToStringProvider(): \Generator
+    {
+        yield [0, '0'];
+        yield [1, '1'];
+        yield [-0, '0'];
+        yield [-1, '-1'];
+        yield [0.0, '0'];
+        yield [1.0, '1'];
+        yield [-0.0, '0'];
+        yield [-1.0, '-1'];
+        yield [0.00000000000000000000000000000000000000000000001, '0.00000000000000000000000000000000000000000000001'];
+        yield [1000000000000000000000000000000000000000000000000, '1000000000000000000000000000000000000000000000000'];
+        yield [123456789012345678901234567890, '123456789012350000000000000000'];
+        yield [PHP_INT_MAX, '9223372036854775807'];
+        yield [PHP_INT_MAX, '9223400000000000000', 5];
+        yield [(float) PHP_INT_MAX, '9223372036854800000'];
+        yield [PHP_FLOAT_EPSILON, '0.00000000000000022204460492503'];
+        yield [PHP_FLOAT_MIN, '0.'.str_repeat('0', 307).'22250738585072'];
+        yield [PHP_FLOAT_MAX, '17976931348623'.str_repeat('0', 295)];
+        yield [1.23456, '1.23456', -1];
+        yield [1.23456, '1.2', 2];
+    }
+
+    /**
+     * @dataProvider numberToStringFailsProvider
+     */
+    public function testNumberToStringFails(float|int $source, string $exception, int|null $precision = null): void
+    {
+        $this->expectException($exception);
+
+        StringUtil::numberToString($source, $precision);
+    }
+
+    public function numberToStringFailsProvider(): \Generator
+    {
+        yield [INF, \InvalidArgumentException::class];
+        yield [NAN, \InvalidArgumentException::class];
+        yield [PHP_FLOAT_MAX * PHP_FLOAT_MAX, \InvalidArgumentException::class];
+        yield [1.2, \InvalidArgumentException::class, -2];
+        yield [1.2, \InvalidArgumentException::class, 0];
+        yield [1.2, \InvalidArgumentException::class, 1];
+    }
+
+    public function testResolvesReferencesInArrays(): void
+    {
+        $ref = ['a'];
+
+        $array = [
+            &$ref,
+            &$ref[0],
+            'key1' => &$ref,
+            'key2' => &$ref[0],
+            'nested' => [
+                'array' => [
+                    &$ref,
+                    &$ref[0],
+                    'key1' => &$ref,
+                    'key2' => &$ref[0],
+                ],
+            ],
+        ];
+
+        $dereferenced = StringUtil::resolveReferences($array);
+
+        $this->assertSame($array, $dereferenced);
+
+        $ref[0] = 'b';
+        $ref = ['c'];
+
+        /** @phpstan-ignore-next-line because PHPStan gets confused by the references */
+        $this->assertNotSame($array, $dereferenced);
+        $this->assertNotSame($ref, $dereferenced[0]);
+        $this->assertSame($ref, $array[0]);
+
+        $this->assertSame(
+            [
+                ['a'],
+                'a',
+                'key1' => ['a'],
+                'key2' => 'a',
+                'nested' => [
+                    'array' => [
+                        ['a'],
+                        'a',
+                        'key1' => ['a'],
+                        'key2' => 'a',
+                    ],
+                ],
+            ],
+            $dereferenced,
+        );
+    }
+
+    public function testInsertTagToSrc(): void
+    {
+        $schemaManager = $this->createMock(AbstractSchemaManager::class);
+        $schemaManager
+            ->method('introspectSchema')
+            ->willReturn(new Schema())
+        ;
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('createSchemaManager')
+            ->willReturn($schemaManager)
+        ;
+
+        $container = System::getContainer();
+        $container->set('database_connection', $connection);
+
+        $finder = new ResourceFinder(Path::join($this->getFixturesDir(), 'vendor/contao/test-bundle/Resources/contao'));
+        $container->set('contao.resource_finder', $finder);
+
+        $locator = new FileLocator(Path::join($this->getFixturesDir(), 'vendor/contao/test-bundle/Resources/contao'));
+        $container->set('contao.resource_locator', $locator);
+
+        $GLOBALS['TL_DCA']['tl_files'] = [];
+        $GLOBALS['TL_MODELS']['tl_files'] = FilesModel::class;
+
+        $file = new FilesModel([
+            'id' => 1,
+            'tstamp' => time(),
+            'uuid' => StringUtil::uuidToBin('9e474bae-ce18-11ec-9465-cadae3e5cf5d'),
+            'type' => 'file',
+            'path' => 'files/test.jpg',
+            'extension' => 'jpg',
+            'name' => 'test.jpg',
+        ]);
+
+        Registry::getInstance()->registerAlias($file, 'uuid', $file->uuid);
+
+        $this->assertSame(
+            'Foo <img src="files/test.jpg" /> Bar',
+            StringUtil::insertTagToSrc('Foo <img src="{{file::9e474bae-ce18-11ec-9465-cadae3e5cf5d}}" /> Bar'),
+        );
+
+        $this->assertSame(
+            'Foo <img src="{{file::##simple-token##|urlattr}}" /> Bar',
+            StringUtil::insertTagToSrc('Foo <img src="{{file::##simple-token##|urlattr}}" /> Bar'),
+        );
     }
 }

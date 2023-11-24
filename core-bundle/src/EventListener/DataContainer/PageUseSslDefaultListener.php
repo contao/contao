@@ -12,16 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
-use Contao\CoreBundle\ServiceAnnotation\Callback;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\DataContainer;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-/**
- * @Callback(table="tl_page", target="config.onload")
- */
+#[AsCallback(table: 'tl_page', target: 'config.onload')]
 class PageUseSslDefaultListener
 {
-    public function __construct(private RequestStack $requestStack)
+    public function __construct(private readonly RequestStack $requestStack)
     {
     }
 
@@ -31,7 +29,7 @@ class PageUseSslDefaultListener
 
         // Set useSSL to HTTP if the current request does not use HTTPS
         if ($request && !$request->isSecure()) {
-            $GLOBALS['TL_DCA']['tl_page']['fields']['useSSL']['default'] = '';
+            $GLOBALS['TL_DCA']['tl_page']['fields']['useSSL']['default'] = false;
         }
     }
 }

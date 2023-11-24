@@ -1,0 +1,34 @@
+tl_page:
+    - id: 1
+      pid: 0
+      sorting: 128
+      tstamp: 1539679767
+      title: Root with home page
+      alias: root-with-home-page
+      urlPrefix: ''
+      urlSuffix: .html
+      type: root
+      language: en
+      dns: root-with-home.local
+      fallback: 1
+      includeLayout: 1
+      layout: 1
+      published: 1
+
+    - id: 2
+      pid: 1
+      sorting: 128
+      tstamp: 1539698035
+      title: Home
+      alias: home
+      type: regular
+      published: 1
+
+    - id: 3
+      pid: 1
+      sorting: 256
+      tstamp: 1539698035
+      title: Error 404 Page
+      alias: error404
+      type: error_404
+      published: 1

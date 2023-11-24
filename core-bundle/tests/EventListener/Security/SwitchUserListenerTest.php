@@ -14,12 +14,12 @@ namespace Contao\CoreBundle\Tests\EventListener\Security;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\EventListener\Security\SwitchUserListener;
-use Contao\CoreBundle\Fixtures\Security\User\ForwardCompatibilityTokenInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Event\SwitchUserEvent;
 
 class SwitchUserListenerTest extends TestCase
@@ -52,10 +52,7 @@ class SwitchUserListenerTest extends TestCase
         $listener($event);
     }
 
-    /**
-     * @return LoggerInterface&MockObject
-     */
-    private function mockLogger(string $message = null): LoggerInterface
+    private function mockLogger(string|null $message = null): LoggerInterface&MockObject
     {
         $logger = $this->createMock(LoggerInterface::class);
 
@@ -72,15 +69,12 @@ class SwitchUserListenerTest extends TestCase
         return $logger;
     }
 
-    /**
-     * @return TokenStorageInterface&MockObject
-     */
-    private function mockTokenStorage(string $username = null): TokenStorageInterface
+    private function mockTokenStorage(string|null $username = null): TokenStorageInterface&MockObject
     {
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
 
         if (null !== $username) {
-            $token = $this->createMock(ForwardCompatibilityTokenInterface::class);
+            $token = $this->createMock(TokenInterface::class);
             $token
                 ->expects($this->once())
                 ->method('getUserIdentifier')
@@ -97,7 +91,7 @@ class SwitchUserListenerTest extends TestCase
         return $tokenStorage;
     }
 
-    private function mockSwitchUserEvent(string $username = null): SwitchUserEvent
+    private function mockSwitchUserEvent(string|null $username = null): SwitchUserEvent
     {
         $user = $this->createPartialMock(BackendUser::class, ['getUserIdentifier']);
 

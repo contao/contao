@@ -28,7 +28,7 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Kernel;
-use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
+use Symfony\Component\Security\Core\Authentication\Token\NullToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -44,7 +44,7 @@ class TwoFactorFrontendListenerTest extends TestCase
             $this->mockContaoFramework(),
             $this->mockScopeMatcherWithEvent(false, $event),
             $this->createMock(TokenStorage::class),
-            [UsernamePasswordToken::class]
+            [UsernamePasswordToken::class],
         );
 
         $listener($event);
@@ -60,7 +60,7 @@ class TwoFactorFrontendListenerTest extends TestCase
             $this->mockContaoFramework(),
             $this->mockScopeMatcherWithEvent(true, $event),
             $this->mockTokenStorageWithToken(),
-            [UsernamePasswordToken::class]
+            [UsernamePasswordToken::class],
         );
 
         $listener($event);
@@ -70,14 +70,14 @@ class TwoFactorFrontendListenerTest extends TestCase
 
     public function testReturnsIfTheTokenIsNotSupported(): void
     {
-        $token = $this->createMock(AnonymousToken::class);
+        $token = $this->createMock(NullToken::class);
         $event = $this->getRequestEvent($this->getRequest());
 
         $listener = new TwoFactorFrontendListener(
             $this->mockContaoFramework(),
             $this->mockScopeMatcherWithEvent(true, $event),
             $this->mockTokenStorageWithToken($token),
-            [UsernamePasswordToken::class]
+            [UsernamePasswordToken::class],
         );
 
         $listener($event);
@@ -94,7 +94,7 @@ class TwoFactorFrontendListenerTest extends TestCase
             $this->mockContaoFramework(),
             $this->mockScopeMatcherWithEvent(true, $event),
             $this->mockTokenStorageWithToken($token),
-            [UsernamePasswordToken::class]
+            [UsernamePasswordToken::class],
         );
 
         $listener($event);
@@ -111,7 +111,7 @@ class TwoFactorFrontendListenerTest extends TestCase
             $this->mockContaoFramework(),
             $this->mockScopeMatcherWithEvent(true, $event),
             $this->mockTokenStorageWithToken($token),
-            [UsernamePasswordToken::class]
+            [UsernamePasswordToken::class],
         );
 
         $listener($event);
@@ -122,10 +122,10 @@ class TwoFactorFrontendListenerTest extends TestCase
     public function testThrowsAPageNotFoundExceptionIfThereIsNoTwoFactorPage(): void
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
-        $user->useTwoFactor = '';
+        $user->useTwoFactor = false;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class);
-        $pageModel->enforceTwoFactor = '1';
+        $pageModel->enforceTwoFactor = true;
         $pageModel->twoFactorJumpTo = 0;
 
         $adapter = $this->mockAdapter(['findPublishedById']);
@@ -142,7 +142,7 @@ class TwoFactorFrontendListenerTest extends TestCase
             $this->mockContaoFramework([PageModel::class => $adapter]),
             $this->mockScopeMatcherWithEvent(true, $event),
             $this->mockTokenStorageWithToken($token),
-            [UsernamePasswordToken::class]
+            [UsernamePasswordToken::class],
         );
 
         $this->expectException(PageNotFoundException::class);
@@ -154,11 +154,11 @@ class TwoFactorFrontendListenerTest extends TestCase
     public function testReturnsIfTwoFactorAuthenticationIsEnforcedAndThePageIsTheTwoFactorPage(): void
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
-        $user->useTwoFactor = '';
+        $user->useTwoFactor = false;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 1;
-        $pageModel->enforceTwoFactor = '1';
+        $pageModel->enforceTwoFactor = true;
         $pageModel->twoFactorJumpTo = 1;
 
         $adapter = $this->mockAdapter(['findPublishedById']);
@@ -175,7 +175,7 @@ class TwoFactorFrontendListenerTest extends TestCase
             $this->mockContaoFramework([PageModel::class => $adapter]),
             $this->mockScopeMatcherWithEvent(true, $event),
             $this->mockTokenStorageWithToken($token),
-            [UsernamePasswordToken::class]
+            [UsernamePasswordToken::class],
         );
 
         $listener($event);
@@ -186,11 +186,11 @@ class TwoFactorFrontendListenerTest extends TestCase
     public function testRedirectsToTheTwoFactorPageIfTwoFactorAuthenticationIsEnforced(): void
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
-        $user->useTwoFactor = '';
+        $user->useTwoFactor = false;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 1;
-        $pageModel->enforceTwoFactor = '1';
+        $pageModel->enforceTwoFactor = true;
         $pageModel->twoFactorJumpTo = 2;
 
         $twoFactorPageModel = $this->mockClassWithProperties(PageModel::class);
@@ -217,12 +217,11 @@ class TwoFactorFrontendListenerTest extends TestCase
             $this->mockContaoFramework([PageModel::class => $adapter]),
             $this->mockScopeMatcherWithEvent(true, $event),
             $this->mockTokenStorageWithToken($token),
-            [UsernamePasswordToken::class]
+            [UsernamePasswordToken::class],
         );
 
         $listener($event);
 
-        /** @var RedirectResponse $response */
         $response = $event->getResponse();
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
@@ -232,7 +231,7 @@ class TwoFactorFrontendListenerTest extends TestCase
     public function testReturnsIfTheUserIsAlreadyAuthenticated(): void
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
-        $user->useTwoFactor = '1';
+        $user->useTwoFactor = true;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class);
 
@@ -250,7 +249,7 @@ class TwoFactorFrontendListenerTest extends TestCase
             $this->mockContaoFramework([PageModel::class => $adapter]),
             $this->mockScopeMatcherWithEvent(true, $event),
             $this->mockTokenStorageWithToken($token),
-            [UsernamePasswordToken::class, $token::class]
+            [UsernamePasswordToken::class, $token::class],
         );
 
         $listener($event);
@@ -261,15 +260,15 @@ class TwoFactorFrontendListenerTest extends TestCase
     public function testRedirectsToTheTargetPathIfThe401PageHasNoRedirect(): void
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
-        $user->useTwoFactor = '';
+        $user->useTwoFactor = false;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 1;
-        $pageModel->enforceTwoFactor = '';
+        $pageModel->enforceTwoFactor = false;
         $pageModel->twoFactorJumpTo = 1;
 
         $page401 = $this->mockClassWithProperties(PageModel::class);
-        $page401->autoforward = '';
+        $page401->autoforward = true;
 
         $session = $this->createMock(SessionInterface::class);
         $session
@@ -297,12 +296,11 @@ class TwoFactorFrontendListenerTest extends TestCase
             $this->mockContaoFramework([PageModel::class => $adapter]),
             $this->mockScopeMatcherWithEvent(true, $event),
             $this->mockTokenStorageWithToken($token),
-            [UsernamePasswordToken::class]
+            [UsernamePasswordToken::class],
         );
 
         $listener($event);
 
-        /** @var RedirectResponse $response */
         $response = $event->getResponse();
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
@@ -312,15 +310,15 @@ class TwoFactorFrontendListenerTest extends TestCase
     public function testReturnsIfTheCurrentPageIsThe401AutoforwardTarget(): void
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
-        $user->useTwoFactor = '';
+        $user->useTwoFactor = false;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 1;
-        $pageModel->enforceTwoFactor = '';
+        $pageModel->enforceTwoFactor = false;
         $pageModel->twoFactorJumpTo = 1;
 
         $page401 = $this->mockClassWithProperties(PageModel::class);
-        $page401->autoforward = '1';
+        $page401->autoforward = true;
         $page401->jumpTo = 1;
 
         $adapter = $this->mockAdapter(['find401ByPid']);
@@ -338,7 +336,7 @@ class TwoFactorFrontendListenerTest extends TestCase
             $this->mockContaoFramework([PageModel::class => $adapter]),
             $this->mockScopeMatcherWithEvent(true, $event),
             $this->mockTokenStorageWithToken($token),
-            [UsernamePasswordToken::class]
+            [UsernamePasswordToken::class],
         );
 
         $listener($event);
@@ -349,11 +347,11 @@ class TwoFactorFrontendListenerTest extends TestCase
     public function testThrowsAnUnauthorizedHttpException(): void
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
-        $user->useTwoFactor = '';
+        $user->useTwoFactor = false;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 1;
-        $pageModel->enforceTwoFactor = '';
+        $pageModel->enforceTwoFactor = false;
 
         $adapter = $this->mockAdapter(['find401ByPid']);
         $adapter
@@ -370,7 +368,7 @@ class TwoFactorFrontendListenerTest extends TestCase
             $this->mockContaoFramework([PageModel::class => $adapter]),
             $this->mockScopeMatcherWithEvent(true, $event),
             $this->mockTokenStorageWithToken($token),
-            [UsernamePasswordToken::class]
+            [UsernamePasswordToken::class],
         );
 
         $this->expectException(UnauthorizedHttpException::class);
@@ -381,11 +379,11 @@ class TwoFactorFrontendListenerTest extends TestCase
     public function testReturnsIfTheCurrentPageIsTheTargetPath(): void
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
-        $user->useTwoFactor = '';
+        $user->useTwoFactor = false;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 1;
-        $pageModel->enforceTwoFactor = '';
+        $pageModel->enforceTwoFactor = false;
 
         $session = $this->createMock(SessionInterface::class);
         $session
@@ -413,7 +411,7 @@ class TwoFactorFrontendListenerTest extends TestCase
             $this->mockContaoFramework([PageModel::class => $adapter]),
             $this->mockScopeMatcherWithEvent(true, $event),
             $this->mockTokenStorageWithToken($token),
-            [UsernamePasswordToken::class]
+            [UsernamePasswordToken::class],
         );
 
         $listener($event);
@@ -424,11 +422,11 @@ class TwoFactorFrontendListenerTest extends TestCase
     public function testRedirectsToTheTargetPath(): void
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
-        $user->useTwoFactor = '';
+        $user->useTwoFactor = false;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 1;
-        $pageModel->enforceTwoFactor = '';
+        $pageModel->enforceTwoFactor = false;
 
         $session = $this->createMock(SessionInterface::class);
         $session
@@ -456,12 +454,11 @@ class TwoFactorFrontendListenerTest extends TestCase
             $this->mockContaoFramework([PageModel::class => $adapter]),
             $this->mockScopeMatcherWithEvent(true, $event),
             $this->mockTokenStorageWithToken($token),
-            [UsernamePasswordToken::class]
+            [UsernamePasswordToken::class],
         );
 
         $listener($event);
 
-        /** @var RedirectResponse $response */
         $response = $event->getResponse();
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
@@ -475,7 +472,7 @@ class TwoFactorFrontendListenerTest extends TestCase
      *
      * @return T&MockObject
      */
-    private function mockToken(string $class, bool $withFrontendUser = false, FrontendUser $user = null)
+    private function mockToken(string $class, bool $withFrontendUser = false, FrontendUser|null $user = null): MockObject
     {
         $token = $this->createMock($class);
         $user ??= $this->createMock(FrontendUser::class);
@@ -497,7 +494,7 @@ class TwoFactorFrontendListenerTest extends TestCase
         return $token;
     }
 
-    private function getRequest(bool $withPageModel = false, PageModel $pageModel = null): Request
+    private function getRequest(bool $withPageModel = false, PageModel|null $pageModel = null): Request
     {
         $request = new Request();
         $request->attributes->set('pageModel', null);
@@ -513,10 +510,7 @@ class TwoFactorFrontendListenerTest extends TestCase
         return $request;
     }
 
-    /**
-     * @return TokenStorageInterface&MockObject
-     */
-    private function mockTokenStorageWithToken(TokenInterface $token = null): TokenStorageInterface
+    private function mockTokenStorageWithToken(TokenInterface|null $token = null): TokenStorageInterface&MockObject
     {
         $tokenStorage = $this->createMock(TokenStorage::class);
         $tokenStorage
@@ -528,10 +522,7 @@ class TwoFactorFrontendListenerTest extends TestCase
         return $tokenStorage;
     }
 
-    /**
-     * @return ScopeMatcher&MockObject
-     */
-    private function mockScopeMatcherWithEvent(bool $hasFrontendUser, RequestEvent $event): ScopeMatcher
+    private function mockScopeMatcherWithEvent(bool $hasFrontendUser, RequestEvent $event): ScopeMatcher&MockObject
     {
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $scopeMatcher
@@ -544,12 +535,12 @@ class TwoFactorFrontendListenerTest extends TestCase
         return $scopeMatcher;
     }
 
-    private function getRequestEvent(Request $request = null, Response $response = null): RequestEvent
+    private function getRequestEvent(Request|null $request = null, Response|null $response = null): RequestEvent
     {
         $kernel = $this->createMock(Kernel::class);
         $event = new RequestEvent($kernel, $request ?? new Request(), HttpKernelInterface::MAIN_REQUEST);
 
-        if (null !== $response) {
+        if ($response) {
             $event->setResponse($response);
         }
 

@@ -13,13 +13,11 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Routing\ScopeMatcher;
-use Contao\CoreBundle\Security\Authentication\Token\FrontendPreviewToken;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Security;
 
 /**
  * @internal
@@ -27,11 +25,10 @@ use Symfony\Component\Security\Core\Security;
 class PreviewAuthenticationListener
 {
     public function __construct(
-        private ScopeMatcher $scopeMatcher,
-        private TokenChecker $tokenChecker,
-        private UrlGeneratorInterface $router,
-        private UriSigner $uriSigner,
-        private Security $security,
+        private readonly ScopeMatcher $scopeMatcher,
+        private readonly TokenChecker $tokenChecker,
+        private readonly UrlGeneratorInterface $router,
+        private readonly UriSigner $uriSigner,
     ) {
     }
 
@@ -42,8 +39,7 @@ class PreviewAuthenticationListener
         if (
             !$request->attributes->get('_preview', false)
             || $this->scopeMatcher->isBackendRequest($request)
-            || $this->tokenChecker->hasBackendUser()
-            || $this->security->getToken() instanceof FrontendPreviewToken
+            || $this->tokenChecker->canAccessPreview()
         ) {
             return;
         }
@@ -51,7 +47,7 @@ class PreviewAuthenticationListener
         // Ajax requests must not be redirected to the login screen, instead we
         // redirect to the URL without preview script.
         if ($request->isXmlHttpRequest()) {
-            $event->setResponse(new RedirectResponse($request->getSchemeAndHttpHost().$request->getPathInfo().(null !== ($qs = $request->server->get('QUERY_STRING')) ? '?'.$qs : '')));
+            $event->setResponse(new RedirectResponse($request->getSchemeAndHttpHost().$request->getBasePath().$request->getPathInfo().(null !== ($qs = $request->server->get('QUERY_STRING')) ? '?'.$qs : '')));
 
             return;
         }
@@ -64,7 +60,7 @@ class PreviewAuthenticationListener
         $url = $this->router->generate(
             'contao_backend_login',
             ['redirect' => $request->getUri()],
-            UrlGeneratorInterface::ABSOLUTE_URL
+            UrlGeneratorInterface::ABSOLUTE_URL,
         );
 
         $context->setBaseUrl($baseUrl);

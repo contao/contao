@@ -19,16 +19,19 @@ use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
+use Twig\TokenParser\ExtendsTokenParser;
 
 /**
- * This parser is a drop in replacement for @\Twig\TokenParser\ExtendsTokenParser
+ * This parser is a drop in replacement for the ExtendsTokenParser
  * that adds support for the Contao template hierarchy.
+ *
+ * @see ExtendsTokenParser
  *
  * @experimental
  */
 final class DynamicExtendsTokenParser extends AbstractTokenParser
 {
-    public function __construct(private TemplateHierarchyInterface $hierarchy)
+    public function __construct(private readonly TemplateHierarchyInterface $hierarchy)
     {
     }
 
@@ -44,7 +47,7 @@ final class DynamicExtendsTokenParser extends AbstractTokenParser
             throw new SyntaxError('Cannot use "extends" in a macro.', $token->getLine(), $stream->getSourceContext());
         }
 
-        if (null !== $this->parser->getParent()) {
+        if ($this->parser->getParent()) {
             throw new SyntaxError('Multiple extends tags are forbidden.', $token->getLine(), $stream->getSourceContext());
         }
 

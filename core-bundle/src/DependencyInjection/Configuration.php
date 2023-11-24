@@ -15,7 +15,10 @@ namespace Contao\CoreBundle\DependencyInjection;
 use Contao\Config;
 use Contao\CoreBundle\Doctrine\Backup\RetentionPolicy;
 use Contao\CoreBundle\Util\LocaleUtil;
+use Contao\Image\Metadata\ExifFormat;
+use Contao\Image\Metadata\IptcFormat;
 use Contao\Image\ResizeConfiguration;
+use Contao\Image\ResizeOptions;
 use Imagine\Image\ImageInterface;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -24,7 +27,7 @@ use Symfony\Component\Filesystem\Path;
 
 class Configuration implements ConfigurationInterface
 {
-    public function __construct(private string $projectDir)
+    public function __construct(private readonly string $projectDir)
     {
     }
 
@@ -42,10 +45,6 @@ class Configuration implements ConfigurationInterface
                     ->cannotBeEmpty()
                     ->defaultValue('contao_csrf_token')
                 ->end()
-                ->scalarNode('encryption_key')
-                    ->cannotBeEmpty()
-                    ->defaultValue('%kernel.secret%')
-                ->end()
                 ->integerNode('error_level')
                     ->info('The error reporting level set when the framework is initialized. Defaults to E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED.')
                     ->min(-1)
@@ -60,12 +59,12 @@ class Configuration implements ConfigurationInterface
                             static function (array $options): array {
                                 foreach (array_keys($options) as $option) {
                                     if ($newKey = Config::getNewKey($option)) {
-                                        trigger_deprecation('contao/core-bundle', '4.12', 'Setting "contao.localconfig.%s" has been deprecated. Use "%s" instead.', $option, $newKey);
+                                        trigger_deprecation('contao/core-bundle', '5.0', 'Setting "contao.localconfig.%s" has been deprecated. Use "%s" instead.', $option, $newKey);
                                     }
                                 }
 
                                 return $options;
-                            }
+                            },
                         )
                     ->end()
                 ->end()
@@ -108,6 +107,12 @@ class Configuration implements ConfigurationInterface
                         ->always(static fn (string $value): string => Path::canonicalize($value))
                     ->end()
                 ->end()
+                ->scalarNode('console_path')
+                    ->info('The path to the Symfony console. Defaults to %kernel.project_dir%/bin/console.')
+                    ->cannotBeEmpty()
+                    ->defaultValue('%kernel.project_dir%/bin/console')
+                ->end()
+                ->append($this->addMessengerNode())
                 ->append($this->addImageNode())
                 ->append($this->addSecurityNode())
                 ->append($this->addSearchNode())
@@ -117,10 +122,66 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addInsertTagsNode())
                 ->append($this->addBackupNode())
                 ->append($this->addSanitizerNode())
+                ->append($this->addCronNode())
             ->end()
         ;
 
         return $treeBuilder;
+    }
+
+    private function addMessengerNode(): NodeDefinition
+    {
+        return (new TreeBuilder('messenger'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->info('Allows to define Symfony Messenger workers (messenger:consume). Workers are started every minute using the Contao cron job framework.')
+            ->children()
+                ->arrayNode('workers')
+                    ->performNoDeepMerging()
+                    ->arrayPrototype()
+                        ->children()
+                            ->arrayNode('transports')
+                                ->info('The transports/receivers you would like to consume from.')
+                                ->example(['foobar_transport', 'foobar2_transport'])
+                                ->scalarPrototype()
+                                ->end()
+                            ->end()
+                            ->arrayNode('options')
+                                ->info('messenger:consume options. Make sure to always include "--time-limit=60".')
+                                ->example(['--sleep=5', '--time-limit=60'])
+                                ->scalarPrototype()->end()
+                                ->defaultValue(['--time-limit=60'])
+                                ->validate()
+                                    ->ifTrue(static fn (array $options) => !\in_array('--time-limit=60', $options, true))
+                                    ->thenInvalid('Custom messenger:consume options must include "--time-limit=60".')
+                                ->end()
+                            ->end()
+                            ->arrayNode('autoscale')
+                                ->info('Enables autoscaling.')
+                                ->canBeEnabled()
+                                ->children()
+                                    ->integerNode('desired_size')
+                                        ->info('Contao will automatically autoscale the number of workers to meet this queue size. Logic: desiredWorkers = ceil(currentSize / desiredSize)')
+                                        ->isRequired()
+                                        ->min(1)
+                                    ->end()
+                                    ->integerNode('min')
+                                        ->min(1)
+                                        ->defaultValue(1)
+                                        ->info('Contao will never scale down to less than this configured number of workers.')
+                                    ->end()
+                                    ->integerNode('max')
+                                        ->isRequired()
+                                        ->min(1)
+                                        ->info('Contao will never scale up to more than this configured number of workers.')
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
     }
 
     private function addImageNode(): NodeDefinition
@@ -133,44 +194,7 @@ class Configuration implements ConfigurationInterface
                     ->info('Bypass the image cache and always regenerate images when requested. This also disables deferred image resizing.')
                     ->defaultValue(false)
                 ->end()
-                ->arrayNode('imagine_options')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->integerNode('jpeg_quality')
-                            ->defaultValue(80)
-                        ->end()
-                        ->arrayNode('jpeg_sampling_factors')
-                            ->prototype('scalar')->end()
-                            ->defaultValue([2, 1, 1])
-                        ->end()
-                        ->integerNode('png_compression_level')
-                        ->end()
-                        ->integerNode('png_compression_filter')
-                        ->end()
-                        ->integerNode('webp_quality')
-                        ->end()
-                        ->booleanNode('webp_lossless')
-                        ->end()
-                        ->integerNode('avif_quality')
-                        ->end()
-                        ->booleanNode('avif_lossless')
-                        ->end()
-                        ->integerNode('heic_quality')
-                        ->end()
-                        ->booleanNode('heic_lossless')
-                        ->end()
-                        ->integerNode('jxl_quality')
-                        ->end()
-                        ->booleanNode('jxl_lossless')
-                        ->end()
-                        ->booleanNode('flatten')
-                            ->info('Allows to disable the layer flattening of animated images. Set this option to false to support animations. It has no effect with Gd as Imagine service.')
-                        ->end()
-                        ->scalarNode('interlace')
-                            ->defaultValue(ImageInterface::INTERLACE_PLANE)
-                        ->end()
-                    ->end()
-                ->end()
+                ->append($this->addImagineOptionsNode(true))
                 ->scalarNode('imagine_service')
                     ->info('Contao automatically uses an Imagine service out of Gmagick, Imagick and Gd (in this order). Set a service ID here to override.')
                     ->defaultNull()
@@ -215,7 +239,7 @@ class Configuration implements ConfigurationInterface
                                 }
 
                                 return $value;
-                            }
+                            },
                         )
                     ->end()
                     ->arrayPrototype()
@@ -255,6 +279,16 @@ class Configuration implements ConfigurationInterface
                                     ->scalarPrototype()->end()
                                 ->end()
                             ->end()
+                            ->arrayNode('preserve_metadata_fields')
+                                ->info('Which metadata fields to preserve when resizing images.')
+                                ->example([ExifFormat::NAME => ExifFormat::DEFAULT_PRESERVE_KEYS, IptcFormat::NAME => IptcFormat::DEFAULT_PRESERVE_KEYS])
+                                ->useAttributeAsKey('format')
+                                ->arrayPrototype()
+                                    ->beforeNormalization()->castToArray()->end()
+                                    ->scalarPrototype()->end()
+                                ->end()
+                            ->end()
+                            ->append($this->addImagineOptionsNode(false))
                             ->arrayNode('items')
                                 ->arrayPrototype()
                                     ->children()
@@ -325,7 +359,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('valid_extensions')
                     ->prototype('scalar')->end()
-                    ->defaultValue(['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp'])
+                    ->defaultValue(['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp', 'avif'])
                 ->end()
                 ->arrayNode('preview')
                     ->addDefaultsIfNotSet()
@@ -359,8 +393,80 @@ class Configuration implements ConfigurationInterface
                         ->thenInvalid('The default_size must not be greater than the max_size: %s')
                     ->end()
                 ->end()
+                ->arrayNode('preserve_metadata_fields')
+                    ->info('Which metadata fields to preserve when resizing images.')
+                    ->example([ExifFormat::NAME => ExifFormat::DEFAULT_PRESERVE_KEYS, IptcFormat::NAME => IptcFormat::DEFAULT_PRESERVE_KEYS])
+                    ->defaultValue((new ResizeOptions())->getPreserveCopyrightMetadata())
+                    ->useAttributeAsKey('format')
+                    ->arrayPrototype()
+                        ->beforeNormalization()->castToArray()->end()
+                        ->scalarPrototype()->end()
+                    ->end()
+                ->end()
             ->end()
         ;
+    }
+
+    private function addImagineOptionsNode(bool $withDefaults): NodeDefinition
+    {
+        $node = (new TreeBuilder('imagine_options'))
+            ->getRootNode()
+            ->children()
+                ->integerNode('jpeg_quality')
+                ->end()
+                ->arrayNode('jpeg_sampling_factors')
+                    ->prototype('scalar')->end()
+                ->end()
+                ->integerNode('png_compression_level')
+                ->end()
+                ->integerNode('png_compression_filter')
+                ->end()
+                ->integerNode('webp_quality')
+                ->end()
+                ->booleanNode('webp_lossless')
+                ->end()
+                ->integerNode('avif_quality')
+                ->end()
+                ->booleanNode('avif_lossless')
+                ->end()
+                ->integerNode('heic_quality')
+                ->end()
+                ->booleanNode('heic_lossless')
+                ->end()
+                ->integerNode('jxl_quality')
+                ->end()
+                ->booleanNode('jxl_lossless')
+                ->end()
+                ->booleanNode('flatten')
+                    ->info('Allows to disable the layer flattening of animated images. Set this option to false to support animations. It has no effect with Gd as Imagine service.')
+                ->end()
+                ->scalarNode('interlace')
+                ->end()
+            ->end()
+        ;
+
+        if ($withDefaults) {
+            $node->addDefaultsIfNotSet();
+            $node->find('jpeg_quality')->defaultValue(80);
+            $node->find('jpeg_sampling_factors')->defaultValue([2, 1, 1]);
+            $node->find('interlace')->defaultValue(ImageInterface::INTERLACE_PLANE);
+        } else {
+            $node
+                ->validate()
+                    ->always(
+                        static function ($values) {
+                            if (empty($values['jpeg_sampling_factors'])) {
+                                unset($values['jpeg_sampling_factors']);
+                            }
+
+                            return $values;
+                        },
+                    )
+                ->end()
+            ;
+        }
+
+        return $node;
     }
 
     private function addIntlNode(): NodeDefinition
@@ -390,7 +496,7 @@ class Configuration implements ConfigurationInterface
                                 }
 
                                 return false;
-                            }
+                            },
                         )
                         ->thenInvalid('All provided locales must be in the canonicalized ICU form and optionally start with +/- to add/remove the locale to/from the default list.')
                     ->end()
@@ -416,7 +522,7 @@ class Configuration implements ConfigurationInterface
                                 }
 
                                 return false;
-                            }
+                            },
                         )
                         ->thenInvalid('All provided locales must be in the canonicalized ICU form and optionally start with +/- to add/remove the locale to/from the default list.')
                     ->end()
@@ -436,7 +542,7 @@ class Configuration implements ConfigurationInterface
                                 }
 
                                 return false;
-                            }
+                            },
                         )
                         ->thenInvalid('All provided countries must be two uppercase letters and optionally start with +/- to add/remove the country to/from the default list.')
                     ->end()
@@ -518,7 +624,7 @@ class Configuration implements ConfigurationInterface
                             }
 
                             return false;
-                        }
+                        },
                     )
                     ->thenInvalid('All provided additional URIs must start with either http:// or https://.')
                     ->end()
@@ -575,7 +681,7 @@ class Configuration implements ConfigurationInterface
                             }
 
                             return $attributes;
-                        }
+                        },
                     )
                     ->end()
                     ->normalizeKeys(false)
@@ -585,16 +691,19 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('custom_css')
                     ->info('Adds custom style sheets to the back end.')
                     ->example(['files/backend/custom.css'])
+                    ->cannotBeEmpty()
                     ->scalarPrototype()->end()
                 ->end()
                 ->arrayNode('custom_js')
                     ->info('Adds custom JavaScript files to the back end.')
                     ->example(['files/backend/custom.js'])
+                    ->cannotBeEmpty()
                     ->scalarPrototype()->end()
                 ->end()
                 ->scalarNode('badge_title')
                     ->info('Configures the title of the badge in the back end.')
                     ->example('develop')
+                    ->cannotBeEmpty()
                     ->defaultValue('')
                 ->end()
                 ->scalarNode('route_prefix')
@@ -605,6 +714,11 @@ class Configuration implements ConfigurationInterface
                     ->end()
                     ->example('/admin')
                     ->defaultValue('/contao')
+                ->end()
+                ->integerNode('crawl_concurrency')
+                    ->info('The number of concurrent requests that are executed. Defaults to 5.')
+                    ->min(1)
+                    ->defaultValue(5)
                 ->end()
             ->end()
         ;
@@ -654,7 +768,7 @@ class Configuration implements ConfigurationInterface
                                 }
 
                                 return false;
-                            }
+                            },
                         )
                     ->thenInvalid('%s')
                     ->end()
@@ -683,9 +797,24 @@ class Configuration implements ConfigurationInterface
                                 }
 
                                 return $protocols;
-                            }
+                            },
                         )
                     ->end()
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addCronNode(): NodeDefinition
+    {
+        return (new TreeBuilder('cron'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->enumNode('web_listener')
+                    ->info('Allows to enable or disable the kernel.terminate listener that executes cron jobs within the web process. "auto" will auto-disable it if a CLI cron is running.')
+                    ->values(['auto', true, false])
+                    ->defaultValue('auto')
                 ->end()
             ->end()
         ;

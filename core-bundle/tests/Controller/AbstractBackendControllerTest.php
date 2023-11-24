@@ -22,10 +22,11 @@ use Contao\Environment as ContaoEnvironment;
 use Contao\System;
 use Contao\TemplateLoader;
 use Doctrine\DBAL\Driver\Connection;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\RouterInterface;
@@ -35,8 +36,6 @@ use Twig\Environment;
 
 class AbstractBackendControllerTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -54,15 +53,8 @@ class AbstractBackendControllerTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @group legacy
-     */
     public function testAddsAndMergesBackendContext(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 4.13: Using "Contao\Environment::get(\'agent\')" has been deprecated %s');
-        $this->expectDeprecation('Since contao/core-bundle 4.13: Using "Contao\Config::get(\'os\')" has been deprecated.');
-        $this->expectDeprecation('Since contao/core-bundle 4.13: Using "Contao\Config::get(\'browser\')" has been deprecated.');
-
         $controller = new class() extends AbstractBackendController {
             public function fooAction(): Response
             {
@@ -86,7 +78,6 @@ class AbstractBackendControllerTest extends TestCase
 
         $GLOBALS['TL_LANGUAGE'] = 'en';
 
-        $_SERVER['HTTP_USER_AGENT'] = 'Contao/Foo';
         $_SERVER['HTTP_HOST'] = 'localhost';
 
         TemplateLoader::addFile('be_main', '');
@@ -96,7 +87,6 @@ class AbstractBackendControllerTest extends TestCase
             'headline' => 'dashboard',
             'title' => '',
             'theme' => 'flexible',
-            'base' => 'http://localhost/',
             'language' => 'en',
             'host' => 'localhost',
             'charset' => 'UTF-8',
@@ -105,7 +95,6 @@ class AbstractBackendControllerTest extends TestCase
             'learnMore' => 'learn more',
             'menu' => '<menu>',
             'headerMenu' => '<header_menu>',
-            'ua' => 'unknown other ',
             'badgeTitle' => '',
             'foo' => 'bar',
         ];
@@ -133,12 +122,25 @@ class AbstractBackendControllerTest extends TestCase
         $twig
             ->expects($this->exactly(3))
             ->method('render')
-            ->willReturnMap([
-                ['@ContaoCore/Backend/be_menu.html.twig', [], '<menu>'],
-                ['@ContaoCore/Backend/be_header_menu.html.twig', [], '<header_menu>'],
-                ['custom_be.html.twig', $expectedContext, '<custom_be_main>'],
-            ])
+            ->willReturnCallback(
+                function (string $template, array $context) use ($expectedContext) {
+                    if ('custom_be.html.twig' === $template) {
+                        $this->assertSame($expectedContext, $context);
+                    }
+
+                    $map = [
+                        '@ContaoCore/Backend/be_menu.html.twig' => '<menu>',
+                        '@ContaoCore/Backend/be_header_menu.html.twig' => '<header_menu>',
+                        'custom_be.html.twig' => '<custom_be_main>',
+                    ];
+
+                    return $map[$template];
+                },
+            )
         ;
+
+        $requestStack = new RequestStack();
+        $requestStack->push(new Request(server: $_SERVER));
 
         $container->set('security.authorization_checker', $authorizationChecker);
         $container->set('security.token_storage', $this->createMock(TokenStorageInterface::class));
@@ -147,6 +149,7 @@ class AbstractBackendControllerTest extends TestCase
         $container->set('session', $this->createMock(Session::class));
         $container->set('twig', $twig);
         $container->set('router', $this->createMock(RouterInterface::class));
+        $container->set('request_stack', $requestStack);
 
         $container->setParameter('contao.resources_paths', $this->getTempDir());
 

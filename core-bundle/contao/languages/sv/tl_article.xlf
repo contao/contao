@@ -1,0 +1,234 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_article.php" source-language="en" target-language="sv">
+    <body>
+      <trans-unit id="tl_article.title.0">
+        <source>Title</source>
+        <target>Rubrik</target>
+      </trans-unit>
+      <trans-unit id="tl_article.title.1">
+        <source>Please enter the article title.</source>
+        <target>Ange en titel för artikeln.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.alias.0">
+        <source>Article alias</source>
+        <target>Artikelalias</target>
+      </trans-unit>
+      <trans-unit id="tl_article.alias.1">
+        <source>The article alias is a unique reference to the article which can be called instead of its numeric ID.</source>
+        <target>Artikelalias är ett unik referensnamn som kan användas istället för artikelns numeriska ID-nummer när man refererar till artikeln.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.author.0">
+        <source>Author</source>
+        <target>Namn</target>
+      </trans-unit>
+      <trans-unit id="tl_article.author.1">
+        <source>Here you can change the author of the article.</source>
+        <target>Välj författare för artikeln.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.inColumn.0">
+        <source>Display in</source>
+        <target>Visa i</target>
+      </trans-unit>
+      <trans-unit id="tl_article.inColumn.1">
+        <source>Please choose the layout section you want the article to be displayed in.</source>
+        <target>Ange var i sidans layout som artikeln ska visas. Tilldela artikeln till en kolumn, sidhuvud, sidfot eller ev. egen layoutsektion.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.teaserCssID.0">
+        <source>Teaser CSS ID/class</source>
+        <target>Ingressens Stilmall ID och klass</target>
+      </trans-unit>
+      <trans-unit id="tl_article.teaserCssID.1">
+        <source>Here you can set an ID and one or more classes for the teaser element.</source>
+        <target>Här kan du ange ett stilmalls-ID (CSS ID) och/eller en eller flera stilmallsklasser (CSS-klass) för ingressen. ID och klasser anges utan prefix (nummertecken # resp. punkt .).</target>
+      </trans-unit>
+      <trans-unit id="tl_article.showTeaser.0">
+        <source>Show teaser</source>
+        <target>Visa ingress</target>
+      </trans-unit>
+      <trans-unit id="tl_article.showTeaser.1">
+        <source>Show the article teaser if there are multiple articles.</source>
+        <target>Visa artiklarnas ingresser istället för hela artiklar om det finns flera artiklar på sidan.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.teaser.0">
+        <source>Article teaser</source>
+        <target>Artikelingress</target>
+      </trans-unit>
+      <trans-unit id="tl_article.teaser.1">
+        <source>The article teaser can also be displayed with the content element &quot;article teaser&quot;.</source>
+        <target>Ingressen visas om &quot;Visa ingress&quot; är valt. Ingressen kan även visas på annan plats med innehållselementet &quot;Artikelingress&quot;.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.printable.0">
+        <source>Syndication</source>
+        <target>Syndikering</target>
+      </trans-unit>
+      <trans-unit id="tl_article.printable.1">
+        <source>Here you can choose which options are available.</source>
+        <target>Här kan du välja vilka alternativ för syndikering (delning) som finns tillgängliga för besökaren.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.customTpl.0">
+        <source>Article template</source>
+        <target>Artikelmall</target>
+      </trans-unit>
+      <trans-unit id="tl_article.customTpl.1">
+        <source>Here you can select the article template.</source>
+        <target>Här kan du välja artikelmallen.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.protected.0">
+        <source>Protect article</source>
+        <target>Skydda artikel</target>
+      </trans-unit>
+      <trans-unit id="tl_article.protected.1">
+        <source>Show the article to certain member groups only.</source>
+        <target>Visa artikeln enbart för vissa medlemsgrupper.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.groups.0">
+        <source>Allowed member groups</source>
+        <target>Tillåtna medlemsgrupper</target>
+      </trans-unit>
+      <trans-unit id="tl_article.groups.1">
+        <source>These groups will be able to see the article.</source>
+        <target>Här kan du välja vilka grupper som ska ha rätt att se artikeln.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.cssID.0">
+        <source>CSS ID/class</source>
+        <target>Stilmall ID och klass</target>
+      </trans-unit>
+      <trans-unit id="tl_article.cssID.1">
+        <source>Here you can set an ID and one or more classes.</source>
+        <target>Här kan du ange ett stilmalls-ID (CSS ID) och/eller en eller flera stilmallsklasser (CSS-klass). ID och klasser anges utan prefix (nummertecken # resp. punkt .).</target>
+      </trans-unit>
+      <trans-unit id="tl_article.published.0">
+        <source>Publish article</source>
+        <target>Publicerad</target>
+      </trans-unit>
+      <trans-unit id="tl_article.published.1">
+        <source>Make the article publicly visible on the website.</source>
+        <target>Markera detta alternativ för att publicera artikeln så att den visas för hemsidans besökare.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.start.0">
+        <source>Show from</source>
+        <target>Börja visa fr.o.m</target>
+      </trans-unit>
+      <trans-unit id="tl_article.start.1">
+        <source>If you want to prevent the article from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Om du vill förhindra att artikeln visas på hemsidan före ett visst datum/tid kan du ange den här. Annars lämnar du fältet tomt.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.stop.0">
+        <source>Show until</source>
+        <target>Sluta visa fr.o.m</target>
+      </trans-unit>
+      <trans-unit id="tl_article.stop.1">
+        <source>If you want to prevent the article from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Om du vill förhindra att artikeln visas på hemsidan efter ett visst datum/tid kan du ange det här. Annars lämnar du fältet tomt.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.tstamp.0">
+        <source>Revision date</source>
+        <target>Ändringsdatum</target>
+      </trans-unit>
+      <trans-unit id="tl_article.tstamp.1">
+        <source>Date and time of the latest revision</source>
+        <target>Datum och tid för senaste ändringen.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.title_legend">
+        <source>Title and author</source>
+        <target>Titel och upphovsman</target>
+      </trans-unit>
+      <trans-unit id="tl_article.layout_legend">
+        <source>Section</source>
+        <target>Sektion</target>
+      </trans-unit>
+      <trans-unit id="tl_article.syndication_legend">
+        <source>Syndication</source>
+        <target>Syndikering</target>
+      </trans-unit>
+      <trans-unit id="tl_article.teaser_legend">
+        <source>Article teaser</source>
+        <target>Artikelingress</target>
+      </trans-unit>
+      <trans-unit id="tl_article.template_legend">
+        <source>Template settings</source>
+        <target>Mallinställningar</target>
+      </trans-unit>
+      <trans-unit id="tl_article.protected_legend">
+        <source>Access protection</source>
+        <target>Åtkomstkydd</target>
+      </trans-unit>
+      <trans-unit id="tl_article.expert_legend">
+        <source>Expert settings</source>
+        <target>Expertinställningar</target>
+      </trans-unit>
+      <trans-unit id="tl_article.publish_legend">
+        <source>Publish settings</source>
+        <target>Publiceringsinställningar</target>
+      </trans-unit>
+      <trans-unit id="tl_article.print">
+        <source>Print the page</source>
+        <target>Skriv ut sidan</target>
+      </trans-unit>
+      <trans-unit id="tl_article.pdf">
+        <source>Export as PDF</source>
+        <target>Exportera som PDF</target>
+      </trans-unit>
+      <trans-unit id="tl_article.facebook">
+        <source>Share on Facebook</source>
+        <target>Dela på Facebook</target>
+      </trans-unit>
+      <trans-unit id="tl_article.twitter">
+        <source>Share on Twitter</source>
+        <target>Dela på Twitter</target>
+      </trans-unit>
+      <trans-unit id="tl_article.new.0">
+        <source>New</source>
+        <target>Ny</target>
+      </trans-unit>
+      <trans-unit id="tl_article.new.1">
+        <source>Create a new article</source>
+        <target>Skapa ny artikel</target>
+      </trans-unit>
+      <trans-unit id="tl_article.show">
+        <source>Show the details of article ID %s</source>
+        <target>Visa detaljer för artikel med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.edit">
+        <source>Edit article ID %s</source>
+        <target>Redigera artikel med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.children">
+        <source>Edit the content elements of article ID %s</source>
+        <target>Redigera innehållselementen i artikel-ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.copy">
+        <source>Duplicate article ID %s</source>
+        <target>Kopiera artikel med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.cut">
+        <source>Move article ID %s</source>
+        <target>Flytta artikel med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.delete">
+        <source>Delete article ID %s</source>
+        <target>Ta bort artikel med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.toggle.0">
+        <source>Publish/unpublish article</source>
+        <target>Publicera / avpublicera artikel</target>
+      </trans-unit>
+      <trans-unit id="tl_article.toggle.1">
+        <source>Unpublish article ID %s</source>
+        <target>Avbulicera artikel ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.toggle.2">
+        <source>Publish article ID %s</source>
+        <target>Publicera artikel ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.pasteafter.1">
+        <source>Paste after article ID %s</source>
+        <target>Klistra in efter artikel med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.pasteinto.1">
+        <source>Paste into page ID %s</source>
+        <target>Klistra in i sidan med ID %s</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

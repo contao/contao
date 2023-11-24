@@ -27,32 +27,13 @@ class ImageSizesTest extends TestCase
 {
     private ImageSizes $imageSizes;
 
-    /**
-     * @var Connection&MockObject
-     */
-    private Connection $connection;
+    private Connection&MockObject $connection;
 
-    /**
-     * @var EventDispatcherInterface&MockObject
-     */
-    private EventDispatcherInterface $eventDispatcher;
+    private EventDispatcherInterface&MockObject $eventDispatcher;
 
     protected function setUp(): void
     {
         parent::setUp();
-
-        $GLOBALS['TL_CROP'] = [
-            'image_sizes' => [],
-            'relative' => [
-                'proportional', 'box',
-            ],
-            'exact' => [
-                'crop',
-                'left_top', 'center_top', 'right_top',
-                'left_center', 'center_center', 'right_center',
-                'left_bottom', 'center_bottom', 'right_bottom',
-            ],
-        ];
 
         $this->connection = $this->createMock(Connection::class);
         $this->eventDispatcher = $this->createMock(EventDispatcherInterface::class);
@@ -60,16 +41,8 @@ class ImageSizesTest extends TestCase
         $this->imageSizes = new ImageSizes(
             $this->connection,
             $this->eventDispatcher,
-            $this->mockContaoFramework(),
-            $this->createMock(TranslatorInterface::class)
+            $this->createMock(TranslatorInterface::class),
         );
-    }
-
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['TL_CROP']);
-
-        parent::tearDown();
     }
 
     public function testReturnsAllOptionsWithImageSizes(): void
@@ -80,8 +53,7 @@ class ImageSizesTest extends TestCase
 
         $options = $this->imageSizes->getAllOptions();
 
-        $this->assertArrayHasKey('relative', $options);
-        $this->assertArrayHasKey('exact', $options);
+        $this->assertArrayHasKey('custom', $options);
         $this->assertArrayHasKey('My theme', $options);
         $this->assertArrayHasKey('42', $options['My theme']);
         $this->assertArrayHasKey('image_sizes', $options);
@@ -96,8 +68,7 @@ class ImageSizesTest extends TestCase
 
         $options = $this->imageSizes->getAllOptions();
 
-        $this->assertArrayHasKey('relative', $options);
-        $this->assertArrayHasKey('exact', $options);
+        $this->assertArrayHasKey('custom', $options);
         $this->assertArrayNotHasKey('My theme', $options);
     }
 
@@ -111,9 +82,9 @@ class ImageSizesTest extends TestCase
 
         $options = $this->imageSizes->getOptionsForUser($user);
 
-        // TL_CROP would not be returned without the admin check, because it is
-        // not within the allowed image sizes
-        $this->assertArrayHasKey('relative', $options);
+        // Default options would not be returned without the admin check,
+        // because it is not within the allowed image sizes
+        $this->assertArrayHasKey('custom', $options);
     }
 
     public function testReturnsTheRegularUserOptions(): void
@@ -129,21 +100,19 @@ class ImageSizesTest extends TestCase
 
         $options = $this->imageSizes->getOptionsForUser($user);
 
-        $this->assertArrayNotHasKey('relative', $options);
-        $this->assertArrayNotHasKey('exact', $options);
+        $this->assertArrayNotHasKey('custom', $options);
         $this->assertArrayHasKey('My theme', $options);
         $this->assertArrayHasKey('42', $options['My theme']);
 
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->isAdmin = false;
 
-        // Allow only some TL_CROP options
+        // Allow only some default options
         $user->imageSizes = ['proportional', 'box'];
 
         $options = $this->imageSizes->getOptionsForUser($user);
 
-        $this->assertArrayHasKey('relative', $options);
-        $this->assertArrayNotHasKey('exact', $options);
+        $this->assertArrayHasKey('custom', $options);
         $this->assertArrayNotHasKey('My theme', $options);
 
         $user = $this->mockClassWithProperties(BackendUser::class);

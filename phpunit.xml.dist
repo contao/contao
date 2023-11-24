@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd" colors="true" defaultTestSuite="unit" bootstrap="vendor/autoload.php" beStrictAboutChangesToGlobalState="true">
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd" colors="true" defaultTestSuite="unit" bootstrap="vendor/autoload.php" beStrictAboutChangesToGlobalState="true">
   <coverage>
     <include>
       <directory>./calendar-bundle/src</directory>
+      <directory>./comments-bundle/src</directory>
       <directory>./core-bundle/src</directory>
       <directory>./faq-bundle/src</directory>
       <directory>./maker-bundle/src</directory>
@@ -11,20 +12,9 @@
       <directory>./newsletter-bundle/src</directory>
     </include>
     <exclude>
-      <directory>./calendar-bundle/src/Resources</directory>
-      <directory>./core-bundle/src/Resources</directory>
-      <directory>./faq-bundle/src/Resources</directory>
-      <directory>./maker-bundle/src/Resources</directory>
-      <directory>./manager-bundle/src/Resources</directory>
-      <directory>./news-bundle/src/Resources</directory>
-      <directory>./newsletter-bundle/src/Resources</directory>
       <!-- exclude resources that are exempt from testing -->
       <directory>./*-bundle/src/Entity</directory>
       <directory>./*-bundle/src/Migration/Version*</directory>
-      <!-- exclude files with symbols and side effects -->
-      <file>./core-bundle/src/EventListener/UserAwareTrait.php</file>
-      <file>./core-bundle/src/Exception/ServiceUnavailableException.php</file>
-      <file>./core-bundle/src/Framework/ScopeAwareTrait.php</file>
     </exclude>
   </coverage>
   <php>
@@ -51,7 +41,6 @@
     <testsuite name="coverage">
       <directory>./*-bundle/tests</directory>
       <exclude>./*-bundle/tests/Fixtures</exclude>
-      <exclude>./core-bundle/tests/Contao</exclude>
       <exclude>./core-bundle/tests/Functional</exclude>
     </testsuite>
   </testsuites>
@@ -80,8 +69,6 @@
     </listener>
   </listeners>
   <extensions>
-    <extension class="Contao\CoreBundle\Tests\PhpunitExtension\DeprecatedClasses"/>
-    <extension class="Contao\ManagerBundle\Tests\PhpunitExtension\DeprecatedClasses"/>
     <extension class="Contao\TestCase\ClearCachePhpunitExtension"/>
     <extension class="Contao\TestCase\WarnXdebugPhpunitExtension"/>
   </extensions>

@@ -16,12 +16,10 @@ use Contao\Search;
 use Contao\System;
 use Contao\TestCase\ContaoDatabaseTrait;
 use Contao\TestCase\FunctionalTestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class SearchTest extends FunctionalTestCase
 {
     use ContaoDatabaseTrait;
-    use ExpectDeprecationTrait;
 
     protected function setUp(): void
     {
@@ -80,12 +78,29 @@ class SearchTest extends FunctionalTestCase
         $this->assertSame(2, Search::query('ａｂｃ')->getCount());
     }
 
+    public function testRemoveEntry(): void
+    {
+        $this->indexPage('page1', 'Page1 Content');
+        $this->indexPage('page2', 'Page2 Content');
+        $this->indexPage('page3', 'Page3 Content');
+
+        $this->assertSame(3, Search::query('Page*')->getCount());
+
+        Search::removeEntry('https://contao.wip/page1');
+
+        $this->assertSame(2, Search::query('Page*')->getCount());
+
+        Search::removeEntry('https://contao.wip/page3');
+
+        $this->assertSame(1, Search::query('Page*')->getCount());
+    }
+
     private function indexPage(string $url, string $content): void
     {
         Search::indexPage([
             'url' => "https://contao.wip/$url",
             'content' => '<head><meta name="description" content=""><meta name="keywords" content=""></head><body>'.$content,
-            'protected' => '',
+            'protected' => false,
             'groups' => '',
             'pid' => '1',
             'title' => '',

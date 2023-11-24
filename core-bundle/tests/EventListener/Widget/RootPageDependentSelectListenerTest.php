@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener\Widget;
 
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\EventListener\Widget\RootPageDependentSelectListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
@@ -20,6 +19,7 @@ use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
 use Doctrine\DBAL\Statement;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RootPageDependentSelectListenerTest extends TestCase
@@ -37,8 +37,8 @@ class RootPageDependentSelectListenerTest extends TestCase
     {
         $listener = new RootPageDependentSelectListener(
             $this->createMock(Connection::class),
+            $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoCsrfTokenManager::class)
         );
 
         $dataContainer = $this->mockClassWithProperties(DataContainer::class);
@@ -56,18 +56,12 @@ class RootPageDependentSelectListenerTest extends TestCase
             ->willReturn('title')
         ;
 
-        $csrfTokenManager = $this->createMock(ContaoCsrfTokenManager::class);
-        $csrfTokenManager
-            ->expects($this->exactly(3))
-            ->method('getDefaultTokenValue')
-        ;
-
         System::setContainer($this->getContainerWithContaoConfiguration('/directory/project'));
 
         $listener = new RootPageDependentSelectListener(
             $this->createMock(Connection::class),
+            $this->createMock(UrlGeneratorInterface::class),
             $translator,
-            $csrfTokenManager,
         );
 
         $dataContainer = $this->mockClassWithProperties(DataContainer::class);
@@ -83,26 +77,23 @@ class RootPageDependentSelectListenerTest extends TestCase
 
     public function testDoesNotSaveUnserializableData(): void
     {
-        $dataContainer = $this->mockClassWithProperties(DataContainer::class);
-
         $listener = new RootPageDependentSelectListener(
             $this->createMock(Connection::class),
+            $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoCsrfTokenManager::class)
         );
 
-        $this->assertSame('foobar', $listener->saveCallback('foobar', $dataContainer));
+        $this->assertSame('foobar', $listener->saveCallback('foobar'));
     }
 
     public function testSavesValuesRelatedToRootPage(): void
     {
-        $dataContainer = $this->mockClassWithProperties(DataContainer::class);
         $connection = $this->mockGetRootPages();
 
         $listener = new RootPageDependentSelectListener(
             $connection,
+            $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoCsrfTokenManager::class),
         );
 
         $this->assertSame(
@@ -111,7 +102,7 @@ class RootPageDependentSelectListenerTest extends TestCase
                 2 => 20,
                 3 => 30,
             ]),
-            $listener->saveCallback(serialize([10, 20, 30]), $dataContainer)
+            $listener->saveCallback(serialize([10, 20, 30])),
         );
     }
 
@@ -120,17 +111,21 @@ class RootPageDependentSelectListenerTest extends TestCase
         $this->populateGlobalsArray([]);
 
         $dataContainer = $this->mockClassWithProperties(DataContainer::class);
-        $dataContainer->activeRecord = new \stdClass();
-        $dataContainer->activeRecord->pid = 1;
         $dataContainer->table = 'tl_module';
         $dataContainer->field = 'field';
+
+        $dataContainer
+            ->expects($this->once())
+            ->method('getCurrentRecord')
+            ->willReturn(['pid' => 1])
+        ;
 
         $connection = $this->mockGetModules();
 
         $listener = new RootPageDependentSelectListener(
             $connection,
+            $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoCsrfTokenManager::class)
         );
 
         $this->assertSame(
@@ -139,7 +134,7 @@ class RootPageDependentSelectListenerTest extends TestCase
                 20 => 'name-20',
                 30 => 'name-30',
             ],
-            $listener->optionsCallback($dataContainer)
+            $listener->optionsCallback($dataContainer),
         );
 
         $this->unsetGlobalsArray();
@@ -159,17 +154,21 @@ class RootPageDependentSelectListenerTest extends TestCase
         ]);
 
         $dataContainer = $this->mockClassWithProperties(DataContainer::class);
-        $dataContainer->activeRecord = new \stdClass();
-        $dataContainer->activeRecord->pid = 1;
         $dataContainer->table = 'tl_module';
         $dataContainer->field = 'field';
+
+        $dataContainer
+            ->expects($this->once())
+            ->method('getCurrentRecord')
+            ->willReturn(['pid' => 1])
+        ;
 
         $connection = $this->mockGetModules();
 
         $listener = new RootPageDependentSelectListener(
             $connection,
+            $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoCsrfTokenManager::class)
         );
 
         $this->assertSame(
@@ -177,7 +176,7 @@ class RootPageDependentSelectListenerTest extends TestCase
                 10 => 'name-10',
                 20 => 'name-20',
             ],
-            $listener->optionsCallback($dataContainer)
+            $listener->optionsCallback($dataContainer),
         );
 
         $this->unsetGlobalsArray();

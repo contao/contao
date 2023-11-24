@@ -1,0 +1,107 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_module.php" source-language="en" target-language="pl">
+    <body>
+      <trans-unit id="tl_module.newsletters.0">
+        <source>Subscribable newsletters</source>
+        <target>Newslettery</target>
+      </trans-unit>
+      <trans-unit id="tl_module.newsletters.1">
+        <source>Show these channels in the front end form.</source>
+        <target>Wybierz kanały, do których użytkownik może się zapisać podczas procesu rejestracji.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.nl_channels.0">
+        <source>Channels</source>
+        <target>Kanały</target>
+      </trans-unit>
+      <trans-unit id="tl_module.nl_channels.1">
+        <source>Please select one or more channels.</source>
+        <target>Wybierz jeden lub więcej kanałów.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.nl_text.0">
+        <source>Custom text</source>
+        <target>Własny tekst</target>
+      </trans-unit>
+      <trans-unit id="tl_module.nl_text.1">
+        <source>Here you can e.g. enter a privacy note to make the newsletter subscription GDPR-compliant.</source>
+      </trans-unit>
+      <trans-unit id="tl_module.nl_hideChannels.0">
+        <source>Hide channel menu</source>
+        <target>Ukryj wybór kanału</target>
+      </trans-unit>
+      <trans-unit id="tl_module.nl_hideChannels.1">
+        <source>Do not show the channel selection menu.</source>
+        <target>Nie pokazuj listy z wyborem kanału.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.nl_subscribe.0">
+        <source>Subscription message</source>
+        <target>E-mail aktywacyjny</target>
+      </trans-unit>
+      <trans-unit id="tl_module.nl_subscribe.1">
+        <source>You can use the wildcards &lt;em&gt;##channels##&lt;/em&gt; (channel names), &lt;em&gt;##domain##&lt;/em&gt; (domain name) and &lt;em&gt;##link##&lt;/em&gt; (activation link).</source>
+        <target>Wpisz treść e-maila z potwierdzeniem subskrypcji. Możesz używać tagów &lt;em&gt;##channel##&lt;/em&gt; (nazwa kanału), &lt;em&gt;##domain##&lt;/em&gt; (aktualna domena) and &lt;em&gt;##link##&lt;/em&gt; (link aktywacyjny).</target>
+      </trans-unit>
+      <trans-unit id="tl_module.nl_unsubscribe.0">
+        <source>Unsubscription message</source>
+        <target>E-mail deaktywacyjny</target>
+      </trans-unit>
+      <trans-unit id="tl_module.nl_unsubscribe.1">
+        <source>You can use the wildcards &lt;em&gt;##channels##&lt;/em&gt; (channel names) and &lt;em&gt;##domain##&lt;/em&gt; (domain name).</source>
+        <target>Wpisz treść e-maila z anulowaniem subskrypcji. Możesz używać tagów &lt;em&gt;##channel##&lt;/em&gt; (nazwa kanału) and &lt;em&gt;##domain##&lt;/em&gt; (aktualna domena).</target>
+      </trans-unit>
+      <trans-unit id="tl_module.nl_template.0">
+        <source>Newsletter template</source>
+        <target>Szablon modułu</target>
+      </trans-unit>
+      <trans-unit id="tl_module.nl_template.1">
+        <source>Here you can select a newsletter template.</source>
+        <target>Tutaj możesz wybrać szablon newslettera. Możesz dodać własne szablony do katalogu &lt;em&gt;templates&lt;/em&gt;. Pliki szablonów newslettera muszą zaczynać się od &lt;em&gt;nl_&lt;/em&gt; i muszą mieć rozszerzenie &lt;em&gt;.html5&lt;/em&gt;.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.text_legend">
+        <source>Custom text</source>
+        <target>Własny tekst</target>
+      </trans-unit>
+      <trans-unit id="tl_module.text_subscribe.0">
+        <source>Your subscription on %s</source>
+        <target>Twoja subskrypcja %s</target>
+      </trans-unit>
+      <trans-unit id="tl_module.text_subscribe.1">
+        <source>You have subscribed to the following channels on ##domain##:
+
+##channels##
+
+Please click here to activate your subscription:
+
+##link##
+
+The confirmation link is valid for 24 hours. You can cancel your subscription at any time.
+
+If you did not subscribe yourself, please ignore this e-mail.
+</source>
+        <target>Subskrybujesz następujące kanały na ##domain##:
+
+##channels##
+
+Kliknij tutaj, aby aktywować subskrypcję:
+
+##link##
+
+Link potwierdzający jest ważny przez 24 godziny. Możesz zrezygnować z subskrypcji w dowolnym momencie.
+
+Jeśli to nie ty zasubskrybowałeś te kanały, zignoruj ten e-mail.
+</target>
+      </trans-unit>
+      <trans-unit id="tl_module.text_unsubscribe.0">
+        <source>Your subscription on %s</source>
+        <target>Twoja subskrypcja %s</target>
+      </trans-unit>
+      <trans-unit id="tl_module.text_unsubscribe.1">
+        <source>You have unsubscribed from the following channels on ##domain##:
+
+##channels##
+</source>
+        <target>Zostałeś pomyślnie wypisany z listy odbiorców newslettera - ##channel##.
+</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

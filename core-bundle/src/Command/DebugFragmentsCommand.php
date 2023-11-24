@@ -13,17 +13,20 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Fragment\FragmentConfig;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand(
+    name: 'debug:fragments',
+    description: 'Displays the fragment controller configuration.',
+)]
 class DebugFragmentsCommand extends Command
 {
-    protected static $defaultName = 'debug:fragments';
-    protected static $defaultDescription = 'Displays the fragment controller configuration.';
-
     private array $identifiers = [];
+
     private array $attributes = [];
 
     /**
@@ -62,7 +65,7 @@ class DebugFragmentsCommand extends Command
         $io->title('Contao Fragments');
         $io->table(['Identifier', 'Controller', 'Renderer', 'Render Options', 'Fragment Options'], $rows);
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function generateArray(array $values): string
@@ -74,7 +77,7 @@ class DebugFragmentsCommand extends Command
 
                 return max($carry, $length);
             },
-            0
+            0,
         );
 
         $return = [];

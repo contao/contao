@@ -44,7 +44,7 @@ class BackupListCommandTest extends TestCase
         $expectedOutput = str_replace(
             '<TIMEZONE>',
             BackupListCommand::getFormattedTimeZoneOffset(new \DateTimeZone(date_default_timezone_get())),
-            $normalizedOutput
+            $expectedOutput,
         );
 
         $this->assertStringContainsString($expectedOutput, $normalizedOutput);
@@ -72,10 +72,7 @@ class BackupListCommandTest extends TestCase
         ];
     }
 
-    /**
-     * @return BackupManager&MockObject
-     */
-    private function mockBackupManager(): BackupManager
+    private function mockBackupManager(): BackupManager&MockObject
     {
         $backups = [
             $this->createBackup('test__20211101141254.sql.gz', 50000),

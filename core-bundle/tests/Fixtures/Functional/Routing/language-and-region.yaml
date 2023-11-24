@@ -1,0 +1,100 @@
+tl_page:
+    - id: 1
+      pid: 0
+      sorting: 128
+      tstamp: 1568196756
+      title: Root de-CH
+      alias: root-de-ch
+      urlPrefix: de-CH
+      urlSuffix: .html
+      type: root
+      language: de_CH
+      dns: example.com
+      fallback: 0
+      includeLayout: 1
+      layout: 1
+      published: 1
+
+    - id: 2
+      pid: 1
+      sorting: 128
+      tstamp: 1568196317
+      title: Index-de
+      alias: index
+      type: regular
+      published: 1
+
+    - id: 3
+      pid: 0
+      sorting: 256
+      tstamp: 1568196339
+      title: Root FR
+      alias: root-fr
+      urlPrefix: fr-CH
+      urlSuffix: .html
+      type: root
+      language: fr_CH
+      dns: example.com
+      fallback: 0
+      includeLayout: 1
+      layout: 1
+      published: 1
+
+    - id: 4
+      pid: 3
+      sorting: 128
+      tstamp: 1568196353
+      title: Index-fr
+      alias: index
+      type: regular
+      published: 1
+
+    - id: 5
+      pid: 0
+      sorting: 384
+      tstamp: 1568196339
+      title: Root IT
+      alias: root-it
+      urlPrefix: it-CH
+      urlSuffix: .html
+      type: root
+      language: it_CH
+      dns: example.com
+      fallback: 0
+      includeLayout: 1
+      layout: 1
+      published: 1
+
+    - id: 6
+      pid: 5
+      sorting: 128
+      tstamp: 1568196353
+      title: Index-fr
+      alias: index
+      type: regular
+      published: 1
+
+    - id: 7
+      pid: 0
+      sorting: 512
+      tstamp: 1568196756
+      title: Root de-DE
+      alias: root-de-de
+      urlPrefix: de-DE
+      urlSuffix: .html
+      type: root
+      language: de_DE
+      dns: example.com
+      fallback: 1
+      includeLayout: 1
+      layout: 1
+      published: 1
+
+    - id: 8
+      pid: 7
+      sorting: 128
+      tstamp: 1568196317
+      title: Index-de-DE
+      alias: index
+      type: regular
+      published: 1

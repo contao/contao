@@ -68,7 +68,7 @@ class ConfigureFilesystemPassTest extends TestCase
                         $this->assertSame($container, $config->getContainer());
 
                         return true;
-                    }
+                    },
                 ))
             ;
 
@@ -109,13 +109,13 @@ class ConfigureFilesystemPassTest extends TestCase
             new ParameterBag([
                 'kernel.project_dir' => $tempDir,
                 'contao.upload_path' => 'files',
-            ])
+            ]),
         );
 
         $container
             ->setDefinition(
                 $mountManagerId = 'contao.filesystem.mount_manager',
-                $mountManagerDefinition = new Definition(MountManager::class)
+                $mountManagerDefinition = new Definition(MountManager::class),
             )
             ->setPublic(true)
         ;
@@ -159,6 +159,47 @@ class ConfigureFilesystemPassTest extends TestCase
             '../vendor/foo',
             'foo',
         ];
+    }
+
+    public function testDoNotMountUploadFolderIfSymlink(): void
+    {
+        $tempDir = $this->getTempDir();
+        $releaseFolder = Path::join($tempDir, 'release');
+        $sharedFolder = Path::join($tempDir, 'shared');
+
+        // Setup directories with symlink
+        $filesystem = new Filesystem();
+        $filesystem->mkdir($releaseFolder);
+        $filesystem->mkdir(Path::join($sharedFolder, 'files'));
+        $filesystem->dumpFile(Path::join($sharedFolder, 'files/foo/dummy.txt'), 'dummy');
+
+        $this->createSymlink(Path::join($sharedFolder, 'files'), 'files', $releaseFolder);
+
+        $container = new ContainerBuilder(
+            new ParameterBag([
+                'kernel.project_dir' => $releaseFolder,
+                'contao.upload_path' => 'files',
+            ]),
+        );
+
+        $container
+            ->setDefinition(
+                'contao.filesystem.mount_manager',
+                $mountManagerDefinition = new Definition(MountManager::class),
+            )
+            ->setPublic(true)
+        ;
+
+        (new ConfigureFilesystemPass())->process($container);
+
+        $methodCalls = $mountManagerDefinition->getMethodCalls();
+
+        $this->assertTrue($filesystem->exists(Path::join($releaseFolder, 'files/foo/dummy.txt'))); // the symlink works correctly
+        $this->assertCount(0, $methodCalls);
+
+        // Cleanup
+        $filesystem->remove($releaseFolder);
+        $filesystem->remove($sharedFolder);
     }
 
     private function createSymlink(string $target, string $link, string $cwd): void

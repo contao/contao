@@ -20,8 +20,12 @@ use Symfony\Component\Routing\Route;
 
 class PageRoute extends Route implements RouteObjectInterface
 {
-    private PageModel $pageModel;
+    final public const PAGE_BASED_ROUTE_NAME = 'page_routing_object';
+
+    private readonly PageModel $pageModel;
+
     private string|null $urlPrefix;
+
     private string|null $urlSuffix;
 
     /**
@@ -36,17 +40,15 @@ class PageRoute extends Route implements RouteObjectInterface
     {
         $pageModel->loadDetails();
 
-        $defaults = array_merge(
-            [
-                '_token_check' => true,
-                '_controller' => 'Contao\FrontendIndex::renderPage',
-                '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
-                '_locale' => LocaleUtil::formatAsLocale($pageModel->rootLanguage),
-                '_format' => 'html',
-                '_canonical_route' => 'tl_page.'.$pageModel->id,
-            ],
-            $defaults
-        );
+        $defaults = [
+            '_token_check' => true,
+            '_controller' => 'Contao\FrontendIndex::renderPage',
+            '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
+            '_locale' => LocaleUtil::formatAsLocale($pageModel->rootLanguage ?? ''),
+            '_format' => 'html',
+            '_canonical_route' => 'tl_page.'.$pageModel->id,
+            ...$defaults,
+        ];
 
         // Always use the given page model in the defaults
         $defaults['pageModel'] = $pageModel;
@@ -72,7 +74,7 @@ class PageRoute extends Route implements RouteObjectInterface
             $options,
             $pageModel->domain,
             $pageModel->rootUseSSL ? 'https' : 'http',
-            $methods
+            $methods,
         );
 
         $this->pageModel = $pageModel;
@@ -94,6 +96,11 @@ class PageRoute extends Route implements RouteObjectInterface
         }
 
         return $path.$this->getUrlSuffix();
+    }
+
+    public function getOriginalPath(): string
+    {
+        return parent::getPath();
     }
 
     public function getUrlPrefix(): string
@@ -130,7 +137,7 @@ class PageRoute extends Route implements RouteObjectInterface
         return $this;
     }
 
-    public function getContent()
+    public function getContent(): object|null
     {
         return $this->content;
     }

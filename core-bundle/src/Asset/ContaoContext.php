@@ -21,13 +21,16 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class ContaoContext implements ContextInterface
 {
-    public function __construct(private RequestStack $requestStack, private string $field, private bool $debug = false)
-    {
+    public function __construct(
+        private readonly RequestStack $requestStack,
+        private readonly string $field,
+        private readonly bool $debug = false,
+    ) {
     }
 
     public function getBasePath(): string
     {
-        if (null === ($request = $this->requestStack->getMainRequest())) {
+        if (!$request = $this->requestStack->getCurrentRequest()) {
             return '';
         }
 
@@ -43,15 +46,11 @@ class ContaoContext implements ContextInterface
 
     public function isSecure(): bool
     {
-        $page = $this->getPageModel();
-
-        if (null !== $page) {
-            return (bool) $page->loadDetails()->rootUseSSL;
+        if ($page = $this->getPageModel()) {
+            return $page->loadDetails()->rootUseSSL;
         }
 
-        $request = $this->requestStack->getMainRequest();
-
-        if (null === $request) {
+        if (!$request = $this->requestStack->getCurrentRequest()) {
             return false;
         }
 
@@ -59,22 +58,22 @@ class ContaoContext implements ContextInterface
     }
 
     /**
-     * Returns the base path with a trailing slash if not empty.
+     * Returns the base path with a trailing slash.
      */
     public function getStaticUrl(): string
     {
-        if ($path = $this->getBasePath()) {
-            return $path.'/';
-        }
-
-        return '';
+        return $this->getBasePath().'/';
     }
 
     private function getPageModel(): PageModel|null
     {
-        $request = $this->requestStack->getMainRequest();
+        if (!$request = $this->requestStack->getCurrentRequest()) {
+            return null;
+        }
 
-        if ($request && ($pageModel = $request->attributes->get('pageModel')) instanceof PageModel) {
+        $pageModel = $request->attributes->get('pageModel');
+
+        if ($pageModel instanceof PageModel) {
             return $pageModel;
         }
 

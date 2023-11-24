@@ -355,6 +355,16 @@ class PageCandidatesTest extends TestCase
                 'legacy' => [],
             ],
         ];
+
+        // Ensure that 0 does not trigger the "AbstractCandidates::getCandidates cannot handle empty path" exception
+        yield [
+            '/0',
+            ['.html'],
+            [''],
+            [
+                'default' => [],
+            ],
+        ];
     }
 
     public function testIncluesPageWithAbsolutePath(): void
@@ -459,10 +469,7 @@ class PageCandidatesTest extends TestCase
         $this->assertSame(['bar/baz', 'bar', 15], $candidates->getCandidates($request));
     }
 
-    /**
-     * @return Request&MockObject
-     */
-    private function mockRequest(string $pathInfo): Request
+    private function mockRequest(string $pathInfo): Request&MockObject
     {
         $request = $this->createMock(Request::class);
         $request
@@ -479,10 +486,7 @@ class PageCandidatesTest extends TestCase
         return $request;
     }
 
-    /**
-     * @return PageRegistry&MockObject
-     */
-    private function mockPageRegistry(array|null $urlPrefixes, array|null $urlSuffixes): PageRegistry
+    private function mockPageRegistry(array|null $urlPrefixes, array|null $urlSuffixes): PageRegistry&MockObject
     {
         $pageRegistry = $this->createMock(PageRegistry::class);
         $pageRegistry
@@ -502,10 +506,8 @@ class PageCandidatesTest extends TestCase
 
     /**
      * @param QueryBuilder&MockObject $queryBuilder
-     *
-     * @return Connection&MockObject
      */
-    private function mockConnection(QueryBuilder $queryBuilder = null): Connection
+    private function mockConnection(QueryBuilder|null $queryBuilder = null): Connection&MockObject
     {
         $queryBuilder ??= $this->createMock(QueryBuilder::class);
 

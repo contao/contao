@@ -1,0 +1,22 @@
+
+<figure class="image_container<?= $this->floatClass ?>">
+  <?php if ($this->imageHref || $this->href): ?>
+    <a href="<?= $this->imageHref ?: $this->href ?>"<?php if ($this->linkTitle): ?> title="<?= $this->linkTitle ?>"<?php endif; ?><?= $this->attributes ?>>
+  <?php endif; ?>
+
+  <?php $this->insert('picture_default', $this->picture); ?>
+
+  <?php if ($this->imageHref || $this->href): ?>
+    </a>
+  <?php endif; ?>
+
+  <?php if ($this->caption): ?>
+    <figcaption class="caption"><?= $this->caption ?></figcaption>
+  <?php endif; ?>
+</figure>
+
+<?php
+
+if ($this->figure) {
+    $this->addSchemaOrg($this->figure->getSchemaOrgData());
+}

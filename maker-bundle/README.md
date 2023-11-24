@@ -1,14 +1,13 @@
-# Contao 4 maker bundle
+# Contao maker bundle
 
 [![](https://img.shields.io/packagist/v/contao/maker-bundle.svg?style=flat-square)](https://packagist.org/packages/contao/maker-bundle)
 [![](https://img.shields.io/packagist/dt/contao/maker-bundle.svg?style=flat-square)](https://packagist.org/packages/contao/maker-bundle)
 
-The maker bundle allows you to generate content elements, front end modules,
-event listener, callbacks and hooks using interactive commands.
+The maker bundle allows you to generate content elements, front end modules, event listener, callbacks and hooks using
+interactive commands.
 
-Contao is an Open Source PHP Content Management System for people who want a
-professional website that is easy to maintain. Visit the [project website][1]
-for more information.
+Contao is an Open Source PHP Content Management System for people who want a professional website that is easy to
+maintain. Visit the [project website][1] for more information.
 
 ## Installation
 
@@ -20,11 +19,10 @@ composer require contao/maker-bundle --dev
 
 ## Usage
 
-This bundle provides several commands under the `make:` namespace. You can list
-them all with the following command:
+This bundle provides several commands under the `make:` namespace. You can list them all with the following command:
 
 ```
-php vendor/bin/contao-console list make:contao
+php bin/console list make:contao
 
 Available commands for the "make:contao" namespace:
   make:contao:content-element  Creates a new content element
@@ -43,4 +41,4 @@ Contao is licensed under the terms of the LGPLv3.
 Visit the [support page][2] to learn about the available support options.
 
 [1]: https://contao.org
-[2]: https://contao.org/en/support.html
+[2]: https://to.contao.org/support

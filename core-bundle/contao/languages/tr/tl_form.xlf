@@ -1,0 +1,274 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_form.php" source-language="en" target-language="tr">
+    <body>
+      <trans-unit id="tl_form.title.0">
+        <source>Title</source>
+        <target>Başlık</target>
+      </trans-unit>
+      <trans-unit id="tl_form.title.1">
+        <source>Please enter the form title.</source>
+        <target>Lütfen form başlığını yazın.</target>
+      </trans-unit>
+      <trans-unit id="tl_form.alias.0">
+        <source>Form alias</source>
+        <target>Form kısaltması</target>
+      </trans-unit>
+      <trans-unit id="tl_form.alias.1">
+        <source>The form alias is a unique reference to the form which can be called instead of its numeric ID.</source>
+        <target>Form kısaltması formun sayısal kimliği olarak kullanılacak eşsiz bir belirteçtir.</target>
+      </trans-unit>
+      <trans-unit id="tl_form.jumpTo.0">
+        <source>Redirect page</source>
+        <target>Yönlendirilecek sayfa</target>
+      </trans-unit>
+      <trans-unit id="tl_form.jumpTo.1">
+        <source>Please choose the page to which visitors will be redirected after submitting the form.</source>
+        <target>Lütfen ziyaretçilerin formu gönderdikten yönlendirilecekleri sayfayı seçin.</target>
+      </trans-unit>
+      <trans-unit id="tl_form.confirmation.0">
+        <source>Confirmation message</source>
+        <target>Doğrulama iletisi</target>
+      </trans-unit>
+      <trans-unit id="tl_form.confirmation.1">
+        <source>Here you can enter the confirmation message that will be displayed after submitting the form. You can use the submitted form data as simple tokens, e.g. &lt;code&gt;##field_name##&lt;/code&gt;. The confirmation message is also available as &lt;code&gt;{{form_confirmation}}&lt;/code&gt; insert tag.</source>
+        <target>Formu gönderdikten sonra görüntülenecek doğrulama iletisini buraya yazabilirsiniz. Gönderilen form verilerini basit kodlar ile kullanabilirsiniz. Örneğin: &lt;code&gt;##field_name##&lt;/code&gt;. Ayrıca doğrulama iletisi ayrıca &lt;code&gt;{{form_confirmation}}&lt;/code&gt; kodu ile kullanılabilir.</target>
+      </trans-unit>
+      <trans-unit id="tl_form.sendViaEmail.0">
+        <source>Send form data via e-mail</source>
+        <target>Form verileri e-posta ile gönderilsin</target>
+      </trans-unit>
+      <trans-unit id="tl_form.sendViaEmail.1">
+        <source>Send the submitted data to an e-mail address.</source>
+        <target>Formda gönderilen verileri bir e-posta adresine gönderir</target>
+      </trans-unit>
+      <trans-unit id="tl_form.mailerTransport.0">
+        <source>Mailer transport</source>
+        <target>E-posta aktarıcı</target>
+      </trans-unit>
+      <trans-unit id="tl_form.mailerTransport.1">
+        <source>Here you can override the mailer transport used to send the form via e-mail.</source>
+        <target>Buradan formun e-posta ile gönderilmesi için kullanılacak e-posta aktarıcıyı değiştirebilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_form.recipient.0">
+        <source>Recipient address</source>
+        <target>Alıcı adresi</target>
+      </trans-unit>
+      <trans-unit id="tl_form.recipient.1">
+        <source>Separate multiple e-mail addresses with comma.</source>
+        <target>Virgül ile ayırarak birden fazla e-posta adresi yazabilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_form.subject.0">
+        <source>Subject</source>
+        <target>Konu</target>
+      </trans-unit>
+      <trans-unit id="tl_form.subject.1">
+        <source>Please enter the e-mail subject.</source>
+        <target>Lütfen e-posta konusunu yazın.</target>
+      </trans-unit>
+      <trans-unit id="tl_form.format.0">
+        <source>Data format</source>
+        <target>Veri biçimi</target>
+      </trans-unit>
+      <trans-unit id="tl_form.format.1">
+        <source>Defines how the form data will be forwarded.</source>
+        <target>Form verilerinin nasıl aktarılacağını belirler.</target>
+      </trans-unit>
+      <trans-unit id="tl_form.raw.0">
+        <source>Raw data</source>
+        <target>Ham veri</target>
+      </trans-unit>
+      <trans-unit id="tl_form.raw.1">
+        <source>The form data will be sent as plain text message with each field in a new line.</source>
+        <target>Form verileri düz metin iletisi olarak gönderilir. Her alan ayrı bir satırda yer alır.</target>
+      </trans-unit>
+      <trans-unit id="tl_form.xml.0">
+        <source>XML file</source>
+        <target>XML dosyası</target>
+      </trans-unit>
+      <trans-unit id="tl_form.xml.1">
+        <source>The form data will be attached to the e-mail as an XML file.</source>
+        <target>Form verileri e-postaya bir XML dosyası olarak eklenir.</target>
+      </trans-unit>
+      <trans-unit id="tl_form.csv.0">
+        <source>CSV file</source>
+        <target>CSV dosyası</target>
+      </trans-unit>
+      <trans-unit id="tl_form.csv.1">
+        <source>The form data will be attached to the e-mail as a CSV file.</source>
+        <target>Form verileri e-postaya bir CSV dosyası olarak eklenir.</target>
+      </trans-unit>
+      <trans-unit id="tl_form.csv_excel.0">
+        <source>CSV file (Microsoft Excel)</source>
+        <target>CSV dosyası (Microsoft Excel)</target>
+      </trans-unit>
+      <trans-unit id="tl_form.csv_excel.1">
+        <source>The form data will be attached to the e-mail as a CSV file readable by Microsoft Excel.</source>
+        <target>Form verileri e-postaya Microsoft Excel tarafından okunabilecek bir CSV dosyası olarak eklenir.</target>
+      </trans-unit>
+      <trans-unit id="tl_form.skipEmpty.0">
+        <source>Skip empty fields</source>
+        <target>Boş alanlar atlansın</target>
+      </trans-unit>
+      <trans-unit id="tl_form.skipEmpty.1">
+        <source>Do not include empty fields in the form data.</source>
+        <target>Bu seçenek etkinleştirildiğinde, boş alanlar form verilerine katılmaz.</target>
+      </trans-unit>
+      <trans-unit id="tl_form.email.0">
+        <source>E-mail</source>
+        <target>E-posta</target>
+      </trans-unit>
+      <trans-unit id="tl_form.email.1">
+        <source>Ignores all fields except &lt;em&gt;name&lt;/em&gt;, &lt;em&gt;email&lt;/em&gt;, &lt;em&gt;subject&lt;/em&gt;, &lt;em&gt;message&lt;/em&gt; and &lt;em&gt;cc&lt;/em&gt; (carbon copy) and sends the form data like it had been sent from a mail client. File uploads are allowed.</source>
+        <target>&lt;em&gt;Ad&lt;/em&gt;, &lt;em&gt;e-posta&lt;/em&gt;, &lt;em&gt;konu&lt;/em&gt;, &lt;em&gt;ileti&lt;/em&gt; ve &lt;em&gt;kopya&lt;/em&gt; (karbon kopya) dışındaki tüm alanları yok sayar ve form verilerini bir e-posta istemcisi tarafından gönderiliyor gibi aktarır. Dosya yüklenmesine izin verilir.</target>
+      </trans-unit>
+      <trans-unit id="tl_form.skipEmtpy.0">
+        <source>Skip empty fields</source>
+        <target>Boş alanlar atlansın</target>
+      </trans-unit>
+      <trans-unit id="tl_form.skipEmtpy.1">
+        <source>Hide empty fields in the e-mail.</source>
+        <target>Bu seçenek etkinleştirildiğinde, boş alanlar e-postada görüntülenmez.</target>
+      </trans-unit>
+      <trans-unit id="tl_form.storeValues.0">
+        <source>Store data</source>
+        <target>Veriler depolansın</target>
+      </trans-unit>
+      <trans-unit id="tl_form.storeValues.1">
+        <source>Store the submitted data in the database.</source>
+        <target>Gönderilen verileri veri tabanına kaydeder.</target>
+      </trans-unit>
+      <trans-unit id="tl_form.customTpl.0">
+        <source>Form template</source>
+        <target>Form kalıbı</target>
+      </trans-unit>
+      <trans-unit id="tl_form.customTpl.1">
+        <source>Here you can select the form template.</source>
+        <target>Buradan bir form kalıbı seçebilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_form.targetTable.0">
+        <source>Target table</source>
+        <target>Hedef tablo</target>
+      </trans-unit>
+      <trans-unit id="tl_form.targetTable.1">
+        <source>The target table must contain a column for every form field.</source>
+        <target>Hedef tabloda her form alanı için bir sütun bulunmalıdır.</target>
+      </trans-unit>
+      <trans-unit id="tl_form.method.0">
+        <source>Submission method</source>
+        <target>Gönderim yöntemi</target>
+      </trans-unit>
+      <trans-unit id="tl_form.method.1">
+        <source>The default form submission method is POST.</source>
+        <target>Varsayılan gönderim yöntemi: POST.</target>
+      </trans-unit>
+      <trans-unit id="tl_form.novalidate.0">
+        <source>Disable HTML5 validation</source>
+        <target>HTML5 doğrulaması yapılmasın </target>
+      </trans-unit>
+      <trans-unit id="tl_form.novalidate.1">
+        <source>Add the &lt;em&gt;novalidate&lt;/em&gt; attribute to the form tag.</source>
+        <target>Form kod imine &lt;em&gt;novalidate&lt;/em&gt; özniteliğini ekler.</target>
+      </trans-unit>
+      <trans-unit id="tl_form.attributes.0">
+        <source>CSS ID/class</source>
+        <target>CSS kimliği/sınıfı</target>
+      </trans-unit>
+      <trans-unit id="tl_form.attributes.1">
+        <source>Here you can set an ID and one or more classes.</source>
+        <target>Buradan bir kimlik ve bir ya da birkaç sınıf ayarlayabilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_form.formID.0">
+        <source>Form ID</source>
+        <target>Form kimliği</target>
+      </trans-unit>
+      <trans-unit id="tl_form.formID.1">
+        <source>The form ID is required to trigger a Contao module.</source>
+        <target>Form kimliği bir Contao modülünü tetiklemek için gereklidir.</target>
+      </trans-unit>
+      <trans-unit id="tl_form.allowTags.0">
+        <source>Allow HTML tags</source>
+        <target>HTML kod imleri kullanılabilsin</target>
+      </trans-unit>
+      <trans-unit id="tl_form.allowTags.1">
+        <source>Allow HTML tags in form fields.</source>
+        <target>Bu seçenek etkinleştirildiğinde, form alanlarında HTML kod imleri kullanılabilir.</target>
+      </trans-unit>
+      <trans-unit id="tl_form.ajax.0">
+        <source>Submit via Ajax</source>
+        <target>AJAX ile gönderilsin</target>
+      </trans-unit>
+      <trans-unit id="tl_form.ajax.1">
+        <source>Submit the form via Ajax instead of reloading the page.</source>
+        <target>Bu seçenek etkinleştirildiğinde, form gönderilirken sayfanın yeniden yüklenmesi yerine AJAX kullanılır. </target>
+      </trans-unit>
+      <trans-unit id="tl_form.tstamp.0">
+        <source>Revision date</source>
+        <target>Düzenlenme tarihi</target>
+      </trans-unit>
+      <trans-unit id="tl_form.tstamp.1">
+        <source>Date and time of the latest revision</source>
+        <target>Son düzenlenme tarihi ve saati</target>
+      </trans-unit>
+      <trans-unit id="tl_form.title_legend">
+        <source>Title and redirect page</source>
+        <target>Başlık ve yönlendirme sayfası</target>
+      </trans-unit>
+      <trans-unit id="tl_form.email_legend">
+        <source>Send form data</source>
+        <target>Form verileri gönderilsin</target>
+      </trans-unit>
+      <trans-unit id="tl_form.store_legend">
+        <source>Store form data</source>
+        <target>Form verileri kaydedilsin</target>
+      </trans-unit>
+      <trans-unit id="tl_form.expert_legend">
+        <source>Expert settings</source>
+        <target>Uzman ayarları</target>
+      </trans-unit>
+      <trans-unit id="tl_form.config_legend">
+        <source>Form configuration</source>
+        <target>Form yapılandırması</target>
+      </trans-unit>
+      <trans-unit id="tl_form.confirm_legend">
+        <source>Confirmation</source>
+        <target>Doğrulama</target>
+      </trans-unit>
+      <trans-unit id="tl_form.template_legend">
+        <source>Template settings</source>
+        <target>Kalıp ayarları</target>
+      </trans-unit>
+      <trans-unit id="tl_form.new.0">
+        <source>New</source>
+        <target>Yeni</target>
+      </trans-unit>
+      <trans-unit id="tl_form.new.1">
+        <source>Create a new form</source>
+        <target>Yeni bir form ekle</target>
+      </trans-unit>
+      <trans-unit id="tl_form.show">
+        <source>Show the details of form ID %s</source>
+        <target>%s kimlikli formun ayrıntılarını görüntüle</target>
+      </trans-unit>
+      <trans-unit id="tl_form.edit">
+        <source>Edit form ID %s</source>
+        <target>%s kimlikli formu düzenle</target>
+      </trans-unit>
+      <trans-unit id="tl_form.children">
+        <source>Edit the form fields of form ID %s</source>
+        <target>%s kimlikli formun ayarlarını düzenle</target>
+      </trans-unit>
+      <trans-unit id="tl_form.copy">
+        <source>Duplicate form ID %s</source>
+        <target>%s kimlikli formu kopyala</target>
+      </trans-unit>
+      <trans-unit id="tl_form.delete">
+        <source>Delete form ID %s</source>
+        <target>%s kimlikli formu sil</target>
+      </trans-unit>
+      <trans-unit id="tl_form.targetTableMissingAllowlist">
+        <source>Define the available tables in the following DCA configuration: &lt;code&gt;%s&lt;/code&gt;.</source>
+        <target>Şu DCA yapılandırmasında kullanılabilecek tabloları belirtin: &lt;code&gt;%s&lt;/code&gt;.</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -92,14 +92,12 @@ class FigureTest extends TestCase
         $this->assertSame(1, $called);
     }
 
-    public function testGetLightboxFailsIfNotSet(): void
+    public function testGetLightboxReturnsNullIfNotSet(): void
     {
         $image = $this->createMock(ImageResult::class);
         $figure = new Figure($image);
 
-        $this->expectException(\LogicException::class);
-
-        $figure->getLightbox();
+        $this->assertNull($figure->getLightbox());
     }
 
     public function testGetMetadata(): void
@@ -134,14 +132,12 @@ class FigureTest extends TestCase
         $this->assertSame(1, $called);
     }
 
-    public function testGetMetadataFailsIfNotSet(): void
+    public function testGetMetadataReturnsNullIfNotSet(): void
     {
         $image = $this->createMock(ImageResult::class);
         $figure = new Figure($image);
 
-        $this->expectException(\LogicException::class);
-
-        $figure->getMetadata();
+        $this->assertNull($figure->getMetadata());
     }
 
     /**
@@ -336,7 +332,7 @@ class FigureTest extends TestCase
             false,
             ['jpeg_quality' => 80],
             ['jpg', 'svg'],
-            $this->getFixturesDir()
+            $this->getFixturesDir(),
         );
 
         $container = $this->getContainerWithContaoConfiguration(Path::canonicalize(__DIR__.'/../../Fixtures'));
@@ -528,7 +524,7 @@ class FigureTest extends TestCase
             [false, 'above', ['top' => '1', 'right' => '2', 'bottom' => '3', 'left' => '4', 'unit' => 'em']],
             function (array $data): void {
                 $this->assertTrue($data['addBefore']);
-                $this->assertSame('margin:1em 2em 3em 4em;', $data['margin']);
+                $this->assertArrayNotHasKey('margin', $data);
             },
         ];
 
@@ -537,7 +533,7 @@ class FigureTest extends TestCase
             [false, 'above', 'a:5:{s:3:"top";s:1:"1";s:5:"right";s:1:"2";s:6:"bottom";s:1:"3";s:4:"left";s:1:"4";s:4:"unit";s:2:"em";}'],
             function (array $data): void {
                 $this->assertTrue($data['addBefore']);
-                $this->assertSame('margin:1em 2em 3em 4em;', $data['margin']);
+                $this->assertArrayNotHasKey('margin', $data);
             },
         ];
 
@@ -570,7 +566,7 @@ class FigureTest extends TestCase
             false,
             ['jpeg_quality' => 80],
             ['jpg', 'svg'],
-            $this->getFixturesDir()
+            $this->getFixturesDir(),
         );
 
         $container = $this->getContainerWithContaoConfiguration(Path::canonicalize(__DIR__.'/../../Fixtures'));
@@ -604,7 +600,7 @@ class FigureTest extends TestCase
             false,
             ['jpeg_quality' => 80],
             ['jpg', 'svg'],
-            $this->getFixturesDir()
+            $this->getFixturesDir(),
         );
 
         $container = $this->getContainerWithContaoConfiguration(Path::canonicalize(__DIR__.'/../../Fixtures'));
@@ -638,7 +634,7 @@ class FigureTest extends TestCase
                 'contentUrl' => 'https://assets.url/files/public/foo.jpg',
                 'identifier' => 'https://assets.url/files/public/foo.jpg',
             ],
-            $figure->getSchemaOrgData()
+            $figure->getSchemaOrgData(),
         );
 
         $figure = new Figure(
@@ -646,7 +642,7 @@ class FigureTest extends TestCase
             new Metadata([
                 Metadata::VALUE_UUID => 'uuid',
                 Metadata::VALUE_CAPTION => 'caption',
-            ])
+            ]),
         );
 
         $this->assertSame(
@@ -656,14 +652,11 @@ class FigureTest extends TestCase
                 'contentUrl' => 'https://assets.url/files/public/foo.jpg',
                 'identifier' => '#/schema/image/uuid',
             ],
-            $figure->getSchemaOrgData()
+            $figure->getSchemaOrgData(),
         );
     }
 
-    /**
-     * @return ImageResult&MockObject
-     */
-    private function mockImage(): ImageResult
+    private function mockImage(): ImageResult&MockObject
     {
         $img = ['img foo'];
         $sources = ['sources foo'];

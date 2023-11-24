@@ -14,9 +14,10 @@ namespace Contao\ManagerBundle\EventListener;
 
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\ManagerBundle\HttpKernel\JwtManager;
+use Knp\Menu\Util\MenuManipulator;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -25,13 +26,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class BackendMenuListener
 {
     public function __construct(
-        private Security $security,
-        private RouterInterface $router,
-        private RequestStack $requestStack,
-        private TranslatorInterface $translator,
-        private bool $debug,
-        private string|null $managerPath,
-        private JwtManager|null $jwtManager,
+        private readonly Security $security,
+        private readonly RouterInterface $router,
+        private readonly RequestStack $requestStack,
+        private readonly TranslatorInterface $translator,
+        private readonly bool $debug,
+        private readonly string|null $managerPath,
+        private readonly JwtManager|null $jwtManager,
     ) {
     }
 
@@ -50,7 +51,7 @@ class BackendMenuListener
      */
     private function addDebugButton(MenuEvent $event): void
     {
-        if (null === $this->jwtManager) {
+        if (!$this->jwtManager) {
             return;
         }
 
@@ -86,23 +87,10 @@ class BackendMenuListener
             ->setExtra('translation_domain', 'ContaoManagerBundle')
         ;
 
-        $children = [];
+        $tree->addChild($debug);
 
-        // Try adding the debug button after the alerts button
-        foreach ($tree->getChildren() as $name => $item) {
-            $children[$name] = $item;
-
-            if ('alerts' === $name) {
-                $children['debug'] = $debug;
-            }
-        }
-
-        // Prepend the debug button if it could not be added above
-        if (!isset($children['debug'])) {
-            $children = ['debug' => $debug] + $children;
-        }
-
-        $tree->setChildren($children);
+        // The last two items are "submenu" and "burger", so make this the third to last
+        (new MenuManipulator())->moveToPosition($debug, $tree->count() - 3);
     }
 
     /**
@@ -116,14 +104,14 @@ class BackendMenuListener
 
         $categoryNode = $event->getTree()->getChild('system');
 
-        if (null === $categoryNode) {
+        if (!$categoryNode || (!$request = $this->requestStack->getCurrentRequest())) {
             return;
         }
 
         $item = $event->getFactory()
             ->createItem('contao_manager')
             ->setLabel('Contao Manager')
-            ->setUri('/'.$this->managerPath)
+            ->setUri($request->getUriForPath('/'.$this->managerPath))
             ->setLinkAttribute('class', 'navigation contao_manager')
             ->setLinkAttribute('title', $this->translator->trans('contao_manager_title', [], 'ContaoManagerBundle'))
             ->setExtra('translation_domain', false)

@@ -66,6 +66,37 @@ class FilesystemItemIteratorTest extends TestCase
         $this->assertSameItems(['bar', 'baz.txt'], $iterator->filter($customFilter)->toArray());
     }
 
+    public function testSortByMediaType(): void
+    {
+        $videoWebm = new FilesystemItem(true, 'video.webm', 100, 100, 'video/webm');
+        $videoMp4 = new FilesystemItem(true, 'video.mp4', 100, 100, 'video/mp4');
+        $videoOgg = new FilesystemItem(true, 'video.ogv', 100, 100, 'video/ogg');
+
+        $audioWebm = new FilesystemItem(true, 'audio.m4a', 100, 100, 'audio/m4a');
+        $audioMp4 = new FilesystemItem(true, 'audio.mp3', 100, 100, 'audio/mp3');
+        $audioOgg = new FilesystemItem(true, 'audio.ogg', 100, 100, 'audio/ogg');
+
+        $completelyUnrelated = new FilesystemItem(true, 'file.jpg', 100, 100, 'image/jpeg');
+        $notEvenAFile = new FilesystemItem(false, '/path/to/somewhere');
+
+        $iterator = new FilesystemItemIterator([$audioWebm, $videoMp4, $notEvenAFile, $audioMp4, $completelyUnrelated, $audioOgg, $videoWebm, $videoOgg]);
+        $sorted = $iterator->sort(SortMode::mediaTypePriority);
+
+        $this->assertSame(
+            [
+                $videoWebm,
+                $videoMp4,
+                $videoOgg,
+                $audioWebm,
+                $audioMp4,
+                $audioOgg,
+                $completelyUnrelated,
+                $notEvenAFile,
+            ],
+            iterator_to_array($sorted),
+        );
+    }
+
     public function testSort(): void
     {
         $fileA = new FilesystemItem(true, 'foo/img2', 100);
@@ -128,6 +159,29 @@ class FilesystemItemIteratorTest extends TestCase
         $this->assertFalse($iterator->all(static fn (FilesystemItem $f): bool => str_starts_with($f->getPath(), 'foo')));
     }
 
+    public function testLimit(): void
+    {
+        $iterator = new FilesystemItemIterator([
+            new FilesystemItem(true, 'file1'),
+            new FilesystemItem(true, 'file2'),
+            new FilesystemItem(true, 'file3'),
+        ]);
+
+        $this->assertSameItems(['file1', 'file2'], $iterator->limit(2)->toArray());
+        $this->assertSameItems(['file1', 'file2', 'file3'], $iterator->limit(4)->toArray());
+        $this->assertSameItems([], $iterator->limit(0)->toArray());
+    }
+
+    public function testLimitThrowsOutOfRangeException(): void
+    {
+        $iterator = new FilesystemItemIterator([]);
+
+        $this->expectException(\OutOfRangeException::class);
+        $this->expectExceptionMessage('Illegal limit value "-1", must be greater or equal to zero.');
+
+        $iterator->limit(-1);
+    }
+
     /**
      * @dataProvider provideInvalidItems
      */
@@ -143,8 +197,39 @@ class FilesystemItemIteratorTest extends TestCase
 
     public function provideInvalidItems(): \Generator
     {
-        yield 'scalar' => [42, 'integer'];
+        yield 'scalar' => [42, 'int'];
         yield 'object of wrong type' => [new \stdClass(), 'stdClass'];
+    }
+
+    public function testIterateMultipleTimesWithGenerator(): void
+    {
+        $iterator = new FilesystemItemIterator($this->generateItems());
+
+        $this->assertSameItems(['foo', 'bar'], iterator_to_array($iterator));
+        $this->assertSameItems(['foo', 'bar'], iterator_to_array($iterator));
+    }
+
+    public function testFirst(): void
+    {
+        $iterator = new FilesystemItemIterator(
+            new \ArrayIterator([
+                $first = new FilesystemItem(true, 'foo'),
+                new FilesystemItem(true, 'bar'),
+            ]),
+        );
+
+        $this->assertSame($first, $iterator->first());
+        $this->assertSame($first, $iterator->first());
+
+        $this->assertSameItems(['foo', 'bar'], $iterator->toArray());
+    }
+
+    public function testFirstWithEmptySet(): void
+    {
+        $iterator = new FilesystemItemIterator([]);
+
+        $this->assertNull($iterator->first());
+        $this->assertSame([], $iterator->toArray());
     }
 
     /**
@@ -154,5 +239,11 @@ class FilesystemItemIteratorTest extends TestCase
     private function assertSameItems(array $expected, array $actual): void
     {
         $this->assertSame($expected, array_map(static fn (FilesystemItem $item): string => $item->getPath(), $actual));
+    }
+
+    private function generateItems(): \Generator
+    {
+        yield new FilesystemItem(true, 'foo');
+        yield new FilesystemItem(true, 'bar');
     }
 }

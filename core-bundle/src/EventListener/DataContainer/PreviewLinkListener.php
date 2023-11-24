@@ -13,20 +13,20 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\BackendUser;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\ServiceAnnotation\Callback;
-use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\Input;
 use Contao\Message;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -35,42 +35,37 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class PreviewLinkListener
 {
     public function __construct(
-        private ContaoFramework $framework,
-        private Connection $connection,
-        private Security $security,
-        private RequestStack $requestStack,
-        private TranslatorInterface $translator,
-        private UrlGeneratorInterface $urlGenerator,
-        private UriSigner $uriSigner,
-        private string $previewScript = '',
+        private readonly ContaoFramework $framework,
+        private readonly Connection $connection,
+        private readonly Security $security,
+        private readonly RequestStack $requestStack,
+        private readonly TranslatorInterface $translator,
+        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly UriSigner $uriSigner,
+        private readonly string $previewScript = '',
     ) {
     }
 
-    /**
-     * @Hook("initializeSystem")
-     */
+    #[AsHook('initializeSystem')]
     public function unloadModuleWithoutPreviewScript(): void
     {
-        if (empty($this->previewScript)) {
+        if (!$this->previewScript) {
             unset($GLOBALS['BE_MOD']['system']['preview_link']);
         }
     }
 
-    /**
-     * @Hook("loadDataContainer")
-     */
+    #[AsHook('loadDataContainer')]
     public function unloadTableWithoutPreviewScript(string $table): void
     {
-        if ('tl_preview_link' === $table && empty($this->previewScript)) {
+        if ('tl_preview_link' === $table && !$this->previewScript) {
             unset($GLOBALS['TL_DCA'][$table]);
         }
     }
 
     /**
      * Only allow to create new records if a front end preview URL is given.
-     *
-     * @Callback(table="tl_preview_link", target="config.onload")
      */
+    #[AsCallback(table: 'tl_preview_link', target: 'config.onload')]
     public function createFromUrl(DataContainer $dc): void
     {
         $input = $this->framework->getAdapter(Input::class);
@@ -94,7 +89,7 @@ class PreviewLinkListener
                 case 'overrideAll':
                     $allowedIds = $this->connection->fetchFirstColumn(
                         'SELECT id FROM tl_preview_link WHERE createdBy=?',
-                        [$userId]
+                        [$userId],
                     );
 
                     $session = $this->requestStack->getSession();
@@ -124,7 +119,7 @@ class PreviewLinkListener
         }
 
         $GLOBALS['TL_DCA']['tl_preview_link']['fields']['url']['default'] = (string) $input->get('url');
-        $GLOBALS['TL_DCA']['tl_preview_link']['fields']['showUnpublished']['default'] = $input->get('showUnpublished') ? '1' : '';
+        $GLOBALS['TL_DCA']['tl_preview_link']['fields']['showUnpublished']['default'] = (bool) $input->get('showUnpublished');
         $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdAt']['default'] = time();
         $GLOBALS['TL_DCA']['tl_preview_link']['fields']['expiresAt']['default'] = strtotime('+1 day');
         $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdBy']['default'] = $userId;
@@ -132,9 +127,8 @@ class PreviewLinkListener
 
     /**
      * Adds a hint and modifies the edit view buttons.
-     *
-     * @Callback(table="tl_preview_link", target="config.onload")
      */
+    #[AsCallback(table: 'tl_preview_link', target: 'config.onload')]
     public function adjustEditView(DataContainer $dc): void
     {
         $input = $this->framework->getAdapter(Input::class);
@@ -151,36 +145,15 @@ class PreviewLinkListener
         } elseif (0 === (int) $row['tstamp']) {
             $message->addNew($this->translator->trans('tl_preview_link.hintSave', [], 'contao_tl_preview_link'));
         } else {
-            $clipboard = $this->generateClipboardData((int) $row['id']);
-
-            $message->addInfo($this->translator->trans(
-                'tl_preview_link.hintEdit',
-                [
-                    $clipboard['content'],
-                    StringUtil::specialchars(json_encode($clipboard)),
-                    $clipboard['content'],
-                ],
-                'contao_tl_preview_link'
+            $message->addInfo(sprintf(
+                '%s: %s',
+                $this->translator->trans('tl_preview_link.hintEdit', [], 'contao_tl_preview_link'),
+                $this->generateClipboardLink((int) $row['id']),
             ));
         }
     }
 
-    /**
-     * Updates tl_preview_link.expiresAt based on expiresInDays selection.
-     *
-     * @Callback(table="tl_preview_link", target="config.onsubmit")
-     */
-    public function updateExpiresAt(DataContainer $dc): void
-    {
-        $this->connection->executeStatement(
-            'UPDATE tl_preview_link SET expiresAt=UNIX_TIMESTAMP(DATE_ADD(FROM_UNIXTIME(createdAt), INTERVAL expiresInDays DAY)) WHERE id=?',
-            [$dc->id]
-        );
-    }
-
-    /**
-     * @Callback(table="tl_preview_link", target="list.label.label")
-     */
+    #[AsCallback(table: 'tl_preview_link', target: 'list.label.label')]
     public function formatColumnView(array $row, string $label, DataContainer $dc, array $args): array
     {
         if ($row['expiresAt'] < time()) {
@@ -194,33 +167,29 @@ class PreviewLinkListener
         return $args;
     }
 
-    /**
-     * @Callback(table="tl_preview_link", target="list.operations.share.button")
-     */
+    #[AsCallback(table: 'tl_preview_link', target: 'list.operations.share.button')]
     public function shareOperation(array $row, string|null $href, string|null $label, string|null $title, string $icon): string
     {
         if ($row['expiresAt'] < time()) {
-            return Image::getHtml(str_replace('.svg', '_.svg', $icon), $label);
+            return Image::getHtml(str_replace('.svg', '--disabled.svg', $icon), $label);
         }
 
-        $clipboard = $this->generateClipboardData((int) $row['id']);
-
-        return sprintf(
-            '<a href="%s" target="_blank" title="%s" data-to-clipboard="%s">%s</a> ',
-            $clipboard['content'],
-            StringUtil::specialchars($title),
-            StringUtil::specialchars(json_encode($clipboard)),
-            Image::getHtml($icon, $label)
-        );
+        return $this->generateClipboardLink((int) $row['id'], Image::getHtml($icon, $label), $title);
     }
 
-    private function generateClipboardData(int $id): array
+    private function generateClipboardLink(int $id, string|null $label = null, string|null $title = null): string
     {
         $url = $this->urlGenerator->generate('contao_preview_link', ['id' => $id], UrlGeneratorInterface::ABSOLUTE_URL);
+        $url = $this->uriSigner->sign($url);
 
-        return [
-            'content' => $this->uriSigner->sign($url),
-            'title' => $this->translator->trans('tl_preview_link.share.0', [], 'contao_tl_preview_link'),
-        ];
+        $title = $title ?? $this->translator->trans('tl_preview_link.share.0', [], 'contao_tl_preview_link');
+
+        return sprintf(
+            '<a href="%s" target="_blank" title="%s" data-controller="contao--clipboard" data-contao--clipboard-content-value="%s" data-action="contao--clipboard#write:prevent">%s</a> ',
+            StringUtil::specialcharsUrl($url),
+            StringUtil::specialchars($title),
+            StringUtil::specialcharsUrl($url),
+            $label ?? $url,
+        );
     }
 }

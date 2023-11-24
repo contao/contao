@@ -21,7 +21,9 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
  * Annotation to register a DCA callback.
  *
  * @Annotation
+ *
  * @Target({"CLASS", "METHOD"})
+ *
  * @Attributes({
  *     @Attribute("table", type="string", required=true),
  *     @Attribute("target", type="string", required=true),
@@ -31,7 +33,9 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
 final class Callback implements ServiceTagInterface
 {
     public string $table;
+
     public string $target;
+
     public int|null $priority = null;
 
     public function getName(): string

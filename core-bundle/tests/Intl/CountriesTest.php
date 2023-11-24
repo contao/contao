@@ -13,10 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Intl;
 
 use Contao\ArrayUtil;
-use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Intl\Countries;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\System;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Intl\Countries as SymfonyCountries;
@@ -72,7 +70,7 @@ class CountriesTest extends TestCase
                     $this->assertSame('contao_countries', $domain);
 
                     return 'CNT.de' === $label;
-                }
+                },
             )
         ;
 
@@ -86,7 +84,7 @@ class CountriesTest extends TestCase
         $translator
             ->method('trans')
             ->willReturnCallback(
-                function (string $label, array $parameters, string $domain, string $locale = null) {
+                function (string $label, array $parameters, string $domain, string|null $locale = null) {
                     $this->assertSame('contao_countries', $domain);
                     $this->assertSame('de', $locale);
 
@@ -95,7 +93,7 @@ class CountriesTest extends TestCase
                     }
 
                     return $label;
-                }
+                },
             )
         ;
 
@@ -160,7 +158,7 @@ class CountriesTest extends TestCase
 
         yield [
             ['+ZZ', '+ZY'],
-            array_merge(SymfonyCountries::getCountryCodes(), ['ZY', 'ZZ']),
+            [...SymfonyCountries::getCountryCodes(), 'ZY', 'ZZ'],
         ];
 
         yield [
@@ -174,55 +172,9 @@ class CountriesTest extends TestCase
         ];
     }
 
-    /**
-     * @group legacy
-     */
-    public function testAppliesLegacyHook(): void
+    private function getCountriesService(Translator|null $translator = null, array $configCountries = []): Countries
     {
-        $this->expectDeprecation('%s"getCountries" hook has been deprecated%s');
-
-        $GLOBALS['TL_HOOKS']['getCountries'] = [[self::class, 'getCountriesHook']];
-
-        $countryNames = $this->getCountriesService()->getCountries('de');
-
-        $this->assertSame([
-            'DE' => 'Schland',
-            'AT' => 'Austria, no kangaroos',
-        ], $countryNames);
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testAppliesLegacyHookToCountryCodes(): void
-    {
-        $this->expectDeprecation('%s"getCountries" hook has been deprecated%s');
-
-        $GLOBALS['TL_HOOKS']['getCountries'] = [[self::class, 'getCountriesHook']];
-
-        $countryCodes = $this->getCountriesService()->getCountryCodes();
-
-        $this->assertSame(['AT', 'DE'], $countryCodes);
-    }
-
-    public function getCountriesHook(array &$return, array $countries): void
-    {
-        $this->assertIsArray($return);
-        $this->assertNotEmpty($return);
-        $this->assertTrue(ArrayUtil::isAssoc($return));
-
-        $this->assertSame('Germany', $countries['de']);
-        $this->assertContains($return['de'], ['Deutschland', 'Germany']);
-
-        $return = [
-            'de' => 'Schland',
-            'at' => 'Austria, no kangaroos',
-        ];
-    }
-
-    private function getCountriesService(Translator $translator = null, array $configCountries = []): Countries
-    {
-        if (null === $translator) {
+        if (!$translator) {
             $translator = $this->createMock(Translator::class);
             $translator
                 ->method('getCatalogue')
@@ -232,15 +184,6 @@ class CountriesTest extends TestCase
 
         $requestStack = $this->createMock(RequestStack::class);
 
-        $contaoFramework = $this->mockContaoFramework([
-            System::class => new class(System::class) extends Adapter {
-                public function importStatic(string $class): object
-                {
-                    return new $class();
-                }
-            },
-        ]);
-
-        return new Countries($translator, $requestStack, $contaoFramework, SymfonyCountries::getCountryCodes(), $configCountries, 'en');
+        return new Countries($translator, $requestStack, SymfonyCountries::getCountryCodes(), $configCountries, 'en');
     }
 }

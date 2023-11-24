@@ -128,18 +128,17 @@ class BackupCreateCommandTest extends TestCase
         ];
     }
 
-    /**
-     * @return BackupManager&MockObject
-     */
-    private function mockBackupManager(\Closure $expectedCreateConfig): BackupManager
+    private function mockBackupManager(\Closure $expectedCreateConfig): BackupManager&MockObject
     {
         $backupManager = $this->createMock(BackupManager::class);
 
-        $backup = $this->getMockBuilder(Backup::class)
+        $backup = $this
+            ->getMockBuilder(Backup::class)
             ->setConstructorArgs(['test__20211101141254.sql.gz'])
             ->onlyMethods(['getSize'])
+            ->getMock()
         ;
-        $backup = $backup->getMock();
+
         $backup
             ->method('getSize')
             ->willReturn(100)

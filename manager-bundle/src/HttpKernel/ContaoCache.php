@@ -23,7 +23,6 @@ use FOS\HttpCache\TagHeaderFormatter\TagHeaderFormatter;
 use Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Adapter\TagAwareAdapter;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,11 +32,11 @@ class ContaoCache extends HttpCache implements CacheInvalidation
 {
     use EventDispatchingHttpCache;
 
-    public function __construct(ContaoKernel $kernel, string $cacheDir = null)
+    public function __construct(ContaoKernel $kernel, string|null $cacheDir = null)
     {
         parent::__construct($kernel, $cacheDir);
 
-        $stripCookies = new StripCookiesSubscriber($this->readEnvCsv('COOKIE_ALLOW_LIST', 'COOKIE_WHITELIST'));
+        $stripCookies = new StripCookiesSubscriber($this->readEnvCsv('COOKIE_ALLOW_LIST'));
         $stripCookies->removeFromDenyList($this->readEnvCsv('COOKIE_REMOVE_FROM_DENY_LIST'));
 
         $stripQueryParams = new StripQueryParametersSubscriber($this->readEnvCsv('QUERY_PARAMS_ALLOW_LIST'));
@@ -48,16 +47,6 @@ class ContaoCache extends HttpCache implements CacheInvalidation
         $this->addSubscriber(new PurgeListener());
         $this->addSubscriber(new PurgeTagsListener());
         $this->addSubscriber(new CleanupCacheTagsListener());
-    }
-
-    /**
-     * Overwrites the getEventDispatcher() method of the EventDispatchingHttpCache
-     * trait, so the LegacyEventDispatcherProxy is not used. Once we have upgraded
-     * to Symfony 6, the method can be removed again.
-     */
-    public function getEventDispatcher(): EventDispatcher
-    {
-        return $this->eventDispatcher ??= new EventDispatcher();
     }
 
     public function fetch(Request $request, $catch = false): Response
@@ -71,6 +60,9 @@ class ContaoCache extends HttpCache implements CacheInvalidation
 
         $options['trace_level'] = $_SERVER['TRACE_LEVEL'] ?? 'short';
         $options['trace_header'] = 'Contao-Cache';
+
+        // TODO: Remove once symfony/http-kernel is required in at least ^7.0
+        $options['terminate_on_cache_hit'] = false;
 
         return $options;
     }
@@ -87,14 +79,8 @@ class ContaoCache extends HttpCache implements CacheInvalidation
         ]);
     }
 
-    private function readEnvCsv(string $key, string $oldName = ''): array
+    private function readEnvCsv(string $key): array
     {
-        if ('' !== $oldName && isset($_SERVER[$oldName])) {
-            trigger_deprecation('contao/manager-bundle', '4.10', sprintf('Using the "%s" environment variable has been deprecated. Use "%s" instead.', $oldName, $key));
-
-            $key = $oldName;
-        }
-
         return array_filter(explode(',', (string) ($_SERVER[$key] ?? '')));
     }
 }

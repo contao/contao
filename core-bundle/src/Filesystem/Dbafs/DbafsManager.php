@@ -12,7 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Filesystem\Dbafs;
 
+use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet\ChangeSet;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
+use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Uid\Uuid;
 
@@ -21,14 +23,16 @@ use Symfony\Component\Uid\Uuid;
  * registered with a prefix path and will be queried accordingly.
  *
  * Note: In general, user code should not directly interface with the
- *       DbafsManager, but use the @see VirtualFilesystem instead.
+ *       DbafsManager, but use the VirtualFilesystem instead.
+ *
+ * @see VirtualFilesystem
  *
  * @experimental
  */
 class DbafsManager
 {
     /**
-     * @var array<DbafsInterface>
+     * @var array<string|int, DbafsInterface>
      */
     private array $dbafs = [];
 
@@ -36,7 +40,7 @@ class DbafsManager
     {
         $this->dbafs[$pathPrefix] = $dbafs;
 
-        krsort($this->dbafs);
+        krsort($this->dbafs, SORT_NATURAL);
 
         if (\count($this->dbafs) > 1) {
             $this->validateTransitiveProperties();
@@ -64,7 +68,7 @@ class DbafsManager
      */
     public function fileExists(string $path): bool
     {
-        return null !== ($record = $this->getRecord($path)) && $record->isFile();
+        return ($record = $this->getRecord($path)) && $record->isFile();
     }
 
     /**
@@ -72,7 +76,7 @@ class DbafsManager
      */
     public function directoryExists(string $path): bool
     {
-        return null !== ($record = $this->getRecord($path)) && !$record->isFile();
+        return ($record = $this->getRecord($path)) && !$record->isFile();
     }
 
     /**
@@ -109,10 +113,9 @@ class DbafsManager
         $dbafsIterator = $this->getDbafsForPath($path);
 
         if (
-            null !== ($dbafs = $dbafsIterator->current())
-            /** @var DbafsInterface $dbafs */
+            ($dbafs = $dbafsIterator->current())
             && $dbafs->getSupportedFeatures() & DbafsInterface::FEATURE_LAST_MODIFIED
-            && null !== ($record = $dbafs->getRecord(Path::makeRelative($path, $dbafsIterator->key())))
+            && ($record = $dbafs->getRecord(Path::makeRelative($path, $dbafsIterator->key())))
         ) {
             return $record->getLastModified();
         }
@@ -129,10 +132,9 @@ class DbafsManager
         $dbafsIterator = $this->getDbafsForPath($path);
 
         if (
-            null !== ($dbafs = $dbafsIterator->current())
-            /** @var DbafsInterface $dbafs */
+            ($dbafs = $dbafsIterator->current())
             && $dbafs->getSupportedFeatures() & DbafsInterface::FEATURE_FILE_SIZE
-            && null !== ($record = $dbafs->getRecord(Path::makeRelative($path, $dbafsIterator->key())))
+            && ($record = $dbafs->getRecord(Path::makeRelative($path, $dbafsIterator->key())))
         ) {
             return $record->getFileSize();
         }
@@ -149,10 +151,9 @@ class DbafsManager
         $dbafsIterator = $this->getDbafsForPath($path);
 
         if (
-            null !== ($dbafs = $dbafsIterator->current())
-            /** @var DbafsInterface $dbafs */
+            ($dbafs = $dbafsIterator->current())
             && $dbafs->getSupportedFeatures() & DbafsInterface::FEATURE_MIME_TYPE
-            && null !== ($record = $dbafs->getRecord(Path::makeRelative($path, $dbafsIterator->key())))
+            && ($record = $dbafs->getRecord(Path::makeRelative($path, $dbafsIterator->key())))
         ) {
             return $record->getMimeType();
         }
@@ -172,11 +173,11 @@ class DbafsManager
         $metadataKeys = [];
 
         foreach ($this->getDbafsForPath($path) as $prefix => $dbafs) {
-            if (null !== ($record = $dbafs->getRecord(Path::makeRelative($path, $prefix)))) {
+            if ($record = $dbafs->getRecord(Path::makeRelative($path, $prefix))) {
                 $chunk = $record->getExtraMetadata();
                 $keys = array_keys($chunk);
 
-                if (!empty($duplicates = array_intersect($metadataKeys, $keys))) {
+                if ($duplicates = array_intersect($metadataKeys, $keys)) {
                     throw new \LogicException(sprintf('The metadata key(s) "%s" appeared in more than one matching DBAFS for path "%s".', implode('", "', $duplicates), $path));
                 }
 
@@ -245,12 +246,11 @@ class DbafsManager
      */
     public function sync(string ...$paths): ChangeSet
     {
-        /** @var array<string, array{0: DbafsInterface, 1:array<string>}> $dbafsAndPathsByPrefix */
         $dbafsAndPathsByPrefix = [];
 
         // Sync all DBAFS if no paths are supplied, otherwise individually
         // match paths according to the configured DBAFS prefixes
-        if (empty($paths)) {
+        if (!$paths) {
             foreach ($this->dbafs as $prefix => $dbafs) {
                 $dbafsAndPathsByPrefix[$prefix] = [$dbafs, []];
             }
@@ -265,12 +265,12 @@ class DbafsManager
         }
 
         // Ensure a consistent order
-        ksort($dbafsAndPathsByPrefix);
+        ksort($dbafsAndPathsByPrefix, SORT_NATURAL);
 
         $changeSet = ChangeSet::createEmpty();
 
         foreach ($dbafsAndPathsByPrefix as $prefix => [$dbafs, $matchingPaths]) {
-            $changeSet = $changeSet->withOther($dbafs->sync(...$matchingPaths), $prefix);
+            $changeSet = $changeSet->withOther($dbafs->sync(...$matchingPaths), (string) $prefix);
         }
 
         return $changeSet;
@@ -280,7 +280,7 @@ class DbafsManager
     {
         $dbafsIterator = $this->getDbafsForPath($path);
 
-        if (null === ($dbafs = $dbafsIterator->current())) {
+        if (!$dbafs = $dbafsIterator->current()) {
             return null;
         }
 
@@ -294,7 +294,7 @@ class DbafsManager
     {
         foreach ($this->dbafs as $dbafsPrefix => $dbafs) {
             if (Path::isBasePath("/$prefix", "/$dbafsPrefix")) {
-                yield $dbafsPrefix => $dbafs;
+                yield (string) $dbafsPrefix => $dbafs;
             }
         }
     }
@@ -306,7 +306,7 @@ class DbafsManager
     {
         foreach ($this->dbafs as $dbafsPrefix => $dbafs) {
             if (Path::isBasePath("/$dbafsPrefix", "/$path")) {
-                yield $dbafsPrefix => $dbafs;
+                yield (string) $dbafsPrefix => $dbafs;
             }
         }
     }
@@ -324,7 +324,7 @@ class DbafsManager
         $currentPrefix = '';
         $supportedFeatures = DbafsInterface::FEATURES_NONE;
 
-        foreach (array_reverse($this->dbafs) as $prefix => $dbafs) {
+        foreach (array_reverse($this->dbafs, true) as $prefix => $dbafs) {
             if (Path::isBasePath("/$currentPrefix", "/$prefix")) {
                 // Find all feature flags that are required but not supported
                 $nonTransitive = $supportedFeatures & ~$dbafs->getSupportedFeatures();

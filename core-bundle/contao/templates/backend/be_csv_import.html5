@@ -1,0 +1,42 @@
+
+<?= Contao\Message::generate() ?>
+
+<div id="tl_buttons">
+  <a href="<?= Contao\StringUtil::ampersand($this->backUrl) ?>" class="header_back" title="<?= Contao\StringUtil::specialchars($this->backBTTitle) ?>" accesskey="b"><?= $this->backBT ?></a>
+</div>
+
+<form id="<?= $this->formId ?>" class="tl_form tl_edit_form" method="post" enctype="multipart/form-data">
+  <div class="tl_formbody_edit">
+    <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>">
+    <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
+    <input type="hidden" name="MAX_FILE_SIZE" value="<?= $this->fileMaxSize ?>">
+
+    <fieldset class="tl_tbox nolegend">
+      <div class="widget w50">
+        <h3><label for="separator"><?= $this->separatorLabel ?></label></h3>
+        <select name="separator" id="separator" class="tl_select" onfocus="Backend.getScrollOffset()">
+          <?php foreach ($this->separators as $separator): ?>
+            <option value="<?= $separator['value'] ?>"><?= $separator['label'] ?></option>
+          <?php endforeach; ?>
+        </select>
+        <?php if (isset($this->separatorHelp)): ?>
+          <p class="tl_help tl_tip"><?= $this->separatorHelp ?></p>
+        <?php endif; ?>
+      </div>
+
+      <div class="widget clr">
+        <h3><?= $this->sourceLabel ?></h3>
+        <?= $this->uploader ?>
+        <?php if (isset($this->sourceHelp)): ?>
+          <p class="tl_help tl_tip"><?= $this->sourceHelp ?></p>
+        <?php endif; ?>
+      </div>
+    </fieldset>
+  </div>
+
+  <div class="tl_formbody_submit">
+    <div class="tl_submit_container">
+      <button type="submit" name="save" id="save" class="tl_submit" accesskey="s"><?= $this->submitLabel ?></button>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,98 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_image_size_item.php" source-language="en" target-language="tr">
+    <body>
+      <trans-unit id="tl_image_size_item.media.0">
+        <source>Media query</source>
+        <target>Ortam kuyruğu</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.media.1">
+        <source>Here you can define when to use the image size, e.g. &lt;em&gt;(max-width: 600px)&lt;/em&gt;.</source>
+        <target>Buradan görsel boyutunun ne zaman kullanılacağını belirtebilirsiniz &lt;em&gt;(max-width: 600px)&lt;/em&gt; gibi.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.invisible.0">
+        <source>Invisible</source>
+        <target>Görünmez</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.invisible.1">
+        <source>Do not use the image size definition.</source>
+        <target>Bu seçenek etkinleştirildiğinde, görsel boyutu tanımı kullanılmaz.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.tstamp.0">
+        <source>Revision date</source>
+        <target>Düzenlenme tarihi</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.tstamp.1">
+        <source>Date and time of the latest revision</source>
+        <target>Son düzenlenme tarihi ve saati</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.title_legend">
+        <source>Image size settings</source>
+        <target>Görsel boyutu ayarları</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.source_legend">
+        <source>Image source settings</source>
+        <target>Görsel kaynağı ayarları</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.visibility_legend">
+        <source>Visibility</source>
+        <target>Görünürlük</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.new.0">
+        <source>New</source>
+        <target>Yeni</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.new.1">
+        <source>Create a new media query</source>
+        <target>Yeni bir ortam kuyruğu ekle</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.show">
+        <source>Show the details of media query ID %s</source>
+        <target>%s kimlikli ortam kuyruğunun ayrıntılarını görüntüle</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.edit">
+        <source>Edit media query ID %s</source>
+        <target>%s kimlikli ortam kuyruğunu düzenle</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.cut">
+        <source>Move media query ID %s</source>
+        <target>%s kimlikli ortam kuyruğunu taşı</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.copy">
+        <source>Duplicate media query ID %s</source>
+        <target>%s kimlikli ortam kuyruğunu kopyala</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.delete">
+        <source>Delete media query ID %s</source>
+        <target>%s kimlikli ortam kuyruğunu sil</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.toggle.0">
+        <source>Activate/deactivate media query</source>
+        <target>Ortam kuyruğunu etkinleştir/etkisizleştir</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.toggle.1">
+        <source>Deactivate media query ID %s</source>
+        <target>%s kimlikli ortam kuyruğunu etkisizleştir</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.toggle.2">
+        <source>Activate media query ID %s</source>
+        <target>%s kimlikli ortam kuyruğunu etkinleştir</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.pasteafter.0">
+        <source>Paste at the top</source>
+        <target>Üste yapıştır</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.pasteafter.1">
+        <source>Paste after media query ID %s</source>
+        <target>%s kimlikli ortam kuyruğundan sonra yapıştır</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.pastenew.0">
+        <source>Create a new media query at the top</source>
+        <target>En üste yeni bir ortam kuyruğu ekle</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.pastenew.1">
+        <source>Create a new media query after media query ID %s</source>
+        <target>%s kimlikli ortam kuyruğundan sonra yeni bir ortam kuyruğu ekle</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

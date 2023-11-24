@@ -24,13 +24,16 @@ final class MessageCatalogue implements MessageCatalogueInterface
     /**
      * @internal Do not instantiate this class; use Translator::getCatalogue() instead
      */
-    public function __construct(private MessageCatalogueInterface $parent, private ContaoFramework $framework, private ResourceFinder $resourceFinder)
-    {
+    public function __construct(
+        private readonly MessageCatalogueInterface $inner,
+        private readonly ContaoFramework $framework,
+        private readonly ResourceFinder $resourceFinder,
+    ) {
     }
 
     public function getLocale(): string
     {
-        return $this->parent->getLocale();
+        return $this->inner->getLocale();
     }
 
     public function getDomains(): array
@@ -45,95 +48,134 @@ final class MessageCatalogue implements MessageCatalogueInterface
         $domains = array_keys($domains);
         sort($domains);
 
-        return array_merge($this->parent->getDomains(), $domains);
+        return [...$this->inner->getDomains(), ...$domains];
     }
 
-    public function all($domain = null): array
+    public function all(string|null $domain = null): array
     {
         if ($this->isContaoDomain($domain)) {
             throw new LogicException(sprintf('Getting Contao translations via %s() is not yet supported', __METHOD__));
         }
 
-        return $this->parent->all($domain);
+        return $this->inner->all($domain);
     }
 
-    public function set($id, $translation, $domain = 'messages'): void
+    public function set(string $id, string $translation, string $domain = 'messages'): void
     {
         if ($this->isContaoDomain($domain)) {
             throw new LogicException(sprintf('Setting Contao translations via %s() is not yet supported', __METHOD__));
         }
 
-        $this->parent->set($id, $translation, $domain);
+        $this->inner->set($id, $translation, $domain);
     }
 
-    public function has($id, $domain = 'messages'): bool
+    public function has(string $id, string $domain = 'messages'): bool
     {
         if (!$this->isContaoDomain($domain)) {
-            return $this->parent->has($id, $domain);
+            return $this->inner->has($id, $domain);
         }
 
         return null !== $this->loadMessage($id, $domain);
     }
 
-    public function defines($id, $domain = 'messages'): bool
+    public function defines(string $id, string $domain = 'messages'): bool
     {
         if (!$this->isContaoDomain($domain)) {
-            return $this->parent->defines($id, $domain);
+            return $this->inner->defines($id, $domain);
         }
 
         return null !== $this->loadMessage($id, $domain);
     }
 
-    public function get($id, $domain = 'messages'): string
+    public function get(string $id, string $domain = 'messages'): string
     {
         if (!$this->isContaoDomain($domain)) {
-            return $this->parent->get($id, $domain);
+            return $this->inner->get($id, $domain);
         }
 
         return $this->loadMessage($id, $domain) ?? $id;
     }
 
-    public function replace($messages, $domain = 'messages'): void
+    public function replace(array $messages, string $domain = 'messages'): void
     {
         if ($this->isContaoDomain($domain)) {
             throw new LogicException(sprintf('Setting Contao translations via %s() is not yet supported', __METHOD__));
         }
 
-        $this->parent->replace($messages, $domain);
+        $this->inner->replace($messages, $domain);
     }
 
-    public function add($messages, $domain = 'messages'): void
+    public function add(array $messages, string $domain = 'messages'): void
     {
         if ($this->isContaoDomain($domain)) {
             throw new LogicException(sprintf('Setting Contao translations via %s() is not yet supported', __METHOD__));
         }
 
-        $this->parent->add($messages, $domain);
+        $this->inner->add($messages, $domain);
     }
 
     public function addCatalogue(MessageCatalogueInterface $catalogue): void
     {
-        $this->parent->addCatalogue($catalogue);
+        $this->inner->addCatalogue($catalogue);
     }
 
     public function addFallbackCatalogue(MessageCatalogueInterface $catalogue): void
     {
-        $this->parent->addFallbackCatalogue($catalogue);
+        $this->inner->addFallbackCatalogue($catalogue);
     }
 
     public function getFallbackCatalogue(): MessageCatalogueInterface|null
     {
-        return $this->parent->getFallbackCatalogue();
+        return $this->inner->getFallbackCatalogue();
     }
 
     public function getResources(): array
     {
-        return $this->parent->getResources();
+        return $this->inner->getResources();
     }
 
     public function addResource(ResourceInterface $resource): void
     {
-        $this->parent->addResource($resource);
+        $this->inner->addResource($resource);
+    }
+
+    /**
+     * Populates $GLOBALS['TL_LANG'] with all translations for the given domain.
+     */
+    public function populateGlobals(string $domain): void
+    {
+        if (!$this->isContaoDomain($domain)) {
+            return;
+        }
+
+        $translations = $this->inner->all($domain);
+
+        foreach ($translations as $k => $v) {
+            $parts = LegacyGlobalsProcessor::getPartsFromKey($k);
+
+            LegacyGlobalsProcessor::addGlobal($parts, $v);
+        }
+    }
+
+    /**
+     * Returns the $GLOBALS['TL_LANG'] PHP string representation for all translations of a given domain.
+     */
+    public function getGlobalsString(string $domain): string
+    {
+        if (!$this->isContaoDomain($domain)) {
+            return '';
+        }
+
+        $translations = $this->inner->all($domain);
+        $return = '';
+
+        foreach ($translations as $k => $v) {
+            $parts = LegacyGlobalsProcessor::getPartsFromKey($k);
+
+            $return .= LegacyGlobalsProcessor::getStringRepresentation($parts, $v);
+        }
+
+        return $return;
     }
 
     private function isContaoDomain(string|null $domain): bool
@@ -156,21 +198,21 @@ final class MessageCatalogue implements MessageCatalogueInterface
      */
     private function getFromGlobals(string $id): string|null
     {
-        // Split the ID into chunks allowing escaped dots (\.) and backslashes (\\)
-        preg_match_all('/(?:\\\\[\\\\.]|[^.])++/', $id, $matches);
-
-        /** @var array<string> $parts */
-        $parts = preg_replace('/\\\\([\\\\.])/', '$1', $matches[0]);
+        $parts = LegacyGlobalsProcessor::getPartsFromKey($id);
         $item = &$GLOBALS['TL_LANG'];
 
         foreach ($parts as $part) {
-            if (!isset($item[$part])) {
+            if (!\is_array($item) || !isset($item[$part])) {
                 return null;
             }
 
             $item = &$item[$part];
         }
 
-        return $item;
+        if (\is_array($item)) {
+            return null;
+        }
+
+        return (string) $item;
     }
 }

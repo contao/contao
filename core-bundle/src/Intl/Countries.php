@@ -12,40 +12,33 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Intl;
 
-use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\System;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Intl\Countries as SymfonyCountries;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class Countries
 {
     /**
-     * @var array<string>
+     * @var list<string>
      */
-    private array $countries;
+    private readonly array $countries;
 
-    /**
-     * @param TranslatorInterface&TranslatorBagInterface $translator
-     */
     public function __construct(
-        private TranslatorInterface $translator,
-        private RequestStack $requestStack,
-        private ContaoFramework $contaoFramework,
+        private readonly TranslatorInterface&TranslatorBagInterface $translator,
+        private readonly RequestStack $requestStack,
         array $defaultCountries,
         array $configCountries,
-        private string $defaultLocale,
+        private readonly string $defaultLocale,
     ) {
         $this->countries = $this->filterCountries($defaultCountries, $configCountries);
     }
 
     /**
-     * @return array<string,string> Translated country names indexed by their uppercase ISO 3166-1 alpha-2 code
+     * @return array<string, string> Translated country names indexed by their uppercase ISO 3166-1 alpha-2 code
      */
-    public function getCountries(string $displayLocale = null): array
+    public function getCountries(string|null $displayLocale = null): array
     {
-        if (null === $displayLocale && null !== ($request = $this->requestStack->getCurrentRequest())) {
+        if (null === $displayLocale && ($request = $this->requestStack->getCurrentRequest())) {
             $displayLocale = $request->getLocale();
         }
 
@@ -63,31 +56,21 @@ class Countries
 
         (new \Collator($displayLocale ?? $this->defaultLocale))->asort($countries);
 
-        if (!empty($GLOBALS['TL_HOOKS']['getCountries'])) {
-            return $this->applyLegacyHook($countries);
-        }
-
         return $countries;
     }
 
     /**
-     * @return array<string> Uppercase ISO 3166-1 alpha-2 codes
+     * @return list<string> Uppercase ISO 3166-1 alpha-2 codes
      */
     public function getCountryCodes(): array
     {
-        // If the legacy hook is used, it might add or remove countries
-        if (!empty($GLOBALS['TL_HOOKS']['getCountries'])) {
-            $countryCodes = array_keys($this->getCountries());
-            sort($countryCodes);
-
-            return $countryCodes;
-        }
-
         return $this->countries;
     }
 
     /**
      * Add, remove or replace countries as configured in the container configuration.
+     *
+     * @return list<string>
      */
     private function filterCountries(array $countries, array $filter): array
     {
@@ -110,28 +93,6 @@ class Countries
 
         sort($countries);
 
-        return $countries;
-    }
-
-    /**
-     * @return array<string,string>
-     */
-    private function applyLegacyHook(array $return): array
-    {
-        trigger_deprecation('contao/core-bundle', '4.12', 'Using the "getCountries" hook has been deprecated and will no longer work in Contao 5.0. Decorate the %s service instead.', self::class);
-
-        $countries = SymfonyCountries::getNames('en');
-
-        // The legacy hook works with lower case country codes
-        $return = array_combine(array_map('strtolower', array_keys($return)), $return);
-        $countries = array_combine(array_map('strtolower', array_keys($countries)), $countries);
-
-        $system = $this->contaoFramework->getAdapter(System::class);
-
-        foreach ($GLOBALS['TL_HOOKS']['getCountries'] as $callback) {
-            $system->importStatic($callback[0])->{$callback[1]}($return, $countries);
-        }
-
-        return array_combine(array_map('strtoupper', array_keys($return)), $return);
+        return array_values($countries);
     }
 }

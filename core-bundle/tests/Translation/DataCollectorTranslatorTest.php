@@ -54,7 +54,7 @@ class DataCollectorTranslatorTest extends TestCase
                 'state' => 0,
                 'transChoiceNumber' => null,
             ]],
-            $translator->getCollectedMessages()
+            $translator->getCollectedMessages(),
         );
     }
 

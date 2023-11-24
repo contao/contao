@@ -17,12 +17,17 @@ use Contao\StringUtil;
 class PaletteManipulator
 {
     final public const POSITION_BEFORE = 'before';
+
     final public const POSITION_AFTER = 'after';
+
     final public const POSITION_PREPEND = 'prepend';
+
     final public const POSITION_APPEND = 'append';
 
     private array $legends = [];
+
     private array $fields = [];
+
     private array $removes = [];
 
     public static function create(): self
@@ -35,7 +40,7 @@ class PaletteManipulator
      *
      * @throws PalettePositionException
      */
-    public function addLegend(string $name, array|string $parent, string $position = self::POSITION_AFTER, bool $hide = false): self
+    public function addLegend(string $name, array|string|null $parent = null, string $position = self::POSITION_AFTER, bool $hide = false): self
     {
         $this->validatePosition($position);
 
@@ -54,7 +59,7 @@ class PaletteManipulator
      *
      * @throws PalettePositionException
      */
-    public function addField(array|string $name, array|string $parent, string $position = self::POSITION_AFTER, \Closure|array|string|null $fallback = null, string $fallbackPosition = self::POSITION_APPEND): self
+    public function addField(array|string $name, array|string|null $parent = null, string $position = self::POSITION_AFTER, \Closure|array|string|null $fallback = null, string $fallbackPosition = self::POSITION_APPEND): self
     {
         $this->validatePosition($position);
 
@@ -76,7 +81,7 @@ class PaletteManipulator
     /**
      * If no legend is given, the field is removed everywhere.
      */
-    public function removeField(array|string $name, string $legend = null): self
+    public function removeField(array|string $name, string|null $legend = null): self
     {
         $this->removes[] = [
             'fields' => (array) $name,
@@ -327,14 +332,11 @@ class PaletteManipulator
             // If the fallback palette was not found, create a new one
             $fallback = reset($action['fallback']);
 
-            $this->applyLegend(
-                $config,
-                [
-                    'name' => $fallback,
-                    'position' => self::POSITION_APPEND,
-                    'hide' => false,
-                ]
-            );
+            $this->applyLegend($config, [
+                'name' => $fallback,
+                'position' => self::POSITION_APPEND,
+                'hide' => false,
+            ]);
         }
 
         // If everything fails, add to the last legend

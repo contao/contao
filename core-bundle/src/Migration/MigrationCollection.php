@@ -17,8 +17,19 @@ class MigrationCollection
     /**
      * @param iterable<MigrationInterface> $migrations
      */
-    public function __construct(private iterable $migrations)
+    public function __construct(private readonly iterable $migrations)
     {
+    }
+
+    public function hasPending(): bool
+    {
+        foreach ($this->migrations as $migration) {
+            if ($migration->shouldRun()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

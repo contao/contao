@@ -17,7 +17,7 @@ use Doctrine\DBAL\DriverManager;
 
 trait ContaoDatabaseTrait
 {
-    private static Connection $connection;
+    private static Connection|null $connection = null;
 
     protected static function loadFileIntoDatabase(string $sqlFile): void
     {
@@ -30,7 +30,7 @@ trait ContaoDatabaseTrait
 
     protected static function getConnection(): Connection
     {
-        if (null === self::$connection) {
+        if (!self::$connection) {
             if (false !== getenv('DATABASE_URL')) {
                 $params = [
                     'driver' => 'pdo_mysql',
@@ -40,7 +40,7 @@ trait ContaoDatabaseTrait
                 $params = [
                     'driver' => 'pdo_mysql',
                     'host' => getenv('DB_HOST'),
-                    'port' => getenv('DB_PORT'),
+                    'port' => (int) getenv('DB_PORT'),
                     'user' => getenv('DB_USER'),
                     'password' => getenv('DB_PASS'),
                     'dbname' => getenv('DB_NAME'),

@@ -18,6 +18,7 @@ use Contao\CoreBundle\Tests\Doctrine\DoctrineTestCase;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Event\GenerateSchemaEventArgs;
+use Psr\Container\ContainerInterface;
 
 class DoctrineSchemaListenerTest extends DoctrineTestCase
 {
@@ -30,7 +31,7 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
                         'path' => "`path` varchar(1022) NOT NULL default ''",
                     ],
                 ],
-            ]
+            ],
         );
 
         $schema = new Schema();
@@ -40,10 +41,10 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
 
         $dcaSchemaProvider = new DcaSchemaProvider(
             $framework,
-            $this->mockDoctrineRegistry()
+            $this->mockDoctrineRegistry(),
         );
 
-        $listener = new DoctrineSchemaListener($dcaSchemaProvider);
+        $listener = new DoctrineSchemaListener($dcaSchemaProvider, $this->createMock(ContainerInterface::class));
         $listener->postGenerateSchema($event);
 
         $this->assertTrue($schema->hasTable('tl_files'));

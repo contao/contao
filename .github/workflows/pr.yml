@@ -1,0 +1,25 @@
+name: PR
+
+on:
+    pull_request_target:
+        types: [opened]
+
+permissions:
+    pull-requests: write
+
+jobs:
+    assign-pr:
+        name: Assign PR
+        runs-on: ubuntu-latest
+        continue-on-error: true
+        steps:
+            - name: Assign the PR
+              uses: toshimaru/auto-author-assign@v1.4.0
+
+            - name: Add the label
+              uses: christianvuerings/add-labels@v1
+              if: join(github.event.pull_request.labels) == ''
+              with:
+                  labels: feature
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

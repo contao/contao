@@ -13,18 +13,31 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\File\MetadataBag;
 use Contao\CoreBundle\Filesystem\Dbafs\AbstractDbafsMetadataEvent;
 use Contao\CoreBundle\Filesystem\Dbafs\RetrieveDbafsMetadataEvent;
 use Contao\CoreBundle\Filesystem\Dbafs\StoreDbafsMetadataEvent;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Image\ImportantPart;
+use Contao\PageModel;
 use Contao\StringUtil;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @internal
  */
 class DbafsMetadataSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @var array<string>|null
+     */
+    private array|null $defaultLocales = null;
+
+    public function __construct(private readonly RequestStack $requestStack)
+    {
+    }
+
     public function enhanceMetadata(RetrieveDbafsMetadataEvent $event): void
     {
         if (!$this->supports($event)) {
@@ -48,10 +61,10 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
         $metadata = [];
 
         foreach (StringUtil::deserialize($row['meta'] ?? null, true) as $lang => $data) {
-            $metadata[$lang] = new Metadata(array_merge([Metadata::VALUE_UUID => $event->getUuid()->toRfc4122()], $data));
+            $metadata[$lang] = new Metadata([Metadata::VALUE_UUID => $event->getUuid()->toRfc4122(), ...$data]);
         }
 
-        $event->set('metadata', $metadata);
+        $event->set('metadata', new MetadataBag($metadata, $this->getDefaultLocales()));
     }
 
     public function normalizeMetadata(StoreDbafsMetadataEvent $event): void
@@ -62,6 +75,7 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
 
         $extraMetadata = $event->getExtraMetadata();
         $importantPart = $extraMetadata['importantPart'] ?? null;
+        $fileMetadata = $extraMetadata['metadata'] ?? null;
 
         if ($importantPart instanceof ImportantPart) {
             $event->set('importantPartX', $importantPart->getX());
@@ -70,7 +84,7 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
             $event->set('importantPartHeight', $importantPart->getHeight());
         }
 
-        if (\is_array($data = $extraMetadata['metadata'])) {
+        if ($fileMetadata instanceof MetadataBag) {
             $metadata = array_map(
                 static function (Metadata $metadata) use ($event): array {
                     if (null !== ($uuid = $metadata->getUuid()) && $uuid !== ($recordUuid = $event->getUuid()->toRfc4122())) {
@@ -79,7 +93,7 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
 
                     return array_diff_key($metadata->all(), [Metadata::VALUE_UUID => null]);
                 },
-                $data
+                $fileMetadata->all(),
             );
 
             $event->set('meta', serialize($metadata));
@@ -97,5 +111,26 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
     private function supports(AbstractDbafsMetadataEvent $event): bool
     {
         return 'tl_files' === $event->getTable();
+    }
+
+    private function getDefaultLocales(): array
+    {
+        if (null !== $this->defaultLocales) {
+            return $this->defaultLocales;
+        }
+
+        $page = $this->requestStack->getCurrentRequest()?->attributes->get('pageModel');
+
+        if (!$page instanceof PageModel) {
+            return [];
+        }
+
+        $locales = [LocaleUtil::formatAsLocale($page->language)];
+
+        if (null !== $page->rootFallbackLanguage) {
+            $locales[] = LocaleUtil::formatAsLocale($page->rootFallbackLanguage);
+        }
+
+        return $this->defaultLocales = array_unique(array_filter($locales));
     }
 }

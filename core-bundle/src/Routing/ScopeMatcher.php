@@ -19,10 +19,12 @@ use Symfony\Component\HttpKernel\Event\KernelEvent;
 class ScopeMatcher
 {
     /**
-     * @internal Do not inherit from this class; decorate the "contao.routing.scope_matcher" service instead
+     * @internal
      */
-    public function __construct(private RequestMatcherInterface $backendMatcher, private RequestMatcherInterface $frontendMatcher)
-    {
+    public function __construct(
+        private readonly RequestMatcherInterface $backendMatcher,
+        private readonly RequestMatcherInterface $frontendMatcher,
+    ) {
     }
 
     public function isContaoMainRequest(KernelEvent $event): bool

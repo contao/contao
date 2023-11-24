@@ -29,6 +29,7 @@ class ResultTest extends TestCase
                 if ($methodName) {
                     $this->assertSame($result, $result->$methodName());
                 }
+
                 $this->assertFalse($result->isModified);
                 $this->assertSame(0, $result->numFields);
                 $this->assertSame(0, $result->numRows);
@@ -42,8 +43,9 @@ class ResultTest extends TestCase
                 $this->assertSame([], $result->row(true));
                 $this->assertFalse(isset($result->modifiedKey));
                 $this->assertNull($result->modifiedKey);
+
                 $result->modifiedKey = 'value';
-                $this->assertSame(['modifiedKey' => 'value'], $result->row());
+
                 $this->assertSame(['modifiedKey' => 'value'], $result->row());
                 $this->assertSame(['value'], $result->row(true));
                 $this->assertTrue(isset($result->modifiedKey));
@@ -51,9 +53,7 @@ class ResultTest extends TestCase
             }
         }
 
-        PHP_MAJOR_VERSION < 8 ? $this->expectNotice() : $this->expectWarning();
-
-        $results[1]->fetchField();
+        $this->assertSame(0, $results[1]->count());
     }
 
     public function testSingleRow(): void
@@ -93,7 +93,10 @@ class ResultTest extends TestCase
             $this->assertSame('value1', $result->fetchField());
         }
 
-        PHP_MAJOR_VERSION < 8 ? $this->expectNotice() : $this->expectWarning();
+        $this->assertSame('value1', $results[1]->fetchField());
+
+        $this->expectException(\OutOfBoundsException::class);
+        $this->expectExceptionMessage('The result does not contain any data at offset 1.');
 
         $results[1]->fetchField(1);
     }
@@ -140,7 +143,10 @@ class ResultTest extends TestCase
             $this->assertSame('value2', $result->fetchField());
         }
 
-        PHP_MAJOR_VERSION < 8 ? $this->expectNotice() : $this->expectWarning();
+        $this->assertSame('value2', $results[1]->fetchField());
+
+        $this->expectException(\OutOfBoundsException::class);
+        $this->expectExceptionMessage('The result does not contain any data at offset 1.');
 
         $results[1]->fetchField(1);
     }
@@ -200,7 +206,7 @@ class ResultTest extends TestCase
     }
 
     /**
-     * @param array<array<string,string>> $data
+     * @param array<array<string, string>> $data
      *
      * @return array<Result|object>
      */
@@ -209,7 +215,7 @@ class ResultTest extends TestCase
         return [
             new Result(
                 new DoctrineResult(new ArrayResult($data), $this->createMock(Connection::class)),
-                'SELECT * FROM test'
+                'SELECT * FROM test',
             ),
             new Result($data, 'SELECT * FROM test'),
         ];

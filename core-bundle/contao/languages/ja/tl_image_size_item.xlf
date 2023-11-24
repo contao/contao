@@ -1,0 +1,98 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_image_size_item.php" source-language="en" target-language="ja">
+    <body>
+      <trans-unit id="tl_image_size_item.media.0">
+        <source>Media query</source>
+        <target>メディアクエリ</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.media.1">
+        <source>Here you can define when to use the image size, e.g. &lt;em&gt;(max-width: 600px)&lt;/em&gt;.</source>
+        <target>画像サイズをいつ使用するかを指定できます。例: &lt;em&gt;(max-width: 600px)&lt;/em&gt;</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.invisible.0">
+        <source>Invisible</source>
+        <target>非表示</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.invisible.1">
+        <source>Do not use the image size definition.</source>
+        <target>画像サイズの指定を使用しません。</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.tstamp.0">
+        <source>Revision date</source>
+        <target>改訂日</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.tstamp.1">
+        <source>Date and time of the latest revision</source>
+        <target>最新のリビジョンの日付と時刻</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.title_legend">
+        <source>Image size settings</source>
+        <target>画像サイズの設定</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.source_legend">
+        <source>Image source settings</source>
+        <target>画像ソースの設定</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.visibility_legend">
+        <source>Visibility</source>
+        <target>可視性</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.new.0">
+        <source>New</source>
+        <target>新規作成</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.new.1">
+        <source>Create a new media query</source>
+        <target>新しいメディアクエリを作成</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.show">
+        <source>Show the details of media query ID %s</source>
+        <target>ID %sのメディアクエリの詳細を表示</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.edit">
+        <source>Edit media query ID %s</source>
+        <target>ID %sのメディアクエリを編集</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.cut">
+        <source>Move media query ID %s</source>
+        <target>画像サイズのメディアクエリを移動</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.copy">
+        <source>Duplicate media query ID %s</source>
+        <target>ID %sのメディアクエリを複製</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.delete">
+        <source>Delete media query ID %s</source>
+        <target>ID %sのメディアクエリを削除</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.toggle.0">
+        <source>Activate/deactivate media query</source>
+        <target>メディアクエリを有効または無効</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.toggle.1">
+        <source>Deactivate media query ID %s</source>
+        <target>ID %sのメディアクエリを有効化</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.toggle.2">
+        <source>Activate media query ID %s</source>
+        <target>ID %sのメディアクエリを無効化</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.pasteafter.0">
+        <source>Paste at the top</source>
+        <target>先頭に貼り付け</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.pasteafter.1">
+        <source>Paste after media query ID %s</source>
+        <target>ID %sのメディアクエリの後に貼り付け</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.pastenew.0">
+        <source>Create a new media query at the top</source>
+        <target>先頭に新しいメディアクエリを作成</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.pastenew.1">
+        <source>Create a new media query after media query ID %s</source>
+        <target>ID %sのメディアクエリの後に新しいメディアクエリを作成</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -26,39 +26,37 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  * This controller handles the back end preview call and redirects to the
  * requested front end page while ensuring that the /preview.php entry point is
  * used. When requested, the front end user gets authenticated.
- *
- * @Route(path="%contao.backend.route_prefix%", defaults={"_scope" = "backend", "_allow_preview" = true})
  */
+#[Route('%contao.backend.route_prefix%', defaults: ['_scope' => 'backend', '_allow_preview' => true])]
 class BackendPreviewController
 {
     public function __construct(
-        private string $previewScript,
-        private FrontendPreviewAuthenticator $previewAuthenticator,
-        private EventDispatcherInterface $dispatcher,
-        private AuthorizationCheckerInterface $authorizationChecker,
+        private readonly string $previewScript,
+        private readonly FrontendPreviewAuthenticator $previewAuthenticator,
+        private readonly EventDispatcherInterface $dispatcher,
+        private readonly AuthorizationCheckerInterface $authorizationChecker,
     ) {
     }
 
-    /**
-     * @Route("/preview", name="contao_backend_preview")
-     */
+    #[Route('/preview', name: 'contao_backend_preview')]
     public function __invoke(Request $request): Response
     {
         // Skip the redirect if there is no preview script, otherwise we will
         // end up in an endless loop (see #1511)
-        if ($this->previewScript && $request->getScriptName() !== $this->previewScript) {
-            return new RedirectResponse($this->previewScript.$request->getRequestUri());
+        if ($this->previewScript && substr($request->getScriptName(), \strlen($request->getBasePath())) !== $this->previewScript) {
+            $qs = $request->getQueryString();
+
+            return new RedirectResponse($request->getBasePath().$this->previewScript.$request->getPathInfo().($qs ? '?'.$qs : ''));
         }
 
         if (!$this->authorizationChecker->isGranted('ROLE_USER')) {
             return new Response('Access denied', Response::HTTP_FORBIDDEN);
         }
 
+        $frontendUser = $request->query->get('user');
+
         // Switch to a particular member (see contao/core#6546)
-        if (
-            ($frontendUser = $request->query->get('user'))
-            && !$this->previewAuthenticator->authenticateFrontendUser($frontendUser, false)
-        ) {
+        if ($frontendUser && !$this->previewAuthenticator->authenticateFrontendUser($frontendUser, false)) {
             $this->previewAuthenticator->removeFrontendAuthentication();
         }
 
@@ -66,7 +64,7 @@ class BackendPreviewController
 
         $this->dispatcher->dispatch($urlConvertEvent, ContaoCoreEvents::PREVIEW_URL_CONVERT);
 
-        if (null !== ($response = $urlConvertEvent->getResponse())) {
+        if ($response = $urlConvertEvent->getResponse()) {
             return $response;
         }
 

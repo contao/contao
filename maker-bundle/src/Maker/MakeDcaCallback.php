@@ -24,7 +24,6 @@ use Symfony\Bundle\MakerBundle\Generator;
 use Symfony\Bundle\MakerBundle\InputConfiguration;
 use Symfony\Bundle\MakerBundle\Maker\AbstractMaker;
 use Symfony\Bundle\MakerBundle\Str;
-use Symfony\Bundle\MakerBundle\Util\PhpCompatUtil;
 use Symfony\Bundle\MakerBundle\Validator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -36,12 +35,11 @@ use Symfony\Component\Yaml\Yaml;
 class MakeDcaCallback extends AbstractMaker
 {
     public function __construct(
-        private ContaoFramework $framework,
-        private ClassGenerator $classGenerator,
-        private ResourceFinder $resourceFinder,
-        private SignatureGenerator $signatureGenerator,
-        private ImportExtractor $importExtractor,
-        private PhpCompatUtil $phpCompatUtil,
+        private readonly ContaoFramework $framework,
+        private readonly ClassGenerator $classGenerator,
+        private readonly ResourceFinder $resourceFinder,
+        private readonly SignatureGenerator $signatureGenerator,
+        private readonly ImportExtractor $importExtractor,
     ) {
     }
 
@@ -86,7 +84,6 @@ class MakeDcaCallback extends AbstractMaker
             return;
         }
 
-        /** @var MethodDefinition $definition */
         $definition = $targets[$target];
         $elementDetails = $generator->createClassNameDetails($name, 'EventListener\DataContainer\\');
 
@@ -110,7 +107,6 @@ class MakeDcaCallback extends AbstractMaker
                 'className' => $elementDetails->getShortName(),
                 'signature' => $this->signatureGenerator->generate($definition, '__invoke'),
                 'body' => $definition->getBody(),
-                'use_attributes' => $this->phpCompatUtil->canUseAttributes(),
             ],
         ]);
 
@@ -130,7 +126,7 @@ class MakeDcaCallback extends AbstractMaker
 
         $question = new Question('Enter a table for the callback');
         $question->setAutocompleterValues($tables);
-        $question->setValidator([Validator::class, 'notBlank']);
+        $question->setValidator(Validator::notBlank(...));
 
         $input->setArgument('table', $io->askQuestion($question));
     }
@@ -146,7 +142,7 @@ class MakeDcaCallback extends AbstractMaker
 
         $question = new Question('Enter a target for the callback');
         $question->setAutocompleterValues(array_keys($targets));
-        $question->setValidator([Validator::class, 'notBlank']);
+        $question->setValidator(Validator::notBlank(...));
 
         $target = $io->askQuestion($question);
 
@@ -161,7 +157,7 @@ class MakeDcaCallback extends AbstractMaker
                 $command->addArgument($chunk, InputArgument::OPTIONAL);
 
                 $question = new Question(sprintf('Please enter a value for "%s"', $chunk));
-                $question->setValidator([Validator::class, 'notBlank']);
+                $question->setValidator(Validator::notBlank(...));
 
                 $input->setArgument($chunk, $io->askQuestion($question));
             }
@@ -181,7 +177,7 @@ class MakeDcaCallback extends AbstractMaker
 
         $tables = array_map(
             static fn (SplFileInfo $input) => str_replace('.php', '', $input->getRelativePathname()),
-            iterator_to_array($files->getIterator())
+            iterator_to_array($files->getIterator()),
         );
 
         $tables = array_values($tables);
@@ -194,7 +190,7 @@ class MakeDcaCallback extends AbstractMaker
      */
     private function getTargets(): array
     {
-        $yaml = Yaml::parseFile(__DIR__.'/../Resources/config/callbacks.yaml');
+        $yaml = Yaml::parseFile(__DIR__.'/../../config/callbacks.yaml');
         $targets = [];
 
         foreach ($yaml['callbacks'] as $key => $config) {

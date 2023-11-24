@@ -87,19 +87,19 @@ class DataContainerCallbackListener
 
         $preCallbacks = array_merge(
             [],
-            ...array_filter($callbacks, static fn ($priority) => $priority >= 0, ARRAY_FILTER_USE_KEY)
+            ...array_filter($callbacks, static fn ($priority) => $priority > 0, ARRAY_FILTER_USE_KEY),
         );
 
         $postCallbacks = array_merge(
             [],
-            ...array_filter($callbacks, static fn ($priority) => $priority < 0, ARRAY_FILTER_USE_KEY)
+            ...array_filter($callbacks, static fn ($priority) => $priority <= 0, ARRAY_FILTER_USE_KEY),
         );
 
-        if (\count($preCallbacks)) {
+        if ($preCallbacks) {
             array_unshift($dcaRef, ...$preCallbacks);
         }
 
-        if (\count($postCallbacks)) {
+        if ($postCallbacks) {
             array_push($dcaRef, ...$postCallbacks);
         }
     }

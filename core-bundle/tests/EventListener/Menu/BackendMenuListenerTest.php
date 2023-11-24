@@ -19,10 +19,10 @@ use Contao\CoreBundle\EventListener\Menu\BackendMenuListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Knp\Menu\MenuFactory;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BackendMenuListenerTest extends TestCase
@@ -42,23 +42,15 @@ class BackendMenuListenerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $router = $this->createMock(RouterInterface::class);
-        $router
-            ->expects($this->once())
-            ->method('generate')
-            ->with('contao_backend')
-            ->willReturn('/contao')
-        ;
-
         $nodeFactory = new MenuFactory();
         $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('mainMenu'));
 
         $listener = new BackendMenuListener(
             $security,
-            $router,
+            $this->createMock(RouterInterface::class),
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoFramework::class)
+            $this->createMock(ContaoFramework::class),
         );
 
         $listener($event);
@@ -82,9 +74,12 @@ class BackendMenuListenerTest extends TestCase
             [
                 'class' => 'group-category1 custom-class',
                 'title' => 'Category 1 Title',
-                'onclick' => "return AjaxRequest.toggleNavigation(this, 'category1', '/contao')",
+                'data-action' => 'contao--toggle-navigation#toggle:prevent',
+                'data-contao--toggle-navigation-category-param' => 'category1',
+                'aria-controls' => 'category1',
+                'aria-expanded' => 'true',
             ],
-            $children['category1']->getLinkAttributes()
+            $children['category1']->getLinkAttributes(),
         );
 
         $grandChildren = $children['category1']->getChildren();
@@ -114,9 +109,12 @@ class BackendMenuListenerTest extends TestCase
             [
                 'class' => 'group-category2',
                 'title' => 'Category 2 Title',
-                'onclick' => "return AjaxRequest.toggleNavigation(this, 'category2', '/contao')",
+                'data-action' => 'contao--toggle-navigation#toggle:prevent',
+                'data-contao--toggle-navigation-category-param' => 'category2',
+                'aria-controls' => 'category2',
+                'aria-expanded' => 'false',
             ],
-            $children['category2']->getLinkAttributes()
+            $children['category2']->getLinkAttributes(),
         );
     }
 
@@ -142,7 +140,7 @@ class BackendMenuListenerTest extends TestCase
             $router,
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoFramework::class)
+            $this->createMock(ContaoFramework::class),
         );
 
         $listener($event);
@@ -174,7 +172,7 @@ class BackendMenuListenerTest extends TestCase
             $router,
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoFramework::class)
+            $this->createMock(ContaoFramework::class),
         );
 
         $listener($event);
@@ -186,7 +184,6 @@ class BackendMenuListenerTest extends TestCase
 
     public function testBuildsTheHeaderMenu(): void
     {
-        /** @var BackendUser $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->name = 'Foo Bar';
         $user->username = 'foo';
@@ -209,11 +206,11 @@ class BackendMenuListenerTest extends TestCase
                     }
 
                     return '/contao?'.http_build_query($options);
-                }
+                },
             )
         ;
 
-        $request = new Request();
+        $request = Request::create('https://localhost/contao?do=pages&ref=123456');
         $request->attributes->set('_contao_referer_id', 'bar');
 
         $requestStack = new RequestStack();
@@ -234,7 +231,7 @@ class BackendMenuListenerTest extends TestCase
             $router,
             $requestStack,
             $this->getTranslator(),
-            $this->mockContaoFramework([Backend::class => $systemMessages])
+            $this->mockContaoFramework([Backend::class => $systemMessages]),
         );
 
         $listener($event);
@@ -245,7 +242,7 @@ class BackendMenuListenerTest extends TestCase
 
         $children = $tree->getChildren();
 
-        $this->assertSame(['manual', 'alerts', 'submenu', 'burger'], array_keys($children));
+        $this->assertSame(['manual', 'alerts', 'color-scheme', 'submenu', 'burger'], array_keys($children));
 
         // Manual
         $this->assertSame('MSC.manual', $children['manual']->getLabel());
@@ -258,33 +255,39 @@ class BackendMenuListenerTest extends TestCase
                 'title' => 'MSC.manual',
                 'target' => '_blank',
             ],
-            $children['manual']->getLinkAttributes()
+            $children['manual']->getLinkAttributes(),
         );
 
         // Alerts
-        $this->assertSame('MSC.systemMessages <sup>1</sup>', $children['alerts']->getLabel());
-        $this->assertSame('/contao/alerts', $children['alerts']->getUri());
+        $this->assertSame('<a href="/contao/alerts" class="icon-alert" title="MSC.systemMessages" onclick="Backend.openModalIframe({\'title\':\'MSC.systemMessages\',\'url\':this.href});return false">MSC.systemMessages</a><sup>1</sup>', $children['alerts']->getLabel());
         $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['alerts']->getExtras());
+
+        // Color scheme
+        $this->assertSame('color-scheme', $children['color-scheme']->getLabel());
+        $this->assertSame('#', $children['color-scheme']->getUri());
+        $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['color-scheme']->getExtras());
 
         $this->assertSame(
             [
-                'class' => 'icon-alert',
-                'title' => 'MSC.systemMessages',
-                'onclick' => "Backend.openModalIframe({'title':'MSC.systemMessages','url':this.href});return false",
+                'class' => 'icon-color-scheme',
+                'title' => '',
+                'data-controller' => 'contao--color-scheme',
+                'data-contao--color-scheme-target' => 'label',
+                'data-contao--color-scheme-i18n-value' => '{"dark":"MSC.darkMode","light":"MSC.lightMode"}',
             ],
-            $children['alerts']->getLinkAttributes()
+            $children['color-scheme']->getLinkAttributes(),
         );
 
         // Submenu
-        $this->assertSame('MSC.user foo', $children['submenu']->getLabel());
+        $this->assertSame('<button type="button">MSC.user foo</button>', $children['submenu']->getLabel());
         $this->assertSame(['class' => 'submenu'], $children['submenu']->getAttributes());
-        $this->assertSame(['class' => 'h2'], $children['submenu']->getLabelAttributes());
-        $this->assertSame(['translation_domain' => false], $children['submenu']->getExtras());
+        $this->assertSame(['class' => 'profile'], $children['submenu']->getLabelAttributes());
+        $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['submenu']->getExtras());
 
         $grandChildren = $children['submenu']->getChildren();
 
-        $this->assertCount(3, $grandChildren);
-        $this->assertSame(['info', 'login', 'security'], array_keys($grandChildren));
+        $this->assertCount(4, $grandChildren);
+        $this->assertSame(['info', 'login', 'security', 'favorites'], array_keys($grandChildren));
 
         // Info
         $this->assertSame('<strong>Foo Bar</strong> foo@bar.com', $grandChildren['info']->getLabel());
@@ -303,8 +306,14 @@ class BackendMenuListenerTest extends TestCase
         $this->assertSame(['class' => 'icon-security'], $grandChildren['security']->getLinkAttributes());
         $this->assertSame(['translation_domain' => 'contao_default'], $grandChildren['security']->getExtras());
 
+        // Favorites
+        $this->assertSame('MSC.favorites', $grandChildren['favorites']->getLabel());
+        $this->assertSame('/contao?do=favorites&ref=bar', $grandChildren['favorites']->getUri());
+        $this->assertSame(['class' => 'icon-favorites'], $grandChildren['favorites']->getLinkAttributes());
+        $this->assertSame(['translation_domain' => 'contao_default'], $grandChildren['favorites']->getExtras());
+
         // Burger
-        $this->assertSame('<button type="button" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>', $children['burger']->getLabel());
+        $this->assertSame('<button type="button" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>', $children['burger']->getLabel());
         $this->assertSame(['class' => 'burger'], $children['burger']->getAttributes());
         $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['burger']->getExtras());
     }
@@ -331,7 +340,7 @@ class BackendMenuListenerTest extends TestCase
             $router,
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoFramework::class)
+            $this->createMock(ContaoFramework::class),
         );
 
         $listener($event);
@@ -363,7 +372,7 @@ class BackendMenuListenerTest extends TestCase
             $router,
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoFramework::class)
+            $this->createMock(ContaoFramework::class),
         );
 
         $listener($event);
@@ -374,7 +383,7 @@ class BackendMenuListenerTest extends TestCase
     }
 
     /**
-     * @return array<string,array<string,array<string,array<string,bool|string>>|string>>
+     * @return array<string, array<string, array<string, array<string, bool|string>>|string>>
      */
     private function getNavigation(): array
     {

@@ -66,7 +66,7 @@ class SystemLoggerTest extends TestCase
             ->with(
                 $level,
                 $message,
-                $this->assertExpectedContaoContext(new ContaoContext(__METHOD__, $action))
+                $this->assertExpectedContaoContext(new ContaoContext(__METHOD__, $action)),
             )
         ;
 
@@ -80,7 +80,6 @@ class SystemLoggerTest extends TestCase
     {
         return $this->callback(
             function (array $context) use ($expectedContext) {
-                /** @var ContaoContext $contaoContext */
                 $contaoContext = $context['contao'] ?? null;
 
                 $this->assertInstanceOf(ContaoContext::class, $contaoContext);
@@ -89,7 +88,7 @@ class SystemLoggerTest extends TestCase
                 $this->assertSame($expectedContext->getUsername(), $contaoContext->getUsername());
 
                 return true;
-            }
+            },
         );
     }
 }

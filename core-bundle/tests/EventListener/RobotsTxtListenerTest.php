@@ -32,18 +32,11 @@ class RobotsTxtListenerTest extends TestCase
     {
         $rootPage = $this->mockClassWithProperties(PageModel::class);
         $rootPage->id = 42;
-        $rootPage->fallback = '1';
+        $rootPage->fallback = true;
         $rootPage->dns = 'www.foobar.com';
-        $rootPage->useSSL = '1';
+        $rootPage->useSSL = true;
 
-        $pageModelAdapter = $this->mockAdapter(['findPublishedFallbackByHostname']);
-        $pageModelAdapter
-            ->expects($this->exactly(2))
-            ->method('findPublishedFallbackByHostname')
-            ->willReturn($rootPage)
-        ;
-
-        $framework = $this->mockContaoFramework([PageModel::class => $pageModelAdapter]);
+        $framework = $this->mockContaoFramework();
         $framework
             ->expects($this->exactly(2))
             ->method('initialize')
@@ -51,9 +44,10 @@ class RobotsTxtListenerTest extends TestCase
 
         $parser = new Parser();
         $parser->setSource($providedRobotsTxt);
+
         $file = $parser->getFile();
 
-        $event = new RobotsTxtEvent($file, new Request(), $rootPage);
+        $event = new RobotsTxtEvent($file, Request::create('https://www.example.org/robots.txt'), $rootPage);
 
         $listener = new RobotsTxtListener($framework);
         $listener($event);
@@ -119,7 +113,6 @@ class RobotsTxtListenerTest extends TestCase
      */
     public function testHandlesDynamicRoutePrefixes(string $routePrefix): void
     {
-        $request = $this->createMock(Request::class);
         $rootPage = $this->mockClassWithProperties(PageModel::class);
 
         $directiveList = $this->createMock(DirectiveList::class);
@@ -127,8 +120,8 @@ class RobotsTxtListenerTest extends TestCase
             ->expects($this->exactly(2))
             ->method('add')
             ->withConsecutive(
-                [$this->callback(static fn (Directive $directive) => ((string) $directive) === 'disallow:'.$routePrefix.'/')],
-                ['disallow:/_contao/']
+                [$this->callback(static fn (Directive $directive) => (string) $directive === 'disallow:'.$routePrefix.'/')],
+                ['disallow:/_contao/'],
             )
         ;
 
@@ -144,16 +137,8 @@ class RobotsTxtListenerTest extends TestCase
             ->willReturn([$record])
         ;
 
-        $event = new RobotsTxtEvent($file, $request, $rootPage);
-
-        $pageModelAdapter = $this->mockAdapter(['findPublishedFallbackByHostname']);
-        $pageModelAdapter
-            ->expects($this->once())
-            ->method('findPublishedFallbackByHostname')
-            ->willReturn(null)
-        ;
-
-        $framework = $this->mockContaoFramework([PageModel::class => $pageModelAdapter]);
+        $event = new RobotsTxtEvent($file, Request::create('https://www.example.org/robots.txt'), $rootPage);
+        $framework = $this->mockContaoFramework();
 
         $listener = new RobotsTxtListener($framework, $routePrefix);
         $listener($event);

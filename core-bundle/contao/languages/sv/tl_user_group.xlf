@@ -1,0 +1,122 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_user_group.php" source-language="en" target-language="sv">
+    <body>
+      <trans-unit id="tl_user_group.name.0">
+        <source>Title</source>
+        <target>Rubrik</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.name.1">
+        <source>Please enter the group title.</source>
+        <target>Ange ett unikt gruppnamn.</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.alexf.0">
+        <source>Allowed fields</source>
+        <target>Tillåtna fält</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.alexf.1">
+        <source>Here you can choose which fields will be editable.</source>
+        <target>Flera tabeller innehåller fält vilka är stoppade för editering som standard. Här kan du göra dessa fält nåbara för den aktuella gruppen. Håll nere [CTRL] för att välja fler än ett alternativ.</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.disable.0">
+        <source>Deactivate</source>
+        <target>Avaktivera</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.disable.1">
+        <source>Temporarily disable the group.</source>
+        <target>Om du väljer detta alternativ kommer den aktuella gruppen att avaktiveras. &lt;br /&gt;Behörigheter från den avaktiverade gruppen kan inte längre ärvas av användare som är medlemmar i gruppen.</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.start.0">
+        <source>Activate on</source>
+        <target>Aktivera den</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.start.1">
+        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Om du vill förhindra att gruppen är aktiv före ett visst datum/tid kan du ange det här. Annars lämnar du fältet tomt.</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.stop.0">
+        <source>Deactivate on</source>
+        <target>Avaktivera den</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.stop.1">
+        <source>If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Om du vill förhindra att gruppen är aktiv efter ett visst datum/tid kan du ange det här. Annars lämnar du fältet tomt.</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.title_legend">
+        <source>Title</source>
+        <target>Rubrik</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.modules_legend">
+        <source>Allowed modules</source>
+        <target>Modulbehörigheter</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.elements_legend">
+        <source>Allowed elements</source>
+        <target>Tillåtna element</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.pagemounts_legend">
+        <source>Pagemounts</source>
+        <target>Sidbehörigheter</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.filemounts_legend">
+        <source>Filemounts</source>
+        <target>Filarkivbehörigheter</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.imageSizes_legend">
+        <source>Image sizes</source>
+        <target>Bildstorlekar</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.forms_legend">
+        <source>Form permissions</source>
+        <target>Formulärbehörigheter</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.amg_legend">
+        <source>Allowed member groups</source>
+        <target>Tillåtna medlemsgrupper</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.alexf_legend">
+        <source>Allowed fields</source>
+        <target>Tillåtna fält</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.account_legend">
+        <source>Group settings</source>
+        <target>Gruppinställningar</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.new.0">
+        <source>New</source>
+        <target>Ny</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.new.1">
+        <source>Create a new user group</source>
+        <target>Skapa en ny användargrupp</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.show">
+        <source>Show the details of user group ID %s</source>
+        <target>Visa information om användargrupp ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.edit">
+        <source>Edit user group ID %s</source>
+        <target>Redigera användargrupp ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.copy">
+        <source>Duplicate user group ID %s</source>
+        <target>Duplicera användargrupp ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.delete">
+        <source>Delete user group ID %s</source>
+        <target>Ta bort användargrupp ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.toggle.0">
+        <source>Activate/deactivate user group</source>
+        <target>Aktivera/avaktivera användargrupp</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.toggle.1">
+        <source>Deactivate user group ID %s</source>
+        <target>Inaktivera användargrupp ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.toggle.2">
+        <source>Activate user group ID %s</source>
+        <target>Aktivera användargrupp ID %s</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

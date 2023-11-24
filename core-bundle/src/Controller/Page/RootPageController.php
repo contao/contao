@@ -13,26 +13,25 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Controller\Page;
 
 use Contao\CoreBundle\Controller\AbstractController;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
 use Contao\CoreBundle\Exception\NoActivePageFoundException;
-use Contao\CoreBundle\ServiceAnnotation\Page;
 use Contao\PageModel;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Page(contentComposition=false)
- *
  * @internal
  */
+#[AsPage(contentComposition: false)]
 class RootPageController extends AbstractController
 {
-    public function __construct(private LoggerInterface|null $logger = null)
+    public function __construct(private readonly LoggerInterface|null $logger = null)
     {
     }
 
     public function __invoke(PageModel $pageModel): Response
     {
-        $nextPage = $this->getNextPage((int) $pageModel->id);
+        $nextPage = $this->getNextPage($pageModel->id);
 
         return $this->redirect($nextPage->getAbsoluteUrl());
     }

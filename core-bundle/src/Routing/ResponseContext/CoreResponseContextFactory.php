@@ -18,6 +18,7 @@ use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\String\HtmlDecoder;
+use Contao\CoreBundle\Util\UrlUtil;
 use Contao\PageModel;
 use Spatie\SchemaOrg\WebPage;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -26,12 +27,12 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 class CoreResponseContextFactory
 {
     public function __construct(
-        private ResponseContextAccessor $responseContextAccessor,
-        private EventDispatcherInterface $eventDispatcher,
-        private TokenChecker $tokenChecker,
-        private HtmlDecoder $htmlDecoder,
-        private RequestStack $requestStack,
-        private InsertTagParser $insertTagParser,
+        private readonly ResponseContextAccessor $responseContextAccessor,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly TokenChecker $tokenChecker,
+        private readonly HtmlDecoder $htmlDecoder,
+        private readonly RequestStack $requestStack,
+        private readonly InsertTagParser $insertTagParser,
     ) {
     }
 
@@ -57,7 +58,7 @@ class CoreResponseContextFactory
                 $manager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->add(new WebPage());
 
                 return $manager;
-            }
+            },
         );
 
         return $context;
@@ -66,11 +67,7 @@ class CoreResponseContextFactory
     public function createContaoWebpageResponseContext(PageModel $pageModel): ResponseContext
     {
         $context = $this->createWebpageResponseContext();
-
-        /** @var HtmlHeadBag $htmlHeadBag */
         $htmlHeadBag = $context->get(HtmlHeadBag::class);
-
-        /** @var JsonLdManager $jsonLdManager */
         $jsonLdManager = $context->get(JsonLdManager::class);
 
         $title = $this->htmlDecoder->inputEncodedToPlainText($pageModel->pageTitle ?: $pageModel->title ?: '');
@@ -89,11 +86,11 @@ class CoreResponseContextFactory
 
             // Ensure absolute links
             if (!preg_match('#^https?://#', $url)) {
-                if (!$request = $this->requestStack->getMainRequest()) {
+                if (!$request = $this->requestStack->getCurrentRequest()) {
                     throw new \RuntimeException('The request stack did not contain a request');
                 }
 
-                $url = $request->getSchemeAndHttpHost().$request->getBasePath().'/'.$url;
+                $url = UrlUtil::makeAbsolute($url, $request->getUri());
             }
 
             $htmlHeadBag->setCanonicalUri($url);
@@ -108,12 +105,12 @@ class CoreResponseContextFactory
             ->set(
                 new ContaoPageSchema(
                     $title ?: '',
-                    (int) $pageModel->id,
-                    (bool) $pageModel->noSearch,
-                    (bool) $pageModel->protected,
+                    $pageModel->id,
+                    $pageModel->noSearch,
+                    $pageModel->protected,
                     array_map('intval', array_filter((array) $pageModel->groups)),
-                    $this->tokenChecker->isPreviewMode()
-                )
+                    $this->tokenChecker->isPreviewMode(),
+                ),
             )
         ;
 

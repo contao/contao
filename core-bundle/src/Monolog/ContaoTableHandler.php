@@ -13,9 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Monolog;
 
 use Contao\StringUtil;
-use Contao\System;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Statement;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\AbstractProcessingHandler;
@@ -27,7 +25,6 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
     use ContainerAwareTrait;
 
     private string $dbalServiceName = 'doctrine.dbal.default_connection';
-    private Statement|null $statement = null;
 
     public function getDbalServiceName(): string
     {
@@ -58,22 +55,18 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
             return false;
         }
 
-        $this->executeHook($record['message'], $record['extra']['contao']);
-
-        return false === $this->bubble;
+        return !$this->bubble;
     }
 
     protected function write(array $record): void
     {
-        $this->createStatement();
-
         /** @var \DateTime $date */
         $date = $record['datetime'];
 
         /** @var ContaoContext $context */
         $context = $record['extra']['contao'];
 
-        $this->statement->executeStatement([
+        $this->getConnection()->insert('tl_log', [
             'tstamp' => $date->format('U'),
             'text' => StringUtil::specialchars((string) $record['formatted']),
             'source' => (string) $context->getSource(),
@@ -81,6 +74,8 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
             'username' => (string) $context->getUsername(),
             'func' => $context->getFunc(),
             'browser' => StringUtil::specialchars((string) $context->getBrowser()),
+            'uri' => StringUtil::specialchars($context->getUri() ?? ''),
+            'page' => $context->getPageId() ?? 0,
         ]);
     }
 
@@ -89,61 +84,13 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
         return new LineFormatter('%message%');
     }
 
-    /**
-     * Verifies the database connection and prepares the statement.
-     */
-    private function createStatement(): void
+    private function getConnection(): Connection
     {
-        if (null !== $this->statement) {
-            return;
-        }
-
-        if (null === $this->container || !$this->container->has($this->dbalServiceName)) {
+        if (!$this->container || !$this->container->has($this->dbalServiceName)) {
             throw new \RuntimeException('The container has not been injected or the database service is missing');
         }
 
-        /** @var Connection $connection */
-        $connection = $this->container->get($this->dbalServiceName);
-
-        $this->statement = $connection->prepare('
-            INSERT INTO
-                tl_log
-                    (tstamp, source, action, username, text, func, browser)
-                VALUES
-                    (:tstamp, :source, :action, :username, :text, :func, :browser)
-        ');
-    }
-
-    /**
-     * Executes the legacy hook if the Contao framework is booted.
-     */
-    private function executeHook(string $message, ContaoContext $context): void
-    {
-        if (null === $this->container || !$this->container->has('contao.framework')) {
-            return;
-        }
-
-        $framework = $this->container->get('contao.framework');
-
-        if (!$this->hasAddLogEntryHook() || !$framework->isInitialized()) {
-            return;
-        }
-
-        trigger_deprecation('contao/core-bundle', '4.0', 'Using the "addLogEntry" hook has been deprecated and will no longer work in Contao 5.0.');
-
-        $system = $framework->getAdapter(System::class);
-
-        // Must create variables to allow modification-by-reference in hook
-        $func = $context->getFunc();
-        $action = $context->getAction();
-
-        foreach ($GLOBALS['TL_HOOKS']['addLogEntry'] as $callback) {
-            $system->importStatic($callback[0])->{$callback[1]}($message, $func, $action);
-        }
-    }
-
-    private function hasAddLogEntryHook(): bool
-    {
-        return !empty($GLOBALS['TL_HOOKS']['addLogEntry']) && \is_array($GLOBALS['TL_HOOKS']['addLogEntry']);
+        /** @var Connection */
+        return $this->container->get($this->dbalServiceName);
     }
 }

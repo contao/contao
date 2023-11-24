@@ -1,0 +1,54 @@
+{#
+    This component outputs a splash screen button. A client side script will
+    replace it with content from a template tag when it gets clicked.
+
+        <button data-splash>
+          <p>Click to load the iframe.</p>
+          <template>
+            <div class="my-content">
+              <iframe src="…"></iframe>
+            </div>
+          </template>
+        </button>
+
+    After activation the HTML of the above example will look like this:
+
+        <div class="my-content">
+          <iframe src="…"></iframe>
+        </div>
+
+    Optional variables:
+        @var \Contao\CoreBundle\String\HtmlAttributes splash_button_attributes
+#}
+
+{% trans_default_domain "contao_default" %}
+
+{% block splash_screen_component %}
+    {% set splash_button_attributes = attrs(splash_button_attributes|default)
+        .set('data-splash-screen')
+    %}
+    <button{{ splash_button_attributes }}>
+        {% block splash_screen_button_content %}
+            {# Render your splash screen's button content here. #}
+            {{ ('MSC.splashScreen')|trans }}
+        {% endblock %}
+        <template>
+            {% block splash_screen_content %}
+                {# Render the actual content (present after activation) here. #}
+            {% endblock %}
+        </template>
+    </button>
+
+    {% block splash_screen_script %}
+        {% add "splash_screen_script" to body %}
+            <script>
+                document.querySelectorAll('*[data-splash-screen]').forEach(button => {
+                    button.addEventListener('click', () => {
+                        button.insertAdjacentHTML('afterend', button.querySelector('template').innerHTML);
+                        button.remove();
+                    })
+                })
+            </script>
+        {% endadd %}
+    {% endblock %}
+{% endblock %}

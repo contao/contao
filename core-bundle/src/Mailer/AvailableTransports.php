@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Mailer;
 
-use Contao\CoreBundle\ServiceAnnotation\Callback;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AvailableTransports
@@ -22,7 +22,7 @@ class AvailableTransports
      */
     private array $transports = [];
 
-    public function __construct(private TranslatorInterface|null $translator = null)
+    public function __construct(private readonly TranslatorInterface|null $translator = null)
     {
     }
 
@@ -43,16 +43,15 @@ class AvailableTransports
      * Returns the available transports as options suitable for widgets.
      *
      * @return array<string, string>
-     *
-     * @Callback(table="tl_page", target="fields.mailerTransport.options")
-     * @Callback(table="tl_form", target="fields.mailerTransport.options")
      */
+    #[AsCallback(table: 'tl_page', target: 'fields.mailerTransport.options')]
+    #[AsCallback(table: 'tl_form', target: 'fields.mailerTransport.options')]
     public function getTransportOptions(): array
     {
         $options = [];
 
         foreach ($this->transports as $name => $config) {
-            $label = null !== $this->translator ? $this->translator->trans($name, [], 'mailer_transports') : $name;
+            $label = $this->translator ? $this->translator->trans($name, [], 'mailer_transports') : $name;
 
             if (null !== ($from = $config->getFrom())) {
                 $label .= ' ('.$from.')';

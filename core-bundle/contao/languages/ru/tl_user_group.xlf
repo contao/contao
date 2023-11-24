@@ -1,0 +1,122 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_user_group.php" source-language="en" target-language="ru">
+    <body>
+      <trans-unit id="tl_user_group.name.0">
+        <source>Title</source>
+        <target>Название</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.name.1">
+        <source>Please enter the group title.</source>
+        <target>Введите название группы.</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.alexf.0">
+        <source>Allowed fields</source>
+        <target>Разрешенные поля</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.alexf.1">
+        <source>Here you can choose which fields will be editable.</source>
+        <target>Вы можете выбрать, какие поля будут доступны для редактирования.</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.disable.0">
+        <source>Deactivate</source>
+        <target>Деактивировать</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.disable.1">
+        <source>Temporarily disable the group.</source>
+        <target>Временно отключить группу.</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.start.0">
+        <source>Activate on</source>
+        <target>Активировать с</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.start.1">
+        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Если хотите запретить активацию группы на веб-сайте до определенной даты/времени, введите её здесь. В противном случае оставьте поле пустым.</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.stop.0">
+        <source>Deactivate on</source>
+        <target>Деактивировать с</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.stop.1">
+        <source>If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Если хотите запретить активацию группы на веб-сайте после определенной даты/времени, введите её здесь. В противном случае оставьте поле пустым.</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.title_legend">
+        <source>Title</source>
+        <target>Название</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.modules_legend">
+        <source>Allowed modules</source>
+        <target>Разрешенные модули</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.elements_legend">
+        <source>Allowed elements</source>
+        <target>Разрешенные элементы</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.pagemounts_legend">
+        <source>Pagemounts</source>
+        <target>Доступные страницы</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.filemounts_legend">
+        <source>Filemounts</source>
+        <target>Доступные каталоги</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.imageSizes_legend">
+        <source>Image sizes</source>
+        <target>Размеры изображения</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.forms_legend">
+        <source>Form permissions</source>
+        <target>Разрешения форм</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.amg_legend">
+        <source>Allowed member groups</source>
+        <target>Разрешенные группы участников</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.alexf_legend">
+        <source>Allowed fields</source>
+        <target>Разрешенные поля</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.account_legend">
+        <source>Group settings</source>
+        <target>Настройки группы</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.new.0">
+        <source>New</source>
+        <target>Новый</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.new.1">
+        <source>Create a new user group</source>
+        <target>Создать новую группу пользователей</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.show">
+        <source>Show the details of user group ID %s</source>
+        <target>Показать детали группы пользователей ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.edit">
+        <source>Edit user group ID %s</source>
+        <target>Редактировать группу пользователей ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.copy">
+        <source>Duplicate user group ID %s</source>
+        <target>Дублировать группу пользователей ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.delete">
+        <source>Delete user group ID %s</source>
+        <target>Удалить группу пользователей ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.toggle.0">
+        <source>Activate/deactivate user group</source>
+        <target>Активировать/деактивировать группу пользователей</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.toggle.1">
+        <source>Deactivate user group ID %s</source>
+        <target>Деактивировать группу пользователей ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.toggle.2">
+        <source>Activate user group ID %s</source>
+        <target>Активировать группу пользователей ID %s</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

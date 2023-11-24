@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\TestCase;
 
+use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\Framework\Adapter;
@@ -21,6 +22,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\ParameterBag\ContainerBag;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -49,6 +51,14 @@ abstract class ContaoTestCase extends TestCase
         }
 
         unset(self::$tempDirs[$key]);
+    }
+
+    protected function tearDown(): void
+    {
+        // Unset TL_CONFIG as we populate it in loadDefaultConfiguration (see #4656)
+        unset($GLOBALS['TL_CONFIG']);
+
+        parent::tearDown();
     }
 
     /**
@@ -95,6 +105,7 @@ abstract class ContaoTestCase extends TestCase
 
         $container = new ContainerBuilder();
         $container->merge($cachedContainers[$projectDir]);
+        $container->set('parameter_bag', new ContainerBag($container));
 
         return $container;
     }
@@ -107,7 +118,7 @@ abstract class ContaoTestCase extends TestCase
      *
      * @return ContaoFramework&MockObject
      */
-    protected function mockContaoFramework(array $adapters = []): ContaoFramework
+    protected function mockContaoFramework(array $adapters = [], array $instances = []): ContaoFramework
     {
         $this->addConfigAdapter($adapters);
 
@@ -119,8 +130,15 @@ abstract class ContaoTestCase extends TestCase
 
         $framework
             ->method('getAdapter')
-            ->willReturnCallback(static fn (string $key): ?Adapter => $adapters[$key] ?? null)
+            ->willReturnCallback(static fn (string $key): Adapter|null => $adapters[$key] ?? null)
         ;
+
+        if ($instances) {
+            $framework
+                ->method('createInstance')
+                ->willReturnCallback(static fn (string $key): mixed => $instances[$key] ?? null)
+            ;
+        }
 
         return $framework;
     }
@@ -171,36 +189,65 @@ abstract class ContaoTestCase extends TestCase
      *
      * @return T&MockObject
      */
-    protected function mockClassWithProperties(string $class, array $properties = []): MockObject
+    protected function mockClassWithProperties(string $class, array $properties = [], array $except = []): MockObject
     {
-        $mock = $this->createMock($class);
+        $classMethods = get_class_methods($class);
+
+        if (!$except) {
+            $mock = $this->createMock($class);
+        } else {
+            $mock = $this->createPartialMock($class, array_diff($classMethods, $except));
+        }
+
         $mock
             ->method('__get')
             ->willReturnCallback(
                 static function (string $key) use (&$properties) {
                     return $properties[$key] ?? null;
-                }
+                },
             )
         ;
 
-        if (\in_array('__set', get_class_methods($class), true)) {
+        if (\in_array('__set', $classMethods, true)) {
             $mock
                 ->method('__set')
                 ->willReturnCallback(
                     static function (string $key, $value) use (&$properties): void {
                         $properties[$key] = $value;
-                    }
+                    },
                 )
             ;
         }
 
-        if (\in_array('__isset', get_class_methods($class), true)) {
+        if (\in_array('__isset', $classMethods, true)) {
             $mock
                 ->method('__isset')
                 ->willReturnCallback(
                     static function (string $key) use (&$properties) {
                         return isset($properties[$key]);
-                    }
+                    },
+                )
+            ;
+        }
+
+        if (\in_array('row', $classMethods, true)) {
+            $mock
+                ->method('row')
+                ->willReturnCallback(
+                    static function () use (&$properties) {
+                        return $properties;
+                    },
+                )
+            ;
+        }
+
+        if (\in_array('setRow', $classMethods, true)) {
+            $mock
+                ->method('setRow')
+                ->willReturnCallback(
+                    static function (array $data) use (&$properties): void {
+                        $properties = $data;
+                    },
                 )
             ;
         }
@@ -221,6 +268,11 @@ abstract class ContaoTestCase extends TestCase
         $token
             ->method('getUser')
             ->willReturn($this->createMock($class))
+        ;
+
+        $token
+            ->method('getRoleNames')
+            ->willReturn([is_a($class, BackendUser::class, true) ? 'ROLE_USER' : 'ROLE_MEMBER'])
         ;
 
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
@@ -274,8 +326,8 @@ abstract class ContaoTestCase extends TestCase
                 && \is_callable([$class, 'reset'])
                 && method_exists($class, 'reset')
                 && $reflectionClass->getMethod('reset')->isStatic()
-                && $reflectionClass->getMethod('reset')->getDeclaringClass() === $class
-                && 0 === \count($reflectionClass->getMethod('reset')->getParameters())
+                && $reflectionClass->getMethod('reset')->getDeclaringClass()->getName() === $class
+                && [] === $reflectionClass->getMethod('reset')->getParameters()
             ) {
                 $class::reset();
 
@@ -301,7 +353,7 @@ abstract class ContaoTestCase extends TestCase
                     continue;
                 }
 
-                $property->setValue($defaultValue);
+                $property->setValue(null, $defaultValue);
             }
         }
     }
@@ -336,39 +388,26 @@ abstract class ContaoTestCase extends TestCase
      */
     private function loadDefaultConfiguration(): void
     {
-        switch (true) {
+        match (true) {
             // The core-bundle is in the vendor folder of the monorepo
-            case file_exists(__DIR__.'/../../../../core-bundle/src/Resources/contao/config/default.php'):
-                include __DIR__.'/../../../../core-bundle/src/Resources/contao/config/default.php';
-                break;
+            file_exists(__DIR__.'/../../../../core-bundle/contao/config/default.php') => include __DIR__.'/../../../../core-bundle/contao/config/default.php',
 
             // The test-case is in the vendor-bin folder
-            case file_exists(__DIR__.'/../../../../../../core-bundle/src/Resources/contao/config/default.php'):
-                include __DIR__.'/../../../../../../core-bundle/src/Resources/contao/config/default.php';
-                break;
+            file_exists(__DIR__.'/../../../../../../core-bundle/contao/config/default.php') => include __DIR__.'/../../../../../../core-bundle/contao/config/default.php',
 
             // The core-bundle is in the vendor folder of the managed edition
-            case file_exists(__DIR__.'/../../../../../core-bundle/src/Resources/contao/config/default.php'):
-                include __DIR__.'/../../../../../core-bundle/src/Resources/contao/config/default.php';
-                break;
+            file_exists(__DIR__.'/../../../../../core-bundle/contao/config/default.php') => include __DIR__.'/../../../../../core-bundle/contao/config/default.php',
 
             // The core-bundle is the root package and the test-case folder is in vendor/contao
-            case file_exists(__DIR__.'/../../../../src/Resources/contao/config/default.php'):
-                include __DIR__.'/../../../../src/Resources/contao/config/default.php';
-                break;
+            file_exists(__DIR__.'/../../../../contao/config/default.php') => include __DIR__.'/../../../../contao/config/default.php',
 
             // Another bundle is the root package and the core-bundle folder is in vendor/contao
-            case file_exists(__DIR__.'/../../core-bundle/src/Resources/contao/config/default.php'):
-                include __DIR__.'/../../core-bundle/src/Resources/contao/config/default.php';
-                break;
+            file_exists(__DIR__.'/../../core-bundle/contao/config/default.php') => include __DIR__.'/../../core-bundle/contao/config/default.php',
 
             // The test-case is the root package and the core-bundle folder is in vendor/contao
-            case file_exists(__DIR__.'/../vendor/contao/core-bundle/src/Resources/contao/config/default.php'):
-                include __DIR__.'/../vendor/contao/core-bundle/src/Resources/contao/config/default.php';
-                break;
+            file_exists(__DIR__.'/../vendor/contao/core-bundle/contao/config/default.php') => include __DIR__.'/../vendor/contao/core-bundle/contao/config/default.php',
 
-            default:
-                throw new \RuntimeException('Cannot find the Contao configuration file');
-        }
+            default => throw new \RuntimeException('Cannot find the Contao configuration file'),
+        };
     }
 }

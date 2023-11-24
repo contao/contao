@@ -24,9 +24,11 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Exception\ServiceUnavailableException;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -38,7 +40,6 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
-use Symfony\Component\Security\Core\Security;
 use Twig\Environment;
 use Twig\Error\Error;
 
@@ -62,6 +63,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $framework = $this->mockContaoFramework();
         $pageRegistry = $this->createMock(PageRegistry::class);
         $httpKernel = $this->createMock(HttpKernelInterface::class);
+        $pageFinder = $this->createMock(PageFinder::class);
 
         $security = $this->createMock(Security::class);
         $security
@@ -73,7 +75,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $exception = new InternalServerErrorHttpException('', new InternalServerErrorException());
         $event = $this->getResponseEvent($exception);
 
-        $listener = new PrettyErrorScreenListener(true, $twig, $framework, $security, $pageRegistry, $httpKernel);
+        $listener = new PrettyErrorScreenListener(true, $twig, $framework, $security, $pageRegistry, $httpKernel, $pageFinder);
         $listener($event);
 
         $this->assertTrue($event->hasResponse());
@@ -86,6 +88,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $framework = $this->mockContaoFramework();
         $pageRegistry = $this->createMock(PageRegistry::class);
         $httpKernel = $this->createMock(HttpKernelInterface::class);
+        $pageFinder = $this->createMock(PageFinder::class);
 
         $security = $this->createMock(Security::class);
         $security
@@ -96,7 +99,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $exception = new InternalServerErrorHttpException('', new InternalServerErrorException());
         $event = $this->getResponseEvent($exception);
 
-        $listener = new PrettyErrorScreenListener(true, $twig, $framework, $security, $pageRegistry, $httpKernel);
+        $listener = new PrettyErrorScreenListener(true, $twig, $framework, $security, $pageRegistry, $httpKernel, $pageFinder);
         $listener($event);
 
         $this->assertTrue($event->hasResponse());
@@ -146,7 +149,7 @@ class PrettyErrorScreenListenerTest extends TestCase
             'pid' => 1,
             'type' => 'error_401',
             'rootLanguage' => '',
-            'protected' => '1',
+            'protected' => true,
             'groups' => '',
         ]);
 
@@ -250,6 +253,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $framework = $this->mockContaoFramework();
         $pageRegistry = $this->createMock(PageRegistry::class);
         $httpKernel = $this->createMock(HttpKernelInterface::class);
+        $pageFinder = $this->createMock(PageFinder::class);
 
         $security = $this->createMock(Security::class);
         $security
@@ -258,7 +262,7 @@ class PrettyErrorScreenListenerTest extends TestCase
             ->willReturn(false)
         ;
 
-        $listener = new PrettyErrorScreenListener(false, $twig, $framework, $security, $pageRegistry, $httpKernel);
+        $listener = new PrettyErrorScreenListener(false, $twig, $framework, $security, $pageRegistry, $httpKernel, $pageFinder);
         $listener($event);
 
         $this->assertFalse($event->hasResponse());
@@ -270,6 +274,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $framework = $this->mockContaoFramework();
         $pageRegistry = $this->createMock(PageRegistry::class);
         $httpKernel = $this->createMock(HttpKernelInterface::class);
+        $pageFinder = $this->createMock(PageFinder::class);
 
         $security = $this->createMock(Security::class);
         $security
@@ -281,7 +286,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $exception = new ServiceUnavailableHttpException(null, '', new ServiceUnavailableException(''));
         $event = $this->getResponseEvent($exception, null, true);
 
-        $listener = new PrettyErrorScreenListener(true, $twig, $framework, $security, $pageRegistry, $httpKernel);
+        $listener = new PrettyErrorScreenListener(true, $twig, $framework, $security, $pageRegistry, $httpKernel, $pageFinder);
         $listener($event);
 
         $this->assertFalse($event->hasResponse());
@@ -314,7 +319,7 @@ class PrettyErrorScreenListenerTest extends TestCase
                     }
 
                     return '';
-                }
+                },
             )
         ;
 
@@ -331,6 +336,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $framework = $this->mockContaoFramework();
         $pageRegistry = $this->createMock(PageRegistry::class);
         $httpKernel = $this->createMock(HttpKernelInterface::class);
+        $pageFinder = $this->createMock(PageFinder::class);
 
         $security = $this->createMock(Security::class);
         $security
@@ -342,7 +348,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $exception = new InternalServerErrorHttpException('', new InsecureInstallationException());
         $event = $this->getResponseEvent($exception, $this->getRequest('frontend', 'json'));
 
-        $listener = new PrettyErrorScreenListener(true, $twig, $framework, $security, $pageRegistry, $httpKernel);
+        $listener = new PrettyErrorScreenListener(true, $twig, $framework, $security, $pageRegistry, $httpKernel, $pageFinder);
         $listener($event);
 
         $this->assertFalse($event->hasResponse());
@@ -357,6 +363,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $framework = $this->mockContaoFramework();
         $pageRegistry = $this->createMock(PageRegistry::class);
         $httpKernel = $this->createMock(HttpKernelInterface::class);
+        $pageFinder = $this->createMock(PageFinder::class);
 
         $security = $this->createMock(Security::class);
         $security
@@ -368,7 +375,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $exception = new InternalServerErrorHttpException('', new InsecureInstallationException());
         $event = $this->getResponseEvent($exception, $this->getRequest('backend', 'html', 'application/json'));
 
-        $listener = new PrettyErrorScreenListener(true, $twig, $framework, $security, $pageRegistry, $httpKernel);
+        $listener = new PrettyErrorScreenListener(true, $twig, $framework, $security, $pageRegistry, $httpKernel, $pageFinder);
         $listener($event);
 
         $this->assertFalse($event->hasResponse());
@@ -397,20 +404,19 @@ class PrettyErrorScreenListenerTest extends TestCase
         $this->assertSame(500, $event->getResponse()->getStatusCode());
     }
 
-    private function getListener(bool $isBackendUser = false, Environment $twig = null, PageModel $errorPage = null, HttpKernelInterface $httpKernel = null): PrettyErrorScreenListener
+    private function getListener(bool $isBackendUser = false, Environment|null $twig = null, PageModel|null $errorPage = null, HttpKernelInterface|null $httpKernel = null): PrettyErrorScreenListener
     {
         $twig ??= $this->createMock(Environment::class);
         $httpKernel ??= $this->createMock(HttpKernelInterface::class);
 
-        $adapters = [];
+        $pageFinder = $this->createMock(PageFinder::class);
         $pageRegistry = $this->createMock(PageRegistry::class);
 
-        if (null !== $errorPage) {
-            $pageAdapter = $this->mockAdapter(['findFirstPublishedByTypeAndPid']);
-            $pageAdapter
+        if ($errorPage) {
+            $pageFinder
                 ->expects($this->once())
-                ->method('findFirstPublishedByTypeAndPid')
-                ->with($errorPage->type, $errorPage->pid)
+                ->method('findFirstPageOfTypeForRequest')
+                ->with($this->isInstanceOf(Request::class), $errorPage->type)
                 ->willReturn($errorPage)
             ;
 
@@ -420,11 +426,9 @@ class PrettyErrorScreenListenerTest extends TestCase
                 ->with($errorPage)
                 ->willReturn(new PageRoute($errorPage))
             ;
-
-            $adapters[PageModel::class] = $pageAdapter;
         }
 
-        $framework = $this->mockContaoFramework($adapters);
+        $framework = $this->mockContaoFramework();
 
         $security = $this->createMock(Security::class);
         $security
@@ -433,20 +437,21 @@ class PrettyErrorScreenListenerTest extends TestCase
             ->willReturn($isBackendUser)
         ;
 
-        return new PrettyErrorScreenListener(true, $twig, $framework, $security, $pageRegistry, $httpKernel);
+        return new PrettyErrorScreenListener(true, $twig, $framework, $security, $pageRegistry, $httpKernel, $pageFinder);
     }
 
     private function getRequest(string $scope = 'backend', string $format = 'html', string $accept = 'text/html'): Request
     {
         $request = new Request();
+        $request->headers->set('Accept', $accept);
+
         $request->attributes->set('_scope', $scope);
         $request->attributes->set('_format', $format);
-        $request->headers->set('Accept', $accept);
 
         return $request;
     }
 
-    private function getResponseEvent(\Exception $exception, Request $request = null, bool $isSubRequest = false): ExceptionEvent
+    private function getResponseEvent(\Exception $exception, Request|null $request = null, bool $isSubRequest = false): ExceptionEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
         $type = $isSubRequest ? HttpKernelInterface::SUB_REQUEST : HttpKernelInterface::MAIN_REQUEST;
@@ -454,10 +459,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         return new ExceptionEvent($kernel, $request ?? $this->getRequest(), $type, $exception);
     }
 
-    /**
-     * @return PageModel&MockObject
-     */
-    private function mockPageWithProperties(array $properties = []): PageModel
+    private function mockPageWithProperties(array $properties = []): PageModel&MockObject
     {
         $page = $this->mockClassWithProperties(PageModel::class, $properties);
         $page

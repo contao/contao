@@ -27,8 +27,11 @@ use Contao\File;
 use Contao\Files;
 use Contao\Image\ImageInterface;
 use Contao\System;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 use Twig\Environment;
 
@@ -136,7 +139,7 @@ class FigureRendererTest extends TestCase
 
         $filesystem->symlink(
             Path::canonicalize(__DIR__.'/../../Fixtures/files'),
-            Path::join($this->getTempDir(), 'files')
+            Path::join($this->getTempDir(), 'files'),
         );
 
         $imageFactory = $this->createMock(ImageFactoryInterface::class);
@@ -149,7 +152,7 @@ class FigureRendererTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
         $container->set('filesystem', $filesystem);
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework()));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class)));
         $container->set('contao.image.factory', $imageFactory);
 
         System::setContainer($container);

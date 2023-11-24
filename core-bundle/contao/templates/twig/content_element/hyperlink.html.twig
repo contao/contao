@@ -1,0 +1,24 @@
+{% extends "@Contao/content_element/_base.html.twig" %}
+{% use "@Contao/component/_figure.html.twig" %}
+
+{% block content %}
+    {% if not image %}
+        {# Link wrapping text #}
+        {% block text_link %}
+            {{- text_before -}}
+            <a{{ attrs(link_attributes|default) }}>{{ link_text }}</a>
+            {{- text_after -}}
+        {% endblock %}
+    {% else %}
+        {# Link wrapping a figure #}
+        {% block image_link %}
+            {% with {figure: image} %}{{ block('figure_component') }}{% endwith %}
+        {% endblock %}
+    {% endif %}
+{% endblock %}
+
+{% block media_link %}
+    {{- text_before -}}
+    {{ parent() }}
+    {{- text_after -}}
+{% endblock %}

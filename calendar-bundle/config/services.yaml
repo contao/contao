@@ -1,0 +1,67 @@
+services:
+    _defaults:
+        autoconfigure: true
+
+    _instanceof:
+        Contao\CoreBundle\Framework\FrameworkAwareInterface:
+            calls:
+                - [setFramework, ['@contao.framework']]
+
+    contao_calendar.cron.generate_feeds:
+        class: Contao\CalendarBundle\Cron\GenerateFeedsCron
+        arguments:
+            - '@contao.framework'
+
+    contao_calendar.listener.data_container.start_stop_validation:
+        class: Contao\CoreBundle\EventListener\DataContainer\StartStopValidationListener
+        arguments:
+            - '@translator'
+        tags:
+            - { name: contao.callback, table: tl_calendar_events, target: config.onbeforesubmit }
+
+    contao_calendar.listener.generate_page:
+        class: Contao\CalendarBundle\EventListener\GeneratePageListener
+        arguments:
+            - '@contao.framework'
+        tags:
+            - { name: contao.hook, hook: generatePage }
+
+    contao_calendar.listener.insert_tags:
+        class: Contao\CalendarBundle\EventListener\InsertTagsListener
+        arguments:
+            - '@contao.framework'
+        tags:
+            - { name: contao.hook, hook: replaceInsertTags }
+
+    contao_calendar.listener.preview_url_convert:
+        class: Contao\CalendarBundle\EventListener\PreviewUrlConvertListener
+        arguments:
+            - '@contao.framework'
+        tags:
+            - kernel.event_listener
+
+    contao_calendar.listener.preview_url_create:
+        class: Contao\CalendarBundle\EventListener\PreviewUrlCreateListener
+        arguments:
+            - '@request_stack'
+            - '@contao.framework'
+        tags:
+            - kernel.event_listener
+
+    contao_calendar.listener.sitemap:
+        class: Contao\CalendarBundle\EventListener\SitemapListener
+        arguments:
+            - '@contao.framework'
+            - '@security.helper'
+        tags:
+            - kernel.event_listener
+
+    contao_calendar.picker.event_provider:
+        class: Contao\CalendarBundle\Picker\EventPickerProvider
+        arguments:
+            - '@knp_menu.factory'
+            - '@router'
+            - '@?translator'
+            - '@security.helper'
+        tags:
+            - { name: contao.picker_provider, priority: 96 }

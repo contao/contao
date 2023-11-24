@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Image\Preview;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\ImageFactoryInterface;
-use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Image\PictureFactoryInterface;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
@@ -33,22 +32,23 @@ use Symfony\Component\Filesystem\Path;
 class PreviewFactory
 {
     private string $defaultDensities = '';
+
     private array $predefinedSizes = [];
 
     /**
-     * @param iterable<int,PreviewProviderInterface> $previewProviders
+     * @param iterable<int, PreviewProviderInterface> $previewProviders
      */
     public function __construct(
-        private iterable $previewProviders,
-        private ImageFactoryInterface $imageFactory,
-        private PictureFactoryInterface $pictureFactory,
-        private Studio $imageStudio,
-        private ContaoFramework $framework,
-        private string $secret,
-        private string $cacheDir,
-        private array $validImageExtensions,
-        private int $defaultSize,
-        private int $maxSize,
+        private readonly iterable $previewProviders,
+        private readonly ImageFactoryInterface $imageFactory,
+        private readonly PictureFactoryInterface $pictureFactory,
+        private readonly Studio $imageStudio,
+        private readonly ContaoFramework $framework,
+        #[\SensitiveParameter] private readonly string $secret,
+        private readonly string $cacheDir,
+        private readonly array $validImageExtensions,
+        private readonly int $defaultSize,
+        private readonly int $maxSize,
     ) {
     }
 
@@ -77,9 +77,9 @@ class PreviewFactory
     }
 
     /**
-     * @throws UnableToGeneratePreviewException|MissingPreviewProviderException
-     *
      * @return iterable<ImageInterface>
+     *
+     * @throws UnableToGeneratePreviewException|MissingPreviewProviderException
      */
     public function createPreviews(string $path, int $size = 0, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $previewOptions = []): iterable
     {
@@ -116,16 +116,16 @@ class PreviewFactory
                         $targetPathCallback,
                         $lastPage,
                         $firstPage,
-                        $previewOptions
+                        $previewOptions,
                     );
 
-                    if (!\is_array($previews)) {
+                    if ($previews instanceof \Traversable) {
                         $previews = iterator_to_array($previews, false);
                     }
 
                     // We reached the last page if the number of returned
                     // previews was less than the number of pages requested
-                    if (\count($previews) > 0 && \count($previews) <= $lastPage - $firstPage) {
+                    if ($previews && \count($previews) <= $lastPage - $firstPage) {
                         $lastPreview = $previews[array_key_last($previews)];
                         $fileExtension = pathinfo($lastPreview, PATHINFO_EXTENSION);
                         $this->symlink($lastPreview, "$targetPath-last.$fileExtension");
@@ -145,7 +145,7 @@ class PreviewFactory
         throw $lastProviderException ?? new MissingPreviewProviderException();
     }
 
-    public function createPreviewImage(string $path, ResizeConfiguration|array|int|string|null $size = null, ResizeOptions $resizeOptions = null, int $page = 1, array $previewOptions = []): ImageInterface
+    public function createPreviewImage(string $path, ResizeConfiguration|array|int|string|null $size = null, ResizeOptions|null $resizeOptions = null, int $page = 1, array $previewOptions = []): ImageInterface
     {
         return $this->imageFactory->create(
             $this->createPreview($path, $this->getPreviewSizeFromImageSize($size), $page, $previewOptions),
@@ -157,7 +157,7 @@ class PreviewFactory
     /**
      * @return iterable<ImageInterface>
      */
-    public function createPreviewImages(string $path, ResizeConfiguration|array|int|string|null $size = null, ResizeOptions $resizeOptions = null, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $previewOptions = []): iterable
+    public function createPreviewImages(string $path, ResizeConfiguration|array|int|string|null $size = null, ResizeOptions|null $resizeOptions = null, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $previewOptions = []): iterable
     {
         $previews = $this->createPreviews(
             $path,
@@ -169,11 +169,11 @@ class PreviewFactory
 
         return array_map(
             fn ($preview) => $this->imageFactory->create($preview, $size, $resizeOptions),
-            \is_array($previews) ? $previews : iterator_to_array($previews, false),
+            $previews instanceof \Traversable ? iterator_to_array($previews, false) : $previews,
         );
     }
 
-    public function createPreviewPicture(string $path, PictureConfiguration|array|int|string|null $size = null, ResizeOptions $resizeOptions = null, int $page = 1, array $previewOptions = []): PictureInterface
+    public function createPreviewPicture(string $path, PictureConfiguration|array|int|string|null $size = null, ResizeOptions|null $resizeOptions = null, int $page = 1, array $previewOptions = []): PictureInterface
     {
         $previewPath = $this->createPreview($path, $this->getPreviewSizeFromImageSize($size), $page, $previewOptions);
 
@@ -183,7 +183,7 @@ class PreviewFactory
     /**
      * @return iterable<PictureInterface>
      */
-    public function createPreviewPictures(string $path, PictureConfiguration|array|int|string|null $size = null, ResizeOptions $resizeOptions = null, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $previewOptions = []): iterable
+    public function createPreviewPictures(string $path, PictureConfiguration|array|int|string|null $size = null, ResizeOptions|null $resizeOptions = null, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $previewOptions = []): iterable
     {
         return $this->convertPreviewsToPictures(
             $this->createPreviews(
@@ -198,7 +198,7 @@ class PreviewFactory
         );
     }
 
-    public function createPreviewFigure(string $path, PictureConfiguration|array|int|string|null $size = null, ResizeOptions $resizeOptions = null, int $page = 1, array $previewOptions = []): Figure
+    public function createPreviewFigure(string $path, PictureConfiguration|array|int|string|null $size = null, ResizeOptions|null $resizeOptions = null, int $page = 1, array $previewOptions = []): Figure
     {
         return $this->createPreviewFigureBuilder($path, $size, $resizeOptions, $page, $previewOptions)->build();
     }
@@ -206,7 +206,7 @@ class PreviewFactory
     /**
      * @return iterable<Figure>
      */
-    public function createPreviewFigures(string $path, PictureConfiguration|array|int|string|null $size = null, ResizeOptions $resizeOptions = null, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $previewOptions = []): iterable
+    public function createPreviewFigures(string $path, PictureConfiguration|array|int|string|null $size = null, ResizeOptions|null $resizeOptions = null, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $previewOptions = []): iterable
     {
         $previews = $this->createPreviews(
             $path,
@@ -226,7 +226,7 @@ class PreviewFactory
         return $figures;
     }
 
-    public function createPreviewFigureBuilder(string $path, PictureConfiguration|array|int|string|null $size = null, ResizeOptions $resizeOptions = null, int $page = 1, array $previewOptions = []): FigureBuilder
+    public function createPreviewFigureBuilder(string $path, PictureConfiguration|array|int|string|null $size = null, ResizeOptions|null $resizeOptions = null, int $page = 1, array $previewOptions = []): FigureBuilder
     {
         return $this->imageStudio
             ->createFigureBuilder()
@@ -296,7 +296,7 @@ class PreviewFactory
         if (is_numeric($size[2])) {
             $imageSize = $this->framework->getAdapter(ImageSizeModel::class)->findByPk($size[2]);
 
-            if (null === $imageSize) {
+            if (!$imageSize) {
                 return 0;
             }
 
@@ -334,40 +334,11 @@ class PreviewFactory
      *
      * @return iterable<PictureInterface>
      */
-    private function convertPreviewsToPictures(iterable $previews, PictureConfiguration|array|int|string|null $size, ResizeOptions $resizeOptions = null): iterable
+    private function convertPreviewsToPictures(iterable $previews, PictureConfiguration|array|int|string|null $size, ResizeOptions|null $resizeOptions = null): iterable
     {
-        // Unlike the Contao\Image\PictureFactory, the PictureFactoryInterface
-        // does not know about ResizeOptions. We therefore check if the third
-        // argument of the "create" method allows setting them.
-        // TODO: Adjust this in Contao 5 after the interface has been adjusted.
-        $canHandleResizeOptions = static function (PictureFactoryInterface $factory): bool {
-            if ($factory instanceof PictureFactory) {
-                return true;
-            }
-
-            $createParameters = (new \ReflectionClass($factory))
-                ->getMethod('create')
-                ->getParameters()
-            ;
-
-            if (!isset($createParameters[2])) {
-                return false;
-            }
-
-            $type = $createParameters[2]->getType();
-
-            return $type instanceof \ReflectionNamedType && ResizeOptions::class === $type->getName();
-        };
-
-        $commonArguments = [$size];
-
-        if (null !== $resizeOptions && $canHandleResizeOptions($this->pictureFactory)) {
-            $commonArguments[] = $resizeOptions;
-        }
-
         return array_map(
-            fn ($path) => $this->pictureFactory->create($path, ...$commonArguments),
-            \is_array($previews) ? $previews : iterator_to_array($previews, false),
+            fn ($path) => $this->pictureFactory->create($path, $size, $resizeOptions),
+            $previews instanceof \Traversable ? iterator_to_array($previews, false) : $previews,
         );
     }
 
@@ -466,6 +437,7 @@ class PreviewFactory
 
         $hash = hash_hmac('sha256', implode('|', $hashData), $this->secret, true);
         $hash = strtolower(substr(StringUtil::encodeBase32($hash), 0, 16));
+
         $name = pathinfo($path, PATHINFO_FILENAME);
 
         return $hash[0]."/$name-".substr($hash, 1);

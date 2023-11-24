@@ -1,0 +1,208 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_image_size.php" source-language="en" target-language="pl">
+    <body>
+      <trans-unit id="tl_image_size.name.0">
+        <source>Name</source>
+        <target>Nazwa wyświetlana</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.name.1">
+        <source>Please enter the image size name.</source>
+        <target>Podaj nazwę rozmiaru obrazka.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.width.0">
+        <source>Width</source>
+        <target>Szerokość</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.width.1">
+        <source>Here you can enter the width in pixels.</source>
+        <target>Wprowadź szerokość w pikselach.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.height.0">
+        <source>Height</source>
+        <target>Wysokość</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.height.1">
+        <source>Here you can enter the height in pixels.</source>
+        <target>Wprowadź wysokość w pikselach.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.resizeMode.0">
+        <source>Resize mode</source>
+        <target>Tryb zmiany rozmiaru</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.resizeMode.1">
+        <source>Only applicable if width and height are specified.</source>
+        <target>Ma zastosowanie tylko, jeżeli szerokość i wysokość są określone.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.zoom.0">
+        <source>Zoom</source>
+        <target>Powiększenie</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.zoom.1">
+        <source>0 = the whole image is visible, 100 = only the important part of the image is visible.</source>
+        <target>0 = cały obraz jest widoczny, 100 = tylko ważna część obrazu jest widoczna.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.sizes.0">
+        <source>Sizes attribute</source>
+        <target>Atrybuty rozmiarów</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.sizes.1">
+        <source>Here you can define the intended layout width of the image, the actual size should be defined via CSS. Example: &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</source>
+        <target>Tutaj można zdefiniować zamierzoną szerokość układu obrazu, rzeczywisty rozmiar powinien być zdefiniowany poprzez CSS. Przykład: &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.densities.0">
+        <source>Pixel densities/scale factors</source>
+        <target>Gęstości pikseli / współczynniki skalowania</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.densities.1">
+        <source>Here you can define the pixel densities (e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;) or width descriptors (e.g. &lt;em&gt;100w, 200w&lt;/em&gt;).</source>
+        <target>Tutaj możesz określić gęstość pikseli (np. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;) lub deskryptory szerokości (np. &lt;em&gt;100w, 200w&lt;/em&gt;).</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.cssClass.0">
+        <source>CSS classes</source>
+        <target>Klasy CSS</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.cssClass.1">
+        <source>The CSS classes will be added to the image tag.</source>
+        <target>Klasy CSS zostaną dodane do tagu obrazka.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.formats.0">
+        <source>Convert image formats</source>
+        <target>Konwertuj formaty obrazków</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.formats.1">
+        <source>Here you can select which image formats shall be converted.</source>
+        <target>Tutaj możesz wybrać formaty obrazków, które zostaną przekonwertowane.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.formatsNotSupported">
+        <source>The following formats are not supported on your server: %s</source>
+        <target>Następujące formaty nie są wspierane na twoim serwerze: %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadata.0">
+        <source>Preserve copyright metadata</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadata.1">
+        <source>Preserve copyright-related metadata fields (EXIF, IPTC, XMP).</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadataFields.0">
+        <source>Metadata fields</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadataFields.1">
+        <source>Please select the metadata fields to preserve.</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.skipIfDimensionsMatch.0">
+        <source>Use original image if dimensions match</source>
+        <target>Użyj oryginalnego obrazka jeśli wymiary się zgadzają</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.skipIfDimensionsMatch.1">
+        <source>Note that no optimizations such as metadata stripping or JPEG compression will be applied in this case.</source>
+        <target>Należy pamiętać, że w tym przypadku nie będą stosowane żadne optymalizacje, takie jak usuwanie metadanych lub kompresja JPEG.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.imageQuality.0">
+        <source>Image quality</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.imageQuality.1">
+        <source>Here you can set the image compression quality between 0 (lowest quality) and 100 (highest quality). Leave blank to use the system default.</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.lazyLoading.0">
+        <source>Enable lazy loading</source>
+        <target>Włącz lazy loading</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.lazyLoading.1">
+        <source>Defer loading the image until it is scrolled into the viewport.</source>
+        <target>Opóźnij ładowanie obrazka do czasu aż pojawi się w viewporcie.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.tstamp.0">
+        <source>Revision date</source>
+        <target>Data rewizji</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.tstamp.1">
+        <source>Date and time of the latest revision</source>
+        <target>Data i czas ostatniej rewizji</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.title_legend">
+        <source>Image size settings</source>
+        <target>Ustawienia rozmiaru obrazka</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.source_legend">
+        <source>Image source settings</source>
+        <target>Ustawienia źródła obrazu</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.loading_legend">
+        <source>Loading options</source>
+        <target>Opcje ładowania</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.metadata_legend">
+        <source>Metadata settings</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.expert_legend">
+        <source>Expert settings</source>
+        <target>Zaawansowane ustawienia</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.proportional.0">
+        <source>Proportional</source>
+        <target>Proporcjonalnie</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.proportional.1">
+        <source>The longer side of the image is adjusted to the given dimensions and the image is resized proportionally.</source>
+        <target>Dłuższa strona obrazka jest dopasowana do podanych wymiarów i obrazek jest proporcjonalnie przeskalowany.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.box.0">
+        <source>Fit the box</source>
+        <target>Dostosuj</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.box.1">
+        <source>The shorter side of the image is adjusted to the given dimensions and the image is resized proportionally.</source>
+        <target>Krótsza strona obrazka jest dopasowana do podanych wymiarów i obrazek jest proporcjonalnie przeskalowany.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.crop.0">
+        <source>Crop</source>
+        <target>Przycięcie</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.crop.1">
+        <source>The image will be resized to the given dimensions. If necessary, it will be cropped.</source>
+        <target>Obrazek zostanie przeskalowany do podanych wymiarów. Jeśli to konieczne, zostanie przycięty.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadataOptions.default">
+        <source>Use default settings</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadataOptions.overwrite">
+        <source>Select custom metadata fields</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadataOptions.delete">
+        <source>Remove all metadata fields</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.new.0">
+        <source>New</source>
+        <target>Nowy</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.new.1">
+        <source>Create a new image size</source>
+        <target>Utwórz nowy rozmiar obrazu</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.show">
+        <source>Show the details of image size ID %s</source>
+        <target>Pokaż szczegóły rozmiaru ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.edit">
+        <source>Edit image size ID %s</source>
+        <target>Edytuj rozmiar obrazka ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.children">
+        <source>Edit the media queries of image size ID %s</source>
+        <target>Edytuj media queries rozmiaru obrazka ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.cut">
+        <source>Move image size ID %s</source>
+        <target>Przenieś rozmiar obrazka ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.copy">
+        <source>Duplicate image size ID %s</source>
+        <target>Duplikuj rozmiar obrazka ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.delete">
+        <source>Delete image size ID %s</source>
+        <target>Usuń rozmiar obrazka ID %s</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

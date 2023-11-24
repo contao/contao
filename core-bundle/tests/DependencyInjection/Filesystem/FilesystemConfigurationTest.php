@@ -92,7 +92,7 @@ class FilesystemConfigurationTest extends TestCase
             ->willReturn($adapterDefinition)
         ;
 
-        $config = $this->getConfigurationWithAdapterDefinitionFactory($container, $adapterDefinitionFactory);
+        $config = new FilesystemConfiguration($container, $adapterDefinitionFactory);
         $config->mountAdapter('some-native-adapter', ['some' => 'options'], 'path', 'foo');
 
         $this->assertTrue($container->hasDefinition('contao.filesystem.adapter.foo'));
@@ -117,7 +117,7 @@ class FilesystemConfigurationTest extends TestCase
             ->willReturn(null)
         ;
 
-        $config = $this->getConfigurationWithAdapterDefinitionFactory($container, $adapterDefinitionFactory);
+        $config = new FilesystemConfiguration($container, $adapterDefinitionFactory);
         $config->mountAdapter('some-custom-adapter', ['some' => 'options'], 'path', 'foo');
 
         $this->assertTrue($container->hasAlias('contao.filesystem.adapter.foo'));
@@ -181,7 +181,7 @@ class FilesystemConfigurationTest extends TestCase
             ->willReturn($this->createMock(Definition::class))
         ;
 
-        $config = $this->getConfigurationWithAdapterDefinitionFactory($container, $adapterDefinitionFactory);
+        $config = new FilesystemConfiguration($container, $adapterDefinitionFactory);
         $config->mountLocalAdapter($filesystemPath, 'mount/path', 'my_adapter');
 
         $this->assertTrue($container->hasDefinition('contao.filesystem.adapter.my_adapter'));
@@ -246,10 +246,16 @@ class FilesystemConfigurationTest extends TestCase
         $this->assertSame('tl_foo', $dbafs->getArgument(2));
         $this->assertTrue($definition->hasTag('kernel.reset'));
 
+        // Set last modified
+        $this->assertSame(
+            ['useLastModified', [$useLastModified]],
+            $definition->getMethodCalls()[0],
+        );
+
         // Registered at DbafsManager
         $this->assertSame(
             ['register', [$definition, 'some/prefix']],
-            $container->getDefinition('contao.filesystem.dbafs_manager')->getMethodCalls()[0]
+            $container->getDefinition('contao.filesystem.dbafs_manager')->getMethodCalls()[0],
         );
     }
 
@@ -268,17 +274,6 @@ class FilesystemConfigurationTest extends TestCase
         $this->expectExceptionMessage('A virtual filesystem with the name "foo" does not exist.');
 
         $config->addDefaultDbafs('foo', 'tl_foo');
-    }
-
-    private function getConfigurationWithAdapterDefinitionFactory(ContainerBuilder $container, AdapterDefinitionFactory $adapterDefinitionFactory): FilesystemConfiguration
-    {
-        $config = new FilesystemConfiguration($container);
-
-        $class = new \ReflectionClass(FilesystemConfiguration::class);
-        $property = $class->getProperty('adapterDefinitionFactory');
-        $property->setValue($config, $adapterDefinitionFactory);
-
-        return $config;
     }
 
     private function getContainerBuilder(array $parameters = []): ContainerBuilder

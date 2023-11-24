@@ -13,20 +13,20 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Cron;
 
 use Contao\Config;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\ServiceAnnotation\CronJob;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Types;
 
 class PurgeExpiredDataCron
 {
-    public function __construct(private ContaoFramework $framework, private Connection $connection)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly Connection $connection,
+    ) {
     }
 
-    /**
-     * @CronJob("hourly")
-     */
+    #[AsCronJob('hourly')]
     public function onHourly(): void
     {
         $this->framework->initialize();

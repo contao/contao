@@ -13,20 +13,20 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Picker;
 
 use Knp\Menu\FactoryInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface
 {
     /**
-     * @internal Do not inherit from this class; decorate the "contao.picker.page_provider" service instead
+     * @internal
      */
     public function __construct(
         FactoryInterface $menuFactory,
         RouterInterface $router,
-        TranslatorInterface|null $translator,
-        private Security $security,
+        TranslatorInterface $translator,
+        private readonly Security $security,
     ) {
         parent::__construct($menuFactory, $router, $translator);
     }
@@ -50,7 +50,7 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return $this->isMatchingInsertTag($config);
     }
 
-    public function getDcaTable(PickerConfig $config = null): string
+    public function getDcaTable(PickerConfig|null $config = null): string
     {
         return 'tl_page';
     }
@@ -63,10 +63,6 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         if ('page' === $config->getContext()) {
             if ($fieldType = $config->getExtra('fieldType')) {
                 $attributes['fieldType'] = $fieldType;
-            }
-
-            if ($source = $config->getExtra('source')) {
-                $attributes['preserveRecord'] = $source;
             }
 
             if (\is_array($rootNodes = $config->getExtra('rootNodes'))) {
@@ -100,7 +96,7 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return sprintf($this->getInsertTag($config), $value);
     }
 
-    protected function getRouteParameters(PickerConfig $config = null): array
+    protected function getRouteParameters(PickerConfig|null $config = null): array
     {
         return ['do' => 'page'];
     }

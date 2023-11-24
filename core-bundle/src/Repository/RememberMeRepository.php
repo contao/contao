@@ -14,9 +14,8 @@ namespace Contao\CoreBundle\Repository;
 
 use Contao\CoreBundle\Entity\RememberMe;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Types\Types;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
+use Symfony\Component\Security\Core\Exception\TokenNotFoundException;
 
 /**
  * @template-extends ServiceEntityRepository<RememberMe>
@@ -25,61 +24,27 @@ use Symfony\Bridge\Doctrine\ManagerRegistry;
  */
 class RememberMeRepository extends ServiceEntityRepository
 {
-    private Connection $connection;
-
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, RememberMe::class);
-
-        $this->connection = $registry->getConnection();
     }
 
-    public function lockTable(): void
-    {
-        $table = $this->getClassMetadata()->getTableName();
-
-        $this->connection->executeStatement("LOCK TABLES $table WRITE, $table AS t0_ WRITE");
-    }
-
-    public function unlockTable(): void
-    {
-        $this->connection->executeStatement('UNLOCK TABLES');
-    }
-
-    /**
-     * @return array<RememberMe>
-     */
-    public function findBySeries(string $series): array
+    public function findBySeries(string $series): RememberMe
     {
         $qb = $this->createQueryBuilder('rm');
         $qb
             ->where('rm.series = :series')
-            ->andWhere(
-                $qb->expr()->orX(
-                    $qb->expr()->isNull('rm.expires'),
-                    $qb->expr()->lte('rm.expires', ':now')
-                )
-            )
             ->setParameter('series', $series)
-            ->setParameter('now', new \DateTime(), Types::DATETIME_MUTABLE)
-            ->orderBy('rm.expires', 'ASC')
+            ->orderBy('rm.lastUsed', 'ASC')
         ;
 
-        return $qb->getQuery()->getResult();
-    }
+        $rows = $qb->getQuery()->getResult();
 
-    public function deleteSiblings(RememberMe $entity): void
-    {
-        $qb = $this->_em->createQueryBuilder();
-        $qb
-            ->delete($this->_entityName, 'rm')
-            ->where('rm.series = :series')
-            ->andWhere('rm.value != :value')
-            ->setParameter('series', $entity->getSeries())
-            ->setParameter('value', $entity->getValue())
-        ;
+        if (0 === \count($rows)) {
+            throw new TokenNotFoundException('No token found');
+        }
 
-        $qb->getQuery()->execute();
+        return $rows[0];
     }
 
     public function deleteBySeries(string $series): void
@@ -94,20 +59,6 @@ class RememberMeRepository extends ServiceEntityRepository
         $qb->getQuery()->execute();
     }
 
-    public function deleteExpired(int $lastUsedLifetime, int $expiresLifetime): void
-    {
-        $qb = $this->_em->createQueryBuilder();
-        $qb
-            ->delete($this->_entityName, 'rm')
-            ->where('rm.lastUsed < :lastUsed')
-            ->orWhere('rm.expires < :expires')
-            ->setParameter('lastUsed', (new \DateTime())->sub(new \DateInterval('PT'.$lastUsedLifetime.'S')))
-            ->setParameter('expires', (new \DateTime())->sub(new \DateInterval('PT'.$expiresLifetime.'S')))
-        ;
-
-        $qb->getQuery()->execute();
-    }
-
     public function persist(RememberMe ...$entities): void
     {
         foreach ($entities as $entity) {
@@ -115,5 +66,17 @@ class RememberMeRepository extends ServiceEntityRepository
         }
 
         $this->_em->flush();
+    }
+
+    public function deleteByUserIdentifier(string $userIdentifier): void
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $qb
+            ->delete($this->_entityName, 'rm')
+            ->where('rm.userIdentifier = :userIdentifier')
+            ->setParameter('userIdentifier', $userIdentifier)
+        ;
+
+        $qb->getQuery()->execute();
     }
 }

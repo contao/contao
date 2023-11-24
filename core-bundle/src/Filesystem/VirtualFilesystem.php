@@ -14,6 +14,8 @@ namespace Contao\CoreBundle\Filesystem;
 
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
+use Contao\CoreBundle\Filesystem\PublicUri\OptionsInterface;
+use Psr\Http\Message\UriInterface;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Uid\Uuid;
 
@@ -23,10 +25,12 @@ use Symfony\Component\Uid\Uuid;
  * prefix (e.g. "assets/images") to get a different root and/or as a readonly
  * view to prevent accidental mutations.
  *
- * In each method you can either pass in a path (string) or a @see Uuid to
+ * In each method you can either pass in a path (string) or an Uuid object to
  * target resources. For operations that can be short-circuited via a DBAFS,
  * you can optionally set access flags to bypass the DBAFS or to force a
  * (partial) synchronization beforehand.
+ *
+ * @see Uuid
  *
  * @experimental
  */
@@ -36,10 +40,10 @@ class VirtualFilesystem implements VirtualFilesystemInterface
      * @internal Use the "contao.filesystem.virtual_factory" service to create new instances.
      */
     public function __construct(
-        private MountManager $mountManager,
-        private DbafsManager $dbafsManager,
-        private string $prefix = '',
-        private bool $readonly = false,
+        private readonly MountManager $mountManager,
+        private readonly DbafsManager $dbafsManager,
+        private readonly string $prefix = '',
+        private readonly bool $readonly = false,
     ) {
     }
 
@@ -174,7 +178,14 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         }
 
         if ($this->directoryExists($relativePath, $accessFlags)) {
-            return new FilesystemItem(false, $relativePath);
+            return new FilesystemItem(
+                false,
+                $relativePath,
+                null,
+                null,
+                null,
+                fn () => $this->getExtraMetadata($relativePath, $accessFlags),
+            );
         }
 
         return null;
@@ -258,6 +269,13 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         $this->dbafsManager->setExtraMetadata($this->resolve($location), $metadata);
     }
 
+    public function generatePublicUri(Uuid|string $location, OptionsInterface|null $options = null): UriInterface|null
+    {
+        $path = $this->resolve($location);
+
+        return $this->mountManager->generatePublicUri($path, $options);
+    }
+
     /**
      * @param 'fileExists'|'directoryExists'|'has' $method
      *
@@ -304,7 +322,6 @@ class VirtualFilesystem implements VirtualFilesystemInterface
     {
         // Read from DBAFS but enhance result with file metadata on demand
         if (!($accessFlags & self::BYPASS_DBAFS) && $this->dbafsManager->match($path)) {
-            /** @var FilesystemItem $item */
             foreach ($this->dbafsManager->listContents($path, $deep) as $item) {
                 $path = $item->getPath();
                 $item = $item->withPath(Path::makeRelative($path, $this->prefix));
@@ -326,7 +343,6 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         }
 
         // Read from adapter, but enhance result with extra metadata on demand
-        /** @var FilesystemItem $item */
         foreach ($this->mountManager->listContents($path, $deep) as $item) {
             $path = $item->getPath();
 
@@ -344,10 +360,9 @@ class VirtualFilesystem implements VirtualFilesystemInterface
 
     private function resolve(Uuid|string $location): string
     {
-        $path = $location instanceof Uuid ?
-            Path::canonicalize($this->dbafsManager->resolveUuid($location, $this->prefix)) :
-            Path::canonicalize($location)
-        ;
+        $path = $location instanceof Uuid
+            ? Path::canonicalize($this->dbafsManager->resolveUuid($location, $this->prefix))
+            : Path::canonicalize($location);
 
         if (Path::isAbsolute($path)) {
             throw new \OutOfBoundsException(sprintf('Virtual filesystem path "%s" cannot be absolute.', $path));

@@ -17,6 +17,7 @@ use Contao\Environment;
 use Contao\System;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpFoundation\IpUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -37,27 +38,27 @@ class EnvironmentTest extends TestCase
         Environment::reset();
         Environment::set('path', '/core');
 
-        $request = new Request();
-        $request->server->set('REMOTE_ADDR', '123.456.789.0');
-        $request->server->set('SCRIPT_NAME', '/core/index.php');
-        $request->server->set('HTTPS', 'on');
-
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
         $container = new ContainerBuilder();
-        $container->set('request_stack', $requestStack);
+        $container->set('request_stack', new RequestStack());
+
+        Request::setTrustedProxies(['127.0.0.1'], Request::HEADER_X_FORWARDED_FOR);
 
         System::setContainer($container);
 
-        require __DIR__.'/../../src/Resources/contao/config/default.php';
-        require __DIR__.'/../../src/Resources/contao/config/agents.php';
+        require __DIR__.'/../../contao/config/default.php';
     }
 
     protected function tearDown(): void
     {
         $this->restoreServerEnvGetPost();
-        $this->resetStaticProperties([Environment::class, [Environment::class, ['strSapi']], System::class]);
+
+        $this->resetStaticProperties([
+            Environment::class,
+            [Environment::class, ['strSapi']],
+            System::class,
+            Request::class,
+            IpUtils::class,
+        ]);
 
         parent::tearDown();
     }
@@ -69,6 +70,7 @@ class EnvironmentTest extends TestCase
     {
         $this->setSapi('apache');
 
+        $_SERVER = [];
         $_SERVER['SERVER_PORT'] = 80;
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['HTTP_CONNECTION'] = 'keep-alive';
@@ -76,7 +78,8 @@ class EnvironmentTest extends TestCase
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.149 Safari/537.36';
         $_SERVER['HTTP_ACCEPT_ENCODING'] = 'gzip,deflate,sdch';
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'de-DE,de;q=0.8,en-GB;q=0.6,en;q=0.4';
-        $_SERVER['HTTP_X_FORWARDED_FOR'] = '123.456.789.0';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '123.45.67.89';
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
         $_SERVER['HTTPS'] = 'on';
         $_SERVER['SERVER_NAME'] = 'localhost';
         $_SERVER['SERVER_ADDR'] = '127.0.0.1';
@@ -89,6 +92,14 @@ class EnvironmentTest extends TestCase
         $_SERVER['PHP_SELF'] = '/core/index.php';
 
         $this->runTests();
+
+        System::getContainer()->get('request_stack')->push(new Request(server: $_SERVER));
+
+        $this->runTests();
+
+        $_SERVER = [];
+
+        $this->runTests();
     }
 
     /**
@@ -98,6 +109,7 @@ class EnvironmentTest extends TestCase
     {
         $this->setSapi('cgi_fcgi');
 
+        $_SERVER = [];
         $_SERVER['SERVER_PORT'] = 80;
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['HTTP_CONNECTION'] = 'close';
@@ -105,7 +117,8 @@ class EnvironmentTest extends TestCase
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.149 Safari/537.36';
         $_SERVER['HTTP_ACCEPT_ENCODING'] = 'gzip,deflate,sdch';
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'de-DE,de;q=0.8,en-GB;q=0.6,en;q=0.4';
-        $_SERVER['HTTP_X_FORWARDED_FOR'] = '123.456.789.0';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '123.45.67.89';
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
         $_SERVER['HTTPS'] = 'on';
         $_SERVER['SERVER_NAME'] = 'localhost';
         $_SERVER['SERVER_ADDR'] = '127.0.0.1';
@@ -122,6 +135,14 @@ class EnvironmentTest extends TestCase
         $_SERVER['SCRIPT_URL'] = '/core/en/academy.html';
 
         $this->runTests();
+
+        System::getContainer()->get('request_stack')->push(new Request(server: $_SERVER));
+
+        $this->runTests();
+
+        $_SERVER = [];
+
+        $this->runTests();
     }
 
     /**
@@ -131,6 +152,7 @@ class EnvironmentTest extends TestCase
     {
         $this->setSapi('fpm_fcgi');
 
+        $_SERVER = [];
         $_SERVER['SERVER_PORT'] = 80;
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['HTTP_CONNECTION'] = 'close';
@@ -138,7 +160,8 @@ class EnvironmentTest extends TestCase
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.149 Safari/537.36';
         $_SERVER['HTTP_ACCEPT_ENCODING'] = 'gzip,deflate,sdch';
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'de-DE,de;q=0.8,en-GB;q=0.6,en;q=0.4';
-        $_SERVER['HTTP_X_FORWARDED_FOR'] = '123.456.789.0';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '123.45.67.89';
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
         $_SERVER['HTTPS'] = 'on';
         $_SERVER['SERVER_NAME'] = 'localhost';
         $_SERVER['SERVER_ADDR'] = '127.0.0.1';
@@ -153,28 +176,24 @@ class EnvironmentTest extends TestCase
         $_SERVER['PATH_INFO'] = '/en/academy.html';
 
         $this->runTests();
+
+        System::getContainer()->get('request_stack')->push(new Request(server: $_SERVER));
+
+        $this->runTests();
+
+        $_SERVER = [];
+
+        $this->runTests();
     }
 
     private function runTests(): void
     {
-        $this->expectDeprecation('%sEnvironment::get(\'agent\')%shas been deprecated%s');
-
-        $agent = Environment::get('agent');
-
-        $this->assertSame('mac', $agent->os);
-        $this->assertSame('mac chrome blink ch33', $agent->class);
-        $this->assertSame('chrome', $agent->browser);
-        $this->assertSame('ch', $agent->shorty);
-        $this->assertSame('33', $agent->version);
-        $this->assertSame('blink', $agent->engine);
-        $this->assertSame(['33', '0', '1750', '149'], $agent->versions);
-        $this->assertFalse($agent->mobile);
-
         $this->assertSame('HTTP/1.1', Environment::get('serverProtocol'));
         $this->assertSame($this->projectDir.'/core/index.php', Environment::get('scriptFilename'));
         $this->assertSame('/core/index.php', Environment::get('scriptName'));
         $this->assertSame($this->projectDir, Environment::get('documentRoot'));
         $this->assertSame('/core/en/academy.html?do=test', Environment::get('requestUri'));
+        $this->assertSame('do=test', Environment::get('queryString'));
         $this->assertSame(['de-DE', 'de', 'en-GB', 'en'], Environment::get('httpAcceptLanguage'));
         $this->assertSame(['gzip', 'deflate', 'sdch'], Environment::get('httpAcceptEncoding'));
         $this->assertSame('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.149 Safari/537.36', Environment::get('httpUserAgent'));
@@ -184,10 +203,12 @@ class EnvironmentTest extends TestCase
         $this->assertTrue(Environment::get('ssl'));
         $this->assertSame('https://localhost', Environment::get('url'));
         $this->assertSame('https://localhost/core/en/academy.html?do=test', Environment::get('uri'));
-        $this->assertSame('123.456.789.0', Environment::get('ip'));
+        $this->assertSame('123.45.67.89', Environment::get('ip'));
         $this->assertSame('127.0.0.1', Environment::get('server'));
         $this->assertSame('index.php', Environment::get('script'));
+        $this->assertSame('/core/index.php', Environment::get('scriptName'));
         $this->assertSame('en/academy.html?do=test', Environment::get('request'));
+        $this->assertSame('/core/en/academy.html?do=test', Environment::get('requestUri'));
         $this->assertSame('en/academy.html?do=test', Environment::get('indexFreeRequest'));
         $this->assertSame('https://localhost'.Environment::get('path').'/', Environment::get('base'));
         $this->assertFalse(Environment::get('isAjaxRequest'));
@@ -197,6 +218,6 @@ class EnvironmentTest extends TestCase
     {
         $reflection = new \ReflectionClass(Environment::class);
         $property = $reflection->getProperty('strSapi');
-        $property->setValue($sapi);
+        $property->setValue(null, $sapi);
     }
 }

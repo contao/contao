@@ -26,11 +26,13 @@ class AbstractCandidates implements CandidatesInterface
      */
     private const LIMIT = 20;
 
-    public function __construct(protected array $urlPrefixes, protected array $urlSuffixes)
-    {
+    public function __construct(
+        protected array $urlPrefixes,
+        protected array $urlSuffixes,
+    ) {
     }
 
-    public function isCandidate($name): bool
+    public function isCandidate(string $name): bool
     {
         return str_starts_with($name, 'tl_page.');
     }
@@ -71,7 +73,7 @@ class AbstractCandidates implements CandidatesInterface
         $url = $request->getPathInfo();
         $url = rawurldecode(substr($url, 1));
 
-        if (empty($url)) {
+        if ('' === $url) {
             throw new \RuntimeException(__METHOD__.' cannot handle empty path');
         }
 

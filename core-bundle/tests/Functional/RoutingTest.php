@@ -699,15 +699,6 @@ class RoutingTest extends FunctionalTestCase
             '127.0.0.1:8080',
         ];
 
-        yield 'Renders the 404 exception if no language matches' => [
-            ['theme', 'root-without-fallback-language'],
-            '/',
-            404,
-            'Not Found',
-            'de,fr',
-            'root-without-fallback-language.local',
-        ];
-
         yield 'Redirects to the first language root if the accept languages matches' => [
             ['theme', 'same-domain-root'],
             '/',
@@ -943,6 +934,149 @@ class RoutingTest extends FunctionalTestCase
         $this->assertStringContainsString('', $title);
     }
 
+    /**
+     * @see https://github.com/contao/contao/issues/6328
+     *
+     * @dataProvider disabledLanguageRedirectsProvider
+     */
+    public function testCorrectHandlesDisabledLanguageRedirects(bool $disableLanguageRedirects, bool $indexAlias, string $requestLocale, string $expectedLocation): void
+    {
+        $request = 'https://example.local/';
+
+        $_SERVER['REQUEST_URI'] = $request;
+        $_SERVER['HTTP_HOST'] = 'example.local';
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $requestLocale;
+        $_SERVER['HTTP_ACCEPT'] = 'text/html';
+
+        $client = $this->createClient([], $_SERVER);
+        System::setContainer($client->getContainer());
+
+        $this->loadFixtureFiles(['disable-language-redirect']);
+
+        $connection = self::getContainer()->get('doctrine')->getConnection();
+
+        $connection->executeStatement("
+            UPDATE tl_page
+            SET disableLanguageRedirect = '".($disableLanguageRedirects ? 1 : 0)."'
+            WHERE id = 3
+        ");
+
+        $connection->executeStatement("
+            UPDATE tl_page
+            SET alias = '".($indexAlias ? 'index' : 'home')."'
+            WHERE type = 'regular'
+        ");
+
+        $client->request('GET', $request);
+        $response = $client->getResponse();
+
+        if ($expectedLocation === $request) {
+            $this->assertSame(200, $response->getStatusCode());
+        } else {
+            $this->assertSame(302, $response->getStatusCode());
+            $this->assertSame($expectedLocation, $response->headers->get('Location'));
+        }
+    }
+
+    public function disabledLanguageRedirectsProvider(): \Generator
+    {
+        // Redirects to fallback because it is the only route on path "/"
+        yield 'unknown locale, alias=home, disableLanguageRedirect=1' => [
+            true,
+            false,
+            'af',
+            'https://example.local/en/',
+        ];
+
+        // Redirects to NL because its root page matches "/" before the fallback one
+        yield 'unknown locale, alias=home, disableLanguageRedirect=0' => [
+            false,
+            false,
+            'af',
+            'https://example.local/home.html',
+        ];
+
+        // Redirects to fallback because it is the only route on path "/"
+        yield 'secondary locale, alias=home, disableLanguageRedirect=1' => [
+            true,
+            false,
+            'nl',
+            'https://example.local/en/',
+        ];
+
+        // Redirects to NL because its root page matches "/" before the fallback one
+        yield 'secondary locale, alias=home, disableLanguageRedirect=0' => [
+            false,
+            false,
+            'nl',
+            'https://example.local/home.html',
+        ];
+
+        // Redirects to fallback because it is the only route on path "/"
+        yield 'fallback locale, alias=home, disableLanguageRedirect=1' => [
+            true,
+            false,
+            'en',
+            'https://example.local/en/',
+        ];
+
+        // Redirects to NL because its root page matches "/" before the fallback one
+        yield 'fallback locale, alias=home, disableLanguageRedirect=0' => [
+            false,
+            false,
+            'en',
+            'https://example.local/home.html',
+        ];
+
+        // Renders the NL index page because it matches "/" before the fallback
+        yield 'unknown locale, alias=index, disableLanguageRedirect=1' => [
+            true,
+            true,
+            'af',
+            'https://example.local/',
+        ];
+
+        // Renders the NL index page because it matches "/" before the fallback
+        yield 'unknown locale, alias=index, disableLanguageRedirect=0' => [
+            false,
+            true,
+            'af',
+            'https://example.local/',
+        ];
+
+        // Renders the NL index page because it matches "/" before the fallback
+        yield 'secondary locale, alias=index, disableLanguageRedirect=1' => [
+            true,
+            true,
+            'nl',
+            'https://example.local/',
+        ];
+
+        // Renders the NL index page because it matches "/" before the fallback
+        yield 'secondary locale, alias=index, disableLanguageRedirect=0' => [
+            false,
+            true,
+            'nl',
+            'https://example.local/',
+        ];
+
+        // Renders the NL index page because it matches "/" before the fallback
+        yield 'fallback locale, alias=index, disableLanguageRedirect=1' => [
+            true,
+            true,
+            'en',
+            'https://example.local/',
+        ];
+
+        // Renders the NL index page because it matches "/" before the fallback
+        yield 'fallback locale, alias=index, disableLanguageRedirect=0' => [
+            false,
+            true,
+            'en',
+            'https://example.local/',
+        ];
+    }
+
     public function testRendersLoginPageWhenRootIsProtected(): void
     {
         $request = 'https://protected-root.local/';
@@ -965,6 +1099,74 @@ class RoutingTest extends FunctionalTestCase
         $this->assertStringContainsString('Error 401 Page', $title);
     }
 
+    /**
+     * @dataProvider getUrlPrefixMixProvider
+     */
+    public function testUrlPrefixMix(string $request, string $acceptLanguage, int $statusCode, string $pageTitle): void
+    {
+        $_SERVER['REQUEST_URI'] = $request;
+        $_SERVER['HTTP_HOST'] = 'example.local';
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguage;
+        $_SERVER['HTTP_ACCEPT'] = 'text/html';
+
+        $client = $this->createClient([], $_SERVER);
+        System::setContainer($client->getContainer());
+
+        $this->loadFixtureFiles(['theme', 'url-prefix-mix']);
+
+        $crawler = $client->request('GET', "https://example.local$request");
+        $title = trim($crawler->filterXPath('//head/title')->text());
+        $response = $client->getResponse();
+
+        $this->assertSame($statusCode, $response->getStatusCode());
+        $this->assertStringContainsString($pageTitle, $title);
+    }
+
+    public function getUrlPrefixMixProvider(): \Generator
+    {
+        yield 'Renders the index page of supported accept language' => [
+            '/',
+            'nl',
+            200,
+            'Dutch site',
+        ];
+
+        yield 'Renders the index page of root with url prefix' => [
+            '/en/',
+            'en',
+            200,
+            'English site',
+        ];
+
+        yield 'Renders the index page of root without url prefix' => [
+            '/',
+            'en',
+            200,
+            'Dutch site',
+        ];
+
+        yield 'Renders the english 404 with "en" accept language' => [
+            '/nl/',
+            'en',
+            404,
+            'English 404 - English root',
+        ];
+
+        yield 'Renders the dutch 404 with "nl" accept language' => [
+            '/nl/',
+            'nl',
+            404,
+            'Dutch 404 - Dutch root',
+        ];
+
+        yield 'Renders the fallback root 404 on invalid prefix with unsupported accept language' => [
+            '/nl/',
+            'fr',
+            404,
+            'English 404 - English root',
+        ];
+    }
+
     private function loadFixtureFiles(array $fileNames): void
     {
         // Do not reload the fixtures if they have not changed
@@ -975,8 +1177,8 @@ class RoutingTest extends FunctionalTestCase
         self::$lastImport = $fileNames;
 
         static::loadFixtures(array_map(
-            static fn ($file) => __DIR__.'/../Fixtures/Functional/Routing/'.$file.'.yml',
-            $fileNames
+            static fn ($file) => __DIR__.'/../Fixtures/Functional/Routing/'.$file.'.yaml',
+            $fileNames,
         ));
     }
 }

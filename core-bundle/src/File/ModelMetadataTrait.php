@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\File;
 
 use Contao\FilesModel;
 use Contao\System;
+use Contao\Validator;
 
 /**
  * @property string $overwriteMeta
@@ -40,7 +41,13 @@ trait ModelMetadataTrait
         }
 
         if (isset($data['imageUrl'])) {
-            $data[Metadata::VALUE_URL] = $data['imageUrl'];
+            $url = $data['imageUrl'];
+
+            if (Validator::isRelativeUrl($url)) {
+                $url = System::getContainer()->get('contao.assets.files_context')->getStaticUrl().$url;
+            }
+
+            $data[Metadata::VALUE_URL] = $url;
         }
 
         unset($data['imageTitle'], $data['imageUrl']);

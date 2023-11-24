@@ -24,7 +24,7 @@ use Symfony\Component\Routing\RouteCollection;
 class LanguageFilter implements RouteFilterInterface
 {
     /**
-     * @internal Do not inherit from this class; decorate the "contao.routing.matcher.language_filter" service instead
+     * @internal
      */
     public function __construct()
     {
@@ -35,14 +35,13 @@ class LanguageFilter implements RouteFilterInterface
         $languages = $request->getLanguages();
 
         foreach ($collection->all() as $name => $route) {
-            /** @var PageModel $pageModel */
             $pageModel = $route->getDefault('pageModel');
 
             if (!$pageModel instanceof PageModel) {
                 continue;
             }
 
-            if (!str_ends_with($name, '.fallback') && ('' !== $pageModel->urlPrefix || !str_ends_with($name, '.root'))) {
+            if (!str_ends_with($name, '.fallback') && ('' !== $pageModel->urlPrefix || !str_ends_with($name, '.root') || '/' === $route->getPath())) {
                 continue;
             }
 

@@ -17,8 +17,8 @@ use Contao\CoreBundle\Picker\Picker;
 use Contao\CoreBundle\Picker\PickerConfig;
 use Knp\Menu\MenuFactory;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PickerTest extends TestCase
@@ -76,7 +76,8 @@ class PickerTest extends TestCase
     {
         $factory = new MenuFactory();
         $router = $this->createMock(RouterInterface::class);
-        $provider = new PagePickerProvider($factory, $router, null, $this->getSecurityHelper());
+        $translator = $this->createMock(TranslatorInterface::class);
+        $provider = new PagePickerProvider($factory, $router, $translator, $this->getSecurityHelper());
         $config = new PickerConfig('page');
         $picker = new Picker($factory, [$provider], $config);
 
@@ -85,7 +86,7 @@ class PickerTest extends TestCase
 
     public function testReturnsTheCurrentUrl(): void
     {
-        $this->assertNull($this->picker->getCurrentUrl());
+        $this->assertSame('', (string) $this->picker->getCurrentUrl());
     }
 
     public function testReturnsNullAsCurrentUrlIfThereIsNoCurrentMenuItem(): void
@@ -97,7 +98,7 @@ class PickerTest extends TestCase
         $config = new PickerConfig('page');
         $picker = new Picker($factory, [$provider], $config);
 
-        $this->assertNull($picker->getCurrentUrl());
+        $this->assertSame('', (string) $picker->getCurrentUrl());
     }
 
     public function testFailsToReturnTheCurrentUrlIfThereAreNoMenuItems(): void

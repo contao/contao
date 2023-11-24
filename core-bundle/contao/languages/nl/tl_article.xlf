@@ -1,0 +1,234 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_article.php" source-language="en" target-language="nl">
+    <body>
+      <trans-unit id="tl_article.title.0">
+        <source>Title</source>
+        <target>Titel</target>
+      </trans-unit>
+      <trans-unit id="tl_article.title.1">
+        <source>Please enter the article title.</source>
+        <target>Geef titel van het artikel op.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.alias.0">
+        <source>Article alias</source>
+        <target>Artikel alias</target>
+      </trans-unit>
+      <trans-unit id="tl_article.alias.1">
+        <source>The article alias is a unique reference to the article which can be called instead of its numeric ID.</source>
+        <target>Een artikel alias is een unieke referentie naar een artikel welke opgeroepen kan worden i.p.v. het artikel ID.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.author.0">
+        <source>Author</source>
+        <target>Auteur</target>
+      </trans-unit>
+      <trans-unit id="tl_article.author.1">
+        <source>Here you can change the author of the article.</source>
+        <target>Hier kunt u de naam van de auteur wijzigen.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.inColumn.0">
+        <source>Display in</source>
+        <target>Weergeven in</target>
+      </trans-unit>
+      <trans-unit id="tl_article.inColumn.1">
+        <source>Please choose the layout section you want the article to be displayed in.</source>
+        <target>Kies het de lay-out gedeelte waarin u het artikel wilt weergeven.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.teaserCssID.0">
+        <source>Teaser CSS ID/class</source>
+        <target>Teaser CSS ID/class</target>
+      </trans-unit>
+      <trans-unit id="tl_article.teaserCssID.1">
+        <source>Here you can set an ID and one or more classes for the teaser element.</source>
+        <target>Hier kunt u een ID en één of meer classes instellen voor het teaser element.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.showTeaser.0">
+        <source>Show teaser</source>
+        <target>Toon teaser</target>
+      </trans-unit>
+      <trans-unit id="tl_article.showTeaser.1">
+        <source>Show the article teaser if there are multiple articles.</source>
+        <target>Toon de teaser tekst i.p.v. het artikel als er meerdere artikelen zijn.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.teaser.0">
+        <source>Article teaser</source>
+        <target>Teaser van artikel</target>
+      </trans-unit>
+      <trans-unit id="tl_article.teaser.1">
+        <source>The article teaser can also be displayed with the content element &quot;article teaser&quot;.</source>
+        <target>De teaser tekst kan automatisch getoond worden met het &quot;artikel teaser&quot; inhoudselement.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.printable.0">
+        <source>Syndication</source>
+        <target>Syndicatie</target>
+      </trans-unit>
+      <trans-unit id="tl_article.printable.1">
+        <source>Here you can choose which options are available.</source>
+        <target>Kies hier de beschikbare opties.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.customTpl.0">
+        <source>Article template</source>
+        <target>Artikel template</target>
+      </trans-unit>
+      <trans-unit id="tl_article.customTpl.1">
+        <source>Here you can select the article template.</source>
+        <target>Hier kunt u het artikel template selecteren.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.protected.0">
+        <source>Protect article</source>
+        <target>Bescherm artikel</target>
+      </trans-unit>
+      <trans-unit id="tl_article.protected.1">
+        <source>Show the article to certain member groups only.</source>
+        <target>Toon artikel enkel aan bepaalde ledengroepen.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.groups.0">
+        <source>Allowed member groups</source>
+        <target>Ledengroepen die zijn toegestaan</target>
+      </trans-unit>
+      <trans-unit id="tl_article.groups.1">
+        <source>These groups will be able to see the article.</source>
+        <target>Deze groepen kunnen dit artikel bekijken.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.cssID.0">
+        <source>CSS ID/class</source>
+        <target>CSS ID/class</target>
+      </trans-unit>
+      <trans-unit id="tl_article.cssID.1">
+        <source>Here you can set an ID and one or more classes.</source>
+        <target>Hier kunt u een style sheet ID (id attribute) en een of meerdere style sheet classes opgeven.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.published.0">
+        <source>Publish article</source>
+        <target>Artikel publiceren</target>
+      </trans-unit>
+      <trans-unit id="tl_article.published.1">
+        <source>Make the article publicly visible on the website.</source>
+        <target>Maak artikel publiek zichtbaar op de website.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.start.0">
+        <source>Show from</source>
+        <target>Weergeven vanaf</target>
+      </trans-unit>
+      <trans-unit id="tl_article.start.1">
+        <source>If you want to prevent the article from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Als je wilt voorkomen dat het artikel voor een bepaalde datum/tijd op de website verschijnt, kun je dat hier invullen. Laat anders het veld leeg.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.stop.0">
+        <source>Show until</source>
+        <target>Weergeven tot</target>
+      </trans-unit>
+      <trans-unit id="tl_article.stop.1">
+        <source>If you want to prevent the article from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Als u wilt voorkomen dat het artikel na een bepaalde datum/tijd op de website wordt weergegeven, kunt u dit hier invullen. Laat anders het veld leeg.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.tstamp.0">
+        <source>Revision date</source>
+        <target>Datum van aanpassing</target>
+      </trans-unit>
+      <trans-unit id="tl_article.tstamp.1">
+        <source>Date and time of the latest revision</source>
+        <target>Datum en tijdstip van de laatste aanpassing.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.title_legend">
+        <source>Title and author</source>
+        <target>Titel en auteur</target>
+      </trans-unit>
+      <trans-unit id="tl_article.layout_legend">
+        <source>Section</source>
+        <target>Sectie</target>
+      </trans-unit>
+      <trans-unit id="tl_article.syndication_legend">
+        <source>Syndication</source>
+        <target>Syndicatie</target>
+      </trans-unit>
+      <trans-unit id="tl_article.teaser_legend">
+        <source>Article teaser</source>
+        <target>Teaser van artikel</target>
+      </trans-unit>
+      <trans-unit id="tl_article.template_legend">
+        <source>Template settings</source>
+        <target>Template-instellingen</target>
+      </trans-unit>
+      <trans-unit id="tl_article.protected_legend">
+        <source>Access protection</source>
+        <target>Toegangsbescherming</target>
+      </trans-unit>
+      <trans-unit id="tl_article.expert_legend">
+        <source>Expert settings</source>
+        <target>Expert-instellingen</target>
+      </trans-unit>
+      <trans-unit id="tl_article.publish_legend">
+        <source>Publish settings</source>
+        <target>Publicatie-instellingen</target>
+      </trans-unit>
+      <trans-unit id="tl_article.print">
+        <source>Print the page</source>
+        <target>Pagina afdrukken</target>
+      </trans-unit>
+      <trans-unit id="tl_article.pdf">
+        <source>Export as PDF</source>
+        <target>Exporteer als PDF</target>
+      </trans-unit>
+      <trans-unit id="tl_article.facebook">
+        <source>Share on Facebook</source>
+        <target>Delen op Facebook</target>
+      </trans-unit>
+      <trans-unit id="tl_article.twitter">
+        <source>Share on Twitter</source>
+        <target>Delen op Twitter</target>
+      </trans-unit>
+      <trans-unit id="tl_article.new.0">
+        <source>New</source>
+        <target>Nieuw</target>
+      </trans-unit>
+      <trans-unit id="tl_article.new.1">
+        <source>Create a new article</source>
+        <target>Maak een nieuw artikel</target>
+      </trans-unit>
+      <trans-unit id="tl_article.show">
+        <source>Show the details of article ID %s</source>
+        <target>Toon details van artikel ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.edit">
+        <source>Edit article ID %s</source>
+        <target>Bewerk artikel ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.children">
+        <source>Edit the content elements of article ID %s</source>
+        <target>Bewerk de inhoudselementen van artikel ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.copy">
+        <source>Duplicate article ID %s</source>
+        <target>Dupliceer artikel ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.cut">
+        <source>Move article ID %s</source>
+        <target>Verplaats artikel ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.delete">
+        <source>Delete article ID %s</source>
+        <target>Verwijder artikel ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.toggle.0">
+        <source>Publish/unpublish article</source>
+        <target>Publiceer/depubliceer artikel</target>
+      </trans-unit>
+      <trans-unit id="tl_article.toggle.1">
+        <source>Unpublish article ID %s</source>
+        <target>Depubliceer artikel ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.toggle.2">
+        <source>Publish article ID %s</source>
+        <target>Publiceer artikel ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.pasteafter.1">
+        <source>Paste after article ID %s</source>
+        <target>Plakken achter artikel ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.pasteinto.1">
+        <source>Paste into page ID %s</source>
+        <target>Plak in pagina ID %s</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

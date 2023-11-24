@@ -12,27 +12,24 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Cron;
 
-use Contao\CoreBundle\ServiceAnnotation\CronJob;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
 use Doctrine\DBAL\Connection;
 
 /**
  * Deletes preview links that are older than 31 days, since the maximum expiration is 30 days.
  * We don't purge right after expiration date since days can be changed to increase the lifetime.
  *
- * @CronJob("daily")
- *
  * @internal
  */
+#[AsCronJob('daily')]
 class PurgePreviewLinksCron
 {
-    public function __construct(private Connection $connection)
+    public function __construct(private readonly Connection $connection)
     {
     }
 
     public function __invoke(): void
     {
-        $this->connection->executeStatement(
-            'DELETE FROM tl_preview_link WHERE createdAt<=UNIX_TIMESTAMP(DATE_ADD(NOW(), INTERVAL 31 DAY))'
-        );
+        $this->connection->executeStatement('DELETE FROM tl_preview_link WHERE expiresAt <= UNIX_TIMESTAMP()');
     }
 }

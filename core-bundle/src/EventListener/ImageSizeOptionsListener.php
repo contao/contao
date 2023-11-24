@@ -13,19 +13,19 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\BackendUser;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Image\ImageSizes;
-use Contao\CoreBundle\ServiceAnnotation\Callback;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
-/**
- * @Callback(table="tl_layout", target="fields.lightboxSize.options")
- * @Callback(table="tl_content", target="fields.size.options")
- * @Callback(table="tl_module", target="fields.imgSize.options")
- */
+#[AsCallback(table: 'tl_layout', target: 'fields.lightboxSize.options')]
+#[AsCallback(table: 'tl_content', target: 'fields.size.options')]
+#[AsCallback(table: 'tl_module', target: 'fields.imgSize.options')]
 class ImageSizeOptionsListener
 {
-    public function __construct(private Security $security, private ImageSizes $imageSizes)
-    {
+    public function __construct(
+        private readonly Security $security,
+        private readonly ImageSizes $imageSizes,
+    ) {
     }
 
     public function __invoke(): array

@@ -20,13 +20,6 @@ use Contao\TestCase\ContaoTestCase;
 
 class InsertTagsListenerTest extends ContaoTestCase
 {
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['TL_CONFIG']);
-
-        parent::tearDown();
-    }
-
     public function testReplacesTheCalendarFeedTag(): void
     {
         $feedModel = $this->mockClassWithProperties(CalendarFeedModel::class);
@@ -61,7 +54,7 @@ class InsertTagsListenerTest extends ContaoTestCase
                     }
 
                     return 'events/the-foobar-event.html';
-                }
+                },
             )
         ;
 
@@ -74,62 +67,62 @@ class InsertTagsListenerTest extends ContaoTestCase
 
         $this->assertSame(
             '<a href="events/the-foobar-event.html" title="The &quot;foobar&quot; event">The "foobar" event</a>',
-            $listener('event::2', false, null, [])
+            $listener('event::2', false, null, []),
         );
 
         $this->assertSame(
             '<a href="events/the-foobar-event.html" title="The &quot;foobar&quot; event" target="_blank" rel="noreferrer noopener">The "foobar" event</a>',
-            $listener('event::2::blank', false, null, [])
+            $listener('event::2::blank', false, null, []),
         );
 
         $this->assertSame(
             '<a href="events/the-foobar-event.html" title="The &quot;foobar&quot; event">',
-            $listener('event_open::2', false, null, [])
+            $listener('event_open::2', false, null, []),
         );
 
         $this->assertSame(
             '<a href="events/the-foobar-event.html" title="The &quot;foobar&quot; event" target="_blank" rel="noreferrer noopener">',
-            $listener('event_open::2::blank', false, null, [])
+            $listener('event_open::2::blank', false, null, []),
         );
 
         $this->assertSame(
             '<a href="http://domain.tld/events/the-foobar-event.html" title="The &quot;foobar&quot; event" target="_blank" rel="noreferrer noopener">',
-            $listener('event_open::2::blank::absolute', false, null, [])
+            $listener('event_open::2::blank::absolute', false, null, []),
         );
 
         $this->assertSame(
             '<a href="http://domain.tld/events/the-foobar-event.html" title="The &quot;foobar&quot; event" target="_blank" rel="noreferrer noopener">',
-            $listener('event_open::2::absolute::blank', false, null, [])
+            $listener('event_open::2::absolute::blank', false, null, []),
         );
 
         $this->assertSame(
             'events/the-foobar-event.html',
-            $listener('event_url::2', false, null, [])
+            $listener('event_url::2', false, null, []),
         );
 
         $this->assertSame(
             'http://domain.tld/events/the-foobar-event.html',
-            $listener('event_url::2', false, null, ['absolute'])
+            $listener('event_url::2', false, null, ['absolute']),
         );
 
         $this->assertSame(
             'http://domain.tld/events/the-foobar-event.html',
-            $listener('event_url::2::absolute', false, null, [])
+            $listener('event_url::2::absolute', false, null, []),
         );
 
         $this->assertSame(
             'http://domain.tld/events/the-foobar-event.html',
-            $listener('event_url::2::blank::absolute', false, null, [])
+            $listener('event_url::2::blank::absolute', false, null, []),
         );
 
         $this->assertSame(
             'The &quot;foobar&quot; event',
-            $listener('event_title::2', false, null, [])
+            $listener('event_title::2', false, null, []),
         );
 
         $this->assertSame(
             '<p>The annual foobar event.</p>',
-            $listener('event_teaser::2', false, null, [])
+            $listener('event_teaser::2', false, null, []),
         );
     }
 
@@ -154,17 +147,17 @@ class InsertTagsListenerTest extends ContaoTestCase
 
         $this->assertSame(
             '<a href="./" title="The &quot;foobar&quot; event">The "foobar" event</a>',
-            $listener('event::2', false, null, [])
+            $listener('event::2', false, null, []),
         );
 
         $this->assertSame(
             '<a href="./" title="The &quot;foobar&quot; event">',
-            $listener('event_open::2', false, null, [])
+            $listener('event_open::2', false, null, []),
         );
 
         $this->assertSame(
             './',
-            $listener('event_url::2', false, null, [])
+            $listener('event_url::2', false, null, []),
         );
     }
 

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -20,22 +21,23 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
-/**
- * Installs the required Contao directories.
- *
- * @internal
- */
+#[AsCommand(
+    name: 'contao:install',
+    description: 'Installs the required Contao directories.',
+)]
 class InstallCommand extends Command
 {
-    protected static $defaultName = 'contao:install';
-    protected static $defaultDescription = 'Installs the required Contao directories.';
-
     private Filesystem|null $fs = null;
+
     private array $rows = [];
+
     private string|null $webDir = null;
 
-    public function __construct(private string $projectDir, private string $uploadPath, private string $imageDir)
-    {
+    public function __construct(
+        private readonly string $projectDir,
+        private readonly string $uploadPath,
+        private readonly string $imageDir,
+    ) {
         parent::__construct();
     }
 
@@ -51,13 +53,13 @@ class InstallCommand extends Command
 
         $this->addEmptyDirs();
 
-        if (!empty($this->rows)) {
+        if ($this->rows) {
             $io = new SymfonyStyle($input, $output);
             $io->newLine();
             $io->listing($this->rows);
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function addEmptyDirs(): void

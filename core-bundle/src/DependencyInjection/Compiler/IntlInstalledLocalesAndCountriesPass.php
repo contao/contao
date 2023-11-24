@@ -17,7 +17,6 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Intl\Countries as SymfonyCountries;
 
 class IntlInstalledLocalesAndCountriesPass implements CompilerPassInterface
@@ -27,21 +26,15 @@ class IntlInstalledLocalesAndCountriesPass implements CompilerPassInterface
         if ($container->has('contao.intl.locales')) {
             $definition = $container->findDefinition('contao.intl.locales');
 
-            // Backwards compatibility for the deprecated contao.locales parameter
-            $enabledLocales = $container->getParameter('contao.locales') ?: $this->getEnabledLocales($container);
-            $locales = array_values(array_unique(array_merge($enabledLocales, \ResourceBundle::getLocales(''))));
+            $enabledLocales = $this->getEnabledLocales($container);
+            $locales = array_values(array_unique([...$enabledLocales, ...$this->getDefaultLocales()]));
 
-            $definition->setArgument(3, $locales);
-            $definition->setArgument(4, $enabledLocales);
-
-            if (!$container->getParameter('contao.locales')) {
-                // Backwards compatibility for the deprecated contao.locales parameter
-                $container->setParameter('contao.locales', $enabledLocales);
-            }
+            $definition->setArgument(2, $locales);
+            $definition->setArgument(3, $enabledLocales);
         }
 
         if ($container->has('contao.intl.countries')) {
-            $container->findDefinition('contao.intl.countries')->setArgument(3, SymfonyCountries::getCountryCodes());
+            $container->findDefinition('contao.intl.countries')->setArgument(2, SymfonyCountries::getCountryCodes());
         }
     }
 
@@ -53,21 +46,15 @@ class IntlInstalledLocalesAndCountriesPass implements CompilerPassInterface
         $projectDir = $container->getParameter('kernel.project_dir');
         $defaultLocale = $container->getParameter('kernel.default_locale');
 
-        $dirs = [__DIR__.'/../../Resources/contao/languages'];
+        $dirs = [__DIR__.'/../../../contao/languages'];
 
         if (is_dir($path = Path::join($projectDir, 'contao/languages'))) {
-            $dirs[] = $path;
-        }
-
-        // Backwards compatibility
-        if (is_dir($path = Path::join($projectDir, 'app/Resources/contao/languages'))) {
             $dirs[] = $path;
         }
 
         // The default locale must be the first supported language (see contao/core#6533)
         $languages = [$defaultLocale];
 
-        /** @var array<SplFileInfo> $finder */
         $finder = Finder::create()->directories()->depth(0)->name('/^[a-z]{2,}/')->in($dirs);
 
         foreach ($finder as $file) {
@@ -81,5 +68,51 @@ class IntlInstalledLocalesAndCountriesPass implements CompilerPassInterface
         }
 
         return array_values(array_unique($languages));
+    }
+
+    private function getDefaultLocales(): array
+    {
+        $allLocales = [];
+        $resourceBundle = \ResourceBundle::create('supplementalData', 'ICUDATA', false);
+
+        foreach ($resourceBundle['territoryInfo'] ?? [] as $data) {
+            foreach ($data as $language => $info) {
+                if (\Locale::getDisplayName($language, 'en') === $language) {
+                    continue;
+                }
+
+                if ('official_regional' === ($info['officialStatus'] ?? null)) {
+                    $allLocales[] = $language;
+                }
+            }
+        }
+
+        foreach ($resourceBundle['languageData'] ?? [] as $language => $data) {
+            if (
+                (!$regions = $data['primary']['territories'] ?? null)
+                || \Locale::getDisplayName($language, 'en') === $language
+            ) {
+                continue;
+            }
+
+            $scripts = $data['primary']['scripts'] ?? [];
+            $locales = [$language];
+
+            if (!\is_string($scripts) && \count($scripts) > 1) {
+                foreach ($scripts as $script) {
+                    $locales[] = "{$language}_$script";
+                }
+            }
+
+            foreach ($locales as $locale) {
+                $allLocales[] = $locale;
+
+                foreach (\is_string($regions) ? [$regions] : $regions as $region) {
+                    $allLocales[] = "{$locale}_$region";
+                }
+            }
+        }
+
+        return $allLocales ?: \ResourceBundle::getLocales('');
     }
 }

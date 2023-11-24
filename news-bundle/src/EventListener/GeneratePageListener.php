@@ -13,20 +13,17 @@ declare(strict_types=1);
 namespace Contao\NewsBundle\EventListener;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\Environment;
 use Contao\LayoutModel;
-use Contao\Model\Collection;
-use Contao\NewsFeedModel;
+use Contao\NewsBundle\Controller\Page\NewsFeedController;
 use Contao\PageModel;
 use Contao\StringUtil;
-use Contao\Template;
 
 /**
  * @internal
  */
 class GeneratePageListener
 {
-    public function __construct(private ContaoFramework $framework)
+    public function __construct(private readonly ContaoFramework $framework)
     {
     }
 
@@ -43,21 +40,24 @@ class GeneratePageListener
 
         $this->framework->initialize();
 
-        $adapter = $this->framework->getAdapter(NewsFeedModel::class);
+        $adapter = $this->framework->getAdapter(PageModel::class);
 
-        if (!($feeds = $adapter->findByIds($newsfeeds)) instanceof Collection) {
+        if (!$feeds = $adapter->findMultipleByIds($newsfeeds)) {
             return;
         }
 
-        $template = $this->framework->getAdapter(Template::class);
-        $environment = $this->framework->getAdapter(Environment::class);
-
         foreach ($feeds as $feed) {
-            $GLOBALS['TL_HEAD'][] = $template->generateFeedTag(
-                sprintf('%sshare/%s.xml', $feed->feedBase ?: $environment->get('base'), $feed->alias),
-                $feed->format,
-                $feed->title
-            );
+            if (NewsFeedController::TYPE !== $feed->type) {
+                continue;
+            }
+
+            // TODO: Use ResponseContext, once it supports appending to <head>
+            $GLOBALS['TL_HEAD'][] = $this->generateFeedTag($feed->getAbsoluteUrl(), $feed->feedFormat, $feed->title);
         }
+    }
+
+    private function generateFeedTag(string $href, string $format, string $title): string
+    {
+        return sprintf('<link type="%s" rel="alternate" href="%s" title="%s">', NewsFeedController::$contentTypes[$format], $href, StringUtil::specialchars($title));
     }
 }

@@ -21,7 +21,7 @@ use Doctrine\DBAL\Schema\Table;
  */
 class MysqlInnodbRowSizeCalculator
 {
-    public function __construct(private Connection $connection)
+    public function __construct(private readonly Connection $connection)
     {
     }
 
@@ -82,7 +82,12 @@ class MysqlInnodbRowSizeCalculator
     {
         static $size = null;
 
-        return $size ??= (int) $this->connection->executeQuery('SELECT @@innodb_page_size / 2 - 66')->fetchOne();
+        if (null === $size) {
+            $res = $this->connection->executeQuery("SHOW STATUS LIKE 'innodb_page_size'");
+            $size = (int) ($res->fetchAssociative()['Value'] / 2 - 66);
+        }
+
+        return $size;
     }
 
     public function measureMysqlColumnSizeBits(Column $column, string $charset): int
@@ -187,9 +192,7 @@ class MysqlInnodbRowSizeCalculator
             $sql .= ' NOT';
         }
 
-        $sql .= ' NULL';
-
-        return $sql;
+        return $sql.' NULL';
     }
 
     private function isTableTooLarge(array $columns, string $rowFormat = 'DYNAMIC'): bool
@@ -216,7 +219,7 @@ class MysqlInnodbRowSizeCalculator
     }
 
     /**
-     * @return array<int,string>
+     * @return array<int, string>
      */
     private function getMysqlColumnDefinitions(int $sizeInBits): array
     {
@@ -241,6 +244,7 @@ class MysqlInnodbRowSizeCalculator
             if ($i === $bits - 1) {
                 $colSize += $bytes % $bits;
             }
+
             $columns[] = "col$i VARCHAR($colSize) CHARACTER SET latin1 NULL";
         }
 
@@ -248,7 +252,7 @@ class MysqlInnodbRowSizeCalculator
     }
 
     /**
-     * @return array<int,string>
+     * @return array<int, string>
      */
     private function getInnodbColumnDefinitions(int $sizeInBits): array
     {

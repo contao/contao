@@ -1,0 +1,26 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_user.php" source-language="en" target-language="tr">
+    <body>
+      <trans-unit id="tl_user.news.0">
+        <source>Allowed archives</source>
+        <target>İzin verilen arşivler</target>
+      </trans-unit>
+      <trans-unit id="tl_user.news.1">
+        <source>Here you can grant access to one or more news archives.</source>
+        <target>Buradan bir ya da birkaç haber arşivine erişim izni verebilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.newp.0">
+        <source>News archive permissions</source>
+        <target>Haber arşivi izinleri</target>
+      </trans-unit>
+      <trans-unit id="tl_user.newp.1">
+        <source>Here you can define the news archive permissions.</source>
+        <target>Buradan haber arşivi izinlerini tanımlayabilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.news_legend">
+        <source>News permissions</source>
+        <target>Haber izinleri</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\Tools\IsolatedTests;
 
 use Contao\CoreBundle\Tests\PhpunitExtension\GlobalStateWatcher;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -21,30 +22,23 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
+#[AsCommand(
+    name: 'contao:run-tests-isolated',
+    description: 'Runs the unit tests isolated from each other.',
+)]
 class RunTestsIsolatedCommand extends Command
 {
-    protected static $defaultName = 'contao:run-tests-isolated';
-    protected static $defaultDescription = 'Runs the unit tests isolated from each other.';
+    private readonly string|false $phpPath;
 
-    /**
-     * @var string|false
-     */
-    private $phpPath;
-
-    private string $projectDir;
-
-    public function __construct(string $projectDir)
+    public function __construct(private readonly string $projectDir)
     {
         parent::__construct();
 
-        $this->projectDir = $projectDir;
         $this->phpPath = (new PhpExecutableFinder())->find();
     }
 
     protected function configure(): void
     {
-        parent::configure();
-
         $this->addOption('depth', null, InputOption::VALUE_REQUIRED, '1 for test classes, 2 for test methods, 3 for every single provider data set', '3');
 
         $this->setHelp(
@@ -53,7 +47,7 @@ class RunTestsIsolatedCommand extends Command
                 a new PHPUnit process for each test class, method, or data set. This gives us
                 "real" isolation rather than shared state, unlike the PHPUnit option
                 --process-isolation does.
-                EOT
+                EOT,
         );
     }
 
@@ -80,10 +74,9 @@ class RunTestsIsolatedCommand extends Command
         }
 
         $phpunit = $this->projectDir.'/vendor/bin/phpunit';
-
         $listOutput = new BufferedOutput();
 
-        $this->executeCommand(array_merge($php, [$phpunit, '--list-tests']), $listOutput);
+        $this->executeCommand([...$php, $phpunit, '--list-tests'], $listOutput);
 
         $tests = [[], [], []];
 
@@ -113,7 +106,7 @@ class RunTestsIsolatedCommand extends Command
         foreach ($tests as $test) {
             // Skip if the whole class, or the test with all data sets failed already
             foreach ($failedTests as $failedTest) {
-                if (0 === strncmp($test, $failedTest, \strlen($failedTest))) {
+                if (str_starts_with($test, $failedTest)) {
                     continue 2;
                 }
             }
@@ -124,11 +117,11 @@ class RunTestsIsolatedCommand extends Command
             $buffer = new BufferedOutput();
 
             try {
-                $this->executeCommand(array_merge($php, [$phpunit, '--extensions', GlobalStateWatcher::class, '--filter', $filter], $commandFlags), $buffer);
+                $this->executeCommand([...$php, $phpunit, '--extensions', GlobalStateWatcher::class, '--filter', $filter, ...$commandFlags], $buffer);
 
                 // Clear previously written line
                 $output->write("\e[1A\e[K");
-            } catch (\Throwable $e) {
+            } catch (\Throwable) {
                 $failedTests[] = $test;
                 $output->writeln($buffer->fetch());
             }
@@ -154,12 +147,7 @@ class RunTestsIsolatedCommand extends Command
 
         // Increase the timeout according to contao/manager-bundle (see #54)
         $process->setTimeout(500);
-
-        $process->run(
-            static function (string $type, string $buffer) use ($output): void {
-                $output->write($buffer);
-            }
-        );
+        $process->run(static fn (string $type, string $buffer) => $output->write($buffer));
 
         if (!$process->isSuccessful()) {
             throw new \RuntimeException(sprintf('An error occurred while executing the "%s" command: %s', implode(' ', $command), $process->getErrorOutput()));
@@ -168,18 +156,11 @@ class RunTestsIsolatedCommand extends Command
 
     private function getVerbosityFlag(OutputInterface $output): string
     {
-        switch ($output->getVerbosity()) {
-            case OutputInterface::VERBOSITY_DEBUG:
-                return '-vvv';
-
-            case OutputInterface::VERBOSITY_VERY_VERBOSE:
-                return '-vv';
-
-            case OutputInterface::VERBOSITY_VERBOSE:
-                return '-v';
-
-            default:
-                return '';
-        }
+        return match ($output->getVerbosity()) {
+            OutputInterface::VERBOSITY_DEBUG => '-vvv',
+            OutputInterface::VERBOSITY_VERY_VERBOSE => '-vv',
+            OutputInterface::VERBOSITY_VERBOSE => '-v',
+            default => '',
+        };
     }
 }

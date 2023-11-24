@@ -6,11 +6,24 @@
 /tools/*/vendor
 /tools/monorepo/composer.lock
 
+# Cypress
+/cypress/screenshots/
+/cypress/videos/
+/cypress/webspace/*
+!/cypress/webspace/.env
+!/cypress/webspace/composer.json
+
 # Monorepo Tools
 /.monorepo-split-cache/
 
-# Node
-/node_modules/
+# Yarn
+/.pnp.*
+/.yarn/*
+!/.yarn/patches
+!/.yarn/plugins
+!/.yarn/releases
+!/.yarn/sdks
+!/.yarn/versions
 
 # PhpUnit
 /.phpunit.result.cache

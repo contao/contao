@@ -46,10 +46,8 @@ use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Mailer\Transport\NativeTransportFactory;
-use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Twig\Extra\TwigExtraBundle\TwigExtraBundle;
 
@@ -93,7 +91,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
         // Autoload the legacy modules
         if (null !== static::$autoloadModules && file_exists(static::$autoloadModules)) {
-            /** @var array<SplFileInfo> $modules */
             $modules = Finder::create()
                 ->directories()
                 ->depth(0)
@@ -108,7 +105,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 }
             }
 
-            if (!empty($iniConfigs)) {
+            if ($iniConfigs) {
                 $configs = array_merge($configs, ...$iniConfigs);
             }
         }
@@ -121,13 +118,13 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $loader->load(
             static function (ContainerBuilder $container) use ($loader): void {
                 if ('dev' === $container->getParameter('kernel.environment')) {
-                    $loader->load('@ContaoManagerBundle/Resources/skeleton/config/config_dev.yml');
+                    $loader->load('@ContaoManagerBundle/skeleton/config/config_dev.yaml');
                 } else {
-                    $loader->load('@ContaoManagerBundle/Resources/skeleton/config/config_prod.yml');
+                    $loader->load('@ContaoManagerBundle/skeleton/config/config_prod.yaml');
                 }
 
                 $container->setParameter('container.dumper.inline_class_loader', true);
-            }
+            },
         );
     }
 
@@ -152,31 +149,15 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $collections[] = $collection;
         }
 
-        $collection = array_reduce(
+        return array_reduce(
             $collections,
             static function (RouteCollection $carry, RouteCollection $item): RouteCollection {
                 $carry->addCollection($item);
 
                 return $carry;
             },
-            new RouteCollection()
+            new RouteCollection(),
         );
-
-        // Redirect the deprecated install.php file
-        $collection->add(
-            'contao_install_redirect',
-            new Route(
-                '/install.php',
-                [
-                    '_scope' => 'backend',
-                    '_controller' => 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController::redirectAction',
-                    'route' => 'contao_install',
-                    'permanent' => true,
-                ]
-            )
-        );
-
-        return $collection;
     }
 
     public function getApiFeatures(): array
@@ -188,7 +169,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 'COOKIE_WHITELIST',
                 'DATABASE_URL',
                 'DISABLE_HTTP_CACHE',
-                'MAILER_URL',
                 'MAILER_DSN',
                 'TRACE_LEVEL',
                 'TRUSTED_PROXIES',
@@ -224,15 +204,15 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 $extensionConfigs = $this->addDefaultMailer($extensionConfigs);
 
                 if (!isset($_SERVER['APP_SECRET'])) {
-                    $container->setParameter('env(APP_SECRET)', $container->getParameter('secret'));
+                    if ($container->hasParameter('secret')) {
+                        $container->setParameter('env(APP_SECRET)', $container->getParameter('secret'));
+                    } else {
+                        $container->setParameter('env(APP_SECRET)', '');
+                    }
                 }
 
                 if (!isset($_SERVER['MAILER_DSN'])) {
-                    if (isset($_SERVER['MAILER_URL'])) {
-                        $container->setParameter('env(MAILER_DSN)', $this->getMailerDsnFromMailerUrl($_SERVER['MAILER_URL']));
-                    } else {
-                        $container->setParameter('env(MAILER_DSN)', $this->getMailerDsn($container));
-                    }
+                    $container->setParameter('env(MAILER_DSN)', $this->getMailerDsn($container));
                 }
 
                 return $extensionConfigs;
@@ -244,8 +224,9 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
                 $extensionConfigs = $this->addDefaultPdoDriverOptions($extensionConfigs, $container);
                 $extensionConfigs = $this->addDefaultDoctrineMapping($extensionConfigs, $container);
+                $extensionConfigs = $this->enableStrictMode($extensionConfigs, $container);
 
-                return $this->enableStrictMode($extensionConfigs, $container);
+                return $this->setDefaultCollation($extensionConfigs);
 
             case 'nelmio_security':
                 return $this->checkClickjackingPaths($extensionConfigs);
@@ -257,7 +238,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * Sets the PDO driver options if applicable (#2459).
      *
-     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     * @return array<string, array<string, array<string, array<string, mixed>>>>
      */
     private function addDefaultPdoDriverOptions(array $extensionConfigs, ContainerBuilder $container): array
     {
@@ -296,7 +277,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * Adds a default ORM mapping for the App namespace if none is configured.
      *
-     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     * @return array<string, array<string, array<string, array<string, mixed>>>>
      */
     private function addDefaultDoctrineMapping(array $extensionConfigs, ContainerBuilder $container): array
     {
@@ -350,7 +331,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                     $defaultEntityManager => [
                         'mappings' => [
                             'App' => [
-                                'type' => 'annotation',
                                 'dir' => '%kernel.project_dir%/src/Entity',
                                 'is_bundle' => false,
                                 'prefix' => 'App\Entity',
@@ -368,7 +348,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * Enables the SQL strict mode for PDO and MySQL drivers.
      *
-     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     * @return array<string, array<string, array<string, array<string, mixed>>>>
      */
     private function enableStrictMode(array $extensionConfigs, ContainerBuilder $container): array
     {
@@ -401,13 +381,48 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     }
 
     /**
+     * Sets the "collate" and "collation" options to the same value (see #4798).
+     *
+     * @return array<string, array<string, array<string, array<string, mixed>>>>
+     */
+    private function setDefaultCollation(array $extensionConfigs): array
+    {
+        $defaultCollation = null;
+
+        foreach ($extensionConfigs as $config) {
+            $collation = $config['dbal']['connections']['default']['default_table_options']['collation'] ?? $config['dbal']['connections']['default']['default_table_options']['collate'] ?? null;
+
+            if (null !== $collation) {
+                $defaultCollation = $collation;
+            }
+        }
+
+        if (null !== $defaultCollation) {
+            $extensionConfigs[] = [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'default_table_options' => [
+                                'collate' => $defaultCollation,
+                                'collation' => $defaultCollation,
+                            ],
+                        ],
+                    ],
+                ],
+            ];
+        }
+
+        return $extensionConfigs;
+    }
+
+    /**
      * Changes the mail transport from "mail" to "sendmail".
      *
-     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     * @return array<string, array<string, array<string, array<string, mixed>>>>
      */
     private function checkMailerTransport(array $extensionConfigs, ContainerBuilder $container): array
     {
-        if ('mail' === $container->getParameter('mailer_transport')) {
+        if ($container->hasParameter('mailer_transport') && 'mail' === $container->getParameter('mailer_transport')) {
             $container->setParameter('mailer_transport', 'sendmail');
         }
 
@@ -417,7 +432,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * Dynamically adds a default mailer to the config, if no mailer is defined.
      *
-     * We cannot add a default mailer configuration to the skeleton config.yml,
+     * We cannot add a default mailer configuration to the skeleton config.yaml,
      * since different types of configurations are not allowed.
      *
      * For example, if the Manager Bundle defined
@@ -426,19 +441,19 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
      *         mailer:
      *             dsn: '%env(MAILER_DSN)%'
      *
-     * in the skeleton config.yml and the user adds
+     * in the skeleton config.yaml and the user adds
      *
      *     framework:
      *         mailer:
      *             transports:
      *                 foobar: 'smtps://smtp.example.com'
      *
-     * to their config.yml, the merged configuration will lead to an error, since
+     * to their config.yaml, the merged configuration will lead to an error, since
      * you cannot use "framework.mailer.dsn" together with "framework.mailer.transports".
      * Thus, the default mailer configuration needs to be added dynamically if
      * not already present.
      *
-     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     * @return array<string, array<string, array<string, array<string, mixed>>>>
      */
     private function addDefaultMailer(array $extensionConfigs): array
     {
@@ -496,7 +511,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * Adds a clickjacking configuration for "^/.*" if not already defined.
      *
-     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     * @return array<string, array<string, array<string, array<string, mixed>>>>
      */
     private function checkClickjackingPaths(array $extensionConfigs): array
     {
@@ -528,11 +543,11 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
         $userPassword = '';
 
-        if ($user = $container->getParameter('database_user')) {
-            $userPassword = $this->encodeUrlParameter($user);
+        if ($container->hasParameter('database_user') && $user = $container->getParameter('database_user')) {
+            $userPassword = $this->encodeUrlParameter((string) $user);
 
-            if ($password = $container->getParameter('database_password')) {
-                $userPassword .= ':'.$this->encodeUrlParameter($password);
+            if ($container->hasParameter('database_password') && $password = $container->getParameter('database_password')) {
+                $userPassword .= ':'.$this->encodeUrlParameter((string) $password);
             }
 
             $userPassword .= '@';
@@ -540,133 +555,21 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
         $dbName = '';
 
-        if ($name = $container->getParameter('database_name')) {
-            $dbName .= '/'.$this->encodeUrlParameter($name);
+        if ($container->hasParameter('database_name') && $name = $container->getParameter('database_name')) {
+            $dbName .= '/'.$this->encodeUrlParameter((string) $name);
         }
 
         if ($container->hasParameter('database_version') && $version = $container->getParameter('database_version')) {
-            $dbName .= '?serverVersion='.$this->encodeUrlParameter($version);
+            $dbName .= '?serverVersion='.$this->encodeUrlParameter((string) $version);
         }
 
         return sprintf(
             '%s://%s%s:%s%s',
             str_replace('_', '-', $driver),
             $userPassword,
-            $container->getParameter('database_host'),
-            (int) $container->getParameter('database_port'),
-            $dbName
-        );
-    }
-
-    private function getMailerDsnFromMailerUrl(string $mailerUrl): string
-    {
-        if (false === $parts = parse_url($mailerUrl)) {
-            throw new \InvalidArgumentException(sprintf('The MAILER_URL "%s" is not valid.', $mailerUrl));
-        }
-
-        $options = [
-            'transport' => null,
-            'username' => null,
-            'password' => null,
-            'host' => null,
-            'port' => null,
-            'encryption' => null,
-        ];
-
-        $queryOptions = [];
-
-        if (isset($parts['scheme'])) {
-            $options['transport'] = $parts['scheme'];
-        }
-
-        if (isset($parts['user'])) {
-            $options['username'] = rawurldecode($parts['user']);
-        }
-
-        if (isset($parts['pass'])) {
-            $options['password'] = rawurldecode($parts['pass']);
-        }
-
-        if (isset($parts['host'])) {
-            $options['host'] = rawurldecode($parts['host']);
-        }
-
-        if (isset($parts['port'])) {
-            $options['port'] = $parts['port'];
-        }
-
-        if (isset($parts['query'])) {
-            parse_str($parts['query'], $query);
-
-            foreach ($query as $key => $value) {
-                if (empty($key)) {
-                    continue;
-                }
-
-                if (\array_key_exists($key, $options)) {
-                    $options[$key] = $value;
-                } else {
-                    $queryOptions[$key] = $value;
-                }
-            }
-        }
-
-        if (empty($options['transport'])) {
-            throw new \InvalidArgumentException(sprintf('The MAILER_URL "%s" is not valid.', $mailerUrl));
-        }
-
-        if (\in_array($options['transport'], ['mail', 'sendmail'], true)) {
-            return 'sendmail://default';
-        }
-
-        /*
-         * Check for gmail transport.
-         *
-         * With Swiftmailer a DSN like "gmail://username:password@localhost" was
-         * supported out-of-the-box. See https://symfony.com/doc/4.4/email.html#using-gmail-to-send-emails
-         * Symfony Mailer supports something similar, but only with an additional
-         * dependency. See https://symfony.com/doc/4.4/components/mailer.html#transport
-         *
-         * Thus we add backwards compatibility for the "gmail" transport here.
-         */
-        if ('gmail' === $options['transport']) {
-            $options['host'] = 'smtp.gmail.com';
-            $options['transport'] = 'smtps';
-        }
-
-        if (empty($options['host']) || !\in_array($options['transport'], ['smtp', 'smtps'], true)) {
-            throw new \InvalidArgumentException(sprintf('The MAILER_URL "%s" is not valid.', $mailerUrl));
-        }
-
-        $transport = $options['transport'];
-        $credentials = '';
-        $port = '';
-
-        if (!empty($options['encryption']) && 'ssl' === $options['encryption']) {
-            $transport = 'smtps';
-        }
-
-        if (!empty($options['username'])) {
-            $credentials .= $this->encodeUrlParameter($options['username']);
-
-            if (!empty($options['password'])) {
-                $credentials .= ':'.$this->encodeUrlParameter($options['password']);
-            }
-
-            $credentials .= '@';
-        }
-
-        if (!empty($options['port'])) {
-            $port = ':'.$options['port'];
-        }
-
-        return sprintf(
-            '%s://%s%s%s%s',
-            $transport,
-            $credentials,
-            $options['host'],
-            $port,
-            !empty($queryOptions) ? '?'.http_build_query($queryOptions) : ''
+            $container->hasParameter('database_host') ? $container->getParameter('database_host') : 'localhost',
+            $container->hasParameter('database_port') ? (int) $container->getParameter('database_port') : 3306,
+            $dbName,
         );
     }
 
@@ -680,21 +583,21 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $credentials = '';
         $portSuffix = '';
 
-        if (($encryption = $container->getParameter('mailer_encryption')) && 'ssl' === $encryption) {
+        if ($container->hasParameter('mailer_encryption') && ($encryption = $container->getParameter('mailer_encryption')) && 'ssl' === $encryption) {
             $transport = 'smtps';
         }
 
-        if ($user = $container->getParameter('mailer_user')) {
-            $credentials .= $this->encodeUrlParameter($user);
+        if ($container->hasParameter('mailer_user') && $user = $container->getParameter('mailer_user')) {
+            $credentials .= $this->encodeUrlParameter((string) $user);
 
-            if ($password = $container->getParameter('mailer_password')) {
-                $credentials .= ':'.$this->encodeUrlParameter($password);
+            if ($container->hasParameter('mailer_password') && $password = $container->getParameter('mailer_password')) {
+                $credentials .= ':'.$this->encodeUrlParameter((string) $password);
             }
 
             $credentials .= '@';
         }
 
-        if ($port = $container->getParameter('mailer_port')) {
+        if ($port = $container->hasParameter('mailer_port') ? $container->getParameter('mailer_port') : 25) {
             $portSuffix = ':'.$port;
         }
 
@@ -702,8 +605,8 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             '%s://%s%s%s',
             $transport,
             $credentials,
-            $container->getParameter('mailer_host'),
-            $portSuffix
+            $container->hasParameter('mailer_host') ? $container->getParameter('mailer_host') : '127.0.0.1',
+            $portSuffix,
         );
     }
 

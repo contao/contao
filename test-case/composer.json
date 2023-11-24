@@ -1,6 +1,6 @@
 {
     "name": "contao/test-case",
-    "description": "Contao 4 test case",
+    "description": "Contao test case",
     "license": "LGPL-3.0-or-later",
     "type": "library",
     "authors": [
@@ -16,13 +16,9 @@
     "require-dev": {
         "ext-pdo": "*",
         "contao/core-bundle": "self.version",
-        "doctrine/dbal": "^3.3",
+        "doctrine/dbal": "^3.6",
         "doctrine/orm": "^2.10",
-        "symfony/http-client": "^5.4"
-    },
-    "conflict": {
-        "phpunit/phpunit": "<8.0",
-        "roave/better-reflection": "<4.12.2 || >=6.0"
+        "symfony/http-client": "^6.3"
     },
     "autoload": {
         "psr-4": {
@@ -31,7 +27,8 @@
     },
     "config": {
         "allow-plugins": {
-            "contao-components/installer": true
+            "contao-components/installer": true,
+            "php-http/discovery": false
         }
     }
 }

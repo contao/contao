@@ -21,7 +21,7 @@ class TranslationListenerTest extends TestCase
     /**
      * @dataProvider insertTagsProvider
      */
-    public function testReplacesInsertTagsWithTranslation(string $id, string $result, string $domain = null, array $parameters = []): void
+    public function testReplacesInsertTagsWithTranslation(string $id, string $result, string|null $domain = null, array $parameters = []): void
     {
         $translator = $this->createMock(Translator::class);
         $translator
@@ -35,7 +35,7 @@ class TranslationListenerTest extends TestCase
 
         if (null === $domain) {
             $insertTag = sprintf('trans::%s', $id);
-        } elseif (empty($parameters)) {
+        } elseif (!$parameters) {
             $insertTag = sprintf('trans::%s::%s', $id, $domain);
         } else {
             $insertTag = sprintf('trans::%s::%s::%s', $id, $domain, implode(':', $parameters));

@@ -22,7 +22,6 @@ use Symfony\Bundle\MakerBundle\Generator;
 use Symfony\Bundle\MakerBundle\InputConfiguration;
 use Symfony\Bundle\MakerBundle\Maker\AbstractMaker;
 use Symfony\Bundle\MakerBundle\Str;
-use Symfony\Bundle\MakerBundle\Util\PhpCompatUtil;
 use Symfony\Bundle\MakerBundle\Validator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -33,10 +32,9 @@ use Symfony\Component\Yaml\Yaml;
 class MakeHook extends AbstractMaker
 {
     public function __construct(
-        private ClassGenerator $classGenerator,
-        private SignatureGenerator $signatureGenerator,
-        private ImportExtractor $importExtractor,
-        private PhpCompatUtil $phpCompatUtil,
+        private readonly ClassGenerator $classGenerator,
+        private readonly SignatureGenerator $signatureGenerator,
+        private readonly ImportExtractor $importExtractor,
     ) {
     }
 
@@ -68,7 +66,7 @@ class MakeHook extends AbstractMaker
 
         $question = new Question('Choose the hook to listen for');
         $question->setAutocompleterValues(array_keys($hooks));
-        $question->setValidator([Validator::class, 'notBlank']);
+        $question->setValidator(Validator::notBlank(...));
 
         $input->setArgument('hook', $io->askQuestion($question));
     }
@@ -89,7 +87,6 @@ class MakeHook extends AbstractMaker
             return;
         }
 
-        /** @var MethodDefinition $definition */
         $definition = $hooks[$hook];
         $elementDetails = $generator->createClassNameDetails($name, 'EventListener\\');
 
@@ -102,7 +99,6 @@ class MakeHook extends AbstractMaker
                 'className' => $elementDetails->getShortName(),
                 'signature' => $this->signatureGenerator->generate($definition, '__invoke'),
                 'body' => $definition->getBody(),
-                'use_attributes' => $this->phpCompatUtil->canUseAttributes(),
             ],
         ]);
 
@@ -116,7 +112,7 @@ class MakeHook extends AbstractMaker
      */
     private function getAvailableHooks(): array
     {
-        $yaml = Yaml::parseFile(__DIR__.'/../Resources/config/hooks.yaml');
+        $yaml = Yaml::parseFile(__DIR__.'/../../config/hooks.yaml');
         $hooks = [];
 
         foreach ($yaml['hooks'] as $key => $config) {

@@ -1,0 +1,114 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_newsletter_recipients.php" source-language="en" target-language="sv">
+    <body>
+      <trans-unit id="tl_newsletter_recipients.email.0">
+        <source>E-mail address</source>
+        <target>E-postadress</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.email.1">
+        <source>Please enter the recipient's e-mail address.</source>
+        <target>Ange en E-postadress för prenumeranten.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.active.0">
+        <source>Activate recipient</source>
+        <target>Aktivera mottagare</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.active.1">
+        <source>Recipients are usually activated automatically (double-opt-in).</source>
+        <target>Mottagaren aktiveras normalt automatiskt (s.k. dubbel-opt-in), via aktiveringslänk i bekräftelseutskick efter att prenumeranten själv registrerat sig som prenumerant.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.addedOn.0">
+        <source>Subscription date</source>
+        <target>Prenumerationsdatum</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.addedOn.1">
+        <source>The date of subscription.</source>
+        <target>Prenumerationens datum.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.ip.0">
+        <source>IP address</source>
+        <target>IP-adress</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.ip.1">
+        <source>The IP address of the subscriber.</source>
+        <target>Prenumerantens IP-adress.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.token.0">
+        <source>Activation token</source>
+        <target>Aktiveringstoken</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.token.1">
+        <source>The activation token of the subscription.</source>
+        <target>Aktiveringstoken för prenumerationen.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.email_legend">
+        <source>E-mail address</source>
+        <target>E-postadress</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.confirm">
+        <source>%s new recipients have been imported.</source>
+        <target>%s nya prenumeranter har importerats.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.invalid">
+        <source>%s invalid entries have been skipped.</source>
+        <target>%s ogiltiga poster har hoppats över.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.subscribed">
+        <source>subscribed on %s</source>
+        <target>började prenumera den %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.manually">
+        <source>added manually</source>
+        <target>manuellt tillagd</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.import.0">
+        <source>CSV import</source>
+        <target>CSV-import</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.import.1">
+        <source>Import recipients from a CSV file</source>
+        <target>Importera prenumeranter från en CSV-fil</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.new.0">
+        <source>New</source>
+        <target>Ny</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.new.1">
+        <source>Create a new recipient</source>
+        <target>Skapa en ny mottagare</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.show">
+        <source>Show the details of recipient ID %s</source>
+        <target>Visa detaljer för prenumerant med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.edit">
+        <source>Edit recipient ID %s</source>
+        <target>Redigera prenumrant med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.cut">
+        <source>Move recipient ID %s</source>
+        <target>Flytta mottagare med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.copy">
+        <source>Duplicate recipient ID %s</source>
+        <target>Kopiera prenumerant med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.delete">
+        <source>Delete recipient ID %s</source>
+        <target>Ta bort prenumerant med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.toggle.0">
+        <source>Activate/deactivate recipient</source>
+        <target>Aktivera / avaktivera prenumeranter</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.toggle.1">
+        <source>Deactivate recipient ID %s</source>
+        <target>Inaktivera mottagar-ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.toggle.2">
+        <source>Activate recipient ID %s</source>
+        <target>Aktivera mottagar-ID %s</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -13,10 +13,10 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\Backend;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
-use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\DataContainer;
 use Contao\PageModel;
 use Contao\StringUtil;
@@ -24,38 +24,33 @@ use Twig\Environment;
 
 class PageRoutingListener
 {
-    public function __construct(private ContaoFramework $framework, private PageRegistry $pageRegistry, private Environment $twig)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly PageRegistry $pageRegistry,
+        private readonly Environment $twig,
+    ) {
     }
 
-    /**
-     * @Callback(table="tl_page", target="fields.routePath.input_field")
-     */
+    #[AsCallback(table: 'tl_page', target: 'fields.routePath.input_field')]
     public function generateRoutePath(DataContainer $dc): string
     {
         $pageModel = $this->framework->getAdapter(PageModel::class)->findByPk($dc->id);
 
-        if (null === $pageModel) {
+        if (!$pageModel) {
             return '';
         }
 
-        return $this->twig->render(
-            '@ContaoCore/Backend/be_route_path.html.twig',
-            [
-                'path' => $this->getPathWithParameters($this->pageRegistry->getRoute($pageModel)),
-            ]
-        );
+        return $this->twig->render('@ContaoCore/Backend/be_route_path.html.twig', [
+            'path' => $this->getPathWithParameters($this->pageRegistry->getRoute($pageModel)),
+        ]);
     }
 
-    /**
-     * @Callback(table="tl_page", target="fields.routeConflicts.input_field")
-     */
+    #[AsCallback(table: 'tl_page', target: 'fields.routeConflicts.input_field')]
     public function generateRouteConflicts(DataContainer $dc): string
     {
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
-        $currentPage = $pageAdapter->findWithDetails($dc->id);
 
-        if (null === $currentPage) {
+        if (!$currentPage = $pageAdapter->findWithDetails($dc->id)) {
             return '';
         }
 
@@ -89,16 +84,13 @@ class PageRoutingListener
             ];
         }
 
-        if (empty($conflicts)) {
+        if (!$conflicts) {
             return '';
         }
 
-        return $this->twig->render(
-            '@ContaoCore/Backend/be_route_conflicts.html.twig',
-            [
-                'conflicts' => $conflicts,
-            ]
-        );
+        return $this->twig->render('@ContaoCore/Backend/be_route_conflicts.html.twig', [
+            'conflicts' => $conflicts,
+        ]);
     }
 
     /**
@@ -122,7 +114,7 @@ class PageRoutingListener
         $path = $route->getPath();
 
         foreach ($route->getRequirements() as $name => $regexp) {
-            $path = preg_replace('/{[!]?('.preg_quote($name, '/').')}/', '{<span class="tl_tip" title="'.StringUtil::specialchars($regexp).'">$1</span>}', $path);
+            $path = preg_replace('/{!?('.preg_quote($name, '/').')}/', '{<span class="tl_tip" title="'.StringUtil::specialchars($regexp).'">$1</span>}', $path);
         }
 
         return $path;

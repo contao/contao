@@ -1,0 +1,38 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_opt_in.php" source-language="en" target-language="nl">
+    <body>
+      <trans-unit id="tl_opt_in.token">
+        <source>Token</source>
+        <target>Token</target>
+      </trans-unit>
+      <trans-unit id="tl_opt_in.confirmedOn">
+        <source>Confirmed at</source>
+        <target>Bevestigd op</target>
+      </trans-unit>
+      <trans-unit id="tl_opt_in.removeOn">
+        <source>Remove at</source>
+        <target>Verwijderen op</target>
+      </trans-unit>
+      <trans-unit id="tl_opt_in.invalidatedThrough">
+        <source>Invalidated through</source>
+        <target>Ongeldig door</target>
+      </trans-unit>
+      <trans-unit id="tl_opt_in.emailSubject">
+        <source>E-mail subject</source>
+        <target>E-mail onderwerp</target>
+      </trans-unit>
+      <trans-unit id="tl_opt_in.emailText">
+        <source>E-mail text</source>
+        <target>E-mail tekst</target>
+      </trans-unit>
+      <trans-unit id="tl_opt_in.show">
+        <source>Show the details of token ID %s</source>
+        <target>Toon details van token ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_opt_in.resend">
+        <source>Resend token ID %s</source>
+        <target>Opnieuw sturen token ID %s</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

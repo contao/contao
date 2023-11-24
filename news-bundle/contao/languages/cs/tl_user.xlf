@@ -1,0 +1,26 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_user.php" source-language="en" target-language="cs">
+    <body>
+      <trans-unit id="tl_user.news.0">
+        <source>Allowed archives</source>
+        <target>Povolené archivy</target>
+      </trans-unit>
+      <trans-unit id="tl_user.news.1">
+        <source>Here you can grant access to one or more news archives.</source>
+        <target>Zde můžete povolit přístup k jednomu nebo více archivům novinek.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.newp.0">
+        <source>News archive permissions</source>
+        <target>Práva archivu novinek</target>
+      </trans-unit>
+      <trans-unit id="tl_user.newp.1">
+        <source>Here you can define the news archive permissions.</source>
+        <target>Zde můžete určit přístupová práva k danému archivu novinek.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.news_legend">
+        <source>News permissions</source>
+        <target>Práva novinek</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

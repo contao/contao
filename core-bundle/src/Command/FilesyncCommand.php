@@ -12,8 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Command;
 
-use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet;
+use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet\ChangeSet;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\Table;
@@ -22,17 +23,13 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-/**
- * Synchronizes the file system with the database.
- *
- * @internal
- */
+#[AsCommand(
+    name: 'contao:filesync',
+    description: 'Synchronizes the registered DBAFS with the virtual filesystem.',
+)]
 class FilesyncCommand extends Command
 {
-    protected static $defaultName = 'contao:filesync';
-    protected static $defaultDescription = 'Synchronizes the registered DBAFS with the virtual filesystem.';
-
-    public function __construct(private DbafsManager $dbafsManager)
+    public function __construct(private readonly DbafsManager $dbafsManager)
     {
         parent::__construct();
     }
@@ -54,7 +51,7 @@ class FilesyncCommand extends Command
 
         (new SymfonyStyle($input, $output))->success("Synchronization complete in {$timeTotal}s.");
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function renderStats(ChangeSet $changeSet, OutputInterface $output): void
@@ -72,31 +69,31 @@ class FilesyncCommand extends Command
         $output->getFormatter()->setStyle('newpath', new OutputFormatterStyle('green'));
         $output->getFormatter()->setStyle('oldpath', new OutputFormatterStyle('red'));
 
-        foreach ($changeSet->getItemsToCreate() as $attributes) {
+        foreach ($changeSet->getItemsToCreate() as $itemToCreate) {
             $table->addRow([
                 'add',
-                "<newpath>{$attributes[ChangeSet::ATTR_PATH]}</newpath> (new hash: <hash>{$attributes[ChangeSet::ATTR_HASH]}</hash>)",
+                "<newpath>{$itemToCreate->getPath()}</newpath> (new hash: <hash>{$itemToCreate->getHash()}</hash>)",
             ]);
         }
 
-        foreach ($changeSet->getItemsToUpdate() as $path => $attributes) {
-            if (null !== ($newPath = $attributes[ChangeSet::ATTR_PATH] ?? null)) {
-                $change = "$path → <newpath>$newPath</newpath>";
+        foreach ($changeSet->getItemsToUpdate() as $itemToUpdate) {
+            if ($itemToUpdate->updatesPath()) {
+                $change = "{$itemToUpdate->getExistingPath()} → <newpath>{$itemToUpdate->getNewPath()}</newpath>";
                 $action = 'move';
             } else {
-                $change = $path;
+                $change = $itemToUpdate->getExistingPath();
                 $action = 'update';
             }
 
-            if (null !== ($hash = $attributes[ChangeSet::ATTR_HASH] ?? null)) {
-                $change .= " (updated hash: <hash>$hash</hash>)";
+            if ($itemToUpdate->updatesHash()) {
+                $change .= " (updated hash: <hash>{$itemToUpdate->getNewHash()}</hash>)";
             }
 
             $table->addRow([$action, $change]);
         }
 
-        foreach (array_keys($changeSet->getItemsToDelete()) as $path) {
-            $table->addRow(['delete', "<oldpath>$path</oldpath>"]);
+        foreach ($changeSet->getItemsToDelete() as $itemToDelete) {
+            $table->addRow(['delete', "<oldpath>{$itemToDelete->getPath()}</oldpath>"]);
         }
 
         $table->render();
@@ -106,8 +103,8 @@ class FilesyncCommand extends Command
                 ' Total items added: %s | updated/moved: %s | deleted: %s',
                 \count($changeSet->getItemsToCreate()),
                 \count($changeSet->getItemsToUpdate()),
-                \count($changeSet->getItemsToDelete())
-            )
+                \count($changeSet->getItemsToDelete()),
+            ),
         );
     }
 }

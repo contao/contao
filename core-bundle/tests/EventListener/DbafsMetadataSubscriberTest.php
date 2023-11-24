@@ -14,24 +14,28 @@ namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\EventListener\DbafsMetadataSubscriber;
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\File\MetadataBag;
 use Contao\CoreBundle\Filesystem\Dbafs\RetrieveDbafsMetadataEvent;
 use Contao\CoreBundle\Filesystem\Dbafs\StoreDbafsMetadataEvent;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\ImportantPart;
+use Contao\PageModel;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Uid\Uuid;
 
 class DbafsMetadataSubscriberTest extends TestCase
 {
     public function testSubscribedEvents(): void
     {
-        $subscriber = new DbafsMetadataSubscriber();
+        $subscriber = $this->getDbafsMetadataSubscriber();
 
         $this->assertSame(
             [
                 RetrieveDbafsMetadataEvent::class => ['enhanceMetadata'],
                 StoreDbafsMetadataEvent::class => ['normalizeMetadata'],
             ],
-            $subscriber::getSubscribedEvents()
+            $subscriber::getSubscribedEvents(),
         );
     }
 
@@ -41,7 +45,7 @@ class DbafsMetadataSubscriberTest extends TestCase
 
         $this->assertEmpty($event->getExtraMetadata());
 
-        (new DbafsMetadataSubscriber())->enhanceMetadata($event);
+        $this->getDbafsMetadataSubscriber()->enhanceMetadata($event);
 
         $extraMetadata = $event->getExtraMetadata();
         $importantPart = $extraMetadata['importantPart'] ?? null;
@@ -52,11 +56,12 @@ class DbafsMetadataSubscriberTest extends TestCase
         $this->assertSame(0.3, $importantPart->getWidth());
         $this->assertSame(0.4, $importantPart->getHeight());
 
-        $metadata = $extraMetadata['metadata']['de'] ?? null;
+        $fileMetadata = $extraMetadata['metadata'] ?? null;
 
-        $this->assertInstanceOf(Metadata::class, $metadata);
-        $this->assertSame('my title', $metadata->getTitle());
-        $this->assertSame('f372c7d8-5aab-11ec-bf63-0242ac130002', $metadata->getUuid());
+        $this->assertInstanceOf(MetadataBag::class, $fileMetadata);
+        $this->assertInstanceOf(Metadata::class, $fileMetadata['de']);
+        $this->assertSame('my title', $fileMetadata['de']->getTitle());
+        $this->assertSame('f372c7d8-5aab-11ec-bf63-0242ac130002', $fileMetadata['de']->getUuid());
     }
 
     public function testOnlyEnhancesMetadataOnDefaultTable(): void
@@ -68,9 +73,40 @@ class DbafsMetadataSubscriberTest extends TestCase
 
         $event = new RetrieveDbafsMetadataEvent('tl_foo', $rowData);
 
-        (new DbafsMetadataSubscriber())->enhanceMetadata($event);
+        $this->getDbafsMetadataSubscriber()->enhanceMetadata($event);
 
         $this->assertEmpty($event->getExtraMetadata());
+    }
+
+    public function testSetsMetadataBagDefaultLocales(): void
+    {
+        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel->language = 'fr';
+        $pageModel->rootFallbackLanguage = 'de';
+
+        $request = new Request();
+        $request->attributes->set('pageModel', $pageModel);
+
+        $requestStack = $this->createMock(RequestStack::class);
+        $requestStack
+            ->method('getCurrentRequest')
+            ->willReturn($request)
+        ;
+
+        $event = new RetrieveDbafsMetadataEvent('tl_files', $this->getDemoRowData());
+
+        $this->getDbafsMetadataSubscriber($requestStack)->enhanceMetadata($event);
+
+        $metadataBag = $event->getExtraMetadata()['metadata'];
+
+        $this->assertInstanceOf(MetadataBag::class, $metadataBag);
+
+        $this->assertSame(
+            ['fr', 'de'],
+            (new \ReflectionClass(MetadataBag::class))
+                ->getProperty('defaultLocales')
+                ->getValue($metadataBag),
+        );
     }
 
     public function testNormalizesMetadata(): void
@@ -84,7 +120,7 @@ class DbafsMetadataSubscriberTest extends TestCase
 
         $this->assertSame($rowData, $event->getRow());
 
-        (new DbafsMetadataSubscriber())->normalizeMetadata($event);
+        $this->getDbafsMetadataSubscriber()->normalizeMetadata($event);
 
         $this->assertSame($this->getDemoRowData(), $event->getRow());
     }
@@ -98,7 +134,7 @@ class DbafsMetadataSubscriberTest extends TestCase
 
         $event = new StoreDbafsMetadataEvent('tl_foo', $rowData);
 
-        (new DbafsMetadataSubscriber())->normalizeMetadata($event);
+        $this->getDbafsMetadataSubscriber()->normalizeMetadata($event);
 
         $this->assertSame($rowData, $event->getRow());
     }
@@ -111,12 +147,12 @@ class DbafsMetadataSubscriberTest extends TestCase
         ];
 
         $metadata = [
-            'metadata' => [
+            'metadata' => new MetadataBag([
                 'de' => new Metadata([
                     Metadata::VALUE_TITLE => 'my title',
                     Metadata::VALUE_UUID => '64c738b4-5aad-11ec-bf63-0242ac130002',
                 ]),
-            ],
+            ]),
         ];
 
         $event = new StoreDbafsMetadataEvent('tl_files', $rowData, $metadata);
@@ -124,7 +160,14 @@ class DbafsMetadataSubscriberTest extends TestCase
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('The UUID stored in the file metadata (64c738b4-5aad-11ec-bf63-0242ac130002) does not match the one of the record (f372c7d8-5aab-11ec-bf63-0242ac130002).');
 
-        (new DbafsMetadataSubscriber())->normalizeMetadata($event);
+        $this->getDbafsMetadataSubscriber()->normalizeMetadata($event);
+    }
+
+    private function getDbafsMetadataSubscriber(RequestStack|null $requestStack = null): DbafsMetadataSubscriber
+    {
+        return new DbafsMetadataSubscriber(
+            $requestStack ?? $this->createMock(RequestStack::class),
+        );
     }
 
     private function getDemoRowData(): array
@@ -146,12 +189,12 @@ class DbafsMetadataSubscriberTest extends TestCase
     {
         return [
             'importantPart' => new ImportantPart(0.1, 0.2, 0.3, 0.4),
-            'metadata' => [
+            'metadata' => new MetadataBag([
                 'de' => new Metadata([
                     Metadata::VALUE_TITLE => 'my title',
                     Metadata::VALUE_UUID => 'f372c7d8-5aab-11ec-bf63-0242ac130002',
                 ]),
-            ],
+            ]),
         ];
     }
 }

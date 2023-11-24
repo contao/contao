@@ -12,22 +12,29 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
+use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
+use Contao\CoreBundle\Controller\FrontendModule\AbstractFrontendModuleController;
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Fragment\FragmentOptionsAwareInterface;
 use Contao\CoreBundle\Routing\ScopeMatcher;
-use Contao\FragmentTemplate;
+use Contao\CoreBundle\Twig\FragmentTemplate;
+use Contao\CoreBundle\Twig\Interop\ContextFactory;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\FrontendTemplate;
 use Contao\Model;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\Template;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
 abstract class AbstractFragmentController extends AbstractController implements FragmentOptionsAwareInterface
 {
     protected array $options = [];
+
+    private string|null $view = null;
 
     public function setFragmentOptions(array $options): void
     {
@@ -43,15 +50,21 @@ abstract class AbstractFragmentController extends AbstractController implements 
 
         $services['request_stack'] = RequestStack::class;
         $services['contao.routing.scope_matcher'] = ScopeMatcher::class;
+        $services['contao.twig.filesystem_loader'] = ContaoFilesystemLoader::class;
+        $services['contao.twig.interop.context_factory'] = ContextFactory::class;
 
         return $services;
     }
 
     protected function getPageModel(): PageModel|null
     {
-        $request = $this->container->get('request_stack')->getCurrentRequest();
+        if (!$request = $this->container->get('request_stack')->getCurrentRequest()) {
+            return null;
+        }
 
-        if (null !== $request && ($pageModel = $request->attributes->get('pageModel')) instanceof PageModel) {
+        $pageModel = $request->attributes->get('pageModel');
+
+        if ($pageModel instanceof PageModel) {
             return $pageModel;
         }
 
@@ -59,70 +72,145 @@ abstract class AbstractFragmentController extends AbstractController implements 
     }
 
     /**
-     * Creates a template by name or from the "customTpl" field of the model.
+     * Creates a FragmentTemplate container object by template name or from the
+     * "customTpl" field of the model and registers the effective template as
+     * default view when using render().
+     *
+     * Calling getResponse() on the returned object will internally call
+     * render() with the set parameters and return the response.
+     *
+     * Note: The $fallbackTemplateName argument will be removed in Contao 6;
+     * always set a template via the fragment options, instead.
      */
-    protected function createTemplate(Model $model, string $templateName): Template
+    protected function createTemplate(Model $model, string|null $fallbackTemplateName = null): FragmentTemplate
     {
-        if (isset($this->options['template'])) {
-            $templateName = $this->options['template'];
+        $templateName = $this->getTemplateName($model, $fallbackTemplateName);
+        $isLegacyTemplate = $this->isLegacyTemplate($templateName);
+        $templateNameToView = static fn (string $name): string => "@Contao/$name.html.twig";
+
+        // Allow calling render() without a view
+        if (!$isLegacyTemplate) {
+            $this->view = $templateNameToView($templateName);
         }
 
-        $request = $this->container->get('request_stack')->getCurrentRequest();
+        $onGetResponse = function (FragmentTemplate $template, Response|null $preBuiltResponse) use ($isLegacyTemplate, $templateName, $templateNameToView): Response {
+            if ($isLegacyTemplate) {
+                // Render using the legacy framework
+                $legacyTemplate = $this->container->get('contao.framework')->createInstance(FrontendTemplate::class, [$templateName]);
+                $legacyTemplate->setData($template->getData());
 
-        if ($model->customTpl) {
-            // Use the custom template unless it is a back end request
-            if (null === $request || !$this->container->get('contao.routing.scope_matcher')->isBackendRequest($request)) {
-                $templateName = $model->customTpl;
+                try {
+                    $response = $legacyTemplate->getResponse();
+                } catch (\Exception $e) {
+                    // Enhance the exception if a modern template name is defined
+                    // but still delegate to the legacy framework
+                    if (null !== ($definedTemplateName = $this->options['template'] ?? null) && preg_match('/^Could not find template "\S+"$/', $e->getMessage())) {
+                        throw new \LogicException(sprintf('Could neither find template "%s" nor the legacy fallback template "%s". Did you forget to create a default template or manually define the "template" property of the controller\'s service tag/attribute?', $definedTemplateName, $templateName), 0, $e);
+                    }
+
+                    throw $e;
+                }
+
+                if ($preBuiltResponse) {
+                    return $preBuiltResponse->setContent($response->getContent());
+                }
+
+                $this->markResponseForInternalCaching($response);
+
+                return $response;
             }
+
+            // Directly render with Twig
+            $context = $this->container->get('contao.twig.interop.context_factory')->fromData($template->getData());
+
+            return $this->render($templateNameToView($template->getName()), $context, $preBuiltResponse);
+        };
+
+        $template = new FragmentTemplate($templateName, $onGetResponse);
+
+        if ($isLegacyTemplate) {
+            $template->setData($model->row());
         }
-
-        $templateClass = FragmentTemplate::class;
-
-        // Current request is the main request (e.g. ESI fragment), so we have to replace
-        // insert tags etc. on the template output
-        if ($request === $this->container->get('request_stack')->getMainRequest()) {
-            $templateClass = FrontendTemplate::class;
-        }
-
-        /** @var Template $template */
-        $template = $this->container->get('contao.framework')->createInstance($templateClass, [$templateName]);
-        $template->setData($model->row());
 
         return $template;
     }
 
-    protected function addHeadlineToTemplate(Template $template, array|string|null $headline): void
+    /**
+     * @internal
+     */
+    protected function isLegacyTemplate(string $templateName): bool
     {
-        $data = StringUtil::deserialize($headline);
-        $template->headline = \is_array($data) ? $data['value'] : $data;
-        $template->hl = \is_array($data) ? $data['unit'] : 'h1';
+        return !str_contains($templateName, '/');
     }
 
-    protected function addCssAttributesToTemplate(Template $template, string $templateName, array|string|null $cssID, array $classes = null): void
+    /**
+     * @internal The addHeadlineToTemplate() method is considered internal in
+     *           Contao 5 and won't be accessible anymore in Contao 6. Headline
+     *           data is always added to the context of modern fragment
+     *           templates.
+     */
+    protected function addHeadlineToTemplate(Template $template, array|string|null $headline): void
     {
+        $this->triggerDeprecationIfCallingFromCustomClass(__METHOD__);
+
+        $data = StringUtil::deserialize($headline);
+        $template->headline = \is_array($data) ? $data['value'] ?? '' : $data;
+        $template->hl = \is_array($data) && isset($data['unit']) ? $data['unit'] : 'h1';
+    }
+
+    /**
+     * @internal The addCssAttributesToTemplate() method is considered internal
+     *           in Contao 5 and won't be accessible anymore in Contao 6.
+     *           Attributes data is always added to the context of modern
+     *           fragment templates.
+     */
+    protected function addCssAttributesToTemplate(Template $template, string $templateName, array|string|null $cssID, array|null $classes = null): void
+    {
+        $this->triggerDeprecationIfCallingFromCustomClass(__METHOD__);
+
         $data = StringUtil::deserialize($cssID, true);
         $template->class = trim($templateName.' '.($data[1] ?? ''));
         $template->cssID = !empty($data[0]) ? ' id="'.$data[0].'"' : '';
 
-        if (!empty($classes)) {
+        if ($classes) {
             $template->class .= ' '.implode(' ', $classes);
         }
     }
 
+    /**
+     * @internal The addPropertiesToTemplate() method is considered internal in
+     *           Contao 5 and won't be accessible anymore in Contao 6. Custom
+     *           properties are always added to the context of modern fragment
+     *           templates.
+     */
     protected function addPropertiesToTemplate(Template $template, array $properties): void
     {
+        $this->triggerDeprecationIfCallingFromCustomClass(__METHOD__);
+
         foreach ($properties as $k => $v) {
             $template->{$k} = $v;
         }
     }
 
+    /**
+     * @internal The addSectionToTemplate() method is considered internal in
+     *           Contao 5 and won't be accessible anymore in Contao 6. Section
+     *           data is always added to the context of modern fragment
+     *           templates.
+     */
     protected function addSectionToTemplate(Template $template, string $section): void
     {
+        $this->triggerDeprecationIfCallingFromCustomClass(__METHOD__);
+
         $template->inColumn = $section;
     }
 
     /**
      * Returns the type from the class name.
+     *
+     * @internal The getType() method is considered internal in Contao 5 and
+     *           won't be accessible anymore in Contao 6. Retrieve the type
+     *           from the fragment options instead.
      */
     protected function getType(): string
     {
@@ -139,15 +227,33 @@ abstract class AbstractFragmentController extends AbstractController implements 
         return Container::underscore($className);
     }
 
-    protected function render(string $view, array $parameters = [], Response $response = null): Response
+    /**
+     * Renders a template. If $view is set to null, the default template of
+     * this fragment will be rendered.
+     *
+     * By default, the returned response will have the appropriate headers set,
+     * that allow our SubrequestCacheSubscriber to merge it with others of the
+     * same page. Pass a prebuilt Response if you want to have full control -
+     * no headers will be set then.
+     */
+    protected function render(string|null $view = null, array $parameters = [], Response|null $response = null): Response
     {
-        if (null === $response) {
+        $view ??= $this->view ?? throw new \InvalidArgumentException('Cannot derive template name, please make sure createTemplate() was called before or specify the template explicitly.');
+
+        if (!$response) {
             $response = new Response();
 
             $this->markResponseForInternalCaching($response);
         }
 
         return parent::render($view, $parameters, $response);
+    }
+
+    protected function isBackendScope(Request|null $request = null): bool
+    {
+        $request ??= $this->container->get('request_stack')->getCurrentRequest();
+
+        return null !== $request && $this->container->get('contao.routing.scope_matcher')->isBackendRequest($request);
     }
 
     /**
@@ -157,5 +263,41 @@ abstract class AbstractFragmentController extends AbstractController implements 
     {
         $response->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, '1');
         $response->headers->remove('Cache-Control');
+    }
+
+    private function triggerDeprecationIfCallingFromCustomClass(string $method): void
+    {
+        $caller = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3)[2]['class'];
+
+        if (!\in_array($caller, [AbstractContentElementController::class, AbstractFrontendModuleController::class], true)) {
+            trigger_deprecation('contao/core-bundle', '5.0', 'The "%s" method is considered internal and won\'t be accessible anymore in Contao 6.', $method);
+        }
+    }
+
+    private function getTemplateName(Model $model, string|null $fallbackTemplateName): string
+    {
+        $exists = fn (string $template): bool => $this->container
+            ->get('contao.twig.filesystem_loader')
+            ->exists("@Contao/$template.html.twig")
+        ;
+
+        $shouldUseVariantTemplate = fn (string $variantTemplate): bool => $this->isLegacyTemplate($variantTemplate)
+            ? !$this->isBackendScope()
+            : $exists($variantTemplate);
+
+        // Prefer using a custom variant template if defined and applicable
+        if ($model->customTpl && $shouldUseVariantTemplate($model->customTpl)) {
+            return $model->customTpl;
+        }
+
+        $definedTemplateName = $this->options['template'] ?? null;
+
+        // Always use the defined name for legacy templates and for modern
+        // templates that exist (= those that do not need to have a fallback)
+        if (null !== $definedTemplateName && ($this->isLegacyTemplate($definedTemplateName) || $exists($definedTemplateName))) {
+            return $definedTemplateName;
+        }
+
+        return $fallbackTemplateName ?? throw new \InvalidArgumentException('No template was set in the fragment options.');
     }
 }

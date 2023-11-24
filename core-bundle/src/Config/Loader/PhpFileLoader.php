@@ -37,7 +37,7 @@ use Symfony\Component\Filesystem\Path;
  */
 class PhpFileLoader extends Loader
 {
-    public function load($resource, string $type = null): string
+    public function load(mixed $resource, string|null $type = null): string
     {
         [$code, $namespace] = $this->parseFile((string) $resource);
 
@@ -48,7 +48,7 @@ class PhpFileLoader extends Loader
         return $code;
     }
 
-    public function supports($resource, string $type = null): bool
+    public function supports(mixed $resource, string|null $type = null): bool
     {
         return 'php' === Path::getExtension((string) $resource, true);
     }
@@ -135,7 +135,7 @@ class PhpFileLoader extends Loader
         $prettyPrinter = new PrettyPrinter();
         $code = sprintf("\n%s\n", $prettyPrinter->prettyPrint($ast));
         $namespaceNode = $namespaceResolver->getNameContext()->getNamespace();
-        $namespace = null !== $namespaceNode ? $namespaceNode->toString() : '';
+        $namespace = $namespaceNode ? $namespaceNode->toString() : '';
 
         // Force GC collection to reduce the total memory required when building the cache (see #4069)
         gc_collect_cycles();

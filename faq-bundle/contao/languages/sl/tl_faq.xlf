@@ -1,0 +1,184 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_faq.php" source-language="en" target-language="sl">
+    <body>
+      <trans-unit id="tl_faq.question.0">
+        <source>Question</source>
+        <target>Vprašanje</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.question.1">
+        <source>Please enter the question.</source>
+        <target>Vnesite vprašanje.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.alias.0">
+        <source>FAQ alias</source>
+        <target>FAQ vzdevek (alias)</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.alias.1">
+        <source>The FAQ alias is a unique reference to the FAQ which can be called instead of its numeric ID.</source>
+        <target>FAQ vzdevek je unikatna referenca vprašanja, ki jo lahko uporabimo namesto ID vprašanja.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.author.0">
+        <source>Author</source>
+        <target>Avtor</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.author.1">
+        <source>Here you can change the author of the FAQ.</source>
+        <target>Izberite avtorja.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.answer.0">
+        <source>Answer</source>
+        <target>Odgovor</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.answer.1">
+        <source>Please enter the answer.</source>
+        <target>Vnesite odgovor.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.addImage.0">
+        <source>Add an image</source>
+        <target>Dodaj sliko</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.addImage.1">
+        <source>Add an image to the FAQ.</source>
+        <target>Dodaj sliko k odgovoru.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.pageTitle.0">
+        <source>Meta title</source>
+        <target>Meta title</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.pageTitle.1">
+        <source>Here you can add a custom meta title to overwrite the default page title.</source>
+        <target>Tu lahko vnesete meta naziv po meri, ki bo prepisal privzetega za spletno stran.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.robots.0">
+        <source>Robots tag</source>
+        <target>Oznake robota</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.robots.1">
+        <source>Here you can overwrite how search engines handle the FAQ.</source>
+        <target>Tu lahko nastavite, kako naj spletni iskalniki obravnavajo FAQ.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.description.0">
+        <source>Meta description</source>
+        <target>Meta description</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.description.1">
+        <source>Here you can add a custom meta description to overwrite the default page description.</source>
+        <target>Tu lahko vnesete meta opis po meri, ki bo prepisal privzetega za spletno stran.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.addEnclosure.0">
+        <source>Add enclosures</source>
+        <target>Dodaj prilogo</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.addEnclosure.1">
+        <source>Add one or more downloadable files to the FAQ.</source>
+        <target>Dodaj datoteko za prenos k odgovoru.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.enclosure.0">
+        <source>Enclosures</source>
+        <target>Priloge</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.enclosure.1">
+        <source>Please choose the files you want to attach.</source>
+        <target>Izberite datoteko, ki jo želite dodati k odgovoru.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.noComments.0">
+        <source>Disable comments</source>
+        <target>Onemogoči komentarje</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.noComments.1">
+        <source>Do not allow comments for this particular FAQ.</source>
+        <target>Ne dovoli komentarje za ta FAQ.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.published.0">
+        <source>Publish the FAQ</source>
+        <target>Objavi</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.published.1">
+        <source>Make the FAQ publicly visible on the website.</source>
+        <target>Pogosto zastavljeno vprašanje (FAQ) ne bo vidno dokler ni objavljeno.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.title_legend">
+        <source>Title and author</source>
+        <target>Naslov in avtor</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.answer_legend">
+        <source>Answer</source>
+        <target>Odgovor</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.meta_legend">
+        <source>Metadata</source>
+        <target>Meta podatki</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.image_legend">
+        <source>Image settings</source>
+        <target>Nastavitve slike</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.enclosure_legend">
+        <source>Enclosures</source>
+        <target>Priloge</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.expert_legend">
+        <source>Expert settings</source>
+        <target>Napredne nastavitve</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.publish_legend">
+        <source>Publish settings</source>
+        <target>Objavi nastavitve</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.new.0">
+        <source>New</source>
+        <target>Nov</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.new.1">
+        <source>Create a new question</source>
+        <target>Ustvari novo vprašanje</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.show">
+        <source>Show the details of question ID %s</source>
+        <target>Prikaži podrobnosti vprašanja ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.edit">
+        <source>Edit question ID %s</source>
+        <target>Uredi vprašanje ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.copy">
+        <source>Duplicate question ID %s</source>
+        <target>Kopiraj vprašanje ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.cut">
+        <source>Move question ID %s</source>
+        <target>Premakni vprašanje ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.delete">
+        <source>Delete question ID %s</source>
+        <target>Izbriši vprašanje ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.toggle.0">
+        <source>Publish/unpublish question</source>
+        <target>Objavi/neobjavi vprašanja</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.toggle.1">
+        <source>Unpublish question ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_faq.toggle.2">
+        <source>Publish question ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_faq.pasteafter.0">
+        <source>Paste at the top</source>
+        <target>Prilepi na vrh</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.pasteafter.1">
+        <source>Paste after question ID %s</source>
+        <target>Prilepi za vprašanje ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.pastenew.0">
+        <source>Create a new question at the top</source>
+        <target>Ustvari novo vprašanje na vrhu</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.pastenew.1">
+        <source>Create a new question after question ID %s</source>
+        <target>Ustvari novo vprašanje za vprašanjem z ID %s</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

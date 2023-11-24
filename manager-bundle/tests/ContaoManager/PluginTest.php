@@ -15,7 +15,6 @@ namespace Contao\ManagerBundle\Tests\ContaoManager;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\ManagerBundle\ContaoManager\Plugin;
 use Contao\ManagerBundle\ContaoManagerBundle;
-use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\DelegatingParser;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
@@ -39,7 +38,6 @@ use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Mailer\Transport\NativeTransportFactory;
 use Symfony\Component\Routing\Route;
@@ -83,8 +81,6 @@ class PluginTest extends ContaoTestCase
     public function testReturnsTheBundles(): void
     {
         $plugin = new Plugin();
-
-        /** @var array<BundleConfig> $bundles */
         $bundles = $plugin->getBundles(new DelegatingParser());
 
         $this->assertCount(13, $bundles);
@@ -187,14 +183,14 @@ class PluginTest extends ContaoTestCase
 
                         $resource($container);
                     }
-                }
+                },
             )
         ;
 
         $plugin = new Plugin();
         $plugin->registerContainerConfiguration($loader, []);
 
-        $this->assertContains('config_prod.yml', $files);
+        $this->assertContains('config_prod.yaml', $files);
     }
 
     public function testRegisterContainerConfigurationInDev(): void
@@ -215,14 +211,14 @@ class PluginTest extends ContaoTestCase
 
                         $resource($container);
                     }
-                }
+                },
             )
         ;
 
         $plugin = new Plugin();
         $plugin->registerContainerConfiguration($loader, []);
 
-        $this->assertContains('config_dev.yml', $files);
+        $this->assertContains('config_dev.yaml', $files);
     }
 
     public function testGetRouteCollectionInProd(): void
@@ -252,7 +248,7 @@ class PluginTest extends ContaoTestCase
                     $collection->add(basename($file).'_foobar', new Route('/foobar'));
 
                     return $collection;
-                }
+                },
             )
         ;
 
@@ -274,7 +270,7 @@ class PluginTest extends ContaoTestCase
         $collection = $plugin->getRouteCollection($resolver, $kernel);
         $routes = array_values($collection->all());
 
-        $this->assertCount(3, $routes);
+        $this->assertCount(2, $routes);
         $this->assertSame('/_wdt/foobar', $routes[0]->getPath());
         $this->assertSame('/_profiler/foobar', $routes[1]->getPath());
     }
@@ -286,11 +282,10 @@ class PluginTest extends ContaoTestCase
             ->in(__DIR__.'/../../src/ContaoManager/ApiCommand')
         ;
 
-        /** @var SplFileInfo $file */
         foreach ($files as $file) {
             $this->assertContains(
                 'Contao\ManagerBundle\ContaoManager\ApiCommand\\'.$file->getBasename('.php'),
-                (new Plugin())->getApiCommands()
+                (new Plugin())->getApiCommands(),
             );
         }
     }
@@ -305,7 +300,6 @@ class PluginTest extends ContaoTestCase
                     'COOKIE_WHITELIST',
                     'DATABASE_URL',
                     'DISABLE_HTTP_CACHE',
-                    'MAILER_URL',
                     'MAILER_DSN',
                     'TRACE_LEVEL',
                     'TRUSTED_PROXIES',
@@ -318,7 +312,7 @@ class PluginTest extends ContaoTestCase
                     'debug',
                 ],
             ],
-            (new Plugin())->getApiFeatures()
+            (new Plugin())->getApiFeatures(),
         );
     }
 
@@ -651,6 +645,84 @@ class PluginTest extends ContaoTestCase
         ];
     }
 
+    /**
+     * @dataProvider provideUserExtensionConfigs
+     */
+    public function testSetsDefaultCollation(array $userExtensionConfig): void
+    {
+        $extensionConfigs = [
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+                            'default_table_options' => [
+                                'charset' => 'utf8mb4',
+                                'collate' => 'utf8mb4_unicode_ci',
+                                'collation' => 'utf8mb4_unicode_ci',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            $userExtensionConfig,
+        ];
+
+        $expect = [
+            ...$extensionConfigs,
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'default_table_options' => [
+                                'collate' => 'utf8_unicode_ci',
+                                'collation' => 'utf8_unicode_ci',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $container = $this->getContainer();
+        $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+
+        $this->assertSame($expect, $extensionConfig);
+    }
+
+    public function provideUserExtensionConfigs(): \Generator
+    {
+        yield 'collate' => [
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'default_table_options' => [
+                                'charset' => 'utf8',
+                                'collate' => 'utf8_unicode_ci',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        yield 'collation' => [
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'default_table_options' => [
+                                'charset' => 'utf8',
+                                'collation' => 'utf8_unicode_ci',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+    }
+
     public function testUpdatesTheMailerTransport(): void
     {
         $container = $this->getContainer();
@@ -841,127 +913,6 @@ class PluginTest extends ContaoTestCase
         ];
     }
 
-    /**
-     * @dataProvider getMailerUrlParameters
-     */
-    public function testSetsTheMailerDsnFromMailerUrl(string $mailerUrl, string $expected): void
-    {
-        $_SERVER['MAILER_URL'] = $mailerUrl;
-
-        $container = $this->getContainer();
-
-        (new Plugin())->getExtensionConfig('framework', [], $container);
-
-        $bag = $container->getParameterBag()->all();
-
-        $this->assertSame($expected, $bag['env(MAILER_DSN)']);
-    }
-
-    public function getMailerUrlParameters(): \Generator
-    {
-        yield [
-            'sendmail://localhost',
-            'sendmail://default',
-        ];
-
-        yield [
-            'mail://localhost',
-            'sendmail://default',
-        ];
-
-        yield [
-            'smtp://127.0.0.1:25',
-            'smtp://127.0.0.1:25',
-        ];
-
-        yield [
-            'smtp://127.0.0.1:25?local_domain=example.org&foo=bar',
-            'smtp://127.0.0.1:25?local_domain=example.org&foo=bar',
-        ];
-
-        yield [
-            'smtp://127.0.0.1:25?username=foo@bar.com',
-            'smtp://foo%%40bar.com@127.0.0.1:25',
-        ];
-
-        yield [
-            'smtp://127.0.0.1:25?username=foo@bar.com&password=foobar',
-            'smtp://foo%%40bar.com:foobar@127.0.0.1:25',
-        ];
-
-        yield [
-            'smtp://foo@bar.com:foobar@127.0.0.1:25',
-            'smtp://foo%%40bar.com:foobar@127.0.0.1:25',
-        ];
-
-        yield [
-            'smtp://127.0.0.1:587?encryption=tls',
-            'smtp://127.0.0.1:587',
-        ];
-
-        yield [
-            'smtp://127.0.0.1:587?username=foo@bar.com&password=foobar&encryption=tls',
-            'smtp://foo%%40bar.com:foobar@127.0.0.1:587',
-        ];
-
-        yield [
-            'smtp://127.0.0.1?encryption=ssl',
-            'smtps://127.0.0.1',
-        ];
-
-        yield [
-            'smtp://foo@bar.com:foobar@127.0.0.1?encryption=ssl',
-            'smtps://foo%%40bar.com:foobar@127.0.0.1',
-        ];
-
-        yield [
-            'smtp://127.0.0.1:465?encryption=ssl',
-            'smtps://127.0.0.1:465',
-        ];
-
-        yield [
-            'smtp://127.0.0.1:465?username=foo@bar.com&password=foobar&encryption=ssl',
-            'smtps://foo%%40bar.com:foobar@127.0.0.1:465',
-        ];
-
-        yield [
-            'gmail://localhost',
-            'smtps://smtp.gmail.com',
-        ];
-
-        yield [
-            '?transport=gmail',
-            'smtps://smtp.gmail.com',
-        ];
-    }
-
-    /**
-     * @dataProvider getInvalidMailerUrlParameters
-     */
-    public function testThrowsExceptionIfMailerUrlIsInvalid(string $invalidMailerUrl): void
-    {
-        $_SERVER['MAILER_URL'] = $invalidMailerUrl;
-
-        $container = $this->getContainer();
-
-        $this->expectException(\InvalidArgumentException::class);
-
-        (new Plugin())->getExtensionConfig('framework', [], $container);
-    }
-
-    public function getInvalidMailerUrlParameters(): \Generator
-    {
-        yield['smtp'];
-
-        yield['smtp://'];
-
-        yield['//smtp'];
-
-        yield['?host=localhost'];
-
-        yield['foo://localhost'];
-    }
-
     public function testUpdatesTheClickjackingPaths(): void
     {
         $extensionConfigs = [
@@ -1062,15 +1013,14 @@ class PluginTest extends ContaoTestCase
         $expect = $extensionConfigs;
 
         if ($shouldAdd) {
-            $expect = array_merge(
-                $extensionConfigs,
-                [[
+            $expect = [
+                ...$extensionConfigs,
+                [
                     'orm' => [
                         'entity_managers' => [
                             $defaultEntityManager => [
                                 'mappings' => [
                                     'App' => [
-                                        'type' => 'annotation',
                                         'dir' => '%kernel.project_dir%/src/Entity',
                                         'is_bundle' => false,
                                         'prefix' => 'App\Entity',
@@ -1080,8 +1030,8 @@ class PluginTest extends ContaoTestCase
                             ],
                         ],
                     ],
-                ]]
-            );
+                ],
+            ];
         }
 
         $plugin = new Plugin();

@@ -15,10 +15,11 @@ namespace Contao\CoreBundle\EventListener\Menu;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
+use Knp\Menu\Util\MenuManipulator;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -28,11 +29,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class BackendPreviewListener
 {
     public function __construct(
-        private Security $security,
-        private RouterInterface $router,
-        private RequestStack $requestStack,
-        private TranslatorInterface $translator,
-        private EventDispatcherInterface $eventDispatcher,
+        private readonly Security $security,
+        private readonly RouterInterface $router,
+        private readonly RequestStack $requestStack,
+        private readonly TranslatorInterface $translator,
+        private readonly EventDispatcherInterface $eventDispatcher,
     ) {
     }
 
@@ -59,23 +60,10 @@ class BackendPreviewListener
             ->setExtra('translation_domain', 'contao_default')
         ;
 
-        $children = [];
+        $tree->addChild($preview);
 
-        // Try adding the preview button after the alerts button
-        foreach ($tree->getChildren() as $name => $item) {
-            $children[$name] = $item;
-
-            if ('alerts' === $name) {
-                $children['preview'] = $preview;
-            }
-        }
-
-        // Prepend the preview button if it could not be added above
-        if (!isset($children['preview'])) {
-            $children = ['preview' => $preview] + $children;
-        }
-
-        $tree->setChildren($children);
+        // The last two items are "submenu" and "burger", so make this the third to last
+        (new MenuManipulator())->moveToPosition($preview, $tree->count() - 3);
     }
 
     private function getPreviewUrl(): string
@@ -100,10 +88,6 @@ class BackendPreviewListener
 
     private function getIdFromRequest(Request $request): int
     {
-        if (!$request->query->has('table')) {
-            return (int) $request->query->get('id');
-        }
-
-        return (int) $request->getSession()->get('CURRENT_ID');
+        return (int) ($request->query->get('id') ?? $request->query->get('pid'));
     }
 }

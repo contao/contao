@@ -53,7 +53,7 @@ class DynamicIncludeTokenParserTest extends TestCase
                     }
 
                     throw new \LogicException('Template not found in hierarchy.');
-                }
+                },
             )
         ;
 
@@ -62,7 +62,7 @@ class DynamicIncludeTokenParserTest extends TestCase
 
         $source = new Source($code, 'template.html.twig');
         $tokenStream = (new Lexer($environment))->tokenize($source);
-        $serializedTree = (new Parser($environment))->parse($tokenStream)->__toString();
+        $serializedTree = (string) (new Parser($environment))->parse($tokenStream);
 
         foreach ($expectedStrings as $expectedString) {
             $this->assertStringContainsString($expectedString, $serializedTree);
@@ -139,7 +139,7 @@ class DynamicIncludeTokenParserTest extends TestCase
         $parser = new Parser($environment);
         $includeNode = $parser->parse($tokenStream)->getNode('body')->getNode('0');
 
-        if (null !== $variables) {
+        if ($variables) {
             $this->assertSame((string) $variables, (string) $includeNode->getNode('variables'));
         } else {
             $this->assertFalse($includeNode->hasNode('variables'));

@@ -34,7 +34,7 @@ class PreviewLinkControllerTest extends TestCase
         $listener = new PreviewLinkController(
             $this->mockAuthenticator($showUnpublished),
             $this->mockUriSigner(true),
-            $this->mockConnection(['url' => $url, 'showUnpublished' => $showUnpublished])
+            $this->mockConnection(['url' => $url, 'showUnpublished' => $showUnpublished]),
         );
 
         $response = $listener($request, 42);
@@ -55,7 +55,7 @@ class PreviewLinkControllerTest extends TestCase
         $listener = new PreviewLinkController(
             $this->mockAuthenticator(null),
             $this->mockUriSigner(false),
-            $this->mockConnection(null)
+            $this->mockConnection(null),
         );
 
         $this->expectException(AccessDeniedException::class);
@@ -70,7 +70,7 @@ class PreviewLinkControllerTest extends TestCase
         $listener = new PreviewLinkController(
             $this->mockAuthenticator(null),
             $this->mockUriSigner(true),
-            $this->mockConnection(false)
+            $this->mockConnection(false),
         );
 
         $this->expectException(NotFoundHttpException::class);
@@ -79,10 +79,7 @@ class PreviewLinkControllerTest extends TestCase
         $listener($request, 42);
     }
 
-    /**
-     * @return FrontendPreviewAuthenticator&MockObject
-     */
-    private function mockAuthenticator(bool|null $showUnpublished): FrontendPreviewAuthenticator
+    private function mockAuthenticator(bool|null $showUnpublished): FrontendPreviewAuthenticator&MockObject
     {
         $authenticator = $this->createMock(FrontendPreviewAuthenticator::class);
         $authenticator
@@ -94,10 +91,7 @@ class PreviewLinkControllerTest extends TestCase
         return $authenticator;
     }
 
-    /**
-     * @return UriSigner&MockObject
-     */
-    private function mockUriSigner(bool $checkSuccessful): UriSigner
+    private function mockUriSigner(bool $checkSuccessful): UriSigner&MockObject
     {
         $uriSigner = $this->createMock(UriSigner::class);
         $uriSigner
@@ -110,18 +104,15 @@ class PreviewLinkControllerTest extends TestCase
         return $uriSigner;
     }
 
-    /**
-     * @return Connection&MockObject
-     */
-    private function mockConnection(array|bool|null $link): Connection
+    private function mockConnection(array|bool|null $link): Connection&MockObject
     {
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects(null === $link ? $this->never() : $this->once())
             ->method('fetchAssociative')
             ->with(
-                "SELECT * FROM tl_preview_link WHERE id=? AND published='1' AND expiresAt>UNIX_TIMESTAMP()",
-                $this->isType('array')
+                'SELECT * FROM tl_preview_link WHERE id=? AND published=1 AND expiresAt>UNIX_TIMESTAMP()',
+                $this->isType('array'),
             )
             ->willReturn($link)
         ;

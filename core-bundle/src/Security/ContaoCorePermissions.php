@@ -106,7 +106,8 @@ final class ContaoCorePermissions
 
     /**
      * Access is granted if the current user can access the form field type.
-     * Subject must be a content element type (e.g. "hidden").
+     * Subject can be a content element type (e.g. "hidden") or null to
+     * check if any field type is allowed.
      */
     public const USER_CAN_ACCESS_FIELD_TYPE = 'contao_user.fields';
 
@@ -153,8 +154,14 @@ final class ContaoCorePermissions
     public const USER_CAN_ACCESS_PAGE_TYPE = 'contao_user.alpty';
 
     /**
+     * Access is granted if the given page is mounted for the current user.
+     * Subject must be a page ID from tl_page.
+     */
+    public const USER_CAN_ACCESS_PAGE = 'contao_user.pagemounts';
+
+    /**
      * Access is granted if the given path is mounted for the current user.
-     * Subject must be path as string (e.g. "files/content/foo").
+     * Subject must be a path as string (e.g. "files/content/foo").
      */
     public const USER_CAN_ACCESS_PATH = 'contao_user.filemounts';
 
@@ -189,36 +196,7 @@ final class ContaoCorePermissions
 
     /**
      * Prefix for all DCA related permission attributes.
+     * Supposed to be followed by the table (e.g. "contao_dc.tl_content").
      */
-    public const DCA_PREFIX = 'contao_dca.';
-
-    /**
-     * Create DCA permission.
-     */
-    public const DCA_CREATE = self::DCA_PREFIX.'create';
-
-    /**
-     * Edit DCA permission.
-     */
-    public const DCA_EDIT = self::DCA_PREFIX.'edit';
-
-    /**
-     * Delete DCA permission.
-     */
-    public const DCA_DELETE = self::DCA_PREFIX.'delete';
-
-    /**
-     * View DCA permission.
-     */
-    public const DCA_VIEW = self::DCA_PREFIX.'view';
-
-    /**
-     * Copy DCA permission.
-     */
-    public const DCA_COPY = self::DCA_PREFIX.'copy';
-
-    /**
-     * Move DCA permission.
-     */
-    public const DCA_MOVE = self::DCA_PREFIX.'move';
+    public const DC_PREFIX = 'contao_dc.';
 }

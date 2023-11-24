@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Loader;
 
-use Contao\CoreBundle\Exception\InvalidThemePathException;
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Psr\Cache\CacheItemPoolInterface;
@@ -45,25 +44,26 @@ use Twig\Source;
 class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarchyInterface, ResetInterface
 {
     private const CACHE_KEY_PATHS = 'contao.twig.loader_paths';
+
     private const CACHE_KEY_HIERARCHY = 'contao.twig.template_hierarchy';
 
     private string|false|null $currentThemeSlug = null;
 
     /**
-     * @var array<string,string>
+     * @var array<string, string>
      */
     private array $trackedTemplatesPaths = [];
 
     /**
-     * @var array<string,array<string,string>>|null
+     * @var array<string, array<string, string>>|null
      */
     private array|null $inheritanceChains = null;
 
     public function __construct(
-        private CacheItemPoolInterface $cachePool,
-        private TemplateLocator $templateLocator,
-        private ThemeNamespace $themeNamespace,
-        string $rootPath = null,
+        private readonly CacheItemPoolInterface $cachePool,
+        private readonly TemplateLocator $templateLocator,
+        private readonly ThemeNamespace $themeNamespace,
+        string|null $rootPath = null,
     ) {
         parent::__construct([], $rootPath);
 
@@ -152,10 +152,12 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
     {
         $pathsItem = $this->cachePool->getItem(self::CACHE_KEY_PATHS);
         $pathsItem->set($this->paths);
+
         $this->cachePool->save($pathsItem);
 
         $hierarchyItem = $this->cachePool->getItem(self::CACHE_KEY_HIERARCHY);
         $hierarchyItem->set($this->inheritanceChains);
+
         $this->cachePool->save($hierarchyItem);
     }
 
@@ -174,7 +176,11 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
     {
         $templateName = $this->getThemeTemplateName($name) ?? $name;
 
-        return parent::getCacheKey($templateName);
+        // We prefix the cache key to make sure templates from the default
+        // Symfony loader won't be reused. Otherwise, we cannot reliably
+        // differentiate when to apply our input encoding tolerant escaper
+        // filters (see #4623).
+        return 'c'.parent::getCacheKey($templateName);
     }
 
     /**
@@ -204,7 +210,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
             1 === preg_match(
                 '/\$this\s*->\s*extend\s*\(\s*[\'"]([a-z0-9_-]+)[\'"]\s*\)/i',
                 (string) file_get_contents($source->getPath()),
-                $match
+                $match,
             )
             && '@Contao/'.$match[1].'.html5' !== $name
         ) {
@@ -214,7 +220,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         preg_match_all(
             '/\$this\s*->\s*block\s*\(\s*[\'"]([a-z0-9_-]+)[\'"]\s*\)/i',
             (string) file_get_contents($source->getPath()),
-            $matches
+            $matches,
         );
 
         return new Source(implode("\n", $matches[1] ?? []), $source->getName(), $source->getPath());
@@ -265,7 +271,9 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         $chain = $this->getInheritanceChains()[ContaoTwigUtil::getIdentifier($name)] ?? [];
 
         foreach (array_keys($chain) as $path) {
-            if (filemtime($path) > $time) {
+            $mTime = @filemtime($path);
+
+            if (false === $mTime || $mTime > $time) {
                 return false;
             }
         }
@@ -283,7 +291,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         $this->currentThemeSlug = null;
     }
 
-    public function getDynamicParent(string $shortNameOrIdentifier, string $sourcePath, string $themeSlug = null): string
+    public function getDynamicParent(string $shortNameOrIdentifier, string $sourcePath, string|null $themeSlug = null): string
     {
         $hierarchy = $this->getInheritanceChains($themeSlug);
         $identifier = ContaoTwigUtil::getIdentifier($shortNameOrIdentifier);
@@ -303,7 +311,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         return $next;
     }
 
-    public function getFirst(string $shortNameOrIdentifier, string $themeSlug = null): string
+    public function getFirst(string $shortNameOrIdentifier, string|null $themeSlug = null): string
     {
         $identifier = ContaoTwigUtil::getIdentifier($shortNameOrIdentifier);
         $hierarchy = $this->getInheritanceChains($themeSlug);
@@ -315,7 +323,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         return $chain[array_key_first($chain)];
     }
 
-    public function getInheritanceChains(string $themeSlug = null): array
+    public function getInheritanceChains(string|null $themeSlug = null): array
     {
         if (null === $this->inheritanceChains) {
             $this->buildInheritanceChains();
@@ -351,24 +359,32 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
             $templates = $this->templateLocator->findTemplates($searchPath);
 
             foreach ($templates as $shortName => $templatePath) {
-                $identifier = ContaoTwigUtil::getIdentifier($shortName);
-
-                if (isset($templatesByNamespace[$namespace][$identifier])) {
+                if (isset($templatesByNamespace[$namespace][$shortName])) {
                     $basePath = Path::getLongestCommonBasePath(...$this->paths[$namespace]);
 
-                    throw new \OutOfBoundsException(sprintf('There cannot be more than one "%s" template in "%s".', $identifier, $basePath));
+                    throw new \OutOfBoundsException(sprintf('There cannot be more than one "%s" template in "%s".', $shortName, $basePath));
                 }
 
-                $templatesByNamespace[$namespace][$identifier] = [$shortName, $templatePath];
+                $templatesByNamespace[$namespace][$shortName] = $templatePath;
             }
         }
 
+        $typeByIdentifier = [];
         $hierarchy = [];
 
         foreach ($templatesByNamespace as $namespace => $templates) {
-            foreach ($templates as $identifier => [$shortName, $path]) {
-                if (!isset($hierarchy[$identifier])) {
-                    $hierarchy[$identifier] = [];
+            foreach ($templates as $shortName => $path) {
+                $identifier = ContaoTwigUtil::getIdentifier($shortName);
+
+                $type = \in_array($extension = ContaoTwigUtil::getExtension($path), ['html.twig', 'html5'], true)
+                    ? 'html.twig/html5'
+                    : $extension;
+
+                // Make sure all files grouped under a certain identifier share the same type
+                if (null === ($existingType = $typeByIdentifier[$identifier] ?? null)) {
+                    $typeByIdentifier[$identifier] = $type;
+                } elseif ($type !== $existingType) {
+                    throw new \OutOfBoundsException(sprintf('The "%s" template has incompatible types, got "%s" in "%s" and "%s" in "%s".', $identifier, $existingType, array_key_last($hierarchy[$identifier]), $type, $path));
                 }
 
                 $hierarchy[$identifier][$path] = "@$namespace/$shortName";
@@ -409,12 +425,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
             return $this->currentThemeSlug = false;
         }
 
-        // TODO: remove try/catch block in Contao 5.0
-        try {
-            $slug = $this->themeNamespace->generateSlug(Path::makeRelative($path, 'templates'));
-        } catch (InvalidThemePathException) {
-            $slug = false;
-        }
+        $slug = $this->themeNamespace->generateSlug(Path::makeRelative($path, 'templates'));
 
         return $this->currentThemeSlug = $slug;
     }

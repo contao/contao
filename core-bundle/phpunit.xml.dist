@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd" colors="true" defaultTestSuite="core-bundle" bootstrap="vendor/autoload.php">
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd" colors="true" defaultTestSuite="core-bundle" bootstrap="vendor/autoload.php">
   <coverage>
     <include>
       <directory>./src</directory>
     </include>
     <exclude>
-      <directory>./src/Resources</directory>
       <!-- exclude resources that are exempt from testing -->
       <directory>./src/Entity</directory>
       <directory>./src/Migration/Version*</directory>
@@ -65,7 +64,6 @@
     </listener>
   </listeners>
   <extensions>
-    <extension class="Contao\CoreBundle\Tests\PhpunitExtension\DeprecatedClasses"/>
     <extension class="Contao\TestCase\ClearCachePhpunitExtension"/>
   </extensions>
 </phpunit>

@@ -122,7 +122,7 @@ class ImageResultTest extends TestCase
             'src' => new Image(
                 $filePathOrImage,
                 $this->createMock(ImagineInterface::class),
-                $filesystem
+                $filesystem,
             ),
         ];
 
@@ -253,7 +253,7 @@ class ImageResultTest extends TestCase
 
         $deferredResizer = $this->createMock(DeferredResizerInterface::class);
         $deferredResizer
-            ->expects(empty($expectedDeferredImages) ? $this->never() : $this->atLeast(\count($expectedDeferredImages)))
+            ->expects($expectedDeferredImages ? $this->atLeast(\count($expectedDeferredImages)) : $this->never())
             ->method('resizeDeferredImage')
             ->with($this->callback(
                 static function ($deferredImage) use (&$expectedDeferredImages) {
@@ -262,7 +262,7 @@ class ImageResultTest extends TestCase
                     }
 
                     return true;
-                }
+                },
             ))
         ;
 
@@ -437,10 +437,7 @@ class ImageResultTest extends TestCase
         $imageResult->createIfDeferred();
     }
 
-    /**
-     * @return PictureFactoryInterface&MockObject
-     */
-    private function mockPictureFactory(string $filePathOrImage, array $sizeConfiguration, PictureInterface $picture): PictureFactoryInterface
+    private function mockPictureFactory(string $filePathOrImage, array $sizeConfiguration, PictureInterface $picture): PictureFactoryInterface&MockObject
     {
         $pictureFactory = $this->createMock(PictureFactoryInterface::class);
         $pictureFactory
@@ -453,10 +450,7 @@ class ImageResultTest extends TestCase
         return $pictureFactory;
     }
 
-    /**
-     * @return ContainerInterface&MockObject
-     */
-    private function mockLocator(PictureFactoryInterface $pictureFactory = null, string $staticUrl = null): ContainerInterface
+    private function mockLocator(PictureFactoryInterface|null $pictureFactory = null, string|null $staticUrl = null): ContainerInterface&MockObject
     {
         $locator = $this->createMock(ContainerInterface::class);
         $context = null;

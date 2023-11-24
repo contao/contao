@@ -1,0 +1,14 @@
+{% trans_default_domain 'contao_exception' %}
+{% extends "@ContaoCore/Error/layout.html.twig" %}
+{% block title %}
+    {{ 'XPT.error'|trans }}
+{% endblock %}
+{% block matter %}
+    <p>{{ 'XPT.errorOccurred'|trans }}</p>
+{% endblock %}
+{% block howToFix %}
+    <p>{{ 'XPT.errorFixOne'|trans|raw }}</p>
+{% endblock %}
+{% block explain %}
+    <p>{{ 'XPT.errorExplain'|trans(['https://to.contao.org/support'])|raw }}</p>
+{% endblock %}

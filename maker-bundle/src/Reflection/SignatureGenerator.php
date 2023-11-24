@@ -30,7 +30,7 @@ class SignatureGenerator
             $paramName = str_replace('&', '', $name);
             [$paramType] = \is_array($type) ? $type : [$type, null];
 
-            if (null !== $paramType && class_exists($paramType, true)) {
+            if (null !== $paramType && class_exists($paramType)) {
                 $paramType = Str::getShortClassName($paramType);
             }
 
@@ -49,7 +49,7 @@ class SignatureGenerator
             'public function %s(%s)%s',
             $methodName,
             implode(', ', $parameterTemplates),
-            $this->getReturnType($method)
+            $this->getReturnType($method),
         );
     }
 
@@ -57,7 +57,7 @@ class SignatureGenerator
     {
         $returnType = $method->getReturnType();
 
-        if (null !== $returnType && class_exists($returnType, true)) {
+        if (null !== $returnType && class_exists($returnType)) {
             $returnType = Str::getShortClassName($returnType);
         }
 

@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\Cron\CronJob;
 use Cron\CronExpression;
+use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidDefinitionException;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -31,6 +32,9 @@ class AddCronJobsPass implements CompilerPassInterface
         $serviceIds = $container->findTaggedServiceIds('contao.cronjob');
         $definition = $container->findDefinition('contao.cron');
 
+        $sync = [];
+        $async = [];
+
         foreach ($serviceIds as $serviceId => $tags) {
             foreach ($tags as $attributes) {
                 if (!isset($attributes['interval'])) {
@@ -45,7 +49,7 @@ class AddCronJobsPass implements CompilerPassInterface
                 $interval = str_replace(
                     ['minutely', 'hourly', 'daily', 'weekly', 'monthly', 'yearly'],
                     ['* * * * *', '@hourly', '@daily', '@weekly', '@monthly', '@yearly'],
-                    $interval
+                    $interval,
                 );
 
                 // Validate the cron expression
@@ -53,13 +57,27 @@ class AddCronJobsPass implements CompilerPassInterface
                     throw new InvalidDefinitionException(sprintf('The contao.cronjob definition for service "%s" has an invalid interval expression "%s"', $serviceId, $interval));
                 }
 
-                $definition->addMethodCall(
-                    'addCronJob',
-                    [
-                        new Definition(CronJob::class, [new Reference($serviceId), $interval, $method]),
-                    ]
-                );
+                $newDefinition = new Definition(CronJob::class, [new Reference($serviceId), $interval, $method]);
+
+                $reflector = new \ReflectionMethod($jobDefinition->getClass(), $method ?? '__invoke');
+                $returnType = $reflector->getReturnType();
+                $returnsPromise = $returnType instanceof \ReflectionNamedType && is_a($returnType->getName(), PromiseInterface::class, true);
+
+                if ($returnsPromise) {
+                    $async[] = $newDefinition;
+                } else {
+                    $sync[] = $newDefinition;
+                }
             }
+        }
+
+        // Add async jobs first, so they are executed first.
+        foreach ($async as $jobDefinition) {
+            $definition->addMethodCall('addCronJob', [$jobDefinition]);
+        }
+
+        foreach ($sync as $jobDefinition) {
+            $definition->addMethodCall('addCronJob', [$jobDefinition]);
         }
     }
 

@@ -12,35 +12,43 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Command;
 
+use Contao\ManagerBundle\Dotenv\DotenvDumper;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
-/**
- * @internal
- */
+#[AsCommand(
+    name: 'contao:setup',
+    description: 'Sets up a Contao Managed Edition. This command will be run when executing the "contao-setup" binary.',
+)]
 class ContaoSetupCommand extends Command
 {
-    protected static $defaultName = 'contao:setup';
-    protected static $defaultDescription = 'Sets up a Contao Managed Edition. This command will be run when executing the "contao-setup" binary.';
+    private readonly string $webDir;
 
-    private string $webDir;
-    private string $consolePath;
-    private string|false $phpPath;
+    private readonly string $consolePath;
+
+    private readonly string|false $phpPath;
 
     /**
      * @var \Closure(array<string>):Process
      */
-    private \Closure $createProcessHandler;
+    private readonly \Closure $createProcessHandler;
 
     /**
      * @param (\Closure(array<string>):Process)|null $createProcessHandler
      */
-    public function __construct(string $projectDir, string $webDir, \Closure $createProcessHandler = null)
-    {
+    public function __construct(
+        private readonly string $projectDir,
+        string $webDir,
+        #[\SensitiveParameter] private readonly string|null $kernelSecret,
+        \Closure|null $createProcessHandler = null,
+    ) {
         $this->webDir = Path::makeRelative($webDir, $projectDir);
         $this->phpPath = (new PhpExecutableFinder())->find();
         $this->consolePath = Path::canonicalize(__DIR__.'/../../bin/contao-console');
@@ -57,6 +65,25 @@ class ContaoSetupCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $io = new SymfonyStyle($input, $output);
+
+        // Auto-generate a kernel secret if none was set
+        if (!$this->kernelSecret || 'ThisTokenIsNotSoSecretChangeIt' === $this->kernelSecret) {
+            $filesystem = new Filesystem();
+
+            $dotenv = new DotenvDumper(Path::join($this->projectDir, '.env.local'), $filesystem);
+            $dotenv->setParameter('APP_SECRET', bin2hex(random_bytes(32)));
+            $dotenv->dump();
+
+            $io->info('An APP_SECRET was generated and written to your .env.local file.');
+
+            if (!$filesystem->exists($envPath = Path::join($this->projectDir, '.env'))) {
+                $filesystem->touch($envPath);
+
+                $io->info('An empty .env file was created.');
+            }
+        }
+
         if (false === $this->phpPath) {
             throw new \RuntimeException('The php executable could not be found.');
         }
@@ -72,13 +99,13 @@ class ContaoSetupCommand extends Command
         }
 
         $commands = [
-            ['contao:install-web-dir', $this->webDir, '--env=prod'],
-            ['cache:clear', '--no-warmup', '--env=prod'],
-            ['cache:clear', '--no-warmup', '--env=dev'],
-            ['cache:warmup', '--env=prod'],
+            ['skeleton:install', $this->webDir, '--env=prod'],
             ['assets:install', $this->webDir, '--symlink', '--relative', '--env=prod'],
             ['contao:install', $this->webDir, '--env=prod'],
             ['contao:symlinks', $this->webDir, '--env=prod'],
+            ['cache:clear', '--no-warmup', '--env=prod'],
+            ['cache:clear', '--no-warmup', '--env=dev'],
+            ['cache:warmup', '--env=prod'],
         ];
 
         $commandFlags = array_filter([
@@ -87,12 +114,12 @@ class ContaoSetupCommand extends Command
         ]);
 
         foreach ($commands as $command) {
-            $this->executeCommand(array_merge($php, [$this->consolePath], $command, $commandFlags), $output);
+            $this->executeCommand([...$php, $this->consolePath, ...$command, ...$commandFlags], $output);
         }
 
-        $output->writeln('<info>Done! Please open the Contao install tool or run contao:migrate on the command line to make sure the database is up-to-date.</info>');
+        $io->info('Done! Please run the contao:migrate command to make sure the database is up-to-date.');
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     /**
@@ -100,7 +127,6 @@ class ContaoSetupCommand extends Command
      */
     private function executeCommand(array $command, OutputInterface $output): void
     {
-        /** @var Process $process */
         $process = ($this->createProcessHandler)($command);
 
         // Increase the timeout according to contao/manager-bundle (see #54)
@@ -109,7 +135,7 @@ class ContaoSetupCommand extends Command
         $process->run(
             static function (string $type, string $buffer) use ($output): void {
                 $output->write($buffer);
-            }
+            },
         );
 
         if (!$process->isSuccessful()) {
@@ -119,18 +145,11 @@ class ContaoSetupCommand extends Command
 
     private function getVerbosityFlag(OutputInterface $output): string
     {
-        switch ($output->getVerbosity()) {
-            case OutputInterface::VERBOSITY_DEBUG:
-                return '-vvv';
-
-            case OutputInterface::VERBOSITY_VERY_VERBOSE:
-                return '-vv';
-
-            case OutputInterface::VERBOSITY_VERBOSE:
-                return '-v';
-
-            default:
-                return '';
-        }
+        return match ($output->getVerbosity()) {
+            OutputInterface::VERBOSITY_DEBUG => '-vvv',
+            OutputInterface::VERBOSITY_VERY_VERBOSE => '-vv',
+            OutputInterface::VERBOSITY_VERBOSE => '-v',
+            default => '',
+        };
     }
 }

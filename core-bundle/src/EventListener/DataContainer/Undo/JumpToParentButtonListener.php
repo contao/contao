@@ -14,8 +14,8 @@ namespace Contao\CoreBundle\EventListener\DataContainer\Undo;
 
 use Contao\Backend;
 use Contao\Controller;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\StringUtil;
@@ -23,14 +23,16 @@ use Doctrine\DBAL\Connection;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * @Callback(target="list.operations.jumpToParent.button", table="tl_undo")
- *
  * @internal
  */
+#[AsCallback(table: 'tl_undo', target: 'list.operations.jumpToParent.button')]
 class JumpToParentButtonListener
 {
-    public function __construct(private ContaoFramework $framework, private Connection $connection, private TranslatorInterface $translator)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly Connection $connection,
+        private readonly TranslatorInterface $translator,
+    ) {
     }
 
     public function __invoke(array $row, string|null $href = '', string $label = '', string $title = '', string $icon = '', string $attributes = ''): string
@@ -41,19 +43,19 @@ class JumpToParentButtonListener
         $image = $this->framework->getAdapter(Image::class);
 
         if (!$parent || !$this->checkIfParentExists($parent)) {
-            return $image->getHtml('parent_.svg', $label).' ';
+            return $image->getHtml('parent--disabled.svg', $label).' ';
         }
 
         $parentLinkParameters = $this->getParentLinkParameters($parent, $table);
 
         if (!$parentLinkParameters) {
-            return $image->getHtml('parent_.svg', $label).' ';
+            return $image->getHtml('parent--disabled.svg', $label).' ';
         }
 
         $newTitle = sprintf(
             $this->translator->trans('tl_undo.parent_modal', [], 'contao_tl_undo'),
             $table,
-            $originalRow['id']
+            $originalRow['id'],
         );
 
         $backend = $this->framework->getAdapter(Backend::class);
@@ -63,13 +65,13 @@ class JumpToParentButtonListener
             $backend->addToUrl($parentLinkParameters.'&popup=1'),
             StringUtil::specialchars($newTitle),
             StringUtil::specialchars($newTitle),
-            $image->getHtml($icon, $label)
+            $image->getHtml($icon, $label),
         );
     }
 
     private function getParentLinkParameters(array $parent, string $table): string
     {
-        if (empty($parent)) {
+        if (!$parent) {
             return '';
         }
 
@@ -102,7 +104,7 @@ class JumpToParentButtonListener
         foreach ($GLOBALS['BE_MOD'] as $group) {
             foreach ($group as $name => $config) {
                 if (\is_array($config['tables'] ?? null) && \in_array($table, $config['tables'], true)) {
-                    return array_merge($config, ['_module_name' => $name]);
+                    return [...$config, '_module_name' => $name];
                 }
             }
         }
@@ -129,7 +131,7 @@ class JumpToParentButtonListener
             'SELECT COUNT(*) FROM '.$this->connection->quoteIdentifier($parent['table']).' WHERE id = :id',
             [
                 'id' => $parent['id'],
-            ]
+            ],
         );
 
         return (int) $count > 0;

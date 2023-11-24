@@ -24,6 +24,7 @@ use Contao\ManagerPlugin\Config\ConfigPluginInterface;
 use Contao\ManagerPlugin\Config\ExtensionPluginInterface;
 use Contao\ManagerPlugin\Dependency\DependentPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\TableCell;
 use Symfony\Component\Console\Helper\TableSeparator;
@@ -34,17 +35,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Path;
 
-/**
- * @internal
- */
+#[AsCommand(
+    name: 'debug:plugins',
+    description: 'Displays the Contao Manager plugin configurations.',
+)]
 class DebugPluginsCommand extends Command
 {
-    protected static $defaultName = 'debug:plugins';
-    protected static $defaultDescription = 'Displays the Contao Manager plugin configurations.';
-
     private SymfonyStyle|null $io = null;
 
-    public function __construct(private ContaoKernel $kernel)
+    public function __construct(private readonly ContaoKernel $kernel)
     {
         parent::__construct();
     }
@@ -106,7 +105,7 @@ class DebugPluginsCommand extends Command
         $this->io->title($title);
         $this->io->table($headers, $rows);
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function listBundles(): int
@@ -136,7 +135,7 @@ class DebugPluginsCommand extends Command
         $this->io->title($title);
         $this->io->table($headers, $rows);
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function showPlugin(string $name, InputInterface $input): int
@@ -174,8 +173,8 @@ class DebugPluginsCommand extends Command
                 sprintf(
                     'The "%s" plugin does not implement the "%s" interface.',
                     $plugin::class,
-                    BundlePluginInterface::class
-                )
+                    BundlePluginInterface::class,
+                ),
             );
 
             return -1;
@@ -191,10 +190,13 @@ class DebugPluginsCommand extends Command
                 $config->getName(),
                 implode("\n", $config->getReplace()),
                 implode("\n", $config->getLoadAfter()),
-                $config->loadInProduction() && $config->loadInDevelopment()
-                    ? 'All'
-                    : ($config->loadInProduction() ? 'Production' : 'Development'),
+                match (true) {
+                    $config->loadInProduction() && $config->loadInDevelopment() => 'All',
+                    $config->loadInProduction() => 'Production',
+                    $config->loadInDevelopment() => 'Development',
+                },
             ];
+
             $rows[] = new TableSeparator();
         }
 
@@ -204,7 +206,7 @@ class DebugPluginsCommand extends Command
         $this->io->title($title);
         $this->io->table($headers, $rows);
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function findPlugin(string $name): array|null

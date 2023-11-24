@@ -16,41 +16,32 @@ use Contao\ArticleModel;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\PageModel;
-use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
- * @Route(defaults={"_scope" = "frontend"})
- *
  * @internal
  */
+#[Route('/sitemap.xml', defaults: ['_scope' => 'frontend'])]
 class SitemapController extends AbstractController
 {
-    public function __construct(private PageRegistry $pageRegistry)
-    {
+    public function __construct(
+        private readonly PageRegistry $pageRegistry,
+        private readonly PageFinder $pageFinder,
+    ) {
     }
 
-    /**
-     * @Route("/sitemap.xml")
-     */
     public function __invoke(Request $request): Response
     {
-        $this->initializeContaoFramework();
+        $rootPages = $this->pageFinder->findRootPagesForHost($request->getHost());
 
-        $pageModel = $this->getContaoAdapter(PageModel::class);
-        $rootPages = $pageModel->findPublishedRootPages(['dns' => $request->server->get('HTTP_HOST')]);
-
-        if (null === $rootPages) {
-            // We did not find root pages by matching host name, let's fetch those that do not have any domain configured
-            $rootPages = $pageModel->findPublishedRootPages(['dns' => '']);
-
-            if (null === $rootPages) {
-                return new Response('', Response::HTTP_NOT_FOUND);
-            }
+        if (!$rootPages) {
+            throw $this->createNotFoundException();
         }
 
         $urls = [];
@@ -58,22 +49,23 @@ class SitemapController extends AbstractController
         $tags = ['contao.sitemap'];
 
         foreach ($rootPages as $rootPage) {
-            $pages = $this->getPageAndArticleUrls((int) $rootPage->id);
-            $urls[] = $this->callLegacyHook($rootPage, $pages);
+            $urls = [...$urls, ...$this->getPageAndArticleUrls($rootPage->id)];
 
             $rootPageIds[] = $rootPage->id;
             $tags[] = 'contao.sitemap.'.$rootPage->id;
         }
 
-        $urls = array_unique(array_merge(...$urls));
+        $urls = array_unique($urls);
 
         $sitemap = new \DOMDocument('1.0', 'UTF-8');
         $sitemap->formatOutput = true;
         $urlSet = $sitemap->createElementNS('https://www.sitemaps.org/schemas/sitemap/0.9', 'urlset');
 
         foreach ($urls as $url) {
-            $loc = $sitemap->createElement('loc', $url);
-            $urlEl = $sitemap->createElement('url');
+            $loc = $sitemap->createElementNS($urlSet->namespaceURI, 'loc');
+            $loc->appendChild($sitemap->createTextNode($url));
+
+            $urlEl = $sitemap->createElementNS($urlSet->namespaceURI, 'url');
             $urlEl->appendChild($loc);
             $urlSet->appendChild($urlEl);
         }
@@ -92,22 +84,6 @@ class SitemapController extends AbstractController
         $this->tagResponse($tags);
 
         return $response;
-    }
-
-    private function callLegacyHook(PageModel $rootPage, array $pages): array
-    {
-        $systemAdapter = $this->getContaoAdapter(System::class);
-
-        // HOOK: take additional pages
-        if (isset($GLOBALS['TL_HOOKS']['getSearchablePages']) && \is_array($GLOBALS['TL_HOOKS']['getSearchablePages'])) {
-            trigger_deprecation('contao/core-bundle', '4.11', 'Using the "getSearchablePages" hook is deprecated. Use the "contao.sitemap" event instead.');
-
-            foreach ($GLOBALS['TL_HOOKS']['getSearchablePages'] as $callback) {
-                $pages = $systemAdapter->importStatic($callback[0])->{$callback[1]}($pages, $rootPage->id, true, $rootPage->language);
-            }
-        }
-
-        return $pages;
     }
 
     private function getPageAndArticleUrls(int $parentPageId): array
@@ -129,6 +105,9 @@ class SitemapController extends AbstractController
 
         // Recursively walk through all subpages
         foreach ($pageModels as $pageModel) {
+            // Load details in order to inherit permission settings (see #5556)
+            $pageModel->loadDetails();
+
             if ($pageModel->protected && !$this->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $pageModel->groups)) {
                 continue;
             }
@@ -143,16 +122,20 @@ class SitemapController extends AbstractController
                 && $this->pageRegistry->isRoutable($pageModel)
                 && 'html' === $this->pageRegistry->getRoute($pageModel)->getDefault('_format')
             ) {
-                $urls = [$pageModel->getAbsoluteUrl()];
+                try {
+                    $urls = [$pageModel->getAbsoluteUrl()];
 
-                // Get articles with teaser
-                if (null !== ($articleModels = $articleModelAdapter->findPublishedWithTeaserByPid($pageModel->id, ['ignoreFePreview' => true]))) {
-                    foreach ($articleModels as $articleModel) {
-                        $urls[] = $pageModel->getAbsoluteUrl('/articles/'.($articleModel->alias ?: $articleModel->id));
+                    // Get articles with teaser
+                    if ($articleModels = $articleModelAdapter->findPublishedWithTeaserByPid($pageModel->id, ['ignoreFePreview' => true])) {
+                        foreach ($articleModels as $articleModel) {
+                            $urls[] = $pageModel->getAbsoluteUrl('/articles/'.($articleModel->alias ?: $articleModel->id));
+                        }
                     }
-                }
 
-                $result[] = $urls;
+                    $result[] = $urls;
+                } catch (ExceptionInterface) {
+                    // Skip URL for this page but generate child pages
+                }
             }
 
             $result[] = $this->getPageAndArticleUrls((int) $pageModel->id);

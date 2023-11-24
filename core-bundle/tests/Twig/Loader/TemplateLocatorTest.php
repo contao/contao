@@ -32,14 +32,11 @@ class TemplateLocatorTest extends TestCase
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
 
-        $locator = $this->getTemplateLocator(
-            $projectDir,
-            [
-                'templates/my/theme',
-                'themes/foo',
-                'templates/non-existing',
-            ]
-        );
+        $locator = $this->getTemplateLocator($projectDir, [
+            'templates/my/theme',
+            'themes/foo',
+            'templates/non-existing',
+        ]);
 
         $expectedThemeDirectories = [
             'my_theme' => Path::join($projectDir, 'templates/my/theme'),
@@ -76,7 +73,7 @@ class TemplateLocatorTest extends TestCase
             [],
             [],
             $this->createMock(ThemeNamespace::class),
-            $connection
+            $connection,
         );
 
         $this->assertEmpty($locator->findThemeDirectories());
@@ -122,7 +119,6 @@ class TemplateLocatorTest extends TestCase
                 Path::join($projectDir, 'contao/templates/some'),
                 Path::join($projectDir, 'contao/templates/some/random'),
                 Path::join($projectDir, 'src/Resources/contao/templates'),
-                Path::join($projectDir, 'app/Resources/contao/templates'),
             ],
             'CoreBundle' => [
                 Path::join($projectDir, 'vendor-bundles/CoreBundle/Resources/contao/templates'),
@@ -143,9 +139,21 @@ class TemplateLocatorTest extends TestCase
         $this->assertSame(array_values($expectedResourcePaths), array_values($paths));
     }
 
+    public function testFindsResourcesPathsIgnoresSubdirectoriesInNamespaceRoots(): void
+    {
+        $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/explicit-roots');
+        $locator = $this->getTemplateLocator($projectDir);
+
+        $this->assertSame(
+            ['App' => [Path::join($projectDir, 'contao/templates')]],
+            $locator->findResourcesPaths(),
+            'should not contain the "content_element" sub-directory',
+        );
+    }
+
     public function testFindsTemplates(): void
     {
-        $path = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/vendor-bundles/InvalidBundle/templates');
+        $path = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/vendor-bundles/InvalidBundle1/templates');
         $locator = $this->getTemplateLocator('/project/dir');
 
         $expectedTemplates = [
@@ -168,6 +176,37 @@ class TemplateLocatorTest extends TestCase
         $this->assertSame($expectedTemplates, $locator->findTemplates($path));
     }
 
+    public function testFindsTemplatesWithImplicitNamespaceRoots(): void
+    {
+        $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/implicit-roots');
+        $locator = $this->getTemplateLocator($projectDir, ['templates/my/theme']);
+
+        $expectedTemplates = [
+            'content_element/foo.html.twig' => Path::join($projectDir, 'templates/content_element/foo.html.twig'),
+        ];
+
+        $expectedThemeTemplates = [
+            'content_element/bar.html.twig' => Path::join($projectDir, 'templates/my/theme/content_element/bar.html.twig'),
+        ];
+
+        $this->assertEmpty(
+            $locator->findTemplates(Path::join($projectDir, 'contao/templates')),
+            'expect single depth without implicit root',
+        );
+
+        $this->assertSame(
+            $expectedTemplates,
+            $locator->findTemplates(Path::join($projectDir, 'templates')),
+            'expect templates with directory structure but no theme templates',
+        );
+
+        $this->assertSame(
+            $expectedThemeTemplates,
+            $locator->findTemplates(Path::join($projectDir, 'templates/my/theme')),
+            'expect theme templates with directory structure',
+        );
+    }
+
     public function testFindsNoTemplatesIfPathDoesNotExist(): void
     {
         $locator = $this->getTemplateLocator('/project/dir');
@@ -188,7 +227,7 @@ class TemplateLocatorTest extends TestCase
             $bundles,
             $bundlesMetadata,
             new ThemeNamespace(),
-            $connection
+            $connection,
         );
     }
 }

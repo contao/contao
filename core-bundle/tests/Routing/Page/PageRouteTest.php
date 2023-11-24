@@ -103,30 +103,22 @@ class PageRouteTest extends TestCase
 
         $this->assertSame(['http'], $route->getSchemes());
 
-        $route = new PageRoute($this->mockPageModel(['rootUseSSL' => '1']));
+        $route = new PageRoute($this->mockPageModel(['rootUseSSL' => true]));
 
         $this->assertSame(['https'], $route->getSchemes());
     }
 
-    /**
-     * @return PageModel&MockObject
-     */
-    private function mockPageModel(array $properties = []): PageModel
+    private function mockPageModel(array $properties = []): PageModel&MockObject
     {
-        return $this->mockClassWithProperties(
-            PageModel::class,
-            array_merge(
-                [
-                    'id' => 17,
-                    'alias' => 'bar',
-                    'domain' => 'www.example.com',
-                    'rootLanguage' => 'xx',
-                    'rootUseSSL' => '1',
-                    'urlPrefix' => 'foo',
-                    'urlSuffix' => '.baz',
-                ],
-                $properties
-            )
-        );
+        return $this->mockClassWithProperties(PageModel::class, [
+            'id' => 17,
+            'alias' => 'bar',
+            'domain' => 'www.example.com',
+            'rootLanguage' => 'xx',
+            'rootUseSSL' => true,
+            'urlPrefix' => 'foo',
+            'urlSuffix' => '.baz',
+            ...$properties,
+        ]);
     }
 }

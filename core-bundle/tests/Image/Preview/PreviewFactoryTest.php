@@ -143,7 +143,7 @@ class PreviewFactoryTest extends TestCase
      */
     public function testGetPreviewSizeFromImageSize(PictureConfiguration|ResizeConfiguration|array|int|string|null $size, int $expectedSize, string $defaultDensities = ''): void
     {
-        $imageSizeModel = (new \ReflectionClass(ImageSizeModel::class))->newInstanceWithoutConstructor();
+        $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class);
         $imageSizeModel->setRow([
             'id' => 456,
             'width' => 20,
@@ -151,7 +151,7 @@ class PreviewFactoryTest extends TestCase
             'densities' => '1x, 2x, 120w',
         ]);
 
-        $imageSizeItemModel = (new \ReflectionClass(ImageSizeItemModel::class))->newInstanceWithoutConstructor();
+        $imageSizeItemModel = $this->mockClassWithProperties(ImageSizeItemModel::class);
         $imageSizeItemModel->setRow([
             'pid' => 456,
             'width' => 789,
@@ -227,7 +227,7 @@ class PreviewFactoryTest extends TestCase
                 ->setSize(
                     (new PictureConfigurationItem())
                         ->setDensities('1.5x')
-                        ->setResizeConfig((new ResizeConfiguration())->setWidth(123)->setHeight(456))
+                        ->setResizeConfig((new ResizeConfiguration())->setWidth(123)->setHeight(456)),
                 ),
             684,
         ];
@@ -237,7 +237,7 @@ class PreviewFactoryTest extends TestCase
                 ->setSize(
                     (new PictureConfigurationItem())
                         ->setDensities('1.5x')
-                        ->setResizeConfig((new ResizeConfiguration())->setWidth(123)->setHeight(123))
+                        ->setResizeConfig((new ResizeConfiguration())->setWidth(123)->setHeight(123)),
                 )
                 ->setSizeItems([
                     (new PictureConfigurationItem())
@@ -298,7 +298,7 @@ class PreviewFactoryTest extends TestCase
         $factory = $this->createFactoryWithExampleProvider();
         $preview = $factory->createPreviewPicture($sourcePath);
 
-        $this->assertFileExists($preview->getImg()['src']->getPath());
+        $this->assertFileExists($preview->getRawImg()['src']->getPath());
 
         (new Filesystem())->dumpFile($sourcePath, 'not a PDF');
 
@@ -317,7 +317,7 @@ class PreviewFactoryTest extends TestCase
         $previews = $factory->createPreviewPictures($sourcePath);
 
         foreach ($previews as $preview) {
-            $this->assertFileExists($preview->getImg()['src']->getPath());
+            $this->assertFileExists($preview->getRawImg()['src']->getPath());
         }
 
         (new Filesystem())->dumpFile($sourcePath, 'not a PDF');
@@ -327,7 +327,7 @@ class PreviewFactoryTest extends TestCase
         $factory->createPreviewPictures($sourcePath, [200, 200, 'box']);
     }
 
-    private function createFactoryWithExampleProvider(ContaoFramework $framework = null): PreviewFactory
+    private function createFactoryWithExampleProvider(ContaoFramework|null $framework = null): PreviewFactory
     {
         $pdfProvider = new class() implements PreviewProviderInterface {
             public function getFileHeaderSize(): int
@@ -365,7 +365,7 @@ class PreviewFactoryTest extends TestCase
                     }
 
                     return new Image($path, $this->createMock(ImagineInterface::class));
-                }
+                },
             )
         ;
 
@@ -379,7 +379,7 @@ class PreviewFactoryTest extends TestCase
                     }
 
                     return new Picture(['src' => $path, 'srcset' => [[$path, '1x']]], []);
-                }
+                },
             )
         ;
 

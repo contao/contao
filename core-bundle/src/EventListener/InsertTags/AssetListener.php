@@ -19,7 +19,7 @@ use Symfony\Component\Asset\Packages;
  */
 class AssetListener
 {
-    public function __construct(private Packages $packages)
+    public function __construct(private readonly Packages $packages)
     {
     }
 
@@ -34,9 +34,6 @@ class AssetListener
             return false;
         }
 
-        $url = $this->packages->getUrl($chunks[1], $chunks[2] ?? null);
-
-        // Contao paths are relative to the <base> tag, so remove leading slashes
-        return ltrim($url, '/');
+        return $this->packages->getUrl($chunks[1], $chunks[2] ?? null);
     }
 }

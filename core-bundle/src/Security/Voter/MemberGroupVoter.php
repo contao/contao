@@ -20,21 +20,21 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class MemberGroupVoter extends Voter
 {
-    protected function supports($attribute, $subject): bool
+    protected function supports(string $attribute, mixed $subject): bool
     {
         return ContaoCorePermissions::MEMBER_IN_GROUPS === $attribute;
     }
 
-    /**
-     * @param mixed $attribute
-     * @param mixed $subject
-     */
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
+    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
-        // Filter non-numeric values
-        $subject = array_filter((array) $subject, static fn ($val) => (string) (int) $val === (string) $val);
+        if (!\is_array($subject)) {
+            $subject = StringUtil::deserialize($subject, true);
+        }
 
-        if (empty($subject)) {
+        // Filter non-numeric values
+        $subject = array_filter($subject, static fn ($val) => (string) (int) $val === (string) $val);
+
+        if (!$subject) {
             return false;
         }
 
@@ -51,6 +51,6 @@ class MemberGroupVoter extends Voter
             return false;
         }
 
-        return \count(array_intersect($subject, $groups)) > 0;
+        return [] !== array_intersect($subject, $groups);
     }
 }

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="<?= $this->language ?>">
+<head>
+
+  <meta charset="<?= $this->charset ?>">
+  <title><?= $this->title ?> | <?= $this->host ?></title>
+  <meta name="generator" content="Contao Open Source CMS">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+  <meta name="referrer" content="origin">
+
+  <link rel="stylesheet" href="<?= $this->asset('popup.css', 'system/themes/'.$this->theme) ?>">
+  <?= $this->stylesheets ?>
+
+  <script><?= $this->getLocaleString() ?></script>
+  <script src="<?= $this->asset('js/mootools.min.js', 'contao-components/mootools') ?>"></script>
+  <script src="<?= $this->asset('backend.js', 'contao_core') ?>"></script>
+  <script><?= $this->getDateString() ?></script>
+  <?= $this->javascripts ?>
+
+</head>
+<body>
+
+  <div id="container">
+    <main id="main">
+      <table class="tl_show with-padding with-zebra">
+        <tr>
+          <td><span class="tl_label"><?= $this->labels->fileCreated ?>:</span></td>
+          <td><?= $this->ctime ?></td>
+        </tr>
+        <tr>
+          <td><span class="tl_label"><?= $this->labels->fileModified ?>:</span></td>
+          <td><?= $this->mtime ?></td>
+        </tr>
+        <tr>
+          <td><span class="tl_label"><?= $this->labels->fileAccessed ?>:</span></td>
+          <td><?= $this->atime ?></td>
+        </tr>
+        <tr>
+          <td><span class="tl_label"><?= $this->labels->filePath ?>:</span></td>
+          <td><?= $this->path ?></td>
+        </tr>
+        <?php if ($this->uuid): ?>
+          <tr>
+            <td><span class="tl_label"><?= $this->labels->fileUuid ?>:</span></td>
+            <td><?= $this->uuid ?></td>
+          </tr>
+        <?php endif; ?>
+        <?php if ($this->filesize): ?>
+          <tr>
+            <td><span class="tl_label"><?= $this->labels->fileSize ?>:</span></td>
+            <td><?= $this->filesize ?></td>
+          </tr>
+        <?php endif; ?>
+        <?php if ($this->src): ?>
+          <tr>
+            <td><span class="tl_label"><?= $this->labels->fileImageSize ?>:</span></td>
+            <?php if ($this->width && $this->height): ?>
+              <td><?= $this->width ?> x <?= $this->height ?></td>
+            <?php else: ?>
+              <td>-</td>
+            <?php endif; ?>
+          </tr>
+        <?php endif; ?>
+        <?php if ($this->meta): ?>
+          <tr class="meta">
+            <td><span class="tl_label"><?= $this->labels->fileMeta ?>:</span></td>
+            <td>
+              <?php foreach ($this->meta as $lang => $data): ?>
+                <p><?= $this->languages[$lang] ?></p>
+                <?php foreach ($data as $field => $value): ?>
+                  <?php if ($value): ?>
+                    <?= $value ?> (<?= $this->labels->{'aw_'.$field} ?>)<br>
+                  <?php endif; ?>
+                <?php endforeach; ?>
+              <?php endforeach; ?>
+            </td>
+          </tr>
+        <?php endif; ?>
+      </table>
+      <?php if ($this->href): ?>
+        <div id="download">
+          <a href="<?= $this->href ?>" class="tl_submit" download="<?= basename($this->path) ?>"><?= Contao\Image::getHtml($this->icon, '', 'class="mime_icon"') ?> <?= $this->download ?></a>
+        </div>
+      <?php endif; ?>
+      <?php if ($this->isImage): ?>
+        <div id="preview">
+          <div class="checkerbox"<?php if ($this->width && $this->height): ?> style="width:<?= $this->width ?>px;height:<?= $this->height ?>px"<?php endif; ?>>
+            <img src="<?= $this->dataUri ?>" alt="" style="image-orientation:from-image"<?php if ($this->width && $this->height): ?> width="<?= $this->width ?>" height="<?= $this->height ?>"<?php endif; ?>>
+          </div>
+        </div>
+      <?php endif; ?>
+      <?php if ($this->metadata): ?>
+        <?php foreach ($this->metadata as $format => $table): ?>
+          <table class="tl_show with-padding with-zebra">
+            <caption><?= $this->trans('MSC.imageMetadata', ['%s' => Contao\StringUtil::specialchars(strtoupper('iptc' === $format ? 'IPTC IIM' : $format))]) ?></caption>
+            <?php foreach ($table as $label => $values): ?>
+              <?php if (array_filter($values, \strlen(...))): ?>
+                <tr>
+                  <td><span class="tl_label"><?= Contao\StringUtil::specialchars($label) ?></span></td>
+                  <td><?= Contao\StringUtil::specialchars(implode(', ', $values)) ?></td>
+                </tr>
+              <?php endif; ?>
+            <?php endforeach; ?>
+          </table>
+        <?php endforeach; ?>
+      <?php endif; ?>
+      <?php if ($this->hasPreview): ?>
+        <div id="preview">
+          <?php foreach ($this->previewPictures as $picture): ?>
+            <div class="checkerbox"<?php if (!empty($picture['img']['width']) && !empty($picture['img']['height'])): ?> style="width:<?= $picture['img']['width'] ?>px;height:<?= $picture['img']['height'] ?>px"<?php endif; ?>>
+              <?php $this->insert('picture_default', $picture) ?>
+            </div>
+          <?php endforeach ?>
+        </div>
+      <?php endif; ?>
+    </main>
+  </div>
+
+</body>
+</html>

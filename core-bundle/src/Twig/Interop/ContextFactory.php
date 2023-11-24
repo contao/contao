@@ -20,26 +20,36 @@ use Contao\Template;
 final class ContextFactory
 {
     /**
-     * Creates a Twig template context from a @see Template object.
+     * Creates a Twig template context from a Template object.
+     *
+     * @see Template
      */
     public function fromContaoTemplate(Template $template): array
     {
-        $context = $template->getData();
-
-        array_walk_recursive(
-            $context,
-            function (&$value, $key): void {
-                if ($value instanceof \Closure) {
-                    $value = $this->getCallableWrapper($value, (string) $key);
-                }
-            }
-        );
+        $context = $this->fromData($template->getData());
 
         if (!isset($context['Template'])) {
             $context['Template'] = $template;
         }
 
         return $context;
+    }
+
+    /**
+     * Replaces all occurrences of closures by callable wrappers.
+     */
+    public function fromData(array $data): array
+    {
+        array_walk_recursive(
+            $data,
+            function (&$value, $key): void {
+                if ($value instanceof \Closure) {
+                    $value = $this->getCallableWrapper($value, (string) $key);
+                }
+            },
+        );
+
+        return $data;
     }
 
     /**
@@ -94,10 +104,7 @@ final class ContextFactory
     private function getAllMembers(object $object): \Generator
     {
         // See https://externals.io/message/105697#105697
-        // Backwards compatibility with PHP < 7.4
-        $mangledObjectVars = \function_exists('get_mangled_object_vars')
-            ? get_mangled_object_vars($object)
-            : (array) $object;
+        $mangledObjectVars = get_mangled_object_vars($object);
 
         foreach ($mangledObjectVars as $key => $value) {
             if (str_starts_with($key, "\0*\0")) {
@@ -122,8 +129,10 @@ final class ContextFactory
              */
             private $callable;
 
-            public function __construct(callable $callable, private string $name)
-            {
+            public function __construct(
+                callable $callable,
+                private readonly string $name,
+            ) {
                 $this->callable = $callable;
             }
 

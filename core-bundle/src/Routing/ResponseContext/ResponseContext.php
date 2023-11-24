@@ -20,7 +20,9 @@ final class ResponseContext
     public const REQUEST_ATTRIBUTE_NAME = '_contao_response_context';
 
     private array $services = [];
+
     private array $current = [];
+
     private PartialResponseHeaderBag|null $headerBag = null;
 
     public function dispatchEvent(AbstractResponseContextEvent $event): void
@@ -31,7 +33,6 @@ final class ResponseContext
 
         $event->setResponseContext($this);
 
-        /** @var EventDispatcherInterface $eventDispatcher */
         $eventDispatcher = $this->get(EventDispatcherInterface::class);
         $eventDispatcher->dispatch($event);
     }
@@ -43,7 +44,7 @@ final class ResponseContext
         return $this;
     }
 
-    public function addLazy(string $classname, \Closure $factory = null): self
+    public function addLazy(string $classname, \Closure|null $factory = null): self
     {
         $factory ??= fn () => new $classname($this);
 
@@ -67,13 +68,11 @@ final class ResponseContext
     }
 
     /**
-     * @template T
+     * @template T of object
      *
      * @param class-string<T> $serviceId
      *
-     * @return object
-     *
-     * @phpstan-return T
+     * @return T
      */
     public function get(string $serviceId)
     {

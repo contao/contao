@@ -13,10 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\CoreBundle\EventListener\DataContainer\DisableAppConfiguredSettingsListener;
-use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image;
-use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\DocParser;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -30,18 +28,6 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
         $this->resetStaticProperties([[AnnotationRegistry::class, ['failedToAutoload']], DocParser::class]);
 
         parent::tearDown();
-    }
-
-    public function testAnnotatedCallbacks(): void
-    {
-        $listener = $this->createListener();
-        $annotationReader = new AnnotationReader();
-
-        /** @var Callback $annotation */
-        $annotation = $annotationReader->getClassAnnotation(new \ReflectionClass($listener), Callback::class);
-
-        $this->assertSame('tl_settings', $annotation->table);
-        $this->assertSame('config.onload', $annotation->target);
     }
 
     public function testLoadCallbackExitsOnMissingLocalconfigParameter(): void
@@ -84,7 +70,7 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
                 'adminEmail' => 'admin@example.org',
                 'dateFormat' => 'd.M.Y',
                 'fooBar' => false,
-            ]
+            ],
         );
         $listener->onLoadCallback();
 
@@ -99,6 +85,7 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
                         'tl_class' => 'w50',
                         'disabled' => true,
                         'helpwizard' => false,
+                        'chosen' => false,
                     ],
                     'xlabel' => [['contao.listener.data_container.disable_app_configured_settings', 'renderHelpIcon']],
                 ],
@@ -110,12 +97,13 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
                         'decodeEntities' => true,
                         'tl_class' => 'w50',
                         'disabled' => true,
+                        'chosen' => false,
                     ],
                     'explanation' => 'dateFormat',
                     'xlabel' => [['contao.listener.data_container.disable_app_configured_settings', 'renderHelpIcon']],
                 ],
             ],
-            $GLOBALS['TL_DCA']['tl_settings']['fields']
+            $GLOBALS['TL_DCA']['tl_settings']['fields'],
         );
     }
 
@@ -139,11 +127,11 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
 
         $this->assertSame(
             '<img src="system/themes/icons/show.svg" alt="" title="title">',
-            $listener->renderHelpIcon()
+            $listener->renderHelpIcon(),
         );
     }
 
-    private function createListener(array $localConfig = null, TranslatorInterface $translator = null, array $adapters = []): DisableAppConfiguredSettingsListener
+    private function createListener(array|null $localConfig = null, TranslatorInterface|null $translator = null, array $adapters = []): DisableAppConfiguredSettingsListener
     {
         $this->mockContaoFramework()->initialize();
 

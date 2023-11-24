@@ -14,9 +14,7 @@ namespace Contao\CoreBundle\Tests\Mailer;
 
 use Contao\CoreBundle\Mailer\AvailableTransports;
 use Contao\CoreBundle\Mailer\TransportConfig;
-use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\CoreBundle\Tests\TestCase;
-use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\DocParser;
 
@@ -27,39 +25,6 @@ class AvailableTransportsTest extends TestCase
         $this->resetStaticProperties([[AnnotationRegistry::class, ['failedToAutoload']], DocParser::class]);
 
         parent::tearDown();
-    }
-
-    public function testAnnotatedCallbacks(): void
-    {
-        $service = new AvailableTransports();
-
-        $annotationReader = new AnnotationReader();
-        $annotations = $annotationReader->getMethodAnnotations(new \ReflectionMethod($service, 'getTransportOptions'));
-
-        $this->assertCount(2, $annotations);
-
-        [$pageCallback, $formCallback] = $annotations;
-
-        $this->assertInstanceOf(Callback::class, $pageCallback);
-        $this->assertInstanceOf(Callback::class, $formCallback);
-
-        $this->assertSame(
-            [
-                'table' => 'tl_page',
-                'target' => 'fields.mailerTransport.options',
-                'priority' => null,
-            ],
-            get_object_vars($pageCallback)
-        );
-
-        $this->assertSame(
-            [
-                'table' => 'tl_form',
-                'target' => 'fields.mailerTransport.options',
-                'priority' => null,
-            ],
-            get_object_vars($formCallback)
-        );
     }
 
     public function testAddsTransports(): void
@@ -73,7 +38,7 @@ class AvailableTransportsTest extends TestCase
                 'foobar' => 'foobar',
                 'lorem' => 'lorem (Lorem Ipsum &lt;lorem.ipsum@example.org&gt;)',
             ],
-            $availableTransports->getTransportOptions()
+            $availableTransports->getTransportOptions(),
         );
 
         $this->assertCount(2, $availableTransports->getTransports());

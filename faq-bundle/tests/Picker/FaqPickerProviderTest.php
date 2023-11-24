@@ -20,27 +20,23 @@ use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\MenuItem;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FaqPickerProviderTest extends ContaoTestCase
 {
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['TL_CONFIG']);
-
-        parent::tearDown();
-    }
-
     public function testCreatesTheMenuItem(): void
     {
-        $config = json_encode([
-            'context' => 'link',
-            'extras' => [],
-            'current' => 'faqPicker',
-            'value' => '',
-        ]);
+        $config = json_encode(
+            [
+                'context' => 'link',
+                'extras' => [],
+                'current' => 'faqPicker',
+                'value' => '',
+            ],
+            JSON_THROW_ON_ERROR,
+        );
 
         if (\function_exists('gzencode') && false !== ($encoded = @gzencode($config))) {
             $config = $encoded;
@@ -109,19 +105,17 @@ class FaqPickerProviderTest extends ContaoTestCase
         $this->assertSame(
             [
                 'fieldType' => 'radio',
-                'preserveRecord' => 'tl_faq.2',
                 'value' => '5',
                 'flags' => ['urlattr'],
             ],
-            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{faq_url::5|urlattr}}'))
+            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{faq_url::5|urlattr}}')),
         );
 
         $this->assertSame(
             [
                 'fieldType' => 'radio',
-                'preserveRecord' => 'tl_faq.2',
             ],
-            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{link_url::5}}'))
+            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{link_url::5}}')),
         );
     }
 
@@ -138,7 +132,7 @@ class FaqPickerProviderTest extends ContaoTestCase
 
         $this->assertSame(
             '{{faq_title::5}}',
-            $picker->convertDcaValue(new PickerConfig('link', ['insertTag' => '{{faq_title::%s}}']), 5)
+            $picker->convertDcaValue(new PickerConfig('link', ['insertTag' => '{{faq_title::%s}}']), 5),
         );
     }
 
@@ -218,7 +212,7 @@ class FaqPickerProviderTest extends ContaoTestCase
         $this->assertArrayNotHasKey('id', $params);
     }
 
-    private function getPicker(bool $accessGranted = null): FaqPickerProvider
+    private function getPicker(bool|null $accessGranted = null): FaqPickerProvider
     {
         $security = $this->createMock(Security::class);
         $security
@@ -239,7 +233,7 @@ class FaqPickerProviderTest extends ContaoTestCase
                     $item->setUri($data['uri']);
 
                     return $item;
-                }
+                },
             )
         ;
 

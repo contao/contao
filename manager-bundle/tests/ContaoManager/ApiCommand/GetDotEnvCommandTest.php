@@ -21,8 +21,11 @@ use Symfony\Component\Filesystem\Filesystem;
 class GetDotEnvCommandTest extends ContaoTestCase
 {
     private Filesystem $filesystem;
+
     private string $tempdir;
+
     private string $tempfile;
+
     private GetDotEnvCommand $command;
 
     protected function setUp(): void
@@ -31,7 +34,7 @@ class GetDotEnvCommandTest extends ContaoTestCase
 
         $this->filesystem = new Filesystem();
         $this->tempdir = $this->getTempDir();
-        $this->tempfile = $this->tempdir.'/.env';
+        $this->tempfile = $this->tempdir.'/.env.local';
 
         $application = $this->createMock(Application::class);
         $application
@@ -56,14 +59,38 @@ class GetDotEnvCommandTest extends ContaoTestCase
         $this->assertFalse($this->command->getDefinition()->getArgument('key')->isRequired());
     }
 
-    public function testReadsDotEnvFile(): void
+    public function testReadsDotEnvLocalFile(): void
     {
+        $this->filesystem->dumpFile(substr($this->tempfile, 0, -6), '');
         $this->filesystem->dumpFile($this->tempfile, 'FOO=BAR');
 
         $tester = new CommandTester($this->command);
         $tester->execute(['key' => 'FOO']);
 
         $this->assertSame('BAR', $tester->getDisplay());
+        $this->assertSame(0, $tester->getStatusCode());
+    }
+
+    public function testReadsDotEnvFile(): void
+    {
+        $this->filesystem->dumpFile(substr($this->tempfile, 0, -6), 'FOO=BAR');
+
+        $tester = new CommandTester($this->command);
+        $tester->execute(['key' => 'FOO']);
+
+        $this->assertSame('BAR', $tester->getDisplay());
+        $this->assertSame(0, $tester->getStatusCode());
+    }
+
+    public function testReadsDotEnvLocalFileIfBothExist(): void
+    {
+        $this->filesystem->dumpFile(substr($this->tempfile, 0, -6), 'FOO=BAR');
+        $this->filesystem->dumpFile($this->tempfile, 'FOO=BAZ');
+
+        $tester = new CommandTester($this->command);
+        $tester->execute(['key' => 'FOO']);
+
+        $this->assertSame('BAZ', $tester->getDisplay());
         $this->assertSame(0, $tester->getStatusCode());
     }
 
@@ -89,12 +116,25 @@ class GetDotEnvCommandTest extends ContaoTestCase
 
     public function testOutputsAllKeysIfNoArgumentIsGiven(): void
     {
+        $this->filesystem->dumpFile(substr($this->tempfile, 0, -6), '');
         $this->filesystem->dumpFile($this->tempfile, "FOO=BAR\nBAR=BAZ");
 
         $tester = new CommandTester($this->command);
         $tester->execute([]);
 
         $this->assertSame('{"FOO":"BAR","BAR":"BAZ"}', $tester->getDisplay());
+        $this->assertSame(0, $tester->getStatusCode());
+    }
+
+    public function testOutputsAllKeysFromBothFiles(): void
+    {
+        $this->filesystem->dumpFile(substr($this->tempfile, 0, -6), "FOO=BAR\nBAZ=BAR");
+        $this->filesystem->dumpFile($this->tempfile, "FOO=BAR\nBAR=BAZ");
+
+        $tester = new CommandTester($this->command);
+        $tester->execute([]);
+
+        $this->assertSame('{"FOO":"BAR","BAZ":"BAR","BAR":"BAZ"}', $tester->getDisplay());
         $this->assertSame(0, $tester->getStatusCode());
     }
 }

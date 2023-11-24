@@ -20,10 +20,7 @@ class AsContentElement
 {
     public array $attributes;
 
-    /**
-     * @param mixed ...$attributes
-     */
-    public function __construct(string $type = null, string $category = 'miscellaneous', string $template = null, string $method = null, string $renderer = null, ...$attributes)
+    public function __construct(string|null $type = null, string $category = 'miscellaneous', string|null $template = null, string|null $method = null, string|null $renderer = null, mixed ...$attributes)
     {
         $attributes['type'] = $type;
         $attributes['category'] = $category;

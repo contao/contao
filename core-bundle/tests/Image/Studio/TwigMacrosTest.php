@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Image\Studio;
 
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\ImageResult;
@@ -66,7 +67,7 @@ class TwigMacrosTest extends TestCase
             new Metadata([Metadata::VALUE_CAPTION => 'my <b>caption</b>']),
             null,
             null,
-            $figureOptions
+            $figureOptions,
         );
 
         $html = $this->renderMacro("caption(figure, $templateOptions)", ['figure' => $figure]);
@@ -196,7 +197,7 @@ class TwigMacrosTest extends TestCase
             new Metadata([Metadata::VALUE_ALT => 'my alt']),
             null,
             null,
-            $figureOptions
+            $figureOptions,
         );
 
         $html = $this->renderMacro("img(figure, $templateOptions)", ['figure' => $figure]);
@@ -318,7 +319,7 @@ class TwigMacrosTest extends TestCase
             null,
             null,
             null,
-            $figureOptions
+            $figureOptions,
         );
 
         $html = $this->renderMacro("picture(figure, $templateOptions)", ['figure' => $figure]);
@@ -374,7 +375,7 @@ class TwigMacrosTest extends TestCase
             $this->createMock(ImageResult::class),
             $metadata,
             $linkAttributes,
-            $lightbox
+            $lightbox,
         );
 
         $html = $this->renderMacro('figure(figure)', ['figure' => $figure]);
@@ -465,7 +466,7 @@ class TwigMacrosTest extends TestCase
                 'data-link' => 'bar',
             ],
             $lightbox,
-            $figureOptions
+            $figureOptions,
         );
 
         $html = $this->renderMacro("figure(figure, $templateOptions)", ['figure' => $figure]);
@@ -523,7 +524,7 @@ class TwigMacrosTest extends TestCase
             new Metadata([
                 Metadata::VALUE_TITLE => 'foo title',
                 Metadata::VALUE_UUID => '<uuid>',
-            ])
+            ]),
         );
 
         $responseContext = new ResponseContext();
@@ -569,24 +570,31 @@ class TwigMacrosTest extends TestCase
         ];
     }
 
-    private function renderMacro(string $call, array $context = [], ResponseContextAccessor $responseContextAccessor = null): string
+    private function renderMacro(string $call, array $context = [], ResponseContextAccessor|null $responseContextAccessor = null): string
     {
         $templates = [
             '_macros.html.twig' => file_get_contents(
-                Path::canonicalize(__DIR__.'/../../../src/Resources/views/Image/Studio/_macros.html.twig')
+                Path::canonicalize(__DIR__.'/../../../templates/Image/Studio/_macros.html.twig'),
             ),
             'test.html.twig' => "{% import \"_macros.html.twig\" as studio %}{{ studio.$call }}",
         ];
 
         $environment = new Environment(new ArrayLoader($templates));
-        $environment->setExtensions([new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class))]);
+
+        $environment->setExtensions([
+            new ContaoExtension(
+                $environment,
+                $this->createMock(TemplateHierarchyInterface::class),
+                $this->createMock(ContaoCsrfTokenManager::class),
+            ),
+        ]);
 
         $responseContextAccessor ??= $this->createMock(ResponseContextAccessor::class);
 
         $environment->addRuntimeLoader(
             new FactoryRuntimeLoader([
                 SchemaOrgRuntime::class => static fn () => new SchemaOrgRuntime($responseContextAccessor),
-            ])
+            ]),
         );
 
         return $environment->render('test.html.twig', $context);

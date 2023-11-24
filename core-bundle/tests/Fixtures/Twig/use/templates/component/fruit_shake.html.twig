@@ -1,0 +1,8 @@
+{% use "@Contao/component/fruit_shake.html.twig" %}
+
+{% block apple %}pineapple{% endblock %}
+
+{% block other_ingredients %}
+        {{ parent() -}}
+        <li>ice</li>
+{% endblock %}

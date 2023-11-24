@@ -1,0 +1,411 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_calendar_events.php" source-language="en" target-language="ko">
+    <body>
+      <trans-unit id="tl_calendar_events.title.0">
+        <source>Title</source>
+        <target>제목</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.title.1">
+        <source>Please enter the event title.</source>
+        <target>이벤트 제목을 입력해주세요.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.alias.0">
+        <source>Event alias</source>
+        <target>이벤트 별칭</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.alias.1">
+        <source>The event alias is a unique reference to the event which can be called instead of its numeric ID.</source>
+        <target>이벤트 별칭은 숫자 ID 대신 호출할 수 있는 이벤트에 대한 고유한 참조입니다.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.author.0">
+        <source>Author</source>
+        <target>저자</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.author.1">
+        <source>Here you can change the author of the event.</source>
+        <target>여기서 이벤트 저자를 바꿀 수 있습니다.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.addTime.0">
+        <source>Add time</source>
+        <target>시간 추가</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.addTime.1">
+        <source>Add a start and end time to the event.</source>
+        <target>이벤트의 시작 및 종료 시간을 추가하세요.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.startTime.0">
+        <source>Start time</source>
+        <target>시작 시간</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.startTime.1">
+        <source>Please enter the start time according to the global time format.</source>
+        <target>국제 시간 형식에 따라 시작 시간을 입력하십시오.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.endTime.0">
+        <source>End time</source>
+        <target>종료 시간</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.endTime.1">
+        <source>Leave blank to create an open-ended event.</source>
+        <target>끝나지 않는 이벤트를 만들려면 비워 두세요.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.startDate.0">
+        <source>Start date</source>
+        <target>시작 날짜</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.startDate.1">
+        <source>Please enter the start date according to the global date format.</source>
+        <target>국제 날짜 형식에 따라 시작 날짜를 입력하세요.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.endDate.0">
+        <source>End date</source>
+        <target>종료 날짜</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.endDate.1">
+        <source>Leave blank to create a single day event.</source>
+        <target>하루 이벤트를 만들려면 비워두세요.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.pageTitle.0">
+        <source>Meta title</source>
+        <target>메타 제목</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.pageTitle.1">
+        <source>Here you can add a custom meta title to overwrite the default page title.</source>
+        <target>여기서 사용자 정의 메타 제목을 추가하여 기본 페이지 제목을 덮어쓸 수 있습니다.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.robots.0">
+        <source>Robots tag</source>
+        <target>Robots 태그</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.robots.1">
+        <source>Here you can overwrite how search engines handle the event.</source>
+        <target>여기서 검색 엔진이 이벤트를 처리하는 방식을 덮어쓸 수 있습니다.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.description.0">
+        <source>Meta description</source>
+        <target>메타 설명</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.description.1">
+        <source>Here you can add a custom meta description to overwrite the default page description.</source>
+        <target>여기서 사용자 정의 메타 설명을 추가하여 기본 페이지 설명을 덮어쓸 수 있습니다.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.location.0">
+        <source>Location name</source>
+        <target>장소 이름</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.location.1">
+        <source>Here you can enter the name of the event location.</source>
+        <target>여기서 이벤트 장소의 이름을 입력할 수 있습니다.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.address.0">
+        <source>Location address</source>
+        <target>주소</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.address.1">
+        <source>Here you can enter the address of the event location.</source>
+        <target>여기서 이벤트 장소의 주소를 입력할 수 있습니다.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.teaser.0">
+        <source>Event teaser</source>
+        <target>이벤트 티저</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.teaser.1">
+        <source>The event teaser can be shown in an event list instead of the full article. A &quot;read more …&quot; link will be added automatically.</source>
+        <target>이벤트 티저는 전체 기사 대신 이벤트 목록에 표시될 수 있습니다. &quot;더 읽기...&quot; 링크가 자동으로 추가됩니다.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.details.0">
+        <source>Event text</source>
+        <target>이벤트 글</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.details.1">
+        <source>Here you can enter the event text.</source>
+        <target>여기서 이벤트 글을 입력할 수 있습니다.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.addImage.0">
+        <source>Add an image</source>
+        <target>그림 추가</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.addImage.1">
+        <source>Add an image to the event.</source>
+        <target>이벤트의 그림을 추가하세요.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.recurring.0">
+        <source>Repeat event</source>
+        <target>반복되는 이벤트</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.recurring.1">
+        <source>Create a recurring event.</source>
+        <target>반복 이벤트를 만듭니다.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.repeatEach.0">
+        <source>Interval</source>
+        <target>간격</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.repeatEach.1">
+        <source>Here you can set the recurrence interval.</source>
+        <target>여기서 반복 간격을 설정할 수 있습니다.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.recurrences.0">
+        <source>Recurrences</source>
+        <target>반복</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.recurrences.1">
+        <source>Set to 0 for unlimited recurrences.</source>
+        <target>무제한 반복의 경우 0으로 설정합니다.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.repeatEnd">
+        <source>End of recurring event</source>
+        <target>반복 이벤트 종료</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.addEnclosure.0">
+        <source>Add enclosures</source>
+        <target>추신 추가</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.addEnclosure.1">
+        <source>Add one or more downloadable files to the event.</source>
+        <target>이벤트에 다운로드 가능한 파일을 하나 이상 추가합니다.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.enclosure.0">
+        <source>Enclosures</source>
+        <target>추신</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.enclosure.1">
+        <source>Please choose the files you want to attach.</source>
+        <target>추가하고 싶은 파일을 선택하세요.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.source.0">
+        <source>Redirect target</source>
+        <target>전달 대상</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.source.1">
+        <source>Here you can override the default redirect target.</source>
+        <target>여기서 기본 리디렉션 대상을 재정의할 수 있습니다.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.default.0">
+        <source>Use default</source>
+        <target>기본 값 사용</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.default.1">
+        <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to the default page of the calendar.</source>
+        <target>&quot;더 읽기...&quot; 버튼을 클릭하면 방문자는 일정관리의 기본 페이지로 리디렉션됩니다.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.internal.0">
+        <source>Page</source>
+        <target>페이지</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.internal.1">
+        <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to an internal page.</source>
+        <target>&quot;더 읽기...&quot; 단추를 클릭하면 방문자가 내부 페이지로 리디렉션됩니다.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.article.0">
+        <source>Article</source>
+        <target>기사</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.article.1">
+        <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to an article.</source>
+        <target>&quot;더 읽기...&quot; 단추를 클릭하면 방문자가 기사로 리디렉션됩니다.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.external.0">
+        <source>Custom URL</source>
+        <target>커스텀 URL</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.external.1">
+        <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to custom URL.</source>
+        <target>&quot;더 읽기...&quot; 버튼을 클릭하면 방문자는 사용자 지정 URL로 리디렉션됩니다.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.linkText.0">
+        <source>Link text</source>
+        <target>링크 텍스트</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.linkText.1">
+        <source>Here you can override the default &quot;read more…&quot; link text.</source>
+        <target>여기서 기본 &quot;더 읽기...&quot; 링크 텍스트를 재정의할 수 있습니다.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.jumpTo.0">
+        <source>Redirect page</source>
+        <target>페이지 전달</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.jumpTo.1">
+        <source>Please choose the page to which visitors will be redirected when clicking the event.</source>
+        <target>이벤트를 클릭할 때 방문자를 리디렉션할 페이지를 선택하십시오.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.articleId.0">
+        <source>Article</source>
+        <target>기사</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.articleId.1">
+        <source>Please choose the article to which visitors will be redirected when clicking the event.</source>
+        <target>이벤트를 클릭할 때 방문자를 리디렉션할 문서를 선택하십시오.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.cssClass.0">
+        <source>CSS class</source>
+        <target>CSS 클래스</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.cssClass.1">
+        <source>Here you can enter one or more classes.</source>
+        <target>여기에 하나 이상의 클래스를 입력할 수 있습니다.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.noComments.0">
+        <source>Disable comments</source>
+        <target>댓글 비활성화</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.noComments.1">
+        <source>Do not allow comments for this particular event.</source>
+        <target>이 특정 이벤트에 대한 댓글을 허용하지 않습니다.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.featured.0">
+        <source>Feature event</source>
+        <target>주요 이벤트</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.featured.1">
+        <source>Show the event in a featured event list.</source>
+        <target>이벤트를 주요 이벤트 목록에 표시합니다.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.published.0">
+        <source>Publish event</source>
+        <target>이벤트 게시</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.published.1">
+        <source>Make the event publicly visible on the website.</source>
+        <target>웹 사이트에서 이벤트를 공개적으로 볼 수 있도록 합니다.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.start.0">
+        <source>Show from</source>
+        <target>에서 표시</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.start.1">
+        <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.stop.0">
+        <source>Show until</source>
+        <target>까지 표시</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.stop.1">
+        <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.tstamp.0">
+        <source>Revision date</source>
+        <target>개정일자</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.tstamp.1">
+        <source>Date and time of the latest revision</source>
+        <target>최신 개정 날짜 및 시간</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.title_legend">
+        <source>Title and author</source>
+        <target>제목 및 저자</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.date_legend">
+        <source>Date and time</source>
+        <target>날짜와 시간</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.details_legend">
+        <source>Event details</source>
+        <target>이벤트 세부 정보</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.text_legend">
+        <source>Event text</source>
+        <target>이벤트 글</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.image_legend">
+        <source>Image settings</source>
+        <target>이미지 설정</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.recurring_legend">
+        <source>Recurrence settings</source>
+        <target>반복 설정</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.enclosure_legend">
+        <source>Enclosures</source>
+        <target>추신</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.source_legend">
+        <source>Redirect target</source>
+        <target>전달 대상</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.meta_legend">
+        <source>Metadata</source>
+        <target>메타 데이터</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.expert_legend">
+        <source>Expert settings</source>
+        <target>고급 설정</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.publish_legend">
+        <source>Publish settings</source>
+        <target>공개 설정</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.days">
+        <source>day(s)</source>
+        <target>날(들)</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.weeks">
+        <source>week(s)</source>
+        <target>주(들)</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.months">
+        <source>month(s)</source>
+        <target>월(들)</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.years">
+        <source>year(s)</source>
+        <target>년(들)</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.new.0">
+        <source>New</source>
+        <target>새로운</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.new.1">
+        <source>Create a new event</source>
+        <target>새 이벤트 생성</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.show">
+        <source>Show the details of event ID %s</source>
+        <target>이벤트 ID %s의 세부정보를 보여줍니다.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.edit">
+        <source>Edit event ID %s</source>
+        <target>이벤트 ID %s 편집</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.children">
+        <source>Edit the content elements of event ID %s</source>
+        <target>이벤트 ID %s의 컨텐츠 요소를 편집</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.copy">
+        <source>Duplicate event ID %s</source>
+        <target>이벤트 ID %s 복사</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.cut">
+        <source>Move event ID %s</source>
+        <target>이벤트 ID%s 이동</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.delete">
+        <source>Delete event ID %s</source>
+        <target>이벤트 ID %s 삭제</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.toggle.0">
+        <source>Publish/unpublish event</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.toggle.1">
+        <source>Unpublish event ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.toggle.2">
+        <source>Publish event ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.feature.0">
+        <source>Feature/unfeature event ID %s</source>
+        <target>이벤트 ID %s 추천 / 비추천</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.feature.1">
+        <source>Unfeature event ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.feature.2">
+        <source>Feature event ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.pasteafter.0">
+        <source>Paste into this calendar</source>
+        <target>이 달력으로 붙여넣기</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

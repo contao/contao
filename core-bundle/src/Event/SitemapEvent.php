@@ -17,13 +17,37 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class SitemapEvent extends Event
 {
-    public function __construct(private \DOMDocument $document, private Request $request, private array $rootPageIds)
-    {
+    public function __construct(
+        private readonly \DOMDocument $document,
+        private readonly Request $request,
+        private readonly array $rootPageIds,
+    ) {
     }
 
     public function getDocument(): \DOMDocument
     {
         return $this->document;
+    }
+
+    public function addUrlToDefaultUrlSet(string $url): self
+    {
+        $sitemap = $this->getDocument();
+        $urlSet = $sitemap->getElementsByTagNameNS('https://www.sitemaps.org/schemas/sitemap/0.9', 'urlset')->item(0);
+
+        if (!$urlSet) {
+            return $this;
+        }
+
+        $loc = $sitemap->createElementNS($urlSet->namespaceURI, 'loc');
+        $loc->appendChild($sitemap->createTextNode($url));
+
+        $urlEl = $sitemap->createElementNS($urlSet->namespaceURI, 'url');
+        $urlEl->appendChild($loc);
+
+        $urlSet->appendChild($urlEl);
+        $sitemap->appendChild($urlSet);
+
+        return $this;
     }
 
     public function getRequest(): Request
