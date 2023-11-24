@@ -14,6 +14,12 @@
       <trans-unit id="tl_news_archive.jumpTo.1">
         <source>Please choose the newsreader page to which visitors will be redirected when clicking a news item.</source>
       </trans-unit>
+      <trans-unit id="tl_news_archive.enableCanonical.0">
+        <source>Enable rel="canonical"</source>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.enableCanonical.1">
+        <source>Add rel="canonical" tags for the news detail page to the website.</source>
+      </trans-unit>
       <trans-unit id="tl_news_archive.allowComments.0">
         <source>Enable comments</source>
       </trans-unit>

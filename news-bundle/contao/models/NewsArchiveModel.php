@@ -19,6 +19,7 @@ use Contao\Model\Collection;
  * @property integer           $tstamp
  * @property string            $title
  * @property integer           $jumpTo
+ * @property boolean           $enableCanonical
  * @property boolean           $protected
  * @property string|array|null $groups
  * @property boolean           $allowComments
@@ -37,6 +38,7 @@ use Contao\Model\Collection;
  * @method static NewsArchiveModel|null findOneByTstamp($val, array $opt=array())
  * @method static NewsArchiveModel|null findOneByTitle($val, array $opt=array())
  * @method static NewsArchiveModel|null findOneByJumpTo($val, array $opt=array())
+ * @method static NewsArchiveModel|null findOneByEnableCanonical($val, array $opt=array())
  * @method static NewsArchiveModel|null findOneByProtected($val, array $opt=array())
  * @method static NewsArchiveModel|null findOneByGroups($val, array $opt=array())
  * @method static NewsArchiveModel|null findOneByAllowComments($val, array $opt=array())
@@ -51,6 +53,7 @@ use Contao\Model\Collection;
  * @method static Collection|NewsArchiveModel[]|NewsArchiveModel|null findByTstamp($val, array $opt=array())
  * @method static Collection|NewsArchiveModel[]|NewsArchiveModel|null findByTitle($val, array $opt=array())
  * @method static Collection|NewsArchiveModel[]|NewsArchiveModel|null findByJumpTo($val, array $opt=array())
+ * @method static Collection|NewsArchiveModel[]|NewsArchiveModel|null findByEnableCanonical($val, array $opt=array())
  * @method static Collection|NewsArchiveModel[]|NewsArchiveModel|null findByProtected($val, array $opt=array())
  * @method static Collection|NewsArchiveModel[]|NewsArchiveModel|null findByGroups($val, array $opt=array())
  * @method static Collection|NewsArchiveModel[]|NewsArchiveModel|null findByAllowComments($val, array $opt=array())
@@ -69,6 +72,7 @@ use Contao\Model\Collection;
  * @method static integer countByTstamp($val, array $opt=array())
  * @method static integer countByTitle($val, array $opt=array())
  * @method static integer countByJumpTo($val, array $opt=array())
+ * @method static integer countByEnableCanonical($val, array $opt=array())
  * @method static integer countByProtected($val, array $opt=array())
  * @method static integer countByGroups($val, array $opt=array())
  * @method static integer countByAllowComments($val, array $opt=array())

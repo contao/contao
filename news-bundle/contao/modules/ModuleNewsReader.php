@@ -126,6 +126,8 @@ class ModuleNewsReader extends ModuleNews
 			$this->news_template = 'news_full';
 		}
 
+		/** @var NewsArchiveModel $objArchive */
+		$objArchive = $objArticle->getRelated('pid');
 		$arrArticle = $this->parseArticle($objArticle);
 		$this->Template->articles = $arrArticle;
 
@@ -176,6 +178,10 @@ class ModuleNewsReader extends ModuleNews
 
 				$htmlHeadBag->setCanonicalUri($url);
 			}
+			elseif ($objArchive->enableCanonical)
+			{
+				$htmlHeadBag->setCanonicalUri(News::generateNewsUrl($objArticle, false, true));
+			}
 		}
 
 		$bundles = System::getContainer()->getParameter('kernel.bundles');
@@ -188,8 +194,6 @@ class ModuleNewsReader extends ModuleNews
 			return;
 		}
 
-		/** @var NewsArchiveModel $objArchive */
-		$objArchive = $objArticle->getRelated('pid');
 		$this->Template->allowComments = $objArchive->allowComments;
 
 		// Comments are not allowed
