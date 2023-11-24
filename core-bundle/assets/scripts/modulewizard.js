@@ -157,9 +157,6 @@
             };
 
             select.addEventListener('change', updateLink);
-
-            // Backwards compatibility with MooTools "Chosen" script that fires non-native change event
-            select.addEvent('change', updateLink);
         };
 
         makeSortable(tbody);
