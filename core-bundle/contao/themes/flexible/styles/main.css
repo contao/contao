@@ -53,9 +53,6 @@ body.popup {
 	min-height: 40px;
 	text-align: left;
 	background: var(--header-bg);
-	position: sticky;
-	top: 0;
-	z-index: 4;
 }
 
 #header h1 {
