@@ -449,7 +449,7 @@ abstract class DataContainer extends Backend
 			$key = (Input::get('act') == 'editAll') ? 'FORM_FIELDS_' . $suffix : 'FORM_FIELDS';
 
 			// Calculate the current palette
-			$postPaletteFields = implode(',', Input::post($key));
+			$postPaletteFields = implode(',', (array) Input::post($key));
 			$postPaletteFields = array_unique(StringUtil::trimsplit('[,;]', $postPaletteFields));
 
 			// Compile the palette if there is none
