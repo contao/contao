@@ -53,6 +53,16 @@ body.popup {
 	min-height: 40px;
 	text-align: left;
 	background: var(--header-bg);
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index: 4;
+	transition: transform .2s ease;
+	transform: none;
+}
+
+#header.header--hidden {
+	transform: translateY(-40px);
 }
 
 #header h1 {
@@ -273,6 +283,7 @@ body.popup {
 #container {
 	display: flex;
 	min-height: calc(100vh - 40px);
+	padding-top: 40px;
 }
 
 .popup #container {
