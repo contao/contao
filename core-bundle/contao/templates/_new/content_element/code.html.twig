@@ -16,7 +16,7 @@
 
             {% block code %}
                 {# @var \Contao\CoreBundle\Twig\Runtime\HighlightResult highlighted #}
-                {% set highlighted = code|default('')|highlight(language) %}
+                {% set highlighted = code|highlight(language) %}
                 {% set code_attributes = attrs(code_attributes|default)
                     .addClass('hljs')
                     .addClass(highlighted.language)
