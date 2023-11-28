@@ -1,6 +1,10 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
+    static values = {
+        threshold: Number
+    }
+
     static classes = ['up', 'down']
 
     initialize () {
@@ -40,12 +44,12 @@ export default class extends Controller {
         // Make sure the scroll value is between 0 and maxScroll
         const currentScroll = Math.max(0, Math.min(document.documentElement.scrollHeight - document.documentElement.clientHeight, window.scrollY));
 
-        if (this.lastScroll < currentScroll) {
+        if (this.lastScroll < currentScroll - this.thresholdValue) {
             this.down();
-        } else if (this.lastScroll > currentScroll) {
+            this.lastScroll = currentScroll;
+        } else if (this.lastScroll > currentScroll + this.thresholdValue || currentScroll < 1) {
             this.up();
+            this.lastScroll = currentScroll;
         }
-
-        this.lastScroll = currentScroll;
     }
 }

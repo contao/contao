@@ -35,7 +35,7 @@
 
   <?php $this->block('header'); ?>
     <?php if (!$this->isPopup): ?>
-      <header id="header" data-controller="contao--scroll" data-contao--scroll-up-class="header--fixed">
+      <header id="header" data-controller="contao--scroll" data-contao--scroll-down-class="header--hidden" data-contao--scroll-threshold-value="40">
         <div class="inner">
           <h1>
             <a href="<?= $this->route('contao_backend') ?>" accesskey="h" id="home" title="<?= $this->home ?>">
