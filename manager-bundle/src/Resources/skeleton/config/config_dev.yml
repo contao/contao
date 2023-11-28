@@ -17,6 +17,8 @@ web_profiler:
 
 # Monolog configuration
 monolog:
+    channels:
+        - deprecation # Deprecations are logged in the dedicated "deprecation" channel when it exists
     handlers:
         contao:
             type: service
@@ -26,14 +28,14 @@ monolog:
             max_files: 10
             path: '%kernel.logs_dir%/%kernel.environment%.log'
             level: debug
-            channels: ['!doctrine', '!event', '!php']
+            channels: ['!doctrine', '!event', '!php', '!deprecation']
         console:
             type: console
             bubble: false
             verbosity_levels:
                 VERBOSITY_VERBOSE: INFO
                 VERBOSITY_VERY_VERBOSE: DEBUG
-            channels: ['!doctrine']
+            channels: ['!doctrine', '!deprecation']
         console_very_verbose:
             type: console
             bubble: false
@@ -42,6 +44,11 @@ monolog:
                 VERBOSITY_VERY_VERBOSE: NOTICE
                 VERBOSITY_DEBUG: DEBUG
             channels: [doctrine]
+        deprecation:
+            type: rotating_file
+            max_files: 10
+            path: '%kernel.logs_dir%/%kernel.environment%-deprecations.log'
+            channels: ['deprecation']
 
 # FOS HttpCache configuration
 fos_http_cache:
