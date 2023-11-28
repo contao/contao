@@ -294,7 +294,6 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
             case 'article':
             case 'article_open':
             case 'article_url':
-            case 'article_title':
                 $objArticle = ArticleModel::findByIdOrAlias($insertTag->getParameters()->get(0));
 
                 if (!$objArticle instanceof ArticleModel) {
@@ -330,10 +329,13 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                     case 'article_url':
                         $result = $strUrl;
                         break;
+                }
+                break;
 
-                    case 'article_title':
-                        $result = StringUtil::specialcharsAttribute($objArticle->title);
-                        break;
+            // Article title
+            case 'article_title':
+                if ($objArticle = ArticleModel::findByIdOrAlias($insertTag->getParameters()->get(0))) {
+                    $result = $objArticle->title;
                 }
                 break;
 
