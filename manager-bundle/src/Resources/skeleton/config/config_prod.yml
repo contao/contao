@@ -26,10 +26,7 @@ monolog:
             level: info
         console:
             type: console
-        # Do not log deprecation messages in production because they might flood the file system. If you are a developer
-        # reading this and trying to get the messages logged in production in preparation for an update, checkout
-        # the default configuration for the "dev" environment that is shipped with Contao for reference and adjust "prod"
-        # to your needs accordingly.
+        # Do not log deprecation messages because they might flood the file system.
         deprecation:
             type: 'null'
             channels: [deprecation]

@@ -44,10 +44,9 @@ monolog:
                 VERBOSITY_VERY_VERBOSE: NOTICE
                 VERBOSITY_DEBUG: DEBUG
             channels: [doctrine]
+        # Do not log deprecation messages because they might flood the file system.
         deprecation:
-            type: rotating_file
-            max_files: 10
-            path: '%kernel.logs_dir%/%kernel.environment%-deprecations.log'
+            type: 'null'
             channels: [deprecation]
 
 # FOS HttpCache configuration
