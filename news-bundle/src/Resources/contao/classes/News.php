@@ -392,7 +392,7 @@ class News extends Frontend
 	 */
 	public static function generateNewsUrl($objItem, $blnAddArchive=false, $blnAbsolute=false)
 	{
-		$strCacheKey = 'id_' . $objItem->id . ($blnAbsolute ? '_absolute' : '');
+		$strCacheKey = 'id_' . $objItem->id . ($blnAbsolute ? '_absolute' : '') . (($blnAddArchive && Input::get('month')) ? '_' . Input::get('month') : '');
 
 		// Load the URL from cache
 		if (isset(self::$arrUrlCache[$strCacheKey]))
