@@ -357,7 +357,7 @@ class ContaoExtensionTest extends TestCase
 
         $parameters = array_map(
             static fn (\ReflectionParameter $parameter): array => [
-                $parameter->hasType() ? $parameter->getType()->getName() : null,
+                ($type = $parameter->getType()) instanceof \ReflectionNamedType ? $type->getName() : null,
                 $parameter->getName(),
             ],
             (new \ReflectionFunction($function))->getParameters()
