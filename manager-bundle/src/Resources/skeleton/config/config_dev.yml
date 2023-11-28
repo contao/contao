@@ -48,7 +48,7 @@ monolog:
             type: rotating_file
             max_files: 10
             path: '%kernel.logs_dir%/%kernel.environment%-deprecations.log'
-            channels: ['deprecation']
+            channels: [deprecation]
 
 # FOS HttpCache configuration
 fos_http_cache:

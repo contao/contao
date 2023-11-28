@@ -32,4 +32,4 @@ monolog:
         # to your needs accordingly.
         deprecation:
             type: 'null'
-            channels: ['deprecation']
+            channels: [deprecation]
