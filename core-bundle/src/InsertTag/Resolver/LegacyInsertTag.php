@@ -335,7 +335,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
             // Article title
             case 'article_title':
                 if ($objArticle = ArticleModel::findByIdOrAlias($insertTag->getParameters()->get(0))) {
-                    $result = $objArticle->title;
+                    $result = StringUtil::specialcharsAttribute($objArticle->title);
                 }
                 break;
 
