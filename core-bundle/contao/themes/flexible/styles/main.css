@@ -53,9 +53,6 @@ body.popup {
 	min-height: 40px;
 	text-align: left;
 	background: var(--header-bg);
-	z-index: 4;
-	transition: transform .2s ease;
-	transform: none;
 }
 
 @keyframes slide-in-top {
@@ -73,10 +70,7 @@ body.popup {
 	left: 0;
 	right: 0;
 	animation: slide-in-top .2s;
-}
-
-#header.header--hidden {
-	transform: translateY(-40px);
+	z-index: 4;
 }
 
 #header h1 {
