@@ -5,7 +5,7 @@ export default class extends Controller {
 
     initialize () {
         this.lastScroll = 0;
-        this.onScroll = this.onScroll.bind(this)
+        this.onScroll = this.onScroll.bind(this);
     }
 
     connect () {
@@ -18,21 +18,21 @@ export default class extends Controller {
 
     up () {
         if (this.hasUpClass) {
-            this.element.classList.add(this.upClass);
+            document.body.classList.add(this.upClass);
         }
 
         if (this.hasDownClass) {
-            this.element.classList.remove(this.downClass);
+            document.body.classList.remove(this.downClass);
         }
     }
 
     down () {
         if (this.hasUpClass) {
-            this.element.classList.remove(this.upClass);
+            document.body.classList.remove(this.upClass);
         }
 
         if (this.hasDownClass) {
-            this.element.classList.add(this.downClass);
+            document.body.classList.add(this.downClass);
         }
     }
 
@@ -41,9 +41,9 @@ export default class extends Controller {
         const currentScroll = Math.max(0, Math.min(document.documentElement.scrollHeight - document.documentElement.clientHeight, window.scrollY));
 
         if (this.lastScroll < currentScroll) {
-            this.up();
-        } else if (this.lastScroll > currentScroll) {
             this.down();
+        } else if (this.lastScroll > currentScroll) {
+            this.up();
         }
 
         this.lastScroll = currentScroll;
