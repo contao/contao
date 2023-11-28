@@ -22,21 +22,21 @@ export default class extends Controller {
 
     up () {
         if (this.hasUpClass) {
-            document.body.classList.add(this.upClass);
+            document.documentElement.classList.add(this.upClass);
         }
 
         if (this.hasDownClass) {
-            document.body.classList.remove(this.downClass);
+            document.documentElement.classList.remove(this.downClass);
         }
     }
 
     down () {
         if (this.hasUpClass) {
-            document.body.classList.remove(this.upClass);
+            document.documentElement.classList.remove(this.upClass);
         }
 
         if (this.hasDownClass) {
-            document.body.classList.add(this.downClass);
+            document.documentElement.classList.add(this.downClass);
         }
     }
 
