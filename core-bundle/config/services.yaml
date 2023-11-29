@@ -7,10 +7,6 @@ services:
             calls:
                 - [setFramework, ['@contao.framework']]
 
-        Symfony\Component\DependencyInjection\ContainerAwareInterface:
-            calls:
-                - [setContainer, ['@service_container']]
-
     contao.assets.assets_context:
         class: Contao\CoreBundle\Asset\ContaoContext
         public: true
@@ -280,6 +276,8 @@ services:
             - '@request_stack'
             - '%kernel.project_dir%'
             - '%contao.error_level%'
+        calls:
+            - [setContainer, ['@service_container']]
 
     contao.image.deferred_image_storage:
         class: Contao\Image\DeferredImageStorageFilesystem
