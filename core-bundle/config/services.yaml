@@ -544,6 +544,7 @@ services:
     contao.monolog.handler:
         class: Contao\CoreBundle\Monolog\ContaoTableHandler
         arguments:
+            - !service_closure '@database_connection'
             - debug
             - false
         tags:
