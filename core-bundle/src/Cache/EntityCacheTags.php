@@ -149,8 +149,7 @@ class EntityCacheTags
             return array_unique($tags);
         }
 
-        if ($this->isModel($target)) {
-            /** @var Model $target */
+        if ($target instanceof Model) {
             return [$this->getTagForModelInstance($target)];
         }
 
