@@ -225,7 +225,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      *
      * If a falsy $condition is specified, the method is a no-op.
      *
-     * @param string|array<string, string> $styles
+     * @param string|array<int|string, string> $styles
      */
     public function addStyle(array|string $styles, mixed $condition = true): self
     {

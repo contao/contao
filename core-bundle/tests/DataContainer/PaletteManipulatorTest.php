@@ -309,10 +309,6 @@ class PaletteManipulatorTest extends TestCase
                 function (array $config, array $action, bool $skipLegends) use (&$closureCalled): void {
                     $closureCalled = true;
 
-                    $this->assertIsArray($config);
-                    $this->assertIsArray($action);
-                    $this->assertIsBool($skipLegends);
-
                     $this->assertArrayHasKey('fields', $action);
                     $this->assertArrayHasKey('parents', $action);
                     $this->assertArrayHasKey('position', $action);

@@ -36,7 +36,6 @@ class CountriesTest extends TestCase
     {
         $countryCodes = $this->getCountriesService()->getCountryCodes();
 
-        $this->assertIsArray($countryCodes);
         $this->assertNotEmpty($countryCodes);
         $this->assertFalse(ArrayUtil::isAssoc($countryCodes));
 
@@ -49,7 +48,6 @@ class CountriesTest extends TestCase
     {
         $countryNames = $this->getCountriesService()->getCountries('en');
 
-        $this->assertIsArray($countryNames);
         $this->assertNotEmpty($countryNames);
         $this->assertTrue(ArrayUtil::isAssoc($countryNames));
 

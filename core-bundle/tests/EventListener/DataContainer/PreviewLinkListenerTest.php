@@ -113,6 +113,7 @@ class PreviewLinkListenerTest extends TestCase
     {
         ClockMock::withClockMock(true);
 
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_preview_link'] = [
             'config' => ['notCreatable' => true],
             'fields' => [
@@ -196,6 +197,7 @@ class PreviewLinkListenerTest extends TestCase
 
     public function testDoesNotEnableCreateOperationIfPreviewScriptIsNotInUrl(): void
     {
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_preview_link'] = [
             'config' => ['notCreatable' => true],
         ];

@@ -12,6 +12,9 @@ rules:
 parameters:
     level: 6
 
+    featureToggles:
+        bleedingEdge: true
+
     paths:
         - %currentWorkingDirectory%/calendar-bundle/src
         - %currentWorkingDirectory%/calendar-bundle/tests
