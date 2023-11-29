@@ -24,6 +24,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class FrontendPreviewAuthenticatorTest extends TestCase
@@ -275,6 +276,9 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $this->assertFalse($authenticator->removeFrontendAuthentication());
     }
 
+    /**
+     * @param UserProviderInterface<UserInterface>|null $userProvider
+     */
     private function getAuthenticator(Security|null $security = null, TokenStorageInterface|null $tokenStorage = null, TokenChecker|null $tokenChecker = null, SessionInterface|null $session = null, UserProviderInterface|null $userProvider = null, LoggerInterface|null $logger = null): FrontendPreviewAuthenticator
     {
         if (null === $session) {

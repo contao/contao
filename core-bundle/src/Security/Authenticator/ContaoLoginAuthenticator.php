@@ -36,6 +36,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
@@ -54,6 +55,9 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
 {
     private readonly array $options;
 
+    /**
+     * @param UserProviderInterface<UserInterface> $userProvider
+     */
     public function __construct(
         private readonly UserProviderInterface $userProvider,
         private readonly AuthenticationSuccessHandlerInterface $successHandler,
