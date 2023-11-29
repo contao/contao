@@ -17,12 +17,11 @@ use Doctrine\DBAL\Connection;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\AbstractProcessingHandler;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class ContaoTableHandler extends AbstractProcessingHandler implements ContainerAwareInterface
+class ContaoTableHandler extends AbstractProcessingHandler
 {
-    use ContainerAwareTrait;
+    private ContainerInterface|null $container = null;
 
     private string $dbalServiceName = 'doctrine.dbal.default_connection';
 
@@ -34,6 +33,11 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
     public function setDbalServiceName(string $name): void
     {
         $this->dbalServiceName = $name;
+    }
+
+    public function setContainer(ContainerInterface $container): void
+    {
+        $this->container = $container;
     }
 
     public function handle(array $record): bool
