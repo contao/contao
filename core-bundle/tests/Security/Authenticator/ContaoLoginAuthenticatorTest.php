@@ -41,6 +41,7 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
@@ -461,6 +462,9 @@ class ContaoLoginAuthenticatorTest extends TestCase
         yield [$errorPage];
     }
 
+    /**
+     * @param UserProviderInterface<UserInterface>|null $userProvider
+     */
     private function mockContaoLoginAuthenticator(UserProviderInterface|null $userProvider = null, AuthenticationSuccessHandlerInterface|null $successHandler = null, AuthenticationFailureHandlerInterface|null $failureHandler = null, ScopeMatcher|null $scopeMatcher = null, RouterInterface|null $router = null, UriSigner|null $uriSigner = null, ContaoFramework|null $framework = null, TokenStorageInterface|null $tokenStorage = null, PageRegistry|null $pageRegistry = null, HttpKernelInterface|null $httpKernel = null, RequestStack|null $requestStack = null, TwoFactorAuthenticator|null $twoFactorAuthenticator = null, array $options = []): ContaoLoginAuthenticator
     {
         return new ContaoLoginAuthenticator(
@@ -480,6 +484,9 @@ class ContaoLoginAuthenticatorTest extends TestCase
         );
     }
 
+    /**
+     * @return UserProviderInterface<UserInterface>
+     */
     private function mockUserProvider(): UserProviderInterface
     {
         return $this->createMock(UserProviderInterface::class);

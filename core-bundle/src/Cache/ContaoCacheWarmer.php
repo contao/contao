@@ -49,7 +49,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $this->locales = $locales->getEnabledLocaleIds();
     }
 
-    public function warmUp(string $cacheDir): array
+    public function warmUp(string $cacheDir, string|null $buildDir = null): array
     {
         if (!$this->isCompleteInstallation()) {
             return [];
