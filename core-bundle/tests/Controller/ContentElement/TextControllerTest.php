@@ -71,6 +71,27 @@ class TextControllerTest extends ContentElementTestCase
         $this->assertSameHtml($expectedOutput, $response->getContent());
     }
 
+    public function testEncodesEmailAddresses(): void
+    {
+        $response = $this->renderWithModelData(
+            new TextController($this->getDefaultStudio()),
+            [
+                'type' => 'text',
+                'text' => '<p>Write to foo@bar.com.</p>',
+            ]
+        );
+
+        $expectedOutput = <<<'HTML'
+            <div class="content-text">
+                <div class="rte">
+                    <p>Write to &#102;&#x6F;&#111;&#x40;&#98;&#x61;&#114;&#x2E;&#99;&#x6F;&#109;.</p>
+                </div>
+            </div>
+            HTML;
+
+        $this->assertSameHtml($expectedOutput, $response->getContent());
+    }
+
     public function provideMediaPositions(): \Generator
     {
         yield 'above' => ['above', 'media media--above'];
