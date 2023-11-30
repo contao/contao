@@ -33,7 +33,7 @@ class PhpTemplateProxyNodeTest extends TestCase
                     function(callable $block) use ($context): string {
                         if ($this->env->isDebug()) { ob_start(); } else { ob_start(static function () { return ''; }); }
                         try { $block($context); return ob_get_contents(); } finally { ob_end_clean(); }
-                    }, array_filter($blocks, static fn(callable $block): bool => method_exists(self::class, $block[1]))
+                    }, array_intersect_key($blocks, $this->blocks)
                 ), $context
             );
 
