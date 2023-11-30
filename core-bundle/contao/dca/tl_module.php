@@ -636,7 +636,7 @@ class tl_module extends Backend
 
 		while ($objForms->next())
 		{
-			if ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FORM, $objForms->id))
+			if ($security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FORM, $objForms->id))
 			{
 				$arrForms[$objForms->id] = $objForms->title;
 			}
