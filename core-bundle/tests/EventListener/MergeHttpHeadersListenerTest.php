@@ -29,6 +29,20 @@ class MergeHttpHeadersListenerTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
+    public function testIgnoresSubrequests(): void
+    {
+        $responseEvent = $this->getResponseEvent(null, HttpKernelInterface::SUB_REQUEST);
+
+        $framework = $this->createMock(ContaoFramework::class);
+        $framework
+            ->expects($this->never())
+            ->method('isInitialized')
+        ;
+
+        $listener = new MergeHttpHeadersListener($framework, new MemoryHeaderStorage([]));
+        $listener($responseEvent);
+    }
+
     /**
      * @group legacy
      */
@@ -345,10 +359,10 @@ class MergeHttpHeadersListenerTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
-    private function getResponseEvent(Response|null $response = null): ResponseEvent
+    private function getResponseEvent(Response|null $response = null, int $requestType = HttpKernelInterface::MAIN_REQUEST): ResponseEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
 
-        return new ResponseEvent($kernel, new Request(), HttpKernelInterface::MAIN_REQUEST, $response ?? new Response());
+        return new ResponseEvent($kernel, new Request(), $requestType, $response ?? new Response());
     }
 }
