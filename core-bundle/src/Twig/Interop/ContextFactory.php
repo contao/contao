@@ -149,11 +149,7 @@ final class ContextFactory
              */
             public function __toString(): string
             {
-                try {
-                    return (string) $this();
-                } catch (\Throwable $e) {
-                    throw new \RuntimeException(sprintf('Error evaluating "%s": %s', $this->name, $e->getMessage()), 0, $e);
-                }
+                return (string) $this();
             }
 
             /**

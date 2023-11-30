@@ -35,7 +35,7 @@ final class PhpTemplateProxyNode extends Node
         //         function(callable $block) use ($context): string {
         //             if ($this->env->isDebug()) { ob_start(); } else { ob_start(static function () { return ''; }); }
         //             try { $block($context); return ob_get_contents(); } finally { ob_end_clean(); }
-        //         }, $blocks
+        //         }, array_intersect_key($blocks, $this->blocks)
         //     ), $context
         // );
         $compiler
@@ -51,7 +51,7 @@ final class PhpTemplateProxyNode extends Node
             ->write('if ($this->env->isDebug()) { ob_start(); } else { ob_start(static function () { return \'\'; }); }'."\n")
             ->write('try { $block($context); return ob_get_contents(); } finally { ob_end_clean(); }'."\n")
             ->outdent()
-            ->write('}, $blocks'."\n")
+            ->write('}, array_intersect_key($blocks, $this->blocks)'."\n")
             ->outdent()
             ->write('), $context'."\n")
             ->outdent()
