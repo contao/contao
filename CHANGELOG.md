@@ -2,6 +2,26 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.35] (2023-11-30)
+
+**Fixed issues:**
+
+- [#6574] Fix and improve logging deprecation messages ([Toflar])
+- [#6575] Fix the safe analysis for the `contao_html`  and `contao_html_attr` strategies ([m-vo])
+- [#6576] Correctly reset the page registry ([aschempp])
+- [#6460] Fix the news URL cache when the archive is added ([aschempp])
+- [#6568] Add the missing autowiring alias for the image sizes service ([Toflar])
+- [#6524] Improve performance when loading language files that do not exist ([fritzmg])
+- [#6535] Fix ongoing events ([ausi])
+- [#6532] Bubble the back end log entries to file logs ([aschempp])
+- [#6430] Only consider the main request in the `MergeHttpHeadersListener` class ([Toflar])
+- [#6545] Change the form permission constant ([aschempp])
+- [#6522] Remove the XLIFF level restriction ([fritzmg])
+- [#6514] Make sure the session cookie is always lax ([Toflar])
+- [#6511] Fix undefined array key warning in `DC_Table::deleteAll` ([fritzmg])
+- [#6507] Use placeholders for URLs in translation strings ([leofeyer])
+- [#6501] Fix the date format in the `Feed` class ([leofeyer])
+
 ## [4.13.34] (2023-11-06)
 
 **Fixed issues:**
@@ -515,6 +535,12 @@ This project adheres to [Semantic Versioning].
 
 ## [4.13.4] (2022-05-05)
 
+## [4.13.3] (2022-05-05)
+
+**Security fixes:**
+
+- [CVE-2022-24899]: Cross site scripting via canonical URL
+
 **New features:**
 
 - [#4329] Deprecated Cache lib ([Toflar])
@@ -547,12 +573,6 @@ This project adheres to [Semantic Versioning].
 - [#4451] Quote all schema names, same as we do for inserts ([ausi])
 - [#4448] Skip row size calculation for MyISAM ([ausi])
 - [#4447] Fix simple token parser default value for unknown variables ([m-vo])
-
-## [4.13.3] (2022-05-05)
-
-**Security fixes:**
-
-- [CVE-2022-24899]: Cross site scripting via canonical URL
 
 ## [4.13.2] (2022-03-31)
 
@@ -851,6 +871,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.35]: https://github.com/contao/contao/releases/tag/4.13.35
 [4.13.34]: https://github.com/contao/contao/releases/tag/4.13.34
 [4.13.33]: https://github.com/contao/contao/releases/tag/4.13.33
 [4.13.32]: https://github.com/contao/contao/releases/tag/4.13.32
@@ -1549,11 +1570,13 @@ This project adheres to [Semantic Versioning].
 [#6419]: https://github.com/contao/contao/pull/6419
 [#6422]: https://github.com/contao/contao/pull/6422
 [#6425]: https://github.com/contao/contao/pull/6425
+[#6430]: https://github.com/contao/contao/pull/6430
 [#6431]: https://github.com/contao/contao/pull/6431
 [#6437]: https://github.com/contao/contao/pull/6437
 [#6444]: https://github.com/contao/contao/pull/6444
 [#6457]: https://github.com/contao/contao/pull/6457
 [#6459]: https://github.com/contao/contao/pull/6459
+[#6460]: https://github.com/contao/contao/pull/6460
 [#6462]: https://github.com/contao/contao/pull/6462
 [#6466]: https://github.com/contao/contao/pull/6466
 [#6467]: https://github.com/contao/contao/pull/6467
@@ -1561,3 +1584,16 @@ This project adheres to [Semantic Versioning].
 [#6487]: https://github.com/contao/contao/pull/6487
 [#6490]: https://github.com/contao/contao/pull/6490
 [#6492]: https://github.com/contao/contao/pull/6492
+[#6501]: https://github.com/contao/contao/pull/6501
+[#6507]: https://github.com/contao/contao/pull/6507
+[#6511]: https://github.com/contao/contao/pull/6511
+[#6514]: https://github.com/contao/contao/pull/6514
+[#6522]: https://github.com/contao/contao/pull/6522
+[#6524]: https://github.com/contao/contao/pull/6524
+[#6532]: https://github.com/contao/contao/pull/6532
+[#6535]: https://github.com/contao/contao/pull/6535
+[#6545]: https://github.com/contao/contao/pull/6545
+[#6568]: https://github.com/contao/contao/pull/6568
+[#6574]: https://github.com/contao/contao/pull/6574
+[#6575]: https://github.com/contao/contao/pull/6575
+[#6576]: https://github.com/contao/contao/pull/6576

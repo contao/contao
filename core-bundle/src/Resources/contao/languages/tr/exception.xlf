@@ -30,8 +30,8 @@
         <target>&lt;code&gt;var/logs&lt;/code&gt; klasöründeki geçerli günlük dosyasını açın ve ilgili hata iletisini bulun (genellikle sonuncusu).</target>
       </trans-unit>
       <trans-unit id="XPT.errorExplain">
-        <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, visit the &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
-        <target>Bir şey düzgün çalışmadığından betiğin yürütülmesi durduruldu, Asıl hata iletisi, güvenlik nedeniyle bu bildirim tarafından gizlenmiştir ve geçerli günlük dosyasında bulunabilir (yukarıya bakın). Hata iletisini anlamıyorsanız ya da sorunu nasıl çözeceğinizi bilmiyorsanız, &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao destek sayfasına&lt;/a&gt; bakabilirsiniz.</target>
+        <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, visit the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
+        <target>Bir şey düzgün çalışmadığından betiğin yürütülmesi durduruldu, Asıl hata iletisi, güvenlik nedeniyle bu bildirim tarafından gizlenmiştir ve geçerli günlük dosyasında bulunabilir (yukarıya bakın). Hata iletisini anlamıyorsanız ya da sorunu nasıl çözeceğinizi bilmiyorsanız, &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao destek sayfasına&lt;/a&gt; bakabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="XPT.requestToken">
         <source>Invalid request token</source>
@@ -50,8 +50,8 @@
         <target>Bu hata, geçerli bir kimlik doğrulama kodu olmayan bir POST isteği yapıldığında ortaya çıkar. Contao 2.10 sürümünde, referans denetimi, bir istek kodu sistemi ile değiştirildi. Sorun sürerse, uyumsuz bir üçüncü taraf eklentisi kullanıyor ya da Contao kurulumunuzu doğru şekilde güncellememiş olabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="XPT.tokenExplainTwo">
-        <source>For more information, visit the &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
-        <target>Ayrıntılı bilgi almak için &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao destek sayfasına&lt;/a&gt; bakabilirsiniz.</target>
+        <source>For more information, visit the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
+        <target>Ayrıntılı bilgi almak için &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao destek sayfasına&lt;/a&gt; bakabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="XPT.unavailable">
         <source>Service unavailable</source>
