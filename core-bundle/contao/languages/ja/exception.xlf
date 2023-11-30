@@ -30,8 +30,8 @@
         <target>&lt;code&gt;var/logs&lt;/code&gt;というディレクトリにある現在のログファイルを開いて、対応する(通常は最後の)エラーメッセージを探してください。</target>
       </trans-unit>
       <trans-unit id="XPT.errorExplain">
-        <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, visit the &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
-        <target>何かが適切に動作していないため、スクリプトの実行は停止しました。この通知の実際のエラーメッセージはセキュリティ上の理由で表示していませんが、現在のログファイルにあるはずです(上記を参照)。エラーメッセージの意味がわからない場合や、この問題の修正の方法を知らない場合は&lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contaoのサポートのページ&lt;/a&gt;を参照してください。</target>
+        <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, visit the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
+        <target>何かが適切に動作していないため、スクリプトの実行が停止しました。この通知による実際のエラーメッセージはセキュリティ上の理由で表示していませんが、現在のログファイルで確認できます(上記を参照)。エラーメッセージの意味を理解できない場合や修正の方法がわからない場合は&lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contaoのサポートのページ&lt;/a&gt;を参照してください。</target>
       </trans-unit>
       <trans-unit id="XPT.requestToken">
         <source>Invalid request token</source>
@@ -50,8 +50,8 @@
         <target>このエラーは有効な認証トークンがないPOST要求で発生します。Contao 2.10からリファラーの照合をリクエストトークンのシステムに置き換えました。問題が継続する場合は互換性のない第三者の機能拡張を使用しているためか、インストールしているContaoを正しく更新していないためかもしれません。</target>
       </trans-unit>
       <trans-unit id="XPT.tokenExplainTwo">
-        <source>For more information, visit the &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
-        <target>さらに詳しい情報は、&lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contaoのサポートのページ&lt;/a&gt;を参照してください。</target>
+        <source>For more information, visit the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
+        <target>さらに詳しい情報は、&lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contaoのサポートのページ&lt;/a&gt;を参照してください。</target>
       </trans-unit>
       <trans-unit id="XPT.unavailable">
         <source>Service unavailable</source>
