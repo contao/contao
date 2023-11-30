@@ -56,6 +56,12 @@ body.popup {
 	position: sticky;
 	top: 0;
 	z-index: 4;
+	transition: transform .2s ease;
+	transform: none;
+}
+
+.header--hidden #header {
+	transform: translateY(-40px);
 }
 
 #header h1 {

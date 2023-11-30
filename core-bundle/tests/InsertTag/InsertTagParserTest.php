@@ -20,6 +20,7 @@ use Contao\CoreBundle\InsertTag\InsertTagSubscription;
 use Contao\CoreBundle\InsertTag\ParsedInsertTag;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\InsertTag\Resolver\FragmentInsertTag;
+use Contao\CoreBundle\InsertTag\Resolver\IfLanguageInsertTag;
 use Contao\CoreBundle\InsertTag\Resolver\LegacyInsertTag;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
@@ -216,6 +217,7 @@ class InsertTagParserTest extends TestCase
 
         $parser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
         $parser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'br', null, true, false));
+        $parser->addBlockSubscription(new InsertTagSubscription(new IfLanguageInsertTag($this->createMock(RequestStack::class)), '__invoke', 'ifnlng', 'ifnlng', true, false));
         System::getContainer()->set('contao.insert_tag.parser', $parser);
 
         $this->assertSame($expected, $parser->replaceInline($source));
@@ -273,6 +275,17 @@ class InsertTagParserTest extends TestCase
                 $this->assertSame('conditional_end', $tags[$_rit + 1]);
 
                 return '';
+            },
+        ];
+
+        yield [
+            'a{{ifnlng::xx}}b{{tag}}c{{ifnlng}}d',
+            'abTAGcd',
+            function ($tag, $useCache, $cachedValue, $flags) {
+                $this->assertSame('tag', $tag);
+                $this->assertSame([], $flags);
+
+                return 'TAG';
             },
         ];
     }
