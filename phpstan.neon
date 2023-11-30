@@ -47,16 +47,11 @@ parameters:
         # Ignore the wrong return type hint of the UrlGeneratorInterface::generate() method
         - '#Method Contao\\CoreBundle\\Picker\\AbstractPickerProvider::generateUrl\(\) never returns null so it can be removed from the return type\.#'
 
-        # Symfony 6.4.0 uses a weird deprecation technique for the UriSigner class that PHPStan cannot handle.
-        - '#Class Symfony\\Component\\HttpKernel\\UriSigner does not have a constructor and must be instantiated without any parameters\.#'
-        - '#Call to an undefined method Symfony\\Component\\HttpKernel\\UriSigner::sign\(\)\.#'
-        - '#Call to an undefined method Symfony\\Component\\HttpKernel\\UriSigner::checkRequest\(\)\.#'
-        - '#Trying to mock an undefined method sign\(\) on class Symfony\\Component\\HttpKernel\\UriSigner\.#'
-        - '#Trying to mock an undefined method checkRequest\(\) on class Symfony\\Component\\HttpKernel\\UriSigner\.#'
-        - '#expects Symfony\\Component\\HttpFoundation\\UriSigner\|null, Symfony\\Component\\HttpKernel\\UriSigner given#'
-
-        # Second parameter will be added in Symfony 7.0
+        # Ignore the forward-compatible declaration that will be added in Symfony 7.0
         - '#Method Symfony\\Component\\HttpKernel\\CacheWarmer\\WarmableInterface::warmUp\(\) invoked with 2 parameters, 1 required\.#'
+
+        # FIXME: Remove this again once Symfony 6.4.1 has been released
+        - '#Symfony\\Component\\HttpKernel\\UriSigner#'
 
     treatPhpDocTypesAsCertain: false
     checkMissingIterableValueType: false
