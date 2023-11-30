@@ -49,6 +49,10 @@ class MergeHttpHeadersListener implements ResetInterface
      */
     public function __invoke(ResponseEvent $event): void
     {
+        if (!$event->isMainRequest()) {
+            return;
+        }
+
         if (!$this->framework->isInitialized()) {
             return;
         }

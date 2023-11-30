@@ -1156,6 +1156,7 @@ services:
     Contao\CoreBundle\Doctrine\Backup\DumperInterface: '@contao.doctrine.backup.dumper'
     Contao\CoreBundle\Framework\ContaoFramework: '@contao.framework'
     Contao\CoreBundle\Image\ImageFactoryInterface: '@contao.image.factory'
+    Contao\CoreBundle\Image\ImageSizes: '@contao.image.sizes'
     Contao\CoreBundle\Image\PictureFactoryInterface: '@contao.image.picture_factory'
     Contao\CoreBundle\Image\Preview\PreviewFactory: '@contao.image.preview_factory'
     Contao\CoreBundle\Image\Studio\Studio: '@contao.image.studio'

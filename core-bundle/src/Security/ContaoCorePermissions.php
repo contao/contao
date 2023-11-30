@@ -172,10 +172,15 @@ final class ContaoCorePermissions
     public const USER_CAN_ACCESS_IMAGE_SIZE = 'contao_user.imageSizes';
 
     /**
-     * Access is granted if the current user can access the form.
-     * Subject must be a form ID from tl_form.
+     * @deprecated use USER_CAN_EDIT_FORM instead
      */
     public const USER_CAN_ACCESS_FORM = 'contao_user.forms';
+
+    /**
+     * Access is granted if the current user can edit the given form.
+     * Subject must be a form ID from tl_form.
+     */
+    public const USER_CAN_EDIT_FORM = 'contao_user.forms';
 
     /**
      * Access is granted if the current user can create forms.

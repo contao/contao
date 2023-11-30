@@ -563,12 +563,10 @@ class InsertTagParser implements ResetInterface
         $hasLegacyTags = false;
 
         foreach ($input as $item) {
-            if (!\is_string($item) && !$this->hasInsertTag($item->getName())) {
-                $hasLegacyTags = true;
-                break;
-            }
-
-            if (\is_string($item) && str_contains($item, '{{')) {
+            if (
+                (\is_string($item) && str_contains($item, '{{'))
+                || ($item instanceof InsertTag && !$this->hasInsertTag($item->getName()))
+            ) {
                 $hasLegacyTags = true;
                 break;
             }

@@ -120,18 +120,19 @@ class ContaoCacheWarmer implements CacheWarmerInterface
 
         $dumper->setHeader("<?php\n");
 
+        $processed = [];
+
         foreach ($this->locales as $language) {
-            $processed = [];
             $files = $this->findLanguageFiles($language);
 
             foreach ($files as $file) {
                 $name = substr($file->getBasename(), 0, -4);
 
-                if (\in_array($name, $processed, true)) {
+                if (isset($processed[$language][$name])) {
                     continue;
                 }
 
-                $processed[] = $name;
+                $processed[$language][$name] = true;
 
                 $subfiles = $this->finder
                     ->findIn(Path::join('languages', $language))
@@ -160,7 +161,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
                     $name = substr($domain, 7);
                     $path = Path::join($cacheDir, 'contao', 'languages', $language, $name.'.php');
 
-                    if (\in_array($name, $processed, true)) {
+                    if (isset($processed[$language][$name])) {
                         $this->filesystem->appendToFile($path, "\n".$php);
                     } else {
                         $this->filesystem->dumpFile($path, "<?php\n\n".$php);
@@ -168,6 +169,12 @@ class ContaoCacheWarmer implements CacheWarmerInterface
                 }
             }
         }
+
+        // Cache the available Contao language files (see #6454)
+        $this->filesystem->dumpFile(
+            Path::join($cacheDir, 'contao/config/available-language-files.php'),
+            sprintf("<?php\n\nreturn %s;\n", var_export($processed, true)),
+        );
     }
 
     private function generateDcaExtracts(string $cacheDir): void
