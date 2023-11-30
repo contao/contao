@@ -65,7 +65,7 @@ class Callback extends Schema implements ContainerAwareInterface, FrameworkAware
 
         $data = $this->all();
 
-        if (empty($data)) {
+        if ([] === $data) {
             return false;
         }
 
@@ -95,7 +95,7 @@ class Callback extends Schema implements ContainerAwareInterface, FrameworkAware
     {
         $data = $this->all();
 
-        if (!empty($data) && !$this->isCallable()) {
+        if ([] !== $data && !$this->isCallable()) {
             throw new \InvalidArgumentException(sprintf('Callback %s is not callable at %s', implode('::', $data), $this->getData()->getPath()));
         }
     }

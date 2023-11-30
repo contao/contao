@@ -143,9 +143,6 @@ class ArrayUtilTest extends TestCase
     }
 
     /**
-     * @param mixed        $expected
-     * @param string|array $path
-     *
      * @dataProvider getDataProvider
      */
     public function testGetsDataViaDotNotation(array $data, array|string $path, mixed $expected): void
@@ -205,10 +202,6 @@ class ArrayUtilTest extends TestCase
     }
 
     /**
-     * @param string|array $path
-     * @param mixed        $value
-     * @param mixed        $expected
-     *
      * @dataProvider setDataProvider
      */
     public function testSetsDataViaDotNotation(array $source, array|string $path, mixed $value, mixed $expected, bool $overwrite = true): void

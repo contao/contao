@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Dca\Schema;
 
 /**
  * @template T of SchemaInterface
+ *
  * @implements \IteratorAggregate<string, T>
  */
 abstract class SchemaCollection extends Schema implements \IteratorAggregate

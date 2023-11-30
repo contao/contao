@@ -64,7 +64,7 @@ class Operation extends Schema implements ServiceSubscriberSchemaInterface
         $attributes = ltrim(sprintf($this->get('attributes') ?? '', $id, $id));
         $classes = $this->getName().($this->get('class') ? ' '.$this->get('class') : '');
 
-        if (false !== strpos($attributes, 'class="')) {
+        if (str_contains($attributes, 'class="')) {
             $attributes = ' '.str_replace('class="', 'class="'.$classes.' ', $attributes);
         } else {
             $attributes = ' class="'.$classes.'" '.$attributes;
