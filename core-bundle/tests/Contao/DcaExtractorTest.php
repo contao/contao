@@ -14,6 +14,8 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Config;
 use Contao\CoreBundle\Config\ResourceFinder;
+use Contao\CoreBundle\Tests\Fixtures\Enum\IntBackedEnum;
+use Contao\CoreBundle\Tests\Fixtures\Enum\StringBackedEnum;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DcaExtractor;
 use Contao\DcaLoader;
@@ -116,5 +118,15 @@ class DcaExtractorTest extends TestCase
         $this->assertFalse($extractor->isDbTable());
         $this->assertSame([], $extractor->getKeys());
         $this->assertSame([], $extractor->getFields());
+    }
+
+    public function testExtractsFieldsWithEnums(): void
+    {
+        $extractor = DcaExtractor::getInstance('tl_test_with_enums');
+
+        $this->assertSame([
+            'foo' => StringBackedEnum::class,
+            'bar' => IntBackedEnum::class,
+        ], $extractor->getEnums());
     }
 }
