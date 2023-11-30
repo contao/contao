@@ -504,7 +504,6 @@ class TokenCheckerTest extends TestCase
         ;
 
         $request = $this->createMock(Request::class);
-
         $request
             ->method('getSession')
             ->willReturn($session)

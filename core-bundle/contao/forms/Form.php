@@ -153,7 +153,9 @@ class Form extends Hybrid
 		$this->Template->formSubmit = $formId;
 		$this->Template->method = ($this->method == 'GET') ? 'get' : 'post';
 
-		if (($request = System::getContainer()->get('request_stack')->getCurrentRequest()) && $request->hasPreviousSession())
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && $request->hasPreviousSession())
 		{
 			$flashBag = $request->getSession()->getFlashBag();
 
