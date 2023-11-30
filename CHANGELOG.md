@@ -2,6 +2,22 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.2.7] (2023-11-30)
+
+**Fixed issues:**
+
+- [#6566] Fix CSRF cookie always being set ([aschempp])
+- [#6450] Allow using the Twig use statement when extending legacy templates ([m-vo])
+- [#6581] Fix block insert tags type error ([ausi])
+- [#6579] Do not wrap exceptions in the Twig `ContextFactory::__toString()` method ([md-netdesign])
+- [#6577] Do not generate the article URL for the title insert tag ([aschempp])
+- [#6559] Handle NULL values in the code element ([aschempp])
+- [#6519] Add protected news/calendar/faq/newsletter entries to sitemap.xml if a member is logged in ([bytehead])
+- [#6523] Fix table picker provider with parents ([ausi])
+- [#6517] Use the top most parent table for pickers without value ([ausi])
+- [#6510] Also check for dynamic ptable in picker provider ([ausi])
+- [#6505] Only show the debug load download button once the file exists ([leofeyer])
+
 ## [5.2.6] (2023-11-06)
 
 ## [5.2.5] (2023-11-06)
@@ -121,6 +137,7 @@ This project adheres to [Semantic Versioning].
 - [#5881] Remove the inconsistent form field wrapper ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.2.7]: https://github.com/contao/contao/releases/tag/5.2.7
 [5.2.6]: https://github.com/contao/contao/releases/tag/5.2.6
 [5.2.5]: https://github.com/contao/contao/releases/tag/5.2.5
 [5.2.4]: https://github.com/contao/contao/releases/tag/5.2.4
@@ -136,9 +153,11 @@ This project adheres to [Semantic Versioning].
 [5.2.0-RC1]: https://github.com/contao/contao/releases/tag/5.2.0-RC1
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
+[bytehead]: https://github.com/bytehead
 [fritzmg]: https://github.com/fritzmg
 [leofeyer]: https://github.com/leofeyer
 [m-vo]: https://github.com/m-vo
+[md-netdesign]: https://github.com/md-netdesign
 [qzminski]: https://github.com/qzminski
 [Toflar]: https://github.com/Toflar
 [#4779]: https://github.com/contao/contao/pull/4779
@@ -190,6 +209,7 @@ This project adheres to [Semantic Versioning].
 [#6438]: https://github.com/contao/contao/pull/6438
 [#6443]: https://github.com/contao/contao/pull/6443
 [#6449]: https://github.com/contao/contao/pull/6449
+[#6450]: https://github.com/contao/contao/pull/6450
 [#6455]: https://github.com/contao/contao/pull/6455
 [#6456]: https://github.com/contao/contao/pull/6456
 [#6464]: https://github.com/contao/contao/pull/6464
@@ -197,3 +217,13 @@ This project adheres to [Semantic Versioning].
 [#6478]: https://github.com/contao/contao/pull/6478
 [#6479]: https://github.com/contao/contao/pull/6479
 [#6486]: https://github.com/contao/contao/pull/6486
+[#6505]: https://github.com/contao/contao/pull/6505
+[#6510]: https://github.com/contao/contao/pull/6510
+[#6517]: https://github.com/contao/contao/pull/6517
+[#6519]: https://github.com/contao/contao/pull/6519
+[#6523]: https://github.com/contao/contao/pull/6523
+[#6559]: https://github.com/contao/contao/pull/6559
+[#6566]: https://github.com/contao/contao/pull/6566
+[#6577]: https://github.com/contao/contao/pull/6577
+[#6579]: https://github.com/contao/contao/pull/6579
+[#6581]: https://github.com/contao/contao/pull/6581

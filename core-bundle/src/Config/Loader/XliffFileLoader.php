@@ -125,30 +125,17 @@ class XliffFileLoader extends Loader
      */
     private function getStringRepresentation(array $chunks, string $value): string
     {
-        return match (\count($chunks)) {
-            2 => sprintf(
-                "\$GLOBALS['TL_LANG']['%s'][%s] = %s;\n",
-                $chunks[0],
-                $this->quoteKey($chunks[1]),
-                $this->quoteValue($value)
-            ),
-            3 => sprintf(
-                "\$GLOBALS['TL_LANG']['%s'][%s][%s] = %s;\n",
-                $chunks[0],
-                $this->quoteKey($chunks[1]),
-                $this->quoteKey($chunks[2]),
-                $this->quoteValue($value)
-            ),
-            4 => sprintf(
-                "\$GLOBALS['TL_LANG']['%s'][%s][%s][%s] = %s;\n",
-                $chunks[0],
-                $this->quoteKey($chunks[1]),
-                $this->quoteKey($chunks[2]),
-                $this->quoteKey($chunks[3]),
-                $this->quoteValue($value)
-            ),
-            default => throw new \OutOfBoundsException('Cannot load less than 2 or more than 4 levels in XLIFF language files.'),
-        };
+        if (!$chunks) {
+            return '';
+        }
+
+        $string = "\$GLOBALS['TL_LANG']";
+
+        foreach ($chunks as $part) {
+            $string .= '['.$this->quoteKey($part).']';
+        }
+
+        return $string.' = '.$this->quoteValue($value).";\n";
     }
 
     /**
