@@ -1,4 +1,5 @@
 includes:
+    - ../vendor/phpstan/phpstan/conf/bleedingEdge.neon
     - ../vendor/phpstan/phpstan-phpunit/extension.neon
     - ../vendor/phpstan/phpstan-phpunit/rules.neon
     - ../vendor/phpstan/phpstan-symfony/extension.neon
@@ -13,7 +14,11 @@ parameters:
     level: 6
 
     featureToggles:
-        bleedingEdge: true
+        alwaysTrueAlwaysReported: false
+        detectDeadTypeInMultiCatch: false
+        disableCheckMissingIterableValueType: false
+        # TODO: Remove after the ModelMetadataTrait has been moved to the legacy code
+        notAnalysedTrait: false
 
     paths:
         - %currentWorkingDirectory%/calendar-bundle/src
@@ -52,9 +57,6 @@ parameters:
 
         # Ignore the forward-compatible declaration that will be added in Symfony 7.0
         - '#Method Symfony\\Component\\HttpKernel\\CacheWarmer\\WarmableInterface::warmUp\(\) invoked with 2 parameters, 1 required\.#'
-
-        # FIXME: Remove this again once Symfony 6.4.1 has been released
-        - '#Symfony\\Component\\HttpKernel\\UriSigner#'
 
     treatPhpDocTypesAsCertain: false
     checkMissingIterableValueType: false
