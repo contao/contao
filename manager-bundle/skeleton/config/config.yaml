@@ -30,10 +30,7 @@ framework:
     uid:
         default_uuid_version: 7
         time_based_uuid_version: 7
-    annotations:
-        enabled: false
     handle_all_throwables: true
-    http_method_override: false
     cache:
         pools:
             doctrine.result_cache_pool:
