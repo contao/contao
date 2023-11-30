@@ -32,6 +32,8 @@ class FrontendPreviewAuthenticator
 
     /**
      * @internal
+     *
+     * @param UserProviderInterface<FrontendUser> $userProvider
      */
     public function __construct(
         private readonly Security $security,

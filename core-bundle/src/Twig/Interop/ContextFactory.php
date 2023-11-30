@@ -44,7 +44,7 @@ final class ContextFactory
             $data,
             function (&$value, $key): void {
                 if ($value instanceof \Closure) {
-                    $value = $this->getCallableWrapper($value, (string) $key);
+                    $value = $this->getCallableWrapper($value);
                 }
             }
         );
@@ -88,7 +88,7 @@ final class ContextFactory
                 continue;
             }
 
-            $context[$name] = $this->getCallableWrapper($method->getClosure($object), $name);
+            $context[$name] = $this->getCallableWrapper($method->getClosure($object));
         }
 
         if (!isset($context['this'])) {
@@ -121,18 +121,16 @@ final class ContextFactory
     /**
      * Wraps a callable into an object so that it can be evaluated in a Twig template.
      */
-    private function getCallableWrapper(callable $callable, string $name): object
+    private function getCallableWrapper(callable $callable): object
     {
-        return new class($callable, $name) implements \Stringable {
+        return new class($callable) implements \Stringable {
             /**
              * @var callable
              */
             private $callable;
 
-            public function __construct(
-                callable $callable,
-                private readonly string $name,
-            ) {
+            public function __construct(callable $callable)
+            {
                 $this->callable = $callable;
             }
 
@@ -149,11 +147,7 @@ final class ContextFactory
              */
             public function __toString(): string
             {
-                try {
-                    return (string) $this();
-                } catch (\Throwable $e) {
-                    throw new \RuntimeException(sprintf('Error evaluating "%s": %s', $this->name, $e->getMessage()), 0, $e);
-                }
+                return (string) $this();
             }
 
             /**

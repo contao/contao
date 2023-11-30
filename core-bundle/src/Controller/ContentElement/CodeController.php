@@ -23,7 +23,7 @@ class CodeController extends AbstractContentElementController
 {
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
-        $template->set('code', $model->code);
+        $template->set('code', $model->code ?: '');
         $template->set('language', $model->highlight);
 
         return $template->getResponse();
