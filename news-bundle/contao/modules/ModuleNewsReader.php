@@ -132,6 +132,7 @@ class ModuleNewsReader extends ModuleNews
 		/** @var NewsArchiveModel $objArchive */
 		$objArchive = $objArticle->getRelated('pid');
 		$arrArticle = $this->parseArticle($objArticle);
+
 		$this->Template->articles = $arrArticle;
 
 		// Overwrite the page metadata (see #2853, #4955 and #87)

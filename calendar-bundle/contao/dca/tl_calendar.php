@@ -121,7 +121,7 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('protected', 'allowComments'),
-		'default'                     => '{title_legend},title,jumpTo,enableCanonical;{protected_legend:hide},protected;{comments_legend:hide},allowComments'
+		'default'                     => '{title_legend},title,jumpTo;{global_legend},enableCanonical;{protected_legend:hide},protected;{comments_legend:hide},allowComments'
 	),
 
 	// Sub-palettes
@@ -153,7 +153,7 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		(
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
-			'eval'                    => array('mandatory'=>true, 'fieldType'=>'radio', 'tl_class'=>'clr w50'),
+			'eval'                    => array('mandatory'=>true, 'fieldType'=>'radio', 'tl_class'=>'clr'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
@@ -161,7 +161,7 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		(
 			'inputType'               => 'checkbox',
 			'default'                 => true,
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'protected' => array

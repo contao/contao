@@ -18,7 +18,7 @@
         <source>Enable rel="canonical"</source>
       </trans-unit>
       <trans-unit id="tl_calendar.enableCanonical.1">
-        <source>Add rel="canonical" tags for the event detail page to the website.</source>
+        <source>Add rel="canonical" tags for the event details page to the website.</source>
       </trans-unit>
       <trans-unit id="tl_calendar.allowComments.0">
         <source>Enable comments</source>
@@ -95,8 +95,8 @@
       <trans-unit id="tl_calendar.protected_legend">
         <source>Access protection</source>
       </trans-unit>
-      <trans-unit id="tl_calendar.feed_legend">
-        <source>RSS/Atom feed</source>
+      <trans-unit id="tl_calendar.global_legend">
+        <source>Global settings</source>
       </trans-unit>
       <trans-unit id="tl_calendar.notify_admin">
         <source>System administrator</source>

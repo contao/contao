@@ -54,7 +54,7 @@ use Contao\Model\Collection;
  * @method static Collection<CalendarModel>|CalendarModel[]|null findByTitle($val, array $opt=array())
  * @method static Collection<CalendarModel>|CalendarModel[]|null findByJumpTo($val, array $opt=array())
  * @method static Collection<CalendarModel>|CalendarModel[]|null findByEnableCanonical($val, array $opt=array())
- * @method static Collection|CalendarModel[]|CalendarModel|null  findByProtected($val, array $opt=array())
+ * @method static Collection<CalendarModel>|CalendarModel[]|null findByProtected($val, array $opt=array())
  * @method static Collection<CalendarModel>|CalendarModel[]|null findByGroups($val, array $opt=array())
  * @method static Collection<CalendarModel>|CalendarModel[]|null findByAllowComments($val, array $opt=array())
  * @method static Collection<CalendarModel>|CalendarModel[]|null findByNotify($val, array $opt=array())

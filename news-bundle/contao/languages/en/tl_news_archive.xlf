@@ -18,7 +18,7 @@
         <source>Enable rel="canonical"</source>
       </trans-unit>
       <trans-unit id="tl_news_archive.enableCanonical.1">
-        <source>Add rel="canonical" tags for the news detail page to the website.</source>
+        <source>Add rel="canonical" tags for the news details page to the website.</source>
       </trans-unit>
       <trans-unit id="tl_news_archive.allowComments.0">
         <source>Enable comments</source>
@@ -94,6 +94,9 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.protected_legend">
         <source>Access protection</source>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.global_legend">
+        <source>Global settings</source>
       </trans-unit>
       <trans-unit id="tl_news_archive.notify_admin">
         <source>System administrator</source>
