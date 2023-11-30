@@ -8,7 +8,7 @@ contao:
 # Monolog configuration
 monolog:
     channels:
-        - deprecation # Deprecations are logged in the dedicated "deprecation" channel when it exists
+        - deprecation
     handlers:
         contao:
             type: service
@@ -26,7 +26,7 @@ monolog:
             level: info
         console:
             type: console
-        # Do not log deprecation messages because they might flood the file system.
+        # Do not log deprecation messages by default because they might flood the file system.
         deprecation:
             type: 'null'
             channels: [deprecation]
