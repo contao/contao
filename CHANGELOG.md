@@ -535,12 +535,6 @@ This project adheres to [Semantic Versioning].
 
 ## [4.13.4] (2022-05-05)
 
-## [4.13.3] (2022-05-05)
-
-**Security fixes:**
-
-- [CVE-2022-24899]: Cross site scripting via canonical URL
-
 **New features:**
 
 - [#4329] Deprecated Cache lib ([Toflar])
@@ -573,6 +567,12 @@ This project adheres to [Semantic Versioning].
 - [#4451] Quote all schema names, same as we do for inserts ([ausi])
 - [#4448] Skip row size calculation for MyISAM ([ausi])
 - [#4447] Fix simple token parser default value for unknown variables ([m-vo])
+
+## [4.13.3] (2022-05-05)
+
+**Security fixes:**
+
+- [CVE-2022-24899]: Cross site scripting via canonical URL
 
 ## [4.13.2] (2022-03-31)
 
