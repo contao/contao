@@ -186,7 +186,7 @@ services:
     contao.dca.schema_factory:
         class: Contao\CoreBundle\Dca\SchemaFactory
         tags:
-            - { name: 'container.service_subscriber', key: 'service_container', id: 'service_container' }
+            - { name: container.service_subscriber, key: service_container, id: service_container }
 
     contao.dca.schema_provider:
         class: Contao\CoreBundle\Dca\Provider\SchemaProvider
