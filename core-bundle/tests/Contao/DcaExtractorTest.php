@@ -124,9 +124,12 @@ class DcaExtractorTest extends TestCase
     {
         $extractor = DcaExtractor::getInstance('tl_test_with_enums');
 
-        $this->assertSame([
-            'foo' => StringBackedEnum::class,
-            'bar' => IntBackedEnum::class,
-        ], $extractor->getEnums());
+        $this->assertSame(
+            [
+                'foo' => StringBackedEnum::class,
+                'bar' => IntBackedEnum::class,
+            ],
+            $extractor->getEnums(),
+        );
     }
 }

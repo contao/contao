@@ -142,7 +142,7 @@ class EnumOptionsListenerTest extends TestCase
                     $this->assertSame($domain, $target->getDomain());
 
                     return $translated;
-                }
+                },
             )
         ;
 

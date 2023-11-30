@@ -54,7 +54,7 @@ class EnumOptionsListener
                 // Build the options from the enum cases.
                 $GLOBALS['TL_DCA'][$table]['fields'][$field]['options_callback'] = static fn () => array_map(
                     static fn ($case) => $case->value,
-                    $enum::cases()
+                    $enum::cases(),
                 );
 
                 // Build references with translations for a translatable enum.
