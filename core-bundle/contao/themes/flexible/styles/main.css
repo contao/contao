@@ -40,7 +40,7 @@ html[data-color-scheme="dark"] {
 
 /* Account for the jump links bar */
 html {
-	scroll-padding-top: 35px;
+	scroll-padding-top: 36px;
 }
 
 /* Body */
