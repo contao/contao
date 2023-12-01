@@ -41,6 +41,7 @@ html[data-color-scheme="dark"] {
 /* Account for the jump links bar */
 html {
 	scroll-padding-top: 36px;
+	scroll-behavior: smooth;
 }
 
 /* Body */
@@ -738,6 +739,11 @@ h2.sub_headline {
 
 .jump-targets .inner {
 	overflow-x: scroll;
+	scrollbar-width: none;
+}
+
+.jump-targets .inner::-webkit-scrollbar {
+	display: none;
 }
 
 .jump-targets ul {
