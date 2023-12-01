@@ -166,19 +166,28 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 				{
 					list($key, $cls) = explode(':', $legends[$k]) + array(null, null);
 
-					$legend = "\n" . '<legend data-toggle-fieldset="' . StringUtil::specialcharsAttribute(json_encode(array('id' => $key, 'table' => $this->strTable))) . '">' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '</legend>';
+					$legend = "\n" . '<legend data-action="click->contao--toggle-fieldset#toggle">' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '</legend>';
 				}
 
-				if (isset($fs[$this->strTable][$key]))
+				if ($legend)
 				{
-					$class .= ($fs[$this->strTable][$key] ? '' : ' collapsed');
-				}
-				else
-				{
-					$class .= (($cls && $legend) ? ' ' . $cls : '');
+					if (isset($fs[$this->strTable][$key]))
+					{
+						$class .= ($fs[$this->strTable][$key] ? '' : ' collapsed');
+					}
+					elseif ($cls)
+					{
+						// Convert the ":hide" suffix from the DCA
+						if ($cls == 'hide')
+						{
+							$cls = 'collapsed';
+						}
+
+						$class .= ' ' . $cls;
+					}
 				}
 
-				$return .= "\n\n" . '<fieldset' . ($key ? ' id="pal_' . $key . '"' : '') . ' class="' . $class . ($legend ? '' : ' nolegend') . '">' . $legend;
+				$return .= "\n\n" . '<fieldset class="' . $class . ($legend ? '' : ' nolegend') . '" data-controller="contao--toggle-fieldset" data-contao--toggle-fieldset-id-value="' . $key . '" data-contao--toggle-fieldset-table-value="' . $this->strTable . '" data-contao--toggle-fieldset-collapsed-class="collapsed">' . $legend;
 
 				// Build rows of the current box
 				foreach ($v as $vv)
