@@ -45,7 +45,6 @@ class LocalesTest extends TestCase
     {
         $localeIds = $this->getLocalesService()->getLocaleIds();
 
-        $this->assertIsArray($localeIds);
         $this->assertNotEmpty($localeIds);
         $this->assertFalse(ArrayUtil::isAssoc($localeIds));
 
@@ -67,7 +66,6 @@ class LocalesTest extends TestCase
     {
         $localeIds = $this->getLocalesService()->getLanguageLocaleIds();
 
-        $this->assertIsArray($localeIds);
         $this->assertNotEmpty($localeIds);
         $this->assertFalse(ArrayUtil::isAssoc($localeIds));
 
@@ -80,7 +78,6 @@ class LocalesTest extends TestCase
     {
         $locales = $this->getLocalesService()->getLocales('de');
 
-        $this->assertIsArray($locales);
         $this->assertNotEmpty($locales);
         $this->assertTrue(ArrayUtil::isAssoc($locales));
 
@@ -122,7 +119,6 @@ class LocalesTest extends TestCase
     {
         $languages = $this->getLocalesService()->getLanguages('de');
 
-        $this->assertIsArray($languages);
         $this->assertNotEmpty($languages);
         $this->assertTrue(ArrayUtil::isAssoc($languages));
 

@@ -20,9 +20,9 @@ use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentUriGenerator;
-use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**

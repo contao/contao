@@ -30,15 +30,15 @@
         "php": "^8.1",
         "contao/core-bundle": "self.version",
         "symfony/deprecation-contracts": "^3.0",
-        "symfony/http-kernel": "^6.3",
+        "symfony/http-kernel": "^6.4",
         "tijsverkoyen/css-to-inline-styles": "^2.0"
     },
     "require-dev": {
         "contao/manager-plugin": "^2.3.1",
         "contao/test-case": "self.version",
         "phpunit/phpunit": "^9.5",
-        "symfony/http-client": "^6.3",
-        "symfony/phpunit-bridge": "^6.3"
+        "symfony/http-client": "^6.4",
+        "symfony/phpunit-bridge": "^6.4"
     },
     "conflict": {
         "contao/core": "*",

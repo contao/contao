@@ -21,7 +21,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\Filesystem\Path;
-use Symfony\Component\Routing\Loader\AnnotationDirectoryLoader;
+use Symfony\Component\Routing\Loader\AttributeDirectoryLoader;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -71,7 +71,7 @@ class RouteLoaderTest extends ContaoTestCase
 
     public function testLoadsAppController(): void
     {
-        $loader = $this->createMock(AnnotationDirectoryLoader::class);
+        $loader = $this->createMock(AttributeDirectoryLoader::class);
         $loader
             ->expects($this->once())
             ->method('load')

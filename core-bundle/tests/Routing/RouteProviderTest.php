@@ -751,10 +751,8 @@ class RouteProviderTest extends TestCase
 
         $framework = $this->mockFramework($pageAdapter);
         $request = $this->mockRequestWithPath('/foo.html');
-
         $routes = $this->getRouteProvider($framework)->getRouteCollectionForRequest($request)->all();
 
-        $this->assertIsArray($routes);
         $this->assertEmpty($routes);
     }
 
@@ -776,10 +774,8 @@ class RouteProviderTest extends TestCase
 
         $framework = $this->mockFramework($pageAdapter);
         $request = $this->mockRequestWithPath('/foo.html');
-
         $routes = $this->getRouteProvider($framework)->getRouteCollectionForRequest($request)->all();
 
-        $this->assertIsArray($routes);
         $this->assertEmpty($routes);
     }
 
