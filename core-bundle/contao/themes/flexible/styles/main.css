@@ -727,6 +727,7 @@ h2.sub_headline {
 
 /* Jump targets */
 .jump-targets {
+	min-height: 30px;
 	padding-top: 1px;
 	background: var(--panel-bg);
 	border-bottom: 1px solid var(--content-border);
@@ -748,7 +749,7 @@ h2.sub_headline {
 
 .jump-targets li {
 	display: inline-block;
-	padding: 8px 10px;
+	padding: 9px 10px;
 	white-space: nowrap;
 	font-size: .75rem;
 }
