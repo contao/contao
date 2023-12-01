@@ -2041,7 +2041,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 				}
 
-				$return .= "\n\n" . '<fieldset class="' . $class . ($legend ? '' : ' nolegend') . '" data-controller="contao--toggle-fieldset" data-contao--toggle-fieldset-id-value="' . $key . '" data-contao--toggle-fieldset-table-value="' . $this->strTable . '" data-contao--toggle-fieldset-collapsed-class="collapsed">' . $legend;
+				$return .= "\n\n" . '<fieldset class="' . $class . ($legend ? '' : ' nolegend') . '" data-controller="contao--toggle-fieldset" data-contao--toggle-fieldset-id-value="' . $key . '" data-contao--toggle-fieldset-table-value="' . $this->strTable . '" data-contao--toggle-fieldset-collapsed-class="collapsed" data-contao--jump-targets-target="section" data-contao--jump-targets-label-value="' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '" data-action="contao--jump-targets:scrollto->contao--toggle-fieldset#open">' . $legend;
 				$thisId = '';
 
 				// Build rows of the current box
@@ -2374,6 +2374,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
   });
 </script>';
 		}
+
+		$return = '
+<div data-controller="contao--jump-targets">
+	<div class="jump-targets"><div class="inner" data-contao--jump-targets-target="navigation"></div></div>
+	' . $return . '
+</div>';
 
 		return $return;
 	}
