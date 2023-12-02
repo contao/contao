@@ -38,6 +38,12 @@ html[data-color-scheme="dark"] {
 	--icon-invisible: url("icons/invisible--dark.svg");
 }
 
+/* Account for the jump links bar */
+html {
+	scroll-padding-top: 36px;
+	scroll-behavior: smooth;
+}
+
 /* Body */
 body {
 	background: var(--body-bg);
@@ -53,15 +59,6 @@ body.popup {
 	min-height: 40px;
 	text-align: left;
 	background: var(--header-bg);
-	position: sticky;
-	top: 0;
-	z-index: 4;
-	transition: transform .2s ease;
-	transform: none;
-}
-
-.header--hidden #header {
-	transform: translateY(-40px);
 }
 
 #header h1 {
@@ -729,6 +726,64 @@ h2.sub_headline {
 	margin-left: 1%;
 }
 
+/* Jump targets */
+.jump-targets {
+	min-height: 30px;
+	padding-top: 1px;
+	background: var(--panel-bg);
+	border-bottom: 1px solid var(--content-border);
+	position: sticky;
+	top: 0;
+	z-index: 3;
+}
+
+.jump-targets .inner {
+	overflow-x: scroll;
+	scrollbar-width: none;
+}
+
+.jump-targets .inner::-webkit-scrollbar {
+	display: none;
+}
+
+.jump-targets ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	white-space: nowrap;
+}
+
+.jump-targets li {
+	display: inline-block;
+	padding: 9px 10px;
+	white-space: nowrap;
+	font-size: .75rem;
+}
+
+.jump-targets button {
+	padding: 0;
+	background: none;
+	border: none;
+}
+
+.jump-targets:before, .jump-targets:after {
+	content: "";
+	display: block;
+	width: 10px;
+	height: 100%;
+	position: absolute;
+	top: 0;
+}
+
+.jump-targets:before {
+	background: linear-gradient(-90deg, transparent 0, var(--panel-bg) 50%);
+}
+
+.jump-targets:after {
+	right: 0;
+	background: linear-gradient(90deg, transparent 0, var(--panel-bg) 50%);
+}
+
 /* Boxes */
 .tl_xpl {
 	padding: 0 18px;
@@ -785,6 +840,9 @@ h2.sub_headline {
 
 .tl_formbody_submit {
 	border-top: 1px solid var(--content-border);
+	position: sticky;
+	bottom: 0;
+	z-index: 2;
 }
 
 .tl_submit_container {
