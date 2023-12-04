@@ -1189,6 +1189,8 @@ abstract class Controller extends System
 	 */
 	protected function redirectToFrontendPage($intPage, $strArticle=null, $blnReturn=false)
 	{
+		trigger_deprecation('contao/core-bundle', '5.3', __METHOD__ . ' is deprecated and will be removed in Contao 6. Use the preview controller arguments instead.');
+
 		if (($intPage = (int) $intPage) <= 0)
 		{
 			return '';

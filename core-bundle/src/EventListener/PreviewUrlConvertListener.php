@@ -60,7 +60,7 @@ class PreviewUrlConvertListener
             }
 
             try {
-                $event->setUrl($page->getPreviewUrl($this->getParams($request, $page->id)));
+                $event->setUrl($page->getAbsoluteUrl($this->getParams($request, $page->id)));
             } catch (RouteParametersException $e) {
                 $route = $e->getRoute();
 
