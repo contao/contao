@@ -54,4 +54,25 @@ class UrlUtil
 
         return (string) $base->withPath($path)->withQuery($query)->withFragment($relative->getFragment());
     }
+
+    public static function makeRelative(string $absoluteUrl, string $baseUrl): string
+    {
+        $absolute = new Uri($absoluteUrl);
+
+        if ('' === $absolute->getAuthority()) {
+            return (string) $absolute->withPath($absolute->getPath() ?: '/');
+        }
+
+        $base = new Uri($baseUrl);
+
+        if ($base->getScheme() === $absolute->getScheme()) {
+            $absolute = $absolute->withScheme('');
+
+            if ($base->getHost() === $absolute->getHost()) {
+                $absolute = $absolute->withHost('');
+            }
+        }
+
+        return (string) $absolute->withPath($absolute->getPath() ?: '/');
+    }
 }

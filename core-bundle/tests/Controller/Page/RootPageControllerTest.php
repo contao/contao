@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Controller\Page;
 
 use Contao\CoreBundle\Controller\Page\RootPageController;
 use Contao\CoreBundle\Exception\NoActivePageFoundException;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Contao\System;
@@ -42,11 +43,6 @@ class RootPageControllerTest extends TestCase
         $rootPage = $this->mockClassWithProperties(PageModel::class, ['id' => 42]);
 
         $childPage = $this->mockClassWithProperties(PageModel::class);
-        $childPage
-            ->expects($this->once())
-            ->method('getAbsoluteUrl')
-            ->willReturn('https://example.com/foobar')
-        ;
 
         $adapter = $this->mockAdapter(['findFirstPublishedByPid']);
         $adapter
@@ -56,8 +52,17 @@ class RootPageControllerTest extends TestCase
             ->willReturn($childPage)
         ;
 
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->expects($this->once())
+            ->method('generate')
+            ->with($childPage)
+            ->willReturn('https://example.com/foobar')
+        ;
+
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $this->mockContaoFramework([PageModel::class => $adapter]));
+        $container->set('contao.routing.content_url_generator', $urlGenerator);
 
         $controller = new RootPageController(new NullLogger());
         $controller->setContainer($container);

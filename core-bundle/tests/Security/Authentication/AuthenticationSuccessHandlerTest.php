@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Security\Authentication;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
@@ -129,11 +130,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
     public function testUsesTheUrlOfThePage(): void
     {
         $model = $this->createMock(PageModel::class);
-        $model
-            ->expects($this->once())
-            ->method('getAbsoluteUrl')
-            ->willReturn('http://localhost/page')
-        ;
 
         $adapter = $this->mockAdapter(['findFirstActiveByMemberGroups']);
         $adapter
@@ -144,6 +140,14 @@ class AuthenticationSuccessHandlerTest extends TestCase
         ;
 
         $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
+
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->expects($this->once())
+            ->method('generate')
+            ->with($model)
+            ->willReturn('http://localhost/page')
+        ;
 
         $user = $this->createPartialMock(FrontendUser::class, ['save']);
         $user->lastLogin = time() - 3600;
@@ -161,7 +165,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $handler = $this->getHandler($framework);
+        $handler = $this->getHandler($framework, null, $urlGenerator);
         $response = $handler->onAuthenticationSuccess(new Request(), $token);
 
         $this->assertSame('http://localhost/page', $response->getTargetUrl());
@@ -358,13 +362,14 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $this->getHandler()->onAuthenticationSuccess($request, $token);
     }
 
-    private function getHandler(ContaoFramework|null $framework = null, LoggerInterface|null $logger = null): AuthenticationSuccessHandler
+    private function getHandler(ContaoFramework|null $framework = null, LoggerInterface|null $logger = null, ContentUrlGenerator|null $urlGenerator = null): AuthenticationSuccessHandler
     {
         $framework ??= $this->mockContaoFramework();
         $trustedDeviceManager = $this->createMock(TrustedDeviceManagerInterface::class);
         $firewallMap = $this->createMock(FirewallMap::class);
+        $urlGenerator ??= $this->createMock(ContentUrlGenerator::class);
         $logger ??= $this->createMock(LoggerInterface::class);
 
-        return new AuthenticationSuccessHandler($framework, $trustedDeviceManager, $firewallMap, $logger);
+        return new AuthenticationSuccessHandler($framework, $trustedDeviceManager, $firewallMap, $urlGenerator, $logger);
     }
 }

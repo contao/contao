@@ -33,7 +33,7 @@ class RootPageController extends AbstractController
     {
         $nextPage = $this->getNextPage($pageModel->id);
 
-        return $this->redirect($nextPage->getAbsoluteUrl());
+        return $this->redirect($this->generateContentUrl($nextPage));
     }
 
     private function getNextPage(int $rootPageId): PageModel

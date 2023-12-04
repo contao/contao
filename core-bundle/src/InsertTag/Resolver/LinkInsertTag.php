@@ -18,7 +18,10 @@ use Contao\CoreBundle\InsertTag\Exception\InvalidInsertTagException;
 use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Contao\CoreBundle\Util\UrlUtil;
+use Contao\Environment;
 use Contao\FrontendUser;
 use Contao\PageModel;
 use Contao\StringUtil;
@@ -29,6 +32,7 @@ class LinkInsertTag
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly TokenChecker $tokenChecker,
+        private readonly ContentUrlGenerator $urlGenerator,
     ) {
     }
 
@@ -81,37 +85,17 @@ class LinkInsertTag
 
             // Do not generate URL for insert tags that don't need it
             if (\in_array($insertTag->getName(), ['link', 'link_open', 'link_url'], true)) {
-                switch ($objNextPage->type) {
-                    case 'redirect':
-                        $strUrl = $objNextPage->url;
+                try {
+                    $blnAbsolute = \in_array('absolute', \array_slice($insertTag->getParameters()->all(), 1), true);
+                    $strUrl = $this->urlGenerator->generate($objNextPage);
 
-                        if (0 === strncasecmp($strUrl, 'mailto:', 7)) {
-                            $strUrl = StringUtil::encodeEmail($strUrl);
-                        }
-                        break;
-
-                    case 'forward':
-                        if ($objNextPage->jumpTo) {
-                            $objNext = $this->framework->getAdapter(PageModel::class)->findPublishedById($objNextPage->jumpTo);
-                        } else {
-                            $objNext = $this->framework->getAdapter(PageModel::class)->findFirstPublishedRegularByPid($objNextPage->id);
-                        }
-
-                        if ($objNext instanceof PageModel) {
-                            try {
-                                $strUrl = \in_array('absolute', \array_slice($insertTag->getParameters()->all(), 1), true) ? $objNext->getAbsoluteUrl() : $objNext->getFrontendUrl();
-                            } catch (ExceptionInterface) {
-                            }
-                            break;
-                        }
-                        // no break
-
-                    default:
-                        try {
-                            $strUrl = \in_array('absolute', \array_slice($insertTag->getParameters()->all(), 1), true) ? $objNextPage->getAbsoluteUrl() : $objNextPage->getFrontendUrl();
-                        } catch (ExceptionInterface) {
-                        }
-                        break;
+                    if (0 === strncasecmp($strUrl, 'mailto:', 7)) {
+                        $strUrl = StringUtil::encodeEmail($strUrl);
+                    } elseif (!$blnAbsolute) {
+                        $strUrl = UrlUtil::makeRelative($strUrl, Environment::get('base'));
+                    }
+                } catch (ExceptionInterface) {
+                    // Use empty URL defined above
                 }
             }
 

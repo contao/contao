@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Security\Authentication;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\FrontendUser;
 use Contao\PageModel;
 use Contao\StringUtil;
@@ -43,6 +44,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         private readonly ContaoFramework $framework,
         private readonly TrustedDeviceManagerInterface $trustedDeviceManager,
         private readonly FirewallMap $firewallMap,
+        private readonly ContentUrlGenerator $urlGenerator,
         private readonly LoggerInterface|null $logger = null,
     ) {
     }
@@ -112,7 +114,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         $groupPage = $pageModelAdapter->findFirstActiveByMemberGroups($groups);
 
         if ($groupPage instanceof PageModel) {
-            return $groupPage->getAbsoluteUrl();
+            return $this->urlGenerator->generate($groupPage);
         }
 
         return $this->decodeTargetPath($request);

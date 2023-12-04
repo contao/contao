@@ -11,14 +11,12 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
-use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Util\LocaleUtil;
+use Contao\CoreBundle\Util\UrlUtil;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Reads and writes pages
@@ -1087,38 +1085,9 @@ class PageModel extends Model
 	 */
 	public function getFrontendUrl($strParams=null)
 	{
-		$page = $this;
-		$page->loadDetails();
+		trigger_deprecation('contao/core-bundle', '5.3', __METHOD__ . ' is deprecated, use the content URL generator instead.');
 
-		$objRouter = System::getContainer()->get('router');
-		$referenceType = $this->domain && $objRouter->getContext()->getHost() !== $this->domain ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH;
-
-		if (\is_array($strParams))
-		{
-			$parameters = array_merge($strParams, array(RouteObjectInterface::CONTENT_OBJECT => $page));
-		}
-		else
-		{
-			$parameters = array(RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => $strParams);
-		}
-
-		try
-		{
-			$strUrl = $objRouter->generate(PageRoute::PAGE_BASED_ROUTE_NAME, $parameters, $referenceType);
-		}
-		catch (RouteNotFoundException $e)
-		{
-			$pageRegistry = System::getContainer()->get('contao.routing.page_registry');
-
-			if (!$pageRegistry->isRoutable($this))
-			{
-				throw new ResourceNotFoundException(sprintf('Page ID %s is not routable', $this->id), 0, $e);
-			}
-
-			throw $e;
-		}
-
-		return $strUrl;
+		return UrlUtil::makeRelative($this->getAbsoluteUrl($strParams), Environment::get('base'));
 	}
 
 	/**
@@ -1133,22 +1102,24 @@ class PageModel extends Model
 	 */
 	public function getAbsoluteUrl($strParams=null)
 	{
+		trigger_deprecation('contao/core-bundle', '5.3', __METHOD__ . ' is deprecated, use the content URL generator instead.');
+
 		$this->loadDetails();
 
-		$objRouter = System::getContainer()->get('router');
+		$objRouter = System::getContainer()->get('contao.routing.content_url_generator');
 
 		if (\is_array($strParams))
 		{
-			$parameters = array_merge($strParams, array(RouteObjectInterface::CONTENT_OBJECT => $this));
+			$parameters = $strParams;
 		}
 		else
 		{
-			$parameters = array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams);
+			$parameters = array('parameters' => $strParams);
 		}
 
 		try
 		{
-			$strUrl = $objRouter->generate(PageRoute::PAGE_BASED_ROUTE_NAME, $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
+			$strUrl = $objRouter->generate($this, $parameters);
 		}
 		catch (RouteNotFoundException $e)
 		{
@@ -1186,28 +1157,26 @@ class PageModel extends Model
 			return $this->getAbsoluteUrl($strParams);
 		}
 
-		$this->loadDetails();
+		$objRouter = System::getContainer()->get('contao.routing.content_url_generator');
 
-		$context = $container->get('router')->getContext();
+		$context = $objRouter->getContext();
 		$baseUrl = $context->getBaseUrl();
 
 		// Add the preview script
 		$context->setBaseUrl(preg_replace('(/[^/]*$)', '', $baseUrl) . $previewScript);
 
-		$objRouter = System::getContainer()->get('router');
-
 		if (\is_array($strParams))
 		{
-			$parameters = array_merge($strParams, array(RouteObjectInterface::CONTENT_OBJECT => $this));
+			$parameters = $strParams;
 		}
 		else
 		{
-			$parameters = array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams);
+			$parameters = array('parameters' => $strParams);
 		}
 
 		try
 		{
-			$strUrl = $objRouter->generate(PageRoute::PAGE_BASED_ROUTE_NAME, $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
+			$strUrl = $objRouter->generate($this, $parameters);
 		}
 		catch (RouteNotFoundException $e)
 		{

@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Util\UrlUtil;
 use Contao\Model\Collection;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 
@@ -294,6 +295,7 @@ abstract class Module extends Frontend
 		$objTemplate->module = $this; // see #155
 
 		$db = Database::getInstance();
+		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
 
 		/** @var PageModel $objPage */
 		global $objPage;
@@ -326,54 +328,40 @@ abstract class Module extends Frontend
 					$subitems = $this->renderNavigation($objSubpage->id, $level, $host, $language);
 				}
 
-				// Get href
-				switch ($objSubpage->type)
+				if ($objSubpage->type == 'forward')
 				{
-					case 'redirect':
-						$href = $objSubpage->url;
+					if ($objSubpage->jumpTo)
+					{
+						$objNext = PageModel::findPublishedById($objSubpage->jumpTo);
+					}
+					else
+					{
+						$objNext = PageModel::findFirstPublishedRegularByPid($objSubpage->id);
+					}
 
-						if (strncasecmp($href, 'mailto:', 7) === 0)
-						{
-							$href = StringUtil::encodeEmail($href);
-						}
-						break;
+					// Hide the link if the target page is invisible
+					if (!$objNext instanceof PageModel || (!$objNext->loadDetails()->isPublic && !$blnShowUnpublished))
+					{
+						continue;
+					}
+				}
 
-					case 'forward':
-						if ($objSubpage->jumpTo)
-						{
-							$objNext = PageModel::findPublishedById($objSubpage->jumpTo);
-						}
-						else
-						{
-							$objNext = PageModel::findFirstPublishedRegularByPid($objSubpage->id);
-						}
+				try
+				{
+					$href = $urlGenerator->generate($objSubpage);
+				}
+				catch (ExceptionInterface)
+				{
+					continue;
+				}
 
-						// Hide the link if the target page is invisible
-						if (!$objNext instanceof PageModel || (!$objNext->loadDetails()->isPublic && !$blnShowUnpublished))
-						{
-							continue 2;
-						}
-
-						try
-						{
-							$href = $objNext->getFrontendUrl();
-						}
-						catch (ExceptionInterface $exception)
-						{
-							continue 2;
-						}
-						break;
-
-					default:
-						try
-						{
-							$href = $objSubpage->getFrontendUrl();
-						}
-						catch (ExceptionInterface $exception)
-						{
-							continue 2;
-						}
-						break;
+				if (str_starts_with($href, 'mailto:'))
+				{
+					$href = StringUtil::encodeEmail($href);
+				}
+				else
+				{
+					$href = StringUtil::ampersand(UrlUtil::makeRelative($href, Environment::get('base')));
 				}
 
 				$items[] = $this->compileNavigationRow($objPage, $objSubpage, $subitems, $href);
@@ -491,7 +479,7 @@ abstract class Module extends Frontend
 		}
 
 		// Load models into the registry with a single query
-		PageModel::findMultipleByIds(array_map(static function ($row) { return $row['id']; }, $arrPages));
+		PageModel::findMultipleByIds(array_column($arrPages, 'id'));
 
 		return array_map(
 			static function (array $row): array {

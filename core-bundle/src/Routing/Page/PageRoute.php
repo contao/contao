@@ -24,6 +24,8 @@ class PageRoute extends Route implements RouteObjectInterface
 
     private readonly PageModel $pageModel;
 
+    private string $routeKey;
+
     private string|null $urlPrefix;
 
     private string|null $urlSuffix;
@@ -31,7 +33,7 @@ class PageRoute extends Route implements RouteObjectInterface
     /**
      * The referenced content object (can be anything).
      */
-    private mixed $content = null;
+    private object|null $content = null;
 
     /**
      * @param string|array<string> $methods
@@ -78,6 +80,7 @@ class PageRoute extends Route implements RouteObjectInterface
         );
 
         $this->pageModel = $pageModel;
+        $this->routeKey = 'tl_page.'.$pageModel->id;
         $this->urlPrefix = $pageModel->urlPrefix;
         $this->urlSuffix = $pageModel->urlSuffix;
     }
@@ -130,7 +133,7 @@ class PageRoute extends Route implements RouteObjectInterface
     /**
      * Sets the object this URL points to.
      */
-    public function setContent(mixed $content): self
+    public function setContent(object|null $content): self
     {
         $this->content = $content;
 
@@ -142,8 +145,15 @@ class PageRoute extends Route implements RouteObjectInterface
         return $this->content;
     }
 
+    public function setRouteKey(string $routeKey): self
+    {
+        $this->routeKey = $routeKey;
+
+        return $this;
+    }
+
     public function getRouteKey(): string
     {
-        return 'tl_page.'.$this->pageModel->id;
+        return $this->routeKey;
     }
 }

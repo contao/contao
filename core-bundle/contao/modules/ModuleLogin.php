@@ -179,8 +179,7 @@ class ModuleLogin extends Module
 		// Redirect to the jumpTo page
 		elseif (($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
 		{
-			/** @var PageModel $objTarget */
-			$strRedirect = $objTarget->getAbsoluteUrl();
+			$strRedirect = $container->get('contao.routing.content_url_generator')->generate($objTarget);
 		}
 
 		$this->Template->formId = 'tl_login_' . $this->id;

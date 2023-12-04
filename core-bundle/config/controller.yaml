@@ -193,5 +193,6 @@ services:
         arguments:
             - '@contao.routing.page_registry'
             - '@contao.routing.page_finder'
+            - '@contao.routing.content_url_generator'
         tags:
             - controller.service_arguments
