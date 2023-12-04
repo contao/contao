@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing;
 
-use Contao\CoreBundle\Routing\Content\ContentParameterResolverInterface;
 use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
@@ -31,7 +30,7 @@ use Symfony\Contracts\Service\ResetInterface;
 class ContentUrlGenerator implements ResetInterface, RequestContextAwareInterface
 {
     /**
-     * @var array<string,string>
+     * @var array<string, string>
      */
     private array $urlCache = [];
 
@@ -51,7 +50,7 @@ class ContentUrlGenerator implements ResetInterface, RequestContextAwareInterfac
      */
     public function generate(object $content, array $parameters = [], array $optionalParameters = []): string
     {
-        $cacheKey = sha1(serialize($content).'__'.serialize($parameters).'__'.serialize($optionalParameters));
+        $cacheKey = sha1(serialize($content)."\0".serialize($parameters)."\0".serialize($optionalParameters));
 
         if (isset($this->urlCache[$cacheKey])) {
             return $this->urlCache[$cacheKey];
@@ -98,7 +97,7 @@ class ContentUrlGenerator implements ResetInterface, RequestContextAwareInterfac
         return $this->urlCache[$cacheKey] = $this->urlGenerator->generate(
             PageRoute::PAGE_BASED_ROUTE_NAME,
             [...$optionalParameters, ...$parameters, RouteObjectInterface::ROUTE_OBJECT => $route],
-            UrlGeneratorInterface::ABSOLUTE_URL
+            UrlGeneratorInterface::ABSOLUTE_URL,
         );
     }
 
@@ -160,7 +159,7 @@ class ContentUrlGenerator implements ResetInterface, RequestContextAwareInterfac
         }
 
         if (null === $metadata) {
-            return \get_class($content).'->'.spl_object_hash($content);
+            return $content::class.'->'.spl_object_hash($content);
         }
 
         $identifier = $this->entityManager
@@ -174,7 +173,7 @@ class ContentUrlGenerator implements ResetInterface, RequestContextAwareInterfac
     /**
      * @throws ExceptionInterface
      */
-    private function throwRouteNotFoundException(object $content): void
+    private function throwRouteNotFoundException(object $content): never
     {
         throw new RouteNotFoundException('No route for content: '.$this->getRouteKey($content));
     }

@@ -70,4 +70,19 @@ class UrlUtilTest extends TestCase
 
         UrlUtil::makeAbsolute('foo', 'path/foo');
     }
+
+    /**
+     * @dataProvider getMakeAbsolutePath
+     */
+    public function testMakeRelative(string $url, string $base, string $expected): void
+    {
+        $this->assertSame($expected, UrlUtil::makeAbsolutePath($url, $base));
+    }
+
+    public function getMakeAbsolutePath(): \Generator
+    {
+        yield ['/page', 'https://foobar.com', '/page'];
+        yield ['https://foobar.com/page', 'https://foobar.com', '/page'];
+        yield ['https://foobar.com/page', 'https://example.com', 'https://foobar.com/page'];
+    }
 }

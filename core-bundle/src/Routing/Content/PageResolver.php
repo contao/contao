@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\Content;
 
-use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
 use Contao\PageModel;
 
 class PageResolver implements ContentUrlResolverInterface
@@ -25,21 +24,13 @@ class PageResolver implements ContentUrlResolverInterface
 
         switch ($content->type) {
             case 'redirect':
-                if (!$content->url) {
-                    throw new ForwardPageNotFoundException('Invalid target URL for redirect page ID '.$content->id);
-                }
-
-                return ContentUrlResult::redirect(new StringUrl($content->url));
+                return ContentUrlResult::url($content->url);
 
             case 'forward':
                 if ($content->jumpTo) {
                     $forwardPage = PageModel::findPublishedById($content->jumpTo);
                 } else {
                     $forwardPage = PageModel::findFirstPublishedRegularByPid($content->id);
-                }
-
-                if (!$forwardPage) {
-                    throw new ForwardPageNotFoundException();
                 }
 
                 return ContentUrlResult::redirect($forwardPage);

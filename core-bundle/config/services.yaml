@@ -642,15 +642,6 @@ services:
     contao.routing.backend_matcher:
         class: Contao\CoreBundle\Routing\Matcher\BackendMatcher
 
-    contao.routing.content_url_generator:
-        class: Contao\CoreBundle\Routing\ContentUrlGenerator
-        arguments:
-            - '@router'
-            - '@contao.routing.page_registry'
-            - '@doctrine.orm.entity_manager'
-            - !tagged_iterator contao.content_url_resolver
-        public: true
-
     contao.routing.content.article_resolver:
         class: Contao\CoreBundle\Routing\Content\ArticleResolver
 
@@ -662,6 +653,15 @@ services:
         arguments:
             - '@contao.insert_tag.parser'
             - '@router.request_context'
+
+    contao.routing.content_url_generator:
+        class: Contao\CoreBundle\Routing\ContentUrlGenerator
+        arguments:
+            - '@router'
+            - '@contao.routing.page_registry'
+            - '@doctrine.orm.entity_manager'
+            - !tagged_iterator contao.content_url_resolver
+        public: true
 
     contao.routing.frontend_matcher:
         class: Contao\CoreBundle\Routing\Matcher\FrontendMatcher

@@ -498,9 +498,10 @@ class SitemapControllerTest extends TestCase
             ->expects($this->exactly(2))
             ->method('generate')
             ->withConsecutive([$page1], [$page2])
-            ->willReturnCallback(fn ($page) => match (true) {
+            ->willReturnCallback(static fn ($page) => match (true) {
                 $page === $page1 => throw new RuntimeException(),
                 $page === $page2 => 'https://www.foobar.com/en/page2.html',
+                default => throw new \InvalidArgumentException(),
             })
         ;
 

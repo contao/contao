@@ -34,7 +34,7 @@ class StringResolver implements ContentUrlResolverInterface
         $url = $this->insertTagParser->replaceInline($content->value);
         $url = UrlUtil::makeAbsolute($url, $this->requestContext->getBaseUrl());
 
-        return ContentUrlResult::absoluteUrl($url);
+        return new ContentUrlResult($url);
     }
 
     public function getParametersForContent(object $content, PageModel $pageModel): array

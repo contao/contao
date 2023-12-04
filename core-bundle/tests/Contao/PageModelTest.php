@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Config;
-use Contao\CoreBundle\Routing\Page\PageRoute;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database;
@@ -32,11 +32,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Routing\RequestContext;
-use Symfony\Component\Routing\RouterInterface;
 
 class PageModelTest extends TestCase
 {
@@ -454,23 +450,15 @@ class PageModelTest extends TestCase
         $page->pid = 42;
         $page->domain = 'example.com';
 
-        $context = RequestContext::fromUri('https://example.com');
-
-        $router = $this->createMock(RouterInterface::class);
-        $router
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
             ->expects($this->once())
             ->method('generate')
-            ->with(PageRoute::PAGE_BASED_ROUTE_NAME, [RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => null], UrlGeneratorInterface::ABSOLUTE_PATH)
+            ->with($page, ['parameters' => null])
             ->willReturn('/page')
         ;
 
-        $router
-            ->expects($this->once())
-            ->method('getContext')
-            ->willReturn($context)
-        ;
-
-        System::getContainer()->set('router', $router);
+        System::getContainer()->set('contao.routing.content_url_generator', $urlGenerator);
 
         $this->assertSame('/page', $page->getFrontendUrl());
     }
@@ -481,23 +469,17 @@ class PageModelTest extends TestCase
         $page->pid = 42;
         $page->domain = 'foobar.com';
 
-        $context = RequestContext::fromUri('https://example.com');
-
-        $router = $this->createMock(RouterInterface::class);
-        $router
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
             ->expects($this->once())
             ->method('generate')
-            ->with(PageRoute::PAGE_BASED_ROUTE_NAME, [RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => null], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->with($page, ['parameters' => null])
             ->willReturn('https://foobar.com/page')
         ;
 
-        $router
-            ->expects($this->once())
-            ->method('getContext')
-            ->willReturn($context)
-        ;
+        Environment::set('base', 'https://example.com');
 
-        System::getContainer()->set('router', $router);
+        System::getContainer()->set('contao.routing.content_url_generator', $urlGenerator);
 
         $this->assertSame('https://foobar.com/page', $page->getFrontendUrl());
     }
@@ -507,15 +489,15 @@ class PageModelTest extends TestCase
         $page = new PageModel();
         $page->pid = 42;
 
-        $router = $this->createMock(RouterInterface::class);
-        $router
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
             ->expects($this->once())
             ->method('generate')
-            ->with(PageRoute::PAGE_BASED_ROUTE_NAME, [RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => null], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->with($page, ['parameters' => null])
             ->willReturn('https://example.com/page')
         ;
 
-        System::getContainer()->set('router', $router);
+        System::getContainer()->set('contao.routing.content_url_generator', $urlGenerator);
 
         $this->assertSame('https://example.com/page', $page->getAbsoluteUrl());
     }

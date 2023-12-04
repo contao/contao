@@ -361,7 +361,7 @@ abstract class Module extends Frontend
 				}
 				else
 				{
-					$href = StringUtil::ampersand(UrlUtil::makeRelative($href, Environment::get('base')));
+					$href = StringUtil::ampersand(UrlUtil::makeAbsolutePath($href, Environment::get('base')));
 				}
 
 				$items[] = $this->compileNavigationRow($objPage, $objSubpage, $subitems, $href);

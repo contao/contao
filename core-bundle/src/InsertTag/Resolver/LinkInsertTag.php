@@ -92,7 +92,7 @@ class LinkInsertTag
                     if (0 === strncasecmp($strUrl, 'mailto:', 7)) {
                         $strUrl = StringUtil::encodeEmail($strUrl);
                     } elseif (!$blnAbsolute) {
-                        $strUrl = UrlUtil::makeRelative($strUrl, Environment::get('base'));
+                        $strUrl = UrlUtil::makeAbsolutePath($strUrl, Environment::get('base'));
                     }
                 } catch (ExceptionInterface) {
                     // Use empty URL defined above

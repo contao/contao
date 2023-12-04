@@ -308,7 +308,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                     $strUrl = $this->container->get('contao.routing.content_url_generator')->generate($objArticle);
 
                     if (!$blnAbsolute) {
-                        $strUrl = UrlUtil::makeRelative($strUrl, Environment::get('base'));
+                        $strUrl = UrlUtil::makeAbsolutePath($strUrl, Environment::get('base'));
                     }
                 } catch (ExceptionInterface) {
                     // Ignore routing exception

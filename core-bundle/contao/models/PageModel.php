@@ -1087,7 +1087,7 @@ class PageModel extends Model
 	{
 		trigger_deprecation('contao/core-bundle', '5.3', __METHOD__ . ' is deprecated, use the content URL generator instead.');
 
-		return UrlUtil::makeRelative($this->getAbsoluteUrl($strParams), Environment::get('base'));
+		return UrlUtil::makeAbsolutePath($this->getAbsoluteUrl($strParams), Environment::get('base'));
 	}
 
 	/**
