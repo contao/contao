@@ -12,11 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\FaqBundle\Tests\EventListener;
 
+use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\FaqBundle\EventListener\InsertTagsListener;
 use Contao\FaqCategoryModel;
 use Contao\FaqModel;
 use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
+use Symfony\Component\Routing\RequestContext;
 
 class InsertTagsListenerTest extends ContaoTestCase
 {
@@ -26,11 +29,6 @@ class InsertTagsListenerTest extends ContaoTestCase
         $page
             ->method('getFrontendUrl')
             ->willReturn('faq/what-does-foobar-mean.html')
-        ;
-
-        $page
-            ->method('getAbsoluteUrl')
-            ->willReturn('http://domain.tld/faq/what-does-foobar-mean.html')
         ;
 
         $categoryModel = $this->createMock(FaqCategoryModel::class);
@@ -52,7 +50,20 @@ class InsertTagsListenerTest extends ContaoTestCase
             FaqModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $faqModel]),
         ];
 
-        $listener = new InsertTagsListener($this->mockContaoFramework($adapters));
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+
+        $urlGenerator
+            ->method('generate')
+            ->with($faqModel)
+            ->willReturn('http://domain.tld/faq/what-does-foobar-mean.html')
+        ;
+
+        $urlGenerator
+            ->method('getContext')
+            ->willReturn(new RequestContext('http://domain.tld'))
+        ;
+
+        $listener = new InsertTagsListener($this->mockContaoFramework($adapters), $urlGenerator);
 
         $this->assertSame(
             '<a href="faq/what-does-foobar-mean.html" title="What does &quot;foobar&quot; mean?">What does "foobar" mean?</a>',
@@ -137,7 +148,7 @@ class InsertTagsListenerTest extends ContaoTestCase
             FaqModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $faqModel]),
         ];
 
-        $listener = new InsertTagsListener($this->mockContaoFramework($adapters));
+        $listener = new InsertTagsListener($this->mockContaoFramework($adapters), $this->createMock(ContentUrlGenerator::class));
 
         $this->assertSame(
             '<a href="./" title="What does &quot;foobar&quot; mean?">What does "foobar" mean?</a>',
@@ -157,7 +168,7 @@ class InsertTagsListenerTest extends ContaoTestCase
 
     public function testReturnsFalseIfTheTagIsUnknown(): void
     {
-        $listener = new InsertTagsListener($this->mockContaoFramework());
+        $listener = new InsertTagsListener($this->mockContaoFramework(), $this->createMock(ContentUrlGenerator::class));
 
         $this->assertFalse($listener->onReplaceInsertTags('link_url::2', false, null, []));
     }
@@ -168,12 +179,12 @@ class InsertTagsListenerTest extends ContaoTestCase
             FaqModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => null]),
         ];
 
-        $listener = new InsertTagsListener($this->mockContaoFramework($adapters));
+        $listener = new InsertTagsListener($this->mockContaoFramework($adapters), $this->createMock(ContentUrlGenerator::class));
 
         $this->assertSame('', $listener->onReplaceInsertTags('faq_url::2', false, null, []));
     }
 
-    public function testReturnsAnEmptyStringIfThereIsNoCategoryModel(): void
+    public function testReturnsAnEmptyStringIfTheRouterThrowsAnException(): void
     {
         $faqModel = $this->createMock(FaqModel::class);
         $faqModel
@@ -185,7 +196,14 @@ class InsertTagsListenerTest extends ContaoTestCase
             FaqModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $faqModel]),
         ];
 
-        $listener = new InsertTagsListener($this->mockContaoFramework($adapters));
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->expects($this->once())
+            ->method('generate')
+            ->willThrowException(new ForwardPageNotFoundException())
+        ;
+
+        $listener = new InsertTagsListener($this->mockContaoFramework($adapters), $urlGenerator);
 
         $this->assertSame('', $listener->onReplaceInsertTags('faq_url::3', false, null, []));
     }

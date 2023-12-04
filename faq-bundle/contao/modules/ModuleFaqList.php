@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\Routing\Exception\ExceptionInterface;
+
 /**
  * Class ModuleFaqList
  *
@@ -23,12 +25,6 @@ class ModuleFaqList extends Module
 	 * @var string
 	 */
 	protected $strTemplate = 'mod_faqlist';
-
-	/**
-	 * Page cache array
-	 * @var array
-	 */
-	private static $arrPageCache = array();
 
 	/**
 	 * Display a wildcard in the back end
@@ -137,36 +133,22 @@ class ModuleFaqList extends Module
 	{
 		/** @var FaqCategoryModel $objCategory */
 		$objCategory = $objFaq->getRelated('pid');
-		$jumpTo = $objCategory->jumpTo;
 
 		// A jumpTo page is not mandatory for FAQ categories (see #6226) but required for the FAQ list module
-		if ($jumpTo < 1)
+		if ($objCategory->jumpTo < 1)
 		{
 			throw new \Exception("FAQ categories without redirect page cannot be used in an FAQ list");
 		}
 
-		if ($jumpTo && ($objTarget = $this->getPageWithDetails($jumpTo)) !== null)
+		try
 		{
-			/** @var PageModel $objTarget */
-			return StringUtil::ampersand($objTarget->getFrontendUrl('/' . ($objFaq->alias ?: $objFaq->id)));
+			$url = System::getContainer()->get('contao.routing.content_url_generator')->generate($objFaq);
+
+			return StringUtil::ampersand($url);
 		}
-
-		return StringUtil::ampersand(Environment::get('requestUri'));
-	}
-
-	/**
-	 * Return the page object with loaded details for the given page ID
-	 *
-	 * @param  integer        $intPageId
-	 * @return PageModel|null
-	 */
-	private function getPageWithDetails($intPageId)
-	{
-		if (!\array_key_exists($intPageId, self::$arrPageCache))
+		catch (ExceptionInterface)
 		{
-			self::$arrPageCache[$intPageId] = PageModel::findWithDetails($intPageId);
+			return StringUtil::ampersand(Environment::get('requestUri'));
 		}
-
-		return self::$arrPageCache[$intPageId];
 	}
 }

@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\FaqBundle\Tests\EventListener;
 
 use Contao\CoreBundle\Event\SitemapEvent;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
 use Contao\FaqBundle\EventListener\SitemapListener;
@@ -53,8 +54,13 @@ class SitemapListenerTest extends ContaoTestCase
             'groups' => [1],
         ]);
 
-        $jumpToPage
-            ->method('getAbsoluteUrl')
+        $faqModel = $this->mockClassWithProperties(FaqModel::class);
+
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->expects($this->once())
+            ->method('generate')
+            ->with($faqModel)
             ->willReturn('https://contao.org')
         ;
 
@@ -68,20 +74,18 @@ class SitemapListenerTest extends ContaoTestCase
                 'findWithDetails' => $jumpToPage,
             ]),
             FaqModel::class => $this->mockConfiguredAdapter([
-                'findPublishedByPid' => [
-                    $this->mockClassWithProperties(FaqModel::class),
-                ],
+                'findPublishedByPid' => [$faqModel],
             ]),
         ];
 
         $sitemapEvent = $this->createSitemapEvent([1]);
-        $listener = $this->createListener([1, 42], $adapters);
+        $listener = $this->createListener([1, 42], $adapters, $urlGenerator);
         $listener($sitemapEvent);
 
         $this->assertStringContainsString('<url><loc>https://contao.org</loc></url>', (string) $sitemapEvent->getDocument()->saveXML());
     }
 
-    private function createListener(array $allPages, array $adapters): SitemapListener
+    private function createListener(array $allPages, array $adapters, ContentUrlGenerator|null $urlGenerator = null): SitemapListener
     {
         $database = $this->createMock(Database::class);
         $database
@@ -105,7 +109,9 @@ class SitemapListenerTest extends ContaoTestCase
             ;
         }
 
-        return new SitemapListener($framework, $security);
+        $urlGenerator ??= $this->createMock(ContentUrlGenerator::class);
+
+        return new SitemapListener($framework, $security, $urlGenerator);
     }
 
     private function createSitemapEvent(array $rootPages): SitemapEvent

@@ -11,6 +11,7 @@ services:
         class: Contao\FaqBundle\EventListener\InsertTagsListener
         arguments:
             - '@contao.framework'
+            - '@contao.routing.content_url_generator'
         tags:
             - { name: contao.hook, hook: replaceInsertTags }
 
@@ -19,6 +20,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@security.helper'
+            - '@contao.routing.content_url_generator'
         tags:
             - kernel.event_listener
 
@@ -31,3 +33,6 @@ services:
             - '@security.helper'
         tags:
             - { name: contao.picker_provider, priority: 64 }
+
+    contao_faq.routing.faq_resolver:
+        class: Contao\FaqBundle\Routing\FaqResolver
