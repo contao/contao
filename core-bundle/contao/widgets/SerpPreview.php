@@ -135,16 +135,8 @@ class SerpPreview extends Widget
 		return $model->{$this->aliasField};
 	}
 
-	/**
-	 * @todo Use the router to generate the URL in a future version (see #831)
-	 */
-	private function getUrl(Model $model)
+	private function getUrl(Model $model): string
 	{
-		if (!isset($this->url_callback))
-		{
-			throw new \LogicException('No url_callback given');
-		}
-
 		$aliasField = $this->aliasField ?: 'alias';
 		$placeholder = bin2hex(random_bytes(10));
 
@@ -164,7 +156,14 @@ class SerpPreview extends Widget
 		}
 		else
 		{
-			throw new \LogicException('Please provide the url_callback as callable');
+			try
+			{
+				$url = System::getContainer()->get('contao.routing.content_url_generator')->generate(self::importStatic($tempModel));
+			}
+			catch (ExceptionInterface $exception)
+			{
+				throw new \LogicException('Unable to generate a content URL for the SERP widget, please provide the url_callback.', 0, $exception);
+			}
 		}
 
 		return str_replace($placeholder, '%s', $url);
