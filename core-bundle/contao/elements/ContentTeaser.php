@@ -66,16 +66,8 @@ class ContentTeaser extends ContentElement
 	 */
 	protected function compile()
 	{
-		$link = '/articles/';
 		$objArticle = $this->objArticle;
-
-		if ($objArticle->inColumn != 'main')
-		{
-			$link .= $objArticle->inColumn . ':';
-		}
-
-		$link .= $objArticle->alias ?: $objArticle->id;
-		$this->Template->href = $this->objParent->getFrontendUrl($link);
+		$this->Template->href = $this->objParent->getFrontendUrl('/articles/' . ($objArticle->alias ?: $objArticle->id));
 
 		$this->Template->text = $objArticle->teaser;
 		$this->Template->headline = $objArticle->title;

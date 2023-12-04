@@ -35,13 +35,7 @@ class TeaserController extends AbstractContentElementController
 
         [$article, $page] = $articleAndPage;
 
-        $href = $page->getFrontendUrl(
-            sprintf(
-                '/articles/%s%s',
-                'main' !== $article->inColumn ? "$article->inColumn:" : '',
-                $article->alias ?: $article->id,
-            ),
-        );
+        $href = $page->getFrontendUrl('/articles/'.($article->alias ?: $article->id));
 
         $template->set('article', $article);
         $template->set('page', $page);

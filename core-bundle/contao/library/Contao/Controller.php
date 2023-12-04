@@ -304,24 +304,25 @@ abstract class Controller extends System
 			// Show a particular article only
 			if ($objPage->type == 'regular' && Input::get('articles'))
 			{
-				list($strSection, $strArticle) = explode(':', Input::get('articles')) + array(null, null);
+				$strArticle = Input::get('articles');
 
-				if ($strArticle === null)
+				if (str_contains($strArticle, ':'))
 				{
-					$strArticle = $strSection;
-					$strSection = 'main';
+					trigger_deprecation('contao/core-bundle', '5.3', 'Passing the column of an article in the URL is deprecated. Only provide the article alias instead.');
+
+					list(, $strArticle) = explode(':', Input::get('articles'));
 				}
 
-				if ($strSection == $strColumn)
+				$objArticle = ArticleModel::findPublishedByIdOrAliasAndPid($strArticle, $objPage->id);
+
+				// Send a 404 header if there is no published article
+				if (null === $objArticle)
 				{
-					$objArticle = ArticleModel::findPublishedByIdOrAliasAndPid($strArticle, $objPage->id);
+					throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
+				}
 
-					// Send a 404 header if there is no published article
-					if (null === $objArticle)
-					{
-						throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
-					}
-
+				if ($objArticle->inColumn == $strColumn)
+				{
 					// Send a 403 header if the article cannot be accessed
 					if (!static::isVisibleElement($objArticle))
 					{
