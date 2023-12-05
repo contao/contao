@@ -67,8 +67,8 @@ class ContentTeaser extends ContentElement
 	protected function compile()
 	{
 		$objArticle = $this->objArticle;
-		$this->Template->href = $this->objParent->getFrontendUrl('/articles/' . ($objArticle->alias ?: $objArticle->id));
 
+		$this->Template->href = $this->objParent->getFrontendUrl('/articles/' . ($objArticle->alias ?: $objArticle->id));
 		$this->Template->text = $objArticle->teaser;
 		$this->Template->headline = $objArticle->title;
 		$this->Template->readMore = StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->title));
