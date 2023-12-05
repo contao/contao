@@ -42,6 +42,7 @@ services:
         class: Contao\NewsBundle\EventListener\GeneratePageListener
         arguments:
             - '@contao.framework'
+            - '@contao.routing.content_url_generator'
         tags:
             - { name: contao.hook, hook: generatePage }
 
@@ -83,6 +84,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@security.helper'
+            - '@contao.routing.content_url_generator'
         tags:
             - kernel.event_listener
 
@@ -103,6 +105,11 @@ services:
             - '@security.helper'
         tags:
             - { name: contao.picker_provider, priority: 128 }
+
+    contao_news.routing.news_resolver:
+        class: Contao\NewsBundle\Routing\NewsResolver
+        arguments:
+            - '@contao.framework'
 
     contao_news.security.news_access_voter:
         class: Contao\NewsBundle\Security\Voter\NewsAccessVoter

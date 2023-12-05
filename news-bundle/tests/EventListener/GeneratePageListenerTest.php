@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\NewsBundle\Tests\EventListener;
 
 use Contao\CoreBundle\Framework\Adapter;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\Environment;
 use Contao\LayoutModel;
 use Contao\Model\Collection;
@@ -51,9 +52,11 @@ class GeneratePageListenerTest extends ContaoTestCase
             ])
         ;
 
-        $newsFeedModel
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
             ->expects($this->once())
-            ->method('getAbsoluteUrl')
+            ->method('generate')
+            ->with($newsFeedModel)
             ->willReturn('http://localhost/news.xml')
         ;
 
@@ -68,7 +71,7 @@ class GeneratePageListenerTest extends ContaoTestCase
         $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
         $layoutModel->newsfeeds = 'a:1:{i:0;i:3;}';
 
-        $listener = new GeneratePageListener($this->mockContaoFramework($adapters));
+        $listener = new GeneratePageListener($this->mockContaoFramework($adapters), $urlGenerator);
         $listener($this->createMock(PageModel::class), $layoutModel);
 
         $this->assertSame(
@@ -82,7 +85,7 @@ class GeneratePageListenerTest extends ContaoTestCase
         $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
         $layoutModel->newsfeeds = '';
 
-        $listener = new GeneratePageListener($this->mockContaoFramework());
+        $listener = new GeneratePageListener($this->mockContaoFramework(), $this->createMock(ContentUrlGenerator::class));
         $listener($this->createMock(PageModel::class), $layoutModel);
 
         $this->assertEmpty($GLOBALS['TL_HEAD'] ?? null);
@@ -100,7 +103,7 @@ class GeneratePageListenerTest extends ContaoTestCase
         $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
         $layoutModel->newsfeeds = 'a:1:{i:0;i:3;}';
 
-        $listener = new GeneratePageListener($this->mockContaoFramework($adapters));
+        $listener = new GeneratePageListener($this->mockContaoFramework($adapters), $this->createMock(ContentUrlGenerator::class));
         $listener($this->createMock(PageModel::class), $layoutModel);
 
         $this->assertEmpty($GLOBALS['TL_HEAD'] ?? null);
