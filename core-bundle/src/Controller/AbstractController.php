@@ -21,6 +21,7 @@ use Contao\PageModel;
 use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as SymfonyAbstractController;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -123,5 +124,14 @@ abstract class AbstractController extends SymfonyAbstractController
         }
 
         return $response;
+    }
+
+    protected function hasParameter(string $name): bool
+    {
+        if (!$this->container->has('parameter_bag')) {
+            return false;
+        }
+
+        return $this->container->get('parameter_bag')->has($name);
     }
 }
