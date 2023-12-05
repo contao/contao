@@ -60,7 +60,10 @@ final class ContentUrlResult
             throw new ForwardPageNotFoundException('Empty target URL');
         }
 
-        return new self(new StringUrl($url));
+        $result = new self(new StringUrl($url));
+        $result->redirect = true;
+
+        return $result;
     }
 
     /**
