@@ -456,6 +456,7 @@ services:
         class: Contao\CoreBundle\EventListener\RobotsTxtListener
         arguments:
             - '@contao.framework'
+            - '@?web_profiler.debug_toolbar'
             - '%contao.backend.route_prefix%'
         tags:
             - kernel.event_listener
