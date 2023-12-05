@@ -30,7 +30,7 @@ use Symfony\Contracts\Service\ResetInterface;
 class ContentUrlGenerator implements ResetInterface, RequestContextAwareInterface
 {
     /**
-     * @var array<string, string>
+     * @var array<string, string|ExceptionInterface>
      */
     private array $urlCache = [];
 
@@ -53,52 +53,62 @@ class ContentUrlGenerator implements ResetInterface, RequestContextAwareInterfac
         $cacheKey = sha1(serialize($content)."\0".serialize($parameters)."\0".serialize($optionalParameters));
 
         if (isset($this->urlCache[$cacheKey])) {
+            if ($this->urlCache[$cacheKey] instanceof ExceptionInterface) {
+                throw $this->urlCache[$cacheKey];
+            }
+
             return $this->urlCache[$cacheKey];
         }
 
-        [$target, $targetContent] = $this->resolveContent($content) + [null, null];
+        try {
+            [$target, $targetContent] = $this->resolveContent($content) + [null, null];
 
-        if (\is_string($target)) {
-            return $this->urlCache[$cacheKey] = $target;
-        }
-
-        if (!$target instanceof PageModel) {
-            $this->throwRouteNotFoundException($target);
-        }
-
-        $route = $this->pageRegistry->getRoute($target);
-
-        if ($targetContent) {
-            $route->setContent($targetContent);
-            $route->setRouteKey($this->getRouteKey($targetContent));
-        }
-
-        // The original content has changed, parameters are not valid anymore
-        if ($targetContent !== $content && $target !== $content) {
-            $parameters = $optionalParameters = [];
-        }
-
-        $compiledRoute = $route->compile();
-
-        if ($targetContent) {
-            foreach ($this->urlResolvers as $resolver) {
-                foreach ($resolver->getParametersForContent($targetContent, $target) as $k => $v) {
-                    if (isset($optionalParameters[$k]) || isset($parameters[$k])) {
-                        continue;
-                    }
-
-                    $optionalParameters[$k] = $v;
-                }
+            if (\is_string($target)) {
+                return $this->urlCache[$cacheKey] = $target;
             }
 
-            $optionalParameters = array_intersect_key($optionalParameters, array_flip($compiledRoute->getVariables()));
-        }
+            if (!$target instanceof PageModel) {
+                $this->throwRouteNotFoundException($target);
+            }
 
-        return $this->urlCache[$cacheKey] = $this->urlGenerator->generate(
-            PageRoute::PAGE_BASED_ROUTE_NAME,
-            [...$optionalParameters, ...$parameters, RouteObjectInterface::ROUTE_OBJECT => $route],
-            UrlGeneratorInterface::ABSOLUTE_URL,
-        );
+            $route = $this->pageRegistry->getRoute($target);
+
+            if ($targetContent) {
+                $route->setContent($targetContent);
+                $route->setRouteKey($this->getRouteKey($targetContent));
+            }
+
+            // The original content has changed, parameters are not valid anymore
+            if ($targetContent !== $content && $target !== $content) {
+                $parameters = $optionalParameters = [];
+            }
+
+            $compiledRoute = $route->compile();
+
+            if ($targetContent) {
+                foreach ($this->urlResolvers as $resolver) {
+                    foreach ($resolver->getParametersForContent($targetContent, $target) as $k => $v) {
+                        if (isset($optionalParameters[$k]) || isset($parameters[$k])) {
+                            continue;
+                        }
+
+                        $optionalParameters[$k] = $v;
+                    }
+                }
+
+                $optionalParameters = array_intersect_key($optionalParameters, array_flip($compiledRoute->getVariables()));
+            }
+
+            return $this->urlCache[$cacheKey] = $this->urlGenerator->generate(
+                PageRoute::PAGE_BASED_ROUTE_NAME,
+                [...$optionalParameters, ...$parameters, RouteObjectInterface::ROUTE_OBJECT => $route],
+                UrlGeneratorInterface::ABSOLUTE_URL,
+            );
+        } catch (ExceptionInterface $exception) {
+            $this->urlCache[$cacheKey] = $exception;
+
+            throw $exception;
+        }
     }
 
     public function setContext(RequestContext $context): void
