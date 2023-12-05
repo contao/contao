@@ -163,20 +163,7 @@ class ModuleBreadcrumb extends Module
 				'data'     => $pages[0]->row(),
 			);
 
-			list($strSection, $strArticle) = explode(':', Input::get('articles')) + array(null, null);
-
-			if ($strArticle === null)
-			{
-				$strArticle = $strSection;
-			}
-
-			$objArticle = ArticleModel::findByIdOrAlias($strArticle);
-			$strAlias = $objArticle->alias ?: $objArticle->id;
-
-			if ($objArticle->inColumn != 'main')
-			{
-				$strAlias = $objArticle->inColumn . ':' . $strAlias;
-			}
+			$objArticle = ArticleModel::findByIdOrAlias(Input::get('articles'));
 
 			if ($objArticle !== null)
 			{
@@ -184,7 +171,7 @@ class ModuleBreadcrumb extends Module
 				(
 					'isRoot'   => false,
 					'isActive' => true,
-					'href'     => $this->getPageFrontendUrl($pages[0], '/articles/' . $strAlias),
+					'href'     => $this->getPageFrontendUrl($pages[0], '/articles/' . ($objArticle->alias ?: $objArticle->id)),
 					'title'    => StringUtil::specialchars($objArticle->title, true),
 					'link'     => $objArticle->title,
 					'data'     => $objArticle->row(),
