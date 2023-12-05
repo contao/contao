@@ -20,6 +20,7 @@ use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicUseTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaper;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNode;
@@ -37,6 +38,8 @@ use Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime;
 use Contao\CoreBundle\Twig\Runtime\SanitizerRuntime;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
 use Contao\CoreBundle\Twig\Runtime\UrlRuntime;
+use Contao\CoreBundle\Twig\Slots\SetupSlotSystemNodeVisitor;
+use Contao\CoreBundle\Twig\Slots\SlotTokenParser;
 use Contao\FrontendTemplateTrait;
 use Contao\Template;
 use Symfony\Component\Filesystem\Path;
@@ -56,9 +59,13 @@ final class ContaoExtension extends AbstractExtension
 {
     private array $contaoEscaperFilterRules = [];
 
+    /**
+     * @internal
+     */
     public function __construct(
         private readonly Environment $environment,
         private readonly TemplateHierarchyInterface $hierarchy,
+        private readonly InspectorNodeVisitor $inspectorNodeVisitor,
         ContaoCsrfTokenManager $tokenManager,
     ) {
         $contaoEscaper = new ContaoEscaper();
@@ -116,6 +123,11 @@ final class ContaoExtension extends AbstractExtension
             new ContaoEscaperNodeVisitor(
                 fn () => $this->contaoEscaperFilterRules,
             ),
+            // Records data about a templates structure during compilation, so
+            // that they get available at runtime
+            $this->inspectorNodeVisitor,
+            // Adds nodes to each module to set up the slot system
+            new SetupSlotSystemNodeVisitor(),
             // Allows rendering PHP templates with the legacy framework by
             // installing proxy nodes
             new PhpTemplateProxyNodeVisitor(self::class),
@@ -135,6 +147,8 @@ final class ContaoExtension extends AbstractExtension
             new DynamicUseTokenParser($this->hierarchy),
             // Add a parser for the Contao specific "add" tag
             new AddTokenParser(self::class),
+            // Add a parser for the Contao specific "slot" tag
+            new SlotTokenParser(),
         ];
     }
 
@@ -197,7 +211,7 @@ final class ContaoExtension extends AbstractExtension
             new TwigFunction(
                 'frontend_module',
                 [FragmentRuntime::class, 'renderModule'],
-                ['is_safe' => ['html']],
+                ['needs_context' => true, 'is_safe' => ['html']],
             ),
             new TwigFunction(
                 'content_element',

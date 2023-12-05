@@ -119,6 +119,20 @@ class FinderTest extends TestCase
         $this->assertSame($expected, iterator_to_array($finder));
     }
 
+    public function testFindWithWildcard(): void
+    {
+        $finder = $this->getFinder()
+            ->identifier('content_*/text')
+            ->enableWildcardSupport()
+        ;
+
+        $expected = [
+            'content_element/text' => 'html.twig',
+        ];
+
+        $this->assertSame($expected, iterator_to_array($finder));
+    }
+
     public function testCount(): void
     {
         $this->assertCount(5, $this->getFinder());

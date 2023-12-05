@@ -27,6 +27,7 @@ final class TemplateInformation
     public function __construct(
         private readonly Source $source,
         private readonly array $blocks,
+        private readonly array $slots,
     ) {
     }
 
@@ -46,5 +47,13 @@ final class TemplateInformation
     public function getBlocks(): array
     {
         return $this->blocks;
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function getSlots(): array
+    {
+        return $this->slots;
     }
 }

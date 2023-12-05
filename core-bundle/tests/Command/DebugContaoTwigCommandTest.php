@@ -110,12 +110,14 @@ class DebugContaoTwigCommandTest extends TestCase
                   @Contao name    @Contao/foo.html.twig
                   Path            /path1/foo.html.twig
                   Blocks          @A/foo.html.twig_block1, @A/foo.html.twig_block2
+                  Slots           @A/foo.html.twig_slot1, @A/foo.html.twig_slot2
                   Preview         … code of @A/foo.html.twig …
                  --------------- --------------------------------------------------
                   Original name   @B/foo.html5
                   @Contao name    @Contao/foo.html.twig
                   Path            /path2/foo.html5
                   Blocks          @B/foo.html5_block1, @B/foo.html5_block2
+                  Slots           @B/foo.html5_slot1, @B/foo.html5_slot2
                  --------------- --------------------------------------------------
                 bar
                 ===
@@ -126,6 +128,7 @@ class DebugContaoTwigCommandTest extends TestCase
                   @Contao name    @Contao/bar.html.twig
                   Path            /path/bar.html.twig
                   Blocks          @C/bar.html.twig_block1, @C/bar.html.twig_block2
+                  Slots           @C/bar.html.twig_slot1, @C/bar.html.twig_slot2
                   Preview         … code of @C/bar.html.twig …
                  --------------- --------------------------------------------------
                 baz
@@ -137,6 +140,7 @@ class DebugContaoTwigCommandTest extends TestCase
                   @Contao name    @Contao/baz.html.twig
                   Path            /path/baz.html5
                   Blocks          @D/baz.html5_block1, @D/baz.html5_block2
+                  Slots           @D/baz.html5_slot1, @D/baz.html5_slot2
                  --------------- ------------------------------------------
 
                 OUTPUT,
@@ -155,12 +159,14 @@ class DebugContaoTwigCommandTest extends TestCase
                   @Contao name    @Contao/foo.html.twig
                   Path            /path1/foo.html.twig
                   Blocks          @A/foo.html.twig_block1, @A/foo.html.twig_block2
+                  Slots           @A/foo.html.twig_slot1, @A/foo.html.twig_slot2
                   Preview         … code of @A/foo.html.twig …
                  --------------- --------------------------------------------------
                   Original name   @B/foo.html5
                   @Contao name    @Contao/foo.html.twig
                   Path            /path2/foo.html5
                   Blocks          @B/foo.html5_block1, @B/foo.html5_block2
+                  Slots           @B/foo.html5_slot1, @B/foo.html5_slot2
                  --------------- --------------------------------------------------
 
                 OUTPUT,
@@ -179,6 +185,7 @@ class DebugContaoTwigCommandTest extends TestCase
                   @Contao name    @Contao/bar.html.twig
                   Path            /path/bar.html.twig
                   Blocks          @C/bar.html.twig_block1, @C/bar.html.twig_block2
+                  Slots           @C/bar.html.twig_slot1, @C/bar.html.twig_slot2
                   Preview         … code of @C/bar.html.twig …
                  --------------- --------------------------------------------------
                 baz
@@ -190,6 +197,7 @@ class DebugContaoTwigCommandTest extends TestCase
                   @Contao name    @Contao/baz.html.twig
                   Path            /path/baz.html5
                   Blocks          @D/baz.html5_block1, @D/baz.html5_block2
+                  Slots           @D/baz.html5_slot1, @D/baz.html5_slot2
                  --------------- ------------------------------------------
 
                 OUTPUT,
@@ -296,6 +304,7 @@ class DebugContaoTwigCommandTest extends TestCase
                 static fn (string $name): TemplateInformation => new TemplateInformation(
                     new Source("… code of $name …", $name),
                     ["{$name}_block1", "{$name}_block2"],
+                    ["{$name}_slot1", "{$name}_slot2"],
                 ),
             )
         ;

@@ -22,7 +22,6 @@ use Contao\CoreBundle\Twig\Interop\ContextFactory;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\FrontendTemplate;
 use Contao\Model;
-use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\Template;
 use Symfony\Component\DependencyInjection\Container;
@@ -54,21 +53,6 @@ abstract class AbstractFragmentController extends AbstractController implements 
         $services['contao.twig.interop.context_factory'] = ContextFactory::class;
 
         return $services;
-    }
-
-    protected function getPageModel(): PageModel|null
-    {
-        if (!$request = $this->container->get('request_stack')->getCurrentRequest()) {
-            return null;
-        }
-
-        $pageModel = $request->attributes->get('pageModel');
-
-        if ($pageModel instanceof PageModel) {
-            return $pageModel;
-        }
-
-        return null;
     }
 
     /**
