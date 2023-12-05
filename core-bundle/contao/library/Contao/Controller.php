@@ -1205,9 +1205,9 @@ abstract class Controller extends System
 		$strParams = null;
 
 		// Add the /article/ fragment (see #673)
-		if ($strArticle !== null && ($objArticle = ArticleModel::findByAlias($strArticle)) !== null)
+		if ($strArticle)
 		{
-			$strParams = '/articles/' . (($objArticle->inColumn != 'main') ? $objArticle->inColumn . ':' : '') . $strArticle;
+			$strParams = '/articles/' . $strArticle;
 		}
 
 		$strUrl = $objPage->getPreviewUrl($strParams);
