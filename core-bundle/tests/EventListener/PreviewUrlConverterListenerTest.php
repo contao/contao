@@ -96,7 +96,7 @@ class PreviewUrlConverterListenerTest extends TestCase
 
         $pageModel
             ->expects($this->once())
-            ->method('getPreviewUrl')
+            ->method('getAbsoluteUrl')
             ->with(null)
             ->willReturn('/en/content-elements.html')
         ;
@@ -157,7 +157,7 @@ class PreviewUrlConverterListenerTest extends TestCase
 
         $pageModel
             ->expects($this->once())
-            ->method('getPreviewUrl')
+            ->method('getAbsoluteUrl')
             ->with('/articles/foobar')
             ->willReturn('/en/content-elements/articles/foobar.html')
         ;
@@ -184,7 +184,7 @@ class PreviewUrlConverterListenerTest extends TestCase
         $pageModel = $this->mockClassWithProperties(PageModel::class, ['id' => 42, 'rootLanguage' => 'en']);
         $pageModel
             ->expects($this->once())
-            ->method('getPreviewUrl')
+            ->method('getAbsoluteUrl')
             ->willThrowException(new RouteNotFoundException())
         ;
 
@@ -241,7 +241,7 @@ class PreviewUrlConverterListenerTest extends TestCase
 
         $pageModel
             ->expects($this->once())
-            ->method('getPreviewUrl')
+            ->method('getAbsoluteUrl')
             ->willThrowException(
                 new RouteParametersException(
                     $route,
