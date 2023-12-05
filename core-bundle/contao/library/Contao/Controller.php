@@ -1187,10 +1187,13 @@ abstract class Controller extends System
 	 * @param boolean $blnReturn  If true, return the URL and don't redirect
 	 *
 	 * @return string The URL of the target page
+	 *
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6.0.
+	 *             Use "PageModel::getAbsoluteUrl()" and the contao_backend_preview route instead.
 	 */
 	protected function redirectToFrontendPage($intPage, $strArticle=null, $blnReturn=false)
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', __METHOD__ . ' is deprecated and will be removed in Contao 6. Use PageModel::getAbsoluteUrl() and the contao_backend_preview route instead.');
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use "PageModel::getAbsoluteUrl()" and the contao_backend_preview route instead.', __METHOD__);
 
 		if (($intPage = (int) $intPage) <= 0)
 		{
