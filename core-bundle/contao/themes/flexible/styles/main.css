@@ -18,6 +18,7 @@
 	--icon-arrow-right: url("icons/arrow_right.svg");
 	--icon-visible: url("icons/visible.svg");
 	--icon-invisible: url("icons/invisible.svg");
+	--icon-loading: url("icons/loading.svg");
 }
 
 html[data-color-scheme="dark"] {
@@ -36,6 +37,7 @@ html[data-color-scheme="dark"] {
 	--icon-arrow-right: url("icons/arrow_right--dark.svg");
 	--icon-visible: url("icons/visible--dark.svg");
 	--icon-invisible: url("icons/invisible--dark.svg");
+	--icon-loading: url("icons/loading--dark.svg");
 }
 
 /* Account for the jump links bar */
@@ -1125,27 +1127,6 @@ h2.sub_headline {
 	border: 1px solid var(--black);
 	box-shadow: 0 0 0 1px var(--white), inset 0 0 0 1px var(--white);
 	opacity: 0.5;
-}
-
-/* Rebuild the search index */
-#tl_rebuild_index {
-	padding: 0 18px 18px;
-	line-height: 1.3;
-}
-
-#index_loading {
-	margin: 0;
-	padding: 12px 12px 12px 24px;
-	background: url("icons/loading.svg") no-repeat left center;
-	background-size: 16px;
-	color: var(--blue);
-}
-
-#index_complete {
-	margin: 0;
-	padding: 12px 12px 12px 24px;
-	background: url("icons/ok.svg") no-repeat left center;
-	color: var(--green);
 }
 
 /* Listing */
@@ -2380,7 +2361,7 @@ ul.sgallery li {
 	position: absolute;
 	left: 50%;
 	margin-left: -150px;
-	background: var(--white) url("icons/loading.svg") no-repeat right 2em center;
+	background: var(--white) var(--icon-loading) no-repeat right 2em center;
 	border: 2px solid var(--black);
 	border-radius: 2px;
 	font-size: 1rem;
@@ -2579,7 +2560,7 @@ time[title] {
 	inset: 2px auto auto 2px;
 	width: 14px;
 	height: 14px;
-	background: url("icons/loading.svg") 0 0/contain no-repeat
+	background: var(--icon-loading) 0 0/contain no-repeat
 }
 
 /* Default icon classes */
