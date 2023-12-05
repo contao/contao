@@ -18,6 +18,7 @@
 	--icon-arrow-right: url("icons/arrow_right.svg");
 	--icon-visible: url("icons/visible.svg");
 	--icon-invisible: url("icons/invisible.svg");
+	--icon-loading: url("icons/loading.svg");
 }
 
 html[data-color-scheme="dark"] {
@@ -36,6 +37,7 @@ html[data-color-scheme="dark"] {
 	--icon-arrow-right: url("icons/arrow_right--dark.svg");
 	--icon-visible: url("icons/visible--dark.svg");
 	--icon-invisible: url("icons/invisible--dark.svg");
+	--icon-loading: url("icons/loading--dark.svg");
 }
 
 /* Account for the jump links bar */
@@ -1130,7 +1132,7 @@ h2.sub_headline {
 #index_loading {
 	margin: 0;
 	padding: 12px 12px 12px 24px;
-	background: url("icons/loading.svg") no-repeat left center;
+	background: var(--icon-loading) no-repeat left center;
 	background-size: 16px;
 	color: var(--blue);
 }
@@ -2374,7 +2376,7 @@ ul.sgallery li {
 	position: absolute;
 	left: 50%;
 	margin-left: -150px;
-	background: var(--white) url("icons/loading.svg") no-repeat right 2em center;
+	background: var(--white) var(--icon-loading) no-repeat right 2em center;
 	border: 2px solid var(--black);
 	border-radius: 2px;
 	font-size: 1rem;
@@ -2573,7 +2575,7 @@ time[title] {
 	inset: 2px auto auto 2px;
 	width: 14px;
 	height: 14px;
-	background: url("icons/loading.svg") 0 0/contain no-repeat
+	background: var(--icon-loading) 0 0/contain no-repeat
 }
 
 /* Default icon classes */
