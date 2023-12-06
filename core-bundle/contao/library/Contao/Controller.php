@@ -566,10 +566,15 @@ abstract class Controller extends System
 			$objStopwatch->start($strStopWatchId, 'contao.layout');
 		}
 
-		if (is_a($strClass, ContentProxy::class, true) && System::getContainer()->get('contao.fragment.compositor')->isNested(ContentElementReference::TAG_NAME . '.' . $objRow->type))
+		$compositor = System::getContainer()->get('contao.fragment.compositor');
+
+		if (is_a($strClass, ContentProxy::class, true) && $compositor->isNested(ContentElementReference::TAG_NAME . '.' . $objRow->type))
 		{
-			$nestedElements = System::getContainer()->get('contao.fragment.compositor')->getNestedContentElements(ContentElementReference::TAG_NAME . '.' . $objRow->type, $objRow->id);
-			$objElement = new $strClass($objRow, $strColumn, $nestedElements);
+			$objElement = new $strClass(
+				$objRow,
+				$strColumn,
+				$compositor->getNestedContentElements(ContentElementReference::TAG_NAME . '.' . $objRow->type, $objRow->id)
+			);
 		}
 		else
 		{

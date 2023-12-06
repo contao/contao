@@ -43,15 +43,12 @@ class FragmentCompositor
             return [];
         }
 
-        $children = ContentModel::findPublishedByPidAndTable($id, ContentModel::getTable());
-
         $rendered = [];
+        $children = ContentModel::findPublishedByPidAndTable($id, ContentModel::getTable());
+        $allowedTypes = $this->nestedByIdentifier[$identifier]['allowedTypes'] ?? [];
 
         foreach ($children ?? [] as $child) {
-            if (
-                !empty($this->nestedByIdentifier[$identifier]['allowedTypes'])
-                && !\in_array($child->type, $this->nestedByIdentifier[$identifier]['allowedTypes'], true)
-            ) {
+            if ([] !== $allowedTypes && !\in_array($child->type, $allowedTypes, true)) {
                 continue;
             }
 
