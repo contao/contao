@@ -31,12 +31,12 @@ class CalendarAccessVoter extends AbstractDataContainerVoter
         return 'tl_calendar';
     }
 
-    protected function isGranted(UpdateAction|CreateAction|ReadAction|DeleteAction $action): bool
+    protected function isGranted(CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
     {
         return match (true) {
             $action instanceof CreateAction => $this->security->isGranted(ContaoCalendarPermissions::USER_CAN_CREATE_CALENDARS),
             $action instanceof ReadAction,
-                $action instanceof UpdateAction => $this->security->isGranted(ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR, $action->getCurrentId()),
+            $action instanceof UpdateAction => $this->security->isGranted(ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR, $action->getCurrentId()),
             $action instanceof DeleteAction => $this->security->isGranted(ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR, $action->getCurrentId())
                 && $this->security->isGranted(ContaoCalendarPermissions::USER_CAN_DELETE_CALENDARS),
         };

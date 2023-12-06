@@ -58,5 +58,5 @@ Abstract class AbstractDataContainerVoter implements VoterInterface, CacheableVo
 
     abstract protected function getTable(): string;
 
-    abstract protected function isGranted(CreateAction|ReadAction|UpdateAction|DeleteAction $action): bool;
+    abstract protected function isGranted(CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool;
 }

@@ -10,12 +10,9 @@
 
 use Contao\Backend;
 use Contao\BackendUser;
-use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
-use Contao\FaqBundle\Security\ContaoFaqPermissions;
-use Contao\Image;
 use Contao\StringUtil;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;

@@ -31,7 +31,7 @@ class NewsletterChannelAccessVoter extends AbstractDataContainerVoter
         return 'tl_newsletter_channel';
     }
 
-    protected function isGranted(UpdateAction|CreateAction|ReadAction|DeleteAction $action): bool
+    protected function isGranted(CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
     {
         return match (true) {
             $action instanceof CreateAction => $this->security->isGranted(ContaoNewsletterPermissions::USER_CAN_CREATE_CHANNELS),

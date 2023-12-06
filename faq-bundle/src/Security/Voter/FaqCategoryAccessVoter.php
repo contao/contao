@@ -31,7 +31,7 @@ class FaqCategoryAccessVoter extends AbstractDataContainerVoter
         return 'tl_faq_category';
     }
 
-    protected function isGranted(UpdateAction|CreateAction|ReadAction|DeleteAction $action): bool
+    protected function isGranted(CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
     {
         return match (true) {
             $action instanceof CreateAction => $this->security->isGranted(ContaoFaqPermissions::USER_CAN_CREATE_CATEGORIES),
