@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\Routing\Exception\ExceptionInterface;
+
 /**
  * Front end module "newsletter list".
  *
@@ -89,26 +91,11 @@ class ModuleNewsletterList extends Module
 
 			while ($objNewsletter->next())
 			{
-				/** @var NewsletterChannelModel $objTarget */
-				if (!($objTarget = $objNewsletter->getRelated('pid')) instanceof NewsletterChannelModel)
+				try
 				{
-					continue;
+					$strUrl = System::getContainer()->get('contao.routing.content_url_generator')->generate($objNewsletter->current());
 				}
-
-				$jumpTo = $objTarget->jumpTo;
-
-				// Skip channels without a jumpTo page (see #6521 and #494)
-				if ($jumpTo < 1)
-				{
-					continue;
-				}
-
-				if (($objJumpTo = $this->getPageWithDetails($jumpTo)) instanceof PageModel)
-				{
-					/** @var PageModel $objJumpTo */
-					$strUrl = $objJumpTo->getFrontendUrl('/' . ($objNewsletter->alias ?: $objNewsletter->id));
-				}
-				else
+				catch (ExceptionInterface)
 				{
 					$strUrl = $strRequest;
 				}

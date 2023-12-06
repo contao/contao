@@ -14,18 +14,21 @@ namespace Contao\NewsletterBundle\EventListener;
 
 use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
 use Contao\NewsletterChannelModel;
 use Contao\NewsletterModel;
 use Contao\PageModel;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 class SitemapListener
 {
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly Security $security,
+        private readonly ContentUrlGenerator $urlGenerator,
     ) {
     }
 
@@ -89,7 +92,10 @@ class SitemapListener
             }
 
             foreach ($objItems as $objItem) {
-                $arrPages[] = $objParent->getAbsoluteUrl('/'.($objItem->alias ?: $objItem->id));
+                try {
+                    $arrPages[] = $this->urlGenerator->generate($objItem);
+                } catch (ExceptionInterface) {
+                }
             }
         }
 
