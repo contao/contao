@@ -36,3 +36,5 @@ services:
 
     contao_faq.routing.faq_resolver:
         class: Contao\FaqBundle\Routing\FaqResolver
+        arguments:
+            - '@contao.framework'

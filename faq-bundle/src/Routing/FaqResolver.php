@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\FaqBundle\Routing;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
 use Contao\CoreBundle\Routing\Content\ContentUrlResult;
 use Contao\FaqModel;
@@ -19,13 +20,19 @@ use Contao\PageModel;
 
 class FaqResolver implements ContentUrlResolverInterface
 {
+    public function __construct(private readonly ContaoFramework $framework)
+    {
+    }
+
     public function resolve(object $content): ContentUrlResult
     {
         if (!$content instanceof FaqModel) {
             return ContentUrlResult::abstain();
         }
 
-        return ContentUrlResult::resolve(PageModel::findWithDetails((int) $content->getRelated('pid')?->jumpTo));
+        $pageAdapter = $this->framework->getAdapter(PageModel::class);
+
+        return ContentUrlResult::resolve($pageAdapter->findPublishedById((int) $content->getRelated('pid')?->jumpTo));
     }
 
     public function getParametersForContent(object $content, PageModel $pageModel): array
