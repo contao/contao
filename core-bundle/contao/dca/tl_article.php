@@ -51,7 +51,8 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			(
 				'id' => 'primary',
 				'alias' => 'index',
-				'pid,published,inColumn,start,stop' => 'index'
+				'pid,published,inColumn,start,stop' => 'index',
+				'sorting' => 'index'
 			)
 		)
 	),

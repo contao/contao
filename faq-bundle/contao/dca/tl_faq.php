@@ -46,7 +46,8 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
-				'pid,published' => 'index'
+				'pid,published' => 'index',
+				'sorting' => 'index'
 			)
 		)
 	),

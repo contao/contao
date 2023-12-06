@@ -49,7 +49,8 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
-				'alias' => 'index'
+				'alias' => 'index',
+				'title' => 'index'
 			)
 		)
 	),
