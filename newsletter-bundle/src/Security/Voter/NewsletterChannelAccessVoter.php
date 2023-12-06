@@ -12,54 +12,34 @@ declare(strict_types=1);
 
 namespace Contao\NewsletterBundle\Security\Voter;
 
-use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
+use Contao\CoreBundle\Security\Voter\DataContainer\AbstractDataContainerVoter;
 use Contao\NewsletterBundle\Security\ContaoNewsletterPermissions;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class NewsletterChannelAccessVoter implements VoterInterface, CacheableVoterInterface
+class NewsletterChannelAccessVoter extends AbstractDataContainerVoter
 {
     public function __construct(private readonly Security $security)
     {
     }
 
-    public function supportsAttribute(string $attribute): bool
+    protected function getTable(): string
     {
-        return $attribute === ContaoCorePermissions::DC_PREFIX.'tl_newsletter_channel';
+        return 'tl_newsletter_channel';
     }
 
-    public function supportsType(string $subjectType): bool
+    protected function isGranted(UpdateAction|CreateAction|ReadAction|DeleteAction $action): bool
     {
-        return \in_array($subjectType, [CreateAction::class, ReadAction::class, UpdateAction::class, DeleteAction::class], true);
-    }
-
-    public function vote(TokenInterface $token, $subject, array $attributes): int
-    {
-        foreach ($attributes as $attribute) {
-            if (!$this->supportsAttribute($attribute)) {
-                continue;
-            }
-
-            $isGranted = match (true) {
-                $subject instanceof CreateAction => $this->security->isGranted(ContaoNewsletterPermissions::USER_CAN_CREATE_CHANNELS),
-                $subject instanceof ReadAction,
-                $subject instanceof UpdateAction => $this->security->isGranted(ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL, $subject->getCurrentId()),
-                $subject instanceof DeleteAction => $this->security->isGranted(ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL, $subject->getCurrentId())
-                    && $this->security->isGranted(ContaoNewsletterPermissions::USER_CAN_DELETE_CHANNELS),
-                default => false,
-            };
-
-            if (!$isGranted) {
-                return self::ACCESS_DENIED;
-            }
-        }
-
-        return self::ACCESS_ABSTAIN;
+        return match (true) {
+            $action instanceof CreateAction => $this->security->isGranted(ContaoNewsletterPermissions::USER_CAN_CREATE_CHANNELS),
+            $action instanceof ReadAction,
+            $action instanceof UpdateAction => $this->security->isGranted(ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL, $action->getCurrentId()),
+            $action instanceof DeleteAction => $this->security->isGranted(ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL, $action->getCurrentId())
+                && $this->security->isGranted(ContaoNewsletterPermissions::USER_CAN_DELETE_CHANNELS),
+            default => false,
+        };
     }
 }

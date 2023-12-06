@@ -79,35 +79,6 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 		),
 		'operations' => array
 		(
-			'edit' => array
-			(
-				'href'                => 'act=edit',
-				'icon'                => 'edit.svg',
-				'button_callback'     => array('tl_newsletter_channel', 'editHeader')
-			),
-			'children' => array
-			(
-				'href'                => 'table=tl_newsletter',
-				'icon'                => 'children.svg'
-			),
-			'copy' => array
-			(
-				'href'                => 'act=copy',
-				'icon'                => 'copy.svg',
-				'button_callback'     => array('tl_newsletter_channel', 'copyChannel')
-			),
-			'delete' => array
-			(
-				'href'                => 'act=delete',
-				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"',
-				'button_callback'     => array('tl_newsletter_channel', 'deleteChannel')
-			),
-			'show' => array
-			(
-				'href'                => 'act=show',
-				'icon'                => 'show.svg'
-			),
 			'recipients' => array
 			(
 				'href'                => 'table=tl_newsletter_recipients',
@@ -302,56 +273,5 @@ class tl_newsletter_channel extends Backend
 			$root[] = $insertId;
 			$user->newsletter = $root;
 		}
-	}
-
-	/**
-	 * Return the edit header button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function editHeader($row, $href, $label, $title, $icon, $attributes)
-	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, 'tl_newsletter_channel') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
-	}
-
-	/**
-	 * Return the copy channel button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function copyChannel($row, $href, $label, $title, $icon, $attributes)
-	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoNewsletterPermissions::USER_CAN_CREATE_CHANNELS) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
-	}
-
-	/**
-	 * Return the delete channel button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function deleteChannel($row, $href, $label, $title, $icon, $attributes)
-	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoNewsletterPermissions::USER_CAN_DELETE_CHANNELS) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 }
