@@ -29,7 +29,7 @@ class RobotsTxtListenerTest extends TestCase
     /**
      * @dataProvider disallowProvider
      */
-    public function testRobotsTxt(string $providedRobotsTxt, bool|null $withWebProfiler, string $expectedRobotsTxt): void
+    public function testRobotsTxt(string $providedRobotsTxt, ?bool $withWebProfiler, string $expectedRobotsTxt): void
     {
         $rootPage = $this->mockClassWithProperties(PageModel::class);
         $rootPage->id = 42;
