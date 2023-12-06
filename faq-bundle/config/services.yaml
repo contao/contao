@@ -32,6 +32,11 @@ services:
         tags:
             - { name: contao.picker_provider, priority: 64 }
 
+    contao_faq.security.faq_access_voter:
+        class: Contao\FaqBundle\Security\Voter\FaqAccessVoter
+        arguments:
+            - '@security.helper'
+
     contao_faq.security.faq_category_access_voter:
         class: Contao\FaqBundle\Security\Voter\FaqCategoryAccessVoter
         arguments:
