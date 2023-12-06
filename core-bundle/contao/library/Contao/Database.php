@@ -87,7 +87,7 @@ class Database
 	 */
 	public function __get($strKey)
 	{
-		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s->%s" has been deprecated and will no longer work in Contao 6.0.', __CLASS__, $strKey);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s->%s" has been deprecated and will no longer work in Contao 6.', __CLASS__, $strKey);
 
 		return null;
 	}

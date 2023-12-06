@@ -305,24 +305,25 @@ abstract class Controller extends System
 			// Show a particular article only
 			if ($objPage->type == 'regular' && Input::get('articles'))
 			{
-				list($strSection, $strArticle) = explode(':', Input::get('articles')) + array(null, null);
+				$strArticle = Input::get('articles');
 
-				if ($strArticle === null)
+				if (str_contains($strArticle, ':'))
 				{
-					$strArticle = $strSection;
-					$strSection = 'main';
+					trigger_deprecation('contao/core-bundle', '5.3', 'Passing the column of an article in the URL is deprecated. Only provide the article alias instead.');
+
+					list(, $strArticle) = explode(':', Input::get('articles'));
 				}
 
-				if ($strSection == $strColumn)
+				$objArticle = ArticleModel::findPublishedByIdOrAliasAndPid($strArticle, $objPage->id);
+
+				// Send a 404 header if there is no published article
+				if (null === $objArticle)
 				{
-					$objArticle = ArticleModel::findPublishedByIdOrAliasAndPid($strArticle, $objPage->id);
+					throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
+				}
 
-					// Send a 404 header if there is no published article
-					if (null === $objArticle)
-					{
-						throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
-					}
-
+				if ($objArticle->inColumn == $strColumn)
+				{
 					// Send a 403 header if the article cannot be accessed
 					if (!static::isVisibleElement($objArticle))
 					{
@@ -1196,9 +1197,14 @@ abstract class Controller extends System
 	 * @param boolean $blnReturn  If true, return the URL and don't redirect
 	 *
 	 * @return string The URL of the target page
+	 *
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6.0.
+	 *             Use "PageModel::getAbsoluteUrl()" and the contao_backend_preview route instead.
 	 */
 	protected function redirectToFrontendPage($intPage, $strArticle=null, $blnReturn=false)
 	{
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use "PageModel::getAbsoluteUrl()" and the contao_backend_preview route instead.', __METHOD__);
+
 		if (($intPage = (int) $intPage) <= 0)
 		{
 			return '';
@@ -1214,9 +1220,9 @@ abstract class Controller extends System
 		$strParams = null;
 
 		// Add the /article/ fragment (see #673)
-		if ($strArticle !== null && ($objArticle = ArticleModel::findByAlias($strArticle)) !== null)
+		if ($strArticle)
 		{
-			$strParams = '/articles/' . (($objArticle->inColumn != 'main') ? $objArticle->inColumn . ':' : '') . $strArticle;
+			$strParams = '/articles/' . $strArticle;
 		}
 
 		$strUrl = $objPage->getPreviewUrl($strParams);
@@ -1248,12 +1254,13 @@ abstract class Controller extends System
 
 		$db = Database::getInstance();
 		$arrParent = array();
+		$strParentTable = $strTable;
 
 		do
 		{
 			// Get the pid
 			$objParent = $db
-				->prepare("SELECT pid FROM " . $strTable . " WHERE id=?")
+				->prepare("SELECT pid FROM " . $strParentTable . " WHERE id=?")
 				->limit(1)
 				->execute($intId);
 
@@ -1263,16 +1270,16 @@ abstract class Controller extends System
 			}
 
 			// Store the parent table information
-			$strTable = $GLOBALS['TL_DCA'][$strTable]['config']['ptable'];
+			$strParentTable = $GLOBALS['TL_DCA'][$strParentTable]['config']['ptable'];
 			$intId = $objParent->pid;
 
 			// Add the log entry
-			$arrParent[] = $strTable . '.id=' . $intId;
+			$arrParent[] = $strParentTable . '.id=' . $intId;
 
 			// Load the data container of the parent table
-			$this->loadDataContainer($strTable);
+			$this->loadDataContainer($strParentTable);
 		}
-		while ($intId && !empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']));
+		while ($intId && !empty($GLOBALS['TL_DCA'][$strParentTable]['config']['ptable']));
 
 		if (empty($arrParent))
 		{
@@ -1293,7 +1300,7 @@ abstract class Controller extends System
 	{
 		$arrPaths = array_filter($arrPaths);
 
-		if (empty($arrPaths) || !\is_array($arrPaths))
+		if (empty($arrPaths))
 		{
 			return array();
 		}

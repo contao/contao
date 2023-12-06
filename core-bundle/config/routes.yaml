@@ -1,6 +1,6 @@
 contao:
     resource: '@ContaoCoreBundle/src/Controller'
-    type: annotation
+    type: attribute
 
 contao_images:
     resource: .

@@ -16,8 +16,14 @@
 # Monorepo Tools
 /.monorepo-split-cache/
 
-# Node
-/node_modules/
+# Yarn
+/.pnp.*
+/.yarn/*
+!/.yarn/patches
+!/.yarn/plugins
+!/.yarn/releases
+!/.yarn/sdks
+!/.yarn/versions
 
 # PhpUnit
 /.phpunit.result.cache

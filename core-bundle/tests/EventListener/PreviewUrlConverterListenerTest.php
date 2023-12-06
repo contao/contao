@@ -24,7 +24,7 @@ use Contao\PageModel;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\UriSigner;
+use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -96,7 +96,7 @@ class PreviewUrlConverterListenerTest extends TestCase
 
         $pageModel
             ->expects($this->once())
-            ->method('getPreviewUrl')
+            ->method('getAbsoluteUrl')
             ->with(null)
             ->willReturn('/en/content-elements.html')
         ;
@@ -157,7 +157,7 @@ class PreviewUrlConverterListenerTest extends TestCase
 
         $pageModel
             ->expects($this->once())
-            ->method('getPreviewUrl')
+            ->method('getAbsoluteUrl')
             ->with('/articles/foobar')
             ->willReturn('/en/content-elements/articles/foobar.html')
         ;
@@ -184,7 +184,7 @@ class PreviewUrlConverterListenerTest extends TestCase
         $pageModel = $this->mockClassWithProperties(PageModel::class, ['id' => 42, 'rootLanguage' => 'en']);
         $pageModel
             ->expects($this->once())
-            ->method('getPreviewUrl')
+            ->method('getAbsoluteUrl')
             ->willThrowException(new RouteNotFoundException())
         ;
 
@@ -241,7 +241,7 @@ class PreviewUrlConverterListenerTest extends TestCase
 
         $pageModel
             ->expects($this->once())
-            ->method('getPreviewUrl')
+            ->method('getAbsoluteUrl')
             ->willThrowException(
                 new RouteParametersException(
                     $route,
