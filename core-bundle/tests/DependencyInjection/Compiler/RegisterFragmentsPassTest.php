@@ -16,6 +16,7 @@ use Contao\ContentProxy;
 use Contao\CoreBundle\Controller\FrontendModule\TwoFactorController;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\EventListener\GlobalsMapListener;
+use Contao\CoreBundle\Fragment\FragmentCompositor;
 use Contao\CoreBundle\Fragment\FragmentPreHandlerInterface;
 use Contao\CoreBundle\Fragment\FragmentRegistry;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
@@ -212,6 +213,7 @@ class RegisterFragmentsPassTest extends TestCase
         $container = new ContainerBuilder();
         $container->setDefinition('contao.fragment.registry', new Definition());
         $container->setDefinition('contao.command.debug_fragments', new Definition());
+        $container->setDefinition('contao.fragment.compositor', new Definition());
         $container->setDefinition('app.fragments.content_controller', $contentController);
 
         (new ResolveClassPass())->process($container);
@@ -362,6 +364,7 @@ class RegisterFragmentsPassTest extends TestCase
         $container = new ContainerBuilder();
         $container->setDefinition('contao.fragment.registry', new Definition(FragmentRegistry::class));
         $container->setDefinition('contao.fragment.pre_handlers', new Definition(ServiceLocator::class, [[]]));
+        $container->setDefinition('contao.fragment.compositor', new Definition(FragmentCompositor::class, [[]]));
 
         return $container;
     }

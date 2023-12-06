@@ -673,6 +673,7 @@ class ContaoCoreExtensionTest extends TestCase
                     'template' => 'a_template',
                     'method' => 'aMethod',
                     'renderer' => 'inline',
+                    'slots' => [],
                 ],
             )
         ;

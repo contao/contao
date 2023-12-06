@@ -20,13 +20,17 @@ class AsContentElement
 {
     public array $attributes;
 
-    public function __construct(string|null $type = null, string $category = 'miscellaneous', string|null $template = null, string|null $method = null, string|null $renderer = null, mixed ...$attributes)
+    /**
+     * @param array<string, array{allowedTypes?:list<string>}> $slots
+     */
+    public function __construct(string|null $type = null, string $category = 'miscellaneous', string|null $template = null, string|null $method = null, string|null $renderer = null, array $slots = [], mixed ...$attributes)
     {
         $attributes['type'] = $type;
         $attributes['category'] = $category;
         $attributes['template'] = $template;
         $attributes['method'] = $method;
         $attributes['renderer'] = $renderer;
+        $attributes['slots'] = $slots;
 
         $this->attributes = $attributes;
     }

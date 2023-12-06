@@ -35,6 +35,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 	(
 		'dataContainer'               => DC_Table::class,
 		'enableVersioning'            => true,
+		'ptable'                      => Input::get('ptable') === 'tl_content' ? 'tl_content' : null,
 		'dynamicPtable'               => true,
 		'markAsCopy'                  => 'headline',
 		'onload_callback'             => array
@@ -61,7 +62,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'sorting' => array
 		(
 			'mode'                    => DataContainer::MODE_PARENT,
-			'fields'                  => array('sorting'),
+			'fields'                  => array('slot', 'sorting'),
+			'slots'                   => array('main', 'image'),
 			'panelLayout'             => 'filter;search,limit',
 			'defaultSearchField'      => 'text',
 			'headerFields'            => array('title', 'headline', 'author', 'tstamp', 'start', 'stop'),
@@ -76,6 +78,12 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 				'href'                => 'act=edit',
 				'icon'                => 'edit.svg',
 				'button_callback'     => array('tl_content', 'disableButton')
+			),
+			'children' => array
+			(
+				'href'                => 'table=tl_content&ptable=tl_content',
+				'icon'                => 'children.svg',
+				'button_callback'     => array('tl_content', 'editChildren')
 			),
 			'copy' => array
 			(
@@ -175,6 +183,10 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'tstamp' => array
 		(
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
+		),
+		'slot' => array
+		(
+			'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default 'main'"
 		),
 		'type' => array
 		(
@@ -1478,6 +1490,23 @@ class tl_content extends Backend
 	public function disableButton($row, $href, $label, $title, $icon, $attributes)
 	{
 		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $row['type']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+	}
+
+	/**
+	 * Return the edit children button
+	 *
+	 * @param array  $row
+	 * @param string $href
+	 * @param string $label
+	 * @param string $title
+	 * @param string $icon
+	 * @param string $attributes
+	 *
+	 * @return string
+	 */
+	public function editChildren($row, $href, $label, $title, $icon, $attributes)
+	{
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $row['type']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**

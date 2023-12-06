@@ -78,6 +78,8 @@ services:
 
     Contao\CoreBundle\Controller\ContentElement\HeadlineController: ~
 
+    Contao\CoreBundle\Controller\ContentElement\RapperController: ~
+
     Contao\CoreBundle\Controller\ContentElement\HtmlController: ~
 
     Contao\CoreBundle\Controller\ContentElement\HyperlinkController:
