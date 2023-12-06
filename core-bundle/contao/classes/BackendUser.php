@@ -152,6 +152,9 @@ class BackendUser extends User
 	 * @param string       $array
 	 *
 	 * @return boolean
+	 *
+	 * @deprecated Deprecated since Contao 5.2, to be removed in Contao 6.0.
+	 *             Use the "ContaoCorePermissions::USER_CAN_ACCESS_*" permissions instead.
 	 */
 	public function hasAccess($field, $array)
 	{

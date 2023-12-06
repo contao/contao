@@ -314,7 +314,7 @@ class Environment
 	 */
 	protected static function script()
 	{
-		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" has been deprecated and will no longer work in Contao 6.0. Use "%s::%s" instead.', __METHOD__, __CLASS__, 'scriptName');
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use "%s::%s" instead.', __METHOD__, __CLASS__, 'scriptName');
 
 		return preg_replace('/^' . preg_quote(static::get('path'), '/') . '\/?/', '', static::get('scriptName'));
 	}
@@ -326,7 +326,7 @@ class Environment
 	 */
 	protected static function request()
 	{
-		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" has been deprecated and will no longer work in Contao 6.0. Use "%s::%s" instead.', __METHOD__, __CLASS__, 'requestUri');
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use "%s::%s" instead.', __METHOD__, __CLASS__, 'requestUri');
 
 		return preg_replace('/^' . preg_quote(static::get('path'), '/') . '\/?/', '', static::get('requestUri'));
 	}
@@ -407,7 +407,7 @@ class Environment
 			return $request;
 		}
 
-		trigger_deprecation('contao/core-bundle', '5.0', 'Getting data from $_SERVER with the "%s" class has been deprecated and will no longer work in Contao 6.0. Make sure the request_stack has a request instead.', __CLASS__);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Getting data from $_SERVER with the "%s" class has been deprecated and will no longer work in Contao 6. Make sure the request_stack has a request instead.', __CLASS__);
 
 		return new Request(server: $_SERVER);
 	}
