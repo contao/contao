@@ -158,7 +158,7 @@ class Newsletter extends Backend
 
 			// Get recipients
 			$objRecipients = $db
-				->prepare("SELECT *, r.id AS recipient, r.email FROM tl_newsletter_recipients r LEFT JOIN tl_member m ON(r.email=m.email) WHERE r.pid=? AND r.active=1 ORDER BY r.email")
+				->prepare("SELECT *, r.id AS recipient, r.email FROM tl_newsletter_recipients r LEFT JOIN tl_member m ON r.email=m.email WHERE r.pid=? AND r.active=1 ORDER BY r.email")
 				->limit($intPages, $intStart)
 				->execute($objNewsletter->pid);
 

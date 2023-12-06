@@ -38,6 +38,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
+				'pid' => 'index',
 				'name' => 'index'
 			)
 		)

@@ -26,7 +26,8 @@ $GLOBALS['TL_DCA']['tl_member_group'] = array
 			(
 				'id' => 'primary',
 				'disable,start,stop' => 'index',
-				'name' => 'index'
+				'name' => 'index',
+				'jumpTo' => 'index'
 			)
 		)
 	),
