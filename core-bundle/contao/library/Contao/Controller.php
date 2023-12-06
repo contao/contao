@@ -1260,6 +1260,8 @@ abstract class Controller extends System
 		$db = Database::getInstance();
 		$arrParent = array();
 		$strParentTable = $strTable;
+		$intLastId = null;
+		$strLastParentTable = null;
 
 		do
 		{
@@ -1278,11 +1280,24 @@ abstract class Controller extends System
 			$strParentTable = $GLOBALS['TL_DCA'][$strParentTable]['config']['ptable'];
 			$intId = $objParent->pid;
 
+			// If both the parent table and the ID remain the same, we found the
+			// topmost record (usually the case with nested content elements).
+			if ($strParentTable == $strLastParentTable && $intId == $intLastId)
+			{
+				break;
+			}
+
 			// Add the log entry
 			$arrParent[] = $strParentTable . '.id=' . $intId;
 
 			// Load the data container of the parent table
-			$this->loadDataContainer($strParentTable);
+			if ($strParentTable != $strLastParentTable)
+			{
+				$this->loadDataContainer($strParentTable);
+			}
+
+			$intLastId = $intId;
+			$strLastParentTable = $strParentTable;
 		}
 		while ($intId && !empty($GLOBALS['TL_DCA'][$strParentTable]['config']['ptable']));
 
