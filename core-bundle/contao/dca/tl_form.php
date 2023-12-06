@@ -68,16 +68,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		(
 			'fields'                  => array('title', 'formID'),
 			'format'                  => '%s <span class="label-info">[%s]</span>'
-		),
-		'global_operations' => array
-		(
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
-		),
+		)
 	),
 
 	// Palettes

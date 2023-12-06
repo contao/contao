@@ -87,12 +87,7 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 				'attributes'          => 'onclick="Backend.getScrollOffset()"',
 				'button_callback'     => array('tl_calendar', 'manageFeeds')
 			),
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
+			'all'
 		)
 	),
 

@@ -62,16 +62,8 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'defaultSearchField'      => 'question',
 			'headerFields'            => array('title', 'headline', 'jumpTo', 'tstamp', 'allowComments'),
 			'child_record_callback'   => array('tl_faq', 'listQuestions'),
-			'renderAsGrid'            => true
-		),
-		'global_operations' => array
-		(
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
+			'renderAsGrid'            => true,
+			'limitHeight'             => 160
 		)
 	),
 
@@ -552,7 +544,7 @@ class tl_faq extends Backend
 
 		return '
 <div class="cte_type ' . $key . '">' . $date . '</div>
-<div class="cte_preview limit_height' . (!Config::get('doNotCollapse') ? ' h112' : '') . '">
+<div class="cte_preview">
 <h2>' . $arrRow['question'] . '</h2>
 ' . StringUtil::insertTagToSrc($arrRow['answer']) . '
 </div>' . "\n";

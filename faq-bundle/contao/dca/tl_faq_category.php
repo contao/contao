@@ -66,15 +66,6 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 		(
 			'fields'                  => array('title'),
 			'format'                  => '%s'
-		),
-		'global_operations' => array
-		(
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
 		)
 	),
 

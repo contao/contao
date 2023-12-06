@@ -68,15 +68,6 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 			'fields'                  => array('title'),
 			'format'                  => '%s'
 		),
-		'global_operations' => array
-		(
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
-		),
 		'operations' => array
 		(
 			'recipients' => array

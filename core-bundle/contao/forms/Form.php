@@ -154,16 +154,21 @@ class Form extends Hybrid
 		$this->Template->formSubmit = $formId;
 		$this->Template->method = ($this->method == 'GET') ? 'get' : 'post';
 
-		$flashBag = System::getContainer()->get('request_stack')->getSession()->getFlashBag();
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-		// Add a confirmation to the template and remove it afterward
-		if ($flashBag->has(self::SESSION_CONFIRMATION_KEY))
+		if ($request && $request->hasPreviousSession())
 		{
-			$confirmationData = $flashBag->peek(self::SESSION_CONFIRMATION_KEY);
+			$flashBag = $request->getSession()->getFlashBag();
 
-			if (isset($confirmationData['id']) && $this->id === $confirmationData['id'])
+			// Add a confirmation to the template and remove it afterward
+			if ($flashBag->has(self::SESSION_CONFIRMATION_KEY))
 			{
-				$this->Template->message = $flashBag->get(self::SESSION_CONFIRMATION_KEY)['message'];
+				$confirmationData = $flashBag->peek(self::SESSION_CONFIRMATION_KEY);
+
+				if (isset($confirmationData['id']) && $this->id === $confirmationData['id'])
+				{
+					$this->Template->message = $flashBag->get(self::SESSION_CONFIRMATION_KEY)['message'];
+				}
 			}
 		}
 
@@ -311,7 +316,7 @@ class Form extends Hybrid
 					$file->delete();
 				}
 
-				if (is_file($upload['tmp_name']))
+				if (isset($upload['tmp_name']) && is_file($upload['tmp_name']))
 				{
 					unlink($upload['tmp_name']);
 				}

@@ -1,9 +1,10 @@
 includes:
-    - tools/phpstan/vendor/phpstan/phpstan-phpunit/extension.neon
-    - tools/phpstan/vendor/phpstan/phpstan-phpunit/rules.neon
-    - tools/phpstan/vendor/phpstan/phpstan-symfony/extension.neon
-    - tools/phpstan/vendor/phpstan/phpstan-symfony/rules.neon
-    - tools/phpstan/vendor/slam/phpstan-extensions/conf/symfony-rules.neon
+    - ../vendor/phpstan/phpstan/conf/bleedingEdge.neon
+    - ../vendor/phpstan/phpstan-phpunit/extension.neon
+    - ../vendor/phpstan/phpstan-phpunit/rules.neon
+    - ../vendor/phpstan/phpstan-symfony/extension.neon
+    - ../vendor/phpstan/phpstan-symfony/rules.neon
+    - ../vendor/slam/phpstan-extensions/conf/symfony-rules.neon
 
 rules:
     - TheCodingMachine\PHPStan\Rules\Exceptions\DoNotThrowExceptionBaseClassRule
@@ -11,6 +12,11 @@ rules:
 
 parameters:
     level: 6
+
+    featureToggles:
+        alwaysTrueAlwaysReported: false
+        detectDeadTypeInMultiCatch: false
+        disableCheckMissingIterableValueType: false
 
     paths:
         - %currentWorkingDirectory%/calendar-bundle/src
@@ -44,8 +50,14 @@ parameters:
             message: '#type array<Symfony\\Component\\HttpKernel\\Fragment\\FragmentRendererInterface> is incompatible with native type Psr\\Container\\ContainerInterface#'
             path: %currentWorkingDirectory%/core-bundle/src/Fragment/FragmentHandler.php
 
+        # Ignore the unused ModelMetadataTrait that will be removed in Contao 6
+        - '#Trait Contao\\CoreBundle\\File\\ModelMetadataTrait is used zero times and is not analysed\.#'
+
         # Ignore the wrong return type hint of the UrlGeneratorInterface::generate() method
         - '#Method Contao\\CoreBundle\\Picker\\AbstractPickerProvider::generateUrl\(\) never returns null so it can be removed from the return type\.#'
+
+        # Ignore the forward-compatible declaration that will be added in Symfony 7.0
+        - '#Method Symfony\\Component\\HttpKernel\\CacheWarmer\\WarmableInterface::warmUp\(\) invoked with 2 parameters, 1 required\.#'
 
     treatPhpDocTypesAsCertain: false
     checkMissingIterableValueType: false
