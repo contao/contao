@@ -26,6 +26,8 @@ services:
 
     contao_newsletter.routing.newsletter_resolver:
         class: Contao\NewsletterBundle\Routing\NewsletterResolver
+        arguments:
+            - '@contao.framework'
 
     contao_newsletter.security.newsletter_access_voter:
         class: Contao\NewsletterBundle\Security\Voter\NewsletterAccessVoter
