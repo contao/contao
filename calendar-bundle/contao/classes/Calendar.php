@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * Provide methods regarding calendars.
@@ -372,40 +373,14 @@ class Calendar extends Frontend
 
 		// Add title and link
 		$title .= ' ' . $objEvent->title;
-		$link = '';
 
-		switch ($objEvent->source)
+		try
 		{
-			case 'external':
-				$url = $objEvent->url;
-
-				if (Validator::isRelativeUrl($url))
-				{
-					$url = Environment::get('path') . '/' . $url;
-				}
-
-				$link = $url;
-				break;
-
-			case 'internal':
-				if (($objTarget = $objEvent->getRelated('jumpTo')) instanceof PageModel)
-				{
-					/** @var PageModel $objTarget */
-					$link = $objTarget->getAbsoluteUrl();
-				}
-				break;
-
-			case 'article':
-				if (($objArticle = ArticleModel::findByPk($objEvent->articleId)) instanceof ArticleModel && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
-				{
-					/** @var PageModel $objPid */
-					$link = StringUtil::ampersand($objPid->getAbsoluteUrl('/articles/' . ($objArticle->alias ?: $objArticle->id)));
-				}
-				break;
-
-			default:
-				$link = $objParent->getAbsoluteUrl('/' . ($objEvent->alias ?: $objEvent->id));
-				break;
+			$link = System::getContainer()->get('contao.routing.content_url_generator')->generate($objEvent);
+		}
+		catch (ExceptionInterface)
+		{
+			$link = '';
 		}
 
 		// Store the whole row (see #5085)
