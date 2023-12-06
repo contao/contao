@@ -11,12 +11,9 @@
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Calendar;
-use Contao\CalendarBundle\Security\ContaoCalendarPermissions;
-use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
-use Contao\Image;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
