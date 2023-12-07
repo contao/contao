@@ -17,8 +17,10 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class SchemaCreatedEvent extends Event
 {
-    public function __construct(private SchemaInterface $schema)
-    {
+    public function __construct(
+        private SchemaInterface $schema,
+        private readonly bool $triggerValidation = false,
+    ) {
     }
 
     public function getSchema(): SchemaInterface
@@ -29,5 +31,10 @@ class SchemaCreatedEvent extends Event
     public function setSchema(SchemaInterface $schema): void
     {
         $this->schema = $schema;
+    }
+
+    public function triggerValidation(): bool
+    {
+        return $this->triggerValidation;
     }
 }

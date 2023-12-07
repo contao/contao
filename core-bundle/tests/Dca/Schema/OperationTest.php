@@ -151,7 +151,7 @@ class OperationTest extends TestCase
         $container = $this->createMock(ContainerInterface::class);
         $container
             ->method('get')
-            ->with('framework')
+            ->with('contao.framework')
             ->willReturn($framework)
         ;
 
@@ -184,14 +184,22 @@ class OperationTest extends TestCase
             ->willReturn('<img />')
         ;
 
+        $backendAdapter = $this->mockAdapter(['addToUrl']);
+        $backendAdapter
+            ->expects($this->once())
+            ->method('addToUrl')
+            ->willReturn('contao?do=foo')
+        ;
+
         $framework = $this->mockContaoFramework([
             Image::class => $imageAdapter,
+            Backend::class => $backendAdapter,
         ]);
 
         $container = $this->createMock(ContainerInterface::class);
         $container
             ->method('get')
-            ->with('framework')
+            ->with('contao.framework')
             ->willReturn($framework)
         ;
 

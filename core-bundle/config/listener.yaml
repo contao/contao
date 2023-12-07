@@ -176,6 +176,22 @@ services:
         arguments:
             - '@database_connection'
 
+    contao.listener.data_container.schema.dc_file_exclude:
+        class: Contao\CoreBundle\EventListener\DataContainer\Schema\DcFileExcludeListener
+
+    contao.listener.data_container.schema.input_type_exclude:
+        class: Contao\CoreBundle\EventListener\DataContainer\Schema\InputTypeExcludeListener
+
+    contao.listener.data_container.schema.toggle_operation:
+        class: Contao\CoreBundle\EventListener\DataContainer\Schema\ToggleOperationListener
+        arguments:
+            - '@security.helper'
+
+    contao.listener.data_container.schema_data_validation:
+        class: Contao\CoreBundle\EventListener\DataContainer\Schema\SchemaDataValidationListener
+        arguments:
+            - '@contao.dca.validation.configuration_validator'
+
     contao.listener.data_container.start_stop_validation:
         class: Contao\CoreBundle\EventListener\DataContainer\StartStopValidationListener
         arguments:

@@ -18,6 +18,7 @@ use Contao\CoreBundle\Dca\Schema\SchemaManagerInterface;
 use Contao\CoreBundle\Dca\Schema\ServiceSubscriberSchemaInterface;
 use Contao\CoreBundle\Dca\Schema\ValidatingSchemaInterface;
 use Contao\CoreBundle\Event\Dca\SchemaCreatedEvent;
+use Contao\CoreBundle\Event\Dca\SchemaCreatingEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Psr\Container\ContainerInterface;
@@ -26,6 +27,9 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
+/**
+ * @internal Do not use this class in your code; use the "contao.dca.schema_factory" service instead
+ */
 class SchemaFactory implements ServiceSubscriberInterface
 {
     private readonly Container $container;
@@ -38,9 +42,6 @@ class SchemaFactory implements ServiceSubscriberInterface
 
     private static array $dependencies = [];
 
-    /**
-     * @internal Do not inherit from this class; decorate the "contao.dca.schema_factory" service instead
-     */
     public function __construct(ContainerInterface $serviceLocator)
     {
         $this->container = $serviceLocator->get('service_container');
@@ -57,10 +58,14 @@ class SchemaFactory implements ServiceSubscriberInterface
      *
      * @return T
      */
-    public function createSchema(string $name, string $className, Data $data, SchemaInterface|null $parent = null): SchemaInterface
+    public function createSchema(string $name, string $className, Data $data, SchemaInterface|null $parent = null, bool $triggerValidation = false): SchemaInterface
     {
         if (!is_a($className, SchemaInterface::class, true)) {
             throw new \InvalidArgumentException(sprintf('Class %s must implement SchemaInterface.', $className));
+        }
+
+        if ($this->eventDispatcher) {
+            $this->eventDispatcher->dispatch(new SchemaCreatingEvent($data, $className, $name, $parent))->getSchema();
         }
 
         $schema = new $className($name, $data);
@@ -69,7 +74,7 @@ class SchemaFactory implements ServiceSubscriberInterface
 
         if ($this->eventDispatcher) {
             /** @var T $schema */
-            $schema = $this->eventDispatcher->dispatch(new SchemaCreatedEvent($schema))->getSchema();
+            $schema = $this->eventDispatcher->dispatch(new SchemaCreatedEvent($schema, $triggerValidation))->getSchema();
         }
 
         if ($schema instanceof ValidatingSchemaInterface) {

@@ -19,9 +19,7 @@ class FieldDefinition extends DcaArrayNodeDefinition implements PreconfiguredDef
         $builder = $this->getNodeBuilder();
 
         $builder
-            ->booleanNode('exclude')
-                ->defaultFalse()
-            ->end()
+            ->booleanNode('exclude')->end()
             ->booleanNode('filter')
                 ->defaultFalse()
             ->end()
@@ -44,6 +42,11 @@ class FieldDefinition extends DcaArrayNodeDefinition implements PreconfiguredDef
         $builder->callbackNode('options_callback');
 
         $builder->dcaArrayNode('eval');
+
+        $builder
+            ->booleanNode('toggle')->end()
+            ->booleanNode('reverseToggle')->end()
+        ;
 
         $builder
             ->variableNode('sql')

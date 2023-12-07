@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Dca\Schema;
 
 use Contao\CoreBundle\Dca\Data;
 use Contao\CoreBundle\Dca\SchemaFactory;
+use Contao\CoreBundle\Dca\Util\Path;
 
 class Schema implements SchemaInterface, SchemaManagerInterface, ParentAwareSchemaInterface
 {
@@ -120,11 +121,42 @@ class Schema implements SchemaInterface, SchemaManagerInterface, ParentAwareSche
     {
         $current = $this;
 
-        while ($current instanceof ParentAwareSchemaInterface) {
+        while ($current instanceof ParentAwareSchemaInterface && $current->getParent()) {
             $current = $current->getParent();
         }
 
         return $current;
+    }
+
+    public function getPath(): Path
+    {
+        $path = [];
+        $current = $this;
+
+        while ($current instanceof ParentAwareSchemaInterface && $current->getParent()) {
+            $path[] = $current->getName();
+            $current = $current->getParent();
+        }
+
+        return new Path(array_reverse($path));
+    }
+
+    public function getDca(): Dca|null
+    {
+        $root = $this->getRoot();
+
+        return $root instanceof Dca ? $root : null;
+    }
+
+    public function copyWith(Data $data): static
+    {
+        return $this->schemaFactory->createSchema(
+            $this->getName(),
+            static::class,
+            $data,
+            $this->parent,
+            true,
+        );
     }
 
     protected function getSchemaFactory(): SchemaFactory

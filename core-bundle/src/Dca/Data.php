@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Dca;
 use Contao\ArrayUtil;
 use Contao\CoreBundle\Dca\Observer\ChildDataObserver;
 use Contao\CoreBundle\Dca\Observer\DataObserverInterface;
+use Contao\CoreBundle\Dca\Observer\RootDataUpdater;
 
 /**
  * @internal
@@ -55,6 +56,11 @@ final class Data
         return ArrayUtil::get($this->data, $path);
     }
 
+    public function isEqualTo(mixed $data): bool
+    {
+        return $this->data === $data;
+    }
+
     public function getData(string $path, array|null $fallback = null): self
     {
         $this->notifyReadObservers();
@@ -71,6 +77,10 @@ final class Data
         $data->getReadObservers()->addAll($this->getReadObservers());
         $this->getRoot()->attachWriteObsever(new ChildDataObserver($data));
 
+        if (!$this->isRoot()) {
+            $data->attachWriteObsever(new RootDataUpdater());
+        }
+
         return $data;
     }
 
@@ -79,6 +89,14 @@ final class Data
         $this->data = $data;
 
         $this->notifyWriteObservers();
+    }
+
+    public function set(string $key, mixed $value): self
+    {
+        $this->data = ArrayUtil::set($this->data, $key, $value);
+        $this->notifyWriteObservers();
+
+        return $this;
     }
 
     public function getPath(): string
@@ -94,6 +112,11 @@ final class Data
     public function getRoot(): self
     {
         return $this->root ?? $this;
+    }
+
+    public function isRoot(): bool
+    {
+        return '' === $this->getPath();
     }
 
     public function attachReadObserver(DataObserverInterface $observer): void

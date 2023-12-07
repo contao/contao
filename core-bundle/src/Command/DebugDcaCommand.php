@@ -27,7 +27,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
 use Symfony\Component\VarDumper\Dumper\CliDumper;
 use Symfony\Component\Yaml\Dumper;
-use Symfony\Component\Yaml\Yaml;
 
 #[AsCommand(
     name: 'debug:dca',
@@ -49,14 +48,12 @@ class DebugDcaCommand extends Command
             ->addArgument('path', InputArgument::OPTIONAL, 'Path to a node in the DCA')
             ->addOption('format', null, InputArgument::OPTIONAL, 'The output format (yaml or php)', 'yaml')
             ->addOption('raw', null, InputOption::VALUE_NONE, 'Do not parse the DCA configuration and dump the raw configuration data instead.')
-            ->setDescription('Dumps the DCA configuration for a table.')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $errorIo = $io->getErrorStyle();
 
         $this->framework->initialize();
 
@@ -76,12 +73,6 @@ class DebugDcaCommand extends Command
             $dumper->dump($cloner->cloneVar($data));
 
             return Command::SUCCESS;
-        }
-
-        if ('yaml' === $format && !class_exists(Yaml::class)) {
-            $errorIo->error('Setting the "format" option to "yaml" requires the Symfony Yaml component. Try running "composer install symfony/yaml" or use "--format=php" instead.');
-
-            return 1;
         }
 
         switch ($format) {

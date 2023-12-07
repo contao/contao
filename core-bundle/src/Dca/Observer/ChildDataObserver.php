@@ -22,8 +22,12 @@ class ChildDataObserver implements DataObserverInterface
 
     public function update(Data $subject): void
     {
-        if ('' !== $this->data->getPath()) {
-            $this->data->replace($subject->get($this->data->getPath()));
+        if (!$this->data->isRoot()) {
+            $updated = $subject->get($this->data->getPath()) ?? [];
+
+            if (!$this->data->isEqualTo($updated)) {
+                $this->data->replace($updated);
+            }
         }
     }
 }

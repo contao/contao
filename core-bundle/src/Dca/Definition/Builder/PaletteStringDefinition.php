@@ -22,15 +22,15 @@ class PaletteStringDefinition extends ScalarNodeDefinition implements Preconfigu
     public function preconfigure(): void
     {
         $this
-            ->isRequired()
-                ->validate()
-                ->ifTrue(
-                    static function (string $value) {
-                        // TODO: Add validation.
-                        return false;
-                    },
-                )
-                ->thenInvalid('Invalid palette string.')
+            ->defaultNull()
+            ->validate()
+            ->ifTrue(
+                static function (?string $value) {
+                    // TODO: Add validation.
+                    return false;
+                },
+            )
+            ->thenInvalid('Invalid palette string.')
         ;
     }
 }

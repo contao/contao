@@ -31,8 +31,12 @@ class CallbackDefinition extends DcaArrayNodeDefinition implements Preconfigured
 
         $this
             ->getNodeBuilder()
-                ->variableNode('0')->end()
-                ->scalarNode('1')->end()
+            ->variableNode('0')
+                ->info('Service ID / classname for the callback or a Closure')
+            ->end()
+            ->scalarNode('1')
+                ->info('Callback method of the service or class')
+            ->end()
         ;
     }
 }

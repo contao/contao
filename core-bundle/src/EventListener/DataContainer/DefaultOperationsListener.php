@@ -90,7 +90,7 @@ class DefaultOperationsListener
                 'edit' => [
                     'href' => 'act=edit',
                     'icon' => 'edit.svg',
-                    'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table),
+                    'permission_callback' => $this->isGrantedCallback(UpdateAction::class, $table),
                 ],
             ];
         }
@@ -110,7 +110,7 @@ class DefaultOperationsListener
                     'href' => 'act=paste&amp;mode=copy',
                     'icon' => 'copy.svg',
                     'attributes' => 'onclick="Backend.getScrollOffset()"',
-                    'button_callback' => $this->isGrantedCallback(CreateAction::class, $table),
+                    'permission_callback' => $this->isGrantedCallback(CreateAction::class, $table),
                 ];
 
                 if ($isTreeMode) {
@@ -118,7 +118,7 @@ class DefaultOperationsListener
                         'href' => 'act=paste&amp;mode=copy&amp;childs=1',
                         'icon' => 'copychilds.svg',
                         'attributes' => 'onclick="Backend.getScrollOffset()"',
-                        'button_callback' => $this->copyChildsCallback($table),
+                        'permission_callback' => $this->copyChildsCallback($table),
                     ];
                 }
             }
@@ -128,14 +128,14 @@ class DefaultOperationsListener
                     'href' => 'act=paste&amp;mode=cut',
                     'icon' => 'cut.svg',
                     'attributes' => 'onclick="Backend.getScrollOffset()"',
-                    'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table),
+                    'permission_callback' => $this->isGrantedCallback(UpdateAction::class, $table),
                 ];
             }
         } elseif ($canCopy) {
             $operations['copy'] = [
                 'href' => 'act=copy',
                 'icon' => 'copy.svg',
-                'button_callback' => $this->isGrantedCallback(CreateAction::class, $table),
+                'permission_callback' => $this->isGrantedCallback(CreateAction::class, $table),
             ];
         }
 
@@ -144,7 +144,7 @@ class DefaultOperationsListener
                 'href' => 'act=delete',
                 'icon' => 'delete.svg',
                 'attributes' => 'onclick="if(!confirm(\''.($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null).'\'))return false;Backend.getScrollOffset()"',
-                'button_callback' => $this->isGrantedCallback(DeleteAction::class, $table),
+                'permission_callback' => $this->isGrantedCallback(DeleteAction::class, $table),
             ];
         }
 
@@ -152,7 +152,7 @@ class DefaultOperationsListener
             $operations['toggle'] = [
                 'href' => 'act=toggle&amp;field='.$toggleField,
                 'icon' => 'visible.svg',
-                'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table),
+                'permission_callback' => $this->isGrantedCallback(UpdateAction::class, $table),
             ];
         }
 
@@ -166,11 +166,7 @@ class DefaultOperationsListener
 
     private function isGrantedCallback(string $actionClass, string $table): \Closure
     {
-        return function (DataContainerOperation $operation) use ($actionClass, $table): void {
-            if (!$this->isGranted($actionClass, $table, $operation)) {
-                $this->disableOperation($operation);
-            }
-        };
+        return fn (DataContainerOperation $operation) => $this->isGranted($actionClass, $table, $operation);
     }
 
     private function copyChildsCallback(string $table): \Closure

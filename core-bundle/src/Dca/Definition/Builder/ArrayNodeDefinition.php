@@ -40,6 +40,13 @@ class ArrayNodeDefinition extends StrictArrayNodeDefinition
         ;
     }
 
+    public function dcaNodePrototype(string $type): DcaNodeDefinition
+    {
+        return $this->prototype = $this->getNodeBuilder()->dcaNode(null, $type)
+            ->setParent($this)
+        ;
+    }
+
     /**
      * Customize the node creation to allow nullable prototype array nodes that get removed if not set.
      */

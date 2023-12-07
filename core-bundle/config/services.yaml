@@ -193,6 +193,9 @@ services:
         tags:
             - contao.dca.schema_dependency_provider
 
+    contao.dca.validation.configuration_validator:
+        class: Contao\CoreBundle\Dca\Validation\ConfigurationValidator
+
     contao.doctrine.backup.dumper:
         class: Contao\CoreBundle\Doctrine\Backup\Dumper
 

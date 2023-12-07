@@ -72,6 +72,9 @@ services:
             - '%kernel.project_dir%'
             - '@contao.twig.inspector'
 
+    contao.command.dump_dca_configuration:
+        class: Contao\CoreBundle\Command\DumpDcaConfigurationCommand
+
     contao.command.filesync:
         class: Contao\CoreBundle\Command\FilesyncCommand
         arguments:

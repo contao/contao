@@ -12,8 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Dca;
 
+use Contao\CoreBundle\Dca\Definition\Builder\ArrayNodeDefinition;
 use Contao\CoreBundle\Dca\Definition\Builder\DcaArrayNodeDefinition;
 use Contao\CoreBundle\Dca\Definition\Builder\DcaNodeBuilder;
+use Contao\CoreBundle\Dca\Definition\Builder\DcaTreeBuilder;
 use Contao\DataContainer;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -23,6 +25,9 @@ class DcaConfiguration implements ConfigurationInterface
 {
     private readonly NodeBuilder $nodeBuilder;
 
+    // TODO: Set to false in Contao 6
+    private bool $allowFailingNodes = true;
+
     public function __construct(private readonly string $name)
     {
         $this->nodeBuilder = new DcaNodeBuilder();
@@ -30,11 +35,11 @@ class DcaConfiguration implements ConfigurationInterface
 
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $tree = new TreeBuilder($this->name, 'array', $this->nodeBuilder);
+        $tree = new DcaTreeBuilder($this->name, $this->nodeBuilder);
 
         $tree
+            ->allowFailingNodes($this->allowFailingNodes)
             ->getRootNode()
-                ->ignoreExtraKeys()
                 ->children()
                     ->append($this->addConfigNode())
                     ->append($this->addListNode())
@@ -46,43 +51,61 @@ class DcaConfiguration implements ConfigurationInterface
         return $tree;
     }
 
+    public function allowFailingNodes(bool $allow): static
+    {
+        $this->allowFailingNodes = $allow;
+
+        return $this;
+    }
+
     private function addConfigNode(): DcaArrayNodeDefinition
     {
         $node = new DcaArrayNodeDefinition('config');
-        $node->setBuilder($this->nodeBuilder);
+        $node
+            ->info('Configuration for the DCA resource itself')
+            ->setBuilder($this->nodeBuilder)
+        ;
 
         $children = $node->children();
 
         $children
-            ->scalarNode('dataContainer')
+            ->dcaNode('dataContainer')
+            ->info('Classname of the driver')
+            ->example('\Contao\DC_Table')
             ->isRequired()
             ->cannotBeEmpty()
         ;
 
         $children
-            ->booleanNode('closed')
+            ->dcaNode('closed', 'boolean')
+            ->info('If true, you cannot add further records to the table.')
             ->defaultFalse()
         ;
 
         $children
-            ->booleanNode('enableVersioning')
+            ->dcaNode('enableVersioning', 'boolean')
             ->defaultFalse()
+            ->info('If true, Contao saves the old version of a record when a new version is created.')
         ;
 
         $children
-            ->scalarNode('ptable')
-        ;
-
-        $children
-            ->arrayNode('onload_callback')
+            ->dcaNode('ptable', 'scalar')
             ->defaultNull()
-            ->prototype('callback')
+            ->info('Name of the related parent table (table.pid = ptable.id).')
         ;
 
         $children
-            ->arrayNode('oncut_callback')
-            ->defaultNull()
-            ->prototype('callback')
+            ->dcaArrayNode('onload_callback')
+            ->info('Callbacks called when a DataContainer is initialized. Passes the DataContainer object as argument.')
+            ->example("['tl_content', 'adjustDcaByType']")
+            ->callbackPrototype()
+        ;
+
+        $children
+            ->dcaArrayNode('oncut_callback')
+            ->info('Callbacks called when a record is moved and passes the DataContainer object as argument.')
+            ->example("['tl_page', 'scheduleUpdate']")
+            ->callbackPrototype()
         ;
 
         return $node;
@@ -93,19 +116,19 @@ class DcaConfiguration implements ConfigurationInterface
         $node = new DcaArrayNodeDefinition('list');
         $node->setBuilder($this->nodeBuilder);
 
+        $node
+            ->append($this->addListSortingNode())->end()
+        ;
+
         $children = $node->children();
 
         $children
-            ->append($this->addListSortingNode())
-        ;
-
-        $children
-            ->arrayNode('global_operations')
+            ->dcaArrayNode('global_operations')
             ->prototype('operation')
         ;
 
         $children
-            ->arrayNode('operations')
+            ->dcaArrayNode('operations')
             ->prototype('operation')
         ;
 
@@ -120,10 +143,11 @@ class DcaConfiguration implements ConfigurationInterface
         $children = $node->children();
 
         $children
-            ->scalarNode('mode')
-            ->isRequired()
+            ->dcaNode('mode', 'scalar')
+            ->defaultValue(DataContainer::MODE_UNSORTED)
             ->validate()
                 ->ifNotInArray([
+                    DataContainer::MODE_UNSORTED,
                     DataContainer::MODE_SORTED,
                     DataContainer::MODE_SORTABLE,
                     DataContainer::MODE_SORTED_PARENT,
@@ -135,22 +159,20 @@ class DcaConfiguration implements ConfigurationInterface
         ;
 
         $children
-            ->arrayNode('fields')
-            ->isRequired()
-            ->requiresAtLeastOneElement()
-            ->ignoreExtraKeys(true)
-            ->prototype('scalar')
+            ->dcaArrayNode('fields')
+            ->dcaNodePrototype('scalar')
+            ->invalidFallbackValue('')
             ->validate()
                 ->ifTrue(static fn ($value): bool => !\is_string($value))
                 ->thenInvalid('Only string values allowed.')
         ;
 
         $children
-            ->node('panelLayout', 'paletteString')
+            ->dcaNode('panelLayout', 'paletteString')
         ;
 
         $children
-            ->node('child_record_callback', 'callback')
+            ->dcaNode('child_record_callback', 'callback')
         ;
 
         return $node;
@@ -163,9 +185,9 @@ class DcaConfiguration implements ConfigurationInterface
 
         $node
             ->children()
-                ->arrayNode('__selector__')
-                ->ignoreExtraKeys(true)
-                ->prototype('scalar')
+                ->dcaArrayNode('__selector__')
+                ->ignoreExtraKeys()
+                ->dcaNodePrototype('scalar')
         ;
 
         return $node;
@@ -177,19 +199,20 @@ class DcaConfiguration implements ConfigurationInterface
         $node->setBuilder($this->nodeBuilder);
 
         $node
-            ->prototype('palettestring')
+            ->dcaNodePrototype('palettestring')
         ;
 
         return $node;
     }
 
-    private function addFieldsNode(): DcaArrayNodeDefinition
+    private function addFieldsNode(): ArrayNodeDefinition
     {
-        $node = new DcaArrayNodeDefinition('fields');
+        // No need to use DcaArrayNodeDefinition since fields always had to be an array
+        $node = new ArrayNodeDefinition('fields');
         $node->setBuilder($this->nodeBuilder);
 
         $node
-            ->prototype('field')
+            ->dcaNodePrototype('field')
         ;
 
         return $node;

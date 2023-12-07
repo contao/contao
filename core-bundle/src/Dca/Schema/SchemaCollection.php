@@ -25,11 +25,16 @@ abstract class SchemaCollection extends Schema implements \IteratorAggregate
     }
 
     /**
-     * @return array<T>
+     * @return array<string, T>
      */
     public function children(): array
     {
-        return array_map(fn ($key) => $this->getSchema($key, $this->getChildSchema()), array_map('\strval', array_keys($this->all())));
+        $key = array_map('\strval', array_keys($this->all()));
+
+        return array_combine(
+            $key,
+            array_map(fn ($key) => $this->getSchema($key, $this->getChildSchema()), $key),
+        );
     }
 
     /**

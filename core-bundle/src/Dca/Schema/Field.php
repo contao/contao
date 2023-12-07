@@ -31,6 +31,11 @@ class Field extends Schema implements ServiceSubscriberSchemaInterface
         return $this->is('exclude');
     }
 
+    public function inputType(): string
+    {
+        return $this->get('inputType');
+    }
+
     public function column(): Column
     {
         // TODO: Implement.
@@ -40,6 +45,16 @@ class Field extends Schema implements ServiceSubscriberSchemaInterface
     public function setLocator(ContainerInterface $locator): void
     {
         $this->locator = $locator;
+    }
+
+    public function isToggle(): bool
+    {
+        return $this->get('toggle') ?? false;
+    }
+
+    public function isReverseToggle(): bool
+    {
+        return $this->get('reverseToggle') ?? false;
     }
 
     public static function getSubscribedServices(): array

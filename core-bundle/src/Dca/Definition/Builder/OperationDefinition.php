@@ -17,20 +17,29 @@ namespace Contao\CoreBundle\Dca\Definition\Builder;
  */
 class OperationDefinition extends DcaArrayNodeDefinition implements PreconfiguredDefinitionInterface
 {
-    protected $ignoreExtraKeys = false;
-
-    protected $removeExtraKeys = true;
-
     public function preconfigure(): void
     {
-        $this
-            ->getNodeBuilder()
+        $builder = $this->getNodeBuilder();
+
+        $builder
             ->variableNode('label')->end()
             ->scalarNode('href')->end()
             ->scalarNode('icon')->end()
             ->scalarNode('class')->end()
             ->scalarNode('attributes')->end()
-            ->node('button_callback', 'callback')
+            ->booleanNode('hidden')->end()
         ;
+
+        $builder
+            ->dcaNode('disabled', 'boolean')
+        ;
+
+        $builder
+            ->dcaNode('reverse', 'boolean')
+            ->invalidFallbackValue(false)
+        ;
+
+        $builder->node('permission_callback', 'callback')->end();
+        $builder->node('button_callback', 'callback')->end();
     }
 }

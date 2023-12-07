@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Dca\Schema;
 
+use Contao\DataContainer;
+
 /**
  * Object representation of the config part of a data container array.
  */
@@ -39,5 +41,13 @@ class Config extends Schema
     public function callback(string $name): CallbackCollection
     {
         return $this->getSchema($name.'_callback', CallbackCollection::class);
+    }
+
+    /**
+     * @return class-string<DataContainer>|null
+     */
+    public function driverClassName(): string|null
+    {
+        return $this->get('dataContainer');
     }
 }

@@ -17,13 +17,13 @@ use Contao\CoreBundle\Dca\Driver\MutableDataDriverInterface;
 use Contao\CoreBundle\Dca\Provider\ConfigurationProviderInterface;
 use Contao\CoreBundle\Dca\Schema\Dca;
 
+/**
+ * @internal Do not use this class in your code; use the "contao.dca.factory" service instead
+ */
 class DcaFactory
 {
     private array $dcas = [];
 
-    /**
-     * @internal Do not inherit from this class; decorate the "contao.dca.factory" service instead
-     */
     public function __construct(
         private readonly SchemaFactory $schemaFactory,
         private readonly DriverCollection $driverCollection,
