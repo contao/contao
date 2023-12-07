@@ -108,16 +108,13 @@ class EnumOptionsListenerTest extends TestCase
         );
     }
 
-    public function testGeneratesTranslatedReferenceForLabeledEnum(): void
+    /**
+     * @dataProvider translatableDcaConfigurationProvider
+     */
+    public function testGeneratesTranslatedReferenceForLabeledEnum(array $dca): void
     {
         /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
-        $GLOBALS['TL_DCA']['tl_foo'] = [
-            'fields' => [
-                'foo' => [
-                    'enum' => TranslatableEnum::class,
-                ],
-            ],
-        ];
+        $GLOBALS['TL_DCA']['tl_foo'] = $dca;
 
         $reference = [
             TranslatableEnum::OptionA->value => 'Option One',
@@ -151,7 +148,7 @@ class EnumOptionsListenerTest extends TestCase
 
         $this->assertSame(
             $reference,
-            $GLOBALS['TL_DCA']['tl_foo']['fields']['foo']['reference'],
+            $GLOBALS['TL_DCA']['tl_foo']['fields']['foo']['reference'] ?? null,
         );
     }
 
@@ -186,6 +183,33 @@ class EnumOptionsListenerTest extends TestCase
         return [
             [StringBackedEnum::class],
             [IntBackedEnum::class],
+        ];
+    }
+
+    public function translatableDcaConfigurationProvider(): array
+    {
+        return [
+            'without options' => [
+                [
+                    'fields' => [
+                        'foo' => [
+                            'enum' => TranslatableEnum::class,
+                        ],
+                    ],
+                ],
+            ],
+            'with defined options' => [
+                [
+                    'fields' => [
+                        'foo' => [
+                            'enum' => TranslatableEnum::class,
+                            'options' => [
+                                TranslatableEnum::OptionB->value,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 }

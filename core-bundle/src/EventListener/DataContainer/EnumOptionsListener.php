@@ -42,32 +42,34 @@ class EnumOptionsListener
     public function __invoke(string $table): void
     {
         foreach ($GLOBALS['TL_DCA'][$table]['fields'] ?? [] as $field => $config) {
-            if (isset($GLOBALS['TL_DCA'][$table]['fields'][$field]['options_callback']) || \is_array($GLOBALS['TL_DCA'][$table]['fields'][$field]['options'] ?? null)) {
+            $enum = $config['enum'] ?? null;
+
+            if (null === $enum) {
                 continue;
             }
 
-            if ($enum = ($config['enum'] ?? null)) {
-                if (!is_subclass_of($enum, \BackedEnum::class)) {
-                    throw new \LogicException(sprintf('Invalid enum configuration. Class "%s" must extend BackedEnum.', $enum));
-                }
+            if (!is_subclass_of($enum, \BackedEnum::class)) {
+                throw new \LogicException(sprintf('Invalid enum configuration. Class "%s" must extend BackedEnum.', $enum));
+            }
 
-                // Build the options from the enum cases.
+            // Generate options from the enum cases
+            if (!isset($GLOBALS['TL_DCA'][$table]['fields'][$field]['options_callback']) && !\is_array($GLOBALS['TL_DCA'][$table]['fields'][$field]['options'] ?? null)) {
                 $GLOBALS['TL_DCA'][$table]['fields'][$field]['options_callback'] = static fn () => array_map(
                     static fn ($case) => $case->value,
                     $enum::cases(),
                 );
+            }
 
-                // Build references with translations for a translatable enum.
-                if (!isset($config['reference']) && is_subclass_of($enum, TranslatableLabelInterface::class)) {
-                    $reference = [];
+            // Generate a reference with translations for a translatable enum
+            if (!isset($config['reference']) && is_subclass_of($enum, TranslatableLabelInterface::class)) {
+                $reference = [];
 
-                    /** @var TranslatableLabelInterface&\BackedEnum $case */
-                    foreach ($enum::cases() as $case) {
-                        $reference[$case->value] = $case->label()->trans($this->translator);
-                    }
-
-                    $GLOBALS['TL_DCA'][$table]['fields'][$field]['reference'] = $reference;
+                /** @var TranslatableLabelInterface&\BackedEnum $case */
+                foreach ($enum::cases() as $case) {
+                    $reference[$case->value] = $case->label()->trans($this->translator);
                 }
+
+                $GLOBALS['TL_DCA'][$table]['fields'][$field]['reference'] = $reference;
             }
         }
     }
