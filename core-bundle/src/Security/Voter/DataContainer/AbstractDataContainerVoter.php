@@ -45,10 +45,10 @@ abstract class AbstractDataContainerVoter implements VoterInterface, CacheableVo
                 $subject instanceof ReadAction,
                 $subject instanceof UpdateAction,
                 $subject instanceof DeleteAction => $this->isGranted($subject),
-                default => false,
+                default => null,
             };
 
-            if (!$isGranted) {
+            if (false === $isGranted) {
                 return self::ACCESS_DENIED;
             }
         }
