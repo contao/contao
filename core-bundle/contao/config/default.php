@@ -90,12 +90,6 @@ $GLOBALS['TL_CONFIG']['maxImageWidth']        = 0;
 $GLOBALS['TL_CONFIG']['defaultUser']          = 0;
 $GLOBALS['TL_CONFIG']['defaultGroup']         = 0;
 $GLOBALS['TL_CONFIG']['defaultChmod']         = array('u1', 'u2', 'u3', 'u4', 'u5', 'u6', 'g4', 'g5', 'g6');
-$GLOBALS['TL_CONFIG']['allowedDownload']
-	= 'jpg,jpeg,gif,png,svg,svgz,webp,avif,heic,jxl,'
-	. 'odt,ods,odp,odg,ott,ots,otp,otg,pdf,'
-	. 'doc,docx,dot,dotx,xls,xlsx,xlt,xltx,ppt,pptx,pot,potx,'
-	. 'mp3,mp4,m4a,m4v,webm,ogg,ogv,wma,wmv,ram,rm,mov,'
-	. 'zip,rar,7z,md';
 $GLOBALS['TL_CONFIG']['installPassword']      = '';
 $GLOBALS['TL_CONFIG']['backendTheme']         = 'flexible';
 $GLOBALS['TL_CONFIG']['minPasswordLength']    = 8;

@@ -1136,7 +1136,7 @@ abstract class Controller extends System
 		}
 
 		$objFile = new File($strFile);
-		$arrAllowedTypes = StringUtil::trimsplit(',', strtolower(Config::get('allowedDownload')));
+		$arrAllowedTypes = StringUtil::trimsplit(',', strtolower(System::getContainer()->getParameter('contao.downloadable_files')));
 
 		// Check whether the file type is allowed to be downloaded
 		if (!\in_array($objFile->extension, $arrAllowedTypes))
@@ -1381,7 +1381,7 @@ abstract class Controller extends System
 		global $objPage;
 
 		$arrEnclosures = array();
-		$allowedDownload = StringUtil::trimsplit(',', strtolower(Config::get('allowedDownload')));
+		$allowedDownload = StringUtil::trimsplit(',', strtolower(System::getContainer()->getParameter('contao.downloadable_files')));
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Add download links

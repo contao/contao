@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller\ContentElement;
 
-use Contao\Config;
 use Contao\ContentModel;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Filesystem\FileDownloadHelper;
@@ -98,21 +97,20 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
 
     protected function applyDownloadableFileExtensionsFilter(FilesystemItemIterator $filesystemItemIterator): FilesystemItemIterator
     {
-        // Only allow certain file extensions
-        $getAllowedFileExtensions = function (): array {
-            if ($this->hasParameter('contao.downloadable_files')) {
-                return $this->getParameter('contao.downloadable_files');
-            }
+        if (!$this->hasParameter('contao.downloadable_files')) {
+            return $filesystemItemIterator;
+        }
 
-            $this->initializeContaoFramework();
+        $allowedExtensions = $this->getParameter('contao.downloadable_files');
 
-            return StringUtil::trimsplit(',', $this->getContaoAdapter(Config::class)->get('allowedDownload'));
-        };
+        if (!\is_array($allowedExtensions)) {
+            $allowedExtensions = array_map('strtolower', StringUtil::trimsplit(',', $this->getParameter('contao.downloadable_files')));
+        }
 
         return $filesystemItemIterator->filter(
             static fn (FilesystemItem $item): bool => \in_array(
                 Path::getExtension($item->getPath(), true),
-                array_map('strtolower', $getAllowedFileExtensions()),
+                array_map('strtolower', $allowedExtensions),
                 true,
             ),
         );

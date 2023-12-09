@@ -136,11 +136,6 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 				},
 			),
 		),
-		'allowedDownload' => array
-		(
-			'inputType'               => 'text',
-			'eval'                    => array('tl_class'=>'w50')
-		),
 		'uploadTypes' => array
 		(
 			'inputType'               => 'text',

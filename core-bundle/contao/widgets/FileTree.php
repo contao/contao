@@ -175,7 +175,7 @@ class FileTree extends Widget
 		if (!empty($this->varValue))
 		{
 			$objFiles = FilesModel::findMultipleByUuids((array) $this->varValue);
-			$allowedDownload = StringUtil::trimsplit(',', strtolower(Config::get('allowedDownload')));
+			$allowedDownload = StringUtil::trimsplit(',', strtolower(System::getContainer()->getParameter('contao.downloadable_files')));
 			$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 			if ($objFiles !== null)

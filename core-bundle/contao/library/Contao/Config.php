@@ -71,6 +71,7 @@ class Config
 
 	private static $arrDeprecatedMap = array
 	(
+		'allowedDownload'    => 'contao.downloadable_files',
 	);
 
 	private static $arrDeprecated = array

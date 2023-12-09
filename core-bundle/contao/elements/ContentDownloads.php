@@ -101,7 +101,7 @@ class ContentDownloads extends ContentDownload
 	protected function compile()
 	{
 		$files = array();
-		$allowedDownload = StringUtil::trimsplit(',', strtolower(Config::get('allowedDownload')));
+		$allowedDownload = StringUtil::trimsplit(',', strtolower(System::getContainer()->getParameter('contao.downloadable_files')));
 
 		$container = System::getContainer();
 		$projectDir = $container->getParameter('kernel.project_dir');

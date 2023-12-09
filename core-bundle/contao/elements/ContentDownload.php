@@ -55,7 +55,7 @@ class ContentDownload extends ContentElement
 			return '';
 		}
 
-		$allowedDownload = StringUtil::trimsplit(',', strtolower(Config::get('allowedDownload')));
+		$allowedDownload = StringUtil::trimsplit(',', strtolower(System::getContainer()->getParameter('contao.downloadable_files')));
 
 		// Return if the file type is not allowed
 		if (!\in_array($objFile->extension, $allowedDownload))
