@@ -21,7 +21,10 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\HttpFoundation\UriSigner;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Http\LoginLink\LoginLinkHandlerInterface;
 
 class BackendPreviewControllerTest extends TestCase
 {
@@ -31,7 +34,9 @@ class BackendPreviewControllerTest extends TestCase
             '/preview.php',
             $this->createMock(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
-            $this->mockAuthorizationChecker(),
+            $this->mockSecurityHelper(),
+            $this->createMock(LoginLinkHandlerInterface::class),
+            $this->createMock(UriSigner::class),
         );
 
         $response = $controller(new Request());
@@ -46,7 +51,9 @@ class BackendPreviewControllerTest extends TestCase
             '/preview.php',
             $this->createMock(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
-            $this->mockAuthorizationChecker(),
+            $this->mockSecurityHelper(),
+            $this->createMock(LoginLinkHandlerInterface::class),
+            $this->createMock(UriSigner::class),
         );
 
         $request = Request::create('https://localhost/managed-edition/public/contao/preview?page=123');
@@ -65,7 +72,9 @@ class BackendPreviewControllerTest extends TestCase
             '/preview.php',
             $this->createMock(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
-            $this->mockAuthorizationChecker(false),
+            $this->mockSecurityHelper(false),
+            $this->createMock(LoginLinkHandlerInterface::class),
+            $this->createMock(UriSigner::class),
         );
 
         $request = Request::create('https://localhost/preview.php/en/');
@@ -96,7 +105,9 @@ class BackendPreviewControllerTest extends TestCase
             '/preview.php',
             $previewAuthenticator,
             new EventDispatcher(),
-            $this->mockAuthorizationChecker(),
+            $this->mockSecurityHelper(),
+            $this->createMock(LoginLinkHandlerInterface::class),
+            $this->createMock(UriSigner::class),
         );
 
         $response = $controller($request);
@@ -117,7 +128,9 @@ class BackendPreviewControllerTest extends TestCase
             '/preview.php',
             $this->createMock(FrontendPreviewAuthenticator::class),
             $dispatcher,
-            $this->mockAuthorizationChecker(),
+            $this->mockSecurityHelper(),
+            $this->createMock(LoginLinkHandlerInterface::class),
+            $this->createMock(UriSigner::class),
         );
 
         $request = Request::create('https://localhost/preview.php/en/');
@@ -135,7 +148,9 @@ class BackendPreviewControllerTest extends TestCase
             '/preview.php',
             $this->createMock(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
-            $this->mockAuthorizationChecker(),
+            $this->mockSecurityHelper(),
+            $this->createMock(LoginLinkHandlerInterface::class),
+            $this->createMock(UriSigner::class),
         );
 
         $request = Request::create('https://localhost/preview.php/en/');
@@ -148,14 +163,25 @@ class BackendPreviewControllerTest extends TestCase
         $this->assertSame('/preview.php/', $response->getTargetUrl());
     }
 
-    private function mockAuthorizationChecker(bool $granted = true): AuthorizationCheckerInterface&MockObject
+    private function mockSecurityHelper(bool $granted = true, UserInterface $user = null): Security&MockObject
     {
-        $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
-        $authorizationChecker
+        $security = $this->createMock(Security::class);
+
+        $security
             ->method('isGranted')
             ->willReturn($granted)
         ;
 
-        return $authorizationChecker;
+        $security
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
+        //$security
+        //    ->method('getToken')
+        //    ->willReturn($token)
+        //;
+
+        return $security;
     }
 }

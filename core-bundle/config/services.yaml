@@ -826,6 +826,8 @@ services:
             - '@contao.framework'
             - '@contao.security.two_factor.trusted_device_manager'
             - '@security.firewall.map'
+            - '@uri_signer'
+            - '@security.token_storage'
             - '@?logger'
 
     contao.security.backend_access_voter:

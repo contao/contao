@@ -25,7 +25,9 @@ use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -358,13 +360,20 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $this->getHandler()->onAuthenticationSuccess($request, $token);
     }
 
-    private function getHandler(ContaoFramework|null $framework = null, LoggerInterface|null $logger = null): AuthenticationSuccessHandler
+    private function getHandler(ContaoFramework|null $framework = null, LoggerInterface|null $logger = null, bool $checkRequest = false): AuthenticationSuccessHandler
     {
         $framework ??= $this->mockContaoFramework();
         $trustedDeviceManager = $this->createMock(TrustedDeviceManagerInterface::class);
         $firewallMap = $this->createMock(FirewallMap::class);
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
         $logger ??= $this->createMock(LoggerInterface::class);
 
-        return new AuthenticationSuccessHandler($framework, $trustedDeviceManager, $firewallMap, $logger);
+        $uriSigner = $this->createMock(UriSigner::class);
+        $uriSigner
+            ->method('checkRequest')
+            ->willReturn($checkRequest)
+        ;
+
+        return new AuthenticationSuccessHandler($framework, $trustedDeviceManager, $firewallMap, $uriSigner, $tokenStorage, $logger);
     }
 }
