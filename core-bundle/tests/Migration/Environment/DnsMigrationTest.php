@@ -24,7 +24,6 @@ class DnsMigrationTest extends TestCase
     public function testDoesNotRunIfNoMappings(): void
     {
         $db = $this->createMock(Connection::class);
-
         $migration = new DnsMigration($db, []);
 
         $this->assertFalse($migration->shouldRun());
@@ -108,20 +107,16 @@ class DnsMigrationTest extends TestCase
             ->willReturn($schemaManager)
         ;
 
-        $queryBuilder = new QueryBuilder($db);
-
         $db
             ->expects($this->once())
             ->method('createQueryBuilder')
-            ->willReturn($queryBuilder)
+            ->willReturn(new QueryBuilder($db))
         ;
-
-        $exprBuilder = new ExpressionBuilder($db);
 
         $db
             ->expects($this->once())
             ->method('getExpressionBuilder')
-            ->willReturn($exprBuilder)
+            ->willReturn(new ExpressionBuilder($db))
         ;
 
         $db
@@ -203,13 +198,10 @@ class DnsMigrationTest extends TestCase
     public function testRun(array $mapping, string $query, array $params): void
     {
         $db = $this->createMock(Connection::class);
-
-        $queryBuilder = new QueryBuilder($db);
-
         $db
             ->expects($this->once())
             ->method('createQueryBuilder')
-            ->willReturn($queryBuilder)
+            ->willReturn(new QueryBuilder($db))
         ;
 
         $db

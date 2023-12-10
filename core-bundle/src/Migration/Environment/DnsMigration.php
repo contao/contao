@@ -47,7 +47,8 @@ class DnsMigration extends AbstractMigration
             $from = $this->parseHost($from);
             $to = $this->parseHost($to);
 
-            $qb = $this->db->createQueryBuilder()
+            $qb = $this->db
+                ->createQueryBuilder()
                 ->select('TRUE')
                 ->from('tl_page')
                 ->where("type = 'root'")
@@ -99,7 +100,7 @@ class DnsMigration extends AbstractMigration
             ;
 
             if ($from['scheme']) {
-                $qb->andWhere('https:' === $from['scheme'] ? 'useSSL = 1' : 'useSSL != 1');
+                $qb->andWhere('https:' === $from['scheme'] ? 'useSSL = 1' : 'useSSL = 0');
             }
 
             if (null !== $from['host']) {
