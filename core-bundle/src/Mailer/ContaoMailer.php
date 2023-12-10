@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Mailer;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Mailer\Envelope;
@@ -25,12 +26,14 @@ final class ContaoMailer implements MailerInterface
     private MailerInterface $mailer;
     private AvailableTransports $transports;
     private RequestStack $requestStack;
+    private ?ContaoFramework $framework;
 
-    public function __construct(MailerInterface $mailer, AvailableTransports $transports, RequestStack $requestStack)
+    public function __construct(MailerInterface $mailer, AvailableTransports $transports, RequestStack $requestStack, ?ContaoFramework $framework)
     {
         $this->mailer = $mailer;
         $this->transports = $transports;
         $this->requestStack = $requestStack;
+        $this->framework = $framework;
     }
 
     public function send(RawMessage $message, Envelope $envelope = null): void
@@ -55,15 +58,7 @@ final class ContaoMailer implements MailerInterface
             return;
         }
 
-        $request = $this->requestStack->getMainRequest();
-
-        if (null === $request) {
-            return;
-        }
-
-        $page = $request->attributes->get('pageModel');
-
-        if (!$page instanceof PageModel) {
+        if (!($page = $this->getPageModel())) {
             return;
         }
 
@@ -108,5 +103,37 @@ final class ContaoMailer implements MailerInterface
         if (null !== $message->getSender()) {
             $message->sender($from);
         }
+    }
+
+    /**
+     * Copy of AbstractFragmentController::getPageModel.
+     */
+    private function getPageModel(): ?PageModel
+    {
+        $request = $this->requestStack->getMainRequest();
+
+        if (null === $request || !$request->attributes->has('pageModel')) {
+            return null;
+        }
+
+        $pageModel = $request->attributes->get('pageModel');
+
+        if ($pageModel instanceof PageModel) {
+            return $pageModel;
+        }
+
+        if (
+            isset($GLOBALS['objPage'])
+            && $GLOBALS['objPage'] instanceof PageModel
+            && (int) $GLOBALS['objPage']->id === (int) $pageModel
+        ) {
+            return $GLOBALS['objPage'];
+        }
+
+        if (!$this->framework) {
+            return null;
+        }
+
+        return $this->framework->getAdapter(PageModel::class)->findByPk((int) $pageModel);
     }
 }
