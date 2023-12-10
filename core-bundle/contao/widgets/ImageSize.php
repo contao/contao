@@ -191,12 +191,12 @@ class ImageSize extends Widget
 			{
 				$arrOptions[] = sprintf(
 					'<option value="%s"%s>%s</option>',
-					self::specialcharsValue($arrOption['value'] ?? ''),
-					$this->optionSelected($arrOption['value'] ?? null, $this->varValue[2] ?? null),
+					self::specialcharsValue($arrOption['value']),
+					$this->optionSelected($arrOption['value'], $this->varValue[2] ?? null),
 					$arrOption['label'] ?? null
 				);
 
-				$arrValues[] = $arrOption['value'] ?? '';
+				$arrValues[] = $arrOption['value'];
 			}
 			else
 			{

@@ -237,6 +237,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             Request::setTrustedProxies(explode(',', (string) $trustedProxies), $trustedHeaderSet);
         }
 
+        // TODO: Remove this line in Contao 5.4 with Symfony 7 only
         Request::enableHttpMethodParameterOverride();
 
         $jwtManager = null;
@@ -314,7 +315,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         }
 
         if ($container->fileExists($path = Path::join($projectDir, 'config', $file.'.yml'))) {
-            trigger_deprecation('contao/manager-bundle', '5.0', sprintf('Using a %s.yml file has been deprecated and will no longer work in Contao 6.0. Use a %s.yaml file instead', $file, $file));
+            trigger_deprecation('contao/manager-bundle', '5.0', 'Using a %s.yml file has been deprecated and will no longer work in Contao 6. Use a %s.yaml file instead', $file, $file);
             $exists[] = $path;
         }
 

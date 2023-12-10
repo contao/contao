@@ -8,21 +8,24 @@
     "packages": [
         {
             "name": "contao/rector",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/contao/rector.git",
-                "reference": "bca1236795d25c15be9aa106c75ddb4d6a8a870c"
+                "reference": "d4104d94ee317e9f61e8200d0ca1d5f0fbfd36b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contao/rector/zipball/bca1236795d25c15be9aa106c75ddb4d6a8a870c",
-                "reference": "bca1236795d25c15be9aa106c75ddb4d6a8a870c",
+                "url": "https://api.github.com/repos/contao/rector/zipball/d4104d94ee317e9f61e8200d0ca1d5f0fbfd36b7",
+                "reference": "d4104d94ee317e9f61e8200d0ca1d5f0fbfd36b7",
                 "shasum": ""
             },
             "require": {
                 "php": "^8.1",
                 "rector/rector": "^0.18"
+            },
+            "require-dev": {
+                "contao/easy-coding-standard": "^6.0"
             },
             "type": "library",
             "autoload": {
@@ -43,7 +46,7 @@
             "description": "Rector configurations for Contao",
             "support": {
                 "issues": "https://github.com/contao/rector/issues",
-                "source": "https://github.com/contao/rector/tree/1.0.0"
+                "source": "https://github.com/contao/rector/tree/1.0.1"
             },
             "funding": [
                 {
@@ -51,20 +54,20 @@
                     "type": "custom"
                 }
             ],
-            "time": "2023-09-27T14:18:08+00:00"
+            "time": "2023-11-14T15:55:19+00:00"
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.41",
+            "version": "1.10.46",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "c6174523c2a69231df55bdc65b61655e72876d76"
+                "reference": "90d3d25c5b98b8068916bbf08ce42d5cb6c54e70"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/c6174523c2a69231df55bdc65b61655e72876d76",
-                "reference": "c6174523c2a69231df55bdc65b61655e72876d76",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/90d3d25c5b98b8068916bbf08ce42d5cb6c54e70",
+                "reference": "90d3d25c5b98b8068916bbf08ce42d5cb6c54e70",
                 "shasum": ""
             },
             "require": {
@@ -113,20 +116,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-11-05T12:57:57+00:00"
+            "time": "2023-11-28T14:57:26+00:00"
         },
         {
             "name": "rector/rector",
-            "version": "0.18.6",
+            "version": "0.18.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "02041b220704b9cbe075f0310d0954b2fda5c40c"
+                "reference": "9621124c860066f56a4ab841349cb7c284edfaee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/02041b220704b9cbe075f0310d0954b2fda5c40c",
-                "reference": "02041b220704b9cbe075f0310d0954b2fda5c40c",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/9621124c860066f56a4ab841349cb7c284edfaee",
+                "reference": "9621124c860066f56a4ab841349cb7c284edfaee",
                 "shasum": ""
             },
             "require": {
@@ -161,7 +164,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/0.18.6"
+                "source": "https://github.com/rectorphp/rector/tree/0.18.11"
             },
             "funding": [
                 {
@@ -169,7 +172,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-10-24T15:00:59+00:00"
+            "time": "2023-11-27T13:27:43+00:00"
         }
     ],
     "packages-dev": [],

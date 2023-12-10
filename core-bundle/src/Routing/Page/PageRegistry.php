@@ -14,8 +14,9 @@ namespace Contao\CoreBundle\Routing\Page;
 
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
+use Symfony\Contracts\Service\ResetInterface;
 
-class PageRegistry
+class PageRegistry implements ResetInterface
 {
     private const DISABLE_CONTENT_COMPOSITION = ['redirect', 'forward', 'logout'];
 
@@ -24,17 +25,17 @@ class PageRegistry
     private array|null $urlSuffixes = null;
 
     /**
-     * @var array<RouteConfig>
+     * @var array<string, RouteConfig>
      */
     private array $routeConfigs = [];
 
     /**
-     * @var array<DynamicRouteInterface>
+     * @var array<string, DynamicRouteInterface>
      */
     private array $routeEnhancers = [];
 
     /**
-     * @var array<ContentCompositionInterface|bool>
+     * @var array<string, ContentCompositionInterface|bool>
      */
     private array $contentComposition = [];
 
@@ -149,6 +150,7 @@ class PageRegistry
 
         $this->contentComposition[$type] = $contentComposition;
 
+        // Make sure to reset caches when a page type is added
         $this->urlPrefixes = null;
         $this->urlSuffixes = null;
 
@@ -203,6 +205,12 @@ class PageRegistry
         }
 
         return $types;
+    }
+
+    public function reset(): void
+    {
+        $this->urlPrefixes = null;
+        $this->urlSuffixes = null;
     }
 
     private function initializePrefixAndSuffix(): void

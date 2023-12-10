@@ -43,7 +43,7 @@ abstract class ModuleNews extends Module
 
 			while ($objArchive->next())
 			{
-				if ($objArchive->protected && !$security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, StringUtil::deserialize($objArchive->groups, true)))
+				if ($objArchive->protected && !$security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objArchive->groups))
 				{
 					continue;
 				}
