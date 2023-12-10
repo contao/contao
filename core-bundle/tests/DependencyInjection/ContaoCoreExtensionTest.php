@@ -856,6 +856,25 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
+    public function testSetsDefaultDnsMappingParameter(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        (new ContaoCoreExtension())->load([], $container);
+
+        $this->assertSame([], $container->getParameter('contao.dns_mapping'));
+    }
+
+    public function testDoesNotOverwriteDnsMappingParameter(): void
+    {
+        $container = $this->getContainerBuilder();
+        $container->setParameter('contao.dns_mapping', ['example.com' => 'example.local']);
+
+        (new ContaoCoreExtension())->load([], $container);
+
+        $this->assertSame(['example.com' => 'example.local'], $container->getParameter('contao.dns_mapping'));
+    }
+
     public function testRegistersAsCallbackAttribute(): void
     {
         $container = $this->getContainerBuilder();
