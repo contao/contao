@@ -157,7 +157,7 @@ class DnsMigrationTest extends TestCase
 
         yield [
             ['example.com' => 'https://example.local'],
-            "SELECT TRUE FROM tl_page WHERE (type = 'root') AND (dns = :fromHost) AND ((useSSL != 1) OR (dns != :toHost))",
+            "SELECT TRUE FROM tl_page WHERE (type = 'root') AND (dns = :fromHost) AND ((useSSL = 0) OR (dns != :toHost))",
             ['fromHost' => 'example.com', 'toHost' => 'example.local'],
         ];
 
