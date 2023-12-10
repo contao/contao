@@ -28,7 +28,7 @@ final class ContaoMailer implements MailerInterface
     private RequestStack $requestStack;
     private ?ContaoFramework $framework;
 
-    public function __construct(MailerInterface $mailer, AvailableTransports $transports, RequestStack $requestStack, ?ContaoFramework $framework)
+    public function __construct(MailerInterface $mailer, AvailableTransports $transports, RequestStack $requestStack, ContaoFramework $framework = null)
     {
         $this->mailer = $mailer;
         $this->transports = $transports;
