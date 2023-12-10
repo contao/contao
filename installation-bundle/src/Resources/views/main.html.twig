@@ -70,7 +70,7 @@
       {% if import_error is defined %}
         <p class="tl_error">{{ import_error|nl2br }}</p>
       {% elseif import_date is defined %}
-        <p class="tl_confirm">{{ 'imported_on'|trans|format(import_date) }}</p>
+        <p class="tl_confirm">{{ 'imported_on'|trans([import_date]) }}</p>
       {% else %}
         <p class="tl_info">{{ 'import_data_will_be_deleted'|trans }}</p>
       {% endif %}

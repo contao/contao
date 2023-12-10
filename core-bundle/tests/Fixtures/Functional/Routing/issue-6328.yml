@@ -1,0 +1,65 @@
+tl_layout:
+    - id: 1
+      pid: 1
+      tstamp: 1584453722
+      name: Contao
+      rows: 1rw
+      cols: 1cl
+      modules: a:1:{i:0;a:3:{s:3:"mod";s:1:"0";s:3:"col";s:4:"main";s:6:"enable";s:1:"1";}}
+      template: fe_page
+
+tl_page:
+    - id: 1
+      pid: 0
+      sorting: 128
+      tstamp: 1603728012
+      title: English
+      alias: en
+      urlPrefix: en
+      urlSuffix: .html
+      type: root
+      language: en
+      fallback: '1'
+      includeLayout: '1'
+      layout: 1
+      published: '1'
+
+    - id: 2
+      pid: 1
+      sorting: 128
+      tstamp: 1603728012
+      title: Home English
+      alias: home
+      type: regular
+      published: '1'
+
+    - id: 3
+      pid: 0
+      sorting: 256
+      tstamp: 1603728012
+      title: Dutch
+      alias: nl
+      urlPrefix: ''
+      urlSuffix: .html
+      disableLanguageRedirect: '1'
+      type: root
+      language: nl
+      fallback: ''
+      includeLayout: '1'
+      layout: 1
+      published: '1'
+
+    - id: 4
+      pid: 3
+      sorting: 128
+      tstamp: 1603728012
+      title: Home Dutch
+      alias: home
+      type: regular
+      published: '1'
+
+tl_theme:
+    - id: 1
+      tstamp: 1575316433
+      name: Contao
+      author: ''

@@ -73,6 +73,7 @@ class ContaoCacheWarmerTest extends TestCase
         $this->assertFileExists(Path::join($this->getTempDir(), 'var/cache/contao/config/autoload.php'));
         $this->assertFileExists(Path::join($this->getTempDir(), 'var/cache/contao/config/config.php'));
         $this->assertFileExists(Path::join($this->getTempDir(), 'var/cache/contao/config/templates.php'));
+        $this->assertFileExists(Path::join($this->getTempDir(), 'var/cache/contao/config/available-language-files.php'));
         $this->assertFileExists(Path::join($this->getTempDir(), 'var/cache/contao/dca'));
         $this->assertFileExists(Path::join($this->getTempDir(), 'var/cache/contao/dca/tl_test.php'));
         $this->assertFileExists(Path::join($this->getTempDir(), 'var/cache/contao/languages'));
@@ -105,6 +106,22 @@ class ContaoCacheWarmerTest extends TestCase
             "\$this->arrFields = array (\n  'id' => 'int(10) unsigned NOT NULL auto_increment',\n);",
             file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/sql/tl_test.php'))
         );
+
+        $expected = <<<'TXT'
+            <?php
+            return array (
+              'en' =>
+              array (
+                'default' => true,
+                'tl_test' => true,
+              ),
+            );
+
+            TXT;
+
+        $file = Path::join($this->getTempDir(), 'var/cache/contao/config/available-language-files.php');
+
+        $this->assertSame($expected, preg_replace('/\s+\n/', "\n", file_get_contents($file)));
     }
 
     public function testIsAnOptionalWarmer(): void

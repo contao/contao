@@ -159,7 +159,7 @@
     </div>
     <div id="footer">
         <div class="wrap">
-            {% block hint %}{{ 'XPT.hint'|trans|format(template)|raw }}{% endblock %}
+            {% block hint %}{{ 'XPT.hint'|trans([template])|raw }}{% endblock %}
         </div>
     </div>
 </body>

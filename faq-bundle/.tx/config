@@ -1,38 +1,51 @@
 [main]
-host = https://www.transifex.com
+host = https://app.transifex.com
 
 [o:contao:p:faq-bundle:r:v4_13-default]
 file_filter = src/Resources/contao/languages/<lang>/default.xlf
 source_file = src/Resources/contao/languages/en/default.xlf
+type = XLIFF
 source_lang = en
+resource_name = v4_13-default
 
 [o:contao:p:faq-bundle:r:v4_13-modules]
 file_filter = src/Resources/contao/languages/<lang>/modules.xlf
 source_file = src/Resources/contao/languages/en/modules.xlf
+type = XLIFF
 source_lang = en
+resource_name = v4_13-modules
 
 [o:contao:p:faq-bundle:r:v4_13-tl_faq]
 file_filter = src/Resources/contao/languages/<lang>/tl_faq.xlf
 source_file = src/Resources/contao/languages/en/tl_faq.xlf
+type = XLIFF
 source_lang = en
+resource_name = v4_13-tl_faq
 
 [o:contao:p:faq-bundle:r:v4_13-tl_faq_category]
 file_filter = src/Resources/contao/languages/<lang>/tl_faq_category.xlf
 source_file = src/Resources/contao/languages/en/tl_faq_category.xlf
+type = XLIFF
 source_lang = en
+resource_name = v4_13-tl_faq_category
 
 [o:contao:p:faq-bundle:r:v4_13-tl_module]
 file_filter = src/Resources/contao/languages/<lang>/tl_module.xlf
 source_file = src/Resources/contao/languages/en/tl_module.xlf
+type = XLIFF
 source_lang = en
+resource_name = v4_13-tl_module
 
 [o:contao:p:faq-bundle:r:v4_13-tl_user]
 file_filter = src/Resources/contao/languages/<lang>/tl_user.xlf
 source_file = src/Resources/contao/languages/en/tl_user.xlf
+type = XLIFF
 source_lang = en
+resource_name = v4_13-tl_user
 
 [o:contao:p:faq-bundle:r:v4_13-tl_user_group]
 file_filter = src/Resources/contao/languages/<lang>/tl_user_group.xlf
 source_file = src/Resources/contao/languages/en/tl_user_group.xlf
+type = XLIFF
 source_lang = en
-
+resource_name = v4_13-tl_user_group

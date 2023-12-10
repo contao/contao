@@ -101,6 +101,9 @@ abstract class Events extends Module
 			return array();
 		}
 
+		// Include all events of the day, expired events will be filtered out later
+		$intStart = strtotime(date('Y-m-d', $intStart) . ' 00:00:00');
+
 		$this->arrEvents = array();
 
 		foreach ($arrCalendars as $id)
@@ -302,6 +305,12 @@ abstract class Events extends Module
 		$arrEvent['end'] = $intEnd;
 		$arrEvent['details'] = '';
 		$arrEvent['hasTeaser'] = false;
+
+		// Set open-end events to 23:59:59, so they run until the end of the day (see #4476)
+		if ($intStart == $intEnd && $objEvents->addTime)
+		{
+			$arrEvent['endTime'] = strtotime(date('Y-m-d', $arrEvent['endTime']) . ' 23:59:59');
+		}
 
 		// Override the link target
 		if ($objEvents->source == 'external' && $objEvents->target)

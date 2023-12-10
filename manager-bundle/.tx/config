@@ -1,8 +1,9 @@
 [main]
-host = https://www.transifex.com
+host = https://app.transifex.com
 
 [o:contao:p:manager-bundle:r:v4_13-ContaoManagerBundle]
 file_filter = src/Resources/translations/ContaoManagerBundle.<lang>.xlf
 source_file = src/Resources/translations/ContaoManagerBundle.en.xlf
+type = XLIFF
 source_lang = en
-
+resource_name = v4_13-ContaoManagerBundle
