@@ -74,7 +74,7 @@ class TransportSecurityHeaderListenerTest extends TestCase
         $response = new Response();
         $request = Request::create('https://contao.org');
 
-        $listener = new TransportSecurityHeaderListener($this->createScopeMatcher(true), 31536000);
+        $listener = new TransportSecurityHeaderListener($this->createScopeMatcher(true));
         $listener($this->createEvent($request, $response));
 
         $this->assertTrue($response->headers->has('Strict-Transport-Security'));

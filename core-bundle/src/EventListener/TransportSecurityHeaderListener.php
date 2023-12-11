@@ -22,7 +22,7 @@ class TransportSecurityHeaderListener
 {
     public function __construct(
         private readonly ScopeMatcher $scopeMatcher,
-        private readonly int $ttl,
+        private readonly int $ttl = 31536000,
     ) {
     }
 

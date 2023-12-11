@@ -570,7 +570,6 @@ services:
         class: Contao\CoreBundle\EventListener\TransportSecurityHeaderListener
         arguments:
             - '@contao.routing.scope_matcher'
-            - ~
         tags:
             - kernel.event_listener
 
