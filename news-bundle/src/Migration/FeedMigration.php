@@ -99,7 +99,7 @@ class FeedMigration extends AbstractMigration
 
         // Find first root page, if none matches by dns and language
         if (!$page) {
-            $page = $this->connection->fetchOne("SELECT id FROM tl_page WHERE type = 'root' AND fallback = '1' ORDER BY sorting ASC LIMIT 1");
+            $page = $this->connection->fetchOne("SELECT id FROM tl_page WHERE type = 'root' AND fallback = 1 ORDER BY sorting ASC LIMIT 1");
         }
 
         return $page;

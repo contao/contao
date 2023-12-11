@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\HttpKernel\UriSigner;
+use Symfony\Component\HttpFoundation\UriSigner;
 
 /**
  * This helper class makes it easier to generate and handle streamed file
@@ -106,7 +106,7 @@ class FileDownloadHelper
             return new Response('The requested resource does not exist.', Response::HTTP_NOT_FOUND);
         }
 
-        if (null !== $onProcess) {
+        if ($onProcess) {
             $context = StringUtil::deserialize($request->query->get(self::PARAM_CONTEXT, ''), true);
             $response = $onProcess($file, $context);
 

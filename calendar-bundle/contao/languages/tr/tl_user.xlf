@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_user.calendars.1">
         <source>Here you can grant access to one or more calendars.</source>
-        <target>Buradan bir ya da birkaç takvime erişim izni verilebilir.</target>
+        <target>Buradan bir ya da birkaç takvime erişim izni verebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarp.0">
         <source>Calendar permissions</source>
@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_user.calendarfeeds.1">
         <source>Here you can grant access to one or more calendar feeds.</source>
-        <target>Buradan bir ya da birkaç takvim akışına erişim izni verilebilir.</target>
+        <target>Buradan bir ya da birkaç takvim akışına erişim izni verebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeedp.0">
         <source>Calendar feed permissions</source>

@@ -55,7 +55,7 @@ class PageUrlGenerator extends SymfonyUrlGenerator
             && \array_key_exists(RouteObjectInterface::CONTENT_OBJECT, $parameters)
             && $parameters[RouteObjectInterface::CONTENT_OBJECT] instanceof PageModel
         ) {
-            trigger_deprecation('contao/core-bundle', '4.13', 'Using RouteObjectInterface::OBJECT_BASED_ROUTE_NAME to generate page URLs has been deprecated and will no longer work in Contao 6.0. Use PageRoute::PAGE_BASED_ROUTE_NAME instead.');
+            trigger_deprecation('contao/core-bundle', '4.13', 'Using "RouteObjectInterface::OBJECT_BASED_ROUTE_NAME" to generate page URLs has been deprecated and will no longer work in Contao 6. Use "PageRoute::PAGE_BASED_ROUTE_NAME" instead.');
             $route = $this->pageRegistry->getRoute($parameters[RouteObjectInterface::CONTENT_OBJECT]);
             unset($parameters[RouteObjectInterface::CONTENT_OBJECT]);
         } elseif (
@@ -63,7 +63,7 @@ class PageUrlGenerator extends SymfonyUrlGenerator
             && \array_key_exists(RouteObjectInterface::ROUTE_OBJECT, $parameters)
             && $parameters[RouteObjectInterface::ROUTE_OBJECT] instanceof PageRoute
         ) {
-            trigger_deprecation('contao/core-bundle', '4.13', 'Using RouteObjectInterface::OBJECT_BASED_ROUTE_NAME to generate page URLs has been deprecated and will no longer work in Contao 6.0. Use PageRoute::PAGE_BASED_ROUTE_NAME instead.');
+            trigger_deprecation('contao/core-bundle', '4.13', 'Using "RouteObjectInterface::OBJECT_BASED_ROUTE_NAME" to generate page URLs has been deprecated and will no longer work in Contao 6. Use "PageRoute::PAGE_BASED_ROUTE_NAME" instead.');
             $route = $parameters[RouteObjectInterface::ROUTE_OBJECT];
             unset($parameters[RouteObjectInterface::ROUTE_OBJECT]);
         } else {

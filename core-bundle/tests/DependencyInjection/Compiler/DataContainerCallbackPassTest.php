@@ -553,7 +553,6 @@ class DataContainerCallbackPassTest extends TestCase
         $definition = $container->getDefinition('contao.listener.data_container_callback');
         $methodCalls = $definition->getMethodCalls();
 
-        $this->assertIsArray($methodCalls);
         $this->assertSame('setCallbacks', $methodCalls[0][0]);
         $this->assertIsArray($methodCalls[0][1]);
 

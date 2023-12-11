@@ -99,6 +99,7 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.hintEdit">
         <source>Preview link</source>
+        <target>Ссылка для предпросмотра</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.hintExpired">
         <source>This preview link has expired and can no longer be shared.</source>

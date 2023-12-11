@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Image\Preview;
 
 use Contao\Image\ImageDimensions;
+use Imagine\Driver\InfoProvider;
 use Imagine\Factory\ClassFactoryInterface;
 use Imagine\Gd\Imagine as GdImagine;
 use Imagine\Gmagick\Imagine as GmagickImagine;
@@ -100,11 +101,6 @@ class ImaginePreviewProvider implements PreviewProviderInterface
 
     private function imagineSupportsFormat(string $format): bool
     {
-        // TODO: Use once Imagine 1.3.0 was released
-        // if ($this->imagine instanceof InfoProvider) {
-        //    return $this->imagine->getDriverInfo()->isFormatSupported($format);
-        // }
-
         if ($this->imagine instanceof ImagickImagine) {
             return \in_array(strtoupper($format), \Imagick::queryFormats(strtoupper($format)), true);
         }
@@ -115,6 +111,10 @@ class ImaginePreviewProvider implements PreviewProviderInterface
 
         if ($this->imagine instanceof GdImagine) {
             return \function_exists('image'.$format);
+        }
+
+        if ($this->imagine instanceof InfoProvider) {
+            return $this->imagine->getDriverInfo()->isFormatSupported($format);
         }
 
         throw new \RuntimeException(sprintf('Unsupported Imagine implementation "%s"', $this->imagine::class));

@@ -215,14 +215,14 @@ class Newsletter extends Backend
 				$objSession->set('tl_newsletter_send', null);
 
 				// Deactivate rejected addresses
-				if ($objSession->has('rejected_recipients'))
+				if ($arrRejected = $objSession->get('rejected_recipients', array()))
 				{
-					$intRejected = \count($objSession->get('rejected_recipients', array()));
+					$intRejected = \count($arrRejected);
 
 					Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['rejected'], $intRejected));
 					$intTotal -= $intRejected;
 
-					foreach ($objSession->get('rejected_recipients', array()) as $strRecipient)
+					foreach ($arrRejected as $strRecipient)
 					{
 						$db
 							->prepare("UPDATE tl_newsletter_recipients SET active=0 WHERE email=?")
@@ -827,7 +827,7 @@ class Newsletter extends Backend
 		$arrDelete = array_values(array_diff($arrChannel, $varValue));
 
 		// Delete existing recipients
-		if (!empty($arrDelete) && \is_array($arrDelete))
+		if (!empty($arrDelete))
 		{
 			$db
 				->prepare("DELETE FROM tl_newsletter_recipients WHERE pid IN(" . implode(',', array_map('\intval', $arrDelete)) . ") AND email=?")
@@ -978,7 +978,7 @@ class Newsletter extends Backend
 	 */
 	public function purgeSubscriptions()
 	{
-		trigger_deprecation('contao/newsletter-bundle', '5.0', 'Calling "%s()" has been deprecated and will no longer work in Contao 6.0. Use NewsletterRecipientsModel::findExpiredSubscriptions() instead.', __METHOD__);
+		trigger_deprecation('contao/newsletter-bundle', '5.0', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use "NewsletterRecipientsModel::findExpiredSubscriptions()" instead.', __METHOD__);
 
 		$objRecipient = NewsletterRecipientsModel::findExpiredSubscriptions();
 

@@ -1,0 +1,32 @@
+{% use "@Contao/component/_headline.html.twig" %}
+
+{% if searchable is defined and not searchable %}
+<!-- indexer::stop -->
+{%- endif %}
+
+{% block wrapper %}
+    {# Wrapper attributes: add the user defined ID/classes and also add the
+       template name (e.g. "content_element/text") as a class #}
+    {% set attributes = attrs(attributes|default)
+        .setIfExists('id', element_html_id)
+        .addClass([element_css_classes, "content-#{type}"])
+    %}
+
+    {# Wrapper element around headline and content #}
+    <{% block wrapper_tag %}div{% endblock %}{% block attributes %}{{ attributes }}{% endblock %}>
+        {%- block inner %}
+            {% if headline.text %}
+                {{ block('headline_component') }}
+            {% endif %}
+
+            {% block content %}{% endblock %}
+        {% endblock -%}
+    </{{ block('wrapper_tag') }}>
+{% endblock %}
+
+{% if searchable is defined and not searchable -%}
+<!-- indexer::continue -->
+{% endif %}
+
+{# Add metadata #}
+{% block metadata %}{% endblock %}

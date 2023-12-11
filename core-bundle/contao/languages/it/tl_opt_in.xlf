@@ -7,9 +7,11 @@
       </trans-unit>
       <trans-unit id="tl_opt_in.confirmedOn">
         <source>Confirmed at</source>
+        <target>Confermato a</target>
       </trans-unit>
       <trans-unit id="tl_opt_in.removeOn">
         <source>Remove at</source>
+        <target>Rimuovi a</target>
       </trans-unit>
       <trans-unit id="tl_opt_in.invalidatedThrough">
         <source>Invalidated through</source>

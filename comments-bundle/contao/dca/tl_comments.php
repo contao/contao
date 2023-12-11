@@ -72,22 +72,14 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 			'mode'                    => DataContainer::MODE_SORTABLE,
 			'fields'                  => array('date'),
 			'panelLayout'             => 'filter;sort,search,limit',
-			'defaultSearchField'      => 'comment'
+			'defaultSearchField'      => 'comment',
+			'limitHeight'             => 104
 		),
 		'label' => array
 		(
 			'fields'                  => array('name'),
 			'format'                  => '%s',
 			'label_callback'          => array('tl_comments', 'listComments')
-		),
-		'global_operations' => array
-		(
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
 		),
 		'operations' => array
 		(
@@ -565,7 +557,7 @@ class tl_comments extends Backend
 
 		return '
 <div class="cte_type ' . $key . '"><a href="mailto:' . Idna::decodeEmail($arrRow['email']) . '" title="' . StringUtil::specialchars(Idna::decodeEmail($arrRow['email'])) . '">' . $arrRow['name'] . '</a>' . ($arrRow['website'] ? ' (<a href="' . $arrRow['website'] . '" title="' . StringUtil::specialchars($arrRow['website']) . '" target="_blank" rel="noreferrer noopener">' . $GLOBALS['TL_LANG']['MSC']['com_website'] . '</a>)' : '') . ' – ' . Date::parse(Config::get('datimFormat'), $arrRow['date']) . ' – IP ' . StringUtil::specialchars($arrRow['ip']) . '<br>' . $title . '</div>
-<div class="cte_preview limit_height' . (!Config::get('doNotCollapse') ? ' h60' : '') . '">
+<div class="cte_preview">
 ' . $arrRow['comment'] . '
 </div>' . "\n    ";
 	}

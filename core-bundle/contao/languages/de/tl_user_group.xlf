@@ -30,7 +30,7 @@
         <target>Aktivieren am</target>
       </trans-unit>
       <trans-unit id="tl_user_group.start.1">
-        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>Wenn Sie die Gruppe erst ab einem bestimmten Zeitpunkt aktivieren möchten, können Sie diesen hier eingeben. Andernfalls lassen Sie das Feld leer. </target>
       </trans-unit>
       <trans-unit id="tl_user_group.stop.0">
@@ -38,7 +38,7 @@
         <target>Deaktivieren am</target>
       </trans-unit>
       <trans-unit id="tl_user_group.stop.1">
-        <source>If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>Wenn Sie die Gruppe nur bis zu einem bestimmten Zeitpunkt aktivieren möchten, können Sie diesen hier eingeben. Andernfalls lassen Sie das Feld leer. </target>
       </trans-unit>
       <trans-unit id="tl_user_group.title_legend">
@@ -105,9 +105,17 @@
         <source>Delete user group ID %s</source>
         <target>Benutzergruppe ID %s löschen</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.toggle">
-        <source>Activate/deactivate user group ID %s</source>
-        <target>Benutzergruppe ID %s aktivieren/deaktivieren</target>
+      <trans-unit id="tl_user_group.toggle.0">
+        <source>Activate/deactivate user group</source>
+        <target>Benutzergruppe aktivieren/deaktivieren</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.toggle.1">
+        <source>Deactivate user group ID %s</source>
+        <target>Benutzergruppe ID %s deaktivieren</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.toggle.2">
+        <source>Activate user group ID %s</source>
+        <target>Benutzergruppe ID %s aktivieren</target>
       </trans-unit>
     </body>
   </file>

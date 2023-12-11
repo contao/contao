@@ -8,7 +8,6 @@ import './scripts/limit-height.js'
 import './scripts/modulewizard.js'
 import './scripts/sectionwizard.js'
 import './scripts/tips.js'
-import './scripts/toggle-fieldset.js'
 
 // Start Stimulus application and register all controllers with `contao--` prefix.
 const application = Application.start()

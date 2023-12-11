@@ -18,6 +18,7 @@ services:
         class: Contao\FaqBundle\EventListener\SitemapListener
         arguments:
             - '@contao.framework'
+            - '@security.helper'
         tags:
             - kernel.event_listener
 

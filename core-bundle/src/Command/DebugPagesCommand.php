@@ -60,7 +60,7 @@ class DebugPagesCommand extends Command
             $this->routeEnhancers[$type] = $routeEnhancer;
         }
 
-        if (null !== $contentComposition) {
+        if ($contentComposition) {
             $this->contentComposition[$type] = $contentComposition;
         }
     }

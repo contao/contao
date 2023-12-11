@@ -66,16 +66,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'defaultSearchField'      => 'text',
 			'headerFields'            => array('title', 'headline', 'author', 'tstamp', 'start', 'stop'),
 			'child_record_callback'   => array('tl_content', 'addCteType'),
-			'renderAsGrid'            => true
-		),
-		'global_operations' => array
-		(
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
+			'renderAsGrid'            => true,
+			'limitHeight'             => 160
 		),
 		'operations' => array
 		(
@@ -403,7 +395,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'highlight' => array
 		(
 			'inputType'               => 'select',
-			'options'                 => array('Apache', 'Bash', 'C#', 'C++', 'CSS', 'Diff', 'HTML', 'HTTP', 'Ini', 'JSON', 'Java', 'JavaScript', 'Markdown', 'Nginx', 'Perl', 'PHP', 'PowerShell', 'Python', 'Ruby', 'SCSS', 'SQL', 'YAML', 'XML'),
+			'options'                 => array('Apache', 'Bash', 'C#', 'C++', 'CSS', 'Diff', 'HTML', 'HTTP', 'Ini', 'JSON', 'Java', 'JavaScript', 'Markdown', 'Nginx', 'Perl', 'PHP', 'PowerShell', 'Python', 'Ruby', 'SCSS', 'SQL', 'Twig', 'YAML', 'XML'),
 			'eval'                    => array('includeBlankOption'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(32) COLLATE ascii_bin NOT NULL default ''"
 		),
@@ -1265,7 +1257,7 @@ class tl_content extends Backend
 
 		return '
 <div class="cte_type ' . $key . '">' . $type . '</div>
-<div class="' . $class . ' limit_height' . (!Config::get('doNotCollapse') ? ' h112' : '') . '">' . $preview . '</div>';
+<div class="' . $class . '">' . $preview . '</div>';
 	}
 
 	/**
@@ -1344,7 +1336,7 @@ class tl_content extends Backend
 
 		while ($objForms->next())
 		{
-			if ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FORM, $objForms->id))
+			if ($security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FORM, $objForms->id))
 			{
 				$arrForms[$objForms->id] = $objForms->title . ' (ID ' . $objForms->id . ')';
 			}
@@ -1422,6 +1414,7 @@ class tl_content extends Backend
 			case 'Scala':
 			case 'SQL':
 			case 'Text':
+			case 'Twig':
 			case 'YAML':
 				$syntax = strtolower($dc->activeRecord->highlight);
 				break;

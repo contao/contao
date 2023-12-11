@@ -63,18 +63,8 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 				'href'                => 'key=new_tpl',
 				'class'               => 'header_new'
 			),
-			'toggleNodes' => array
-			(
-				'href'                => 'tg=all',
-				'class'               => 'header_toggle',
-				'showOnSelect'        => true
-			),
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
+			'toggleNodes',
+			'all'
 		),
 		'operations' => array
 		(
