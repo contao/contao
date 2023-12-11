@@ -49,6 +49,12 @@
         form.addEventListener('submit', e => {
           e.preventDefault();
 
+          if (form.dataset.formSubmitted) {
+            return;
+          }
+
+          form.dataset.formSubmitted = '1';
+
           const formData = new FormData(form);
 
           // Send the triggered button data as well
