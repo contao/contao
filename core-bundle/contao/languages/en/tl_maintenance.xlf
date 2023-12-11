@@ -120,7 +120,7 @@
         <source>Automatically log in a front end member to index protected pages.</source>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlHint">
-        <source>Your website is currently crawled with %d concurrent requests. If your server can handle more than %1$d concurrent requests, ask your system administrator to increase the &lt;code&gt;%s&lt;/code&gt; setting in the system configuration to speed up the crawling process. Moreover, make sure you analyze the debug log to see which URLs are crawled exactly. You can ask Contao to skip links from being crawled. Please refer to the &lt;a href="https://to.contao.org/docs/crawler" target="_blank" rel="noreferrer noopener"&gt;Contao docs&lt;/a&gt; for more information.</source>
+        <source>Your website is currently crawled with %d concurrent requests. If your server can handle more than %1$d concurrent requests, ask your system administrator to increase the &lt;code&gt;%s&lt;/code&gt; setting in the system configuration to speed up the crawling process. Moreover, make sure you analyze the debug log to see which URLs are crawled exactly. You can ask Contao to skip links from being crawled. Please refer to the &lt;a href="%s" target="_blank" rel="noreferrer noopener"&gt;Contao docs&lt;/a&gt; for more information.</source>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlWaitToBeFinished">
         <source>The crawler is currently working. Please wait for it to finish to see the results.</source>

@@ -21,6 +21,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Terminal42\Escargot\Exception\InvalidJobIdException;
 
 /**
@@ -60,16 +61,17 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 			return '';
 		}
 
+		$translator = System::getContainer()->get('translator');
 		$factory = System::getContainer()->get('contao.crawl.escargot.factory');
 		$subscriberNames = $factory->getSubscriberNames();
 
-		$subscribersWidget = $this->generateSubscribersWidget($subscriberNames);
-		$maxDepthWidget = $this->generateMaxDepthWidget();
+		$subscribersWidget = $this->generateSubscribersWidget($translator, $subscriberNames);
+		$maxDepthWidget = $this->generateMaxDepthWidget($translator);
 		$memberWidget = null;
 
 		if (System::getContainer()->getParameter('contao.search.index_protected'))
 		{
-			$memberWidget = $this->generateMemberWidget();
+			$memberWidget = $this->generateMemberWidget($translator);
 		}
 
 		$template = new BackendTemplate('be_crawl');
@@ -200,7 +202,11 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 			->withMaxDurationInSeconds(20)
 			->withLogger($this->createLogger($factory, $activeSubscribers, $jobId, $debugLogPath));
 
-		$template->hint = sprintf($GLOBALS['TL_LANG']['tl_maintenance']['crawlHint'], $concurrency, 'contao.backend.crawl_concurrency');
+		$template->hint = $translator->trans('tl_maintenance.crawlHint', array(
+			$concurrency,
+			'contao.backend.crawl_concurrency',
+			'https://to.contao.org/docs/crawler'
+		), 'contao_tl_maintenance');
 
 		if (Environment::get('isAjaxRequest'))
 		{
@@ -325,13 +331,13 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 		return $this->getLogDir() . '/' . $jobId . '_' . $subscriberName . '_log.csv';
 	}
 
-	private function generateSubscribersWidget(array $subscriberNames): Widget
+	private function generateSubscribersWidget(TranslatorInterface $translator, array $subscriberNames): Widget
 	{
 		$name = 'crawl_subscriber_names';
 		$widget = new CheckBox();
 		$widget->id = $name;
 		$widget->name = $name;
-		$widget->label = $GLOBALS['TL_LANG']['tl_maintenance']['crawlSubscribers'][0];
+		$widget->label = $translator->trans('tl_maintenance.crawlSubscribers.0', array(), 'contao_tl_maintenance');
 		$widget->mandatory = true;
 		$widget->multiple = true;
 		$widget->setInputCallback($this->getInputCallback($name));
@@ -342,7 +348,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 		{
 			$options[] = array(
 				'value' => $subscriberName,
-				'label' => $GLOBALS['TL_LANG']['tl_maintenance']['crawlSubscriberNames'][$subscriberName],
+				'label' => $translator->trans('tl_maintenance.crawlSubscriberNames.' . $subscriberName, array(), 'contao_tl_maintenance'),
 				'default' => false,
 			);
 		}
@@ -367,14 +373,14 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 		return $widget;
 	}
 
-	private function generateMaxDepthWidget(): Widget
+	private function generateMaxDepthWidget(TranslatorInterface $translator): Widget
 	{
 		$name = 'crawl_depth';
 
 		$widget = new SelectMenu();
 		$widget->id = $name;
 		$widget->name = $name;
-		$widget->label = $GLOBALS['TL_LANG']['tl_maintenance']['crawlDepth'][0];
+		$widget->label = $translator->trans('tl_maintenance.crawlDepth.0', array(), 'contao_tl_maintenance');
 		$widget->setInputCallback($this->getInputCallback($name));
 
 		$options = array();
@@ -402,14 +408,14 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 		return $widget;
 	}
 
-	private function generateMemberWidget(): Widget
+	private function generateMemberWidget(TranslatorInterface $translator): Widget
 	{
 		$name = 'crawl_member';
 
 		$widget = new SelectMenu();
 		$widget->id = $name;
 		$widget->name = $name;
-		$widget->label = $GLOBALS['TL_LANG']['tl_maintenance']['crawlMember'][0];
+		$widget->label = $translator->trans('tl_maintenance.crawlMember.0', array(), 'contao_tl_maintenance');
 		$widget->setInputCallback($this->getInputCallback($name));
 
 		$time = time();
