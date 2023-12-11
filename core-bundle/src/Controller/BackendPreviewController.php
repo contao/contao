@@ -80,11 +80,11 @@ class BackendPreviewController
 
         $targetUri = new Uri($targetUrl);
 
-        if ($request->getHost() === $targetUri->getHost()) {
+        if ($request->getHost() === $targetUri->getHost() || !($user = $this->security->getUser())) {
             return new RedirectResponse($targetUrl);
         }
 
-        $loginLink = $this->loginLinkHandler->createLoginLink($this->security->getUser(), Request::create($targetUrl));
+        $loginLink = $this->loginLinkHandler->createLoginLink($user, Request::create($targetUrl));
         $loginUri = new Uri($loginLink->getUrl());
 
         parse_str($loginUri->getQuery(), $query);
@@ -95,7 +95,7 @@ class BackendPreviewController
         ;
 
         $query['_target_path'] = base64_encode((string) $previewUri);
-        $query[TwoFactorAuthenticator::FLAG_2FA_COMPLETE] = $this->security->getToken()->hasAttribute(TwoFactorAuthenticator::FLAG_2FA_COMPLETE);
+        $query[TwoFactorAuthenticator::FLAG_2FA_COMPLETE] = (bool) $this->security->getToken()?->hasAttribute(TwoFactorAuthenticator::FLAG_2FA_COMPLETE);
 
         $loginUri = $loginUri->withQuery(http_build_query($query));
         $targetUrl = $this->uriSigner->sign((string) $loginUri);

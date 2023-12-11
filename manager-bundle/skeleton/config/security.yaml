@@ -20,7 +20,7 @@ security:
 
             login_link:
                 check_route: contao_backend_login_link
-                signature_properties: ['username', 'lastLogin']
+                signature_properties: [username, lastLogin]
                 success_handler: contao.security.authentication_success_handler
 
             contao_login:

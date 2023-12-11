@@ -20,6 +20,7 @@ use Contao\FrontendUser;
 use Contao\PageModel;
 use Psr\Log\LoggerInterface;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
+use Scheb\TwoFactorBundle\Security\Http\Authenticator\TwoFactorAuthenticator;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterface;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
@@ -249,6 +250,40 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $this->assertSame('http://localhost/target', $response->getTargetUrl());
     }
 
+    public function testUsesTheTargetPathFromQueryIfTheUrlIsSigned(): void
+    {
+        $adapter = $this->mockAdapter(['findFirstActiveByMemberGroups']);
+        $adapter
+            ->expects($this->never())
+            ->method('findFirstActiveByMemberGroups')
+        ;
+
+        $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
+
+        $request = new Request(['_target_path' => base64_encode('http://localhost/target')]);
+
+        $user = $this->createPartialMock(BackendUser::class, ['save']);
+        $user->lastLogin = time() - 3600;
+        $user->currentLogin = time() - 1800;
+        $user->groups = [2, 3];
+
+        $user
+            ->expects($this->once())
+            ->method('save')
+        ;
+
+        $token = $this->createMock(TokenInterface::class);
+        $token
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
+        $handler = $this->getHandler($framework, null, true);
+        $response = $handler->onAuthenticationSuccess($request, $token);
+
+        $this->assertSame('http://localhost/target', $response->getTargetUrl());
+    }
+
     public function testReloadsIfTwoFactorAuthenticationIsEnabled(): void
     {
         $request = $this->createMock(Request::class);
@@ -274,6 +309,44 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $response = $this->getHandler()->onAuthenticationSuccess($request, $token);
 
         $this->assertSame('http://localhost/failure', $response->getTargetUrl());
+    }
+
+    public function testUnwrapsTwoFactorTokenIfSignedUrlParameterExists(): void
+    {
+        $request = Request::create('http://localhost/contao/login-link');
+        $request->query->set(TwoFactorAuthenticator::FLAG_2FA_COMPLETE, '1');
+        $request->query->set('_target_path', base64_encode('http://localhost/target/path'));
+
+        $user = $this->createPartialMock(BackendUser::class, ['save']);
+        $user
+            ->expects($this->once())
+            ->method('save')
+        ;
+
+        $authenticatedToken = $this->createMock(UsernamePasswordToken::class);
+        $authenticatedToken
+            ->expects($this->once())
+            ->method('setAttribute')
+            ->with(TwoFactorAuthenticator::FLAG_2FA_COMPLETE, true)
+        ;
+
+        $twoFactorToken = $this->createMock(TwoFactorToken::class);
+
+        $twoFactorToken
+            ->expects($this->once())
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
+        $twoFactorToken
+            ->expects($this->once())
+            ->method('getAuthenticatedToken')
+            ->willReturn($authenticatedToken)
+        ;
+
+        $response = $this->getHandler(null, null, true)->onAuthenticationSuccess($request, $twoFactorToken);
+
+        $this->assertSame('http://localhost/target/path', $response->getTargetUrl());
     }
 
     public function testStoresTheTargetPathInSessionOnTwoFactorAuthentication(): void
