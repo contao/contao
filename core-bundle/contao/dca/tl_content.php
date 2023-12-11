@@ -1501,15 +1501,14 @@ class tl_content extends Backend
 	 */
 	public function editChildren($row, $href, $label, $title, $icon, $attributes)
 	{
-		$identifier = 'contao.content_element.'.$row['type'];
 		$compositor = System::getContainer()->get('contao.fragment.compositor');
 
-		if (!$compositor->isNested($identifier))
+		if (!$compositor->isNested('contao.content_element.' . $row['type']))
 		{
 			return '';
 		}
 
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $row['type']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id'], true, ['act', 'mode']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $row['type']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id'], true, array('act', 'mode')) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
