@@ -17,13 +17,13 @@ use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Nyholm\Psr7\Uri;
 use Scheb\TwoFactorBundle\Security\Http\Authenticator\TwoFactorAuthenticator;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\LoginLink\LoginLinkHandlerInterface;
 
 /**

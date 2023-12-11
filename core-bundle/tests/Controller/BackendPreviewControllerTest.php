@@ -157,7 +157,7 @@ class BackendPreviewControllerTest extends TestCase
             ContaoCoreEvents::PREVIEW_URL_CONVERT,
             static function (PreviewUrlConvertEvent $event) use ($targetUrl): void {
                 $event->setUrl($targetUrl);
-            }
+            },
         );
 
         $loginLinkHandler = $this->createMock(LoginLinkHandlerInterface::class);
