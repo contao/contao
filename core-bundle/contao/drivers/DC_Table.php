@@ -945,15 +945,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
-		$pid = Input::get('pid');
-
-		if (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable']) && $GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] == $this->strTable)
-		{
-			$pid = Input::get('id');
-		}
-
 		// Get the new position
-		$this->getNewPosition('copy', $pid, Input::get('mode') == '2');
+		$this->getNewPosition('copy', Input::get('pid'), Input::get('mode') == '2');
 
 		// Dynamically set the parent table of tl_content
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
