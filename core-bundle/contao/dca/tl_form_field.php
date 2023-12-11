@@ -60,16 +60,8 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'defaultSearchField'      => 'label',
 			'headerFields'            => array('title', 'tstamp', 'formID', 'storeValues', 'sendViaEmail', 'recipient', 'subject'),
 			'child_record_callback'   => array('tl_form_field', 'listFormFields'),
-			'renderAsGrid'            => true
-		),
-		'global_operations' => array
-		(
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
+			'renderAsGrid'            => true,
+			'limitHeight'             => 104
 		),
 		'operations' => array
 		(
@@ -642,7 +634,7 @@ class tl_form_field extends Backend
 
 		$strType = '
 <div class="cte_type ' . $key . '">' . $GLOBALS['TL_LANG']['FFL'][$arrRow['type']][0] . ($objWidget->submitInput() && $arrRow['name'] ? ' (' . $arrRow['name'] . ')' : '') . '</div>
-<div class="cte_preview limit_height' . (!Config::get('doNotCollapse') ? ' h52' : '') . '">';
+<div class="cte_preview">';
 
 		$strWidget = $objWidget->parse();
 		$strWidget = preg_replace('/ name="[^"]+"/i', '', $strWidget);

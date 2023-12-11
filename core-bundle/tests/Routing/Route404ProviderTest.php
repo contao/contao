@@ -59,7 +59,6 @@ class Route404ProviderTest extends TestCase
 
         $result = $provider->getRoutesByNames(['foo']);
 
-        $this->assertIsArray($result);
         $this->assertEmpty($result);
     }
 
@@ -111,13 +110,12 @@ class Route404ProviderTest extends TestCase
 
         $routes = $provider->getRoutesByNames();
 
-        $this->assertIsArray($routes);
         $this->assertCount(2, $routes);
-
         $this->assertArrayHasKey('tl_page.2.error_404', $routes);
         $this->assertArrayHasKey('tl_page.3.locale', $routes);
 
         $route = $routes['tl_page.3.locale'];
+
         $this->assertInstanceOf(Route::class, $route);
         $this->assertSame(RedirectController::class, $route->getDefault('_controller'));
         $this->assertSame('/en/foo{!parameters}.html', $route->getDefault('path'));
@@ -391,7 +389,6 @@ class Route404ProviderTest extends TestCase
 
         $routes = $provider->getRouteCollectionForRequest($request)->all();
 
-        $this->assertIsArray($routes);
         $this->assertEmpty($routes);
     }
 
@@ -427,7 +424,6 @@ class Route404ProviderTest extends TestCase
 
         $routes = $provider->getRouteCollectionForRequest($request)->all();
 
-        $this->assertIsArray($routes);
         $this->assertEmpty($routes);
     }
 

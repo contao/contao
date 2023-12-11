@@ -13,12 +13,14 @@ declare(strict_types=1);
 namespace Contao\NewsletterBundle\Tests\EventListener;
 
 use Contao\CoreBundle\Event\SitemapEvent;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
 use Contao\NewsletterBundle\EventListener\SitemapListener;
 use Contao\NewsletterChannelModel;
 use Contao\NewsletterModel;
 use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class SitemapListenerTest extends ContaoTestCase
@@ -47,7 +49,8 @@ class SitemapListenerTest extends ContaoTestCase
     {
         $jumpToPage = $this->mockClassWithProperties(PageModel::class, [
             'published' => 1,
-            'protected' => 0,
+            'protected' => 1,
+            'groups' => [1],
         ]);
 
         $jumpToPage
@@ -91,8 +94,18 @@ class SitemapListenerTest extends ContaoTestCase
         ];
 
         $framework = $this->mockContaoFramework($adapters, $instances);
+        $security = $this->createMock(Security::class);
 
-        return new SitemapListener($framework);
+        if ([] !== $allPages) {
+            $security
+                ->expects($this->once())
+                ->method('isGranted')
+                ->with(ContaoCorePermissions::MEMBER_IN_GROUPS, [1])
+                ->willReturn(true)
+            ;
+        }
+
+        return new SitemapListener($framework, $security);
     }
 
     private function createSitemapEvent(array $rootPages): SitemapEvent

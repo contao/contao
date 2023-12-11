@@ -49,7 +49,7 @@ class TwoFactorFrontendListenerTest extends TestCase
 
         $listener($event);
 
-        $this->assertNotInstanceOf(RedirectResponse::class, $event->hasResponse());
+        $this->assertNotInstanceOf(RedirectResponse::class, $event->getResponse());
     }
 
     public function testReturnsIfTheTokenIsNotATwoFactorToken(): void
@@ -65,7 +65,7 @@ class TwoFactorFrontendListenerTest extends TestCase
 
         $listener($event);
 
-        $this->assertNotInstanceOf(RedirectResponse::class, $event->hasResponse());
+        $this->assertNotInstanceOf(RedirectResponse::class, $event->getResponse());
     }
 
     public function testReturnsIfTheTokenIsNotSupported(): void
@@ -82,7 +82,7 @@ class TwoFactorFrontendListenerTest extends TestCase
 
         $listener($event);
 
-        $this->assertNotInstanceOf(RedirectResponse::class, $event->hasResponse());
+        $this->assertNotInstanceOf(RedirectResponse::class, $event->getResponse());
     }
 
     public function testReturnsIfTheRequestHasNoPageModel(): void
@@ -99,7 +99,7 @@ class TwoFactorFrontendListenerTest extends TestCase
 
         $listener($event);
 
-        $this->assertNotInstanceOf(RedirectResponse::class, $event->hasResponse());
+        $this->assertNotInstanceOf(RedirectResponse::class, $event->getResponse());
     }
 
     public function testReturnsIfTheUserIsNotAFrontendUser(): void
@@ -116,7 +116,7 @@ class TwoFactorFrontendListenerTest extends TestCase
 
         $listener($event);
 
-        $this->assertNotInstanceOf(RedirectResponse::class, $event->hasResponse());
+        $this->assertNotInstanceOf(RedirectResponse::class, $event->getResponse());
     }
 
     public function testThrowsAPageNotFoundExceptionIfThereIsNoTwoFactorPage(): void
@@ -180,7 +180,7 @@ class TwoFactorFrontendListenerTest extends TestCase
 
         $listener($event);
 
-        $this->assertNotInstanceOf(RedirectResponse::class, $event->hasResponse());
+        $this->assertNotInstanceOf(RedirectResponse::class, $event->getResponse());
     }
 
     public function testRedirectsToTheTwoFactorPageIfTwoFactorAuthenticationIsEnforced(): void
@@ -254,7 +254,7 @@ class TwoFactorFrontendListenerTest extends TestCase
 
         $listener($event);
 
-        $this->assertNotInstanceOf(RedirectResponse::class, $event->hasResponse());
+        $this->assertInstanceOf(RedirectResponse::class, $event->getResponse());
     }
 
     public function testRedirectsToTheTargetPathIfThe401PageHasNoRedirect(): void
@@ -341,7 +341,7 @@ class TwoFactorFrontendListenerTest extends TestCase
 
         $listener($event);
 
-        $this->assertNotInstanceOf(RedirectResponse::class, $event->hasResponse());
+        $this->assertInstanceOf(RedirectResponse::class, $event->getResponse());
     }
 
     public function testThrowsAnUnauthorizedHttpException(): void
@@ -416,7 +416,7 @@ class TwoFactorFrontendListenerTest extends TestCase
 
         $listener($event);
 
-        $this->assertNotInstanceOf(RedirectResponse::class, $event->hasResponse());
+        $this->assertInstanceOf(RedirectResponse::class, $event->getResponse());
     }
 
     public function testRedirectsToTheTargetPath(): void

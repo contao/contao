@@ -272,7 +272,7 @@ class ModuleSubscribe extends Module
 
 		$arrChannels = array_intersect($arrChannels, $this->nl_channels); // see #3240
 
-		if (empty($arrChannels) || !\is_array($arrChannels))
+		if (empty($arrChannels))
 		{
 			$this->Template->mclass = 'error';
 			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['noChannels'];
