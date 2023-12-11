@@ -45,17 +45,6 @@ class TransportSecurityHeaderListenerTest extends TestCase
         $this->assertFalse($response->headers->has('Strict-Transport-Security'));
     }
 
-    public function testIgnoresNonSafeRequests(): void
-    {
-        $response = new Response();
-        $request = Request::create('https://contao.org', 'POST');
-
-        $listener = new TransportSecurityHeaderListener($this->createScopeMatcher(true), 31536000);
-        $listener($this->createEvent($request, $response));
-
-        $this->assertFalse($response->headers->has('Strict-Transport-Security'));
-    }
-
     public function testIgnoresIfTheResponseAlreadyHasAnStsHeaderPresent(): void
     {
         $response = new Response();

@@ -31,7 +31,6 @@ class TransportSecurityHeaderListener
         if (
             !$this->scopeMatcher->isContaoMainRequest($event)
             || !$event->getRequest()->isSecure()
-            || !$event->getRequest()->isMethodSafe()
             || $event->getResponse()->headers->has('Strict-Transport-Security')
         ) {
             return;
