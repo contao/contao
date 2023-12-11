@@ -827,7 +827,7 @@ class Newsletter extends Backend
 		$arrDelete = array_values(array_diff($arrChannel, $varValue));
 
 		// Delete existing recipients
-		if (!empty($arrDelete) && \is_array($arrDelete))
+		if (!empty($arrDelete))
 		{
 			$db
 				->prepare("DELETE FROM tl_newsletter_recipients WHERE pid IN(" . implode(',', array_map('\intval', $arrDelete)) . ") AND email=?")
@@ -978,7 +978,7 @@ class Newsletter extends Backend
 	 */
 	public function purgeSubscriptions()
 	{
-		trigger_deprecation('contao/newsletter-bundle', '5.0', 'Calling "%s()" has been deprecated and will no longer work in Contao 6.0. Use NewsletterRecipientsModel::findExpiredSubscriptions() instead.', __METHOD__);
+		trigger_deprecation('contao/newsletter-bundle', '5.0', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use "NewsletterRecipientsModel::findExpiredSubscriptions()" instead.', __METHOD__);
 
 		$objRecipient = NewsletterRecipientsModel::findExpiredSubscriptions();
 

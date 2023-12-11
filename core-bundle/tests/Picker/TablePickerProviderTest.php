@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Picker;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Picker\PickerConfig;
 use Contao\CoreBundle\Picker\TablePickerProvider;
+use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\DcaLoader;
 use Contao\TestCase\ContaoTestCase;
@@ -283,7 +284,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_article'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockUnusedConnection(),
+            $this->mockConnectionForQuery('tl_article', 15, ['id' => 15, 'pid' => 1]),
         );
 
         $provider->getUrl($config);
@@ -305,7 +306,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_article'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockConnectionForQuery('tl_article', 15, ['pid' => 1]),
+            $this->mockConnectionForQuery('tl_article', 15, ['id' => 15, 'pid' => 1]),
         );
 
         $provider->getUrl($config);
@@ -329,7 +330,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_article'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockConnectionForQuery('tl_article', 42, ['pid' => 1]),
+            $this->mockConnectionForQuery('tl_article', 42, ['id' => 42, 'pid' => 1]),
         );
 
         $provider->getUrl($config);
@@ -417,7 +418,11 @@ class TablePickerProviderTest extends ContaoTestCase
     public function testGetUrlAddsTableIfItsNotFirstInModule(): void
     {
         $GLOBALS['BE_MOD']['foo']['article'] = ['tables' => ['tl_article', 'tl_content']];
-        $GLOBALS['TL_DCA']['tl_content'] = ['config' => ['dataContainer' => DC_Table::class, 'ptable' => 'tl_article']];
+
+        $GLOBALS['TL_DCA']['tl_content'] = [
+            'config' => ['dataContainer' => DC_Table::class, 'ptable' => 'tl_article'],
+            'list' => ['sorting' => ['mode' => DataContainer::MODE_PARENT]],
+        ];
 
         $params = [
             'do' => 'article',
@@ -428,9 +433,99 @@ class TablePickerProviderTest extends ContaoTestCase
         $config = $this->mockPickerConfig('tl_content');
 
         $provider = $this->createTableProvider(
-            $this->mockFrameworkWithDcaLoader('tl_content'),
+            $this->mockFrameworkWithDcaLoader('tl_content', 'tl_article'),
             $this->mockRouterWithExpectedParams($params),
             $this->mockUnusedConnection(),
+        );
+
+        $provider->getUrl($config);
+    }
+
+    public function testGetUrlDoesNotAddTableForDynamicPtable(): void
+    {
+        $GLOBALS['BE_MOD']['foo']['article'] = ['tables' => ['tl_article', 'tl_content']];
+
+        $GLOBALS['TL_DCA']['tl_content'] = [
+            'config' => ['dataContainer' => DC_Table::class, 'dynamicPtable' => true],
+            'list' => ['sorting' => ['mode' => DataContainer::MODE_PARENT]],
+        ];
+
+        $params = [
+            'do' => 'article',
+            'popup' => '1',
+            'picker' => 'foobar',
+        ];
+
+        $config = $this->mockPickerConfig('tl_content');
+
+        $provider = $this->createTableProvider(
+            $this->mockFrameworkWithDcaLoader('tl_content', 'tl_article'),
+            $this->mockRouterWithExpectedParams($params),
+            $this->mockUnusedConnection(),
+        );
+
+        $provider->getUrl($config);
+    }
+
+    public function testGetUrlAddsTableForNonParentMode(): void
+    {
+        $GLOBALS['BE_MOD']['foo']['article'] = ['tables' => ['tl_article', 'tl_content']];
+
+        $GLOBALS['TL_DCA']['tl_content'] = [
+            'config' => ['dataContainer' => DC_Table::class],
+            'list' => ['sorting' => ['mode' => DataContainer::MODE_SORTED]],
+        ];
+
+        $params = [
+            'do' => 'article',
+            'popup' => '1',
+            'picker' => 'foobar',
+            'table' => 'tl_content',
+        ];
+
+        $config = $this->mockPickerConfig('tl_content');
+
+        $provider = $this->createTableProvider(
+            $this->mockFrameworkWithDcaLoader('tl_content', 'tl_article'),
+            $this->mockRouterWithExpectedParams($params),
+            $this->mockUnusedConnection(),
+        );
+
+        $provider->getUrl($config);
+    }
+
+    public function testGetUrlAddsTopmostParentTable(): void
+    {
+        $GLOBALS['BE_MOD']['foo']['article'] = ['tables' => ['tl_foo', 'tl_parent', 'tl_child', 'tl_grandchild']];
+
+        $GLOBALS['TL_DCA']['tl_grandchild'] = [
+            'config' => ['dataContainer' => DC_Table::class, 'ptable' => 'tl_child'],
+            'list' => ['sorting' => ['mode' => DataContainer::MODE_PARENT]],
+        ];
+
+        $GLOBALS['TL_DCA']['tl_child'] = [
+            'config' => ['dataContainer' => DC_Table::class, 'ptable' => 'tl_parent'],
+            'list' => ['sorting' => ['mode' => DataContainer::MODE_PARENT]],
+        ];
+
+        $GLOBALS['TL_DCA']['tl_parent'] = [
+            'config' => ['dataContainer' => DC_Table::class],
+            'list' => ['sorting' => ['mode' => DataContainer::MODE_SORTED]],
+        ];
+
+        $params = [
+            'do' => 'article',
+            'popup' => '1',
+            'picker' => 'foobar',
+            'table' => 'tl_parent',
+        ];
+
+        $config = $this->mockPickerConfig('tl_grandchild', '123');
+
+        $provider = $this->createTableProvider(
+            $this->mockFrameworkWithDcaLoader('tl_parent', 'tl_child', 'tl_grandchild'),
+            $this->mockRouterWithExpectedParams($params),
+            $this->mockConnectionForQuery('tl_grandchild', 123, false),
         );
 
         $provider->getUrl($config);
@@ -543,19 +638,23 @@ class TablePickerProviderTest extends ContaoTestCase
         return $config;
     }
 
-    private function mockFrameworkWithDcaLoader(string $table): ContaoFramework&MockObject
+    private function mockFrameworkWithDcaLoader(string ...$tables): ContaoFramework&MockObject
     {
         $dcaLoader = $this->createMock(DcaLoader::class);
         $dcaLoader
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('load')
         ;
 
         $framework = $this->createMock(ContaoFramework::class);
+
         $framework
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('createInstance')
-            ->with(DcaLoader::class, [$table])
+            ->with(
+                DcaLoader::class,
+                $this->callback(static fn (array $args) => \in_array($args[0], $tables, true)),
+            )
             ->willReturn($dcaLoader)
         ;
 
@@ -619,7 +718,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $queryBuilder
             ->expects($this->once())
             ->method('select')
-            ->with('pid')
+            ->with(['id', 'pid'])
             ->willReturnSelf()
         ;
 

@@ -49,15 +49,6 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 			'panelLayout'             => 'limit',
 			'headerFields'            => array('name', 'tstamp', 'width', 'height', 'resizeMode', 'zoom'),
 			'child_record_callback'   => array('tl_image_size_item', 'listImageSizeItem')
-		),
-		'global_operations' => array
-		(
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
 		)
 	),
 

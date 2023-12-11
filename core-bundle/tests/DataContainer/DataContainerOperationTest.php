@@ -20,6 +20,7 @@ class DataContainerOperationTest extends TestCase
 {
     public function testDoesNotModifyLabelReferences(): void
     {
+        /** @phpstan-var array $translations (signals PHPStan that the array shape may change) */
         $translations = ['some_label' => ['first', 'second']];
         $config = ['label' => &$translations['some_label']];
 

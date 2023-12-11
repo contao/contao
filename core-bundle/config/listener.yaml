@@ -80,6 +80,9 @@ services:
             - '@database_connection'
             - '@request_stack'
 
+    contao.listener.data_container.default_global_operations:
+        class: Contao\CoreBundle\EventListener\DataContainer\DefaultGlobalOperationsListener
+
     contao.listener.data_container.default_operations:
         class: Contao\CoreBundle\EventListener\DataContainer\DefaultOperationsListener
         arguments:
@@ -184,14 +187,6 @@ services:
             - '@contao.twig.filesystem_loader_warmer'
             - '@contao.twig.loader.theme_namespace'
             - '@translator'
-
-    contao.listener.data_container.toggle_nodes_label:
-        class: Contao\CoreBundle\EventListener\DataContainer\ToggleNodesLabelListener
-        arguments:
-            - '@request_stack'
-            - '@contao.routing.scope_matcher'
-        tags:
-            - { name: contao.hook, hook: loadDataContainer }
 
     contao.listener.data_container.undo.jump_to_parent_button:
         class: Contao\CoreBundle\EventListener\DataContainer\Undo\JumpToParentButtonListener
@@ -604,6 +599,11 @@ services:
             - '@database_connection'
             - '@router'
             - '@translator'
+
+    contao.messenger.message_listener:
+        class: Contao\CoreBundle\Messenger\EventListener\MessageListener
+        arguments:
+            - '@monolog.logger.contao.error'
 
     contao.messenger.worker_listener:
         class: Contao\CoreBundle\Messenger\EventListener\WorkerListener

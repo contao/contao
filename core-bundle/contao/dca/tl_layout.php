@@ -52,15 +52,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'defaultSearchField'      => 'name',
 			'headerFields'            => array('name', 'author', 'tstamp'),
 			'child_record_callback'   => array('tl_layout', 'listLayout')
-		),
-		'global_operations' => array
-		(
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
 		)
 	),
 

@@ -76,7 +76,7 @@ class FigureTest extends TestCase
         $lightbox = $this->createMock(LightboxResult::class);
         $called = 0;
 
-        $lightboxClosure = function (Figure $figure) use (&$called, $lightbox): LightboxResult {
+        $lightboxClosure = function ($figure) use (&$called, $lightbox): LightboxResult {
             $this->assertInstanceOf(Figure::class, $figure);
             ++$called;
 
@@ -116,7 +116,7 @@ class FigureTest extends TestCase
         $metadata = new Metadata(['foo' => 'bar']);
         $called = 0;
 
-        $metadataClosure = function (Figure $figure) use (&$called, $metadata): Metadata {
+        $metadataClosure = function ($figure) use (&$called, $metadata): Metadata {
             $this->assertInstanceOf(Figure::class, $figure);
             ++$called;
 
@@ -291,7 +291,7 @@ class FigureTest extends TestCase
         $options = ['attributes' => ['class' => 'foo'], 'custom' => new \stdClass()];
         $called = 0;
 
-        $optionsClosure = function (Figure $figure) use (&$called, $options): array {
+        $optionsClosure = function ($figure) use (&$called, $options): array {
             $this->assertInstanceOf(Figure::class, $figure);
             ++$called;
 
