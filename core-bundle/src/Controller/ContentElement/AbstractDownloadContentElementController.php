@@ -100,7 +100,7 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
     {
         // Only allow certain file extensions
         $getAllowedFileExtensions = function (): array {
-            if (null !== $this->getParameter('contao.downloadable_files')) {
+            if ($this->hasParameter('contao.downloadable_files')) {
                 return $this->getParameter('contao.downloadable_files');
             }
 

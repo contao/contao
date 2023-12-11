@@ -77,6 +77,7 @@ class ContaoCacheWarmerTest extends TestCase
         $this->assertFileExists(Path::join($this->getTempDir(), 'var/cache/contao/config/autoload.php'));
         $this->assertFileExists(Path::join($this->getTempDir(), 'var/cache/contao/config/config.php'));
         $this->assertFileExists(Path::join($this->getTempDir(), 'var/cache/contao/config/templates.php'));
+        $this->assertFileExists(Path::join($this->getTempDir(), 'var/cache/contao/config/available-language-files.php'));
         $this->assertFileExists(Path::join($this->getTempDir(), 'var/cache/contao/dca'));
         $this->assertFileExists(Path::join($this->getTempDir(), 'var/cache/contao/dca/tl_test.php'));
         $this->assertFileExists(Path::join($this->getTempDir(), 'var/cache/contao/languages'));
@@ -109,6 +110,12 @@ class ContaoCacheWarmerTest extends TestCase
             "\$this->arrFields = array (\n  'id' => 'int(10) unsigned NOT NULL auto_increment',\n);",
             file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/sql/tl_test.php')),
         );
+
+        $langs = include Path::join($this->getTempDir(), 'var/cache/contao/config/available-language-files.php');
+
+        $this->assertArrayHasKey('en', $langs);
+        $this->assertArrayHasKey('default', $langs['en']);
+        $this->assertArrayHasKey('tl_test', $langs['en']);
     }
 
     public function testIsAnOptionalWarmer(): void
