@@ -65,7 +65,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'fields'                  => array('sorting'),
 			'panelLayout'             => 'filter;search,limit',
 			'defaultSearchField'      => 'text',
-			'headerFields'            => array('title', 'headline', 'author', 'tstamp', 'start', 'stop'),
+			'headerFields'            => array('title', 'type', 'author', 'tstamp', 'start', 'stop'),
 			'child_record_callback'   => array('tl_content', 'addCteType'),
 			'renderAsGrid'            => true,
 			'limitHeight'             => 160
@@ -89,7 +89,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 				'href'                => 'act=paste&amp;mode=copy',
 				'icon'                => 'copy.svg',
 				'attributes'          => 'onclick="Backend.getScrollOffset()"',
-				'button_callback'     => array('tl_content', 'disableButton')
+				'button_callback'     => array('tl_content', 'copyElement')
 			),
 			'cut',
 			'delete' => array
@@ -1524,14 +1524,36 @@ class tl_content extends Backend
 	 */
 	public function editChildren($row, $href, $label, $title, $icon, $attributes)
 	{
-		$compositor = System::getContainer()->get('contao.fragment.compositor');
-
-		if (!$compositor->isNested('contao.content_element.' . $row['type']))
+		if (!System::getContainer()->get('contao.fragment.compositor')->isNested('contao.content_element.' . $row['type']))
 		{
 			return '';
 		}
 
 		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $row['type']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id'], true, array('act', 'mode')) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+	}
+
+	/**
+	 * Return the copy content element button
+	 *
+	 * @param array  $row
+	 * @param string $href
+	 * @param string $label
+	 * @param string $title
+	 * @param string $icon
+	 * @param string $attributes
+	 *
+	 * @return string
+	 */
+	public function copyElement($row, $href, $label, $title, $icon, $attributes)
+	{
+		$href .= '&amp;id=' . $row['id'];
+
+		if (System::getContainer()->get('contao.fragment.compositor')->isNested('contao.content_element.' . $row['type']))
+		{
+			$href .= '&amp;childs=1';
+		}
+
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $row['type']) ? '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**
