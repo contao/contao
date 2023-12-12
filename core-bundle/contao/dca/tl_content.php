@@ -1214,14 +1214,7 @@ class tl_content extends Backend
 		{
 			if (($group = $this->getContentElementGroup($arrRow['type'])) !== null)
 			{
-				if (isset($GLOBALS['TL_LANG']['CTE'][$group]))
-				{
-					$type = (is_array($GLOBALS['TL_LANG']['CTE'][$group]) ? $GLOBALS['TL_LANG']['CTE'][$group][0] : $GLOBALS['TL_LANG']['CTE'][$group]) . ' (' . $type . ')';
-				}
-				else
-				{
-					$type = $group . ' (' . $type . ')';
-				}
+				$type = ($GLOBALS['TL_LANG']['CTE'][$group] ?? $group) . ' (' . $type . ')';
 			}
 		}
 

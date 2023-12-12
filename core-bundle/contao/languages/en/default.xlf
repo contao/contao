@@ -377,6 +377,21 @@
       <trans-unit id="CTE.slider.1">
         <source>Generates a content slider element.</source>
       </trans-unit>
+      <trans-unit id="CTE.legacy">
+        <source>Legacy elements</source>
+      </trans-unit>
+      <trans-unit id="CTE.sliderStart.0">
+        <source>Slider wrapper start</source>
+      </trans-unit>
+      <trans-unit id="CTE.sliderStart.1">
+        <source>Generates the opening part of the slider wrapper.</source>
+      </trans-unit>
+      <trans-unit id="CTE.sliderStop.0">
+        <source>Slider wrapper stop</source>
+      </trans-unit>
+      <trans-unit id="CTE.sliderStop.1">
+        <source>Generates the closing part of the slider wrapper.</source>
+      </trans-unit>
       <trans-unit id="CTE.links">
         <source>Link elements</source>
       </trans-unit>
