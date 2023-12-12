@@ -78,8 +78,6 @@ services:
 
     Contao\CoreBundle\Controller\ContentElement\HeadlineController: ~
 
-    Contao\CoreBundle\Controller\ContentElement\RapperController: ~
-
     Contao\CoreBundle\Controller\ContentElement\HtmlController: ~
 
     Contao\CoreBundle\Controller\ContentElement\HyperlinkController:
@@ -101,6 +99,8 @@ services:
     Contao\CoreBundle\Controller\ContentElement\PlayerController:
         arguments:
             - '@contao.filesystem.virtual.files'
+
+    Contao\CoreBundle\Controller\ContentElement\SliderController: ~
 
     Contao\CoreBundle\Controller\ContentElement\TableController: ~
 

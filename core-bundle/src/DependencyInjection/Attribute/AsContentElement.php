@@ -21,9 +21,9 @@ class AsContentElement
     public array $attributes;
 
     /**
-     * @param array{allowedTypes?:list<string>} $nestedElements
+     * @param array{allowedTypes?:list<string>}|bool $nestedElements
      */
-    public function __construct(string|null $type = null, string $category = 'miscellaneous', string|null $template = null, string|null $method = null, string|null $renderer = null, array $nestedElements = [], mixed ...$attributes)
+    public function __construct(string|null $type = null, string $category = 'miscellaneous', string|null $template = null, string|null $method = null, string|null $renderer = null, array|bool $nestedElements = false, mixed ...$attributes)
     {
         $attributes['type'] = $type;
         $attributes['category'] = $category;

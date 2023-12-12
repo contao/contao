@@ -568,7 +568,7 @@ abstract class Controller extends System
 
 		$compositor = System::getContainer()->get('contao.fragment.compositor');
 
-		if (is_a($strClass, ContentProxy::class, true) && $compositor->isNested(ContentElementReference::TAG_NAME . '.' . $objRow->type))
+		if (is_a($strClass, ContentProxy::class, true) && $compositor->supportsNesting(ContentElementReference::TAG_NAME . '.' . $objRow->type))
 		{
 			$objElement = new $strClass(
 				$objRow,

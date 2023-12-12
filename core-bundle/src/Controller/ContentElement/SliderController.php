@@ -18,13 +18,19 @@ use Contao\CoreBundle\Twig\FragmentTemplate;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-#[AsContentElement(category: 'texts', nestedElements: [
-    'allowedTypes' => ['image', 'text'],
-])]
-class RapperController extends AbstractContentElementController
+#[AsContentElement(category: 'miscellaneous', nestedElements: true)]
+class SliderController extends AbstractContentElementController
 {
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
+        $template->set('config', sprintf(
+            '%d,%d,%d,%d',
+            $model->sliderDelay,
+            $model->sliderSpeed,
+            $model->sliderStartSlide,
+            $model->sliderContinuous,
+        ));
+
         return $template->getResponse();
     }
 }

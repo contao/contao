@@ -27,14 +27,14 @@ class FragmentCompositor
     {
     }
 
-    public function add(string $identifier, array $nestedElements): void
+    public function add(string $identifier, array|bool $nestedElements): void
     {
         $this->nestedByIdentifier[$identifier] = $nestedElements;
     }
 
-    public function isNested(string $identifier): bool
+    public function supportsNesting(string $identifier): bool
     {
-        return isset($this->nestedByIdentifier[$identifier]);
+        return isset($this->nestedByIdentifier[$identifier]) && false !== $this->nestedByIdentifier[$identifier];
     }
 
     public function getAllowedTypes(string $identifier): array
@@ -44,7 +44,7 @@ class FragmentCompositor
 
     public function getNestedContentElements(string $identifier, int $id): array
     {
-        if (!isset($this->nestedByIdentifier[$identifier])) {
+        if (!$this->supportsNesting($identifier)) {
             return [];
         }
 
