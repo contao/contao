@@ -891,7 +891,28 @@ class tl_content extends Backend
 	 */
 	protected function checkAccessToElement($id, $pagemounts, $blnIsPid=false)
 	{
-		if ($blnIsPid)
+		if (Input::get('ptable') == 'tl_content')
+		{
+			while (true)
+			{
+				$objElement = Database::getInstance()
+					->prepare("SELECT * FROM tl_content WHERE id=?")
+					->execute($id);
+
+				if (!$objElement->numRows || $objElement->ptable != 'tl_content')
+				{
+					break;
+				}
+
+				$id = $objElement->pid;
+			}
+
+			$objPage = Database::getInstance()
+				->prepare("SELECT p.id, p.pid, p.includeChmod, p.chmod, p.cuser, p.cgroup, a.id AS aid FROM tl_article a, tl_page p WHERE a.id=? AND a.pid=p.id")
+				->limit(1)
+				->execute($objElement->pid);
+		}
+		elseif ($blnIsPid)
 		{
 			$objPage = Database::getInstance()
 				->prepare("SELECT p.id, p.pid, p.includeChmod, p.chmod, p.cuser, p.cgroup, a.id AS aid FROM tl_article a, tl_page p WHERE a.id=? AND a.pid=p.id")
