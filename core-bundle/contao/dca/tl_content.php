@@ -929,8 +929,24 @@ class tl_content extends Backend
 	 *
 	 * @return array
 	 */
-	public function getContentElements()
+	public function getContentElements(DataContainer $dc)
 	{
+		$allowedTypes = array();
+
+		if (Input::get('ptable') == 'tl_content')
+		{
+			$parent = Database::getInstance()
+				->prepare("SELECT * FROM tl_content WHERE id=?")
+				->execute($dc->getCurrentRecord()['pid']);
+
+			$compositor = System::getContainer()->get('contao.fragment.compositor');
+
+			if ($compositor->isNested('contao.content_element.' . $parent->type))
+			{
+				$allowedTypes = $compositor->getAllowedTypes('contao.content_element.' . $parent->type);
+			}
+		}
+
 		$security = System::getContainer()->get('security.helper');
 		$groups = array();
 
@@ -938,6 +954,13 @@ class tl_content extends Backend
 		{
 			foreach (array_keys($v) as $kk)
 			{
+				// Filter elements that are not allowed to be nested
+				if ($allowedTypes && !in_array($kk, $allowedTypes))
+				{
+					continue;
+				}
+
+				// Filter elements that are not allowed for the current user
 				if ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $kk))
 				{
 					$groups[$k][] = $kk;

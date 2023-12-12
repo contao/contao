@@ -37,6 +37,11 @@ class FragmentCompositor
         return isset($this->nestedByIdentifier[$identifier]);
     }
 
+    public function getAllowedTypes(string $identifier): array
+    {
+        return $this->nestedByIdentifier[$identifier]['allowedTypes'] ?? [];
+    }
+
     public function getNestedContentElements(string $identifier, int $id): array
     {
         if (!isset($this->nestedByIdentifier[$identifier])) {
