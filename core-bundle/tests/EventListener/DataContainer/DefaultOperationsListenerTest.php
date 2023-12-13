@@ -144,7 +144,7 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertSame(['edit', 'copy', 'copyChildren', 'cut', 'delete', 'show'], array_keys($operations));
         $this->assertOperation($operations['edit'], 'act=edit', 'edit.svg', true);
         $this->assertOperation($operations['copy'], 'act=paste&amp;mode=copy', 'copy.svg', true);
-        $this->assertOperation($operations['copyChildren'], 'act=paste&amp;mode=copy&amp;childs=1', 'copychildren.svg', true);
+        $this->assertOperation($operations['copyChildren'], 'act=paste&amp;mode=copy&amp;children=1', 'copychildren.svg', true);
         $this->assertOperation($operations['cut'], 'act=paste&amp;mode=cut', 'cut.svg', true);
         $this->assertOperation($operations['delete'], 'act=delete', 'delete.svg', true);
         $this->assertOperation($operations['show'], 'act=show', 'show.svg', false);

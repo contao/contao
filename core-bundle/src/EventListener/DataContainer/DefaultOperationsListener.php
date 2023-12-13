@@ -115,7 +115,7 @@ class DefaultOperationsListener
 
                 if ($isTreeMode) {
                     $operations['copyChildren'] = [
-                        'href' => 'act=paste&amp;mode=copy&amp;childs=1',
+                        'href' => 'act=paste&amp;mode=copy&amp;children=1',
                         'icon' => 'copychildren.svg',
                         'attributes' => 'onclick="Backend.getScrollOffset()"',
                         'button_callback' => $this->copyChildrenCallback($table),

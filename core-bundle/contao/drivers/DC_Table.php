@@ -333,12 +333,21 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Add to clipboard
 		if (Input::get('act') == 'paste')
 		{
+			$children = Input::get('children');
+
+			// Backwards compatibility
+			if (Input::get('childs') !== null)
+			{
+				trigger_deprecation('contao/core-bundle', '5.3', 'Using the "childs" query parameter has been deprecated and will no longer work in Contao 6. Use the "children" parameter instead.');
+				$children = Input::get('childs');
+			}
+
 			$arrClipboard = $objSession->get('CLIPBOARD');
 
 			$arrClipboard[$this->strTable] = array
 			(
 				'id' => Input::get('id'),
-				'childs' => Input::get('childs'),
+				'children' => $children,
 				'mode' => Input::get('mode')
 			);
 
@@ -1009,7 +1018,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$objSessionBag->set('new_records', $new_records);
 
 				// Duplicate the records of the child table
-				$this->copyChilds($this->strTable, $insertID, $this->intId, $insertID);
+				$this->copyChildren($this->strTable, $insertID, $this->intId, $insertID);
 
 				// Call the oncopy_callback after all new records have been created
 				if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['oncopy_callback'] ?? null))
@@ -1048,6 +1057,16 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	}
 
 	/**
+	 * @deprecated Deprecated in Contao 5.3, to be removed in Contao 6;
+	 *             use copyChildren() instead.
+	 */
+	protected function copyChilds($table, $insertID, $id, $parentId)
+	{
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use "copyChildren()" instead.', __METHOD__);
+		$this->copyChildren($table, $insertID, $id, $parentId);
+	}
+
+	/**
 	 * Duplicate all child records of a duplicated record
 	 *
 	 * @param string  $table
@@ -1055,15 +1074,23 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 * @param integer $id
 	 * @param integer $parentId
 	 */
-	protected function copyChilds($table, $insertID, $id, $parentId)
+	protected function copyChildren($table, $insertID, $id, $parentId)
 	{
 		$time = time();
 		$copy = array();
 		$cctable = array();
 		$ctable = $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? array();
 		$db = Database::getInstance();
+		$children = Input::get('children');
 
-		if (!($GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null) && Input::get('childs') && $db->fieldExists('pid', $table) && $db->fieldExists('sorting', $table))
+		// Backwards compatibility
+		if (Input::get('childs') !== null)
+		{
+			trigger_deprecation('contao/core-bundle', '5.3', 'Using the "childs" query parameter has been deprecated and will no longer work in Contao 6. Use the "children" parameter instead.');
+			$children = Input::get('childs');
+		}
+
+		if (!($GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null) && $children && $db->fieldExists('pid', $table) && $db->fieldExists('sorting', $table))
 		{
 			$ctable[] = $table;
 		}
@@ -1184,7 +1211,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 						if ($kk != $parentId && (!empty($cctable[$k]) || ($GLOBALS['TL_DCA'][$k]['list']['sorting']['mode'] ?? null) == self::MODE_TREE))
 						{
-							$this->copyChilds($k, $insertID, $kk, $parentId);
+							$this->copyChildren($k, $insertID, $kk, $parentId);
 						}
 
 						if (\is_array($GLOBALS['TL_DCA'][$k]['config']['oncopy_callback'] ?? null))
@@ -1599,7 +1626,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			foreach ($delete[$this->strTable] as $id)
 			{
-				$this->deleteChilds($this->strTable, $id, $delete);
+				$this->deleteChildren($this->strTable, $id, $delete);
 			}
 		}
 
@@ -1734,13 +1761,23 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	}
 
 	/**
+	 * @deprecated Deprecated in Contao 5.3, to be removed in Contao 6;
+	 *             use deleteChildren() instead.
+	 */
+	protected function deleteChilds($table, $id, &$delete)
+	{
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use "deleteChildren()" instead.', __METHOD__);
+		$this->deleteChildren($table, $id, $delete);
+	}
+
+	/**
 	 * Recursively get all related table names and records
 	 *
 	 * @param string  $table
 	 * @param integer $id
 	 * @param array   $delete
 	 */
-	public function deleteChilds($table, $id, &$delete)
+	public function deleteChildren($table, $id, &$delete)
 	{
 		$cctable = array();
 		$ctable = $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? array();
@@ -1800,7 +1837,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					if (!empty($cctable[$v]))
 					{
-						$this->deleteChilds($v, $row['id'], $delete);
+						$this->deleteChildren($v, $row['id'], $delete);
 					}
 				}
 			}
