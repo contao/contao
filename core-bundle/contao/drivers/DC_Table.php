@@ -3963,7 +3963,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Show paste button only if there are no root records specified
 		if ($blnClipboard && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && $this->rootPaste && Input::get('act') != 'select')
 		{
-			// Call paste_button_callback (&$dc, $row, $table, $cr, $childs, $previous, $next)
+			// Call paste_button_callback (&$dc, $row, $table, $cr, $children, $previous, $next)
 			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'] ?? null))
 			{
 				$strClass = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'][0];
@@ -4244,7 +4244,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$return = '';
 		$intSpacing = 18;
-		$childs = array();
+		$children = array();
 
 		// Add the ID to the list of current IDs
 		if ($this->strTable == $table)
@@ -4266,13 +4266,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$allowedChildIds = array_merge($arrFound, $this->visibleRootTrails);
 				}
 
-				$objChilds = $db
+				$objChildren = $db
 					->prepare("SELECT id FROM " . $table . " WHERE pid=?" . (!empty($allowedChildIds) ? " AND id IN(" . implode(',', array_map('\intval', $allowedChildIds)) . ")" : '') . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
 					->execute($id);
 
-				if ($objChilds->numRows)
+				if ($objChildren->numRows)
 				{
-					$childs = $objChilds->fetchEach('id');
+					$children = $objChildren->fetchEach('id');
 				}
 			}
 		}
@@ -4298,7 +4298,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$mouseover = ' hover-div';
 		}
 
-		$return .= "\n  " . '<li class="' . (((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && ($currentRecord['type'] ?? null) == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file') . ((string) ($currentRecord['tstamp'] ?? null) === '0' ? ' draft' : '') . ' click2edit' . $mouseover . ' cf"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + (empty($childs) ? 18 : 0)) . 'px">';
+		$return .= "\n  " . '<li class="' . (((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && ($currentRecord['type'] ?? null) == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file') . ((string) ($currentRecord['tstamp'] ?? null) === '0' ? ' draft' : '') . ' click2edit' . $mouseover . ' cf"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + (empty($children) ? 18 : 0)) . 'px">';
 
 		// Calculate label and add a toggle button
 		$level = $intMargin / $intSpacing + 1;
@@ -4322,7 +4322,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
-		if (!empty($childs))
+		if (!empty($children))
 		{
 			$class = $blnIsOpen ? 'foldable foldable--open' : 'foldable';
 			$alt = $blnIsOpen ? $GLOBALS['TL_LANG']['MSC']['collapseNode'] : $GLOBALS['TL_LANG']['MSC']['expandNode'];
@@ -4338,10 +4338,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$next = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? ($arrPrevNext['nn'] ?? null) : ($arrPrevNext['n'] ?? null);
 		$_buttons = '';
 
-		// Regular buttons ($row, $table, $root, $blnCircularReference, $childs, $previous, $next)
+		// Regular buttons ($row, $table, $root, $blnCircularReference, $children, $previous, $next)
 		if ($this->strTable == $table && !$isVisibleRootTrailPage)
 		{
-			$_buttons .= (Input::get('act') == 'select') ? '<input type="checkbox" name="IDS[]" id="ids_' . $id . '" class="tl_tree_checkbox" value="' . $id . '">' : $this->generateButtons($currentRecord, $table, $this->root, $blnCircularReference, $childs, $previous, $next);
+			$_buttons .= (Input::get('act') == 'select') ? '<input type="checkbox" name="IDS[]" id="ids_' . $id . '" class="tl_tree_checkbox" value="' . $id . '">' : $this->generateButtons($currentRecord, $table, $this->root, $blnCircularReference, $children, $previous, $next);
 
 			if ($this->strPickerFieldType)
 			{
@@ -4354,17 +4354,17 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			$_buttons .= ' ';
 
-			// Call paste_button_callback(&$dc, $row, $table, $blnCircularReference, $arrClipboard, $childs, $previous, $next)
+			// Call paste_button_callback(&$dc, $row, $table, $blnCircularReference, $arrClipboard, $children, $previous, $next)
 			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'] ?? null))
 			{
 				$strClass = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'][0];
 				$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'][1];
 
-				$_buttons .= System::importStatic($strClass)->$strMethod($this, $currentRecord, $table, $blnCircularReference, $arrClipboard, $childs, $previous, $next);
+				$_buttons .= System::importStatic($strClass)->$strMethod($this, $currentRecord, $table, $blnCircularReference, $arrClipboard, $children, $previous, $next);
 			}
 			elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'] ?? null))
 			{
-				$_buttons .= $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback']($this, $currentRecord, $table, $blnCircularReference, $arrClipboard, $childs, $previous, $next);
+				$_buttons .= $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback']($this, $currentRecord, $table, $blnCircularReference, $arrClipboard, $children, $previous, $next);
 			}
 			else
 			{
@@ -4449,42 +4449,42 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$arrValues = $this->values;
 				array_unshift($arrValues, $id);
 
-				$objChilds = $db
+				$objChildren = $db
 					->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=? AND " . implode(' AND ', $this->procedure) . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
 					->execute(...$arrValues);
 			}
 			else
 			{
-				$objChilds = $db
+				$objChildren = $db
 					->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=?" . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
 					->execute($id);
 			}
 
-			if ($objChilds->numRows)
+			if ($objChildren->numRows)
 			{
-				$ids = $objChilds->fetchEach('id');
+				$ids = $objChildren->fetchEach('id');
 
 				static::preloadCurrentRecords($ids, $this->strTable);
 
 				for ($j=0, $c=\count($ids); $j<$c; $j++)
 				{
-					$return .= $this->generateTree($this->strTable, $ids[$j], array('pp'=>($ids[$j - 1] ?? null), 'nn'=>($ids[$j + 1] ?? null)), $blnHasSorting, $intMargin + $intSpacing, $arrClipboard, false, $j<(\count($ids)-1) || !empty($childs), $blnNoRecursion, $arrFound);
+					$return .= $this->generateTree($this->strTable, $ids[$j], array('pp'=>($ids[$j - 1] ?? null), 'nn'=>($ids[$j + 1] ?? null)), $blnHasSorting, $intMargin + $intSpacing, $arrClipboard, false, $j<(\count($ids)-1) || !empty($children), $blnNoRecursion, $arrFound);
 				}
 			}
 		}
 
 		// Begin a new submenu if the node is open or $arrFound is not empty (which means that there
 		// is an active filter and all matching nodes have to be loaded to avoid Ajax requests).
-		if (!$blnNoRecursion && !empty($childs) && ($blnIsOpen || !empty($arrFound)))
+		if (!$blnNoRecursion && !empty($children) && ($blnIsOpen || !empty($arrFound)))
 		{
 			$return .= '<li class="parent" id="' . $node . '_' . $id . '"' . (!$blnIsOpen ? ' style="display:none"' : '') . ' data-contao--toggle-nodes-target="child' . ($level === 0 ? ' rootChild"' : '') . '"><ul class="level_' . $level . '">';
 
-			static::preloadCurrentRecords($childs, $table);
+			static::preloadCurrentRecords($children, $table);
 
 			// Add the records of the parent table
-			for ($k=0, $c=\count($childs); $k<$c; $k++)
+			for ($k=0, $c=\count($children); $k<$c; $k++)
 			{
-				$return .= $this->generateTree($table, $childs[$k], array('p'=>($childs[$k - 1] ?? null), 'n'=>($childs[$k + 1] ?? null)), $blnHasSorting, $intMargin + $intSpacing, $arrClipboard, (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && \is_array($arrClipboard) && $childs[$k] == $arrClipboard['id']) || $blnCircularReference, $blnProtected || $protectedPage, $blnNoRecursion, $arrFound);
+				$return .= $this->generateTree($table, $children[$k], array('p'=>($children[$k - 1] ?? null), 'n'=>($children[$k + 1] ?? null)), $blnHasSorting, $intMargin + $intSpacing, $arrClipboard, (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && \is_array($arrClipboard) && $children[$k] == $arrClipboard['id']) || $blnCircularReference, $blnProtected || $protectedPage, $blnNoRecursion, $arrFound);
 			}
 
 			$return .= '</ul></li>';
@@ -5372,7 +5372,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$return .= '<td class="tl_file_list">' . ($limitHeight ? '<div data-contao--limit-height-target="node">' : '') . $label . ($limitHeight ? '</div>' : '') . '</td>';
 				}
 
-				// Buttons ($row, $table, $root, $blnCircularReference, $childs, $previous, $next)
+				// Buttons ($row, $table, $root, $blnCircularReference, $children, $previous, $next)
 				$return .= ((Input::get('act') == 'select') ? '
     <td class="tl_file_list tl_right_nowrap"><input type="checkbox" name="IDS[]" id="ids_' . $row['id'] . '" class="tl_tree_checkbox" value="' . $row['id'] . '"></td>' : '
     <td class="tl_file_list tl_right_nowrap">' . $this->generateButtons($row, $this->strTable, $this->root) . ($this->strPickerFieldType ? $this->getPickerInputField($row['id']) : '') . '</td>') . '
