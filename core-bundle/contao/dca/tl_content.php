@@ -1043,6 +1043,11 @@ class tl_content extends Backend
 				$GLOBALS['TL_DCA']['tl_content']['fields']['fullsize']['eval']['tl_class'] .= ' m12';
 				break;
 		}
+
+		if (System::getContainer()->get('contao.fragment.compositor')->supportsNesting('contao.content_element.' . $objCte->type))
+		{
+			$GLOBALS['TL_DCA']['tl_content']['config']['switchToEdit'] = true;
+		}
 	}
 
 	/**
