@@ -25,6 +25,7 @@ class RedirectControllerTest extends TestCase
     public function testAddsTheHeader(): void
     {
         $response = $this->createMock(RedirectResponse::class);
+
         $response->headers = $this->createMock(ResponseHeaderBag::class);
         $response->headers
             ->expects($this->once())
@@ -40,6 +41,7 @@ class RedirectControllerTest extends TestCase
         ;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class, ['useSSL' => false]);
+
         $request = Request::create('https://localhost/');
         $request->attributes->set('pageModel', $pageModel);
 
@@ -50,6 +52,7 @@ class RedirectControllerTest extends TestCase
     public function testDoesNotAddTheHeaderForInsecureRequess(): void
     {
         $response = $this->createMock(RedirectResponse::class);
+
         $response->headers = $this->createMock(ResponseHeaderBag::class);
         $response->headers
             ->expects($this->never())
@@ -64,6 +67,7 @@ class RedirectControllerTest extends TestCase
         ;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class, ['useSSL' => false]);
+
         $request = Request::create('http://localhost/');
         $request->attributes->set('pageModel', $pageModel);
 
@@ -74,6 +78,7 @@ class RedirectControllerTest extends TestCase
     public function testDoesNotAddTheHeaderWithoutPageModel(): void
     {
         $response = $this->createMock(RedirectResponse::class);
+
         $response->headers = $this->createMock(ResponseHeaderBag::class);
         $response->headers
             ->expects($this->never())
@@ -110,6 +115,7 @@ class RedirectControllerTest extends TestCase
         ;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class, ['useSSL' => true]);
+
         $request = Request::create('https://localhost/');
         $request->attributes->set('pageModel', $pageModel);
 

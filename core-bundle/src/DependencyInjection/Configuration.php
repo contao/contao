@@ -566,7 +566,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->arrayNode('hsts')
-                    ->info('Allows to configure the response listener to set the Strict-Transport-Security HTTP header.')
+                    ->info('Enables sending the HTTP Strict Transport Security (HSTS) header for secure requests.')
                     ->canBeDisabled()
                     ->children()
                         ->scalarNode('ttl')
