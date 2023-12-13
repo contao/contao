@@ -59,8 +59,7 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		(
 			'keys' => array
 			(
-				'id' => 'primary',
-				'title' => 'index'
+				'id' => 'primary'
 			)
 		)
 	),

@@ -33,8 +33,7 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 		(
 			'keys' => array
 			(
-				'id' => 'primary',
-				'name' => 'index'
+				'id' => 'primary'
 			)
 		),
 		'onload_callback' => array

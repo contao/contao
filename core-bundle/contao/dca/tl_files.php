@@ -60,8 +60,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 				'pid' => 'index',
 				'uuid' => 'unique',
 				'path' => 'index', // not unique (see #7725)
-				'extension' => 'index',
-				'name' => 'index'
+				'extension' => 'index'
 			)
 		)
 	),

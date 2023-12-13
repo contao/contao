@@ -39,7 +39,6 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 			(
 				'id' => 'primary',
 				'token' => 'unique',
-				'createdOn' => 'index',
 				'removeOn' => 'index'
 			)
 		)
