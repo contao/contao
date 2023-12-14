@@ -6,7 +6,7 @@
 {% block content %}
     <div class="slider-wrapper">
         {% for element in nested_elements %}
-            {{ render(element) }}
+            {{ content_element(element) }}
         {% endfor %}
     </div>
 

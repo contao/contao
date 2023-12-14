@@ -33,4 +33,14 @@ class ContentElementReference extends FragmentReference
         $this->attributes['templateProperties'] = $templateProperties;
         $this->attributes['nestedElements'] = $nestedElements;
     }
+
+    public function getContentModel(): ContentModel|int
+    {
+        return $this->attributes['contentModel'];
+    }
+
+    public function getSection(): string
+    {
+        return $this->attributes['section'];
+    }
 }

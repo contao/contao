@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Twig\Runtime;
 
 use Contao\ContentModel;
 use Contao\Controller;
+use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\ModuleModel;
@@ -35,11 +36,15 @@ final class FragmentRuntime implements RuntimeExtensionInterface
         return $this->framework->getAdapter(Controller::class)->getFrontendModule($model);
     }
 
-    public function renderContent(int|string $typeOrId, array $data = []): string
+    public function renderContent(ContentElementReference|int|string $typeOrId, array $data = []): string
     {
-        $model = $this->getModel(ContentModel::class, $typeOrId, $data);
+        if ($typeOrId instanceof ContentElementReference) {
+            $modelOrReference = $typeOrId;
+        } else {
+            $modelOrReference = $this->getModel(ContentModel::class, $typeOrId, $data);
+        }
 
-        return $this->framework->getAdapter(Controller::class)->getContentElement($model);
+        return $this->framework->getAdapter(Controller::class)->getContentElement($modelOrReference);
     }
 
     /**

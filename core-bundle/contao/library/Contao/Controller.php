@@ -515,13 +515,27 @@ abstract class Controller extends System
 	/**
 	 * Generate a content element and return it as string
 	 *
-	 * @param mixed  $intId     A content element ID or a Model object
+	 * @param mixed  $intId     A content element ID, a Model object or a ContentElementReference
 	 * @param string $strColumn The column the element is in
 	 *
 	 * @return string The content element HTML markup
 	 */
 	public static function getContentElement($intId, $strColumn='main')
 	{
+		$contentElementReference = null;
+
+		if ($intId instanceof ContentElementReference)
+		{
+			if (\func_num_args() > 1)
+			{
+				throw new \InvalidArgumentException('Passing a column name is not supported when using a ContentElementReference.');
+			}
+
+			$contentElementReference = $intId;
+			$strColumn = $contentElementReference->getSection();
+			$intId = $contentElementReference->getContentModel();
+		}
+
 		if (\is_object($intId))
 		{
 			$objRow = $intId;
@@ -568,7 +582,11 @@ abstract class Controller extends System
 
 		$compositor = System::getContainer()->get('contao.fragment.compositor');
 
-		if (is_a($strClass, ContentProxy::class, true) && $compositor->supportsNesting(ContentElementReference::TAG_NAME . '.' . $objRow->type))
+		if (is_a($strClass, ContentProxy::class, true) && $contentElementReference)
+		{
+			$objElement = new $strClass($contentElementReference, $strColumn);
+		}
+		elseif (is_a($strClass, ContentProxy::class, true) && $compositor->supportsNesting(ContentElementReference::TAG_NAME . '.' . $objRow->type))
 		{
 			$objElement = new $strClass(
 				$objRow,

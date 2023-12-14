@@ -25,21 +25,29 @@ class ContentProxy extends ContentElement
 	private $reference;
 
 	/**
-	 * @param ContentModel|Collection $objElement
+	 * @param ContentModel|Collection|ContentElementReference $objElement
 	 */
 	public function __construct($objElement, $strColumn = 'main', array $nestedElements = array())
 	{
-		if ($objElement instanceof Collection)
+		if ($objElement instanceof ContentElementReference)
 		{
-			$objElement = $objElement->current();
+			$this->reference = $objElement;
+		}
+		else
+		{
+			if ($objElement instanceof Collection)
+			{
+				$objElement = $objElement->current();
+			}
+
+			if (!$objElement instanceof ContentModel)
+			{
+				throw new \RuntimeException('ContentProxy must be constructed with a ContentModel');
+			}
+
+			$this->reference = new ContentElementReference($objElement, $strColumn, array(), !Registry::getInstance()->isRegistered($objElement), $nestedElements);
 		}
 
-		if (!$objElement instanceof ContentModel)
-		{
-			throw new \RuntimeException('ContentProxy must be constructed with a ContentModel');
-		}
-
-		$this->reference = new ContentElementReference($objElement, $strColumn, array(), !Registry::getInstance()->isRegistered($objElement), $nestedElements);
 		$this->strColumn = $strColumn;
 
 		// Do not call parent constructor
