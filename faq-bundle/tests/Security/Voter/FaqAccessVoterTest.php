@@ -33,10 +33,7 @@ class FaqAccessVoterTest extends WebTestCase
             ->expects($this->exactly(2))
             ->method('isGranted')
             ->with(ContaoFaqPermissions::USER_CAN_EDIT_CATEGORY, 42)
-            ->willReturnOnConsecutiveCalls(
-                true,
-                false,
-            )
+            ->willReturnOnConsecutiveCalls(true, false)
         ;
 
         $voter = new FaqAccessVoter($security);

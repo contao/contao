@@ -35,8 +35,8 @@ class FormAccessVoter extends AbstractDataContainerVoter
         return match (true) {
             $action instanceof CreateAction => $this->security->isGranted(ContaoCorePermissions::USER_CAN_CREATE_FORMS),
             $action instanceof ReadAction,
-            $action instanceof UpdateAction => $this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FORM, $action->getCurrentId()),
-            $action instanceof DeleteAction => $this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FORM, $action->getCurrentId())
+            $action instanceof UpdateAction => $this->security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FORM, $action->getCurrentId()),
+            $action instanceof DeleteAction => $this->security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FORM, $action->getCurrentId())
                 && $this->security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_FORMS),
         };
     }

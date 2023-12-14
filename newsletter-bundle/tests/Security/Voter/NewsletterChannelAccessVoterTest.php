@@ -33,10 +33,7 @@ class NewsletterChannelAccessVoterTest extends WebTestCase
             ->expects($this->exactly(2))
             ->method('isGranted')
             ->with(ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL, 42)
-            ->willReturnOnConsecutiveCalls(
-                true,
-                false,
-            )
+            ->willReturnOnConsecutiveCalls(true, false)
         ;
 
         $voter = new NewsletterChannelAccessVoter($security);

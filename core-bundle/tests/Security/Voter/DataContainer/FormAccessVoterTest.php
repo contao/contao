@@ -31,11 +31,8 @@ class FormAccessVoterTest extends WebTestCase
         $security
             ->expects($this->exactly(2))
             ->method('isGranted')
-            ->with(ContaoCorePermissions::USER_CAN_ACCESS_FORM, 42)
-            ->willReturnOnConsecutiveCalls(
-                true,
-                false,
-            )
+            ->with(ContaoCorePermissions::USER_CAN_EDIT_FORM, 42)
+            ->willReturnOnConsecutiveCalls(true, false)
         ;
 
         $voter = new FormAccessVoter($security);
