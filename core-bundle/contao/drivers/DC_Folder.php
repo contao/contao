@@ -317,6 +317,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$arrClipboard[$this->strTable] = array
 			(
 				'id' => $this->urlEncode($this->intId),
+				'childs' => $children, // backwards compatibility
 				'children' => $children,
 				'mode' => $mode
 			);

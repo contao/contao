@@ -347,6 +347,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$arrClipboard[$this->strTable] = array
 			(
 				'id' => Input::get('id'),
+				'childs' => $children, // backwards compatibility
 				'children' => $children,
 				'mode' => Input::get('mode')
 			);
