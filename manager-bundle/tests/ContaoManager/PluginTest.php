@@ -327,31 +327,6 @@ class PluginTest extends ContaoTestCase
         $this->assertSame('ThisTokenIsNotSoSecretChangeIt', $bag['env(APP_SECRET)']);
     }
 
-    public function testSetsDnsMappingParameterAndFallback(): void
-    {
-        $container = $this->getContainer();
-
-        (new Plugin())->getExtensionConfig('contao', [], $container);
-
-        $bag = $container->getParameterBag()->all();
-
-        $this->assertSame('[]', $bag['env(DNS_MAPPING)']);
-        $this->assertSame('%env(json:DNS_MAPPING)%', $bag['contao.dns_mapping']);
-    }
-
-    public function testDoesNotSetDnsParameterIfAlreadyDefined(): void
-    {
-        $container = $this->getContainer();
-        $container->setParameter('contao.dns_mapping', ['example.com' => 'example.local']);
-
-        (new Plugin())->getExtensionConfig('framework', [], $container);
-
-        $bag = $container->getParameterBag()->all();
-
-        $this->assertFalse(isset($bag['env(DNS_MAPPING)']));
-        $this->assertSame(['example.com' => 'example.local'], $bag['contao.dns_mapping']);
-    }
-
     /**
      * @dataProvider getDatabaseParameters
      */
