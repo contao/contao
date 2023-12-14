@@ -110,7 +110,7 @@ final class ContaoMailer implements MailerInterface
      */
     private function getPageModel(): ?PageModel
     {
-        $request = $this->requestStack->getMainRequest();
+        $request = $this->requestStack->getCurrentRequest();
 
         if (null === $request || !$request->attributes->has('pageModel')) {
             return null;
