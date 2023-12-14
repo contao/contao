@@ -39,7 +39,6 @@ class NewsletterChannelAccessVoter extends AbstractDataContainerVoter
             $action instanceof UpdateAction => $this->security->isGranted(ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL, $action->getCurrentId()),
             $action instanceof DeleteAction => $this->security->isGranted(ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL, $action->getCurrentId())
                 && $this->security->isGranted(ContaoNewsletterPermissions::USER_CAN_DELETE_CHANNELS),
-            default => false,
         };
     }
 }

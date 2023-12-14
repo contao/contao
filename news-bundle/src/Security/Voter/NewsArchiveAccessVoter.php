@@ -39,7 +39,6 @@ class NewsArchiveAccessVoter extends AbstractDataContainerVoter
             $action instanceof UpdateAction => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $action->getCurrentId()),
             $action instanceof DeleteAction => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $action->getCurrentId())
                 && $this->security->isGranted(ContaoNewsPermissions::USER_CAN_DELETE_ARCHIVES),
-            default => false,
         };
     }
 }

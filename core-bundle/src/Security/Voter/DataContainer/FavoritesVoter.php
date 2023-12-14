@@ -43,7 +43,6 @@ class FavoritesVoter extends AbstractDataContainerVoter
             $action instanceof ReadAction,
             $action instanceof UpdateAction,
             $action instanceof DeleteAction => $this->checkAccess($action),
-            default => false,
         };
     }
 

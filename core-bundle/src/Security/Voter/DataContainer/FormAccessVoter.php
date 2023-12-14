@@ -38,7 +38,6 @@ class FormAccessVoter extends AbstractDataContainerVoter
             $action instanceof UpdateAction => $this->security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FORM, $action->getCurrentId()),
             $action instanceof DeleteAction => $this->security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FORM, $action->getCurrentId())
                 && $this->security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_FORMS),
-            default => false,
         };
     }
 }

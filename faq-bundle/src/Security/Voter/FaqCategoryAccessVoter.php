@@ -39,7 +39,6 @@ class FaqCategoryAccessVoter extends AbstractDataContainerVoter
             $action instanceof UpdateAction => $this->security->isGranted(ContaoFaqPermissions::USER_CAN_EDIT_CATEGORY, $action->getCurrentId()),
             $action instanceof DeleteAction => $this->security->isGranted(ContaoFaqPermissions::USER_CAN_EDIT_CATEGORY, $action->getCurrentId())
                 && $this->security->isGranted(ContaoFaqPermissions::USER_CAN_DELETE_CATEGORIES),
-            default => false,
         };
     }
 }
