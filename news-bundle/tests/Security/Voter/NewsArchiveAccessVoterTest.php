@@ -33,10 +33,7 @@ class NewsArchiveAccessVoterTest extends WebTestCase
             ->expects($this->exactly(2))
             ->method('isGranted')
             ->with(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, 42)
-            ->willReturnOnConsecutiveCalls(
-                true,
-                false,
-            )
+            ->willReturnOnConsecutiveCalls(true, false)
         ;
 
         $voter = new NewsArchiveAccessVoter($security);
