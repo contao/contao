@@ -1,3 +1,6 @@
+parameters:
+    contao.dns_mapping: []
+
 services:
     _defaults:
         autoconfigure: true
