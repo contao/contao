@@ -39,6 +39,7 @@ class CalendarAccessVoter extends AbstractDataContainerVoter
             $action instanceof UpdateAction => $this->security->isGranted(ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR, $action->getCurrentId()),
             $action instanceof DeleteAction => $this->security->isGranted(ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR, $action->getCurrentId())
                 && $this->security->isGranted(ContaoCalendarPermissions::USER_CAN_DELETE_CALENDARS),
+            default => false,
         };
     }
 }
