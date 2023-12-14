@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Twig\Runtime;
 
 use Contao\ContentModel;
 use Contao\Controller;
+use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Runtime\FragmentRuntime;
 use Contao\ModuleModel;
@@ -105,6 +106,40 @@ class FragmentRuntimeTest extends TestCase
 
         $runtime = new FragmentRuntime($framework);
         $result = $runtime->renderContent('text', ['foo' => 'bar', 'headline' => ['unit' => 'h2', 'value' => 'Test']]);
+
+        $this->assertSame('runtime-result', $result);
+    }
+
+    public function testRenderNestedContent(): void
+    {
+        $controllerAdapter = $this->mockAdapter(['getContentElement']);
+        $controllerAdapter
+            ->expects($this->once())
+            ->method('getContentElement')
+            ->with($this->callback(
+                function (ContentElementReference $reference) {
+                    $this->assertSame(
+                        ['type' => 'slider', 'headline' => serialize(['unit' => 'h2', 'value' => 'Test'])],
+                        $reference->getContentModel()->row(),
+                    );
+                    $this->assertSame(
+                        ['type' => 'text', 'text' => '<p>Test</p>'],
+                        $reference->attributes['nestedElements'][0]->getContentModel()->row(),
+                    );
+
+                    return true;
+                },
+            ))
+            ->willReturn('runtime-result')
+        ;
+
+        $framework = $this->mockContaoFramework(
+            [Controller::class => $controllerAdapter],
+            [ContentModel::class => fn () => $this->mockClassWithProperties(ContentModel::class)],
+        );
+
+        $runtime = new FragmentRuntime($framework);
+        $result = $runtime->renderContent('slider', ['headline' => ['unit' => 'h2', 'value' => 'Test'], 'nested_elements' => [['type' => 'text', 'text' => '<p>Test</p>']]]);
 
         $this->assertSame('runtime-result', $result);
     }

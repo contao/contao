@@ -40,11 +40,27 @@ final class FragmentRuntime implements RuntimeExtensionInterface
     {
         if ($typeOrId instanceof ContentElementReference) {
             $modelOrReference = $typeOrId;
+        } elseif (\is_string($typeOrId) && \is_array($data['nested_elements'] ?? null)) {
+            $modelOrReference = $this->getContentReference($typeOrId, $data);
         } else {
             $modelOrReference = $this->getModel(ContentModel::class, $typeOrId, $data);
         }
 
         return $this->framework->getAdapter(Controller::class)->getContentElement($modelOrReference);
+    }
+
+    private function getContentReference(string $type, array $data = []): ContentElementReference
+    {
+        $nestedElements = array_map(
+            fn (array $element) => $this->getContentReference($element['type'], $element),
+            $data['nested_elements'] ?? [],
+        );
+
+        unset($data['nested_elements']);
+
+        $model = $this->getModel(ContentModel::class, $type, $data);
+
+        return new ContentElementReference($model, 'main', [], true, $nestedElements);
     }
 
     /**

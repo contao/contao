@@ -133,10 +133,15 @@ abstract class ContaoTestCase extends TestCase
             ->willReturnCallback(static fn (string $key): Adapter|null => $adapters[$key] ?? null)
         ;
 
+        $instances = array_map(
+            static fn ($instance): \Closure => $instance instanceof \Closure ? $instance : static fn () => $instance,
+            $instances,
+        );
+
         if ($instances) {
             $framework
                 ->method('createInstance')
-                ->willReturnCallback(static fn (string $key): mixed => $instances[$key] ?? null)
+                ->willReturnCallback(static fn (string $key): mixed => ($instances[$key] ?? null)?->__invoke())
             ;
         }
 

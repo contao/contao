@@ -586,7 +586,7 @@ abstract class Controller extends System
 		{
 			$objElement = new $strClass($contentElementReference, $strColumn);
 		}
-		elseif (is_a($strClass, ContentProxy::class, true) && $compositor->supportsNesting(ContentElementReference::TAG_NAME . '.' . $objRow->type))
+		elseif (is_a($strClass, ContentProxy::class, true) && $compositor->supportsNesting(ContentElementReference::TAG_NAME . '.' . $objRow->type) && $objRow->id)
 		{
 			$objElement = new $strClass(
 				$objRow,
