@@ -100,8 +100,6 @@ services:
         arguments:
             - '@contao.filesystem.virtual.files'
 
-    Contao\CoreBundle\Controller\ContentElement\SliderController: ~
-
     Contao\CoreBundle\Controller\ContentElement\TableController: ~
 
     Contao\CoreBundle\Controller\ContentElement\TemplateController: ~

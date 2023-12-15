@@ -371,23 +371,17 @@
       <trans-unit id="CTE.template.1">
         <source>Generates an element to insert a custom template.</source>
       </trans-unit>
-      <trans-unit id="CTE.slider.0">
+      <trans-unit id="CTE.slider">
         <source>Content slider</source>
       </trans-unit>
-      <trans-unit id="CTE.slider.1">
-        <source>Generates a content slider element.</source>
-      </trans-unit>
-      <trans-unit id="CTE.legacy">
-        <source>Legacy elements</source>
-      </trans-unit>
       <trans-unit id="CTE.sliderStart.0">
-        <source>Slider wrapper start</source>
+        <source>Wrapper start</source>
       </trans-unit>
       <trans-unit id="CTE.sliderStart.1">
         <source>Generates the opening part of the slider wrapper.</source>
       </trans-unit>
       <trans-unit id="CTE.sliderStop.0">
-        <source>Slider wrapper stop</source>
+        <source>Wrapper stop</source>
       </trans-unit>
       <trans-unit id="CTE.sliderStop.1">
         <source>Generates the closing part of the slider wrapper.</source>
