@@ -371,8 +371,14 @@
       <trans-unit id="CTE.template.1">
         <source>Generates an element to insert a custom template.</source>
       </trans-unit>
-      <trans-unit id="CTE.slider">
+      <trans-unit id="CTE.swiper.0">
         <source>Content slider</source>
+      </trans-unit>
+      <trans-unit id="CTE.swiper.1">
+        <source>Generates a content slider element.</source>
+      </trans-unit>
+      <trans-unit id="CTE.slider">
+        <source>Legacy slider</source>
       </trans-unit>
       <trans-unit id="CTE.sliderStart.0">
         <source>Wrapper start</source>
