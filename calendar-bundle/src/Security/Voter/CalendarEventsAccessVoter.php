@@ -18,13 +18,14 @@ use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Security\Voter\DataContainer\AbstractDataContainerVoter;
-use Symfony\Bundle\SecurityBundle\Security;
+use Contao\CoreBundle\Security\Voter\DataContainer\ParentAccessTrait;
 
+/**
+ * @internal
+ */
 class CalendarEventsAccessVoter extends AbstractDataContainerVoter
 {
-    public function __construct(private readonly Security $security)
-    {
-    }
+    use ParentAccessTrait;
 
     protected function getTable(): string
     {
@@ -33,13 +34,7 @@ class CalendarEventsAccessVoter extends AbstractDataContainerVoter
 
     protected function isGranted(CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
     {
-        $pid = match (true) {
-            $action instanceof CreateAction => $action->getNewPid(),
-            $action instanceof ReadAction,
-            $action instanceof UpdateAction,
-            $action instanceof DeleteAction => $action->getCurrentPid(),
-        };
-
-        return $this->security->isGranted(ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR, $pid);
+        return $this->security->isGranted(ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE)
+            && $this->canAccessParent(ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR, $action);
     }
 }
