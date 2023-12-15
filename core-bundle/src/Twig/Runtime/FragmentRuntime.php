@@ -60,7 +60,10 @@ final class FragmentRuntime implements RuntimeExtensionInterface
 
         $model = $this->getModel(ContentModel::class, $type, $data);
 
-        return new ContentElementReference($model, 'main', [], true, $nestedFragments);
+        $contentElementReference = new ContentElementReference($model, 'main', [], true);
+        $contentElementReference->setNestedFragments($nestedFragments);
+
+        return $contentElementReference;
     }
 
     /**

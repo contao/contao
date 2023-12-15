@@ -57,13 +57,10 @@ class FragmentCompositor
                 continue;
             }
 
-            $rendered[] = new ContentElementReference(
-                $child,
-                'main',
-                [],
-                !Registry::getInstance()->isRegistered($child),
-                $this->getNestedContentElements(ContentElementReference::TAG_NAME.'.'.$child->type, $child->id),
-            );
+            $contentElementReference = new ContentElementReference($child, 'main', [], !Registry::getInstance()->isRegistered($child));
+            $contentElementReference->setNestedFragments($this->getNestedContentElements(ContentElementReference::TAG_NAME.'.'.$child->type, $child->id));
+
+            $rendered[] = $contentElementReference;
         }
 
         return $rendered;
