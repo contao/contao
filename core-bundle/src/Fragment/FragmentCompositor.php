@@ -42,7 +42,7 @@ class FragmentCompositor
         return $this->nestedByIdentifier[$identifier]['allowedTypes'] ?? [];
     }
 
-    public function getNestedContentElements(string $identifier, int $id): array
+    public function getNestedFragments(string $identifier, int $id): array
     {
         if (!$this->supportsNesting($identifier)) {
             return [];
@@ -58,7 +58,7 @@ class FragmentCompositor
             }
 
             $contentElementReference = new ContentElementReference($child, 'main', [], !Registry::getInstance()->isRegistered($child));
-            $contentElementReference->setNestedFragments($this->getNestedContentElements(ContentElementReference::TAG_NAME.'.'.$child->type, $child->id));
+            $contentElementReference->setNestedFragments($this->getNestedFragments(ContentElementReference::TAG_NAME.'.'.$child->type, $child->id));
 
             $rendered[] = $contentElementReference;
         }
