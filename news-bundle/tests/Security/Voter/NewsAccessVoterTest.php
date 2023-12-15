@@ -19,21 +19,27 @@ use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\NewsBundle\Security\ContaoNewsPermissions;
 use Contao\NewsBundle\Security\Voter\NewsAccessVoter;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class NewsAccessVoterTest extends WebTestCase
+class NewsAccessVoterTest extends TestCase
 {
     public function testVoter(): void
     {
         $security = $this->createMock(Security::class);
         $security
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(5))
             ->method('isGranted')
-            ->with(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, 42)
-            ->willReturnOnConsecutiveCalls(true, false)
+            ->withConsecutive(
+                [ContaoNewsPermissions::USER_CAN_ACCESS_MODULE],
+                [ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, 42],
+                [ContaoNewsPermissions::USER_CAN_ACCESS_MODULE],
+                [ContaoNewsPermissions::USER_CAN_ACCESS_MODULE],
+                [ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, 42],
+            )
+            ->willReturnOnConsecutiveCalls(true, true, false, true, false)
         ;
 
         $voter = new NewsAccessVoter($security);
@@ -53,7 +59,7 @@ class NewsAccessVoterTest extends WebTestCase
             VoterInterface::ACCESS_ABSTAIN,
             $voter->vote(
                 $token,
-                new ReadAction('foo', ['pid' => 42]),
+                new ReadAction('tl_news', ['pid' => 42]),
                 ['whatever'],
             ),
         );
@@ -64,17 +70,55 @@ class NewsAccessVoterTest extends WebTestCase
             VoterInterface::ACCESS_ABSTAIN,
             $voter->vote(
                 $token,
-                new ReadAction('foo', ['pid' => 42]),
+                new ReadAction('tl_news', ['pid' => 42]),
                 [ContaoCorePermissions::DC_PREFIX.'tl_news'],
             ),
         );
 
-        // Permission denied
+        // Permission denied on back end module
         $this->assertSame(
             VoterInterface::ACCESS_DENIED,
             $voter->vote(
                 $token,
-                new ReadAction('foo', ['pid' => 42]),
+                new ReadAction('tl_news', ['pid' => 42]),
+                [ContaoCorePermissions::DC_PREFIX.'tl_news'],
+            ),
+        );
+
+        // Permission denied on news archive
+        $this->assertSame(
+            VoterInterface::ACCESS_DENIED,
+            $voter->vote(
+                $token,
+                new ReadAction('tl_news', ['pid' => 42]),
+                [ContaoCorePermissions::DC_PREFIX.'tl_news'],
+            ),
+        );
+    }
+
+    public function testDeniesUpdateActionToNewParent(): void
+    {
+        $security = $this->createMock(Security::class);
+        $security
+            ->expects($this->exactly(3))
+            ->method('isGranted')
+            ->withConsecutive(
+                [ContaoNewsPermissions::USER_CAN_ACCESS_MODULE],
+                [ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, 42],
+                [ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, 43],
+            )
+            ->willReturnOnConsecutiveCalls(true, true, false)
+        ;
+
+        $token = $this->createMock(TokenInterface::class);
+
+        $voter = new NewsAccessVoter($security);
+
+        $this->assertSame(
+            VoterInterface::ACCESS_DENIED,
+            $voter->vote(
+                $token,
+                new UpdateAction('tl_news', ['pid' => 42], ['pid' => 43]),
                 [ContaoCorePermissions::DC_PREFIX.'tl_news'],
             ),
         );

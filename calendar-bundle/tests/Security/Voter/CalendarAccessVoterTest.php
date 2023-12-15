@@ -19,21 +19,27 @@ use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class CalendarAccessVoterTest extends WebTestCase
+class CalendarAccessVoterTest extends TestCase
 {
     public function testVoter(): void
     {
         $security = $this->createMock(Security::class);
         $security
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(5))
             ->method('isGranted')
-            ->with(ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR, 42)
-            ->willReturnOnConsecutiveCalls(true, false)
+            ->withConsecutive(
+                [ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE],
+                [ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR, 42],
+                [ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE],
+                [ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE],
+                [ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR, 42],
+            )
+            ->willReturnOnConsecutiveCalls(true, true, false, true, false)
         ;
 
         $voter = new CalendarAccessVoter($security);
@@ -53,7 +59,7 @@ class CalendarAccessVoterTest extends WebTestCase
             VoterInterface::ACCESS_ABSTAIN,
             $voter->vote(
                 $token,
-                new ReadAction('foo', ['id' => 42]),
+                new ReadAction('tl_calendar', ['id' => 42]),
                 ['whatever'],
             ),
         );
@@ -64,17 +70,27 @@ class CalendarAccessVoterTest extends WebTestCase
             VoterInterface::ACCESS_ABSTAIN,
             $voter->vote(
                 $token,
-                new ReadAction('foo', ['id' => 42]),
+                new ReadAction('tl_calendar', ['id' => 42]),
                 [ContaoCorePermissions::DC_PREFIX.'tl_calendar'],
             ),
         );
 
-        // Permission denied
+        // Permission denied on back end module
         $this->assertSame(
             VoterInterface::ACCESS_DENIED,
             $voter->vote(
                 $token,
-                new ReadAction('foo', ['id' => 42]),
+                new ReadAction('tl_calendar', ['id' => 42]),
+                [ContaoCorePermissions::DC_PREFIX.'tl_calendar'],
+            ),
+        );
+
+        // Permission denied on calendar
+        $this->assertSame(
+            VoterInterface::ACCESS_DENIED,
+            $voter->vote(
+                $token,
+                new ReadAction('tl_calendar', ['id' => 42]),
                 [ContaoCorePermissions::DC_PREFIX.'tl_calendar'],
             ),
         );

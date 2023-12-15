@@ -18,21 +18,27 @@ use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Security\Voter\DataContainer\FormFieldAccessVoter;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class FormFieldAccessVoterTest extends WebTestCase
+class FormFieldAccessVoterTest extends TestCase
 {
     public function testVoter(): void
     {
         $security = $this->createMock(Security::class);
         $security
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(5))
             ->method('isGranted')
-            ->with(ContaoCorePermissions::USER_CAN_EDIT_FORM, 42)
-            ->willReturnOnConsecutiveCalls(true, false)
+            ->withConsecutive(
+                [ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'form'],
+                [ContaoCorePermissions::USER_CAN_EDIT_FORM, 42],
+                [ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'form'],
+                [ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'form'],
+                [ContaoCorePermissions::USER_CAN_EDIT_FORM, 42],
+            )
+            ->willReturnOnConsecutiveCalls(true, true, false, true, false)
         ;
 
         $voter = new FormFieldAccessVoter($security);
@@ -52,7 +58,7 @@ class FormFieldAccessVoterTest extends WebTestCase
             VoterInterface::ACCESS_ABSTAIN,
             $voter->vote(
                 $token,
-                new ReadAction('foo', ['pid' => 42]),
+                new ReadAction('tl_form_field', ['pid' => 42]),
                 ['whatever'],
             ),
         );
@@ -63,17 +69,55 @@ class FormFieldAccessVoterTest extends WebTestCase
             VoterInterface::ACCESS_ABSTAIN,
             $voter->vote(
                 $token,
-                new ReadAction('foo', ['pid' => 42]),
+                new ReadAction('tl_form_field', ['pid' => 42]),
                 [ContaoCorePermissions::DC_PREFIX.'tl_form_field'],
             ),
         );
 
-        // Permission denied
+        // Permission denied on back end module
         $this->assertSame(
             VoterInterface::ACCESS_DENIED,
             $voter->vote(
                 $token,
-                new ReadAction('foo', ['pid' => 42]),
+                new ReadAction('tl_form_field', ['pid' => 42]),
+                [ContaoCorePermissions::DC_PREFIX.'tl_form_field'],
+            ),
+        );
+
+        // Permission denied on form
+        $this->assertSame(
+            VoterInterface::ACCESS_DENIED,
+            $voter->vote(
+                $token,
+                new ReadAction('tl_form_field', ['pid' => 42]),
+                [ContaoCorePermissions::DC_PREFIX.'tl_form_field'],
+            ),
+        );
+    }
+
+    public function testDeniesUpdateActionToNewParent(): void
+    {
+        $security = $this->createMock(Security::class);
+        $security
+            ->expects($this->exactly(3))
+            ->method('isGranted')
+            ->withConsecutive(
+                [ContaoCorePermissions::USER_CAN_ACCESS_MODULE],
+                [ContaoCorePermissions::USER_CAN_EDIT_FORM, 42],
+                [ContaoCorePermissions::USER_CAN_EDIT_FORM, 43],
+            )
+            ->willReturnOnConsecutiveCalls(true, true, false)
+        ;
+
+        $token = $this->createMock(TokenInterface::class);
+
+        $voter = new FormFieldAccessVoter($security);
+
+        $this->assertSame(
+            VoterInterface::ACCESS_DENIED,
+            $voter->vote(
+                $token,
+                new UpdateAction('tl_form_field', ['pid' => 42], ['pid' => 43]),
                 [ContaoCorePermissions::DC_PREFIX.'tl_form_field'],
             ),
         );
