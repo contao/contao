@@ -1,18 +1,20 @@
 {% extends "@Contao/content_element/_base.html.twig" %}
 
 {% block content %}
-    <div class="swiper" data-delay="{{ delay }}" data-speed="{{ speed }}" data-offset="{{ offset }}" data-loop="{{ loop }}">
-        <div class="swiper-wrapper">
-            {% for element in nested_fragments %}
-                <div class="swiper-slide">
-                    {{ content_element(element) }}
-                </div>
-            {% endfor %}
+    {% block html %}
+        <div class="swiper" data-delay="{{ delay }}" data-speed="{{ speed }}" data-offset="{{ offset }}" data-loop="{{ loop }}">
+            <div class="swiper-wrapper">
+                {% for element in nested_fragments %}
+                    <div class="swiper-slide">
+                        {{ content_element(element) }}
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-pagination"></div>
         </div>
-        <div class="swiper-button-next"></div>
-        <div class="swiper-button-prev"></div>
-        <div class="swiper-pagination"></div>
-    </div>
+    {% endblock %}
 
     {% block script %}
         {% add "swiper_script" to body %}
