@@ -188,18 +188,24 @@ services:
             - '@contao.twig.loader.theme_namespace'
             - '@translator'
 
-    contao.listener.data_container.undo.jump_to_parent_button:
-        class: Contao\CoreBundle\EventListener\DataContainer\Undo\JumpToParentButtonListener
+    contao.listener.data_container.undo.jump_to_parent_operation:
+        class: Contao\CoreBundle\EventListener\DataContainer\Undo\JumpToParentOperationListener
         arguments:
             - '@contao.framework'
             - '@database_connection'
             - '@translator'
+            - '@security.helper'
 
     contao.listener.data_container.undo.label:
         class: Contao\CoreBundle\EventListener\DataContainer\Undo\LabelListener
         arguments:
             - '@contao.framework'
             - '@twig'
+
+    contao.listener.data_container.undo.undo_operation:
+        class: Contao\CoreBundle\EventListener\DataContainer\Undo\UndoOperationListener
+        arguments:
+            - '@security.helper'
 
     contao.listener.data_container.validate_custom_rgxp:
         class: Contao\CoreBundle\EventListener\DataContainer\ValidateCustomRgxpListener
