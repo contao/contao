@@ -398,7 +398,7 @@ class Form extends Hybrid
 			}
 		}
 
-		// Do not process the form data if errors were added (#6611)
+		// Do not process the form data if there are errors (see #6611)
 		if ($this->hasErrors())
 		{
 			return;
