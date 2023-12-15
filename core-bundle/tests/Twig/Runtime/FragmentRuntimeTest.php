@@ -139,7 +139,19 @@ class FragmentRuntimeTest extends TestCase
         );
 
         $runtime = new FragmentRuntime($framework);
-        $result = $runtime->renderContent('slider', ['headline' => ['unit' => 'h2', 'value' => 'Test'], 'nested_elements' => [['type' => 'text', 'text' => '<p>Test</p>']]]);
+
+        $result = $runtime->renderContent('slider', [
+            'headline' => [
+                'unit' => 'h2',
+                'value' => 'Test',
+            ],
+            'nested_elements' => [
+                [
+                    'type' => 'text',
+                    'text' => '<p>Test</p>',
+                ],
+            ],
+        ]);
 
         $this->assertSame('runtime-result', $result);
     }

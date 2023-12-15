@@ -580,13 +580,14 @@ abstract class Controller extends System
 			$objStopwatch->start($strStopWatchId, 'contao.layout');
 		}
 
+		$isContentProxy = is_a($strClass, ContentProxy::class, true);
 		$compositor = System::getContainer()->get('contao.fragment.compositor');
 
-		if (is_a($strClass, ContentProxy::class, true) && $contentElementReference)
+		if ($isContentProxy && $contentElementReference)
 		{
 			$objElement = new $strClass($contentElementReference, $strColumn);
 		}
-		elseif (is_a($strClass, ContentProxy::class, true) && $compositor->supportsNesting(ContentElementReference::TAG_NAME . '.' . $objRow->type) && $objRow->id)
+		elseif ($isContentProxy && $objRow->id && $compositor->supportsNesting(ContentElementReference::TAG_NAME . '.' . $objRow->type))
 		{
 			$objElement = new $strClass(
 				$objRow,
