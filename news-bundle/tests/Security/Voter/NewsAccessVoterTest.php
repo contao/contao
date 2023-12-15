@@ -18,13 +18,13 @@ use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\NewsBundle\Security\ContaoNewsPermissions;
-use Contao\NewsBundle\Security\Voter\NewsArchiveAccessVoter;
+use Contao\NewsBundle\Security\Voter\NewsAccessVoter;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class NewsArchiveAccessVoterTest extends WebTestCase
+class NewsAccessVoterTest extends WebTestCase
 {
     public function testVoter(): void
     {
@@ -36,15 +36,15 @@ class NewsArchiveAccessVoterTest extends WebTestCase
             ->willReturnOnConsecutiveCalls(true, false)
         ;
 
-        $voter = new NewsArchiveAccessVoter($security);
+        $voter = new NewsAccessVoter($security);
 
-        $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_news_archive'));
-        $this->assertFalse($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_news'));
+        $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_news'));
+        $this->assertFalse($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_news_archive'));
         $this->assertTrue($voter->supportsType(CreateAction::class));
         $this->assertTrue($voter->supportsType(ReadAction::class));
         $this->assertTrue($voter->supportsType(UpdateAction::class));
         $this->assertTrue($voter->supportsType(DeleteAction::class));
-        $this->assertFalse($voter->supportsType(NewsArchiveAccessVoter::class));
+        $this->assertFalse($voter->supportsType(NewsAccessVoter::class));
 
         $token = $this->createMock(TokenInterface::class);
 
@@ -53,7 +53,7 @@ class NewsArchiveAccessVoterTest extends WebTestCase
             VoterInterface::ACCESS_ABSTAIN,
             $voter->vote(
                 $token,
-                new ReadAction('foo', ['id' => 42]),
+                new ReadAction('foo', ['pid' => 42]),
                 ['whatever'],
             ),
         );
@@ -64,8 +64,8 @@ class NewsArchiveAccessVoterTest extends WebTestCase
             VoterInterface::ACCESS_ABSTAIN,
             $voter->vote(
                 $token,
-                new ReadAction('foo', ['id' => 42]),
-                [ContaoCorePermissions::DC_PREFIX.'tl_news_archive'],
+                new ReadAction('foo', ['pid' => 42]),
+                [ContaoCorePermissions::DC_PREFIX.'tl_news'],
             ),
         );
 
@@ -74,8 +74,8 @@ class NewsArchiveAccessVoterTest extends WebTestCase
             VoterInterface::ACCESS_DENIED,
             $voter->vote(
                 $token,
-                new ReadAction('foo', ['id' => 42]),
-                [ContaoCorePermissions::DC_PREFIX.'tl_news_archive'],
+                new ReadAction('foo', ['pid' => 42]),
+                [ContaoCorePermissions::DC_PREFIX.'tl_news'],
             ),
         );
     }

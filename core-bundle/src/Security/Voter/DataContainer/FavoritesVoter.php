@@ -13,20 +13,17 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Security\Voter\DataContainer;
 
 use Contao\BackendUser;
-use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
 
 /**
  * @internal
  */
-class FavoritesVoter implements CacheableVoterInterface
+class FavoritesVoter extends AbstractDataContainerVoter
 {
     public function __construct(
         private readonly Security $security,
@@ -34,47 +31,29 @@ class FavoritesVoter implements CacheableVoterInterface
     ) {
     }
 
-    public function supportsAttribute(string $attribute): bool
+    protected function getTable(): string
     {
-        return $attribute === ContaoCorePermissions::DC_PREFIX.'tl_favorites';
+        return 'tl_favorites';
     }
 
-    public function supportsType(string $subjectType): bool
+    protected function isGranted(CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
     {
-        return \in_array($subjectType, [CreateAction::class, ReadAction::class, UpdateAction::class, DeleteAction::class], true);
+        return match (true) {
+            $action instanceof CreateAction => true,
+            $action instanceof ReadAction,
+            $action instanceof UpdateAction,
+            $action instanceof DeleteAction => $this->checkAccess($action),
+        };
     }
 
-    public function vote(TokenInterface $token, $subject, array $attributes): int
-    {
-        foreach ($attributes as $attribute) {
-            if (!$this->supportsAttribute($attribute)) {
-                continue;
-            }
-
-            $isGranted = match (true) {
-                $subject instanceof CreateAction => true,
-                $subject instanceof ReadAction,
-                $subject instanceof UpdateAction,
-                $subject instanceof DeleteAction => $this->checkAccess($subject),
-                default => false,
-            };
-
-            if (!$isGranted) {
-                return self::ACCESS_DENIED;
-            }
-        }
-
-        return self::ACCESS_ABSTAIN;
-    }
-
-    private function checkAccess(DeleteAction|ReadAction|UpdateAction $subject): bool
+    private function checkAccess(DeleteAction|ReadAction|UpdateAction $action): bool
     {
         $user = $this->security->getUser();
         $userId = $user instanceof BackendUser ? (int) $user->id : 0;
 
         $createdBy = (int) $this->connection->fetchOne(
             'SELECT user FROM tl_favorites WHERE id = :id',
-            ['id' => $subject->getCurrentId()],
+            ['id' => $action->getCurrentId()],
         );
 
         return $createdBy === $userId;

@@ -845,6 +845,16 @@ services:
             - '@security.helper'
             - '@database_connection'
 
+    contao.security.data_container.form_access_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\FormAccessVoter
+        arguments:
+            - '@security.helper'
+
+    contao.security.data_container.form_field_access_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\FormFieldAccessVoter
+        arguments:
+            - '@security.helper'
+
     contao.security.data_container.table_access_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\TableAccessVoter
         arguments:

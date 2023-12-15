@@ -10,21 +10,21 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\NewsBundle\Tests\Security\Voter;
+namespace Contao\FaqBundle\Tests\Security\Voter;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
-use Contao\NewsBundle\Security\ContaoNewsPermissions;
-use Contao\NewsBundle\Security\Voter\NewsArchiveAccessVoter;
+use Contao\FaqBundle\Security\ContaoFaqPermissions;
+use Contao\FaqBundle\Security\Voter\FaqCategoryAccessVoter;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class NewsArchiveAccessVoterTest extends WebTestCase
+class FaqCategoryAccessVoterTest extends WebTestCase
 {
     public function testVoter(): void
     {
@@ -32,19 +32,19 @@ class NewsArchiveAccessVoterTest extends WebTestCase
         $security
             ->expects($this->exactly(2))
             ->method('isGranted')
-            ->with(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, 42)
+            ->with(ContaoFaqPermissions::USER_CAN_EDIT_CATEGORY, 42)
             ->willReturnOnConsecutiveCalls(true, false)
         ;
 
-        $voter = new NewsArchiveAccessVoter($security);
+        $voter = new FaqCategoryAccessVoter($security);
 
-        $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_news_archive'));
-        $this->assertFalse($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_news'));
+        $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_faq_category'));
+        $this->assertFalse($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_faq'));
         $this->assertTrue($voter->supportsType(CreateAction::class));
         $this->assertTrue($voter->supportsType(ReadAction::class));
         $this->assertTrue($voter->supportsType(UpdateAction::class));
         $this->assertTrue($voter->supportsType(DeleteAction::class));
-        $this->assertFalse($voter->supportsType(NewsArchiveAccessVoter::class));
+        $this->assertFalse($voter->supportsType(FaqCategoryAccessVoter::class));
 
         $token = $this->createMock(TokenInterface::class);
 
@@ -65,7 +65,7 @@ class NewsArchiveAccessVoterTest extends WebTestCase
             $voter->vote(
                 $token,
                 new ReadAction('foo', ['id' => 42]),
-                [ContaoCorePermissions::DC_PREFIX.'tl_news_archive'],
+                [ContaoCorePermissions::DC_PREFIX.'tl_faq_category'],
             ),
         );
 
@@ -75,7 +75,7 @@ class NewsArchiveAccessVoterTest extends WebTestCase
             $voter->vote(
                 $token,
                 new ReadAction('foo', ['id' => 42]),
-                [ContaoCorePermissions::DC_PREFIX.'tl_news_archive'],
+                [ContaoCorePermissions::DC_PREFIX.'tl_faq_category'],
             ),
         );
     }

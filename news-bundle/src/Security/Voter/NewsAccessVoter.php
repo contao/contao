@@ -20,7 +20,7 @@ use Contao\CoreBundle\Security\Voter\DataContainer\AbstractDataContainerVoter;
 use Contao\NewsBundle\Security\ContaoNewsPermissions;
 use Symfony\Bundle\SecurityBundle\Security;
 
-class NewsArchiveAccessVoter extends AbstractDataContainerVoter
+class NewsAccessVoter extends AbstractDataContainerVoter
 {
     public function __construct(private readonly Security $security)
     {
@@ -28,17 +28,18 @@ class NewsArchiveAccessVoter extends AbstractDataContainerVoter
 
     protected function getTable(): string
     {
-        return 'tl_news_archive';
+        return 'tl_news';
     }
 
     protected function isGranted(CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
     {
-        return match (true) {
-            $action instanceof CreateAction => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_CREATE_ARCHIVES),
+        $pid = match (true) {
+            $action instanceof CreateAction => $action->getNewPid(),
             $action instanceof ReadAction,
-            $action instanceof UpdateAction => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $action->getCurrentId()),
-            $action instanceof DeleteAction => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $action->getCurrentId())
-                && $this->security->isGranted(ContaoNewsPermissions::USER_CAN_DELETE_ARCHIVES),
+            $action instanceof UpdateAction,
+            $action instanceof DeleteAction => $action->getCurrentPid(),
         };
+
+        return $this->security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $pid);
     }
 }
