@@ -153,6 +153,45 @@ services:
         tags:
             - { name: data_collector, template: '@ContaoCore/Collector/contao.html.twig', id: contao }
 
+    contao.dca.configuration_provider:
+        class: Contao\CoreBundle\Dca\Provider\ConfigurationProvider
+        arguments:
+            - '@contao.dca.driver_collection'
+            - '@event_dispatcher'
+
+    contao.dca.driver_collection:
+        class: Contao\CoreBundle\Dca\Driver\DriverCollection
+        arguments:
+            - !tagged_iterator contao.dca.driver
+
+    contao.dca.factory:
+        class: Contao\CoreBundle\Dca\DcaFactory
+        public: true
+        arguments:
+            - '@contao.dca.schema_factory'
+            - '@contao.dca.driver_collection'
+            - '@contao.dca.configuration_provider'
+
+    contao.dca.global_array_driver:
+        class: Contao\CoreBundle\Dca\Driver\GlobalArrayDriver
+        arguments:
+            - '@contao.framework'
+        tags:
+            - contao.dca.driver
+
+    contao.dca.schema_factory:
+        class: Contao\CoreBundle\Dca\SchemaFactory
+        tags:
+            - { name: container.service_subscriber, key: service_container, id: service_container }
+
+    contao.dca.schema_provider:
+        class: Contao\CoreBundle\Dca\Provider\SchemaProvider
+        tags:
+            - contao.dca.schema_dependency_provider
+
+    contao.dca.validation.configuration_validator:
+        class: Contao\CoreBundle\Dca\Validation\ConfigurationValidator
+
     contao.doctrine.backup.dumper:
         class: Contao\CoreBundle\Doctrine\Backup\Dumper
 
@@ -1168,6 +1207,8 @@ services:
     Contao\CoreBundle\Cache\EntityCacheTags: '@contao.cache.entity_tags'
     Contao\CoreBundle\Config\ResourceFinderInterface: '@contao.resource_finder'
     Contao\CoreBundle\Csrf\ContaoCsrfTokenManager: '@contao.csrf.token_manager'
+    Contao\CoreBundle\Dca\DcaFactory: '@contao.dca.factory'
+    Contao\CoreBundle\Dca\SchemaFactory: '@contao.dca.schema_factory'
     Contao\CoreBundle\Doctrine\Backup\DumperInterface: '@contao.doctrine.backup.dumper'
     Contao\CoreBundle\Framework\ContaoFramework: '@contao.framework'
     Contao\CoreBundle\Image\ImageFactoryInterface: '@contao.image.factory'

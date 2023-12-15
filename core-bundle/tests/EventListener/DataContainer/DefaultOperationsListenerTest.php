@@ -555,7 +555,7 @@ class DefaultOperationsListenerTest extends TestCase
         ;
 
         $config = new DataContainerOperation($name, $operation, $record, $this->createMock(DataContainer::class));
-        $operation['button_callback']($config);
+        $operation['permission_callback']($config);
     }
 
     public function checkPermissionsProvider(): \Generator
@@ -641,10 +641,10 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertSame($operation['icon'], $icon);
 
         if ($hasCallback) {
-            $this->assertArrayHasKey('button_callback', $operation);
-            $this->assertIsCallable($operation['button_callback']);
+            $this->assertArrayHasKey('permission_callback', $operation);
+            $this->assertIsCallable($operation['permission_callback']);
 
-            $ref = new \ReflectionFunction($operation['button_callback']);
+            $ref = new \ReflectionFunction($operation['permission_callback']);
 
             $this->assertSame(1, $ref->getNumberOfParameters());
 
@@ -652,7 +652,7 @@ class DefaultOperationsListenerTest extends TestCase
             $type = $ref->getParameters()[0]->getType();
             $this->assertSame(DataContainerOperation::class, $type->getName());
         } else {
-            $this->assertArrayNotHasKey('button_callback', $operation);
+            $this->assertArrayNotHasKey('permission_callback', $operation);
         }
     }
 }

@@ -22,6 +22,8 @@ return static function (ECSConfig $ecsConfig): void {
         '*-bundle/contao/*',
         MethodChainingIndentationFixer::class => [
             '*/DependencyInjection/Configuration.php',
+            'core-bundle/src/Dca/DcaConfiguration.php',
+            'core-bundle/src/Dca/Definition/Builder/*.php',
         ],
         UnusedVariableSniff::class => [
             'core-bundle/tests/Session/Attribute/ArrayAttributeBagTest.php',

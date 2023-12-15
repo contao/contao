@@ -141,4 +141,101 @@ class ArrayUtilTest extends TestCase
             $unsorted,
         );
     }
+
+    /**
+     * @dataProvider getDataProvider
+     */
+    public function testGetsDataViaDotNotation(array $data, array|string $path, mixed $expected): void
+    {
+        $this->assertSame($expected, ArrayUtil::get($data, $path));
+    }
+
+    public function getDataProvider(): \Generator
+    {
+        $source = [
+            'foo' => 'bar',
+            'bar' => ['foo' => 'bar'],
+            'baz' => ['foo' => ['bar' => 'baz']],
+            'foo.bar' => 'baz',
+            'foo\bar' => 'foo',
+        ];
+
+        yield 'simple key' => [$source, 'foo', 'bar'];
+        yield 'dot notation path' => [$source, 'foo.bar', null];
+        yield 'array path' => [$source, ['foo', 'bar'], null];
+        yield 'non-scalar result' => [$source, 'bar', ['foo' => 'bar']];
+        yield 'deep dot notation path' => [$source, 'baz.foo.bar', 'baz'];
+        yield 'dot notation with escaped dot' => [$source, 'foo\.bar', 'baz'];
+        yield 'dot notation with escaped slash' => [$source, 'foo\\bar', 'foo'];
+    }
+
+    public function testReturnsProvidedDefaultForNullDataOnGet(): void
+    {
+        $source = [
+            'foo' => null,
+            'bar.baz' => null,
+            'falsy' => [
+                'bool' => false,
+                'int' => 0,
+                'string' => '',
+            ],
+        ];
+
+        $this->assertSame('default', ArrayUtil::get($source, 'foo', 'default'));
+        $this->assertSame('default', ArrayUtil::get($source, 'bar.baz', 'default'));
+        $this->assertFalse(ArrayUtil::get($source, 'falsy.bool', 'default'));
+        $this->assertSame(0, ArrayUtil::get($source, 'falsy.int', 'default'));
+        $this->assertSame('', ArrayUtil::get($source, 'falsy.string', 'default'));
+        $this->assertSame('default', ArrayUtil::get($source, 'invalid', 'default'));
+    }
+
+    public function testThrowsExceptionForInvalidPathIfConfigured(): void
+    {
+        $source = [
+            'foo' => [],
+        ];
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('bar.baz');
+
+        ArrayUtil::get($source, 'foo.bar.baz', null, true);
+    }
+
+    /**
+     * @dataProvider setDataProvider
+     */
+    public function testSetsDataViaDotNotation(array $source, array|string $path, mixed $value, mixed $expected, bool $overwrite = true): void
+    {
+        $source = ArrayUtil::set($source, $path, $value, $overwrite);
+
+        $this->assertSame($expected, ArrayUtil::get($source, $path));
+    }
+
+    public function setDataProvider(): \Generator
+    {
+        yield 'simple key' => [[], 'foo', 'bar', 'bar'];
+        yield 'nested path' => [[], 'foo.bar.baz', 'foo', 'foo'];
+        yield 'array path' => [[], ['foo', 'bar', 'baz'], 'foo', 'foo'];
+        yield 'overwriting' => [['foo' => 'bar'], 'foo', 'baz', 'baz'];
+        yield 'not overwriting' => [['foo' => 'bar'], 'foo', 'baz', 'bar', false];
+        yield 'setting non-scalar' => [[], 'foo.bar', ['baz'], ['baz']];
+        yield 'setting null' => [[], 'foo.bar', null, null];
+    }
+
+    /**
+     * @dataProvider dotNotationProvider
+     */
+    public function testTransformsDotNotationToArray(string $path, array $expected): void
+    {
+        $this->assertSame($expected, ArrayUtil::pathToArray($path));
+    }
+
+    public function dotNotationProvider(): \Generator
+    {
+        yield ['foo', ['foo']];
+        yield ['foo.bar', ['foo', 'bar']];
+        yield ['foo\bar.baz', ['foo\bar', 'baz']];
+        yield ['foo\.bar.baz', ['foo.bar', 'baz']];
+        yield ['foo\\bar.baz', ['foo\bar', 'baz']];
+    }
 }

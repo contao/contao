@@ -52,6 +52,7 @@ services:
         class: Contao\CoreBundle\Command\DebugDcaCommand
         arguments:
             - '@contao.framework'
+            - '@contao.dca.configuration_provider'
 
     contao.command.debug_fragments:
         class: Contao\CoreBundle\Command\DebugFragmentsCommand
@@ -70,6 +71,9 @@ services:
             - '@contao.twig.loader.theme_namespace'
             - '%kernel.project_dir%'
             - '@contao.twig.inspector'
+
+    contao.command.dump_dca_configuration:
+        class: Contao\CoreBundle\Command\DumpDcaConfigurationCommand
 
     contao.command.filesync:
         class: Contao\CoreBundle\Command\FilesyncCommand
