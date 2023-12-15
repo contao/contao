@@ -32,7 +32,7 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
             $classes ?? [],
             $request->attributes->get('templateProperties', []),
             $this->isBackendScope($request),
-            $request->attributes->get('nestedElements', []),
+            $request->attributes->get('nestedFragments', []),
         );
 
         $this->tagResponse($model);
@@ -67,7 +67,7 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
      * @param array<string>        $classes
      * @param array<string, mixed> $properties
      */
-    protected function addDefaultDataToTemplate(FragmentTemplate $template, array $modelData = [], string $section = 'main', array $classes = [], array $properties = [], bool $asEditorView = false, array $nestedElements = []): void
+    protected function addDefaultDataToTemplate(FragmentTemplate $template, array $modelData = [], string $section = 'main', array $classes = [], array $properties = [], bool $asEditorView = false, array $nestedFragments = []): void
     {
         if ($this->isLegacyTemplate($template->getName())) {
             // Legacy fragments
@@ -87,7 +87,7 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
             'template' => $template->getName(),
             'as_editor_view' => $asEditorView,
             'data' => $modelData,
-            'nested_elements' => $nestedElements,
+            'nested_fragments' => $nestedFragments,
             'section' => $section,
             'properties' => $properties,
             'element_html_id' => $attributesData[0] ?? null,

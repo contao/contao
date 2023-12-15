@@ -124,7 +124,7 @@ class FragmentRuntimeTest extends TestCase
                     );
                     $this->assertSame(
                         ['type' => 'text', 'text' => '<p>Test</p>'],
-                        $reference->attributes['nestedElements'][0]->getContentModel()->row(),
+                        $reference->attributes['nestedFragments'][0]->getContentModel()->row(),
                     );
 
                     return true;
@@ -145,7 +145,7 @@ class FragmentRuntimeTest extends TestCase
                 'unit' => 'h2',
                 'value' => 'Test',
             ],
-            'nested_elements' => [
+            'nested_fragments' => [
                 [
                     'type' => 'text',
                     'text' => '<p>Test</p>',

@@ -27,7 +27,7 @@ class ContentProxy extends ContentElement
 	/**
 	 * @param ContentModel|Collection|ContentElementReference $objElement
 	 */
-	public function __construct($objElement, $strColumn = 'main', array $nestedElements = array())
+	public function __construct($objElement, $strColumn = 'main', array $nestedFragments = array())
 	{
 		if ($objElement instanceof ContentElementReference)
 		{
@@ -45,7 +45,7 @@ class ContentProxy extends ContentElement
 				throw new \RuntimeException('ContentProxy must be constructed with a ContentModel');
 			}
 
-			$this->reference = new ContentElementReference($objElement, $strColumn, array(), !Registry::getInstance()->isRegistered($objElement), $nestedElements);
+			$this->reference = new ContentElementReference($objElement, $strColumn, array(), !Registry::getInstance()->isRegistered($objElement), $nestedFragments);
 		}
 
 		$this->strColumn = $strColumn;

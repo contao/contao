@@ -23,7 +23,7 @@ class ContentElementReference extends FragmentReference
 
     final public const PROXY_CLASS = ContentProxy::class;
 
-    public function __construct(ContentModel $model, string $section = 'main', array $templateProperties = [], bool $inline = false, array $nestedElements = [])
+    public function __construct(ContentModel $model, string $section = 'main', array $templateProperties = [], bool $inline = false, array $nestedFragments = [])
     {
         parent::__construct(self::TAG_NAME.'.'.$model->type);
 
@@ -31,7 +31,7 @@ class ContentElementReference extends FragmentReference
         $this->attributes['section'] = $section;
         $this->attributes['classes'] = $model->classes;
         $this->attributes['templateProperties'] = $templateProperties;
-        $this->attributes['nestedElements'] = $nestedElements;
+        $this->attributes['nestedFragments'] = $nestedFragments;
     }
 
     public function getContentModel(): ContentModel|int

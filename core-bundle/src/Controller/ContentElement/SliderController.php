@@ -18,7 +18,7 @@ use Contao\CoreBundle\Twig\FragmentTemplate;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-#[AsContentElement(category: 'miscellaneous', nestedElements: true)]
+#[AsContentElement(category: 'miscellaneous', nestedFragments: true)]
 class SliderController extends AbstractContentElementController
 {
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response

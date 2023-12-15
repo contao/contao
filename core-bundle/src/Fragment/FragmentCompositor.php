@@ -27,9 +27,9 @@ class FragmentCompositor
     {
     }
 
-    public function add(string $identifier, array|bool $nestedElements): void
+    public function add(string $identifier, array|bool $nestedFragments): void
     {
-        $this->nestedByIdentifier[$identifier] = $nestedElements;
+        $this->nestedByIdentifier[$identifier] = $nestedFragments;
     }
 
     public function supportsNesting(string $identifier): bool
