@@ -50,9 +50,6 @@ parameters:
         # Ignore the forward-compatible declaration that will be added in Symfony 7.0
         - '#Method Symfony\\Component\\HttpKernel\\CacheWarmer\\WarmableInterface::warmUp\(\) invoked with 2 parameters, 1 required\.#'
 
-        # FIXME: Remove this again once Symfony 6.4.1 has been released
-        - '#Symfony\\Component\\HttpKernel\\UriSigner#'
-
     treatPhpDocTypesAsCertain: false
     checkMissingIterableValueType: false
     rememberPossiblyImpureFunctionValues: false
