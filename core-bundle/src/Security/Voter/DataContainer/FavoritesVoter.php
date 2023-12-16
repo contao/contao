@@ -52,7 +52,7 @@ class FavoritesVoter extends AbstractDataContainerVoter
 
         $canAccessNew = match (true) {
             $action instanceof CreateAction,
-            $action instanceof UpdateAction => !isset($action->getNew()['user']) || $action->getNew()['user'] === $userId,
+            $action instanceof UpdateAction => !isset($action->getNew()['user']) || (int) $action->getNew()['user'] === $userId,
             default => true,
         };
 
