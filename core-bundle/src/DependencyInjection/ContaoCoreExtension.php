@@ -148,6 +148,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleBackup($config, $container);
         $this->handleFallbackPreviewProvider($config, $container);
         $this->handleCronConfig($config, $container);
+        $this->handleSecurityConfig($config, $container);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -508,5 +509,14 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         }
 
         return Path::join($projectDir, $publicDir);
+    }
+
+    private function handleSecurityConfig(array $config, ContainerBuilder $container): void
+    {
+        if ($container->hasDefinition('contao.routing.csp_reporter_loader') && ($config['security']['csp']['reporting']['enabled'] ?? false)) {
+            $container->getDefinition('contao.routing.csp_reporter_loader')
+                ->setArgument(0, $config['security']['csp']['reporting']['path'] ?? null)
+            ;
+        }
     }
 }

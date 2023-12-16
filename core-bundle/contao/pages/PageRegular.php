@@ -16,6 +16,7 @@ use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Util\LocaleUtil;
+use ParagonIE\CSPBuilder\CSPBuilder;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -46,9 +47,6 @@ class PageRegular extends Frontend
 		$this->prepare($objPage);
 
 		$response = $this->Template->getResponse($blnCheckRequest);
-
-		// Finalize the response context so it cannot be used anymore
-		System::getContainer()->get('contao.routing.response_context_accessor')->finalizeCurrentContext($response);
 
 		return $response;
 	}
@@ -621,7 +619,16 @@ class PageRegular extends Frontend
 		// Add the custom JavaScript
 		if ($objLayout->script)
 		{
-			$strScripts .= "\n" . trim($objLayout->script) . "\n";
+			$customScript = trim($objLayout->script);
+
+			if ($this->responseContext->has(CSPBuilder::class))
+			{
+				/** @var CSPBuilder $csp */
+				$csp = $this->responseContext->get(CSPBuilder::class);
+				$customScript = str_replace('<script', '<script nonce="' . $csp->nonce('script-src') . '"', $customScript);
+			}
+
+			$strScripts .= "\n" . $customScript . "\n";
 		}
 
 		$this->Template->mootools = $strScripts;

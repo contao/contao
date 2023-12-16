@@ -23,6 +23,8 @@ use Contao\PageModel;
 use ParagonIE\CSPBuilder\CSPBuilder;
 use Spatie\SchemaOrg\WebPage;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class CoreResponseContextFactory
@@ -34,6 +36,8 @@ class CoreResponseContextFactory
         private readonly HtmlDecoder $htmlDecoder,
         private readonly RequestStack $requestStack,
         private readonly InsertTagParser $insertTagParser,
+        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly bool $cspReportingEnabled = false,
     ) {
     }
 
@@ -116,22 +120,28 @@ class CoreResponseContextFactory
         ;
 
         if ($pageModel->enableCsp) {
-            if ($cspHeader = trim((string) $pageModel->csp)) {
-                $csp = CSPBuilder::fromHeader($cspHeader);
-            } else {
-                $csp = new CSPBuilder();
-                $csp->setSelfAllowed('default-src', true);
-                $csp->setSelfAllowed('frame-ancestors', true);
-                $csp->setSelfAllowed('style-src', true);
-                $csp->setSelfAllowed('script-src', true);
+            $csp = CSPBuilder::fromHeader(trim((string) $pageModel->csp));
+
+            if ($this->cspReportingEnabled) {
+                $urlContext = $this->urlGenerator->getContext();
+                $baseUrl = $urlContext->getBaseUrl();
+                $urlContext->setBaseUrl('');
+
+                try {
+                    $csp->setReportUri($this->urlGenerator->generate('contao_csp_reporter', [], UrlGeneratorInterface::ABSOLUTE_URL));
+                } catch (RouteNotFoundException) {
+                    // noop
+                }
+
+                $urlContext->setBaseUrl($baseUrl);
             }
 
-            if ($pageModel->staticFiles) {
-                $csp->addSource('default-src', $pageModel->staticFiles);
+            if ($pageModel->cspReportOnly) {
+                $csp->setDirective('report-only');
             }
 
-            if ($pageModel->staticPlugins) {
-                $csp->addSource('default-src', $pageModel->staticPlugins);
+            if (!$pageModel->enableLegacyCsp) {
+                $csp->disableOldBrowserSupport();
             }
 
             $context->add($csp);

@@ -7,7 +7,7 @@ $MatomoPath = '//www.example.com/matomo/';
 // DO NOT EDIT ANYTHING BELOW THIS LINE UNLESS YOU KNOW WHAT YOU ARE DOING!
 if ($MatomoSite > 0 && '//www.example.com/matomo/' != $MatomoPath && !$this->hasAuthenticatedBackendUser()): ?>
 
-<script nonce="<?= $this->nonce('script-src') ?>">
+<script<?php if ($nonce = $this->nonce('script-src')): ?> nonce="<?= $nonce ?>"<?php endif; ?>>
   var _paq = window._paq = window._paq || [];
   _paq.push(['trackPageView']);
   _paq.push(['enableLinkTracking']);

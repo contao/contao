@@ -1,3 +1,6 @@
+parameters:
+    contao.csp_reporter_path: /_contao/csp/report
+
 services:
     _defaults:
         autoconfigure: true
@@ -645,6 +648,11 @@ services:
     contao.routing.backend_matcher:
         class: Contao\CoreBundle\Routing\Matcher\BackendMatcher
 
+    contao.routing.csp_reporter_loader:
+        class: Contao\CoreBundle\Routing\CspReporterLoader
+        tags:
+            - routing.loader
+
     contao.routing.frontend_matcher:
         class: Contao\CoreBundle\Routing\Matcher\FrontendMatcher
 
@@ -767,6 +775,7 @@ services:
             - '@contao.string.html_decoder'
             - '@request_stack'
             - '@contao.insert_tag.parser'
+            - '@router'
 
     contao.routing.route_404_provider:
         class: Contao\CoreBundle\Routing\Route404Provider

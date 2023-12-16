@@ -6,7 +6,7 @@ $GLOBALS['TL_CSS'][] = $this->asset('css/handorgel.min.css', 'contao-components/
 ?>
 
 <script src="<?= $this->asset('js/handorgel.min.js', 'contao-components/handorgel') ?>"></script>
-<script>
+<script<?php if ($nonce = $this->nonce('script-src')): ?> nonce="<?= $nonce ?>"<?php endif; ?>>
   (function () {
     // DO NOT CHANGE THIS FUNCTION!
     // Set the Handorgel.js options in the function call below.

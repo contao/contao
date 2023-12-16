@@ -102,7 +102,7 @@ class ContaoTableProcessor implements ProcessorInterface
 
     private function updateUri(ContaoContext $context, Request|null $request = null): void
     {
-        if (!$request) {
+        if (!$request || null !== $context->getUri()) {
             return;
         }
 

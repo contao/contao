@@ -22,7 +22,7 @@
       <label for="ctrl_<?= $this->id ?>_hp">Do not fill in this field</label>
       <input type="text" name="<?= $this->name ?>_name" id="ctrl_<?= $this->id ?>_hp" value="">
     </div>
-    <script nonce="<?= $this->nonce('script-src') ?>">
+    <script<?php if ($nonce = $this->nonce('script-src')): ?> nonce="<?= $nonce ?>"<?php endif; ?>>
       (function() {
         var e = document.getElementById('ctrl_<?= $this->id ?>'),
             p = e.parentNode, f = p.parentNode;

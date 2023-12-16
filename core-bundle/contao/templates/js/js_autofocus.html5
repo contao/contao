@@ -1,5 +1,5 @@
 
-<script nonce="<?= $this->nonce('script-src') ?>">
+<script<?php if ($nonce = $this->nonce('script-src')): ?> nonce="<?= $nonce ?>"<?php endif; ?>>
   (function() {
     var p = document.querySelector('p.error') || document.querySelector('p.confirm');
     if (p) {

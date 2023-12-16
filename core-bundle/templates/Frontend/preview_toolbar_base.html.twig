@@ -18,7 +18,7 @@
             <div>
                 <button type="button" id="copyPublishedPath" class="tl_submit">{{ 'MSC.copyURL'|trans([], 'contao_default') }}</button>
                 {% if share is not empty %}
-                    <a href="{{ share }}" target="_blank" class="tl_submit" onclick="window.open(this.href+'&amp;url='+location.href);return false">{{ 'MSC.shareURL'|trans([], 'contao_default') }}</a>
+                    <a class="cto-toolbar__share-url" href="{{ share }}" target="_blank" class="tl_submit">{{ 'MSC.shareURL'|trans([], 'contao_default') }}</a>
                 {% endif %}
             </div>
             {% if canSwitchUser %}
@@ -41,3 +41,11 @@
     <div class="cto-toolbar__close"><a href="#" title="{{ 'MSC.closeToolbar'|trans }}">&times;</a></div>
 </div>
 <div class="cto-toolbar__clear"></div>
+{% set scriptNonce = contao_csp_nonce('script-src') %}
+<script{% if scriptNonce %} nonce="{{ scriptNonce }}"{% endif %}>
+    document.querySelector('.cto-toolbar__share-url').addEventListener('click', (e) => {
+        e.preventDefault();
+        window.open(this.href+'&amp;url='+location.href);
+        return false;
+    });
+</script>

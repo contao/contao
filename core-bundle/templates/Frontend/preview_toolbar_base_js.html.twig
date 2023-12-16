@@ -1,10 +1,5 @@
-{% use "@Contao/component/_style.html.twig" %}
-{% use "@Contao/component/_script.html.twig" %}
-
-{{ block('style_component') }}
-{{ block('script_component') }}
-
-{% block style_content %}
+{% set styleNonce = contao_csp_nonce('style-src') %}
+<style{% if styleNonce %} nonce="{{ styleNonce }}"{% endif %}>
     .cto-toolbar {
         font-family: -apple-system,system-ui,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
         font-weight: 400;
@@ -210,9 +205,10 @@
             margin: 3px auto 0 8px;
         }
     }
-{% endblock %}
+</style>
 
-{% block script_content %}
+{% set scriptNonce = contao_csp_nonce('script-src') %}
+<script{% if scriptNonce %} nonce="{{ scriptNonce }}"{% endif %}>
     (function () {
         const toolbar = document.createElement('div');
         toolbar.classList.add('cto-toolbar');
@@ -370,4 +366,4 @@
             });
         });
     })();
-{% endblock %}
+</script>

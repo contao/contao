@@ -682,7 +682,9 @@ abstract class Template extends Controller
 	 */
 	public static function generateInlineStyle($script)
 	{
-		return '<style nonce="' . self::getNonce('style-src') . '">' . $script . '</style>';
+		$nonce = self::getNonce('style-src');
+
+		return '<style'.($nonce ? ' nonce="' . $nonce . '"' : '').'>' . $script . '</style>';
 	}
 
 	/**
@@ -739,7 +741,9 @@ abstract class Template extends Controller
 	 */
 	public static function generateInlineScript($script)
 	{
-		return '<script nonce="' . self::getNonce('script-src') . '">' . $script . '</script>';
+		$nonce = self::getNonce('script-src');
+
+		return '<script'.($nonce ? ' nonce="' . $nonce . '"' : '').'>' . $script . '</script>';
 	}
 
 	/**

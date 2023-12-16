@@ -6,7 +6,7 @@ $GLOBALS['TL_CSS'][] = 'assets/mediabox/css/mediabox-black.min.css|static';
 ?>
 
 <script src="<?= $this->asset('js/mediabox.min.js', 'contao-components/mediabox') ?>"></script>
-<script nonce="<?= $this->nonce('script-src') ?>">
+<script<?php if ($nonce = $this->nonce('script-src')): ?> nonce="<?= $nonce ?>"<?php endif; ?>>
   window.addEvent('domready', function() {
     var $ = document.id;
     $$('a[data-lightbox]').mediabox({

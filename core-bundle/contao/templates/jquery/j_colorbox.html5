@@ -6,7 +6,7 @@ $GLOBALS['TL_CSS'][] = 'assets/colorbox/css/colorbox.min.css|static';
 ?>
 
 <script src="<?= $this->asset('js/colorbox.min.js', 'contao-components/colorbox') ?>"></script>
-<script nonce="<?= $this->nonce('script-src') ?>">
+<script<?php if ($nonce = $this->nonce('script-src')): ?> nonce="<?= $nonce ?>"<?php endif; ?>>
   jQuery(function($) {
     $('a[data-lightbox]').map(function() {
       $(this).colorbox({

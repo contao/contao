@@ -10,7 +10,7 @@
         <a id="splashImage_<?= $this->id ?>" href="<?= $this->src ?>">
           <?php $this->insert('picture_default', $this->splashImage->picture); ?>
         </a>
-        <script nonce="<?= $this->nonce('script-src') ?>">
+        <script<?php if ($nonce = $this->nonce('script-src')): ?> nonce="<?= $nonce ?>"<?php endif; ?>>
           document.getElementById('splashImage_<?= $this->id ?>').addEventListener('click', function(e) {
             e.preventDefault();
             var iframe = document.createElement('iframe');

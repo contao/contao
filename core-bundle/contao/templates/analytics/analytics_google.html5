@@ -8,7 +8,7 @@ $GoogleAnalyticsId = 'XXXXX';
 if ('XXXXX' != $GoogleAnalyticsId && !$this->hasAuthenticatedBackendUser()): ?>
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=<?= $GoogleAnalyticsId ?>"></script>
-<script nonce="<?= $this->nonce('script-src') ?>">
+<script<?php if ($nonce = $this->nonce('script-src')): ?> nonce="<?= $nonce ?>"<?php endif; ?>>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());

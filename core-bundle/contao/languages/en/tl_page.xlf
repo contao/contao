@@ -368,6 +368,18 @@
       <trans-unit id="tl_page.csp.1">
         <source>Enter custom Content Security Policy directives here.</source>
       </trans-unit>
+      <trans-unit id="tl_page.cspReportOnly.0">
+        <source>Reporting only</source>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportOnly.1">
+        <source>Tells the browser to only report policy violations without enforcing them.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.enableLegacyCsp.0">
+        <source>Enable legacy browser support</source>
+      </trans-unit>
+      <trans-unit id="tl_page.enableLegacyCsp.1">
+        <source>Automatically adds directives for increased compatibility with legacy browsers.</source>
+      </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
       </trans-unit>
