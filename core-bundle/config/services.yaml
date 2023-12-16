@@ -1,6 +1,3 @@
-parameters:
-    contao.csp_reporter_path: /_contao/csp/report
-
 services:
     _defaults:
         autoconfigure: true
