@@ -27,8 +27,12 @@ class MemberGroupVoter extends Voter
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
+        if (!\is_array($subject)) {
+            $subject = StringUtil::deserialize($subject, true);
+        }
+
         // Filter non-numeric values
-        $subject = array_filter((array) $subject, static fn ($val) => (string) (int) $val === (string) $val);
+        $subject = array_filter($subject, static fn ($val) => (string) (int) $val === (string) $val);
 
         if (!$subject) {
             return false;

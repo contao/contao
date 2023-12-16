@@ -152,6 +152,9 @@ class BackendUser extends User
 	 * @param string       $array
 	 *
 	 * @return boolean
+	 *
+	 * @deprecated Deprecated since Contao 5.2, to be removed in Contao 6.0.
+	 *             Use the "ContaoCorePermissions::USER_CAN_ACCESS_*" permissions instead.
 	 */
 	public function hasAccess($field, $array)
 	{
@@ -257,7 +260,7 @@ class BackendUser extends User
 		}
 
 		// Merge permissions
-		$inherit = \in_array($this->inherit, array('group', 'extend')) ? array_merge($always, $depends) : $always;
+		$inherit = \in_array($this->inherit, array('group', 'extend')) ? array(...$always, ...$depends) : $always;
 		$time = Date::floorToMinute();
 		$db = Database::getInstance();
 

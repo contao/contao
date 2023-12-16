@@ -214,16 +214,16 @@
         <target>公開の開始日</target>
       </trans-unit>
       <trans-unit id="tl_news.start.1">
-        <source>If you want to prevent the news item from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>ある特定の日時より前はニュース項目をウェブサイトに表示したくない場合は、その日時を入力します。それ以外の場合は空のままにしてください。</target>
+        <source>If you want to prevent the news item from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>特定の日時より前はニュース項目をウェブサイトに表示したくない場合は、その日時を入力します。それ以外の場合は空のままにします。</target>
       </trans-unit>
       <trans-unit id="tl_news.stop.0">
         <source>Show until</source>
         <target>公開の終了日</target>
       </trans-unit>
       <trans-unit id="tl_news.stop.1">
-        <source>If you want to prevent the news item from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>ある特定の日時より後はニュース項目をウェブサイトに表示したくない場合は、その日時を入力します。それ以外の場合は空のままにしてください。</target>
+        <source>If you want to prevent the news item from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>特定の日時より後はニュース項目をウェブサイトに表示したくない場合は、その日時を入力します。それ以外の場合は空のままにします。</target>
       </trans-unit>
       <trans-unit id="tl_news.tstamp.0">
         <source>Revision date</source>
@@ -305,13 +305,29 @@
         <source>Delete news item ID %s</source>
         <target>ID %sのニュース項目を削除</target>
       </trans-unit>
-      <trans-unit id="tl_news.toggle">
-        <source>Publish/unpublish news item ID %s</source>
-        <target>ID %sのニュース項目を公開または非公開に設定</target>
+      <trans-unit id="tl_news.toggle.0">
+        <source>Publish/unpublish news item</source>
+        <target>ニュース項目の公開または非公開</target>
       </trans-unit>
-      <trans-unit id="tl_news.feature">
+      <trans-unit id="tl_news.toggle.1">
+        <source>Unpublish news item ID %s</source>
+        <target>ID %sのニュース項目を非公開</target>
+      </trans-unit>
+      <trans-unit id="tl_news.toggle.2">
+        <source>Publish news item ID %s</source>
+        <target>ID %sのニュース項目を公開</target>
+      </trans-unit>
+      <trans-unit id="tl_news.feature.0">
         <source>Feature/unfeature news item ID %s</source>
         <target>ID %sのニュース項目を特別または通常に設定</target>
+      </trans-unit>
+      <trans-unit id="tl_news.feature.1">
+        <source>Unfeature news item ID %s</source>
+        <target>ID %sのニュース項目を通常に設定</target>
+      </trans-unit>
+      <trans-unit id="tl_news.feature.2">
+        <source>Feature news item ID %s</source>
+        <target>ID %sのニュース項目を特別に設定</target>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
