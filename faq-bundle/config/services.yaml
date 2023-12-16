@@ -35,9 +35,9 @@ services:
     contao_faq.security.faq_access_voter:
         class: Contao\FaqBundle\Security\Voter\FaqAccessVoter
         arguments:
-            - '@security.helper'
+            - '@security.access.decision_manager'
 
     contao_faq.security.faq_category_access_voter:
         class: Contao\FaqBundle\Security\Voter\FaqCategoryAccessVoter
         arguments:
-            - '@security.helper'
+            - '@security.access.decision_manager'

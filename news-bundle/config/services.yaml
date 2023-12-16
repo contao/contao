@@ -107,9 +107,9 @@ services:
     contao_news.security.news_access_voter:
         class: Contao\NewsBundle\Security\Voter\NewsAccessVoter
         arguments:
-            - '@security.helper'
+            - '@security.access.decision_manager'
 
     contao_news.security.news_archive_access_voter:
         class: Contao\NewsBundle\Security\Voter\NewsArchiveAccessVoter
         arguments:
-            - '@security.helper'
+            - '@security.access.decision_manager'
