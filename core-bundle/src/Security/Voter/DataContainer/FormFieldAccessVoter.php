@@ -17,13 +17,13 @@ use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
-use Symfony\Bundle\SecurityBundle\Security;
 
+/**
+ * @internal
+ */
 class FormFieldAccessVoter extends AbstractDataContainerVoter
 {
-    public function __construct(private readonly Security $security)
-    {
-    }
+    use ParentAccessTrait;
 
     protected function getTable(): string
     {
@@ -32,13 +32,7 @@ class FormFieldAccessVoter extends AbstractDataContainerVoter
 
     protected function isGranted(CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
     {
-        $pid = match (true) {
-            $action instanceof CreateAction => $action->getNewPid(),
-            $action instanceof ReadAction,
-            $action instanceof UpdateAction,
-            $action instanceof DeleteAction => $action->getCurrentPid(),
-        };
-
-        return $this->security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FORM, $pid);
+        return $this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'form')
+            && $this->canAccessParent(ContaoCorePermissions::USER_CAN_EDIT_FORM, $action);
     }
 }

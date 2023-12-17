@@ -19,21 +19,27 @@ use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\NewsletterBundle\Security\ContaoNewsletterPermissions;
 use Contao\NewsletterBundle\Security\Voter\NewsletterChannelAccessVoter;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class NewsletterChannelAccessVoterTest extends WebTestCase
+class NewsletterChannelAccessVoterTest extends TestCase
 {
     public function testVoter(): void
     {
         $security = $this->createMock(Security::class);
         $security
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(5))
             ->method('isGranted')
-            ->with(ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL, 42)
-            ->willReturnOnConsecutiveCalls(true, false)
+            ->withConsecutive(
+                [ContaoNewsletterPermissions::USER_CAN_ACCESS_MODULE],
+                [ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL, 42],
+                [ContaoNewsletterPermissions::USER_CAN_ACCESS_MODULE],
+                [ContaoNewsletterPermissions::USER_CAN_ACCESS_MODULE],
+                [ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL, 42],
+            )
+            ->willReturnOnConsecutiveCalls(true, true, false, true, false)
         ;
 
         $voter = new NewsletterChannelAccessVoter($security);
@@ -53,7 +59,7 @@ class NewsletterChannelAccessVoterTest extends WebTestCase
             VoterInterface::ACCESS_ABSTAIN,
             $voter->vote(
                 $token,
-                new ReadAction('foo', ['id' => 42]),
+                new ReadAction('tl_newsletter_channel', ['id' => 42]),
                 ['whatever'],
             ),
         );
@@ -64,17 +70,27 @@ class NewsletterChannelAccessVoterTest extends WebTestCase
             VoterInterface::ACCESS_ABSTAIN,
             $voter->vote(
                 $token,
-                new ReadAction('foo', ['id' => 42]),
+                new ReadAction('tl_newsletter_channel', ['id' => 42]),
                 [ContaoCorePermissions::DC_PREFIX.'tl_newsletter_channel'],
             ),
         );
 
-        // Permission denied
+        // Permission denied on back end module
         $this->assertSame(
             VoterInterface::ACCESS_DENIED,
             $voter->vote(
                 $token,
-                new ReadAction('foo', ['id' => 42]),
+                new ReadAction('tl_newsletter_channel', ['id' => 42]),
+                [ContaoCorePermissions::DC_PREFIX.'tl_newsletter_channel'],
+            ),
+        );
+
+        // Permission denied on newsletter channel
+        $this->assertSame(
+            VoterInterface::ACCESS_DENIED,
+            $voter->vote(
+                $token,
+                new ReadAction('tl_newsletter_channel', ['id' => 42]),
                 [ContaoCorePermissions::DC_PREFIX.'tl_newsletter_channel'],
             ),
         );

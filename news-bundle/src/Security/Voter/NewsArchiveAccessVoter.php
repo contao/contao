@@ -20,6 +20,9 @@ use Contao\CoreBundle\Security\Voter\DataContainer\AbstractDataContainerVoter;
 use Contao\NewsBundle\Security\ContaoNewsPermissions;
 use Symfony\Bundle\SecurityBundle\Security;
 
+/**
+ * @internal
+ */
 class NewsArchiveAccessVoter extends AbstractDataContainerVoter
 {
     public function __construct(private readonly Security $security)
@@ -33,6 +36,10 @@ class NewsArchiveAccessVoter extends AbstractDataContainerVoter
 
     protected function isGranted(CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
     {
+        if (!$this->security->isGranted(ContaoNewsPermissions::USER_CAN_ACCESS_MODULE)) {
+            return false;
+        }
+
         return match (true) {
             $action instanceof CreateAction => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_CREATE_ARCHIVES),
             $action instanceof ReadAction,

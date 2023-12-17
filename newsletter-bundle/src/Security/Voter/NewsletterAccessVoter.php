@@ -17,14 +17,15 @@ use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Security\Voter\DataContainer\AbstractDataContainerVoter;
+use Contao\CoreBundle\Security\Voter\DataContainer\ParentAccessTrait;
 use Contao\NewsletterBundle\Security\ContaoNewsletterPermissions;
-use Symfony\Bundle\SecurityBundle\Security;
 
+/**
+ * @internal
+ */
 class NewsletterAccessVoter extends AbstractDataContainerVoter
 {
-    public function __construct(private readonly Security $security)
-    {
-    }
+    use ParentAccessTrait;
 
     protected function getTable(): string
     {
@@ -33,13 +34,7 @@ class NewsletterAccessVoter extends AbstractDataContainerVoter
 
     protected function isGranted(CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
     {
-        $pid = match (true) {
-            $action instanceof CreateAction => $action->getNewPid(),
-            $action instanceof ReadAction,
-            $action instanceof UpdateAction,
-            $action instanceof DeleteAction => $action->getCurrentPid(),
-        };
-
-        return $this->security->isGranted(ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL, $pid);
+        return $this->security->isGranted(ContaoNewsletterPermissions::USER_CAN_ACCESS_MODULE)
+            && $this->canAccessParent(ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL, $action);
     }
 }
