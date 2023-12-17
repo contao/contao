@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Routing\ResponseContext;
 
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+use ParagonIE\CSPBuilder\CSPBuilder;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -47,6 +48,8 @@ class ResponseContextAccessorTest extends TestCase
         $responseContext = new ResponseContext();
         $responseContext->getHeaderBag()->set('Foo', 'Bar');
 
+        $responseContext->add(CSPBuilder::fromHeader("script-src 'self'"));
+
         $accessor->setResponseContext($responseContext);
 
         $this->assertNotNull($accessor->getResponseContext());
@@ -55,6 +58,7 @@ class ResponseContextAccessorTest extends TestCase
         $accessor->finalizeCurrentContext($response);
 
         $this->assertSame('Bar', $response->headers->get('Foo'));
+        $this->assertSame("script-src 'self'", $response->headers->get('Content-Security-Policy'));
         $this->assertNull($accessor->getResponseContext());
     }
 }

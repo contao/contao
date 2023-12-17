@@ -28,7 +28,7 @@ class CspSaveCallbackListener
         try {
             CSPBuilder::fromHeader(trim((string) $value));
         } catch (\Throwable $e) {
-            throw new \Exception($this->translator->trans('ERR.invalidCsp', [$e->getMessage()], 'contao_default'));
+            throw new \Exception($this->translator->trans('ERR.invalidCsp', [$e->getMessage()], 'contao_default'), 0, $e);
         }
 
         return $value;

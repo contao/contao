@@ -928,6 +928,65 @@ class ContaoCoreExtensionTest extends TestCase
         yield 'callback' => [AsCallback::class];
     }
 
+    public function testCspSecurityConfiguration(): void
+    {
+        $container = $this->getContainerBuilder();
+        (new ContaoCoreExtension())->load([], $container);
+
+        $this->assertTrue($container->hasDefinition('contao.routing.csp_reporter_loader'));
+        $loader = $container->findDefinition('contao.routing.csp_reporter_loader');
+        $this->assertNull($loader->getArgument(0));
+
+        $this->assertTrue($container->hasDefinition('contao.routing.response_context_factory'));
+        $factory = $container->findDefinition('contao.routing.response_context_factory');
+        $this->assertFalse($factory->getArgument(7));
+
+        (new ContaoCoreExtension())->load(
+            [
+                'contao' => [
+                    'security' => [
+                        'csp' => [
+                            'reporting' => true,
+                        ],
+                    ],
+                ],
+            ],
+            $container,
+        );
+
+        $this->assertTrue($container->hasDefinition('contao.routing.csp_reporter_loader'));
+        $loader = $container->findDefinition('contao.routing.csp_reporter_loader');
+        $this->assertSame('/_contao/csp/report', $loader->getArgument(0));
+
+        $this->assertTrue($container->hasDefinition('contao.routing.response_context_factory'));
+        $factory = $container->findDefinition('contao.routing.response_context_factory');
+        $this->assertTrue($factory->getArgument(7));
+
+        (new ContaoCoreExtension())->load(
+            [
+                'contao' => [
+                    'security' => [
+                        'csp' => [
+                            'reporting' => [
+                                'enabled' => true,
+                                'path' => '/custom',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            $container,
+        );
+
+        $this->assertTrue($container->hasDefinition('contao.routing.csp_reporter_loader'));
+        $loader = $container->findDefinition('contao.routing.csp_reporter_loader');
+        $this->assertSame('/custom', $loader->getArgument(0));
+
+        $this->assertTrue($container->hasDefinition('contao.routing.response_context_factory'));
+        $factory = $container->findDefinition('contao.routing.response_context_factory');
+        $this->assertTrue($factory->getArgument(7));
+    }
+
     private function getContainerBuilder(array|null $params = null): ContainerBuilder
     {
         $container = new ContainerBuilder(

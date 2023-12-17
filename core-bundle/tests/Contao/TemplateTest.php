@@ -18,9 +18,12 @@ use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\System;
+use ParagonIE\CSPBuilder\CSPBuilder;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
@@ -418,5 +421,52 @@ class TemplateTest extends TestCase
         $template = new FrontendTemplate('test_template');
         $template->setData(['requestToken' => null]);
         $this->assertSame('false, NULL', $template->parse());
+    }
+
+    public function testRetrievesNonceFromCspBuilder(): void
+    {
+        $cspBuilder = $this->createMock(CSPBuilder::class);
+        $cspBuilder
+            ->expects($this->once())
+            ->method('nonce')
+            ->with('script-src')
+        ;
+
+        $responseContext = (new ResponseContext())->add($cspBuilder);
+
+        $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
+        $responseContextAccessor
+            ->expects($this->once())
+            ->method('getResponseContext')
+            ->willReturn($responseContext)
+        ;
+
+        System::getContainer()->set('contao.routing.response_context_accessor', $responseContextAccessor);
+
+        (new FrontendTemplate())->nonce('script-src');
+    }
+
+    public function testAddsCspSource(): void
+    {
+        $cspBuilder = $this->createMock(CSPBuilder::class);
+        $cspBuilder
+            ->expects($this->once())
+            ->method('addSource')
+            ->with('script-src', 'https://example.com/files/foo/foobar.js')
+        ;
+
+        $responseContext = (new ResponseContext())->add($cspBuilder);
+
+        $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
+        $responseContextAccessor
+            ->expects($this->once())
+            ->method('getResponseContext')
+            ->willReturn($responseContext)
+        ;
+
+        System::getContainer()->set('contao.routing.response_context_accessor', $responseContextAccessor);
+        System::getContainer()->set('request_stack', new RequestStack());
+
+        (new FrontendTemplate())->addCspSource('script-src', 'https://example.com/files/foo/foobar.js');
     }
 }

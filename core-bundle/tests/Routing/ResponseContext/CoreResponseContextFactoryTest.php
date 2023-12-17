@@ -24,11 +24,13 @@ use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Contao\System;
+use ParagonIE\CSPBuilder\CSPBuilder;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class CoreResponseContextFactoryTest extends TestCase
@@ -55,6 +57,7 @@ class CoreResponseContextFactoryTest extends TestCase
             new HtmlDecoder($this->createMock(InsertTagParser::class)),
             $this->createMock(RequestStack::class),
             $this->createMock(InsertTagParser::class),
+            $this->createMock(UrlGeneratorInterface::class),
         );
 
         $responseContext = $factory->createResponseContext();
@@ -77,6 +80,7 @@ class CoreResponseContextFactoryTest extends TestCase
             new HtmlDecoder($this->createMock(InsertTagParser::class)),
             $this->createMock(RequestStack::class),
             $this->createMock(InsertTagParser::class),
+            $this->createMock(UrlGeneratorInterface::class),
         );
 
         $responseContext = $factory->createWebpageResponseContext();
@@ -121,6 +125,14 @@ class CoreResponseContextFactoryTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push(Request::create('https://example.com/'));
 
+        $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
+        $urlGenerator
+            ->expects($this->once())
+            ->method('generate')
+            ->with('contao_csp_reporter', [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('https://example.com/csp/report')
+        ;
+
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 0;
         $pageModel->title = 'My title';
@@ -130,6 +142,10 @@ class CoreResponseContextFactoryTest extends TestCase
         $pageModel->canonicalLink = '{{link_url::42}}';
         $pageModel->noSearch = false;
         $pageModel->protected = false;
+        $pageModel->enableCsp = true;
+        $pageModel->csp = "script-src 'self'";
+        $pageModel->cspReportOnly = true;
+        $pageModel->enableLegacyCsp = true;
 
         $factory = new CoreResponseContextFactory(
             $responseAccessor,
@@ -138,6 +154,8 @@ class CoreResponseContextFactoryTest extends TestCase
             new HtmlDecoder($insertTagsParser),
             $requestStack,
             $insertTagsParser,
+            $urlGenerator,
+            true,
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
@@ -167,6 +185,9 @@ class CoreResponseContextFactoryTest extends TestCase
             ],
             $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class)->toArray(),
         );
+
+        $this->assertInstanceOf(CSPBuilder::class, $responseContext->get(CSPBuilder::class));
+        $this->assertSame(['Content-Security-Policy' => "script-src 'self'; report-uri https://example.com/csp/report"], $responseContext->get(CSPBuilder::class)->getHeaderArray(false));
     }
 
     /**
@@ -204,6 +225,7 @@ class CoreResponseContextFactoryTest extends TestCase
             new HtmlDecoder($insertTagsParser),
             $requestStack,
             $insertTagsParser,
+            $this->createMock(UrlGeneratorInterface::class),
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
@@ -248,6 +270,7 @@ class CoreResponseContextFactoryTest extends TestCase
             new HtmlDecoder($insertTagsParser),
             $this->createMock(RequestStack::class),
             $insertTagsParser,
+            $this->createMock(UrlGeneratorInterface::class),
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
