@@ -513,9 +513,17 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
     private function handleSecurityConfig(array $config, ContainerBuilder $container): void
     {
-        if ($container->hasDefinition('contao.routing.csp_reporter_loader') && ($config['security']['csp']['reporting']['enabled'] ?? false)) {
+        $cspEnabled = $config['security']['csp']['reporting']['enabled'] ?? false;
+
+        if ($container->hasDefinition('contao.routing.csp_reporter_loader')) {
             $container->getDefinition('contao.routing.csp_reporter_loader')
-                ->setArgument(0, $config['security']['csp']['reporting']['path'] ?? null)
+                ->setArgument(0, $cspEnabled ? $config['security']['csp']['reporting']['path'] ?? null : null)
+            ;
+        }
+
+        if ($container->hasDefinition('contao.routing.response_context_factory')) {
+            $container->getDefinition('contao.routing.response_context_factory')
+                ->setArgument(7, $cspEnabled)
             ;
         }
     }
