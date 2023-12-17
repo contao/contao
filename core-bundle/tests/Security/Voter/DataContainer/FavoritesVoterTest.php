@@ -20,7 +20,6 @@ use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Security\Voter\DataContainer\FavoritesVoter;
 use Contao\CoreBundle\Tests\TestCase;
-use Doctrine\DBAL\Connection;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -37,20 +36,7 @@ class FavoritesVoterTest extends TestCase
             ->willReturn($user)
         ;
 
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->method('fetchOne')
-            ->with('SELECT user FROM tl_favorites WHERE id = :id')
-            ->willReturnCallback(
-                static fn (string $query, array $args): int => match ((int) $args['id']) {
-                    42 => 2, // current user
-                    17 => 3, // different user
-                    default => 0,
-                },
-            )
-        ;
-
-        $voter = new FavoritesVoter($security, $connection);
+        $voter = new FavoritesVoter($security);
 
         $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_favorites'));
         $this->assertTrue($voter->supportsType(CreateAction::class));
@@ -65,7 +51,7 @@ class FavoritesVoterTest extends TestCase
             VoterInterface::ACCESS_ABSTAIN,
             $voter->vote(
                 $token,
-                new ReadAction('foo', ['id' => 42]),
+                new ReadAction('foo', ['user' => 42]),
                 ['whatever'],
             ),
         );
@@ -76,7 +62,7 @@ class FavoritesVoterTest extends TestCase
             VoterInterface::ACCESS_ABSTAIN,
             $voter->vote(
                 $token,
-                new ReadAction('foo', ['id' => 42]),
+                new ReadAction('foo', ['user' => 2]),
                 [ContaoCorePermissions::DC_PREFIX.'tl_favorites'],
             ),
         );
@@ -86,7 +72,7 @@ class FavoritesVoterTest extends TestCase
             VoterInterface::ACCESS_DENIED,
             $voter->vote(
                 $token,
-                new ReadAction('foo', ['id' => 17]),
+                new ReadAction('foo', ['user' => 3]),
                 [ContaoCorePermissions::DC_PREFIX.'tl_favorites'],
             ),
         );
