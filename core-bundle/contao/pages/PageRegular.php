@@ -625,7 +625,11 @@ class PageRegular extends Frontend
 			{
 				/** @var CSPBuilder $csp */
 				$csp = $this->responseContext->get(CSPBuilder::class);
-				$customScript = str_replace('<script', '<script nonce="' . $csp->nonce('script-src') . '"', $customScript);
+				
+				if ($nonce = $csp->nonce('script-src'))
+				{
+					$customScript = str_replace('<script', '<script nonce="' . $nonce . '"', $customScript);
+				}
 			}
 
 			$strScripts .= "\n" . $customScript . "\n";
