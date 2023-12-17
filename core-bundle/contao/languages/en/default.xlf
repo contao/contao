@@ -281,6 +281,9 @@
       <trans-unit id="ERR.noAdminEmail">
         <source>There is no administrator e-mail address set, please contact the site administrator.</source>
       </trans-unit>
+      <trans-unit id="ERR.invalidCsp">
+        <source>Invalid Content Security Policy given: %s.</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
       </trans-unit>

@@ -87,6 +87,11 @@ services:
             - '@database_connection'
             - '@request_stack'
 
+    contao.listener.data_container.csp_save_callback:
+        class: Contao\CoreBundle\EventListener\DataContainer\CspSaveCallbackListener
+        arguments:
+            - '@translator'
+
     contao.listener.data_container.default_global_operations:
         class: Contao\CoreBundle\EventListener\DataContainer\DefaultGlobalOperationsListener
 
