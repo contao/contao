@@ -421,14 +421,6 @@ abstract class Template extends Controller
 	 */
 	public function nonce(string $directive): string
 	{
-		return self::getNonce($directive);
-	}
-
-	/**
-	 * Returns a nonce for the given CSP directive.
-	 */
-	public static function getNonce(string $directive): string
-	{
 		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
 		if (!$responseContext || !$responseContext->has(CSPBuilder::class))
@@ -682,7 +674,7 @@ abstract class Template extends Controller
 	 */
 	public static function generateInlineStyle($script)
 	{
-		$nonce = self::getNonce('style-src');
+		$nonce = self::nonce('style-src');
 
 		return '<style'.($nonce ? ' nonce="' . $nonce . '"' : '').'>' . $script . '</style>';
 	}
@@ -741,7 +733,7 @@ abstract class Template extends Controller
 	 */
 	public static function generateInlineScript($script)
 	{
-		$nonce = self::getNonce('script-src');
+		$nonce = self::nonce('script-src');
 
 		return '<script'.($nonce ? ' nonce="' . $nonce . '"' : '').'>' . $script . '</script>';
 	}

@@ -78,7 +78,7 @@ class FragmentTemplateTest extends TestCase
 
     public function provideIllegalParentMethods(): \Generator
     {
-        $excluded = ['__construct', '__set', '__get', '__isset', 'setData', 'getData', 'setName', 'getName', 'getResponse', 'addCspSource', 'getNonce', 'nonce'];
+        $excluded = ['__construct', '__set', '__get', '__isset', 'setData', 'getData', 'setName', 'getName', 'getResponse', 'addCspSource', 'nonce'];
         $parent = (new \ReflectionClass(FragmentTemplate::class))->getParentClass();
 
         foreach ($parent->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
