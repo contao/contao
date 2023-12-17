@@ -23,12 +23,12 @@ class CspSaveCallbackListener
     {
     }
 
-    public function __invoke($value)
+    public function __invoke(mixed $value): mixed
     {
         try {
             CSPBuilder::fromHeader(trim((string) $value));
         } catch (\Throwable $e) {
-            throw new \Exception($this->translator->trans('ERR.invalidCsp', [$e->getMessage()], 'contao_default'), 0, $e);
+            throw new \RuntimeException($this->translator->trans('ERR.invalidCsp', [$e->getMessage()], 'contao_default'), 0, $e);
         }
 
         return $value;
