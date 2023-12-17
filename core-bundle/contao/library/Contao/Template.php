@@ -15,6 +15,7 @@ use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use MatthiasMullie\Minify\CSS;
 use MatthiasMullie\Minify\JS;
+use Nyholm\Psr7\Uri;
 use ParagonIE\CSPBuilder\CSPBuilder;
 use Spatie\SchemaOrg\Graph;
 use Symfony\Component\HttpFoundation\Response;
@@ -444,6 +445,22 @@ abstract class Template extends Controller
 		if (!$responseContext || !$responseContext->has(CSPBuilder::class))
 		{
 			return;
+		}
+
+		// Automatically add the scheme and host
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request)
+		{
+			$uri = new Uri($source);
+
+			if (!$uri->getHost())
+			{
+				$source = (string) $uri
+					->withScheme($request->getScheme())
+					->withHost($request->getHost())
+				;
+			}
 		}
 
 		/** @var CSPBuilder $csp */

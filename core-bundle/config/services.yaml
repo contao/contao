@@ -1156,10 +1156,11 @@ services:
         arguments:
             - '@contao.routing.response_context_accessor'
 
-    contao.twig.csp_nonce_runtime:
-        class: Contao\CoreBundle\Twig\Runtime\CspNonceRuntime
+    contao.twig.csp_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\CspRuntime
         arguments:
             - '@contao.routing.response_context_accessor'
+            - '@request_stack'
 
     contao.twig.picture_configuration_runtime:
         class: Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime
