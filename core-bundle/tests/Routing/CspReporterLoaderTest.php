@@ -34,7 +34,7 @@ class CspReporterLoaderTest extends TestCase
         $this->assertNotNull($route);
         $this->assertSame('/_contao/csp/report', $route->getPath());
         $this->assertSame('nelmio_security.csp_reporter_controller::indexAction', $route->getDefault('_controller'));
-        $this->assertSame([Request::METHOD_POST], $route->getMethods('method'));
+        $this->assertSame([Request::METHOD_POST], $route->getMethods());
     }
 
     public function testDoesNotAddRouteWithoutPath(): void

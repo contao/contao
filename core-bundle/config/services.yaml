@@ -1055,6 +1055,12 @@ services:
             - '@contao.framework'
             - '@contao.resource_finder'
 
+    contao.twig.csp_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\CspRuntime
+        arguments:
+            - '@contao.routing.response_context_accessor'
+            - '@request_stack'
+
     contao.twig.extension:
         class: Contao\CoreBundle\Twig\Extension\ContaoExtension
         public: true
@@ -1150,17 +1156,6 @@ services:
 
     contao.twig.loader.theme_namespace:
         class: Contao\CoreBundle\Twig\Loader\ThemeNamespace
-
-    contao.twig.add_csp_source_runtime:
-        class: Contao\CoreBundle\Twig\Runtime\CspAddSourceRuntime
-        arguments:
-            - '@contao.routing.response_context_accessor'
-
-    contao.twig.csp_runtime:
-        class: Contao\CoreBundle\Twig\Runtime\CspRuntime
-        arguments:
-            - '@contao.routing.response_context_accessor'
-            - '@request_stack'
 
     contao.twig.picture_configuration_runtime:
         class: Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime
