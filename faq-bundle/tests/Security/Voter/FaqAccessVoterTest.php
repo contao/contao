@@ -111,7 +111,6 @@ class FaqAccessVoterTest extends TestCase
         ;
 
         $token = $this->createMock(TokenInterface::class);
-
         $voter = new FaqAccessVoter($security);
 
         $this->assertSame(

@@ -110,7 +110,6 @@ class FormFieldAccessVoterTest extends TestCase
         ;
 
         $token = $this->createMock(TokenInterface::class);
-
         $voter = new FormFieldAccessVoter($security);
 
         $this->assertSame(

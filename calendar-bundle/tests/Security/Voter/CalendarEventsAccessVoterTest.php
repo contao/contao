@@ -111,7 +111,6 @@ class CalendarEventsAccessVoterTest extends TestCase
         ;
 
         $token = $this->createMock(TokenInterface::class);
-
         $voter = new CalendarEventsAccessVoter($security);
 
         $this->assertSame(

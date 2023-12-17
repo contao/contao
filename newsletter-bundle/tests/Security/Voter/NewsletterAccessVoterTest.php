@@ -111,7 +111,6 @@ class NewsletterAccessVoterTest extends TestCase
         ;
 
         $token = $this->createMock(TokenInterface::class);
-
         $voter = new NewsletterAccessVoter($security);
 
         $this->assertSame(
