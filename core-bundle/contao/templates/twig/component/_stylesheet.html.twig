@@ -18,26 +18,14 @@
 
 {% block stylesheet_component %}
     {% set stylesheet = stylesheet|default(_context) %}
-    {% set nonce = contao_csp_nonce('style-src') %}
-    {% set style_attributes = attrs(style_attributes|default)
-        .set('rel', 'stylesheet')
-        .set('href', stylesheet.file)
-        .set('nonce', nonce, nonce)
-    %}
 
     {% if stylesheet.lazy is defined ? stylesheet.lazy : true %}
         {# Lazy load, see https://web.dev/defer-non-critical-css/ #}
-        {% set lazy_style_attributes = attrs(style_attributes|default)
-            .set('rel', 'preload')
-            .set('as', 'style')
-            .set('onload', 'this.onload=null;this.rel=\'stylesheet\'')
-        %}
-
-        <link{{ lazy_style_attributes }}>
+        <link rel="preload" href="{{ stylesheet.file }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript>
-            <link{{ style_attributes }}>
+            <link rel="stylesheet" href="{{ stylesheet.file }}">
         </noscript>
     {% else %}
-        <link{{ style_attributes }}>
+        <link rel="stylesheet" href="{{ stylesheet.file }}">
     {% endif %}
 {% endblock %}
