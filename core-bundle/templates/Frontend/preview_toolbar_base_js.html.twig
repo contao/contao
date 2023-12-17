@@ -246,7 +246,9 @@
         // Fetch toolbar
         request('GET', '{{ action }}', null, function () {
             if (200 === this.status) {
-                toolbar.innerHTML = this.responseText;
+                const toolbarContent = document.createRange().createContextualFragment(this.responseText);
+                toolbar.innerHTML = '';
+                toolbar.append(toolbarContent);
 
                 const event = new Event('cto-toolbar-loaded');
                 window.dispatchEvent(event);
