@@ -26,7 +26,7 @@ class FinalizeResponseContextListener
 
     public function __invoke(ResponseEvent $event): void
     {
-        if (!$this->scopeMatcher->isContaoMainRequest($event)) {
+        if (!$event->isMainRequest()) {
             return;
         }
 

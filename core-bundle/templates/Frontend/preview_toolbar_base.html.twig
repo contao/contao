@@ -41,11 +41,3 @@
     <div class="cto-toolbar__close"><a href="#" title="{{ 'MSC.closeToolbar'|trans }}">&times;</a></div>
 </div>
 <div class="cto-toolbar__clear"></div>
-{% set scriptNonce = contao_csp_nonce('script-src') %}
-<script{% if scriptNonce %} nonce="{{ scriptNonce }}"{% endif %}>
-    document.querySelector('.cto-toolbar__share-url').addEventListener('click', (e) => {
-        e.preventDefault();
-        window.open(e.target.href+'&url='+location.href);
-        return false;
-    });
-</script>

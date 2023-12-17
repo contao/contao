@@ -49,7 +49,8 @@ class PreviewToolbarListener
 
         // Do not capture redirects, errors, or modify XML HTTP Requests
         if (
-            !$request->attributes->get('_preview', false)
+            !$this->scopeMatcher->isFrontendMainRequest($event)
+            || !$request->attributes->get('_preview', false)
             || $request->isXmlHttpRequest()
             || !$response->isSuccessful() && !$response->isClientError()
         ) {
