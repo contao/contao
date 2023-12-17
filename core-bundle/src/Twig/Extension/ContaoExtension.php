@@ -26,7 +26,6 @@ use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNode;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
 use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
-use Contao\CoreBundle\Twig\Runtime\CspAddSourceRuntime;
 use Contao\CoreBundle\Twig\Runtime\CspRuntime;
 use Contao\CoreBundle\Twig\Runtime\FigureRuntime;
 use Contao\CoreBundle\Twig\Runtime\FormatterRuntime;

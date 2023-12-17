@@ -39,7 +39,6 @@ use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
-use Contao\CoreBundle\Twig\Runtime\CspAddSourceRuntime;
 use Contao\CoreBundle\Twig\Runtime\CspRuntime;
 use Contao\CoreBundle\Twig\Runtime\FormatterRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;

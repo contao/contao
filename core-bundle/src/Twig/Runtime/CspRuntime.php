@@ -55,12 +55,12 @@ final class CspRuntime implements RuntimeExtensionInterface
         if ($request = $this->requestStack->getCurrentRequest()) {
             $uri = new Uri($source);
 
-			if (!$uri->getHost()) {
-				$source = (string) $uri
-					->withScheme($request->getScheme())
-					->withHost($request->getHost())
-				;
-			}
+            if (!$uri->getHost()) {
+                $source = (string) $uri
+                    ->withScheme($request->getScheme())
+                    ->withHost($request->getHost())
+                ;
+            }
         }
 
         /** @var CSPBuilder $csp */

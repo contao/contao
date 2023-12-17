@@ -693,7 +693,7 @@ abstract class Template extends Controller
 	{
 		$nonce = self::nonce('style-src');
 
-		return '<style'.($nonce ? ' nonce="' . $nonce . '"' : '').'>' . $script . '</style>';
+		return '<style' . ($nonce ? ' nonce="' . $nonce . '"' : '') . '>' . $script . '</style>';
 	}
 
 	/**
@@ -752,7 +752,7 @@ abstract class Template extends Controller
 	{
 		$nonce = self::nonce('script-src');
 
-		return '<script'.($nonce ? ' nonce="' . $nonce . '"' : '').'>' . $script . '</script>';
+		return '<script' . ($nonce ? ' nonce="' . $nonce . '"' : '') . '>' . $script . '</script>';
 	}
 
 	/**
