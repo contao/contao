@@ -54,7 +54,7 @@ services:
         tags:
             - kernel.event_listener
 
-    contao.listener.csp_report_listener:
+    contao.listener.csp_report:
         class: Contao\CoreBundle\EventListener\CspReportListener
         arguments:
             - '@logger'
