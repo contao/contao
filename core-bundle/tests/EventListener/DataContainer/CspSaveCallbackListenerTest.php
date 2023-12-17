@@ -28,7 +28,7 @@ class CspSaveCallbackListenerTest extends TestCase
             ->willReturn('Invalid Content Security Policy given: Directive "foobar" does not exist.')
         ;
 
-        $this->expectException(\Exception::class);
+        $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Invalid Content Security Policy given: Directive "foobar" does not exist.');
 
         (new CspSaveCallbackListener($translator))("foobar 'self'");
