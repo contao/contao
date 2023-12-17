@@ -854,7 +854,6 @@ services:
         class: Contao\CoreBundle\Security\Voter\DataContainer\FavoritesVoter
         arguments:
             - '@security.helper'
-            - '@database_connection'
 
     contao.security.data_container.form_access_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\FormAccessVoter

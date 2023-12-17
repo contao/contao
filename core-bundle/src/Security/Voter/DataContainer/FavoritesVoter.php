@@ -17,7 +17,6 @@ use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
-use Doctrine\DBAL\Connection;
 use Symfony\Bundle\SecurityBundle\Security;
 
 /**
@@ -25,10 +24,8 @@ use Symfony\Bundle\SecurityBundle\Security;
  */
 class FavoritesVoter extends AbstractDataContainerVoter
 {
-    public function __construct(
-        private readonly Security $security,
-        private readonly Connection $connection,
-    ) {
+    public function __construct(private readonly Security $security)
+    {
     }
 
     protected function getTable(): string
@@ -38,24 +35,27 @@ class FavoritesVoter extends AbstractDataContainerVoter
 
     protected function isGranted(CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
     {
-        return match (true) {
-            $action instanceof CreateAction => true,
-            $action instanceof ReadAction,
-            $action instanceof UpdateAction,
-            $action instanceof DeleteAction => $this->checkAccess($action),
-        };
-    }
-
-    private function checkAccess(DeleteAction|ReadAction|UpdateAction $action): bool
-    {
         $user = $this->security->getUser();
-        $userId = $user instanceof BackendUser ? (int) $user->id : 0;
 
-        $createdBy = (int) $this->connection->fetchOne(
-            'SELECT user FROM tl_favorites WHERE id = :id',
-            ['id' => $action->getCurrentId()],
-        );
+        if (!$user instanceof BackendUser) {
+            return false;
+        }
 
-        return $createdBy === $userId;
+        $userId = (int) $user->id;
+
+        $canAccessCurrent = match (true) {
+            $action instanceof UpdateAction,
+            $action instanceof ReadAction,
+            $action instanceof DeleteAction => (int) $action->getCurrent()['user'] === $userId,
+            default => true,
+        };
+
+        $canAccessNew = match (true) {
+            $action instanceof CreateAction,
+            $action instanceof UpdateAction => !isset($action->getNew()['user']) || (int) $action->getNew()['user'] === $userId,
+            default => true,
+        };
+
+        return $canAccessCurrent && $canAccessNew;
     }
 }
