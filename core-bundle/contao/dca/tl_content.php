@@ -1576,7 +1576,7 @@ class tl_content extends Backend
 
 		if (System::getContainer()->get('contao.fragment.compositor')->supportsNesting('contao.content_element.' . $row['type']))
 		{
-			$href .= '&amp;childs=1';
+			$href .= '&amp;children=1';
 		}
 
 		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $row['type']) ? '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';

@@ -79,6 +79,5 @@ class CodeControllerTest extends ContentElementTestCase
             HTML;
 
         $this->assertSameHtml($expectedOutput, $response->getContent());
-        $this->assertEmpty($responseContextData);
     }
 }

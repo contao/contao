@@ -479,7 +479,7 @@
       <trans-unit id="tl_page.copy">
         <source>Duplicate page ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_page.copyChilds">
+      <trans-unit id="tl_page.copyChildren">
         <source>Duplicate page ID %s with its subpages</source>
       </trans-unit>
       <trans-unit id="tl_page.delete">
