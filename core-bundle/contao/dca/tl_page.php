@@ -109,10 +109,10 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 				'attributes'          => 'onclick="Backend.getScrollOffset()"',
 				'button_callback'     => array('tl_page', 'copyPage')
 			),
-			'copyChilds' => array
+			'copyChildren' => array
 			(
-				'href'                => 'act=paste&amp;mode=copy&amp;childs=1',
-				'icon'                => 'copychilds.svg',
+				'href'                => 'act=paste&amp;mode=copy&amp;children=1',
+				'icon'                => 'copychildren.svg',
 				'attributes'          => 'onclick="Backend.getScrollOffset()"',
 				'button_callback'     => array('tl_page', 'copyPageWithSubpages')
 			),
