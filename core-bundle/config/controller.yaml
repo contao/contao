@@ -68,7 +68,7 @@ services:
         arguments:
             - '@contao.image.studio'
 
-    Contao\CoreBundle\Controller\ContentElement\AccordionWrapperController:
+    Contao\CoreBundle\Controller\ContentElement\AccordionWrapperController: ~
 
     Contao\CoreBundle\Controller\ContentElement\CodeController: ~
 
