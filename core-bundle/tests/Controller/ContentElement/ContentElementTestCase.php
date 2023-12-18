@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 use Contao\ArticleModel;
 use Contao\Config;
 use Contao\ContentModel;
+use Contao\Controller;
 use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
@@ -40,6 +41,7 @@ use Contao\CoreBundle\Twig\Loader\TemplateLocator;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
 use Contao\CoreBundle\Twig\Runtime\FormatterRuntime;
+use Contao\CoreBundle\Twig\Runtime\FragmentRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
@@ -105,11 +107,17 @@ class ContentElementTestCase extends TestCase
      *
      * @param-out array<string, array<int|string, string>> $responseContextData
      */
-    protected function renderWithModelData(AbstractContentElementController $controller, array $modelData, string|null $template = null, bool $asEditorView = false, array|null &$responseContextData = null, ContainerBuilder|null $adjustedContainer = null): Response
+    protected function renderWithModelData(AbstractContentElementController $controller, array $modelData, string|null $template = null, bool $asEditorView = false, array|null &$responseContextData = null, ContainerBuilder|null $adjustedContainer = null, Request|null $request = null): Response
     {
+        $nestedFragments = [];
+
+        if ($request?->attributes->has('nestedFragments')) {
+            $nestedFragments = $request->attributes->get('nestedFragments');
+        }
+
         // Setup Twig environment
         $loader = $this->getContaoFilesystemLoader();
-        $environment = $this->getEnvironment($loader);
+        $environment = $this->getEnvironment($loader, $nestedFragments);
 
         // Setup container with helper services
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
@@ -178,7 +186,7 @@ class ContentElementTestCase extends TestCase
             'type' => $modelData['type'],
         ]);
 
-        $response = $controller(new Request(), $model, 'main');
+        $response = $controller($request ?? new Request(), $model, 'main');
 
         // Record response context data
         $responseContextData = array_filter([
@@ -256,7 +264,7 @@ class ContentElementTestCase extends TestCase
         return $loader;
     }
 
-    protected function getEnvironment(ContaoFilesystemLoader $contaoFilesystemLoader): Environment
+    protected function getEnvironment(ContaoFilesystemLoader $contaoFilesystemLoader, array $nestedFragments = []): Environment
     {
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
@@ -292,10 +300,11 @@ class ContentElementTestCase extends TestCase
         // Runtime loaders
         $insertTagParser = $this->getDefaultInsertTagParser();
         $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
-        $framework = $this->getDefaultFramework();
+        $framework = $this->getDefaultFramework($nestedFragments);
 
         $environment->addRuntimeLoader(
             new FactoryRuntimeLoader([
+                FragmentRuntime::class => static fn () => new FragmentRuntime($framework),
                 InsertTagRuntime::class => static fn () => new InsertTagRuntime($insertTagParser),
                 HighlighterRuntime::class => static fn () => new HighlighterRuntime(),
                 SchemaOrgRuntime::class => static fn () => new SchemaOrgRuntime($responseContextAccessor),
@@ -428,7 +437,7 @@ class ContentElementTestCase extends TestCase
         return $insertTagParser;
     }
 
-    protected function getDefaultFramework(): ContaoFramework
+    protected function getDefaultFramework(array $nestedFragments = []): ContaoFramework
     {
         $GLOBALS['TL_LANG'] = [
             'MSC' => [
@@ -489,11 +498,33 @@ class ContentElementTestCase extends TestCase
             })
         ;
 
-        return $this->mockContaoFramework([
-            Config::class => $configAdapter,
-            Input::class => $inputAdapter,
-            PageModel::class => $pageAdapter,
-            ArticleModel::class => $articleAdapter,
-        ]);
+        $controllerAdapter = $this->mockAdapter(['getContentElement']);
+        $controllerAdapter
+            ->method('getContentElement')
+            ->willReturnCallback(
+                static function () use ($nestedFragments) {
+                    $return = '';
+
+                    foreach ($nestedFragments as $nestedFragment) {
+                        $return .= $nestedFragment->getContent();
+                    }
+
+                    return $return;
+                },
+            )
+        ;
+
+        return $this->mockContaoFramework(
+            [
+                Config::class => $configAdapter,
+                Input::class => $inputAdapter,
+                PageModel::class => $pageAdapter,
+                ArticleModel::class => $articleAdapter,
+                Controller::class => $controllerAdapter,
+            ],
+            [
+                ContentModel::class => fn () => $this->createMock(ContentModel::class),
+            ],
+        );
     }
 }
