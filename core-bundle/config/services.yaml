@@ -240,6 +240,10 @@ services:
             - '@contao.filesystem.mount_manager'
             - '@contao.filesystem.dbafs_manager'
 
+    contao.fragment.compositor:
+        class: Contao\CoreBundle\Fragment\FragmentCompositor
+        public: true
+
     contao.fragment.forward_renderer:
         class: Contao\CoreBundle\Fragment\ForwardFragmentRenderer
         arguments:
@@ -268,6 +272,7 @@ services:
 
     contao.fragment.registry:
         class: Contao\CoreBundle\Fragment\FragmentRegistry
+        public: true
 
     contao.framework:
         class: Contao\CoreBundle\Framework\ContaoFramework
@@ -845,7 +850,16 @@ services:
         class: Contao\CoreBundle\Security\Voter\DataContainer\FavoritesVoter
         arguments:
             - '@security.helper'
-            - '@database_connection'
+
+    contao.security.data_container.form_access_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\FormAccessVoter
+        arguments:
+            - '@security.helper'
+
+    contao.security.data_container.form_field_access_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\FormFieldAccessVoter
+        arguments:
+            - '@security.helper'
 
     contao.security.data_container.table_access_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\TableAccessVoter
