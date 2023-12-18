@@ -19,21 +19,27 @@ use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\FaqBundle\Security\ContaoFaqPermissions;
 use Contao\FaqBundle\Security\Voter\FaqCategoryAccessVoter;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class FaqCategoryAccessVoterTest extends WebTestCase
+class FaqCategoryAccessVoterTest extends TestCase
 {
     public function testVoter(): void
     {
         $security = $this->createMock(Security::class);
         $security
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(5))
             ->method('isGranted')
-            ->with(ContaoFaqPermissions::USER_CAN_EDIT_CATEGORY, 42)
-            ->willReturnOnConsecutiveCalls(true, false)
+            ->withConsecutive(
+                [ContaoFaqPermissions::USER_CAN_ACCESS_MODULE],
+                [ContaoFaqPermissions::USER_CAN_EDIT_CATEGORY, 42],
+                [ContaoFaqPermissions::USER_CAN_ACCESS_MODULE],
+                [ContaoFaqPermissions::USER_CAN_ACCESS_MODULE],
+                [ContaoFaqPermissions::USER_CAN_EDIT_CATEGORY, 42],
+            )
+            ->willReturnOnConsecutiveCalls(true, true, false, true, false)
         ;
 
         $voter = new FaqCategoryAccessVoter($security);
@@ -69,7 +75,17 @@ class FaqCategoryAccessVoterTest extends WebTestCase
             ),
         );
 
-        // Permission denied
+        // Permission denied on back end module
+        $this->assertSame(
+            VoterInterface::ACCESS_DENIED,
+            $voter->vote(
+                $token,
+                new ReadAction('foo', ['id' => 42]),
+                [ContaoCorePermissions::DC_PREFIX.'tl_faq_category'],
+            ),
+        );
+
+        // Permission denied on faq category
         $this->assertSame(
             VoterInterface::ACCESS_DENIED,
             $voter->vote(

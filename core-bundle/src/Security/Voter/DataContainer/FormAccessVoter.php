@@ -19,6 +19,9 @@ use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Symfony\Bundle\SecurityBundle\Security;
 
+/**
+ * @internal
+ */
 class FormAccessVoter extends AbstractDataContainerVoter
 {
     public function __construct(private readonly Security $security)
@@ -32,6 +35,10 @@ class FormAccessVoter extends AbstractDataContainerVoter
 
     protected function isGranted(CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
     {
+        if (!$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'form')) {
+            return false;
+        }
+
         return match (true) {
             $action instanceof CreateAction => $this->security->isGranted(ContaoCorePermissions::USER_CAN_CREATE_FORMS),
             $action instanceof ReadAction,
