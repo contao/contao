@@ -271,7 +271,7 @@ $GLOBALS['TL_CTE'] = array
 		'accordionStart'  => ContentAccordionStart::class,
 		'accordionStop'   => ContentAccordionStop::class
 	),
-	'slider' => array
+	'legacy' => array
 	(
 		'sliderStart'     => ContentSliderStart::class,
 		'sliderStop'      => ContentSliderStop::class
