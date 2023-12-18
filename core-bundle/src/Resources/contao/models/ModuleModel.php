@@ -34,6 +34,7 @@ use Contao\Model\Collection;
  * @property string            $customLabel
  * @property string|boolean    $autologin
  * @property string|integer    $jumpTo
+ * @property string|integer    $pwResetJumpTo
  * @property string|integer    $overviewPage
  * @property string|boolean    $redirectBack
  * @property string|array|null $editable
@@ -104,6 +105,7 @@ use Contao\Model\Collection;
  * @method static ModuleModel|null findOneByCustomLabel($val, array $opt=array())
  * @method static ModuleModel|null findOneByAutologin($val, array $opt=array())
  * @method static ModuleModel|null findOneByJumpTo($val, array $opt=array())
+ * @method static ModuleModel|null findOneByPwResetJumpTo($val, array $opt=array())
  * @method static ModuleModel|null findOneByOverviewPage($val, array $opt=array())
  * @method static ModuleModel|null findOneByRedirectBack($val, array $opt=array())
  * @method static ModuleModel|null findOneByEditable($val, array $opt=array())
@@ -168,6 +170,7 @@ use Contao\Model\Collection;
  * @method static Collection|ModuleModel[]|ModuleModel|null findByCustomLabel($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByAutologin($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByJumpTo($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByPwResetJumpTo($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByOverviewPage($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByRedirectBack($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByEditable($val, array $opt=array())
@@ -236,6 +239,7 @@ use Contao\Model\Collection;
  * @method static integer countByCustomLabel($val, array $opt=array())
  * @method static integer countByAutologin($val, array $opt=array())
  * @method static integer countByJumpTo($val, array $opt=array())
+ * @method static integer countByPwResetJumpTo($val, array $opt=array())
  * @method static integer countByOverviewPage($val, array $opt=array())
  * @method static integer countByRedirectBack($val, array $opt=array())
  * @method static integer countByEditable($val, array $opt=array())

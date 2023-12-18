@@ -129,6 +129,14 @@
         <source>Please choose the page to which visitors will be redirected when clicking a link or submitting a form.</source>
         <target>Bitte wählen Sie die Seite aus, zu der Besucher beim Anklicken eines Links oder Abschicken eines Formulars weitergeleitet werden.</target>
       </trans-unit>
+      <trans-unit id="tl_module.pwResetJumpTo.0">
+        <source>Redirect: Forgotten password</source>
+        <target>Weiterleitung: Passwort Vergessen</target>
+      </trans-unit>
+      <trans-unit id="tl_module.pwResetJumpTo.1">
+        <source>Please choose the page to which visitors will be redirected when clicking the &lt;em&gt;password forgotten&lt;/em&gt; link.</source>
+        <target>Bitte wählen Sie die Seite aus, zu der die Besucher weitergeleitet werden, wenn sie auf den Link &lt;em&gt;Passwort vergessen&lt;/em&gt; klicken.</target>
+      </trans-unit>
       <trans-unit id="tl_module.overviewPage.0">
         <source>Overview page</source>
         <target>Übersichtsseite</target>
