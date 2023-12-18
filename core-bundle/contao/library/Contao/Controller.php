@@ -15,6 +15,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
@@ -514,13 +515,27 @@ abstract class Controller extends System
 	/**
 	 * Generate a content element and return it as string
 	 *
-	 * @param mixed  $intId     A content element ID or a Model object
+	 * @param mixed  $intId     A content element ID, a Model object or a ContentElementReference
 	 * @param string $strColumn The column the element is in
 	 *
 	 * @return string The content element HTML markup
 	 */
 	public static function getContentElement($intId, $strColumn='main')
 	{
+		$contentElementReference = null;
+
+		if ($intId instanceof ContentElementReference)
+		{
+			if (\func_num_args() > 1)
+			{
+				throw new \InvalidArgumentException('Passing a column name is not supported when using a ContentElementReference.');
+			}
+
+			$contentElementReference = $intId;
+			$strColumn = $contentElementReference->getSection();
+			$intId = $contentElementReference->getContentModel();
+		}
+
 		if (\is_object($intId))
 		{
 			$objRow = $intId;
@@ -565,8 +580,27 @@ abstract class Controller extends System
 			$objStopwatch->start($strStopWatchId, 'contao.layout');
 		}
 
-		/** @var ContentElement $objElement */
-		$objElement = new $strClass($objRow, $strColumn);
+		$isContentProxy = is_a($strClass, ContentProxy::class, true);
+		$compositor = System::getContainer()->get('contao.fragment.compositor');
+
+		if ($isContentProxy && $contentElementReference)
+		{
+			$objElement = new $strClass($contentElementReference, $strColumn);
+		}
+		elseif ($isContentProxy && $objRow->id && $compositor->supportsNesting(ContentElementReference::TAG_NAME . '.' . $objRow->type))
+		{
+			$objElement = new $strClass(
+				$objRow,
+				$strColumn,
+				$compositor->getNestedFragments(ContentElementReference::TAG_NAME . '.' . $objRow->type, $objRow->id)
+			);
+		}
+		else
+		{
+			/** @var ContentElement $objElement */
+			$objElement = new $strClass($objRow, $strColumn);
+		}
+
 		$strBuffer = $objElement->generate();
 
 		// HOOK: add custom logic
@@ -1245,6 +1279,8 @@ abstract class Controller extends System
 		$db = Database::getInstance();
 		$arrParent = array();
 		$strParentTable = $strTable;
+		$intLastId = null;
+		$strLastParentTable = null;
 
 		do
 		{
@@ -1263,11 +1299,24 @@ abstract class Controller extends System
 			$strParentTable = $GLOBALS['TL_DCA'][$strParentTable]['config']['ptable'];
 			$intId = $objParent->pid;
 
+			// If both the parent table and the ID remain the same, we found the
+			// topmost record (usually the case with nested content elements).
+			if ($strParentTable == $strLastParentTable && $intId == $intLastId)
+			{
+				break;
+			}
+
 			// Add the log entry
 			$arrParent[] = $strParentTable . '.id=' . $intId;
 
 			// Load the data container of the parent table
-			$this->loadDataContainer($strParentTable);
+			if ($strParentTable != $strLastParentTable)
+			{
+				$this->loadDataContainer($strParentTable);
+			}
+
+			$intLastId = $intId;
+			$strLastParentTable = $strParentTable;
 		}
 		while ($intId && !empty($GLOBALS['TL_DCA'][$strParentTable]['config']['ptable']));
 
