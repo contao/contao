@@ -1,56 +1,54 @@
 {% extends "@Contao/content_element/_base.html.twig" %}
 
 {% block content %}
-    {% block html %}
-        <div class="swiper" data-delay="{{ delay }}" data-speed="{{ speed }}" data-offset="{{ offset }}" data-loop="{{ loop }}">
-            <div class="swiper-wrapper">
-                {% for element in nested_fragments %}
-                    <div class="swiper-slide">
-                        {{ content_element(element) }}
-                    </div>
-                {% endfor %}
-            </div>
-            <div class="swiper-button-next"></div>
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-pagination"></div>
+    <div class="swiper" data-delay="{{ delay }}" data-speed="{{ speed }}" data-offset="{{ offset }}" data-loop="{{ loop }}">
+        <div class="swiper-wrapper">
+            {% for element in nested_fragments %}
+                <div class="swiper-slide">
+                    {{ content_element(element) }}
+                </div>
+            {% endfor %}
         </div>
-    {% endblock %}
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-pagination"></div>
+    </div>
+{% endblock %}
 
-    {% block script %}
-        {% add "swiper_script" to body %}
-            <script src="{{ asset('js/swiper-bundle.min.js', 'contao-components/swiper') }}"></script>
-            <script>
-                (function() {
-                    const s = document.querySelectorAll('.swiper');
-                    for (let i=0; i<s.length; i++) {
-                        let opts = {
-                            pagination: {
-                                el: '.swiper-pagination',
-                                clickable: true,
-                            },
-                            navigation: {
-                                prevEl: '.swiper-button-prev',
-                                nextEl: '.swiper-button-next',
-                            },
-                            speed: parseInt(s[i].getAttribute('data-speed')),
-                            initialSlide: parseInt(s[i].getAttribute('data-offset')),
-                            loop: !!s[i].getAttribute('data-loop'),
-                            // Put custom options here
-                        };
-                        let delay = s[i].getAttribute('data-delay');
-                        if (delay > 0) {
-                            opts['autoplay'] = { delay: parseInt(delay) };
-                        }
-                        new Swiper(s[i], opts);
+{% block script %}
+    {% add "swiper_script" to body %}
+        <script src="{{ asset('js/swiper-bundle.min.js', 'contao-components/swiper') }}"></script>
+        <script>
+            (function() {
+                const s = document.querySelectorAll('.swiper');
+                for (let i=0; i<s.length; i++) {
+                    let opts = {
+                        pagination: {
+                            el: '.swiper-pagination',
+                            clickable: true,
+                        },
+                        navigation: {
+                            prevEl: '.swiper-button-prev',
+                            nextEl: '.swiper-button-next',
+                        },
+                        speed: parseInt(s[i].getAttribute('data-speed')),
+                        initialSlide: parseInt(s[i].getAttribute('data-offset')),
+                        loop: !!s[i].getAttribute('data-loop'),
+                        // Put custom options here
+                    };
+                    let delay = s[i].getAttribute('data-delay');
+                    if (delay > 0) {
+                        opts['autoplay'] = { delay: parseInt(delay) };
                     }
-                })();
-            </script>
-        {% endadd %}
-    {% endblock %}
+                    new Swiper(s[i], opts);
+                }
+            })();
+        </script>
+    {% endadd %}
+{% endblock %}
 
-    {% block style %}
-        {% add "swiper_css" to head %}
-            <link rel="stylesheet" href="{{ asset('css/swiper-bundle.min.css', 'contao-components/swiper') }}">
-        {% endadd %}
-    {% endblock %}
+{% block style %}
+    {% add "swiper_css" to head %}
+        <link rel="stylesheet" href="{{ asset('css/swiper-bundle.min.css', 'contao-components/swiper') }}">
+    {% endadd %}
 {% endblock %}

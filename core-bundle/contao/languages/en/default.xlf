@@ -377,9 +377,6 @@
       <trans-unit id="CTE.slider.1">
         <source>Generates a content slider element.</source>
       </trans-unit>
-      <trans-unit id="CTE.legacy">
-        <source>Legacy elements</source>
-      </trans-unit>
       <trans-unit id="CTE.sliderStart.0">
         <source>Slider wrapper start</source>
       </trans-unit>
@@ -487,6 +484,9 @@
       </trans-unit>
       <trans-unit id="CTE.teaser.1">
         <source>Displays the teaser text of an article.</source>
+      </trans-unit>
+      <trans-unit id="CTE.legacy">
+        <source>Legacy elements</source>
       </trans-unit>
       <trans-unit id="FFL.explanation.0">
         <source>Explanation</source>
