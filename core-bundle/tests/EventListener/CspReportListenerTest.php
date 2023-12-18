@@ -44,6 +44,7 @@ class CspReportListenerTest extends TestCase
             )
         ;
 
+        // @phpstan-ignore-next-line
         $report = new Report([
             'source-file' => $uri,
             'line-number' => $line,
