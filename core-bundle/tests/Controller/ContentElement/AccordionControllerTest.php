@@ -23,7 +23,7 @@ class AccordionControllerTest extends ContentElementTestCase
             [
                 'type' => 'accordion',
                 'mooHeadline' => 'First section',
-                'text' => '<p>This is the text.</p>'
+                'text' => '<p>This is the text.</p>',
             ],
         );
 
