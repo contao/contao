@@ -1,0 +1,69 @@
+{% extends "@Contao/content_element/text.html.twig" %}
+
+{% block wrapper_tag %}section{% endblock %}
+
+{% block content %}
+    <div class="{{ toggler }}">
+        {{ title }}
+    </div>
+    <div class="{{ accordion }}">
+        <div>
+            {{ parent() }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    {% add "handorgel_js" to body %}
+        <script src="{{ asset('js/handorgel.min.js', 'contao-components/handorgel') }}"></script>
+        <script>
+            (function () {
+                // DO NOT CHANGE THIS FUNCTION!
+                // Set the Handorgel.js options in the function call below.
+                const initAccordion = function (selector, options) {
+                    const headerElements = document.querySelectorAll(selector);
+                    const contentElements = [];
+
+                    if (!headerElements) {
+                        return;
+                    }
+
+                    headerElements.forEach((toggler) => {
+                        const button = document.createElement('button');
+                        button.type = 'button';
+                        button.append(...toggler.childNodes);
+                        toggler.appendChild(button);
+                        toggler.parentNode.classList.add('handorgel');
+                        contentElements.push(toggler.nextElementSibling);
+                    });
+
+                    new handorgel(document.body, Object.assign({
+                        headerElements,
+                        contentElements,
+                        headerOpenClass: 'open',
+                        contentOpenClass: 'open',
+                        headerOpenedClass: 'active',
+                        contentOpenedClass: 'active',
+                        headerFocusClass: 'focus',
+                        contentFocusClass: 'focus',
+                        headerDisabledClass: 'disabled',
+                        contentDisabledClass: 'disabled',
+                    }, options || {}));
+                }
+
+                // Change this selector according to your template, or duplicate
+                // the line if you use multiple accordion element classes.
+                initAccordion('.content-accordion > .{{ toggler }}', {
+                    // Put custom options here
+                    multiSelectable: false,
+                });
+            })();
+        </script>
+    {% endadd %}
+{% endblock %}
+
+{% block style %}
+    {% add "handorgel_css" to head %}
+        <link rel="stylesheet" href="{{ asset('css/handorgel.min.css', 'contao-components/handorgel') }}">
+    {% endadd %}
+{% endblock %}

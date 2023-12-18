@@ -64,6 +64,12 @@ services:
         tags:
             - controller.service_arguments
 
+    Contao\CoreBundle\Controller\ContentElement\AccordionController:
+        arguments:
+            - '@contao.image.studio'
+
+    Contao\CoreBundle\Controller\ContentElement\AccordionWrapperController:
+
     Contao\CoreBundle\Controller\ContentElement\CodeController: ~
 
     Contao\CoreBundle\Controller\ContentElement\DownloadsController:

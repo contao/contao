@@ -1,0 +1,18 @@
+{% extends "@Contao/content_element/_base.html.twig" %}
+
+{% set attributes = attrs(attributes|default).addClass("content-accordion") %}
+
+{% block wrapper_tag %}section{% endblock %}
+
+{% block content %}
+    <div class="{{ toggler }}">
+        {{ title }}
+    </div>
+    <div class="{{ accordion }}">
+        <div>
+            {% for element in nested_fragments %}
+                {{ content_element(element) }}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
