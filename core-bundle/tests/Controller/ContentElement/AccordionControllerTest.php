@@ -34,8 +34,8 @@ class AccordionControllerTest extends ContentElementTestCase
 
         $expectedOutput = <<<'HTML'
             <section class="content-accordion content-accordion_single">
-                <div class="toggler">First section</div>
-                <div class="accordion"><div>
+                <div class="handorgel__header">First section</div>
+                <div class="handorgel__content"><div>
                     <div class="rte">
                         <p>This is the text.</p>
                     </div>
@@ -76,8 +76,8 @@ class AccordionControllerTest extends ContentElementTestCase
 
         $expectedOutput = <<<'HTML'
             <section class="content-accordion content-accordion_wrapper">
-                <div class="toggler">First section</div>
-                <div class="accordion"><div>
+                <div class="handorgel__header">First section</div>
+                <div class="handorgel__content"><div>
                     <div class="content-text">
                         <div class="rte">
                             <p>Foo.</p>

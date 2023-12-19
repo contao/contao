@@ -48,8 +48,8 @@ class AccordionController extends AbstractContentElementController
 
         $classes = StringUtil::deserialize($model->mooClasses, true) + [null, null];
 
-        $template->set('toggler', $classes[0] ?: 'toggler');
-        $template->set('accordion', $classes[1] ?: 'accordion');
+        $template->set('toggler', $classes[0] ?: 'handorgel__header');
+        $template->set('accordion', $classes[1] ?: 'handorgel__content');
         $template->set('title', $model->mooHeadline);
 
         return $template->getResponse();

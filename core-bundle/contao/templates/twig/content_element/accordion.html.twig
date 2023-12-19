@@ -1,10 +1,10 @@
 {% extends "@Contao/content_element/_base.html.twig" %}
 {% use "@Contao/component/_text.html.twig" %}
 
-{% set attributes = attrs(attributes|default).addClass("content-accordion") %}
+{% set attributes = attrs(attributes|default).addClass('content-accordion') %}
 
 {% if not nested_fragments and layout is defined %}
-    {% set layout_attributes = attrs().addClass('content-text media media--' ~ layout) %}
+    {% set layout_attributes = attrs().addClass('content-text media media--' ~ layout, layout and image) %}
 {% endif %}
 
 {% block wrapper_tag %}section{% endblock %}
@@ -46,18 +46,10 @@
                         contentElements.push(toggler.nextElementSibling);
                     });
 
-                    const accordion = new handorgel(document.body, Object.assign({
-                        headerElements,
-                        contentElements,
-                        headerOpenClass: 'open',
-                        contentOpenClass: 'open',
-                        headerOpenedClass: 'active',
-                        contentOpenedClass: 'active',
-                        headerFocusClass: 'focus',
-                        contentFocusClass: 'focus',
-                        headerDisabledClass: 'disabled',
-                        contentDisabledClass: 'disabled',
-                    }, options || {}));
+                    const accordion = new handorgel(
+                        document.body,
+                        Object.assign({ headerElements, contentElements }, options || {})
+                    );
 
                     // Show the first element
                     accordion.folds[0].open();
