@@ -1,16 +1,25 @@
-{% extends "@Contao/content_element/text.html.twig" %}
+{% extends "@Contao/content_element/_base.html.twig" %}
+{% use "@Contao/component/_text.html.twig" %}
+
+{% set attributes = attrs(attributes|default).addClass("content-accordion") %}
+
+{% if not nested_fragments and layout is defined %}
+    {% set layout_attributes = attrs().addClass('content-text media media--' ~ layout) %}
+{% endif %}
 
 {% block wrapper_tag %}section{% endblock %}
 
 {% block content %}
-    <div class="{{ toggler }}">
-        {{ title }}
-    </div>
-    <div class="{{ accordion }}">
-        <div>
-            {{ parent() }}
-        </div>
-    </div>
+    <div class="{{ toggler }}">{{ title }}</div>
+    <div class="{{ accordion }}"><div{{ layout_attributes|default }}>
+        {% if nested_fragments %}
+            {% for element in nested_fragments %}
+                {{ content_element(element) }}
+            {% endfor %}
+        {% else %}
+            {{ block('text_component') }}
+        {% endif %}
+    </div></div>
 {% endblock %}
 
 {% block script %}
@@ -37,7 +46,7 @@
                         contentElements.push(toggler.nextElementSibling);
                     });
 
-                    new handorgel(document.body, Object.assign({
+                    const accordion = new handorgel(document.body, Object.assign({
                         headerElements,
                         contentElements,
                         headerOpenClass: 'open',
@@ -49,6 +58,9 @@
                         headerDisabledClass: 'disabled',
                         contentDisabledClass: 'disabled',
                     }, options || {}));
+
+                    // Show the first element
+                    accordion.folds[0].open();
                 }
 
                 // Change this selector according to your template, or duplicate

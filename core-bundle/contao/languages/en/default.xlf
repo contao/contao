@@ -332,14 +332,17 @@
       <trans-unit id="CTE.table.1">
         <source>Generates an optionally sortable table.</source>
       </trans-unit>
-      <trans-unit id="CTE.accordion.0">
+      <trans-unit id="CTE.accordion">
         <source>Accordion</source>
       </trans-unit>
-      <trans-unit id="CTE.accordion.1">
+      <trans-unit id="CTE.accordion_single.0">
+        <source>Single element</source>
+      </trans-unit>
+      <trans-unit id="CTE.accordion_single.1">
         <source>Generates a single accordion element.</source>
       </trans-unit>
       <trans-unit id="CTE.accordion_wrapper.0">
-        <source>Accordion wrapper</source>
+        <source>Wrapper element</source>
       </trans-unit>
       <trans-unit id="CTE.accordion_wrapper.1">
         <source>Generates an accordion wrapper element.</source>

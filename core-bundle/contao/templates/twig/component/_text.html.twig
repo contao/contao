@@ -1,0 +1,35 @@
+{#
+    This component output a text with an optional image.
+
+      <figure>
+        <img src="…" loading="lazy">
+      </figure>
+      <div class="rte">
+        <p>text</p>
+      </div>
+
+    Mandatory variables:
+        @var string text
+
+    Optional variables:
+        @var \Contao\CoreBundle\Image\Studio\Figure image
+#}
+
+{% use "@Contao/component/_figure.html.twig" %}
+
+{% block text_component %}
+    {# Media #}
+    {% block text_media %}
+        {% if image %}
+            {% with {figure: image} %}{{ block('figure_component') }}{% endwith %}
+        {% endif %}
+    {% endblock %}
+
+    {# Richtext #}
+    {% block text %}
+        {% set text_attributes = attrs(text_attributes|default).addClass('rte') %}
+        <div{% block text_attributes %}{{ text_attributes }}{% endblock %}>
+            {{ text|insert_tag|raw }}
+        </div>
+    {% endblock %}
+{% endblock %}

@@ -20,7 +20,8 @@ use Contao\StringUtil;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-#[AsContentElement(category: 'texts')]
+#[AsContentElement('accordion_single', category: 'accordion', template: 'content_element/accordion')]
+#[AsContentElement('accordion_wrapper', category: 'accordion', template: 'content_element/accordion', nestedFragments: true)]
 class AccordionController extends AbstractContentElementController
 {
     public function __construct(private readonly Studio $studio)
@@ -29,19 +30,21 @@ class AccordionController extends AbstractContentElementController
 
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
-        $template->set('text', $model->text ?: '');
+        if ([] === $request->attributes->get('nestedFragments', [])) {
+            $template->set('text', $model->text ?: '');
 
-        $figure = !$model->addImage ? null : $this->studio
-            ->createFigureBuilder()
-            ->fromUuid($model->singleSRC ?: '')
-            ->setSize($model->size)
-            ->setOverwriteMetadata($model->getOverwriteMetadata())
-            ->enableLightbox($model->fullsize)
-            ->buildIfResourceExists()
-        ;
+            $figure = !$model->addImage ? null : $this->studio
+                ->createFigureBuilder()
+                ->fromUuid($model->singleSRC ?: '')
+                ->setSize($model->size)
+                ->setOverwriteMetadata($model->getOverwriteMetadata())
+                ->enableLightbox($model->fullsize)
+                ->buildIfResourceExists()
+            ;
 
-        $template->set('image', $figure);
-        $template->set('layout', $model->floating);
+            $template->set('image', $figure);
+            $template->set('layout', $model->floating);
+        }
 
         $classes = StringUtil::deserialize($model->mooClasses, true) + [null, null];
 
