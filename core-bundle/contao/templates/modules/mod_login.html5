@@ -36,6 +36,11 @@
           <label for="password"><?= $this->password ?></label>
           <input type="password" name="password" id="password" class="text password" value="" autocomplete="current-password" required>
         </div>
+        <?php if ($this->passwordreset): ?>
+          <div class="password-reset">
+            <a class="password-reset_link"><a href="<?= $this->passwordreset ?>" title="<?= $this->resetTitle ?>"><?= $this->resetLabel ?></a></a>
+          </div>
+        <?php endif; ?>
         <?php if ($this->autologin): ?>
           <div class="widget widget-checkbox">
             <fieldset class="checkbox_container">

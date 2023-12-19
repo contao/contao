@@ -2325,6 +2325,10 @@
         <source>Quick link</source>
         <target>Quicklink</target>
       </trans-unit>
+      <trans-unit id="MSC.lostPassword">
+        <source>Lost your password?</source>
+        <target>Passwort vergessen?</target>
+      </trans-unit>
       <trans-unit id="MSC.username">
         <source>Username</source>
         <target>Benutzername</target>

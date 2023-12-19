@@ -203,6 +203,15 @@ class ModuleLogin extends Module
 			return;
 		}
 
+		if (($objLostPasswordTarget = $this->objModel->getRelated('pwResetJumpTo')) instanceof PageModel)
+		{
+			/** @var PageModel $objLostPasswordTarget */
+			$this->Template->passwordreset = $objLostPasswordTarget->getFrontendUrl();
+
+			$this->Template->resetTitle = $GLOBALS['TL_LANG']['MSC']['lostPassword'];
+			$this->Template->resetLabel = $GLOBALS['TL_LANG']['MSC']['lostPassword'];
+		}
+
 		$this->Template->username = $GLOBALS['TL_LANG']['MSC']['username'];
 		$this->Template->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['login']);
