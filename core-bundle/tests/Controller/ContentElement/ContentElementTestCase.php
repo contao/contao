@@ -63,7 +63,6 @@ use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\Uid\Uuid;
@@ -303,7 +302,6 @@ class ContentElementTestCase extends TestCase
         $insertTagParser = $this->getDefaultInsertTagParser();
         $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
         $framework = $this->getDefaultFramework($nestedFragments);
-        $requestStack = new RequestStack();
 
         $environment->addRuntimeLoader(
             new FactoryRuntimeLoader([
@@ -312,7 +310,7 @@ class ContentElementTestCase extends TestCase
                 HighlighterRuntime::class => static fn () => new HighlighterRuntime(),
                 SchemaOrgRuntime::class => static fn () => new SchemaOrgRuntime($responseContextAccessor),
                 FormatterRuntime::class => static fn () => new FormatterRuntime($framework),
-                CspRuntime::class => static fn () => new CspRuntime($responseContextAccessor, $requestStack),
+                CspRuntime::class => static fn () => new CspRuntime($responseContextAccessor),
             ]),
         );
 

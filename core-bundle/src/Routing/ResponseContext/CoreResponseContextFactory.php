@@ -12,7 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\ResponseContext;
 
+use Contao\CoreBundle\Csp\CspParser;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
@@ -20,7 +22,6 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\CoreBundle\Util\UrlUtil;
 use Contao\PageModel;
-use ParagonIE\CSPBuilder\CSPBuilder;
 use Spatie\SchemaOrg\WebPage;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -36,6 +37,7 @@ class CoreResponseContextFactory
         private readonly HtmlDecoder $htmlDecoder,
         private readonly RequestStack $requestStack,
         private readonly InsertTagParser $insertTagParser,
+        private readonly CspParser $cspParser,
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly bool $cspReportingEnabled = false,
     ) {
@@ -120,15 +122,18 @@ class CoreResponseContextFactory
         ;
 
         if ($pageModel->enableCsp) {
-            $csp = CSPBuilder::fromHeader(trim((string) $pageModel->csp));
+            $directives = $this->cspParser->parseHeader(trim((string) $pageModel->csp));
+            $directives->setLevel1Fallback((bool) $pageModel->cspLevel1Fallback);
 
             if ($this->cspReportingEnabled) {
                 $urlContext = $this->urlGenerator->getContext();
                 $baseUrl = $urlContext->getBaseUrl();
+
+                // Remove preview script if present
                 $urlContext->setBaseUrl('');
 
                 try {
-                    $csp->setReportUri($this->urlGenerator->generate('contao_csp_reporter', [], UrlGeneratorInterface::ABSOLUTE_URL));
+                    $directives->setDirective('report-uri', $this->urlGenerator->generate('contao_csp_reporter', [], UrlGeneratorInterface::ABSOLUTE_URL));
                 } catch (RouteNotFoundException) {
                     // noop
                 }
@@ -136,15 +141,13 @@ class CoreResponseContextFactory
                 $urlContext->setBaseUrl($baseUrl);
             }
 
-            if ($pageModel->cspReportOnly) {
-                $csp->setDirective('report-only');
-            }
+            $cspHandler = new CspHandler(
+                $directives,
+                (bool) $pageModel->cspReportOnly,
+                (bool) $pageModel->cspLegacyHeader,
+            );
 
-            if (!$pageModel->enableLegacyCsp) {
-                $csp->disableOldBrowserSupport();
-            }
-
-            $context->add($csp);
+            $context->add($cspHandler);
         }
 
         return $context;

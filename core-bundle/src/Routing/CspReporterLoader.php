@@ -24,15 +24,17 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class CspReporterLoader extends Loader
 {
-    public function __construct(private readonly string|null $cspReportPath = null)
-    {
+    public function __construct(
+        private readonly bool $enabled = false,
+        private readonly string|null $cspReportPath = null,
+    ) {
     }
 
     public function load(mixed $resource, string|null $type = null): RouteCollection
     {
         $routes = new RouteCollection();
 
-        if (!$this->cspReportPath) {
+        if (!$this->enabled || !$this->cspReportPath) {
             return $routes;
         }
 

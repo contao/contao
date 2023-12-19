@@ -132,6 +132,14 @@ services:
             - '%kernel.project_dir%'
             - '@monolog.logger.contao.cron'
 
+    contao.csp.parser:
+        class: Contao\CoreBundle\Csp\CspParser
+        arguments:
+            - '@contao.csp.policy_manager'
+
+    contao.csp.policy_manager:
+        class: Nelmio\SecurityBundle\ContentSecurityPolicy\PolicyManager
+
     contao.csrf.token_manager:
         class: Contao\CoreBundle\Csrf\ContaoCsrfTokenManager
         public: true
@@ -647,6 +655,9 @@ services:
 
     contao.routing.csp_reporter_loader:
         class: Contao\CoreBundle\Routing\CspReporterLoader
+        arguments:
+            - '%contao.csp.reporting.enabled%'
+            - '%contao.csp.reporting.path%'
         tags:
             - routing.loader
 
@@ -772,7 +783,9 @@ services:
             - '@contao.string.html_decoder'
             - '@request_stack'
             - '@contao.insert_tag.parser'
+            - '@contao.csp.parser'
             - '@router'
+            - '%contao.csp.reporting.enabled%'
 
     contao.routing.route_404_provider:
         class: Contao\CoreBundle\Routing\Route404Provider
@@ -1059,7 +1072,6 @@ services:
         class: Contao\CoreBundle\Twig\Runtime\CspRuntime
         arguments:
             - '@contao.routing.response_context_accessor'
-            - '@request_stack'
 
     contao.twig.extension:
         class: Contao\CoreBundle\Twig\Extension\ContaoExtension

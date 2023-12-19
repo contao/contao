@@ -90,6 +90,7 @@ services:
     contao.listener.data_container.csp_save_callback:
         class: Contao\CoreBundle\EventListener\DataContainer\CspSaveCallbackListener
         arguments:
+            - '@contao.csp.parser'
             - '@translator'
 
     contao.listener.data_container.default_global_operations:

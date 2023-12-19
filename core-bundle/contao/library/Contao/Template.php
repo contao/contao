@@ -10,13 +10,12 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use MatthiasMullie\Minify\CSS;
 use MatthiasMullie\Minify\JS;
-use Nyholm\Psr7\Uri;
-use ParagonIE\CSPBuilder\CSPBuilder;
 use Spatie\SchemaOrg\Graph;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\VarDumper\VarDumper;
@@ -420,19 +419,19 @@ abstract class Template extends Controller
 	/**
 	 * Returns a nonce for the given CSP directive.
 	 */
-	public function nonce(string $directive): string
+	public function nonce(string $directive): ?string
 	{
 		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
-		if (!$responseContext || !$responseContext->has(CSPBuilder::class))
+		if (!$responseContext || !$responseContext->has(CspHandler::class))
 		{
 			return '';
 		}
 
-		/** @var CSPBuilder $csp */
-		$csp = $responseContext->get(CSPBuilder::class);
+		/** @var CspHandler $csp */
+		$csp = $responseContext->get(CspHandler::class);
 
-		return $csp->nonce($directive);
+		return $csp->getNonce($directive);
 	}
 
 	/**
@@ -442,29 +441,13 @@ abstract class Template extends Controller
 	{
 		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
-		if (!$responseContext || !$responseContext->has(CSPBuilder::class))
+		if (!$responseContext || !$responseContext->has(CspHandler::class))
 		{
 			return;
 		}
 
-		// Automatically add the scheme and host
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		if ($request)
-		{
-			$uri = new Uri($source);
-
-			if (!$uri->getHost())
-			{
-				$source = (string) $uri
-					->withScheme($request->getScheme())
-					->withHost($request->getHost())
-				;
-			}
-		}
-
-		/** @var CSPBuilder $csp */
-		$csp = $responseContext->get(CSPBuilder::class);
+		/** @var CspHandler $csp */
+		$csp = $responseContext->get(CspHandler::class);
 		$csp->addSource($directive, $source);
 	}
 

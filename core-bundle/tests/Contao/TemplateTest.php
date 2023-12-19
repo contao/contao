@@ -18,12 +18,14 @@ use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\System;
-use ParagonIE\CSPBuilder\CSPBuilder;
+use Nelmio\SecurityBundle\ContentSecurityPolicy\DirectiveSet;
+use Nelmio\SecurityBundle\ContentSecurityPolicy\PolicyManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
@@ -425,14 +427,12 @@ class TemplateTest extends TestCase
 
     public function testRetrievesNonceFromCspBuilder(): void
     {
-        $cspBuilder = $this->createMock(CSPBuilder::class);
-        $cspBuilder
-            ->expects($this->once())
-            ->method('nonce')
-            ->with('script-src')
-        ;
+        $directives = new DirectiveSet(new PolicyManager());
+        $directives->setDirective('script-src', "'self'");
 
-        $responseContext = (new ResponseContext())->add($cspBuilder);
+        $cspHandler = new CspHandler($directives);
+
+        $responseContext = (new ResponseContext())->add($cspHandler);
 
         $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
         $responseContextAccessor
@@ -443,19 +443,17 @@ class TemplateTest extends TestCase
 
         System::getContainer()->set('contao.routing.response_context_accessor', $responseContextAccessor);
 
-        (new FrontendTemplate())->nonce('script-src');
+        $this->assertNotNull((new FrontendTemplate())->nonce('script-src'));
     }
 
     public function testAddsCspSource(): void
     {
-        $cspBuilder = $this->createMock(CSPBuilder::class);
-        $cspBuilder
-            ->expects($this->once())
-            ->method('addSource')
-            ->with('script-src', 'https://example.com/files/foo/foobar.js')
-        ;
+        $directives = new DirectiveSet(new PolicyManager());
+        $directives->setDirective('script-src', "'self'");
 
-        $responseContext = (new ResponseContext())->add($cspBuilder);
+        $cspHandler = new CspHandler($directives);
+
+        $responseContext = (new ResponseContext())->add($cspHandler);
 
         $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
         $responseContextAccessor
@@ -468,5 +466,7 @@ class TemplateTest extends TestCase
         System::getContainer()->set('request_stack', new RequestStack());
 
         (new FrontendTemplate())->addCspSource('script-src', 'https://example.com/files/foo/foobar.js');
+
+        $this->assertSame("'self' https://example.com/files/foo/foobar.js", $directives->getDirective('script-src'));
     }
 }

@@ -12,25 +12,24 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Runtime;
 
+use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Runtime\CspRuntime;
-use ParagonIE\CSPBuilder\CSPBuilder;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Nelmio\SecurityBundle\ContentSecurityPolicy\DirectiveSet;
+use Nelmio\SecurityBundle\ContentSecurityPolicy\PolicyManager;
 
 class CspRuntimeTest extends TestCase
 {
     public function testRetrievesNonceFromCspBuilder(): void
     {
-        $cspBuilder = $this->createMock(CSPBuilder::class);
-        $cspBuilder
-            ->expects($this->once())
-            ->method('nonce')
-            ->with('script-src')
-        ;
+        $directives = new DirectiveSet(new PolicyManager());
+        $directives->setDirective('script-src', "'self'");
 
-        $responseContext = (new ResponseContext())->add($cspBuilder);
+        $cspHandler = new CspHandler($directives);
+
+        $responseContext = (new ResponseContext())->add($cspHandler);
 
         $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
         $responseContextAccessor
@@ -39,21 +38,19 @@ class CspRuntimeTest extends TestCase
             ->willReturn($responseContext)
         ;
 
-        $runtime = new CspRuntime($responseContextAccessor, new RequestStack());
+        $runtime = new CspRuntime($responseContextAccessor);
 
-        $runtime->getNonce('script-src');
+        $this->assertNotNull($runtime->getNonce('script-src'));
     }
 
     public function testAddsCspSource(): void
     {
-        $cspBuilder = $this->createMock(CSPBuilder::class);
-        $cspBuilder
-            ->expects($this->once())
-            ->method('addSource')
-            ->with('script-src', 'https://example.com/files/foo/foobar.js')
-        ;
+        $directives = new DirectiveSet(new PolicyManager());
+        $directives->setDirective('script-src', "'self'");
 
-        $responseContext = (new ResponseContext())->add($cspBuilder);
+        $cspHandler = new CspHandler($directives);
+
+        $responseContext = (new ResponseContext())->add($cspHandler);
 
         $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
         $responseContextAccessor
@@ -62,8 +59,10 @@ class CspRuntimeTest extends TestCase
             ->willReturn($responseContext)
         ;
 
-        $runtime = new CspRuntime($responseContextAccessor, new RequestStack());
+        $runtime = new CspRuntime($responseContextAccessor);
 
         $runtime->addSource('script-src', 'https://example.com/files/foo/foobar.js');
+
+        $this->assertSame("'self' https://example.com/files/foo/foobar.js", $directives->getDirective('script-src'));
     }
 }

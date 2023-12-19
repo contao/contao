@@ -12,8 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
+use Contao\CoreBundle\Csp\CspParser;
 use Contao\CoreBundle\EventListener\DataContainer\CspSaveCallbackListener;
 use Contao\CoreBundle\Tests\TestCase;
+use Nelmio\SecurityBundle\ContentSecurityPolicy\PolicyManager;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CspSaveCallbackListenerTest extends TestCase
@@ -24,13 +26,15 @@ class CspSaveCallbackListenerTest extends TestCase
         $translator
             ->expects($this->once())
             ->method('trans')
-            ->with('ERR.invalidCsp', ['Directive foobar does not exist'], 'contao_default')
-            ->willReturn('Invalid Content Security Policy given: Directive "foobar" does not exist.')
+            ->with('ERR.invalidCsp', ['Unknown CSP directive name: foobar'], 'contao_default')
+            ->willReturn('Invalid Content Security Policy given: Unknown CSP directive name: foobar.')
         ;
 
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Invalid Content Security Policy given: Directive "foobar" does not exist.');
+        $cspParser = new CspParser(new PolicyManager());
 
-        (new CspSaveCallbackListener($translator))("foobar 'self'");
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Invalid Content Security Policy given: Unknown CSP directive name: foobar.');
+
+        (new CspSaveCallbackListener($cspParser, $translator))("foobar 'self'");
     }
 }

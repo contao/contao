@@ -16,7 +16,6 @@ use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Util\LocaleUtil;
-use ParagonIE\CSPBuilder\CSPBuilder;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -621,15 +620,9 @@ class PageRegular extends Frontend
 		{
 			$customScript = trim($objLayout->script);
 
-			if ($this->responseContext->has(CSPBuilder::class))
+			if ($nonce = $this->Template->nonce('script-src'))
 			{
-				/** @var CSPBuilder $csp */
-				$csp = $this->responseContext->get(CSPBuilder::class);
-
-				if ($nonce = $csp->nonce('script-src'))
-				{
-					$customScript = str_replace('<script', '<script nonce="' . $nonce . '"', $customScript);
-				}
+				$customScript = str_replace('<script', '<script nonce="' . $nonce . '"', $customScript);
 			}
 
 			$strScripts .= "\n" . $customScript . "\n";
