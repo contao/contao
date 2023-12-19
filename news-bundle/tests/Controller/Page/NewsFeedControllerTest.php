@@ -57,15 +57,12 @@ class NewsFeedControllerTest extends ContaoTestCase
      */
     public function testConfiguresPageRoute(string $format, string $suffix): void
     {
-        $pageModel = $this->mockClassWithProperties(
-            PageModel::class,
-            [
-                'id' => 42,
-                'title' => 'Latest News',
-                'alias' => 'latest-news',
-                'feedFormat' => $format,
-            ]
-        );
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 42,
+            'title' => 'Latest News',
+            'alias' => 'latest-news',
+            'feedFormat' => $format,
+        ]);
 
         $route = new PageRoute($pageModel);
 
@@ -77,15 +74,12 @@ class NewsFeedControllerTest extends ContaoTestCase
 
     public function testThrowsExceptionOnInvalidFeedFormat(): void
     {
-        $pageModel = $this->mockClassWithProperties(
-            PageModel::class,
-            [
-                'id' => 42,
-                'title' => 'Latest News',
-                'alias' => 'latest-news',
-                'feedFormat' => 'foo',
-            ]
-        );
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 42,
+            'title' => 'Latest News',
+            'alias' => 'latest-news',
+            'feedFormat' => 'foo',
+        ]);
 
         $route = new PageRoute($pageModel);
         $controller = $this->getController();
@@ -97,17 +91,14 @@ class NewsFeedControllerTest extends ContaoTestCase
 
     public function testReturnsEmptyFeed(): void
     {
-        $pageModel = $this->mockClassWithProperties(
-            PageModel::class,
-            [
-                'id' => 42,
-                'title' => 'Latest News',
-                'alias' => 'latest-news',
-                'feedDescription' => 'Get latest news',
-                'feedFormat' => 'rss',
-                'language' => 'en',
-            ]
-        );
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 42,
+            'title' => 'Latest News',
+            'alias' => 'latest-news',
+            'feedDescription' => 'Get latest news',
+            'feedFormat' => 'rss',
+            'language' => 'en',
+        ]);
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $this->mockContaoFramework());
@@ -127,17 +118,14 @@ class NewsFeedControllerTest extends ContaoTestCase
      */
     public function testProperlyEncodesXMLEntities(string $format): void
     {
-        $pageModel = $this->mockClassWithProperties(
-            PageModel::class,
-            [
-                'id' => 42,
-                'title' => 'Latest News &lt;/channel&gt;',
-                'alias' => 'latest-news',
-                'feedDescription' => 'Get latest news &lt;/channel&gt;',
-                'feedFormat' => $format,
-                'language' => 'en',
-            ]
-        );
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 42,
+            'title' => 'Latest News &lt;/channel&gt;',
+            'alias' => 'latest-news',
+            'feedDescription' => 'Get latest news &lt;/channel&gt;',
+            'feedFormat' => $format,
+            'language' => 'en',
+        ]);
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $this->mockContaoFramework());
@@ -164,15 +152,12 @@ class NewsFeedControllerTest extends ContaoTestCase
      */
     public function testReturnsFeedInCorrectFormat(string $format, string $suffix, string $url, string $contentType): void
     {
-        $pageModel = $this->mockClassWithProperties(
-            PageModel::class,
-            [
-                'id' => 42,
-                'title' => 'Latest News',
-                'alias' => 'latest-news',
-                'feedFormat' => $format,
-            ]
-        );
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 42,
+            'title' => 'Latest News',
+            'alias' => 'latest-news',
+            'feedFormat' => $format,
+        ]);
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $this->mockContaoFramework());
@@ -196,7 +181,7 @@ class NewsFeedControllerTest extends ContaoTestCase
                     }
 
                     $this->fail('Unexpected event: '.$event::class);
-                }
+                },
             )
         ;
 
@@ -235,14 +220,11 @@ class NewsFeedControllerTest extends ContaoTestCase
         $articles = [];
 
         for ($i = 0; $i < $count; ++$i) {
-            $articles[] = $this->mockClassWithProperties(
-                NewsModel::class,
-                [
-                    'id' => 1 + $i,
-                    'pid' => 1 + $i,
-                    'title' => 'Example title',
-                ]
-            );
+            $articles[] = $this->mockClassWithProperties(NewsModel::class, [
+                'id' => 1 + $i,
+                'pid' => 1 + $i,
+                'title' => 'Example title',
+            ]);
         }
 
         return $articles;

@@ -21,6 +21,7 @@ use Contao\StringUtil;
 class DataContainerOperation implements \ArrayAccess
 {
     private array $operation;
+
     private string|null $html = null;
 
     /**

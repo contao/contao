@@ -80,7 +80,7 @@ class CachingTraversableTest extends TestCase
                 [['II', 'II'], [2, 2]],
                 [['III', 'III'], [3, 3]],
             ],
-            $consumedItems
+            $consumedItems,
         );
 
         $this->assertGeneratedItems(3, $generatorLog);

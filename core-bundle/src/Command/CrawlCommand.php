@@ -16,10 +16,9 @@ use Contao\CoreBundle\Crawl\Escargot\Factory;
 use Contao\CoreBundle\Crawl\Monolog\CrawlCsvLogHandler;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\GroupHandler;
-use Monolog\Logger as BaseLogger;
+use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Monolog\Handler\ConsoleHandler;
-use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
@@ -45,7 +44,7 @@ use Terminal42\Escargot\Subscriber\SubscriberInterface;
 
 #[AsCommand(
     name: 'contao:crawl',
-    description: 'Crawls the Contao root pages with the desired subscribers.'
+    description: 'Crawls the Contao root pages with the desired subscribers.',
 )]
 class CrawlCommand extends Command
 {
@@ -69,10 +68,10 @@ class CrawlCommand extends Command
             ->addArgument('job', InputArgument::OPTIONAL, 'An optional existing job ID')
             ->addOption('queue', null, InputArgument::OPTIONAL, 'Queue to use ("memory" or "doctrine")', 'memory')
             ->addOption('subscribers', 's', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'A list of subscribers to enable', $this->escargotFactory->getSubscriberNames())
-            ->addOption('concurrency', 'c', InputOption::VALUE_REQUIRED, 'The number of concurrent requests that are going to be executed', '10')
+            ->addOption('concurrency', 'c', InputOption::VALUE_REQUIRED, 'The number of concurrent requests that are going to be executed', '5')
             ->addOption('delay', null, InputOption::VALUE_REQUIRED, 'The number of microseconds to wait between requests (0 = throttling is disabled)', '0')
             ->addOption('max-requests', null, InputOption::VALUE_REQUIRED, 'The maximum number of requests to execute (0 = no limit)', '0')
-            ->addOption('max-depth', null, InputOption::VALUE_REQUIRED, 'The maximum depth to crawl for (0 = no limit)', '10')
+            ->addOption('max-depth', null, InputOption::VALUE_REQUIRED, 'The maximum depth to crawl for (0 = no limit)', '3')
             ->addOption('no-progress', null, InputOption::VALUE_NONE, 'Disables the progress bar output')
             ->addOption('enable-debug-csv', null, InputOption::VALUE_NONE, 'Writes the crawl debug log into a separate CSV file')
             ->addOption('debug-csv-path', null, InputOption::VALUE_REQUIRED, 'The path of the debug log CSV file', Path::join(getcwd(), 'crawl_debug_log.csv'))
@@ -145,8 +144,8 @@ class CrawlCommand extends Command
         $io->comment(
             sprintf(
                 '[Job ID: %s] Finished crawling! Find the details for each subscriber below:',
-                $this->escargot->getJobId()
-            )
+                $this->escargot->getJobId(),
+            ),
         );
 
         $errored = false;
@@ -181,7 +180,7 @@ class CrawlCommand extends Command
                 $this->filesystem->remove($input->getOption('debug-csv-path'));
             }
 
-            $csvDebugHandler = new CrawlCsvLogHandler($input->getOption('debug-csv-path'), BaseLogger::DEBUG);
+            $csvDebugHandler = new CrawlCsvLogHandler($input->getOption('debug-csv-path'), Logger::DEBUG);
             $handlers[] = $csvDebugHandler;
         }
 

@@ -61,9 +61,7 @@ class SitemapListenerTest extends ContaoTestCase
         $adapters = [
             NewsletterChannelModel::class => $this->mockConfiguredAdapter([
                 'findAll' => [
-                    $this->mockClassWithProperties(NewsletterChannelModel::class, [
-                        'jumpTo' => 42,
-                    ]),
+                    $this->mockClassWithProperties(NewsletterChannelModel::class, ['jumpTo' => 42]),
                 ],
             ]),
             PageModel::class => $this->mockConfiguredAdapter([

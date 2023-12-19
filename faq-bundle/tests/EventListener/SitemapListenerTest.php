@@ -61,9 +61,7 @@ class SitemapListenerTest extends ContaoTestCase
         $adapters = [
             FaqCategoryModel::class => $this->mockConfiguredAdapter([
                 'findAll' => [
-                    $this->mockClassWithProperties(FaqCategoryModel::class, [
-                        'jumpTo' => 42,
-                    ]),
+                    $this->mockClassWithProperties(FaqCategoryModel::class, ['jumpTo' => 42]),
                 ],
             ]),
             PageModel::class => $this->mockConfiguredAdapter([

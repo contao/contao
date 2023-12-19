@@ -70,7 +70,7 @@ class UserListCommandTest extends TestCase
         $input['--format'] = 'json';
 
         $command = $this->getCommand($this->mockQueryBuilder($data));
-        $output = json_decode($this->executeCommand($command, $input), true);
+        $output = json_decode($this->executeCommand($command, $input), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame($expected, $output);
     }
@@ -161,10 +161,7 @@ class UserListCommandTest extends TestCase
         return $command;
     }
 
-    /**
-     * @return QueryBuilder&MockObject
-     */
-    private function mockQueryBuilder(array $result): QueryBuilder
+    private function mockQueryBuilder(array $result): QueryBuilder&MockObject
     {
         $queryBuilder = $this->createMock(QueryBuilder::class);
         $queryBuilder

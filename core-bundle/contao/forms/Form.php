@@ -38,6 +38,7 @@ use Symfony\Component\HttpFoundation\Response;
 class Form extends Hybrid
 {
 	public const SESSION_KEY = 'contao.form.data';
+
 	public const SESSION_CONFIRMATION_KEY = 'contao.form.confirmation';
 
 	/**
@@ -153,16 +154,21 @@ class Form extends Hybrid
 		$this->Template->formSubmit = $formId;
 		$this->Template->method = ($this->method == 'GET') ? 'get' : 'post';
 
-		$flashBag = System::getContainer()->get('request_stack')->getSession()->getFlashBag();
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-		// Add a confirmation to the template and remove it afterward
-		if ($flashBag->has(self::SESSION_CONFIRMATION_KEY))
+		if ($request && $request->hasPreviousSession())
 		{
-			$confirmationData = $flashBag->peek(self::SESSION_CONFIRMATION_KEY);
+			$flashBag = $request->getSession()->getFlashBag();
 
-			if (isset($confirmationData['id']) && $this->id === $confirmationData['id'])
+			// Add a confirmation to the template and remove it afterward
+			if ($flashBag->has(self::SESSION_CONFIRMATION_KEY))
 			{
-				$this->Template->message = $flashBag->get(self::SESSION_CONFIRMATION_KEY)['message'];
+				$confirmationData = $flashBag->peek(self::SESSION_CONFIRMATION_KEY);
+
+				if (isset($confirmationData['id']) && $this->id === $confirmationData['id'])
+				{
+					$this->Template->message = $flashBag->get(self::SESSION_CONFIRMATION_KEY)['message'];
+				}
 			}
 		}
 

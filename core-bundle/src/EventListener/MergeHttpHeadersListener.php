@@ -26,6 +26,7 @@ use Symfony\Contracts\Service\ResetInterface;
 class MergeHttpHeadersListener implements ResetInterface
 {
     private readonly HeaderStorageInterface $headerStorage;
+
     private array $headers = [];
 
     private array $multiHeaders = [
@@ -48,6 +49,10 @@ class MergeHttpHeadersListener implements ResetInterface
      */
     public function __invoke(ResponseEvent $event): void
     {
+        if (!$event->isMainRequest()) {
+            return;
+        }
+
         if (!$this->framework->isInitialized()) {
             return;
         }
@@ -96,7 +101,13 @@ class MergeHttpHeadersListener implements ResetInterface
      */
     private function fetchHttpHeaders(): void
     {
-        $this->headers = [...$this->headers, ...$this->headerStorage->all()];
+        $headers = $this->headerStorage->all();
+
+        if ([] !== $headers) {
+            trigger_deprecation('contao/core-bundle', '5.3', 'Using the PHP header() function to set HTTP headers has been deprecated and will no longer work in Contao 6. Use the response object instead.');
+        }
+
+        $this->headers = [...$this->headers, ...$headers];
         $this->headerStorage->clear();
     }
 

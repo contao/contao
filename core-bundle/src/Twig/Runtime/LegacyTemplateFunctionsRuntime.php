@@ -36,14 +36,16 @@ final class LegacyTemplateFunctionsRuntime implements RuntimeExtensionInterface
     {
         $this->framework->initialize();
 
-        if (!($frontendTemplate = $context['Template'] ?? null) instanceof FrontendTemplate) {
+        $frontendTemplate = $context['Template'] ?? null;
+
+        if (!$frontendTemplate instanceof FrontendTemplate) {
             throw new RuntimeError('The "contao_sections" function cannot be used in this template.');
         }
 
         return $this->captureOutput(
             static function () use ($frontendTemplate, $key, $template): void {
                 $frontendTemplate->sections($key, $template);
-            }
+            },
         );
     }
 
@@ -54,14 +56,16 @@ final class LegacyTemplateFunctionsRuntime implements RuntimeExtensionInterface
     {
         $this->framework->initialize();
 
-        if (!($frontendTemplate = $context['Template'] ?? null) instanceof FrontendTemplate) {
+        $frontendTemplate = $context['Template'] ?? null;
+
+        if (!$frontendTemplate instanceof FrontendTemplate) {
             throw new RuntimeError('The "contao_section" function cannot be used in this template.');
         }
 
         return $this->captureOutput(
             static function () use ($frontendTemplate, $key, $template): void {
                 $frontendTemplate->section($key, $template);
-            }
+            },
         );
     }
 

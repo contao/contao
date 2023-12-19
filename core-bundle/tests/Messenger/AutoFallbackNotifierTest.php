@@ -74,7 +74,7 @@ class AutoFallbackNotifierTest extends TestCase
             ->method('getItem')
             ->withConsecutive(
                 ['auto-fallback-transport-notifier-running-auto-fallback'],
-                ['auto-fallback-transport-notifier-not-running-auto-fallback']
+                ['auto-fallback-transport-notifier-not-running-auto-fallback'],
             )
             ->willReturn($cacheItem)
         ;

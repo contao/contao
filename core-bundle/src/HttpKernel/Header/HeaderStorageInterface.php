@@ -12,6 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\HttpKernel\Header;
 
+/**
+ * @internal
+ */
 interface HeaderStorageInterface
 {
     /**

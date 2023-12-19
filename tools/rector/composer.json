@@ -1,5 +1,5 @@
 {
     "require": {
-        "rector/rector": "^0.18"
+        "contao/rector": "^1.0"
     }
 }

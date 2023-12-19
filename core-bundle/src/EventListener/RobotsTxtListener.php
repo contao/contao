@@ -63,7 +63,7 @@ class RobotsTxtListener
         $sitemap = sprintf(
             '%s%s/sitemap.xml',
             $rootPage->useSSL ? 'https://' : 'http://',
-            $rootPage->dns ?: $event->getRequest()->server->get('HTTP_HOST')
+            $rootPage->dns ?: $event->getRequest()->server->get('HTTP_HOST'),
         );
 
         $event->getFile()->getNonGroupDirectives()->add(new Directive('Sitemap', $sitemap));

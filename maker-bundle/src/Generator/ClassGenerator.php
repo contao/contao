@@ -29,7 +29,7 @@ class ClassGenerator implements GeneratorInterface
         return $this->generator->generateClass(
             $options['fqcn'],
             $this->getSourcePath($options['source']),
-            $options['variables']
+            $options['variables'],
         );
     }
 

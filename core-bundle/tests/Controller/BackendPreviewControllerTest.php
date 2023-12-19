@@ -31,7 +31,7 @@ class BackendPreviewControllerTest extends TestCase
             '/preview.php',
             $this->createMock(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
-            $this->mockAuthorizationChecker()
+            $this->mockAuthorizationChecker(),
         );
 
         $response = $controller(new Request());
@@ -46,7 +46,7 @@ class BackendPreviewControllerTest extends TestCase
             '/preview.php',
             $this->createMock(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
-            $this->mockAuthorizationChecker()
+            $this->mockAuthorizationChecker(),
         );
 
         $request = Request::create('https://localhost/managed-edition/public/contao/preview?page=123');
@@ -65,7 +65,7 @@ class BackendPreviewControllerTest extends TestCase
             '/preview.php',
             $this->createMock(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
-            $this->mockAuthorizationChecker(false)
+            $this->mockAuthorizationChecker(false),
         );
 
         $request = Request::create('https://localhost/preview.php/en/');
@@ -96,7 +96,7 @@ class BackendPreviewControllerTest extends TestCase
             '/preview.php',
             $previewAuthenticator,
             new EventDispatcher(),
-            $this->mockAuthorizationChecker()
+            $this->mockAuthorizationChecker(),
         );
 
         $response = $controller($request);
@@ -117,7 +117,7 @@ class BackendPreviewControllerTest extends TestCase
             '/preview.php',
             $this->createMock(FrontendPreviewAuthenticator::class),
             $dispatcher,
-            $this->mockAuthorizationChecker()
+            $this->mockAuthorizationChecker(),
         );
 
         $request = Request::create('https://localhost/preview.php/en/');
@@ -135,7 +135,7 @@ class BackendPreviewControllerTest extends TestCase
             '/preview.php',
             $this->createMock(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
-            $this->mockAuthorizationChecker()
+            $this->mockAuthorizationChecker(),
         );
 
         $request = Request::create('https://localhost/preview.php/en/');
@@ -148,10 +148,7 @@ class BackendPreviewControllerTest extends TestCase
         $this->assertSame('/preview.php/', $response->getTargetUrl());
     }
 
-    /**
-     * @return AuthorizationCheckerInterface&MockObject
-     */
-    private function mockAuthorizationChecker(bool $granted = true): AuthorizationCheckerInterface
+    private function mockAuthorizationChecker(bool $granted = true): AuthorizationCheckerInterface&MockObject
     {
         $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
         $authorizationChecker

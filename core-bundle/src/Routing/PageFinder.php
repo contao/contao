@@ -47,7 +47,9 @@ class PageFinder
      */
     public function findRootPageForRequest(Request $request): PageModel|null
     {
-        if (($pageModel = $request->attributes->get('pageModel')) instanceof PageModel) {
+        $pageModel = $request->attributes->get('pageModel');
+
+        if ($pageModel instanceof PageModel) {
             $this->framework->initialize();
 
             return $this->framework->getAdapter(PageModel::class)->findPublishedById($pageModel->loadDetails()->rootId);
@@ -66,7 +68,7 @@ class PageFinder
     {
         $pageModel = $this->findRootPageForHostAndLanguage($hostname);
 
-        if (null === $pageModel) {
+        if (!$pageModel) {
             return [];
         }
 
@@ -103,7 +105,7 @@ class PageFinder
     {
         $pageModel = $this->matchPageForRequest($request);
 
-        if (null === $pageModel) {
+        if (!$pageModel) {
             return null;
         }
 

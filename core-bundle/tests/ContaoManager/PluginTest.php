@@ -84,7 +84,7 @@ class PluginTest extends TestCase
                 TwigBundle::class,
                 CmfRoutingBundle::class,
             ],
-            $loadAfter
+            $loadAfter,
         );
     }
 

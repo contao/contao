@@ -128,7 +128,7 @@ class JwtManager
 
                 return (string) $value;
             },
-            $token->claims()->all()
+            $token->claims()->all(),
         );
     }
 

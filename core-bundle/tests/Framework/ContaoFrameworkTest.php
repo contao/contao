@@ -302,7 +302,7 @@ class ContaoFrameworkTest extends TestCase
                 ['test.listener.c', 'onGetPageLayout'],
                 ['test.listener.b', 'onGetPageLayout'],
             ],
-            $getPageLayout
+            $getPageLayout,
         );
 
         // Test hooks with negative priority are added at the end
@@ -312,7 +312,7 @@ class ContaoFrameworkTest extends TestCase
                 ['test.listener.b', 'onGeneratePage'],
                 ['test.listener.a', 'onGeneratePage'],
             ],
-            $generatePage
+            $generatePage,
         );
 
         // Test legacy hooks are kept when adding only hook listeners with high priority.
@@ -321,7 +321,7 @@ class ContaoFrameworkTest extends TestCase
                 ['test.listener.a', 'onParseTemplate'],
                 ['test.listener.c', 'onParseTemplate'],
             ],
-            $parseTemplate
+            $parseTemplate,
         );
 
         // Test legacy hooks are kept when adding only hook listeners with low priority.
@@ -330,7 +330,7 @@ class ContaoFrameworkTest extends TestCase
                 ['test.listener.c', 'onIsVisibleElement'],
                 ['test.listener.a', 'onIsVisibleElement'],
             ],
-            $isVisibleElement
+            $isVisibleElement,
         );
     }
 
@@ -352,8 +352,7 @@ class ContaoFrameworkTest extends TestCase
     {
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
         $schemaManager
-            // Backwards compatibility with doctrine/dbal < 3.5
-            ->method(method_exists($schemaManager, 'introspectSchema') ? 'introspectSchema' : 'createSchema')
+            ->method('introspectSchema')
             ->willReturn(new Schema())
         ;
 
@@ -408,14 +407,14 @@ class ContaoFrameworkTest extends TestCase
     {
         $requestStack = new RequestStack();
 
-        if (null !== $request) {
+        if ($request) {
             $requestStack->push($request);
         }
 
         $framework = new ContaoFramework(
             $requestStack,
             $this->getTempDir(),
-            error_reporting()
+            error_reporting(),
         );
 
         $adapters = [
@@ -435,7 +434,7 @@ class ContaoFrameworkTest extends TestCase
     /**
      * @return Adapter<Config>&MockObject
      */
-    private function mockConfigAdapter(bool $complete = true): Adapter
+    private function mockConfigAdapter(bool $complete = true): Adapter&MockObject
     {
         $config = $this->mockAdapter(['preload', 'isComplete', 'getInstance', 'get']);
         $config

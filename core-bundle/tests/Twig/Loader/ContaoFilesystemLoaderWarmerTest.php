@@ -185,8 +185,8 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
                         $this->assertSame($expectedData, json_decode($json, true, 512, JSON_THROW_ON_ERROR));
 
                         return true;
-                    }
-                )
+                    },
+                ),
             )
         ;
 
@@ -208,10 +208,7 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
         $warmer->warmUp();
     }
 
-    /**
-     * @return TemplateLocator&MockObject
-     */
-    private function mockTemplateLocator(array $themeDirectories = [], array $resourcesPaths = []): TemplateLocator
+    private function mockTemplateLocator(array $themeDirectories = [], array $resourcesPaths = []): TemplateLocator&MockObject
     {
         $locator = $this->createMock(TemplateLocator::class);
         $locator

@@ -14,7 +14,11 @@ namespace Contao\NewsBundle\Security;
 
 final class ContaoNewsPermissions
 {
+    public const USER_CAN_ACCESS_MODULE = 'contao_user.modules.news';
+
     public const USER_CAN_EDIT_ARCHIVE = 'contao_user.news';
+
     public const USER_CAN_CREATE_ARCHIVES = 'contao_user.newp.create';
+
     public const USER_CAN_DELETE_ARCHIVES = 'contao_user.newp.delete';
 }

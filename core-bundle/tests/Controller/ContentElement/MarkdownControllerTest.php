@@ -146,7 +146,7 @@ class MarkdownControllerTest extends ContentElementTestCase
             [
                 'type' => 'markdown',
                 'code' => "## Headline\n * my\n * list",
-            ]
+            ],
         );
 
         $expectedOutput = <<<'HTML'

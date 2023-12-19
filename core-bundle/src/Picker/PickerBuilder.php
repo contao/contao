@@ -49,7 +49,7 @@ class PickerBuilder implements PickerBuilderInterface
 
         $providers = array_filter(
             $providers,
-            static fn (PickerProviderInterface $provider): bool => $provider->supportsContext($config->getContext())
+            static fn (PickerProviderInterface $provider): bool => $provider->supportsContext($config->getContext()),
         );
 
         if (!$providers) {

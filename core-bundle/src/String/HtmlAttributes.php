@@ -176,7 +176,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
 
         $this->attributes['class'] = implode(
             ' ',
-            array_unique($this->split(($this->attributes['class'] ?? '').' '.$classes))
+            array_unique($this->split(($this->attributes['class'] ?? '').' '.$classes)),
         );
 
         if (empty($this->attributes['class'])) {
@@ -207,8 +207,8 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             ' ',
             array_diff(
                 $this->split($this->attributes['class'] ?? ''),
-                $this->split($classes)
-            )
+                $this->split($classes),
+            ),
         );
 
         if (empty($this->attributes['class'])) {
@@ -225,7 +225,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      *
      * If a falsy $condition is specified, the method is a no-op.
      *
-     * @param string|array<string, string> $styles
+     * @param string|array<int|string, string> $styles
      */
     public function addStyle(array|string $styles, mixed $condition = true): self
     {

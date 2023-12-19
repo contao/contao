@@ -167,7 +167,6 @@
       </trans-unit>
       <trans-unit id="tl_content.thead.1">
         <source>Make the first row the table header.</source>
-        <target>Rendi la prima riga l'intestazione della tabella.</target>
       </trans-unit>
       <trans-unit id="tl_content.tfoot.0">
         <source>Add table footer</source>
@@ -175,7 +174,6 @@
       </trans-unit>
       <trans-unit id="tl_content.tfoot.1">
         <source>Make the last row the table footer.</source>
-        <target>Rendi l'ultima riga il piè di pagina della tabella.</target>
       </trans-unit>
       <trans-unit id="tl_content.tleft.0">
         <source>Use row headers</source>
@@ -323,11 +321,9 @@
       </trans-unit>
       <trans-unit id="tl_content.overwriteLink.0">
         <source>Overwrite link</source>
-        <target>Sovrascrivi il link</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteLink.1">
         <source>Set a custom link text and link title.</source>
-        <target>Imposta un testo e un titolo personalizzato per il link.</target>
       </trans-unit>
       <trans-unit id="tl_content.titleText.0">
         <source>Link title</source>
@@ -639,7 +635,6 @@
       </trans-unit>
       <trans-unit id="tl_content.start.1">
         <source>If you want to prevent the element from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
-        <target>Se desideri evitare che l'elemento venga visualizzato sul sito web prima di una determinata data/ora, puoi inserirlo qui. Altrimenti lascia il campo vuoto.</target>
       </trans-unit>
       <trans-unit id="tl_content.stop.0">
         <source>Show until</source>
@@ -647,7 +642,6 @@
       </trans-unit>
       <trans-unit id="tl_content.stop.1">
         <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
-        <target>Se desideri impedire che l'elemento venga visualizzato sul sito web dopo una determinata data/ora, puoi inserirlo qui. Altrimenti lascia il campo vuoto.</target>
       </trans-unit>
       <trans-unit id="tl_content.type_legend">
         <source>Element type</source>
@@ -903,15 +897,12 @@
       </trans-unit>
       <trans-unit id="tl_content.toggle.0">
         <source>Hide/unhide content element</source>
-        <target>Nascondi/mostra l'elemento di contenuto</target>
       </trans-unit>
       <trans-unit id="tl_content.toggle.1">
         <source>Hide content element ID %s</source>
-        <target>Nascondi elemento di contenuto ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.toggle.2">
         <source>Unhide content element ID %s</source>
-        <target>Mostra l'elemento di contenuto ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>

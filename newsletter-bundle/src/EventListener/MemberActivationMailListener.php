@@ -34,7 +34,7 @@ class MemberActivationMailListener
         $channels = $this->connection->fetchFirstColumn(
             'SELECT title FROM tl_newsletter_channel WHERE id IN (?)',
             [$newsletter],
-            [Types::SIMPLE_ARRAY]
+            [Types::SIMPLE_ARRAY],
         );
 
         if (!$channels) {

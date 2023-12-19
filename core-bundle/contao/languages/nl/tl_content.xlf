@@ -323,11 +323,9 @@
       </trans-unit>
       <trans-unit id="tl_content.overwriteLink.0">
         <source>Overwrite link</source>
-        <target>Link overschrijven</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteLink.1">
         <source>Set a custom link text and link title.</source>
-        <target>Stel een aangepaste linktekst en linktitel in.</target>
       </trans-unit>
       <trans-unit id="tl_content.titleText.0">
         <source>Link title</source>

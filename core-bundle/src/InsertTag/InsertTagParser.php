@@ -170,7 +170,7 @@ class InsertTagParser implements ResetInterface
      */
     public function render(string $input): string
     {
-        trigger_deprecation('contao/core-bundle', '5.1', '"%s()" is deprecated. use "%s::renderTag()" instead.', __METHOD__, __CLASS__);
+        trigger_deprecation('contao/core-bundle', '5.1', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use "%s::renderTag()" instead.', __METHOD__, __CLASS__);
 
         return $this->renderTag($input)->getValue();
     }
@@ -183,17 +183,13 @@ class InsertTagParser implements ResetInterface
             try {
                 $tag = $this->parseTag($input);
             } catch (\InvalidArgumentException $exception) {
-                trigger_deprecation('contao/core-bundle', '5.0', $exception->getMessage().'. This will no longer work in Contao 6.0.');
+                trigger_deprecation('contao/core-bundle', '5.0', $exception->getMessage().'. This will no longer work in Contao 6.');
                 $tag = null;
             }
         }
 
-        if (null !== $tag) {
-            $result = $this->renderSubscription($tag, false);
-
-            if (null !== $result) {
-                return $result;
-            }
+        if ($tag && ($result = $this->renderSubscription($tag, false))) {
+            return $result;
         }
 
         // Fallback to old implementation
@@ -228,7 +224,7 @@ class InsertTagParser implements ResetInterface
 
     public function parse(string $input): ParsedSequence
     {
-        if (null === $this->insertTags) {
+        if (!$this->insertTags) {
             $this->framework->initialize();
             $this->insertTags = new InsertTags();
         }
@@ -269,20 +265,20 @@ class InsertTagParser implements ResetInterface
         }
 
         if (strtolower($name) !== $name) {
-            trigger_deprecation('contao/core-bundle', '5.0', 'Insert tags with uppercase letters ("%s") have been deprecated and will no longer work in Contao 6.0.', $name);
+            trigger_deprecation('contao/core-bundle', '5.0', 'Insert tags with uppercase letters ("%s") have been deprecated and will no longer work in Contao 6.', $name);
             $name = strtolower($name);
         }
 
         foreach ($flags as $flag) {
             if (strtolower($flag) !== $flag) {
-                trigger_deprecation('contao/core-bundle', '5.0', 'Insert tag flags with uppercase letters ("%s") have been deprecated and will no longer work in Contao 6.0.', $flag);
+                trigger_deprecation('contao/core-bundle', '5.0', 'Insert tag flags with uppercase letters ("%s") have been deprecated and will no longer work in Contao 6.', $flag);
             }
         }
 
         $tag = new ParsedInsertTag(
             $name,
             new ParsedParameters($parameters),
-            array_map(static fn ($flag) => new InsertTagFlag($flag), $flags)
+            array_map(static fn ($flag) => new InsertTagFlag($flag), $flags),
         );
 
         if ($tag->getParameters()->hasInsertTags()) {
@@ -465,7 +461,7 @@ class InsertTagParser implements ResetInterface
         $esiTag = $this->fragmentHandler->render(
             new ControllerReference(InsertTagsController::class.'::renderAction', $attributes, $query),
             'esi',
-            ['ignore_errors' => false] // see #48
+            ['ignore_errors' => false], // see #48
         );
 
         return new InsertTagResult($esiTag, OutputType::html);
@@ -550,7 +546,7 @@ class InsertTagParser implements ResetInterface
 
     private function callLegacyClass(string $input, bool $allowEsiTags): ChunkedText
     {
-        if (null === $this->insertTags) {
+        if (!$this->insertTags) {
             $this->framework->initialize();
             $this->insertTags = new InsertTags();
         }
@@ -567,12 +563,10 @@ class InsertTagParser implements ResetInterface
         $hasLegacyTags = false;
 
         foreach ($input as $item) {
-            if (!\is_string($item) && !$this->hasInsertTag($item->getName())) {
-                $hasLegacyTags = true;
-                break;
-            }
-
-            if (\is_string($item) && str_contains($item, '{{')) {
+            if (
+                (\is_string($item) && str_contains($item, '{{'))
+                || ($item instanceof InsertTag && !$this->hasInsertTag($item->getName()))
+            ) {
                 $hasLegacyTags = true;
                 break;
             }
@@ -600,7 +594,7 @@ class InsertTagParser implements ResetInterface
             return $result;
         }
 
-        trigger_deprecation('contao/core-bundle', '5.2', 'Using the "insertTagFlags" hook has been deprecated and will no longer work in Contao 6.0. Use the "%s" attribute instead.', AsInsertTagFlag::class);
+        trigger_deprecation('contao/core-bundle', '5.2', 'Using the "insertTagFlags" hook has been deprecated and will no longer work in Contao 6. Use the "%s" attribute instead.', AsInsertTagFlag::class);
 
         // Set up as variables as they may be used by reference in the hooks
         $flagName = $flag->getName();

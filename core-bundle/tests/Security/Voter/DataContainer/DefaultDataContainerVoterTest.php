@@ -26,12 +26,12 @@ class DefaultDataContainerVoterTest extends TestCase
 
         $this->assertSame(
             VoterInterface::ACCESS_ABSTAIN,
-            $voter->vote($this->createMock(TokenInterface::class), 'foobar', ['foobar'])
+            $voter->vote($this->createMock(TokenInterface::class), 'foobar', ['foobar']),
         );
 
         $this->assertSame(
             VoterInterface::ACCESS_GRANTED,
-            $voter->vote($this->createMock(TokenInterface::class), 'foobar', [ContaoCorePermissions::DC_PREFIX.'foobar'])
+            $voter->vote($this->createMock(TokenInterface::class), 'foobar', [ContaoCorePermissions::DC_PREFIX.'foobar']),
         );
     }
 }

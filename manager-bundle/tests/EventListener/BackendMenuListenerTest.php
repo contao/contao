@@ -17,10 +17,10 @@ use Contao\ManagerBundle\EventListener\BackendMenuListener;
 use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\MenuFactory;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BackendMenuListenerTest extends ContaoTestCase

@@ -127,7 +127,7 @@ class Dumper implements DumperInterface
                     $value,
                     $columnBindingTypes[$columnName],
                     $columnUtf8Charsets[$columnName],
-                    $connection
+                    $connection,
                 );
             }
 
@@ -180,6 +180,8 @@ class Dumper implements DumperInterface
 
             $filteredTables[] = $table;
         }
+
+        sort($filteredTables);
 
         return $filteredTables;
     }

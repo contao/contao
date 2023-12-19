@@ -33,9 +33,7 @@ class SwitchUserListener
      */
     public function __invoke(SwitchUserEvent $event): void
     {
-        $token = $this->tokenStorage->getToken();
-
-        if (null === $token) {
+        if (!$token = $this->tokenStorage->getToken()) {
             throw new \RuntimeException('The token storage did not contain a token.');
         }
 

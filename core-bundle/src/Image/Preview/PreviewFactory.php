@@ -32,6 +32,7 @@ use Symfony\Component\Filesystem\Path;
 class PreviewFactory
 {
     private string $defaultDensities = '';
+
     private array $predefinedSizes = [];
 
     /**
@@ -115,7 +116,7 @@ class PreviewFactory
                         $targetPathCallback,
                         $lastPage,
                         $firstPage,
-                        $previewOptions
+                        $previewOptions,
                     );
 
                     if ($previews instanceof \Traversable) {
@@ -168,7 +169,7 @@ class PreviewFactory
 
         return array_map(
             fn ($preview) => $this->imageFactory->create($preview, $size, $resizeOptions),
-            $previews instanceof \Traversable ? iterator_to_array($previews, false) : $previews
+            $previews instanceof \Traversable ? iterator_to_array($previews, false) : $previews,
         );
     }
 
@@ -295,7 +296,7 @@ class PreviewFactory
         if (is_numeric($size[2])) {
             $imageSize = $this->framework->getAdapter(ImageSizeModel::class)->findByPk($size[2]);
 
-            if (null === $imageSize) {
+            if (!$imageSize) {
                 return 0;
             }
 
@@ -337,7 +338,7 @@ class PreviewFactory
     {
         return array_map(
             fn ($path) => $this->pictureFactory->create($path, $size, $resizeOptions),
-            $previews instanceof \Traversable ? iterator_to_array($previews, false) : $previews
+            $previews instanceof \Traversable ? iterator_to_array($previews, false) : $previews,
         );
     }
 

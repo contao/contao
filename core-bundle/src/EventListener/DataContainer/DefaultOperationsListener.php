@@ -20,7 +20,7 @@ use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\DataContainer;
 use Doctrine\DBAL\Connection;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 /**
  * @internal
@@ -114,11 +114,11 @@ class DefaultOperationsListener
                 ];
 
                 if ($isTreeMode) {
-                    $operations['copyChilds'] = [
-                        'href' => 'act=paste&amp;mode=copy&amp;childs=1',
-                        'icon' => 'copychilds.svg',
+                    $operations['copyChildren'] = [
+                        'href' => 'act=paste&amp;mode=copy&amp;children=1',
+                        'icon' => 'copychildren.svg',
                         'attributes' => 'onclick="Backend.getScrollOffset()"',
-                        'button_callback' => $this->copyChildsCallback($table),
+                        'button_callback' => $this->copyChildrenCallback($table),
                     ];
                 }
             }
@@ -173,7 +173,7 @@ class DefaultOperationsListener
         };
     }
 
-    private function copyChildsCallback(string $table): \Closure
+    private function copyChildrenCallback(string $table): \Closure
     {
         return function (DataContainerOperation $operation) use ($table): void {
             if (!$this->isGranted(CreateAction::class, $table, $operation)) {
@@ -184,7 +184,7 @@ class DefaultOperationsListener
 
             $childCount = $this->connection->fetchOne(
                 "SELECT COUNT(*) FROM $table WHERE pid=?",
-                [(string) $operation->getRecord()['id']]
+                [(string) $operation->getRecord()['id']],
             );
 
             if ($childCount < 1) {
@@ -200,7 +200,7 @@ class DefaultOperationsListener
     {
         $field = null;
 
-        foreach (($GLOBALS['TL_DCA'][$table]['fields'] ?? []) as $name => $config) {
+        foreach ($GLOBALS['TL_DCA'][$table]['fields'] ?? [] as $name => $config) {
             if (!($config['toggle'] ?? false) && !($config['reverseToggle'] ?? false)) {
                 continue;
             }

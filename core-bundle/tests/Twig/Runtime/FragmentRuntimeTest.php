@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Twig\Runtime;
 
 use Contao\ContentModel;
 use Contao\Controller;
+use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Runtime\FragmentRuntime;
 use Contao\ModuleModel;
@@ -31,14 +32,14 @@ class FragmentRuntimeTest extends TestCase
                     $this->assertSame(['type' => 'navigation', 'foo' => 'bar'], $model->row());
 
                     return true;
-                }
+                },
             ))
             ->willReturn('runtime-result')
         ;
 
         $framework = $this->mockContaoFramework(
             [Controller::class => $controllerAdapter],
-            [ModuleModel::class => $this->mockClassWithProperties(ModuleModel::class)]
+            [ModuleModel::class => $this->mockClassWithProperties(ModuleModel::class)],
         );
 
         $runtime = new FragmentRuntime($framework);
@@ -58,7 +59,7 @@ class FragmentRuntimeTest extends TestCase
                     $this->assertSame(['id' => 42, 'type' => 'navigation', 'foo' => 'bar'], $model->row());
 
                     return true;
-                }
+                },
             ))
             ->willReturn('runtime-result')
         ;
@@ -93,18 +94,64 @@ class FragmentRuntimeTest extends TestCase
                     $this->assertSame(['type' => 'text', 'foo' => 'bar', 'headline' => serialize(['unit' => 'h2', 'value' => 'Test'])], $model->row());
 
                     return true;
-                }
+                },
             ))
             ->willReturn('runtime-result')
         ;
 
         $framework = $this->mockContaoFramework(
             [Controller::class => $controllerAdapter],
-            [ContentModel::class => $this->mockClassWithProperties(ContentModel::class)]
+            [ContentModel::class => $this->mockClassWithProperties(ContentModel::class)],
         );
 
         $runtime = new FragmentRuntime($framework);
         $result = $runtime->renderContent('text', ['foo' => 'bar', 'headline' => ['unit' => 'h2', 'value' => 'Test']]);
+
+        $this->assertSame('runtime-result', $result);
+    }
+
+    public function testRenderNestedContent(): void
+    {
+        $controllerAdapter = $this->mockAdapter(['getContentElement']);
+        $controllerAdapter
+            ->expects($this->once())
+            ->method('getContentElement')
+            ->with($this->callback(
+                function (ContentElementReference $reference) {
+                    $this->assertSame(
+                        ['type' => 'slider', 'headline' => serialize(['unit' => 'h2', 'value' => 'Test'])],
+                        $reference->getContentModel()->row(),
+                    );
+                    $this->assertSame(
+                        ['type' => 'text', 'text' => '<p>Test</p>'],
+                        $reference->attributes['nestedFragments'][0]->getContentModel()->row(),
+                    );
+
+                    return true;
+                },
+            ))
+            ->willReturn('runtime-result')
+        ;
+
+        $framework = $this->mockContaoFramework(
+            [Controller::class => $controllerAdapter],
+            [ContentModel::class => fn () => $this->mockClassWithProperties(ContentModel::class)],
+        );
+
+        $runtime = new FragmentRuntime($framework);
+
+        $result = $runtime->renderContent('slider', [
+            'headline' => [
+                'unit' => 'h2',
+                'value' => 'Test',
+            ],
+            'nested_fragments' => [
+                [
+                    'type' => 'text',
+                    'text' => '<p>Test</p>',
+                ],
+            ],
+        ]);
 
         $this->assertSame('runtime-result', $result);
     }
@@ -120,7 +167,7 @@ class FragmentRuntimeTest extends TestCase
                     $this->assertSame(['id' => 42, 'type' => 'text', 'foo' => 'bar'], $model->row());
 
                     return true;
-                }
+                },
             ))
             ->willReturn('runtime-result')
         ;

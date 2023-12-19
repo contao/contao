@@ -54,7 +54,7 @@ class CoreResponseContextFactoryTest extends TestCase
             $this->createMock(TokenChecker::class),
             new HtmlDecoder($this->createMock(InsertTagParser::class)),
             $this->createMock(RequestStack::class),
-            $this->createMock(InsertTagParser::class)
+            $this->createMock(InsertTagParser::class),
         );
 
         $responseContext = $factory->createResponseContext();
@@ -76,7 +76,7 @@ class CoreResponseContextFactoryTest extends TestCase
             $this->createMock(TokenChecker::class),
             new HtmlDecoder($this->createMock(InsertTagParser::class)),
             $this->createMock(RequestStack::class),
-            $this->createMock(InsertTagParser::class)
+            $this->createMock(InsertTagParser::class),
         );
 
         $responseContext = $factory->createWebpageResponseContext();
@@ -97,7 +97,7 @@ class CoreResponseContextFactoryTest extends TestCase
                     ],
                 ],
             ],
-            $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->toArray()
+            $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->toArray(),
         );
 
         $this->assertTrue($responseContext->isInitialized(JsonLdManager::class));
@@ -137,7 +137,7 @@ class CoreResponseContextFactoryTest extends TestCase
             $this->createMock(TokenChecker::class),
             new HtmlDecoder($insertTagsParser),
             $requestStack,
-            $insertTagsParser
+            $insertTagsParser,
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
@@ -165,7 +165,7 @@ class CoreResponseContextFactoryTest extends TestCase
                 'groups' => [],
                 'fePreview' => false,
             ],
-            $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class)->toArray()
+            $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class)->toArray(),
         );
     }
 
@@ -203,7 +203,7 @@ class CoreResponseContextFactoryTest extends TestCase
             $this->createMock(TokenChecker::class),
             new HtmlDecoder($insertTagsParser),
             $requestStack,
-            $insertTagsParser
+            $insertTagsParser,
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
@@ -247,7 +247,7 @@ class CoreResponseContextFactoryTest extends TestCase
             $this->createMock(TokenChecker::class),
             new HtmlDecoder($insertTagsParser),
             $this->createMock(RequestStack::class),
-            $insertTagsParser
+            $insertTagsParser,
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
@@ -269,7 +269,7 @@ class CoreResponseContextFactoryTest extends TestCase
                 'groups' => [],
                 'fePreview' => false,
             ],
-            $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class)->toArray()
+            $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class)->toArray(),
         );
     }
 }

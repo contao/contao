@@ -24,6 +24,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 abstract class AbstractTablePickerProvider implements PickerProviderInterface, DcaPickerProviderInterface, PickerMenuInterface
 {
     private const PREFIX = 'dc.';
+
     private const PREFIX_LENGTH = 3;
 
     public function __construct(
@@ -87,7 +88,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
                     'linkAttributes' => ['class' => $name],
                     'current' => $this->isCurrent($config) && $name === substr($config->getCurrent(), \strlen($this->getName().'.')),
                     'uri' => $this->router->generate('contao_backend', $params),
-                ]
+                ],
             ));
         }
     }
@@ -130,7 +131,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
 
     public function getDcaTable(PickerConfig|null $config = null): string
     {
-        if (null === $config) {
+        if (!$config) {
             return '';
         }
 
@@ -235,7 +236,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         $this->framework->initialize();
         $this->framework->createInstance(DcaLoader::class, [$table])->load();
 
-        if (($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null) !== DataContainer::MODE_PARENT) {
+        if (DataContainer::MODE_PARENT !== ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null)) {
             return $table;
         }
 

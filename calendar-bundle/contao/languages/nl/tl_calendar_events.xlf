@@ -403,11 +403,9 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature.1">
         <source>Unfeature event ID %s</source>
-        <target>Nieuwsitem ID %s niet meer kenmerken</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature.2">
         <source>Feature event ID %s</source>
-        <target>Nieuwsitem ID %s kenmerken</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>

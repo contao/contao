@@ -99,11 +99,9 @@
       </trans-unit>
       <trans-unit id="tl_page.alwaysForward.0">
         <source>Always redirect</source>
-        <target>Omdirigera alltid</target>
       </trans-unit>
       <trans-unit id="tl_page.alwaysForward.1">
         <source>Redirect to the target page even if there are query or path parameters.</source>
-        <target>Omdirigera till målsidan även om det finns fråge- eller sökvägsparametrar.</target>
       </trans-unit>
       <trans-unit id="tl_page.jumpTo.0">
         <source>Redirect page</source>

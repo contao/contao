@@ -37,7 +37,7 @@ use Symfony\Component\Filesystem\Path;
 
 #[AsCommand(
     name: 'debug:plugins',
-    description: 'Displays the Contao Manager plugin configurations.'
+    description: 'Displays the Contao Manager plugin configurations.',
 )]
 class DebugPluginsCommand extends Command
 {
@@ -173,8 +173,8 @@ class DebugPluginsCommand extends Command
                 sprintf(
                     'The "%s" plugin does not implement the "%s" interface.',
                     $plugin::class,
-                    BundlePluginInterface::class
-                )
+                    BundlePluginInterface::class,
+                ),
             );
 
             return -1;

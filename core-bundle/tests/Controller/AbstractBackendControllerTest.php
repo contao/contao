@@ -135,7 +135,7 @@ class AbstractBackendControllerTest extends TestCase
                     ];
 
                     return $map[$template];
-                }
+                },
             )
         ;
 

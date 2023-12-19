@@ -69,9 +69,7 @@ class SitemapListenerTest extends ContaoTestCase
             ]),
             NewsModel::class => $this->mockConfiguredAdapter([
                 'findPublishedDefaultByPid' => [
-                    $this->mockClassWithProperties(NewsModel::class, [
-                        'jumpTo' => 42,
-                    ]),
+                    $this->mockClassWithProperties(NewsModel::class, ['jumpTo' => 42]),
                 ],
             ]),
         ];

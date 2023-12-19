@@ -30,7 +30,7 @@ class CodeControllerTest extends ContentElementTestCase
             ],
             null,
             false,
-            $responseContextData
+            $responseContextData,
         );
 
         $expectedOutput = <<<'HTML'
@@ -68,7 +68,7 @@ class CodeControllerTest extends ContentElementTestCase
             ],
             null,
             true,
-            $responseContextData
+            $responseContextData,
         );
 
         $expectedOutput = <<<'HTML'
@@ -79,6 +79,5 @@ class CodeControllerTest extends ContentElementTestCase
             HTML;
 
         $this->assertSameHtml($expectedOutput, $response->getContent());
-        $this->assertEmpty($responseContextData);
     }
 }

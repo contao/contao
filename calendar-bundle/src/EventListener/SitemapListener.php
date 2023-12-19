@@ -72,7 +72,7 @@ class SitemapListener
             $objParent = $this->framework->getAdapter(PageModel::class)->findWithDetails($objCalendar->jumpTo);
 
             // The target page does not exist
-            if (null === $objParent) {
+            if (!$objParent) {
                 continue;
             }
 

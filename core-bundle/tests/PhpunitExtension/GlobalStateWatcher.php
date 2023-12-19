@@ -30,12 +30,19 @@ use Symfony\Component\Mime\MimeTypes;
 final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
 {
     private string $globalKeys;
+
     private string $globals;
+
     private string $staticMembers;
+
     private string $phpIni;
+
     private string $setFunctions;
+
     private string $fileSystem;
+
     private string $constants;
+
     private string $env;
 
     public function executeBeforeTest(string $test): void
@@ -105,7 +112,7 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
                 'http_response_code' => http_response_code(),
                 'headers_list' => headers_list(),
             ],
-            true
+            true,
         );
     }
 
@@ -136,7 +143,7 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
                 static fn ($key) => !\in_array($key, ['SYMFONY_DEPRECATIONS_SERIALIZE', 'SYMFONY_EXPECTED_DEPRECATIONS_SERIALIZE'], true),
                 ARRAY_FILTER_USE_KEY,
             ),
-            true
+            true,
         );
     }
 

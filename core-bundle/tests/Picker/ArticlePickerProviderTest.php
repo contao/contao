@@ -19,8 +19,8 @@ use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\MenuItem;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ArticlePickerProviderTest extends ContaoTestCase
@@ -43,12 +43,15 @@ class ArticlePickerProviderTest extends ContaoTestCase
 
     public function testCreatesTheMenuItem(): void
     {
-        $config = json_encode([
-            'context' => 'link',
-            'extras' => [],
-            'current' => 'articlePicker',
-            'value' => '',
-        ]);
+        $config = json_encode(
+            [
+                'context' => 'link',
+                'extras' => [],
+                'current' => 'articlePicker',
+                'value' => '',
+            ],
+            JSON_THROW_ON_ERROR,
+        );
 
         if (\function_exists('gzencode') && false !== ($encoded = @gzencode($config))) {
             $config = $encoded;
@@ -128,14 +131,14 @@ class ArticlePickerProviderTest extends ContaoTestCase
                 'value' => '5',
                 'flags' => ['urlattr'],
             ],
-            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{article_url::5|urlattr}}'))
+            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{article_url::5|urlattr}}')),
         );
 
         $this->assertSame(
             [
                 'fieldType' => 'radio',
             ],
-            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{link_url::5}}'))
+            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{link_url::5}}')),
         );
     }
 
@@ -152,7 +155,7 @@ class ArticlePickerProviderTest extends ContaoTestCase
 
         $this->assertSame(
             '{{article_title::5}}',
-            $picker->convertDcaValue(new PickerConfig('link', ['insertTag' => '{{article_title::%s}}']), 5)
+            $picker->convertDcaValue(new PickerConfig('link', ['insertTag' => '{{article_title::%s}}']), 5),
         );
     }
 
@@ -177,7 +180,7 @@ class ArticlePickerProviderTest extends ContaoTestCase
                     $item->setUri($data['uri']);
 
                     return $item;
-                }
+                },
             )
         ;
 

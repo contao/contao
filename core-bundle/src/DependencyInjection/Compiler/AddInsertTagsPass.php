@@ -52,17 +52,14 @@ class AddInsertTagsPass implements CompilerPassInterface
                     $method = $this->getMethod($attributes['method'], $serviceTag, $class, $serviceId);
                     $attributes['resolveNestedTags'] ??= $this->getResolveNestedTagsFromMethod($class, $method);
 
-                    $subscriptions[] = new Definition(
-                        InsertTagSubscription::class,
-                        [
-                            new Reference($serviceId),
-                            $method,
-                            $attributes['name'],
-                            $attributes['endTag'] ?? null,
-                            $attributes['resolveNestedTags'],
-                            $attributes['asFragment'] ?? false,
-                        ],
-                    );
+                    $subscriptions[] = new Definition(InsertTagSubscription::class, [
+                        new Reference($serviceId),
+                        $method,
+                        $attributes['name'],
+                        $attributes['endTag'] ?? null,
+                        $attributes['resolveNestedTags'],
+                        $attributes['asFragment'] ?? false,
+                    ]);
 
                     $priorities[] = $attributes['priority'];
                 }

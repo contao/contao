@@ -205,7 +205,7 @@ class BackendAccessVoterTest extends TestCase
 
         $this->assertSame(
             VoterInterface::ACCESS_GRANTED,
-            $this->voter->vote($token, '/foo/bar/baz', [ContaoCorePermissions::USER_CAN_ACCESS_PATH])
+            $this->voter->vote($token, '/foo/bar/baz', [ContaoCorePermissions::USER_CAN_ACCESS_PATH]),
         );
     }
 

@@ -64,7 +64,7 @@ class Configuration implements ConfigurationInterface
                                 }
 
                                 return $options;
-                            }
+                            },
                         )
                     ->end()
                 ->end()
@@ -239,7 +239,7 @@ class Configuration implements ConfigurationInterface
                                 }
 
                                 return $value;
-                            }
+                            },
                         )
                     ->end()
                     ->arrayPrototype()
@@ -460,7 +460,7 @@ class Configuration implements ConfigurationInterface
                             }
 
                             return $values;
-                        }
+                        },
                     )
                 ->end()
             ;
@@ -496,7 +496,7 @@ class Configuration implements ConfigurationInterface
                                 }
 
                                 return false;
-                            }
+                            },
                         )
                         ->thenInvalid('All provided locales must be in the canonicalized ICU form and optionally start with +/- to add/remove the locale to/from the default list.')
                     ->end()
@@ -522,7 +522,7 @@ class Configuration implements ConfigurationInterface
                                 }
 
                                 return false;
-                            }
+                            },
                         )
                         ->thenInvalid('All provided locales must be in the canonicalized ICU form and optionally start with +/- to add/remove the locale to/from the default list.')
                     ->end()
@@ -542,7 +542,7 @@ class Configuration implements ConfigurationInterface
                                 }
 
                                 return false;
-                            }
+                            },
                         )
                         ->thenInvalid('All provided countries must be two uppercase letters and optionally start with +/- to add/remove the country to/from the default list.')
                     ->end()
@@ -624,7 +624,7 @@ class Configuration implements ConfigurationInterface
                             }
 
                             return false;
-                        }
+                        },
                     )
                     ->thenInvalid('All provided additional URIs must start with either http:// or https://.')
                     ->end()
@@ -681,7 +681,7 @@ class Configuration implements ConfigurationInterface
                             }
 
                             return $attributes;
-                        }
+                        },
                     )
                     ->end()
                     ->normalizeKeys(false)
@@ -714,6 +714,11 @@ class Configuration implements ConfigurationInterface
                     ->end()
                     ->example('/admin')
                     ->defaultValue('/contao')
+                ->end()
+                ->integerNode('crawl_concurrency')
+                    ->info('The number of concurrent requests that are executed. Defaults to 5.')
+                    ->min(1)
+                    ->defaultValue(5)
                 ->end()
             ->end()
         ;
@@ -763,7 +768,7 @@ class Configuration implements ConfigurationInterface
                                 }
 
                                 return false;
-                            }
+                            },
                         )
                     ->thenInvalid('%s')
                     ->end()
@@ -792,7 +797,7 @@ class Configuration implements ConfigurationInterface
                                 }
 
                                 return $protocols;
-                            }
+                            },
                         )
                     ->end()
                 ->end()
