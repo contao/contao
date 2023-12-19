@@ -73,7 +73,7 @@ class KeyValueWizard extends Widget
 				$options[$key]['key'] = trim($option['key']);
 				$options[$key]['value'] = trim($option['value']);
 
-				if ($options[$key]['key'] || ($this->allowEmptyKeys && $options[$key]['value']))
+				if ($options[$key]['key'] !== '' || ($this->allowEmptyKeys && $options[$key]['value'] !== ''))
 				{
 					$this->mandatory = false;
 				}
