@@ -1,8 +1,14 @@
 {% extends "@Contao/content_element/_base.html.twig" %}
 {% use "@Contao/component/_text.html.twig" %}
 
-{% set attributes = attrs(attributes|default)
+{% set content_layout_attributes = attrs(content_layout_attributes|default)
     .addClass('media media--' ~ layout, layout and image)
+%}
+
+{# By default we add the layout attributes to the wrapper element. If you want to
+   disable this behavior, set "default_content_layout" to false. #}
+{% set attributes = attrs(attributes|default)
+    .mergeWith(content_layout_attributes, default_content_layout is not defined or default_content_layout)
 %}
 
 {% block content %}
