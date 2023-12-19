@@ -37,7 +37,7 @@ class CspParser
                 $value = true;
             }
 
-            $directiveSet->setDirective($name, $parser->parseSourceList(explode(' ', (string) $value)));
+            $directiveSet->setDirective($name, \is_string($value) ? $parser->parseSourceList(explode(' ', $value)) : $value);
         }
 
         return $directiveSet;
