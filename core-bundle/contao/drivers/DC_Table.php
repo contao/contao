@@ -2237,6 +2237,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				elseif (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
 				{
 					$strUrl .= Database::getInstance()->fieldExists('sorting', $this->strTable) ? '&amp;act=create&amp;mode=1&amp;pid=' . $this->intId : '&amp;act=create&amp;mode=2&amp;pid=' . ($currentRecord['pid'] ?? null);
+
+					if (($currentRecord['ptable'] ?? null) === $this->strTable)
+					{
+						$strUrl .= '&amp;ptable=' . $currentRecord['ptable'];
+					}
 				}
 
 				// List view
@@ -2268,6 +2273,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				elseif (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
 				{
 					$strUrl .= Database::getInstance()->fieldExists('sorting', $this->strTable) ? '&amp;act=copy&amp;mode=1&amp;pid=' . $this->intId . '&amp;id=' . $this->intId : '&amp;act=copy&amp;mode=2&amp;pid=' . $this->intCurrentPid . '&amp;id=' . $this->intId;
+
+					if (($currentRecord['ptable'] ?? null) === $this->strTable)
+					{
+						$strUrl .= '&amp;ptable=' . $currentRecord['ptable'];
+					}
 				}
 
 				// List view
