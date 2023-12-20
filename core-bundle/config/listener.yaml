@@ -202,7 +202,7 @@ services:
             - '@contao.framework'
             - '@twig'
 
-    contao.listener.data_container.undo.undo_operation:
+    contao.listener.data_container.undo_operation:
         class: Contao\CoreBundle\EventListener\DataContainer\Undo\UndoOperationListener
         arguments:
             - '@security.helper'
