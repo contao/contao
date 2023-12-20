@@ -30,7 +30,7 @@ class AccordionController extends AbstractContentElementController
 
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
-        if ([] === $request->attributes->get('nestedFragments', [])) {
+        if ([] === $template->get('nested_fragments')) {
             $template->set('text', $model->text ?: '');
 
             $figure = !$model->addImage ? null : $this->studio
