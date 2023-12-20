@@ -17,25 +17,21 @@ use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
-use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * @internal
  */
 class FavoritesVoter extends AbstractDataContainerVoter
 {
-    public function __construct(private readonly Security $security)
-    {
-    }
-
     protected function getTable(): string
     {
         return 'tl_favorites';
     }
 
-    protected function isGranted(CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
+    protected function hasAccess(TokenInterface $token, CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
     {
-        $user = $this->security->getUser();
+        $user = $token->getUser();
 
         if (!$user instanceof BackendUser) {
             return false;

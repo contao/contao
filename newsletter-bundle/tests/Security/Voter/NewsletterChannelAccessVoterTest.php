@@ -20,29 +20,31 @@ use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\NewsletterBundle\Security\ContaoNewsletterPermissions;
 use Contao\NewsletterBundle\Security\Voter\NewsletterChannelAccessVoter;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class NewsletterChannelAccessVoterTest extends TestCase
 {
     public function testVoter(): void
     {
-        $security = $this->createMock(Security::class);
-        $security
+        $token = $this->createMock(TokenInterface::class);
+
+        $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
+        $accessDecisionManager
             ->expects($this->exactly(5))
-            ->method('isGranted')
+            ->method('decide')
             ->withConsecutive(
-                [ContaoNewsletterPermissions::USER_CAN_ACCESS_MODULE],
-                [ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL, 42],
-                [ContaoNewsletterPermissions::USER_CAN_ACCESS_MODULE],
-                [ContaoNewsletterPermissions::USER_CAN_ACCESS_MODULE],
-                [ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL, 42],
+                [$token, [ContaoNewsletterPermissions::USER_CAN_ACCESS_MODULE]],
+                [$token, [ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL], 42],
+                [$token, [ContaoNewsletterPermissions::USER_CAN_ACCESS_MODULE]],
+                [$token, [ContaoNewsletterPermissions::USER_CAN_ACCESS_MODULE]],
+                [$token, [ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL], 42],
             )
             ->willReturnOnConsecutiveCalls(true, true, false, true, false)
         ;
 
-        $voter = new NewsletterChannelAccessVoter($security);
+        $voter = new NewsletterChannelAccessVoter($accessDecisionManager);
 
         $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_newsletter_channel'));
         $this->assertFalse($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_newsletter'));
@@ -51,8 +53,6 @@ class NewsletterChannelAccessVoterTest extends TestCase
         $this->assertTrue($voter->supportsType(UpdateAction::class));
         $this->assertTrue($voter->supportsType(DeleteAction::class));
         $this->assertFalse($voter->supportsType(NewsletterChannelAccessVoter::class));
-
-        $token = $this->createMock(TokenInterface::class);
 
         // Unsupported attribute
         $this->assertSame(

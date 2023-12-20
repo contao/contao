@@ -148,6 +148,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleBackup($config, $container);
         $this->handleFallbackPreviewProvider($config, $container);
         $this->handleCronConfig($config, $container);
+        $this->handleSecurityConfig($config, $container);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -508,5 +509,21 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         }
 
         return Path::join($projectDir, $publicDir);
+    }
+
+    private function handleSecurityConfig(array $config, ContainerBuilder $container): void
+    {
+        if (!$container->hasDefinition('contao.listener.transport_security_header')) {
+            return;
+        }
+
+        if (false === $config['security']['hsts']['enabled']) {
+            $container->removeDefinition('contao.listener.transport_security_header');
+
+            return;
+        }
+
+        $listener = $container->getDefinition('contao.listener.transport_security_header');
+        $listener->setArgument(1, $config['security']['hsts']['ttl']);
     }
 }

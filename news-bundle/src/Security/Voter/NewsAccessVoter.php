@@ -19,6 +19,7 @@ use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Security\Voter\DataContainer\AbstractDataContainerVoter;
 use Contao\CoreBundle\Security\Voter\DataContainer\ParentAccessTrait;
 use Contao\NewsBundle\Security\ContaoNewsPermissions;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * @internal
@@ -32,9 +33,9 @@ class NewsAccessVoter extends AbstractDataContainerVoter
         return 'tl_news';
     }
 
-    protected function isGranted(CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
+    protected function hasAccess(TokenInterface $token, CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
     {
-        return $this->security->isGranted(ContaoNewsPermissions::USER_CAN_ACCESS_MODULE)
-            && $this->canAccessParent(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $action);
+        return $this->accessDecisionManager->decide($token, [ContaoNewsPermissions::USER_CAN_ACCESS_MODULE])
+            && $this->hasAccessToParent($token, ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $action);
     }
 }
