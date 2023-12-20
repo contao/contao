@@ -503,7 +503,7 @@ class ContentElementTestCase extends TestCase
         $controllerAdapter
             ->method('getContentElement')
             ->with($this->isInstanceOf(ContentElementReference::class))
-            ->willReturn('Content element')
+            ->willReturn('Nested fragments')
         ;
 
         return $this->mockContaoFramework([

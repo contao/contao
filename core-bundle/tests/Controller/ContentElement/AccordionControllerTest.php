@@ -50,7 +50,7 @@ class AccordionControllerTest extends ContentElementTestCase
                 </h3>
                 <div class="handorgel__content">
                     <div class="handorgel__content__inner">
-                        Content element
+                        Nested fragments
                     </div>
                 </div>
             </div>

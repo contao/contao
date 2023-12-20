@@ -45,7 +45,7 @@ class ElementGroupTest extends ContentElementTestCase
 
         $expectedOutput = <<<'HTML'
             <div class="content-element_group">
-                Content element
+                Nested fragments
             </div>
             HTML;
 
