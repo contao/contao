@@ -29,10 +29,10 @@ class AccordionControllerTest extends ContentElementTestCase
         ]);
 
         $request = new Request();
-        $request->attributes->set('nestedFragments', [new ContentElementReference($model)]);
+        $request->attributes->set('nestedFragments', [new ContentElementReference($model, 'main', [], true)]);
 
         $response = $this->renderWithModelData(
-            new AccordionController($this->getDefaultFramework($model)),
+            new AccordionController($this->getDefaultFramework()),
             [
                 'type' => 'accordion',
             ],

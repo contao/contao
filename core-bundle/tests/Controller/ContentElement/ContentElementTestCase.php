@@ -432,7 +432,7 @@ class ContentElementTestCase extends TestCase
         return $insertTagParser;
     }
 
-    protected function getDefaultFramework(ContentModel|null $contentModel = null): ContaoFramework
+    protected function getDefaultFramework(): ContaoFramework
     {
         $GLOBALS['TL_LANG'] = [
             'MSC' => [
@@ -493,12 +493,6 @@ class ContentElementTestCase extends TestCase
             })
         ;
 
-        $contentAdapter = $this->mockAdapter(['findByPk']);
-        $contentAdapter
-            ->method('findByPk')
-            ->willReturn($contentModel ?? $this->createMock(ContentModel::class))
-        ;
-
         $controllerAdapter = $this->mockAdapter(['getContentElement']);
         $controllerAdapter
             ->method('getContentElement')
@@ -511,7 +505,6 @@ class ContentElementTestCase extends TestCase
             Input::class => $inputAdapter,
             PageModel::class => $pageAdapter,
             ArticleModel::class => $articleAdapter,
-            ContentModel::class => $contentAdapter,
             Controller::class => $controllerAdapter,
         ]);
     }

@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Controller\ContentElement;
 
 use Contao\ContentModel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
+use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,11 +29,15 @@ class AccordionController extends AbstractContentElementController
 
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
-        $adapter = $this->framework->getAdapter(ContentModel::class);
         $elements = [];
 
+        /** @var ContentElementReference $reference */
         foreach ($template->get('nested_fragments') as $reference) {
-            $model = $adapter->findByPk($reference->getContentModel());
+            $model = $reference->getContentModel();
+
+            if (!$model instanceof ContentModel) {
+                $model = $this->framework->getAdapter(ContentModel::class)->findByPk($model);
+            }
 
             $elements[] = [
                 'header' => $model->sectionHeadline,
