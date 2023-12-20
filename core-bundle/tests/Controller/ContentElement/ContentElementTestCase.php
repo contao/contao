@@ -24,6 +24,7 @@ use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\File\MetadataBag;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
+use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\ChunkedText;
@@ -109,15 +110,9 @@ class ContentElementTestCase extends TestCase
      */
     protected function renderWithModelData(AbstractContentElementController $controller, array $modelData, string|null $template = null, bool $asEditorView = false, array|null &$responseContextData = null, ContainerBuilder|null $adjustedContainer = null, Request|null $request = null): Response
     {
-        $nestedFragments = [];
-
-        if ($request?->attributes->has('nestedFragments')) {
-            $nestedFragments = $request->attributes->get('nestedFragments');
-        }
-
         // Setup Twig environment
         $loader = $this->getContaoFilesystemLoader();
-        $environment = $this->getEnvironment($loader, $nestedFragments);
+        $environment = $this->getEnvironment($loader);
 
         // Setup container with helper services
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
@@ -264,7 +259,7 @@ class ContentElementTestCase extends TestCase
         return $loader;
     }
 
-    protected function getEnvironment(ContaoFilesystemLoader $contaoFilesystemLoader, array $nestedFragments = []): Environment
+    protected function getEnvironment(ContaoFilesystemLoader $contaoFilesystemLoader): Environment
     {
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
@@ -300,7 +295,7 @@ class ContentElementTestCase extends TestCase
         // Runtime loaders
         $insertTagParser = $this->getDefaultInsertTagParser();
         $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
-        $framework = $this->getDefaultFramework($nestedFragments);
+        $framework = $this->getDefaultFramework();
 
         $environment->addRuntimeLoader(
             new FactoryRuntimeLoader([
@@ -437,7 +432,7 @@ class ContentElementTestCase extends TestCase
         return $insertTagParser;
     }
 
-    protected function getDefaultFramework(array $nestedFragments = []): ContaoFramework
+    protected function getDefaultFramework(ContentModel|null $contentModel = null): ContaoFramework
     {
         $GLOBALS['TL_LANG'] = [
             'MSC' => [
@@ -498,33 +493,26 @@ class ContentElementTestCase extends TestCase
             })
         ;
 
+        $contentAdapter = $this->mockAdapter(['findByPk']);
+        $contentAdapter
+            ->method('findByPk')
+            ->willReturn($contentModel ?? $this->createMock(ContentModel::class))
+        ;
+
         $controllerAdapter = $this->mockAdapter(['getContentElement']);
         $controllerAdapter
             ->method('getContentElement')
-            ->willReturnCallback(
-                static function () use ($nestedFragments) {
-                    $return = '';
-
-                    foreach ($nestedFragments as $nestedFragment) {
-                        $return .= $nestedFragment->getContent();
-                    }
-
-                    return $return;
-                },
-            )
+            ->with($this->isInstanceOf(ContentElementReference::class))
+            ->willReturn('Content element')
         ;
 
-        return $this->mockContaoFramework(
-            [
-                Config::class => $configAdapter,
-                Input::class => $inputAdapter,
-                PageModel::class => $pageAdapter,
-                ArticleModel::class => $articleAdapter,
-                Controller::class => $controllerAdapter,
-            ],
-            [
-                ContentModel::class => fn () => $this->createMock(ContentModel::class),
-            ],
-        );
+        return $this->mockContaoFramework([
+            Config::class => $configAdapter,
+            Input::class => $inputAdapter,
+            PageModel::class => $pageAdapter,
+            ArticleModel::class => $articleAdapter,
+            ContentModel::class => $contentAdapter,
+            Controller::class => $controllerAdapter,
+        ]);
     }
 }

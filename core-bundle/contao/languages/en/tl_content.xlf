@@ -14,6 +14,12 @@
       <trans-unit id="tl_content.headline.1">
         <source>Here you can add a headline to the content element.</source>
       </trans-unit>
+      <trans-unit id="tl_content.sectionHeadline.0">
+        <source>Section headline</source>
+      </trans-unit>
+      <trans-unit id="tl_content.sectionHeadline.1">
+        <source>Here you can add a section headline, e.g. a tab title or accordion header.</source>
+      </trans-unit>
       <trans-unit id="tl_content.text.0">
         <source>Text</source>
       </trans-unit>
@@ -496,6 +502,9 @@
       </trans-unit>
       <trans-unit id="tl_content.type_legend">
         <source>Element type</source>
+      </trans-unit>
+      <trans-unit id="tl_content.section_legend">
+        <source>Section settings</source>
       </trans-unit>
       <trans-unit id="tl_content.text_legend">
         <source>Text/HTML/Code</source>

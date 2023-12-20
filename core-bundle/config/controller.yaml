@@ -64,6 +64,10 @@ services:
         tags:
             - controller.service_arguments
 
+    Contao\CoreBundle\Controller\ContentElement\AccordionController:
+        arguments:
+            - '@contao.framework'
+
     Contao\CoreBundle\Controller\ContentElement\CodeController: ~
 
     Contao\CoreBundle\Controller\ContentElement\DownloadsController:
@@ -75,6 +79,8 @@ services:
             - { name: container.service_subscriber, id: contao.filesystem.file_download_helper }
             - { name: container.service_subscriber, id: contao.image.preview_factory }
             - { name: container.service_subscriber, id: contao.image.studio }
+
+    Contao\CoreBundle\Controller\ContentElement\ElementGroupController: ~
 
     Contao\CoreBundle\Controller\ContentElement\HeadlineController: ~
 
