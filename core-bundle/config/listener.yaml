@@ -566,6 +566,13 @@ services:
         tags:
             - kernel.event_subscriber
 
+    contao.listener.transport_security_header:
+        class: Contao\CoreBundle\EventListener\TransportSecurityHeaderListener
+        arguments:
+            - '@contao.routing.scope_matcher'
+        tags:
+            - kernel.event_listener
+
     contao.listener.unwrap_twig_exception:
         class: Contao\CoreBundle\EventListener\UnwrapTwigExceptionListener
         tags:
