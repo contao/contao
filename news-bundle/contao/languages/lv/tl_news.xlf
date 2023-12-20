@@ -185,14 +185,6 @@
         <source>Here you can enter one or more classes.</source>
         <target>Šeit jūs varat ievadīt vienu vai vairākas klases.</target>
       </trans-unit>
-      <trans-unit id="tl_news.noComments.0">
-        <source>Disable comments</source>
-        <target>Atspējot komentārus</target>
-      </trans-unit>
-      <trans-unit id="tl_news.noComments.1">
-        <source>Do not allow comments for this particular news item.</source>
-        <target>Neļaut komentārus šim jaunumu vienumam.</target>
-      </trans-unit>
       <trans-unit id="tl_news.featured.0">
         <source>Feature item</source>
         <target>Iezīmēt vienumu</target>

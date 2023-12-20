@@ -17,78 +17,6 @@
         <source>Please choose the newsreader page to which visitors will be redirected when clicking a news item.</source>
         <target>Elija la página del lector de noticias a la que se redirigirá a los visitantes al hacer clic en una noticia.</target>
       </trans-unit>
-      <trans-unit id="tl_news_archive.allowComments.0">
-        <source>Enable comments</source>
-        <target>Habilitar comentarios</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.allowComments.1">
-        <source>Allow visitors to comment news items.</source>
-        <target>Permitir a los visitantes comentar los elementos de noticias.</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.notify.0">
-        <source>Notify</source>
-        <target>Notificación</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.notify.1">
-        <source>Please choose who to notify when comments are added.</source>
-        <target>Seleccione a quién se debe notificar cuando se agreguen comentarios.</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.sortOrder.0">
-        <source>Sort order</source>
-        <target>Ordenamiento</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.sortOrder.1">
-        <source>By default, comments are sorted ascending, starting with the oldest one.</source>
-        <target>De manera preestablecida los comentarios se ordenan de manera ascendente, comenzando por el más antiguo.</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.perPage.0">
-        <source>Comments per page</source>
-        <target>Comentarios por página</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.perPage.1">
-        <source>Number of comments per page. Set to 0 to disable pagination.</source>
-        <target>Cantidad de comentarios por página. Introduzca 0 para deshabilitar la paginación.</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.moderate.0">
-        <source>Moderate comments</source>
-        <target>Moderación</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.moderate.1">
-        <source>Approve comments before they are published on the website.</source>
-        <target>Permite aprobar los comentarios antes de que sean publicados en el sitio.</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.bbcode.0">
-        <source>Allow BBCode</source>
-        <target>Permitir BBCode</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.bbcode.1">
-        <source>Allow visitors to format their comments with BBCode.</source>
-        <target>Permitir a los visitantes aplicar formato utilizando BBCode.</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.requireLogin.0">
-        <source>Require login to comment</source>
-        <target>Requerir identificación para comentar</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.requireLogin.1">
-        <source>Allow only authenticated members to create comments.</source>
-        <target>Permitir que sólo los miembros autenticados creen comentarios.</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.disableCaptcha.0">
-        <source>Disable spam protection</source>
-        <target>Desactivar la protección contra correo no deseado</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.disableCaptcha.1">
-        <source>Use this option only if you have limited comments to authenticated users.</source>
-        <target>Utilice esta opción únicamente si ha limitado la creación de comentarios a los usuarios identificados.</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.protected.0">
-        <source>Protect archive</source>
-        <target>Proteger archivo</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.protected.1">
-        <source>Show news items to certain member groups only.</source>
-        <target>Mostrar elementos de noticia soloo a ciertos grupos de miembros.</target>
-      </trans-unit>
       <trans-unit id="tl_news_archive.groups.0">
         <source>Allowed member groups</source>
         <target>Miembros de grupos permitidos</target>
@@ -109,25 +37,9 @@
         <source>Title and redirect page</source>
         <target>Título y página de redirección</target>
       </trans-unit>
-      <trans-unit id="tl_news_archive.comments_legend">
-        <source>Comments</source>
-        <target>Comentarios</target>
-      </trans-unit>
       <trans-unit id="tl_news_archive.protected_legend">
         <source>Access protection</source>
         <target>Acceso protegido</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.notify_admin">
-        <source>System administrator</source>
-        <target>Administrador del sistema</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.notify_author">
-        <source>Author of the news item</source>
-        <target>Autor del artículo de noticia</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.notify_both">
-        <source>Author and system administrator</source>
-        <target>Autor y administrador del sistema</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.0">
         <source>News feeds</source>
@@ -164,10 +76,6 @@
       <trans-unit id="tl_news_archive.delete">
         <source>Delete news archive ID %s</source>
         <target>Eliminar ID del archivo de noticias %s</target>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.comments">
-        <source>Show comments of news archive ID %s</source>
-        <target>Mostrar comentarios de ID de archivo de noticias %s</target>
       </trans-unit>
     </body>
   </file>

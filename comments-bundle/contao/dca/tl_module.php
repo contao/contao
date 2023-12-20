@@ -9,6 +9,7 @@
  */
 
 use Contao\Controller;
+use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\System;
 
 System::loadLanguageFile('tl_content');
@@ -69,3 +70,9 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['com_template'] = array
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 	'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
 );
+
+PaletteManipulator::create()
+    ->addLegend('comment_legend', 'protected_legend', PaletteManipulator::POSITION_BEFORE, true)
+    ->addField('com_template', 'comment_legend', PaletteManipulator::POSITION_APPEND)
+    ->applyToPalette('newsreader', 'tl_module')
+;

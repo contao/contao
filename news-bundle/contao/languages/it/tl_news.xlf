@@ -185,14 +185,6 @@
         <source>Here you can enter one or more classes.</source>
         <target>Qui puoi inserire una o più classi CSS.</target>
       </trans-unit>
-      <trans-unit id="tl_news.noComments.0">
-        <source>Disable comments</source>
-        <target>Disabilita commenti</target>
-      </trans-unit>
-      <trans-unit id="tl_news.noComments.1">
-        <source>Do not allow comments for this particular news item.</source>
-        <target>Disabilita i commenti per una particolare news.</target>
-      </trans-unit>
       <trans-unit id="tl_news.featured.0">
         <source>Feature item</source>
         <target>Notizia in evidenza</target>
