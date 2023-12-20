@@ -30,7 +30,7 @@ services:
         arguments:
             - '@security.access.decision_manager'
 
-    contao_newsletter.security.newsletter_recipient_access_voter:
+    contao_newsletter.security.newsletter_recipients_access_voter:
         class: Contao\NewsletterBundle\Security\Voter\NewsletterRecipientsAccessVoter
         arguments:
             - '@security.access.decision_manager'
