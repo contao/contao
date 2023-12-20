@@ -9,17 +9,13 @@
  */
 
 use Contao\Backend;
-use Contao\BackendUser;
 use Contao\Config;
-use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\DC_Table;
 use Contao\Idna;
 use Contao\Image;
-use Contao\Input;
-use Contao\System;
 
 $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 (
