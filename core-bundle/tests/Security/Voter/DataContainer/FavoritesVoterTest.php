@@ -20,7 +20,7 @@ use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Security\Voter\DataContainer\FavoritesVoter;
 use Contao\CoreBundle\Tests\TestCase;
-use Symfony\Bundle\SecurityBundle\Security;
+use Contao\FrontendUser;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -30,21 +30,20 @@ class FavoritesVoterTest extends TestCase
     {
         $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 2]);
 
-        $security = $this->createMock(Security::class);
-        $security
+        $token = $this->createMock(TokenInterface::class);
+        $token
+            ->expects($this->exactly(2))
             ->method('getUser')
             ->willReturn($user)
         ;
 
-        $voter = new FavoritesVoter($security);
+        $voter = new FavoritesVoter();
 
         $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_favorites'));
         $this->assertTrue($voter->supportsType(CreateAction::class));
         $this->assertTrue($voter->supportsType(ReadAction::class));
         $this->assertTrue($voter->supportsType(UpdateAction::class));
         $this->assertTrue($voter->supportsType(DeleteAction::class));
-
-        $token = $this->createMock(TokenInterface::class);
 
         // Unsupported attribute
         $this->assertSame(
@@ -62,7 +61,7 @@ class FavoritesVoterTest extends TestCase
             VoterInterface::ACCESS_ABSTAIN,
             $voter->vote(
                 $token,
-                new ReadAction('foo', ['user' => 2]),
+                new ReadAction('tl_favorites', ['user' => 2]),
                 [ContaoCorePermissions::DC_PREFIX.'tl_favorites'],
             ),
         );
@@ -72,7 +71,30 @@ class FavoritesVoterTest extends TestCase
             VoterInterface::ACCESS_DENIED,
             $voter->vote(
                 $token,
-                new ReadAction('foo', ['user' => 3]),
+                new ReadAction('tl_favorites', ['user' => 3]),
+                [ContaoCorePermissions::DC_PREFIX.'tl_favorites'],
+            ),
+        );
+    }
+
+    public function testDeniesAccessIfUserIsNotABackendUser(): void
+    {
+        $user = $this->mockClassWithProperties(FrontendUser::class, ['id' => 2]);
+
+        $token = $this->createMock(TokenInterface::class);
+        $token
+            ->expects($this->once())
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
+        $voter = new FavoritesVoter();
+
+        $this->assertSame(
+            VoterInterface::ACCESS_DENIED,
+            $voter->vote(
+                $token,
+                new ReadAction('tl_favorites', ['user' => 3]),
                 [ContaoCorePermissions::DC_PREFIX.'tl_favorites'],
             ),
         );

@@ -19,6 +19,7 @@ use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Security\Voter\DataContainer\AbstractDataContainerVoter;
 use Contao\CoreBundle\Security\Voter\DataContainer\ParentAccessTrait;
 use Contao\FaqBundle\Security\ContaoFaqPermissions;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * @internal
@@ -32,9 +33,9 @@ class FaqAccessVoter extends AbstractDataContainerVoter
         return 'tl_faq';
     }
 
-    protected function isGranted(CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
+    protected function hasAccess(TokenInterface $token, CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
     {
-        return $this->security->isGranted(ContaoFaqPermissions::USER_CAN_ACCESS_MODULE)
-            && $this->canAccessParent(ContaoFaqPermissions::USER_CAN_EDIT_CATEGORY, $action);
+        return $this->accessDecisionManager->decide($token, [ContaoFaqPermissions::USER_CAN_ACCESS_MODULE])
+            && $this->hasAccessToParent($token, ContaoFaqPermissions::USER_CAN_EDIT_CATEGORY, $action);
     }
 }
