@@ -55,11 +55,11 @@
                     accordion.folds[0].open();
                 }
 
-                // Change this selector according to your template, or duplicate
-                // the line if you use multiple accordion element classes.
                 initAccordion('.content-accordion > .{{ toggler }}', {
-                    // Put custom options here
-                    multiSelectable: false,
+                    {% block init_options %}
+                        // Put custom options here
+                        multiSelectable: false,
+                    {% endblock %}
                 });
             })();
         </script>
