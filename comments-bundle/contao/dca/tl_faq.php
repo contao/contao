@@ -12,7 +12,6 @@ use Contao\CoreBundle\DataContainer\PaletteManipulator;
 
 $GLOBALS['TL_DCA']['tl_faq']['list']['sorting']['headerFields'][] = 'allowComments';
 
-
 $GLOBALS['TL_DCA']['tl_faq']['fields']['noComments'] = array
 (
 	'filter'                  => true,
