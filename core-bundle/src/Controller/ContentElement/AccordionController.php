@@ -32,16 +32,17 @@ class AccordionController extends AbstractContentElementController
         $elements = [];
 
         /** @var ContentElementReference $reference */
-        foreach ($template->get('nested_fragments') as $reference) {
-            $model = $reference->getContentModel();
+        foreach ($template->get('nested_fragments') as $i => $reference) {
+            $nestedModel = $reference->getContentModel();
 
-            if (!$model instanceof ContentModel) {
-                $model = $this->framework->getAdapter(ContentModel::class)->findByPk($model);
+            if (!$nestedModel instanceof ContentModel) {
+                $nestedModel = $this->framework->getAdapter(ContentModel::class)->findByPk($nestedModel);
             }
 
             $elements[] = [
-                'header' => $model->sectionHeadline,
+                'header' => $nestedModel->sectionHeadline,
                 'reference' => $reference,
+                'is_open' => !$model->closeSections && 0 === $i,
             ];
         }
 

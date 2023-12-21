@@ -35,6 +35,50 @@ class AccordionControllerTest extends ContentElementTestCase
             new AccordionController($this->getDefaultFramework()),
             [
                 'type' => 'accordion',
+                'closeSections' => false,
+            ],
+            null,
+            false,
+            $responseContextData,
+            null,
+            $request,
+        );
+
+        $expectedOutput = <<<'HTML'
+            <div class="content-accordion">
+                <h3 class="handorgel__header">
+                    <button class="handorgel__header__button">Section</button>
+                </h3>
+                <div class="handorgel__content" data-open>
+                    <div class="handorgel__content__inner">
+                        Nested fragments
+                    </div>
+                </div>
+            </div>
+            HTML;
+
+        $this->assertSameHtml($expectedOutput, $response->getContent());
+        $this->assertArrayHasKey('handorgel_css', $responseContextData['head']);
+        $this->assertArrayHasKey('handorgel_js', $responseContextData['body']);
+    }
+
+    public function testDoesNotAddTheDataOpenAttribute(): void
+    {
+        $model = $this->mockClassWithProperties(ContentModel::class, [
+            'id' => 1,
+            'type' => 'text',
+            'sectionHeadline' => 'Section',
+            'text' => '<p>Text.</p>',
+        ]);
+
+        $request = new Request();
+        $request->attributes->set('nestedFragments', [new ContentElementReference($model, 'main', [], true)]);
+
+        $response = $this->renderWithModelData(
+            new AccordionController($this->getDefaultFramework()),
+            [
+                'type' => 'accordion',
+                'closeSections' => true,
             ],
             null,
             false,

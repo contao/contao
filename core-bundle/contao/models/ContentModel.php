@@ -48,6 +48,7 @@ use Contao\Model\MetadataTrait;
  * @property boolean           $sortable
  * @property integer           $sortIndex
  * @property string            $sortOrder
+ * @property boolean           $closeSections
  * @property string            $mooHeadline
  * @property string            $mooStyle
  * @property string            $mooClasses
@@ -142,6 +143,7 @@ use Contao\Model\MetadataTrait;
  * @method static ContentModel|null findOneBySortable($val, array $opt=array())
  * @method static ContentModel|null findOneBySortIndex($val, array $opt=array())
  * @method static ContentModel|null findOneBySortOrder($val, array $opt=array())
+ * @method static ContentModel|null findOneByCloseSections($val, array $opt=array())
  * @method static ContentModel|null findOneByMooHeadline($val, array $opt=array())
  * @method static ContentModel|null findOneByMooStyle($val, array $opt=array())
  * @method static ContentModel|null findOneByMooClasses($val, array $opt=array())
@@ -229,6 +231,7 @@ use Contao\Model\MetadataTrait;
  * @method static Collection<ContentModel>|ContentModel[]|null findBySortable($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findBySortIndex($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findBySortOrder($val, array $opt=array())
+ * @method static Collection<ContentModel>|ContentModel[]|null findByCloseSections($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByMooHeadline($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByMooStyle($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByMooClasses($val, array $opt=array())
@@ -320,6 +323,7 @@ use Contao\Model\MetadataTrait;
  * @method static integer countBySortable($val, array $opt=array())
  * @method static integer countBySortIndex($val, array $opt=array())
  * @method static integer countBySortOrder($val, array $opt=array())
+ * @method static integer countByCloseSections($val, array $opt=array())
  * @method static integer countByMooHeadline($val, array $opt=array())
  * @method static integer countByMooStyle($val, array $opt=array())
  * @method static integer countByMooClasses($val, array $opt=array())

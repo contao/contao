@@ -164,6 +164,12 @@
       <trans-unit id="tl_content.sortOrder.1">
         <source>Please choose the sort order.</source>
       </trans-unit>
+      <trans-unit id="tl_content.closeSections.0">
+        <source>Close all sections</source>
+      </trans-unit>
+      <trans-unit id="tl_content.closeSections.1">
+        <source>Do not open the first section by default.</source>
+      </trans-unit>
       <trans-unit id="tl_content.mooType.0">
         <source>Operation mode</source>
       </trans-unit>
@@ -534,6 +540,9 @@
         <source>Sorting options</source>
       </trans-unit>
       <trans-unit id="tl_content.moo_legend">
+        <source>Accordion settings</source>
+      </trans-unit>
+      <trans-unit id="tl_content.accordion_legend">
         <source>Accordion settings</source>
       </trans-unit>
       <trans-unit id="tl_content.link_legend">

@@ -5,7 +5,7 @@
         <h3 class="handorgel__header">
             <button class="handorgel__header__button">{{ element.header }}</button>
         </h3>
-        <div class="handorgel__content">
+        <div class="handorgel__content"{% if element.is_open %} data-open{% endif %}>
             <div class="handorgel__content__inner">
                 {{ content_element(element.reference) }}
             </div>
@@ -18,15 +18,12 @@
         <script src="{{ asset('js/handorgel.min.js', 'contao-components/handorgel') }}"></script>
         <script>
             (function () {
-                const accordion = new handorgel(document.querySelector('.content-accordion'), {
+                new handorgel(document.querySelector('.content-accordion'), {
                     {% block init_options %}
                         // Put custom options here
                         multiSelectable: false,
                     {% endblock %}
                 });
-
-                // Show the first element
-                accordion.folds[0].open();
             })();
         </script>
     {% endadd %}
