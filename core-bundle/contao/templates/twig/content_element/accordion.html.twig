@@ -3,14 +3,22 @@
 
 {% block content %}
     {% for element in elements %}
-        <h3 class="handorgel__header">
-            <button class="handorgel__header__button">{{ element.header }}</button>
-        </h3>
-        <div class="handorgel__content"{% if element.is_open %} data-open{% endif %}>
-            <div class="handorgel__content__inner">
-                {{ content_element(element.reference) }}
-            </div>
-        </div>
+        {% block element %}
+            {% block element_header %}
+                <h3{{ attrs(accordion_header|default).addClass('handorgel__header') }}>
+                    <button{{ attrs(accordion_header_button|default).addClass('handorgel__header__button') }}>
+                        {{- element.header -}}
+                    </button>
+                </h3>
+            {% endblock %}
+            {% block element_content %}
+                <div{{ attrs(accordion_content|default).addClass('handorgel__content').set('data-open', element.is_open) }}>
+                    <div{{ attrs(accordion_content_inner|default).addClass('handorgel__content__inner') }}>
+                        {{ content_element(element.reference) }}
+                    </div>
+                </div>
+            {% endblock %}
+        {% endblock %}
     {% endfor %}
 {% endblock %}
 
