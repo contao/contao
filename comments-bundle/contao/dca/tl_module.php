@@ -75,27 +75,27 @@ $bundles = System::getContainer()->getParameter('kernel.bundles');
 
 if (isset($bundles['ContaoNewsBundle']))
 {
-    PaletteManipulator::create()
-        ->addLegend('comment_legend', 'protected_legend', PaletteManipulator::POSITION_BEFORE, true)
-        ->addField('com_template', 'comment_legend', PaletteManipulator::POSITION_APPEND)
-        ->applyToPalette('newsreader', 'tl_module')
-    ;
+	PaletteManipulator::create()
+		->addLegend('comment_legend', 'protected_legend', PaletteManipulator::POSITION_BEFORE, true)
+		->addField('com_template', 'comment_legend', PaletteManipulator::POSITION_APPEND)
+		->applyToPalette('newsreader', 'tl_module')
+	;
 }
 
 if (isset($bundles['ContaoFaqBundle']))
 {
-    PaletteManipulator::create()
-        ->addLegend('comment_legend', 'protected_legend', PaletteManipulator::POSITION_BEFORE, true)
-        ->addField('com_template', 'comment_legend', PaletteManipulator::POSITION_APPEND)
-        ->applyToPalette('faqreader', 'tl_module')
-    ;
+	PaletteManipulator::create()
+		->addLegend('comment_legend', 'protected_legend', PaletteManipulator::POSITION_BEFORE, true)
+		->addField('com_template', 'comment_legend', PaletteManipulator::POSITION_APPEND)
+		->applyToPalette('faqreader', 'tl_module')
+	;
 }
 
 if (isset($bundles['ContaoCalendarBundle']))
 {
-    PaletteManipulator::create()
-        ->addLegend('comment_legend', 'protected_legend', PaletteManipulator::POSITION_BEFORE, true)
-        ->addField('com_template', 'comment_legend', PaletteManipulator::POSITION_APPEND)
-        ->applyToPalette('eventreader', 'tl_module')
-    ;
+	PaletteManipulator::create()
+		->addLegend('comment_legend', 'protected_legend', PaletteManipulator::POSITION_BEFORE, true)
+		->addField('com_template', 'comment_legend', PaletteManipulator::POSITION_APPEND)
+		->applyToPalette('eventreader', 'tl_module')
+	;
 }
