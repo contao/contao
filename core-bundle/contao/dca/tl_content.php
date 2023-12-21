@@ -35,7 +35,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 	(
 		'dataContainer'               => DC_Table::class,
 		'enableVersioning'            => true,
-		'ptable'                      => Input::get('ptable') === 'tl_content' ? 'tl_content' : null,
+		'ctable'                      => array('tl_content'),
 		'dynamicPtable'               => true,
 		'markAsCopy'                  => 'headline',
 		'onload_callback'             => array
@@ -850,7 +850,7 @@ class tl_content extends Backend
 			case 'create':
 			case 'select':
 				// Check access to the article
-				$this->checkAccessToElement($dc->currentPid, $pagemounts, true);
+				$this->checkAccessToElement($dc->currentPid, $pagemounts, true, $dc->parentTable);
 				break;
 
 			case 'editAll':
@@ -861,12 +861,12 @@ class tl_content extends Backend
 				// Check access to the parent element if a content element is moved
 				if (in_array(Input::get('act'), array('cutAll', 'copyAll')))
 				{
-					$this->checkAccessToElement(Input::get('pid'), $pagemounts, Input::get('mode') == 2);
+					$this->checkAccessToElement(Input::get('pid'), $pagemounts, Input::get('mode') == 2, $dc->parentTable);
 				}
 
 				$objCes = $db
-					->prepare("SELECT id FROM tl_content WHERE ptable='tl_article' AND pid=?")
-					->execute($dc->currentPid);
+					->prepare("SELECT id FROM tl_content WHERE ptable=? AND pid=?")
+					->execute($dc->parentTable, $dc->currentPid);
 
 				$objSession = System::getContainer()->get('request_stack')->getSession();
 
@@ -878,12 +878,12 @@ class tl_content extends Backend
 			case 'cut':
 			case 'copy':
 				// Check access to the parent element if a content element is moved
-				$this->checkAccessToElement(Input::get('pid'), $pagemounts, Input::get('mode') == 2);
+				$this->checkAccessToElement(Input::get('pid'), $pagemounts, Input::get('mode') == 2, $dc->parentTable);
 				// no break
 
 			default:
 				// Check access to the content element
-				$this->checkAccessToElement(Input::get('id'), $pagemounts);
+				$this->checkAccessToElement(Input::get('id'), $pagemounts, false, $dc->parentTable);
 				break;
 		}
 	}
@@ -897,9 +897,9 @@ class tl_content extends Backend
 	 *
 	 * @throws AccessDeniedException
 	 */
-	protected function checkAccessToElement($id, $pagemounts, $blnIsPid=false)
+	protected function checkAccessToElement($id, $pagemounts, $blnIsPid=false, $ptable=null)
 	{
-		if (Input::get('ptable') == 'tl_content')
+		if ($ptable == 'tl_content')
 		{
 			while (true)
 			{
@@ -963,7 +963,7 @@ class tl_content extends Backend
 	{
 		$allowedTypes = array();
 
-		if (Input::get('ptable') == 'tl_content')
+		if ($dc->parentTable == 'tl_content')
 		{
 			$parent = Database::getInstance()
 				->prepare("SELECT * FROM tl_content WHERE id=?")
