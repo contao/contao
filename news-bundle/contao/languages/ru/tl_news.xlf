@@ -185,6 +185,14 @@
         <source>Here you can enter one or more classes.</source>
         <target>Вы можете ввести один или несколько CSS классов.</target>
       </trans-unit>
+      <trans-unit id="tl_news.noComments.0">
+        <source>Disable comments</source>
+        <target>Отключить комментарии</target>
+      </trans-unit>
+      <trans-unit id="tl_news.noComments.1">
+        <source>Do not allow comments for this particular news item.</source>
+        <target>Отключить комментарии для данной новости.</target>
+      </trans-unit>
       <trans-unit id="tl_news.featured.0">
         <source>Feature item</source>
         <target>Популярная новость</target>

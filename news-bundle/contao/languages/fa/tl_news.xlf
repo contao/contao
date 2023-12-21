@@ -184,6 +184,14 @@
         <source>Here you can enter one or more classes.</source>
         <target>اینجا می‌توانید یک یا چند کلاس را وارد نمایید.</target>
       </trans-unit>
+      <trans-unit id="tl_news.noComments.0">
+        <source>Disable comments</source>
+        <target>غیرفعال کردن دیدگاه‌ها</target>
+      </trans-unit>
+      <trans-unit id="tl_news.noComments.1">
+        <source>Do not allow comments for this particular news item.</source>
+        <target>توسط این گزینه می‌توانید امکان دیدگاه دادن به این خبر را غیرفعال سازید.</target>
+      </trans-unit>
       <trans-unit id="tl_news.featured.0">
         <source>Feature item</source>
         <target>آیتم ویژه</target>
