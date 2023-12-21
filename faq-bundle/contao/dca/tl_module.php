@@ -35,14 +35,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['faq_readerModule'] = array
 	'sql'                     => "int(10) unsigned NOT NULL default 0"
 );
 
-$bundles = System::getContainer()->getParameter('kernel.bundles');
-
-// Add the comments template drop-down menu
-if (isset($bundles['ContaoCommentsBundle']))
-{
-	$GLOBALS['TL_DCA']['tl_module']['palettes']['faqreader'] = str_replace('{protected_legend:hide}', '{comment_legend:hide},com_template;{protected_legend:hide}', $GLOBALS['TL_DCA']['tl_module']['palettes']['faqreader']);
-}
-
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *

@@ -71,8 +71,31 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['com_template'] = array
 	'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
 );
 
-PaletteManipulator::create()
-    ->addLegend('comment_legend', 'protected_legend', PaletteManipulator::POSITION_BEFORE, true)
-    ->addField('com_template', 'comment_legend', PaletteManipulator::POSITION_APPEND)
-    ->applyToPalette('newsreader', 'tl_module')
-;
+$bundles = System::getContainer()->getParameter('kernel.bundles');
+
+if (isset($bundles['ContaoNewsBundle']))
+{
+    PaletteManipulator::create()
+        ->addLegend('comment_legend', 'protected_legend', PaletteManipulator::POSITION_BEFORE, true)
+        ->addField('com_template', 'comment_legend', PaletteManipulator::POSITION_APPEND)
+        ->applyToPalette('newsreader', 'tl_module')
+    ;
+}
+
+if (isset($bundles['ContaoFaqBundle']))
+{
+    PaletteManipulator::create()
+        ->addLegend('comment_legend', 'protected_legend', PaletteManipulator::POSITION_BEFORE, true)
+        ->addField('com_template', 'comment_legend', PaletteManipulator::POSITION_APPEND)
+        ->applyToPalette('faqreader', 'tl_module')
+    ;
+}
+
+if (isset($bundles['ContaoCalendarBundle']))
+{
+    PaletteManipulator::create()
+        ->addLegend('comment_legend', 'protected_legend', PaletteManipulator::POSITION_BEFORE, true)
+        ->addField('com_template', 'comment_legend', PaletteManipulator::POSITION_APPEND)
+        ->applyToPalette('newsreader', 'tl_module')
+    ;
+}
