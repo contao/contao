@@ -10,14 +10,12 @@
 
 use Contao\Backend;
 use Contao\BackendUser;
-use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\FilesModel;
 use Contao\Folder;
 use Contao\Image;
-use Contao\Input;
 use Contao\StringUtil;
 use Contao\StyleSheets;
 use Contao\System;
@@ -40,7 +38,6 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 		),
 		'onload_callback' => array
 		(
-			array('tl_theme', 'checkPermission'),
 			array('tl_theme', 'updateStyleSheet')
 		),
 		'oncopy_callback' => array
@@ -222,37 +219,6 @@ class tl_theme extends Backend
 	{
 		parent::__construct();
 		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
-	 * Check permissions to edit the table
-	 *
-	 * @throws AccessDeniedException
-	 */
-	public function checkPermission()
-	{
-		if ($this->User->isAdmin)
-		{
-			return;
-		}
-
-		// Check the theme import and export permissions (see #5835)
-		switch (Input::get('key'))
-		{
-			case 'importTheme':
-				if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_IMPORT_THEMES))
-				{
-					throw new AccessDeniedException('Not enough permissions to import themes.');
-				}
-				break;
-
-			case 'exportTheme':
-				if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_IMPORT_THEMES))
-				{
-					throw new AccessDeniedException('Not enough permissions to export themes.');
-				}
-				break;
-		}
 	}
 
 	/**
