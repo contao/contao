@@ -19,6 +19,7 @@ use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Security\Voter\DataContainer\AbstractDataContainerVoter;
 use Contao\CoreBundle\Security\Voter\DataContainer\ParentAccessTrait;
 use Contao\NewsletterBundle\Security\ContaoNewsletterPermissions;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * @internal
@@ -32,9 +33,9 @@ class NewsletterAccessVoter extends AbstractDataContainerVoter
         return 'tl_newsletter';
     }
 
-    protected function isGranted(CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
+    protected function hasAccess(TokenInterface $token, CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
     {
-        return $this->security->isGranted(ContaoNewsletterPermissions::USER_CAN_ACCESS_MODULE)
-            && $this->canAccessParent(ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL, $action);
+        return $this->accessDecisionManager->decide($token, [ContaoNewsletterPermissions::USER_CAN_ACCESS_MODULE])
+            && $this->hasAccessToParent($token, ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL, $action);
     }
 }

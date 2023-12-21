@@ -20,29 +20,31 @@ use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\FaqBundle\Security\ContaoFaqPermissions;
 use Contao\FaqBundle\Security\Voter\FaqCategoryAccessVoter;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class FaqCategoryAccessVoterTest extends TestCase
 {
     public function testVoter(): void
     {
-        $security = $this->createMock(Security::class);
-        $security
+        $token = $this->createMock(TokenInterface::class);
+
+        $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
+        $accessDecisionManager
             ->expects($this->exactly(5))
-            ->method('isGranted')
+            ->method('decide')
             ->withConsecutive(
-                [ContaoFaqPermissions::USER_CAN_ACCESS_MODULE],
-                [ContaoFaqPermissions::USER_CAN_EDIT_CATEGORY, 42],
-                [ContaoFaqPermissions::USER_CAN_ACCESS_MODULE],
-                [ContaoFaqPermissions::USER_CAN_ACCESS_MODULE],
-                [ContaoFaqPermissions::USER_CAN_EDIT_CATEGORY, 42],
+                [$token, [ContaoFaqPermissions::USER_CAN_ACCESS_MODULE]],
+                [$token, [ContaoFaqPermissions::USER_CAN_EDIT_CATEGORY], 42],
+                [$token, [ContaoFaqPermissions::USER_CAN_ACCESS_MODULE]],
+                [$token, [ContaoFaqPermissions::USER_CAN_ACCESS_MODULE]],
+                [$token, [ContaoFaqPermissions::USER_CAN_EDIT_CATEGORY], 42],
             )
             ->willReturnOnConsecutiveCalls(true, true, false, true, false)
         ;
 
-        $voter = new FaqCategoryAccessVoter($security);
+        $voter = new FaqCategoryAccessVoter($accessDecisionManager);
 
         $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_faq_category'));
         $this->assertFalse($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_faq'));
@@ -51,8 +53,6 @@ class FaqCategoryAccessVoterTest extends TestCase
         $this->assertTrue($voter->supportsType(UpdateAction::class));
         $this->assertTrue($voter->supportsType(DeleteAction::class));
         $this->assertFalse($voter->supportsType(FaqCategoryAccessVoter::class));
-
-        $token = $this->createMock(TokenInterface::class);
 
         // Unsupported attribute
         $this->assertSame(

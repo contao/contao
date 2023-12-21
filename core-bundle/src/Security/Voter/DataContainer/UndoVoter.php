@@ -18,19 +18,28 @@ use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 
 /**
  * @internal
  */
-class FavoritesVoter extends AbstractDataContainerVoter
+class UndoVoter extends AbstractDataContainerVoter
 {
+    public function __construct(private readonly AccessDecisionManagerInterface $accessDecisionManager)
+    {
+    }
+
     protected function getTable(): string
     {
-        return 'tl_favorites';
+        return 'tl_undo';
     }
 
     protected function hasAccess(TokenInterface $token, CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
     {
+        if ($this->accessDecisionManager->decide($token, ['ROLE_ADMIN'])) {
+            return true;
+        }
+
         $user = $token->getUser();
 
         if (!$user instanceof BackendUser) {
@@ -42,13 +51,13 @@ class FavoritesVoter extends AbstractDataContainerVoter
         $canAccessCurrent = match (true) {
             $action instanceof UpdateAction,
             $action instanceof ReadAction,
-            $action instanceof DeleteAction => (int) $action->getCurrent()['user'] === $userId,
+            $action instanceof DeleteAction => (int) $action->getCurrent()['pid'] === $userId,
             default => true,
         };
 
         $canAccessNew = match (true) {
             $action instanceof CreateAction,
-            $action instanceof UpdateAction => !isset($action->getNew()['user']) || (int) $action->getNew()['user'] === $userId,
+            $action instanceof UpdateAction => !isset($action->getNew()['pid']) || $action->getNew()['pid'] === $userId,
             default => true,
         };
 

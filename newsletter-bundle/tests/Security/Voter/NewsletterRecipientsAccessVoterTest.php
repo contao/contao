@@ -10,21 +10,22 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\NewsBundle\Tests\Security\Voter;
+namespace Contao\NewsletterBundle\Tests\Security\Voter;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
-use Contao\NewsBundle\Security\ContaoNewsPermissions;
-use Contao\NewsBundle\Security\Voter\NewsAccessVoter;
+use Contao\NewsletterBundle\Security\ContaoNewsletterPermissions;
+use Contao\NewsletterBundle\Security\Voter\NewsletterAccessVoter;
+use Contao\NewsletterBundle\Security\Voter\NewsletterRecipientsAccessVoter;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class NewsAccessVoterTest extends TestCase
+class NewsletterRecipientsAccessVoterTest extends TestCase
 {
     public function testVoter(): void
     {
@@ -35,31 +36,31 @@ class NewsAccessVoterTest extends TestCase
             ->expects($this->exactly(5))
             ->method('decide')
             ->withConsecutive(
-                [$token, [ContaoNewsPermissions::USER_CAN_ACCESS_MODULE]],
-                [$token, [ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE], 42],
-                [$token, [ContaoNewsPermissions::USER_CAN_ACCESS_MODULE]],
-                [$token, [ContaoNewsPermissions::USER_CAN_ACCESS_MODULE]],
-                [$token, [ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE], 42],
+                [$token, [ContaoNewsletterPermissions::USER_CAN_ACCESS_MODULE]],
+                [$token, [ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL], 42],
+                [$token, [ContaoNewsletterPermissions::USER_CAN_ACCESS_MODULE]],
+                [$token, [ContaoNewsletterPermissions::USER_CAN_ACCESS_MODULE]],
+                [$token, [ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL], 42],
             )
             ->willReturnOnConsecutiveCalls(true, true, false, true, false)
         ;
 
-        $voter = new NewsAccessVoter($accessDecisionManager);
+        $voter = new NewsletterRecipientsAccessVoter($accessDecisionManager);
 
-        $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_news'));
-        $this->assertFalse($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_news_archive'));
+        $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_newsletter_recipients'));
+        $this->assertFalse($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_newsletter_channel'));
         $this->assertTrue($voter->supportsType(CreateAction::class));
         $this->assertTrue($voter->supportsType(ReadAction::class));
         $this->assertTrue($voter->supportsType(UpdateAction::class));
         $this->assertTrue($voter->supportsType(DeleteAction::class));
-        $this->assertFalse($voter->supportsType(NewsAccessVoter::class));
+        $this->assertFalse($voter->supportsType(NewsletterAccessVoter::class));
 
         // Unsupported attribute
         $this->assertSame(
             VoterInterface::ACCESS_ABSTAIN,
             $voter->vote(
                 $token,
-                new ReadAction('tl_news', ['pid' => 42]),
+                new ReadAction('tl_newsletter', ['id' => 42]),
                 ['whatever'],
             ),
         );
@@ -70,8 +71,8 @@ class NewsAccessVoterTest extends TestCase
             VoterInterface::ACCESS_ABSTAIN,
             $voter->vote(
                 $token,
-                new ReadAction('tl_news', ['pid' => 42]),
-                [ContaoCorePermissions::DC_PREFIX.'tl_news'],
+                new ReadAction('tl_newsletter_recipients', ['pid' => 42]),
+                [ContaoCorePermissions::DC_PREFIX.'tl_newsletter_recipients'],
             ),
         );
 
@@ -80,18 +81,18 @@ class NewsAccessVoterTest extends TestCase
             VoterInterface::ACCESS_DENIED,
             $voter->vote(
                 $token,
-                new ReadAction('tl_news', ['pid' => 42]),
-                [ContaoCorePermissions::DC_PREFIX.'tl_news'],
+                new ReadAction('tl_newsletter_recipients', ['pid' => 42]),
+                [ContaoCorePermissions::DC_PREFIX.'tl_newsletter_recipients'],
             ),
         );
 
-        // Permission denied on news archive
+        // Permission denied on newsletter channel
         $this->assertSame(
             VoterInterface::ACCESS_DENIED,
             $voter->vote(
                 $token,
-                new ReadAction('tl_news', ['pid' => 42]),
-                [ContaoCorePermissions::DC_PREFIX.'tl_news'],
+                new ReadAction('tl_newsletter_recipients', ['pid' => 42]),
+                [ContaoCorePermissions::DC_PREFIX.'tl_newsletter_recipients'],
             ),
         );
     }
@@ -105,21 +106,21 @@ class NewsAccessVoterTest extends TestCase
             ->expects($this->exactly(3))
             ->method('decide')
             ->withConsecutive(
-                [$token, [ContaoNewsPermissions::USER_CAN_ACCESS_MODULE]],
-                [$token, [ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE], 42],
-                [$token, [ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE], 43],
+                [$token, [ContaoNewsletterPermissions::USER_CAN_ACCESS_MODULE]],
+                [$token, [ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL], 42],
+                [$token, [ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL], 43],
             )
             ->willReturnOnConsecutiveCalls(true, true, false)
         ;
 
-        $voter = new NewsAccessVoter($accessDecisionManager);
+        $voter = new NewsletterRecipientsAccessVoter($accessDecisionManager);
 
         $this->assertSame(
             VoterInterface::ACCESS_DENIED,
             $voter->vote(
                 $token,
-                new UpdateAction('tl_news', ['pid' => 42], ['pid' => 43]),
-                [ContaoCorePermissions::DC_PREFIX.'tl_news'],
+                new UpdateAction('tl_newsletter_recipients', ['pid' => 42], ['pid' => 43]),
+                [ContaoCorePermissions::DC_PREFIX.'tl_newsletter_recipients'],
             ),
         );
     }

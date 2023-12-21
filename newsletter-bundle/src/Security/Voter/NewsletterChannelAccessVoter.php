@@ -18,14 +18,15 @@ use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Security\Voter\DataContainer\AbstractDataContainerVoter;
 use Contao\NewsletterBundle\Security\ContaoNewsletterPermissions;
-use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 
 /**
  * @internal
  */
 class NewsletterChannelAccessVoter extends AbstractDataContainerVoter
 {
-    public function __construct(private readonly Security $security)
+    public function __construct(private readonly AccessDecisionManagerInterface $accessDecisionManager)
     {
     }
 
@@ -34,18 +35,18 @@ class NewsletterChannelAccessVoter extends AbstractDataContainerVoter
         return 'tl_newsletter_channel';
     }
 
-    protected function isGranted(CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
+    protected function hasAccess(TokenInterface $token, CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
     {
-        if (!$this->security->isGranted(ContaoNewsletterPermissions::USER_CAN_ACCESS_MODULE)) {
+        if (!$this->accessDecisionManager->decide($token, [ContaoNewsletterPermissions::USER_CAN_ACCESS_MODULE])) {
             return false;
         }
 
         return match (true) {
-            $action instanceof CreateAction => $this->security->isGranted(ContaoNewsletterPermissions::USER_CAN_CREATE_CHANNELS),
+            $action instanceof CreateAction => $this->accessDecisionManager->decide($token, [ContaoNewsletterPermissions::USER_CAN_CREATE_CHANNELS]),
             $action instanceof ReadAction,
-            $action instanceof UpdateAction => $this->security->isGranted(ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL, $action->getCurrentId()),
-            $action instanceof DeleteAction => $this->security->isGranted(ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL, $action->getCurrentId())
-                && $this->security->isGranted(ContaoNewsletterPermissions::USER_CAN_DELETE_CHANNELS),
+            $action instanceof UpdateAction => $this->accessDecisionManager->decide($token, [ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL], $action->getCurrentId()),
+            $action instanceof DeleteAction => $this->accessDecisionManager->decide($token, [ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL], $action->getCurrentId())
+                && $this->accessDecisionManager->decide($token, [ContaoNewsletterPermissions::USER_CAN_DELETE_CHANNELS]),
         };
     }
 }

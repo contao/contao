@@ -20,29 +20,31 @@ use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\NewsBundle\Security\ContaoNewsPermissions;
 use Contao\NewsBundle\Security\Voter\NewsArchiveAccessVoter;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class NewsArchiveAccessVoterTest extends TestCase
 {
     public function testVoter(): void
     {
-        $security = $this->createMock(Security::class);
-        $security
+        $token = $this->createMock(TokenInterface::class);
+
+        $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
+        $accessDecisionManager
             ->expects($this->exactly(5))
-            ->method('isGranted')
+            ->method('decide')
             ->withConsecutive(
-                [ContaoNewsPermissions::USER_CAN_ACCESS_MODULE],
-                [ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, 42],
-                [ContaoNewsPermissions::USER_CAN_ACCESS_MODULE],
-                [ContaoNewsPermissions::USER_CAN_ACCESS_MODULE],
-                [ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, 42],
+                [$token, [ContaoNewsPermissions::USER_CAN_ACCESS_MODULE]],
+                [$token, [ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE], 42],
+                [$token, [ContaoNewsPermissions::USER_CAN_ACCESS_MODULE]],
+                [$token, [ContaoNewsPermissions::USER_CAN_ACCESS_MODULE]],
+                [$token, [ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE], 42],
             )
             ->willReturnOnConsecutiveCalls(true, true, false, true, false)
         ;
 
-        $voter = new NewsArchiveAccessVoter($security);
+        $voter = new NewsArchiveAccessVoter($accessDecisionManager);
 
         $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_news_archive'));
         $this->assertFalse($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_news'));
@@ -51,8 +53,6 @@ class NewsArchiveAccessVoterTest extends TestCase
         $this->assertTrue($voter->supportsType(UpdateAction::class));
         $this->assertTrue($voter->supportsType(DeleteAction::class));
         $this->assertFalse($voter->supportsType(NewsArchiveAccessVoter::class));
-
-        $token = $this->createMock(TokenInterface::class);
 
         // Unsupported attribute
         $this->assertSame(

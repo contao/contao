@@ -37,7 +37,9 @@ services:
             - '%contao.preview_script%'
             - '@contao.security.frontend_preview_authenticator'
             - '@event_dispatcher'
-            - '@security.authorization_checker'
+            - '@security.helper'
+            - '@security.authenticator.firewall_aware_login_link_handler'
+            - '@uri_signer'
         tags:
             - controller.service_arguments
 
@@ -181,6 +183,11 @@ services:
             - '@database_connection'
         tags:
             - controller.service_arguments
+
+    Contao\CoreBundle\Controller\RedirectController:
+        public: true
+        arguments:
+            - '@Symfony\Bundle\FrameworkBundle\Controller\RedirectController'
 
     Contao\CoreBundle\Controller\RobotsTxtController:
         arguments:
