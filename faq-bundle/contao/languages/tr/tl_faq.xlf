@@ -81,6 +81,14 @@
         <source>Please choose the files you want to attach.</source>
         <target>Eklemek istediğiniz dosyaları seçin</target>
       </trans-unit>
+      <trans-unit id="tl_faq.noComments.0">
+        <source>Disable comments</source>
+        <target>Yorum yapılamasın</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.noComments.1">
+        <source>Do not allow comments for this particular FAQ.</source>
+        <target>Bu seçenek etkinleştirildiğinde, bu SSS ögesine yorum yapılamaz.</target>
+      </trans-unit>
       <trans-unit id="tl_faq.published.0">
         <source>Publish the FAQ</source>
         <target>SSS ögesini yayınla</target>
@@ -108,6 +116,10 @@
       <trans-unit id="tl_faq.enclosure_legend">
         <source>Enclosures</source>
         <target>Dosyalar</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.expert_legend">
+        <source>Expert settings</source>
+        <target>Uzman ayarları</target>
       </trans-unit>
       <trans-unit id="tl_faq.publish_legend">
         <source>Publish settings</source>

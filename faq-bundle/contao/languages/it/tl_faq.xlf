@@ -81,6 +81,14 @@
         <source>Please choose the files you want to attach.</source>
         <target>Seleziona i file che vuoi allegare.</target>
       </trans-unit>
+      <trans-unit id="tl_faq.noComments.0">
+        <source>Disable comments</source>
+        <target>Disabilita commenti</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.noComments.1">
+        <source>Do not allow comments for this particular FAQ.</source>
+        <target>Disabilita i commenti relativa a questa particolare FAQ</target>
+      </trans-unit>
       <trans-unit id="tl_faq.published.0">
         <source>Publish the FAQ</source>
         <target>Pubblica FAQ</target>
@@ -108,6 +116,10 @@
       <trans-unit id="tl_faq.enclosure_legend">
         <source>Enclosures</source>
         <target>Aggiungi file alla notizia</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.expert_legend">
+        <source>Expert settings</source>
+        <target>Impostazioni avanzate</target>
       </trans-unit>
       <trans-unit id="tl_faq.publish_legend">
         <source>Publish settings</source>
