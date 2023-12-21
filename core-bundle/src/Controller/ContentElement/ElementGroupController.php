@@ -21,10 +21,6 @@ use Symfony\Component\HttpFoundation\Response;
 #[AsContentElement(category: 'miscellaneous', nestedFragments: true)]
 class ElementGroupController extends AbstractContentElementController
 {
-    public function __construct()
-    {
-    }
-
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
         return $template->getResponse();
