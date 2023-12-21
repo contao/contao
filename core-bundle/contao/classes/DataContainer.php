@@ -945,7 +945,11 @@ abstract class DataContainer extends Backend
 			$isPopup = $k == 'show';
 			$href = null;
 
-			if (!empty($config['route']))
+			if ($config->getUrl() !== null)
+			{
+				$href = $config->getUrl();
+			}
+			elseif (!empty($config['route']))
 			{
 				$params = array('id' => $arrRow['id']);
 
