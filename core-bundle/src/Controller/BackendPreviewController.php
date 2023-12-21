@@ -97,8 +97,7 @@ class BackendPreviewController
         $query['_target_path'] = base64_encode((string) $previewUri);
         $query[TwoFactorAuthenticator::FLAG_2FA_COMPLETE] = (bool) $this->security->getToken()?->hasAttribute(TwoFactorAuthenticator::FLAG_2FA_COMPLETE);
 
-        $loginUri = $loginUri->withQuery(http_build_query($query));
-        $targetUrl = $this->uriSigner->sign((string) $loginUri);
+        $targetUrl = $this->uriSigner->sign((string) $loginUri->withQuery(http_build_query($query)));
 
         return new RedirectResponse($targetUrl);
     }

@@ -170,7 +170,6 @@ class BackendPreviewControllerTest extends TestCase
         $uriSigner = $this->createMock(UriSigner::class);
         $uriSigner
             ->method('sign')
-            // ->with()
             ->willReturnArgument(0)
         ;
 
@@ -241,7 +240,6 @@ class BackendPreviewControllerTest extends TestCase
     private function mockSecurityHelper(bool $granted = true, UserInterface|null $user = null, bool $twoFactorComplete = false): Security&MockObject
     {
         $security = $this->createMock(Security::class);
-
         $security
             ->method('isGranted')
             ->willReturn($granted)

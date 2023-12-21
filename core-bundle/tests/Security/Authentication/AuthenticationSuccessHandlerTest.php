@@ -259,7 +259,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
         ;
 
         $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
-
         $request = new Request(['_target_path' => base64_encode('http://localhost/target')]);
 
         $user = $this->createPartialMock(BackendUser::class, ['save']);
@@ -331,7 +330,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
         ;
 
         $twoFactorToken = $this->createMock(TwoFactorToken::class);
-
         $twoFactorToken
             ->expects($this->once())
             ->method('getUser')
