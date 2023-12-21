@@ -14,7 +14,6 @@ use Contao\Config;
 use Contao\ContentModel;
 use Contao\ContentTable;
 use Contao\Controller;
-use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
@@ -1056,20 +1055,6 @@ class tl_content extends Backend
 		if (System::getContainer()->get('contao.fragment.compositor')->supportsNesting('contao.content_element.' . $objCte->type))
 		{
 			$GLOBALS['TL_DCA']['tl_content']['config']['switchToEdit'] = true;
-		}
-
-		if ($objCte->ptable == 'tl_content')
-		{
-			$objParent = ContentModel::findByPk($objCte->pid);
-
-			// Dynamically add the section headline to accordion child elements
-			if ($objParent && $objParent->type == 'accordion')
-			{
-				PaletteManipulator::create()
-					->addLegend('section_legend', 'type_legend')
-					->addField('sectionHeadline', 'section_legend', PaletteManipulator::POSITION_APPEND)
-					->applyToPalette($objCte->type, 'tl_content');
-			}
 		}
 	}
 

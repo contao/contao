@@ -63,6 +63,9 @@ services:
         tags:
             - kernel.event_subscriber
 
+    contao.listener.data_container.accordion:
+        class: Contao\CoreBundle\EventListener\DataContainer\AccordionListener
+
     contao.listener.data_container.backend_favorites:
         class: Contao\CoreBundle\EventListener\DataContainer\BackendFavoritesListener
         arguments:
