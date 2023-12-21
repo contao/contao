@@ -82,8 +82,8 @@ class tl_content_calendar extends Backend
 				}
 
 				$objCes = Database::getInstance()
-					->prepare("SELECT id FROM tl_content WHERE ptable='tl_calendar_events' AND pid=?")
-					->execute($dc->currentPid);
+					->prepare("SELECT id FROM tl_content WHERE ptable=? AND pid=?")
+					->execute($dc->parentTable, $dc->currentPid);
 
 				$objSession = System::getContainer()->get('request_stack')->getSession();
 
