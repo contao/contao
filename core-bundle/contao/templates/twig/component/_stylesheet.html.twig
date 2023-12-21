@@ -21,7 +21,7 @@
 
     {% if stylesheet.lazy is defined ? stylesheet.lazy : false %}
         {# Lazy load, see https://web.dev/defer-non-critical-css/ #}
-        <link rel="preload" href="{{ stylesheet.file }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <link rel="preload" as="style" href="{{ stylesheet.file }}" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="{{ stylesheet.file }}"></noscript>
     {% else %}
         <link rel="stylesheet" href="{{ stylesheet.file }}">
