@@ -1,4 +1,5 @@
 {% extends "@Contao/content_element/_base.html.twig" %}
+{% use "@Contao/component/_stylesheet.html.twig" %}
 
 {% block content %}
     {% for element in elements %}
@@ -30,7 +31,9 @@
 {% endblock %}
 
 {% block style %}
+    {% set handorgel_css_file = asset('css/handorgel.min.css', 'contao-components/handorgel') %}
+
     {% add "handorgel_css" to head %}
-        <link rel="stylesheet" href="{{ asset('css/handorgel.min.css', 'contao-components/handorgel') }}">
+        {% with {file: handorgel_css_file} %}{{ block('stylesheet_component') }}{% endwith %}
     {% endadd %}
 {% endblock %}
