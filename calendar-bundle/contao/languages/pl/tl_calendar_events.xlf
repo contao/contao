@@ -245,14 +245,6 @@
         <source>Here you can enter one or more classes.</source>
         <target>Tutaj możesz wprowadzić jedną lub więcej klas CSS.</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.noComments.0">
-        <source>Disable comments</source>
-        <target>Wyłącz komentarze</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.noComments.1">
-        <source>Do not allow comments for this particular event.</source>
-        <target>Nie zezwalaj komentowania tego wydarzenia.</target>
-      </trans-unit>
       <trans-unit id="tl_calendar_events.featured.0">
         <source>Feature event</source>
         <target>Promuj wydarzenie</target>

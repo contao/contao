@@ -17,70 +17,6 @@
         <source>Please choose the event reader page to which visitors will be redirected when clicking an event.</source>
         <target>Selecteer de pagina waarheen bezoekers geleid zullen worden na het klikken op een evenement.</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.allowComments.0">
-        <source>Enable comments</source>
-        <target>Reacties mogelijk maken</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.allowComments.1">
-        <source>Allow visitors to comment events.</source>
-        <target>Sta bezoekers toe om reacties te geven.</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.notify.0">
-        <source>Notify</source>
-        <target>Waarschuw</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.notify.1">
-        <source>Please choose who to notify when comments are added.</source>
-        <target>Kies wie te waarschuwen als er reacties zijn toegevoegd.</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.sortOrder.0">
-        <source>Sort order</source>
-        <target>Sorteer-volgorde</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.sortOrder.1">
-        <source>By default, comments are sorted ascending, starting with the oldest one.</source>
-        <target>Standaard zijn reacties oplopend gesorteerd, beginnend met de oudste.</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.perPage.0">
-        <source>Comments per page</source>
-        <target>Reacties per pagina</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.perPage.1">
-        <source>Number of comments per page. Set to 0 to disable pagination.</source>
-        <target>Aantal reacties per pagina. Zet op 0 om paginering uit te zetten.</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.moderate.0">
-        <source>Moderate comments</source>
-        <target>Modereer reacties</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.moderate.1">
-        <source>Approve comments before they are published on the website.</source>
-        <target>Keur reacties goed alvorens ze te publiceren op de website.</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.bbcode.0">
-        <source>Allow BBCode</source>
-        <target>BBCode toestaan</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.bbcode.1">
-        <source>Allow visitors to format their comments with BBCode.</source>
-        <target>Sta toe dat bezoekers hun reacties kunnen opmaken met BBCode.</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.requireLogin.0">
-        <source>Require login to comment</source>
-        <target>Inloggen is vereist om te reageren</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.requireLogin.1">
-        <source>Allow only authenticated members to create comments.</source>
-        <target>Alleen aangemelde leden kunnen reacties geven.</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.disableCaptcha.0">
-        <source>Disable spam protection</source>
-        <target>Schakel spambeveiliging uit</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.disableCaptcha.1">
-        <source>Use this option only if you have limited comments to authenticated users.</source>
-        <target>Gebruik deze optie alleen als u reageren hebt beperkt tot aangemelde gebruikers.</target>
-      </trans-unit>
       <trans-unit id="tl_calendar.protected.0">
         <source>Protect calendar</source>
         <target>Bescherm kalender</target>
@@ -108,10 +44,6 @@
       <trans-unit id="tl_calendar.title_legend">
         <source>Title and redirect page</source>
         <target>Titel en omleiding pagina</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.comments_legend">
-        <source>Comments</source>
-        <target>Reacties</target>
       </trans-unit>
       <trans-unit id="tl_calendar.protected_legend">
         <source>Access protection</source>

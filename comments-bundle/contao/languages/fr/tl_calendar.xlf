@@ -1,0 +1,78 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_calendar.php" source-language="en" target-language="fr">
+    <body>
+      <trans-unit id="tl_calendar.allowComments.0">
+        <source>Enable comments</source>
+        <target>Activer les commentaires</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.allowComments.1">
+        <source>Allow visitors to comment events.</source>
+        <target>Autoriser les visiteurs à commenter les événements.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.notify.0">
+        <source>Notify</source>
+        <target>Notifier</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.notify.1">
+        <source>Please choose who to notify when comments are added.</source>
+        <target>Choisir qui notifier lorsque des commentaires sont ajoutés.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.sortOrder.0">
+        <source>Sort order</source>
+        <target>Ordre de tri</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.sortOrder.1">
+        <source>By default, comments are sorted ascending, starting with the oldest one.</source>
+        <target>Par défaut, les commentaires sont triés par ordre croissant, en commençant par le plus ancien.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.perPage.0">
+        <source>Comments per page</source>
+        <target>Commentaires par page</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.perPage.1">
+        <source>Number of comments per page. Set to 0 to disable pagination.</source>
+        <target>Nombre de commentaires par page. Mettre 0 pour désactiver la pagination.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.moderate.0">
+        <source>Moderate comments</source>
+        <target>Modérer les commentaires</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.moderate.1">
+        <source>Approve comments before they are published on the website.</source>
+        <target>Approuver les commentaires avant qu'ils ne soient publiés sur le site.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.bbcode.0">
+        <source>Allow BBCode</source>
+        <target>BBCode autorisé</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.bbcode.1">
+        <source>Allow visitors to format their comments with BBCode.</source>
+        <target>Autoriser les visiteurs à formater leurs commentaires à l'aide de BBCode.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.requireLogin.0">
+        <source>Require login to comment</source>
+        <target>Connexion préalable nécessaire</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.requireLogin.1">
+        <source>Allow only authenticated members to create comments.</source>
+        <target>N'autoriser que les utilisateurs authentifiés à créer des commentaires.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.disableCaptcha.0">
+        <source>Disable spam protection</source>
+        <target>Désactiver la protection contre le spam</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.disableCaptcha.1">
+        <source>Use this option only if you have limited comments to authenticated users.</source>
+        <target>N'utiliser cette option que si vous avez restreint les commentaires aux utilisateurs authentifiés.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.comments_legend">
+        <source>Comments</source>
+        <target>Commentaires</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.protected_legend">
+        <source>Access protection</source>
+        <target>Protection d'accès</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

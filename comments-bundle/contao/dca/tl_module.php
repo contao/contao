@@ -96,6 +96,6 @@ if (isset($bundles['ContaoCalendarBundle']))
     PaletteManipulator::create()
         ->addLegend('comment_legend', 'protected_legend', PaletteManipulator::POSITION_BEFORE, true)
         ->addField('com_template', 'comment_legend', PaletteManipulator::POSITION_APPEND)
-        ->applyToPalette('newsreader', 'tl_module')
+        ->applyToPalette('eventreader', 'tl_module')
     ;
 }

@@ -1,0 +1,14 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_calendar_events.php" source-language="en" target-language="ko">
+    <body>
+      <trans-unit id="tl_calendar_events.noComments.0">
+        <source>Disable comments</source>
+        <target>댓글 비활성화</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.noComments.1">
+        <source>Do not allow comments for this particular event.</source>
+        <target>이 특정 이벤트에 대한 댓글을 허용하지 않습니다.</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

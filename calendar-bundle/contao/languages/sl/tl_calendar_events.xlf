@@ -244,14 +244,6 @@
         <source>Here you can enter one or more classes.</source>
         <target>Tu lahko vnesete enega ali več razredov.</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.noComments.0">
-        <source>Disable comments</source>
-        <target>Onemogoči komentarje</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.noComments.1">
-        <source>Do not allow comments for this particular event.</source>
-        <target>Ne dovoli komentarje za ta dogodek.</target>
-      </trans-unit>
       <trans-unit id="tl_calendar_events.featured.0">
         <source>Feature event</source>
         <target>Izpostavljen dogodek</target>

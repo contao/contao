@@ -245,14 +245,6 @@
         <source>Here you can enter one or more classes.</source>
         <target>여기에 하나 이상의 클래스를 입력할 수 있습니다.</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.noComments.0">
-        <source>Disable comments</source>
-        <target>댓글 비활성화</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.noComments.1">
-        <source>Do not allow comments for this particular event.</source>
-        <target>이 특정 이벤트에 대한 댓글을 허용하지 않습니다.</target>
-      </trans-unit>
       <trans-unit id="tl_calendar_events.featured.0">
         <source>Feature event</source>
         <target>주요 이벤트</target>
