@@ -17,6 +17,70 @@
         <source>Please choose the event reader page to which visitors will be redirected when clicking an event.</source>
         <target>Seleccione la página a la que serán redirigidos los visitantes cuando hagan clic sobre un evento.</target>
       </trans-unit>
+      <trans-unit id="tl_calendar.allowComments.0">
+        <source>Enable comments</source>
+        <target>Habilitar comentarios</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.allowComments.1">
+        <source>Allow visitors to comment events.</source>
+        <target>Permitir a los visitantes añadir comentarios a los eventos.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.notify.0">
+        <source>Notify</source>
+        <target>Notificación</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.notify.1">
+        <source>Please choose who to notify when comments are added.</source>
+        <target>Seleccione a quién se debe notificar cuando se agreguen comentarios.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.sortOrder.0">
+        <source>Sort order</source>
+        <target>Ordenamiento</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.sortOrder.1">
+        <source>By default, comments are sorted ascending, starting with the oldest one.</source>
+        <target>De manera preestablecida los comentarios se ordenan de manera ascendente, comenzando por el más antiguo.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.perPage.0">
+        <source>Comments per page</source>
+        <target>Comentarios por página</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.perPage.1">
+        <source>Number of comments per page. Set to 0 to disable pagination.</source>
+        <target>Cantidad de comentarios por página. Introduzca 0 para deshabilitar la paginación.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.moderate.0">
+        <source>Moderate comments</source>
+        <target>Moderación</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.moderate.1">
+        <source>Approve comments before they are published on the website.</source>
+        <target>Permite aprobar los comentarios antes de que sean publicados en el sitio.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.bbcode.0">
+        <source>Allow BBCode</source>
+        <target>Permitir BBCode</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.bbcode.1">
+        <source>Allow visitors to format their comments with BBCode.</source>
+        <target>Permitir a los visitantes aplicar formato utilizando BBCode.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.requireLogin.0">
+        <source>Require login to comment</source>
+        <target>Requerir identificación para comentar</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.requireLogin.1">
+        <source>Allow only authenticated members to create comments.</source>
+        <target>Permitir que sólo los miembros autenticados creen comentarios.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.disableCaptcha.0">
+        <source>Disable spam protection</source>
+        <target>Desactivar la protección contra correo no deseado</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.disableCaptcha.1">
+        <source>Use this option only if you have limited comments to authenticated users.</source>
+        <target>Utilice esta opción únicamente si ha limitado la creación de comentarios a los usuarios identificados.</target>
+      </trans-unit>
       <trans-unit id="tl_calendar.protected.0">
         <source>Protect calendar</source>
         <target>Proteger calendario</target>
@@ -44,6 +108,10 @@
       <trans-unit id="tl_calendar.title_legend">
         <source>Title and redirect page</source>
         <target>Título y página de redirección</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.comments_legend">
+        <source>Comments</source>
+        <target>Comentarios</target>
       </trans-unit>
       <trans-unit id="tl_calendar.protected_legend">
         <source>Access protection</source>

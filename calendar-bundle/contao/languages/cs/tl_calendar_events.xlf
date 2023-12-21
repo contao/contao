@@ -245,6 +245,14 @@
         <source>Here you can enter one or more classes.</source>
         <target>Sem můžete zadat více tříd kaskádovitých stylů CSS (class)</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.noComments.0">
+        <source>Disable comments</source>
+        <target>Vypnout komentáře</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.noComments.1">
+        <source>Do not allow comments for this particular event.</source>
+        <target>Zakázat přidávání komentářů.</target>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.featured.0">
         <source>Feature event</source>
         <target>Zvýraznit příspěvek</target>

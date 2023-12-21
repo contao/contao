@@ -245,6 +245,14 @@
         <source>Here you can enter one or more classes.</source>
         <target>Buraya bir ya da birkaç sınıf ekleyebilirsiniz.</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.noComments.0">
+        <source>Disable comments</source>
+        <target>Yorum yapılamasın</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.noComments.1">
+        <source>Do not allow comments for this particular event.</source>
+        <target>Bu etkinliğe yorum yapılmasını engeller.</target>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.featured.0">
         <source>Feature event</source>
         <target>Etkinliği öne çıkarılmışlara ekle</target>

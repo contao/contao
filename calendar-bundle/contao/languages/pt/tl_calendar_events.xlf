@@ -245,6 +245,14 @@ Deixe em branco para criar um evento sem data/hora de fim definido.</target>
         <source>Here you can enter one or more classes.</source>
         <target>Aqui você pode inserir uma ou mais classes CSS.</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.noComments.0">
+        <source>Disable comments</source>
+        <target>Desativar comentários</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.noComments.1">
+        <source>Do not allow comments for this particular event.</source>
+        <target>Não permitir comentários para este evento em particular.</target>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.featured.0">
         <source>Feature event</source>
         <target>Evento em destaque</target>

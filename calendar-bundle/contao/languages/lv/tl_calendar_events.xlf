@@ -245,6 +245,14 @@
         <source>Here you can enter one or more classes.</source>
         <target>Šeit jūs varat ievadīt vienu vai vairākas klases.</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.noComments.0">
+        <source>Disable comments</source>
+        <target>Atspējot komentārus</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.noComments.1">
+        <source>Do not allow comments for this particular event.</source>
+        <target>Neļaut komentārus šim notikumam.</target>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.featured.0">
         <source>Feature event</source>
         <target>Zīmīgais notikums</target>
