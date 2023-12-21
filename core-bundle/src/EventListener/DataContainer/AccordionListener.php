@@ -36,6 +36,7 @@ class AccordionListener
         return PaletteManipulator::create()
             ->addLegend('section_legend', 'type_legend')
             ->addField('sectionHeadline', 'section_legend', PaletteManipulator::POSITION_APPEND)
-            ->applyToString($palette);
+            ->applyToString($palette)
+        ;
     }
 }
