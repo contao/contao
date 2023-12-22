@@ -49,7 +49,7 @@ class SwiperControllerTest extends ContentElementTestCase
 
         $expectedOutput = <<<'HTML'
             <div class="content-swiper">
-                <div class="swiper" data-delay="0" data-speed="300" data-offset="0" data-loop="1">
+                <div class="swiper" data-delay="0" data-speed="300" data-offset="0" data-loop>
                     <div class="swiper-wrapper">
                         <div class="swiper-slide">
                             text
@@ -58,8 +58,8 @@ class SwiperControllerTest extends ContentElementTestCase
                             image
                         </div>
                     </div>
-                    <button type="button" class="swiper-button-next"></button>
                     <button type="button" class="swiper-button-prev"></button>
+                    <button type="button" class="swiper-button-next"></button>
                     <div class="swiper-pagination"></div>
                 </div>
             </div>
