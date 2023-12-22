@@ -47,62 +47,55 @@ class CommentsConditionalFieldsListener
         $GLOBALS['TL_DCA'][$table]['fields']['allowComments'] = [
             'filter' => true,
             'inputType' => 'checkbox',
-            'eval' => array('submitOnChange'=>true),
-            'sql' => array('type' => 'boolean', 'default' => false)
+            'eval' => ['submitOnChange' => true],
+            'sql' => ['type' => 'boolean', 'default' => false],
         ];
 
-        $GLOBALS['TL_DCA'][$table]['fields']['notify'] = array
-        (
+        $GLOBALS['TL_DCA'][$table]['fields']['notify'] = [
             'inputType' => 'select',
-            'options' => array('notify_admin', 'notify_author', 'notify_both'),
+            'options' => ['notify_admin', 'notify_author', 'notify_both'],
             'reference' => &$GLOBALS['TL_LANG'][$table],
-            'eval' => array('tl_class'=>'w50'),
+            'eval' => ['tl_class'=>'w50'],
             'sql' => "varchar(32) NOT NULL default 'notify_admin'"
-        );
+        ];
 
-        $GLOBALS['TL_DCA'][$table]['fields']['sortOrder'] = array
-        (
+        $GLOBALS['TL_DCA'][$table]['fields']['sortOrder'] = [
             'inputType' => 'select',
-            'options' => array('ascending', 'descending'),
+            'options' => ['ascending', 'descending'],
             'reference' => &$GLOBALS['TL_LANG']['MSC'],
-            'eval' => array('tl_class'=>'w50 clr'),
+            'eval' => ['tl_class'=>'w50 clr'],
             'sql' => "varchar(32) NOT NULL default 'ascending'"
-        );
+        ];
 
-        $GLOBALS['TL_DCA'][$table]['fields']['perPage'] = array
-        (
+        $GLOBALS['TL_DCA'][$table]['fields']['perPage'] = [
             'inputType' => 'text',
-            'eval' => array('rgxp'=>'natural', 'tl_class'=>'w50'),
+            'eval' => ['rgxp'=>'natural', 'tl_class'=>'w50'],
             'sql' => "smallint(5) unsigned NOT NULL default 0"
-        );
+        ];
 
-        $GLOBALS['TL_DCA'][$table]['fields']['moderate'] = array
-        (
+        $GLOBALS['TL_DCA'][$table]['fields']['moderate'] = [
             'inputType' => 'checkbox',
-            'eval' => array('tl_class'=>'w50'),
-            'sql' => array('type' => 'boolean', 'default' => false)
-        );
+            'eval' => ['tl_class'=>'w50'],
+            'sql' => ['type' => 'boolean', 'default' => false]
+        ];
 
-        $GLOBALS['TL_DCA'][$table]['fields']['bbcode'] = array
-        (
+        $GLOBALS['TL_DCA'][$table]['fields']['bbcode'] = [
             'inputType' => 'checkbox',
-            'eval' => array('tl_class'=>'w50'),
-            'sql' => array('type' => 'boolean', 'default' => false)
-        );
+            'eval' => ['tl_class'=>'w50'],
+            'sql' => ['type' => 'boolean', 'default' => false]
+        ];
 
-        $GLOBALS['TL_DCA'][$table]['fields']['requireLogin'] = array
-        (
+        $GLOBALS['TL_DCA'][$table]['fields']['requireLogin'] = [
             'inputType' => 'checkbox',
-            'eval' => array('tl_class'=>'w50'),
-            'sql' => array('type' => 'boolean', 'default' => false)
-        );
+            'eval' => ['tl_class'=>'w50'],
+            'sql' => ['type' => 'boolean', 'default' => false]
+        ];
 
-        $GLOBALS['TL_DCA'][$table]['fields']['disableCaptcha'] = array
-        (
+        $GLOBALS['TL_DCA'][$table]['fields']['disableCaptcha'] = [
             'inputType' => 'checkbox',
-            'eval' => array('tl_class'=>'w50'),
-            'sql' => array('type' => 'boolean', 'default' => false)
-        );
+            'eval' => ['tl_class'=>'w50'],
+            'sql' => ['type' => 'boolean', 'default' => false]
+        ];
 
         switch ($table) {
             case 'tl_news':
@@ -130,34 +123,30 @@ class CommentsConditionalFieldsListener
     {
         $GLOBALS['TL_DCA'][$table]['list']['sorting']['headerFields'][] = 'allowComments';
 
-        switch ($table)
-        {
+        switch ($table) {
             case 'tl_news':
-                $GLOBALS['TL_DCA'][$table]['fields']['noComments'] = array
-                (
+                $GLOBALS['TL_DCA'][$table]['fields']['noComments'] = [
                     'filter' => true,
                     'inputType' => 'checkbox',
-                    'eval' => array('tl_class'=>'w50 m12'),
-                    'sql' => array('type' => 'boolean', 'default' => false)
-                );
+                    'eval' => ['tl_class'=>'w50 m12'],
+                    'sql' => ['type' => 'boolean', 'default' => false]
+                ];
                 break;
 
             case 'tl_calendar_events':
-                $GLOBALS['TL_DCA'][$table]['fields']['noComments'] = array
-                (
+                $GLOBALS['TL_DCA'][$table]['fields']['noComments'] = [
                     'inputType' => 'checkbox',
-                    'eval' => array('tl_class'=>'w50 m12'),
-                    'sql' => array('type' => 'boolean', 'default' => false)
-                );
+                    'eval' => ['tl_class'=>'w50 m12'],
+                    'sql' => ['type' => 'boolean', 'default' => false]
+                ];
                 break;
 
             case 'tl_faq':
-                $GLOBALS['TL_DCA'][$table]['fields']['noComments'] = array
-                (
+                $GLOBALS['TL_DCA'][$table]['fields']['noComments'] = [
                     'filter' => true,
                     'inputType' => 'checkbox',
-                    'sql' => array('type' => 'boolean', 'default' => false)
-                );
+                    'sql' => ['type' => 'boolean', 'default' => false]
+                ];
                 break;
         }
 
