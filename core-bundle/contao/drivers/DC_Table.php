@@ -197,7 +197,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$this->strTable = $strTable;
-		$this->ptable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] ?? null;
+		$this->ptable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] = $this->findPtable();
 		$this->ctable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'] ?? null;
 		$this->treeView = \in_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null, array(self::MODE_TREE, self::MODE_TREE_EXTENDED));
 		$this->arrModule = $arrModule;
@@ -289,6 +289,34 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		return null;
+	}
+
+	private function findPtable(): string|null
+	{
+		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
+		{
+			$act = Input::get('act');
+			$mode = Input::get('mode');
+
+			// For these actions the id parameter refers to the parent record, so they need to be excluded
+			if ($this->intId && ($act !== 'paste' || $mode !== 'create') && !\in_array($act, array(null, 'create', 'select', 'editAll', 'overrideAll', 'deleteAll'), true))
+			{
+				$currentRecord = $this->getCurrentRecord($this->intId);
+
+				if (!empty($currentRecord['ptable']))
+				{
+					return $currentRecord['ptable'];
+				}
+			}
+
+			// Use the ptable query parameter if it points to itself (nested elements case)
+			if (Input::get('ptable') === $this->strTable && \in_array($this->strTable, $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'] ?? array(), true))
+			{
+				return $this->strTable;
+			}
+		}
+
+		return $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] ?? null;
 	}
 
 	/**

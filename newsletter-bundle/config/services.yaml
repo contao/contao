@@ -29,3 +29,8 @@ services:
         class: Contao\NewsletterBundle\Security\Voter\NewsletterChannelAccessVoter
         arguments:
             - '@security.access.decision_manager'
+
+    contao_newsletter.security.newsletter_recipients_access_voter:
+        class: Contao\NewsletterBundle\Security\Voter\NewsletterRecipientsAccessVoter
+        arguments:
+            - '@security.access.decision_manager'

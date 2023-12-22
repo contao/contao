@@ -831,6 +831,8 @@ services:
             - '@contao.framework'
             - '@contao.security.two_factor.trusted_device_manager'
             - '@security.firewall.map'
+            - '@uri_signer'
+            - '@security.token_storage'
             - '@?logger'
 
     contao.security.backend_access_voter:
@@ -863,6 +865,11 @@ services:
             - '@security.access.decision_manager'
         tags:
             - { name: security.voter, priority: 100 }
+
+    contao.security.data_container.undo_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\UndoVoter
+        arguments:
+            - '@security.access.decision_manager'
 
     contao.security.default_data_container_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\DefaultDataContainerVoter
