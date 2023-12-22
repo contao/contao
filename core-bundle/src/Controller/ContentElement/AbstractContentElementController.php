@@ -79,8 +79,6 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
             return;
         }
 
-        $classes[] = 'content-'.str_replace('_', '-', $this->getType());
-
         $headlineData = StringUtil::deserialize($modelData['headline'] ?? [] ?: '', true);
         $attributesData = StringUtil::deserialize($modelData['cssID'] ?? [] ?: '', true);
 

@@ -84,8 +84,6 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
             return;
         }
 
-        $classes[] = 'module-'.str_replace('_', '-', $this->getType());
-
         $headlineData = StringUtil::deserialize($modelData['headline'] ?? [] ?: '', true);
         $attributesData = StringUtil::deserialize($modelData['cssID'] ?? [] ?: '', true);
 
