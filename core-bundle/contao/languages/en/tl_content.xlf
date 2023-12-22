@@ -14,6 +14,12 @@
       <trans-unit id="tl_content.headline.1">
         <source>Here you can add a headline to the content element.</source>
       </trans-unit>
+      <trans-unit id="tl_content.sectionHeadline.0">
+        <source>Section headline</source>
+      </trans-unit>
+      <trans-unit id="tl_content.sectionHeadline.1">
+        <source>Here you can add a section headline, e.g. a tab title or accordion header.</source>
+      </trans-unit>
       <trans-unit id="tl_content.text.0">
         <source>Text</source>
       </trans-unit>
@@ -157,6 +163,12 @@
       </trans-unit>
       <trans-unit id="tl_content.sortOrder.1">
         <source>Please choose the sort order.</source>
+      </trans-unit>
+      <trans-unit id="tl_content.closeSections.0">
+        <source>Close all sections</source>
+      </trans-unit>
+      <trans-unit id="tl_content.closeSections.1">
+        <source>Do not open the first section by default.</source>
       </trans-unit>
       <trans-unit id="tl_content.mooType.0">
         <source>Operation mode</source>
@@ -497,6 +509,9 @@
       <trans-unit id="tl_content.type_legend">
         <source>Element type</source>
       </trans-unit>
+      <trans-unit id="tl_content.section_legend">
+        <source>Section settings</source>
+      </trans-unit>
       <trans-unit id="tl_content.text_legend">
         <source>Text/HTML/Code</source>
       </trans-unit>
@@ -525,6 +540,9 @@
         <source>Sorting options</source>
       </trans-unit>
       <trans-unit id="tl_content.moo_legend">
+        <source>Accordion settings</source>
+      </trans-unit>
+      <trans-unit id="tl_content.accordion_legend">
         <source>Accordion settings</source>
       </trans-unit>
       <trans-unit id="tl_content.link_legend">
