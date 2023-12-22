@@ -19,29 +19,31 @@ use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Security\Voter\DataContainer\FormAccessVoter;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class FormAccessVoterTest extends TestCase
 {
     public function testVoter(): void
     {
-        $security = $this->createMock(Security::class);
-        $security
+        $token = $this->createMock(TokenInterface::class);
+
+        $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
+        $accessDecisionManager
             ->expects($this->exactly(5))
-            ->method('isGranted')
+            ->method('decide')
             ->withConsecutive(
-                [ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'form'],
-                [ContaoCorePermissions::USER_CAN_EDIT_FORM, 42],
-                [ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'form'],
-                [ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'form'],
-                [ContaoCorePermissions::USER_CAN_EDIT_FORM, 42],
+                [$token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'form'],
+                [$token, [ContaoCorePermissions::USER_CAN_EDIT_FORM], 42],
+                [$token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'form'],
+                [$token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'form'],
+                [$token, [ContaoCorePermissions::USER_CAN_EDIT_FORM], 42],
             )
             ->willReturnOnConsecutiveCalls(true, true, false, true, false)
         ;
 
-        $voter = new FormAccessVoter($security);
+        $voter = new FormAccessVoter($accessDecisionManager);
 
         $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_form'));
         $this->assertFalse($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_form_fields'));
@@ -50,8 +52,6 @@ class FormAccessVoterTest extends TestCase
         $this->assertTrue($voter->supportsType(UpdateAction::class));
         $this->assertTrue($voter->supportsType(DeleteAction::class));
         $this->assertFalse($voter->supportsType(FormAccessVoter::class));
-
-        $token = $this->createMock(TokenInterface::class);
 
         // Unsupported attribute
         $this->assertSame(
