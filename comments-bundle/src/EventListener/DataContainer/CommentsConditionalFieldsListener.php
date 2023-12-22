@@ -24,8 +24,7 @@ class CommentsConditionalFieldsListener
             return;
         }
 
-        switch ($table)
-        {
+        switch ($table) {
             case 'tl_news_archive':
             case 'tl_calendar':
             case 'tl_faq_category':
@@ -40,73 +39,72 @@ class CommentsConditionalFieldsListener
         }
     }
 
-    private function applyParentFields($table): void
+    private function applyParentFields(string $table): void
     {
         $GLOBALS['TL_DCA'][$table]['palettes']['__selector__'][] = 'allowComments';
         $GLOBALS['TL_DCA'][$table]['subpalettes']['allowComments'] = 'notify,sortOrder,perPage,moderate,bbcode,requireLogin,disableCaptcha';
 
         $GLOBALS['TL_DCA'][$table]['fields']['allowComments'] = [
-            'filter'                  => true,
-            'inputType'               => 'checkbox',
-            'eval'                    => array('submitOnChange'=>true),
-            'sql'                     => array('type' => 'boolean', 'default' => false)
+            'filter' => true,
+            'inputType' => 'checkbox',
+            'eval' => array('submitOnChange'=>true),
+            'sql' => array('type' => 'boolean', 'default' => false)
         ];
 
         $GLOBALS['TL_DCA'][$table]['fields']['notify'] = array
         (
-            'inputType'               => 'select',
-            'options'                 => array('notify_admin', 'notify_author', 'notify_both'),
-            'reference'               => &$GLOBALS['TL_LANG'][$table],
-            'eval'                    => array('tl_class'=>'w50'),
-            'sql'                     => "varchar(32) NOT NULL default 'notify_admin'"
+            'inputType' => 'select',
+            'options' => array('notify_admin', 'notify_author', 'notify_both'),
+            'reference' => &$GLOBALS['TL_LANG'][$table],
+            'eval' => array('tl_class'=>'w50'),
+            'sql' => "varchar(32) NOT NULL default 'notify_admin'"
         );
 
         $GLOBALS['TL_DCA'][$table]['fields']['sortOrder'] = array
         (
-            'inputType'               => 'select',
-            'options'                 => array('ascending', 'descending'),
-            'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-            'eval'                    => array('tl_class'=>'w50 clr'),
-            'sql'                     => "varchar(32) NOT NULL default 'ascending'"
+            'inputType' => 'select',
+            'options' => array('ascending', 'descending'),
+            'reference' => &$GLOBALS['TL_LANG']['MSC'],
+            'eval' => array('tl_class'=>'w50 clr'),
+            'sql' => "varchar(32) NOT NULL default 'ascending'"
         );
 
         $GLOBALS['TL_DCA'][$table]['fields']['perPage'] = array
         (
-            'inputType'               => 'text',
-            'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
-            'sql'                     => "smallint(5) unsigned NOT NULL default 0"
+            'inputType' => 'text',
+            'eval' => array('rgxp'=>'natural', 'tl_class'=>'w50'),
+            'sql' => "smallint(5) unsigned NOT NULL default 0"
         );
 
         $GLOBALS['TL_DCA'][$table]['fields']['moderate'] = array
         (
-            'inputType'               => 'checkbox',
-            'eval'                    => array('tl_class'=>'w50'),
-            'sql'                     => array('type' => 'boolean', 'default' => false)
+            'inputType' => 'checkbox',
+            'eval' => array('tl_class'=>'w50'),
+            'sql' => array('type' => 'boolean', 'default' => false)
         );
 
         $GLOBALS['TL_DCA'][$table]['fields']['bbcode'] = array
         (
-            'inputType'               => 'checkbox',
-            'eval'                    => array('tl_class'=>'w50'),
-            'sql'                     => array('type' => 'boolean', 'default' => false)
+            'inputType' => 'checkbox',
+            'eval' => array('tl_class'=>'w50'),
+            'sql' => array('type' => 'boolean', 'default' => false)
         );
 
         $GLOBALS['TL_DCA'][$table]['fields']['requireLogin'] = array
         (
-            'inputType'               => 'checkbox',
-            'eval'                    => array('tl_class'=>'w50'),
-            'sql'                     => array('type' => 'boolean', 'default' => false)
+            'inputType' => 'checkbox',
+            'eval' => array('tl_class'=>'w50'),
+            'sql' => array('type' => 'boolean', 'default' => false)
         );
 
         $GLOBALS['TL_DCA'][$table]['fields']['disableCaptcha'] = array
         (
-            'inputType'               => 'checkbox',
-            'eval'                    => array('tl_class'=>'w50'),
-            'sql'                     => array('type' => 'boolean', 'default' => false)
+            'inputType' => 'checkbox',
+            'eval' => array('tl_class'=>'w50'),
+            'sql' => array('type' => 'boolean', 'default' => false)
         );
 
-        switch ($table)
-        {
+        switch ($table) {
             case 'tl_news':
             case 'tl_calendar_events':
                 PaletteManipulator::create()
@@ -114,6 +112,7 @@ class CommentsConditionalFieldsListener
                     ->addField(['allowComments'], 'comments_legend', PaletteManipulator::POSITION_APPEND)
                     ->applyToPalette('default', $table)
                 ;
+
                 break;
 
             case 'tl_faq':
@@ -122,11 +121,12 @@ class CommentsConditionalFieldsListener
                     ->addField(['allowComments'], 'comments_legend', PaletteManipulator::POSITION_APPEND)
                     ->applyToPalette('default', $table)
                 ;
+
                 break;
         }
     }
 
-    private function applyChildrenFields($table): void
+    private function applyChildrenFields(string $table): void
     {
         $GLOBALS['TL_DCA'][$table]['list']['sorting']['headerFields'][] = 'allowComments';
 
@@ -135,34 +135,33 @@ class CommentsConditionalFieldsListener
             case 'tl_news':
                 $GLOBALS['TL_DCA'][$table]['fields']['noComments'] = array
                 (
-                    'filter'                  => true,
-                    'inputType'               => 'checkbox',
-                    'eval'                    => array('tl_class'=>'w50 m12'),
-                    'sql'                     => array('type' => 'boolean', 'default' => false)
+                    'filter' => true,
+                    'inputType' => 'checkbox',
+                    'eval' => array('tl_class'=>'w50 m12'),
+                    'sql' => array('type' => 'boolean', 'default' => false)
                 );
                 break;
 
             case 'tl_calendar_events':
                 $GLOBALS['TL_DCA'][$table]['fields']['noComments'] = array
                 (
-                    'inputType'               => 'checkbox',
-                    'eval'                    => array('tl_class'=>'w50 m12'),
-                    'sql'                     => array('type' => 'boolean', 'default' => false)
+                    'inputType' => 'checkbox',
+                    'eval' => array('tl_class'=>'w50 m12'),
+                    'sql' => array('type' => 'boolean', 'default' => false)
                 );
                 break;
 
             case 'tl_faq':
                 $GLOBALS['TL_DCA'][$table]['fields']['noComments'] = array
                 (
-                    'filter'                  => true,
-                    'inputType'               => 'checkbox',
-                    'sql'                     => array('type' => 'boolean', 'default' => false)
+                    'filter' => true,
+                    'inputType' => 'checkbox',
+                    'sql' => array('type' => 'boolean', 'default' => false)
                 );
                 break;
         }
 
-        switch ($table)
-        {
+        switch ($table) {
             case 'tl_news':
             case 'tl_calendar_events':
                 PaletteManipulator::create()
@@ -172,6 +171,7 @@ class CommentsConditionalFieldsListener
                     ->applyToPalette('article', $table)
                     ->applyToPalette('external', $table)
                 ;
+
                 break;
 
             case 'tl_faq':
@@ -180,6 +180,7 @@ class CommentsConditionalFieldsListener
                     ->addField(['noComments'], 'expert_legend', PaletteManipulator::POSITION_APPEND)
                     ->applyToPalette('default', $table)
                 ;
+
                 break;
         }
     }
