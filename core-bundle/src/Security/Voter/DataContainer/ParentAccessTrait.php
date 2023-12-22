@@ -16,15 +16,16 @@ use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
-use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 
 trait ParentAccessTrait
 {
-    public function __construct(private readonly Security $security)
+    public function __construct(private readonly AccessDecisionManagerInterface $accessDecisionManager)
     {
     }
 
-    protected function canAccessParent(string $attribute, CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
+    protected function hasAccessToParent(TokenInterface $token, string $attribute, CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
     {
         $pids = [];
 
@@ -44,7 +45,7 @@ trait ParentAccessTrait
         }
 
         foreach ($pids as $pid) {
-            if (!$this->security->isGranted($attribute, $pid)) {
+            if (!$this->accessDecisionManager->decide($token, [$attribute], $pid)) {
                 return false;
             }
         }

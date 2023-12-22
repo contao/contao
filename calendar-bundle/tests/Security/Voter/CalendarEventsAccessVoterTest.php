@@ -20,29 +20,31 @@ use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class CalendarEventsAccessVoterTest extends TestCase
 {
     public function testVoter(): void
     {
-        $security = $this->createMock(Security::class);
-        $security
+        $token = $this->createMock(TokenInterface::class);
+
+        $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
+        $accessDecisionManager
             ->expects($this->exactly(5))
-            ->method('isGranted')
+            ->method('decide')
             ->withConsecutive(
-                [ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE],
-                [ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR, 42],
-                [ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE],
-                [ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE],
-                [ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR, 42],
+                [$token, [ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE]],
+                [$token, [ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], 42],
+                [$token, [ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE]],
+                [$token, [ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE]],
+                [$token, [ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], 42],
             )
             ->willReturnOnConsecutiveCalls(true, true, false, true, false)
         ;
 
-        $voter = new CalendarEventsAccessVoter($security);
+        $voter = new CalendarEventsAccessVoter($accessDecisionManager);
 
         $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_calendar_events'));
         $this->assertFalse($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_calendar'));
@@ -51,8 +53,6 @@ class CalendarEventsAccessVoterTest extends TestCase
         $this->assertTrue($voter->supportsType(UpdateAction::class));
         $this->assertTrue($voter->supportsType(DeleteAction::class));
         $this->assertFalse($voter->supportsType(CalendarEventsAccessVoter::class));
-
-        $token = $this->createMock(TokenInterface::class);
 
         // Unsupported attribute
         $this->assertSame(
@@ -98,20 +98,21 @@ class CalendarEventsAccessVoterTest extends TestCase
 
     public function testDeniesUpdateActionToNewParent(): void
     {
-        $security = $this->createMock(Security::class);
-        $security
+        $token = $this->createMock(TokenInterface::class);
+
+        $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
+        $accessDecisionManager
             ->expects($this->exactly(3))
-            ->method('isGranted')
+            ->method('decide')
             ->withConsecutive(
-                [ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE],
-                [ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR, 42],
-                [ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR, 43],
+                [$token, [ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE]],
+                [$token, [ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], 42],
+                [$token, [ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], 43],
             )
             ->willReturnOnConsecutiveCalls(true, true, false)
         ;
 
-        $token = $this->createMock(TokenInterface::class);
-        $voter = new CalendarEventsAccessVoter($security);
+        $voter = new CalendarEventsAccessVoter($accessDecisionManager);
 
         $this->assertSame(
             VoterInterface::ACCESS_DENIED,

@@ -98,9 +98,7 @@ services:
     contao.cron.messenger:
         class: Contao\CoreBundle\Cron\MessengerCron
         arguments:
-            - '@messenger.receiver_locator'
             - '@contao.process_util'
-            - ~
 
     contao.cron.purge_expired_data:
         class: Contao\CoreBundle\Cron\PurgeExpiredDataCron
@@ -850,6 +848,8 @@ services:
             - '@contao.framework'
             - '@contao.security.two_factor.trusted_device_manager'
             - '@security.firewall.map'
+            - '@uri_signer'
+            - '@security.token_storage'
             - '@?logger'
 
     contao.security.backend_access_voter:
@@ -865,25 +865,28 @@ services:
 
     contao.security.data_container.favorites_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\FavoritesVoter
-        arguments:
-            - '@security.helper'
 
     contao.security.data_container.form_access_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\FormAccessVoter
         arguments:
-            - '@security.helper'
+            - '@security.access.decision_manager'
 
     contao.security.data_container.form_field_access_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\FormFieldAccessVoter
         arguments:
-            - '@security.helper'
+            - '@security.access.decision_manager'
 
     contao.security.data_container.table_access_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\TableAccessVoter
         arguments:
-            - '@security.helper'
+            - '@security.access.decision_manager'
         tags:
             - { name: security.voter, priority: 100 }
+
+    contao.security.data_container.undo_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\UndoVoter
+        arguments:
+            - '@security.access.decision_manager'
 
     contao.security.default_data_container_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\DefaultDataContainerVoter

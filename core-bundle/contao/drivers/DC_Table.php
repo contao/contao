@@ -197,7 +197,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$this->strTable = $strTable;
-		$this->ptable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] ?? null;
+		$this->ptable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] = $this->findPtable();
 		$this->ctable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'] ?? null;
 		$this->treeView = \in_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null, array(self::MODE_TREE, self::MODE_TREE_EXTENDED));
 		$this->arrModule = $arrModule;
@@ -289,6 +289,34 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		return null;
+	}
+
+	private function findPtable(): string|null
+	{
+		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
+		{
+			$act = Input::get('act');
+			$mode = Input::get('mode');
+
+			// For these actions the id parameter refers to the parent record, so they need to be excluded
+			if ($this->intId && ($act !== 'paste' || $mode !== 'create') && !\in_array($act, array(null, 'create', 'select', 'editAll', 'overrideAll', 'deleteAll'), true))
+			{
+				$currentRecord = $this->getCurrentRecord($this->intId);
+
+				if (!empty($currentRecord['ptable']))
+				{
+					return $currentRecord['ptable'];
+				}
+			}
+
+			// Use the ptable query parameter if it points to itself (nested elements case)
+			if (Input::get('ptable') === $this->strTable && \in_array($this->strTable, $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'] ?? array(), true))
+			{
+				return $this->strTable;
+			}
+		}
+
+		return $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] ?? null;
 	}
 
 	/**
@@ -2237,6 +2265,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				elseif (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
 				{
 					$strUrl .= Database::getInstance()->fieldExists('sorting', $this->strTable) ? '&amp;act=create&amp;mode=1&amp;pid=' . $this->intId : '&amp;act=create&amp;mode=2&amp;pid=' . ($currentRecord['pid'] ?? null);
+
+					if (($currentRecord['ptable'] ?? null) === $this->strTable)
+					{
+						$strUrl .= '&amp;ptable=' . $currentRecord['ptable'];
+					}
 				}
 
 				// List view
@@ -2268,6 +2301,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				elseif (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
 				{
 					$strUrl .= Database::getInstance()->fieldExists('sorting', $this->strTable) ? '&amp;act=copy&amp;mode=1&amp;pid=' . $this->intId . '&amp;id=' . $this->intId : '&amp;act=copy&amp;mode=2&amp;pid=' . $this->intCurrentPid . '&amp;id=' . $this->intId;
+
+					if (($currentRecord['ptable'] ?? null) === $this->strTable)
+					{
+						$strUrl .= '&amp;ptable=' . $currentRecord['ptable'];
+					}
 				}
 
 				// List view
@@ -3610,6 +3648,22 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			foreach ($subpalettes as $k=>$v)
 			{
 				$strPalette = preg_replace('/\b' . preg_quote($k, '/') . '\b/i', $k . ',[' . $k . '],' . $v . ',[EOF]', $strPalette);
+			}
+		}
+
+		// Call onpalette_callback
+		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onpalette_callback'] ?? null))
+		{
+			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onpalette_callback'] as $callback)
+			{
+				if (\is_array($callback))
+				{
+					$strPalette = System::importStatic($callback[0])->{$callback[1]}($strPalette, $this);
+				}
+				elseif (\is_callable($callback))
+				{
+					$strPalette = $callback($strPalette, $this);
+				}
 			}
 		}
 

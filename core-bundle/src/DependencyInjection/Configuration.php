@@ -1,4 +1,4 @@
-<?php
+öö<?php
 
 declare(strict_types=1);
 
@@ -562,6 +562,15 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->booleanNode('enforce_backend')
                             ->defaultValue(false)
+                        ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('hsts')
+                    ->info('Enables sending the HTTP Strict Transport Security (HSTS) header for secure requests.')
+                    ->canBeDisabled()
+                    ->children()
+                        ->scalarNode('ttl')
+                            ->defaultValue(31536000)
                         ->end()
                     ->end()
                 ->end()

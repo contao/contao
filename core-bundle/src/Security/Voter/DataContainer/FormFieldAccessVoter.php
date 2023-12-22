@@ -17,6 +17,7 @@ use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * @internal
@@ -30,9 +31,9 @@ class FormFieldAccessVoter extends AbstractDataContainerVoter
         return 'tl_form_field';
     }
 
-    protected function isGranted(CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
+    protected function hasAccess(TokenInterface $token, CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
     {
-        return $this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'form')
-            && $this->canAccessParent(ContaoCorePermissions::USER_CAN_EDIT_FORM, $action);
+        return $this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'form')
+            && $this->hasAccessToParent($token, ContaoCorePermissions::USER_CAN_EDIT_FORM, $action);
     }
 }

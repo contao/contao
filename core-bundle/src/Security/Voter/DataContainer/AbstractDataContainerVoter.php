@@ -44,7 +44,7 @@ abstract class AbstractDataContainerVoter implements VoterInterface, CacheableVo
                 $subject instanceof CreateAction,
                 $subject instanceof ReadAction,
                 $subject instanceof UpdateAction,
-                $subject instanceof DeleteAction => $this->isGranted($subject),
+                $subject instanceof DeleteAction => $this->hasAccess($token, $subject),
                 default => null,
             };
 
@@ -58,5 +58,5 @@ abstract class AbstractDataContainerVoter implements VoterInterface, CacheableVo
 
     abstract protected function getTable(): string;
 
-    abstract protected function isGranted(CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool;
+    abstract protected function hasAccess(TokenInterface $token, CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool;
 }
