@@ -10,14 +10,13 @@
 #}
 
 {% block style_component %}
-    {% set nonce = contao_csp_nonce('script-src') %}
     {% set style_attributes = attrs(style_attributes|default)
-        .set('nonce', nonce, nonce)
+        .setIfExists('nonce', contao_csp_nonce('style-src'))
     %}
 
-    <script{{ style_attributes }}>
+    <style{{ style_attributes }}>
         {% block style_content %}
             {# Output inline styles here. #}
         {% endblock %}
-    </script>
+    </style>
 {% endblock %}
