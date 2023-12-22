@@ -238,6 +238,10 @@ services:
             - '@contao.filesystem.mount_manager'
             - '@contao.filesystem.dbafs_manager'
 
+    contao.fragment.compositor:
+        class: Contao\CoreBundle\Fragment\FragmentCompositor
+        public: true
+
     contao.fragment.forward_renderer:
         class: Contao\CoreBundle\Fragment\ForwardFragmentRenderer
         arguments:
@@ -266,6 +270,7 @@ services:
 
     contao.fragment.registry:
         class: Contao\CoreBundle\Fragment\FragmentRegistry
+        public: true
 
     contao.framework:
         class: Contao\CoreBundle\Framework\ContaoFramework
@@ -824,6 +829,8 @@ services:
             - '@contao.framework'
             - '@contao.security.two_factor.trusted_device_manager'
             - '@security.firewall.map'
+            - '@uri_signer'
+            - '@security.token_storage'
             - '@?logger'
 
     contao.security.backend_access_voter:
@@ -839,16 +846,28 @@ services:
 
     contao.security.data_container.favorites_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\FavoritesVoter
+
+    contao.security.data_container.form_access_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\FormAccessVoter
         arguments:
-            - '@security.helper'
-            - '@database_connection'
+            - '@security.access.decision_manager'
+
+    contao.security.data_container.form_field_access_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\FormFieldAccessVoter
+        arguments:
+            - '@security.access.decision_manager'
 
     contao.security.data_container.table_access_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\TableAccessVoter
         arguments:
-            - '@security.helper'
+            - '@security.access.decision_manager'
         tags:
             - { name: security.voter, priority: 100 }
+
+    contao.security.data_container.undo_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\UndoVoter
+        arguments:
+            - '@security.access.decision_manager'
 
     contao.security.default_data_container_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\DefaultDataContainerVoter

@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 use Contao\ArticleModel;
 use Contao\Config;
 use Contao\ContentModel;
+use Contao\Controller;
 use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
@@ -23,6 +24,7 @@ use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\File\MetadataBag;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
+use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\ChunkedText;
@@ -40,6 +42,7 @@ use Contao\CoreBundle\Twig\Loader\TemplateLocator;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
 use Contao\CoreBundle\Twig\Runtime\FormatterRuntime;
+use Contao\CoreBundle\Twig\Runtime\FragmentRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
@@ -105,7 +108,7 @@ class ContentElementTestCase extends TestCase
      *
      * @param-out array<string, array<int|string, string>> $responseContextData
      */
-    protected function renderWithModelData(AbstractContentElementController $controller, array $modelData, string|null $template = null, bool $asEditorView = false, array|null &$responseContextData = null, ContainerBuilder|null $adjustedContainer = null): Response
+    protected function renderWithModelData(AbstractContentElementController $controller, array $modelData, string|null $template = null, bool $asEditorView = false, array|null &$responseContextData = null, ContainerBuilder|null $adjustedContainer = null, Request|null $request = null): Response
     {
         // Setup Twig environment
         $loader = $this->getContaoFilesystemLoader();
@@ -178,7 +181,7 @@ class ContentElementTestCase extends TestCase
             'type' => $modelData['type'],
         ]);
 
-        $response = $controller(new Request(), $model, 'main');
+        $response = $controller($request ?? new Request(), $model, 'main');
 
         // Record response context data
         $responseContextData = array_filter([
@@ -296,6 +299,7 @@ class ContentElementTestCase extends TestCase
 
         $environment->addRuntimeLoader(
             new FactoryRuntimeLoader([
+                FragmentRuntime::class => static fn () => new FragmentRuntime($framework),
                 InsertTagRuntime::class => static fn () => new InsertTagRuntime($insertTagParser),
                 HighlighterRuntime::class => static fn () => new HighlighterRuntime(),
                 SchemaOrgRuntime::class => static fn () => new SchemaOrgRuntime($responseContextAccessor),
@@ -489,11 +493,19 @@ class ContentElementTestCase extends TestCase
             })
         ;
 
+        $controllerAdapter = $this->mockAdapter(['getContentElement']);
+        $controllerAdapter
+            ->method('getContentElement')
+            ->with($this->isInstanceOf(ContentElementReference::class))
+            ->willReturn('Nested fragments')
+        ;
+
         return $this->mockContaoFramework([
             Config::class => $configAdapter,
             Input::class => $inputAdapter,
             PageModel::class => $pageAdapter,
             ArticleModel::class => $articleAdapter,
+            Controller::class => $controllerAdapter,
         ]);
     }
 }

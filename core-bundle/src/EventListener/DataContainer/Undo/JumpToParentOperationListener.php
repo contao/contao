@@ -14,42 +14,54 @@ namespace Contao\CoreBundle\EventListener\DataContainer\Undo;
 
 use Contao\Backend;
 use Contao\Controller;
+use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\DataContainer;
-use Contao\Image;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
  */
 #[AsCallback(table: 'tl_undo', target: 'list.operations.jumpToParent.button')]
-class JumpToParentButtonListener
+class JumpToParentOperationListener
 {
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly Connection $connection,
         private readonly TranslatorInterface $translator,
+        private readonly Security $security,
     ) {
     }
 
-    public function __invoke(array $row, string|null $href = '', string $label = '', string $title = '', string $icon = '', string $attributes = ''): string
+    public function __invoke(DataContainerOperation $operation): void
     {
+        $row = $operation->getRecord();
         $table = $row['fromTable'];
         $originalRow = StringUtil::deserialize($row['data'])[$table][0];
         $parent = $this->getParentTableForRow($table, $originalRow);
-        $image = $this->framework->getAdapter(Image::class);
 
-        if (!$parent || !$this->checkIfParentExists($parent)) {
-            return $image->getHtml('parent--disabled.svg', $label).' ';
+        if (
+            !$parent
+            || !$this->checkIfParentExists($parent)
+            || !$this->security->isGranted(ContaoCorePermissions::DC_PREFIX.$table, new CreateAction($table, $originalRow))
+        ) {
+            $operation->disable();
+
+            return;
         }
 
         $parentLinkParameters = $this->getParentLinkParameters($parent, $table);
 
         if (!$parentLinkParameters) {
-            return $image->getHtml('parent--disabled.svg', $label).' ';
+            $operation->disable();
+
+            return;
         }
 
         $newTitle = sprintf(
@@ -60,13 +72,9 @@ class JumpToParentButtonListener
 
         $backend = $this->framework->getAdapter(Backend::class);
 
-        return sprintf(
-            '<a href="%s" title="%s" onclick="Backend.openModalIframe({\'title\':\'%s\',\'url\': this.href });return false">%s</a> ',
-            $backend->addToUrl($parentLinkParameters.'&popup=1'),
-            StringUtil::specialchars($newTitle),
-            StringUtil::specialchars($newTitle),
-            $image->getHtml($icon, $label),
-        );
+        $operation->setUrl($backend->addToUrl($parentLinkParameters.'&popup=1'));
+        $operation['title'] = $newTitle;
+        $operation['attributes'] = ' onclick="Backend.openModalIframe({\'title\':\''.StringUtil::specialchars($newTitle).'\',\'url\': this.href });return false"';
     }
 
     private function getParentLinkParameters(array $parent, string $table): string

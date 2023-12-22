@@ -14,7 +14,6 @@ use Contao\Calendar;
 use Contao\CalendarEventsModel;
 use Contao\CalendarModel;
 use Contao\Config;
-use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
 use Contao\DataContainer;
@@ -42,7 +41,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		'markAsCopy'                  => 'title',
 		'onload_callback' => array
 		(
-			array('tl_calendar_events', 'checkPermission'),
+			array('tl_calendar_events', 'adjustDca'),
 			array('tl_calendar_events', 'generateFeed')
 		),
 		'oncut_callback' => array
@@ -489,13 +488,9 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 class tl_calendar_events extends Backend
 {
 	/**
-	 * Check permissions to edit table tl_calendar_events
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @throws AccessDeniedException
+	 * Unset the "allowComments" field if the comments bundle is not available.
 	 */
-	public function checkPermission(DataContainer $dc)
+	public function adjustDca()
 	{
 		$bundles = System::getContainer()->getParameter('kernel.bundles');
 
@@ -504,103 +499,6 @@ class tl_calendar_events extends Backend
 		{
 			$key = array_search('allowComments', $GLOBALS['TL_DCA']['tl_calendar_events']['list']['sorting']['headerFields'] ?? array());
 			unset($GLOBALS['TL_DCA']['tl_calendar_events']['list']['sorting']['headerFields'][$key], $GLOBALS['TL_DCA']['tl_calendar_events']['fields']['noComments']);
-		}
-
-		$user = BackendUser::getInstance();
-
-		if ($user->isAdmin)
-		{
-			return;
-		}
-
-		// Set root IDs
-		if (empty($user->calendars) || !is_array($user->calendars))
-		{
-			$root = array(0);
-		}
-		else
-		{
-			$root = $user->calendars;
-		}
-
-		$id = strlen(Input::get('id')) ? Input::get('id') : $dc->currentPid;
-
-		// Check current action
-		switch (Input::get('act'))
-		{
-			case 'paste':
-			case 'select':
-				// Check currentPid here (see #247)
-				if (!in_array($dc->currentPid, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to access calendar ID ' . $id . '.');
-				}
-				break;
-
-			case 'create':
-				if (!Input::get('pid') || !in_array(Input::get('pid'), $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to create events in calendar ID ' . Input::get('pid') . '.');
-				}
-				break;
-
-			case 'cut':
-			case 'copy':
-				if (!in_array(Input::get('pid'), $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' event ID ' . $id . ' to calendar ID ' . Input::get('pid') . '.');
-				}
-				// no break
-
-			case 'edit':
-			case 'show':
-			case 'delete':
-			case 'toggle':
-				$objCalendar = Database::getInstance()
-					->prepare("SELECT pid FROM tl_calendar_events WHERE id=?")
-					->limit(1)
-					->execute($id);
-
-				if ($objCalendar->numRows < 1)
-				{
-					throw new AccessDeniedException('Invalid event ID ' . $id . '.');
-				}
-
-				if (!in_array($objCalendar->pid, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' event ID ' . $id . ' of calendar ID ' . $objCalendar->pid . '.');
-				}
-				break;
-
-			case 'editAll':
-			case 'deleteAll':
-			case 'overrideAll':
-			case 'cutAll':
-			case 'copyAll':
-				if (!in_array($id, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to access calendar ID ' . $id . '.');
-				}
-
-				$objCalendar = Database::getInstance()->prepare("SELECT id FROM tl_calendar_events WHERE pid=?")->execute($id);
-				$objSession = System::getContainer()->get('request_stack')->getSession();
-
-				$session = $objSession->all();
-				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objCalendar->fetchEach('id'));
-				$objSession->replace($session);
-				break;
-
-			default:
-				if (Input::get('act'))
-				{
-					throw new AccessDeniedException('Invalid command "' . Input::get('act') . '".');
-				}
-
-				if (!in_array($id, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to access calendar ID ' . $id . '.');
-				}
-				break;
 		}
 	}
 

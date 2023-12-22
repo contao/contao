@@ -63,6 +63,9 @@ services:
         tags:
             - kernel.event_subscriber
 
+    contao.listener.data_container.accordion:
+        class: Contao\CoreBundle\EventListener\DataContainer\AccordionListener
+
     contao.listener.data_container.backend_favorites:
         class: Contao\CoreBundle\EventListener\DataContainer\BackendFavoritesListener
         arguments:
@@ -188,18 +191,24 @@ services:
             - '@contao.twig.loader.theme_namespace'
             - '@translator'
 
-    contao.listener.data_container.undo.jump_to_parent_button:
-        class: Contao\CoreBundle\EventListener\DataContainer\Undo\JumpToParentButtonListener
+    contao.listener.data_container.undo.jump_to_parent_operation:
+        class: Contao\CoreBundle\EventListener\DataContainer\Undo\JumpToParentOperationListener
         arguments:
             - '@contao.framework'
             - '@database_connection'
             - '@translator'
+            - '@security.helper'
 
     contao.listener.data_container.undo.label:
         class: Contao\CoreBundle\EventListener\DataContainer\Undo\LabelListener
         arguments:
             - '@contao.framework'
             - '@twig'
+
+    contao.listener.data_container.undo_operation:
+        class: Contao\CoreBundle\EventListener\DataContainer\Undo\UndoOperationListener
+        arguments:
+            - '@security.helper'
 
     contao.listener.data_container.validate_custom_rgxp:
         class: Contao\CoreBundle\EventListener\DataContainer\ValidateCustomRgxpListener
@@ -565,6 +574,13 @@ services:
         class: Contao\CoreBundle\EventListener\SubrequestCacheSubscriber
         tags:
             - kernel.event_subscriber
+
+    contao.listener.transport_security_header:
+        class: Contao\CoreBundle\EventListener\TransportSecurityHeaderListener
+        arguments:
+            - '@contao.routing.scope_matcher'
+        tags:
+            - kernel.event_listener
 
     contao.listener.unwrap_twig_exception:
         class: Contao\CoreBundle\EventListener\UnwrapTwigExceptionListener
