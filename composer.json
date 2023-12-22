@@ -160,6 +160,7 @@
         "symfony/yaml": "^6.4",
         "terminal42/escargot": "^1.6",
         "terminal42/service-annotation-bundle": "^1.1",
+        "toflar/cronjob-supervisor": "^1.0",
         "toflar/psr6-symfony-http-cache-store": "^4.0",
         "twig/extra-bundle": "^3.0",
         "twig/string-extra": "^3.0",
