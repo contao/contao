@@ -1,8 +1,16 @@
 {% extends "@Contao/content_element/_base.html.twig" %}
 {% use "@Contao/component/_stylesheet.html.twig" %}
 
+{% set slider_attributes = attrs(attributes|default)
+    .addClass('swiper')
+    .set('data-delay', delay)
+    .set('data-speed', speed)
+    .set('data-offset', offset)
+    .set('data-loop', loop)
+%}
+
 {% block content %}
-    <div class="swiper" data-delay="{{ delay }}" data-speed="{{ speed }}" data-offset="{{ offset }}" data-loop="{{ loop }}">
+    <div{{ slider_attributes }}>
         <div class="swiper-wrapper">
             {% for element in nested_fragments %}
                 <div class="swiper-slide">
@@ -10,8 +18,8 @@
                 </div>
             {% endfor %}
         </div>
-        <button type="button" class="swiper-button-next"></button>
         <button type="button" class="swiper-button-prev"></button>
+        <button type="button" class="swiper-button-next"></button>
         <div class="swiper-pagination"></div>
     </div>
 {% endblock %}
@@ -26,7 +34,7 @@
                     let opts = {
                         speed: el.getAttribute('data-speed'),
                         initialSlide: el.getAttribute('data-offset'),
-                        loop: el.getAttribute('data-loop'),
+                        loop: el.hasAttribute('data-loop'),
                     };
 
                     let delay = el.getAttribute('data-delay');
