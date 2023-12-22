@@ -105,7 +105,7 @@ services:
 
     contao.command.supervise_workers:
         class: Contao\CoreBundle\Command\SuperviseWorkersCommand
-        factory: [null, 'create']
+        factory: [null, create]
         arguments:
             - '@messenger.receiver_locator'
             - '@contao.process_util'
