@@ -12,29 +12,26 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
-use Contao\CoreBundle\Controller\ContentElement\SliderController;
-use Contao\CoreBundle\Controller\ContentElement\TextController;
-use Symfony\Component\HttpFoundation\Request;
+use Contao\ContentModel;
+use Contao\CoreBundle\Controller\ContentElement\SwiperController;
+use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 
-class SliderControllerTest extends ContentElementTestCase
+class SwiperControllerTest extends ContentElementTestCase
 {
     public function testOutputsMarkup(): void
     {
-        $nested = $this->renderWithModelData(
-            new TextController($this->getDefaultStudio()),
-            [
-                'type' => 'text',
-                'text' => '<p>Foo.</p>',
-            ],
-        );
+        $text = $this->mockClassWithProperties(ContentModel::class, [
+            'type' => 'text',
+        ]);
 
-        $request = new Request();
-        $request->attributes->set('nestedFragments', [$nested]);
+        $image = $this->mockClassWithProperties(ContentModel::class, [
+            'type' => 'image',
+        ]);
 
         $response = $this->renderWithModelData(
-            new SliderController(),
+            new SwiperController(),
             [
-                'type' => 'slider',
+                'type' => 'swiper',
                 'sliderDelay' => 0,
                 'sliderSpeed' => 300,
                 'sliderStartSlide' => 0,
@@ -44,19 +41,21 @@ class SliderControllerTest extends ContentElementTestCase
             false,
             $responseContextData,
             null,
-            $request,
+            [
+                new ContentElementReference($text, 'main', [], true),
+                new ContentElementReference($image, 'main', [], true),
+            ],
         );
 
         $expectedOutput = <<<'HTML'
-            <div class="content-slider">
+            <div class="content-swiper">
                 <div class="swiper" data-delay="0" data-speed="300" data-offset="0" data-loop="1">
                     <div class="swiper-wrapper">
                         <div class="swiper-slide">
-                            <div class="content-text">
-                                <div class="rte">
-                                    <p>Foo.</p>
-                                </div>
-                            </div>
+                            text
+                        </div>
+                        <div class="swiper-slide">
+                            image
                         </div>
                     </div>
                     <div class="swiper-button-next"></div>
@@ -67,5 +66,7 @@ class SliderControllerTest extends ContentElementTestCase
             HTML;
 
         $this->assertSameHtml($expectedOutput, $response->getContent());
+        $this->assertArrayHasKey('swiper_css', $responseContextData['head']);
+        $this->assertArrayHasKey('swiper_js', $responseContextData['body']);
     }
 }
