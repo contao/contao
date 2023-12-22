@@ -19,7 +19,7 @@
 {% block stylesheet_component %}
     {% set stylesheet = stylesheet|default(_context) %}
 
-    {% if stylesheet.lazy is defined ? stylesheet.lazy : false %}
+    {% if stylesheet.lazy|default %}
         {# Lazy load, see https://web.dev/defer-non-critical-css/ #}
         <link rel="preload" as="style" href="{{ stylesheet.file }}" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="{{ stylesheet.file }}"></noscript>
