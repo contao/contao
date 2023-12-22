@@ -12,9 +12,8 @@
 #}
 
 {% block script_component %}
-    {% set nonce = contao_csp_nonce('script-src') %}
     {% set script_attributes = attrs(script_attributes|default)
-        .set('nonce', nonce, nonce)
+        .setIfExists('nonce', contao_csp_nonce('script-src'))
     %}
 
     <script{{ script_attributes }}>
