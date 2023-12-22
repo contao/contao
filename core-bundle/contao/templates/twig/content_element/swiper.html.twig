@@ -1,0 +1,62 @@
+{% extends "@Contao/content_element/_base.html.twig" %}
+{% use "@Contao/component/_stylesheet.html.twig" %}
+
+{% block content %}
+    <div class="swiper" data-delay="{{ delay }}" data-speed="{{ speed }}" data-offset="{{ offset }}" data-loop="{{ loop }}">
+        <div class="swiper-wrapper">
+            {% for element in nested_fragments %}
+                <div class="swiper-slide">
+                    {{ content_element(element) }}
+                </div>
+            {% endfor %}
+        </div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-pagination"></div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    {% add "swiper_script" to body %}
+        <script src="{{ asset('js/swiper-bundle.min.js', 'contao-components/swiper') }}"></script>
+        <script>
+            (function() {
+                const swiper = document.querySelectorAll('.swiper');
+                swiper.forEach (el => {
+                    let opts = {
+                        speed: el.getAttribute('data-speed'),
+                        initialSlide: el.getAttribute('data-offset'),
+                        loop: el.getAttribute('data-loop'),
+                    };
+
+                    let delay = el.getAttribute('data-delay');
+                    if (delay > 0) {
+                        opts['autoplay'] = { delay: delay };
+                    }
+
+                    new Swiper(el, Object.assign({
+                        {% block init_options %}
+                            pagination: {
+                                el: '.swiper-pagination',
+                                clickable: true,
+                            },
+                            navigation: {
+                                prevEl: '.swiper-button-prev',
+                                nextEl: '.swiper-button-next',
+                            },
+                            {# Put custom options here #}
+                        {% endblock %}
+                    }, opts));
+                });
+            })();
+        </script>
+    {% endadd %}
+{% endblock %}
+
+{% block style %}
+    {% set swiper_css_file = asset('css/swiper-bundle.min.css', 'contao-components/swiper') %}
+
+    {% add "swiper_css" to head %}
+        {% with {file: swiper_css_file} %}{{ block('stylesheet_component') }}{% endwith %}
+    {% endadd %}
+{% endblock %}
