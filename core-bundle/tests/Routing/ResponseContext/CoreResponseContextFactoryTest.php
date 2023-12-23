@@ -163,7 +163,6 @@ class CoreResponseContextFactoryTest extends TestCase
             $insertTagsParser,
             $cspParser,
             $urlGenerator,
-            true,
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
