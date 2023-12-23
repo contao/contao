@@ -275,14 +275,6 @@ services:
         tags:
             - kernel.event_listener
 
-    contao.listener.finalize_response_context:
-        class: Contao\CoreBundle\EventListener\FinalizeResponseContextListener
-        arguments:
-            - '@contao.routing.response_context_accessor'
-        tags:
-            # The priority must be lower than 'contao.listener.preview_toolbar' but higher than 'web_profiler.debug_toolbar'
-            - { name: kernel.event_listener, priority: -100 }
-
     contao.listener.form_field_template_options:
         class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
         arguments:
@@ -475,6 +467,7 @@ services:
             - '@contao.security.token_checker'
             - '@twig'
             - '@router'
+            - '@contao.csp.parser'
             - '%contao.preview_script%'
         tags:
             - kernel.event_listener

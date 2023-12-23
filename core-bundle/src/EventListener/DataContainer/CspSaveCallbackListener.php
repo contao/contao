@@ -28,7 +28,7 @@ class CspSaveCallbackListener
     public function __invoke(mixed $value): mixed
     {
         try {
-            $this->cspParser->parseHeader(trim((string) $value));
+            $this->cspParser->parseHeader((string) $value);
         } catch (\InvalidArgumentException $e) {
             throw new \RuntimeException($this->translator->trans('ERR.invalidCsp', [$e->getMessage()], 'contao_default'), 0, $e);
         }

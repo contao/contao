@@ -1,4 +1,4 @@
-{% set styleNonce = contao_csp_nonce('style-src') %}
+{% set styleNonce = csp_handler.getNonce('style-src') %}
 <style{% if styleNonce %} nonce="{{ styleNonce }}"{% endif %}>
     .cto-toolbar {
         font-family: -apple-system,system-ui,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
@@ -207,7 +207,7 @@
     }
 </style>
 
-{% set scriptNonce = contao_csp_nonce('script-src') %}
+{% set scriptNonce = csp_handler.getNonce('script-src') %}
 <script{% if scriptNonce %} nonce="{{ scriptNonce }}"{% endif %}>
     (function () {
         const toolbar = document.createElement('div');

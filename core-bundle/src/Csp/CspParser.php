@@ -24,11 +24,16 @@ class CspParser
 
     public function parseHeader(string $header): DirectiveSet
     {
-        $parser = new ContentSecurityPolicyParser();
         $directiveSet = new DirectiveSet($this->policyManager);
+
+        if (!$header) {
+            return $directiveSet;
+        }
+
+        $parser = new ContentSecurityPolicyParser();
         $names = $directiveSet->getNames();
 
-        $directives = explode(';', $header);
+        $directives = array_filter(array_map('trim', explode(';', $header)));
 
         foreach ($directives as $directive) {
             [$name, $value] = explode(' ', trim($directive), 2) + [null, null];

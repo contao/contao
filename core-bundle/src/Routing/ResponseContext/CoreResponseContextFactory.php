@@ -132,7 +132,7 @@ class CoreResponseContextFactory
             return;
         }
 
-        $directives = $this->cspParser->parseHeader(trim((string) $pageModel->csp));
+        $directives = $this->cspParser->parseHeader((string) $pageModel->csp);
         $directives->setLevel1Fallback(false);
 
         if ($pageModel->cspReportLog) {
