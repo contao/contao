@@ -180,7 +180,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'includeCache'                => 'clientCache,cache,alwaysLoadFromCache',
 		'includeChmod'                => 'cuser,cgroup,chmod',
 		'enforceTwoFactor'            => 'twoFactorJumpTo',
-		'enableCsp'                   => 'csp,cspLevel1Fallback,cspLegacyHeader,cspReportOnly',
+		'enableCsp'                   => 'csp,cspReportOnly',
 	),
 
 	// Fields
@@ -696,18 +696,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'inputType'               => 'text',
 			'eval'                    => array('decodeEntities'=>true),
 			'sql'                     => array('type'=>'text', 'notnull'=>false),
-		),
-		'cspLevel1Fallback' => array
-		(
-			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'boolean', 'default'=>false),
-		),
-		'cspLegacyHeader' => array
-		(
-			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'boolean', 'default'=>false),
 		),
 		'cspReportOnly' => array
 		(

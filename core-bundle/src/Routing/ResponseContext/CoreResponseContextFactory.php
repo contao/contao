@@ -123,7 +123,7 @@ class CoreResponseContextFactory
 
         if ($pageModel->enableCsp) {
             $directives = $this->cspParser->parseHeader(trim((string) $pageModel->csp));
-            $directives->setLevel1Fallback((bool) $pageModel->cspLevel1Fallback);
+            $directives->setLevel1Fallback(false);
 
             if ($this->cspReportingEnabled) {
                 $urlContext = $this->urlGenerator->getContext();
@@ -141,11 +141,7 @@ class CoreResponseContextFactory
                 $urlContext->setBaseUrl($baseUrl);
             }
 
-            $cspHandler = new CspHandler(
-                $directives,
-                (bool) $pageModel->cspReportOnly,
-                (bool) $pageModel->cspLegacyHeader,
-            );
+            $cspHandler = new CspHandler($directives, (bool) $pageModel->cspReportOnly);
 
             $context->add($cspHandler);
         }

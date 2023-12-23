@@ -368,18 +368,6 @@
       <trans-unit id="tl_page.csp.1">
         <source>Enter custom Content Security Policy directives here.</source>
       </trans-unit>
-      <trans-unit id="tl_page.cspLevel1Fallback.0">
-        <source>Enable Level 1 fallback</source>
-      </trans-unit>
-      <trans-unit id="tl_page.cspLevel1Fallback.1">
-        <source>Provides a CSP Level 1 fallback for old browsers when using hash or nonce by adding an 'unsafe-inline' source.</source>
-      </trans-unit>
-      <trans-unit id="tl_page.cspLegacyHeader.0">
-        <source>Enable legacy headers</source>
-      </trans-unit>
-      <trans-unit id="tl_page.cspLegacyHeader.1">
-        <source>Also adds the legacy 'X-Content-Security-Policy' header.</source>
-      </trans-unit>
       <trans-unit id="tl_page.cspReportOnly.0">
         <source>Reporting only</source>
       </trans-unit>

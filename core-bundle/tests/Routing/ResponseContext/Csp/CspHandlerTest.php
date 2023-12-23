@@ -94,27 +94,11 @@ class CspHandlerTest extends TestCase
 
         $this->assertSame("script-src 'self'", $response->headers->get('Content-Security-Policy'));
 
-        $cspHandler->setUseLegacyHeaders(true);
-        $response = new Response();
-        $cspHandler->applyHeaders($response);
-
-        $this->assertSame("script-src 'self'", $response->headers->get('X-Content-Security-Policy'));
-
-        $cspHandler->setUseLegacyHeaders(false);
         $cspHandler->setReportOnly(true);
-
         $response = new Response();
         $cspHandler->applyHeaders($response);
 
         $this->assertSame("script-src 'self'", $response->headers->get('Content-Security-Policy-Report-Only'));
-
-        $cspHandler->setUseLegacyHeaders(true);
-        $cspHandler->setReportOnly(true);
-
-        $response = new Response();
-        $cspHandler->applyHeaders($response);
-
-        $this->assertSame("script-src 'self'", $response->headers->get('X-Content-Security-Policy-Report-Only'));
     }
 
     private function getCspHandler(array $directives = ['script-src' => "'self'"]): CspHandler

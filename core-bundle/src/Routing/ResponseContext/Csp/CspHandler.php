@@ -32,7 +32,6 @@ final class CspHandler
     public function __construct(
         private DirectiveSet $directives,
         private bool $reportOnly = false,
-        private bool $useLegacyHeaders = false,
     ) {
     }
 
@@ -58,18 +57,6 @@ final class CspHandler
     public function getReportOnly(): bool
     {
         return $this->reportOnly;
-    }
-
-    public function setUseLegacyHeaders(bool $useLegacyHeaders): self
-    {
-        $this->useLegacyHeaders = $useLegacyHeaders;
-
-        return $this;
-    }
-
-    public function getUseLegacyHeaders(): bool
-    {
-        return $this->useLegacyHeaders;
     }
 
     public function getNonce(string $directive): string|null
@@ -166,12 +153,8 @@ final class CspHandler
             return;
         }
 
-        $headerName = fn ($name) => $name.($this->reportOnly ? '-Report-Only' : '');
+        $headerName = 'Content-Security-Policy'.($this->reportOnly ? '-Report-Only' : '');
 
-        $response->headers->set($headerName('Content-Security-Policy'), $headerValue);
-
-        if ($this->useLegacyHeaders) {
-            $response->headers->set($headerName('X-Content-Security-Policy'), $headerValue);
-        }
+        $response->headers->set($headerName, $headerValue);
     }
 }
