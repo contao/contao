@@ -25,7 +25,7 @@ class CheckCspReportingPassTest extends TestCase
         $container->setParameter('contao.csp.reporting.enabled', true);
 
         $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('Cannot enable CSP reporting if the NelmioSecurityBundle was not loaded.');
+        $this->expectExceptionMessage('Cannot enable Contao CSP reporting if the NelmioSecurityBundle was not loaded.');
 
         (new CheckCspReportingPass())->process($container);
     }
