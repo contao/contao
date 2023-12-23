@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route(path: '/_contao/csp/report/{page}', name: self::class, methods: [Request::METHOD_POST])]
+#[Route(path: '/_contao/csp/report/{page}', methods: [Request::METHOD_POST])]
 final class CspReporterController
 {
     public function __construct(
@@ -37,7 +37,6 @@ final class CspReporterController
 
         $this->framework->initialize();
 
-        /** @var PageModel $pageModelAdapter */
         $pageModelAdapter = $this->framework->getAdapter(PageModel::class);
 
         if (!$page || !$pageModelAdapter->findWithDetails($page)?->cspReportLog) {

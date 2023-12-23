@@ -142,7 +142,7 @@
         "symfony/process": "^6.4",
         "symfony/property-access": "^6.4",
         "symfony/rate-limiter": "^6.4",
-        "symfony/routing": "^6.4.1",
+        "symfony/routing": "^6.4",
         "symfony/security-bundle": "^6.4",
         "symfony/security-core": "^6.4",
         "symfony/security-csrf": "^6.4",
