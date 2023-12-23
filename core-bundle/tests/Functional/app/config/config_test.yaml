@@ -71,3 +71,12 @@ scheb_two_factor:
 services:
     doctrine.orm.default_entity_manager.validator_loader:
         synthetic: true
+
+monolog:
+    handlers:
+        main:
+            type: rotating_file
+            max_files: 1
+            path: '%kernel.logs_dir%/%kernel.environment%.log'
+            level: debug
+            channels: ['!doctrine', '!event', '!php', '!deprecation']
