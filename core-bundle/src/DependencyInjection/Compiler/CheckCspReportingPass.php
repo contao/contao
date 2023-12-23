@@ -24,7 +24,7 @@ class CheckCspReportingPass implements CompilerPassInterface
     public function process(ContainerBuilder $container): void
     {
         if ($container->getParameter('contao.csp.reporting.enabled') && !$container->hasDefinition('nelmio_security.csp_reporter_controller')) {
-            throw new LogicException('Cannot enable CSP reporting if the NelmioSecurityBundle was not loaded.');
+            throw new LogicException('Cannot enable Contao CSP reporting if the NelmioSecurityBundle was not loaded.');
         }
     }
 }
