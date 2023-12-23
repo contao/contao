@@ -18,12 +18,7 @@ use Contao\CoreBundle\Exception\RouteParametersException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
-use Contao\CoreBundle\Security\AccessTokenHandler;
 use Contao\PageModel;
-use League\Uri\Modifier;
-use League\Uri\Uri;
-use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
@@ -39,8 +34,6 @@ class PreviewUrlConvertListener
         private readonly ContaoFramework $framework,
         private readonly PageRegistry $pageRegistry,
         private readonly UriSigner $signer,
-        private readonly Security $security,
-        private readonly AccessTokenHandler $accessTokenHandler,
         private readonly string $fragmentPath = '/_fragment',
     ) {
     }
@@ -78,17 +71,6 @@ class PreviewUrlConvertListener
                 // Ignore the exception and set no URL for pages with requireItem (see #3525)
             } catch (ExceptionInterface) {
                 $event->setUrl($this->getFragmentUrl($request, $page));
-            }
-
-            $origin = Uri::new($request->getUri());
-            $target = Uri::new($event->getUrl());
-            $token = $this->security->getToken();
-
-            if ($token && $origin->getHost() !== $target->getHost()) {
-                $accessToken = $this->accessTokenHandler->createTokenForUser($token->getUserIdentifier());
-                $preAuthTarget = Modifier::from((string) $origin->withHost($target->getHost()))->appendQueryParameters(['access_token' => $accessToken]);
-
-                $event->setResponse(new RedirectResponse((string) $preAuthTarget));
             }
         }
     }

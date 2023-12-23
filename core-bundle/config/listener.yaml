@@ -467,8 +467,6 @@ services:
             - '@contao.framework'
             - '@contao.routing.page_registry'
             - '@uri_signer'
-            - '@security.helper'
-            - '@contao.security.access_token_handler'
             - '%fragment.path%'
         tags:
             - kernel.event_listener
