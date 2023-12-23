@@ -775,7 +775,6 @@ services:
             - '@contao.insert_tag.parser'
             - '@contao.csp.parser'
             - '@router'
-            - '%contao.csp.reporting.enabled%'
 
     contao.routing.route_404_provider:
         class: Contao\CoreBundle\Routing\Route404Provider

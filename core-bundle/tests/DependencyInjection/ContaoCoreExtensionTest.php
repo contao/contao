@@ -968,50 +968,6 @@ class ContaoCoreExtensionTest extends TestCase
         yield 'callback' => [AsCallback::class];
     }
 
-    public function testCspSecurityConfiguration(): void
-    {
-        $container = $this->getContainerBuilder();
-        (new ContaoCoreExtension())->load([], $container);
-
-        $this->assertFalse($container->getParameter('contao.csp.reporting.enabled'));
-        $this->assertSame('/_contao/csp/report', $container->getParameter('contao.csp.reporting.path'));
-
-        (new ContaoCoreExtension())->load(
-            [
-                'contao' => [
-                    'security' => [
-                        'csp' => [
-                            'reporting' => true,
-                        ],
-                    ],
-                ],
-            ],
-            $container,
-        );
-
-        $this->assertTrue($container->getParameter('contao.csp.reporting.enabled'));
-        $this->assertSame('/_contao/csp/report', $container->getParameter('contao.csp.reporting.path'));
-
-        (new ContaoCoreExtension())->load(
-            [
-                'contao' => [
-                    'security' => [
-                        'csp' => [
-                            'reporting' => [
-                                'enabled' => true,
-                                'path' => '/custom',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-            $container,
-        );
-
-        $this->assertTrue($container->getParameter('contao.csp.reporting.enabled'));
-        $this->assertSame('/custom', $container->getParameter('contao.csp.reporting.path'));
-    }
-
     private function getContainerBuilder(array|null $params = null): ContainerBuilder
     {
         $container = new ContainerBuilder(

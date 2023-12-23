@@ -137,8 +137,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('contao.intl.countries', $config['intl']['countries']);
         $container->setParameter('contao.insert_tags.allowed_tags', $config['insert_tags']['allowed_tags']);
         $container->setParameter('contao.sanitizer.allowed_url_protocols', $config['sanitizer']['allowed_url_protocols']);
-        $container->setParameter('contao.csp.reporting.enabled', $config['security']['csp']['reporting']['enabled'] ?? false);
-        $container->setParameter('contao.csp.reporting.path', $config['security']['csp']['reporting']['path'] ?? null);
 
         $this->handleMessengerConfig($config, $container);
         $this->handleSearchConfig($config, $container);
