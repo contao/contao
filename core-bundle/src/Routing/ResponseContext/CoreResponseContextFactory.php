@@ -146,11 +146,11 @@ class CoreResponseContextFactory
             try {
                 $reportUri = $this->urlGenerator->generate(CspReporterController::class, ['page' => $pageModel->id], UrlGeneratorInterface::ABSOLUTE_URL);
                 $directives->setDirective('report-uri', $reportUri);
-            } catch (RouteNotFoundException $e) {
+            } catch (RouteNotFoundException) {
                 // noop
             } finally {
                 $urlContext->setBaseUrl($baseUrl);
-            }            
+            }
         }
 
         $cspHandler = new CspHandler($directives, (bool) $pageModel->cspReportOnly);
