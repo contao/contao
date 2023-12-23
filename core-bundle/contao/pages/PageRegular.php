@@ -620,6 +620,7 @@ class PageRegular extends Frontend
 		{
 			$customScript = trim($objLayout->script);
 
+			// Add nonces to the <script> tags since we consider this safe user input.
 			if ($nonce = $this->Template->nonce('script-src'))
 			{
 				$customScript = str_replace('<script', '<script nonce="' . $nonce . '"', $customScript);
