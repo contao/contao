@@ -121,31 +121,38 @@ class CoreResponseContextFactory
             )
         ;
 
-        if ($pageModel->enableCsp) {
-            $directives = $this->cspParser->parseHeader(trim((string) $pageModel->csp));
-            $directives->setLevel1Fallback(false);
-
-            if ($this->cspReportingEnabled) {
-                $urlContext = $this->urlGenerator->getContext();
-                $baseUrl = $urlContext->getBaseUrl();
-
-                // Remove preview script if present
-                $urlContext->setBaseUrl('');
-
-                try {
-                    $directives->setDirective('report-uri', $this->urlGenerator->generate('contao_csp_reporter', [], UrlGeneratorInterface::ABSOLUTE_URL));
-                } catch (RouteNotFoundException) {
-                    // noop
-                }
-
-                $urlContext->setBaseUrl($baseUrl);
-            }
-
-            $cspHandler = new CspHandler($directives, (bool) $pageModel->cspReportOnly);
-
-            $context->add($cspHandler);
-        }
+        $this->addCspHandler($context, $pageModel);
 
         return $context;
+    }
+
+    private function addCspHandler(ResponseContext $context, PageModel $pageModel): void
+    {
+        if (!$pageModel->enableCsp) {
+            return;
+        }
+
+        $directives = $this->cspParser->parseHeader(trim((string) $pageModel->csp));
+        $directives->setLevel1Fallback(false);
+
+        if ($this->cspReportingEnabled) {
+            $urlContext = $this->urlGenerator->getContext();
+            $baseUrl = $urlContext->getBaseUrl();
+
+            // Remove preview script if present
+            $urlContext->setBaseUrl('');
+
+            try {
+                $directives->setDirective('report-uri', $this->urlGenerator->generate('contao_csp_reporter', [], UrlGeneratorInterface::ABSOLUTE_URL));
+            } catch (RouteNotFoundException) {
+                // noop
+            }
+
+            $urlContext->setBaseUrl($baseUrl);
+        }
+
+        $cspHandler = new CspHandler($directives, (bool) $pageModel->cspReportOnly);
+
+        $context->add($cspHandler);
     }
 }
