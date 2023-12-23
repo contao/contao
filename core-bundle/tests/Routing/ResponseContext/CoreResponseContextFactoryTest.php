@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Routing\ResponseContext;
 
+use Contao\CoreBundle\Controller\CspReporterController;
 use Contao\CoreBundle\Csp\CspParser;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
@@ -135,12 +136,12 @@ class CoreResponseContextFactoryTest extends TestCase
         $urlGenerator
             ->expects($this->once())
             ->method('generate')
-            ->with('contao_csp_reporter', [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->with(CspReporterController::class, ['page' => 1], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturn('https://example.com/csp/report')
         ;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class);
-        $pageModel->id = 0;
+        $pageModel->id = 1;
         $pageModel->title = 'My title';
         $pageModel->description = 'My description';
         $pageModel->robots = 'noindex,nofollow';
@@ -151,7 +152,7 @@ class CoreResponseContextFactoryTest extends TestCase
         $pageModel->enableCsp = true;
         $pageModel->csp = "script-src 'self'";
         $pageModel->cspReportOnly = true;
-        $pageModel->enableLegacyCsp = true;
+        $pageModel->cspReportLog = true;
 
         $factory = new CoreResponseContextFactory(
             $responseAccessor,
@@ -184,7 +185,7 @@ class CoreResponseContextFactoryTest extends TestCase
                 '@context' => 'https://schema.contao.org/',
                 '@type' => 'Page',
                 'title' => 'My title',
-                'pageId' => 0,
+                'pageId' => 1,
                 'noSearch' => false,
                 'protected' => false,
                 'groups' => [],

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\ResponseContext;
 
+use Contao\CoreBundle\Controller\CspReporterController;
 use Contao\CoreBundle\Csp\CspParser;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
@@ -135,7 +136,7 @@ class CoreResponseContextFactory
         $directives = $this->cspParser->parseHeader(trim((string) $pageModel->csp));
         $directives->setLevel1Fallback(false);
 
-        if ($this->cspReportingEnabled) {
+        if ($pageModel->cspReportLog) {
             $urlContext = $this->urlGenerator->getContext();
             $baseUrl = $urlContext->getBaseUrl();
 
@@ -143,12 +144,13 @@ class CoreResponseContextFactory
             $urlContext->setBaseUrl('');
 
             try {
-                $directives->setDirective('report-uri', $this->urlGenerator->generate('contao_csp_reporter', [], UrlGeneratorInterface::ABSOLUTE_URL));
-            } catch (RouteNotFoundException) {
+                $reportUri = $this->urlGenerator->generate(CspReporterController::class, ['page' => $pageModel->id], UrlGeneratorInterface::ABSOLUTE_URL);
+                $directives->setDirective('report-uri', $reportUri);
+            } catch (RouteNotFoundException $e) {
                 // noop
-            }
-
-            $urlContext->setBaseUrl($baseUrl);
+            } finally {
+                $urlContext->setBaseUrl($baseUrl);
+            }            
         }
 
         $cspHandler = new CspHandler($directives, (bool) $pageModel->cspReportOnly);

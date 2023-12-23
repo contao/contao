@@ -19,7 +19,6 @@ use Contao\CoreBundle\DependencyInjection\Compiler\AddCronJobsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddInsertTagsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddNativeTransportFactoryPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
-use Contao\CoreBundle\DependencyInjection\Compiler\CheckCspReportingPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\ConfigureFilesystemPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\CrawlerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\DataContainerCallbackPass;
@@ -77,7 +76,6 @@ class ContaoCoreBundleTest extends TestCase
             LoggerChannelPass::class,
             ConfigureFilesystemPass::class,
             AddInsertTagsPass::class,
-            CheckCspReportingPass::class,
         ];
 
         $security = $this->createMock(SecurityExtension::class);

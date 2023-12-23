@@ -374,6 +374,12 @@
       <trans-unit id="tl_page.cspReportOnly.1">
         <source>Tells the browser to only report policy violations without enforcing them.</source>
       </trans-unit>
+      <trans-unit id="tl_page.cspReportLog.0">
+        <source>Enable report logging</source>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportLog.1">
+        <source>Enables logging of CSP violations to the Contao system log.</source>
+      </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
       </trans-unit>

@@ -180,7 +180,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'includeCache'                => 'clientCache,cache,alwaysLoadFromCache',
 		'includeChmod'                => 'cuser,cgroup,chmod',
 		'enforceTwoFactor'            => 'twoFactorJumpTo',
-		'enableCsp'                   => 'csp,cspReportOnly',
+		'enableCsp'                   => 'csp,cspReportOnly,cspReportLog',
 	),
 
 	// Fields
@@ -698,6 +698,12 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'sql'                     => array('type'=>'text', 'notnull'=>false),
 		),
 		'cspReportOnly' => array
+		(
+			'inputType'               => 'checkbox',
+			'eval'                    => array('tl_class'=>'w50'),
+			'sql'                     => array('type'=>'boolean', 'default'=>false),
+		),
+		'cspReportLog' => array
 		(
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),

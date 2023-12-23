@@ -651,14 +651,6 @@ services:
     contao.routing.backend_matcher:
         class: Contao\CoreBundle\Routing\Matcher\BackendMatcher
 
-    contao.routing.csp_reporter_loader:
-        class: Contao\CoreBundle\Routing\CspReporterLoader
-        arguments:
-            - '%contao.csp.reporting.enabled%'
-            - '%contao.csp.reporting.path%'
-        tags:
-            - routing.loader
-
     contao.routing.frontend_matcher:
         class: Contao\CoreBundle\Routing\Matcher\FrontendMatcher
 

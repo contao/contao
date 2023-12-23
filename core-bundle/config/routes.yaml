@@ -14,8 +14,3 @@ contao_backend_redirect:
         _controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::redirectAction
         route: contao_backend
         permanent: true
-
-# CSP reporting controller
-contao_csp_reporter:
-    resource: .
-    type: contao_csp_reporter

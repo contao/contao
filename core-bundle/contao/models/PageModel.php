@@ -1000,7 +1000,7 @@ class PageModel extends Model
 			$this->enableCsp = $objParentPage->enableCsp;
 			$this->csp = $objParentPage->csp;
 			$this->cspReportOnly = $objParentPage->cspReportOnly;
-			$this->enableLegacyCsp = $objParentPage->enableLegacyCsp;
+			$this->cspReportLog = $objParentPage->cspReportLog;
 
 			// Store whether the root page has been published
 			$this->rootIsPublic = $objParentPage->published && (!$objParentPage->start || $objParentPage->start <= $time) && (!$objParentPage->stop || $objParentPage->stop > $time);
