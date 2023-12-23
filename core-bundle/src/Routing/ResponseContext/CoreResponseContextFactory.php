@@ -40,7 +40,6 @@ class CoreResponseContextFactory
         private readonly InsertTagParser $insertTagParser,
         private readonly CspParser $cspParser,
         private readonly UrlGeneratorInterface $urlGenerator,
-        private readonly bool $cspReportingEnabled = false,
     ) {
     }
 
