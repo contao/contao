@@ -238,19 +238,23 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
     private function handleMessengerConfig(array $config, ContainerBuilder $container): void
     {
-        if (!$container->hasDefinition('contao.cron.messenger')) {
+        if (
+            !$container->hasDefinition('contao.cron.messenger')
+            || !$container->hasDefinition('contao.command.supervise_workers')
+        ) {
             return;
         }
 
-        // No workers defined -> remove our cron job
+        // No workers defined -> remove our cron job and the command
         if (0 === \count($config['messenger']['workers'])) {
             $container->removeDefinition('contao.cron.messenger');
+            $container->removeDefinition('contao.command.supervise_workers');
 
             return;
         }
 
-        $cron = $container->getDefinition('contao.cron.messenger');
-        $cron->setArgument(2, $config['messenger']['workers']);
+        $command = $container->getDefinition('contao.command.supervise_workers');
+        $command->setArgument(3, $config['messenger']['workers']);
     }
 
     private function handleSearchConfig(array $config, ContainerBuilder $container): void
