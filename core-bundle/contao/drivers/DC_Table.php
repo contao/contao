@@ -6644,9 +6644,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 	private function isGrantedToClipboard(array $arrClipboard, array $data): bool
 	{
-		$actions = match($arrClipboard['mod'])
+		$actions = match ($arrClipboard['mod'])
 		{
-			'create' => [new CreateAction($this->strTable, $data)],
+			'create' => array(new CreateAction($this->strTable, $data)),
 			'cut',
 			'cutAll' => array_map(fn ($clipboardId) => new UpdateAction($this->strTable, $this->getCurrentRecord($clipboardId, $this->strTable), $data), (array) $arrClipboard['id']),
 			'copy',
