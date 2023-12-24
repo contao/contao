@@ -9,7 +9,6 @@
  */
 
 use Contao\Controller;
-use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\System;
 
 System::loadLanguageFile('tl_content');
