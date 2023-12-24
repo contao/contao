@@ -961,7 +961,7 @@ abstract class DataContainer extends Backend
 				$href = $this->addToUrl(($config['href'] ?? '') . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : '') . ($isPopup ? '&amp;popup=1' : ''));
 			}
 
-			parse_str(StringUtil::decodeEntities($config['href'] ?? ''), $params);
+			parse_str(StringUtil::decodeEntities($config['href'] ?? $v['href'] ?? ''), $params);
 
 			if (($params['act'] ?? null) == 'toggle' && isset($params['field']))
 			{
