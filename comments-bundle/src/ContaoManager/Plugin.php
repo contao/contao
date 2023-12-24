@@ -12,11 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\CommentsBundle\ContaoManager;
 
+use Contao\CalendarBundle\ContaoCalendarBundle;
 use Contao\CommentsBundle\ContaoCommentsBundle;
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\FaqBundle\ContaoFaqBundle;
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
+use Contao\NewsBundle\ContaoNewsBundle;
 
 /**
  * @internal
@@ -27,8 +30,12 @@ class Plugin implements BundlePluginInterface
     {
         return [
             BundleConfig::create(ContaoCommentsBundle::class)
-                ->setLoadAfter([ContaoCoreBundle::class, 'calendar', 'faq', 'news'])
-                ->setReplace(['comments']),
+                ->setLoadAfter([
+                    ContaoCoreBundle::class,
+                    ContaoCalendarBundle::class,
+                    ContaoFaqBundle::class,
+                    ContaoNewsBundle::class],
+                )->setReplace(['comments']),
         ];
     }
 }

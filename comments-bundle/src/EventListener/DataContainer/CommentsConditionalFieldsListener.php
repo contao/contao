@@ -14,6 +14,7 @@ namespace Contao\CommentsBundle\EventListener\DataContainer;
 
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
+use Contao\System;
 
 #[AsHook('loadDataContainer')]
 class CommentsConditionalFieldsListener
@@ -25,6 +26,10 @@ class CommentsConditionalFieldsListener
         }
 
         switch ($table) {
+            case 'tl_module':
+                self::applyModuleFields();
+                break;
+
             case 'tl_news_archive':
             case 'tl_calendar':
             case 'tl_faq_category':
@@ -36,6 +41,28 @@ class CommentsConditionalFieldsListener
             case 'tl_faq':
                 self::applyChildrenFields($table);
                 break;
+        }
+    }
+
+    private function applyModuleFields(): void
+    {
+        $bundles = System::getContainer()->getParameter('kernel.bundles');
+
+        $pm = PaletteManipulator::create()
+            ->addLegend('comment_legend', 'protected_legend', PaletteManipulator::POSITION_BEFORE, true)
+            ->addField('com_template', 'comment_legend', PaletteManipulator::POSITION_APPEND)
+        ;
+
+        if (isset($bundles['ContaoNewsBundle'])) {
+            $pm->applyToPalette('newsreader', 'tl_module');
+        }
+
+        if (isset($bundles['ContaoFaqBundle'])) {
+            $pm->applyToPalette('faqreader', 'tl_module');
+        }
+
+        if (isset($bundles['ContaoCalendarBundle'])) {
+            $pm->applyToPalette('eventreader', 'tl_module');
         }
     }
 
@@ -97,80 +124,37 @@ class CommentsConditionalFieldsListener
             'sql' => ['type' => 'boolean', 'default' => false],
         ];
 
-        switch ($table) {
-            case 'tl_news':
-            case 'tl_calendar_events':
-                PaletteManipulator::create()
-                    ->addLegend('comments_legend', 'protected_legend', PaletteManipulator::POSITION_AFTER, true)
-                    ->addField(['allowComments'], 'comments_legend', PaletteManipulator::POSITION_APPEND)
-                    ->applyToPalette('default', $table)
-                ;
-
-                break;
-
-            case 'tl_faq':
-                PaletteManipulator::create()
-                    ->addLegend('comments_legend', 'title_legend', PaletteManipulator::POSITION_AFTER, true)
-                    ->addField(['allowComments'], 'comments_legend', PaletteManipulator::POSITION_APPEND)
-                    ->applyToPalette('default', $table)
-                ;
-
-                break;
-        }
+        PaletteManipulator::create()
+            ->addLegend('comments_legend', null, PaletteManipulator::POSITION_APPEND, true)
+            ->addField('allowComments', 'comments_legend', PaletteManipulator::POSITION_APPEND)
+            ->applyToPalette('default', $table)
+        ;
     }
 
     private function applyChildrenFields(string $table): void
     {
         $GLOBALS['TL_DCA'][$table]['list']['sorting']['headerFields'][] = 'allowComments';
 
-        switch ($table) {
-            case 'tl_news':
-                $GLOBALS['TL_DCA'][$table]['fields']['noComments'] = [
-                    'filter' => true,
-                    'inputType' => 'checkbox',
-                    'eval' => ['tl_class' => 'w50 m12'],
-                    'sql' => ['type' => 'boolean', 'default' => false],
-                ];
-                break;
+        $GLOBALS['TL_DCA'][$table]['fields']['noComments'] =
+            [
+                'filter' => true,
+                'inputType' => 'checkbox',
+                'sql' => ['type' => 'boolean', 'default' => false],
+            ];
 
-            case 'tl_calendar_events':
-                $GLOBALS['TL_DCA'][$table]['fields']['noComments'] = [
-                    'inputType' => 'checkbox',
-                    'eval' => ['tl_class' => 'w50 m12'],
-                    'sql' => ['type' => 'boolean', 'default' => false],
-                ];
-                break;
+        $pm = PaletteManipulator::create()
+            ->addLegend('expert_legend', 'publish_legend', PaletteManipulator::POSITION_BEFORE, true)
+            ->addField('noComments', 'expert_legend', PaletteManipulator::POSITION_APPEND)
+            ->applyToPalette('default', $table)
+        ;
 
-            case 'tl_faq':
-                $GLOBALS['TL_DCA'][$table]['fields']['noComments'] = [
-                    'filter' => true,
-                    'inputType' => 'checkbox',
-                    'sql' => ['type' => 'boolean', 'default' => false],
-                ];
-                break;
-        }
+        if ('tl_news' === $table || 'tl_calendar_events' === $table) {
+            $GLOBALS['TL_DCA'][$table]['fields']['noComments']['eval'] = ['tl_class' => 'w50 m12'];
 
-        switch ($table) {
-            case 'tl_news':
-            case 'tl_calendar_events':
-                PaletteManipulator::create()
-                    ->addField(['noComments'], 'expert_legend', PaletteManipulator::POSITION_APPEND)
-                    ->applyToPalette('default', $table)
-                    ->applyToPalette('internal', $table)
-                    ->applyToPalette('article', $table)
-                    ->applyToPalette('external', $table)
-                ;
-
-                break;
-
-            case 'tl_faq':
-                PaletteManipulator::create()
-                    ->addLegend('expert_legend', 'publish_legend', PaletteManipulator::POSITION_BEFORE, true)
-                    ->addField(['noComments'], 'expert_legend', PaletteManipulator::POSITION_APPEND)
-                    ->applyToPalette('default', $table)
-                ;
-
-                break;
+            $pm->applyToPalette('internal', $table)
+                ->applyToPalette('article', $table)
+                ->applyToPalette('external', $table)
+            ;
         }
     }
 }
