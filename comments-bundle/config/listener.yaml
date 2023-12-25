@@ -1,9 +1,0 @@
-services:
-    _defaults:
-        autoconfigure: true
-
-    contao_comments.listener.data_container.comments_conditional_fields:
-        class: Contao\CommentsBundle\EventListener\DataContainer\CommentsConditionalFieldsListener
-        arguments:
-            - '@contao.framework'
-            - '@database_connection'

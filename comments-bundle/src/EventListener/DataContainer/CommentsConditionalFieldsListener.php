@@ -14,11 +14,14 @@ namespace Contao\CommentsBundle\EventListener\DataContainer;
 
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
-use Contao\System;
 
 #[AsHook('loadDataContainer')]
 class CommentsConditionalFieldsListener
 {
+    public function __construct(private readonly array $bundles)
+    {
+    }
+
     public function __invoke(string $table): void
     {
         if (!isset($GLOBALS['TL_DCA'][$table])) {
@@ -27,41 +30,39 @@ class CommentsConditionalFieldsListener
 
         switch ($table) {
             case 'tl_module':
-                self::applyModuleFields();
+                $this->applyModuleFields();
                 break;
 
             case 'tl_news_archive':
             case 'tl_calendar':
             case 'tl_faq_category':
-                self::applyParentFields($table);
+                $this->applyParentFields($table);
                 break;
 
             case 'tl_news':
             case 'tl_calendar_events':
             case 'tl_faq':
-                self::applyChildrenFields($table);
+                $this->applyChildrenFields($table);
                 break;
         }
     }
 
     private function applyModuleFields(): void
     {
-        $bundles = System::getContainer()->getParameter('kernel.bundles');
-
         $pm = PaletteManipulator::create()
             ->addLegend('comment_legend', 'protected_legend', PaletteManipulator::POSITION_BEFORE, true)
             ->addField('com_template', 'comment_legend', PaletteManipulator::POSITION_APPEND)
         ;
 
-        if (isset($bundles['ContaoNewsBundle'])) {
+        if (isset($this->bundles['ContaoNewsBundle'])) {
             $pm->applyToPalette('newsreader', 'tl_module');
         }
 
-        if (isset($bundles['ContaoFaqBundle'])) {
+        if (isset($this->bundles['ContaoFaqBundle'])) {
             $pm->applyToPalette('faqreader', 'tl_module');
         }
 
-        if (isset($bundles['ContaoCalendarBundle'])) {
+        if (isset($this->bundles['ContaoCalendarBundle'])) {
             $pm->applyToPalette('eventreader', 'tl_module');
         }
     }
