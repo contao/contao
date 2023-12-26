@@ -1210,17 +1210,21 @@ table.tl_listing {
 .tl_file_manager .preview-image {
 	max-width:100px;
 	max-height:75px;
-	width:auto;
 	height:auto;
 	margin:0 0 2px 22px;
 }
 .tl_file_manager .preview-important {
 	max-width:80px;
 	max-height:60px;
-	width:auto;
 	height:auto;
 	margin:0 0 2px 0;
 	vertical-align:bottom;
+}
+/*Fallback for Safari < 14.2 and other browsers - See #6662 */
+@supports not (aspect-ratio: auto) {
+	.tl_file_manager .preview-image,.tl_file_manager .preview-important {
+		width: auto;
+	}
 }
 .tl_listing .tl_right {
 	padding:1px 0 0 9px;
