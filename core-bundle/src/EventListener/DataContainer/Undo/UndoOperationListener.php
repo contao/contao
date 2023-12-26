@@ -32,21 +32,16 @@ class UndoOperationListener
     public function __invoke(DataContainerOperation $operation): void
     {
         $data = StringUtil::deserialize($operation->getRecord()['data'] ?? null);
+        $table = $operation->getRecord()['fromTable'];
+        $row = $data[$table][0] ?? null;
 
-        if (!\is_array($data)) {
-            $operation->disable();
-
+        if (
+            $row
+            && $this->security->isGranted(ContaoCorePermissions::DC_PREFIX.$table, new CreateAction($table, $row))
+        ) {
             return;
         }
 
-        foreach ($data as $table => $fields) {
-            foreach ($fields as $row) {
-                if (!$this->security->isGranted(ContaoCorePermissions::DC_PREFIX.$table, new CreateAction($table, $row))) {
-                    $operation->disable();
-
-                    return;
-                }
-            }
-        }
+        $operation->disable();
     }
 }
