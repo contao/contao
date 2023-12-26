@@ -336,7 +336,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Add to clipboard
 		if (Input::get('act') == 'paste')
 		{
-			if (!$this->isGrantedClipboardMode(Input::get('mode'), (int) Input::get('id'), ['sorting' => null]))
+			if (!$this->isGrantedClipboardMode(Input::get('mode'), (int) Input::get('id'), array('sorting' => null)))
 			{
 				throw new AccessDeniedException();
 			}
