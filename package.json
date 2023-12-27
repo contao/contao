@@ -1,12 +1,12 @@
 {
     "devDependencies": {
-        "@babel/core": "^7.23.3",
-        "@babel/preset-env": "^7.23.3",
+        "@babel/core": "^7.23.6",
+        "@babel/preset-env": "^7.23.6",
         "@hotwired/stimulus": "^3.2.2",
         "@hotwired/stimulus-webpack-helpers": "^1.0.1",
         "@symfony/webpack-encore": "^4.5.0",
         "css-loader": "^6.8.1",
-        "cypress": "^13.5.0",
+        "cypress": "^13.6.2",
         "gulp": "^4.0.2",
         "gulp-svgo": "^2.2.1",
         "pump": "^3.0.0",
