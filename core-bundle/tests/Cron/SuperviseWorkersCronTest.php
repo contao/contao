@@ -13,17 +13,17 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Cron;
 
 use Contao\CoreBundle\Cron\Cron;
-use Contao\CoreBundle\Cron\MessengerCron;
+use Contao\CoreBundle\Cron\SuperviseWorkersCron;
 use Contao\CoreBundle\Exception\CronExecutionSkippedException;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Util\ProcessUtil;
 use Symfony\Component\Process\Process;
 
-class MessengerCronTest extends TestCase
+class SuperviseWorkersCronTest extends TestCase
 {
     public function testIsSkippedIfNotOnCli(): void
     {
-        $cron = new MessengerCron(new ProcessUtil('bin/console'));
+        $cron = new SuperviseWorkersCron(new ProcessUtil('bin/console'));
 
         $this->expectException(CronExecutionSkippedException::class);
 
@@ -48,7 +48,7 @@ class MessengerCronTest extends TestCase
             ->with($process)
         ;
 
-        $cron = new MessengerCron($processUtil);
+        $cron = new SuperviseWorkersCron($processUtil);
         $cron(Cron::SCOPE_CLI);
     }
 }
