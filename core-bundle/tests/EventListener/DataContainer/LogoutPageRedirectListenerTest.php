@@ -12,12 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
-use Contao\CoreBundle\EventListener\DataContainer\LayoutOptionsListener;
 use Contao\CoreBundle\EventListener\DataContainer\LogoutPageRedirectListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DC_Table;
-use Doctrine\DBAL\Connection;
-use Symfony\Contracts\Service\ResetInterface;
 
 class LogoutPageRedirectListenerTest extends TestCase
 {
@@ -52,43 +49,43 @@ class LogoutPageRedirectListenerTest extends TestCase
         yield 'Keeps true mandatory value for logout pages' => [
             [],
             ['type' => 'logout'],
-            true
+            true,
         ];
 
         yield 'Overrides false mandatory value for logout pages' => [
             ['mandatory' => false],
             ['type' => 'logout'],
-            true
+            true,
         ];
 
         yield 'Overrides any mandatory value for logout pages' => [
             ['mandatory' => 'foobar'],
             ['type' => 'logout'],
-            true
+            true,
         ];
 
         yield 'Does not change true mandatory property for non-logout pages' => [
             ['mandatory' => true],
             ['type' => 'regular'],
-            true
+            true,
         ];
 
         yield 'Does not change false mandatory property for non-logout pages' => [
             ['mandatory' => false],
             ['type' => 'regular'],
-            false
+            false,
         ];
 
         yield 'Does not add the mandatory property for non-logout pages' => [
             [],
             ['type' => 'regular'],
-            null
+            null,
         ];
 
         yield 'Does nothing without DataContainer' => [
             [],
             null,
-            null
+            null,
         ];
     }
 }
