@@ -128,6 +128,7 @@ services:
     contao.cron.supervise_workers:
         class: Contao\CoreBundle\Cron\SuperviseWorkersCron
         arguments:
+            - '@contao.process_util'
 
     contao.csrf.token_manager:
         class: Contao\CoreBundle\Csrf\ContaoCsrfTokenManager
