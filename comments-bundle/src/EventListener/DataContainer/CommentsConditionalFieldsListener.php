@@ -152,7 +152,8 @@ class CommentsConditionalFieldsListener
         if ('tl_news' === $table || 'tl_calendar_events' === $table) {
             $GLOBALS['TL_DCA'][$table]['fields']['noComments']['eval'] = ['tl_class' => 'w50 m12'];
 
-            $pm->applyToPalette('internal', $table)
+            $pm
+                ->applyToPalette('internal', $table)
                 ->applyToPalette('article', $table)
                 ->applyToPalette('external', $table)
             ;
