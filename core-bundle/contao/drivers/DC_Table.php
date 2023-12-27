@@ -182,19 +182,27 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$mode = Input::post('cut') !== null ? 'cutAll' : 'copyAll';
 				$ids = array_filter($ids, fn ($id) => $security->isGranted(...$this->getClipboardPermission($mode, (int) $id)));
 
-				$arrClipboard[$strTable] = array
-				(
-					'id' => $ids,
-					'mode' => $mode,
-					'keep' => Input::post('copyMultiple') !== null
-				);
-
-				$objSession->set('CLIPBOARD', $arrClipboard);
-
-				// Support copyAll in the list view (see #7499)
-				if ((Input::post('copy') !== null || Input::post('copyMultiple') !== null) && ($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['mode'] ?? 0) < self::MODE_PARENT)
+				if (empty($ids))
 				{
-					$this->redirect(str_replace('act=select', 'act=copyAll', Environment::get('requestUri')));
+					unset($arrClipboard[$strTable]);
+					$objSession->set('CLIPBOARD', $arrClipboard);
+				}
+				else
+				{
+					$arrClipboard[$strTable] = array
+					(
+						'id' => $ids,
+						'mode' => $mode,
+						'keep' => Input::post('copyMultiple') !== null
+					);
+
+					$objSession->set('CLIPBOARD', $arrClipboard);
+
+					// Support copyAll in the list view (see #7499)
+					if ((Input::post('copy') !== null || Input::post('copyMultiple') !== null) && ($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['mode'] ?? 0) < self::MODE_PARENT)
+					{
+						$this->redirect(str_replace('act=select', 'act=copyAll', Environment::get('requestUri')));
+					}
 				}
 
 				$this->redirect($this->getReferer());
