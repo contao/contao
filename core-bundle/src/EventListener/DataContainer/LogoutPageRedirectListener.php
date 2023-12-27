@@ -14,15 +14,11 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\DataContainer;
-use Contao\Module;
 
 #[AsCallback(table: 'tl_page', target: 'fields.jumpTo.attributes')]
 class LogoutPageRedirectListener
 {
-    /**
-     * @param DataContainer|Module|null $dc
-     */
-    public function __invoke(array $attributes, $dc): array
+    public function __invoke(array $attributes, mixed $dc): array
     {
         if ($dc instanceof DataContainer && 'logout' === ($dc->getCurrentRecord()['type'] ?? null)) {
             $attributes['mandatory'] = true;

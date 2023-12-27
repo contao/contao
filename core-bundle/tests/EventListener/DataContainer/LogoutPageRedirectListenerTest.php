@@ -23,9 +23,9 @@ class LogoutPageRedirectListenerTest extends TestCase
      */
     public function testListener(array $attributes, array|null $currentRecord, bool|null $expected): void
     {
-        if (null === $currentRecord) {
-            $dataContainer = null;
-        } else {
+        $dataContainer = null;
+
+        if (null !== $currentRecord) {
             $dataContainer = $this->createMock(DC_Table::class);
             $dataContainer
                 ->method('getCurrentRecord')
