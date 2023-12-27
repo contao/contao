@@ -6687,6 +6687,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			'copyAll' => new CreateAction($this->strTable, array_replace($this->getCurrentRecord($id, $this->strTable), array('tstamp' => null, 'sorting' => null), (array) $new))
 		};
 
-		return [ContaoCorePermissions::DC_PREFIX . $this->strTable, $action];
+		return array(ContaoCorePermissions::DC_PREFIX . $this->strTable, $action);
 	}
 }
