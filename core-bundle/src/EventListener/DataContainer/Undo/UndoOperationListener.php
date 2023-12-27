@@ -39,10 +39,7 @@ class UndoOperationListener
         // records again and skip the ones that are not allowed.
         $row = $data[$table][0] ?? null;
 
-        if (
-            $row
-            && $this->security->isGranted(ContaoCorePermissions::DC_PREFIX.$table, new CreateAction($table, $row))
-        ) {
+        if ($row && $this->security->isGranted(ContaoCorePermissions::DC_PREFIX.$table, new CreateAction($table, $row))) {
             return;
         }
 
