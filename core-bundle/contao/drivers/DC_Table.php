@@ -123,6 +123,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$this->intId = Input::get('id');
+		$this->strTable = $strTable;
 
 		// Clear the clipboard
 		if (Input::get('clipboard') !== null)
@@ -199,7 +200,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
-		$this->strTable = $strTable;
 		$this->ptable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] ?? null;
 		$this->ctable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'] ?? null;
 		$this->treeView = \in_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null, array(self::MODE_TREE, self::MODE_TREE_EXTENDED));
