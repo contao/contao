@@ -4323,7 +4323,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 		catch (AccessDeniedException)
 		{
-			$currentRecord = null;
+			$currentRecord = Database::getInstance()->prepare("SELECT * FROM ".$table." WHERE id=?")->execute($id);
+
+			if ($checkIdAllowed ? !\in_array($id, $this->visibleRootTrails) : !\in_array($currentRecord['pid'] ?? null, $this->visibleRootTrails))
+			{
+				$currentRecord = null;
+			}
 		}
 
 		// Return if there is no result
