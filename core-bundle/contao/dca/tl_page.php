@@ -1485,7 +1485,7 @@ class tl_page extends Backend
 					continue;
 				}
 
-				if (!$security->isGranted(ContaoCorePermissions::DC_PREFIX.'tl_article', new UpdateAction('tl_page', $objPage->row(), ['alias' => $strAlias])))
+				if (!$security->isGranted(ContaoCorePermissions::DC_PREFIX . 'tl_article', new UpdateAction('tl_page', $objPage->row(), array('alias' => $strAlias))))
 				{
 					continue;
 				}

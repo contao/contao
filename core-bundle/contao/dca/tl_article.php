@@ -749,7 +749,7 @@ class tl_article extends Backend
 	/**
 	 * Automatically generate the folder URL aliases
 	 *
-	 * @param array $arrButtons
+	 * @param array         $arrButtons
 	 * @param DataContainer $dc
 	 *
 	 * @return array
@@ -806,7 +806,7 @@ class tl_article extends Backend
 					continue;
 				}
 
-				if (!$security->isGranted(ContaoCorePermissions::DC_PREFIX.'tl_article', new UpdateAction('tl_article', $objArticle->row(), ['alias' => $strAlias])))
+				if (!$security->isGranted(ContaoCorePermissions::DC_PREFIX . 'tl_article', new UpdateAction('tl_article', $objArticle->row(), array('alias' => $strAlias))))
 				{
 					continue;
 				}
