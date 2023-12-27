@@ -336,7 +336,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Add to clipboard
 		if (Input::get('act') == 'paste')
 		{
-			if (!$this->isGrantedClipboardMode(Input::get('mode'), (int) Input::get('id'), array('sorting' => null)))
+			if (!$this->isGrantedClipboardMode(Input::get('mode'), (int) Input::get('id')))
 			{
 				throw new AccessDeniedException();
 			}
@@ -6650,7 +6650,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		return $data;
 	}
 
-	private function canPasteClipboard(array $arrClipboard, array $new): bool
+	protected function canPasteClipboard(array $arrClipboard, array $new): bool
 	{
 		if ($arrClipboard['mode'] === 'create')
 		{
@@ -6668,15 +6668,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		return true;
 	}
 
-	private function isGrantedClipboardMode(string $mode, int $id, array|null $new = null): bool
+	protected function isGrantedClipboardMode(string $mode, int $id): bool
 	{
 		$action = match ($mode)
 		{
-			'create' => new CreateAction($this->strTable, $new),
+			'create' => new CreateAction($this->strTable),
 			'cut',
-			'cutAll' => new UpdateAction($this->strTable, $this->getCurrentRecord($id, $this->strTable), $new),
+			'cutAll' => new UpdateAction($this->strTable, $this->getCurrentRecord($id, $this->strTable), array('sorting' => null)),
 			'copy',
-			'copyAll' => new CreateAction($this->strTable, array_merge($this->getCurrentRecord($id, $this->strTable), $new))
+			'copyAll' => new CreateAction($this->strTable, array_merge($this->getCurrentRecord($id, $this->strTable), array('tstamp' => null, 'sorting' => null)))
 		};
 
 		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, $action);
