@@ -46,7 +46,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			array('tl_page', 'addBreadcrumb'),
 			array('tl_page', 'setRootType'),
 			array('tl_page', 'showFallbackWarning'),
-			array('tl_page', 'makeRedirectPageMandatory'),
 		),
 		'oncut_callback' => array
 		(
@@ -1031,26 +1030,6 @@ class tl_page extends Backend
 		{
 			$messages = new Messages();
 			Message::addRaw($messages->languageFallback());
-		}
-	}
-
-	/**
-	 * Make the redirect page mandatory if the page is a logout page
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @throws Exception
-	 */
-	public function makeRedirectPageMandatory(DataContainer $dc)
-	{
-		$objPage = Database::getInstance()
-			->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")
-			->limit(1)
-			->execute($dc->id);
-
-		if ($objPage->numRows && $objPage->type == 'logout')
-		{
-			$GLOBALS['TL_DCA']['tl_page']['fields']['jumpTo']['eval']['mandatory'] = true;
 		}
 	}
 
