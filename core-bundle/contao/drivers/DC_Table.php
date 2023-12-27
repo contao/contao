@@ -4323,7 +4323,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 		catch (AccessDeniedException)
 		{
-			$currentRecord = Database::getInstance()->prepare("SELECT * FROM ".$table." WHERE id=?")->execute($id);
+			$currentRecord = null;
+		}
+
+		// Special handling for visible root trails, which are tree nodes the user does not have access to.
+		// $this->>getCurrentRecord() would deny access, but we still need the record to render a label.
+		if (null === $currentRecord && !empty($this->visibleRootTrails))
+		{
+			$currentRecord = Database::getInstance()->prepare("SELECT * FROM " . $table . " WHERE id=?")->execute($id);
 
 			if ($checkIdAllowed ? !\in_array($id, $this->visibleRootTrails) : !\in_array($currentRecord['pid'] ?? null, $this->visibleRootTrails))
 			{
