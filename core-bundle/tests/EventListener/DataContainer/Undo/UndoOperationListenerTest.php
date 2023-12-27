@@ -21,76 +21,85 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 class UndoOperationListenerTest extends TestCase
 {
-    /**
-     * @dataProvider undoOperationListenerProvider
-     */
-    public function testUndoOperationListener(array $data, array $isGranted): void
+    public function testUndoOperationIsGranted(): void
     {
         $operation = $this->createMock(DataContainerOperation::class);
         $operation
             ->expects($this->once())
             ->method('getRecord')
-            ->willReturn(['data' => serialize($data)])
+            ->willReturn(['fromTable' => 'tl_foo', 'data' => serialize(['tl_foo' => [['id' => 42]]])])
         ;
 
         $operation
-            ->expects(\in_array(false, $isGranted, true) ? $this->once() : $this->never())
+            ->expects($this->never())
             ->method('disable')
         ;
 
-        $calls = [];
-
-        foreach ($data as $table => $rows) {
-            foreach ($rows as $row) {
-                $calls[] = [
-                    ContaoCorePermissions::DC_PREFIX.$table,
-                    $this->callback(static fn (CreateAction $action) => $table === $action->getDataSource() && $row === $action->getNew()),
-                ];
-            }
-        }
-
         $security = $this->createMock(Security::class);
         $security
-            ->expects($this->exactly(\count($isGranted)))
+            ->expects($this->once())
             ->method('isGranted')
-            ->withConsecutive(...$calls)
-            ->willReturnOnConsecutiveCalls(...$isGranted)
+            ->with(
+                ContaoCorePermissions::DC_PREFIX.'tl_foo',
+                $this->callback(static fn ($action) => $action instanceof CreateAction && 'tl_foo' === $action->getDataSource()),
+            )
+            ->willReturn(true)
         ;
 
         $listener = new UndoOperationListener($security);
         $listener($operation);
     }
 
-    public function undoOperationListenerProvider(): \Generator
+    public function testUndoOperationIsDisabledIfIsNotGranted(): void
     {
-        yield [
-            ['tl_foo' => [['id' => 42]]],
-            [true],
-        ];
+        $operation = $this->createMock(DataContainerOperation::class);
+        $operation
+            ->expects($this->once())
+            ->method('getRecord')
+            ->willReturn(['fromTable' => 'tl_bar', 'data' => serialize(['tl_bar' => [['id' => 42]]])])
+        ;
 
-        yield [
-            ['tl_foo' => [['id' => 42], ['id' => 43]]],
-            [true, true],
-        ];
+        $operation
+            ->expects($this->once())
+            ->method('disable')
+        ;
 
-        yield [
-            ['tl_foo' => [['id' => 42]], 'tl_bar' => [['id' => 43]]],
-            [true, true],
-        ];
+        $security = $this->createMock(Security::class);
+        $security
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with(
+                ContaoCorePermissions::DC_PREFIX.'tl_bar',
+                $this->callback(static fn ($action) => $action instanceof CreateAction && 'tl_bar' === $action->getDataSource()),
+            )
+            ->willReturn(false)
+        ;
 
-        yield [
-            ['tl_foo' => [['id' => 42]]],
-            [false],
-        ];
+        $listener = new UndoOperationListener($security);
+        $listener($operation);
+    }
 
-        yield [
-            ['tl_foo' => [['id' => 42], ['id' => 43]]],
-            [true, false],
-        ];
+    public function testUndoOperationIsDisabledIfRecordIsMissing(): void
+    {
+        $operation = $this->createMock(DataContainerOperation::class);
+        $operation
+            ->expects($this->once())
+            ->method('getRecord')
+            ->willReturn(['fromTable' => 'tl_bar', 'data' => serialize([])])
+        ;
 
-        yield [
-            ['tl_foo' => [['id' => 42]], 'tl_bar' => [['id' => 43]]],
-            [true, false],
-        ];
+        $operation
+            ->expects($this->once())
+            ->method('disable')
+        ;
+
+        $security = $this->createMock(Security::class);
+        $security
+            ->expects($this->never())
+            ->method('isGranted')
+        ;
+
+        $listener = new UndoOperationListener($security);
+        $listener($operation);
     }
 }

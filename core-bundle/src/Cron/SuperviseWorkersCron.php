@@ -18,7 +18,7 @@ use Contao\CoreBundle\Util\ProcessUtil;
 use GuzzleHttp\Promise\PromiseInterface;
 
 #[AsCronJob('minutely')]
-class MessengerCron
+class SuperviseWorkersCron
 {
     public function __construct(private readonly ProcessUtil $processUtil)
     {
