@@ -177,7 +177,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$arrClipboard = $objSession->get('CLIPBOARD');
 
-				$mode = (Input::post('cut') !== null ? 'cutAll' : 'copyAll');
+				$mode = Input::post('cut') !== null ? 'cutAll' : 'copyAll';
 				$ids = array_filter($ids, fn ($id) => $this->isGrantedClipboardMode($mode, (int) $id));
 
 				$arrClipboard[$strTable] = array
