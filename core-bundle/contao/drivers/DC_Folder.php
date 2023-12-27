@@ -303,12 +303,22 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$this->isValid($this->intId);
 			}
 
+			$children = Input::get('children');
+
+			// Backwards compatibility
+			if (Input::get('childs') !== null)
+			{
+				trigger_deprecation('contao/core-bundle', '5.3', 'Using the "childs" query parameter has been deprecated and will no longer work in Contao 6. Use the "children" parameter instead.');
+				$children = Input::get('childs');
+			}
+
 			$arrClipboard = $objSession->get('CLIPBOARD');
 
 			$arrClipboard[$this->strTable] = array
 			(
 				'id' => $this->urlEncode($this->intId),
-				'childs' => Input::get('childs'),
+				'childs' => $children, // backwards compatibility
+				'children' => $children,
 				'mode' => $mode
 			);
 
@@ -2480,7 +2490,25 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 */
 	public function getPalette()
 	{
-		return $GLOBALS['TL_DCA'][$this->strTable]['palettes']['default'];
+		$strPalette = $GLOBALS['TL_DCA'][$this->strTable]['palettes']['default'];
+
+		// Call onpalette_callback
+		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onpalette_callback'] ?? null))
+		{
+			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onpalette_callback'] as $callback)
+			{
+				if (\is_array($callback))
+				{
+					$strPalette = System::importStatic($callback[0])->{$callback[1]}($strPalette, $this);
+				}
+				elseif (\is_callable($callback))
+				{
+					$strPalette = $callback($strPalette, $this);
+				}
+			}
+		}
+
+		return $strPalette;
 	}
 
 	/**

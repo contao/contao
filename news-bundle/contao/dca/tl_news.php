@@ -11,12 +11,10 @@
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
-use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
-use Contao\Input;
 use Contao\LayoutModel;
 use Contao\News;
 use Contao\NewsArchiveModel;
@@ -39,7 +37,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		'markAsCopy'                  => 'headline',
 		'onload_callback' => array
 		(
-			array('tl_news', 'checkPermission'),
+			array('tl_news', 'adjustDca'),
 		),
 		'onsubmit_callback' => array
 		(
@@ -426,13 +424,9 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 class tl_news extends Backend
 {
 	/**
-	 * Check permissions to edit table tl_news
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @throws AccessDeniedException
+	 * Unset the "allowComments" field if the comments bundle is not available.
 	 */
-	public function checkPermission(DataContainer $dc)
+	public function adjustDca(DataContainer $dc)
 	{
 		$bundles = System::getContainer()->getParameter('kernel.bundles');
 
@@ -441,122 +435,6 @@ class tl_news extends Backend
 		{
 			$key = array_search('allowComments', $GLOBALS['TL_DCA']['tl_news']['list']['sorting']['headerFields'] ?? array());
 			unset($GLOBALS['TL_DCA']['tl_news']['list']['sorting']['headerFields'][$key], $GLOBALS['TL_DCA']['tl_news']['fields']['noComments']);
-		}
-
-		$user = BackendUser::getInstance();
-
-		if ($user->isAdmin)
-		{
-			return;
-		}
-
-		// Set the root IDs
-		if (empty($user->news) || !is_array($user->news))
-		{
-			$root = array(0);
-		}
-		else
-		{
-			$root = $user->news;
-		}
-
-		$id = strlen(Input::get('id')) ? Input::get('id') : $dc->currentPid;
-
-		// Check current action
-		switch (Input::get('act'))
-		{
-			case 'paste':
-			case 'select':
-				// Check currentPid here (see #247)
-				if (!in_array($dc->currentPid, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to access news archive ID ' . $id . '.');
-				}
-				break;
-
-			case 'create':
-				if (!Input::get('pid') || !in_array(Input::get('pid'), $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to create news items in news archive ID ' . Input::get('pid') . '.');
-				}
-				break;
-
-			case 'cut':
-			case 'copy':
-				if (Input::get('act') == 'cut' && Input::get('mode') == 1)
-				{
-					$objArchive = Database::getInstance()
-						->prepare("SELECT pid FROM tl_news WHERE id=?")
-						->limit(1)
-						->execute(Input::get('pid'));
-
-					if ($objArchive->numRows < 1)
-					{
-						throw new AccessDeniedException('Invalid news item ID ' . Input::get('pid') . '.');
-					}
-
-					$pid = $objArchive->pid;
-				}
-				else
-				{
-					$pid = Input::get('pid');
-				}
-
-				if (!in_array($pid, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' news item ID ' . $id . ' to news archive ID ' . $pid . '.');
-				}
-				// no break
-
-			case 'edit':
-			case 'show':
-			case 'delete':
-			case 'toggle':
-				$objArchive = Database::getInstance()
-					->prepare("SELECT pid FROM tl_news WHERE id=?")
-					->limit(1)
-					->execute($id);
-
-				if ($objArchive->numRows < 1)
-				{
-					throw new AccessDeniedException('Invalid news item ID ' . $id . '.');
-				}
-
-				if (!in_array($objArchive->pid, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' news item ID ' . $id . ' of news archive ID ' . $objArchive->pid . '.');
-				}
-				break;
-
-			case 'editAll':
-			case 'deleteAll':
-			case 'overrideAll':
-			case 'cutAll':
-			case 'copyAll':
-				if (!in_array($id, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to access news archive ID ' . $id . '.');
-				}
-
-				$objArchive = Database::getInstance()->prepare("SELECT id FROM tl_news WHERE pid=?")->execute($id);
-				$objSession = System::getContainer()->get('request_stack')->getSession();
-
-				$session = $objSession->all();
-				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objArchive->fetchEach('id'));
-				$objSession->replace($session);
-				break;
-
-			default:
-				if (Input::get('act'))
-				{
-					throw new AccessDeniedException('Invalid command "' . Input::get('act') . '".');
-				}
-
-				if (!in_array($id, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to access news archive ID ' . $id . '.');
-				}
-				break;
 		}
 	}
 

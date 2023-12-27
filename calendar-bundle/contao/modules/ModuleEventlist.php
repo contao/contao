@@ -167,6 +167,9 @@ class ModuleEventlist extends Events
 
 		list($intStart, $intEnd, $strEmpty) = $this->getDatesFromFormat($this->Date, $this->cal_format);
 
+		// Use the start of the day when filtering events in line 197 (see #4476)
+		$intStartFloored = strtotime(date('Y-m-d', $intStart) . ' 00:00:00');
+
 		// Get all events
 		$arrAllEvents = $this->getAllEvents($this->cal_calendar, $intStart, $intEnd, $blnFeatured);
 
@@ -191,7 +194,7 @@ class ModuleEventlist extends Events
 			{
 				// Skip events before the start day if the "shortened view" option is not set.
 				// Events after the end day are filtered in the Events::addEvent() method (see #8782).
-				if (!$this->cal_noSpan && $day < $intStart)
+				if (!$this->cal_noSpan && $day < $intStartFloored)
 				{
 					continue;
 				}

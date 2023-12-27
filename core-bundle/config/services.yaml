@@ -7,10 +7,6 @@ services:
             calls:
                 - [setFramework, ['@contao.framework']]
 
-        Symfony\Component\DependencyInjection\ContainerAwareInterface:
-            calls:
-                - [setContainer, ['@service_container']]
-
     contao.assets.assets_context:
         class: Contao\CoreBundle\Asset\ContaoContext
         public: true
@@ -99,13 +95,6 @@ services:
             - '@cache.app'
             - '@?logger'
 
-    contao.cron.messenger:
-        class: Contao\CoreBundle\Cron\MessengerCron
-        arguments:
-            - '@messenger.receiver_locator'
-            - '@contao.process_util'
-            - ~
-
     contao.cron.purge_expired_data:
         class: Contao\CoreBundle\Cron\PurgeExpiredDataCron
         arguments:
@@ -135,6 +124,11 @@ services:
             - '@filesystem'
             - '%kernel.project_dir%'
             - '@monolog.logger.contao.cron'
+
+    contao.cron.supervise_workers:
+        class: Contao\CoreBundle\Cron\SuperviseWorkersCron
+        arguments:
+            - '@contao.process_util'
 
     contao.csrf.token_manager:
         class: Contao\CoreBundle\Csrf\ContaoCsrfTokenManager
@@ -244,6 +238,10 @@ services:
             - '@contao.filesystem.mount_manager'
             - '@contao.filesystem.dbafs_manager'
 
+    contao.fragment.compositor:
+        class: Contao\CoreBundle\Fragment\FragmentCompositor
+        public: true
+
     contao.fragment.forward_renderer:
         class: Contao\CoreBundle\Fragment\ForwardFragmentRenderer
         arguments:
@@ -272,6 +270,7 @@ services:
 
     contao.fragment.registry:
         class: Contao\CoreBundle\Fragment\FragmentRegistry
+        public: true
 
     contao.framework:
         class: Contao\CoreBundle\Framework\ContaoFramework
@@ -280,6 +279,8 @@ services:
             - '@request_stack'
             - '%kernel.project_dir%'
             - '%contao.error_level%'
+        calls:
+            - [setContainer, ['@service_container']]
 
     contao.image.deferred_image_storage:
         class: Contao\Image\DeferredImageStorageFilesystem
@@ -546,6 +547,7 @@ services:
     contao.monolog.handler:
         class: Contao\CoreBundle\Monolog\ContaoTableHandler
         arguments:
+            - !service_closure '@database_connection'
             - debug
             - false
         tags:
@@ -827,6 +829,8 @@ services:
             - '@contao.framework'
             - '@contao.security.two_factor.trusted_device_manager'
             - '@security.firewall.map'
+            - '@uri_signer'
+            - '@security.token_storage'
             - '@?logger'
 
     contao.security.backend_access_voter:
@@ -842,16 +846,28 @@ services:
 
     contao.security.data_container.favorites_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\FavoritesVoter
+
+    contao.security.data_container.form_access_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\FormAccessVoter
         arguments:
-            - '@security.helper'
-            - '@database_connection'
+            - '@security.access.decision_manager'
+
+    contao.security.data_container.form_field_access_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\FormFieldAccessVoter
+        arguments:
+            - '@security.access.decision_manager'
 
     contao.security.data_container.table_access_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\TableAccessVoter
         arguments:
-            - '@security.helper'
+            - '@security.access.decision_manager'
         tags:
             - { name: security.voter, priority: 100 }
+
+    contao.security.data_container.undo_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\UndoVoter
+        arguments:
+            - '@security.access.decision_manager'
 
     contao.security.default_data_container_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\DefaultDataContainerVoter
@@ -1157,6 +1173,7 @@ services:
     Contao\CoreBundle\Doctrine\Backup\DumperInterface: '@contao.doctrine.backup.dumper'
     Contao\CoreBundle\Framework\ContaoFramework: '@contao.framework'
     Contao\CoreBundle\Image\ImageFactoryInterface: '@contao.image.factory'
+    Contao\CoreBundle\Image\ImageSizes: '@contao.image.sizes'
     Contao\CoreBundle\Image\PictureFactoryInterface: '@contao.image.picture_factory'
     Contao\CoreBundle\Image\Preview\PreviewFactory: '@contao.image.preview_factory'
     Contao\CoreBundle\Image\Studio\Studio: '@contao.image.studio'

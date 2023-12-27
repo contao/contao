@@ -154,16 +154,21 @@ class Form extends Hybrid
 		$this->Template->formSubmit = $formId;
 		$this->Template->method = ($this->method == 'GET') ? 'get' : 'post';
 
-		$flashBag = System::getContainer()->get('request_stack')->getSession()->getFlashBag();
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-		// Add a confirmation to the template and remove it afterward
-		if ($flashBag->has(self::SESSION_CONFIRMATION_KEY))
+		if ($request && $request->hasPreviousSession())
 		{
-			$confirmationData = $flashBag->peek(self::SESSION_CONFIRMATION_KEY);
+			$flashBag = $request->getSession()->getFlashBag();
 
-			if (isset($confirmationData['id']) && $this->id === $confirmationData['id'])
+			// Add a confirmation to the template and remove it afterward
+			if ($flashBag->has(self::SESSION_CONFIRMATION_KEY))
 			{
-				$this->Template->message = $flashBag->get(self::SESSION_CONFIRMATION_KEY)['message'];
+				$confirmationData = $flashBag->peek(self::SESSION_CONFIRMATION_KEY);
+
+				if (isset($confirmationData['id']) && $this->id === $confirmationData['id'])
+				{
+					$this->Template->message = $flashBag->get(self::SESSION_CONFIRMATION_KEY)['message'];
+				}
 			}
 		}
 
@@ -392,6 +397,12 @@ class Form extends Hybrid
 			{
 				System::importStatic($callback[0])->{$callback[1]}($arrSubmitted, $arrLabels, $arrFields, $this, $arrFiles);
 			}
+		}
+
+		// Do not process the form data if there are errors (see #6611)
+		if ($this->hasErrors())
+		{
+			return;
 		}
 
 		// Store submitted data (possibly modified by hook or data added) in the session for 10 seconds,

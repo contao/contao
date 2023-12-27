@@ -20,15 +20,15 @@ use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Security\Voter\DataContainer\TableAccessVoter;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class TableAccessVoterTest extends TestCase
 {
     private TableAccessVoter $voter;
 
-    private Security&MockObject $security;
+    private AccessDecisionManagerInterface&MockObject $accessDecisionManager;
 
     private TokenInterface&MockObject $token;
 
@@ -36,8 +36,8 @@ class TableAccessVoterTest extends TestCase
     {
         parent::setUp();
 
-        $this->security = $this->createMock(Security::class);
-        $this->voter = new TableAccessVoter($this->security);
+        $this->accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
+        $this->voter = new TableAccessVoter($this->accessDecisionManager);
         $this->token = $this->createMock(TokenInterface::class);
 
         unset($GLOBALS['TL_DCA']);
@@ -87,10 +87,10 @@ class TableAccessVoterTest extends TestCase
             ],
         ];
 
-        $this->security
+        $this->accessDecisionManager
             ->expects($this->once())
-            ->method('isGranted')
-            ->with(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, 'tl_foobar')
+            ->method('decide')
+            ->with($this->token, [ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE], 'tl_foobar')
             ->willReturn(true)
         ;
 
@@ -108,10 +108,10 @@ class TableAccessVoterTest extends TestCase
             ],
         ];
 
-        $this->security
+        $this->accessDecisionManager
             ->expects($this->once())
-            ->method('isGranted')
-            ->with(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, 'tl_foobar')
+            ->method('decide')
+            ->with($this->token, [ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE], 'tl_foobar')
             ->willReturn(true)
         ;
 
@@ -134,9 +134,9 @@ class TableAccessVoterTest extends TestCase
             ],
         ];
 
-        $this->security
+        $this->accessDecisionManager
             ->expects($this->never())
-            ->method('isGranted')
+            ->method('decide')
         ;
 
         $this->assertSame(
@@ -158,10 +158,10 @@ class TableAccessVoterTest extends TestCase
             ],
         ];
 
-        $this->security
+        $this->accessDecisionManager
             ->expects($this->once())
-            ->method('isGranted')
-            ->with(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, 'tl_foobar')
+            ->method('decide')
+            ->with($this->token, [ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE], 'tl_foobar')
             ->willReturn(false)
         ;
 
@@ -183,10 +183,10 @@ class TableAccessVoterTest extends TestCase
             ],
         ];
 
-        $this->security
+        $this->accessDecisionManager
             ->expects($this->once())
-            ->method('isGranted')
-            ->with(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, 'tl_foobar')
+            ->method('decide')
+            ->with($this->token, [ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE], 'tl_foobar')
             ->willReturn(false)
         ;
 
