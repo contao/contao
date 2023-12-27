@@ -177,9 +177,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			elseif (Input::post('cut') !== null || Input::post('copy') !== null || Input::post('copyMultiple') !== null)
 			{
 				$arrClipboard = $objSession->get('CLIPBOARD');
+				$security = $container->get('security.helper');
 
 				$mode = Input::post('cut') !== null ? 'cutAll' : 'copyAll';
-				$ids = array_filter($ids, fn ($id) => $this->isGrantedClipboardMode($mode, (int) $id));
+				$ids = array_filter($ids, fn ($id) => $security->isGranted(...$this->getClipboardPermission($mode, (int) $id)));
 
 				$arrClipboard[$strTable] = array
 				(
@@ -336,10 +337,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Add to clipboard
 		if (Input::get('act') == 'paste')
 		{
-			if (!$this->isGrantedClipboardMode(Input::get('mode'), (int) Input::get('id')))
-			{
-				throw new AccessDeniedException();
-			}
+			$this->denyAccessUnlessGranted(...$this->getClipboardPermission(Input::get('mode'), (int) Input::get('id')));
 
 			$arrClipboard = $objSession->get('CLIPBOARD');
 
@@ -6527,7 +6525,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	}
 
 	/**
-	 * Initialize the root pages
+	 * Initialize the root nodes
 	 */
 	protected function initRoots()
 	{
@@ -6652,14 +6650,16 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 	protected function canPasteClipboard(array $arrClipboard, array $new): bool
 	{
+		$security = System::getContainer()->get('security.helper');
+
 		if ($arrClipboard['mode'] === 'create')
 		{
-			return $this->isGrantedClipboardMode($arrClipboard['mode'], 0, $new);
+			return $security->isGranted(...$this->getClipboardPermission($arrClipboard['mode'], 0, $new));
 		}
 
 		foreach ((array) $arrClipboard['id'] as $id)
 		{
-			if (!$this->isGrantedClipboardMode($arrClipboard['mode'], (int) $id, $new))
+			if (!$security->isGranted(...$this->getClipboardPermission($arrClipboard['mode'], (int) $id, $new)))
 			{
 				return false;
 			}
@@ -6668,7 +6668,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		return true;
 	}
 
-	protected function isGrantedClipboardMode(string $mode, int $id, array|null $new = null): bool
+	protected function getClipboardPermission(string $mode, int $id, array|null $new = null): array
 	{
 		$action = match ($mode)
 		{
@@ -6679,6 +6679,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			'copyAll' => new CreateAction($this->strTable, array_replace($this->getCurrentRecord($id, $this->strTable), array('tstamp' => null, 'sorting' => null), (array) $new))
 		};
 
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, $action);
+		return [ContaoCorePermissions::DC_PREFIX . $this->strTable, $action];
 	}
 }
