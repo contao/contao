@@ -6668,15 +6668,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		return true;
 	}
 
-	protected function isGrantedClipboardMode(string $mode, int $id): bool
+	protected function isGrantedClipboardMode(string $mode, int $id, array|null $new = null): bool
 	{
 		$action = match ($mode)
 		{
-			'create' => new CreateAction($this->strTable),
+			'create' => new CreateAction($this->strTable, $new),
 			'cut',
-			'cutAll' => new UpdateAction($this->strTable, $this->getCurrentRecord($id, $this->strTable), array('sorting' => null)),
+			'cutAll' => new UpdateAction($this->strTable, $this->getCurrentRecord($id, $this->strTable), array_replace(array('sorting' => null), (array) $new)),
 			'copy',
-			'copyAll' => new CreateAction($this->strTable, array_merge($this->getCurrentRecord($id, $this->strTable), array('tstamp' => null, 'sorting' => null)))
+			'copyAll' => new CreateAction($this->strTable, array_replace($this->getCurrentRecord($id, $this->strTable), array('tstamp' => null, 'sorting' => null), (array) $new))
 		};
 
 		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, $action);
