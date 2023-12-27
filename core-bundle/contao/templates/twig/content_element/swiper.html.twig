@@ -1,7 +1,7 @@
 {% extends "@Contao/content_element/_base.html.twig" %}
 {% use "@Contao/component/_stylesheet.html.twig" %}
 
-{% set slider_attributes = attrs(attributes|default)
+{% set slider_attributes = attrs(slider_attributes|default)
     .addClass('swiper')
     .set('data-delay', delay)
     .set('data-speed', speed)
@@ -11,16 +11,24 @@
 
 {% block content %}
     <div{{ slider_attributes }}>
-        <div class="swiper-wrapper">
-            {% for element in nested_fragments %}
-                <div class="swiper-slide">
-                    {{ content_element(element) }}
-                </div>
-            {% endfor %}
+        <div{{ attrs(slider_wrapper|default).addClass('swiper-wrapper') }}>
+            {% block slides %}
+                {% for element in nested_fragments %}
+                    {% block slide %}
+                        <div{{ attrs(element_slide|default).addClass('swiper-slide') }}>
+                            {% block slide_inner %}
+                                {{ content_element(element) }}
+                            {% endblock %}
+                        </div>
+                    {% endblock %}
+                {% endfor %}
+            {% endblock %}
         </div>
-        <button type="button" class="swiper-button-prev"></button>
-        <button type="button" class="swiper-button-next"></button>
-        <div class="swiper-pagination"></div>
+        {% block controls %}
+            <button{{ attrs(previous_slide_button|default).set('type', 'button').addClass('swiper-button-prev') }}></button>
+            <button{{ attrs(next_slide_button|default).set('type', 'button').addClass('swiper-button-next') }}></button>
+            <div{{ attrs(pagination|default).addClass('swiper-pagination') }}></div>
+        {% endblock %}
     </div>
 {% endblock %}
 
