@@ -24,7 +24,7 @@
         <source>Markdown</source>
       </trans-unit>
       <trans-unit id="XPL.insertTags.3.1">
-        <source>To learn more about markdown, see the &lt;a href="https://docs.contao.org/manual/en/article-management/content-elements/text-elements/#markdown" target="_blank" rel="noreferrer noopener"&gt;Contao manual&lt;/a&gt;.</source>
+        <source>To learn more about markdown, see the &lt;a href="https://to.contao.org/docs/markdown?lang=en" target="_blank" rel="noreferrer noopener"&gt;Contao manual&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="XPL.dateFormat.0.0">
         <source>colspan</source>
