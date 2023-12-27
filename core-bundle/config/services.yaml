@@ -95,11 +95,6 @@ services:
             - '@cache.app'
             - '@?logger'
 
-    contao.cron.messenger:
-        class: Contao\CoreBundle\Cron\MessengerCron
-        arguments:
-            - '@contao.process_util'
-
     contao.cron.purge_expired_data:
         class: Contao\CoreBundle\Cron\PurgeExpiredDataCron
         arguments:
@@ -129,6 +124,10 @@ services:
             - '@filesystem'
             - '%kernel.project_dir%'
             - '@monolog.logger.contao.cron'
+
+    contao.cron.supervise_workers:
+        class: Contao\CoreBundle\Cron\SuperviseWorkersCron
+        arguments:
 
     contao.csrf.token_manager:
         class: Contao\CoreBundle\Csrf\ContaoCsrfTokenManager
