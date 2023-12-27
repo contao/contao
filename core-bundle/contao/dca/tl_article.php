@@ -15,6 +15,7 @@ use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
@@ -749,12 +750,15 @@ class tl_article extends Backend
 	 * Automatically generate the folder URL aliases
 	 *
 	 * @param array $arrButtons
+	 * @param DataContainer $dc
 	 *
 	 * @return array
 	 */
-	public function addAliasButton($arrButtons)
+	public function addAliasButton($arrButtons, DataContainer $dc)
 	{
-		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_article::alias'))
+		$security = System::getContainer()->get('security.helper');
+
+		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_article::alias'))
 		{
 			return $arrButtons;
 		}
@@ -766,8 +770,6 @@ class tl_article extends Backend
 			$session = $objSession->all();
 			$ids = $session['CURRENT']['IDS'] ?? array();
 
-			$db = Database::getInstance();
-
 			foreach ($ids as $id)
 			{
 				$objArticle = ArticleModel::findByPk($id);
@@ -777,10 +779,34 @@ class tl_article extends Backend
 					continue;
 				}
 
-				$strAlias = System::getContainer()->get('contao.slug')->generate($objArticle->title, $objArticle->pid);
+				$dc->id = $id;
+				$dc->activeRecord = $objArticle;
+
+				$strAlias = '';
+
+				// Generate new alias through save callbacks
+				if (is_array($GLOBALS['TL_DCA'][$dc->table]['fields']['alias']['save_callback'] ?? null))
+				{
+					foreach ($GLOBALS['TL_DCA'][$dc->table]['fields']['alias']['save_callback'] as $callback)
+					{
+						if (is_array($callback))
+						{
+							$strAlias = System::importStatic($callback[0])->{$callback[1]}($strAlias, $dc);
+						}
+						elseif (is_callable($callback))
+						{
+							$strAlias = $callback($strAlias, $dc);
+						}
+					}
+				}
 
 				// The alias has not changed
 				if ($strAlias == $objArticle->alias)
+				{
+					continue;
+				}
+
+				if (!$security->isGranted(ContaoCorePermissions::DC_PREFIX.'tl_article', new UpdateAction('tl_article', $objArticle->row(), ['alias' => $strAlias])))
 				{
 					continue;
 				}
@@ -790,7 +816,9 @@ class tl_article extends Backend
 				$objVersions->initialize();
 
 				// Store the new alias
-				$db->prepare("UPDATE tl_article SET alias=? WHERE id=?")->execute($strAlias, $id);
+				Database::getInstance()
+					->prepare("UPDATE tl_article SET alias=? WHERE id=?")
+					->execute($strAlias, $id);
 
 				// Create a new version
 				$objVersions->create();

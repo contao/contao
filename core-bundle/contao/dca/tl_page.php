@@ -14,6 +14,7 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database;
 use Contao\DataContainer;
@@ -1434,7 +1435,9 @@ class tl_page extends Backend
 	 */
 	public function addAliasButton($arrButtons, DataContainer $dc)
 	{
-		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_page::alias'))
+		$security = System::getContainer()->get('security.helper');
+
+		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_page::alias'))
 		{
 			return $arrButtons;
 		}
@@ -1478,6 +1481,11 @@ class tl_page extends Backend
 
 				// The alias has not changed
 				if ($strAlias == $objPage->alias)
+				{
+					continue;
+				}
+
+				if (!$security->isGranted(ContaoCorePermissions::DC_PREFIX.'tl_article', new UpdateAction('tl_page', $objPage->row(), ['alias' => $strAlias])))
 				{
 					continue;
 				}
