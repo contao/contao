@@ -31,8 +31,9 @@ class UndoOperationListener
     #[AsCallback(table: 'tl_undo', target: 'list.operations.undo.button')]
     public function __invoke(DataContainerOperation $operation): void
     {
-        $data = StringUtil::deserialize($operation->getRecord()['data'] ?? null);
-        $table = $operation->getRecord()['fromTable'];
+        $record = $operation->getRecord();
+        $data = StringUtil::deserialize($record['data'] ?? null);
+        $table = $record['fromTable'];
 
         // We can only disable undo if the main record access is denied, because child records cannot
         // check their permissions on a non-existing parent record. DC_Table::undo() will actually verify
