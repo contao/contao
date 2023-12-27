@@ -23,7 +23,7 @@ use PHPUnit\Framework\TestCase;
 
 class PluginTest extends TestCase
 {
-    public function testReturnsTheBundles(): void
+    public function testReturnsTheBundleConfiguration(): void
     {
         $parser = $this->createMock(ParserInterface::class);
 
