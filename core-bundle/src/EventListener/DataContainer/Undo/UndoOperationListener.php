@@ -33,6 +33,10 @@ class UndoOperationListener
     {
         $data = StringUtil::deserialize($operation->getRecord()['data'] ?? null);
         $table = $operation->getRecord()['fromTable'];
+
+        // We can only disable undo if the main record access is denied, because child records cannot
+        // check their permissions on a non-existing parent record. DC_Table::undo() will actually verify
+        // records again and skip the ones that are not allowed.
         $row = $data[$table][0] ?? null;
 
         if (
