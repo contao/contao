@@ -25,8 +25,8 @@
             {% endblock %}
         </div>
         {% block controls %}
-            <button{{ attrs(previous_slide_button|default).set('type', 'button').addClass('swiper-button-prev') }}></button>
-            <button{{ attrs(next_slide_button|default).set('type', 'button').addClass('swiper-button-next') }}></button>
+            <button{{ attrs(slide_button_prev|default).set('type', 'button').addClass('swiper-button-prev') }}></button>
+            <button{{ attrs(slide_button_next|default).set('type', 'button').addClass('swiper-button-next') }}></button>
             <div{{ attrs(pagination|default).addClass('swiper-pagination') }}></div>
         {% endblock %}
     </div>
