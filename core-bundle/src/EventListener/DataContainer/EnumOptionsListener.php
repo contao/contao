@@ -17,27 +17,26 @@ use Contao\CoreBundle\Translation\TranslatableLabelInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * @internal
- *
  * Generates option_callbacks for DCA fields with enum configurations,
  * optionally also generating translated references for enums implementing
- * \Contao\CoreBundle\Translation\TranslatableLabelInterface
+ * \Contao\CoreBundle\Translation\TranslatableLabelInterface.
  *
  * Example configuration:
  *   $GLOBALS['TL_DCA']['tl_example']['fields']['enum_field'] = [
  *     'enum' => StringBackedEnum::class,
  *   ]
+ *
+ * @internal
  */
 #[AsHook('loadDataContainer', priority: 200)]
 class EnumOptionsListener
 {
-    public function __construct(
-        private readonly TranslatorInterface $translator,
-    ) {
+    public function __construct(private readonly TranslatorInterface $translator)
+    {
     }
 
     /**
-     * @throws \Exception
+     * @throws \LogicException
      */
     public function __invoke(string $table): void
     {

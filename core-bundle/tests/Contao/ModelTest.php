@@ -171,9 +171,7 @@ class ModelTest extends TestCase
 
         $model->foo = $value;
 
-        $this->assertSame(
-            $model->getEnum('foo'), $expected,
-        );
+        $this->assertSame($model->getEnum('foo'), $expected);
     }
 
     public function getEnumFieldValues(): \Generator

@@ -22,10 +22,6 @@ enum TranslatableEnum: string implements TranslatableLabelInterface
 
     public function label(): TranslatableMessage
     {
-        return new TranslatableMessage(
-            'foo.'.$this->value,
-            [],
-            'contao_default',
-        );
+        return new TranslatableMessage('foo.'.$this->value, [], 'contao_default');
     }
 }

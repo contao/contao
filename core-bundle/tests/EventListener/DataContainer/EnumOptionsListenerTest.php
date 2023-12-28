@@ -82,10 +82,7 @@ class EnumOptionsListenerTest extends TestCase
         $listener = new EnumOptionsListener($this->createMock(TranslatorInterface::class));
         $listener('tl_foo');
 
-        $this->assertSame(
-            $dca,
-            $GLOBALS['TL_DCA']['tl_foo'],
-        );
+        $this->assertSame($dca, $GLOBALS['TL_DCA']['tl_foo']);
     }
 
     public function testDoesNotOverwriteExistingOptions(): void
@@ -102,10 +99,7 @@ class EnumOptionsListenerTest extends TestCase
         $listener = new EnumOptionsListener($this->createMock(TranslatorInterface::class));
         $listener('tl_foo');
 
-        $this->assertSame(
-            $dca,
-            $GLOBALS['TL_DCA']['tl_foo'],
-        );
+        $this->assertSame($dca, $GLOBALS['TL_DCA']['tl_foo']);
     }
 
     /**
@@ -120,12 +114,13 @@ class EnumOptionsListenerTest extends TestCase
             TranslatableEnum::OptionA->value => 'Option One',
             TranslatableEnum::OptionB->value => 'Option Two',
         ];
-        $translations = array_values($reference);
 
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translations = array_values($reference);
 
         /** @var array<TranslatableMessage> $map */
         $map = array_map(static fn ($case) => $case->label(), TranslatableEnum::cases());
+
+        $translator = $this->createMock(TranslatorInterface::class);
         $translator
             ->expects($this->exactly(\count(TranslatableEnum::cases())))
             ->method('trans')

@@ -745,22 +745,22 @@ abstract class Model
 		return $this->arrRelated[$strKey];
 	}
 
-	public function getEnum($strKey): ?\BackedEnum
+	public function getEnum($strKey): \BackedEnum|null
 	{
 		$enum = $this->arrEnums[$strKey] ?? null;
-		$varValue = $this->{$strKey};
-		$table = static::getTable();
 
 		// The enum does not exist
 		if (null === $enum)
 		{
-			throw new \Exception("Field $table.$strKey has no enum configured");
+			throw new \Exception(sprintf('Field %s.%s has no enum configured', static::getTable(), $strKey));
 		}
+
+		$varValue = $this->{$strKey};
 
 		// The value is invalid
 		if (!\is_string($varValue) && !\is_int($varValue))
 		{
-			throw new \Exception("Value of $table.$strKey must be a string or an integer to resolve a backed enumeration");
+			throw new \Exception(sprintf('Value of %s.%s must be a string or an integer to resolve a backed enumeration', static::getTable(), $strKey));
 		}
 
 		return $this->arrEnums[$strKey]::tryFrom($varValue);
