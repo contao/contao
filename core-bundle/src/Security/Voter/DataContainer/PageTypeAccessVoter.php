@@ -102,13 +102,14 @@ class PageTypeAccessVoter extends AbstractDataContainerVoter
         ) {
             return false;
         }
+
         return !($action instanceof UpdateAction
-        && isset($action->getNew()['type'])
-        && \in_array($action->getNew()['type'], self::FIRST_LEVEL_TYPES, true)
-        && (
-            !$this->isRootPage((int) $action->getCurrentPid())
-            || $this->hasPageTypeInRoot($type, (int) $action->getCurrentPid())
-        ));
+            && isset($action->getNew()['type'])
+            && \in_array($action->getNew()['type'], self::FIRST_LEVEL_TYPES, true)
+            && (
+                !$this->isRootPage((int) $action->getCurrentPid())
+                || $this->hasPageTypeInRoot($type, (int) $action->getCurrentPid())
+            ));
     }
 
     private function validateRootType(CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
