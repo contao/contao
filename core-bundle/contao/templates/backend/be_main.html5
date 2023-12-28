@@ -31,7 +31,7 @@
   <?php $this->endblock(); ?>
 
 </head>
-<body id="top" class="be_main<?php if ($this->isPopup): ?> popup<?php endif; ?>"<?= $this->attributes ?>>
+<body id="top" class="be_main<?php if ($this->isPopup): ?> popup<?php endif; ?>"<?= $this->attributes ?> data-controller="contao--offset">
 
   <?php $this->block('header'); ?>
     <?php if (!$this->isPopup): ?>
@@ -100,8 +100,6 @@
   <?php endif; ?>
 
   <?= $this->mootools ?>
-
-  <script>Backend.initScrollOffset()</script>
 
 </body>
 </html>

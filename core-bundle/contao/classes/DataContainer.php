@@ -1299,21 +1299,22 @@ abstract class DataContainer extends Backend
 
 		$checked = Widget::optionChecked($value, $this->arrPickerValue);
 
-		if ((bool) \strlen($checked))
+		if ($checked)
 		{
 			$checked .= ' data-contao--offset-target="scrollTo"';
 		}
 
-		return vsprintf(' <input type="%s" name="picker%s" id="picker_%s" class="tl_tree_%s" value="%s" %s%s%s>', array(
+		return sprintf(
+			' <input type="%s" name="picker%s" id="picker_%s" class="tl_tree_%s" value="%s" %s%s%s>',
 			$this->strPickerFieldType,
 			$this->strPickerFieldType === 'checkbox' ? '[]' : '',
 			$id,
 			$this->strPickerFieldType,
 			StringUtil::specialchars(($this->objPickerCallback)($value)),
-			'data-controller="contao--offset" data-action="focus->contao--offset#set"',
+			'data-action="focus->contao--offset#store"',
 			$checked,
 			$attributes
-		));
+		);
 	}
 
 	/**
