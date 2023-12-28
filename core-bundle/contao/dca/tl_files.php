@@ -96,14 +96,14 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			(
 				'href'                => 'act=paste&amp;mode=copy',
 				'icon'                => 'copy.svg',
-				'attributes'          => 'onclick="Backend.getScrollOffset()"',
+				'attributes'          => 'data-action="contao--offset#store"',
 				'button_callback'     => array('tl_files', 'copyFile')
 			),
 			'cut' => array
 			(
 				'href'                => 'act=paste&amp;mode=cut',
 				'icon'                => 'cut.svg',
-				'attributes'          => 'onclick="Backend.getScrollOffset()"',
+				'attributes'          => 'data-action="contao--offset#store"',
 				'button_callback'     => array('tl_files', 'cutFile')
 			),
 			'delete' => array

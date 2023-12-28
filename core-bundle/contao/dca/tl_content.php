@@ -88,7 +88,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			(
 				'href'                => 'act=paste&amp;mode=copy',
 				'icon'                => 'copy.svg',
-				'attributes'          => 'onclick="Backend.getScrollOffset()"',
+				'attributes'          => 'data-action="contao--offset#store"',
 				'button_callback'     => array('tl_content', 'copyElement')
 			),
 			'cut',
