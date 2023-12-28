@@ -28,6 +28,20 @@ class CommentsConditionalFieldsListenerTest extends ContaoTestCase
         parent::tearDown();
     }
 
+    public function testTableIsNotSet(): void
+    {
+        $GLOBALS['TL_DCA'] = [
+            'tl_foo' => [],
+            'tl_bar' => [],
+        ];
+
+        // Test will fail if tl_module is set due to palettes not existing
+        $listener = new CommentsConditionalFieldsListener(['ContaoNewsBundle' => ContaoNewsBundle::class]);
+        $listener('tl_module');
+
+        $this->assertArrayNotHasKey('tl_module', $GLOBALS['TL_DCA']);
+    }
+
     public function testAppliesModuleFields(): void
     {
         $palettes = '{foo_legend},bar;{protected_legend},baz';
