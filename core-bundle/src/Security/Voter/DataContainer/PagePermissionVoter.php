@@ -88,7 +88,7 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
             $pageId = match ($action->getDataSource()) {
                 'tl_page' => (int) $action->getNewId(),
                 'tl_article' => (int) $action->getNewPid(),
-                default => throw new \UnexpectedValueException('Unsupported data source "'.$action->getDataSource().'"')
+                default => throw new \UnexpectedValueException('Unsupported data source "'.$action->getDataSource().'"'),
             };
 
             return ($this->canEdit($action, $token, $pageId) || $this->canChangeHierarchy($action, $token, $pageId))
@@ -172,7 +172,7 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
         $permission = match ($action->getDataSource()) {
             'tl_page' => ContaoCorePermissions::USER_CAN_DELETE_PAGE,
             'tl_article' => ContaoCorePermissions::USER_CAN_DELETE_ARTICLES,
-            default => throw new \UnexpectedValueException('Unsupported data source "'.$action->getDataSource().'"')
+            default => throw new \UnexpectedValueException('Unsupported data source "'.$action->getDataSource().'"'),
         };
 
         return $this->accessDecisionManager->decide($token, [$permission], $this->getCurrentPageId($action));
@@ -200,7 +200,7 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
         return match ($action->getDataSource()) {
             'tl_page' => (int) $action->getCurrentId(),
             'tl_article' => (int) $action->getCurrentPid(),
-            default => throw new \UnexpectedValueException('Unsupported data source "'.$action->getDataSource().'"')
+            default => throw new \UnexpectedValueException('Unsupported data source "'.$action->getDataSource().'"'),
         };
     }
 
@@ -209,7 +209,7 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
         $attributes = match ($action->getDataSource()) {
             'tl_page' => [ContaoCorePermissions::USER_CAN_EDIT_PAGE],
             'tl_article' => [ContaoCorePermissions::USER_CAN_EDIT_ARTICLES],
-            default => throw new \UnexpectedValueException('Unsupported data source "'.$action->getDataSource().'"')
+            default => throw new \UnexpectedValueException('Unsupported data source "'.$action->getDataSource().'"'),
         };
 
         return $this->accessDecisionManager->decide($token, $attributes, $pageId);
@@ -220,7 +220,7 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
         $attributes = match ($action->getDataSource()) {
             'tl_page' => [ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY],
             'tl_article' => [ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY],
-            default => throw new \UnexpectedValueException('Unsupported data source "'.$action->getDataSource().'"')
+            default => throw new \UnexpectedValueException('Unsupported data source "'.$action->getDataSource().'"'),
         };
 
         return $this->accessDecisionManager->decide($token, $attributes, $pageId);

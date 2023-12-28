@@ -102,20 +102,13 @@ class PageTypeAccessVoter extends AbstractDataContainerVoter
         ) {
             return false;
         }
-
-        if (
-            $action instanceof UpdateAction
-            && isset($action->getNew()['type'])
-            && \in_array($action->getNew()['type'], self::FIRST_LEVEL_TYPES, true)
-            && (
-                !$this->isRootPage((int) $action->getCurrentPid())
-                || $this->hasPageTypeInRoot($type, (int) $action->getCurrentPid())
-            )
-        ) {
-            return false;
-        }
-
-        return true;
+        return !($action instanceof UpdateAction
+        && isset($action->getNew()['type'])
+        && \in_array($action->getNew()['type'], self::FIRST_LEVEL_TYPES, true)
+        && (
+            !$this->isRootPage((int) $action->getCurrentPid())
+            || $this->hasPageTypeInRoot($type, (int) $action->getCurrentPid())
+        ));
     }
 
     private function validateRootType(CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
@@ -135,11 +128,7 @@ class PageTypeAccessVoter extends AbstractDataContainerVoter
             return false;
         }
 
-        if (0 !== (int) $action->getNewPid()) {
-            return false;
-        }
-
-        return true;
+        return 0 === (int) $action->getNewPid();
     }
 
     private function validateRootNode(CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
