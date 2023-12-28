@@ -64,7 +64,7 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
      */
     public static function adjustTemplateName($name, TemplateHierarchyInterface $hierarchy)
     {
-        if (!is_string($name)) {
+        if (!\is_string($name)) {
             if ($name instanceof TemplateWrapper) {
                 return $name;
             }
