@@ -21,6 +21,13 @@ use Contao\TestCase\ContaoTestCase;
 
 class CommentsConditionalFieldsListenerTest extends ContaoTestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_DCA']);
+
+        parent::tearDown();
+    }
+
     public function testAppliesModuleFields(): void
     {
         $palettes = '{foo_legend},bar;{protected_legend},baz';
