@@ -23,8 +23,7 @@ class CommentsConditionalFieldsListenerTest extends ContaoTestCase
 {
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_DCA']);
-        unset($GLOBALS['TL_LANG']);
+        unset($GLOBALS['TL_DCA'], $GLOBALS['TL_LANG']);
 
         parent::tearDown();
     }
