@@ -207,9 +207,6 @@ class ModuleLogin extends Module
 		{
 			/** @var PageModel $objLostPasswordTarget */
 			$this->Template->passwordreset = $objLostPasswordTarget->getFrontendUrl();
-
-			$this->Template->resetTitle = $GLOBALS['TL_LANG']['MSC']['lostPassword'];
-			$this->Template->resetLabel = $GLOBALS['TL_LANG']['MSC']['lostPassword'];
 		}
 
 		$this->Template->username = $GLOBALS['TL_LANG']['MSC']['username'];

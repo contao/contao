@@ -52,7 +52,7 @@
       </div>
       <?php if ($this->passwordreset): ?>
         <div class="password-reset">
-          <a class="password-reset_link"><a href="<?= $this->passwordreset ?>" title="<?= $this->resetTitle ?>"><?= $this->resetLabel ?></a></a>
+          <a class="password-reset_link"><a href="<?= $this->passwordreset ?>" title="<?= $this->trans('MSC.lostPassword', [], 'contao_default'); ?>"><?= $this->trans('MSC.lostPassword', [], 'contao_default'); ?></a></a>
         </div>
       <?php endif; ?>
     </div>
