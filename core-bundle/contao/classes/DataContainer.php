@@ -1292,18 +1292,19 @@ abstract class DataContainer extends Backend
 	{
 		$id = is_numeric($value) ? $value : md5($value);
 
-		if (!in_array($this->strPickerFieldType, ['checkbox','radio']))
+		if (!\in_array($this->strPickerFieldType, array('checkbox', 'radio')))
 		{
 			return '';
 		}
 
 		$checked = Widget::optionChecked($value, $this->arrPickerValue);
 
-		if (!!strlen($checked)) {
+		if ((bool) \strlen($checked))
+		{
 			$checked .= ' data-contao--offset-target="scrollTo"';
 		}
 
-		return vsprintf(' <input type="%s" name="picker%s" id="picker_%s" class="tl_tree_%s" value="%s" %s%s%s>', [
+		return vsprintf(' <input type="%s" name="picker%s" id="picker_%s" class="tl_tree_%s" value="%s" %s%s%s>', array(
 			$this->strPickerFieldType,
 			$this->strPickerFieldType === 'checkbox' ? '[]' : '',
 			$id,
@@ -1312,7 +1313,7 @@ abstract class DataContainer extends Backend
 			'data-controller="contao--offset" data-action="focus->contao--offset#set"',
 			$checked,
 			$attributes
-		]);
+		));
 	}
 
 	/**
