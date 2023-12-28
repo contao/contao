@@ -1292,16 +1292,27 @@ abstract class DataContainer extends Backend
 	{
 		$id = is_numeric($value) ? $value : md5($value);
 
-		switch ($this->strPickerFieldType)
+		if (!in_array($this->strPickerFieldType, ['checkbox','radio']))
 		{
-			case 'checkbox':
-				return ' <input type="checkbox" name="picker[]" id="picker_' . $id . '" class="tl_tree_checkbox" value="' . StringUtil::specialchars(($this->objPickerCallback)($value)) . '" onfocus="Backend.getScrollOffset()"' . Widget::optionChecked($value, $this->arrPickerValue) . $attributes . '>';
-
-			case 'radio':
-				return ' <input type="radio" name="picker" id="picker_' . $id . '" class="tl_tree_radio" value="' . StringUtil::specialchars(($this->objPickerCallback)($value)) . '" onfocus="Backend.getScrollOffset()"' . Widget::optionChecked($value, $this->arrPickerValue) . $attributes . '>';
+			return '';
 		}
 
-		return '';
+		$checked = Widget::optionChecked($value, $this->arrPickerValue);
+
+		if (!!strlen($checked)) {
+			$checked .= ' data-contao--offset-target="scrollTo"';
+		}
+
+		return vsprintf(' <input type="%s" name="picker%s" id="picker_%s" class="tl_tree_%s" value="%s" %s%s%s>', [
+			$this->strPickerFieldType,
+			$this->strPickerFieldType === 'checkbox' ? '[]' : '',
+			$id,
+			$this->strPickerFieldType,
+			StringUtil::specialchars(($this->objPickerCallback)($value)),
+			'data-controller="contao--offset" data-action="focus->contao--offset#set"',
+			$checked,
+			$attributes
+		]);
 	}
 
 	/**
