@@ -29,6 +29,9 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 class DefaultOperationsListenerTest extends TestCase
 {
+    /**
+     * @var Adapter<Controller>&MockObject
+     */
     private Adapter&MockObject $controllerAdapter;
 
     private Security&MockObject $security;

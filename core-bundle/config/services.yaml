@@ -855,18 +855,6 @@ services:
             - '@contao.framework'
             - '@contao.routing.page_registry'
 
-    contao.security.data_container.page_permission_voter:
-        class: Contao\CoreBundle\Security\Voter\DataContainer\PagePermissionVoter
-        arguments:
-            - '@contao.framework'
-            - '@security.access.decision_manager'
-
-    contao.security.data_container.page_type_access_voter:
-        class: Contao\CoreBundle\Security\Voter\DataContainer\PageTypeAccessVoter
-        arguments:
-            - '@security.access.decision_manager'
-            - '@database_connection'
-
     contao.security.data_container.favorites_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\FavoritesVoter
 
@@ -879,6 +867,18 @@ services:
         class: Contao\CoreBundle\Security\Voter\DataContainer\FormFieldAccessVoter
         arguments:
             - '@security.access.decision_manager'
+
+    contao.security.data_container.page_permission_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\PagePermissionVoter
+        arguments:
+            - '@contao.framework'
+            - '@security.access.decision_manager'
+
+    contao.security.data_container.page_type_access_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\PageTypeAccessVoter
+        arguments:
+            - '@security.access.decision_manager'
+            - '@database_connection'
 
     contao.security.data_container.table_access_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\TableAccessVoter

@@ -106,7 +106,7 @@ class PageTypeAccessVoter extends AbstractDataContainerVoter
         if (
             $action instanceof UpdateAction
             && isset($action->getNew()['type'])
-            && in_array($action->getNew()['type'], self::FIRST_LEVEL_TYPES, true)
+            && \in_array($action->getNew()['type'], self::FIRST_LEVEL_TYPES, true)
             && (
                 !$this->isRootPage((int) $action->getCurrentPid())
                 || $this->hasPageTypeInRoot($type, (int) $action->getCurrentPid())

@@ -61,14 +61,6 @@ class ContentCompositionListenerTest extends TestCase
         'published' => 1,
     ];
 
-    private array $articleRecord = [
-        'id' => 2,
-        'pid' => 17,
-        'alias' => 'foo-bar',
-        'title' => 'foo',
-        'published' => 1,
-    ];
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -194,7 +186,7 @@ class ContentCompositionListenerTest extends TestCase
             'articles',
             ['href' => 'do=article'],
             $this->pageRecord,
-            $this->createMock(DataContainer::class)
+            $this->createMock(DataContainer::class),
         );
 
         $this->listener->renderPageArticlesOperation($operation);
@@ -220,7 +212,7 @@ class ContentCompositionListenerTest extends TestCase
             'articles',
             ['href' => 'do=article'],
             $this->pageRecord,
-            $this->createMock(DataContainer::class)
+            $this->createMock(DataContainer::class),
         );
 
         $this->listener->renderPageArticlesOperation($operation);

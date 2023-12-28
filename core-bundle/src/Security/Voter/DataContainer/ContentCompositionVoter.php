@@ -37,7 +37,7 @@ class ContentCompositionVoter implements VoterInterface, CacheableVoterInterface
 
     public function supportsAttribute(string $attribute): bool
     {
-        return ContaoCorePermissions::DC_PREFIX.'tl_article' == $attribute;
+        return ContaoCorePermissions::DC_PREFIX.'tl_article' === $attribute;
     }
 
     public function supportsType(string $subjectType): bool

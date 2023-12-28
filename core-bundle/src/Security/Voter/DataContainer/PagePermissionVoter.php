@@ -41,7 +41,7 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
 
     public function supportsAttribute(string $attribute): bool
     {
-        return \in_array($attribute, [ContaoCorePermissions::DC_PREFIX.'tl_page', ContaoCorePermissions::DC_PREFIX.'tl_article']);
+        return \in_array($attribute, [ContaoCorePermissions::DC_PREFIX.'tl_page', ContaoCorePermissions::DC_PREFIX.'tl_article'], true);
     }
 
     public function supportsType(string $subjectType): bool
@@ -88,6 +88,7 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
             $pageId = match ($action->getDataSource()) {
                 'tl_page' => (int) $action->getNewId(),
                 'tl_article' => (int) $action->getNewPid(),
+                default => throw new \UnexpectedValueException('Unsupported data source "'.$action->getDataSource().'"')
             };
 
             return ($this->canEdit($action, $token, $pageId) || $this->canChangeHierarchy($action, $token, $pageId))
@@ -132,8 +133,8 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
         }
 
         // Move existing record
-        $changeSorting = array_key_exists('sorting', $newRecord);
-        $changePid = array_key_exists('pid', $newRecord) && $action->getCurrentPid() !== $action->getNewPid();
+        $changeSorting = \array_key_exists('sorting', $newRecord);
+        $changePid = \array_key_exists('pid', $newRecord) && $action->getCurrentPid() !== $action->getNewPid();
 
         if (
             ($changeSorting || $changePid)
@@ -171,6 +172,7 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
         $permission = match ($action->getDataSource()) {
             'tl_page' => ContaoCorePermissions::USER_CAN_DELETE_PAGE,
             'tl_article' => ContaoCorePermissions::USER_CAN_DELETE_ARTICLES,
+            default => throw new \UnexpectedValueException('Unsupported data source "'.$action->getDataSource().'"')
         };
 
         return $this->accessDecisionManager->decide($token, [$permission], $this->getCurrentPageId($action));
@@ -193,11 +195,12 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
         return $this->pagemountsCache[$user->id] = $database->getChildRecords($user->pagemounts, 'tl_page', false, $user->pagemounts);
     }
 
-    private function getCurrentPageId(ReadAction|UpdateAction|DeleteAction $action): int
+    private function getCurrentPageId(DeleteAction|ReadAction|UpdateAction $action): int
     {
         return match ($action->getDataSource()) {
             'tl_page' => (int) $action->getCurrentId(),
             'tl_article' => (int) $action->getCurrentPid(),
+            default => throw new \UnexpectedValueException('Unsupported data source "'.$action->getDataSource().'"')
         };
     }
 
@@ -205,7 +208,8 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
     {
         $attributes = match ($action->getDataSource()) {
             'tl_page' => [ContaoCorePermissions::USER_CAN_EDIT_PAGE],
-            'tl_article' => [ContaoCorePermissions::USER_CAN_EDIT_ARTICLES]
+            'tl_article' => [ContaoCorePermissions::USER_CAN_EDIT_ARTICLES],
+            default => throw new \UnexpectedValueException('Unsupported data source "'.$action->getDataSource().'"')
         };
 
         return $this->accessDecisionManager->decide($token, $attributes, $pageId);
@@ -215,7 +219,8 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
     {
         $attributes = match ($action->getDataSource()) {
             'tl_page' => [ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY],
-            'tl_article' => [ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY]
+            'tl_article' => [ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY],
+            default => throw new \UnexpectedValueException('Unsupported data source "'.$action->getDataSource().'"')
         };
 
         return $this->accessDecisionManager->decide($token, $attributes, $pageId);
