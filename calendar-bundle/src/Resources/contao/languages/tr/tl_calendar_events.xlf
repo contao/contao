@@ -19,11 +19,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.author.0">
         <source>Author</source>
-        <target>Yazar</target>
+        <target>Sahibi</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.author.1">
         <source>Here you can change the author of the event.</source>
-        <target>Buradan etkinliğin yazarını değiştirilebilirsiniz.</target>
+        <target>Buradan etkinliğin sahibini değiştirilebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.addTime.0">
         <source>Add time</source>
@@ -247,7 +247,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.featured.0">
         <source>Feature event</source>
-        <target>Etkinliği öne çıkar</target>
+        <target>Etkinliği öne çıkarılmışlara ekle</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.featured.1">
         <source>Show the event in a featured event list.</source>
@@ -287,7 +287,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.title_legend">
         <source>Title and author</source>
-        <target>Başlık ve yazar</target>
+        <target>Başlık ve sahip</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.date_legend">
         <source>Date and time</source>
@@ -355,35 +355,35 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.show">
         <source>Show the details of event ID %s</source>
-        <target>%s kodlu etkinliğin ayrıntılarını görüntüle</target>
+        <target>%s kimlikli etkinliğin ayrıntılarını görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.edit">
         <source>Edit event ID %s</source>
-        <target>%s kodlu etkinliği düzenle</target>
+        <target>%s kimlikli etkinliği düzenle</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.copy">
         <source>Duplicate event ID %s</source>
-        <target>%s kodlu etkinliği kopyala</target>
+        <target>%s kimlikli etkinliği kopyala</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.cut">
         <source>Move event ID %s</source>
-        <target>%s kodlu etkinliği taşı</target>
+        <target>%s kimlikli etkinliği taşı</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.delete">
         <source>Delete event ID %s</source>
-        <target>%s kodlu etkinliği sil</target>
+        <target>%s kimlikli etkinliği sil</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.toggle">
         <source>Publish/unpublish event ID %s</source>
-        <target>%s kodlu etkinliği yayınla/yayından kaldır</target>
+        <target>%s kimlikli etkinliği yayınla/yayından kaldır</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature">
         <source>Feature/unfeature event ID %s</source>
-        <target>%s kodlu etkinliği öne çıkarılmışlara ekle/kaldır</target>
+        <target>%s kimlikli etkinliği öne çıkarılmışlara ekle/kaldır</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.editheader">
         <source>Edit the settings of event ID %s</source>
-        <target>%s kodlu etkinliğin ayarlarını düzenle</target>
+        <target>%s kimlikli etkinliğin ayarlarını düzenle</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>

@@ -227,23 +227,23 @@
       </trans-unit>
       <trans-unit id="tl_form.show">
         <source>Show the details of form ID %s</source>
-        <target>نمایش جزئیات فرم شناسه‌ی %s</target>
+        <target>نمایش جزئیات فرم شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_form.edit">
         <source>Edit form ID %s</source>
-        <target>ویرایش فرم شناسه‌ی %s</target>
+        <target>ویرایش فرم شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_form.editheader">
         <source>Edit the settings of form ID %s</source>
-        <target>ویرایش تنظیمات فرم شناسه‌ی %s</target>
+        <target>ویرایش تنظیمات فرم شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_form.copy">
         <source>Duplicate form ID %s</source>
-        <target>تکثیر فرم شناسه‌ی %s</target>
+        <target>تکثیر فرم شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_form.delete">
         <source>Delete form ID %s</source>
-        <target>حذف فرم شناسه‌ی %s</target>
+        <target>حذف فرم شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_form.targetTableMissingAllowlist">
         <source>Define the available tables in the following DCA configuration: &lt;code&gt;%s&lt;/code&gt;.</source>

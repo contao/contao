@@ -185,6 +185,10 @@ class News extends Frontend
 				// Override the global page object (#2946)
 				$GLOBALS['objPage'] = $objParent;
 
+				// Override the assets and files context (#6563)
+				$GLOBALS['objPage']->staticFiles = rtrim($GLOBALS['objPage']->staticFiles ?: $strLink, '/');
+				$GLOBALS['objPage']->staticPlugins = rtrim($GLOBALS['objPage']->staticPlugins ?: $strLink, '/');
+
 				// Get the jumpTo URL
 				if (!isset($arrUrls[$jumpTo]))
 				{
@@ -392,7 +396,7 @@ class News extends Frontend
 	 */
 	public static function generateNewsUrl($objItem, $blnAddArchive=false, $blnAbsolute=false)
 	{
-		$strCacheKey = 'id_' . $objItem->id . ($blnAbsolute ? '_absolute' : '');
+		$strCacheKey = 'id_' . $objItem->id . ($blnAbsolute ? '_absolute' : '') . (($blnAddArchive && Input::get('month')) ? '_' . Input::get('month') : '');
 
 		// Load the URL from cache
 		if (isset(self::$arrUrlCache[$strCacheKey]))

@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_files.syncExclude.1">
         <source>Do not synchronize the folder and its subfolders with the database.</source>
-        <target>Klasör ve alt klasörleri veritabanı ile eşitlenmez.</target>
+        <target>Klasör ve alt klasörleri veri tabanı ile eşitlenmez.</target>
       </trans-unit>
       <trans-unit id="tl_files.importantPartX.0">
         <source>Important part x coordinate</source>
@@ -207,7 +207,7 @@
       </trans-unit>
       <trans-unit id="tl_files.sync.1">
         <source>Synchronize the file system and the database</source>
-        <target>Dosya sistemi ile veritabanını eşitle</target>
+        <target>Dosya sistemini ve veri tabanını eşitle</target>
       </trans-unit>
       <trans-unit id="tl_files.show">
         <source>Show the details of file or folder &quot;%s&quot;</source>

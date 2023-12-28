@@ -14,10 +14,12 @@ namespace Contao\CoreBundle\Security\Authentication;
 
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Security\Authentication\Token\FrontendPreviewToken;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\FrontendUser;
 use Contao\StringUtil;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -25,6 +27,8 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 class FrontendPreviewAuthenticator
 {
     private Security $security;
+    private TokenStorageInterface $tokenStorage;
+    private TokenChecker $tokenChecker;
     private SessionInterface $session;
     private UserProviderInterface $userProvider;
     private ?LoggerInterface $logger;
@@ -32,9 +36,11 @@ class FrontendPreviewAuthenticator
     /**
      * @internal
      */
-    public function __construct(Security $security, SessionInterface $session, UserProviderInterface $userProvider, LoggerInterface $logger = null)
+    public function __construct(Security $security, TokenStorageInterface $tokenStorage, TokenChecker $tokenChecker, SessionInterface $session, UserProviderInterface $userProvider, LoggerInterface $logger = null)
     {
         $this->security = $security;
+        $this->tokenStorage = $tokenStorage;
+        $this->tokenChecker = $tokenChecker;
         $this->session = $session;
         $this->userProvider = $userProvider;
         $this->logger = $logger;
@@ -50,7 +56,7 @@ class FrontendPreviewAuthenticator
 
         $token = new FrontendPreviewToken($user, $showUnpublished);
 
-        $this->session->set('_security_contao_frontend', serialize($token));
+        $this->updateToken($token);
 
         return true;
     }
@@ -59,7 +65,7 @@ class FrontendPreviewAuthenticator
     {
         $token = new FrontendPreviewToken(null, $showUnpublished, $previewLinkId);
 
-        $this->session->set('_security_contao_frontend', serialize($token));
+        $this->updateToken($token);
 
         return true;
     }
@@ -73,9 +79,24 @@ class FrontendPreviewAuthenticator
             return false;
         }
 
-        $this->session->remove('_security_contao_frontend');
+        $this->updateToken(null);
 
         return true;
+    }
+
+    /**
+     * Replaces the current token if the frontend firewall is active.
+     * Otherwise, the token is stored in the session.
+     */
+    private function updateToken(?FrontendPreviewToken $token): void
+    {
+        if ($this->tokenChecker->isFrontendFirewall()) {
+            $this->tokenStorage->setToken($token);
+        } elseif (null === $token) {
+            $this->session->remove('_security_contao_frontend');
+        } else {
+            $this->session->set('_security_contao_frontend', serialize($token));
+        }
     }
 
     /**

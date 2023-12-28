@@ -151,27 +151,27 @@
       </trans-unit>
       <trans-unit id="tl_image_size.show">
         <source>Show the details of image size ID %s</source>
-        <target>%s kodlu görsel boyutunun ayrıntılarını görüntüle</target>
+        <target>%s kimlikli görsel boyutunun ayrıntılarını görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_image_size.edit">
         <source>Edit image size ID %s</source>
-        <target>%s kodlu görsel boyutunu düzenle</target>
+        <target>%s kimlikli görsel boyutunu düzenle</target>
       </trans-unit>
       <trans-unit id="tl_image_size.editheader">
         <source>Edit the settings of image size ID %s</source>
-        <target>%s kodlu görsel boyutunun ayarlarını düzenle</target>
+        <target>%s kimlikli görsel boyutunun ayarlarını düzenle</target>
       </trans-unit>
       <trans-unit id="tl_image_size.cut">
         <source>Move image size ID %s</source>
-        <target>%s kodlu görsel boyutunu taşı</target>
+        <target>%s kimlikli görsel boyutunu taşı</target>
       </trans-unit>
       <trans-unit id="tl_image_size.copy">
         <source>Duplicate image size ID %s</source>
-        <target>%s kodlu görsel boyutunu kopyala</target>
+        <target>%s kimlikli görsel boyutunu kopyala</target>
       </trans-unit>
       <trans-unit id="tl_image_size.delete">
         <source>Delete image size ID %s</source>
-        <target>%s kodlu görsel boyutunu sil</target>
+        <target>%s kimlikli görsel boyutunu sil</target>
       </trans-unit>
     </body>
   </file>

@@ -26,12 +26,10 @@
         <target>Поље &quot;%s&quot; не сме да буде дуже од %d знакова!</target>
       </trans-unit>
       <trans-unit id="ERR.minval">
-        <source>Field &quot;%s&quot; has to be at least %d!</source>
-        <target>Поље &quot;%s&quot; мора да буде бар %d!</target>
+        <source>Field &quot;%s&quot; has to be at least %s!</source>
       </trans-unit>
       <trans-unit id="ERR.maxval">
-        <source>Field &quot;%s&quot; must not be greater than %d!</source>
-        <target>Поље &quot;%s&quot; не сме да буде веће од %d!</target>
+        <source>Field &quot;%s&quot; must not be greater than %s!</source>
       </trans-unit>
       <trans-unit id="ERR.digit">
         <source>Please enter digits only!</source>

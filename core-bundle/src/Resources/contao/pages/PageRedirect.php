@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Util\UrlUtil;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -31,7 +32,9 @@ class PageRedirect extends Frontend
 
 		$this->prepare($objPage);
 
-		$this->redirect(System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objPage->url), $this->getRedirectStatusCode($objPage));
+		$url = UrlUtil::makeAbsolute(System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objPage->url), Environment::get('path') . '/');
+
+		$this->redirect($url, $this->getRedirectStatusCode($objPage));
 	}
 
 	/**
@@ -45,7 +48,9 @@ class PageRedirect extends Frontend
 	{
 		$this->prepare($objPage);
 
-		return new RedirectResponse(System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objPage->url), $this->getRedirectStatusCode($objPage));
+		$url = UrlUtil::makeAbsolute(System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objPage->url), Environment::get('path') . '/');
+
+		return new RedirectResponse($url, $this->getRedirectStatusCode($objPage));
 	}
 
 	/**

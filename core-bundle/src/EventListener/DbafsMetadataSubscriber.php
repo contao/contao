@@ -70,7 +70,7 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
             $event->set('importantPartHeight', $importantPart->getHeight());
         }
 
-        if (\is_array($data = $extraMetadata['metadata'])) {
+        if (\is_array($data = $extraMetadata['metadata'] ?? null)) {
             $metadata = array_map(
                 static function (Metadata $metadata) use ($event): array {
                     if (null !== ($uuid = $metadata->getUuid()) && $uuid !== ($recordUuid = $event->getUuid()->toRfc4122())) {

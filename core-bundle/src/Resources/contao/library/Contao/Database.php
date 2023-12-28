@@ -125,13 +125,6 @@ class Database
 	 */
 	public function __get($strKey)
 	{
-		if ($strKey == 'error')
-		{
-			$info = $this->resConnection->errorInfo();
-
-			return 'SQLSTATE ' . $info[0] . ': error ' . $info[1] . ': ' . $info[2];
-		}
-
 		return null;
 	}
 

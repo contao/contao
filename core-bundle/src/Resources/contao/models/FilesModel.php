@@ -317,6 +317,11 @@ class FilesModel extends Model
 	{
 		$t = static::$strTable;
 
+		if (!isset($arrOptions['order']))
+		{
+			$arrOptions['order'] = "$t.path";
+		}
+
 		return static::findBy(array("$t.path LIKE ?"), $strPath . '%', $arrOptions);
 	}
 

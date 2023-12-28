@@ -710,6 +710,34 @@ class SitemapControllerTest extends TestCase
         unset($GLOBALS['TL_HOOKS']['getSearchablePages']);
     }
 
+    public function testEncodesTheUrl(): void
+    {
+        $page1 = $this->mockPage(
+            [
+                'id' => 43,
+                'pid' => 42,
+                'type' => 'regular',
+                'groups' => [],
+                'published' => '1',
+                'rootLanguage' => 'en',
+            ],
+            ['' => 'https://www.foobar.com/en/page1.html?foo=bar&bar=baz']
+        );
+
+        $framework = $this->mockFrameworkWithPages([42 => [$page1], 43 => null, 21 => null], [43 => null]);
+        $container = $this->getContainer($framework);
+        $registry = new PageRegistry($this->createMock(Connection::class));
+
+        $controller = new SitemapController($registry);
+        $controller->setContainer($container);
+
+        $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
+
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertSame('public, s-maxage=2592000', $response->headers->get('Cache-Control'));
+        $this->assertSame($this->getExpectedSitemapContent(['https://www.foobar.com/en/page1.html?foo=bar&amp;bar=baz']), $response->getContent());
+    }
+
     public function testSkipsNonHtmlPages(): void
     {
         $page1 = $this->mockPage([

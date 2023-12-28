@@ -90,6 +90,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.allowedAttributesWarning">
         <source>Allowing &lt;code&gt;*&lt;/code&gt; attributes can be exploited for XSS attacks. Only do this if all backend users are trusted!</source>
+        <target>Če omogočite &lt;code&gt;*&lt;/code&gt;atribute, se to lahko izkoristi za napade XSS. To storite le, če zaupate vsem skrbnikom in urednikom vsebin.</target>
       </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.0">
         <source>Disable request tokens</source>
@@ -169,6 +170,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.defaultGroup.1">
         <source>Here you can select a user group as the default owner of a page.</source>
+        <target>Tu lahko določite skupino uporabnikov kot privzetega lastnika strani.</target>
       </trans-unit>
       <trans-unit id="tl_settings.defaultChmod.0">
         <source>Default access rights</source>

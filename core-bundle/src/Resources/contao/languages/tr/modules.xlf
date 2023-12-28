@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="MOD.page.1">
         <source>Set up the site structure of your website(s)</source>
-        <target>Web sitelerinizin site yapılarını kurun</target>
+        <target>Sitelerinizin site yapılarını kurun</target>
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.0">
         <source>Templates</source>
@@ -135,7 +135,7 @@
       </trans-unit>
       <trans-unit id="MOD.maintenance.1">
         <source>Crawl the website or purge generated data</source>
-        <target>Web sitesini tarayın ya da oluşturulan verileri temizleyin</target>
+        <target>Siteyi tarayın ya da oluşturulan verileri temizleyin</target>
       </trans-unit>
       <trans-unit id="MOD.security.0">
         <source>Security</source>

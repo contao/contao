@@ -2,6 +2,136 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.35] (2023-11-30)
+
+**Fixed issues:**
+
+- [#6574] Fix and improve logging deprecation messages ([Toflar])
+- [#6575] Fix the safe analysis for the `contao_html`  and `contao_html_attr` strategies ([m-vo])
+- [#6576] Correctly reset the page registry ([aschempp])
+- [#6460] Fix the news URL cache when the archive is added ([aschempp])
+- [#6568] Add the missing autowiring alias for the image sizes service ([Toflar])
+- [#6524] Improve performance when loading language files that do not exist ([fritzmg])
+- [#6535] Fix ongoing events ([ausi])
+- [#6532] Bubble the back end log entries to file logs ([aschempp])
+- [#6430] Only consider the main request in the `MergeHttpHeadersListener` class ([Toflar])
+- [#6545] Change the form permission constant ([aschempp])
+- [#6522] Remove the XLIFF level restriction ([fritzmg])
+- [#6514] Make sure the session cookie is always lax ([Toflar])
+- [#6511] Fix undefined array key warning in `DC_Table::deleteAll` ([fritzmg])
+- [#6507] Use placeholders for URLs in translation strings ([leofeyer])
+- [#6501] Fix the date format in the `Feed` class ([leofeyer])
+
+## [4.13.34] (2023-11-06)
+
+**Fixed issues:**
+
+- [#6492] Fix the arguments of the `contao.command.user_list` service ([xprojects-de])
+
+## [4.13.33] (2023-11-06)
+
+**Fixed issues:**
+
+- [#6490] Focus the TinyMCE dialog after using the picker ([ausi])
+- [#6487] Fixed debug log not shown when crawler is running ([Toflar])
+- [#6345] Fix redirect to language without URL prefix ([aschempp])
+- [#6473] Cast boolean to integer in `DC_Table::copy` ([fritzmg])
+- [#6466] Correctly handle metadata in Dbafs ([aschempp])
+- [#6467] Compare the actual row format instead of the create options ([ausi])
+- [#6459] Correctly reset the context when generating preview URL fails ([aschempp])
+- [#6462] Remove the `kernel.reset` tag ([aschempp])
+- [#6457] Add member login preview links to known limitations ([ausi])
+- [#6417] Change user commands to not use models ([aschempp])
+- [#6444] Enable code highlighting for Twig ([m-vo])
+
+## [4.13.32] (2023-10-17)
+
+**Fixed issues:**
+
+- [#6437] Support themes from ZIP files ([aschempp])
+- [#6431] Make sure valid URLs start with a slash ([aschempp])
+- [#6425] Do not set `database_version` in the install tool ([aschempp])
+
+## [4.13.31] (2023-10-09)
+
+**Fixed issues:**
+
+- [#6419] Use `href` for lightbox resource ([fritzmg])
+- [#6422] Correctly tag cached responses with forms ([aschempp])
+- [#6401] Create one `<script>` block per JSON-LD context ([leofeyer])
+- [#6391] Do not forward pages with parameters by default ([leofeyer])
+- [#6393] Generate the file tree preview images with a 1x, 2x source set ([leofeyer])
+- [#6390] Do not allow route parameters for redirect pages ([leofeyer])
+- [#6349] Fix an "access array offset on value of type null" error in the help wizard ([leofeyer])
+- [#6384] Fix legacy route matching for unpublished pages ([fritzmg])
+- [#6352] Fix a PHP8 warning on undefined `$GLOBALS['TL_CSS']` ([aschempp])
+
+## [4.13.30] (2023-08-30)
+
+**Fixed issues:**
+
+- [#6343] Fix warning if reference page of navigation module gets deleted ([fritzmg])
+- [#6333] Correctly add the schema.org data of multiple FAQ archives on the same page ([Toflar])
+- [#6348] URL-encode file paths for edit multiple ([ausi])
+- [#6332] Always allow unpublished pages in preview entry point ([aschempp])
+- [#6331] Check the preview script before the firewall ([aschempp])
+- [#6325] Do not URL-encode insert tags in `specialcharsUrl()` ([ausi])
+- [#6317] Use primary language for slug generation ([fritzmg])
+- [#6279] Fix bug with huge PDF files in the back end preview ([ausi])
+- [#6311] Remove another left-over `errorInfo()` call ([leofeyer])
+- [#6309] Fix warnings when using `Image::get` ([fritzmg])
+- [#6310] Allow storing large integers in the calendar bundle ([leofeyer])
+- [#6308] Encode the form data when sending it as XML file ([leofeyer])
+- [#6307] Fix the .htaccess rewrite rules ([leofeyer])
+- [#6306] Correctly handle users without username in the registration module ([e-spin])
+- [#6302] Generate the file manager preview images with a 1x, 2x source set ([leofeyer])
+- [#6297] Remove the left-over `errorInfo()` call ([leofeyer])
+- [#6296] Allow to set `field` and `inputName` on DataContainer ([aschempp])
+- [#6293] Add redirect for app.php to prevent duplicate content ([bennyborn])
+- [#6276] Use PDF TrimBox when generating previews ([ausi])
+
+## [4.13.29] (2023-08-01)
+
+**Fixed issues:**
+
+- [#6261] Fix the FAQ page and list modules ([leofeyer])
+- [#6251] Handle insert tags in news and event URLs ([leofeyer])
+- [#6252] Set the correct PIDs when copying folders recursively ([leofeyer])
+- [#6127] Recursively implode fields when generating record labels ([aschempp])
+- [#6250] Correctly show options with the same label in the filter menu ([leofeyer])
+- [#6240] Do not set the unsubscribe header for test newsletters ([aschempp])
+- [#6234] Fix the variable naming in the DCA schema provider ([leofeyer])
+
+## [4.13.28] (2023-07-25)
+
+**Security fixes:**
+
+- [CVE-2023-36806]: Cross site scripting in widgets with units
+
+## [4.13.27] (2023-07-21)
+
+**Fixed issues:**
+
+- [#6226] Replace the token in the storage for preview link authentication ([ausi])
+- [#5829] Make the RegisterFragmentType compiler pass reusable ([richardhj])
+- [#6159] Include the category data in the FAQ list template ([aschempp])
+- [#6229] Fix PHP8 issues in the database installer ([aschempp])
+- [#6222] Handle missing files in the `StringUtil::insertTagToSrc()` method ([ausi])
+- [#6231] Fix the `ReflectionProperty::setValue()` method signature ([ausi])
+- [#6217] Fix relative redirects ([fritzmg])
+- [#6221] Improve the `UrlUtil::makeAbsolute()` method ([ausi])
+
+## [4.13.26] (2023-07-10)
+
+**Fixed issues:**
+
+- [#6197] Handle empty label fields in the picker ([leofeyer])
+- [#6187] Make the template module more flexible ([fritzmg])
+- [#6148] Correctly encode URLs in the sitemap ([aschempp])
+- [#6180] Fix rootNodes for table picker ([aschempp])
+- [#6171] Revert 'Use real path for `.env.local`' ([ausi])
+- [#6168] Fix highlighting for phrase searches ([ausi])
+
 ## [4.13.25] (2023-06-21)
 
 **Fixed issues:**
@@ -75,6 +205,10 @@ This project adheres to [Semantic Versioning].
 
 ## [4.13.21] (2023-04-25)
 
+**Security fixes:**
+
+- [CVE-2023-29200]: Directory traversal in the file manager
+
 **Fixed issues:**
 
 - [#5987] Harden the file manager against directory traversal attacks ([ausi])
@@ -84,12 +218,12 @@ This project adheres to [Semantic Versioning].
 **Fixed issues:**
 
 - [#5962] Fix an undefined array key warning when comparing versions with different fields ([fritzmg])
-- [#5851] Do not auto-link images in the news reader ([leofeyer])
+- [#5851] Do not auto-link images in the newsreader ([leofeyer])
 - [#5959] Remove unnecessary locale tags from languages ([ausi])
 - [#5955] Remove the "symfony/proxy-manager-bridge" dependency ([leofeyer])
 - [#5893] Correctly check the mounted pages in the `hasAccess()` method ([leofeyer])
 - [#5952] Ignore exceptions when adding trusted devices ([aschempp])
-- [#5942] Do not treat sub-directories of Twig namespace roots as template paths ([m-vo])
+- [#5942] Do not treat subdirectories of Twig namespace roots as template paths ([m-vo])
 - [#5908] Correctly handle response status codes from legacy entry points ([aschempp])
 - [#5934] Fix the search query in DC_Folder ([leofeyer])
 - [#5917] Consider foreign keys when sorting the list view ([dennisbohn])
@@ -438,7 +572,7 @@ This project adheres to [Semantic Versioning].
 
 **Security fixes:**
 
-- Prevent XSS via canonical tags in the front end ([ausi])
+- [CVE-2022-24899]: Cross site scripting via canonical URL
 
 ## [4.13.2] (2022-03-31)
 
@@ -737,6 +871,16 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.35]: https://github.com/contao/contao/releases/tag/4.13.35
+[4.13.34]: https://github.com/contao/contao/releases/tag/4.13.34
+[4.13.33]: https://github.com/contao/contao/releases/tag/4.13.33
+[4.13.32]: https://github.com/contao/contao/releases/tag/4.13.32
+[4.13.31]: https://github.com/contao/contao/releases/tag/4.13.31
+[4.13.30]: https://github.com/contao/contao/releases/tag/4.13.30
+[4.13.29]: https://github.com/contao/contao/releases/tag/4.13.29
+[4.13.28]: https://github.com/contao/contao/releases/tag/4.13.28
+[4.13.27]: https://github.com/contao/contao/releases/tag/4.13.27
+[4.13.26]: https://github.com/contao/contao/releases/tag/4.13.26
 [4.13.25]: https://github.com/contao/contao/releases/tag/4.13.25
 [4.13.24]: https://github.com/contao/contao/releases/tag/4.13.24
 [4.13.23]: https://github.com/contao/contao/releases/tag/4.13.23
@@ -766,12 +910,16 @@ This project adheres to [Semantic Versioning].
 [4.13.0-RC3]: https://github.com/contao/contao/releases/tag/4.13.0-RC3
 [4.13.0-RC2]: https://github.com/contao/contao/releases/tag/4.13.0-RC2
 [4.13.0-RC1]: https://github.com/contao/contao/releases/tag/4.13.0-RC1
+[CVE-2023-36806]: https://github.com/contao/contao/security/advisories/GHSA-4gpr-p634-922x
+[CVE-2023-29200]: https://github.com/contao/contao/security/advisories/GHSA-fp7q-xhhw-6rj3
+[CVE-2022-24899]: https://github.com/contao/contao/security/advisories/GHSA-m8x6-6r63-qvj2
 [a-v-l]: https://github.com/a-v-l
 [agonyz]: https://github.com/agonyz
 [AlexanderWillner]: https://github.com/AlexanderWillner
 [ameotoko]: https://github.com/ameotoko
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
+[bennyborn]: https://github.com/bennyborn
 [bezin]: https://github.com/bezin
 [bytehead]: https://github.com/bytehead
 [christianbarkowsky]: https://github.com/christianbarkowsky
@@ -782,6 +930,7 @@ This project adheres to [Semantic Versioning].
 [dennisbohn]: https://github.com/dennisbohn
 [dmolineus]: https://github.com/dmolineus
 [doishub]: https://github.com/doishub
+[e-spin]: https://github.com/e-spin
 [fritzmg]: https://github.com/fritzmg
 [JanoschOltmanns]: https://github.com/JanoschOltmanns
 [leofeyer]: https://github.com/leofeyer
@@ -1282,6 +1431,7 @@ This project adheres to [Semantic Versioning].
 [#5815]: https://github.com/contao/contao/pull/5815
 [#5817]: https://github.com/contao/contao/pull/5817
 [#5820]: https://github.com/contao/contao/pull/5820
+[#5829]: https://github.com/contao/contao/pull/5829
 [#5830]: https://github.com/contao/contao/pull/5830
 [#5834]: https://github.com/contao/contao/pull/5834
 [#5842]: https://github.com/contao/contao/pull/5842
@@ -1356,6 +1506,7 @@ This project adheres to [Semantic Versioning].
 [#6113]: https://github.com/contao/contao/pull/6113
 [#6121]: https://github.com/contao/contao/pull/6121
 [#6123]: https://github.com/contao/contao/pull/6123
+[#6127]: https://github.com/contao/contao/pull/6127
 [#6130]: https://github.com/contao/contao/pull/6130
 [#6132]: https://github.com/contao/contao/pull/6132
 [#6138]: https://github.com/contao/contao/pull/6138
@@ -1365,7 +1516,84 @@ This project adheres to [Semantic Versioning].
 [#6142]: https://github.com/contao/contao/pull/6142
 [#6144]: https://github.com/contao/contao/pull/6144
 [#6145]: https://github.com/contao/contao/pull/6145
+[#6148]: https://github.com/contao/contao/pull/6148
 [#6151]: https://github.com/contao/contao/pull/6151
 [#6152]: https://github.com/contao/contao/pull/6152
+[#6159]: https://github.com/contao/contao/pull/6159
 [#6160]: https://github.com/contao/contao/pull/6160
 [#6161]: https://github.com/contao/contao/pull/6161
+[#6168]: https://github.com/contao/contao/pull/6168
+[#6171]: https://github.com/contao/contao/pull/6171
+[#6180]: https://github.com/contao/contao/pull/6180
+[#6187]: https://github.com/contao/contao/pull/6187
+[#6197]: https://github.com/contao/contao/pull/6197
+[#6217]: https://github.com/contao/contao/pull/6217
+[#6221]: https://github.com/contao/contao/pull/6221
+[#6222]: https://github.com/contao/contao/pull/6222
+[#6226]: https://github.com/contao/contao/pull/6226
+[#6229]: https://github.com/contao/contao/pull/6229
+[#6231]: https://github.com/contao/contao/pull/6231
+[#6234]: https://github.com/contao/contao/pull/6234
+[#6240]: https://github.com/contao/contao/pull/6240
+[#6250]: https://github.com/contao/contao/pull/6250
+[#6251]: https://github.com/contao/contao/pull/6251
+[#6252]: https://github.com/contao/contao/pull/6252
+[#6261]: https://github.com/contao/contao/pull/6261
+[#6276]: https://github.com/contao/contao/pull/6276
+[#6279]: https://github.com/contao/contao/pull/6279
+[#6293]: https://github.com/contao/contao/pull/6293
+[#6296]: https://github.com/contao/contao/pull/6296
+[#6297]: https://github.com/contao/contao/pull/6297
+[#6302]: https://github.com/contao/contao/pull/6302
+[#6306]: https://github.com/contao/contao/pull/6306
+[#6307]: https://github.com/contao/contao/pull/6307
+[#6308]: https://github.com/contao/contao/pull/6308
+[#6309]: https://github.com/contao/contao/pull/6309
+[#6310]: https://github.com/contao/contao/pull/6310
+[#6311]: https://github.com/contao/contao/pull/6311
+[#6317]: https://github.com/contao/contao/pull/6317
+[#6325]: https://github.com/contao/contao/pull/6325
+[#6331]: https://github.com/contao/contao/pull/6331
+[#6332]: https://github.com/contao/contao/pull/6332
+[#6333]: https://github.com/contao/contao/pull/6333
+[#6343]: https://github.com/contao/contao/pull/6343
+[#6345]: https://github.com/contao/contao/pull/6345
+[#6348]: https://github.com/contao/contao/pull/6348
+[#6349]: https://github.com/contao/contao/pull/6349
+[#6352]: https://github.com/contao/contao/pull/6352
+[#6384]: https://github.com/contao/contao/pull/6384
+[#6390]: https://github.com/contao/contao/pull/6390
+[#6391]: https://github.com/contao/contao/pull/6391
+[#6393]: https://github.com/contao/contao/pull/6393
+[#6401]: https://github.com/contao/contao/pull/6401
+[#6417]: https://github.com/contao/contao/pull/6417
+[#6419]: https://github.com/contao/contao/pull/6419
+[#6422]: https://github.com/contao/contao/pull/6422
+[#6425]: https://github.com/contao/contao/pull/6425
+[#6430]: https://github.com/contao/contao/pull/6430
+[#6431]: https://github.com/contao/contao/pull/6431
+[#6437]: https://github.com/contao/contao/pull/6437
+[#6444]: https://github.com/contao/contao/pull/6444
+[#6457]: https://github.com/contao/contao/pull/6457
+[#6459]: https://github.com/contao/contao/pull/6459
+[#6460]: https://github.com/contao/contao/pull/6460
+[#6462]: https://github.com/contao/contao/pull/6462
+[#6466]: https://github.com/contao/contao/pull/6466
+[#6467]: https://github.com/contao/contao/pull/6467
+[#6473]: https://github.com/contao/contao/pull/6473
+[#6487]: https://github.com/contao/contao/pull/6487
+[#6490]: https://github.com/contao/contao/pull/6490
+[#6492]: https://github.com/contao/contao/pull/6492
+[#6501]: https://github.com/contao/contao/pull/6501
+[#6507]: https://github.com/contao/contao/pull/6507
+[#6511]: https://github.com/contao/contao/pull/6511
+[#6514]: https://github.com/contao/contao/pull/6514
+[#6522]: https://github.com/contao/contao/pull/6522
+[#6524]: https://github.com/contao/contao/pull/6524
+[#6532]: https://github.com/contao/contao/pull/6532
+[#6535]: https://github.com/contao/contao/pull/6535
+[#6545]: https://github.com/contao/contao/pull/6545
+[#6568]: https://github.com/contao/contao/pull/6568
+[#6574]: https://github.com/contao/contao/pull/6574
+[#6575]: https://github.com/contao/contao/pull/6575
+[#6576]: https://github.com/contao/contao/pull/6576

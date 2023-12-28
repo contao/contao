@@ -760,8 +760,8 @@ class FigureBuilder
             return [$filePath, null];
         };
 
-        // Use explicitly set data (1), fall back to using metadata (2) or use the base resource (3) if empty
-        $lightboxResourceOrUrl = $this->lightboxResourceOrUrl ?? $getMetadataUrl() ?? $this->filePath;
+        // Use explicitly set href (1) or lightbox resource (2), fall back to using metadata (3) or use the base resource (4) if empty
+        $lightboxResourceOrUrl = $this->additionalLinkAttributes['href'] ?? $this->lightboxResourceOrUrl ?? $getMetadataUrl() ?? $this->filePath;
 
         [$filePathOrImage, $url] = $getResourceOrUrl($lightboxResourceOrUrl);
 

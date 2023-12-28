@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.restrictToUrl.1">
         <source>Allow access only to the specified URL instead of the entire website.</source>
-        <target>Bu seçenek etkinleştirildiğinde, tüm web sitesi yerine yalnızca belirtilen adrese erişilmesine izin verilir.</target>
+        <target>Bu seçenek etkinleştirildiğinde, tüm site yerine yalnızca belirtilen adrese erişilmesine izin verilir.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.createdAt.0">
         <source>Created at</source>
@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.share.1">
         <source>Copy the preview link ID %s to your clipboard.</source>
-        <target>%s kodlu ön izleme bağlantısını panoya kopyalar.</target>
+        <target>%s kimlikli ön izleme bağlantısını panoya kopyalar.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.url_legend">
         <source>Target URL</source>

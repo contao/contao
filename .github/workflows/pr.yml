@@ -27,6 +27,8 @@ jobs:
               uses: christianvuerings/add-labels@v1
               if: join(github.event.pull_request.labels) == ''
               with:
-                  labels: bug
+                  labels: |
+                      bug
+                      unconfirmed
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

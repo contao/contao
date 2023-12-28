@@ -862,6 +862,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						{
 							$v = Encryption::encrypt($v);
 						}
+
+						// Cast boolean to integers (see #6473)
+						if (\is_bool($v))
+						{
+							$v = (int) $v;
+						}
 					}
 
 					$this->set[$k] = $v;
@@ -1587,7 +1593,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$session = $objSession->all();
 		$ids = $session['CURRENT']['IDS'] ?? array();
 
-		if (\is_array($ids) && \strlen($ids[0]))
+		if (\is_array($ids) && array_filter($ids))
 		{
 			foreach ($ids as $id)
 			{
@@ -4996,7 +5002,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <table class="tl_listing' . (($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null) ? ' showColumns' : '') . ($this->strPickerFieldType ? ' picker unselectable' : '') . '">';
 
 			// Automatically add the "order by" field as last column if we do not have group headers
-			if ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null)
+			if (($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null) && false !== ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showFirstOrderBy'] ?? null))
 			{
 				$blnFound = false;
 
@@ -6057,7 +6063,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						}
 					}
 
-					$options_sorter[$option_label . '_' . $field] = '  <option value="' . StringUtil::specialchars($value) . '"' . ((isset($session['filter'][$filter][$field]) && $value == $session['filter'][$filter][$field]) ? ' selected="selected"' : '') . '>' . StringUtil::specialchars($option_label) . '</option>';
+					$options_sorter[$option_label . '_' . $field . '_' . $kk] = '  <option value="' . StringUtil::specialchars($value) . '"' . ((isset($session['filter'][$filter][$field]) && $value == $session['filter'][$filter][$field]) ? ' selected="selected"' : '') . '>' . StringUtil::specialchars($option_label) . '</option>';
 				}
 
 				// Sort by option values

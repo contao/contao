@@ -437,7 +437,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options'                 => array('Apache', 'Bash', 'C#', 'C++', 'CSS', 'Diff', 'HTML', 'HTTP', 'Ini', 'JSON', 'Java', 'JavaScript', 'Markdown', 'Nginx', 'Perl', 'PHP', 'PowerShell', 'Python', 'Ruby', 'SCSS', 'SQL', 'YAML', 'XML'),
+			'options'                 => array('Apache', 'Bash', 'C#', 'C++', 'CSS', 'Diff', 'HTML', 'HTTP', 'Ini', 'JSON', 'Java', 'JavaScript', 'Markdown', 'Nginx', 'Perl', 'PHP', 'PowerShell', 'Python', 'Ruby', 'SCSS', 'SQL', 'Twig', 'YAML', 'XML'),
 			'eval'                    => array('includeBlankOption'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(32) COLLATE ascii_bin NOT NULL default ''"
 		),
@@ -1590,7 +1590,7 @@ class tl_content extends Backend
 
 		while ($objForms->next())
 		{
-			if ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FORM, $objForms->id))
+			if ($security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FORM, $objForms->id))
 			{
 				$arrForms[$objForms->id] = $objForms->title . ' (ID ' . $objForms->id . ')';
 			}
@@ -1774,6 +1774,7 @@ class tl_content extends Backend
 			case 'Scala':
 			case 'SQL':
 			case 'Text':
+			case 'Twig':
 			case 'YAML':
 				$syntax = strtolower($dc->activeRecord->highlight);
 				break;

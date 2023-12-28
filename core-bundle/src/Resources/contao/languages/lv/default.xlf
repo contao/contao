@@ -26,12 +26,10 @@
         <target>Lauks &quot;%s&quot; nevar būt garāks par %d zīmjēm!</target>
       </trans-unit>
       <trans-unit id="ERR.minval">
-        <source>Field &quot;%s&quot; has to be at least %d!</source>
-        <target>Laukam &quot;%s&quot; jābūt vismaz %d!</target>
+        <source>Field &quot;%s&quot; has to be at least %s!</source>
       </trans-unit>
       <trans-unit id="ERR.maxval">
-        <source>Field &quot;%s&quot; must not be greater than %d!</source>
-        <target>Lauks &quot;%s&quot; nevar būt garāks kā %d!</target>
+        <source>Field &quot;%s&quot; must not be greater than %s!</source>
       </trans-unit>
       <trans-unit id="ERR.digit">
         <source>Please enter digits only!</source>

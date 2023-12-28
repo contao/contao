@@ -11,7 +11,7 @@
       </trans-unit>
       <trans-unit id="tl_theme.author.0">
         <source>Author</source>
-        <target>Tasarımcı</target>
+        <target>Geliştirici</target>
       </trans-unit>
       <trans-unit id="tl_theme.author.1">
         <source>Please enter the name of the theme designer.</source>
@@ -67,7 +67,7 @@
       </trans-unit>
       <trans-unit id="tl_theme.title_legend">
         <source>Title and author</source>
-        <target>Başlık ve yazar</target>
+        <target>Başlık ve geliştirici</target>
       </trans-unit>
       <trans-unit id="tl_theme.config_legend">
         <source>Configuration</source>
@@ -91,7 +91,7 @@
       </trans-unit>
       <trans-unit id="tl_theme.missing_field">
         <source>The field &lt;strong&gt;%s&lt;/strong&gt; is missing in the database and will not be imported.</source>
-        <target>Veritabanında &lt;strong&gt;%s&lt;/strong&gt; alanı eksik olduğundan içe aktarılmayacak.</target>
+        <target>Veri tabanında &lt;strong&gt;%s&lt;/strong&gt; alanı eksik olduğundan içe aktarılmayacak.</target>
       </trans-unit>
       <trans-unit id="tl_theme.tables_ok">
         <source>The tables have been successfully checked.</source>
@@ -143,35 +143,35 @@
       </trans-unit>
       <trans-unit id="tl_theme.show">
         <source>Show the details of theme ID %s</source>
-        <target>%s kodlu temanın ayrıntılarını görüntüle</target>
+        <target>%s kimlikli temanın ayrıntılarını görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_theme.edit">
         <source>Edit theme ID %s</source>
-        <target>%s kodlu temayı düzenle</target>
+        <target>%s kimlikli temayı düzenle</target>
       </trans-unit>
       <trans-unit id="tl_theme.delete">
         <source>Delete theme ID %s</source>
-        <target>%s kodlu temayı sil</target>
+        <target>%s kimlikli temayı sil</target>
       </trans-unit>
       <trans-unit id="tl_theme.css">
         <source>Edit the style sheets of theme ID %s</source>
-        <target>%s kodlu temanın biçem sayfalarını düzenle</target>
+        <target>%s kimlikli temanın biçem sayfalarını düzenle</target>
       </trans-unit>
       <trans-unit id="tl_theme.modules">
         <source>Edit the front end modules of theme ID %s</source>
-        <target>%s kodlu temanın ön yüz modüllerini düzenle</target>
+        <target>%s kimlikli temanın ön yüz modüllerini düzenle</target>
       </trans-unit>
       <trans-unit id="tl_theme.layout">
         <source>Edit the page layouts of theme ID %s</source>
-        <target>%s kodlu temanın sayfa düzenlerini düzenle</target>
+        <target>%s kimlikli temanın sayfa düzenlerini düzenle</target>
       </trans-unit>
       <trans-unit id="tl_theme.imageSizes">
         <source>Edit the image sizes of theme ID %s</source>
-        <target>%s kodlu temanın görsel boyutlarını düzenle</target>
+        <target>%s kimlikli temanın görsel boyutlarını düzenle</target>
       </trans-unit>
       <trans-unit id="tl_theme.exportTheme">
         <source>Export theme ID %s</source>
-        <target>%s kodlu temayı dışa aktar</target>
+        <target>%s kimlikli temayı dışa aktar</target>
       </trans-unit>
     </body>
   </file>

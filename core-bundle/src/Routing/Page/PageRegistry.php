@@ -14,8 +14,9 @@ namespace Contao\CoreBundle\Routing\Page;
 
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
+use Symfony\Contracts\Service\ResetInterface;
 
-class PageRegistry
+class PageRegistry implements ResetInterface
 {
     private const DISABLE_CONTENT_COMPOSITION = ['redirect', 'forward', 'logout'];
 
@@ -24,17 +25,17 @@ class PageRegistry
     private ?array $urlSuffixes = null;
 
     /**
-     * @var array<RouteConfig>
+     * @var array<string,RouteConfig>
      */
     private array $routeConfigs = [];
 
     /**
-     * @var array<DynamicRouteInterface>
+     * @var array<string,DynamicRouteInterface>
      */
     private array $routeEnhancers = [];
 
     /**
-     * @var array<ContentCompositionInterface|bool>
+     * @var array<string,ContentCompositionInterface|bool>
      */
     private array $contentComposition = [];
 
@@ -64,9 +65,13 @@ class PageRegistry
             $path = '';
             $options['compiler_class'] = UnroutablePageRouteCompiler::class;
         } elseif (null === $path) {
-            $path = '/'.($pageModel->alias ?: $pageModel->id).'{!parameters}';
-            $defaults['parameters'] = '';
-            $requirements['parameters'] = $pageModel->requireItem ? '/.+?' : '(/.+?)?';
+            if ($this->isParameterless($pageModel)) {
+                $path = '/'.($pageModel->alias ?: $pageModel->id);
+            } else {
+                $path = '/'.($pageModel->alias ?: $pageModel->id).'{!parameters}';
+                $defaults['parameters'] = '';
+                $requirements['parameters'] = $pageModel->requireItem ? '/.+?' : '(/.+?)?';
+            }
         }
 
         $route = new PageRoute($pageModel, $path, $defaults, $requirements, $options, $config->getMethods());
@@ -144,15 +149,15 @@ class PageRegistry
         // Override existing pages with the same identifier
         $this->routeConfigs[$type] = $config;
 
-        if (null !== $routeEnhancer) {
+        if ($routeEnhancer) {
             $this->routeEnhancers[$type] = $routeEnhancer;
         }
 
-        if (null !== $contentComposition) {
-            $this->contentComposition[$type] = $contentComposition;
-        }
+        $this->contentComposition[$type] = $contentComposition;
 
-        $this->urlPrefixes = $this->urlSuffixes = null;
+        // Make sure to reset caches when a page type is added
+        $this->urlPrefixes = null;
+        $this->urlSuffixes = null;
 
         return $this;
     }
@@ -207,6 +212,12 @@ class PageRegistry
         return $types;
     }
 
+    public function reset(): void
+    {
+        $this->urlPrefixes = null;
+        $this->urlSuffixes = null;
+    }
+
     private function initializePrefixAndSuffix(): void
     {
         if (null !== $this->urlPrefixes || null !== $this->urlSuffixes) {
@@ -219,7 +230,7 @@ class PageRegistry
             array_column($results, 'urlSuffix'),
             array_filter(array_map(
                 static fn (RouteConfig $config) => $config->getUrlSuffix(),
-                $this->routeConfigs
+                $this->routeConfigs,
             )),
         ];
 
@@ -235,5 +246,14 @@ class PageRegistry
 
         $this->urlSuffixes = array_values(array_unique(array_merge(...$urlSuffixes)));
         $this->urlPrefixes = array_values(array_unique(array_column($results, 'urlPrefix')));
+    }
+
+    private function isParameterless(PageModel $pageModel): bool
+    {
+        if ('redirect' === $pageModel->type) {
+            return true;
+        }
+
+        return 'forward' === $pageModel->type && !$pageModel->alwaysForward;
     }
 }

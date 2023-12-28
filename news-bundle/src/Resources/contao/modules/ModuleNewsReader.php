@@ -14,6 +14,7 @@ use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Util\UrlUtil;
 
 /**
  * Front end module "news reader".
@@ -125,7 +126,10 @@ class ModuleNewsReader extends ModuleNews
 			case 'external':
 				if ($objArticle->url)
 				{
-					throw new RedirectResponseException($objArticle->url, 301);
+					$url = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objArticle->url);
+					$url = UrlUtil::makeAbsolute($url, Environment::get('base'));
+
+					throw new RedirectResponseException($url, 301);
 				}
 
 				throw new InternalServerErrorException('Empty target URL');

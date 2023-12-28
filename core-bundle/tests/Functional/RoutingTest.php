@@ -1330,6 +1330,149 @@ class RoutingTest extends FunctionalTestCase
         $this->assertStringContainsString('Domain1', $title);
     }
 
+    /**
+     * @see https://github.com/contao/contao/issues/6328
+     *
+     * @dataProvider disabledLanguageRedirectsProvider
+     */
+    public function testCorrectHandlesDisabledLanguageRedirects(bool $disableLanguageRedirects, bool $indexAlias, string $requestLocale, string $expectedLocation): void
+    {
+        $request = 'https://example.local/';
+
+        $_SERVER['REQUEST_URI'] = $request;
+        $_SERVER['HTTP_HOST'] = 'example.local';
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $requestLocale;
+        $_SERVER['HTTP_ACCEPT'] = 'text/html';
+
+        $client = $this->createClient([], $_SERVER);
+        System::setContainer($client->getContainer());
+
+        $this->loadFixtureFiles(['issue-6328']);
+
+        $connection = self::getContainer()->get('doctrine')->getConnection();
+
+        $connection->executeStatement("
+            UPDATE tl_page
+            SET disableLanguageRedirect = '".($disableLanguageRedirects ? '1' : '')."'
+            WHERE id=3
+        ");
+
+        $connection->executeStatement("
+            UPDATE tl_page
+            SET alias = '".($indexAlias ? 'index' : 'home')."'
+            WHERE type = 'regular'
+        ");
+
+        $client->request('GET', $request);
+        $response = $client->getResponse();
+
+        if ($expectedLocation === $request) {
+            $this->assertSame(200, $response->getStatusCode());
+        } else {
+            $this->assertSame(302, $response->getStatusCode());
+            $this->assertSame($expectedLocation, $response->headers->get('Location'));
+        }
+    }
+
+    public function disabledLanguageRedirectsProvider(): \Generator
+    {
+        // Redirects to fallback because it is the only route on path "/"
+        yield 'unknown locale, alias=home, disableLanguageRedirect=1' => [
+            true,
+            false,
+            'af',
+            'https://example.local/en/',
+        ];
+
+        // Redirects to NL because its root page matches "/" before the fallback one
+        yield 'unknown locale, alias=home, disableLanguageRedirect=0' => [
+            false,
+            false,
+            'af',
+            'https://example.local/home.html',
+        ];
+
+        // Redirects to fallback because it is the only route on path "/"
+        yield 'secondary locale, alias=home, disableLanguageRedirect=1' => [
+            true,
+            false,
+            'nl',
+            'https://example.local/en/',
+        ];
+
+        // Redirects to NL because its root page matches "/" before the fallback one
+        yield 'secondary locale, alias=home, disableLanguageRedirect=0' => [
+            false,
+            false,
+            'nl',
+            'https://example.local/home.html',
+        ];
+
+        // Redirects to fallback because it is the only route on path "/"
+        yield 'fallback locale, alias=home, disableLanguageRedirect=1' => [
+            true,
+            false,
+            'en',
+            'https://example.local/en/',
+        ];
+
+        // Redirects to NL because its root page matches "/" before the fallback one
+        yield 'fallback locale, alias=home, disableLanguageRedirect=0' => [
+            false,
+            false,
+            'en',
+            'https://example.local/home.html',
+        ];
+
+        // Renders the NL index page because it matches "/" before the fallback
+        yield 'unknown locale, alias=index, disableLanguageRedirect=1' => [
+            true,
+            true,
+            'af',
+            'https://example.local/',
+        ];
+
+        // Renders the NL index page because it matches "/" before the fallback
+        yield 'unknown locale, alias=index, disableLanguageRedirect=0' => [
+            false,
+            true,
+            'af',
+            'https://example.local/',
+        ];
+
+        // Renders the NL index page because it matches "/" before the fallback
+        yield 'secondary locale, alias=index, disableLanguageRedirect=1' => [
+            true,
+            true,
+            'nl',
+            'https://example.local/',
+        ];
+
+        // Renders the NL index page because it matches "/" before the fallback
+        yield 'secondary locale, alias=index, disableLanguageRedirect=0' => [
+            false,
+            true,
+            'nl',
+            'https://example.local/',
+        ];
+
+        // Renders the NL index page because it matches "/" before the fallback
+        yield 'fallback locale, alias=index, disableLanguageRedirect=1' => [
+            true,
+            true,
+            'en',
+            'https://example.local/',
+        ];
+
+        // Renders the NL index page because it matches "/" before the fallback
+        yield 'fallback locale, alias=index, disableLanguageRedirect=0' => [
+            false,
+            true,
+            'en',
+            'https://example.local/',
+        ];
+    }
+
     public function testRendersLoginPageWhenRootIsProtected(): void
     {
         $request = 'https://protected-root.local/';

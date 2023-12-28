@@ -513,6 +513,7 @@
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
         <source>Choose module for &quot;%s&quot;</source>
+        <target>انتخال ماژول &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>
@@ -639,23 +640,23 @@ If you did not request this e-mail, please contact the website administrator.
       </trans-unit>
       <trans-unit id="tl_module.show">
         <source>Show the details of module ID %s</source>
-        <target>نمایش جزئیات ماژول شناسه‌ی %s</target>
+        <target>نمایش جزئیات ماژول شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_module.edit">
         <source>Edit module ID %s</source>
-        <target>ویرایش ماژول شناسه‌ی %s</target>
+        <target>ویرایش ماژول شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_module.copy">
         <source>Duplicate module ID %s</source>
-        <target>تکثیر ماژول شناسه‌ی %s</target>
+        <target>تکثیر ماژول شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_module.cut">
         <source>Move module ID %s</source>
-        <target>جابجایی ماژول شناسه‌ی %s</target>
+        <target>جابجایی ماژول شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_module.delete">
         <source>Delete module ID %s</source>
-        <target>حذف ماژول شناسه‌ی %s</target>
+        <target>حذف ماژول شناسه %s</target>
       </trans-unit>
     </body>
   </file>

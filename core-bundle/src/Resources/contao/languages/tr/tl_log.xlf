@@ -51,7 +51,7 @@
       </trans-unit>
       <trans-unit id="tl_log.browser.0">
         <source>Browser</source>
-        <target>Web tarayıcı</target>
+        <target>Tarayıcı</target>
       </trans-unit>
       <trans-unit id="tl_log.browser.1">
         <source>Name of the user agent</source>

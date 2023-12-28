@@ -479,23 +479,23 @@
       </trans-unit>
       <trans-unit id="tl_layout.show">
         <source>Show the details of page layout ID %s</source>
-        <target>نمایش جزئیات چیدمان برگه شناسه‌ی %s</target>
+        <target>نمایش جزئیات چیدمان برگه شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_layout.edit">
         <source>Edit page layout ID %s</source>
-        <target>ویرایش چیدمان برگه شناسه‌ی %s</target>
+        <target>ویرایش چیدمان برگه شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_layout.copy">
         <source>Duplicate page layout ID %s</source>
-        <target>دونسخه کردن چیدمان برگه شناسه‌ی %s</target>
+        <target>دونسخه کردن چیدمان برگه شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_layout.cut">
         <source>Move page layout ID %s</source>
-        <target>جابجایی چیدمان برگه شناسه‌ی %s</target>
+        <target>جابجایی چیدمان برگه شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_layout.delete">
         <source>Delete page layout ID %s</source>
-        <target>حذف چیدمان برگه شناسه‌ی %s</target>
+        <target>حذف چیدمان برگه شناسه %s</target>
       </trans-unit>
     </body>
   </file>

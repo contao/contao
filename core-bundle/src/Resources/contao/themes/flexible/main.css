@@ -592,7 +592,7 @@ h2.sub_headline {
 	padding:6px 15px 14px;
 }
 .maintenance_inactive .tl_message {
-	margin-top:0;
+	margin: 0 15px 3px;
 }
 .maintenance_inactive h2.sub_headline {
 	margin:18px 15px 3px;
@@ -680,19 +680,17 @@ h2.sub_headline {
 #tl_crawl .results p {
 	margin-bottom:6px;
 }
-#tl_crawl .results .spinner {
-	margin:0;
-	padding:10px;
-	background:url("icons/loading.svg") no-repeat left center;
-	background-size:16px;
-}
 #tl_crawl .subscriber-log {
 	display:none;
 	padding:5px 0;
 	margin-bottom:0;
 }
 #tl_crawl .wait {
-	margin-top:18px;
+	margin-top:9px;
+	color:#999;
+}
+#tl_crawl .debug-log {
+	margin-top:11px;
 }
 #tl_crawl .results.running .show-when-finished,#tl_crawl .results.finished .show-when-running {
 	display:none;
@@ -2051,7 +2049,7 @@ fieldset.collapsed > legend {
 	white-space:nowrap;
 }
 #tl_maintenance_cache .tl_checkbox_container {
-	margin-top:12px;
+	margin-top:3px;
 }
 #tl_maintenance_cache .tl_checkbox_container label {
 	font-weight:600;

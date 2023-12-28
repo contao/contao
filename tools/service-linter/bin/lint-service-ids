@@ -18,7 +18,7 @@ if (!file_exists(__DIR__.'/../vendor/autoload.php')) {
 
 require __DIR__.'/../vendor/autoload.php';
 
-use Contao\Tools\ServiceIdLinter\LintServiceIdsCommand;
+use Contao\Tools\ServiceLinter\LintServiceIdsCommand;
 use Symfony\Component\Console\Application;
 
 $command = new LintServiceIdsCommand(getcwd());

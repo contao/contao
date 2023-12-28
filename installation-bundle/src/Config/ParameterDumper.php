@@ -66,6 +66,8 @@ class ParameterDumper
             $this->parameters['parameters']['database_port'] = (int) $this->parameters['parameters']['database_port'];
         }
 
+        unset($this->parameters['parameters']['database_version']);
+
         $this->filesystem->dumpFile(
             $this->configFile,
             "# This file has been auto-generated during installation\n".Yaml::dump($this->getEscapedValues())

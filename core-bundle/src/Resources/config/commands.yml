@@ -121,7 +121,7 @@ services:
     contao.command.user_list:
         class: Contao\CoreBundle\Command\UserListCommand
         arguments:
-            - '@contao.framework'
+            - '@database_connection'
 
     contao.command.user_password:
         class: Contao\CoreBundle\Command\UserPasswordCommand

@@ -25,6 +25,7 @@ framework:
     session:
         handler_id: ~
         cookie_secure: auto
+        cookie_samesite: lax
     fragments: { path: /_fragment }
     cache:
         pools:

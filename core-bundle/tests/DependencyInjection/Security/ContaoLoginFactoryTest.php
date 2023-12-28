@@ -99,7 +99,7 @@ class ContaoLoginFactoryTest extends TestCase
             '%security.access.always_authenticate_before_granting%',
         ]));
 
-        $this->assertFalse(\array_key_exists(3, $container->getDefinition('security.authorization_checker')->getArguments()));
+        $this->assertArrayNotHasKey(3, $container->getDefinition('security.authorization_checker')->getArguments());
 
         $factory = new ContaoLoginFactory();
         $factory->create(

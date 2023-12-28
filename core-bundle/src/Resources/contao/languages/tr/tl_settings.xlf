@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.disableCron.1">
         <source>Disable the periodic command scheduler and trigger the &lt;em&gt;_contao/cron&lt;/em&gt; route by a real cron job (which you have to set up manually).</source>
-        <target>Düzenli komut zamanlayıcıyı devre dışı bırakarak &lt;em&gt;_contao/cron&lt;/em&gt; yolunu gerçek bir zamanlanmış görev (el ile ayarlamanız gerekir) ile tetiklemenizi sağlar.</target>
+        <target>Düzenli komut zamanlayıcıyı etkisizleştirerek &lt;em&gt;_contao/cron&lt;/em&gt; yolunu gerçek bir zamanlanmış görev (el ile ayarlamanız gerekir) ile tetiklemenizi sağlar.</target>
       </trans-unit>
       <trans-unit id="tl_settings.resultsPerPage.0">
         <source>Items per page</source>

@@ -107,31 +107,31 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.show">
         <source>Show the details of style sheet ID %s</source>
-        <target>نمایش جزئیات شیوه‌نامه شناسه‌ی %s</target>
+        <target>نمایش جزئیات شیوه‌نامه شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.edit">
         <source>Edit style sheet ID %s</source>
-        <target>ویرایش شیوه‌نامه شناسه‌ی %s</target>
+        <target>ویرایش شیوه‌نامه شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.editheader">
         <source>Edit the settings of style sheet ID %s</source>
-        <target>ویرایش تنظیمات شیوه‌نامه شناسه‌ی %s</target>
+        <target>ویرایش تنظیمات شیوه‌نامه شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.copy">
         <source>Duplicate style sheet ID %s</source>
-        <target>تکثیر شیوه‌نامه شناسه‌ی %s</target>
+        <target>تکثیر شیوه‌نامه شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.cut">
         <source>Move style sheet ID %s</source>
-        <target>جابجایی شیوه‌نامه شناسه‌ی %s</target>
+        <target>جابجایی شیوه‌نامه شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.delete">
         <source>Delete style sheet ID %s</source>
-        <target>حذف شیوه‌نامه شناسه‌ی %s</target>
+        <target>حذف شیوه‌نامه شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.export">
         <source>Export style sheet ID %s</source>
-        <target>خارج کردن شیوه‌نامه شناسه‌ی %s</target>
+        <target>خارج کردن شیوه‌نامه شناسه %s</target>
       </trans-unit>
     </body>
   </file>

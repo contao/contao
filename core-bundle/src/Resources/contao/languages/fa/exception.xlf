@@ -49,6 +49,7 @@
       </trans-unit>
       <trans-unit id="XPT.tokenExplainTwo">
         <source>For more information, visit the &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
+        <target>برای اطلاعات بیشتر از &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;صفحه‌ی پشتیبانی کنتائو&lt;/a&gt; دیدن کنید.</target>
       </trans-unit>
       <trans-unit id="XPT.unavailable">
         <source>Service unavailable</source>

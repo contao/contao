@@ -94,6 +94,12 @@
         <source>Please choose the redirect type.</source>
         <target>Prosimo, izberite tip preusmeritve.</target>
       </trans-unit>
+      <trans-unit id="tl_page.alwaysForward.0">
+        <source>Always redirect</source>
+      </trans-unit>
+      <trans-unit id="tl_page.alwaysForward.1">
+        <source>Redirect to the target page even if there are query or path parameters.</source>
+      </trans-unit>
       <trans-unit id="tl_page.jumpTo.0">
         <source>Redirect page</source>
         <target>Pojdi na stran</target>
@@ -479,6 +485,7 @@
       </trans-unit>
       <trans-unit id="tl_page.routing_legend">
         <source>Routing</source>
+        <target>Usmerjanje (routing)</target>
       </trans-unit>
       <trans-unit id="tl_page.meta_legend">
         <source>Metadata</source>
@@ -573,6 +580,7 @@
       </trans-unit>
       <trans-unit id="tl_page.layout_inherit">
         <source>Inherit page layout</source>
+        <target>Podeduj postavitev strani</target>
       </trans-unit>
       <trans-unit id="tl_page.new.0">
         <source>New</source>
