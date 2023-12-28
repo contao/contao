@@ -17,6 +17,7 @@ use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\IncludeNode;
 use Twig\Node\Node;
+use Twig\TemplateWrapper;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
 
