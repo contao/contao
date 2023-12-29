@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="<?= $this->language ?>">
+<html lang="<?= $this->language ?>" data-controller="contao--offset">
 <head>
 
   <?php $this->block('head'); ?>
@@ -31,7 +31,7 @@
   <?php $this->endblock(); ?>
 
 </head>
-<body id="top" class="be_main<?php if ($this->isPopup): ?> popup<?php endif; ?>"<?= $this->attributes ?> data-controller="contao--offset">
+<body id="top" class="be_main<?php if ($this->isPopup): ?> popup<?php endif; ?>"<?= $this->attributes ?>>
 
   <?php $this->block('header'); ?>
     <?php if (!$this->isPopup): ?>

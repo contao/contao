@@ -21,17 +21,18 @@ export default class extends Controller {
     static afterLoad(identifier, application) {
         const loadFallback = () => {
             return new Promise((resolve, reject) => {
-                const controller = application.getControllerForElementAndIdentifier(document.body, identifier);
+                const controller = application.getControllerForElementAndIdentifier(document.documentElement, identifier);
 
                 if (controller) {
                     resolve(controller);
                     return;
                 }
 
-                document.body.dataset.controller += ` ${ identifier }`;
+                const { controllerAttribute } = application.schema;
+                document.documentElement.setAttribute(controllerAttribute, `${document.documentElement.getAttribute(controllerAttribute) || ''} ${ identifier }`);
 
                 setTimeout(() => {
-                    const controller = application.getControllerForElementAndIdentifier(document.body, identifier);
+                    const controller = application.getControllerForElementAndIdentifier(document.documentElement, identifier);
                     controller && resolve(controller) || reject(controller);
                 }, 100);
             });
@@ -58,7 +59,7 @@ export default class extends Controller {
 
     connect () {
         if (this.offset) {
-            window.scrollTo({
+            this.element.scrollTo({
                 top: this.offset + this.additionalOffset,
                 behavior: this.behaviorValue
             });
@@ -88,7 +89,7 @@ export default class extends Controller {
     }
 
     store () {
-        this.offset = window.scrollY
+        this.offset = this.element.scrollTop;
     }
 
     discard () {
