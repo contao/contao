@@ -55,6 +55,7 @@
         "contao-components/mootools": "^1.6.0.1",
         "contao-components/simplemodal": "^3.0",
         "contao-components/swipe": "^2.0.3",
+        "contao-components/swiper": "^11.0",
         "contao-components/tablesort": "^4.0",
         "contao-components/tablesorter": "^2.1",
         "contao-components/tinymce4": "^5.0 || ^6.0",

@@ -29,8 +29,8 @@
             (function () {
                 new handorgel(document.querySelector('.content-accordion'), {
                     {% block init_options %}
-                        // Put custom options here
                         multiSelectable: false,
+                        {# Put custom options here #}
                     {% endblock %}
                 });
             })();

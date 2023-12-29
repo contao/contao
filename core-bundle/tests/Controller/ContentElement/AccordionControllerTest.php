@@ -15,21 +15,20 @@ namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 use Contao\ContentModel;
 use Contao\CoreBundle\Controller\ContentElement\AccordionController;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
-use Symfony\Component\HttpFoundation\Request;
 
 class AccordionControllerTest extends ContentElementTestCase
 {
     public function testOutputsAccordion(): void
     {
-        $model = $this->mockClassWithProperties(ContentModel::class, [
-            'id' => 1,
+        $text = $this->mockClassWithProperties(ContentModel::class, [
             'type' => 'text',
-            'sectionHeadline' => 'Section',
-            'text' => '<p>Text.</p>',
+            'sectionHeadline' => 'Text',
         ]);
 
-        $request = new Request();
-        $request->attributes->set('nestedFragments', [new ContentElementReference($model, 'main', [], true)]);
+        $image = $this->mockClassWithProperties(ContentModel::class, [
+            'type' => 'image',
+            'sectionHeadline' => 'Image',
+        ]);
 
         $response = $this->renderWithModelData(
             new AccordionController($this->getDefaultFramework()),
@@ -41,17 +40,28 @@ class AccordionControllerTest extends ContentElementTestCase
             false,
             $responseContextData,
             null,
-            $request,
+            [
+                new ContentElementReference($text, 'main', [], true),
+                new ContentElementReference($image, 'main', [], true),
+            ],
         );
 
         $expectedOutput = <<<'HTML'
             <div class="content-accordion">
                 <h3 class="handorgel__header">
-                    <button class="handorgel__header__button">Section</button>
+                    <button class="handorgel__header__button">Text</button>
                 </h3>
                 <div class="handorgel__content" data-open>
                     <div class="handorgel__content__inner">
-                        Nested fragments
+                        text
+                    </div>
+                </div>
+                <h3 class="handorgel__header">
+                    <button class="handorgel__header__button">Image</button>
+                </h3>
+                <div class="handorgel__content">
+                    <div class="handorgel__content__inner">
+                        image
                     </div>
                 </div>
             </div>
@@ -64,15 +74,15 @@ class AccordionControllerTest extends ContentElementTestCase
 
     public function testDoesNotAddTheDataOpenAttribute(): void
     {
-        $model = $this->mockClassWithProperties(ContentModel::class, [
-            'id' => 1,
+        $text = $this->mockClassWithProperties(ContentModel::class, [
             'type' => 'text',
-            'sectionHeadline' => 'Section',
-            'text' => '<p>Text.</p>',
+            'sectionHeadline' => 'Text',
         ]);
 
-        $request = new Request();
-        $request->attributes->set('nestedFragments', [new ContentElementReference($model, 'main', [], true)]);
+        $image = $this->mockClassWithProperties(ContentModel::class, [
+            'type' => 'image',
+            'sectionHeadline' => 'Image',
+        ]);
 
         $response = $this->renderWithModelData(
             new AccordionController($this->getDefaultFramework()),
@@ -84,17 +94,28 @@ class AccordionControllerTest extends ContentElementTestCase
             false,
             $responseContextData,
             null,
-            $request,
+            [
+                new ContentElementReference($text, 'main', [], true),
+                new ContentElementReference($image, 'main', [], true),
+            ],
         );
 
         $expectedOutput = <<<'HTML'
             <div class="content-accordion">
                 <h3 class="handorgel__header">
-                    <button class="handorgel__header__button">Section</button>
+                    <button class="handorgel__header__button">Text</button>
                 </h3>
                 <div class="handorgel__content">
                     <div class="handorgel__content__inner">
-                        Nested fragments
+                        text
+                    </div>
+                </div>
+                <h3 class="handorgel__header">
+                    <button class="handorgel__header__button">Image</button>
+                </h3>
+                <div class="handorgel__content">
+                    <div class="handorgel__content__inner">
+                        image
                     </div>
                 </div>
             </div>
