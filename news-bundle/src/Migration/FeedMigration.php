@@ -19,8 +19,10 @@ use Psr\Log\LoggerInterface;
 
 class FeedMigration extends AbstractMigration
 {
-    public function __construct(private readonly Connection $connection, private readonly LoggerInterface $logger)
-    {
+    public function __construct(
+        private readonly Connection $connection,
+        private readonly LoggerInterface $logger,
+    ) {
     }
 
     public function shouldRun(): bool
@@ -66,22 +68,19 @@ class FeedMigration extends AbstractMigration
                 continue;
             }
 
-            $this->connection->insert(
-                'tl_page',
-                [
-                    'type' => 'news_feed',
-                    'pid' => $rootPage,
-                    'tstamp' => $feed['tstamp'],
-                    'title' => $feed['title'],
-                    'alias' => 'share/'.$feed['alias'],
-                    'feedSource' => $feed['source'],
-                    'feedFormat' => $feed['format'],
-                    'newsArchives' => $feed['archives'],
-                    'maxFeedItems' => $feed['maxItems'],
-                    'feedDescription' => $feed['description'],
-                    'imgSize' => $feed['imgSize'],
-                ]
-            );
+            $this->connection->insert('tl_page', [
+                'type' => 'news_feed',
+                'pid' => $rootPage,
+                'tstamp' => $feed['tstamp'],
+                'title' => $feed['title'],
+                'alias' => 'share/'.$feed['alias'],
+                'feedSource' => $feed['source'],
+                'feedFormat' => $feed['format'],
+                'newsArchives' => $feed['archives'],
+                'maxFeedItems' => $feed['maxItems'],
+                'feedDescription' => $feed['description'],
+                'imgSize' => $feed['imgSize'],
+            ]);
 
             $this->connection->delete('tl_news_feed', ['id' => $feed['id']]);
         }
@@ -95,12 +94,12 @@ class FeedMigration extends AbstractMigration
 
         $page = $this->connection->fetchOne(
             "SELECT id FROM tl_page WHERE type = 'root' AND dns = :dns AND language = :language LIMIT 1",
-            ['dns' => $feedBase, 'language' => $feed['language']]
+            ['dns' => $feedBase, 'language' => $feed['language']],
         );
 
         // Find first root page, if none matches by dns and language
         if (!$page) {
-            $page = $this->connection->fetchOne("SELECT id FROM tl_page WHERE type = 'root' AND fallback = '1' ORDER BY sorting ASC LIMIT 1");
+            $page = $this->connection->fetchOne("SELECT id FROM tl_page WHERE type = 'root' AND fallback = 1 ORDER BY sorting ASC LIMIT 1");
         }
 
         return $page;

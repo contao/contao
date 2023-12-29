@@ -435,6 +435,26 @@ class Search
 			}
 		}
 
+		foreach ($arrMatches as $match)
+		{
+			$iterator->setText($match);
+
+			if (iterator_count($iterator->getPartsIterator()) < 2)
+			{
+				continue;
+			}
+
+			preg_match_all('/' . str_replace(' ', '[^[:alnum:]]+', preg_quote($match, '/')) . '/ui', $strText, $phrases);
+
+			foreach ($phrases[0] as $phrase)
+			{
+				if (!\in_array($phrase, $variants, true))
+				{
+					$variants[] = $phrase;
+				}
+			}
+		}
+
 		return $variants;
 	}
 
@@ -697,7 +717,7 @@ class Search
 		$arrHaving = array();
 
 		// Check that all required keywords match
-		foreach ($blnOrSearch ? $arrRequiredMatches : array_merge($arrMatches, $arrRequiredMatches) as $intMatch)
+		foreach ($blnOrSearch ? $arrRequiredMatches : array(...$arrMatches, ...$arrRequiredMatches) as $intMatch)
 		{
 			$arrHaving[] = "COUNT(matchedTerm.match$intMatch) > 0";
 		}
@@ -719,7 +739,7 @@ class Search
 		if (\count($arrPhrasesRegExp))
 		{
 			$strQuery .= " AND (" . implode($blnOrSearch ? ' OR ' : ' AND ', array_fill(0, \count($arrPhrasesRegExp), 'tl_search.text REGEXP ?')) . ')';
-			$arrValues = array_merge($arrValues, $arrPhrasesRegExp);
+			$arrValues = array(...$arrValues, ...$arrPhrasesRegExp);
 		}
 
 		// Limit results to a particular set of pages
@@ -736,7 +756,7 @@ class Search
 		$objResult = $objResultStmt->execute(...$arrValues);
 		$arrResult = $objResult->fetchAllAssoc();
 
-		return new SearchResult($arrResult, array_merge($arrKeywords, $arrIncluded), $arrWildcards, $arrPhrases);
+		return new SearchResult($arrResult, array(...$arrKeywords, ...$arrIncluded), $arrWildcards, $arrPhrases);
 	}
 
 	/**

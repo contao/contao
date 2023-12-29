@@ -20,7 +20,7 @@ use Symfony\Component\Routing\RouteCollection;
 
 class ImagesLoader extends Loader
 {
-    private string $pathPrefix;
+    private readonly string $pathPrefix;
 
     /**
      * @internal
@@ -30,7 +30,7 @@ class ImagesLoader extends Loader
         $this->pathPrefix = Path::makeRelative($imageTargetDir, $projectDir);
     }
 
-    public function load(mixed $resource, string $type = null): RouteCollection
+    public function load(mixed $resource, string|null $type = null): RouteCollection
     {
         $route = new Route(
             '/'.$this->pathPrefix.'/{path}',
@@ -38,7 +38,7 @@ class ImagesLoader extends Loader
                 '_controller' => ImagesController::class,
                 '_bypass_maintenance' => true,
             ],
-            ['path' => '.+']
+            ['path' => '.+'],
         );
 
         $routes = new RouteCollection();
@@ -47,7 +47,7 @@ class ImagesLoader extends Loader
         return $routes;
     }
 
-    public function supports($resource, string $type = null): bool
+    public function supports($resource, string|null $type = null): bool
     {
         return 'contao_images' === $type;
     }

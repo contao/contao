@@ -18,7 +18,9 @@ use Contao\ContentProxy;
 class ContentElementReference extends FragmentReference
 {
     final public const TAG_NAME = 'contao.content_element';
+
     final public const GLOBALS_KEY = 'TL_CTE';
+
     final public const PROXY_CLASS = ContentProxy::class;
 
     public function __construct(ContentModel $model, string $section = 'main', array $templateProperties = [], bool $inline = false)
@@ -29,5 +31,24 @@ class ContentElementReference extends FragmentReference
         $this->attributes['section'] = $section;
         $this->attributes['classes'] = $model->classes;
         $this->attributes['templateProperties'] = $templateProperties;
+        $this->attributes['nestedFragments'] = [];
+    }
+
+    public function getContentModel(): ContentModel|int
+    {
+        return $this->attributes['contentModel'];
+    }
+
+    public function getSection(): string
+    {
+        return $this->attributes['section'];
+    }
+
+    /**
+     * @param array<ContentElementReference> $nestedFragments
+     */
+    public function setNestedFragments(array $nestedFragments): void
+    {
+        $this->attributes['nestedFragments'] = $nestedFragments;
     }
 }

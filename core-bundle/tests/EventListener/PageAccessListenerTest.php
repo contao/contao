@@ -20,9 +20,9 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
-use Symfony\Component\Security\Core\Security;
 
 class PageAccessListenerTest extends TestCase
 {
@@ -170,14 +170,11 @@ class PageAccessListenerTest extends TestCase
             ->willReturn(false)
         ;
 
-        $pageModel = $this->mockClassWithProperties(
-            PageModel::class,
-            [
-                'id' => 42,
-                'protected' => true,
-                'groups' => [1, 2, 3],
-            ]
-        );
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 42,
+            'protected' => true,
+            'groups' => [1, 2, 3],
+        ]);
 
         $request = new Request();
         $request->attributes->set('pageModel', $pageModel);
@@ -208,14 +205,11 @@ class PageAccessListenerTest extends TestCase
             ->willReturn(true, false)
         ;
 
-        $pageModel = $this->mockClassWithProperties(
-            PageModel::class,
-            [
-                'id' => 42,
-                'protected' => true,
-                'groups' => [1, 2, 3],
-            ]
-        );
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 42,
+            'protected' => true,
+            'groups' => [1, 2, 3],
+        ]);
 
         $request = new Request();
         $request->attributes->set('pageModel', $pageModel);
@@ -246,14 +240,11 @@ class PageAccessListenerTest extends TestCase
             ->willReturn(false, false)
         ;
 
-        $pageModel = $this->mockClassWithProperties(
-            PageModel::class,
-            [
-                'id' => 42,
-                'protected' => true,
-                'groups' => [-1, 1],
-            ]
-        );
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 42,
+            'protected' => true,
+            'groups' => [-1, 1],
+        ]);
 
         $request = new Request();
         $request->attributes->set('pageModel', $pageModel);
@@ -284,14 +275,11 @@ class PageAccessListenerTest extends TestCase
             ->willReturn(true, true)
         ;
 
-        $pageModel = $this->mockClassWithProperties(
-            PageModel::class,
-            [
-                'id' => 42,
-                'protected' => true,
-                'groups' => [1, 2, 3],
-            ]
-        );
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 42,
+            'protected' => true,
+            'groups' => [1, 2, 3],
+        ]);
 
         $request = new Request();
         $request->attributes->set('pageModel', $pageModel);
@@ -319,14 +307,11 @@ class PageAccessListenerTest extends TestCase
             ->willReturn(false, true)
         ;
 
-        $pageModel = $this->mockClassWithProperties(
-            PageModel::class,
-            [
-                'id' => 42,
-                'protected' => true,
-                'groups' => [-1, 1],
-            ]
-        );
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 42,
+            'protected' => true,
+            'groups' => [-1, 1],
+        ]);
 
         $request = new Request();
         $request->attributes->set('pageModel', $pageModel);
@@ -344,10 +329,7 @@ class PageAccessListenerTest extends TestCase
         $this->assertSame($pageModel, $request->attributes->get('pageModel'));
     }
 
-    /**
-     * @return ContaoFramework&MockObject
-     */
-    private function mockFramework(int $id = null, PageModel $pageModel = null): ContaoFramework
+    private function mockFramework(int|null $id = null, PageModel|null $pageModel = null): ContaoFramework&MockObject
     {
         $framework = $this->createMock(ContaoFramework::class);
 

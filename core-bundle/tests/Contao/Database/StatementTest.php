@@ -63,7 +63,7 @@ class StatementTest extends TestCase
     /**
      * @dataProvider getQueriesWithParametersAndSets
      */
-    public function testReplacesParametersAndSets(string $query, string $expected, array $params = null, array $set = null): void
+    public function testReplacesParametersAndSets(string $query, string $expected, array|null $params = null, array|null $set = null): void
     {
         $doctrineResult = $this->createMock(Result::class);
         $doctrineResult
@@ -76,7 +76,7 @@ class StatementTest extends TestCase
             ->expects($this->once())
             ->method('executeQuery')
             ->willReturnCallback(
-                function (string $query, array $params) use ($doctrineResult, $expected) {
+                function (string $query, array $params) use ($expected, $doctrineResult) {
                     $params = array_map(
                         static function ($param) {
                             if (\is_bool($param)) {
@@ -93,7 +93,7 @@ class StatementTest extends TestCase
 
                             return $param ?? 'NULL';
                         },
-                        $params
+                        $params,
                     );
 
                     $builtQuery = '';
@@ -106,7 +106,7 @@ class StatementTest extends TestCase
                     $this->assertSame($expected, $builtQuery);
 
                     return $doctrineResult;
-                }
+                },
             )
         ;
 
@@ -125,7 +125,7 @@ class StatementTest extends TestCase
 
         System::setContainer($container);
 
-        $statement = (new Statement($connection));
+        $statement = new Statement($connection);
         $statement->prepare($query);
 
         if ($set) {
@@ -151,7 +151,7 @@ class StatementTest extends TestCase
         yield [
             'SELECT id FROM tl_content WHERE boolCol = ? AND intCol = ? AND floatCol = ? AND stringCol = ?',
             "SELECT id FROM tl_content WHERE boolCol = 1 AND intCol = 123456 AND floatCol = 123.456 AND stringCol = 'foo''bar'",
-            [true, 123456, 123.456, 'foo\'bar'],
+            [true, 123456, 123.456, "foo'bar"],
         ];
 
         yield [
@@ -180,7 +180,7 @@ class StatementTest extends TestCase
                 'boolCol' => true,
                 'intCol' => 123456,
                 'floatCol' => 123.456,
-                'stringCol' => 'foo\'bar',
+                'stringCol' => "foo'bar",
                 'nullCol' => null,
             ],
         ];
@@ -193,7 +193,7 @@ class StatementTest extends TestCase
                 'boolCol' => true,
                 'intCol' => 123456,
                 'floatCol' => 123.456,
-                'stringCol' => 'foo\'bar',
+                'stringCol' => "foo'bar",
                 'nullCol' => null,
             ],
         ];

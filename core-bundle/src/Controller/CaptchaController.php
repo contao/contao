@@ -25,13 +25,11 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class CaptchaController extends AbstractController
 {
-    public function __construct(private ContaoFramework $framework)
+    public function __construct(private readonly ContaoFramework $framework)
     {
     }
 
-    /**
-     * @Route("/_contao/captcha/{_locale}", name="contao_frontend_captcha", defaults={"_scope" = "frontend"})
-     */
+    #[Route('/_contao/captcha/{_locale}', name: 'contao_frontend_captcha', defaults: ['_scope' => 'frontend'])]
     public function __invoke(Request $request): Response
     {
         $this->framework->initialize();

@@ -23,14 +23,11 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class DefaultOperationsListenerTest extends TestCase
 {
-    /**
-     * @var Security&MockObject
-     */
-    private Security $security;
+    private Security&MockObject $security;
 
     private DefaultOperationsListener $listener;
 
@@ -144,10 +141,10 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        $this->assertSame(['edit', 'copy', 'copyChilds', 'cut', 'delete', 'show'], array_keys($operations));
+        $this->assertSame(['edit', 'copy', 'copyChildren', 'cut', 'delete', 'show'], array_keys($operations));
         $this->assertOperation($operations['edit'], 'act=edit', 'edit.svg', true);
         $this->assertOperation($operations['copy'], 'act=paste&amp;mode=copy', 'copy.svg', true);
-        $this->assertOperation($operations['copyChilds'], 'act=paste&amp;mode=copy&amp;childs=1', 'copychilds.svg', true);
+        $this->assertOperation($operations['copyChildren'], 'act=paste&amp;mode=copy&amp;children=1', 'copychildren.svg', true);
         $this->assertOperation($operations['cut'], 'act=paste&amp;mode=cut', 'cut.svg', true);
         $this->assertOperation($operations['delete'], 'act=delete', 'delete.svg', true);
         $this->assertOperation($operations['show'], 'act=show', 'show.svg', false);
@@ -524,7 +521,7 @@ class DefaultOperationsListenerTest extends TestCase
     /**
      * @dataProvider checkPermissionsProvider
      */
-    public function testCheckPermissions(string $name, string $actionClass, array $record, array $dca = [], array $newRecord = null): void
+    public function testCheckPermissions(string $name, string $actionClass, array $record, array $dca = [], array|null $newRecord = null): void
     {
         $GLOBALS['TL_DCA']['tl_foo'] = $dca;
 
@@ -551,8 +548,8 @@ class DefaultOperationsListenerTest extends TestCase
                         }
 
                         return true;
-                    }
-                )
+                    },
+                ),
             )
             ->willReturn(true)
         ;
@@ -572,9 +569,9 @@ class DefaultOperationsListenerTest extends TestCase
         yield 'copy operation' => [
             'copy',
             CreateAction::class,
-            ['id' => 15, 'foo' => 'bar'],
+            ['id' => 15, 'pid' => 42, 'foo' => 'bar'],
             [],
-            ['foo' => 'bar', 'tstamp' => 0],
+            ['pid' => 42, 'foo' => 'bar', 'tstamp' => 0],
         ];
 
         yield 'delete operation' => [
@@ -586,7 +583,7 @@ class DefaultOperationsListenerTest extends TestCase
         yield 'copy operation in tree mode' => [
             'copy',
             CreateAction::class,
-            ['id' => 15, 'foo' => 'bar'],
+            ['id' => 15, 'pid' => 0, 'foo' => 'bar'],
             ['list' => ['sorting' => ['mode' => DataContainer::MODE_TREE]]],
             ['foo' => 'bar', 'tstamp' => 0],
         ];
@@ -594,17 +591,17 @@ class DefaultOperationsListenerTest extends TestCase
         yield 'copy operation with parent table' => [
             'copy',
             CreateAction::class,
-            ['id' => 15, 'foo' => 'bar'],
+            ['id' => 15, 'pid' => 42, 'sorting' => 128, 'foo' => 'bar'],
             ['config' => ['ptable' => 'tl_bar']],
             ['foo' => 'bar', 'tstamp' => 0],
         ];
 
-        yield 'copyChilds operation in tree mode' => [
-            'copyChilds',
+        yield 'copyChildren operation in tree mode' => [
+            'copyChildren',
             CreateAction::class,
-            ['id' => 15, 'pid' => 42, 'foo' => 'bar'],
+            ['id' => 15, 'pid' => 42, 'sorting' => 128, 'foo' => 'bar'],
             ['list' => ['sorting' => ['mode' => DataContainer::MODE_TREE]]],
-            ['pid' => 42, 'foo' => 'bar', 'tstamp' => 0],
+            ['foo' => 'bar', 'tstamp' => 0],
         ];
 
         yield 'cut operation in tree mode' => [

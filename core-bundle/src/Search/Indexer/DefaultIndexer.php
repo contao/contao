@@ -22,8 +22,11 @@ class DefaultIndexer implements IndexerInterface
     /**
      * @internal
      */
-    public function __construct(private ContaoFramework $framework, private Connection $connection, private bool $indexProtected = false)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly Connection $connection,
+        private readonly bool $indexProtected = false,
+    ) {
     }
 
     public function index(Document $document): void
@@ -36,7 +39,7 @@ class DefaultIndexer implements IndexerInterface
             $this->throwBecause('Cannot index empty response.');
         }
 
-        if (($canonical = $document->extractCanonicalUri()) && ((string) $canonical !== (string) $document->getUri())) {
+        if (($canonical = $document->extractCanonicalUri()) && (string) $canonical !== (string) $document->getUri()) {
             $this->throwBecause(sprintf('Ignored because canonical URI "%s" does not match document URI.', $canonical));
         }
 
@@ -129,11 +132,11 @@ class DefaultIndexer implements IndexerInterface
     {
         $jsonLds = $document->extractJsonLdScripts('https://schema.contao.org/', 'Page');
 
-        if (0 === \count($jsonLds)) {
+        if (!$jsonLds) {
             $this->throwBecause('No JSON-LD found.');
         }
 
         // Merge all entries to one meta array (the latter overrides the former)
-        $meta = array_merge($meta, array_merge(...$jsonLds));
+        $meta = [...$meta, ...array_merge(...$jsonLds)];
     }
 }

@@ -40,10 +40,10 @@ class VirtualFilesystem implements VirtualFilesystemInterface
      * @internal Use the "contao.filesystem.virtual_factory" service to create new instances.
      */
     public function __construct(
-        private MountManager $mountManager,
-        private DbafsManager $dbafsManager,
-        private string $prefix = '',
-        private bool $readonly = false,
+        private readonly MountManager $mountManager,
+        private readonly DbafsManager $dbafsManager,
+        private readonly string $prefix = '',
+        private readonly bool $readonly = false,
     ) {
     }
 
@@ -322,7 +322,6 @@ class VirtualFilesystem implements VirtualFilesystemInterface
     {
         // Read from DBAFS but enhance result with file metadata on demand
         if (!($accessFlags & self::BYPASS_DBAFS) && $this->dbafsManager->match($path)) {
-            /** @var FilesystemItem $item */
             foreach ($this->dbafsManager->listContents($path, $deep) as $item) {
                 $path = $item->getPath();
                 $item = $item->withPath(Path::makeRelative($path, $this->prefix));
@@ -344,7 +343,6 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         }
 
         // Read from adapter, but enhance result with extra metadata on demand
-        /** @var FilesystemItem $item */
         foreach ($this->mountManager->listContents($path, $deep) as $item) {
             $path = $item->getPath();
 

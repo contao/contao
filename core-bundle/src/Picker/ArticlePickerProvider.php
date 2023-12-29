@@ -13,8 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Picker;
 
 use Knp\Menu\FactoryInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface
@@ -26,7 +26,7 @@ class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements D
         FactoryInterface $menuFactory,
         RouterInterface $router,
         TranslatorInterface $translator,
-        private Security $security,
+        private readonly Security $security,
     ) {
         parent::__construct($menuFactory, $router, $translator);
     }
@@ -46,7 +46,7 @@ class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements D
         return $this->isMatchingInsertTag($config);
     }
 
-    public function getDcaTable(PickerConfig $config = null): string
+    public function getDcaTable(PickerConfig|null $config = null): string
     {
         return 'tl_article';
     }
@@ -71,7 +71,7 @@ class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements D
         return sprintf($this->getInsertTag($config), $value);
     }
 
-    protected function getRouteParameters(PickerConfig $config = null): array
+    protected function getRouteParameters(PickerConfig|null $config = null): array
     {
         return ['do' => 'article'];
     }

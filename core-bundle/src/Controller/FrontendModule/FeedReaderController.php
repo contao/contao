@@ -33,8 +33,11 @@ use Symfony\Contracts\Cache\ItemInterface;
 #[AsFrontendModule(category: 'miscellaneous')]
 class FeedReaderController extends AbstractFrontendModuleController
 {
-    public function __construct(private readonly FeedIo $feedIo, private readonly LoggerInterface $logger, private readonly CacheInterface $cache)
-    {
+    public function __construct(
+        private readonly FeedIo $feedIo,
+        private readonly LoggerInterface $logger,
+        private readonly CacheInterface $cache,
+    ) {
     }
 
     protected function getResponse(FragmentTemplate $template, ModuleModel $model, Request $request): Response
@@ -55,7 +58,7 @@ class FeedReaderController extends AbstractFrontendModuleController
                         }
 
                         return $readerResult->getFeed();
-                    }
+                    },
                 );
             } catch (\Exception $exception) {
                 $feed = null;
@@ -72,7 +75,6 @@ class FeedReaderController extends AbstractFrontendModuleController
         $template->set('feeds', $feeds);
 
         // Take the configured amount of items from each feed and merge them into one list
-        /** @var list<array{feed: Feed, item: Item}> $elements */
         $elements = array_merge(
             ...array_map(
                 static fn (FeedInterface $feed): array => array_map(
@@ -80,10 +82,10 @@ class FeedReaderController extends AbstractFrontendModuleController
                         'feed' => $feed,
                         'item' => $item,
                     ],
-                    \array_slice([...$feed], $model->skipFirst, $model->numberOfItems ?: null)
+                    \array_slice([...$feed], $model->skipFirst, $model->numberOfItems ?: null),
                 ),
-                $feeds
-            )
+                $feeds,
+            ),
         );
 
         usort($elements, static fn (array $a, array $b): int => $a['item']->getLastModified() <=> $b['item']->getLastModified());

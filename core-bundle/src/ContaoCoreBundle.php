@@ -16,6 +16,7 @@ use Composer\InstalledVersions;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAssetsPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAvailableTransportsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddCronJobsPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\AddInsertTagsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddNativeTransportFactoryPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\ConfigureFilesystemPass;
@@ -54,6 +55,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 class ContaoCoreBundle extends Bundle
 {
     final public const SCOPE_BACKEND = 'backend';
+
     final public const SCOPE_FRONTEND = 'frontend';
 
     public function getContainerExtension(): ContaoCoreExtension
@@ -78,7 +80,7 @@ class ContaoCoreBundle extends Bundle
                 RobotsTxtEvent::class => ContaoCoreEvents::ROBOTS_TXT,
                 SitemapEvent::class => ContaoCoreEvents::SITEMAP,
                 SlugValidCharactersEvent::class => ContaoCoreEvents::SLUG_VALID_CHARACTERS,
-            ])
+            ]),
         );
 
         $container->addCompilerPass(new MakeServicesPublicPass());
@@ -93,8 +95,8 @@ class ContaoCoreBundle extends Bundle
                 FrontendModuleReference::TAG_NAME,
                 FrontendModuleReference::GLOBALS_KEY,
                 FrontendModuleReference::PROXY_CLASS,
-                'contao.listener.module_template_options'
-            )
+                'contao.listener.module_template_options',
+            ),
         );
 
         $container->addCompilerPass(
@@ -102,8 +104,8 @@ class ContaoCoreBundle extends Bundle
                 ContentElementReference::TAG_NAME,
                 ContentElementReference::GLOBALS_KEY,
                 ContentElementReference::PROXY_CLASS,
-                'contao.listener.element_template_options'
-            )
+                'contao.listener.element_template_options',
+            ),
         );
 
         $container->addCompilerPass(new DataContainerCallbackPass());
@@ -119,6 +121,7 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new IntlInstalledLocalesAndCountriesPass());
         $container->addCompilerPass(new LoggerChannelPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, -1);
         $container->addCompilerPass(new ConfigureFilesystemPass());
+        $container->addCompilerPass(new AddInsertTagsPass());
     }
 
     public static function getVersion(): string

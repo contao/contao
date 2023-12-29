@@ -27,23 +27,25 @@ use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Scheb\TwoFactorBundle\Security\Http\Authenticator\Passport\Credentials\TwoFactorCodeCredentials;
 use Scheb\TwoFactorBundle\Security\Http\Authenticator\TwoFactorAuthenticator;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Token\PostAuthenticationToken;
 
@@ -139,7 +141,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
 
         $this->assertInstanceOf(
             PostAuthenticationToken::class,
-            $authenticator->createToken($this->createMock(Passport::class), 'firewall')
+            $authenticator->createToken($this->createMock(Passport::class), 'firewall'),
         );
 
         $badge = $this->createMock(TwoFactorCodeCredentials::class);
@@ -158,7 +160,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
 
         $this->assertInstanceOf(
             TwoFactorToken::class,
-            $authenticator->createToken($passport, 'firewall')
+            $authenticator->createToken($passport, 'firewall'),
         );
 
         $twoFactorToken = $this->createMock(TwoFactorToken::class);
@@ -190,7 +192,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
 
         $this->assertInstanceOf(
             PostAuthenticationToken::class,
-            $authenticator->createToken($passport, 'firewall')
+            $authenticator->createToken($passport, 'firewall'),
         );
     }
 
@@ -215,7 +217,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
 
         $authenticator = $this->mockContaoLoginAuthenticator(
             tokenStorage: $tokenStorage,
-            twoFactorAuthenticator: $twoFactorAuthenticator
+            twoFactorAuthenticator: $twoFactorAuthenticator,
         );
 
         $authenticator->authenticate($request);
@@ -250,7 +252,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
         $authenticator = $this->mockContaoLoginAuthenticator(
             userProvider: $this->createMock(ContaoUserProvider::class),
             tokenStorage: $tokenStorage,
-            options: ['enable_csrf' => true]
+            options: ['enable_csrf' => true],
         );
 
         if (null !== $exception) {
@@ -262,7 +264,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
 
     public function getUserData(): \Generator
     {
-        $veryLongUsername = str_repeat('k.jones', (int) ceil(Security::MAX_USERNAME_LENGTH / \strlen('k.jones')));
+        $veryLongUsername = str_repeat('k.jones', (int) ceil(UserBadge::MAX_USERNAME_LENGTH / \strlen('k.jones')));
 
         yield [null, BadRequestHttpException::class];
         yield [$veryLongUsername, BadCredentialsException::class];
@@ -295,7 +297,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
         $authenticator = $this->mockContaoLoginAuthenticator(
             scopeMatcher: $scopeMatcher,
             router: $router,
-            uriSigner: $uriSigner
+            uriSigner: $uriSigner,
         );
 
         $response = $authenticator->start(new Request());
@@ -360,7 +362,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
             tokenStorage: $tokenStorage,
             pageRegistry: $pageRegistry,
             httpKernel: $httpKernel,
-            options: ['enable_csrf' => true]
+            options: ['enable_csrf' => true],
         );
 
         $authenticator->start($request);
@@ -403,7 +405,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
             ->willReturn($errorPage)
         ;
 
-        if (null === $errorPage) {
+        if (!$errorPage) {
             $this->expectException(PageNotFoundException::class);
         }
 
@@ -443,7 +445,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
             tokenStorage: $tokenStorage,
             pageRegistry: $pageRegistry,
             httpKernel: $httpKernel,
-            options: ['enable_csrf' => true]
+            options: ['enable_csrf' => true],
         );
 
         $authenticator->start($request);
@@ -461,7 +463,10 @@ class ContaoLoginAuthenticatorTest extends TestCase
         yield [$errorPage];
     }
 
-    private function mockContaoLoginAuthenticator(UserProviderInterface $userProvider = null, AuthenticationSuccessHandlerInterface $successHandler = null, AuthenticationFailureHandlerInterface $failureHandler = null, ScopeMatcher $scopeMatcher = null, RouterInterface $router = null, UriSigner $uriSigner = null, ContaoFramework $framework = null, TokenStorageInterface $tokenStorage = null, PageRegistry $pageRegistry = null, HttpKernelInterface $httpKernel = null, RequestStack $requestStack = null, TwoFactorAuthenticator $twoFactorAuthenticator = null, array $options = []): ContaoLoginAuthenticator
+    /**
+     * @param UserProviderInterface<UserInterface>|null $userProvider
+     */
+    private function mockContaoLoginAuthenticator(UserProviderInterface|null $userProvider = null, AuthenticationSuccessHandlerInterface|null $successHandler = null, AuthenticationFailureHandlerInterface|null $failureHandler = null, ScopeMatcher|null $scopeMatcher = null, RouterInterface|null $router = null, UriSigner|null $uriSigner = null, ContaoFramework|null $framework = null, TokenStorageInterface|null $tokenStorage = null, PageRegistry|null $pageRegistry = null, HttpKernelInterface|null $httpKernel = null, RequestStack|null $requestStack = null, TwoFactorAuthenticator|null $twoFactorAuthenticator = null, array $options = []): ContaoLoginAuthenticator
     {
         return new ContaoLoginAuthenticator(
             $userProvider ?? $this->mockUserProvider(),
@@ -480,6 +485,9 @@ class ContaoLoginAuthenticatorTest extends TestCase
         );
     }
 
+    /**
+     * @return UserProviderInterface<UserInterface>
+     */
     private function mockUserProvider(): UserProviderInterface
     {
         return $this->createMock(UserProviderInterface::class);

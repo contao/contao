@@ -97,9 +97,17 @@
         <source>Delete recipient ID %s</source>
         <target>Ta bort prenumerant med ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_recipients.toggle">
-        <source>Activate/deactivate recipient ID %s</source>
-        <target>Aktivera / avaktivera prenumeranter med ID %s</target>
+      <trans-unit id="tl_newsletter_recipients.toggle.0">
+        <source>Activate/deactivate recipient</source>
+        <target>Aktivera / avaktivera prenumeranter</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.toggle.1">
+        <source>Deactivate recipient ID %s</source>
+        <target>Inaktivera mottagar-ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.toggle.2">
+        <source>Activate recipient ID %s</source>
+        <target>Aktivera mottagar-ID %s</target>
       </trans-unit>
     </body>
   </file>

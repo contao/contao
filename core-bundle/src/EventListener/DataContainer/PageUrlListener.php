@@ -37,13 +37,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class PageUrlListener
 {
     public function __construct(
-        private ContaoFramework $framework,
-        private Slug $slug,
-        private TranslatorInterface $translator,
-        private Connection $connection,
-        private PageRegistry $pageRegistry,
-        private UrlGeneratorInterface $urlGenerator,
-        private FinalMatcherInterface $routeMatcher,
+        private readonly ContaoFramework $framework,
+        private readonly Slug $slug,
+        private readonly TranslatorInterface $translator,
+        private readonly Connection $connection,
+        private readonly PageRegistry $pageRegistry,
+        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly FinalMatcherInterface $routeMatcher,
     ) {
     }
 
@@ -51,9 +51,8 @@ class PageUrlListener
     public function generateAlias(string $value, DataContainer $dc): string
     {
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
-        $pageModel = $pageAdapter->findWithDetails($dc->id);
 
-        if (null === $pageModel) {
+        if (!$pageModel = $pageAdapter->findWithDetails($dc->id)) {
             return $value;
         }
 
@@ -84,7 +83,7 @@ class PageUrlListener
         $value = $this->slug->generate(
             $pageModel->title ?? '',
             (int) $dc->id,
-            fn ($alias) => $isRoutable && $this->aliasExists(($pageModel->useFolderUrl ? $pageModel->folderUrl : '').$alias, $pageModel)
+            fn ($alias) => $isRoutable && $this->aliasExists(($pageModel->useFolderUrl ? $pageModel->folderUrl : '').$alias, $pageModel),
         );
 
         // Generate folder URL aliases (see #4933)
@@ -111,7 +110,7 @@ class PageUrlListener
                 'urlPrefix' => $value,
                 'dns' => $currentRecord['dns'] ?? null,
                 'rootId' => $dc->id,
-            ]
+            ],
         );
 
         if ($count > 0) {
@@ -119,9 +118,8 @@ class PageUrlListener
         }
 
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
-        $rootPage = $pageAdapter->findWithDetails($dc->id);
 
-        if (null === $rootPage) {
+        if (!$rootPage = $pageAdapter->findWithDetails($dc->id)) {
             return $value;
         }
 
@@ -146,9 +144,8 @@ class PageUrlListener
         }
 
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
-        $rootPage = $pageAdapter->findWithDetails($dc->id);
 
-        if (null === $rootPage) {
+        if (!$rootPage = $pageAdapter->findWithDetails($dc->id)) {
             return $value;
         }
 
@@ -172,10 +169,10 @@ class PageUrlListener
             return;
         }
 
-        /** @var PageModel $page */
         foreach ($pages as $page) {
             if ($page->alias && $this->pageRegistry->isRoutable($page)) {
                 // Inherit root page settings from post data
+                $page->loadDetails();
                 $page->domain = $rootPage->domain;
                 $page->urlPrefix = $rootPage->urlPrefix;
                 $page->urlSuffix = $rootPage->urlSuffix;
@@ -204,7 +201,7 @@ class PageUrlListener
             $currentUrl = $this->urlGenerator->generate(
                 PageRoute::PAGE_BASED_ROUTE_NAME,
                 [RouteObjectInterface::ROUTE_OBJECT => $currentRoute],
-                UrlGeneratorInterface::ABSOLUTE_URL
+                UrlGeneratorInterface::ABSOLUTE_URL,
             );
         } catch (RouteParametersException) {
             // This route has mandatory parameters, only match exact path with placeholders
@@ -226,6 +223,7 @@ class PageUrlListener
 
             // If page has the same root, inherit root page settings from post data
             if ($currentPage->rootId === $aliasPage->rootId) {
+                $aliasPage->loadDetails();
                 $aliasPage->domain = $currentPage->domain;
                 $aliasPage->urlPrefix = $currentPage->urlPrefix;
                 $aliasPage->urlSuffix = $currentPage->urlSuffix;

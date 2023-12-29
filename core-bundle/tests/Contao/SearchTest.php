@@ -86,8 +86,13 @@ class SearchTest extends TestCase
         ];
         yield [
             'foo Foo fOO FOO föö',
-            ['foo', 'doesNotExist'],
+            ['foo', 'doesNotExist', 'f', 'fo'],
             ['foo', 'Foo', 'fOO', 'FOO', 'föö'],
+        ];
+        yield [
+            'Text (with) phrase-content',
+            ['text with phrase', 'Phrase Content', '(WITH', 'does not exist'],
+            ['Text (with) phrase', 'phrase-content', '(with'],
         ];
     }
 }

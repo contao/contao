@@ -65,7 +65,7 @@ class FactoryTest extends TestCase
         $factory = new Factory(
             $this->createMock(Connection::class),
             $this->mockContaoFramework([PageModel::class => $pageModelAdapter]),
-            ['https://example.com']
+            ['https://example.com'],
         );
 
         $this->assertCount(1, $factory->getAdditionalCrawlUriCollection());

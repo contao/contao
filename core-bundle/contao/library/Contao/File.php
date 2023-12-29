@@ -143,8 +143,6 @@ class File extends System
 			throw new \Exception(sprintf('Directory "%s" is not a file', $strFile));
 		}
 
-		$this->import(Files::class, 'Files');
-
 		$this->strFile = $strFile;
 	}
 
@@ -155,7 +153,7 @@ class File extends System
 	{
 		if (\is_resource($this->resFile))
 		{
-			$this->Files->fclose($this->resFile);
+			Files::getInstance()->fclose($this->resFile);
 		}
 	}
 
@@ -418,7 +416,7 @@ class File extends System
 		}
 
 		// Open the file
-		if (!$this->resFile = $this->Files->fopen($this->strFile, 'wb'))
+		if (!$this->resFile = Files::getInstance()->fopen($this->strFile, 'wb'))
 		{
 			throw new \Exception(sprintf('Cannot create file "%s"', $this->strFile));
 		}
@@ -495,7 +493,7 @@ class File extends System
 	 */
 	public function delete()
 	{
-		$return = $this->Files->delete($this->strFile);
+		$return = Files::getInstance()->delete($this->strFile);
 
 		// Update the database
 		if (Dbafs::shouldBeSynchronized($this->strFile))
@@ -515,7 +513,7 @@ class File extends System
 	 */
 	public function chmod($intChmod)
 	{
-		return $this->Files->chmod($this->strFile, $intChmod);
+		return Files::getInstance()->chmod($this->strFile, $intChmod);
 	}
 
 	/**
@@ -525,9 +523,11 @@ class File extends System
 	 */
 	public function close()
 	{
+		$filesObj = Files::getInstance();
+
 		if (\is_resource($this->resFile))
 		{
-			$this->Files->fclose($this->resFile);
+			$filesObj->fclose($this->resFile);
 		}
 
 		// Create the file path
@@ -547,7 +547,7 @@ class File extends System
 		}
 
 		// Move the temporary file to its destination
-		$return = $this->Files->rename($this->strTmp, $this->strFile);
+		$return = $filesObj->rename($this->strTmp, $this->strFile);
 		$this->strTmp = null;
 
 		// Update the database
@@ -671,7 +671,7 @@ class File extends System
 			new Folder($strParent);
 		}
 
-		$return = $this->Files->rename($this->strFile, $strNewName);
+		$return = Files::getInstance()->rename($this->strFile, $strNewName);
 
 		// Update the database AFTER the file has been renamed
 		$syncSource = Dbafs::shouldBeSynchronized($this->strFile);
@@ -719,7 +719,7 @@ class File extends System
 			new Folder($strParent);
 		}
 
-		$return = $this->Files->copy($this->strFile, $strNewName);
+		$return = Files::getInstance()->copy($this->strFile, $strNewName);
 
 		// Update the database AFTER the file has been renamed
 		$syncSource = Dbafs::shouldBeSynchronized($this->strFile);
@@ -818,16 +818,18 @@ class File extends System
 	{
 		if (!\is_resource($this->resFile))
 		{
+			$filesObj = Files::getInstance();
+
 			$this->strTmp = 'system/tmp/' . md5(uniqid(mt_rand(), true));
 
 			// Copy the contents of the original file to append data
 			if (strncmp($strMode, 'a', 1) === 0 && file_exists($this->strRootDir . '/' . $this->strFile))
 			{
-				$this->Files->copy($this->strFile, $this->strTmp);
+				$filesObj->copy($this->strFile, $this->strTmp);
 			}
 
 			// Open the temporary file
-			if (!$this->resFile = $this->Files->fopen($this->strTmp, $strMode))
+			if (!$this->resFile = $filesObj->fopen($this->strTmp, $strMode))
 			{
 				return false;
 			}

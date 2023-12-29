@@ -77,8 +77,7 @@ class ModuleBooknav extends Module
 		// Get all groups of the current front end user
 		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
 		{
-			$this->import(FrontendUser::class, 'User');
-			$groups = $this->User->groups;
+			$groups = FrontendUser::getInstance()->groups;
 		}
 
 		// Get all book pages
@@ -129,9 +128,9 @@ class ModuleBooknav extends Module
 			$intKey = $arrLookup[$current - 1];
 
 			// Skip forward pages (see #5074)
-			while ($this->arrPages[$intKey]->type == 'forward' && isset($arrLookup[--$current]))
+			while (isset($this->arrPages[$intKey]) && $this->arrPages[$intKey]->type == 'forward' && isset($arrLookup[--$current]))
 			{
-				$intKey = $arrLookup[$current - 1];
+				$intKey = $arrLookup[$current - 1] ?? null;
 			}
 
 			if ($intKey === null)

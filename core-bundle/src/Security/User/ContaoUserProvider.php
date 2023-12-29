@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Security\User;
 
 use Contao\BackendUser;
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\FrontendUser;
 use Contao\User;
@@ -23,14 +24,17 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
+/**
+ * @implements UserProviderInterface<User>
+ */
 class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
     /**
      * @param class-string<User> $userClass
      */
     public function __construct(
-        private ContaoFramework $framework,
-        private string $userClass,
+        private readonly ContaoFramework $framework,
+        private readonly string $userClass,
     ) {
         if (BackendUser::class !== $userClass && FrontendUser::class !== $userClass) {
             throw new \RuntimeException(sprintf('Unsupported class "%s".', $userClass));
@@ -41,7 +45,7 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
     {
         $this->framework->initialize();
 
-        /** @var User $adapter */
+        /** @var Adapter<User> $adapter */
         $adapter = $this->framework->getAdapter($this->userClass);
         $user = $adapter->loadUserByIdentifier($identifier);
 

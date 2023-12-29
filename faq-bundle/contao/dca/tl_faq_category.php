@@ -10,13 +10,9 @@
 
 use Contao\Backend;
 use Contao\BackendUser;
-use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
-use Contao\FaqBundle\Security\ContaoFaqPermissions;
-use Contao\Image;
-use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
@@ -33,7 +29,7 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 		'markAsCopy'                  => 'title',
 		'onload_callback' => array
 		(
-			array('tl_faq_category', 'checkPermission')
+			array('tl_faq_category', 'adjustDca')
 		),
 		'oncreate_callback' => array
 		(
@@ -67,39 +63,6 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 		(
 			'fields'                  => array('title'),
 			'format'                  => '%s'
-		),
-		'global_operations' => array
-		(
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
-		),
-		'operations' => array
-		(
-			'edit' => array
-			(
-				'href'                => 'act=edit',
-				'icon'                => 'edit.svg',
-				'button_callback'     => array('tl_faq_category', 'editHeader')
-			),
-			'children',
-			'copy' => array
-			(
-				'href'                => 'act=copy',
-				'icon'                => 'copy.svg',
-				'button_callback'     => array('tl_faq_category', 'copyCategory')
-			),
-			'delete' => array
-			(
-				'href'                => 'act=delete',
-				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"',
-				'button_callback'     => array('tl_faq_category', 'deleteCategory')
-			),
-			'show'
 		)
 	),
 
@@ -110,7 +73,7 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 		'default'                     => '{title_legend},title,headline,jumpTo;{comments_legend:hide},allowComments'
 	),
 
-	// Subpalettes
+	// Sub-palettes
 	'subpalettes' => array
 	(
 		'allowComments'               => 'notify,sortOrder,perPage,moderate,bbcode,requireLogin,disableCaptcha'
@@ -213,20 +176,9 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 class tl_faq_category extends Backend
 {
 	/**
-	 * Import the back end user object
+	 * Set the root IDs and unset the "allowComments" field if the comments bundle is not available.
 	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
-	 * Check permissions to edit table tl_faq_category
-	 *
-	 * @throws AccessDeniedException
-	 */
-	public function checkPermission()
+	public function adjustDca()
 	{
 		$bundles = System::getContainer()->getParameter('kernel.bundles');
 
@@ -236,88 +188,24 @@ class tl_faq_category extends Backend
 			unset($GLOBALS['TL_DCA']['tl_faq_category']['fields']['allowComments']);
 		}
 
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
 		// Set root IDs
-		if (empty($this->User->faqs) || !is_array($this->User->faqs))
+		if (empty($user->faqs) || !is_array($user->faqs))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->faqs;
+			$root = $user->faqs;
 		}
 
 		$GLOBALS['TL_DCA']['tl_faq_category']['list']['sorting']['root'] = $root;
-		$security = System::getContainer()->get('security.helper');
-
-		// Check permissions to add FAQ categories
-		if (!$security->isGranted(ContaoFaqPermissions::USER_CAN_CREATE_CATEGORIES))
-		{
-			$GLOBALS['TL_DCA']['tl_faq_category']['config']['closed'] = true;
-			$GLOBALS['TL_DCA']['tl_faq_category']['config']['notCreatable'] = true;
-			$GLOBALS['TL_DCA']['tl_faq_category']['config']['notCopyable'] = true;
-		}
-
-		// Check permissions to delete FAQ categories
-		if (!$security->isGranted(ContaoFaqPermissions::USER_CAN_DELETE_CATEGORIES))
-		{
-			$GLOBALS['TL_DCA']['tl_faq_category']['config']['notDeletable'] = true;
-		}
-
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-
-		// Check current action
-		switch (Input::get('act'))
-		{
-			case 'select':
-				// Allow
-				break;
-
-			case 'create':
-				if (!$security->isGranted(ContaoFaqPermissions::USER_CAN_CREATE_CATEGORIES))
-				{
-					throw new AccessDeniedException('Not enough permissions to create FAQ categories.');
-				}
-				break;
-
-			case 'edit':
-			case 'copy':
-			case 'delete':
-			case 'show':
-				if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$security->isGranted(ContaoFaqPermissions::USER_CAN_DELETE_CATEGORIES)))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' FAQ category ID ' . Input::get('id') . '.');
-				}
-				break;
-
-			case 'editAll':
-			case 'deleteAll':
-			case 'overrideAll':
-			case 'copyAll':
-				$session = $objSession->all();
-
-				if (Input::get('act') == 'deleteAll' && !$security->isGranted(ContaoFaqPermissions::USER_CAN_DELETE_CATEGORIES))
-				{
-					$session['CURRENT']['IDS'] = array();
-				}
-				else
-				{
-					$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $root);
-				}
-				$objSession->replace($session);
-				break;
-
-			default:
-				if (Input::get('act'))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' FAQ categories.');
-				}
-				break;
-		}
 	}
 
 	/**
@@ -333,19 +221,21 @@ class tl_faq_category extends Backend
 			$insertId = func_get_arg(1);
 		}
 
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
 		// Set root IDs
-		if (empty($this->User->faqs) || !is_array($this->User->faqs))
+		if (empty($user->faqs) || !is_array($user->faqs))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->faqs;
+			$root = $user->faqs;
 		}
 
 		// The FAQ category is enabled already
@@ -354,17 +244,18 @@ class tl_faq_category extends Backend
 			return;
 		}
 
+		$db = Database::getInstance();
+
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
-
 		$arrNew = $objSessionBag->get('new_records');
 
 		if (is_array($arrNew['tl_faq_category']) && in_array($insertId, $arrNew['tl_faq_category']))
 		{
 			// Add the permissions on group level
-			if ($this->User->inherit != 'custom')
+			if ($user->inherit != 'custom')
 			{
-				$objGroup = $this->Database->execute("SELECT id, faqs, faqp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $this->User->groups)) . ")");
+				$objGroup = $db->execute("SELECT id, faqs, faqp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $user->groups)) . ")");
 
 				while ($objGroup->next())
 				{
@@ -375,18 +266,18 @@ class tl_faq_category extends Backend
 						$arrFaqs = StringUtil::deserialize($objGroup->faqs, true);
 						$arrFaqs[] = $insertId;
 
-						$this->Database->prepare("UPDATE tl_user_group SET faqs=? WHERE id=?")
-									   ->execute(serialize($arrFaqs), $objGroup->id);
+						$db->prepare("UPDATE tl_user_group SET faqs=? WHERE id=?")->execute(serialize($arrFaqs), $objGroup->id);
 					}
 				}
 			}
 
 			// Add the permissions on user level
-			if ($this->User->inherit != 'group')
+			if ($user->inherit != 'group')
 			{
-				$objUser = $this->Database->prepare("SELECT faqs, faqp FROM tl_user WHERE id=?")
-										   ->limit(1)
-										   ->execute($this->User->id);
+				$objUser = $db
+					->prepare("SELECT faqs, faqp FROM tl_user WHERE id=?")
+					->limit(1)
+					->execute($user->id);
 
 				$arrFaqp = StringUtil::deserialize($objUser->faqp);
 
@@ -395,65 +286,13 @@ class tl_faq_category extends Backend
 					$arrFaqs = StringUtil::deserialize($objUser->faqs, true);
 					$arrFaqs[] = $insertId;
 
-					$this->Database->prepare("UPDATE tl_user SET faqs=? WHERE id=?")
-								   ->execute(serialize($arrFaqs), $this->User->id);
+					$db->prepare("UPDATE tl_user SET faqs=? WHERE id=?")->execute(serialize($arrFaqs), $user->id);
 				}
 			}
 
 			// Add the new element to the user object
 			$root[] = $insertId;
-			$this->User->faqs = $root;
+			$user->faqs = $root;
 		}
-	}
-
-	/**
-	 * Return the edit header button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function editHeader($row, $href, $label, $title, $icon, $attributes)
-	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, 'tl_faq_category') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
-	}
-
-	/**
-	 * Return the copy category button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function copyCategory($row, $href, $label, $title, $icon, $attributes)
-	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoFaqPermissions::USER_CAN_CREATE_CATEGORIES) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
-	}
-
-	/**
-	 * Return the delete category button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function deleteCategory($row, $href, $label, $title, $icon, $attributes)
-	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoFaqPermissions::USER_CAN_DELETE_CATEGORIES) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 }

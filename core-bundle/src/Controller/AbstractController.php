@@ -54,7 +54,7 @@ abstract class AbstractController extends SymfonyAbstractController
      *
      * @phpstan-return Adapter<T>
      */
-    protected function getContaoAdapter(string $class)
+    protected function getContaoAdapter(string $class): Adapter
     {
         return $this->container->get('contao.framework')->getAdapter($class);
     }
@@ -123,5 +123,14 @@ abstract class AbstractController extends SymfonyAbstractController
         }
 
         return $response;
+    }
+
+    protected function hasParameter(string $name): bool
+    {
+        if (!$this->container->has('parameter_bag')) {
+            return false;
+        }
+
+        return $this->container->get('parameter_bag')->has($name);
     }
 }

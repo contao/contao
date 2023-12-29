@@ -15,10 +15,13 @@ namespace Contao\CoreBundle\Doctrine\Backup;
 class Backup implements \Stringable
 {
     final public const DATETIME_FORMAT = 'YmdHis';
+
     final public const VALID_BACKUP_NAME_REGEX = '@^[^/]*__(\d{4}\d{2}\d{2}\d{2}\d{2}\d{2})\.sql(\.gz)?$@';
 
-    private string $filename;
-    private \DateTimeInterface $createdAt;
+    private readonly string $filename;
+
+    private readonly \DateTimeInterface $createdAt;
+
     private int $size = 0;
 
     /**
@@ -26,8 +29,8 @@ class Backup implements \Stringable
      */
     public function __construct(string $filename)
     {
-        $this->filename = self::validateFileName($filename);
-        $this->createdAt = self::extractDatetime($filename);
+        $this->filename = $this->validateFileName($filename);
+        $this->createdAt = $this->extractDatetime($filename);
     }
 
     public function __toString(): string
@@ -60,7 +63,7 @@ class Backup implements \Stringable
         return $this;
     }
 
-    public static function createNew(\DateTime $dateTime = null): self
+    public static function createNew(\DateTime|null $dateTime = null): self
     {
         $now = $dateTime ?? new \DateTime('now');
         $now->setTimezone(new \DateTimeZone('UTC'));
@@ -77,7 +80,7 @@ class Backup implements \Stringable
         ];
     }
 
-    private static function extractDatetime(string $filepath): \DateTimeInterface
+    private function extractDatetime(string $filepath): \DateTimeInterface
     {
         preg_match(self::VALID_BACKUP_NAME_REGEX, $filepath, $matches);
 
@@ -86,7 +89,7 @@ class Backup implements \Stringable
         return \DateTime::createFromFormat(self::DATETIME_FORMAT, $matches[1], new \DateTimeZone('UTC'));
     }
 
-    private static function validateFileName(string $filename): string
+    private function validateFileName(string $filename): string
     {
         if (!preg_match(self::VALID_BACKUP_NAME_REGEX, $filename)) {
             throw new BackupManagerException(sprintf('The filename "%s" does not match "%s"', $filename, self::VALID_BACKUP_NAME_REGEX));

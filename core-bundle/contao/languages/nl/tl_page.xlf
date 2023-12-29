@@ -97,6 +97,12 @@
         <source>Please choose the redirect type.</source>
         <target>Tijdelijke redirects sturen een HTTP 302 header, permanente sturen een HTTP 301 header.</target>
       </trans-unit>
+      <trans-unit id="tl_page.alwaysForward.0">
+        <source>Always redirect</source>
+      </trans-unit>
+      <trans-unit id="tl_page.alwaysForward.1">
+        <source>Redirect to the target page even if there are query or path parameters.</source>
+      </trans-unit>
       <trans-unit id="tl_page.jumpTo.0">
         <source>Redirect page</source>
         <target>Ga naar pagina</target>
@@ -191,6 +197,7 @@
       </trans-unit>
       <trans-unit id="tl_page.canonicalLink.1">
         <source>Here you can set a custom canonical URL like https://example.com/.</source>
+        <target>Hier kunt u een aangepaste canonieke URL instellen, zoals https://example.com/.</target>
       </trans-unit>
       <trans-unit id="tl_page.canonicalKeepParams.0">
         <source>Query parameters</source>
@@ -254,6 +261,7 @@
       </trans-unit>
       <trans-unit id="tl_page.urlPrefix.1">
         <source>Enter a URL prefix (e.g. the language) that will be prepended to all page aliases below this website root page.</source>
+        <target>Voer een URL-voorvoegsel in (bijvoorbeeld de taal) dat wordt toegevoegd aan alle pagina-aliassen onder de hoofdpagina van deze website.</target>
       </trans-unit>
       <trans-unit id="tl_page.urlSuffix.0">
         <source>URL suffix</source>
@@ -436,16 +444,16 @@
         <target>Weergeven vanaf</target>
       </trans-unit>
       <trans-unit id="tl_page.start.1">
-        <source>If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Als u wilt voorkomen dat de pagina vóór een bepaalde datum / tijd op de website wordt weergegeven, kunt u dit hier invoeren. Laat het veld anders leeg.</target>
+        <source>If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Als u wilt voorkomen dat de pagina voor een bepaalde datum/tijd op de website wordt weergegeven, kunt u dat hier invullen. Laat anders het veld leeg.</target>
       </trans-unit>
       <trans-unit id="tl_page.stop.0">
         <source>Show until</source>
         <target>Weergeven tot</target>
       </trans-unit>
       <trans-unit id="tl_page.stop.1">
-        <source>If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Als u wilt voorkomen dat de pagina na een bepaalde datum / tijd op de website wordt weergegeven, kunt u dit hier invoeren. Laat het veld anders leeg.</target>
+        <source>If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Als u wilt voorkomen dat de pagina na een bepaalde datum/tijd op de website wordt weergegeven, kunt u dit hier invoeren. Laat anders het veld leeg.</target>
       </trans-unit>
       <trans-unit id="tl_page.enforceTwoFactor.0">
         <source>Enforce two-factor authentication</source>
@@ -599,9 +607,17 @@
         <source>Delete page ID %s</source>
         <target>Verwijder pagina ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.toggle">
-        <source>Publish/unpublish page ID %s</source>
-        <target>Publiceer/verberg pagina ID %s</target>
+      <trans-unit id="tl_page.toggle.0">
+        <source>Publish/unpublish page</source>
+        <target>Publiceer/verberg pagina</target>
+      </trans-unit>
+      <trans-unit id="tl_page.toggle.1">
+        <source>Unpublish page ID %s</source>
+        <target>Depubliceer pagina ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.toggle.2">
+        <source>Publish page ID %s</source>
+        <target>Publiceer pagina ID %s</target>
       </trans-unit>
       <trans-unit id="tl_page.pasteinto.0">
         <source>Paste at the top</source>

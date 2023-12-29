@@ -31,9 +31,9 @@ use Symfony\Component\Yaml\Yaml;
 class MakeEventListener extends AbstractMaker
 {
     public function __construct(
-        private ClassGenerator $classGenerator,
-        private SignatureGenerator $signatureGenerator,
-        private ImportExtractor $importExtractor,
+        private readonly ClassGenerator $classGenerator,
+        private readonly SignatureGenerator $signatureGenerator,
+        private readonly ImportExtractor $importExtractor,
     ) {
     }
 
@@ -85,7 +85,6 @@ class MakeEventListener extends AbstractMaker
             return;
         }
 
-        /** @var MethodDefinition $definition */
         $definition = $events[$event];
         $elementDetails = $generator->createClassNameDetails($name, 'EventListener\\');
 

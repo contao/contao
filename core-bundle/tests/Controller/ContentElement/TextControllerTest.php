@@ -24,7 +24,7 @@ class TextControllerTest extends ContentElementTestCase
             [
                 'type' => 'text',
                 'text' => '<p>This is <b>rich</b>{{br}}text.</p> <p>There might be multiple paragraphs.</p>',
-            ]
+            ],
         );
 
         $expectedOutput = <<<'HTML'
@@ -54,7 +54,7 @@ class TextControllerTest extends ContentElementTestCase
                 'size' => '',
                 'fullsize' => false,
                 'floating' => $floatingProperty,
-            ]
+            ],
         );
 
         $expectedOutput = <<<HTML

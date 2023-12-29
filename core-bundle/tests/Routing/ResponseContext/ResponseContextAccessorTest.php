@@ -41,6 +41,7 @@ class ResponseContextAccessorTest extends TestCase
     {
         $requestStack = new RequestStack();
         $requestStack->push(new Request());
+
         $accessor = new ResponseContextAccessor($requestStack);
 
         $responseContext = new ResponseContext();

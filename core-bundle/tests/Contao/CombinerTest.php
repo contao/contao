@@ -73,7 +73,7 @@ class CombinerTest extends TestCase
                 'file2.css|screen|'.$mtime,
                 'file3.css|screen|'.$mtime,
             ],
-            $combiner->getFileUrls()
+            $combiner->getFileUrls(),
         );
 
         $this->assertSame(
@@ -82,7 +82,7 @@ class CombinerTest extends TestCase
                 'https://cdn.example.com/file2.css|screen|'.$mtime,
                 'https://cdn.example.com/file3.css|screen|'.$mtime,
             ],
-            $combiner->getFileUrls('https://cdn.example.com/')
+            $combiner->getFileUrls('https://cdn.example.com/'),
         );
 
         $combinedFile = $combiner->getCombinedFile('https://cdn.example.com/');
@@ -95,7 +95,7 @@ class CombinerTest extends TestCase
 
         $this->assertStringEqualsFile(
             $this->getTempDir().'/'.$combinedFile,
-            "file1 { background: url(\"../../foo.bar\") }\n@media screen{\npublic/file2\n}\n@media screen{\nfile3\n}\n"
+            "file1 { background: url(\"../../foo.bar\") }\n@media screen{\npublic/file2\n}\n@media screen{\nfile3\n}\n",
         );
 
         System::getContainer()->setParameter('kernel.debug', true);
@@ -104,7 +104,7 @@ class CombinerTest extends TestCase
 
         $this->assertSame(
             'file1.css?v='.$hash.'"><link rel="stylesheet" href="file2.css?v='.$hash.'" media="screen"><link rel="stylesheet" href="file3.css?v='.$hash.'" media="screen',
-            $combiner->getCombinedFile()
+            $combiner->getCombinedFile(),
         );
     }
 
@@ -127,7 +127,7 @@ class CombinerTest extends TestCase
 
         $this->assertSame(
             $expected,
-            $method->invokeArgs($class->newInstance(), [$css, ['name' => 'file.css']])
+            $method->invokeArgs($class->newInstance(), [$css, ['name' => 'file.css']]),
         );
     }
 
@@ -150,7 +150,7 @@ class CombinerTest extends TestCase
 
         $this->assertSame(
             $expected,
-            $method->invokeArgs($class->newInstance(), [$css, ['name' => 'public/"test"/file.css']])
+            $method->invokeArgs($class->newInstance(), [$css, ['name' => 'public/"test"/file.css']]),
         );
 
         $expected = <<<'EOF'
@@ -161,7 +161,7 @@ class CombinerTest extends TestCase
 
         $this->assertSame(
             $expected,
-            $method->invokeArgs($class->newInstance(), [$css, ['name' => "public/'test'/file.css"]])
+            $method->invokeArgs($class->newInstance(), [$css, ['name' => "public/'test'/file.css"]]),
         );
 
         $expected = <<<'EOF'
@@ -172,7 +172,7 @@ class CombinerTest extends TestCase
 
         $this->assertSame(
             $expected,
-            $method->invokeArgs($class->newInstance(), [$css, ['name' => 'public/(test)/file.css']])
+            $method->invokeArgs($class->newInstance(), [$css, ['name' => 'public/(test)/file.css']]),
         );
     }
 
@@ -188,7 +188,7 @@ class CombinerTest extends TestCase
 
         $this->assertSame(
             $css,
-            $method->invokeArgs($class->newInstance(), [$css, ['name' => 'file.css']])
+            $method->invokeArgs($class->newInstance(), [$css, ['name' => 'file.css']]),
         );
     }
 
@@ -205,7 +205,7 @@ class CombinerTest extends TestCase
 
         $this->assertSame(
             $css,
-            $method->invokeArgs($class->newInstance(), [$css, ['name' => 'file.css']])
+            $method->invokeArgs($class->newInstance(), [$css, ['name' => 'file.css']]),
         );
     }
 
@@ -227,12 +227,12 @@ class CombinerTest extends TestCase
                 'assets/css/file1.scss.css|'.$mtime1,
                 'assets/css/file2.scss.css|'.$mtime2,
             ],
-            $combiner->getFileUrls()
+            $combiner->getFileUrls(),
         );
 
         $this->assertStringEqualsFile(
             $this->getTempDir().'/'.$combiner->getCombinedFile(),
-            "body{color:red}\nbody{color:green}\n"
+            "body{color:red}\nbody{color:green}\n",
         );
 
         System::getContainer()->setParameter('kernel.debug', true);
@@ -242,7 +242,7 @@ class CombinerTest extends TestCase
 
         $this->assertSame(
             'assets/css/file1.scss.css?v='.$hash1.'"><link rel="stylesheet" href="assets/css/file2.scss.css?v='.$hash2,
-            $combiner->getCombinedFile()
+            $combiner->getCombinedFile(),
         );
     }
 
@@ -263,7 +263,7 @@ class CombinerTest extends TestCase
                 'file1.js|'.$mtime1,
                 'file2.js|'.$mtime2,
             ],
-            $combiner->getFileUrls()
+            $combiner->getFileUrls(),
         );
 
         $combinedFile = $combiner->getCombinedFile();

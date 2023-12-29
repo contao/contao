@@ -27,15 +27,9 @@ class ImageSizesTest extends TestCase
 {
     private ImageSizes $imageSizes;
 
-    /**
-     * @var Connection&MockObject
-     */
-    private Connection $connection;
+    private Connection&MockObject $connection;
 
-    /**
-     * @var EventDispatcherInterface&MockObject
-     */
-    private EventDispatcherInterface $eventDispatcher;
+    private EventDispatcherInterface&MockObject $eventDispatcher;
 
     protected function setUp(): void
     {
@@ -47,7 +41,7 @@ class ImageSizesTest extends TestCase
         $this->imageSizes = new ImageSizes(
             $this->connection,
             $this->eventDispatcher,
-            $this->createMock(TranslatorInterface::class)
+            $this->createMock(TranslatorInterface::class),
         );
     }
 

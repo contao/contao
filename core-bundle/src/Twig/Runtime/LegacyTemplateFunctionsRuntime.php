@@ -25,43 +25,47 @@ final class LegacyTemplateFunctionsRuntime implements RuntimeExtensionInterface
     /**
      * @internal
      */
-    public function __construct(private ContaoFramework $framework)
+    public function __construct(private readonly ContaoFramework $framework)
     {
     }
 
     /**
      * Makes the FrontendTemplate#sections() method available from within Twig templates.
      */
-    public function renderLayoutSections(array $context, string $key, string $template = null): string
+    public function renderLayoutSections(array $context, string $key, string|null $template = null): string
     {
         $this->framework->initialize();
 
-        if (!($frontendTemplate = $context['Template'] ?? null) instanceof FrontendTemplate) {
+        $frontendTemplate = $context['Template'] ?? null;
+
+        if (!$frontendTemplate instanceof FrontendTemplate) {
             throw new RuntimeError('The "contao_sections" function cannot be used in this template.');
         }
 
         return $this->captureOutput(
-            static function () use ($template, $key, $frontendTemplate): void {
+            static function () use ($frontendTemplate, $key, $template): void {
                 $frontendTemplate->sections($key, $template);
-            }
+            },
         );
     }
 
     /**
      * Makes the FrontendTemplate#section() method available from within Twig templates.
      */
-    public function renderLayoutSection(array $context, string $key, string $template = null): string
+    public function renderLayoutSection(array $context, string $key, string|null $template = null): string
     {
         $this->framework->initialize();
 
-        if (!($frontendTemplate = $context['Template'] ?? null) instanceof FrontendTemplate) {
+        $frontendTemplate = $context['Template'] ?? null;
+
+        if (!$frontendTemplate instanceof FrontendTemplate) {
             throw new RuntimeError('The "contao_section" function cannot be used in this template.');
         }
 
         return $this->captureOutput(
-            static function () use ($template, $key, $frontendTemplate): void {
+            static function () use ($frontendTemplate, $key, $template): void {
                 $frontendTemplate->section($key, $template);
-            }
+            },
         );
     }
 

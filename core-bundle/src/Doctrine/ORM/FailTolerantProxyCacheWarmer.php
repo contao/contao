@@ -18,8 +18,10 @@ use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 
 class FailTolerantProxyCacheWarmer implements CacheWarmerInterface
 {
-    public function __construct(private CacheWarmerInterface $inner, private Connection $connection)
-    {
+    public function __construct(
+        private readonly CacheWarmerInterface $inner,
+        private readonly Connection $connection,
+    ) {
     }
 
     public function isOptional(): bool
@@ -30,7 +32,7 @@ class FailTolerantProxyCacheWarmer implements CacheWarmerInterface
     /**
      * @return array<string>
      */
-    public function warmUp(string $cacheDir): array
+    public function warmUp(string $cacheDir, string|null $buildDir = null): array
     {
         // If there are no DB credentials yet and the server_version was not
         // configured, we have to skip the ORM warmup to prevent a DBAL
@@ -41,7 +43,7 @@ class FailTolerantProxyCacheWarmer implements CacheWarmerInterface
             return [];
         }
 
-        $this->inner->warmUp($cacheDir);
+        $this->inner->warmUp($cacheDir, $buildDir);
 
         return [];
     }

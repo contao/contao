@@ -14,6 +14,8 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Csrf\MemoryTokenStorage;
+use Symfony\Component\Console\ConsoleEvents;
+use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -29,8 +31,11 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class CsrfTokenCookieSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private ContaoCsrfTokenManager $tokenManager, private MemoryTokenStorage $tokenStorage, private string $cookiePrefix = 'csrf_')
-    {
+    public function __construct(
+        private readonly ContaoCsrfTokenManager $tokenManager,
+        private readonly MemoryTokenStorage $tokenStorage,
+        private readonly string $cookiePrefix = 'csrf_',
+    ) {
     }
 
     /**
@@ -71,6 +76,14 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
         }
     }
 
+    /**
+     * Initializes an empty CSRF token storage for the command line.
+     */
+    public function onCommand(ConsoleCommandEvent $event): void
+    {
+        $this->tokenStorage->initialize([]);
+    }
+
     public static function getSubscribedEvents(): array
     {
         return [
@@ -78,6 +91,7 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
             KernelEvents::REQUEST => ['onKernelRequest', 36],
             // The priority must be higher than the one of the make-response-private listener (defaults to -896)
             KernelEvents::RESPONSE => ['onKernelResponse', -832],
+            ConsoleEvents::COMMAND => ['onCommand', 36],
         ];
     }
 
@@ -89,7 +103,7 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
             }
         }
 
-        if (\count($response->headers->getCookies(ResponseHeaderBag::COOKIES_ARRAY))) {
+        if ($response->headers->getCookies(ResponseHeaderBag::COOKIES_ARRAY)) {
             return true;
         }
 
@@ -97,11 +111,7 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
             return true;
         }
 
-        if ($request->hasSession() && $request->getSession()->isStarted()) {
-            return true;
-        }
-
-        return false;
+        return $request->hasSession() && $request->getSession()->isStarted();
     }
 
     private function setCookies(Request $request, Response $response): void
@@ -117,11 +127,19 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
                 continue;
             }
 
-            $expires = null === $value ? 1 : 0;
-
-            $response->headers->setCookie(
-                new Cookie($cookieKey, $value, $expires, $basePath, null, $isSecure, true, false, Cookie::SAMESITE_LAX)
+            $cookie = new Cookie(
+                $cookieKey,
+                $value,
+                null === $value ? 1 : 0,
+                $basePath,
+                null,
+                $isSecure,
+                true,
+                false,
+                Cookie::SAMESITE_LAX,
             );
+
+            $response->headers->setCookie($cookie);
         }
     }
 
@@ -135,7 +153,7 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
         $content = $response->getContent();
         $tokens = $this->tokenManager->getUsedTokenValues();
 
-        if (!\is_string($content) || empty($tokens)) {
+        if (!$tokens || !\is_string($content)) {
             return;
         }
 
@@ -166,7 +184,7 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @return array<string,string>
+     * @return array<string, string>
      */
     private function getTokensFromCookies(ParameterBag $cookies): array
     {

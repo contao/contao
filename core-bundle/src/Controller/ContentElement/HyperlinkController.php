@@ -25,8 +25,10 @@ use Symfony\Component\HttpFoundation\Response;
 #[AsContentElement(category: 'links')]
 class HyperlinkController extends AbstractContentElementController
 {
-    public function __construct(private readonly Studio $studio, private readonly InsertTagParser $insertTagParser)
-    {
+    public function __construct(
+        private readonly Studio $studio,
+        private readonly InsertTagParser $insertTagParser,
+    ) {
     }
 
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
@@ -40,7 +42,7 @@ class HyperlinkController extends AbstractContentElementController
 
         $linkAttributes = (new HtmlAttributes())
             ->set('href', $href)
-            ->setIfExists('title', $model->linkTitle)
+            ->setIfExists('title', $model->titleText)
             ->setIfExists('data-lightbox', $model->rel)
         ;
 
@@ -66,7 +68,7 @@ class HyperlinkController extends AbstractContentElementController
             ->createFigureBuilder()
             ->fromUuid($model->singleSRC ?: '')
             ->setSize($model->size)
-            ->setMetadata($model->getOverwriteMetadata())
+            ->setOverwriteMetadata($model->getOverwriteMetadata())
             ->setLinkAttributes($linkAttributes)
             ->buildIfResourceExists()
         ;

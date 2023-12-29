@@ -83,7 +83,7 @@ class InheritanceTest extends TestCase
         $this->getDemoEnvironment(['InvalidBundle2' => ['path' => $bundlePath]]);
     }
 
-    private function getDemoEnvironment(array $bundlesMetadata = null): Environment
+    private function getDemoEnvironment(array|null $bundlesMetadata = null): Environment
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
 
@@ -96,7 +96,7 @@ class InheritanceTest extends TestCase
 
         $bundles = array_combine(
             array_keys($bundlesMetadata),
-            array_fill(0, \count($bundlesMetadata), ContaoModuleBundle::class)
+            array_fill(0, \count($bundlesMetadata), ContaoModuleBundle::class),
         );
 
         $connection = $this->createMock(Connection::class);
@@ -120,8 +120,8 @@ class InheritanceTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $loader,
-                $this->createMock(ContaoCsrfTokenManager::class)
-            )
+                $this->createMock(ContaoCsrfTokenManager::class),
+            ),
         );
 
         return $environment;

@@ -9,16 +9,13 @@
  */
 
 use Contao\Backend;
-use Contao\BackendUser;
 use Contao\Config;
-use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\DC_Table;
 use Contao\Idna;
 use Contao\Image;
-use Contao\Input;
-use Contao\System;
 
 $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 (
@@ -28,10 +25,6 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 		'dataContainer'               => DC_Table::class,
 		'ptable'                      => 'tl_newsletter_channel',
 		'enableVersioning'            => true,
-		'onload_callback' => array
-		(
-			array('tl_newsletter_recipients', 'checkPermission')
-		),
 		'oncut_callback' => array
 		(
 			array('tl_newsletter_recipients', 'clearOptInData')
@@ -68,46 +61,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 				'class'               => 'header_css_import',
 				'attributes'          => 'onclick="Backend.getScrollOffset()"'
 			),
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
-		),
-		'operations' => array
-		(
-			'edit' => array
-			(
-				'href'                => 'act=edit',
-				'icon'                => 'edit.svg'
-			),
-			'copy' => array
-			(
-				'href'                => 'act=paste&amp;mode=copy',
-				'icon'                => 'copy.svg'
-			),
-			'cut' => array
-			(
-				'href'                => 'act=paste&amp;mode=cut',
-				'icon'                => 'cut.svg'
-			),
-			'delete' => array
-			(
-				'href'                => 'act=delete',
-				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"'
-			),
-			'toggle' => array
-			(
-				'href'                => 'act=toggle&amp;field=active',
-				'icon'                => 'visible.svg'
-			),
-			'show' => array
-			(
-				'href'                => 'act=show',
-				'icon'                => 'show.svg'
-			)
+			'all'
 		)
 	),
 
@@ -175,129 +129,15 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 class tl_newsletter_recipients extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
-	 * Check permissions to edit table tl_newsletter_recipients
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @throws AccessDeniedException
-	 */
-	public function checkPermission(DataContainer $dc)
-	{
-		if ($this->User->isAdmin)
-		{
-			return;
-		}
-
-		// Set root IDs
-		if (empty($this->User->newsletters) || !is_array($this->User->newsletters))
-		{
-			$root = array(0);
-		}
-		else
-		{
-			$root = $this->User->newsletters;
-		}
-
-		$id = strlen(Input::get('id')) ? Input::get('id') : $dc->currentPid;
-
-		// Check current action
-		switch (Input::get('act'))
-		{
-			case 'paste':
-			case 'select':
-				// Check currentPid here (see #247)
-				if (!in_array($dc->currentPid, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to access newsletter channel ID ' . $id . '.');
-				}
-				break;
-
-			case 'create':
-				if (!Input::get('pid') || !in_array(Input::get('pid'), $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to create newsletters recipients in channel ID ' . Input::get('pid') . '.');
-				}
-				break;
-
-			case 'cut':
-			case 'copy':
-				if (!in_array(Input::get('pid'), $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' newsletter recipient ID ' . $id . ' to channel ID ' . Input::get('pid') . '.');
-				}
-				// no break
-
-			case 'edit':
-			case 'show':
-			case 'delete':
-			case 'toggle':
-				$objRecipient = $this->Database->prepare("SELECT pid FROM tl_newsletter_recipients WHERE id=?")
-											   ->limit(1)
-											   ->execute($id);
-
-				if ($objRecipient->numRows < 1)
-				{
-					throw new AccessDeniedException('Invalid newsletter recipient ID ' . $id . '.');
-				}
-
-				if (!in_array($objRecipient->pid, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' recipient ID ' . $id . ' of newsletter channel ID ' . $objRecipient->pid . '.');
-				}
-				break;
-
-			case 'editAll':
-			case 'deleteAll':
-			case 'overrideAll':
-			case 'cutAll':
-			case 'copyAll':
-				if (!in_array($id, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to access newsletter channel ID ' . $id . '.');
-				}
-
-				$objRecipient = $this->Database->prepare("SELECT id FROM tl_newsletter_recipients WHERE pid=?")
-											 ->execute($id);
-
-				$objSession = System::getContainer()->get('request_stack')->getSession();
-
-				$session = $objSession->all();
-				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objRecipient->fetchEach('id'));
-				$objSession->replace($session);
-				break;
-
-			default:
-				if (Input::get('act'))
-				{
-					throw new AccessDeniedException('Invalid command "' . Input::get('act') . '".');
-				}
-
-				if (!in_array($id, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to access newsletter recipient ID ' . $id . '.');
-				}
-				break;
-		}
-	}
-
-	/**
 	 * Set the recipient status to "added manually" if they are moved to another channel
 	 *
 	 * @param DataContainer $dc
 	 */
 	public function clearOptInData(DataContainer $dc)
 	{
-		$this->Database->prepare("UPDATE tl_newsletter_recipients SET addedOn='' WHERE id=?")
-					   ->execute($dc->id);
+		Database::getInstance()
+			->prepare("UPDATE tl_newsletter_recipients SET addedOn='' WHERE id=?")
+			->execute($dc->id);
 	}
 
 	/**
@@ -312,8 +152,9 @@ class tl_newsletter_recipients extends Backend
 	 */
 	public function checkUniqueRecipient($varValue, DataContainer $dc)
 	{
-		$objRecipient = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_recipients WHERE email=? AND pid=(SELECT pid FROM tl_newsletter_recipients WHERE id=?) AND id!=?")
-									   ->execute($varValue, $dc->id, $dc->id);
+		$objRecipient = Database::getInstance()
+			->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_recipients WHERE email=? AND pid=(SELECT pid FROM tl_newsletter_recipients WHERE id=?) AND id!=?")
+			->execute($varValue, $dc->id, $dc->id);
 
 		if ($objRecipient->count > 0)
 		{
@@ -335,8 +176,9 @@ class tl_newsletter_recipients extends Backend
 	 */
 	public function checkDenyList($varValue, DataContainer $dc)
 	{
-		$objDenyList = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_deny_list WHERE hash=? AND pid=(SELECT pid FROM tl_newsletter_recipients WHERE id=?) AND id!=?")
-									   ->execute(md5($varValue), $dc->id, $dc->id);
+		$objDenyList = Database::getInstance()
+			->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_deny_list WHERE hash=? AND pid=(SELECT pid FROM tl_newsletter_recipients WHERE id=?) AND id!=?")
+			->execute(md5($varValue), $dc->id, $dc->id);
 
 		if ($objDenyList->count > 0)
 		{

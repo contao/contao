@@ -141,7 +141,9 @@ class ModuleListing extends Module
 		}
 
 		$strQuery .= $strWhere;
-		$objTotal = $this->Database->prepare($strQuery)->execute(...$varKeyword);
+
+		$db = Database::getInstance();
+		$objTotal = $db->prepare($strQuery)->execute(...$varKeyword);
 
 		// Validate the page count
 		$id = 'page_l' . $this->id;
@@ -214,7 +216,7 @@ class ModuleListing extends Module
 			}
 		}
 
-		$objDataStmt = $this->Database->prepare($strQuery);
+		$objDataStmt = $db->prepare($strQuery);
 
 		// Limit
 		if ($per_page)
@@ -258,7 +260,6 @@ class ModuleListing extends Module
 			}
 
 			$class = '';
-			$sort = 'asc';
 			$strField = $arrFields[$i];
 
 			// Field label
@@ -270,7 +271,7 @@ class ModuleListing extends Module
 			// Add a CSS class to the order_by column
 			if ($order_by == $arrFields[$i])
 			{
-				$sort = ($sort == 'asc') ? 'desc' : 'asc';
+				$sort =  ($sort == 'asc') ? 'desc' : 'asc';
 				$class = ' sorted ' . $sort;
 			}
 
@@ -358,9 +359,10 @@ class ModuleListing extends Module
 		$this->list_info = StringUtil::deserialize($this->list_info);
 		$this->list_info_where = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($this->list_info_where);
 
-		$objRecord = $this->Database->prepare("SELECT " . implode(', ', array_map(Database::quoteIdentifier(...), StringUtil::trimsplit(',', $this->list_info))) . " FROM " . $this->list_table . " WHERE " . ($this->list_info_where ? "(" . $this->list_info_where . ") AND " : "") . Database::quoteIdentifier($this->strPk) . "=?")
-									->limit(1)
-									->execute($id);
+		$objRecord = Database::getInstance()
+			->prepare("SELECT " . implode(', ', array_map(Database::quoteIdentifier(...), StringUtil::trimsplit(',', $this->list_info))) . " FROM " . $this->list_table . " WHERE " . ($this->list_info_where ? "(" . $this->list_info_where . ") AND " : "") . Database::quoteIdentifier($this->strPk) . "=?")
+			->limit(1)
+			->execute($id);
 
 		if ($objRecord->numRows < 1)
 		{

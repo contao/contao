@@ -15,7 +15,10 @@ namespace Contao\CoreBundle\DependencyInjection;
 use Contao\Config;
 use Contao\CoreBundle\Doctrine\Backup\RetentionPolicy;
 use Contao\CoreBundle\Util\LocaleUtil;
+use Contao\Image\Metadata\ExifFormat;
+use Contao\Image\Metadata\IptcFormat;
 use Contao\Image\ResizeConfiguration;
+use Contao\Image\ResizeOptions;
 use Imagine\Image\ImageInterface;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -24,7 +27,7 @@ use Symfony\Component\Filesystem\Path;
 
 class Configuration implements ConfigurationInterface
 {
-    public function __construct(private string $projectDir)
+    public function __construct(private readonly string $projectDir)
     {
     }
 
@@ -61,7 +64,7 @@ class Configuration implements ConfigurationInterface
                                 }
 
                                 return $options;
-                            }
+                            },
                         )
                     ->end()
                 ->end()
@@ -191,44 +194,7 @@ class Configuration implements ConfigurationInterface
                     ->info('Bypass the image cache and always regenerate images when requested. This also disables deferred image resizing.')
                     ->defaultValue(false)
                 ->end()
-                ->arrayNode('imagine_options')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->integerNode('jpeg_quality')
-                            ->defaultValue(80)
-                        ->end()
-                        ->arrayNode('jpeg_sampling_factors')
-                            ->prototype('scalar')->end()
-                            ->defaultValue([2, 1, 1])
-                        ->end()
-                        ->integerNode('png_compression_level')
-                        ->end()
-                        ->integerNode('png_compression_filter')
-                        ->end()
-                        ->integerNode('webp_quality')
-                        ->end()
-                        ->booleanNode('webp_lossless')
-                        ->end()
-                        ->integerNode('avif_quality')
-                        ->end()
-                        ->booleanNode('avif_lossless')
-                        ->end()
-                        ->integerNode('heic_quality')
-                        ->end()
-                        ->booleanNode('heic_lossless')
-                        ->end()
-                        ->integerNode('jxl_quality')
-                        ->end()
-                        ->booleanNode('jxl_lossless')
-                        ->end()
-                        ->booleanNode('flatten')
-                            ->info('Allows to disable the layer flattening of animated images. Set this option to false to support animations. It has no effect with Gd as Imagine service.')
-                        ->end()
-                        ->scalarNode('interlace')
-                            ->defaultValue(ImageInterface::INTERLACE_PLANE)
-                        ->end()
-                    ->end()
-                ->end()
+                ->append($this->addImagineOptionsNode(true))
                 ->scalarNode('imagine_service')
                     ->info('Contao automatically uses an Imagine service out of Gmagick, Imagick and Gd (in this order). Set a service ID here to override.')
                     ->defaultNull()
@@ -273,7 +239,7 @@ class Configuration implements ConfigurationInterface
                                 }
 
                                 return $value;
-                            }
+                            },
                         )
                     ->end()
                     ->arrayPrototype()
@@ -313,6 +279,16 @@ class Configuration implements ConfigurationInterface
                                     ->scalarPrototype()->end()
                                 ->end()
                             ->end()
+                            ->arrayNode('preserve_metadata_fields')
+                                ->info('Which metadata fields to preserve when resizing images.')
+                                ->example([ExifFormat::NAME => ExifFormat::DEFAULT_PRESERVE_KEYS, IptcFormat::NAME => IptcFormat::DEFAULT_PRESERVE_KEYS])
+                                ->useAttributeAsKey('format')
+                                ->arrayPrototype()
+                                    ->beforeNormalization()->castToArray()->end()
+                                    ->scalarPrototype()->end()
+                                ->end()
+                            ->end()
+                            ->append($this->addImagineOptionsNode(false))
                             ->arrayNode('items')
                                 ->arrayPrototype()
                                     ->children()
@@ -417,8 +393,80 @@ class Configuration implements ConfigurationInterface
                         ->thenInvalid('The default_size must not be greater than the max_size: %s')
                     ->end()
                 ->end()
+                ->arrayNode('preserve_metadata_fields')
+                    ->info('Which metadata fields to preserve when resizing images.')
+                    ->example([ExifFormat::NAME => ExifFormat::DEFAULT_PRESERVE_KEYS, IptcFormat::NAME => IptcFormat::DEFAULT_PRESERVE_KEYS])
+                    ->defaultValue((new ResizeOptions())->getPreserveCopyrightMetadata())
+                    ->useAttributeAsKey('format')
+                    ->arrayPrototype()
+                        ->beforeNormalization()->castToArray()->end()
+                        ->scalarPrototype()->end()
+                    ->end()
+                ->end()
             ->end()
         ;
+    }
+
+    private function addImagineOptionsNode(bool $withDefaults): NodeDefinition
+    {
+        $node = (new TreeBuilder('imagine_options'))
+            ->getRootNode()
+            ->children()
+                ->integerNode('jpeg_quality')
+                ->end()
+                ->arrayNode('jpeg_sampling_factors')
+                    ->prototype('scalar')->end()
+                ->end()
+                ->integerNode('png_compression_level')
+                ->end()
+                ->integerNode('png_compression_filter')
+                ->end()
+                ->integerNode('webp_quality')
+                ->end()
+                ->booleanNode('webp_lossless')
+                ->end()
+                ->integerNode('avif_quality')
+                ->end()
+                ->booleanNode('avif_lossless')
+                ->end()
+                ->integerNode('heic_quality')
+                ->end()
+                ->booleanNode('heic_lossless')
+                ->end()
+                ->integerNode('jxl_quality')
+                ->end()
+                ->booleanNode('jxl_lossless')
+                ->end()
+                ->booleanNode('flatten')
+                    ->info('Allows to disable the layer flattening of animated images. Set this option to false to support animations. It has no effect with Gd as Imagine service.')
+                ->end()
+                ->scalarNode('interlace')
+                ->end()
+            ->end()
+        ;
+
+        if ($withDefaults) {
+            $node->addDefaultsIfNotSet();
+            $node->find('jpeg_quality')->defaultValue(80);
+            $node->find('jpeg_sampling_factors')->defaultValue([2, 1, 1]);
+            $node->find('interlace')->defaultValue(ImageInterface::INTERLACE_PLANE);
+        } else {
+            $node
+                ->validate()
+                    ->always(
+                        static function ($values) {
+                            if (empty($values['jpeg_sampling_factors'])) {
+                                unset($values['jpeg_sampling_factors']);
+                            }
+
+                            return $values;
+                        },
+                    )
+                ->end()
+            ;
+        }
+
+        return $node;
     }
 
     private function addIntlNode(): NodeDefinition
@@ -448,7 +496,7 @@ class Configuration implements ConfigurationInterface
                                 }
 
                                 return false;
-                            }
+                            },
                         )
                         ->thenInvalid('All provided locales must be in the canonicalized ICU form and optionally start with +/- to add/remove the locale to/from the default list.')
                     ->end()
@@ -474,7 +522,7 @@ class Configuration implements ConfigurationInterface
                                 }
 
                                 return false;
-                            }
+                            },
                         )
                         ->thenInvalid('All provided locales must be in the canonicalized ICU form and optionally start with +/- to add/remove the locale to/from the default list.')
                     ->end()
@@ -494,7 +542,7 @@ class Configuration implements ConfigurationInterface
                                 }
 
                                 return false;
-                            }
+                            },
                         )
                         ->thenInvalid('All provided countries must be two uppercase letters and optionally start with +/- to add/remove the country to/from the default list.')
                     ->end()
@@ -514,6 +562,15 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->booleanNode('enforce_backend')
                             ->defaultValue(false)
+                        ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('hsts')
+                    ->info('Enables sending the HTTP Strict Transport Security (HSTS) header for secure requests.')
+                    ->canBeDisabled()
+                    ->children()
+                        ->scalarNode('ttl')
+                            ->defaultValue(31536000)
                         ->end()
                     ->end()
                 ->end()
@@ -576,7 +633,7 @@ class Configuration implements ConfigurationInterface
                             }
 
                             return false;
-                        }
+                        },
                     )
                     ->thenInvalid('All provided additional URIs must start with either http:// or https://.')
                     ->end()
@@ -633,7 +690,7 @@ class Configuration implements ConfigurationInterface
                             }
 
                             return $attributes;
-                        }
+                        },
                     )
                     ->end()
                     ->normalizeKeys(false)
@@ -666,6 +723,11 @@ class Configuration implements ConfigurationInterface
                     ->end()
                     ->example('/admin')
                     ->defaultValue('/contao')
+                ->end()
+                ->integerNode('crawl_concurrency')
+                    ->info('The number of concurrent requests that are executed. Defaults to 5.')
+                    ->min(1)
+                    ->defaultValue(5)
                 ->end()
             ->end()
         ;
@@ -715,7 +777,7 @@ class Configuration implements ConfigurationInterface
                                 }
 
                                 return false;
-                            }
+                            },
                         )
                     ->thenInvalid('%s')
                     ->end()
@@ -744,7 +806,7 @@ class Configuration implements ConfigurationInterface
                                 }
 
                                 return $protocols;
-                            }
+                            },
                         )
                     ->end()
                 ->end()

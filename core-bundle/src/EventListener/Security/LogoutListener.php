@@ -18,9 +18,9 @@ use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\User;
 use Psr\Log\LoggerInterface;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
 use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
@@ -33,10 +33,10 @@ class LogoutListener
      * @internal
      */
     public function __construct(
-        private HttpUtils $httpUtils,
-        private ScopeMatcher $scopeMatcher,
-        private Security $security,
-        private LoggerInterface|null $logger,
+        private readonly HttpUtils $httpUtils,
+        private readonly ScopeMatcher $scopeMatcher,
+        private readonly Security $security,
+        private readonly LoggerInterface|null $logger,
     ) {
     }
 
@@ -90,7 +90,7 @@ class LogoutListener
 
             $this->logger?->info(
                 sprintf('User "%s" has logged out', $user->username),
-                ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, $user->username)]
+                ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, $user->username)],
             );
         }
     }

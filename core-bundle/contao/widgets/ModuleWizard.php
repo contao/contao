@@ -52,13 +52,13 @@ class ModuleWizard extends Widget
 	 */
 	public function generate()
 	{
-		$this->import(Database::class, 'Database');
-
+		$db = Database::getInstance();
 		$arrButtons = array('edit', 'copy', 'delete', 'enable', 'drag');
 
 		// Get all modules of the current theme
-		$objModules = $this->Database->prepare("SELECT id, name, type FROM tl_module WHERE pid=(SELECT pid FROM " . $this->strTable . " WHERE id=?) ORDER BY name")
-									 ->execute($this->currentRecord);
+		$objModules = $db
+			->prepare("SELECT id, name, type FROM tl_module WHERE pid=(SELECT pid FROM " . $this->strTable . " WHERE id=?) ORDER BY name")
+			->execute($this->currentRecord);
 
 		// Add the articles module
 		$modules[] = array('id'=>0, 'name'=>$GLOBALS['TL_LANG']['MOD']['article'][0], 'type'=>'article');
@@ -81,9 +81,10 @@ class ModuleWizard extends Widget
 			$modules[$k] = $v;
 		}
 
-		$objRow = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
-								 ->limit(1)
-								 ->execute($this->currentRecord);
+		$objRow = $db
+			->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
+			->limit(1)
+			->execute($this->currentRecord);
 
 		$cols = array('main');
 
@@ -211,7 +212,7 @@ class ModuleWizard extends Widget
 				if ($button == 'edit')
 				{
 					$href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>($this->varValue[$i]['mod'] ?? null), 'popup'=>'1')));
-					$return .= ' <a href="' . $href . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['tl_layout']['edit_module']) . '" class="module_link' . (($this->varValue[$i]['mod'] ?? null) > 0 ? '' : ' hidden') . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_layout']['edit_module'])) . '\',\'url\':this.href});return false">' . Image::getHtml('edit.svg') . '</a>' . Image::getHtml('edit_.svg', '', 'class="module_image' . (($this->varValue[$i]['mod'] ?? null) > 0 ? ' hidden' : '') . '"');
+					$return .= ' <a href="' . $href . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['tl_layout']['edit_module']) . '" class="module_link' . (($this->varValue[$i]['mod'] ?? null) > 0 ? '' : ' hidden') . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_layout']['edit_module'])) . '\',\'url\':this.href});return false">' . Image::getHtml('edit.svg') . '</a>' . Image::getHtml('edit--disabled.svg', '', 'class="module_image' . (($this->varValue[$i]['mod'] ?? null) > 0 ? ' hidden' : '') . '"');
 				}
 				elseif ($button == 'drag')
 				{

@@ -23,6 +23,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 class InsecureInstallationListenerTest extends TestCase
 {
     private const DEFAULT_SECRET = 'ThisTokenIsNotSoSecretChangeIt';
+
     private const PSEUDO_SECRET = '0123456789abcdefghijklmnopqrstuv';
 
     public function testThrowsAnExceptionIfTheDocumentRootIsInsecure(): void
@@ -81,7 +82,7 @@ class InsecureInstallationListenerTest extends TestCase
         return $request;
     }
 
-    private function getResponseEvent(Request $request = null): RequestEvent
+    private function getResponseEvent(Request|null $request = null): RequestEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
 

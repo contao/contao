@@ -37,10 +37,10 @@ class RegisterFragmentsPass implements CompilerPassInterface
     use PriorityTaggedServiceTrait;
 
     public function __construct(
-        private string|null $tag,
-        private string|null $globalsKey = null,
-        private string|null $proxyClass = null,
-        private string|null $templateOptionsListener = null,
+        private readonly string|null $tag,
+        private readonly string|null $globalsKey = null,
+        private readonly string|null $proxyClass = null,
+        private readonly string|null $templateOptionsListener = null,
     ) {
     }
 
@@ -65,6 +65,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
         $preHandlers = [];
         $templates = [];
         $registry = $container->findDefinition('contao.fragment.registry');
+        $compositor = $container->findDefinition('contao.fragment.compositor');
         $command = $container->hasDefinition('contao.command.debug_fragments') ? $container->findDefinition('contao.command.debug_fragments') : null;
 
         foreach ($this->findAndSortTaggedServices($tag, $container) as $reference) {
@@ -110,6 +111,10 @@ class RegisterFragmentsPass implements CompilerPassInterface
                 $registry->addMethodCall('add', [$identifier, $config]);
                 $command?->addMethodCall('add', [$identifier, $config, $attributes]);
 
+                if (isset($attributes['nestedFragments'])) {
+                    $compositor->addMethodCall('add', [$identifier, $attributes['nestedFragments']]);
+                }
+
                 $childDefinition->setTags($definition->getTags());
                 $container->setDefinition($serviceId, $childDefinition);
 
@@ -133,14 +138,11 @@ class RegisterFragmentsPass implements CompilerPassInterface
 
     protected function getFragmentConfig(ContainerBuilder $container, Reference $reference, array $attributes): Reference
     {
-        $definition = new Definition(
-            FragmentConfig::class,
-            [
-                $this->getControllerName($reference, $attributes),
-                $attributes['renderer'] ?? 'forward',
-                array_merge(['ignore_errors' => false], $attributes['options'] ?? []),
-            ]
-        );
+        $definition = new Definition(FragmentConfig::class, [
+            $this->getControllerName($reference, $attributes),
+            $attributes['renderer'] ?? 'forward',
+            ['ignore_errors' => false, ...$attributes['options'] ?? []],
+        ]);
 
         $serviceId = 'contao.fragment._config_'.ContainerBuilder::hash($definition);
         $container->setDefinition($serviceId, $definition);
@@ -173,7 +175,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
         }
 
         $definition = $container->getDefinition('contao.fragment.pre_handlers');
-        $definition->setArgument(0, array_merge($definition->getArgument(0), $handlers));
+        $definition->setArgument(0, [...$definition->getArgument(0), ...$handlers]);
     }
 
     protected function getFragmentType(Definition $definition, array $attributes): string
@@ -194,7 +196,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
 
     private function addGlobalsMapListener(array $globals, ContainerBuilder $container): void
     {
-        if (empty($globals)) {
+        if (!$globals) {
             return;
         }
 

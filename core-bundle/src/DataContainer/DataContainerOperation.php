@@ -21,13 +21,20 @@ use Contao\StringUtil;
 class DataContainerOperation implements \ArrayAccess
 {
     private array $operation;
+
+    private string|null $url = null;
+
     private string|null $html = null;
 
     /**
      * @internal
      */
-    public function __construct(private readonly string $name, array $operation, private readonly array $record, private readonly DataContainer $dataContainer)
-    {
+    public function __construct(
+        private readonly string $name,
+        array $operation,
+        private readonly array $record,
+        private readonly DataContainer $dataContainer,
+    ) {
         $id = StringUtil::specialchars(rawurldecode((string) $record['id']));
 
         // Dereference pointer to $GLOBALS['TL_LANG']
@@ -103,5 +110,26 @@ class DataContainerOperation implements \ArrayAccess
         $this->html = $html;
 
         return $this;
+    }
+
+    public function getUrl(): string|null
+    {
+        return $this->url;
+    }
+
+    public function setUrl(string|null $url): self
+    {
+        $this->url = $url;
+
+        return $this;
+    }
+
+    public function disable(): void
+    {
+        unset($this['route'], $this['href']);
+
+        if (isset($this['icon'])) {
+            $this['icon'] = str_replace('.svg', '--disabled.svg', $this['icon']);
+        }
     }
 }

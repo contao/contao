@@ -53,8 +53,7 @@ class Calendar extends Frontend
 		{
 			$webDir = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir'));
 
-			$this->import(Files::class, 'Files');
-			$this->Files->delete($webDir . '/share/' . $objCalendar->feedName . '.xml');
+			Files::getInstance()->delete($webDir . '/share/' . $objCalendar->feedName . '.xml');
 		}
 
 		// Update XML file
@@ -71,8 +70,7 @@ class Calendar extends Frontend
 	 */
 	public function generateFeeds()
 	{
-		$this->import(Automator::class, 'Automator');
-		$this->Automator->purgeXmlFiles();
+		(new Automator())->purgeXmlFiles();
 
 		$objCalendar = CalendarFeedModel::findAll();
 
@@ -143,13 +141,15 @@ class Calendar extends Frontend
 		$time = time();
 
 		// Get the upcoming events
-		$objArticle = CalendarEventsModel::findUpcomingByPids($arrCalendars, $arrFeed['maxItems']);
+		$objArticles = CalendarEventsModel::findUpcomingByPids($arrCalendars, $arrFeed['maxItems']);
 
 		// Parse the items
-		if ($objArticle !== null)
+		if ($objArticles !== null)
 		{
-			while ($objArticle->next())
+			while ($objArticles->next())
 			{
+				$objArticle = $objArticles->current();
+
 				// Never add unpublished elements to the RSS feeds
 				if (!$objArticle->published || ($objArticle->start && $objArticle->start > $time) || ($objArticle->stop && $objArticle->stop <= $time))
 				{
@@ -530,7 +530,23 @@ class Calendar extends Frontend
 	{
 		if (!\array_key_exists($intPageId, self::$arrPageCache))
 		{
-			self::$arrPageCache[$intPageId] = PageModel::findWithDetails($intPageId);
+			$objPage = self::$arrPageCache[$intPageId] = PageModel::findWithDetails($intPageId);
+
+			if (null === $objPage)
+			{
+				return null;
+			}
+
+			$objLayout = $objPage->getRelated('layout');
+
+			if (!$objLayout instanceof LayoutModel)
+			{
+				return $objPage;
+			}
+
+			/** @var ThemeModel $objTheme */
+			$objTheme = $objLayout->getRelated('pid');
+			$objPage->templateGroup = $objTheme->templates ?? null;
 		}
 
 		return self::$arrPageCache[$intPageId];

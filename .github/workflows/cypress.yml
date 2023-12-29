@@ -1,0 +1,66 @@
+name: Cypress
+
+on:
+    schedule:
+        - cron: 0 13 * * 1-5
+
+permissions: read-all
+
+jobs:
+    cypress:
+        name: Contao ${{ matrix.contao }}
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                contao: [5.2, 5.x]
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.2
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  coverage: none
+
+            - name: Initialize the database
+              run: |
+                  sudo /etc/init.d/mysql start
+                  mysql -uroot -proot -e "CREATE database contao_test"
+
+            - name: Install Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+
+            - name: Install Symfony CLI
+              run: |
+                  wget https://get.symfony.com/cli/installer -O - | bash
+                  mv /home/runner/.symfony5/bin/symfony /usr/local/bin/symfony
+                  symfony server:ca:install
+
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - name: Install the dependencies
+              run: |
+                  npm update
+                  rm -rf cypress/webspace/vendor/contao/manager-bundle
+                  composer install --working-dir=cypress/webspace --no-interaction --no-progress
+
+            - name: Run the Cypress tests
+              id: cypress
+              run: |
+                  symfony server:start --port=8765 --dir=cypress/webspace --daemon
+                  npx cypress run --config-file cypress.config.js
+                  symfony server:stop --dir=cypress/webspace
+              env:
+                  DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
+                  TERM: xterm-256color
+
+            - name: Upload videos
+              uses: actions/upload-artifact@v2
+              if: ${{ failure() && steps.cypress.conclusion == 'failure' }}
+              with:
+                  name: Cypress videos
+                  path: tools/cypress/videos
+                  retention-days: 14

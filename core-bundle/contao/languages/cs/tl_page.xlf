@@ -97,6 +97,14 @@
         <source>Please choose the redirect type.</source>
         <target>Zvolte prosím typ přesměrování</target>
       </trans-unit>
+      <trans-unit id="tl_page.alwaysForward.0">
+        <source>Always redirect</source>
+        <target>Stálé přesměrování</target>
+      </trans-unit>
+      <trans-unit id="tl_page.alwaysForward.1">
+        <source>Redirect to the target page even if there are query or path parameters.</source>
+        <target>Přesměrovávat na cílovou stránku, i když se u ní vyskytují parametry pro query a cestu.</target>
+      </trans-unit>
       <trans-unit id="tl_page.jumpTo.0">
         <source>Redirect page</source>
         <target>Přesměrovat na stránku</target>
@@ -438,16 +446,16 @@
         <target>Zobrazit od</target>
       </trans-unit>
       <trans-unit id="tl_page.start.1">
-        <source>If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Pokud chcete zabránit zobrazení události před jistým datem/časem, můžete to zadat tady. Jinak ponechte dané pole prázdné.</target>
+        <source>If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Pokud chcete zabránit zobrazení stránky před jistým datem/dobou, můžete to zadat tady. Jinak ponechte dané pole prázdné.</target>
       </trans-unit>
       <trans-unit id="tl_page.stop.0">
         <source>Show until</source>
         <target>Zobrazit do</target>
       </trans-unit>
       <trans-unit id="tl_page.stop.1">
-        <source>If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Pokud chcete zabránit zobrazení události před jistým datem/časem, můžete to zadat tady. Jinak ponechte dané pole prázdné.</target>
+        <source>If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Pokud chcete zabránit zobrazení stránky po jistém datu/době, můžete to zadat tady. Jinak ponechte dané pole prázdné.</target>
       </trans-unit>
       <trans-unit id="tl_page.enforceTwoFactor.0">
         <source>Enforce two-factor authentication</source>
@@ -601,9 +609,17 @@
         <source>Delete page ID %s</source>
         <target>Smazat stránku ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.toggle">
-        <source>Publish/unpublish page ID %s</source>
-        <target>Publikovat / nepublikovat stránku ID %s</target>
+      <trans-unit id="tl_page.toggle.0">
+        <source>Publish/unpublish page</source>
+        <target>Publikovat / nepublikovat</target>
+      </trans-unit>
+      <trans-unit id="tl_page.toggle.1">
+        <source>Unpublish page ID %s</source>
+        <target>Nezveřejnit stránku ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.toggle.2">
+        <source>Publish page ID %s</source>
+        <target>Zveřejnit stránku ID %s</target>
       </trans-unit>
       <trans-unit id="tl_page.pasteinto.0">
         <source>Paste at the top</source>

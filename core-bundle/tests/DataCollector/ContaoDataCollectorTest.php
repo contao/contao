@@ -62,7 +62,7 @@ class ContaoDataCollectorTest extends TestCase
                 'layout' => '',
                 'template' => '',
             ],
-            $collector->getSummary()
+            $collector->getSummary(),
         );
 
         $this->assertSame($version, $collector->getContaoVersion());
@@ -103,7 +103,7 @@ class ContaoDataCollectorTest extends TestCase
                 'layout' => 'Default (ID 2)',
                 'template' => 'fe_page',
             ],
-            $collector->getSummary()
+            $collector->getSummary(),
         );
 
         $collector->reset();
@@ -150,7 +150,7 @@ class ContaoDataCollectorTest extends TestCase
                 'layout' => 'Default (ID 2)',
                 'template' => 'fe_page',
             ],
-            $collector->getSummary()
+            $collector->getSummary(),
         );
 
         unset($GLOBALS['objPage']);

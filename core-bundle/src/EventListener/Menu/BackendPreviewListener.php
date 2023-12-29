@@ -16,10 +16,10 @@ use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Knp\Menu\Util\MenuManipulator;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -29,11 +29,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class BackendPreviewListener
 {
     public function __construct(
-        private Security $security,
-        private RouterInterface $router,
-        private RequestStack $requestStack,
-        private TranslatorInterface $translator,
-        private EventDispatcherInterface $eventDispatcher,
+        private readonly Security $security,
+        private readonly RouterInterface $router,
+        private readonly RequestStack $requestStack,
+        private readonly TranslatorInterface $translator,
+        private readonly EventDispatcherInterface $eventDispatcher,
     ) {
     }
 

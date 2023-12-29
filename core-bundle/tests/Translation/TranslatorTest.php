@@ -142,7 +142,7 @@ class TranslatorTest extends TestCase
                     ;
 
                     return $catalogue;
-                }
+                },
             )
         ;
 
@@ -245,7 +245,7 @@ class TranslatorTest extends TestCase
                     ;
 
                     return $catalogue;
-                }
+                },
             )
         ;
 
@@ -267,9 +267,9 @@ class TranslatorTest extends TestCase
         $translator->trans('foobar', [], 'contao_default', 'de');
     }
 
-    private function createTranslator(TranslatorInterface $translator = null, ContaoFramework $framework = null, ResourceFinder $resourceFinder = null): Translator
+    private function createTranslator(TranslatorInterface|null $translator = null, ContaoFramework|null $framework = null, ResourceFinder|null $resourceFinder = null): Translator
     {
-        if (null === $translator) {
+        if (!$translator) {
             $translator = $this->createMock(BaseTranslator::class);
             $translator
                 ->method('getCatalogue')
@@ -282,7 +282,7 @@ class TranslatorTest extends TestCase
                         ;
 
                         return $catalogue;
-                    }
+                    },
                 )
             ;
         }

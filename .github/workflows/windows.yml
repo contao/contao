@@ -1,0 +1,49 @@
+name: Windows
+
+on:
+    schedule:
+        - cron: 0 13 * * 1-5
+
+permissions: read-all
+
+jobs:
+    windows:
+        name: Contao ${{ matrix.contao }}
+        runs-on: windows-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                contao: [4.13, 5.2, 5.x]
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.2
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  ini-values: memory_limit=1G
+                  coverage: none
+
+            - name: Adjust the Git autocrlf setting
+              run: git config --global core.autocrlf false
+
+            - name: Checkout
+              uses: actions/checkout@v3
+              with:
+                  ref: ${{ matrix.contao }}
+
+            - name: Get the Composer cache directory
+              id: composer-cache
+              run: echo "name=dir::$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+            - name: Cache the dependencies
+              uses: actions/cache@v3
+              with:
+                  path: ${{ steps.composer-cache.outputs.dir }}
+                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+                  restore-keys: ${{ runner.os }}-composer-
+
+            - name: Install the dependencies
+              run: composer install --no-interaction --no-progress
+
+            - name: Run the unit tests
+              run: vendor/bin/phpunit.bat --colors=always

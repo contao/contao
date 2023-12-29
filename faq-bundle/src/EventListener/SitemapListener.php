@@ -14,15 +14,19 @@ namespace Contao\FaqBundle\EventListener;
 
 use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
 use Contao\FaqCategoryModel;
 use Contao\FaqModel;
 use Contao\PageModel;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class SitemapListener
 {
-    public function __construct(private ContaoFramework $framework)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly Security $security,
+    ) {
     }
 
     public function __invoke(SitemapEvent $event): void
@@ -59,7 +63,7 @@ class SitemapListener
             $objParent = $this->framework->getAdapter(PageModel::class)->findWithDetails($objFaq->jumpTo);
 
             // The target page does not exist
-            if (null === $objParent) {
+            if (!$objParent) {
                 continue;
             }
 
@@ -69,7 +73,7 @@ class SitemapListener
             }
 
             // The target page is protected (see #8416)
-            if ($objParent->protected) {
+            if ($objParent->protected && !$this->security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objParent->groups)) {
                 continue;
             }
 

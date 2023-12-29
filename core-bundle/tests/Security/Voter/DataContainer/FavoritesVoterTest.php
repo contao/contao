@@ -20,10 +20,9 @@ use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Security\Voter\DataContainer\FavoritesVoter;
 use Contao\CoreBundle\Tests\TestCase;
-use Doctrine\DBAL\Connection;
+use Contao\FrontendUser;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
-use Symfony\Component\Security\Core\Security;
 
 class FavoritesVoterTest extends TestCase
 {
@@ -31,26 +30,14 @@ class FavoritesVoterTest extends TestCase
     {
         $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 2]);
 
-        $security = $this->createMock(Security::class);
-        $security
+        $token = $this->createMock(TokenInterface::class);
+        $token
+            ->expects($this->exactly(2))
             ->method('getUser')
             ->willReturn($user)
         ;
 
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->method('fetchOne')
-            ->with('SELECT user FROM tl_favorites WHERE id = :id')
-            ->willReturnCallback(
-                static fn (string $query, array $args): int => match ((int) $args['id']) {
-                    42 => 2, // current user
-                    17 => 3, // different user
-                    default => 0,
-                }
-            )
-        ;
-
-        $voter = new FavoritesVoter($security, $connection);
+        $voter = new FavoritesVoter();
 
         $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_favorites'));
         $this->assertTrue($voter->supportsType(CreateAction::class));
@@ -58,33 +45,58 @@ class FavoritesVoterTest extends TestCase
         $this->assertTrue($voter->supportsType(UpdateAction::class));
         $this->assertTrue($voter->supportsType(DeleteAction::class));
 
-        $token = $this->createMock(TokenInterface::class);
-
+        // Unsupported attribute
         $this->assertSame(
             VoterInterface::ACCESS_ABSTAIN,
             $voter->vote(
                 $token,
-                new ReadAction('foo', ['id' => 42]),
-                ['whatever']
-            )
+                new ReadAction('foo', ['user' => 42]),
+                ['whatever'],
+            ),
         );
 
+        // Permission granted, so abstain! Our voters either deny or abstain,
+        // they must never grant access (see #6201).
         $this->assertSame(
-            VoterInterface::ACCESS_GRANTED,
+            VoterInterface::ACCESS_ABSTAIN,
             $voter->vote(
                 $token,
-                new ReadAction('foo', ['id' => 42]),
-                [ContaoCorePermissions::DC_PREFIX.'tl_favorites']
-            )
+                new ReadAction('tl_favorites', ['user' => 2]),
+                [ContaoCorePermissions::DC_PREFIX.'tl_favorites'],
+            ),
         );
+
+        // Permission denied
+        $this->assertSame(
+            VoterInterface::ACCESS_DENIED,
+            $voter->vote(
+                $token,
+                new ReadAction('tl_favorites', ['user' => 3]),
+                [ContaoCorePermissions::DC_PREFIX.'tl_favorites'],
+            ),
+        );
+    }
+
+    public function testDeniesAccessIfUserIsNotABackendUser(): void
+    {
+        $user = $this->mockClassWithProperties(FrontendUser::class, ['id' => 2]);
+
+        $token = $this->createMock(TokenInterface::class);
+        $token
+            ->expects($this->once())
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
+        $voter = new FavoritesVoter();
 
         $this->assertSame(
             VoterInterface::ACCESS_DENIED,
             $voter->vote(
                 $token,
-                new ReadAction('foo', ['id' => 17]),
-                [ContaoCorePermissions::DC_PREFIX.'tl_favorites']
-            )
+                new ReadAction('tl_favorites', ['user' => 3]),
+                [ContaoCorePermissions::DC_PREFIX.'tl_favorites'],
+            ),
         );
     }
 }

@@ -14,14 +14,16 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\Security;
 
 #[AsCallback(table: 'tl_favorites', target: 'config.onload')]
 class BackendFavoritesListener
 {
-    public function __construct(private readonly Security $security, private RequestStack $requestStack)
-    {
+    public function __construct(
+        private readonly Security $security,
+        private readonly RequestStack $requestStack,
+    ) {
     }
 
     public function __invoke(): void

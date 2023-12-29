@@ -33,10 +33,10 @@ class SearchIndexerPass implements CompilerPassInterface
         // Make sure we do not add the delegating indexer to itself to prevent endless redirects
         $indexers = array_filter(
             $indexers,
-            static fn (Reference $reference): bool => self::DELEGATING_SERVICE_ID !== (string) $reference
+            static fn (Reference $reference): bool => self::DELEGATING_SERVICE_ID !== (string) $reference,
         );
 
-        if (!$container->hasDefinition(self::DELEGATING_SERVICE_ID) || 0 === \count($indexers)) {
+        if (!$indexers || !$container->hasDefinition(self::DELEGATING_SERVICE_ID)) {
             // Remove delegating indexer
             $container->removeDefinition(self::DELEGATING_SERVICE_ID);
 

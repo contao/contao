@@ -46,8 +46,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($this);
+					System::importStatic($callback[0])->{$callback[1]}($this);
 				}
 				elseif (\is_callable($callback))
 				{
@@ -167,19 +166,28 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 				{
 					list($key, $cls) = explode(':', $legends[$k]) + array(null, null);
 
-					$legend = "\n" . '<legend data-toggle-fieldset="' . StringUtil::specialcharsAttribute(json_encode(array('id' => $key, 'table' => $this->strTable))) . '">' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '</legend>';
+					$legend = "\n" . '<legend data-action="click->contao--toggle-fieldset#toggle">' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '</legend>';
 				}
 
-				if (isset($fs[$this->strTable][$key]))
+				if ($legend)
 				{
-					$class .= ($fs[$this->strTable][$key] ? '' : ' collapsed');
-				}
-				else
-				{
-					$class .= (($cls && $legend) ? ' ' . $cls : '');
+					if (isset($fs[$this->strTable][$key]))
+					{
+						$class .= ($fs[$this->strTable][$key] ? '' : ' collapsed');
+					}
+					elseif ($cls)
+					{
+						// Convert the ":hide" suffix from the DCA
+						if ($cls == 'hide')
+						{
+							$cls = 'collapsed';
+						}
+
+						$class .= ' ' . $cls;
+					}
 				}
 
-				$return .= "\n\n" . '<fieldset' . ($key ? ' id="pal_' . $key . '"' : '') . ' class="' . $class . ($legend ? '' : ' nolegend') . '">' . $legend;
+				$return .= "\n\n" . '<fieldset class="' . $class . ($legend ? '' : ' nolegend') . '" data-controller="contao--toggle-fieldset" data-contao--toggle-fieldset-id-value="' . $key . '" data-contao--toggle-fieldset-table-value="' . $this->strTable . '" data-contao--toggle-fieldset-collapsed-class="collapsed" data-contao--jump-targets-target="section" data-contao--jump-targets-label-value="' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '" data-action="contao--jump-targets:scrollto->contao--toggle-fieldset#open">' . $legend;
 
 				// Build rows of the current box
 				foreach ($v as $vv)
@@ -200,7 +208,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 					if (preg_match('/^\[.*]$/', $vv))
 					{
 						$thisId = 'sub_' . substr($vv, 1, -1);
-						$blnAjax = ($ajaxId == $thisId && Environment::get('isAjaxRequest'));
+						$blnAjax = $ajaxId == $thisId && Environment::get('isAjaxRequest');
 						$return .= "\n  " . '<div id="' . $thisId . '" class="subpal cf">';
 
 						continue;
@@ -226,8 +234,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 						{
 							if (\is_array($callback))
 							{
-								$this->import($callback[0]);
-								$this->varValue = $this->{$callback[0]}->{$callback[1]}($this->varValue, $this);
+								$this->varValue = System::importStatic($callback[0])->{$callback[1]}($this->varValue, $this);
 							}
 							elseif (\is_callable($callback))
 							{
@@ -265,8 +272,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$arrButtons = $this->{$callback[0]}->{$callback[1]}($arrButtons, $this);
+					$arrButtons = System::importStatic($callback[0])->{$callback[1]}($arrButtons, $this);
 				}
 				elseif (\is_callable($callback))
 				{
@@ -306,8 +312,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 				{
 					if (\is_array($callback))
 					{
-						$this->import($callback[0]);
-						$this->{$callback[0]}->{$callback[1]}($this);
+						System::importStatic($callback[0])->{$callback[1]}($this);
 					}
 					elseif (\is_callable($callback))
 					{
@@ -336,6 +341,12 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
   });
 </script>';
 		}
+
+		$return = '
+<div data-controller="contao--jump-targets">
+	<div class="jump-targets"><div class="inner" data-contao--jump-targets-target="navigation"></div></div>
+	' . $return . '
+</div>';
 
 		return $return;
 	}
@@ -383,12 +394,6 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 				$objDate = new Date($varValue, Date::getFormatFromRgxp($arrData['eval']['rgxp']));
 				$varValue = $objDate->tstamp;
 			}
-
-			// Handle entities
-			if (($arrData['inputType'] ?? null) == 'text' || ($arrData['inputType'] ?? null) == 'textarea')
-			{
-				$varValue = StringUtil::deserialize($varValue);
-			}
 		}
 
 		// Trigger the save_callback
@@ -398,8 +403,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$varValue = $this->{$callback[0]}->{$callback[1]}($varValue, $this);
+					$varValue = System::importStatic($callback[0])->{$callback[1]}($varValue, $this);
 				}
 				elseif (\is_callable($callback))
 				{
@@ -527,10 +531,26 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 				}
 			}
 
-			// Include subpalettes
+			// Include sub-palettes
 			foreach ($subpalettes as $k=>$v)
 			{
 				$strPalette = preg_replace('/\b' . preg_quote($k, '/') . '\b/i', $k . ',[' . $k . '],' . $v . ',[EOF]', $strPalette);
+			}
+		}
+
+		// Call onpalette_callback
+		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onpalette_callback'] ?? null))
+		{
+			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onpalette_callback'] as $callback)
+			{
+				if (\is_array($callback))
+				{
+					$strPalette = System::importStatic($callback[0])->{$callback[1]}($strPalette, $this);
+				}
+				elseif (\is_callable($callback))
+				{
+					$strPalette = $callback($strPalette, $this);
+				}
 			}
 		}
 

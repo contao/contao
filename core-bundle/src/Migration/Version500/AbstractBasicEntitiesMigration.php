@@ -25,7 +25,7 @@ use Doctrine\DBAL\Connection;
  */
 abstract class AbstractBasicEntitiesMigration extends AbstractMigration
 {
-    public function __construct(private Connection $connection)
+    public function __construct(private readonly Connection $connection)
     {
     }
 
@@ -53,7 +53,7 @@ abstract class AbstractBasicEntitiesMigration extends AbstractMigration
             }
 
             $test = $this->connection->fetchOne(
-                "SELECT TRUE FROM $table WHERE `$column` REGEXP '\\\\[(&|&amp;|lt|gt|nbsp|-)\\\\]' LIMIT 1;"
+                "SELECT TRUE FROM $table WHERE `$column` REGEXP '\\\\[(&|&amp;|lt|gt|nbsp|-)\\\\]' LIMIT 1;",
             );
 
             if (false !== $test) {
@@ -77,7 +77,7 @@ abstract class AbstractBasicEntitiesMigration extends AbstractMigration
             }
 
             $values = $this->connection->fetchAllKeyValue(
-                "SELECT id, `$column` FROM $table WHERE `$column` REGEXP '\\\\[(&|&amp;|lt|gt|nbsp|-)\\\\]'"
+                "SELECT id, `$column` FROM $table WHERE `$column` REGEXP '\\\\[(&|&amp;|lt|gt|nbsp|-)\\\\]'",
             );
 
             foreach ($values as $id => $value) {
@@ -110,7 +110,7 @@ abstract class AbstractBasicEntitiesMigration extends AbstractMigration
      * ];
      * ```
      *
-     * @return list<array{0:string,1:string}>
+     * @return list<array{0:string, 1:string}>
      */
     abstract protected function getDatabaseColumns(): array;
 }

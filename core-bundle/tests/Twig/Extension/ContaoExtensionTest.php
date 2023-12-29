@@ -29,7 +29,10 @@ use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
 use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\CoreExtension;
@@ -175,7 +178,7 @@ class ContaoExtensionTest extends TestCase
         $extension = new ContaoExtension(
             $environment,
             $this->createMock(TemplateHierarchyInterface::class),
-            $this->createMock(ContaoCsrfTokenManager::class)
+            $this->createMock(ContaoCsrfTokenManager::class),
         );
 
         $this->expectException(\RuntimeException::class);
@@ -191,7 +194,7 @@ class ContaoExtensionTest extends TestCase
 
         $traverser = new NodeTraverser(
             $this->createMock(Environment::class),
-            [$escaperNodeVisitor]
+            [$escaperNodeVisitor],
         );
 
         $node = new ModuleNode(
@@ -203,21 +206,21 @@ class ContaoExtensionTest extends TestCase
                     new ConstantExpression(null, 1),
                     new ConstantExpression(true, 1),
                 ]),
-                1
+                1,
             ),
             null,
             new Node(),
             new Node(),
             new Node(),
             null,
-            new Source('<code>', 'foo.html.twig')
+            new Source('<code>', 'foo.html.twig'),
         );
 
-        $original = $node->__toString();
+        $original = (string) $node;
 
         // Traverse tree first time (no changes expected)
         $traverser->traverse($node);
-        $iteration1 = $node->__toString();
+        $iteration1 = (string) $node;
 
         // Add rule that allows the template and traverse tree a second time (change expected)
         $contaoExtension->addContaoEscaperRule('/foo\.html\.twig/');
@@ -226,7 +229,7 @@ class ContaoExtensionTest extends TestCase
         $contaoExtension->addContaoEscaperRule('/foo\.html\.twig/');
 
         $traverser->traverse($node);
-        $iteration2 = $node->__toString();
+        $iteration2 = (string) $node;
 
         $this->assertSame($original, $iteration1);
         $this->assertStringNotContainsString("'contao_html'", $iteration1);
@@ -238,17 +241,17 @@ class ContaoExtensionTest extends TestCase
         $extension = $this->getContaoExtension();
 
         $container = $this->getContainerWithContaoConfiguration(
-            Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy')
+            Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy'),
         );
 
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework()));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class)));
 
         System::setContainer($container);
 
         $output = $extension->renderLegacyTemplate(
             'foo.html5',
             ['B' => ['overwritten B block']],
-            ['foo' => 'bar']
+            ['foo' => 'bar'],
         );
 
         $this->assertSame("foo: bar\noriginal A block\noverwritten B block", $output);
@@ -259,10 +262,10 @@ class ContaoExtensionTest extends TestCase
         $extension = $this->getContaoExtension();
 
         $container = $this->getContainerWithContaoConfiguration(
-            Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy')
+            Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy'),
         );
 
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework()));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class)));
 
         System::setContainer($container);
 
@@ -272,7 +275,7 @@ class ContaoExtensionTest extends TestCase
         $output = $extension->renderLegacyTemplate(
             'baz.html5',
             ['B' => "root before B\n[[TL_PARENT_<nonce>]]root after B"],
-            ['foo' => 'bar']
+            ['foo' => 'bar'],
         );
 
         $this->assertSame(
@@ -289,7 +292,7 @@ class ContaoExtensionTest extends TestCase
                 'baz after B',
                 'root after B',
             ]),
-            $output
+            $output,
         );
     }
 
@@ -303,7 +306,7 @@ class ContaoExtensionTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration(Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy'));
         $container->set('contao.security.token_checker', $tokenChecker);
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework()));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class)));
 
         System::setContainer($container);
 
@@ -358,9 +361,53 @@ class ContaoExtensionTest extends TestCase
     }
 
     /**
+     * We need to adjust some of Twig's core functions (e.g. the escape filter)
+     * but still delegate to the original implementation for maximum compatibility.
+     * This test makes sure the function's signatures remains the same and changes
+     * to the original codebase do not stay unnoticed.
+     *
+     * @dataProvider provideTwigFunctionSignatures
+     */
+    public function testContaoUsesCorrectTwigFunctionSignatures(string $function, array $expectedParameters): void
+    {
+        // Make sure the functions outside the class scope are loaded
+        new \ReflectionClass(EscaperExtension::class);
+
+        $parameters = array_map(
+            static fn (\ReflectionParameter $parameter): array => [
+                ($type = $parameter->getType()) instanceof \ReflectionNamedType ? $type->getName() : null,
+                $parameter->getName(),
+            ],
+            (new \ReflectionFunction($function))->getParameters(),
+        );
+        $this->assertSame($parameters, $expectedParameters);
+    }
+
+    public function provideTwigFunctionSignatures(): \Generator
+    {
+        yield [
+            'twig_escape_filter',
+            [
+                [Environment::class, 'env'],
+                [null, 'string'],
+                [null, 'strategy'],
+                [null, 'charset'],
+                [null, 'autoescape'],
+            ],
+        ];
+
+        yield [
+            'twig_escape_filter_is_safe',
+            [
+                [Node::class, 'filterArgs'],
+            ],
+        ];
+    }
+
+    /**
      * @param Environment&MockObject $environment
      */
-    private function getContaoExtension(Environment $environment = null, TemplateHierarchyInterface $hierarchy = null): ContaoExtension
+    private function getContaoExtension(Environment|null $environment = null, TemplateHierarchyInterface|null $hierarchy = null): ContaoExtension
     {
         $environment ??= $this->createMock(Environment::class);
         $hierarchy ??= $this->createMock(TemplateHierarchyInterface::class);

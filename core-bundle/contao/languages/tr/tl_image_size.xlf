@@ -77,6 +77,22 @@
         <source>The following formats are not supported on your server: %s</source>
         <target>Sunucunuzda şu biçimler desteklenmiyor: %s</target>
       </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadata.0">
+        <source>Preserve copyright metadata</source>
+        <target>Telif hakkı üst bilgisi korunsun</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadata.1">
+        <source>Preserve copyright-related metadata fields (EXIF, IPTC, XMP).</source>
+        <target>Bu seçenek etkinleştirildiğinde, telif hakkı ile ilgili üst veri alanları korunur (EXIF, IPTC, XMP).</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadataFields.0">
+        <source>Metadata fields</source>
+        <target>Üst veri alanları</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadataFields.1">
+        <source>Please select the metadata fields to preserve.</source>
+        <target>Lütfen korunacak üst veri alanlarını seçin.</target>
+      </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.0">
         <source>Use original image if dimensions match</source>
         <target>Boyutlar eşleşirse özgün görsel kullanılsın</target>
@@ -84,6 +100,14 @@
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.1">
         <source>Note that no optimizations such as metadata stripping or JPEG compression will be applied in this case.</source>
         <target>Bu durumda üst veri ayıklama veya JPEG sıkıştırma gibi iyileştirmelerin uygulanmayacağını unutmayın.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.imageQuality.0">
+        <source>Image quality</source>
+        <target>Görsel kalitesi</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.imageQuality.1">
+        <source>Here you can set the image compression quality between 0 (lowest quality) and 100 (highest quality). Leave blank to use the system default.</source>
+        <target>Buradan görsel sıkıştırma kalitesini 0 (en düşük) ile 100 (en yüksek) arasında seçebilirsiniz. Boş bırakılırsa, varsayılan sistem ayarı kullanılır.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.0">
         <source>Enable lazy loading</source>
@@ -113,6 +137,10 @@
         <source>Loading options</source>
         <target>Yükleme seçenekleri</target>
       </trans-unit>
+      <trans-unit id="tl_image_size.metadata_legend">
+        <source>Metadata settings</source>
+        <target>Üst veri ayarları</target>
+      </trans-unit>
       <trans-unit id="tl_image_size.expert_legend">
         <source>Expert settings</source>
         <target>Uzman ayarları</target>
@@ -141,6 +169,18 @@
         <source>The image will be resized to the given dimensions. If necessary, it will be cropped.</source>
         <target>Görsel belirtilen boyutlara göre yeniden boyutlandırılır. Gerekirse kırpılır.</target>
       </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadataOptions.default">
+        <source>Use default settings</source>
+        <target>Varsayılan ayarlar kullanılsın</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadataOptions.overwrite">
+        <source>Select custom metadata fields</source>
+        <target>Özel üst veri alanlarını seçin</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadataOptions.delete">
+        <source>Remove all metadata fields</source>
+        <target>Tüm üst veri alanlarını kaldır</target>
+      </trans-unit>
       <trans-unit id="tl_image_size.new.0">
         <source>New</source>
         <target>Yeni</target>
@@ -151,27 +191,27 @@
       </trans-unit>
       <trans-unit id="tl_image_size.show">
         <source>Show the details of image size ID %s</source>
-        <target>%s kodlu görsel boyutunun ayrıntılarını görüntüle</target>
+        <target>%s kimlikli görsel boyutunun ayrıntılarını görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_image_size.edit">
         <source>Edit image size ID %s</source>
-        <target>%s kodlu görsel boyutunu düzenle</target>
+        <target>%s kimlikli görsel boyutunu düzenle</target>
       </trans-unit>
       <trans-unit id="tl_image_size.children">
         <source>Edit the media queries of image size ID %s</source>
-        <target>%s kodlu görsel boyutunun ortam sorgularını düzenle</target>
+        <target>%s kimlikli görsel boyutunun ayarlarını düzenle</target>
       </trans-unit>
       <trans-unit id="tl_image_size.cut">
         <source>Move image size ID %s</source>
-        <target>%s kodlu görsel boyutunu taşı</target>
+        <target>%s kimlikli görsel boyutunu taşı</target>
       </trans-unit>
       <trans-unit id="tl_image_size.copy">
         <source>Duplicate image size ID %s</source>
-        <target>%s kodlu görsel boyutunu kopyala</target>
+        <target>%s kimlikli görsel boyutunu kopyala</target>
       </trans-unit>
       <trans-unit id="tl_image_size.delete">
         <source>Delete image size ID %s</source>
-        <target>%s kodlu görsel boyutunu sil</target>
+        <target>%s kimlikli görsel boyutunu sil</target>
       </trans-unit>
     </body>
   </file>

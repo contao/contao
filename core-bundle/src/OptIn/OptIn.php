@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\OptIn;
 
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Model;
 use Contao\OptInModel;
@@ -21,7 +22,7 @@ class OptIn implements OptInInterface
     /**
      * @internal
      */
-    public function __construct(private ContaoFramework $framework)
+    public function __construct(private readonly ContaoFramework $framework)
     {
     }
 
@@ -89,10 +90,10 @@ class OptIn implements OptInInterface
                     /** @var class-string<Model> $class */
                     $class = $adapter->getClassFromTable($table);
 
-                    /** @var Model $model */
+                    /** @var Adapter<Model> $model */
                     $model = $this->framework->getAdapter($class);
 
-                    if (null !== $model->findMultipleByIds($id)) {
+                    if ($model->findMultipleByIds($id)) {
                         $delete = false;
                         break;
                     }

@@ -52,10 +52,7 @@ class SwitchUserListenerTest extends TestCase
         $listener($event);
     }
 
-    /**
-     * @return LoggerInterface&MockObject
-     */
-    private function mockLogger(string $message = null): LoggerInterface
+    private function mockLogger(string|null $message = null): LoggerInterface&MockObject
     {
         $logger = $this->createMock(LoggerInterface::class);
 
@@ -72,10 +69,7 @@ class SwitchUserListenerTest extends TestCase
         return $logger;
     }
 
-    /**
-     * @return TokenStorageInterface&MockObject
-     */
-    private function mockTokenStorage(string $username = null): TokenStorageInterface
+    private function mockTokenStorage(string|null $username = null): TokenStorageInterface&MockObject
     {
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
 
@@ -97,7 +91,7 @@ class SwitchUserListenerTest extends TestCase
         return $tokenStorage;
     }
 
-    private function mockSwitchUserEvent(string $username = null): SwitchUserEvent
+    private function mockSwitchUserEvent(string|null $username = null): SwitchUserEvent
     {
         $user = $this->createPartialMock(BackendUser::class, ['getUserIdentifier']);
 

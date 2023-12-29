@@ -20,8 +20,10 @@ use Psr\Log\LoggerInterface;
 #[AsCronJob('daily')]
 class PurgeSubscriptionsCron
 {
-    public function __construct(private ContaoFramework $framework, private LoggerInterface|null $logger)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly LoggerInterface|null $logger,
+    ) {
     }
 
     public function __invoke(): void
@@ -34,7 +36,6 @@ class PurgeSubscriptionsCron
             return;
         }
 
-        /** @var CommentsNotifyModel $subscription */
         foreach ($subscriptions as $subscription) {
             $subscription->delete();
         }

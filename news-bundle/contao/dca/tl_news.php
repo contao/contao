@@ -11,11 +11,10 @@
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
-use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
-use Contao\Input;
 use Contao\LayoutModel;
 use Contao\News;
 use Contao\NewsArchiveModel;
@@ -38,7 +37,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		'markAsCopy'                  => 'headline',
 		'onload_callback' => array
 		(
-			array('tl_news', 'checkPermission'),
+			array('tl_news', 'adjustDca'),
 		),
 		'onsubmit_callback' => array
 		(
@@ -75,15 +74,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'fields' => array('headline', 'date', 'time'),
 			'format' => '%s <span class="label-info">[%s %s]</span>',
 		),
-		'global_operations' => array
-		(
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
-		),
 		'operations' => array
 		(
 			'edit',
@@ -116,7 +106,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		'external'                    => '{title_legend},headline,featured,alias,author;{date_legend},date,time;{source_legend},source,url,target,linkText;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments;{publish_legend},published,start,stop'
 	),
 
-	// Subpalettes
+	// Sub-palettes
 	'subpalettes' => array
 	(
 		'addImage'                    => 'singleSRC,fullsize,size,floating,overwriteMeta',
@@ -366,11 +356,11 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		),
 		'articleId' => array
 		(
-			'inputType'               => 'select',
-			'options_callback'        => array('tl_news', 'getArticleAlias'),
-			'eval'                    => array('chosen'=>true, 'mandatory'=>true, 'tl_class'=>'w50'),
+			'inputType'               => 'picker',
+			'foreignKey'              => 'tl_article.title',
+			'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0",
-			'relation'                => array('table'=>'tl_article', 'type'=>'hasOne', 'load'=>'lazy'),
+			'relation'                => array('type'=>'hasOne', 'load'=>'lazy'),
 		),
 		'url' => array
 		(
@@ -434,22 +424,9 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 class tl_news extends Backend
 {
 	/**
-	 * Import the back end user object
+	 * Unset the "allowComments" field if the comments bundle is not available.
 	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
-	 * Check permissions to edit table tl_news
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @throws AccessDeniedException
-	 */
-	public function checkPermission(DataContainer $dc)
+	public function adjustDca(DataContainer $dc)
 	{
 		$bundles = System::getContainer()->getParameter('kernel.bundles');
 
@@ -458,120 +435,6 @@ class tl_news extends Backend
 		{
 			$key = array_search('allowComments', $GLOBALS['TL_DCA']['tl_news']['list']['sorting']['headerFields'] ?? array());
 			unset($GLOBALS['TL_DCA']['tl_news']['list']['sorting']['headerFields'][$key], $GLOBALS['TL_DCA']['tl_news']['fields']['noComments']);
-		}
-
-		if ($this->User->isAdmin)
-		{
-			return;
-		}
-
-		// Set the root IDs
-		if (empty($this->User->news) || !is_array($this->User->news))
-		{
-			$root = array(0);
-		}
-		else
-		{
-			$root = $this->User->news;
-		}
-
-		$id = strlen(Input::get('id')) ? Input::get('id') : $dc->currentPid;
-
-		// Check current action
-		switch (Input::get('act'))
-		{
-			case 'paste':
-			case 'select':
-				// Check currentPid here (see #247)
-				if (!in_array($dc->currentPid, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to access news archive ID ' . $id . '.');
-				}
-				break;
-
-			case 'create':
-				if (!Input::get('pid') || !in_array(Input::get('pid'), $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to create news items in news archive ID ' . Input::get('pid') . '.');
-				}
-				break;
-
-			case 'cut':
-			case 'copy':
-				if (Input::get('act') == 'cut' && Input::get('mode') == 1)
-				{
-					$objArchive = $this->Database->prepare("SELECT pid FROM tl_news WHERE id=?")
-												 ->limit(1)
-												 ->execute(Input::get('pid'));
-
-					if ($objArchive->numRows < 1)
-					{
-						throw new AccessDeniedException('Invalid news item ID ' . Input::get('pid') . '.');
-					}
-
-					$pid = $objArchive->pid;
-				}
-				else
-				{
-					$pid = Input::get('pid');
-				}
-
-				if (!in_array($pid, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' news item ID ' . $id . ' to news archive ID ' . $pid . '.');
-				}
-				// no break
-
-			case 'edit':
-			case 'show':
-			case 'delete':
-			case 'toggle':
-				$objArchive = $this->Database->prepare("SELECT pid FROM tl_news WHERE id=?")
-											 ->limit(1)
-											 ->execute($id);
-
-				if ($objArchive->numRows < 1)
-				{
-					throw new AccessDeniedException('Invalid news item ID ' . $id . '.');
-				}
-
-				if (!in_array($objArchive->pid, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' news item ID ' . $id . ' of news archive ID ' . $objArchive->pid . '.');
-				}
-				break;
-
-			case 'editAll':
-			case 'deleteAll':
-			case 'overrideAll':
-			case 'cutAll':
-			case 'copyAll':
-				if (!in_array($id, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to access news archive ID ' . $id . '.');
-				}
-
-				$objArchive = $this->Database->prepare("SELECT id FROM tl_news WHERE pid=?")
-											 ->execute($id);
-
-				$objSession = System::getContainer()->get('request_stack')->getSession();
-
-				$session = $objSession->all();
-				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objArchive->fetchEach('id'));
-				$objSession->replace($session);
-				break;
-
-			default:
-				if (Input::get('act'))
-				{
-					throw new AccessDeniedException('Invalid command "' . Input::get('act') . '".');
-				}
-
-				if (!in_array($id, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to access news archive ID ' . $id . '.');
-				}
-				break;
 		}
 	}
 
@@ -587,8 +450,12 @@ class tl_news extends Backend
 	 */
 	public function generateAlias($varValue, DataContainer $dc)
 	{
-		$aliasExists = function (string $alias) use ($dc): bool {
-			return $this->Database->prepare("SELECT id FROM tl_news WHERE alias=? AND id!=?")->execute($alias, $dc->id)->numRows > 0;
+		$aliasExists = static function (string $alias) use ($dc): bool {
+			$result = Database::getInstance()
+				->prepare("SELECT id FROM tl_news WHERE alias=? AND id!=?")
+				->execute($alias, $dc->id);
+
+			return $result->numRows > 0;
 		};
 
 		// Generate alias if there is none
@@ -694,55 +561,6 @@ class tl_news extends Backend
 	}
 
 	/**
-	 * Get all articles and return them as array
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @return array
-	 */
-	public function getArticleAlias(DataContainer $dc)
-	{
-		$arrPids = array();
-		$arrAlias = array();
-
-		if (!$this->User->isAdmin)
-		{
-			foreach ($this->User->pagemounts as $id)
-			{
-				$arrPids[] = array($id);
-				$arrPids[] = $this->Database->getChildRecords($id, 'tl_page');
-			}
-
-			if (!empty($arrPids))
-			{
-				$arrPids = array_merge(...$arrPids);
-			}
-			else
-			{
-				return $arrAlias;
-			}
-
-			$objAlias = $this->Database->execute("SELECT a.id, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid WHERE a.pid IN(" . implode(',', array_map('\intval', array_unique($arrPids))) . ") ORDER BY parent, a.sorting");
-		}
-		else
-		{
-			$objAlias = $this->Database->execute("SELECT a.id, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid ORDER BY parent, a.sorting");
-		}
-
-		if ($objAlias->numRows)
-		{
-			System::loadLanguageFile('tl_article');
-
-			while ($objAlias->next())
-			{
-				$arrAlias[$objAlias->parent][$objAlias->id] = $objAlias->title . ' (' . ($GLOBALS['TL_LANG']['COLS'][$objAlias->inColumn] ?: $objAlias->inColumn) . ', ID ' . $objAlias->id . ')';
-			}
-		}
-
-		return $arrAlias;
-	}
-
-	/**
 	 * Add the source options depending on the allowed fields (see #5498)
 	 *
 	 * @param DataContainer $dc
@@ -751,7 +569,7 @@ class tl_news extends Backend
 	 */
 	public function getSourceOptions(DataContainer $dc)
 	{
-		if ($this->User->isAdmin)
+		if (BackendUser::getInstance()->isAdmin)
 		{
 			return array('default', 'internal', 'article', 'external');
 		}
@@ -760,14 +578,18 @@ class tl_news extends Backend
 		$arrOptions = array('default');
 
 		// Add the "internal" option
-		if ($security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_news::jumpTo'))
-		{
+		if (
+			$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_news::jumpTo')
+			&& $security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'page')
+		) {
 			$arrOptions[] = 'internal';
 		}
 
 		// Add the "article" option
-		if ($security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_news::articleId'))
-		{
+		if (
+			$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_news::articleId')
+			&& $security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'article')
+		) {
 			$arrOptions[] = 'article';
 		}
 
@@ -803,7 +625,7 @@ class tl_news extends Backend
 		$arrSet['date'] = strtotime(date('Y-m-d', $dc->activeRecord->date) . ' ' . date('H:i:s', $dc->activeRecord->time));
 		$arrSet['time'] = $arrSet['date'];
 
-		$this->Database->prepare("UPDATE tl_news %s WHERE id=?")->set($arrSet)->execute($dc->id);
+		Database::getInstance()->prepare("UPDATE tl_news %s WHERE id=?")->set($arrSet)->execute($dc->id);
 	}
 
 	/**

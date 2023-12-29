@@ -23,7 +23,7 @@ class HtaccessAnalyzerTest extends TestCase
         $file = new SplFileInfo(
             $this->getFixturesDir().'/system/modules/foobar/assets/.htaccess',
             'system/modules/foobar/assets',
-            'system/modules/foobar/assets/.htaccess'
+            'system/modules/foobar/assets/.htaccess',
         );
 
         $htaccess = new HtaccessAnalyzer($file);
@@ -33,7 +33,7 @@ class HtaccessAnalyzerTest extends TestCase
         $file = new SplFileInfo(
             $this->getFixturesDir().'/system/modules/foobar/html/.htaccess',
             'system/modules/foobar/html',
-            'system/modules/foobar/html/.htaccess'
+            'system/modules/foobar/html/.htaccess',
         );
 
         $htaccess = new HtaccessAnalyzer($file);
@@ -43,7 +43,7 @@ class HtaccessAnalyzerTest extends TestCase
         $file = new SplFileInfo(
             $this->getFixturesDir().'/system/modules/foobar/private/.htaccess',
             'system/modules/foobar/private',
-            'system/modules/foobar/private/.htaccess'
+            'system/modules/foobar/private/.htaccess',
         );
 
         $htaccess = new HtaccessAnalyzer($file);

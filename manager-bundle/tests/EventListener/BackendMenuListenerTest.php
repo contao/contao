@@ -17,10 +17,10 @@ use Contao\ManagerBundle\EventListener\BackendMenuListener;
 use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\MenuFactory;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BackendMenuListenerTest extends ContaoTestCase
@@ -192,9 +192,19 @@ class BackendMenuListenerTest extends ContaoTestCase
         $event = new MenuEvent($factory, $menu);
         $security = $this->getSecurity();
         $router = $this->createMock(RouterInterface::class);
-        $requestStack = new RequestStack();
         $translator = $this->getTranslator();
         $managerPath = 'contao-manager.phar.php';
+
+        $request = $this->createMock(Request::class);
+        $request
+            ->expects($this->once())
+            ->method('getUriForPath')
+            ->with('/'.$managerPath)
+            ->willReturnArgument(0)
+        ;
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
 
         $listener = new BackendMenuListener($security, $router, $requestStack, $translator, false, $managerPath, null);
         $listener($event);
@@ -223,10 +233,33 @@ class BackendMenuListenerTest extends ContaoTestCase
         $event = new MenuEvent($factory, $menu);
         $security = $this->getSecurity();
         $router = $this->createMock(RouterInterface::class);
-        $requestStack = new RequestStack();
         $translator = $this->getTranslator();
 
+        $requestStack = new RequestStack();
+        $requestStack->push($this->createMock(Request::class));
+
         $listener = new BackendMenuListener($security, $router, $requestStack, $translator, false, null, null);
+        $listener($event);
+
+        $this->assertCount(0, $event->getTree()->getChild('system')->getChildren());
+    }
+
+    public function testDoesNotAddTheManagerLinkIfTheRequestStackIsEmpty(): void
+    {
+        $factory = new MenuFactory();
+        $system = $factory->createItem('system');
+
+        $menu = $factory->createItem('mainMenu');
+        $menu->addChild($system);
+
+        $event = new MenuEvent($factory, $menu);
+        $security = $this->getSecurity();
+        $router = $this->createMock(RouterInterface::class);
+        $requestStack = new RequestStack();
+        $translator = $this->getTranslator();
+        $managerPath = 'contao-manager.phar.php';
+
+        $listener = new BackendMenuListener($security, $router, $requestStack, $translator, false, $managerPath, null);
         $listener($event);
 
         $this->assertCount(0, $event->getTree()->getChild('system')->getChildren());

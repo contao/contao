@@ -139,11 +139,8 @@ class MetaWizard extends Widget
 		$count = 0;
 		$return = '';
 
-		$this->import(Database::class, 'Database');
-		$this->import(BackendUser::class, 'User');
-
 		// Only show the root page languages (see #7112, #7667)
-		$objRootLangs = $this->Database->query("SELECT language FROM tl_page WHERE type='root' AND language!=''");
+		$objRootLangs = Database::getInstance()->query("SELECT language FROM tl_page WHERE type='root' AND language!=''");
 		$existing = $objRootLangs->fetchEach('language');
 
 		foreach ($existing as $lang)
@@ -163,64 +160,61 @@ class MetaWizard extends Widget
 		}
 
 		// Add the existing entries
-		if (!empty($this->varValue))
+		$languages = System::getContainer()->get('contao.intl.locales')->getDisplayNames(array_map('strval', array_keys($this->varValue)));
+		$items = array();
+
+		// Add the input fields
+		foreach ($this->varValue as $lang=>$meta)
 		{
-			$languages = System::getContainer()->get('contao.intl.locales')->getDisplayNames(array_map('strval', array_keys($this->varValue)));
-			$items = array();
+			$item = '<li data-language="' . $lang . '" data-controller="contao--metawizard"><span class="lang">' . ($languages[$lang] ?? $lang) . ' <button type="button" title="' . $GLOBALS['TL_LANG']['MSC']['delete'] . '" data-action="contao--metawizard#delete:prevent">' . Image::getHtml('delete.svg') . '</button></span>';
 
-			// Add the input fields
-			foreach ($this->varValue as $lang=>$meta)
+			// Take the fields from the DCA (see #4327)
+			foreach ($this->metaFields as $field=>$fieldConfig)
 			{
-				$item = '<li data-language="' . $lang . '" data-controller="contao--metawizard"><span class="lang">' . ($languages[$lang] ?? $lang) . ' <button type="button" title="' . $GLOBALS['TL_LANG']['MSC']['delete'] . '" data-action="contao--metawizard#delete:prevent">' . Image::getHtml('delete.svg') . '</button></span>';
+				$item .= '<label' . (isset($this->arrFieldErrors[$lang][$field]) ? ' class="error"' : '') . ' for="ctrl_' . $this->strId . '_' . $field . '_' . $count . '">' . $GLOBALS['TL_LANG']['MSC']['aw_' . $field] . '</label>';
 
-				// Take the fields from the DCA (see #4327)
-				foreach ($this->metaFields as $field=>$fieldConfig)
+				if (isset($fieldConfig['type']) && 'textarea' === $fieldConfig['type'])
 				{
-					$item .= '<label' . (isset($this->arrFieldErrors[$lang][$field]) ? ' class="error"' : '') . ' for="ctrl_' . $this->strId . '_' . $field . '_' . $count . '">' . $GLOBALS['TL_LANG']['MSC']['aw_' . $field] . '</label>';
-
-					if (isset($fieldConfig['type']) && 'textarea' === $fieldConfig['type'])
-					{
-						$item .= '<textarea name="' . $this->strId . '[' . $lang . '][' . $field . ']" id="ctrl_' . $this->strId . '_' . $field . '_' . $count . '" class="tl_textarea"' . (!empty($fieldConfig['attributes']) ? ' ' . $fieldConfig['attributes'] : '') . ' data-contao--metawizard-target="input">' . ($meta[$field] ?? '') . '</textarea>';
-					}
-					else
-					{
-						$item .= '<input type="text" name="' . $this->strId . '[' . $lang . '][' . $field . ']" id="ctrl_' . $this->strId . '_' . $field . '_' . $count . '" class="tl_text" value="' . self::specialcharsValue($meta[$field] ?? '') . '"' . (!empty($fieldConfig['attributes']) ? ' ' . $fieldConfig['attributes'] : '') . '  data-contao--metawizard-target="input">';
-					}
-
-					// DCA picker
-					if (isset($fieldConfig['dcaPicker']) && (\is_array($fieldConfig['dcaPicker']) || $fieldConfig['dcaPicker'] === true))
-					{
-						$item .= Backend::getDcaPickerWizard($fieldConfig['dcaPicker'], $this->strTable, $this->strField, $this->strId . '_' . $field . '_' . $count);
-					}
-
-					$item .= '<br>';
+					$item .= '<textarea name="' . $this->strId . '[' . $lang . '][' . $field . ']" id="ctrl_' . $this->strId . '_' . $field . '_' . $count . '" class="tl_textarea"' . (!empty($fieldConfig['attributes']) ? ' ' . $fieldConfig['attributes'] : '') . ' data-contao--metawizard-target="input">' . ($meta[$field] ?? '') . '</textarea>';
+				}
+				else
+				{
+					$item .= '<input type="text" name="' . $this->strId . '[' . $lang . '][' . $field . ']" id="ctrl_' . $this->strId . '_' . $field . '_' . $count . '" class="tl_text" value="' . self::specialcharsValue($meta[$field] ?? '') . '"' . (!empty($fieldConfig['attributes']) ? ' ' . $fieldConfig['attributes'] : '') . '  data-contao--metawizard-target="input">';
 				}
 
-				$item .= '</li>';
+				// DCA picker
+				if (isset($fieldConfig['dcaPicker']) && (\is_array($fieldConfig['dcaPicker']) || $fieldConfig['dcaPicker'] === true))
+				{
+					$item .= Backend::getDcaPickerWizard($fieldConfig['dcaPicker'], $this->strTable, $this->strField, $this->strId . '_' . $field . '_' . $count);
+				}
 
-				$items[$lang] = $item;
-
-				++$count;
+				$item .= '<br>';
 			}
 
-			// Sort the items by language name with the user language on top (see #3818)
-			uksort($items, function ($a, $b) use ($languages) {
-				if ($this->User->language === $a)
-				{
-					return -1;
-				}
+			$item .= '</li>';
 
-				if ($this->User->language === $b)
-				{
-					return 1;
-				}
+			$items[$lang] = $item;
 
-				return ($languages[$a] ?? $a) <=> ($languages[$b] ?? $b);
-			});
-
-			$return = implode('', $items);
+			++$count;
 		}
 
-		return '<ul id="ctrl_' . $this->strId . '" class="tl_metawizard dcapicker">' . $return . '</ul>';
+		$user = BackendUser::getInstance();
+
+		// Sort the items by language name with the user language on top (see #3818)
+		uksort($items, static function ($a, $b) use ($user, $languages) {
+			if ($user->language === $a)
+			{
+				return -1;
+			}
+
+			if ($user->language === $b)
+			{
+				return 1;
+			}
+
+			return ($languages[$a] ?? $a) <=> ($languages[$b] ?? $b);
+		});
+
+		return '<ul id="ctrl_' . $this->strId . '" class="tl_metawizard dcapicker">' . implode('', $items) . '</ul>';
 	}
 }

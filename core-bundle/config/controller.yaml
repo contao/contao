@@ -37,7 +37,9 @@ services:
             - '%contao.preview_script%'
             - '@contao.security.frontend_preview_authenticator'
             - '@event_dispatcher'
-            - '@security.authorization_checker'
+            - '@security.helper'
+            - '@security.authenticator.firewall_aware_login_link_handler'
+            - '@uri_signer'
         tags:
             - controller.service_arguments
 
@@ -64,16 +66,23 @@ services:
         tags:
             - controller.service_arguments
 
+    Contao\CoreBundle\Controller\ContentElement\AccordionController:
+        arguments:
+            - '@contao.framework'
+
     Contao\CoreBundle\Controller\ContentElement\CodeController: ~
 
     Contao\CoreBundle\Controller\ContentElement\DownloadsController:
         arguments:
             - '@security.helper'
             - '@contao.filesystem.virtual.files'
-            - '@contao.filesystem.file_download_helper'
-            - '@contao.image.preview_factory'
-            - '@contao.image.studio'
-            - '%kernel.project_dir%'
+        tags:
+            - controller.service_arguments
+            - { name: container.service_subscriber, id: contao.filesystem.file_download_helper }
+            - { name: container.service_subscriber, id: contao.image.preview_factory }
+            - { name: container.service_subscriber, id: contao.image.studio }
+
+    Contao\CoreBundle\Controller\ContentElement\ElementGroupController: ~
 
     Contao\CoreBundle\Controller\ContentElement\HeadlineController: ~
 
@@ -120,6 +129,7 @@ services:
     Contao\CoreBundle\Controller\FaviconController:
         arguments:
             - '@contao.framework'
+            - '@contao.routing.page_finder'
             - '%kernel.project_dir%'
             - '@contao.cache.entity_tags'
         tags:
@@ -158,6 +168,7 @@ services:
     Contao\CoreBundle\Controller\InsertTagsController:
         arguments:
             - '@contao.insert_tag.parser'
+            - '@?fos_http_cache.http.symfony_response_tagger'
         tags:
             - controller.service_arguments
 
@@ -179,9 +190,14 @@ services:
         tags:
             - controller.service_arguments
 
+    Contao\CoreBundle\Controller\RedirectController:
+        public: true
+        arguments:
+            - '@Symfony\Bundle\FrameworkBundle\Controller\RedirectController'
+
     Contao\CoreBundle\Controller\RobotsTxtController:
         arguments:
-            - '@contao.framework'
+            - '@contao.routing.page_finder'
             - '@event_dispatcher'
         tags:
             - controller.service_arguments
@@ -189,5 +205,6 @@ services:
     Contao\CoreBundle\Controller\SitemapController:
         arguments:
             - '@contao.routing.page_registry'
+            - '@contao.routing.page_finder'
         tags:
             - controller.service_arguments

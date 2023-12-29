@@ -27,7 +27,7 @@ class UnableToResolveUuidExceptionTest extends TestCase
 
         $this->assertSame(
             'Unable to resolve UUID "2bfce622-5ea5-11ec-bf63-0242ac130002" to a path. Additional message.',
-            $exception->getMessage()
+            $exception->getMessage(),
         );
     }
 }

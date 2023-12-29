@@ -15,6 +15,7 @@ use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Image;
@@ -69,15 +70,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'fields'                  => array('', 'name', 'username', 'dateAdded'),
 			'showColumns'             => true,
 			'label_callback'          => array('tl_user', 'addIcon')
-		),
-		'global_operations' => array
-		(
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
 		),
 		'operations' => array
 		(
@@ -446,28 +438,23 @@ class tl_user extends Backend
 	private static $origUserId;
 
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Check permissions to edit table tl_user
 	 *
 	 * @throws AccessDeniedException
 	 */
 	public function checkPermission()
 	{
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
 		// Unset the "admin" checkbox for regular users
 		unset($GLOBALS['TL_DCA']['tl_user']['fields']['admin']);
+
+		$db = Database::getInstance();
 
 		// Check current action
 		switch (Input::get('act'))
@@ -480,7 +467,7 @@ class tl_user extends Backend
 
 			case 'toggle':
 			case 'delete':
-				if (Input::get('id') == $this->User->id)
+				if (Input::get('id') == $user->id)
 				{
 					throw new AccessDeniedException('Attempt to ' . Input::get('act') . ' own account ID ' . Input::get('id') . '.');
 				}
@@ -489,9 +476,10 @@ class tl_user extends Backend
 			case 'edit':
 			case 'copy':
 			default:
-				$objUser = $this->Database->prepare("SELECT `admin` FROM tl_user WHERE id=?")
-										  ->limit(1)
-										  ->execute(Input::get('id'));
+				$objUser = $db
+					->prepare("SELECT `admin` FROM tl_user WHERE id=?")
+					->limit(1)
+					->execute(Input::get('id'));
 
 				if ($objUser->admin && Input::get('act'))
 				{
@@ -504,7 +492,7 @@ class tl_user extends Backend
 			case 'overrideAll':
 				$objSession = System::getContainer()->get('request_stack')->getSession();
 				$session = $objSession->all();
-				$objUser = $this->Database->execute("SELECT id FROM tl_user WHERE `admin`=1");
+				$objUser = $db->execute("SELECT id FROM tl_user WHERE `admin`=1");
 				$session['CURRENT']['IDS'] = array_diff($session['CURRENT']['IDS'], $objUser->fetchEach('id'));
 				$objSession->replace($session);
 				break;
@@ -556,7 +544,7 @@ class tl_user extends Backend
 			return;
 		}
 
-		$objResult = $this->Database->query("SELECT EXISTS(SELECT * FROM tl_user WHERE admin=0 AND modules LIKE '%\"tpl_editor\"%') as showTemplateWarning, EXISTS(SELECT * FROM tl_user WHERE admin=0 AND themes LIKE '%\"theme_import\"%') as showThemeWarning, EXISTS(SELECT * FROM tl_user WHERE elements LIKE '%\"unfiltered_html\"%') as showUnfilteredHtmlWarning");
+		$objResult = Database::getInstance()->query("SELECT EXISTS(SELECT * FROM tl_user WHERE admin=0 AND modules LIKE '%\"tpl_editor\"%') as showTemplateWarning, EXISTS(SELECT * FROM tl_user WHERE admin=0 AND themes LIKE '%\"theme_import\"%') as showThemeWarning, EXISTS(SELECT * FROM tl_user WHERE elements LIKE '%\"unfiltered_html\"%') as showUnfilteredHtmlWarning");
 
 		if ($objResult->showTemplateWarning)
 		{
@@ -594,16 +582,18 @@ class tl_user extends Backend
 			$image .= '_two_factor';
 		}
 
+		$icon = $image;
+
 		if ($disabled || $row['disable'])
 		{
-			$image .= '_';
+			$image .= '--disabled';
 		}
 
 		$args[0] = sprintf(
 			'<div class="list_icon_new" style="background-image:url(\'%s\')" data-icon="%s" data-icon-disabled="%s">&nbsp;</div>',
 			Image::getUrl($image),
-			Image::getUrl($disabled ? $image : rtrim($image, '_')),
-			Image::getUrl(rtrim($image, '_') . '_')
+			Image::getUrl($icon),
+			Image::getUrl($icon . '--disabled')
 		);
 
 		return $args;
@@ -623,7 +613,7 @@ class tl_user extends Backend
 	 */
 	public function editUser($row, $href, $label, $title, $icon, $attributes)
 	{
-		return ($this->User->isAdmin || !$row['admin']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return (BackendUser::getInstance()->isAdmin || !$row['admin']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -646,7 +636,7 @@ class tl_user extends Backend
 			return '';
 		}
 
-		return ($this->User->isAdmin || !$row['admin']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return (BackendUser::getInstance()->isAdmin || !$row['admin']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -663,7 +653,7 @@ class tl_user extends Backend
 	 */
 	public function deleteUser($row, $href, $label, $title, $icon, $attributes)
 	{
-		return ($this->User->isAdmin || !$row['admin']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return (BackendUser::getInstance()->isAdmin || !$row['admin']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -690,7 +680,7 @@ class tl_user extends Backend
 
 		$disabled = false;
 
-		if ($this->User->id == $row['id'])
+		if (BackendUser::getInstance()->id == $row['id'])
 		{
 			$disabled = true;
 		}
@@ -716,7 +706,7 @@ class tl_user extends Backend
 
 		if ($disabled)
 		{
-			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+			return Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 		}
 
 		$router = System::getContainer()->get('router');
@@ -740,7 +730,7 @@ class tl_user extends Backend
 
 			if (is_array($arrPurge))
 			{
-				$this->import(Automator::class, 'Automator');
+				$automator = new Automator();
 
 				if (in_array('purge_session', $arrPurge))
 				{
@@ -752,19 +742,19 @@ class tl_user extends Backend
 
 				if (in_array('purge_images', $arrPurge))
 				{
-					$this->Automator->purgeImageCache();
+					$automator->purgeImageCache();
 					Message::addConfirmation($GLOBALS['TL_LANG']['tl_user']['htmlPurged']);
 				}
 
 				if (in_array('purge_previews', $arrPurge))
 				{
-					$this->Automator->purgePreviewCache();
+					$automator->purgePreviewCache();
 					Message::addConfirmation($GLOBALS['TL_LANG']['tl_user']['previewPurged']);
 				}
 
 				if (in_array('purge_pages', $arrPurge))
 				{
-					$this->Automator->purgePageCache();
+					$automator->purgePageCache();
 					Message::addConfirmation($GLOBALS['TL_LANG']['tl_user']['tempPurged']);
 				}
 
@@ -817,7 +807,7 @@ class tl_user extends Backend
 		$modules = StringUtil::deserialize($dc->activeRecord->modules);
 
 		// Unset the template editor unless the user is an administrator or has been granted access to the template editor
-		if (!$this->User->isAdmin && (!is_array($modules) || !in_array('tpl_editor', $modules)) && ($key = array_search('tpl_editor', $arrModules['design'])) !== false)
+		if (!BackendUser::getInstance()->isAdmin && (!is_array($modules) || !in_array('tpl_editor', $modules)) && ($key = array_search('tpl_editor', $arrModules['design'])) !== false)
 		{
 			unset($arrModules['design'][$key]);
 			$arrModules['design'] = array_values($arrModules['design']);
@@ -846,7 +836,7 @@ class tl_user extends Backend
 	 */
 	public function checkAdminStatus($varValue, DataContainer $dc)
 	{
-		if (!$varValue && $this->User->id == $dc->id)
+		if (!$varValue && BackendUser::getInstance()->id == $dc->id)
 		{
 			$varValue = true;
 		}
@@ -864,7 +854,7 @@ class tl_user extends Backend
 	 */
 	public function checkAdminDisable($varValue, DataContainer $dc)
 	{
-		if ($varValue == 1 && $this->User->id == $dc->id)
+		if ($varValue == 1 && BackendUser::getInstance()->id == $dc->id)
 		{
 			$varValue = '';
 		}
@@ -895,8 +885,9 @@ class tl_user extends Backend
 			$time = time();
 		}
 
-		$this->Database->prepare("UPDATE tl_user SET dateAdded=? WHERE id=?")
-					   ->execute($time, $dc->id);
+		Database::getInstance()
+			->prepare("UPDATE tl_user SET dateAdded=? WHERE id=?")
+			->execute($time, $dc->id);
 	}
 
 	/**
@@ -907,9 +898,11 @@ class tl_user extends Backend
 	 */
 	public function updateCurrentUser(DataContainer $dc)
 	{
-		if ($this->User->id == $dc->id)
+		$user = BackendUser::getInstance();
+
+		if ($user->id == $dc->id)
 		{
-			$this->User->findBy('id', $this->User->id);
+			$user->findBy('id', $user->id);
 		}
 	}
 
@@ -940,12 +933,16 @@ class tl_user extends Backend
 			$icon = 'invisible.svg';
 		}
 
+		$user = BackendUser::getInstance();
+
 		// Protect admin accounts and own account
-		if ((!$this->User->isAdmin && $row['admin']) || $this->User->id == $row['id'])
+		if ((!$user->isAdmin && $row['admin']) || $user->id == $row['id'])
 		{
 			return Image::getHtml($icon) . ' ';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['disable'] ? 0 : 1) . '"') . '</a> ';
+		$titleDisabled = (is_array($GLOBALS['TL_DCA']['tl_user']['list']['operations']['toggle']['label']) && isset($GLOBALS['TL_DCA']['tl_user']['list']['operations']['toggle']['label'][2])) ? sprintf($GLOBALS['TL_DCA']['tl_user']['list']['operations']['toggle']['label'][2], $row['id']) : $title;
+
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars(!$row['disable'] ? $title : $titleDisabled) . '" data-title="' . StringUtil::specialchars($title) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['disable'] ? 0 : 1) . '"') . '</a> ';
 	}
 }

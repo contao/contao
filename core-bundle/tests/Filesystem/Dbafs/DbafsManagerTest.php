@@ -29,17 +29,17 @@ class DbafsManagerTest extends TestCase
 
         $manager->register(
             $this->getDbafsWithProperties(DbafsInterface::FEATURE_LAST_MODIFIED),
-            'foo'
+            'foo',
         );
 
         $manager->register(
             $this->getDbafsWithProperties(DbafsInterface::FEATURE_LAST_MODIFIED | DbafsInterface::FEATURE_FILE_SIZE),
-            'foo/bar'
+            'foo/bar',
         );
 
         $manager->register(
             $this->getDbafsWithProperties(DbafsInterface::FEATURES_NONE),
-            'baz'
+            'baz',
         );
 
         $this->assertTrue($manager->match('foo'));
@@ -117,14 +117,14 @@ class DbafsManagerTest extends TestCase
                 'a' => $uuid1,
                 'bar/b' => $uuid2,
             ]),
-            'foo'
+            'foo',
         );
 
         $manager->register(
             $this->getDbafsCoveringUuids([
                 'c' => $uuid3,
             ]),
-            'other'
+            'other',
         );
 
         // Resolve without constraining to prefix
@@ -149,7 +149,7 @@ class DbafsManagerTest extends TestCase
         $dbafs
             ->method('getRecord')
             ->willReturnCallback(
-                static function (string $path): ?FilesystemItem {
+                static function (string $path): FilesystemItem|null {
                     $resources = [
                         'bar/baz' => false,
                         'bar.file' => true,
@@ -160,7 +160,7 @@ class DbafsManagerTest extends TestCase
                     }
 
                     return null;
-                }
+                },
             )
         ;
 
@@ -255,20 +255,14 @@ class DbafsManagerTest extends TestCase
 
     public function testGetExtraMetadata(): void
     {
-        $filesDbafs = $this->getDbafsWithExtraMetadata(
-            'media/hilarious-cat.mov',
-            [
-                'foo' => 'foobar',
-                'bar' => 42,
-            ]
-        );
+        $filesDbafs = $this->getDbafsWithExtraMetadata('media/hilarious-cat.mov', [
+            'foo' => 'foobar',
+            'bar' => 42,
+        ]);
 
-        $filesMediaDbafs = $this->getDbafsWithExtraMetadata(
-            'hilarious-cat.mov',
-            [
-                'baz' => true,
-            ]
-        );
+        $filesMediaDbafs = $this->getDbafsWithExtraMetadata('hilarious-cat.mov', [
+            'baz' => true,
+        ]);
 
         $manager = new DbafsManager();
         $manager->register($filesDbafs, 'files');
@@ -280,29 +274,23 @@ class DbafsManagerTest extends TestCase
                 'bar' => 42,
                 'baz' => true,
             ],
-            $manager->getExtraMetadata('files/media/hilarious-cat.mov')
+            $manager->getExtraMetadata('files/media/hilarious-cat.mov'),
         );
     }
 
     public function testValidatesExtraMetadata(): void
     {
-        $assetsDbafs = $this->getDbafsWithExtraMetadata(
-            'images/a.jpg',
-            [
-                'accessed' => 123,
-                'compressed' => true,
-                'quality' => 'high',
-            ]
-        );
+        $assetsDbafs = $this->getDbafsWithExtraMetadata('images/a.jpg', [
+            'accessed' => 123,
+            'compressed' => true,
+            'quality' => 'high',
+        ]);
 
-        $assetsImagesDbafs = $this->getDbafsWithExtraMetadata(
-            'a.jpg',
-            [
-                'aspectRatio' => 1.5,
-                'quality' => '50',
-                'compressed' => true,
-            ]
-        );
+        $assetsImagesDbafs = $this->getDbafsWithExtraMetadata('a.jpg', [
+            'aspectRatio' => 1.5,
+            'quality' => '50',
+            'compressed' => true,
+        ]);
 
         $manager = new DbafsManager();
         $manager->register($assetsDbafs, 'assets');
@@ -394,7 +382,7 @@ class DbafsManagerTest extends TestCase
                 'foo/bar',
                 'foo/baz',
             ],
-            array_map('strval', iterator_to_array($listing))
+            array_map('strval', iterator_to_array($listing)),
         );
     }
 
@@ -497,18 +485,15 @@ class DbafsManagerTest extends TestCase
             ->willReturn(
                 array_map(
                     static fn (string $listingPath): FilesystemItem => new FilesystemItem(true, $listingPath),
-                    $listing
-                )
+                    $listing,
+                ),
             )
         ;
 
         return $dbafs;
     }
 
-    /**
-     * @return DbafsInterface&MockObject
-     */
-    private function getDbafsWithProperties(int $featureFlags): DbafsInterface
+    private function getDbafsWithProperties(int $featureFlags): DbafsInterface&MockObject
     {
         $dbafs = $this->createMock(DbafsInterface::class);
         $dbafs
@@ -528,7 +513,7 @@ class DbafsManagerTest extends TestCase
         $dbafs
             ->method('getPathFromUuid')
             ->willReturnCallback(
-                static function (Uuid $uuidToCompare) use ($mapping): ?string {
+                static function (Uuid $uuidToCompare) use ($mapping): string|null {
                     foreach ($mapping as $path => $uuid) {
                         if (0 === $uuidToCompare->compare($uuid)) {
                             return $path;
@@ -536,7 +521,7 @@ class DbafsManagerTest extends TestCase
                     }
 
                     return null;
-                }
+                },
             )
         ;
 

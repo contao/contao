@@ -11,13 +11,9 @@
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Calendar;
-use Contao\CalendarBundle\Security\ContaoCalendarPermissions;
-use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
-use Contao\Image;
-use Contao\Input;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
@@ -35,7 +31,7 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		'markAsCopy'                  => 'title',
 		'onload_callback' => array
 		(
-			array('tl_calendar', 'checkPermission'),
+			array('tl_calendar', 'adjustDca'),
 			array('tl_calendar', 'generateFeed')
 		),
 		'oncreate_callback' => array
@@ -88,36 +84,7 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 				'attributes'          => 'onclick="Backend.getScrollOffset()"',
 				'button_callback'     => array('tl_calendar', 'manageFeeds')
 			),
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
-		),
-		'operations' => array
-		(
-			'edit' => array
-			(
-				'href'                => 'act=edit',
-				'icon'                => 'edit.svg',
-				'button_callback'     => array('tl_calendar', 'editHeader')
-			),
-			'children',
-			'copy' => array
-			(
-				'href'                => 'act=copy',
-				'icon'                => 'copy.svg',
-				'button_callback'     => array('tl_calendar', 'copyCalendar')
-			),
-			'delete' => array
-			(
-				'href'                => 'act=delete',
-				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"',
-				'button_callback'     => array('tl_calendar', 'deleteCalendar')
-			),
-			'show'
+			'all'
 		)
 	),
 
@@ -128,7 +95,7 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		'default'                     => '{title_legend},title,jumpTo;{protected_legend:hide},protected;{comments_legend:hide},allowComments'
 	),
 
-	// Subpalettes
+	// Sub-palettes
 	'subpalettes' => array
 	(
 		'protected'                   => 'groups',
@@ -242,20 +209,9 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 class tl_calendar extends Backend
 {
 	/**
-	 * Import the back end user object
+	 * Set the root IDs and unset the "allowComments" field if the comments bundle is not available.
 	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
-	 * Check permissions to edit table tl_calendar
-	 *
-	 * @throws AccessDeniedException
-	 */
-	public function checkPermission()
+	public function adjustDca()
 	{
 		$bundles = System::getContainer()->getParameter('kernel.bundles');
 
@@ -265,88 +221,24 @@ class tl_calendar extends Backend
 			unset($GLOBALS['TL_DCA']['tl_calendar']['fields']['allowComments']);
 		}
 
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
 		// Set root IDs
-		if (empty($this->User->calendars) || !is_array($this->User->calendars))
+		if (empty($user->calendars) || !is_array($user->calendars))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->calendars;
+			$root = $user->calendars;
 		}
 
 		$GLOBALS['TL_DCA']['tl_calendar']['list']['sorting']['root'] = $root;
-		$security = System::getContainer()->get('security.helper');
-
-		// Check permissions to add calendars
-		if (!$security->isGranted(ContaoCalendarPermissions::USER_CAN_CREATE_CALENDARS))
-		{
-			$GLOBALS['TL_DCA']['tl_calendar']['config']['closed'] = true;
-			$GLOBALS['TL_DCA']['tl_calendar']['config']['notCreatable'] = true;
-			$GLOBALS['TL_DCA']['tl_calendar']['config']['notCopyable'] = true;
-		}
-
-		// Check permissions to delete calendars
-		if (!$security->isGranted(ContaoCalendarPermissions::USER_CAN_DELETE_CALENDARS))
-		{
-			$GLOBALS['TL_DCA']['tl_calendar']['config']['notDeletable'] = true;
-		}
-
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-
-		// Check current action
-		switch (Input::get('act'))
-		{
-			case 'select':
-				// Allow
-				break;
-
-			case 'create':
-				if (!$security->isGranted(ContaoCalendarPermissions::USER_CAN_CREATE_CALENDARS))
-				{
-					throw new AccessDeniedException('Not enough permissions to create calendars.');
-				}
-				break;
-
-			case 'edit':
-			case 'copy':
-			case 'delete':
-			case 'show':
-				if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$security->isGranted(ContaoCalendarPermissions::USER_CAN_DELETE_CALENDARS)))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' calendar ID ' . Input::get('id') . '.');
-				}
-				break;
-
-			case 'editAll':
-			case 'deleteAll':
-			case 'overrideAll':
-			case 'copyAll':
-				$session = $objSession->all();
-
-				if (Input::get('act') == 'deleteAll' && !$security->isGranted(ContaoCalendarPermissions::USER_CAN_DELETE_CALENDARS))
-				{
-					$session['CURRENT']['IDS'] = array();
-				}
-				else
-				{
-					$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $root);
-				}
-				$objSession->replace($session);
-				break;
-
-			default:
-				if (Input::get('act'))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' calendars.');
-				}
-				break;
-		}
 	}
 
 	/**
@@ -362,19 +254,21 @@ class tl_calendar extends Backend
 			$insertId = func_get_arg(1);
 		}
 
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
 		// Set root IDs
-		if (empty($this->User->calendars) || !is_array($this->User->calendars))
+		if (empty($user->calendars) || !is_array($user->calendars))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->calendars;
+			$root = $user->calendars;
 		}
 
 		// The calendar is enabled already
@@ -389,10 +283,12 @@ class tl_calendar extends Backend
 
 		if (is_array($arrNew['tl_calendar']) && in_array($insertId, $arrNew['tl_calendar']))
 		{
+			$db = Database::getInstance();
+
 			// Add the permissions on group level
-			if ($this->User->inherit != 'custom')
+			if ($user->inherit != 'custom')
 			{
-				$objGroup = $this->Database->execute("SELECT id, calendars, calendarp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $this->User->groups)) . ")");
+				$objGroup = $db->execute("SELECT id, calendars, calendarp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $user->groups)) . ")");
 
 				while ($objGroup->next())
 				{
@@ -403,18 +299,18 @@ class tl_calendar extends Backend
 						$arrCalendars = StringUtil::deserialize($objGroup->calendars, true);
 						$arrCalendars[] = $insertId;
 
-						$this->Database->prepare("UPDATE tl_user_group SET calendars=? WHERE id=?")
-									   ->execute(serialize($arrCalendars), $objGroup->id);
+						$db->prepare("UPDATE tl_user_group SET calendars=? WHERE id=?")->execute(serialize($arrCalendars), $objGroup->id);
 					}
 				}
 			}
 
 			// Add the permissions on user level
-			if ($this->User->inherit != 'group')
+			if ($user->inherit != 'group')
 			{
-				$objUser = $this->Database->prepare("SELECT calendars, calendarp FROM tl_user WHERE id=?")
-										   ->limit(1)
-										   ->execute($this->User->id);
+				$objUser = $db
+					->prepare("SELECT calendars, calendarp FROM tl_user WHERE id=?")
+					->limit(1)
+					->execute($user->id);
 
 				$arrCalendarp = StringUtil::deserialize($objUser->calendarp);
 
@@ -423,14 +319,13 @@ class tl_calendar extends Backend
 					$arrCalendars = StringUtil::deserialize($objUser->calendars, true);
 					$arrCalendars[] = $insertId;
 
-					$this->Database->prepare("UPDATE tl_user SET calendars=? WHERE id=?")
-								   ->execute(serialize($arrCalendars), $this->User->id);
+					$db->prepare("UPDATE tl_user SET calendars=? WHERE id=?")->execute(serialize($arrCalendars), $user->id);
 				}
 			}
 
 			// Add the new element to the user object
 			$root[] = $insertId;
-			$this->User->calendars = $root;
+			$user->calendars = $root;
 		}
 	}
 
@@ -455,11 +350,11 @@ class tl_calendar extends Backend
 			$request->attributes->set('_scope', 'frontend');
 		}
 
-		$this->import(Calendar::class, 'Calendar');
+		$calendar = new Calendar();
 
 		foreach ($session as $id)
 		{
-			$this->Calendar->generateFeedsByCalendar($id);
+			$calendar->generateFeedsByCalendar($id);
 		}
 
 		if ($request)
@@ -507,58 +402,9 @@ class tl_calendar extends Backend
 	 */
 	public function manageFeeds($href, $label, $title, $class, $attributes)
 	{
-		return ($this->User->isAdmin || !empty($this->User->calendarfeeds) || !empty($this->User->calendarfeedp)) ? '<a href="' . $this->addToUrl($href) . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : '';
-	}
+		$user = BackendUser::getInstance();
 
-	/**
-	 * Return the edit header button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function editHeader($row, $href, $label, $title, $icon, $attributes)
-	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, 'tl_calendar') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)) . ' ';
-	}
-
-	/**
-	 * Return the copy calendar button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function copyCalendar($row, $href, $label, $title, $icon, $attributes)
-	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCalendarPermissions::USER_CAN_CREATE_CALENDARS) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)) . ' ';
-	}
-
-	/**
-	 * Return the delete calendar button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function deleteCalendar($row, $href, $label, $title, $icon, $attributes)
-	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCalendarPermissions::USER_CAN_DELETE_CALENDARS) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)) . ' ';
+		return ($user->isAdmin || !empty($user->calendarfeeds) || !empty($user->calendarfeedp)) ? '<a href="' . $this->addToUrl($href) . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : '';
 	}
 
 	/**

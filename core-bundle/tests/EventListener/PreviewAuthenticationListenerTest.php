@@ -18,10 +18,10 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
 
@@ -103,7 +103,7 @@ class PreviewAuthenticationListenerTest extends TestCase
         $this->assertInstanceOf(RedirectResponse::class, $requestEvent->getResponse());
     }
 
-    private function getRequestEvent(Request $request = null): RequestEvent
+    private function getRequestEvent(Request|null $request = null): RequestEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
 

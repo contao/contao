@@ -61,7 +61,7 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface
                         NelmioSecurityBundle::class,
                         SchebTwoFactorBundle::class,
                         CmfRoutingBundle::class,
-                    ]
+                    ],
                 ),
         ];
     }

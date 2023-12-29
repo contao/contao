@@ -25,12 +25,12 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Result;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
@@ -151,7 +151,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
             [],
             [],
             [],
-            ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest', 'REQUEST_METHOD' => 'POST']
+            ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest', 'REQUEST_METHOD' => 'POST'],
         );
 
         $response = $controller($request);
@@ -235,14 +235,14 @@ class BackendPreviewSwitchControllerTest extends TestCase
             [],
             [],
             [],
-            ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest', 'REQUEST_METHOD' => 'POST']
+            ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest', 'REQUEST_METHOD' => 'POST'],
         );
 
         $response = $controller($request);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertSame(json_encode([]), $response->getContent());
+        $this->assertSame(json_encode([], JSON_THROW_ON_ERROR), $response->getContent());
     }
 
     public function testExitsAsUnauthenticatedUser(): void
@@ -293,10 +293,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $this->assertSame(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
 
-    /**
-     * @return RouterInterface&MockObject
-     */
-    private function mockRouter(bool $canShare = false, bool $isPreviewMode = true): RouterInterface
+    private function mockRouter(bool $canShare = false): RouterInterface&MockObject
     {
         $router = $this->createMock(RouterInterface::class);
 
@@ -307,9 +304,9 @@ class BackendPreviewSwitchControllerTest extends TestCase
                 ->withConsecutive(
                     [
                         'contao_backend',
-                        ['do' => 'preview_link', 'act' => 'create', 'showUnpublished' => $isPreviewMode ? '1' : '', 'rt' => 'csrf', 'nb' => '1'],
+                        ['do' => 'preview_link', 'act' => 'create', 'showUnpublished' => '1', 'rt' => 'csrf', 'nb' => '1'],
                     ],
-                    ['contao_backend_switch']
+                    ['contao_backend_switch'],
                 )
                 ->willReturn('/_contao/preview/1', '/contao/preview_switch')
             ;
@@ -324,10 +321,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
         return $router;
     }
 
-    /**
-     * @return TokenChecker&MockObject
-     */
-    private function mockTokenChecker(string $frontendUsername = null, bool $previewMode = true): TokenChecker
+    private function mockTokenChecker(string|null $frontendUsername = null): TokenChecker&MockObject
     {
         $tokenChecker = $this->createMock(TokenChecker::class);
         $tokenChecker
@@ -337,7 +331,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
 
         $tokenChecker
             ->method('isPreviewMode')
-            ->willReturn($previewMode)
+            ->willReturn(true)
         ;
 
         return $tokenChecker;
@@ -345,10 +339,8 @@ class BackendPreviewSwitchControllerTest extends TestCase
 
     /**
      * @param class-string<User> $userClass
-     *
-     * @return Security&MockObject
      */
-    private function mockSecurity(bool $canShare = false, string|null $userClass = BackendUser::class, array $roles = ['ROLE_ADMIN', 'ROLE_USER', 'ROLE_ALLOWED_TO_SWITCH_MEMBER', 'IS_AUTHENTICATED_FULLY']): Security
+    private function mockSecurity(bool $canShare = false, string|null $userClass = BackendUser::class, array $roles = ['ROLE_ADMIN', 'ROLE_USER', 'ROLE_ALLOWED_TO_SWITCH_MEMBER', 'IS_AUTHENTICATED_FULLY']): Security&MockObject
     {
         $user = null;
 
@@ -368,7 +360,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
                 ->method('isGranted')
                 ->withConsecutive(
                     ['ROLE_ALLOWED_TO_SWITCH_MEMBER'],
-                    [ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'preview_link']
+                    [ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'preview_link'],
                 )
                 ->willReturn(true, $canShare)
             ;
@@ -382,10 +374,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
         return $security;
     }
 
-    /**
-     * @return Environment&MockObject
-     */
-    private function getTwigMock(): Environment
+    private function getTwigMock(): Environment&MockObject
     {
         $twig = $this->createMock(Environment::class);
         $twig
@@ -396,10 +385,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
         return $twig;
     }
 
-    /**
-     * @return ContaoCsrfTokenManager&MockObject
-     */
-    private function mockTokenManager(): ContaoCsrfTokenManager
+    private function mockTokenManager(): ContaoCsrfTokenManager&MockObject
     {
         $tokenManager = $this->createMock(ContaoCsrfTokenManager::class);
         $tokenManager
@@ -410,10 +396,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
         return $tokenManager;
     }
 
-    /**
-     * @return TranslatorInterface&MockObject
-     */
-    private function mockTranslator(): TranslatorInterface
+    private function mockTranslator(): TranslatorInterface&MockObject
     {
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
@@ -424,10 +407,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
         return $translator;
     }
 
-    /**
-     * @return FrontendPreviewAuthenticator&MockObject
-     */
-    private function mockFrontendPreviewAuthenticator(): FrontendPreviewAuthenticator
+    private function mockFrontendPreviewAuthenticator(): FrontendPreviewAuthenticator&MockObject
     {
         $authenticator = $this->createMock(FrontendPreviewAuthenticator::class);
         $authenticator

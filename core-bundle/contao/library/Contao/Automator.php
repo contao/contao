@@ -231,7 +231,7 @@ class Automator extends System
 	 */
 	public function purgeRegistrations()
 	{
-		trigger_deprecation('contao/core-bundle', '5.0', 'Calling "%s()" has been deprecated and will no longer work in Contao 6.0. Use MemberModel::findExpiredRegistrations() instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use "MemberModel::findExpiredRegistrations()" instead.', __METHOD__);
 
 		$objMember = MemberModel::findExpiredRegistrations();
 
@@ -256,7 +256,7 @@ class Automator extends System
 	 */
 	public function purgeOptInTokens()
 	{
-		trigger_deprecation('contao/core-bundle', '5.0', 'Calling "%s()" has been deprecated and will no longer work in Contao 6.0. Use the "contao.opt_in" service instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the "contao.opt_in" service instead.', __METHOD__);
 
 		$optIn = System::getContainer()->get('contao.opt_in');
 		$optIn->purgeTokens();
@@ -280,8 +280,7 @@ class Automator extends System
 		{
 			foreach ($GLOBALS['TL_HOOKS']['removeOldFeeds'] as $callback)
 			{
-				$this->import($callback[0]);
-				$arrFeeds = array_merge($arrFeeds, $this->{$callback[0]}->{$callback[1]}());
+				$arrFeeds = array(...$arrFeeds, ...System::importStatic($callback[0])->{$callback[1]}());
 			}
 		}
 
@@ -348,8 +347,7 @@ class Automator extends System
 		{
 			foreach ($GLOBALS['TL_HOOKS']['generateXmlFiles'] as $callback)
 			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}();
+				System::importStatic($callback[0])->{$callback[1]}();
 			}
 		}
 

@@ -38,7 +38,7 @@ class RootPageDependentSelectListenerTest extends TestCase
         $listener = new RootPageDependentSelectListener(
             $this->createMock(Connection::class),
             $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(TranslatorInterface::class)
+            $this->createMock(TranslatorInterface::class),
         );
 
         $dataContainer = $this->mockClassWithProperties(DataContainer::class);
@@ -61,7 +61,7 @@ class RootPageDependentSelectListenerTest extends TestCase
         $listener = new RootPageDependentSelectListener(
             $this->createMock(Connection::class),
             $this->createMock(UrlGeneratorInterface::class),
-            $translator
+            $translator,
         );
 
         $dataContainer = $this->mockClassWithProperties(DataContainer::class);
@@ -77,26 +77,23 @@ class RootPageDependentSelectListenerTest extends TestCase
 
     public function testDoesNotSaveUnserializableData(): void
     {
-        $dataContainer = $this->mockClassWithProperties(DataContainer::class);
-
         $listener = new RootPageDependentSelectListener(
             $this->createMock(Connection::class),
             $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(TranslatorInterface::class)
+            $this->createMock(TranslatorInterface::class),
         );
 
-        $this->assertSame('foobar', $listener->saveCallback('foobar', $dataContainer));
+        $this->assertSame('foobar', $listener->saveCallback('foobar'));
     }
 
     public function testSavesValuesRelatedToRootPage(): void
     {
-        $dataContainer = $this->mockClassWithProperties(DataContainer::class);
         $connection = $this->mockGetRootPages();
 
         $listener = new RootPageDependentSelectListener(
             $connection,
             $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(TranslatorInterface::class)
+            $this->createMock(TranslatorInterface::class),
         );
 
         $this->assertSame(
@@ -105,7 +102,7 @@ class RootPageDependentSelectListenerTest extends TestCase
                 2 => 20,
                 3 => 30,
             ]),
-            $listener->saveCallback(serialize([10, 20, 30]), $dataContainer)
+            $listener->saveCallback(serialize([10, 20, 30])),
         );
     }
 
@@ -128,7 +125,7 @@ class RootPageDependentSelectListenerTest extends TestCase
         $listener = new RootPageDependentSelectListener(
             $connection,
             $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(TranslatorInterface::class)
+            $this->createMock(TranslatorInterface::class),
         );
 
         $this->assertSame(
@@ -137,7 +134,7 @@ class RootPageDependentSelectListenerTest extends TestCase
                 20 => 'name-20',
                 30 => 'name-30',
             ],
-            $listener->optionsCallback($dataContainer)
+            $listener->optionsCallback($dataContainer),
         );
 
         $this->unsetGlobalsArray();
@@ -171,7 +168,7 @@ class RootPageDependentSelectListenerTest extends TestCase
         $listener = new RootPageDependentSelectListener(
             $connection,
             $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(TranslatorInterface::class)
+            $this->createMock(TranslatorInterface::class),
         );
 
         $this->assertSame(
@@ -179,7 +176,7 @@ class RootPageDependentSelectListenerTest extends TestCase
                 10 => 'name-10',
                 20 => 'name-20',
             ],
-            $listener->optionsCallback($dataContainer)
+            $listener->optionsCallback($dataContainer),
         );
 
         $this->unsetGlobalsArray();

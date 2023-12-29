@@ -17,6 +17,7 @@ use Contao\CoreBundle\Doctrine\Backup\Backup;
 abstract class AbstractConfig
 {
     private array $tablesToIgnore = [];
+
     private bool $gzCompression;
 
     public function __construct(private Backup $backup)

@@ -20,7 +20,7 @@ use Symfony\Component\Finder\Finder;
  */
 class ResourceFinder implements ResourceFinderInterface
 {
-    private array $paths;
+    private readonly array $paths;
 
     public function __construct(array|string $paths)
     {
@@ -50,7 +50,7 @@ class ResourceFinder implements ResourceFinderInterface
             }
         }
 
-        if (empty($paths)) {
+        if (!$paths) {
             throw new \InvalidArgumentException(sprintf('The subpath "%s" does not exists.', $subpath));
         }
 

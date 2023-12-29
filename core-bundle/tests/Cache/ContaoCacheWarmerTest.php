@@ -19,6 +19,8 @@ use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Translation\MessageCatalogue;
+use Contao\CoreBundle\Translation\Translator;
 use Contao\DcaExtractor;
 use Contao\DcaLoader;
 use Contao\System;
@@ -27,6 +29,8 @@ use Doctrine\DBAL\Schema\Schema;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 
 class ContaoCacheWarmerTest extends TestCase
 {
@@ -73,6 +77,7 @@ class ContaoCacheWarmerTest extends TestCase
         $this->assertFileExists(Path::join($this->getTempDir(), 'var/cache/contao/config/autoload.php'));
         $this->assertFileExists(Path::join($this->getTempDir(), 'var/cache/contao/config/config.php'));
         $this->assertFileExists(Path::join($this->getTempDir(), 'var/cache/contao/config/templates.php'));
+        $this->assertFileExists(Path::join($this->getTempDir(), 'var/cache/contao/config/available-language-files.php'));
         $this->assertFileExists(Path::join($this->getTempDir(), 'var/cache/contao/dca'));
         $this->assertFileExists(Path::join($this->getTempDir(), 'var/cache/contao/dca/tl_test.php'));
         $this->assertFileExists(Path::join($this->getTempDir(), 'var/cache/contao/languages'));
@@ -83,28 +88,34 @@ class ContaoCacheWarmerTest extends TestCase
 
         $this->assertStringContainsString(
             "\$GLOBALS['TL_TEST'] = \\true;",
-            file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/config/config.php'))
+            file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/config/config.php')),
         );
 
         $this->assertStringContainsString(
             "'dummy' => 'templates'",
-            file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/config/templates.php'))
+            file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/config/templates.php')),
         );
 
         $this->assertStringContainsString(
             "\$GLOBALS['TL_DCA']['tl_test'] = [",
-            file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/dca/tl_test.php'))
+            file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/dca/tl_test.php')),
         );
 
         $this->assertStringContainsString(
             "\$GLOBALS['TL_LANG']['MSC']['first']",
-            file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/languages/en/default.php'))
+            file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/languages/en/default.php')),
         );
 
         $this->assertStringContainsString(
             "\$this->arrFields = array (\n  'id' => 'int(10) unsigned NOT NULL auto_increment',\n);",
-            file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/sql/tl_test.php'))
+            file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/sql/tl_test.php')),
         );
+
+        $langs = include Path::join($this->getTempDir(), 'var/cache/contao/config/available-language-files.php');
+
+        $this->assertArrayHasKey('en', $langs);
+        $this->assertArrayHasKey('default', $langs['en']);
+        $this->assertArrayHasKey('tl_test', $langs['en']);
     }
 
     public function testIsAnOptionalWarmer(): void
@@ -140,10 +151,60 @@ class ContaoCacheWarmerTest extends TestCase
         $this->assertFileDoesNotExist(Path::join($this->getTempDir(), 'var/cache/contao'));
     }
 
-    private function getCacheWarmer(Connection $connection = null, ContaoFramework $framework = null, string $bundle = 'test-bundle'): ContaoCacheWarmer
+    public function testWritesSymfonyTranslationsIntoCache(): void
+    {
+        $parentCatalogue = $this->createMock(MessageCatalogueInterface::class);
+        $parentCatalogue
+            ->expects($this->exactly(2))
+            ->method('getDomains')
+            ->willReturn(['contao_default'])
+        ;
+
+        $parentCatalogue
+            ->expects($this->exactly(2))
+            ->method('all')
+            ->with('contao_default')
+            ->willReturn(['MSC.goBack' => 'Foobar'])
+        ;
+
+        $framework = $this->mockContaoFramework();
+
+        $finder = $this->createMock(Finder::class);
+        $finder
+            ->method('getIterator')
+            ->willReturn(new \ArrayIterator([]))
+        ;
+
+        $resourceFinder = $this->createMock(ResourceFinder::class);
+        $resourceFinder
+            ->expects($this->exactly(2))
+            ->method('findIn')
+            ->willReturn($finder)
+        ;
+
+        $catalogue = new MessageCatalogue($parentCatalogue, $framework, $resourceFinder);
+
+        $translator = $this->createMock(Translator::class);
+        $translator
+            ->expects($this->exactly(2))
+            ->method('getCatalogue')
+            ->willReturn($catalogue)
+        ;
+
+        $warmer = $this->getCacheWarmer(translator: $translator);
+        $warmer->warmUp(Path::join($this->getTempDir(), 'var/cache'));
+
+        $this->assertStringContainsString(
+            "\n\$GLOBALS['TL_LANG']['MSC']['goBack'] = 'Foobar';",
+            file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/languages/en/default.php')),
+        );
+    }
+
+    private function getCacheWarmer(Connection|null $connection = null, ContaoFramework|null $framework = null, string $bundle = 'test-bundle', Translator|null $translator = null): ContaoCacheWarmer
     {
         $connection ??= $this->createMock(Connection::class);
         $framework ??= $this->mockContaoFramework();
+        $translator ??= $this->createMock(Translator::class);
 
         $fixtures = Path::join($this->getFixturesDir(), 'vendor/contao/'.$bundle.'/Resources/contao');
 
@@ -157,6 +218,6 @@ class ContaoCacheWarmerTest extends TestCase
             ->willReturn(['en-US', 'en'])
         ;
 
-        return new ContaoCacheWarmer($filesystem, $finder, $locator, $fixtures, $connection, $framework, $locales);
+        return new ContaoCacheWarmer($filesystem, $finder, $locator, $fixtures, $connection, $framework, $translator, $locales);
     }
 }

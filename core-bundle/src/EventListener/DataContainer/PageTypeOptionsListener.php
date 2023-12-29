@@ -17,27 +17,30 @@ use Contao\CoreBundle\Event\FilterPageTypeEvent;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Security\Core\Security;
 
 #[AsCallback(table: 'tl_page', target: 'fields.type.options')]
 #[AsCallback(table: 'tl_user', target: 'fields.alpty.options')]
 #[AsCallback(table: 'tl_user_group', target: 'fields.alpty.options')]
 class PageTypeOptionsListener
 {
-    public function __construct(private PageRegistry $pageRegistry, private Security $security, private EventDispatcherInterface|null $eventDispatcher = null)
-    {
+    public function __construct(
+        private readonly PageRegistry $pageRegistry,
+        private readonly Security $security,
+        private readonly EventDispatcherInterface|null $eventDispatcher = null,
+    ) {
     }
 
     public function __invoke(DataContainer $dc): array
     {
-        $options = array_unique(array_merge(array_keys($GLOBALS['TL_PTY']), $this->pageRegistry->keys()));
+        $options = array_unique([...array_keys($GLOBALS['TL_PTY']), ...$this->pageRegistry->keys()]);
 
         if ('tl_user' === $dc->table || 'tl_user_group' === $dc->table) {
             return array_values($options);
         }
 
-        if (null !== $this->eventDispatcher) {
+        if ($this->eventDispatcher) {
             $options = $this->eventDispatcher
                 ->dispatch(new FilterPageTypeEvent($options, $dc))
                 ->getOptions()

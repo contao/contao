@@ -66,6 +66,7 @@ sections:
 security:
     password_hashers:
         Contao\User: auto
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: auto
 
     providers:
         contao.security.backend_user_provider:
@@ -81,6 +82,11 @@ security:
             user_checker: contao.security.user_checker
             switch_user: true
             login_throttling: ~
+
+            login_link:
+                check_route: contao_backend_login_link
+                signature_properties: [username, lastLogin]
+                success_handler: contao.security.authentication_success_handler
 
             contao_login:
                 remember_me: false
@@ -128,6 +134,6 @@ Visit the [support page][5] to learn about the available support options.
 [2]: https://symfony.com
 [3]: https://github.com/contao/managed-edition
 [4]: https://packagist.org/providers/php-http/client-implementation
-[5]: https://contao.org/en/support.html
+[5]: https://to.contao.org/support
 [6]: https://github.com/symfony/recipes-contrib
 [7]: http://symfony.com/doc/current/components/dotenv.html

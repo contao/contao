@@ -41,11 +41,11 @@ class ImageResult
      * @internal Use the Contao\CoreBundle\Image\Studio\Studio factory to get an instance of this class
      */
     public function __construct(
-        private ContainerInterface $locator,
-        private string $projectDir,
-        private ImageInterface|string $filePathOrImageInterface,
-        private PictureConfiguration|array|int|string|null $sizeConfiguration = null,
-        private ResizeOptions|null $resizeOptions = null,
+        private readonly ContainerInterface $locator,
+        private readonly string $projectDir,
+        private readonly ImageInterface|string $filePathOrImageInterface,
+        private readonly PictureConfiguration|array|int|string|null $sizeConfiguration = null,
+        private readonly ResizeOptions|null $resizeOptions = null,
     ) {
     }
 
@@ -54,7 +54,7 @@ class ImageResult
      */
     public function getPicture(): PictureInterface
     {
-        if (null === $this->picture) {
+        if (!$this->picture) {
             $this->picture = $this
                 ->pictureFactory()
                 ->create($this->filePathOrImageInterface, $this->sizeConfiguration, $this->resizeOptions)
@@ -101,7 +101,7 @@ class ImageResult
      */
     public function getOriginalDimensions(): ImageDimensions
     {
-        if (null !== $this->originalDimensions) {
+        if ($this->originalDimensions) {
             return $this->originalDimensions;
         }
 
@@ -143,7 +143,7 @@ class ImageResult
         $picture = $this->getPicture();
         $candidates = [];
 
-        foreach (array_merge([$picture->getImg()], $picture->getSources()) as $source) {
+        foreach ([$picture->getImg(), ...$picture->getSources()] as $source) {
             $candidates[] = $source['src'] ?? null;
 
             foreach ($source['srcset'] ?? [] as $srcset) {
@@ -153,10 +153,10 @@ class ImageResult
 
         $deferredImages = array_filter(
             $candidates,
-            static fn ($image): bool => $image instanceof DeferredImageInterface
+            static fn ($image): bool => $image instanceof DeferredImageInterface,
         );
 
-        if (empty($deferredImages)) {
+        if (!$deferredImages) {
             return;
         }
 

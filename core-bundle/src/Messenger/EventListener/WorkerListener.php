@@ -19,7 +19,7 @@ use Symfony\Component\Messenger\Event\WorkerStartedEvent;
 
 class WorkerListener
 {
-    public function __construct(private AutoFallbackNotifier $autoFallbackNotifier)
+    public function __construct(private readonly AutoFallbackNotifier $autoFallbackNotifier)
     {
     }
 

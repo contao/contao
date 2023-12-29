@@ -25,8 +25,11 @@ use Symfony\Component\Routing\Route;
 
 abstract class AbstractPageRouteProvider implements RouteProviderInterface
 {
-    public function __construct(protected ContaoFramework $framework, protected CandidatesInterface $candidates, protected PageRegistry $pageRegistry)
-    {
+    public function __construct(
+        protected ContaoFramework $framework,
+        protected CandidatesInterface $candidates,
+        protected PageRegistry $pageRegistry,
+    ) {
     }
 
     /**
@@ -36,7 +39,7 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
     {
         $candidates = array_map('strval', $this->candidates->getCandidates($request));
 
-        if (empty($candidates)) {
+        if (!$candidates) {
             return [];
         }
 
@@ -53,11 +56,11 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
 
         $conditions = [];
 
-        if (!empty($ids)) {
+        if ($ids) {
             $conditions[] = 'tl_page.id IN ('.implode(',', $ids).')';
         }
 
-        if (!empty($aliases)) {
+        if ($aliases) {
             $conditions[] = 'tl_page.alias IN ('.implode(',', array_fill(0, \count($aliases), '?')).')';
         }
 
@@ -68,7 +71,6 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
             return [];
         }
 
-        /** @var array<PageModel> $models */
         $models = $pages->getModels();
 
         return array_filter($models, fn (PageModel $model) => $this->pageRegistry->isRoutable($model));
@@ -98,7 +100,7 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
         return array_unique($ids);
     }
 
-    protected function compareRoutes(Route $a, Route $b, array $languages = null): int
+    protected function compareRoutes(Route $a, Route $b, array|null $languages = null): int
     {
         if ('' !== $a->getHost() && '' === $b->getHost()) {
             return -1;

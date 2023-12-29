@@ -11,11 +11,9 @@
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Controller;
-use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
-use Contao\Image;
 use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
@@ -33,7 +31,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		'markAsCopy'                  => 'title',
 		'onload_callback' => array
 		(
-			array('tl_form', 'checkPermission')
+			array('tl_form', 'adjustDca')
 		),
 		'oncreate_callback' => array
 		(
@@ -68,39 +66,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		(
 			'fields'                  => array('title', 'formID'),
 			'format'                  => '%s <span class="label-info">[%s]</span>'
-		),
-		'global_operations' => array
-		(
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
-		),
-		'operations' => array
-		(
-			'edit' => array
-			(
-				'href'                => 'act=edit',
-				'icon'                => 'edit.svg',
-				'button_callback'     => array('tl_form', 'editHeader')
-			),
-			'children',
-			'copy' => array
-			(
-				'href'                => 'act=copy',
-				'icon'                => 'copy.svg',
-				'button_callback'     => array('tl_form', 'copyForm')
-			),
-			'delete' => array
-			(
-				'href'                => 'act=delete',
-				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"',
-				'button_callback'     => array('tl_form', 'deleteForm')
-			),
-			'show'
 		)
 	),
 
@@ -111,7 +76,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		'default'                     => '{title_legend},title,alias,jumpTo;{config_legend},ajax,allowTags;{confirm_legend},confirmation;{email_legend},sendViaEmail;{store_legend:hide},storeValues;{template_legend:hide},customTpl;{expert_legend:hide},method,novalidate,attributes,formID'
 	),
 
-	// Subpalettes
+	// Sub-palettes
 	'subpalettes' => array
 	(
 		'sendViaEmail'                => 'mailerTransport,recipient,subject,format,skipEmpty',
@@ -280,103 +245,28 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 class tl_form extends Backend
 {
 	/**
-	 * Import the back end user object
+	 *  Set the root IDs.
 	 */
-	public function __construct()
+	public function adjustDca()
 	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
+		$user = BackendUser::getInstance();
 
-	/**
-	 * Check permissions to edit table tl_form
-	 *
-	 * @throws AccessDeniedException
-	 */
-	public function checkPermission()
-	{
-		if ($this->User->isAdmin)
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
 		// Set root IDs
-		if (empty($this->User->forms) || !is_array($this->User->forms))
+		if (empty($user->forms) || !is_array($user->forms))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->forms;
+			$root = $user->forms;
 		}
 
 		$GLOBALS['TL_DCA']['tl_form']['list']['sorting']['root'] = $root;
-		$security = System::getContainer()->get('security.helper');
-
-		// Check permissions to add forms
-		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_CREATE_FORMS))
-		{
-			$GLOBALS['TL_DCA']['tl_form']['config']['closed'] = true;
-			$GLOBALS['TL_DCA']['tl_form']['config']['notCreatable'] = true;
-			$GLOBALS['TL_DCA']['tl_form']['config']['notCopyable'] = true;
-		}
-
-		// Check permissions to delete forms
-		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_FORMS))
-		{
-			$GLOBALS['TL_DCA']['tl_form']['config']['notDeletable'] = true;
-		}
-
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-
-		// Check current action
-		switch (Input::get('act'))
-		{
-			case 'select':
-				// Allow
-				break;
-
-			case 'create':
-				if (!$security->isGranted(ContaoCorePermissions::USER_CAN_CREATE_FORMS))
-				{
-					throw new AccessDeniedException('Not enough permissions to create forms.');
-				}
-				break;
-
-			case 'edit':
-			case 'copy':
-			case 'delete':
-			case 'show':
-				if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_FORMS)))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' form ID ' . Input::get('id') . '.');
-				}
-				break;
-
-			case 'editAll':
-			case 'deleteAll':
-			case 'overrideAll':
-			case 'copyAll':
-				$session = $objSession->all();
-
-				if (Input::get('act') == 'deleteAll' && !$security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_FORMS))
-				{
-					$session['CURRENT']['IDS'] = array();
-				}
-				else
-				{
-					$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $root);
-				}
-				$objSession->replace($session);
-				break;
-
-			default:
-				if (Input::get('act'))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' forms.');
-				}
-				break;
-		}
 	}
 
 	/**
@@ -392,19 +282,21 @@ class tl_form extends Backend
 			$insertId = func_get_arg(1);
 		}
 
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
 		// Set root IDs
-		if (empty($this->User->forms) || !is_array($this->User->forms))
+		if (empty($user->forms) || !is_array($user->forms))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->forms;
+			$root = $user->forms;
 		}
 
 		// The form is enabled already
@@ -419,10 +311,12 @@ class tl_form extends Backend
 
 		if (is_array($arrNew['tl_form']) && in_array($insertId, $arrNew['tl_form']))
 		{
+			$db = Database::getInstance();
+
 			// Add the permissions on group level
-			if ($this->User->inherit != 'custom')
+			if ($user->inherit != 'custom')
 			{
-				$objGroup = $this->Database->execute("SELECT id, forms, formp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $this->User->groups)) . ")");
+				$objGroup = $db->execute("SELECT id, forms, formp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $user->groups)) . ")");
 
 				while ($objGroup->next())
 				{
@@ -433,18 +327,18 @@ class tl_form extends Backend
 						$arrForms = StringUtil::deserialize($objGroup->forms, true);
 						$arrForms[] = $insertId;
 
-						$this->Database->prepare("UPDATE tl_user_group SET forms=? WHERE id=?")
-									   ->execute(serialize($arrForms), $objGroup->id);
+						$db->prepare("UPDATE tl_user_group SET forms=? WHERE id=?")->execute(serialize($arrForms), $objGroup->id);
 					}
 				}
 			}
 
 			// Add the permissions on user level
-			if ($this->User->inherit != 'group')
+			if ($user->inherit != 'group')
 			{
-				$objUser = $this->Database->prepare("SELECT forms, formp FROM tl_user WHERE id=?")
-										   ->limit(1)
-										   ->execute($this->User->id);
+				$objUser = $db
+					->prepare("SELECT forms, formp FROM tl_user WHERE id=?")
+					->limit(1)
+					->execute($user->id);
 
 				$arrFormp = StringUtil::deserialize($objUser->formp);
 
@@ -453,14 +347,13 @@ class tl_form extends Backend
 					$arrForms = StringUtil::deserialize($objUser->forms, true);
 					$arrForms[] = $insertId;
 
-					$this->Database->prepare("UPDATE tl_user SET forms=? WHERE id=?")
-								   ->execute(serialize($arrForms), $this->User->id);
+					$db->prepare("UPDATE tl_user SET forms=? WHERE id=?")->execute(serialize($arrForms), $user->id);
 				}
 			}
 
 			// Add the new element to the user object
 			$root[] = $insertId;
-			$this->User->forms = $root;
+			$user->forms = $root;
 		}
 	}
 
@@ -476,8 +369,12 @@ class tl_form extends Backend
 	 */
 	public function generateAlias($varValue, DataContainer $dc)
 	{
-		$aliasExists = function (string $alias) use ($dc): bool {
-			return $this->Database->prepare("SELECT id FROM tl_form WHERE alias=? AND id!=?")->execute($alias, $dc->id)->numRows > 0;
+		$aliasExists = static function (string $alias) use ($dc): bool {
+			$result = Database::getInstance()
+				->prepare("SELECT id FROM tl_form WHERE alias=? AND id!=?")
+				->execute($alias, $dc->id);
+
+			return $result->numRows > 0;
 		};
 
 		// Generate an alias if there is none
@@ -512,12 +409,12 @@ class tl_form extends Backend
 
 		$GLOBALS['TL_DCA']['tl_form']['fields']['targetTable']['label'][1] = '<span class="tl_red">' . sprintf($GLOBALS['TL_LANG']['tl_form']['targetTableMissingAllowlist'], "\$GLOBALS['TL_DCA']['tl_form']['fields']['targetTable']['options']") . '</span>';
 
-		if (!$this->User->isAdmin)
+		if (!BackendUser::getInstance()->isAdmin)
 		{
 			return array();
 		}
 
-		$arrTables = $this->Database->listTables();
+		$arrTables = Database::getInstance()->listTables();
 		$arrViews = System::getContainer()->get('database_connection')->createSchemaManager()->listViews();
 
 		if (!empty($arrViews))
@@ -527,56 +424,5 @@ class tl_form extends Backend
 		}
 
 		return array_values($arrTables);
-	}
-
-	/**
-	 * Return the edit header button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function editHeader($row, $href, $label, $title, $icon, $attributes)
-	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, 'tl_form') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
-	}
-
-	/**
-	 * Return the copy form button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function copyForm($row, $href, $label, $title, $icon, $attributes)
-	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_CREATE_FORMS) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
-	}
-
-	/**
-	 * Return the delete form button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function deleteForm($row, $href, $label, $title, $icon, $attributes)
-	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_DELETE_FORMS) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 }

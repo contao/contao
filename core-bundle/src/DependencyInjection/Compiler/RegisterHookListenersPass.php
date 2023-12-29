@@ -27,9 +27,7 @@ class RegisterHookListenersPass implements CompilerPassInterface
             return;
         }
 
-        $hooks = $this->getHooks($container);
-
-        if (empty($hooks)) {
+        if (!$hooks = $this->getHooks($container)) {
             return;
         }
 

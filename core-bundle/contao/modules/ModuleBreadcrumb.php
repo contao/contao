@@ -93,7 +93,7 @@ class ModuleBreadcrumb extends Module
 			array_pop($pages);
 		}
 
-		for ($i=(\count($pages)-1); $i>0; $i--)
+		for ($i=\count($pages)-1; $i>0; $i--)
 		{
 			// Skip pages that require an item (see #3450) and hidden or unpublished pages
 			if ($pages[$i]->requireItem || ($pages[$i]->hide && !$this->showHidden) || (!$pages[$i]->published && !$blnShowUnpublished))
@@ -163,20 +163,7 @@ class ModuleBreadcrumb extends Module
 				'data'     => $pages[0]->row(),
 			);
 
-			list($strSection, $strArticle) = explode(':', Input::get('articles')) + array(null, null);
-
-			if ($strArticle === null)
-			{
-				$strArticle = $strSection;
-			}
-
-			$objArticle = ArticleModel::findByIdOrAlias($strArticle);
-			$strAlias = $objArticle->alias ?: $objArticle->id;
-
-			if ($objArticle->inColumn != 'main')
-			{
-				$strAlias = $objArticle->inColumn . ':' . $strAlias;
-			}
+			$objArticle = ArticleModel::findByIdOrAlias(Input::get('articles'));
 
 			if ($objArticle !== null)
 			{
@@ -184,7 +171,7 @@ class ModuleBreadcrumb extends Module
 				(
 					'isRoot'   => false,
 					'isActive' => true,
-					'href'     => $this->getPageFrontendUrl($pages[0], '/articles/' . $strAlias),
+					'href'     => $this->getPageFrontendUrl($pages[0], '/articles/' . ($objArticle->alias ?: $objArticle->id)),
 					'title'    => StringUtil::specialchars($objArticle->title, true),
 					'link'     => $objArticle->title,
 					'data'     => $objArticle->row(),
@@ -212,8 +199,7 @@ class ModuleBreadcrumb extends Module
 		{
 			foreach ($GLOBALS['TL_HOOKS']['generateBreadcrumb'] as $callback)
 			{
-				$this->import($callback[0]);
-				$items = $this->{$callback[0]}->{$callback[1]}($items, $this);
+				$items = System::importStatic($callback[0])->{$callback[1]}($items, $this);
 			}
 		}
 

@@ -18,7 +18,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[AsCallback(table: 'tl_form_field', target: 'fields.customRgxp.save')]
 class ValidateCustomRgxpListener
 {
-    public function __construct(private TranslatorInterface $translator)
+    public function __construct(private readonly TranslatorInterface $translator)
     {
     }
 

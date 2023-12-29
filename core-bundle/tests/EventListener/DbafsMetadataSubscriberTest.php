@@ -35,7 +35,7 @@ class DbafsMetadataSubscriberTest extends TestCase
                 RetrieveDbafsMetadataEvent::class => ['enhanceMetadata'],
                 StoreDbafsMetadataEvent::class => ['normalizeMetadata'],
             ],
-            $subscriber::getSubscribedEvents()
+            $subscriber::getSubscribedEvents(),
         );
     }
 
@@ -105,7 +105,7 @@ class DbafsMetadataSubscriberTest extends TestCase
             ['fr', 'de'],
             (new \ReflectionClass(MetadataBag::class))
                 ->getProperty('defaultLocales')
-                ->getValue($metadataBag)
+                ->getValue($metadataBag),
         );
     }
 
@@ -166,7 +166,7 @@ class DbafsMetadataSubscriberTest extends TestCase
     private function getDbafsMetadataSubscriber(RequestStack|null $requestStack = null): DbafsMetadataSubscriber
     {
         return new DbafsMetadataSubscriber(
-            $requestStack ?? $this->createMock(RequestStack::class)
+            $requestStack ?? $this->createMock(RequestStack::class),
         );
     }
 

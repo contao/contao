@@ -154,8 +154,6 @@ class Comments extends Frontend
 	 */
 	protected function renderCommentForm(FrontendTemplate $objTemplate, \stdClass $objConfig, $strSource, $intParent, $varNotifies)
 	{
-		$this->import(FrontendUser::class, 'User');
-
 		// Access control
 		if ($objConfig->requireLogin && !System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
 		{
@@ -173,6 +171,8 @@ class Comments extends Frontend
 			return;
 		}
 
+		$user = FrontendUser::getInstance();
+
 		// Form fields
 		$arrFields = array
 		(
@@ -180,7 +180,7 @@ class Comments extends Frontend
 			(
 				'name'      => 'name',
 				'label'     => $GLOBALS['TL_LANG']['MSC']['com_name'],
-				'value'     => trim($this->User->firstname . ' ' . $this->User->lastname),
+				'value'     => trim($user->firstname . ' ' . $user->lastname),
 				'inputType' => 'text',
 				'eval'      => array('mandatory'=>true, 'maxlength'=>64)
 			),
@@ -188,7 +188,7 @@ class Comments extends Frontend
 			(
 				'name'      => 'email',
 				'label'     => $GLOBALS['TL_LANG']['MSC']['com_email'],
-				'value'     => $this->User->email,
+				'value'     => $user->email,
 				'inputType' => 'text',
 				'eval'      => array('rgxp'=>'email', 'mandatory'=>true, 'maxlength'=>255, 'decodeEntities'=>true)
 			),
@@ -352,8 +352,7 @@ class Comments extends Frontend
 			{
 				foreach ($GLOBALS['TL_HOOKS']['addComment'] as $callback)
 				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($objComment->id, $arrSet, $this);
+					System::importStatic($callback[0])->{$callback[1]}($objComment->id, $arrSet, $this);
 				}
 			}
 
@@ -511,7 +510,7 @@ class Comments extends Frontend
 	 */
 	public function purgeSubscriptions()
 	{
-		trigger_deprecation('contao/comments-bundle', '5.0', 'Calling "%s()" has been deprecated and will no longer work in Contao 6.0. Use CommentsNotifyModel::findExpiredSubscriptions() instead.', __METHOD__);
+		trigger_deprecation('contao/comments-bundle', '5.0', 'Calling "%s()" has been deprecated and will no longer work in Contao 6. Use "CommentsNotifyModel::findExpiredSubscriptions()" instead.', __METHOD__);
 
 		$objNotify = CommentsNotifyModel::findExpiredSubscriptions();
 

@@ -17,8 +17,8 @@ use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -27,8 +27,11 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route(defaults: ['_scope' => 'frontend', '_allow_preview' => true])]
 class PreviewLinkController
 {
-    public function __construct(private FrontendPreviewAuthenticator $previewAuthenticator, private UriSigner $uriSigner, private Connection $connection)
-    {
+    public function __construct(
+        private readonly FrontendPreviewAuthenticator $previewAuthenticator,
+        private readonly UriSigner $uriSigner,
+        private readonly Connection $connection,
+    ) {
     }
 
     #[Route('/_contao/preview/{id}', name: 'contao_preview_link', requirements: ['id' => '\d+'])]
@@ -40,7 +43,7 @@ class PreviewLinkController
 
         $link = $this->connection->fetchAssociative(
             'SELECT * FROM tl_preview_link WHERE id=? AND published=1 AND expiresAt>UNIX_TIMESTAMP()',
-            [$id]
+            [$id],
         );
 
         if (false === $link) {

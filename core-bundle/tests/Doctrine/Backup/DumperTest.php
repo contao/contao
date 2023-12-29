@@ -40,7 +40,7 @@ class DumperTest extends ContaoTestCase
 
         $dumper = new Dumper();
         $connection = $this->mockConnection($tables, $views, $queries);
-        $config = (new CreateConfig($backup));
+        $config = new CreateConfig($backup);
 
         $this->assertSame($expectedDump, iterator_to_array($dumper->dump($connection, $config), false));
     }
@@ -164,11 +164,16 @@ class DumperTest extends ContaoTestCase
 
         yield 'Multiple tables with data' => [
             [
-                new Table('tl_page', [new Column('foobar', Type::getType(Types::STRING))]),
                 new Table('tl_news', [new Column('foobar', Type::getType(Types::STRING))]),
+                new Table('tl_page', [new Column('foobar', Type::getType(Types::STRING))]),
             ],
             [],
             [
+                'SELECT `foobar` AS `foobar` FROM `tl_news`' => [
+                    [
+                        'foobar' => 'value1',
+                    ],
+                ],
                 'SELECT `foobar` AS `foobar` FROM `tl_page`' => [
                     [
                         'foobar' => 'value1',
@@ -177,25 +182,20 @@ class DumperTest extends ContaoTestCase
                         'foobar' => null,
                     ],
                 ],
-                'SELECT `foobar` AS `foobar` FROM `tl_news`' => [
-                    [
-                        'foobar' => 'value1',
-                    ],
-                ],
             ],
             [
                 'SET FOREIGN_KEY_CHECKS = 0;',
+                '-- BEGIN STRUCTURE tl_news',
+                'DROP TABLE IF EXISTS `tl_news`;',
+                'CREATE TABLE `tl_news` (`foobar` VARCHAR(255) NOT NULL) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB;',
+                '-- BEGIN DATA tl_news',
+                "INSERT INTO `tl_news` (`foobar`) VALUES ('value1');",
                 '-- BEGIN STRUCTURE tl_page',
                 'DROP TABLE IF EXISTS `tl_page`;',
                 'CREATE TABLE `tl_page` (`foobar` VARCHAR(255) NOT NULL) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB;',
                 '-- BEGIN DATA tl_page',
                 "INSERT INTO `tl_page` (`foobar`) VALUES ('value1');",
                 'INSERT INTO `tl_page` (`foobar`) VALUES (NULL);',
-                '-- BEGIN STRUCTURE tl_news',
-                'DROP TABLE IF EXISTS `tl_news`;',
-                'CREATE TABLE `tl_news` (`foobar` VARCHAR(255) NOT NULL) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB;',
-                '-- BEGIN DATA tl_news',
-                "INSERT INTO `tl_news` (`foobar`) VALUES ('value1');",
                 'SET FOREIGN_KEY_CHECKS = 1;',
             ],
         ];
@@ -275,12 +275,10 @@ class DumperTest extends ContaoTestCase
     }
 
     /**
-     * @param array $tables<Table>
-     * @param array $views<View>
-     *
-     * @return Connection&MockObject
+     * @param array<Table> $tables
+     * @param array<View>  $views
      */
-    private function mockConnection(array $tables, array $views, array $queries): Connection
+    private function mockConnection(array $tables, array $views, array $queries): Connection&MockObject
     {
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
         $schemaManager

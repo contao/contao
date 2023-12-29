@@ -99,9 +99,9 @@ class FilesyncCommandTest extends TestCase
                             'baz' => ChangeSet::TYPE_DIRECTORY,
                             'baz/deleted1' => ChangeSet::TYPE_FILE,
                             'baz/deleted2' => ChangeSet::TYPE_FILE,
-                        ]
+                        ],
                     );
-                }
+                },
             )
         ;
 
@@ -150,7 +150,7 @@ class FilesyncCommandTest extends TestCase
         ];
     }
 
-    private function getCommand(DbafsManager $manager = null): FilesyncCommand
+    private function getCommand(DbafsManager|null $manager = null): FilesyncCommand
     {
         return new FilesyncCommand($manager ?? $this->createMock(DbafsManager::class));
     }

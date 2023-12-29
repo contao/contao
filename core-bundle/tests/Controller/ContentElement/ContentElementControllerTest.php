@@ -55,7 +55,7 @@ class ContentElementControllerTest extends TestCase
         $controller = $this->getTestController();
 
         $response = $controller(new Request(), $this->mockClassWithProperties(ContentModel::class), 'main');
-        $template = json_decode($response->getContent(), true);
+        $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame('ce_test', $template['templateName']);
     }
@@ -65,7 +65,7 @@ class ContentElementControllerTest extends TestCase
         $controller = $this->getTestController(['type' => 'foo']);
 
         $response = $controller(new Request(), $this->mockClassWithProperties(ContentModel::class), 'main');
-        $template = json_decode($response->getContent(), true);
+        $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame('ce_foo', $template['templateName']);
     }
@@ -75,7 +75,7 @@ class ContentElementControllerTest extends TestCase
         $controller = $this->getTestController(['template' => 'ce_bar']);
 
         $response = $controller(new Request(), $this->mockClassWithProperties(ContentModel::class), 'main');
-        $template = json_decode($response->getContent(), true);
+        $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame('ce_bar', $template['templateName']);
     }
@@ -89,7 +89,7 @@ class ContentElementControllerTest extends TestCase
         $model = $this->mockClassWithProperties(ContentModel::class, ['customTpl' => 'ce_bar']);
 
         $response = $controller(new Request(), $model, 'main');
-        $template = json_decode($response->getContent(), true);
+        $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame('ce_bar', $template['templateName']);
     }
@@ -108,7 +108,7 @@ class ContentElementControllerTest extends TestCase
         $model = $this->mockClassWithProperties(ContentModel::class, ['customTpl' => 'ce_bar']);
 
         $response = $controller($request, $model, 'main');
-        $template = json_decode($response->getContent(), true);
+        $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame('ce_test', $template['templateName']);
     }
@@ -118,7 +118,7 @@ class ContentElementControllerTest extends TestCase
         $controller = $this->getTestController();
 
         $response = $controller(new Request(), $this->mockClassWithProperties(ContentModel::class), 'main');
-        $template = json_decode($response->getContent(), true);
+        $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame('', $template['cssID']);
         $this->assertSame('ce_test', $template['class']);
@@ -131,7 +131,7 @@ class ContentElementControllerTest extends TestCase
         $model = $this->mockClassWithProperties(ContentModel::class, ['headline' => serialize(['unit' => 'h6', 'value' => 'foobar'])]);
 
         $response = $controller(new Request(), $model, 'main');
-        $template = json_decode($response->getContent(), true);
+        $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame('foobar', $template['headline']);
         $this->assertSame('h6', $template['hl']);
@@ -144,7 +144,7 @@ class ContentElementControllerTest extends TestCase
         $model = $this->mockClassWithProperties(ContentModel::class, ['cssID' => serialize(['foo', 'bar'])]);
 
         $response = $controller(new Request(), $model, 'main');
-        $template = json_decode($response->getContent(), true);
+        $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame(' id="foo"', $template['cssID']);
         $this->assertSame('ce_test bar', $template['class']);
@@ -155,7 +155,7 @@ class ContentElementControllerTest extends TestCase
         $controller = $this->getTestController();
 
         $response = $controller(new Request(), $this->mockClassWithProperties(ContentModel::class), 'left');
-        $template = json_decode($response->getContent(), true);
+        $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame('left', $template['inColumn']);
     }
@@ -165,7 +165,7 @@ class ContentElementControllerTest extends TestCase
         $controller = $this->getTestController();
 
         $response = $controller(new Request(), $this->mockClassWithProperties(ContentModel::class), 'main', ['foo', 'bar']);
-        $template = json_decode($response->getContent(), true);
+        $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame('ce_test foo bar', $template['class']);
     }
@@ -207,7 +207,7 @@ class ContentElementControllerTest extends TestCase
         ]);
 
         $response = $controller(new Request(), $model, 'main', ['bar-class', 'baz-class']);
-        $template = json_decode($response->getContent(), true);
+        $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame('text', $template['type']);
         $this->assertSame('content_element/text', $template['template']);

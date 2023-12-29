@@ -61,7 +61,7 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
         $metadata = [];
 
         foreach (StringUtil::deserialize($row['meta'] ?? null, true) as $lang => $data) {
-            $metadata[$lang] = new Metadata(array_merge([Metadata::VALUE_UUID => $event->getUuid()->toRfc4122()], $data));
+            $metadata[$lang] = new Metadata([Metadata::VALUE_UUID => $event->getUuid()->toRfc4122(), ...$data]);
         }
 
         $event->set('metadata', new MetadataBag($metadata, $this->getDefaultLocales()));
@@ -93,7 +93,7 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
 
                     return array_diff_key($metadata->all(), [Metadata::VALUE_UUID => null]);
                 },
-                $fileMetadata->all()
+                $fileMetadata->all(),
             );
 
             $event->set('meta', serialize($metadata));

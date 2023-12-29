@@ -22,7 +22,7 @@ class AvailableTransports
      */
     private array $transports = [];
 
-    public function __construct(private TranslatorInterface|null $translator = null)
+    public function __construct(private readonly TranslatorInterface|null $translator = null)
     {
     }
 
@@ -51,7 +51,7 @@ class AvailableTransports
         $options = [];
 
         foreach ($this->transports as $name => $config) {
-            $label = null !== $this->translator ? $this->translator->trans($name, [], 'mailer_transports') : $name;
+            $label = $this->translator ? $this->translator->trans($name, [], 'mailer_transports') : $name;
 
             if (null !== ($from = $config->getFrom())) {
                 $label .= ' ('.$from.')';

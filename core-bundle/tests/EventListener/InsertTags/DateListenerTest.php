@@ -104,6 +104,6 @@ class DateListenerTest extends TestCase
             ])
         ;
 
-        return $this->mockContaoFramework(array_merge([Date::class => $dateAdapter], $adapters));
+        return $this->mockContaoFramework([Date::class => $dateAdapter, ...$adapters]);
     }
 }

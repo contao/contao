@@ -182,7 +182,7 @@ class ModuleUnsubscribe extends Module
 
 		$arrChannels = array_intersect($arrChannels, $this->nl_channels); // see #3240
 
-		if (empty($arrChannels) || !\is_array($arrChannels))
+		if (empty($arrChannels))
 		{
 			$this->Template->mclass = 'error';
 			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['noChannels'];
@@ -261,8 +261,7 @@ class ModuleUnsubscribe extends Module
 		{
 			foreach ($GLOBALS['TL_HOOKS']['removeRecipient'] as $callback)
 			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($strEmail, $arrRemove, $this);
+				System::importStatic($callback[0])->{$callback[1]}($strEmail, $arrRemove, $this);
 			}
 		}
 

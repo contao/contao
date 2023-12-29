@@ -177,9 +177,17 @@
         <source>Delete comment ID %s</source>
         <target>Smazat komentář ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_comments.toggle">
-        <source>Publish/unpublish comment ID %s</source>
-        <target>Publikovat / nepublikovat komentář ID %s</target>
+      <trans-unit id="tl_comments.toggle.0">
+        <source>Publish/unpublish comment</source>
+        <target>Publikovat / nepublikovat</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.toggle.1">
+        <source>Unpublish comment ID %s</source>
+        <target>Nezveřejnit komentář ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.toggle.2">
+        <source>Publish comment ID %s</source>
+        <target>Zveřejnit komentář ID %s</target>
       </trans-unit>
     </body>
   </file>

@@ -11,10 +11,8 @@
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Controller;
-use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\DataContainer;
 use Contao\DC_Table;
-use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 
@@ -35,7 +33,7 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		),
 		'onload_callback' => array
 		(
-			array('tl_undo', 'checkPermission')
+			array('tl_undo', 'adjustDca')
 		),
 		'onshow_callback' => array
 		(
@@ -129,38 +127,18 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 class tl_undo extends Backend
 {
 	/**
-	 * Import the back end user object
+	 * Set the user filter.
 	 */
-	public function __construct()
+	public function adjustDca()
 	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
+		$user = BackendUser::getInstance();
 
-	/**
-	 * Check permissions to use table tl_undo
-	 *
-	 * @throws AccessDeniedException
-	 */
-	public function checkPermission()
-	{
-		if ($this->User->isAdmin)
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
-		// Show only own undo steps
-		$objSteps = $this->Database->prepare("SELECT id FROM tl_undo WHERE pid=?")
-								   ->execute($this->User->id);
-
-		// Restrict the list
-		$GLOBALS['TL_DCA']['tl_undo']['list']['sorting']['root'] = $objSteps->numRows ? $objSteps->fetchEach('id') : array(0);
-
-		// Redirect if there is an error
-		if (Input::get('act') && !in_array(Input::get('id'), $GLOBALS['TL_DCA']['tl_undo']['list']['sorting']['root'] ?? array()))
-		{
-			throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' undo step ID ' . Input::get('id') . '.');
-		}
+		$GLOBALS['TL_DCA']['tl_undo']['list']['sorting']['filter'][] = array('pid=?', $user->id);
 	}
 
 	/**

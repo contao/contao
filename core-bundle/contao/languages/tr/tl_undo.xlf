@@ -43,11 +43,11 @@
       </trans-unit>
       <trans-unit id="tl_undo.undo">
         <source>Restore element ID %s</source>
-        <target>%s kodlu bileşeni geri yükle</target>
+        <target>%s kimlikli bileşeni geri yükle</target>
       </trans-unit>
       <trans-unit id="tl_undo.parent_modal">
         <source>Show origin of %s ID %s</source>
-        <target>%s ögesinin %s kodlu kaynağını görüntüle</target>
+        <target>%s ögesinin %s kimlikli kaynağını görüntüle</target>
       </trans-unit>
     </body>
   </file>

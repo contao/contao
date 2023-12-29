@@ -38,6 +38,7 @@ use Symfony\Component\HttpFoundation\Response;
 class Form extends Hybrid
 {
 	public const SESSION_KEY = 'contao.form.data';
+
 	public const SESSION_CONFIRMATION_KEY = 'contao.form.confirmation';
 
 	/**
@@ -153,16 +154,21 @@ class Form extends Hybrid
 		$this->Template->formSubmit = $formId;
 		$this->Template->method = ($this->method == 'GET') ? 'get' : 'post';
 
-		$flashBag = System::getContainer()->get('request_stack')->getSession()->getFlashBag();
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-		// Add a confirmation to the template and remove it afterward
-		if ($flashBag->has(self::SESSION_CONFIRMATION_KEY))
+		if ($request && $request->hasPreviousSession())
 		{
-			$confirmationData = $flashBag->peek(self::SESSION_CONFIRMATION_KEY);
+			$flashBag = $request->getSession()->getFlashBag();
 
-			if (isset($confirmationData['id']) && $this->id === $confirmationData['id'])
+			// Add a confirmation to the template and remove it afterward
+			if ($flashBag->has(self::SESSION_CONFIRMATION_KEY))
 			{
-				$this->Template->message = $flashBag->get(self::SESSION_CONFIRMATION_KEY)['message'];
+				$confirmationData = $flashBag->peek(self::SESSION_CONFIRMATION_KEY);
+
+				if (isset($confirmationData['id']) && $this->id === $confirmationData['id'])
+				{
+					$this->Template->message = $flashBag->get(self::SESSION_CONFIRMATION_KEY)['message'];
+				}
 			}
 		}
 
@@ -187,6 +193,8 @@ class Form extends Hybrid
 					$arrFields[] = $objFields->current();
 				}
 			}
+
+			System::getContainer()->get('contao.cache.entity_tags')->tagWith($objFields);
 		}
 
 		// HOOK: compile form fields
@@ -194,8 +202,7 @@ class Form extends Hybrid
 		{
 			foreach ($GLOBALS['TL_HOOKS']['compileFormFields'] as $callback)
 			{
-				$this->import($callback[0]);
-				$arrFields = $this->{$callback[0]}->{$callback[1]}($arrFields, $formId, $this);
+				$arrFields = System::importStatic($callback[0])->{$callback[1]}($arrFields, $formId, $this);
 			}
 		}
 
@@ -239,8 +246,7 @@ class Form extends Hybrid
 				{
 					foreach ($GLOBALS['TL_HOOKS']['loadFormField'] as $callback)
 					{
-						$this->import($callback[0]);
-						$objWidget = $this->{$callback[0]}->{$callback[1]}($objWidget, $formId, $this->arrData, $this);
+						$objWidget = System::importStatic($callback[0])->{$callback[1]}($objWidget, $formId, $this->arrData, $this);
 					}
 				}
 
@@ -254,8 +260,7 @@ class Form extends Hybrid
 					{
 						foreach ($GLOBALS['TL_HOOKS']['validateFormField'] as $callback)
 						{
-							$this->import($callback[0]);
-							$objWidget = $this->{$callback[0]}->{$callback[1]}($objWidget, $formId, $this->arrData, $this);
+							$objWidget = System::importStatic($callback[0])->{$callback[1]}($objWidget, $formId, $this->arrData, $this);
 						}
 					}
 
@@ -311,7 +316,7 @@ class Form extends Hybrid
 					$file->delete();
 				}
 
-				if (is_file($upload['tmp_name']))
+				if (isset($upload['tmp_name']) && is_file($upload['tmp_name']))
 				{
 					unlink($upload['tmp_name']);
 				}
@@ -390,9 +395,14 @@ class Form extends Hybrid
 		{
 			foreach ($GLOBALS['TL_HOOKS']['prepareFormData'] as $callback)
 			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($arrSubmitted, $arrLabels, $arrFields, $this, $arrFiles);
+				System::importStatic($callback[0])->{$callback[1]}($arrSubmitted, $arrLabels, $arrFields, $this, $arrFiles);
 			}
+		}
+
+		// Do not process the form data if there are errors (see #6611)
+		if ($this->hasErrors())
+		{
+			return;
 		}
 
 		// Store submitted data (possibly modified by hook or data added) in the session for 10 seconds,
@@ -439,7 +449,7 @@ class Form extends Hybrid
 				if ($this->format == 'csv' || $this->format == 'csv_excel')
 				{
 					$keys[] = $k;
-					$values[] = (\is_array($v) ? implode(',', $v) : $v);
+					$values[] = \is_array($v) ? implode(',', $v) : $v;
 				}
 			}
 
@@ -497,6 +507,9 @@ class Form extends Hybrid
 			// Attach XML file
 			if ($this->format == 'xml')
 			{
+				// Encode the values (see #6053)
+				array_walk_recursive($fields, static function (&$value) { $value = htmlspecialchars($value, ENT_QUOTES|ENT_SUBSTITUTE|ENT_XML1); });
+
 				$objTemplate = new FrontendTemplate('form_xml');
 				$objTemplate->fields = $fields;
 				$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
@@ -548,10 +561,11 @@ class Form extends Hybrid
 		// Store the values in the database
 		if ($this->storeValues && $this->targetTable)
 		{
+			$db = Database::getInstance();
 			$arrSet = array();
 
 			// Add the timestamp
-			if ($this->Database->fieldExists('tstamp', $this->targetTable))
+			if ($db->fieldExists('tstamp', $this->targetTable))
 			{
 				$arrSet['tstamp'] = time();
 			}
@@ -589,8 +603,7 @@ class Form extends Hybrid
 			{
 				foreach ($GLOBALS['TL_HOOKS']['storeFormData'] as $callback)
 				{
-					$this->import($callback[0]);
-					$arrSet = $this->{$callback[0]}->{$callback[1]}($arrSet, $this);
+					$arrSet = System::importStatic($callback[0])->{$callback[1]}($arrSet, $this);
 				}
 			}
 
@@ -607,7 +620,7 @@ class Form extends Hybrid
 			}
 
 			// Do not use Models here (backwards compatibility)
-			$this->Database->prepare("INSERT INTO " . $this->targetTable . " %s")->set($arrSet)->execute();
+			$db->prepare("INSERT INTO " . $this->targetTable . " %s")->set($arrSet)->execute();
 		}
 
 		// HOOK: process form data callback
@@ -615,17 +628,14 @@ class Form extends Hybrid
 		{
 			foreach ($GLOBALS['TL_HOOKS']['processFormData'] as $callback)
 			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($arrSubmitted, $this->arrData, $arrFiles, $arrLabels, $this);
+				System::importStatic($callback[0])->{$callback[1]}($arrSubmitted, $this->arrData, $arrFiles, $arrLabels, $this);
 			}
 		}
 
 		// Add a log entry
 		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
 		{
-			$this->import(FrontendUser::class, 'User');
-
-			System::getContainer()->get('monolog.logger.contao.forms')->info('Form "' . $this->title . '" has been submitted by "' . $this->User->username . '".');
+			System::getContainer()->get('monolog.logger.contao.forms')->info('Form "' . $this->title . '" has been submitted by "' . FrontendUser::getInstance()->username . '".');
 		}
 		else
 		{

@@ -15,8 +15,8 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
-use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -25,10 +25,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class PreviewAuthenticationListener
 {
     public function __construct(
-        private ScopeMatcher $scopeMatcher,
-        private TokenChecker $tokenChecker,
-        private UrlGeneratorInterface $router,
-        private UriSigner $uriSigner,
+        private readonly ScopeMatcher $scopeMatcher,
+        private readonly TokenChecker $tokenChecker,
+        private readonly UrlGeneratorInterface $router,
+        private readonly UriSigner $uriSigner,
     ) {
     }
 
@@ -60,7 +60,7 @@ class PreviewAuthenticationListener
         $url = $this->router->generate(
             'contao_backend_login',
             ['redirect' => $request->getUri()],
-            UrlGeneratorInterface::ABSOLUTE_URL
+            UrlGeneratorInterface::ABSOLUTE_URL,
         );
 
         $context->setBaseUrl($baseUrl);

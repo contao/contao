@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.perPage.1">
         <source>Number of comments per page. Set to 0 to disable pagination.</source>
-        <target>Bir sayfada görüntülenecek yorum sayısını yazın. Sayfalandırmayı devre dışı bırakmak için 0 yazın.</target>
+        <target>Bir sayfada görüntülenecek yorum sayısını yazın. Sayfalandırmayı etkisizleştirmek için 0 yazın.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.moderate.0">
         <source>Moderate comments</source>
@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.moderate.1">
         <source>Approve comments before they are published on the website.</source>
-        <target>Bu seçenek etkinleştirildiğinde, web sitesinde yayınlanmadan önce yorumların onaylanması gerekir.</target>
+        <target>Bu seçenek etkinleştirildiğinde, yorumların sitede yayınlanmadan önce onaylanması gerekir.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.bbcode.0">
         <source>Allow BBCode</source>
@@ -75,7 +75,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.disableCaptcha.0">
         <source>Disable spam protection</source>
-        <target>Spam koruması devre dışı bırakılsın</target>
+        <target>Spam koruması etkisizleştirilsin</target>
       </trans-unit>
       <trans-unit id="tl_calendar.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>
@@ -127,11 +127,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar.notify_author">
         <source>Author of the event</source>
-        <target>Etkinliği oluşturan</target>
+        <target>Etkinliğin sahibi</target>
       </trans-unit>
       <trans-unit id="tl_calendar.notify_both">
         <source>Author and system administrator</source>
-        <target>Yazar ve sistem yöneticisi</target>
+        <target>Sahibi ve sistem yöneticisi</target>
       </trans-unit>
       <trans-unit id="tl_calendar.source_teaser">
         <source>Event teasers</source>
@@ -159,23 +159,23 @@
       </trans-unit>
       <trans-unit id="tl_calendar.show">
         <source>Show the details of calendar ID %s</source>
-        <target>%s kodlu takvimin ayrıntılarını görüntüle</target>
+        <target>%s kimlikli takvimin ayrıntılarını görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_calendar.edit">
         <source>Edit calendar ID %s</source>
-        <target>%s kodlu takvimi düzenle</target>
+        <target>%s kimlikli takvimi düzenle</target>
       </trans-unit>
       <trans-unit id="tl_calendar.children">
         <source>Edit the events of calendar ID %s</source>
-        <target>%s kodlu takvimin etkinliklerini düzenle</target>
+        <target>%s kimlikli takvimin ayarlarını düzenle</target>
       </trans-unit>
       <trans-unit id="tl_calendar.copy">
         <source>Duplicate calendar ID %s</source>
-        <target>%s kodlu takvimi kopyala</target>
+        <target>%s kimlikli takvimi kopyala</target>
       </trans-unit>
       <trans-unit id="tl_calendar.delete">
         <source>Delete calendar ID %s</source>
-        <target>%s kodlu takvimi sil</target>
+        <target>%s kimlikli takvimi sil</target>
       </trans-unit>
     </body>
   </file>

@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ResponseContextAccessor
 {
-    public function __construct(private RequestStack $requestStack)
+    public function __construct(private readonly RequestStack $requestStack)
     {
     }
 
@@ -52,9 +52,7 @@ class ResponseContextAccessor
      */
     public function finalizeCurrentContext(Response $response): self
     {
-        $responseContext = $this->getResponseContext();
-
-        if (null === $responseContext) {
+        if (!$responseContext = $this->getResponseContext()) {
             return $this;
         }
 

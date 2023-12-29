@@ -32,14 +32,14 @@ use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 
 #[AsCommand(
     name: 'contao:user:password',
-    description: 'Changes the password of a Contao back end user.'
+    description: 'Changes the password of a Contao back end user.',
 )]
 class UserPasswordCommand extends Command
 {
     public function __construct(
-        private ContaoFramework $framework,
-        private Connection $connection,
-        private PasswordHasherFactoryInterface $passwordHasherFactory,
+        private readonly ContaoFramework $framework,
+        private readonly Connection $connection,
+        private readonly PasswordHasherFactoryInterface $passwordHasherFactory,
     ) {
         parent::__construct();
     }

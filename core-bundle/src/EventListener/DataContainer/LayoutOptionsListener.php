@@ -22,7 +22,7 @@ class LayoutOptionsListener implements ResetInterface
 {
     private array|null $options = null;
 
-    public function __construct(private Connection $connection)
+    public function __construct(private readonly Connection $connection)
     {
     }
 

@@ -33,7 +33,7 @@ class UnwrapTwigExceptionListenerTest extends TestCase
             'An exception has been thrown during rendering of a template.',
             -1,
             null,
-            $exception
+            $exception,
         );
 
         $event = new ExceptionEvent(
@@ -87,7 +87,7 @@ class UnwrapTwigExceptionListenerTest extends TestCase
                 'An exception has been thrown during rendering of a template.',
                 -1,
                 null,
-                $exception
+                $exception,
             ),
         ];
     }

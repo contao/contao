@@ -104,7 +104,7 @@ class ModuleArticlenav extends Module
 					'link' => $intCount
 				);
 
-				$intActive = ($intCount - 1);
+				$intActive = $intCount - 1;
 			}
 
 			// Inactive article
