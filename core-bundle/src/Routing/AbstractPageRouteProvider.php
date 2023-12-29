@@ -39,7 +39,7 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
     {
         $candidates = array_map('strval', $this->candidates->getCandidates($request));
 
-        if (empty($candidates)) {
+        if (!$candidates) {
             return [];
         }
 
@@ -56,11 +56,11 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
 
         $conditions = [];
 
-        if (!empty($ids)) {
+        if ($ids) {
             $conditions[] = 'tl_page.id IN ('.implode(',', $ids).')';
         }
 
-        if (!empty($aliases)) {
+        if ($aliases) {
             $conditions[] = 'tl_page.alias IN ('.implode(',', array_fill(0, \count($aliases), '?')).')';
         }
 
@@ -71,7 +71,6 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
             return [];
         }
 
-        /** @var array<PageModel> $models */
         $models = $pages->getModels();
 
         return array_filter($models, fn (PageModel $model) => $this->pageRegistry->isRoutable($model));

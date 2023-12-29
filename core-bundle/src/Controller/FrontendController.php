@@ -72,6 +72,7 @@ class FrontendController extends AbstractController
 
         $response = new Response(base64_decode($image, true));
         $response->setPrivate();
+
         $response->headers->set('Content-Type', 'image/png');
         $response->headers->addCacheControlDirective('no-store');
         $response->headers->addCacheControlDirective('must-revalidate');
@@ -86,10 +87,11 @@ class FrontendController extends AbstractController
     #[Route('/_contao/request_token_script', name: 'contao_frontend_request_token_script')]
     public function requestTokenScriptAction(): Response
     {
-        $tokenValue = json_encode($this->container->get('contao.csrf.token_manager')->getDefaultTokenValue());
+        $tokenValue = json_encode($this->container->get('contao.csrf.token_manager')->getDefaultTokenValue(), JSON_THROW_ON_ERROR);
 
         $response = new Response();
         $response->setContent('document.querySelectorAll(\'input[name=REQUEST_TOKEN],input[name$="[REQUEST_TOKEN]"]\').forEach(function(i){i.value='.$tokenValue.'})');
+
         $response->headers->set('Content-Type', 'application/javascript; charset=UTF-8');
         $response->headers->addCacheControlDirective('no-store');
         $response->headers->addCacheControlDirective('must-revalidate');

@@ -29,7 +29,7 @@ class TemplateGenerator implements GeneratorInterface
         $this->generator->generateFile(
             $options['target'],
             $this->getSourcePath($options['source']),
-            $options['variables']
+            $options['variables'],
         );
 
         return $options['target'];

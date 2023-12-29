@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\Tools\IsolatedTests;
 
 use Contao\CoreBundle\Tests\PhpunitExtension\GlobalStateWatcher;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -21,11 +22,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
+#[AsCommand(
+    name: 'contao:run-tests-isolated',
+    description: 'Runs the unit tests isolated from each other.',
+)]
 class RunTestsIsolatedCommand extends Command
 {
-    protected static $defaultName = 'contao:run-tests-isolated';
-    protected static $defaultDescription = 'Runs the unit tests isolated from each other.';
-
     private readonly string|false $phpPath;
 
     public function __construct(private readonly string $projectDir)
@@ -37,8 +39,6 @@ class RunTestsIsolatedCommand extends Command
 
     protected function configure(): void
     {
-        parent::configure();
-
         $this->addOption('depth', null, InputOption::VALUE_REQUIRED, '1 for test classes, 2 for test methods, 3 for every single provider data set', '3');
 
         $this->setHelp(
@@ -47,7 +47,7 @@ class RunTestsIsolatedCommand extends Command
                 a new PHPUnit process for each test class, method, or data set. This gives us
                 "real" isolation rather than shared state, unlike the PHPUnit option
                 --process-isolation does.
-                EOT
+                EOT,
         );
     }
 
@@ -81,7 +81,7 @@ class RunTestsIsolatedCommand extends Command
         $tests = [[], [], []];
 
         foreach (preg_split('/\r?\n/', $listOutput->fetch()) as $line) {
-            if (preg_match('/^ - (\S+)(::[^\s#"]+)(.*)$/', (string) $line, $matches)) {
+            if (preg_match('/^ - (\S+)(::[^\s#"]+)(.*)$/', $line, $matches)) {
                 $tests[0][] = $matches[1];
 
                 if ($depth > 1) {

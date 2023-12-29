@@ -58,7 +58,7 @@ class CoreResponseContextFactory
                 $manager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->add(new WebPage());
 
                 return $manager;
-            }
+            },
         );
 
         return $context;
@@ -67,11 +67,7 @@ class CoreResponseContextFactory
     public function createContaoWebpageResponseContext(PageModel $pageModel): ResponseContext
     {
         $context = $this->createWebpageResponseContext();
-
-        /** @var HtmlHeadBag $htmlHeadBag */
         $htmlHeadBag = $context->get(HtmlHeadBag::class);
-
-        /** @var JsonLdManager $jsonLdManager */
         $jsonLdManager = $context->get(JsonLdManager::class);
 
         $title = $this->htmlDecoder->inputEncodedToPlainText($pageModel->pageTitle ?: $pageModel->title ?: '');
@@ -113,8 +109,8 @@ class CoreResponseContextFactory
                     $pageModel->noSearch,
                     $pageModel->protected,
                     array_map('intval', array_filter((array) $pageModel->groups)),
-                    $this->tokenChecker->isPreviewMode()
-                )
+                    $this->tokenChecker->isPreviewMode(),
+                ),
             )
         ;
 

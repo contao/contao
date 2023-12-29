@@ -332,23 +332,32 @@
       <trans-unit id="CTE.table.1">
         <source>Generates an optionally sortable table.</source>
       </trans-unit>
-      <trans-unit id="CTE.accordion">
+      <trans-unit id="CTE.accordion.0">
         <source>Accordion</source>
       </trans-unit>
+      <trans-unit id="CTE.accordion.1">
+        <source>Generates an accordion.</source>
+      </trans-unit>
+      <trans-unit id="CTE.element_group.0">
+        <source>Element group</source>
+      </trans-unit>
+      <trans-unit id="CTE.element_group.1">
+        <source>Generates a group of nested elements.</source>
+      </trans-unit>
       <trans-unit id="CTE.accordionStart.0">
-        <source>Wrapper start</source>
+        <source>Accordion wrapper start</source>
       </trans-unit>
       <trans-unit id="CTE.accordionStart.1">
         <source>Generates the opening part of the accordion wrapper.</source>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.0">
-        <source>Wrapper stop</source>
+        <source>Accordion wrapper stop</source>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.1">
         <source>Generates the closing part of the accordion wrapper.</source>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.0">
-        <source>Single element</source>
+        <source>Accordion single element</source>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.1">
         <source>Generates a single accordion element.</source>
@@ -481,6 +490,9 @@
       </trans-unit>
       <trans-unit id="CTE.teaser.1">
         <source>Displays the teaser text of an article.</source>
+      </trans-unit>
+      <trans-unit id="CTE.legacy">
+        <source>Legacy elements</source>
       </trans-unit>
       <trans-unit id="FFL.explanation.0">
         <source>Explanation</source>
@@ -1203,7 +1215,7 @@
         <source>Back end keyboard shortcuts</source>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href="https://to.contao.org/shortcuts" target="_blank" rel="noreferrer noopener"&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <source>Learn more about speeding up your workflow by using &lt;a href="%s" target="_blank" rel="noreferrer noopener"&gt;keyboard shortcuts&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>

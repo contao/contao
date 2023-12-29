@@ -20,7 +20,6 @@ return static function (ECSConfig $ecsConfig): void {
 
     $ecsConfig->skip([
         '*-bundle/contao/*',
-        '*-bundle/src/Resources/contao/*',
         MethodChainingIndentationFixer::class => [
             '*/DependencyInjection/Configuration.php',
         ],

@@ -28,56 +28,41 @@ use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ClockMock;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ContentCompositionListenerTest extends TestCase
 {
     private ContentCompositionListener $listener;
 
-    /**
-     * @var Security&MockObject
-     */
-    private Security $security;
+    private Security&MockObject $security;
+
+    private ContaoFramework&MockObject $framework;
+
+    private PageRegistry&MockObject $pageRegistry;
+
+    private Connection&MockObject $connection;
+
+    private RequestStack&MockObject $requestStack;
 
     /**
      * @var Adapter<Image>&MockObject
      */
-    private Adapter $imageAdapter;
+    private Adapter&MockObject $imageAdapter;
 
     /**
      * @var Adapter<Backend>&MockObject
      */
-    private Adapter $backendAdapter;
+    private Adapter&MockObject $backendAdapter;
 
     /**
      * @var Adapter<PageModel>&MockObject
      */
-    private Adapter $pageModelAdapter;
-
-    /**
-     * @var ContaoFramework&MockObject
-     */
-    private ContaoFramework $framework;
-
-    /**
-     * @var PageRegistry&MockObject
-     */
-    private PageRegistry $pageRegistry;
-
-    /**
-     * @var Connection&MockObject
-     */
-    private Connection $connection;
-
-    /**
-     * @var RequestStack&MockObject
-     */
-    private RequestStack $requestStack;
+    private Adapter&MockObject $pageModelAdapter;
 
     private array $pageRecord = [
         'id' => 17,
@@ -122,7 +107,7 @@ class ContentCompositionListenerTest extends TestCase
             $this->pageRegistry,
             $this->createMock(TranslatorInterface::class),
             $this->connection,
-            $this->requestStack
+            $this->requestStack,
         );
     }
 
@@ -172,7 +157,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '<img src="foo--disabled.svg"> ',
-            $this->listener->renderPageArticlesOperation($this->pageRecord, '', '', '', 'foo.svg')
+            $this->listener->renderPageArticlesOperation($this->pageRecord, '', '', '', 'foo.svg'),
         );
     }
 
@@ -203,7 +188,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '<img src="foo--disabled.svg"> ',
-            $this->listener->renderPageArticlesOperation($this->pageRecord, '', '', '', 'foo.svg')
+            $this->listener->renderPageArticlesOperation($this->pageRecord, '', '', '', 'foo.svg'),
         );
     }
 
@@ -287,7 +272,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '<a href="linkWithPn" title="title"><img src="foo.svg" alt="label"></a> ',
-            $this->listener->renderPageArticlesOperation($this->pageRecord, 'link', 'label', 'title', 'foo.svg')
+            $this->listener->renderPageArticlesOperation($this->pageRecord, 'link', 'label', 'title', 'foo.svg'),
         );
     }
 
@@ -320,7 +305,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '<a href="linkWithPn" title="title"><img src="foo.svg" alt="label"></a> ',
-            $this->listener->renderPageArticlesOperation($this->pageRecord, 'link', 'label', 'title', 'foo.svg')
+            $this->listener->renderPageArticlesOperation($this->pageRecord, 'link', 'label', 'title', 'foo.svg'),
         );
     }
 
@@ -747,7 +732,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '<img src="pasteinto--disabled.svg"> ',
-            $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', true)
+            $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', true),
         );
     }
 
@@ -779,7 +764,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '<img src="pasteinto--disabled.svg"> ',
-            $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', false)
+            $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', false),
         );
     }
 
@@ -817,7 +802,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '<a href="link" title="" onclick="Backend.getScrollOffset()"><img src="pasteinto.svg"></a> ',
-            $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', false, ['mode' => 'paste', 'id' => 17])
+            $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', false, ['mode' => 'paste', 'id' => 17]),
         );
     }
 
@@ -852,7 +837,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '',
-            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false)
+            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false),
         );
     }
 
@@ -880,7 +865,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '',
-            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false)
+            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false),
         );
     }
 
@@ -908,7 +893,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '',
-            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false)
+            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false),
         );
     }
 
@@ -938,7 +923,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '<img src="pasteafter--disabled.svg"> ',
-            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false, ['mode' => 'cut', 'id' => 2])
+            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false, ['mode' => 'cut', 'id' => 2]),
         );
     }
 
@@ -968,7 +953,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '<img src="pasteafter--disabled.svg"> ',
-            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false, ['mode' => 'cutAll', 'id' => [2]])
+            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false, ['mode' => 'cutAll', 'id' => [2]]),
         );
     }
 
@@ -998,7 +983,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '<img src="pasteafter--disabled.svg"> ',
-            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', true, ['mode' => 'paste', 'id' => 17])
+            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', true, ['mode' => 'paste', 'id' => 17]),
         );
     }
 
@@ -1030,7 +1015,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '<img src="pasteafter--disabled.svg"> ',
-            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false, ['mode' => 'paste', 'id' => 17])
+            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false, ['mode' => 'paste', 'id' => 17]),
         );
     }
 
@@ -1068,7 +1053,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->assertSame(
             '<a href="link" title="" onclick="Backend.getScrollOffset()"><img src="pasteafter.svg"></a> ',
-            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false, ['mode' => 'paste', 'id' => 17])
+            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false, ['mode' => 'paste', 'id' => 17]),
         );
     }
 
@@ -1124,10 +1109,7 @@ class ContentCompositionListenerTest extends TestCase
         ;
     }
 
-    /**
-     * @return PageModel&MockObject
-     */
-    private function mockPageWithRow(int|false|null $moduleId = false): PageModel
+    private function mockPageWithRow(int|false|null $moduleId = false): PageModel&MockObject
     {
         $page = $this->mockClassWithProperties(PageModel::class, $this->pageRecord);
         $page
@@ -1144,12 +1126,9 @@ class ContentCompositionListenerTest extends TestCase
 
         if (false !== $moduleId) {
             if (null !== $moduleId) {
-                $moduleId = $this->mockClassWithProperties(
-                    LayoutModel::class,
-                    [
-                        'modules' => serialize([['mod' => $moduleId, 'col' => 'main']]),
-                    ]
-                );
+                $moduleId = $this->mockClassWithProperties(LayoutModel::class, [
+                    'modules' => serialize([['mod' => $moduleId, 'col' => 'main']]),
+                ]);
             }
 
             $page
@@ -1170,10 +1149,7 @@ class ContentCompositionListenerTest extends TestCase
         return $page;
     }
 
-    /**
-     * @return PageModel&MockObject
-     */
-    private function MockPageFindByPk(int|false|null $moduleId = false): PageModel
+    private function MockPageFindByPk(int|false|null $moduleId = false): PageModel&MockObject
     {
         $page = $this->mockClassWithProperties(PageModel::class, $this->pageRecord);
         $page
@@ -1183,12 +1159,9 @@ class ContentCompositionListenerTest extends TestCase
 
         if (false !== $moduleId) {
             if (null !== $moduleId) {
-                $moduleId = $this->mockClassWithProperties(
-                    LayoutModel::class,
-                    [
-                        'modules' => serialize([['mod' => $moduleId, 'col' => 'main']]),
-                    ]
-                );
+                $moduleId = $this->mockClassWithProperties(LayoutModel::class, [
+                    'modules' => serialize([['mod' => $moduleId, 'col' => 'main']]),
+                ]);
             }
 
             $page

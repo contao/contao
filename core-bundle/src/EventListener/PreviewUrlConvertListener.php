@@ -20,9 +20,9 @@ use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentUriGenerator;
-use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
@@ -60,7 +60,7 @@ class PreviewUrlConvertListener
             }
 
             try {
-                $event->setUrl($page->getPreviewUrl($this->getParams($request)));
+                $event->setUrl($page->getAbsoluteUrl($this->getParams($request, $page->id)));
             } catch (RouteParametersException $e) {
                 $route = $e->getRoute();
 
@@ -75,7 +75,7 @@ class PreviewUrlConvertListener
         }
     }
 
-    private function getParams(Request $request): string|null
+    private function getParams(Request $request, int $pageId): string|null
     {
         if (!$request->query->has('article')) {
             return null;
@@ -83,12 +83,12 @@ class PreviewUrlConvertListener
 
         $articleAdapter = $this->framework->getAdapter(ArticleModel::class);
 
-        if (!$article = $articleAdapter->findByAlias($request->query->get('article'))) {
+        if (!$article = $articleAdapter->findByIdOrAliasAndPid($request->query->get('article'), $pageId)) {
             return null;
         }
 
         // Add the /article/ fragment (see contao/core-bundle#673)
-        return sprintf('/articles/%s%s', 'main' !== $article->inColumn ? $article->inColumn.':' : '', $article->alias);
+        return '/articles/'.($article->alias ?: $article->id);
     }
 
     private function getFragmentUrl(Request $request, PageModel $pageModel): string

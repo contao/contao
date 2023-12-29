@@ -178,7 +178,7 @@ class ContaoCoreExtensionTest extends TestCase
                     ],
                 ],
             ],
-            $container
+            $container,
         );
 
         foreach ($services as $service) {
@@ -194,7 +194,7 @@ class ContaoCoreExtensionTest extends TestCase
                 'width' => 150,
                 'height' => 250,
                 'items' => [],
-                'preserveMetadata' => [],
+                'preserveMetadataFields' => [],
                 'formats' => [
                     'jpg' => ['webp', 'jpg'],
                 ],
@@ -202,7 +202,7 @@ class ContaoCoreExtensionTest extends TestCase
             '_bar' => [
                 'width' => 150,
                 'items' => [],
-                'preserveMetadata' => [],
+                'preserveMetadataFields' => [],
                 'formats' => [
                     'jpg' => ['webp', 'jpg'],
                 ],
@@ -226,7 +226,7 @@ class ContaoCoreExtensionTest extends TestCase
                     'sizes' => '50vw',
                     'media' => '(max-width: 900px)',
                 ]],
-                'preserveMetadata' => [],
+                'preserveMetadataFields' => [],
                 'formats' => [
                     'jpg' => ['webp', 'jpg'],
                 ],
@@ -273,7 +273,7 @@ class ContaoCoreExtensionTest extends TestCase
                     ],
                 ],
             ],
-            $container
+            $container,
         );
 
         $definition = $container->getDefinition('contao.crawl.escargot.factory');
@@ -313,7 +313,7 @@ class ContaoCoreExtensionTest extends TestCase
                     ],
                 ],
             ],
-            $container
+            $container,
         );
 
         $definition = $container->getDefinition('contao.doctrine.backup_manager');
@@ -344,7 +344,7 @@ class ContaoCoreExtensionTest extends TestCase
                     ],
                 ],
             ],
-            $container
+            $container,
         );
 
         // Disabling should remove the definition, no cron job should be configured
@@ -359,7 +359,7 @@ class ContaoCoreExtensionTest extends TestCase
                     ],
                 ],
             ],
-            $container
+            $container,
         );
 
         // Forcing it to true should disable auto mode, no cron job should be configured
@@ -376,7 +376,7 @@ class ContaoCoreExtensionTest extends TestCase
                     ],
                 ],
             ],
-            $container
+            $container,
         );
 
         // Auto should also configure the minutely cron job
@@ -411,7 +411,7 @@ class ContaoCoreExtensionTest extends TestCase
                     ],
                 ],
             ],
-            $container
+            $container,
         );
 
         $this->assertArrayHasKey(IndexerInterface::class, $container->getAutoconfiguredInstanceof());
@@ -437,7 +437,7 @@ class ContaoCoreExtensionTest extends TestCase
                     ],
                 ],
             ],
-            $container
+            $container,
         );
 
         // Should still have the interface registered for autoconfiguration
@@ -460,7 +460,7 @@ class ContaoCoreExtensionTest extends TestCase
                     ],
                 ],
             ],
-            $container
+            $container,
         );
 
         $definition = $container->getDefinition('contao.listener.search_index');
@@ -485,7 +485,7 @@ class ContaoCoreExtensionTest extends TestCase
                     ],
                 ],
             ],
-            $container
+            $container,
         );
 
         $this->assertFalse($container->has('contao.listener.search_index'));
@@ -499,7 +499,7 @@ class ContaoCoreExtensionTest extends TestCase
                 'kernel.charset' => 'UTF-8',
                 'kernel.project_dir' => Path::normalize($this->getTempDir()),
                 'kernel.default_locale' => 'en',
-            ])
+            ]),
         );
 
         $extension = new ContaoCoreExtension();
@@ -517,7 +517,7 @@ class ContaoCoreExtensionTest extends TestCase
             new ParameterBag([
                 'kernel.project_dir' => Path::normalize($this->getTempDir()),
                 'kernel.charset' => 'UTF-8',
-            ])
+            ]),
         );
 
         $composerJsonFilePath = Path::join($this->getTempDir(), 'composer.json');
@@ -567,7 +567,7 @@ class ContaoCoreExtensionTest extends TestCase
         $container = new ContainerBuilder(
             new ParameterBag([
                 'kernel.project_dir' => Path::normalize($this->getTempDir()),
-            ])
+            ]),
         );
 
         $container->registerExtension($monologExtension);
@@ -585,7 +585,7 @@ class ContaoCoreExtensionTest extends TestCase
         $container = new ContainerBuilder(
             new ParameterBag([
                 'kernel.project_dir' => Path::normalize($this->getTempDir()),
-            ])
+            ]),
         );
 
         $extension = new ContaoCoreExtension();
@@ -638,7 +638,7 @@ class ContaoCoreExtensionTest extends TestCase
                 'kernel.debug' => true,
                 'kernel.charset' => 'UTF-8',
                 'kernel.project_dir' => Path::normalize($this->getTempDir()),
-            ])
+            ]),
         );
 
         $extension = new ContaoCoreExtension();
@@ -651,10 +651,48 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('security.access.decision_manager', $definition->getDecoratedService()[0]);
     }
 
+    public function testHstsSecurityConfiguration(): void
+    {
+        $container = $this->getContainerBuilder();
+        (new ContaoCoreExtension())->load([], $container);
+
+        $this->assertTrue($container->hasDefinition('contao.listener.transport_security_header'));
+        $listener = $container->findDefinition('contao.listener.transport_security_header');
+        $this->assertSame(31536000, $listener->getArgument(1));
+
+        (new ContaoCoreExtension())->load(
+            [
+                'contao' => [
+                    'security' => [
+                        'hsts' => [
+                            'ttl' => 500,
+                        ],
+                    ],
+                ],
+            ],
+            $container,
+        );
+
+        $this->assertTrue($container->hasDefinition('contao.listener.transport_security_header'));
+        $listener = $container->findDefinition('contao.listener.transport_security_header');
+        $this->assertSame(500, $listener->getArgument(1));
+
+        (new ContaoCoreExtension())->load(
+            [
+                'contao' => [
+                    'security' => [
+                        'hsts' => false,
+                    ],
+                ],
+            ],
+            $container,
+        );
+
+        $this->assertFalse($container->hasDefinition('contao.listener.transport_security_header'));
+    }
+
     public function testRegistersAsContentElementAttribute(): void
     {
-        $this->skipTestIfAttributesAreNotSupported();
-
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
         $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
@@ -675,7 +713,8 @@ class ContaoCoreExtensionTest extends TestCase
                     'template' => 'a_template',
                     'method' => 'aMethod',
                     'renderer' => 'inline',
-                ]
+                    'nestedFragments' => false,
+                ],
             )
         ;
 
@@ -688,14 +727,12 @@ class ContaoCoreExtensionTest extends TestCase
                 'renderer' => 'inline',
                 'foo' => 'bar',
                 'baz' => 42,
-            ])
+            ]),
         );
     }
 
     public function testRegistersAsFrontendModuleAttribute(): void
     {
-        $this->skipTestIfAttributesAreNotSupported();
-
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
         $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
@@ -716,7 +753,7 @@ class ContaoCoreExtensionTest extends TestCase
                     'template' => 'a_template',
                     'method' => 'aMethod',
                     'renderer' => 'inline',
-                ]
+                ],
             )
         ;
 
@@ -729,14 +766,12 @@ class ContaoCoreExtensionTest extends TestCase
                 'renderer' => 'inline',
                 'foo' => 'bar',
                 'baz' => 42,
-            ])
+            ]),
         );
     }
 
     public function testRegistersAsPageAttribute(): void
     {
-        $this->skipTestIfAttributesAreNotSupported();
-
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
         $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
@@ -762,7 +797,7 @@ class ContaoCoreExtensionTest extends TestCase
                     'methods' => ['GET'],
                     'contentComposition' => true,
                     'urlSuffix' => 'html',
-                ]
+                ],
             )
         ;
 
@@ -778,16 +813,14 @@ class ContaoCoreExtensionTest extends TestCase
                 'en',
                 'json',
                 true,
-                'html'
+                'html',
             ),
-            new \ReflectionClass(ClassWithMethod::class)
+            new \ReflectionClass(ClassWithMethod::class),
         );
     }
 
     public function testRegistersAsPickerProviderAttribute(): void
     {
-        $this->skipTestIfAttributesAreNotSupported();
-
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
         $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
@@ -804,14 +837,12 @@ class ContaoCoreExtensionTest extends TestCase
         $autoConfiguredAttributes[AsPickerProvider::class](
             $definition,
             new AsPickerProvider(32),
-            new \ReflectionClass(ClassWithMethod::class)
+            new \ReflectionClass(ClassWithMethod::class),
         );
     }
 
     public function testRegistersAsCronjobAttribute(): void
     {
-        $this->skipTestIfAttributesAreNotSupported();
-
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
         $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
@@ -828,20 +859,18 @@ class ContaoCoreExtensionTest extends TestCase
         $autoConfiguredAttributes[AsCronJob::class](
             $definition,
             new AsCronJob('daily', 'someMethod'),
-            new \ReflectionClass(ClassWithMethod::class)
+            new \ReflectionClass(ClassWithMethod::class),
         );
 
         $autoConfiguredAttributes[AsCronJob::class](
             $definition,
             new AsCronJob('daily'),
-            (new \ReflectionClass(ClassWithMethod::class))->getMethod('someMethod')
+            (new \ReflectionClass(ClassWithMethod::class))->getMethod('someMethod'),
         );
     }
 
     public function testRegistersAsHookAttribute(): void
     {
-        $this->skipTestIfAttributesAreNotSupported();
-
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
         $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
@@ -858,20 +887,18 @@ class ContaoCoreExtensionTest extends TestCase
         $autoConfiguredAttributes[AsHook::class](
             $definition,
             new AsHook('activateAccount', 'someMethod', 32),
-            new \ReflectionClass(ClassWithMethod::class)
+            new \ReflectionClass(ClassWithMethod::class),
         );
 
         $autoConfiguredAttributes[AsHook::class](
             $definition,
             new AsHook('activateAccount', null, 32),
-            (new \ReflectionClass(ClassWithMethod::class))->getMethod('someMethod')
+            (new \ReflectionClass(ClassWithMethod::class))->getMethod('someMethod'),
         );
     }
 
     public function testRegistersAsCallbackAttribute(): void
     {
-        $this->skipTestIfAttributesAreNotSupported();
-
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
         $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
@@ -889,20 +916,20 @@ class ContaoCoreExtensionTest extends TestCase
                     'target' => 'list.label.label',
                     'priority' => 32,
                     'method' => 'someMethod',
-                ]
+                ],
             )
         ;
 
         $autoConfiguredAttributes[AsCallback::class](
             $definition,
             new AsCallback('tl_foo', 'list.label.label', 'someMethod', 32),
-            new \ReflectionClass(ClassWithMethod::class)
+            new \ReflectionClass(ClassWithMethod::class),
         );
 
         $autoConfiguredAttributes[AsCallback::class](
             $definition,
             new AsCallback('tl_foo', 'list.label.label', null, 32),
-            (new \ReflectionClass(ClassWithMethod::class))->getMethod('someMethod')
+            (new \ReflectionClass(ClassWithMethod::class))->getMethod('someMethod'),
         );
     }
 
@@ -911,8 +938,6 @@ class ContaoCoreExtensionTest extends TestCase
      */
     public function testThrowsExceptionWhenTryingToDeclareTheMethodPropertyOnAMethodAttribute(string $attributeClass): void
     {
-        $this->skipTestIfAttributesAreNotSupported();
-
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
         $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
@@ -932,7 +957,7 @@ class ContaoCoreExtensionTest extends TestCase
         $autoConfiguredAttributes[$attributeClass](
             $definition,
             $attribute,
-            (new \ReflectionClass(ClassWithMethod::class))->getMethod('someMethod')
+            (new \ReflectionClass(ClassWithMethod::class))->getMethod('someMethod'),
         );
     }
 
@@ -951,7 +976,7 @@ class ContaoCoreExtensionTest extends TestCase
                 'kernel.charset' => 'UTF-8',
                 'kernel.project_dir' => $this->getTempDir(),
                 'kernel.default_locale' => 'en',
-            ])
+            ]),
         );
 
         $params ??= [
@@ -964,12 +989,5 @@ class ContaoCoreExtensionTest extends TestCase
         $extension->load($params, $container);
 
         return $container;
-    }
-
-    private function skipTestIfAttributesAreNotSupported(): void
-    {
-        if (\PHP_VERSION_ID < 80000) {
-            $this->markTestSkipped('Attributes support is only available since PHP8.');
-        }
     }
 }

@@ -53,7 +53,7 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
 
         $translated = $this->getCatalogue($locale)->get($id, $domain);
 
-        if (!empty($parameters)) {
+        if ($parameters) {
             $translated = vsprintf($translated, $parameters);
         }
 
@@ -83,7 +83,7 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
         if (!$this->catalogues->contains($parentCatalog)) {
             $this->catalogues->attach(
                 $parentCatalog,
-                new MessageCatalogue($parentCatalog, $this->framework, $this->resourceFinder)
+                new MessageCatalogue($parentCatalog, $this->framework, $this->resourceFinder),
             );
         }
 

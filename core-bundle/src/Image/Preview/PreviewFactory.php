@@ -32,6 +32,7 @@ use Symfony\Component\Filesystem\Path;
 class PreviewFactory
 {
     private string $defaultDensities = '';
+
     private array $predefinedSizes = [];
 
     /**
@@ -115,7 +116,7 @@ class PreviewFactory
                         $targetPathCallback,
                         $lastPage,
                         $firstPage,
-                        $previewOptions
+                        $previewOptions,
                     );
 
                     if ($previews instanceof \Traversable) {
@@ -124,7 +125,7 @@ class PreviewFactory
 
                     // We reached the last page if the number of returned
                     // previews was less than the number of pages requested
-                    if (\count($previews) > 0 && \count($previews) <= $lastPage - $firstPage) {
+                    if ($previews && \count($previews) <= $lastPage - $firstPage) {
                         $lastPreview = $previews[array_key_last($previews)];
                         $fileExtension = pathinfo($lastPreview, PATHINFO_EXTENSION);
                         $this->symlink($lastPreview, "$targetPath-last.$fileExtension");
@@ -168,7 +169,7 @@ class PreviewFactory
 
         return array_map(
             fn ($preview) => $this->imageFactory->create($preview, $size, $resizeOptions),
-            $previews instanceof \Traversable ? iterator_to_array($previews, false) : $previews
+            $previews instanceof \Traversable ? iterator_to_array($previews, false) : $previews,
         );
     }
 
@@ -295,7 +296,7 @@ class PreviewFactory
         if (is_numeric($size[2])) {
             $imageSize = $this->framework->getAdapter(ImageSizeModel::class)->findByPk($size[2]);
 
-            if (null === $imageSize) {
+            if (!$imageSize) {
                 return 0;
             }
 
@@ -337,7 +338,7 @@ class PreviewFactory
     {
         return array_map(
             fn ($path) => $this->pictureFactory->create($path, $size, $resizeOptions),
-            $previews instanceof \Traversable ? iterator_to_array($previews, false) : $previews
+            $previews instanceof \Traversable ? iterator_to_array($previews, false) : $previews,
         );
     }
 
@@ -436,6 +437,7 @@ class PreviewFactory
 
         $hash = hash_hmac('sha256', implode('|', $hashData), $this->secret, true);
         $hash = strtolower(substr(StringUtil::encodeBase32($hash), 0, 16));
+
         $name = pathinfo($path, PATHINFO_FILENAME);
 
         return $hash[0]."/$name-".substr($hash, 1);

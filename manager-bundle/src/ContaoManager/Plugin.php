@@ -46,7 +46,6 @@ use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Mailer\Transport\NativeTransportFactory;
 use Symfony\Component\Routing\RouteCollection;
@@ -92,7 +91,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
         // Autoload the legacy modules
         if (null !== static::$autoloadModules && file_exists(static::$autoloadModules)) {
-            /** @var array<SplFileInfo> $modules */
             $modules = Finder::create()
                 ->directories()
                 ->depth(0)
@@ -107,7 +105,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 }
             }
 
-            if (!empty($iniConfigs)) {
+            if ($iniConfigs) {
                 $configs = array_merge($configs, ...$iniConfigs);
             }
         }
@@ -126,7 +124,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 }
 
                 $container->setParameter('container.dumper.inline_class_loader', true);
-            }
+            },
         );
     }
 
@@ -158,7 +156,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
                 return $carry;
             },
-            new RouteCollection()
+            new RouteCollection(),
         );
     }
 
@@ -227,9 +225,8 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 $extensionConfigs = $this->addDefaultPdoDriverOptions($extensionConfigs, $container);
                 $extensionConfigs = $this->addDefaultDoctrineMapping($extensionConfigs, $container);
                 $extensionConfigs = $this->enableStrictMode($extensionConfigs, $container);
-                $extensionConfigs = $this->setDefaultCollation($extensionConfigs);
 
-                return $extensionConfigs;
+                return $this->setDefaultCollation($extensionConfigs);
 
             case 'nelmio_security':
                 return $this->checkClickjackingPaths($extensionConfigs);
@@ -572,7 +569,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $userPassword,
             $container->hasParameter('database_host') ? $container->getParameter('database_host') : 'localhost',
             $container->hasParameter('database_port') ? (int) $container->getParameter('database_port') : 3306,
-            $dbName
+            $dbName,
         );
     }
 
@@ -609,7 +606,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $transport,
             $credentials,
             $container->hasParameter('mailer_host') ? $container->getParameter('mailer_host') : '127.0.0.1',
-            $portSuffix
+            $portSuffix,
         );
     }
 

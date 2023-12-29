@@ -192,9 +192,7 @@ class MysqlInnodbRowSizeCalculator
             $sql .= ' NOT';
         }
 
-        $sql .= ' NULL';
-
-        return $sql;
+        return $sql.' NULL';
     }
 
     private function isTableTooLarge(array $columns, string $rowFormat = 'DYNAMIC'): bool
@@ -246,6 +244,7 @@ class MysqlInnodbRowSizeCalculator
             if ($i === $bits - 1) {
                 $colSize += $bytes % $bits;
             }
+
             $columns[] = "col$i VARCHAR($colSize) CHARACTER SET latin1 NULL";
         }
 

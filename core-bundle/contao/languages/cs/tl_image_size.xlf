@@ -77,6 +77,22 @@
         <source>The following formats are not supported on your server: %s</source>
         <target>Následující formáty nejsou Vaším serverem podporovány: %s</target>
       </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadata.0">
+        <source>Preserve copyright metadata</source>
+        <target>Zachovat autorská metadata</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadata.1">
+        <source>Preserve copyright-related metadata fields (EXIF, IPTC, XMP).</source>
+        <target>Zachovat pole spojená s autorskými metadaty (EXIF, IPTC, XMP).</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadataFields.0">
+        <source>Metadata fields</source>
+        <target>Pole meta</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadataFields.1">
+        <source>Please select the metadata fields to preserve.</source>
+        <target>Zvolte prosím data, která chcete zachovat.</target>
+      </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.0">
         <source>Use original image if dimensions match</source>
         <target>Použít originál obrázku, pokud jeho rozměry souhlasí.</target>
@@ -84,6 +100,14 @@
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.1">
         <source>Note that no optimizations such as metadata stripping or JPEG compression will be applied in this case.</source>
         <target>Mějte na paměti, že v tomto případě nebudou použité žádné optimalizace jako přepsání meta informací nebo komprese JPEGu.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.imageQuality.0">
+        <source>Image quality</source>
+        <target>Kvalita obrázku</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.imageQuality.1">
+        <source>Here you can set the image compression quality between 0 (lowest quality) and 100 (highest quality). Leave blank to use the system default.</source>
+        <target>Zde můžete určit kompresy kvality mezi 0 (nejnižší) a 100 (nejvyšší). Ponechte to prázdné, aby se použilo výchozího nastavení.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.0">
         <source>Enable lazy loading</source>
@@ -113,6 +137,10 @@
         <source>Loading options</source>
         <target>Možnosti načítání</target>
       </trans-unit>
+      <trans-unit id="tl_image_size.metadata_legend">
+        <source>Metadata settings</source>
+        <target>Nastavení metadat</target>
+      </trans-unit>
       <trans-unit id="tl_image_size.expert_legend">
         <source>Expert settings</source>
         <target>Rozšířená nastavení</target>
@@ -140,6 +168,18 @@
       <trans-unit id="tl_image_size.crop.1">
         <source>The image will be resized to the given dimensions. If necessary, it will be cropped.</source>
         <target>Obrázek bude zmenšený podle zadaných rozměrů. Bude-li třeba, bude oříznut. </target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadataOptions.default">
+        <source>Use default settings</source>
+        <target>Použít výchozí nastavení</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadataOptions.overwrite">
+        <source>Select custom metadata fields</source>
+        <target>Vybrat vlastní pole metadat</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadataOptions.delete">
+        <source>Remove all metadata fields</source>
+        <target>Smazat všechna pole metadat</target>
       </trans-unit>
       <trans-unit id="tl_image_size.new.0">
         <source>New</source>

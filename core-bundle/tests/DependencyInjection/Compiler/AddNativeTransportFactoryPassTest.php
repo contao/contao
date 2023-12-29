@@ -30,9 +30,9 @@ class AddNativeTransportFactoryPassTest extends TestCase
         if (class_exists(NativeTransportFactory::class)) {
             $this->assertTrue($container->hasDefinition('mailer.transport_factory.native'));
 
-            /** @var ChildDefinition $definition */
             $definition = $container->getDefinition('mailer.transport_factory.native');
 
+            $this->assertInstanceOf(ChildDefinition::class, $definition);
             $this->assertTrue($definition->hasTag('mailer.transport_factory'));
             $this->assertSame('mailer.transport_factory.abstract', $definition->getParent());
         } else {

@@ -22,6 +22,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\ParameterBag\ContainerBag;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -104,6 +105,7 @@ abstract class ContaoTestCase extends TestCase
 
         $container = new ContainerBuilder();
         $container->merge($cachedContainers[$projectDir]);
+        $container->set('parameter_bag', new ContainerBag($container));
 
         return $container;
     }
@@ -131,10 +133,22 @@ abstract class ContaoTestCase extends TestCase
             ->willReturnCallback(static fn (string $key): Adapter|null => $adapters[$key] ?? null)
         ;
 
-        if (0 !== \count($instances)) {
+        if ($instances) {
             $framework
                 ->method('createInstance')
-                ->willReturnCallback(static fn (string $key): mixed => $instances[$key] ?? null)
+                ->willReturnCallback(
+                    static function (string $key) use ($instances): mixed {
+                        if (!isset($instances[$key])) {
+                            return null;
+                        }
+
+                        if ($instances[$key] instanceof \Closure) {
+                            return $instances[$key]();
+                        }
+
+                        return $instances[$key];
+                    },
+                )
             ;
         }
 
@@ -202,7 +216,7 @@ abstract class ContaoTestCase extends TestCase
             ->willReturnCallback(
                 static function (string $key) use (&$properties) {
                     return $properties[$key] ?? null;
-                }
+                },
             )
         ;
 
@@ -212,7 +226,7 @@ abstract class ContaoTestCase extends TestCase
                 ->willReturnCallback(
                     static function (string $key, $value) use (&$properties): void {
                         $properties[$key] = $value;
-                    }
+                    },
                 )
             ;
         }
@@ -223,7 +237,7 @@ abstract class ContaoTestCase extends TestCase
                 ->willReturnCallback(
                     static function (string $key) use (&$properties) {
                         return isset($properties[$key]);
-                    }
+                    },
                 )
             ;
         }
@@ -234,7 +248,7 @@ abstract class ContaoTestCase extends TestCase
                 ->willReturnCallback(
                     static function () use (&$properties) {
                         return $properties;
-                    }
+                    },
                 )
             ;
         }
@@ -245,7 +259,7 @@ abstract class ContaoTestCase extends TestCase
                 ->willReturnCallback(
                     static function (array $data) use (&$properties): void {
                         $properties = $data;
-                    }
+                    },
                 )
             ;
         }
@@ -325,7 +339,7 @@ abstract class ContaoTestCase extends TestCase
                 && method_exists($class, 'reset')
                 && $reflectionClass->getMethod('reset')->isStatic()
                 && $reflectionClass->getMethod('reset')->getDeclaringClass()->getName() === $class
-                && 0 === \count($reflectionClass->getMethod('reset')->getParameters())
+                && [] === $reflectionClass->getMethod('reset')->getParameters()
             ) {
                 $class::reset();
 
@@ -351,7 +365,7 @@ abstract class ContaoTestCase extends TestCase
                     continue;
                 }
 
-                $property->setValue($defaultValue);
+                $property->setValue(null, $defaultValue);
             }
         }
     }

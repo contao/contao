@@ -35,6 +35,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 	(
 		'dataContainer'               => DC_Table::class,
 		'enableVersioning'            => true,
+		'ctable'                      => array('tl_content'),
 		'dynamicPtable'               => true,
 		'markAsCopy'                  => 'headline',
 		'onload_callback'             => array
@@ -64,18 +65,10 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'fields'                  => array('sorting'),
 			'panelLayout'             => 'filter;search,limit',
 			'defaultSearchField'      => 'text',
-			'headerFields'            => array('title', 'headline', 'author', 'tstamp', 'start', 'stop'),
+			'headerFields'            => array('title', 'type', 'author', 'tstamp', 'start', 'stop'),
 			'child_record_callback'   => array('tl_content', 'addCteType'),
-			'renderAsGrid'            => true
-		),
-		'global_operations' => array
-		(
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
+			'renderAsGrid'            => true,
+			'limitHeight'             => 160
 		),
 		'operations' => array
 		(
@@ -85,12 +78,18 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 				'icon'                => 'edit.svg',
 				'button_callback'     => array('tl_content', 'disableButton')
 			),
+			'children' => array
+			(
+				'href'                => 'table=tl_content&ptable=tl_content',
+				'icon'                => 'children.svg',
+				'button_callback'     => array('tl_content', 'editChildren')
+			),
 			'copy' => array
 			(
 				'href'                => 'act=paste&amp;mode=copy',
 				'icon'                => 'copy.svg',
 				'attributes'          => 'onclick="Backend.getScrollOffset()"',
-				'button_callback'     => array('tl_content', 'disableButton')
+				'button_callback'     => array('tl_content', 'copyElement')
 			),
 			'cut',
 			'delete' => array
@@ -121,6 +120,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'unfiltered_html'             => '{type_legend},type;{text_legend},unfilteredHtml;{template_legend:hide},customTpl;{protected_legend:hide},protected;{invisible_legend:hide},invisible,start,stop',
 		'list'                        => '{type_legend},type,headline;{list_legend},listtype,listitems;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'table'                       => '{type_legend},type,headline;{table_legend},tableitems;{tconfig_legend},summary,thead,tfoot,tleft;{sortable_legend:hide},sortable;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'accordion'                   => '{type_legend},type,headline;{accordion_legend},closeSections;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'element_group'               => '{type_legend},type,headline;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'accordionStart'              => '{type_legend},type;{moo_legend},mooHeadline,mooStyle,mooClasses;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'accordionStop'               => '{type_legend},type;{moo_legend},mooClasses;{template_legend:hide},customTpl;{protected_legend:hide},protected;{invisible_legend:hide},invisible,start,stop',
 		'accordionSingle'             => '{type_legend},type;{moo_legend},mooHeadline,mooStyle,mooClasses;{text_legend},text;{image_legend},addImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
@@ -200,6 +201,13 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'options'                 => array('h1', 'h2', 'h3', 'h4', 'h5', 'h6'),
 			'eval'                    => array('maxlength'=>200, 'basicEntities'=>true, 'tl_class'=>'w50 clr'),
 			'sql'                     => "varchar(255) NOT NULL default 'a:2:{s:5:\"value\";s:0:\"\";s:4:\"unit\";s:2:\"h2\";}'"
+		),
+		'sectionHeadline' => array
+		(
+			'search'                  => true,
+			'inputType'               => 'text',
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'text' => array
 		(
@@ -381,6 +389,12 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "varchar(32) COLLATE ascii_bin NOT NULL default 'ascending'"
 		),
+		'closeSections' => array
+		(
+			'inputType'               => 'checkbox',
+			'eval'                    => array('tl_class'=>'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
+		),
 		'mooHeadline' => array
 		(
 			'inputType'               => 'text',
@@ -403,7 +417,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'highlight' => array
 		(
 			'inputType'               => 'select',
-			'options'                 => array('Apache', 'Bash', 'C#', 'C++', 'CSS', 'Diff', 'HTML', 'HTTP', 'Ini', 'JSON', 'Java', 'JavaScript', 'Markdown', 'Nginx', 'Perl', 'PHP', 'PowerShell', 'Python', 'Ruby', 'SCSS', 'SQL', 'YAML', 'XML'),
+			'options'                 => array('Apache', 'Bash', 'C#', 'C++', 'CSS', 'Diff', 'HTML', 'HTTP', 'Ini', 'JSON', 'Java', 'JavaScript', 'Markdown', 'Nginx', 'Perl', 'PHP', 'PowerShell', 'Python', 'Ruby', 'SCSS', 'SQL', 'Twig', 'YAML', 'XML'),
 			'eval'                    => array('includeBlankOption'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(32) COLLATE ascii_bin NOT NULL default ''"
 		),
@@ -444,7 +458,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'overwriteLink' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['overwriteMeta'],
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true, 'tl_class'=>'w50 clr'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
@@ -842,7 +855,7 @@ class tl_content extends Backend
 			case 'create':
 			case 'select':
 				// Check access to the article
-				$this->checkAccessToElement($dc->currentPid, $pagemounts, true);
+				$this->checkAccessToElement($dc->currentPid, $pagemounts, true, $dc->parentTable);
 				break;
 
 			case 'editAll':
@@ -853,12 +866,12 @@ class tl_content extends Backend
 				// Check access to the parent element if a content element is moved
 				if (in_array(Input::get('act'), array('cutAll', 'copyAll')))
 				{
-					$this->checkAccessToElement(Input::get('pid'), $pagemounts, Input::get('mode') == 2);
+					$this->checkAccessToElement(Input::get('pid'), $pagemounts, Input::get('mode') == 2, $dc->parentTable);
 				}
 
 				$objCes = $db
-					->prepare("SELECT id FROM tl_content WHERE ptable='tl_article' AND pid=?")
-					->execute($dc->currentPid);
+					->prepare("SELECT id FROM tl_content WHERE ptable=? AND pid=?")
+					->execute($dc->parentTable, $dc->currentPid);
 
 				$objSession = System::getContainer()->get('request_stack')->getSession();
 
@@ -870,12 +883,12 @@ class tl_content extends Backend
 			case 'cut':
 			case 'copy':
 				// Check access to the parent element if a content element is moved
-				$this->checkAccessToElement(Input::get('pid'), $pagemounts, Input::get('mode') == 2);
+				$this->checkAccessToElement(Input::get('pid'), $pagemounts, Input::get('mode') == 2, $dc->parentTable);
 				// no break
 
 			default:
 				// Check access to the content element
-				$this->checkAccessToElement(Input::get('id'), $pagemounts);
+				$this->checkAccessToElement(Input::get('id'), $pagemounts, false, $dc->parentTable);
 				break;
 		}
 	}
@@ -889,9 +902,30 @@ class tl_content extends Backend
 	 *
 	 * @throws AccessDeniedException
 	 */
-	protected function checkAccessToElement($id, $pagemounts, $blnIsPid=false)
+	protected function checkAccessToElement($id, $pagemounts, $blnIsPid=false, $ptable=null)
 	{
-		if ($blnIsPid)
+		if ($ptable == 'tl_content')
+		{
+			while (true)
+			{
+				$objElement = Database::getInstance()
+					->prepare("SELECT * FROM tl_content WHERE id=?")
+					->execute($id);
+
+				if (!$objElement->numRows || $objElement->ptable != 'tl_content')
+				{
+					break;
+				}
+
+				$id = $objElement->pid;
+			}
+
+			$objPage = Database::getInstance()
+				->prepare("SELECT p.id, p.pid, p.includeChmod, p.chmod, p.cuser, p.cgroup, a.id AS aid FROM tl_article a, tl_page p WHERE a.id=? AND a.pid=p.id")
+				->limit(1)
+				->execute($objElement->pid);
+		}
+		elseif ($blnIsPid)
 		{
 			$objPage = Database::getInstance()
 				->prepare("SELECT p.id, p.pid, p.includeChmod, p.chmod, p.cuser, p.cgroup, a.id AS aid FROM tl_article a, tl_page p WHERE a.id=? AND a.pid=p.id")
@@ -930,8 +964,24 @@ class tl_content extends Backend
 	 *
 	 * @return array
 	 */
-	public function getContentElements()
+	public function getContentElements(DataContainer $dc)
 	{
+		$allowedTypes = array();
+
+		if ($dc->parentTable == 'tl_content')
+		{
+			$parent = Database::getInstance()
+				->prepare("SELECT * FROM tl_content WHERE id=?")
+				->execute($dc->getCurrentRecord()['pid']);
+
+			$compositor = System::getContainer()->get('contao.fragment.compositor');
+
+			if ($compositor->supportsNesting('contao.content_element.' . $parent->type))
+			{
+				$allowedTypes = $compositor->getAllowedTypes('contao.content_element.' . $parent->type);
+			}
+		}
+
 		$security = System::getContainer()->get('security.helper');
 		$groups = array();
 
@@ -939,6 +989,13 @@ class tl_content extends Backend
 		{
 			foreach (array_keys($v) as $kk)
 			{
+				// Filter elements that are not allowed to be nested
+				if ($allowedTypes && !in_array($kk, $allowedTypes))
+				{
+					continue;
+				}
+
+				// Filter elements that are not allowed for the current user
 				if ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $kk))
 				{
 					$groups[$k][] = $kk;
@@ -998,6 +1055,11 @@ class tl_content extends Backend
 				$GLOBALS['TL_DCA']['tl_content']['fields']['size']['eval']['mandatory'] = true;
 				$GLOBALS['TL_DCA']['tl_content']['fields']['fullsize']['eval']['tl_class'] .= ' m12';
 				break;
+		}
+
+		if (System::getContainer()->get('contao.fragment.compositor')->supportsNesting('contao.content_element.' . $objCte->type))
+		{
+			$GLOBALS['TL_DCA']['tl_content']['config']['switchToEdit'] = true;
 		}
 	}
 
@@ -1265,7 +1327,7 @@ class tl_content extends Backend
 
 		return '
 <div class="cte_type ' . $key . '">' . $type . '</div>
-<div class="' . $class . ' limit_height' . (!Config::get('doNotCollapse') ? ' h112' : '') . '">' . $preview . '</div>';
+<div class="' . $class . '">' . $preview . '</div>';
 	}
 
 	/**
@@ -1344,7 +1406,7 @@ class tl_content extends Backend
 
 		while ($objForms->next())
 		{
-			if ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FORM, $objForms->id))
+			if ($security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FORM, $objForms->id))
 			{
 				$arrForms[$objForms->id] = $objForms->title . ' (ID ' . $objForms->id . ')';
 			}
@@ -1404,6 +1466,7 @@ class tl_content extends Backend
 			case 'Scala':
 			case 'SQL':
 			case 'Text':
+			case 'Twig':
 			case 'YAML':
 				$syntax = strtolower($dc->activeRecord->highlight);
 				break;
@@ -1467,6 +1530,52 @@ class tl_content extends Backend
 	public function disableButton($row, $href, $label, $title, $icon, $attributes)
 	{
 		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $row['type']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+	}
+
+	/**
+	 * Return the edit children button
+	 *
+	 * @param array  $row
+	 * @param string $href
+	 * @param string $label
+	 * @param string $title
+	 * @param string $icon
+	 * @param string $attributes
+	 *
+	 * @return string
+	 */
+	public function editChildren($row, $href, $label, $title, $icon, $attributes)
+	{
+		if (!System::getContainer()->get('contao.fragment.compositor')->supportsNesting('contao.content_element.' . $row['type']))
+		{
+			return '';
+		}
+
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $row['type']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id'], true, array('act', 'mode')) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+	}
+
+	/**
+	 * Return the copy content element button
+	 *
+	 * @param array  $row
+	 * @param string $href
+	 * @param string $label
+	 * @param string $title
+	 * @param string $icon
+	 * @param string $attributes
+	 *
+	 * @return string
+	 */
+	public function copyElement($row, $href, $label, $title, $icon, $attributes)
+	{
+		$href .= '&amp;id=' . $row['id'];
+
+		if (System::getContainer()->get('contao.fragment.compositor')->supportsNesting('contao.content_element.' . $row['type']))
+		{
+			$href .= '&amp;children=1';
+		}
+
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $row['type']) ? '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**

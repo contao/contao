@@ -38,10 +38,15 @@ use Symfony\Component\HttpKernel\Kernel;
 class ContaoKernel extends Kernel implements HttpCacheProvider
 {
     protected static string|null $projectDir = null;
+
     private PluginLoader|null $pluginLoader = null;
+
     private BundleLoader|null $bundleLoader = null;
+
     private JwtManager|null $jwtManager = null;
+
     private ManagerConfig|null $managerConfig = null;
+
     private ContaoCache|null $httpCache = null;
 
     public function shutdown(): void
@@ -84,7 +89,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
     public function getPluginLoader(): PluginLoader
     {
-        if (null === $this->pluginLoader) {
+        if (!$this->pluginLoader) {
             $this->pluginLoader = new PluginLoader();
 
             $config = $this->getManagerConfig()->all();
@@ -107,7 +112,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
     public function getBundleLoader(): BundleLoader
     {
-        if (null === $this->bundleLoader) {
+        if (!$this->bundleLoader) {
             $parser = new DelegatingParser();
             $parser->addParser(new JsonParser());
             $parser->addParser(new IniParser(Path::join($this->getProjectDir(), 'system/modules')));
@@ -178,13 +183,13 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
                 if ($container->fileExists(Path::join($this->getProjectDir(), 'src'), false)) {
                     $loader->load(__DIR__.'/../../skeleton/config/services.php');
                 }
-            }
+            },
         );
     }
 
     public function getHttpCache(): ContaoCache
     {
-        if (null !== $this->httpCache) {
+        if ($this->httpCache) {
             return $this->httpCache;
         }
 
@@ -232,6 +237,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             Request::setTrustedProxies(explode(',', (string) $trustedProxies), $trustedHeaderSet);
         }
 
+        // TODO: Remove this line in Contao 5.4 with Symfony 7 only
         Request::enableHttpMethodParameterOverride();
 
         $jwtManager = null;
@@ -286,9 +292,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     {
         parent::initializeContainer();
 
-        if (null === ($container = $this->getContainer())) {
-            return;
-        }
+        $container = $this->getContainer();
 
         // Set the plugin loader again, so it is available at runtime (synthetic service)
         $container->set('contao_manager.plugin_loader', $this->getPluginLoader());
@@ -311,7 +315,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         }
 
         if ($container->fileExists($path = Path::join($projectDir, 'config', $file.'.yml'))) {
-            trigger_deprecation('contao/manager-bundle', '5.0', sprintf('Using a %s.yml file has been deprecated and will no longer work in Contao 6.0. Use a %s.yaml file instead', $file, $file));
+            trigger_deprecation('contao/manager-bundle', '5.0', 'Using a %s.yml file has been deprecated and will no longer work in Contao 6. Use a %s.yaml file instead', $file, $file);
             $exists[] = $path;
         }
 
@@ -322,7 +326,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     {
         $configs = $this->getBundleLoader()->getBundleConfigs(
             'dev' === $this->getEnvironment(),
-            $this->debug ? null : Path::join($this->getCacheDir(), 'bundles.map')
+            $this->debug ? null : Path::join($this->getCacheDir(), 'bundles.map'),
         );
 
         foreach ($configs as $config) {

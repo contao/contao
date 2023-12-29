@@ -119,7 +119,7 @@ class ZipReader
 	 *
 	 * @throws \Exception If $strFile does not exist or cannot be opened
 	 */
-	public function __construct($strFile)
+	public function __construct($strFile, $blnSkipRootFolder = false)
 	{
 		// Handle open_basedir restrictions
 		if ($strFile == '.')
@@ -144,7 +144,7 @@ class ZipReader
 			throw new \Exception("Could not open file $strFile");
 		}
 
-		$this->readCentralDirectory();
+		$this->readCentralDirectory($blnSkipRootFolder);
 	}
 
 	/**
@@ -416,7 +416,7 @@ class ZipReader
 	 *
 	 * @throws \Exception If the central directory cannot be found
 	 */
-	protected function readCentralDirectory()
+	protected function readCentralDirectory($blnSkipRootFolder = false)
 	{
 		$strMbCharset = null;
 
@@ -533,6 +533,26 @@ class ZipReader
 
 		// Restore the mbstring encoding (see #5842)
 		$strMbCharset && mb_internal_encoding($strMbCharset);
+
+		if ($blnSkipRootFolder && !empty($this->arrFiles))
+		{
+			$strRoot = strtok($this->arrFiles[0]['file_name'], '/') . '/';
+
+			foreach ($this->arrFiles as $file)
+			{
+				if (!str_starts_with($file['file_name'], $strRoot))
+				{
+					return;
+				}
+			}
+
+			$offset = \strlen($strRoot);
+
+			foreach ($this->arrFiles as &$file)
+			{
+				$file['file_name'] = substr($file['file_name'], $offset);
+			}
+		}
 	}
 
 	/**

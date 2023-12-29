@@ -96,18 +96,15 @@ class RegisterPagesPass implements CompilerPassInterface
             $pathRegex = $compiledRoute->getRegex();
         }
 
-        return new Definition(
-            RouteConfig::class,
-            [
-                $path,
-                $pathRegex,
-                $attributes['urlSuffix'] ?? null,
-                $attributes['requirements'] ?? [],
-                $attributes['options'] ?? [],
-                $defaults,
-                $attributes['methods'] ?? [],
-            ]
-        );
+        return new Definition(RouteConfig::class, [
+            $path,
+            $pathRegex,
+            $attributes['urlSuffix'] ?? null,
+            $attributes['requirements'] ?? [],
+            $attributes['options'] ?? [],
+            $defaults,
+            $attributes['methods'] ?? [],
+        ]);
     }
 
     /**

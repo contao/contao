@@ -22,7 +22,6 @@ use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\Database;
-use Contao\Database\Result;
 use Contao\Date;
 use Contao\Environment;
 use Contao\File;
@@ -294,12 +293,18 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
             case 'article':
             case 'article_open':
             case 'article_url':
-            case 'article_title':
-                if (!(($objArticle = ArticleModel::findByIdOrAlias($insertTag->getParameters()->get(0))) instanceof ArticleModel) || !(($objPid = $objArticle->getRelated('pid')) instanceof PageModel)) {
+                $objArticle = ArticleModel::findByIdOrAlias($insertTag->getParameters()->get(0));
+
+                if (!$objArticle instanceof ArticleModel) {
                     break;
                 }
 
-                /** @var PageModel $objPid */
+                $objPid = $objArticle->getRelated('pid');
+
+                if (!$objPid instanceof PageModel) {
+                    break;
+                }
+
                 $params = '/articles/'.($objArticle->alias ?: $objArticle->id);
                 $strTarget = \in_array('blank', \array_slice($insertTag->getParameters()->all(), 1), true) ? ' target="_blank" rel="noreferrer noopener"' : '';
                 $strUrl = '';
@@ -323,18 +328,19 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                     case 'article_url':
                         $result = $strUrl;
                         break;
+                }
+                break;
 
-                    case 'article_title':
-                        $result = StringUtil::specialcharsAttribute($objArticle->title);
-                        break;
+            // Article title
+            case 'article_title':
+                if ($objArticle = ArticleModel::findByIdOrAlias($insertTag->getParameters()->get(0))) {
+                    $result = StringUtil::specialcharsAttribute($objArticle->title);
                 }
                 break;
 
             // Article teaser
             case 'article_teaser':
-                $objTeaser = ArticleModel::findByIdOrAlias($insertTag->getParameters()->get(0));
-
-                if (null !== $objTeaser) {
+                if ($objTeaser = ArticleModel::findByIdOrAlias($insertTag->getParameters()->get(0))) {
                     $result = $objTeaser->teaser;
                 }
                 break;
@@ -355,8 +361,6 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 }
 
                 $strQuery .= ' FROM tl_content';
-
-                /** @var Result&object{tc:int, tn:int, te:int} $objUpdate */
                 $objUpdate = Database::getInstance()->query($strQuery);
 
                 if ($objUpdate->numRows) {
@@ -441,7 +445,6 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 $responseContext = $this->container->get('contao.routing.response_context_accessor')->getResponseContext();
 
                 if ($responseContext?->has(HtmlHeadBag::class) && \in_array($property, ['pageTitle', 'description'], true)) {
-                    /** @var HtmlHeadBag $htmlHeadBag */
                     $htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
 
                     $result = match ($property) {
@@ -553,18 +556,14 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
 
                 if (Validator::isUuid($strFile)) {
                     // Handle UUIDs
-                    $objFile = FilesModel::findByUuid($strFile);
-
-                    if (null === $objFile) {
+                    if (!$objFile = FilesModel::findByUuid($strFile)) {
                         break;
                     }
 
                     $strFile = $objFile->path;
                 } elseif (is_numeric($strFile)) {
                     // Handle numeric IDs (see #4805)
-                    $objFile = FilesModel::findByPk($strFile);
-
-                    if (null === $objFile) {
+                    if (!$objFile = FilesModel::findByPk($strFile)) {
                         break;
                     }
 
@@ -584,7 +583,6 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
 
                 // Generate the thumbnail image
                 try {
-                    // Image
                     if ('image' === $insertTag->getName()) {
                         $dimensions = '';
                         $src = $this->container->get('contao.image.factory')->create($this->container->getParameter('kernel.project_dir').'/'.rawurldecode($strFile), [$width, $height, $mode])->getUrl($this->container->getParameter('kernel.project_dir'));
@@ -596,20 +594,20 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                         }
 
                         $result = '<img src="'.StringUtil::specialcharsUrl(Controller::addFilesUrlTo($src)).'" '.$dimensions.' alt="'.StringUtil::specialcharsAttribute($alt).'"'.($class ? ' class="'.StringUtil::specialcharsAttribute($class).'"' : '').'>';
-                    } // Picture
-                    else {
+                    } else {
                         $staticUrl = $this->container->get('contao.assets.files_context')->getStaticUrl();
                         $picture = $this->container->get('contao.image.picture_factory')->create($this->container->getParameter('kernel.project_dir').'/'.$strFile, $size);
 
-                        $picture = [
+                        $data = [
                             'img' => $picture->getImg($this->container->getParameter('kernel.project_dir'), $staticUrl),
                             'sources' => $picture->getSources($this->container->getParameter('kernel.project_dir'), $staticUrl),
+                            'alt' => StringUtil::specialcharsAttribute($alt),
+                            'class' => StringUtil::specialcharsAttribute($class),
                         ];
 
-                        $picture['alt'] = StringUtil::specialcharsAttribute($alt);
-                        $picture['class'] = StringUtil::specialcharsAttribute($class);
                         $pictureTemplate = new FrontendTemplate($strTemplate);
-                        $pictureTemplate->setData($picture);
+                        $pictureTemplate->setData($data);
+
                         $result = $pictureTemplate->parse();
                     }
 
@@ -624,23 +622,21 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
 
             // Files (UUID or template path)
             case 'file':
-                if (Validator::isUuid($insertTag->getParameters()->get(0))) {
-                    $objFile = FilesModel::findByUuid($insertTag->getParameters()->get(0));
+                $uuid = $insertTag->getParameters()->get(0);
 
-                    if (null !== $objFile) {
-                        $result = System::getContainer()->get('contao.assets.files_context')->getStaticUrl().System::urlEncode($objFile->path);
-                        break;
-                    }
+                if (Validator::isUuid($uuid) && ($objFile = FilesModel::findByUuid($uuid))) {
+                    $result = System::getContainer()->get('contao.assets.files_context')->getStaticUrl().System::urlEncode($objFile->path);
+                    break;
                 }
 
-                trigger_deprecation('contao/core-bundle', '5.0', 'Using the file insert tag to include templates has been deprecated and will no longer work in Contao 6.0. Use the Template content element instead.');
+                trigger_deprecation('contao/core-bundle', '5.0', 'Using the file insert tag to include templates has been deprecated and will no longer work in Contao 6. Use the "Template" content element instead.');
 
                 $arrGet = $_GET;
                 $strFile = $insertTag->getParameters()->get(0);
 
                 // Take arguments and add them to the $_GET array
-                if (str_contains($insertTag->getParameters()->get(0), '?')) {
-                    $arrChunks = explode('?', urldecode($insertTag->getParameters()->get(0)));
+                if (str_contains($strFile, '?')) {
+                    $arrChunks = explode('?', urldecode($strFile));
                     $strSource = StringUtil::decodeEntities($arrChunks[1]);
                     $arrParams = explode('&', $strSource);
 
@@ -704,7 +700,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 }
 
                 $value = StringUtil::specialcharsAttribute($value);
-            }
+            },
         );
 
         return [$base, $attributes];

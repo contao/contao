@@ -71,15 +71,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'showColumns'             => true,
 			'label_callback'          => array('tl_user', 'addIcon')
 		),
-		'global_operations' => array
-		(
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
-		),
 		'operations' => array
 		(
 			'edit' => array

@@ -16,13 +16,13 @@ use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\StoreRefererListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\User;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class StoreRefererListenerTest extends TestCase
@@ -50,14 +50,17 @@ class StoreRefererListenerTest extends TestCase
         $request->attributes->set('_route', 'contao_backend');
         $request->attributes->set('_contao_referer_id', 'newRefererId');
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
+
         $request->server->set('REQUEST_URI', '/path/of/contao?having&query&string=1');
 
         $requestWithRefInUrl = new Request();
+        $requestWithRefInUrl->query->set('ref', 'existingRefererId');
+
         $requestWithRefInUrl->attributes->set('_route', 'contao_backend');
         $requestWithRefInUrl->attributes->set('_contao_referer_id', 'newRefererId');
         $requestWithRefInUrl->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
+
         $requestWithRefInUrl->server->set('REQUEST_URI', '/path/of/contao?having&query&string=1');
-        $requestWithRefInUrl->query->set('ref', 'existingRefererId');
 
         yield 'Test current referer null returns correct new referer' => [
             $request,
@@ -147,7 +150,7 @@ class StoreRefererListenerTest extends TestCase
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MAIN_REQUEST,
-            new Response('', 404)
+            new Response('', 404),
         );
 
         $listener = $this->getListener();
@@ -163,7 +166,7 @@ class StoreRefererListenerTest extends TestCase
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MAIN_REQUEST,
-            new Response('', 404)
+            new Response('', 404),
         );
 
         $listener = $this->getListener();
@@ -183,6 +186,7 @@ class StoreRefererListenerTest extends TestCase
 
         $request = new Request();
         $request->setSession($session);
+
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $listener = $this->getListener($user, true);
@@ -220,6 +224,7 @@ class StoreRefererListenerTest extends TestCase
 
         $request = new Request();
         $request->setSession($session);
+
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $kernel = $this->createMock(KernelInterface::class);
@@ -239,6 +244,7 @@ class StoreRefererListenerTest extends TestCase
 
         $request = new Request();
         $request->setSession($session);
+
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $listener = $this->getListener($this->createMock(User::class));
@@ -263,7 +269,7 @@ class StoreRefererListenerTest extends TestCase
     {
         $security = $this->createMock(Security::class);
         $security
-            ->expects($expectsSecurityCall || null !== $user ? $this->once() : $this->never())
+            ->expects($expectsSecurityCall || $user ? $this->once() : $this->never())
             ->method('getUser')
             ->willReturn($user)
         ;

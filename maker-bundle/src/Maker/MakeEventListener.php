@@ -85,7 +85,6 @@ class MakeEventListener extends AbstractMaker
             return;
         }
 
-        /** @var MethodDefinition $definition */
         $definition = $events[$event];
         $elementDetails = $generator->createClassNameDetails($name, 'EventListener\\');
 

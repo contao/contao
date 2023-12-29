@@ -35,17 +35,9 @@ class TeaserController extends AbstractContentElementController
 
         [$article, $page] = $articleAndPage;
 
-        $href = $page->getFrontendUrl(
-            sprintf(
-                '/articles/%s%s',
-                'main' !== $article->inColumn ? "$article->inColumn:" : '',
-                $article->alias ?: $article->id
-            )
-        );
-
         $template->set('article', $article);
         $template->set('page', $page);
-        $template->set('href', $href);
+        $template->set('href', $page->getFrontendUrl('/articles/'.($article->alias ?: $article->id)));
 
         return $template->getResponse();
     }
@@ -59,13 +51,13 @@ class TeaserController extends AbstractContentElementController
 
         $articleModel = $this->getContaoAdapter(ArticleModel::class);
 
-        if (null === ($article = $articleModel->findPublishedById($model->article))) {
+        if (!$article = $articleModel->findPublishedById($model->article)) {
             return null;
         }
 
         $pageModel = $this->getContaoAdapter(PageModel::class);
         $page = $pageModel->findPublishedById($article->pid);
 
-        return null !== $page ? [$article, $page] : null;
+        return $page ? [$article, $page] : null;
     }
 }

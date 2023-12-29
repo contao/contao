@@ -58,7 +58,7 @@ class TemplateTest extends TestCase
     {
         (new Filesystem())->dumpFile(
             Path::join($this->getTempDir(), 'templates/test_template.html5'),
-            '<?= $this->value ?>'
+            '<?= $this->value ?>',
         );
 
         $template = new BackendTemplate('test_template');
@@ -73,7 +73,7 @@ class TemplateTest extends TestCase
     {
         (new Filesystem())->dumpFile(
             Path::join($this->getTempDir(), 'templates/test_template.html5'),
-            'test<?php throw new Exception ?>'
+            'test<?php throw new Exception ?>',
         );
 
         $template = new BackendTemplate('test_template');
@@ -106,7 +106,7 @@ class TemplateTest extends TestCase
                     $this->block('c');
                     echo 'test4';
                     throw new Exception;
-                EOF
+                EOF,
         );
 
         $template = new BackendTemplate('test_template');
@@ -147,7 +147,7 @@ class TemplateTest extends TestCase
                     $this->block('e');
                     echo 'test6';
                     throw new Exception;
-                EOF
+                EOF,
         );
 
         $filesystem->dumpFile(
@@ -167,7 +167,7 @@ class TemplateTest extends TestCase
                     echo 'test6';
                     $this->endblock('b');
                     echo 'test7';
-                EOF
+                EOF,
         );
 
         $template = new BackendTemplate('test_template');
@@ -206,7 +206,7 @@ class TemplateTest extends TestCase
                     echo 'test5';
                     $this->endblock('a');
                     echo 'test6';
-                EOF
+                EOF,
         );
 
         $template = new BackendTemplate('test_template');
@@ -256,7 +256,7 @@ class TemplateTest extends TestCase
         VarDumper::setHandler(
             static function ($var) use (&$dump): void {
                 $dump = $var;
-            }
+            },
         );
 
         $template->dumpTemplateVars();
@@ -268,7 +268,7 @@ class TemplateTest extends TestCase
     {
         (new Filesystem())->dumpFile(
             Path::join($this->getTempDir(), 'templates/test_template.html5'),
-            '<?= $this->value ?>'
+            '<?= $this->value ?>',
         );
 
         $template = new BackendTemplate('test_template');

@@ -27,7 +27,7 @@ class PageTrailCacheTagsListener
 
     public function __invoke(ResponseEvent $event): void
     {
-        if (null === $this->responseTagger || !$this->scopeMatcher->isFrontendMainRequest($event)) {
+        if (!$this->responseTagger || !$this->scopeMatcher->isFrontendMainRequest($event)) {
             return;
         }
 
@@ -43,7 +43,7 @@ class PageTrailCacheTagsListener
             $tags[] = 'contao.db.tl_page.'.$trail;
         }
 
-        if (\count($tags)) {
+        if ($tags) {
             $this->responseTagger->addTags($tags);
         }
     }

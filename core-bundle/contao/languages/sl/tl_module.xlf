@@ -1,0 +1,655 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_module.php" source-language="en" target-language="sl">
+    <body>
+      <trans-unit id="tl_module.name.0">
+        <source>Title</source>
+        <target>Naziv</target>
+      </trans-unit>
+      <trans-unit id="tl_module.name.1">
+        <source>Please enter the module title.</source>
+        <target>Prosim, vnesite naziv modula.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.headline.0">
+        <source>Headline</source>
+        <target>Naslov</target>
+      </trans-unit>
+      <trans-unit id="tl_module.headline.1">
+        <source>Here you can add a headline to the module.</source>
+        <target>Tukaj lahko dodate naslov modula.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.type.0">
+        <source>Module type</source>
+        <target>Vrsta modula</target>
+      </trans-unit>
+      <trans-unit id="tl_module.type.1">
+        <source>Please choose the type of module.</source>
+        <target>Prosim, izberite vrsto modula.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.levelOffset.0">
+        <source>Start level</source>
+        <target>Začetni nivo</target>
+      </trans-unit>
+      <trans-unit id="tl_module.levelOffset.1">
+        <source>Enter a value greater than 0 to show only submenu items.</source>
+        <target>Vnesite vrednost, večjo od 0, v kolikor želite prikazati le podmenije.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.showLevel.0">
+        <source>Stop level</source>
+        <target>Končni nivo</target>
+      </trans-unit>
+      <trans-unit id="tl_module.showLevel.1">
+        <source>Enter a value greater than 0 to limit the nesting level of the menu.</source>
+        <target>Vnesite vrednost, večjo od 0, v kolikor želite omejiti gnezdenje menija.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.hardLimit.0">
+        <source>Hard limit</source>
+        <target>Vsiljena meja</target>
+      </trans-unit>
+      <trans-unit id="tl_module.hardLimit.1">
+        <source>Never show any menu items beyond the stop level.</source>
+        <target>Nikoli ne prikaži elementov za tem nivojem.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.showProtected.0">
+        <source>Show protected items</source>
+        <target>Prikaži zaščitene elemente</target>
+      </trans-unit>
+      <trans-unit id="tl_module.showProtected.1">
+        <source>Show items that are usually only visible to authenticated members.</source>
+        <target>Prikaži elemente, ki so običajno vidni samo prijavljenim uporabnikom.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.defineRoot.0">
+        <source>Set a reference page</source>
+        <target>Določi referenčno stran</target>
+      </trans-unit>
+      <trans-unit id="tl_module.defineRoot.1">
+        <source>Define a custom source or target page for the module.</source>
+        <target>Določi prilagojeno izvorno ali ciljno stran modula.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.rootPage.0">
+        <source>Reference page</source>
+        <target>Referenčna stran</target>
+      </trans-unit>
+      <trans-unit id="tl_module.rootPage.1">
+        <source>Please choose the reference page.</source>
+      </trans-unit>
+      <trans-unit id="tl_module.navigationTpl.0">
+        <source>Navigation template</source>
+        <target>Predloga navigacije</target>
+      </trans-unit>
+      <trans-unit id="tl_module.navigationTpl.1">
+        <source>Here you can select the navigation template.</source>
+        <target>Tu lahko določite predlogo navigacije.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.customTpl.0">
+        <source>Module template</source>
+        <target>Predloga modula</target>
+      </trans-unit>
+      <trans-unit id="tl_module.customTpl.1">
+        <source>Here you can select the module template.</source>
+        <target>Tu lahko določite predlogo modula</target>
+      </trans-unit>
+      <trans-unit id="tl_module.pages.0">
+        <source>Pages</source>
+        <target>Strani</target>
+      </trans-unit>
+      <trans-unit id="tl_module.pages.1">
+        <source>Please choose one or more pages.</source>
+        <target>Prosimo izberite eno ali več strani.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.showHidden.0">
+        <source>Show hidden items</source>
+        <target>Prikaži skrite elemente</target>
+      </trans-unit>
+      <trans-unit id="tl_module.showHidden.1">
+        <source>Show items that are usually hidden in the navigation menu.</source>
+        <target>Prikaži skrite elemente navigacijskega menija.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.customLabel.0">
+        <source>Custom label</source>
+        <target>Prilagojena oznaka</target>
+      </trans-unit>
+      <trans-unit id="tl_module.customLabel.1">
+        <source>Here you can enter a custom label for the drop-down menu or the overview link.</source>
+      </trans-unit>
+      <trans-unit id="tl_module.autologin.0">
+        <source>Allow auto login</source>
+        <target>Dovoli samodejni vpis</target>
+      </trans-unit>
+      <trans-unit id="tl_module.autologin.1">
+        <source>Allow members to log into the front end automatically.</source>
+        <target>Dovoli članom, da se v predstavitvenem delu (front end) strani samodejno vpišejo.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.jumpTo.0">
+        <source>Redirect page</source>
+        <target>Pojdi na stran</target>
+      </trans-unit>
+      <trans-unit id="tl_module.jumpTo.1">
+        <source>Please choose the page to which visitors will be redirected when clicking a link or submitting a form.</source>
+        <target>Prosimo, izberite stran kamor bodo ob kliku na povezavo ali oddaji obrazca preusmerjeni obiskovalci.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.overviewPage.0">
+        <source>Overview page</source>
+        <target>Pregledna stran</target>
+      </trans-unit>
+      <trans-unit id="tl_module.overviewPage.1">
+        <source>Select an overview page to include a link to it in the template.</source>
+      </trans-unit>
+      <trans-unit id="tl_module.redirectBack.0">
+        <source>Redirect to last page visited</source>
+        <target>Preusmeri na zadnjo obiskano stran.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.redirectBack.1">
+        <source>Redirect the member back to the last page visited instead of the redirect page.</source>
+        <target>Preusmeri uporabnika nazaj na zadnjo obiskano stran namesto na preusmeritveno stran.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.1cl.0">
+        <source>One column</source>
+        <target>En stolpec</target>
+      </trans-unit>
+      <trans-unit id="tl_module.1cl.1">
+        <source>Show the label above the input field.</source>
+        <target>Prikaži oznako nad vnosnim poljem.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.2cl.0">
+        <source>Two columns</source>
+        <target>Dva stolpca</target>
+      </trans-unit>
+      <trans-unit id="tl_module.2cl.1">
+        <source>Show the label on the left side of the input field.</source>
+        <target>Prikaži oznako na levi strani vnosnega polja.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.editable.0">
+        <source>Editable fields</source>
+        <target>Polja z možnostjo urejanja.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.editable.1">
+        <source>Show these fields in the front end form.</source>
+        <target>Pokaži ta polja v predstavitvi (front end) obrazca.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.memberTpl.0">
+        <source>Form template</source>
+        <target>Predloga za obrazec</target>
+      </trans-unit>
+      <trans-unit id="tl_module.memberTpl.1">
+        <source>Here you can select the form template.</source>
+        <target>Tu lahko izberete predlogo obrazca.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.form.0">
+        <source>Form</source>
+        <target>Obrazec</target>
+      </trans-unit>
+      <trans-unit id="tl_module.form.1">
+        <source>Please select a form.</source>
+        <target>Prosimo, izberite obrazec.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.queryType.0">
+        <source>Default query type</source>
+        <target>Privzeti tip poizvedbe</target>
+      </trans-unit>
+      <trans-unit id="tl_module.queryType.1">
+        <source>Please select the default query type.</source>
+        <target>Prosimo, izberite privzeti tip poizvedbe.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.and.0">
+        <source>Find all words</source>
+        <target>Najdi vse besede</target>
+      </trans-unit>
+      <trans-unit id="tl_module.and.1">
+        <source>Returns only pages that contain all keywords.</source>
+        <target>Vrne le strani, ki vsebujejo vse ključne besede.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.or.0">
+        <source>Find any word</source>
+        <target>Najdi katerokoli besedo.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.or.1">
+        <source>Returns all pages that contain any of the keywords.</source>
+        <target>Vrne vse strani, ki vsebujejo katerokoli od iskanih gesel.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.fuzzy.0">
+        <source>Fuzzy search</source>
+        <target>Iskanje po vzorcu (fuzzy search)</target>
+      </trans-unit>
+      <trans-unit id="tl_module.fuzzy.1">
+        <source>Will find &quot;Contao&quot; if you search for &quot;con&quot; (equal to a wildcard search).</source>
+        <target>Našel bo &quot;Contao&quot;, če sprožite iskanje po vzorcu &quot;con&quot; (enako kot &quot;wildcard&quot; iskanje).</target>
+      </trans-unit>
+      <trans-unit id="tl_module.simple.0">
+        <source>Simple form</source>
+        <target>Enostaven obrazec</target>
+      </trans-unit>
+      <trans-unit id="tl_module.simple.1">
+        <source>Contains a single input field only.</source>
+        <target>Vsebuje le eno vnosno polje.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.advanced.0">
+        <source>Advanced form</source>
+        <target>Napredni obrazec</target>
+      </trans-unit>
+      <trans-unit id="tl_module.advanced.1">
+        <source>Contains an input field and a radio button menu to choose the query type.</source>
+        <target>Vsebuje vnosno polje in izbirni meni za določitev tipa poizvedbe.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.contextLength.0">
+        <source>Context length</source>
+        <target>Velikost konteksta</target>
+      </trans-unit>
+      <trans-unit id="tl_module.contextLength.1">
+        <source>The first field defines the number of characters on the left and right side of each keyword and the second one the overall context length per result.</source>
+        <target>Prvo polje definira število znakov pred in po vsaki ključni besedi, drugo pa celotno dolžino konteksta za vsak zadetek.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.minKeywordLength.0">
+        <source>Minimum keyword length</source>
+        <target>Najkrajša dolžina ključne besede</target>
+      </trans-unit>
+      <trans-unit id="tl_module.minKeywordLength.1">
+        <source>Keywords deceeding the minimum length will be ignored in the search results. Set to 0 to disable.</source>
+      </trans-unit>
+      <trans-unit id="tl_module.perPage.0">
+        <source>Items per page</source>
+        <target>Elementov na stran</target>
+      </trans-unit>
+      <trans-unit id="tl_module.perPage.1">
+        <source>The number of items per page. Set to 0 to disable pagination.</source>
+        <target>Število elementov na stran. Nastavite 0 za onemogočanje številčenja.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.searchType.0">
+        <source>Search form layout</source>
+        <target>Postavitev iskalnega obrazca.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.searchType.1">
+        <source>Here you can select the search form layout.</source>
+        <target>Tu lahko izberite postavitev iskalnega obrazca.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.searchTpl.0">
+        <source>Search results template</source>
+        <target>Predloga izpisa rezultatov iskanja</target>
+      </trans-unit>
+      <trans-unit id="tl_module.searchTpl.1">
+        <source>Here you can select the search results template.</source>
+        <target>Tu lahko izberete predlogo izpisa rezultatov iskanja.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.inColumn.0">
+        <source>Layout section</source>
+        <target>Sklop postavitve</target>
+      </trans-unit>
+      <trans-unit id="tl_module.inColumn.1">
+        <source>Please choose the layout section whose articles you want to list.</source>
+      </trans-unit>
+      <trans-unit id="tl_module.skipFirst.0">
+        <source>Skip items</source>
+        <target>Preskoči prvi element</target>
+      </trans-unit>
+      <trans-unit id="tl_module.skipFirst.1">
+        <source>Here you can define how many items will be skipped.</source>
+        <target>Tu lahko določite, koliko elementov se preskoči.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.loadFirst.0">
+        <source>Load the first item</source>
+        <target>Naloži prvi element</target>
+      </trans-unit>
+      <trans-unit id="tl_module.loadFirst.1">
+        <source>Automatically redirect to the first item if none is selected.</source>
+        <target>Samodejno preusmeri na prvi element, v kolikor noben ni izbran.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.singleSRC.0">
+        <source>Source file</source>
+        <target>Izvorna datoteka</target>
+      </trans-unit>
+      <trans-unit id="tl_module.singleSRC.1">
+        <source>Please select a file from the files directory.</source>
+        <target>Prosimo, izberite datoteko iz datotečnega imenika.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.fullsize.0">
+        <source>Full-size view/new window</source>
+        <target>Celotni zaslon/novo okno</target>
+      </trans-unit>
+      <trans-unit id="tl_module.fullsize.1">
+        <source>Open the full-size image in a lightbox or the link in a new browser window.</source>
+        <target>Odpri sliko prek lightbox-a v polni velikosti ali pa kot povezavo v novem oknu.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.useCaption.0">
+        <source>Show caption</source>
+        <target>Prikaži napis k sliki</target>
+      </trans-unit>
+      <trans-unit id="tl_module.useCaption.1">
+        <source>Display the image name or caption below the image.</source>
+        <target>Pod sliko pokaži naziv ali napis k sliki.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.multiSRC.0">
+        <source>Source files</source>
+        <target>Izvorne datoteke</target>
+      </trans-unit>
+      <trans-unit id="tl_module.multiSRC.1">
+        <source>Please select one or more files from the files directory.</source>
+        <target>Prosimo, izberite eno ali več datotek iz imenika.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.html.0">
+        <source>HTML code</source>
+        <target>HTML koda</target>
+      </trans-unit>
+      <trans-unit id="tl_module.html.1">
+        <source>You can modify the list of allowed HTML tags in the back end settings.</source>
+        <target>Lahko prilagodite seznam dovoljenih HTML značk v nastavitvah skrbništva.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.unfilteredHtml.0">
+        <source>HTML code</source>
+        <target>HTML koda</target>
+      </trans-unit>
+      <trans-unit id="tl_module.unfilteredHtml.1">
+        <source>Take care when pasting things you don't understand. This could allow attackers to steal your identity or take control of the whole system.</source>
+      </trans-unit>
+      <trans-unit id="tl_module.rss_cache.0">
+        <source>Cache timeout</source>
+        <target>Življenjska doba medpomnilnika</target>
+      </trans-unit>
+      <trans-unit id="tl_module.rss_cache.1">
+        <source>Here you can define how long the feed is being cached.</source>
+      </trans-unit>
+      <trans-unit id="tl_module.rss_feed.0">
+        <source>Feed URLs</source>
+        <target>Spletni naslov RSS vira</target>
+      </trans-unit>
+      <trans-unit id="tl_module.rss_feed.1">
+        <source>Please enter the URL of one or more feeds.</source>
+      </trans-unit>
+      <trans-unit id="tl_module.rss_template.0">
+        <source>Feed template</source>
+        <target>Predloga postavitve</target>
+      </trans-unit>
+      <trans-unit id="tl_module.rss_template.1">
+        <source>Here you can select the feed template.</source>
+        <target>Tukaj lahko izberete predlogo izvlečka.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.protected.0">
+        <source>Protect module</source>
+        <target>Zaščiti modul</target>
+      </trans-unit>
+      <trans-unit id="tl_module.protected.1">
+        <source>Show the module to certain member groups only.</source>
+        <target>Prikaži modul le določenim skupinam članov.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.groups.0">
+        <source>Allowed member groups</source>
+        <target>Dovoljene skupine uporabnikov</target>
+      </trans-unit>
+      <trans-unit id="tl_module.groups.1">
+        <source>These groups will be able to see the module.</source>
+        <target>Skupine, ki bodo lahko videle ta modul.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.cssID.0">
+        <source>CSS ID/class</source>
+        <target>CSS ID/razred</target>
+      </trans-unit>
+      <trans-unit id="tl_module.cssID.1">
+        <source>Here you can set an ID and one or more classes.</source>
+        <target>Tu lahko določite ID in enega ali več razredov.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.disableCaptcha.0">
+        <source>Disable spam protection</source>
+        <target>Onemogoči zaščito pred neželeno pošto</target>
+      </trans-unit>
+      <trans-unit id="tl_module.disableCaptcha.1">
+        <source>Here you can disable the spam protection (not recommended).</source>
+        <target>Tu lahko onemogočite zaščito pred neželeno pošto (ni priporočljivo).</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_groups.0">
+        <source>Member groups</source>
+        <target>Skupine članov</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_groups.1">
+        <source>Here you can assign the member to one or more groups.</source>
+        <target>Tu lahko uporabnika vključite v eno ali več skupin.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_allowLogin.0">
+        <source>Allow login</source>
+        <target>Dovoli prijavo</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_allowLogin.1">
+        <source>Allow the new member to log into the front end.</source>
+        <target>Dovoli uporabniku, da se prijavi v ospredje - front end.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_skipName.0">
+        <source>Skip username</source>
+        <target>Ne upoštevaj uporabniškega imena</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_skipName.1">
+        <source>Do not require the username to request a new password.</source>
+        <target>Ne zahtevaj uporabniškega imena za zahtevek novega gesla.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_close.0">
+        <source>Mode</source>
+        <target>Način</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_close.1">
+        <source>Here you can define how to handle the deletion.</source>
+        <target>Tukaj lahko nastavite kako ravnati z izbrisom.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_deleteDir.0">
+        <source>Delete home directory</source>
+        <target>Izbriši domačo mapo</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_deleteDir.1">
+        <source>Delete the home directory when the account is deleted.</source>
+        <target>Izbriši domačo mapo, ko je izbrisan uporabniški račun</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_assignDir.0">
+        <source>Create a home directory</source>
+        <target>Ustvari domačo mapo</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_assignDir.1">
+        <source>Create a home directory from the registered username.</source>
+        <target>Ustvari domačo mapo iz registriranega uporabniškega imena.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_homeDir.0">
+        <source>Home directory path</source>
+        <target>Pot domače mape</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_homeDir.1">
+        <source>Please select the parent folder from the files directory.</source>
+        <target>Prosimo izberite mapo iz nivoja višje v datotečni strukturi.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_activate.0">
+        <source>Send activation e-mail</source>
+        <target>Pošlji aktivacijski e-poštno sporočilo</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_activate.1">
+        <source>Send an activation e-mail to the registered e-mail address.</source>
+        <target>Pošlji aktivacijski e-mail na registriran e-mail naslov.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_jumpTo.0">
+        <source>Confirmation page</source>
+        <target>Potrditvena stran</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_jumpTo.1">
+        <source>Please choose the page to which members will be redirected after the request has been completed.</source>
+        <target>Prosimo, izberite stran, kamor bodo preusmerjeni uporabniki po zaključeni poizvedbi.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_text.0">
+        <source>Activation message</source>
+        <target>Aktivacijsko e-poštno sporočilo</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_text.1">
+        <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any input field (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
+        <target>Lahko uporabite oznake &lt;em&gt;##domain##&lt;/em&gt; (ime domene), &lt;em&gt;##link##&lt;/em&gt; (link za aktivacijo) in katerokoli vnosno polje (npr. &lt;em&gt;##lastname##&lt;/em&gt;).</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_password.0">
+        <source>Password message</source>
+        <target>Sporočilo za pošiljanje gesla</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_password.1">
+        <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any member property (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
+      </trans-unit>
+      <trans-unit id="tl_module.data.0">
+        <source>Template data</source>
+        <target>Podatki predloge</target>
+      </trans-unit>
+      <trans-unit id="tl_module.data.1">
+        <source>These values are available as &lt;code&gt;$this-&gt;data&lt;/code&gt; in the template.</source>
+        <target>V predlogi so na voljo te vrednosti v &lt;code&gt;$this-&gt;data&lt;/code&gt;.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.rootPageDependentModules.0">
+        <source>Modules</source>
+        <target>Moduli</target>
+      </trans-unit>
+      <trans-unit id="tl_module.rootPageDependentModules.1">
+        <source>Please select a module for every website root page.</source>
+      </trans-unit>
+      <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
+        <source>Choose module for &quot;%s&quot;</source>
+        <target>Izberite modul za &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_module.title_legend">
+        <source>Title and type</source>
+        <target>Naslov in tip</target>
+      </trans-unit>
+      <trans-unit id="tl_module.label_legend">
+        <source>Label</source>
+        <target>Nalepka</target>
+      </trans-unit>
+      <trans-unit id="tl_module.nav_legend">
+        <source>Navigation settings</source>
+        <target>Nastavitve navigacije</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reference_legend">
+        <source>Reference page</source>
+        <target>Referenčna stran</target>
+      </trans-unit>
+      <trans-unit id="tl_module.redirect_legend">
+        <source>Redirect settings</source>
+        <target>Nastavitve preusmeritve</target>
+      </trans-unit>
+      <trans-unit id="tl_module.template_legend">
+        <source>Template settings</source>
+        <target>Nastavitve predloge</target>
+      </trans-unit>
+      <trans-unit id="tl_module.image_legend">
+        <source>Image settings</source>
+        <target>Nastavitve slike</target>
+      </trans-unit>
+      <trans-unit id="tl_module.config_legend">
+        <source>Module configuration</source>
+        <target>Nastavitev modula</target>
+      </trans-unit>
+      <trans-unit id="tl_module.include_legend">
+        <source>Include settings</source>
+        <target>Vključi nastavitve</target>
+      </trans-unit>
+      <trans-unit id="tl_module.source_legend">
+        <source>Source</source>
+        <target>Izvor</target>
+      </trans-unit>
+      <trans-unit id="tl_module.html_legend">
+        <source>Text/HTML</source>
+        <target>Tekst/HTML</target>
+      </trans-unit>
+      <trans-unit id="tl_module.protected_legend">
+        <source>Access protection</source>
+        <target>Zaščita pred dostopom</target>
+      </trans-unit>
+      <trans-unit id="tl_module.expert_legend">
+        <source>Expert settings</source>
+        <target>Napredne nastavitve</target>
+      </trans-unit>
+      <trans-unit id="tl_module.email_legend">
+        <source>E-mail settings</source>
+        <target>E-poštne nastavitve</target>
+      </trans-unit>
+      <trans-unit id="tl_module.account_legend">
+        <source>Account settings</source>
+        <target>Nastavitve računa</target>
+      </trans-unit>
+      <trans-unit id="tl_module.emailText.0">
+        <source>Your registration on %s</source>
+        <target>Vaša registracija na %s</target>
+      </trans-unit>
+      <trans-unit id="tl_module.emailText.1">
+        <source>Thank you for your registration on ##domain##.
+
+Click here to complete your registration and to activate your account:
+
+##link##
+
+The confirmation link is valid for 24 hours.
+
+If you did not request an account, please ignore this e-mail.
+</source>
+        <target>Zahvaljujemo se vam za vašo registracijo na domeni ##domain##.
+
+Prosimo le še to, da zaključite registracijo in aktivirate vaš uporabniški račun.
+
+##link##
+
+Povezava je veljavna 24 ur.
+
+V kolikor niste zahtevali omenjenega računa, prosimo ignorirajte to e-sporočilo.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.passwordText.0">
+        <source>Your password request on %s</source>
+        <target>Vaša zahteva za novo geslo na %s</target>
+      </trans-unit>
+      <trans-unit id="tl_module.passwordText.1">
+        <source>You have requested a new password for ##domain##.
+
+Click here to set the new password:
+
+##link##
+
+If you did not request this e-mail, please contact the website administrator.
+</source>
+        <target>Zahtevali ste novo geslo na spletnem mestu ##domain##.
+
+Kliknite tu, da si nastavite novo geslo:
+
+##link##
+
+Če niste zahtevali tega sporočila, prosimo kontaktirajte skrbnika spletnega mesta.
+</target>
+      </trans-unit>
+      <trans-unit id="tl_module.internal">
+        <source>Internal file</source>
+        <target>Interna datoteka</target>
+      </trans-unit>
+      <trans-unit id="tl_module.external">
+        <source>External URL</source>
+        <target>Zunanja URL povezava</target>
+      </trans-unit>
+      <trans-unit id="tl_module.close_deactivate">
+        <source>Deactivate account</source>
+        <target>Onemogoči račun</target>
+      </trans-unit>
+      <trans-unit id="tl_module.close_delete">
+        <source>Irrevocably delete account</source>
+        <target>Nepreklicno izbriši račun</target>
+      </trans-unit>
+      <trans-unit id="tl_module.new.0">
+        <source>New</source>
+        <target>Nov</target>
+      </trans-unit>
+      <trans-unit id="tl_module.new.1">
+        <source>Create a new module</source>
+        <target>Ustvari nov modul</target>
+      </trans-unit>
+      <trans-unit id="tl_module.show">
+        <source>Show the details of module ID %s</source>
+        <target>Pokaži podrobnosti modula ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_module.edit">
+        <source>Edit module ID %s</source>
+        <target>Uredi modul ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_module.copy">
+        <source>Duplicate module ID %s</source>
+        <target>Podvoji modul ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_module.cut">
+        <source>Move module ID %s</source>
+        <target>Premakni modul ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_module.delete">
+        <source>Delete module ID %s</source>
+        <target>Izbriši modul ID %s</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -52,7 +52,7 @@ class PhpTemplateProxyNodeVisitorTest extends TestCase
             new Node(),
             new Node(),
             null,
-            new Source("a\n<?php invalid block\nb", '@Contao_Foo/foo.html5')
+            new Source("a\n<?php invalid block\nb", '@Contao_Foo/foo.html5'),
         );
 
         $framework = new \ReflectionClass(ContaoFramework::class);

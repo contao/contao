@@ -103,6 +103,15 @@ services:
             - '@contao.image.deferred_image_storage'
             - '@?filesystem'
 
+    contao.command.supervise_workers:
+        class: Contao\CoreBundle\Command\SuperviseWorkersCommand
+        factory: [null, create]
+        arguments:
+            - '@messenger.receiver_locator'
+            - '@contao.process_util'
+            - '%kernel.cache_dir%/worker-supervisor'
+            - ~
+
     contao.command.symlinks:
         class: Contao\CoreBundle\Command\SymlinksCommand
         public: true
@@ -124,7 +133,7 @@ services:
     contao.command.user_list:
         class: Contao\CoreBundle\Command\UserListCommand
         arguments:
-            - '@contao.framework'
+            - '@database_connection'
 
     contao.command.user_password:
         class: Contao\CoreBundle\Command\UserPasswordCommand

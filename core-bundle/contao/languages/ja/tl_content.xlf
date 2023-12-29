@@ -166,16 +166,16 @@
         <target>表のヘッダーを追加</target>
       </trans-unit>
       <trans-unit id="tl_content.thead.1">
-        <source>Make the first row of the table the table header.</source>
-        <target>表の最初の行を表のヘッダーとします。</target>
+        <source>Make the first row the table header.</source>
+        <target>最初の行を表のヘッダーとします。</target>
       </trans-unit>
       <trans-unit id="tl_content.tfoot.0">
         <source>Add table footer</source>
         <target>表のフッターを追加</target>
       </trans-unit>
       <trans-unit id="tl_content.tfoot.1">
-        <source>Make the last row of the table the table footer.</source>
-        <target>表の最後の行を表のフッターとします。</target>
+        <source>Make the last row the table footer.</source>
+        <target>最後の行を表のフッターとします。</target>
       </trans-unit>
       <trans-unit id="tl_content.tleft.0">
         <source>Use row headers</source>
@@ -320,6 +320,14 @@
       <trans-unit id="tl_content.linkTitle.1">
         <source>The link text will be displayed instead of the target URL.</source>
         <target>リンクのテキストをリンク先のURLの代わりに表示します。</target>
+      </trans-unit>
+      <trans-unit id="tl_content.overwriteLink.0">
+        <source>Overwrite link</source>
+        <target>リンクを上書き</target>
+      </trans-unit>
+      <trans-unit id="tl_content.overwriteLink.1">
+        <source>Set a custom link text and link title.</source>
+        <target>独自のリンクのテキストと題名を設定します。</target>
       </trans-unit>
       <trans-unit id="tl_content.titleText.0">
         <source>Link title</source>
@@ -631,16 +639,16 @@
         <target>公開の開始日</target>
       </trans-unit>
       <trans-unit id="tl_content.start.1">
-        <source>If you want to prevent the element from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>ある特定の日時より前はコンテント要素をウェブサイトに表示したくない場合は、その日時を入力します。それ以外の場合は空のままにしてください。</target>
+        <source>If you want to prevent the element from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>特定の日時より前はコンテント要素をウェブサイトに表示したくない場合は、その日時を入力します。それ以外の場合は空のままにします。</target>
       </trans-unit>
       <trans-unit id="tl_content.stop.0">
         <source>Show until</source>
         <target>公開の終了日</target>
       </trans-unit>
       <trans-unit id="tl_content.stop.1">
-        <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>ある特定の日時より後はコンテント要素をウェブサイトに表示したくない場合は、その日時を入力します。それ以外の場合は空のままにしてください。</target>
+        <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>特定の日時より後はコンテント要素をウェブサイトに表示したくない場合は、その日時を入力します。それ以外の場合は空のままにします。</target>
       </trans-unit>
       <trans-unit id="tl_content.type_legend">
         <source>Element type</source>
@@ -894,9 +902,17 @@
         <source>Edit content element ID %s</source>
         <target>ID %sのコンテント要素を編集</target>
       </trans-unit>
-      <trans-unit id="tl_content.toggle">
-        <source>Hide/unhide content element ID %s</source>
-        <target>ID %sのコンテント要素を隠す/表示</target>
+      <trans-unit id="tl_content.toggle.0">
+        <source>Hide/unhide content element</source>
+        <target>コンテント要素を表示または非表示</target>
+      </trans-unit>
+      <trans-unit id="tl_content.toggle.1">
+        <source>Hide content element ID %s</source>
+        <target>ID %sのコンテント要素を非表示</target>
+      </trans-unit>
+      <trans-unit id="tl_content.toggle.2">
+        <source>Unhide content element ID %s</source>
+        <target>ID %sのコンテント要素を表示</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>

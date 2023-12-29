@@ -14,6 +14,7 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database;
 use Contao\DataContainer;
@@ -45,7 +46,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			array('tl_page', 'addBreadcrumb'),
 			array('tl_page', 'setRootType'),
 			array('tl_page', 'showFallbackWarning'),
-			array('tl_page', 'makeRedirectPageMandatory'),
 		),
 		'oncut_callback' => array
 		(
@@ -94,21 +94,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'format'                  => '%s',
 			'label_callback'          => array('tl_page', 'addIcon')
 		),
-		'global_operations' => array
-		(
-			'toggleNodes' => array
-			(
-				'href'                => 'ptg=all',
-				'class'               => 'header_toggle',
-				'showOnSelect'        => true
-			),
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
-		),
 		'operations' => array
 		(
 			'edit' => array
@@ -124,10 +109,10 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 				'attributes'          => 'onclick="Backend.getScrollOffset()"',
 				'button_callback'     => array('tl_page', 'copyPage')
 			),
-			'copyChilds' => array
+			'copyChildren' => array
 			(
-				'href'                => 'act=paste&amp;mode=copy&amp;childs=1',
-				'icon'                => 'copychilds.svg',
+				'href'                => 'act=paste&amp;mode=copy&amp;children=1',
+				'icon'                => 'copychildren.svg',
 				'attributes'          => 'onclick="Backend.getScrollOffset()"',
 				'button_callback'     => array('tl_page', 'copyPageWithSubpages')
 			),
@@ -175,7 +160,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'__selector__'                => array('type', 'fallback', 'autoforward', 'protected', 'includeLayout', 'includeCache', 'includeChmod', 'enforceTwoFactor'),
 		'default'                     => '{title_legend},title,type',
 		'regular'                     => '{title_legend},title,type;{routing_legend},alias,requireItem,routePath,routePriority,routeConflicts;{meta_legend},pageTitle,robots,description,serpPreview;{canonical_legend:hide},canonicalLink,canonicalKeepParams;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,noSearch;{tabnav_legend:hide},accesskey;{publish_legend},published,start,stop',
-		'forward'                     => '{title_legend},title,type;{routing_legend},alias,routePath,routePriority,routeConflicts;{meta_legend},pageTitle,robots;{redirect_legend},jumpTo,redirect;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide;{tabnav_legend:hide},accesskey;{publish_legend},published,start,stop',
+		'forward'                     => '{title_legend},title,type;{routing_legend},alias,routePath,routePriority,routeConflicts;{meta_legend},pageTitle,robots;{redirect_legend},jumpTo,redirect,alwaysForward;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide;{tabnav_legend:hide},accesskey;{publish_legend},published,start,stop',
 		'redirect'                    => '{title_legend},title,type;{routing_legend},alias,routePath,routePriority,routeConflicts;{meta_legend},pageTitle,robots;{redirect_legend},redirect,url,target;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide;{tabnav_legend:hide},accesskey;{publish_legend},published,start,stop',
 		'root'                        => '{title_legend},title,type;{routing_legend},alias;{meta_legend},pageTitle;{url_legend},dns,useSSL,urlPrefix,urlSuffix,validAliasCharacters,useFolderUrl;{language_legend},language,fallback,disableLanguageRedirect;{website_legend:hide},maintenanceMode;{global_legend:hide},mailerTransport,enableCanonical,adminEmail,dateFormat,timeFormat,datimFormat,staticFiles,staticPlugins;{protected_legend:hide},protected;{layout_legend},includeLayout;{twoFactor_legend:hide},enforceTwoFactor;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{publish_legend},published,start,stop',
 		'rootfallback'                => '{title_legend},title,type;{routing_legend},alias;{meta_legend},pageTitle;{url_legend},dns,useSSL,urlPrefix,urlSuffix,validAliasCharacters,useFolderUrl;{language_legend},language,fallback,disableLanguageRedirect;{website_legend:hide},favicon,robotsTxt,maintenanceMode;{global_legend:hide},mailerTransport,enableCanonical,adminEmail,dateFormat,timeFormat,datimFormat,staticFiles,staticPlugins;{protected_legend:hide},protected;{layout_legend},includeLayout;{twoFactor_legend:hide},enforceTwoFactor;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{publish_legend},published,start,stop',
@@ -315,6 +300,13 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'eval'                    => array('tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_page'],
 			'sql'                     => "varchar(32) NOT NULL default 'permanent'"
+		),
+		'alwaysForward' => array
+		(
+			'exclude'                 => true,
+			'inputType'               => 'checkbox',
+			'eval'                    => array('tl_class'=>'w50 m12'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'jumpTo' => array
 		(
@@ -1042,26 +1034,6 @@ class tl_page extends Backend
 	}
 
 	/**
-	 * Make the redirect page mandatory if the page is a logout page
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @throws Exception
-	 */
-	public function makeRedirectPageMandatory(DataContainer $dc)
-	{
-		$objPage = Database::getInstance()
-			->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")
-			->limit(1)
-			->execute($dc->id);
-
-		if ($objPage->numRows && $objPage->type == 'logout')
-		{
-			$GLOBALS['TL_DCA']['tl_page']['fields']['jumpTo']['eval']['mandatory'] = true;
-		}
-	}
-
-	/**
 	 * Schedule a sitemap update
 	 *
 	 * This method is triggered when a single page or multiple pages are
@@ -1442,7 +1414,9 @@ class tl_page extends Backend
 	 */
 	public function addAliasButton($arrButtons, DataContainer $dc)
 	{
-		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_page::alias'))
+		$security = System::getContainer()->get('security.helper');
+
+		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_page::alias'))
 		{
 			return $arrButtons;
 		}
@@ -1486,6 +1460,11 @@ class tl_page extends Backend
 
 				// The alias has not changed
 				if ($strAlias == $objPage->alias)
+				{
+					continue;
+				}
+
+				if (!$security->isGranted(ContaoCorePermissions::DC_PREFIX . 'tl_article', new UpdateAction('tl_page', $objPage->row(), array('alias' => $strAlias))))
 				{
 					continue;
 				}

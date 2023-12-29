@@ -113,8 +113,6 @@ class AddCronJobsPassTest extends TestCase
         $pass->process($container);
 
         $crons = $this->getCronsFromDefinition($container);
-
-        /** @var Definition $definition */
         $definition = $crons[0][0];
 
         $this->assertSame('onMinutely', $definition->getArgument(2));
@@ -132,8 +130,6 @@ class AddCronJobsPassTest extends TestCase
         $pass->process($container);
 
         $crons = $this->getCronsFromDefinition($container);
-
-        /** @var Definition $definition */
         $definition = $crons[0][0];
 
         $this->assertNull($definition->getArgument(2));
@@ -143,13 +139,10 @@ class AddCronJobsPassTest extends TestCase
     {
         $definition = new Definition(TestCronJob::class);
 
-        $definition->addTag(
-            'contao.cronjob',
-            [
-                'interval' => 'minutely',
-                'method' => 'customMethod',
-            ]
-        );
+        $definition->addTag('contao.cronjob', [
+            'interval' => 'minutely',
+            'method' => 'customMethod',
+        ]);
 
         $container = $this->getContainerBuilder();
         $container->setDefinition(TestCronJob::class, $definition);
@@ -158,8 +151,6 @@ class AddCronJobsPassTest extends TestCase
         $pass->process($container);
 
         $crons = $this->getCronsFromDefinition($container);
-
-        /** @var Definition $definition */
         $definition = $crons[0][0];
 
         $this->assertSame('customMethod', $definition->getArgument(2));
@@ -181,8 +172,6 @@ class AddCronJobsPassTest extends TestCase
         $pass->process($container);
 
         $crons = $this->getCronsFromDefinition($container);
-
-        /** @var array<Definition> $definitions */
         $definitions = array_column($crons, 0);
 
         $this->assertCount(5, $crons);
@@ -213,10 +202,8 @@ class AddCronJobsPassTest extends TestCase
         $pass->process($container);
 
         $crons = $this->getCronsFromDefinition($container);
-
         $serviceIds = [];
 
-        /** @var Definition $definition */
         foreach ($crons as $definition) {
             $serviceIds[] = (string) $definition[0]->getArguments()[0];
         }
@@ -236,7 +223,7 @@ class AddCronJobsPassTest extends TestCase
     }
 
     /**
-     * @return array<int, array<int, Reference|string>>
+     * @return array<int, array<int, Definition|string>>
      */
     private function getCronsFromDefinition(ContainerBuilder $container): array
     {
@@ -244,8 +231,6 @@ class AddCronJobsPassTest extends TestCase
 
         $definition = $container->getDefinition('contao.cron');
         $methodCalls = $definition->getMethodCalls();
-
-        $this->assertIsArray($methodCalls);
 
         $crons = [];
 

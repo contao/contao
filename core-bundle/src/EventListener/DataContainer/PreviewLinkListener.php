@@ -23,10 +23,10 @@ use Contao\Input;
 use Contao\Message;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\UriSigner;
+use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -49,7 +49,7 @@ class PreviewLinkListener
     #[AsHook('initializeSystem')]
     public function unloadModuleWithoutPreviewScript(): void
     {
-        if (empty($this->previewScript)) {
+        if (!$this->previewScript) {
             unset($GLOBALS['BE_MOD']['system']['preview_link']);
         }
     }
@@ -57,7 +57,7 @@ class PreviewLinkListener
     #[AsHook('loadDataContainer')]
     public function unloadTableWithoutPreviewScript(string $table): void
     {
-        if ('tl_preview_link' === $table && empty($this->previewScript)) {
+        if ('tl_preview_link' === $table && !$this->previewScript) {
             unset($GLOBALS['TL_DCA'][$table]);
         }
     }
@@ -89,7 +89,7 @@ class PreviewLinkListener
                 case 'overrideAll':
                     $allowedIds = $this->connection->fetchFirstColumn(
                         'SELECT id FROM tl_preview_link WHERE createdBy=?',
-                        [$userId]
+                        [$userId],
                     );
 
                     $session = $this->requestStack->getSession();
@@ -148,7 +148,7 @@ class PreviewLinkListener
             $message->addInfo(sprintf(
                 '%s: %s',
                 $this->translator->trans('tl_preview_link.hintEdit', [], 'contao_tl_preview_link'),
-                $this->generateClipboardLink((int) $row['id'])
+                $this->generateClipboardLink((int) $row['id']),
             ));
         }
     }
@@ -189,7 +189,7 @@ class PreviewLinkListener
             StringUtil::specialcharsUrl($url),
             StringUtil::specialchars($title),
             StringUtil::specialcharsUrl($url),
-            $label ?? $url
+            $label ?? $url,
         );
     }
 }

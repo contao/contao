@@ -51,7 +51,7 @@ class StoreDbafsMetadataEventTest extends TestCase
                 'baz' => 42,
                 'foo' => ['some' => 'value'],
             ],
-            $event->getRow()
+            $event->getRow(),
         );
     }
 

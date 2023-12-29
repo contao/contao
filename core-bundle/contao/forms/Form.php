@@ -38,6 +38,7 @@ use Symfony\Component\HttpFoundation\Response;
 class Form extends Hybrid
 {
 	public const SESSION_KEY = 'contao.form.data';
+
 	public const SESSION_CONFIRMATION_KEY = 'contao.form.confirmation';
 
 	/**
@@ -153,16 +154,21 @@ class Form extends Hybrid
 		$this->Template->formSubmit = $formId;
 		$this->Template->method = ($this->method == 'GET') ? 'get' : 'post';
 
-		$flashBag = System::getContainer()->get('request_stack')->getSession()->getFlashBag();
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-		// Add a confirmation to the template and remove it afterward
-		if ($flashBag->has(self::SESSION_CONFIRMATION_KEY))
+		if ($request && $request->hasPreviousSession())
 		{
-			$confirmationData = $flashBag->peek(self::SESSION_CONFIRMATION_KEY);
+			$flashBag = $request->getSession()->getFlashBag();
 
-			if (isset($confirmationData['id']) && $this->id === $confirmationData['id'])
+			// Add a confirmation to the template and remove it afterward
+			if ($flashBag->has(self::SESSION_CONFIRMATION_KEY))
 			{
-				$this->Template->message = $flashBag->get(self::SESSION_CONFIRMATION_KEY)['message'];
+				$confirmationData = $flashBag->peek(self::SESSION_CONFIRMATION_KEY);
+
+				if (isset($confirmationData['id']) && $this->id === $confirmationData['id'])
+				{
+					$this->Template->message = $flashBag->get(self::SESSION_CONFIRMATION_KEY)['message'];
+				}
 			}
 		}
 
@@ -187,6 +193,8 @@ class Form extends Hybrid
 					$arrFields[] = $objFields->current();
 				}
 			}
+
+			System::getContainer()->get('contao.cache.entity_tags')->tagWith($objFields);
 		}
 
 		// HOOK: compile form fields
@@ -308,7 +316,7 @@ class Form extends Hybrid
 					$file->delete();
 				}
 
-				if (is_file($upload['tmp_name']))
+				if (isset($upload['tmp_name']) && is_file($upload['tmp_name']))
 				{
 					unlink($upload['tmp_name']);
 				}
@@ -389,6 +397,12 @@ class Form extends Hybrid
 			{
 				System::importStatic($callback[0])->{$callback[1]}($arrSubmitted, $arrLabels, $arrFields, $this, $arrFiles);
 			}
+		}
+
+		// Do not process the form data if there are errors (see #6611)
+		if ($this->hasErrors())
+		{
+			return;
 		}
 
 		// Store submitted data (possibly modified by hook or data added) in the session for 10 seconds,
@@ -493,6 +507,9 @@ class Form extends Hybrid
 			// Attach XML file
 			if ($this->format == 'xml')
 			{
+				// Encode the values (see #6053)
+				array_walk_recursive($fields, static function (&$value) { $value = htmlspecialchars($value, ENT_QUOTES|ENT_SUBSTITUTE|ENT_XML1); });
+
 				$objTemplate = new FrontendTemplate('form_xml');
 				$objTemplate->fields = $fields;
 				$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');

@@ -19,12 +19,12 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Date;
 use Doctrine\DBAL\Connection;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment as TwigEnvironment;
 use Twig\Error\Error as TwigError;
@@ -37,7 +37,7 @@ use Twig\Error\Error as TwigError;
  * b) Provide the member usernames for the datalist
  * c) Process the switch action (i.e. log in a specific front end user).
  */
-#[Route(path: '%contao.backend.route_prefix%', defaults: ['_scope' => 'backend', '_allow_preview' => true])]
+#[Route('%contao.backend.route_prefix%', defaults: ['_scope' => 'backend', '_allow_preview' => true])]
 class BackendPreviewSwitchController
 {
     public function __construct(
@@ -88,32 +88,26 @@ class BackendPreviewSwitchController
         $shareLink = '';
 
         if ($this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'preview_link')) {
-            $shareLink = $this->router->generate(
-                'contao_backend',
-                [
-                    'do' => 'preview_link',
-                    'act' => 'create',
-                    'showUnpublished' => $showUnpublished,
-                    'rt' => $this->tokenManager->getDefaultTokenValue(),
-                    'nb' => '1', // Do not show the "Save & Close" button
-                ]
-            );
+            $shareLink = $this->router->generate('contao_backend', [
+                'do' => 'preview_link',
+                'act' => 'create',
+                'showUnpublished' => $showUnpublished,
+                'rt' => $this->tokenManager->getDefaultTokenValue(),
+                'nb' => '1', // Do not show the "Save & Close" button
+            ]);
         }
 
         try {
-            return $this->twig->render(
-                '@ContaoCore/Frontend/preview_toolbar_base.html.twig',
-                [
-                    'request_token' => $this->tokenManager->getDefaultTokenValue(),
-                    'action' => $this->router->generate('contao_backend_switch'),
-                    'canSwitchUser' => $canSwitchUser,
-                    'user' => $frontendUsername,
-                    'show' => $showUnpublished,
-                    'attributes' => $this->backendAttributes,
-                    'badgeTitle' => $this->backendBadgeTitle,
-                    'share' => $shareLink,
-                ]
-            );
+            return $this->twig->render('@ContaoCore/Frontend/preview_toolbar_base.html.twig', [
+                'request_token' => $this->tokenManager->getDefaultTokenValue(),
+                'action' => $this->router->generate('contao_backend_switch'),
+                'canSwitchUser' => $canSwitchUser,
+                'user' => $frontendUsername,
+                'show' => $showUnpublished,
+                'attributes' => $this->backendAttributes,
+                'badgeTitle' => $this->backendBadgeTitle,
+                'share' => $shareLink,
+            ]);
         } catch (TwigError $e) {
             return 'Error while rendering twig template: '.$e->getMessage();
         }

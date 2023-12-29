@@ -66,7 +66,7 @@ class AddInsertTagsPassTest extends TestCase
 
         $pass = new AddInsertTagsPass();
 
-        if (null !== $expectedException) {
+        if ($expectedException) {
             $this->expectException($expectedException::class);
             $this->expectExceptionMessage($expectedException->getMessage());
         }
@@ -213,8 +213,8 @@ class AddInsertTagsPassTest extends TestCase
                     new Reference('request_stack'),
                     null,
                     ['*'],
-                ]
-            )
+                ],
+            ),
         );
 
         return $container;

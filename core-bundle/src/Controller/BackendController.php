@@ -24,14 +24,14 @@ use Contao\CoreBundle\Picker\PickerConfig;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @internal
  */
-#[Route(path: '%contao.backend.route_prefix%', defaults: ['_scope' => 'backend', '_token_check' => true])]
+#[Route('%contao.backend.route_prefix%', defaults: ['_scope' => 'backend', '_token_check' => true])]
 class BackendController extends AbstractController
 {
     #[Route('', name: 'contao_backend')]
@@ -45,6 +45,7 @@ class BackendController extends AbstractController
     }
 
     #[Route('/login', name: 'contao_backend_login')]
+    #[Route('/login-link', name: 'contao_backend_login_link')]
     public function loginAction(Request $request): Response
     {
         $this->initializeContaoFramework();

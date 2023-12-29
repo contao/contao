@@ -22,8 +22,11 @@ use Symfony\Component\Uid\Uuid;
 interface DbafsInterface
 {
     public const FEATURES_NONE = 0;
+
     public const FEATURE_LAST_MODIFIED = 1 << 0;
+
     public const FEATURE_FILE_SIZE = 1 << 1;
+
     public const FEATURE_MIME_TYPE = 1 << 2;
 
     /**

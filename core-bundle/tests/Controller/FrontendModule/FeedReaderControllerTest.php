@@ -287,11 +287,13 @@ class FeedReaderControllerTest extends TestCase
         $item = $feed->newItem();
         $item->setTitle('Example item');
         $item->setContent('Example content');
+
         $feed->add($item);
 
         $item = $feed->newItem();
         $item->setTitle('Example item 2');
         $item->setContent('Example content 2');
+
         $feed->add($item);
 
         return $feed;
@@ -324,7 +326,7 @@ class FeedReaderControllerTest extends TestCase
                 ->method('render')
                 ->with(
                     '@Contao/frontend_module/feed_reader.html.twig',
-                    $this->callback($assertTwigContext)
+                    $this->callback($assertTwigContext),
                 )
                 ->willReturn('rendered frontend_module/feed_reader')
             ;

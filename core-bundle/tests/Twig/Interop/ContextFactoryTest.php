@@ -179,8 +179,8 @@ class ContextFactoryTest extends TestCase
 
         $this->expectExceptionMessage(
             'An exception has been thrown during the rendering of a template ("'.
-            'Error evaluating "lazy": Object of class stdClass could not be converted to string'.
-            '") in "test.html.twig" at line 1.'
+            'Object of class stdClass could not be converted to string'.
+            '") in "test.html.twig" at line 1.',
         );
 
         $environment->render('test.html.twig', $context);

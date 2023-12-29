@@ -65,8 +65,8 @@ class SearchIndexSubscriberTest extends TestCase
                             $this->assertSame(SearchIndexSubscriber::class, $context['source']);
 
                             return true;
-                        }
-                    )
+                        },
+                    ),
                 )
             ;
         } else {
@@ -164,8 +164,8 @@ class SearchIndexSubscriberTest extends TestCase
                             $this->assertSame(SearchIndexSubscriber::class, $context['source']);
 
                             return true;
-                        }
-                    )
+                        },
+                    ),
                 )
             ;
         } else {
@@ -185,7 +185,7 @@ class SearchIndexSubscriberTest extends TestCase
         $decision = $subscriber->needsContent(
             $crawlUri ?? new CrawlUri(new Uri('https://contao.org'), 0),
             $response,
-            $this->createMock(ChunkInterface::class)
+            $this->createMock(ChunkInterface::class),
         );
 
         $this->assertSame($expectedDecision, $decision);
@@ -246,14 +246,14 @@ class SearchIndexSubscriberTest extends TestCase
                         $this->assertSame(SearchIndexSubscriber::class, $context['source']);
 
                         return true;
-                    }
-                )
+                    },
+                ),
             )
         ;
 
         $indexer = $this->createMock(IndexerInterface::class);
 
-        if (null === $indexerException) {
+        if (!$indexerException) {
             $indexer
                 ->expects(['ok' => 0, 'warning' => 0, 'error' => 0] === $expectedStats ? $this->never() : $this->once())
                 ->method('index')
@@ -276,12 +276,12 @@ class SearchIndexSubscriberTest extends TestCase
         $subscriber->onLastChunk(
             $crawlUri ?? new CrawlUri(new Uri('https://contao.org'), 0),
             $this->mockResponse(true),
-            $this->createMock(ChunkInterface::class)
+            $this->createMock(ChunkInterface::class),
         );
 
         $previousResult = null;
 
-        if (0 !== \count($previousStats)) {
+        if ($previousStats) {
             $previousResult = new SubscriberResult(true, 'foobar');
             $previousResult->addInfo('stats', $previousStats);
         }
@@ -367,8 +367,8 @@ class SearchIndexSubscriberTest extends TestCase
                             $this->assertSame(SearchIndexSubscriber::class, $context['source']);
 
                             return true;
-                        }
-                    )
+                        },
+                    ),
                 )
             ;
         } else {
@@ -394,7 +394,7 @@ class SearchIndexSubscriberTest extends TestCase
 
         $previousResult = null;
 
-        if (0 !== \count($previousStats)) {
+        if ($previousStats) {
             $previousResult = new SubscriberResult(true, 'foobar');
             $previousResult->addInfo('stats', $previousStats);
         }
@@ -435,8 +435,8 @@ class SearchIndexSubscriberTest extends TestCase
                             $this->assertSame(SearchIndexSubscriber::class, $context['source']);
 
                             return true;
-                        }
-                    )
+                        },
+                    ),
                 )
             ;
         } else {
@@ -462,7 +462,7 @@ class SearchIndexSubscriberTest extends TestCase
 
         $previousResult = null;
 
-        if (0 !== \count($previousStats)) {
+        if ($previousStats) {
             $previousResult = new SubscriberResult(true, 'foobar');
             $previousResult->addInfo('stats', $previousStats);
         }
@@ -518,17 +518,14 @@ class SearchIndexSubscriberTest extends TestCase
                         'response_headers' => [],
                         default => null,
                     };
-                }
+                },
             )
         ;
 
         return $response;
     }
 
-    /**
-     * @return TranslatorInterface&MockObject
-     */
-    private function getTranslator(): TranslatorInterface
+    private function getTranslator(): TranslatorInterface&MockObject
     {
         $translator = $this->createMock(TranslatorInterface::class);
         $translator

@@ -64,7 +64,7 @@ class Configuration implements ConfigurationInterface
                                 }
 
                                 return $options;
-                            }
+                            },
                         )
                     ->end()
                 ->end()
@@ -239,7 +239,7 @@ class Configuration implements ConfigurationInterface
                                 }
 
                                 return $value;
-                            }
+                            },
                         )
                     ->end()
                     ->arrayPrototype()
@@ -279,8 +279,8 @@ class Configuration implements ConfigurationInterface
                                     ->scalarPrototype()->end()
                                 ->end()
                             ->end()
-                            ->arrayNode('preserve_metadata')
-                                ->info('Which metadata keys to preserve when resizing images.')
+                            ->arrayNode('preserve_metadata_fields')
+                                ->info('Which metadata fields to preserve when resizing images.')
                                 ->example([ExifFormat::NAME => ExifFormat::DEFAULT_PRESERVE_KEYS, IptcFormat::NAME => IptcFormat::DEFAULT_PRESERVE_KEYS])
                                 ->useAttributeAsKey('format')
                                 ->arrayPrototype()
@@ -393,8 +393,8 @@ class Configuration implements ConfigurationInterface
                         ->thenInvalid('The default_size must not be greater than the max_size: %s')
                     ->end()
                 ->end()
-                ->arrayNode('preserve_metadata')
-                    ->info('Which metadata keys to preserve when resizing images.')
+                ->arrayNode('preserve_metadata_fields')
+                    ->info('Which metadata fields to preserve when resizing images.')
                     ->example([ExifFormat::NAME => ExifFormat::DEFAULT_PRESERVE_KEYS, IptcFormat::NAME => IptcFormat::DEFAULT_PRESERVE_KEYS])
                     ->defaultValue((new ResizeOptions())->getPreserveCopyrightMetadata())
                     ->useAttributeAsKey('format')
@@ -460,7 +460,7 @@ class Configuration implements ConfigurationInterface
                             }
 
                             return $values;
-                        }
+                        },
                     )
                 ->end()
             ;
@@ -496,7 +496,7 @@ class Configuration implements ConfigurationInterface
                                 }
 
                                 return false;
-                            }
+                            },
                         )
                         ->thenInvalid('All provided locales must be in the canonicalized ICU form and optionally start with +/- to add/remove the locale to/from the default list.')
                     ->end()
@@ -522,7 +522,7 @@ class Configuration implements ConfigurationInterface
                                 }
 
                                 return false;
-                            }
+                            },
                         )
                         ->thenInvalid('All provided locales must be in the canonicalized ICU form and optionally start with +/- to add/remove the locale to/from the default list.')
                     ->end()
@@ -542,7 +542,7 @@ class Configuration implements ConfigurationInterface
                                 }
 
                                 return false;
-                            }
+                            },
                         )
                         ->thenInvalid('All provided countries must be two uppercase letters and optionally start with +/- to add/remove the country to/from the default list.')
                     ->end()
@@ -562,6 +562,15 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->booleanNode('enforce_backend')
                             ->defaultValue(false)
+                        ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('hsts')
+                    ->info('Enables sending the HTTP Strict Transport Security (HSTS) header for secure requests.')
+                    ->canBeDisabled()
+                    ->children()
+                        ->scalarNode('ttl')
+                            ->defaultValue(31536000)
                         ->end()
                     ->end()
                 ->end()
@@ -624,7 +633,7 @@ class Configuration implements ConfigurationInterface
                             }
 
                             return false;
-                        }
+                        },
                     )
                     ->thenInvalid('All provided additional URIs must start with either http:// or https://.')
                     ->end()
@@ -681,7 +690,7 @@ class Configuration implements ConfigurationInterface
                             }
 
                             return $attributes;
-                        }
+                        },
                     )
                     ->end()
                     ->normalizeKeys(false)
@@ -714,6 +723,11 @@ class Configuration implements ConfigurationInterface
                     ->end()
                     ->example('/admin')
                     ->defaultValue('/contao')
+                ->end()
+                ->integerNode('crawl_concurrency')
+                    ->info('The number of concurrent requests that are executed. Defaults to 5.')
+                    ->min(1)
+                    ->defaultValue(5)
                 ->end()
             ->end()
         ;
@@ -763,7 +777,7 @@ class Configuration implements ConfigurationInterface
                                 }
 
                                 return false;
-                            }
+                            },
                         )
                     ->thenInvalid('%s')
                     ->end()
@@ -792,7 +806,7 @@ class Configuration implements ConfigurationInterface
                                 }
 
                                 return $protocols;
-                            }
+                            },
                         )
                     ->end()
                 ->end()

@@ -15,7 +15,9 @@ window.AjaxRequest =
 	 * @returns {boolean}
 	 */
 	toggleNavigation: function(el, id, url) {
-		window.console && console.warn('AjaxRequest.toggleNavigation() is deprecated. Please use the stimulus controller instead.');
+		if (window.console) {
+			console.warn('AjaxRequest.toggleNavigation() is deprecated. Please use the stimulus controller instead.');
+		}
 
 		var item = $(id),
 			parent = $(el).getParent('li');
@@ -49,6 +51,10 @@ window.AjaxRequest =
 	 * @returns {boolean}
 	 */
 	toggleStructure: function(el, id, level, mode) {
+		if (window.console) {
+			console.warn('AjaxRequest.toggleStructure() is deprecated. Please use the stimulus controller instead.');
+		}
+
 		el.blur();
 
 		var item = $(id);
@@ -144,6 +150,10 @@ window.AjaxRequest =
 	 * @returns {boolean}
 	 */
 	toggleFileManager: function(el, id, folder, level) {
+		if (window.console) {
+			console.warn('AjaxRequest.toggleFileManager() is deprecated. Please use the stimulus controller instead.');
+		}
+
 		el.blur();
 
 		var item = $(id);
@@ -689,12 +699,7 @@ window.Backend =
 
 		if (!offset) return;
 
-		var header = window.document.getElementById('header'),
-			additionalOffset = 0;
-
-		if (header) {
-			header.addClass('down');
-		}
+		var additionalOffset = 0;
 
 		$$('[data-add-to-scroll-offset]').each(function(el) {
 			var offset = el.get('data-add-to-scroll-offset'),
@@ -1194,12 +1199,12 @@ window.Backend =
 			tbody = table.getElement('tbody'),
 			makeSortable = function(tbody) {
 				var rows = tbody.getChildren(),
-					textarea, childs, i, j;
+					textarea, children, i, j;
 
 				for (i=0; i<rows.length; i++) {
-					childs = rows[i].getChildren();
-					for (j=0; j<childs.length; j++) {
-						if (textarea = childs[j].getFirst('textarea')) {
+					children = rows[i].getChildren();
+					for (j=0; j<children.length; j++) {
+						if (textarea = children[j].getFirst('textarea')) {
 							textarea.name = textarea.name.replace(/\[[0-9]+][[0-9]+]/g, '[' + i + '][' + j + ']')
 						}
 					}
@@ -1216,7 +1221,7 @@ window.Backend =
 			},
 			addEventsTo = function(tr) {
 				var head = thead.getFirst('tr'),
-					command, textarea, current, next, ntr, childs, index, i;
+					command, textarea, current, next, ntr, children, index, i;
 
 				tr.getElements('button').each(function(bt) {
 					if (bt.hasEvent('click')) return;
@@ -1227,10 +1232,10 @@ window.Backend =
 							bt.addEvent('click', function() {
 								Backend.getScrollOffset();
 								ntr = new Element('tr');
-								childs = tr.getChildren();
-								for (i=0; i<childs.length; i++) {
-									next = childs[i].clone(true).inject(ntr, 'bottom');
-									if (textarea = childs[i].getFirst('textarea')) {
+								children = tr.getChildren();
+								for (i=0; i<children.length; i++) {
+									next = children[i].clone(true).inject(ntr, 'bottom');
+									if (textarea = children[i].getFirst('textarea')) {
 										next.getFirst('textarea').value = textarea.value;
 									}
 								}
@@ -1252,9 +1257,9 @@ window.Backend =
 							bt.addEvent('click', function() {
 								Backend.getScrollOffset();
 								index = getIndex(bt);
-								childs = tbody.getChildren();
-								for (i=0; i<childs.length; i++) {
-									current = childs[i].getChildren()[index];
+								children = tbody.getChildren();
+								for (i=0; i<children.length; i++) {
+									current = children[i].getChildren()[index];
 									next = current.clone(true).inject(current, 'after');
 									if (textarea = current.getFirst('textarea')) {
 										next.getFirst('textarea').value = textarea.value;
@@ -1271,16 +1276,16 @@ window.Backend =
 							bt.addEvent('click', function() {
 								Backend.getScrollOffset();
 								index = getIndex(bt);
-								childs = tbody.getChildren();
+								children = tbody.getChildren();
 								if (index > 0) {
-									for (i=0; i<childs.length; i++) {
-										current = childs[i].getChildren()[index];
+									for (i=0; i<children.length; i++) {
+										current = children[i].getChildren()[index];
 										current.inject(current.getPrevious(), 'before');
 									}
 								} else {
-									for (i=0; i<childs.length; i++) {
-										current = childs[i].getChildren()[index];
-										current.inject(childs[i].getLast(), 'before');
+									for (i=0; i<children.length; i++) {
+										current = children[i].getChildren()[index];
+										current.inject(children[i].getLast(), 'before');
 									}
 								}
 								makeSortable(tbody);
@@ -1290,16 +1295,16 @@ window.Backend =
 							bt.addEvent('click', function() {
 								Backend.getScrollOffset();
 								index = getIndex(bt);
-								childs = tbody.getChildren();
+								children = tbody.getChildren();
 								if (index < (tr.getChildren().length - 2)) {
-									for (i=0; i<childs.length; i++) {
-										current = childs[i].getChildren()[index];
+									for (i=0; i<children.length; i++) {
+										current = children[i].getChildren()[index];
 										current.inject(current.getNext(), 'after');
 									}
 								} else {
-									for (i=0; i<childs.length; i++) {
-										current = childs[i].getChildren()[index];
-										current.inject(childs[i].getFirst(), 'before');
+									for (i=0; i<children.length; i++) {
+										current = children[i].getChildren()[index];
+										current.inject(children[i].getFirst(), 'before');
 									}
 								}
 								makeSortable(tbody);
@@ -1309,10 +1314,10 @@ window.Backend =
 							bt.addEvent('click', function() {
 								Backend.getScrollOffset();
 								index = getIndex(bt);
-								childs = tbody.getChildren();
+								children = tbody.getChildren();
 								if (tr.getChildren().length > 2) {
-									for (i=0; i<childs.length; i++) {
-										childs[i].getChildren()[index].destroy();
+									for (i=0; i<children.length; i++) {
+										children[i].getChildren()[index].destroy();
 									}
 									head.getFirst('td').destroy();
 								}
@@ -1420,12 +1425,12 @@ window.Backend =
 			tbody = table.getElement('tbody'),
 			makeSortable = function(tbody) {
 				var rows = tbody.getChildren(),
-					childs, i, j, input;
+					children, i, j, input;
 
 				for (i=0; i<rows.length; i++) {
-					childs = rows[i].getChildren();
-					for (j=0; j<childs.length; j++) {
-						if (input = childs[j].getFirst('input')) {
+					children = rows[i].getChildren();
+					for (j=0; j<children.length; j++) {
+						if (input = children[j].getFirst('input')) {
 							input.name = input.name.replace(/\[[0-9]+]/g, '[' + i + ']');
 							if (input.type == 'checkbox') {
 								input.id = input.name.replace(/\[[0-9]+]/g, '').replace(/\[/g, '_').replace(/]/g, '') + '_' + i;
@@ -1445,7 +1450,7 @@ window.Backend =
 				});
 			},
 			addEventsTo = function(tr) {
-				var command, input, next, ntr, childs, i;
+				var command, input, next, ntr, children, i;
 				tr.getElements('button').each(function(bt) {
 					if (bt.hasEvent('click')) return;
 					command = bt.getProperty('data-command');
@@ -1455,10 +1460,10 @@ window.Backend =
 							bt.addEvent('click', function() {
 								Backend.getScrollOffset();
 								ntr = new Element('tr');
-								childs = tr.getChildren();
-								for (i=0; i<childs.length; i++) {
-									next = childs[i].clone(true).inject(ntr, 'bottom');
-									if (input = childs[i].getFirst('input')) {
+								children = tr.getChildren();
+								for (i=0; i<children.length; i++) {
+									next = children[i].clone(true).inject(ntr, 'bottom');
+									if (input = children[i].getFirst('input')) {
 										next.getFirst('input').value = input.value;
 										if (input.type == 'checkbox') {
 											next.getFirst('input').checked = input.checked ? 'checked' : '';
@@ -1523,12 +1528,12 @@ window.Backend =
 			tbody = table.getElement('tbody'),
 			makeSortable = function(tbody) {
 				var rows = tbody.getChildren(),
-					childs, i, j, input;
+					children, i, j, input;
 
 				for (i=0; i<rows.length; i++) {
-					childs = rows[i].getChildren();
-					for (j=0; j<childs.length; j++) {
-						if (input = childs[j].getFirst('input')) {
+					children = rows[i].getChildren();
+					for (j=0; j<children.length; j++) {
+						if (input = children[j].getFirst('input')) {
 							input.name = input.name.replace(/\[[0-9]+]/g, '[' + i + ']')
 						}
 					}
@@ -1544,7 +1549,7 @@ window.Backend =
 				});
 			},
 			addEventsTo = function(tr) {
-				var command, input, next, ntr, childs, i;
+				var command, input, next, ntr, children, i;
 				tr.getElements('button').each(function(bt) {
 					if (bt.hasEvent('click')) return;
 					command = bt.getProperty('data-command');
@@ -1554,10 +1559,10 @@ window.Backend =
 							bt.addEvent('click', function() {
 								Backend.getScrollOffset();
 								ntr = new Element('tr');
-								childs = tr.getChildren();
-								for (i=0; i<childs.length; i++) {
-									next = childs[i].clone(true).inject(ntr, 'bottom');
-									if (input = childs[i].getFirst('input')) {
+								children = tr.getChildren();
+								for (i=0; i<children.length; i++) {
+									next = children[i].clone(true).inject(ntr, 'bottom');
+									if (input = children[i].getFirst('input')) {
 										next.getFirst().value = input.value;
 									}
 								}
@@ -2006,17 +2011,34 @@ window.Backend =
 			crawl = $('tl_crawl'),
 			progressBar = crawl.getElement('div.progress-bar'),
 			progressCount = crawl.getElement('p.progress-count'),
-			results = crawl.getElement('div.results');
+			results = crawl.getElement('div.results'),
+			debugLog = crawl.getElement('p.debug-log');
 
 		function updateData(response) {
-			var done = response.total - response.pending,
-				percentage = response.total > 0 ? parseInt(done / response.total * 100, 10) : 100,
+			var total = response.total,
+				done = total - response.pending,
+				percentage = total > 0 ? parseInt(done / total * 100, 10) : 100,
 				result;
+
+			// Initialize the status bar at 10%
+			if (done < 1 && percentage < 1) {
+				done = 1;
+				percentage = 10;
+				total = 10;
+			}
 
 			progressBar.setStyle('width', percentage + '%');
 			progressBar.set('html', percentage + '%');
 			progressBar.setAttribute('aria-valuenow', percentage);
-			progressCount.set('html', done + ' / ' + response.total);
+			progressCount.set('html', done + ' / ' + total);
+
+			if (response.hasDebugLog) {
+				debugLog.setStyle('display', 'block');
+			}
+
+			if (response.hasDebugLog) {
+				debugLog.setStyle('display', 'block');
+			}
 
 			if (!response.finished) {
 				return;
@@ -2269,44 +2291,6 @@ window.Theme =
 	},
 
 	/**
-	 * Hide the menu on scroll
-	 */
-	hideMenuOnScroll: function() {
-		var header = $('header');
-		if (!header) return;
-
-		var wh = window.getSize().y,
-			dh = window.getScrollSize().y - wh,
-			anchor = 0;
-
-		if (!('ontouchmove' in window) || wh >= dh) {
-			header.removeClass('down');
-			return;
-		}
-
-		window
-			.addEvent('touchmove', function() {
-				var ws = window.getScroll().y;
-
-				if (Math.abs(anchor - ws) < 20) return;
-
-				if (ws > 0 && ws > anchor) {
-					header.addClass('down');
-				} else {
-					header.removeClass('down');
-				}
-
-				anchor = ws;
-			})
-			.addEvent('scroll', function() {
-				if (window.getScroll().y < 1) {
-					header.removeClass('down');
-				}
-			})
-		;
-	},
-
-	/**
 	 * Set up the split button toggle
 	 */
 	setupSplitButtonToggle: function() {
@@ -2377,7 +2361,6 @@ window.addEvent('domready', function() {
 	Theme.setupTextareaResizing();
 	Theme.setupMenuToggle();
 	Theme.setupProfileToggle();
-	Theme.hideMenuOnScroll();
 	Theme.setupSplitButtonToggle();
 });
 

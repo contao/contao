@@ -74,7 +74,7 @@ class DcaLoader extends Controller
 
 			if (!isset($GLOBALS['TL_DCA'][$this->strTable]))
 			{
-				trigger_deprecation('contao/core-bundle', '5.0', 'Loading a non-existent DCA "%s" has has been deprecated and will throw an exception in Contao 6.0.', $this->strTable);
+				trigger_deprecation('contao/core-bundle', '5.0', 'Loading a non-existent DCA "%s" has has been deprecated and will throw an exception in Contao 6.', $this->strTable);
 			}
 
 			return;
@@ -95,7 +95,7 @@ class DcaLoader extends Controller
 
 		if (!isset($GLOBALS['TL_DCA'][$this->strTable]))
 		{
-			trigger_deprecation('contao/core-bundle', '5.0', 'Loading a non-existent DCA "%s" has has been deprecated and will throw an exception in Contao 6.0.', $this->strTable);
+			trigger_deprecation('contao/core-bundle', '5.0', 'Loading a non-existent DCA "%s" has has been deprecated and will throw an exception in Contao 6.', $this->strTable);
 		}
 	}
 
@@ -158,7 +158,7 @@ class DcaLoader extends Controller
 
 			foreach ($GLOBALS['TL_DCA'][$this->strTable]['list'][$key] as $k=>&$v)
 			{
-				if (\is_array($v) && \array_key_exists('label', $v))
+				if (!\is_array($v) || \array_key_exists('label', $v))
 				{
 					continue;
 				}
@@ -167,7 +167,7 @@ class DcaLoader extends Controller
 				{
 					$v['label'] = &$GLOBALS['TL_LANG'][$this->strTable][$k];
 				}
-				elseif (isset($GLOBALS['TL_LANG']['DCA'][$k]))
+				else
 				{
 					$v['label'] = &$GLOBALS['TL_LANG']['DCA'][$k];
 				}

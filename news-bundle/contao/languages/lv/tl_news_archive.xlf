@@ -15,6 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.jumpTo.1">
         <source>Please choose the newsreader page to which visitors will be redirected when clicking a news item.</source>
+        <target>Lūdzu, izvēlieties jaunumu lasītāja lapu, uz kuru apmeklētāji tiks novirzīti, noklikšķinot uz jaunumu vienuma.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.allowComments.0">
         <source>Enable comments</source>
@@ -130,7 +131,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.0">
         <source>News feeds</source>
-        <target>Jaunumu barotnes</target>
+        <target>Jaunumu plūsmas</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.1">
         <source>Manage news feeds</source>
@@ -154,6 +155,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.children">
         <source>Edit the news items of news archive ID %s</source>
+        <target>Rediģēt jaunumu arhīva ID %s jaunumu vienumus</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.copy">
         <source>Duplicate news archive ID %s</source>

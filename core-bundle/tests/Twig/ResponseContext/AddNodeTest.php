@@ -30,7 +30,7 @@ class AddNodeTest extends TestCase
             new PrintNode(new ConstantExpression('foobar', 42), 42),
             'identifier',
             DocumentLocation::endOfBody,
-            1
+            1,
         );
 
         $compiler = new Compiler($this->createMock(Environment::class));

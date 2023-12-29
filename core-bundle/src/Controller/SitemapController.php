@@ -40,7 +40,7 @@ class SitemapController extends AbstractController
     {
         $rootPages = $this->pageFinder->findRootPagesForHost($request->getHost());
 
-        if (empty($rootPages)) {
+        if (!$rootPages) {
             throw $this->createNotFoundException();
         }
 
@@ -62,10 +62,10 @@ class SitemapController extends AbstractController
         $urlSet = $sitemap->createElementNS('https://www.sitemaps.org/schemas/sitemap/0.9', 'urlset');
 
         foreach ($urls as $url) {
-            $loc = $sitemap->createElement('loc');
+            $loc = $sitemap->createElementNS($urlSet->namespaceURI, 'loc');
             $loc->appendChild($sitemap->createTextNode($url));
 
-            $urlEl = $sitemap->createElement('url');
+            $urlEl = $sitemap->createElementNS($urlSet->namespaceURI, 'url');
             $urlEl->appendChild($loc);
             $urlSet->appendChild($urlEl);
         }
@@ -126,7 +126,7 @@ class SitemapController extends AbstractController
                     $urls = [$pageModel->getAbsoluteUrl()];
 
                     // Get articles with teaser
-                    if (null !== ($articleModels = $articleModelAdapter->findPublishedWithTeaserByPid($pageModel->id, ['ignoreFePreview' => true]))) {
+                    if ($articleModels = $articleModelAdapter->findPublishedWithTeaserByPid($pageModel->id, ['ignoreFePreview' => true])) {
                         foreach ($articleModels as $articleModel) {
                             $urls[] = $pageModel->getAbsoluteUrl('/articles/'.($articleModel->alias ?: $articleModel->id));
                         }

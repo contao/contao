@@ -20,7 +20,7 @@ use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\DataContainer;
 use Doctrine\DBAL\Connection;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 /**
  * @internal
@@ -36,6 +36,11 @@ class DefaultOperationsListener
 
     public function __invoke(string $table): void
     {
+        // Do not add default operations if a DCA was "loaded" that does not exist
+        if (!isset($GLOBALS['TL_DCA'][$table])) {
+            return;
+        }
+
         $GLOBALS['TL_DCA'][$table]['list']['operations'] = $this->getForTable($table);
     }
 
@@ -51,7 +56,7 @@ class DefaultOperationsListener
         $operations = [];
 
         // If none of the defined operations are name-only, we append the operations to the defaults.
-        if (empty(array_filter($dca, static fn ($v, $k) => isset($defaults[$k]) || (\is_string($v) && isset($defaults[$v])), ARRAY_FILTER_USE_BOTH))) {
+        if (!array_filter($dca, static fn ($v, $k) => isset($defaults[$k]) || (\is_string($v) && isset($defaults[$v])), ARRAY_FILTER_USE_BOTH)) {
             $operations = $defaults;
         }
 
@@ -109,11 +114,11 @@ class DefaultOperationsListener
                 ];
 
                 if ($isTreeMode) {
-                    $operations['copyChilds'] = [
-                        'href' => 'act=paste&amp;mode=copy&amp;childs=1',
-                        'icon' => 'copychilds.svg',
+                    $operations['copyChildren'] = [
+                        'href' => 'act=paste&amp;mode=copy&amp;children=1',
+                        'icon' => 'copychildren.svg',
                         'attributes' => 'onclick="Backend.getScrollOffset()"',
-                        'button_callback' => $this->copyChildsCallback($table),
+                        'button_callback' => $this->copyChildrenCallback($table),
                     ];
                 }
             }
@@ -163,27 +168,27 @@ class DefaultOperationsListener
     {
         return function (DataContainerOperation $operation) use ($actionClass, $table): void {
             if (!$this->isGranted($actionClass, $table, $operation)) {
-                $this->disableOperation($operation);
+                $operation->disable();
             }
         };
     }
 
-    private function copyChildsCallback(string $table): \Closure
+    private function copyChildrenCallback(string $table): \Closure
     {
         return function (DataContainerOperation $operation) use ($table): void {
             if (!$this->isGranted(CreateAction::class, $table, $operation)) {
-                $this->disableOperation($operation);
+                $operation->disable();
 
                 return;
             }
 
             $childCount = $this->connection->fetchOne(
                 "SELECT COUNT(*) FROM $table WHERE pid=?",
-                [(string) $operation->getRecord()['id']]
+                [(string) $operation->getRecord()['id']],
             );
 
             if ($childCount < 1) {
-                $this->disableOperation($operation);
+                $operation->disable();
             }
         };
     }
@@ -195,7 +200,7 @@ class DefaultOperationsListener
     {
         $field = null;
 
-        foreach (($GLOBALS['TL_DCA'][$table]['fields'] ?? []) as $name => $config) {
+        foreach ($GLOBALS['TL_DCA'][$table]['fields'] ?? [] as $name => $config) {
             if (!($config['toggle'] ?? false) && !($config['reverseToggle'] ?? false)) {
                 continue;
             }
@@ -229,15 +234,15 @@ class DefaultOperationsListener
         unset($new['id']);
         $new['tstamp'] = 0;
 
-        return new CreateAction($table, $new);
-    }
-
-    private function disableOperation(DataContainerOperation $operation): void
-    {
-        unset($operation['route'], $operation['href']);
-
-        if (isset($operation['icon'])) {
-            $operation['icon'] = str_replace('.svg', '--disabled.svg', $operation['icon']);
+        // Unset the PID field for the copy operation (act=paste&mode=copy), so a voter can differentiate
+        // between the copy operation (without PID) and the paste operation (with new target PID)
+        if (
+            DataContainer::MODE_TREE === ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null)
+            || !empty($GLOBALS['TL_DCA'][$table]['config']['ptable'])
+        ) {
+            unset($new['pid'], $new['sorting']);
         }
+
+        return new CreateAction($table, $new);
     }
 }

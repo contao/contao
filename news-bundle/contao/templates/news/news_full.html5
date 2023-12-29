@@ -3,7 +3,9 @@
 
   <h1><?= $this->newsHeadline ?></h1>
 
-  <p class="info"><time datetime="<?= $this->datetime ?>"><?= $this->date ?></time> <?= $this->author ?></p>
+  <?php $this->block('info'); ?>
+    <p class="info"><time datetime="<?= $this->datetime ?>"><?= $this->date ?></time> <?= $this->author ?></p>
+  <?php $this->endblock(); ?>
 
   <?php if ($this->hasSubHeadline): ?>
     <h2><?= $this->subHeadline ?></h2>

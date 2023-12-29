@@ -45,6 +45,7 @@ class NewsFeedController extends AbstractController implements DynamicRouteInter
     public function __construct(
         private readonly ContaoContext $contaoContext,
         private readonly Specification $specification,
+        private readonly string $charset,
     ) {
     }
 
@@ -55,11 +56,10 @@ class NewsFeedController extends AbstractController implements DynamicRouteInter
         $staticUrl = $this->contaoContext->getStaticUrl();
         $baseUrl = $staticUrl ?: $request->getSchemeAndHttpHost();
 
-        $feed = (new Feed())
-            ->setTitle($pageModel->title)
-            ->setDescription($pageModel->feedDescription)
-            ->setLanguage($pageModel->language)
-        ;
+        $feed = new Feed();
+        $feed->setTitle(html_entity_decode($pageModel->title, ENT_QUOTES, $this->charset));
+        $feed->setDescription(html_entity_decode($pageModel->feedDescription ?? '', ENT_QUOTES, $this->charset));
+        $feed->setLanguage($pageModel->language);
 
         $event = new FetchArticlesForFeedEvent($feed, $request, $pageModel);
 

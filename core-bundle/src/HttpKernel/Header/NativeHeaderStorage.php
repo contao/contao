@@ -14,6 +14,8 @@ namespace Contao\CoreBundle\HttpKernel\Header;
 
 /**
  * Handles HTTP headers in PHP's native methods.
+ *
+ * @internal
  */
 class NativeHeaderStorage implements HeaderStorageInterface
 {

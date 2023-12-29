@@ -17,16 +17,18 @@
     {% endif %}
 </div>
 
-<div class="tl_undo_preview">
-    {% if preview is not iterable %}
-        {{ preview|raw }}
-    {% else %}
-        <table>
-            <tr>
-                {% for value in preview %}
-                    <td>{{ value|raw }}</td>
-                {% endfor %}
-            </tr>
-        </table>
-    {% endif %}
-</div>
+{% if preview is not empty %}
+    <div class="tl_undo_preview">
+        {% if preview is not iterable %}
+            {{ preview|raw }}
+        {% else %}
+            <table>
+                <tr>
+                    {% for value in preview %}
+                        <td>{{ value|raw }}</td>
+                    {% endfor %}
+                </tr>
+            </table>
+        {% endif %}
+    </div>
+{% endif %}

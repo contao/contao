@@ -44,7 +44,7 @@ class VideoController extends AbstractContentElementController
         $sourceParameters = match ($type = $template->get('type')) {
             'vimeo' => $this->getVimeoSourceParameters($model),
             'youtube' => $this->getYoutubeSourceParameters($model, $request->getLocale()),
-            default => throw new \InvalidArgumentException(sprintf('Unknown video provider "%s".', $type))
+            default => throw new \InvalidArgumentException(sprintf('Unknown video provider "%s".', $type)),
         };
 
         $template->set('source', $sourceParameters);
@@ -158,7 +158,7 @@ class VideoController extends AbstractContentElementController
             'options' => $options,
             'base_url' => $baseUrl = "$domain/embed/$videoId",
             'query' => $query = http_build_query($options),
-            'url' => empty($query) ? $baseUrl : "$baseUrl?$query",
+            'url' => $query ? "$baseUrl?$query" : $baseUrl,
         ];
     }
 }

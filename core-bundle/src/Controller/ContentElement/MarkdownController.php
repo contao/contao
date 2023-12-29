@@ -108,11 +108,9 @@ class MarkdownController extends AbstractContentElementController
         }
 
         $filesAdapter = $this->getContaoAdapter(FilesModel::class);
-
-        /** @var FilesModel|null $filesModel */
         $filesModel = $filesAdapter->findByPk($file);
 
-        if (null === $filesModel) {
+        if (!$filesModel instanceof FilesModel) {
             return '';
         }
 

@@ -208,7 +208,6 @@ class ContaoTableProcessorTest extends TestCase
 
         $record = $processor($data);
 
-        /** @var ContaoContext $context */
         $context = $record['extra']['contao'];
 
         $this->assertSame('foobar', $context->getUsername());
@@ -227,7 +226,6 @@ class ContaoTableProcessorTest extends TestCase
 
         $record = $processor($data);
 
-        /** @var ContaoContext $context */
         $context = $record['extra']['contao'];
 
         $this->assertSame('k.jones', $context->getUsername());
@@ -248,7 +246,6 @@ class ContaoTableProcessorTest extends TestCase
 
         $record = $processor($data);
 
-        /** @var ContaoContext $context */
         $context = $record['extra']['contao'];
 
         $this->assertSame('N/A', $context->getUsername());
@@ -283,7 +280,6 @@ class ContaoTableProcessorTest extends TestCase
         $processor = $this->getContaoTableProcessor($requestStack);
         $result = $processor($data);
 
-        /** @var ContaoContext $context */
         $context = $result['extra']['contao'];
 
         $this->assertSame($expectedSource, $context->getSource());
@@ -328,7 +324,6 @@ class ContaoTableProcessorTest extends TestCase
         $processor = $this->getContaoTableProcessor($requestStack);
         $record = $processor($data);
 
-        /** @var ContaoContext $context */
         $context = $record['extra']['contao'];
 
         $this->assertSame($uri, $context->getUri());
@@ -375,7 +370,6 @@ class ContaoTableProcessorTest extends TestCase
         $processor = $this->getContaoTableProcessor($requestStack);
         $record = $processor($data);
 
-        /** @var ContaoContext $context */
         $context = $record['extra']['contao'];
 
         $this->assertSame($pageId, $context->getPageId());

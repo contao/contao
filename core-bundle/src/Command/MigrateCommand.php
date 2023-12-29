@@ -17,11 +17,9 @@ use Contao\CoreBundle\Doctrine\Schema\MysqlInnodbRowSizeCalculator;
 use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\CoreBundle\Migration\CommandCompiler;
 use Contao\CoreBundle\Migration\MigrationCollection;
-use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Mysqli\Driver as MysqliDriver;
 use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
-use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\VersionAwarePlatformDriver;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -34,7 +32,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'contao:migrate',
-    description: 'Executes migrations and updates the database schema.'
+    description: 'Executes migrations and updates the database schema.',
 )]
 class MigrateCommand extends Command
 {
@@ -127,7 +125,7 @@ class MigrateCommand extends Command
         if (!$asJson) {
             $this->io->info(sprintf(
                 'Creating a database dump to "%s" with the default options. Use --no-backup to disable this feature.',
-                $config->getBackup()->getFilename()
+                $config->getBackup()->getFilename(),
             ));
         }
 
@@ -216,11 +214,7 @@ class MigrateCommand extends Command
             return true;
         }
 
-        if (\count($this->commandCompiler->compileCommands()) > 0) {
-            return true;
-        }
-
-        return false;
+        return [] !== $this->commandCompiler->compileCommands();
     }
 
     private function executeMigrations(bool &$dryRun, bool $asJson, string|null $specifiedHash = null): bool
@@ -245,7 +239,7 @@ class MigrateCommand extends Command
                 }
             }
 
-            $actualHash = hash('sha256', json_encode($migrationLabels));
+            $actualHash = hash('sha256', json_encode($migrationLabels, JSON_THROW_ON_ERROR));
 
             if ($asJson) {
                 $this->writeNdjson('migration-pending', ['names' => $migrationLabels, 'hash' => $actualHash]);
@@ -269,7 +263,6 @@ class MigrateCommand extends Command
 
             $count = 0;
 
-            /** @var MigrationResult $result */
             foreach ($this->migrations->run() as $result) {
                 ++$count;
 
@@ -326,10 +319,10 @@ class MigrateCommand extends Command
         while (true) {
             $commands = $this->commandCompiler->compileCommands();
 
-            $hasNewCommands = \count(array_diff($commands, $lastCommands)) > 0;
+            $hasNewCommands = [] !== array_diff($commands, $lastCommands);
             $lastCommands = $commands;
 
-            $commandsHash = hash('sha256', json_encode($commands));
+            $commandsHash = hash('sha256', json_encode($commands, JSON_THROW_ON_ERROR));
 
             if ($asJson) {
                 $this->writeNdjson('schema-pending', [
@@ -426,14 +419,12 @@ class MigrateCommand extends Command
             if (!$asJson) {
                 $this->io->success('Executed '.$count.' SQL queries.');
 
-                if (\count($exceptions)) {
-                    foreach ($exceptions as $exception) {
-                        $this->io->error($exception->getMessage());
-                    }
+                foreach ($exceptions as $exception) {
+                    $this->io->error($exception->getMessage());
                 }
             }
 
-            if (\count($exceptions)) {
+            if ($exceptions) {
                 return false;
             }
 
@@ -448,17 +439,8 @@ class MigrateCommand extends Command
 
     private function writeNdjson(string $type, array $data): void
     {
-        $this->io->writeln(
-            json_encode(
-                // make sure $type is the first in array but always wins
-                ['type' => $type] + $data,
-                JSON_INVALID_UTF8_SUBSTITUTE
-            )
-        );
-
-        if (JSON_ERROR_NONE !== json_last_error()) {
-            throw new \JsonException(json_last_error_msg());
-        }
+        // Make sure $type is the first in array but always wins
+        $this->io->writeln(json_encode(['type' => $type] + $data, JSON_INVALID_UTF8_SUBSTITUTE | JSON_THROW_ON_ERROR));
     }
 
     /**
@@ -484,7 +466,7 @@ class MigrateCommand extends Command
         $options = $this->connection->getParams()['defaultTableOptions'] ?? [];
 
         // Check the collation if the user has configured it
-        if (null !== $collate = ($options['collate'] ?? null)) {
+        if (null !== $collate = $options['collate'] ?? null) {
             $row = $this->connection->fetchAssociative("SHOW COLLATION LIKE '$collate'");
 
             if (false === $row) {
@@ -504,7 +486,7 @@ class MigrateCommand extends Command
         }
 
         // Check the engine if the user has configured it
-        if (null !== $engine = ($options['engine'] ?? null)) {
+        if (null !== $engine = $options['engine'] ?? null) {
             $engineFound = false;
             $rows = $this->connection->fetchAllAssociative('SHOW ENGINES');
 
@@ -588,9 +570,9 @@ class MigrateCommand extends Command
 
             if (
                 // The InnoDB file format is not Barracuda
-                ($fileFormatSetting && 'barracuda' !== strtolower((string) $fileFormatSetting)) ||
+                ($fileFormatSetting && 'barracuda' !== strtolower((string) $fileFormatSetting))
                 // The innodb_file_per_table option is disabled
-                (null !== $filePerTableSetting && !\in_array(strtolower((string) $filePerTableSetting), ['1', 'on'], true))
+                || (null !== $filePerTableSetting && !\in_array(strtolower((string) $filePerTableSetting), ['1', 'on'], true))
             ) {
                 $errors[] =
                     <<<'EOF'
@@ -691,8 +673,6 @@ class MigrateCommand extends Command
 
         $version = $driverConnection->getServerVersion();
         $correctPlatform = $driver->createDatabasePlatformForVersion($version);
-
-        /** @var AbstractPlatform $currentPlatform */
         $currentPlatform = $this->connection->getDatabasePlatform();
 
         if ($correctPlatform::class === $currentPlatform::class) {

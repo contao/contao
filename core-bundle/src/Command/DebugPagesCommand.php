@@ -26,7 +26,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'debug:pages',
-    description: 'Displays the page controller configuration.'
+    description: 'Displays the page controller configuration.',
 )]
 class DebugPagesCommand extends Command
 {
@@ -56,11 +56,11 @@ class DebugPagesCommand extends Command
     {
         $this->routeConfigs[$type] = $config;
 
-        if (null !== $routeEnhancer) {
+        if ($routeEnhancer) {
             $this->routeEnhancers[$type] = $routeEnhancer;
         }
 
-        if (null !== $contentComposition) {
+        if ($contentComposition) {
             $this->contentComposition[$type] = $contentComposition;
         }
     }
@@ -114,7 +114,7 @@ class DebugPagesCommand extends Command
 
                 return max($carry, $length);
             },
-            0
+            0,
         );
 
         $return = [];
@@ -127,6 +127,6 @@ class DebugPagesCommand extends Command
             $return[] = sprintf('%s : %s', str_pad($k, $length, ' ', STR_PAD_RIGHT), $v);
         }
 
-        return !empty($return) ? implode("\n", $return) : '-';
+        return $return ? implode("\n", $return) : '-';
     }
 }

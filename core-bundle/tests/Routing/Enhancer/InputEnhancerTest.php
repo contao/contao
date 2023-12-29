@@ -201,17 +201,11 @@ class InputEnhancerTest extends TestCase
         $enhancer->enhance($defaults, $request);
     }
 
-    /**
-     * @return PageModel&MockObject
-     */
-    private function mockPageModel(string $language, string $urlPrefix): PageModel
+    private function mockPageModel(string $language, string $urlPrefix): PageModel&MockObject
     {
-        return $this->mockClassWithProperties(
-            PageModel::class,
-            [
-                'rootLanguage' => $language,
-                'urlPrefix' => $urlPrefix,
-            ]
-        );
+        return $this->mockClassWithProperties(PageModel::class, [
+            'rootLanguage' => $language,
+            'urlPrefix' => $urlPrefix,
+        ]);
     }
 }

@@ -50,8 +50,7 @@ class PageModelTest extends TestCase
 
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
         $schemaManager
-            // Backwards compatibility with doctrine/dbal < 3.5
-            ->method(method_exists($schemaManager, 'introspectSchema') ? 'introspectSchema' : 'createSchema')
+            ->method('introspectSchema')
             ->willReturn(new Schema())
         ;
 
@@ -175,8 +174,7 @@ class PageModelTest extends TestCase
 
         $this->assertInstanceOf(Collection::class, $result);
 
-        /** @var PageModel $pageModel */
-        $pageModel = $result->first();
+        $pageModel = $result->current();
 
         $this->assertSame(42, $pageModel->id);
     }
@@ -322,8 +320,8 @@ class PageModelTest extends TestCase
             ->method('execute')
             ->willReturnCallback(
                 static function () use (&$parents) {
-                    return !empty($parents) ? new Result(array_shift($parents), '') : new Result([], '');
-                }
+                    return $parents ? new Result(array_shift($parents), '') : new Result([], '');
+                },
             )
         ;
 
@@ -525,7 +523,7 @@ class PageModelTest extends TestCase
     private function mockDatabase(Database $database): void
     {
         $property = (new \ReflectionClass($database))->getProperty('objInstance');
-        $property->setValue($database);
+        $property->setValue(null, $database);
 
         $this->assertSame($database, Database::getInstance());
     }

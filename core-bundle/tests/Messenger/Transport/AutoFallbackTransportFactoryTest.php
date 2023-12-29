@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Messenger\Transport;
 
 use Contao\CoreBundle\Messenger\AutoFallbackNotifier;
-use Contao\CoreBundle\Messenger\Transport\AutoFallbackTransport;
 use Contao\CoreBundle\Messenger\Transport\AutoFallbackTransportFactory;
 use PHPUnit\Framework\TestCase;
 use Psr\Cache\CacheItemPoolInterface;
@@ -46,11 +45,10 @@ class AutoFallbackTransportFactoryTest extends TestCase
         $notifier = new AutoFallbackNotifier($this->createMock(CacheItemPoolInterface::class), new Container());
         $factory = new AutoFallbackTransportFactory($notifier, $container);
 
-        /** @var AutoFallbackTransport $transport */
         $transport = $factory->createTransport(
             'contao-auto-fallback://my_transport_name?target=target_transport&fallback=fallback_transport',
             [],
-            $this->createMock(SerializerInterface::class)
+            $this->createMock(SerializerInterface::class),
         );
 
         $this->assertSame('my_transport_name', $transport->getSelfTransportName());
@@ -73,7 +71,7 @@ class AutoFallbackTransportFactoryTest extends TestCase
         $factory->createTransport(
             'contao-auto-fallback://my_transport_name?target=target_transport&fallback=fallback_transport',
             [],
-            $this->createMock(SerializerInterface::class)
+            $this->createMock(SerializerInterface::class),
         );
     }
 
@@ -92,7 +90,7 @@ class AutoFallbackTransportFactoryTest extends TestCase
         $factory->createTransport(
             'contao-auto-fallback://my_transport_name?target=target_transport&fallback=fallback_transport',
             [],
-            $this->createMock(SerializerInterface::class)
+            $this->createMock(SerializerInterface::class),
         );
     }
 
@@ -111,7 +109,7 @@ class AutoFallbackTransportFactoryTest extends TestCase
         $factory->createTransport(
             'contao-auto-fallback://my_transport_name?target=target_transport&fallback=fallback_transport',
             [],
-            $this->createMock(SerializerInterface::class)
+            $this->createMock(SerializerInterface::class),
         );
     }
 }

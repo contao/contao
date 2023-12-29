@@ -15,3 +15,11 @@ jobs:
         steps:
             - name: Assign the PR
               uses: toshimaru/auto-author-assign@v1.4.0
+
+            - name: Add the label
+              uses: christianvuerings/add-labels@v1
+              if: join(github.event.pull_request.labels) == ''
+              with:
+                  labels: feature
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

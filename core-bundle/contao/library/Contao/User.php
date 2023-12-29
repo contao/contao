@@ -254,6 +254,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 
 		if ($objResult->numRows > 0)
 		{
+			/** @var class-string<Model> $strModelClass */
 			$strModelClass = Model::getClassFromTable($this->strTable);
 			$this->arrData = array();
 
@@ -372,7 +373,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 		return $this->password;
 	}
 
-	public function setPassword(#[\SensitiveParameter] ?string $password): self
+	public function setPassword(#[\SensitiveParameter] string|null $password): self
 	{
 		$this->password = $password;
 
