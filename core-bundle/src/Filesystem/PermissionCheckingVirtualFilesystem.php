@@ -77,13 +77,9 @@ class PermissionCheckingVirtualFilesystem implements VirtualFilesystemInterface
         }
 
         $permission = array_flip((new \ReflectionClass(ContaoCorePermissions::class))->getConstants())[$attribute];
-        $message = sprintf(
-            'Access denied to %s at location "%s".',
-            strtolower(str_replace('_', ' ', substr($permission, 9))),
-            $location
-        );
+        $action = strtolower(str_replace('_', ' ', substr($permission, 9)));
 
-        $exception = new AccessDeniedException($message);
+        $exception = new AccessDeniedException(sprintf('Access denied to %s at location "%s".', $action, $location));
         $exception->setAttributes($attribute);
         $exception->setSubject($location);
 

@@ -9,11 +9,11 @@ use Psr\Http\Message\UriInterface;
 use Symfony\Component\Uid\Uuid;
 
 /**
- * @internal
- *
  * This trait simply delegates all methods of the VirtualFilesystemInterface to
  * an $inner implementation. With this, decoration of only a few methods is
  * possible with less boilerplate.
+ *
+ * @internal
  */
 trait VirtualFilesystemDecoratorTrait
 {
@@ -114,7 +114,7 @@ trait VirtualFilesystemDecoratorTrait
         $this->inner->setExtraMetadata($location, $metadata);
     }
 
-    public function generatePublicUri(Uuid|string $location, OptionsInterface $options = null): UriInterface|null
+    public function generatePublicUri(Uuid|string $location, OptionsInterface|null $options = null): UriInterface|null
     {
         return $this->inner->generatePublicUri($location, $options);
     }

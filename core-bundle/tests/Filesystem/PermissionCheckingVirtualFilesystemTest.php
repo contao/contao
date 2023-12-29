@@ -33,15 +33,7 @@ class PermissionCheckingVirtualFilesystemTest extends TestCase
         $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
         $authorizationChecker
             ->method('isGranted')
-            ->willReturnCallback(
-                static function (string $attribute) use ($permission): bool {
-                    if ($attribute === $permission) {
-                        return false;
-                    }
-
-                    return true;
-                }
-            )
+            ->willReturnCallback(static fn (string $attribute): bool => $attribute !== $permission)
         ;
 
         $container = new Container();
@@ -49,7 +41,7 @@ class PermissionCheckingVirtualFilesystemTest extends TestCase
 
         $customViewVirtualFilesystem = new PermissionCheckingVirtualFilesystem(
             $virtualFilesystem,
-            new Security($container)
+            new Security($container),
         );
 
         $this->expectException(AccessDeniedException::class);
