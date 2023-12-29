@@ -1,7 +1,5 @@
 import { Controller } from '@hotwired/stimulus'
 
-let initialized = false;
-
 export default class extends Controller {
     static targets = ['scrollTo'];
     static values = {
@@ -21,37 +19,40 @@ export default class extends Controller {
 
     // BC layers to automatically register the Stimulus controller if the legacy methods are used
     static afterLoad(identifier, application) {
-        const initialize = () => {
-            if (!initialized) {
+        const loadFallback = () => {
+            return new Promise((resolve, reject) => {
+                const controller = application.getControllerForElementAndIdentifier(document.body, identifier);
+
+                if (controller) {
+                    resolve(controller);
+                    return;
+                }
+
                 document.body.dataset.controller += ` ${ identifier }`;
-            }
+
+                setTimeout(() => {
+                    const controller = application.getControllerForElementAndIdentifier(document.body, identifier);
+                    controller && resolve(controller) || reject(controller);
+                }, 100);
+            });
         }
 
         if (window.Backend && !window.Backend.initScrollOffset) {
             window.Backend.initScrollOffset = () => {
                 console.warn('Backend.initScrollOffset() is deprecated. Please use the Stimulus controller instead.');
-                initialize();
+                loadFallback();
             }
         }
 
         if (window.Backend && !window.Backend.getScrollOffset) {
             window.Backend.getScrollOffset = () => {
                 console.warn('Backend.getScrollOffset() is deprecated. Please use the Stimulus controller instead.');
-                initialize();
-
-                // Optimistically wait until Stimulus has registered the new controller
-                setTimeout(
-                    () => {
-                        application.getControllerForElementAndIdentifier(document.body, identifier).remove();
-                    },
-                    100
-                );
+                loadFallback().then((controller) => controller.discard());
             }
         }
     }
 
     initialize () {
-        initialized = true;
         this.store = this.store.bind(this);
     }
 
@@ -90,7 +91,7 @@ export default class extends Controller {
         this.offset = window.scrollY
     }
 
-    remove () {
+    discard () {
         this.offset = null;
     }
 
