@@ -269,10 +269,7 @@ $GLOBALS['TL_CTE'] = array
 	(
 		'accordionSingle' => ContentAccordion::class,
 		'accordionStart'  => ContentAccordionStart::class,
-		'accordionStop'   => ContentAccordionStop::class
-	),
-	'slider' => array
-	(
+		'accordionStop'   => ContentAccordionStop::class,
 		'sliderStart'     => ContentSliderStart::class,
 		'sliderStop'      => ContentSliderStop::class
 	),

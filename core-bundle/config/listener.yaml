@@ -123,6 +123,9 @@ services:
         arguments:
             - '@database_connection'
 
+    contao.listener.data_container.logout_page_redirect:
+        class: Contao\CoreBundle\EventListener\DataContainer\LogoutPageRedirectListener
+
     contao.listener.data_container.member_groups:
         class: Contao\CoreBundle\EventListener\DataContainer\MemberGroupsListener
         arguments:
