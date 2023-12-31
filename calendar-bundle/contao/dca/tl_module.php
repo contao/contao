@@ -138,7 +138,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_featured'] = array
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_keepCanonical'] = array
 (
 	'inputType'               => 'checkbox',
-	'default'                 => true,
 	'eval'                    => array('tl_class'=>'w50'),
 	'sql'                     => array('type' => 'boolean', 'default' => false)
 );
