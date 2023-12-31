@@ -114,11 +114,11 @@ class DefaultOperationsListener
                 ];
 
                 if ($isTreeMode) {
-                    $operations['copyChilds'] = [
-                        'href' => 'act=paste&amp;mode=copy&amp;childs=1',
-                        'icon' => 'copychilds.svg',
+                    $operations['copyChildren'] = [
+                        'href' => 'act=paste&amp;mode=copy&amp;children=1',
+                        'icon' => 'copychildren.svg',
                         'attributes' => 'onclick="Backend.getScrollOffset()"',
-                        'button_callback' => $this->copyChildsCallback($table),
+                        'button_callback' => $this->copyChildrenCallback($table),
                     ];
                 }
             }
@@ -168,16 +168,16 @@ class DefaultOperationsListener
     {
         return function (DataContainerOperation $operation) use ($actionClass, $table): void {
             if (!$this->isGranted($actionClass, $table, $operation)) {
-                $this->disableOperation($operation);
+                $operation->disable();
             }
         };
     }
 
-    private function copyChildsCallback(string $table): \Closure
+    private function copyChildrenCallback(string $table): \Closure
     {
         return function (DataContainerOperation $operation) use ($table): void {
             if (!$this->isGranted(CreateAction::class, $table, $operation)) {
-                $this->disableOperation($operation);
+                $operation->disable();
 
                 return;
             }
@@ -188,7 +188,7 @@ class DefaultOperationsListener
             );
 
             if ($childCount < 1) {
-                $this->disableOperation($operation);
+                $operation->disable();
             }
         };
     }
@@ -244,14 +244,5 @@ class DefaultOperationsListener
         }
 
         return new CreateAction($table, $new);
-    }
-
-    private function disableOperation(DataContainerOperation $operation): void
-    {
-        unset($operation['route'], $operation['href']);
-
-        if (isset($operation['icon'])) {
-            $operation['icon'] = str_replace('.svg', '--disabled.svg', $operation['icon']);
-        }
     }
 }

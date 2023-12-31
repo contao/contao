@@ -621,7 +621,7 @@ abstract class System
 		// HOOK: allow adding custom logic
 		if (isset($GLOBALS['TL_HOOKS']['setCookie']) && \is_array($GLOBALS['TL_HOOKS']['setCookie']))
 		{
-			trigger_deprecation('contao/core-bundle', '5.3', 'Using the "setCookie" hook has been deprecated and will no longer work in Contao 6. Use kernel.response events instead.');
+			trigger_deprecation('contao/core-bundle', '5.3', 'Using the "setCookie" hook has been deprecated and will no longer work in Contao 6. Use the kernel.response events instead.');
 
 			foreach ($GLOBALS['TL_HOOKS']['setCookie'] as $callback)
 			{

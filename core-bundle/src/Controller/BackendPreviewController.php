@@ -15,12 +15,16 @@ namespace Contao\CoreBundle\Controller;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
+use Nyholm\Psr7\Uri;
+use Scheb\TwoFactorBundle\Security\Http\Authenticator\TwoFactorAuthenticator;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Http\LoginLink\LoginLinkHandlerInterface;
 
 /**
  * This controller handles the back end preview call and redirects to the
@@ -34,7 +38,9 @@ class BackendPreviewController
         private readonly string $previewScript,
         private readonly FrontendPreviewAuthenticator $previewAuthenticator,
         private readonly EventDispatcherInterface $dispatcher,
-        private readonly AuthorizationCheckerInterface $authorizationChecker,
+        private readonly Security $security,
+        private readonly LoginLinkHandlerInterface $loginLinkHandler,
+        private readonly UriSigner $uriSigner,
     ) {
     }
 
@@ -49,7 +55,7 @@ class BackendPreviewController
             return new RedirectResponse($request->getBasePath().$this->previewScript.$request->getPathInfo().($qs ? '?'.$qs : ''));
         }
 
-        if (!$this->authorizationChecker->isGranted('ROLE_USER')) {
+        if (!$this->security->isGranted('ROLE_USER')) {
             return new Response('Access denied', Response::HTTP_FORBIDDEN);
         }
 
@@ -68,10 +74,31 @@ class BackendPreviewController
             return $response;
         }
 
-        if ($targetUrl = $urlConvertEvent->getUrl()) {
+        if (!$targetUrl = $urlConvertEvent->getUrl()) {
+            return new RedirectResponse($request->getBaseUrl().'/');
+        }
+
+        $targetUri = new Uri($targetUrl);
+
+        if ($request->getHost() === $targetUri->getHost() || !($user = $this->security->getUser())) {
             return new RedirectResponse($targetUrl);
         }
 
-        return new RedirectResponse($request->getBaseUrl().'/');
+        $loginLink = $this->loginLinkHandler->createLoginLink($user, Request::create($targetUrl));
+        $loginUri = new Uri($loginLink->getUrl());
+
+        parse_str($loginUri->getQuery(), $query);
+
+        $previewUri = (new Uri($request->getUri()))
+            ->withScheme($targetUri->getScheme())
+            ->withHost($targetUri->getHost())
+        ;
+
+        $query['_target_path'] = base64_encode((string) $previewUri);
+        $query[TwoFactorAuthenticator::FLAG_2FA_COMPLETE] = (bool) $this->security->getToken()?->hasAttribute(TwoFactorAuthenticator::FLAG_2FA_COMPLETE);
+
+        $targetUrl = $this->uriSigner->sign((string) $loginUri->withQuery(http_build_query($query)));
+
+        return new RedirectResponse($targetUrl);
     }
 }

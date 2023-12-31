@@ -20,17 +20,6 @@ use Monolog\Logger;
 
 class ContaoTableHandlerTest extends TestCase
 {
-    public function testSupportsReadingAndWritingTheDbalServiceName(): void
-    {
-        $handler = new ContaoTableHandler();
-
-        $this->assertSame('doctrine.dbal.default_connection', $handler->getDbalServiceName());
-
-        $handler->setDbalServiceName('foobar');
-
-        $this->assertSame('foobar', $handler->getDbalServiceName());
-    }
-
     public function testHandlesContaoRecords(): void
     {
         $record = [
@@ -45,25 +34,19 @@ class ContaoTableHandlerTest extends TestCase
 
         $connection = $this->createMock(Connection::class);
         $connection
+            ->expects($this->once())
             ->method('insert')
             ->willReturn(1)
         ;
 
-        $container = $this->getContainerWithContaoConfiguration();
-        $container->set('doctrine.dbal.default_connection', $connection);
-
-        $handler = new ContaoTableHandler();
-        $handler->setContainer($container);
+        $handler = new ContaoTableHandler(static fn () => $connection);
 
         $this->assertFalse($handler->handle($record));
     }
 
     public function testDoesNotHandleARecordIfTheLogLevelDoesNotMatch(): void
     {
-        $handler = new ContaoTableHandler();
-        $handler->setLevel(Logger::INFO);
-
-        $this->assertFalse($handler->handle([
+        $record = [
             'level' => Logger::DEBUG,
             'level_name' => 'DEBUG',
             'channel' => 'test',
@@ -71,7 +54,18 @@ class ContaoTableHandlerTest extends TestCase
             'context' => [],
             'datetime' => new \DateTimeImmutable(),
             'message' => 'foobar',
-        ]));
+        ];
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->never())
+            ->method('insert')
+        ;
+
+        $handler = new ContaoTableHandler(static fn () => $connection);
+        $handler->setLevel(Logger::INFO);
+
+        $this->assertFalse($handler->handle($record));
     }
 
     public function testDoesNotHandleARecordWithoutContaoContext(): void
@@ -86,24 +80,13 @@ class ContaoTableHandlerTest extends TestCase
             'message' => 'foobar',
         ];
 
-        $handler = new ContaoTableHandler();
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->never())
+            ->method('insert')
+        ;
 
-        $this->assertFalse($handler->handle($record));
-    }
-
-    public function testDoesNotHandleTheRecordIfThereIsNoContainer(): void
-    {
-        $record = [
-            'level' => Logger::DEBUG,
-            'level_name' => 'DEBUG',
-            'channel' => 'test',
-            'extra' => ['contao' => new ContaoContext('foobar')],
-            'context' => [],
-            'datetime' => new \DateTimeImmutable(),
-            'message' => 'foobar',
-        ];
-
-        $handler = new ContaoTableHandler();
+        $handler = new ContaoTableHandler(static fn () => $connection);
 
         $this->assertFalse($handler->handle($record));
     }

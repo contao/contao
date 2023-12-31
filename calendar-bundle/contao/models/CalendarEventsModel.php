@@ -10,8 +10,8 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\File\ModelMetadataTrait;
 use Contao\Model\Collection;
+use Contao\Model\MetadataTrait;
 
 /**
  * Reads and writes events
@@ -207,7 +207,7 @@ use Contao\Model\Collection;
  */
 class CalendarEventsModel extends Model
 {
-	use ModelMetadataTrait;
+	use MetadataTrait;
 
 	/**
 	 * Table name

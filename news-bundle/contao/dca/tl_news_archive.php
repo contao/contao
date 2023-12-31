@@ -200,7 +200,7 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 class tl_news_archive extends Backend
 {
 	/**
-	 * Set root IDs and unset allowComments field if no comments bundle available.
+	 * Set the root IDs and unset the "allowComments" field if the comments bundle is not available.
 	 */
 	public function adjustDca()
 	{
