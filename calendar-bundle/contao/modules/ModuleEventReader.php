@@ -179,7 +179,7 @@ class ModuleEventReader extends Events
 
 				$htmlHeadBag->setCanonicalUri($url);
 			}
-			elseif ($objCalendar->enableCanonical)
+			elseif (!$objCalendar->cal_keepCanonical)
 			{
 				$htmlHeadBag->setCanonicalUri(Events::generateEventUrl($objEvent, true));
 			}

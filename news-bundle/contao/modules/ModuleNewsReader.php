@@ -184,7 +184,7 @@ class ModuleNewsReader extends ModuleNews
 
 				$htmlHeadBag->setCanonicalUri($url);
 			}
-			elseif ($objArchive->enableCanonical)
+			elseif (!$objArchive->news_keepCanonical)
 			{
 				$htmlHeadBag->setCanonicalUri(News::generateNewsUrl($objArticle, false, true));
 			}

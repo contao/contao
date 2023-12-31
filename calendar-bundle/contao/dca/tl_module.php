@@ -22,7 +22,7 @@ $GLOBALS['TL_DCA']['tl_module']['palettes']['__selector__'][] = 'cal_format';
 // Add palettes to tl_module
 $GLOBALS['TL_DCA']['tl_module']['palettes']['calendar']         = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_noSpan,cal_startDay,cal_featured;{redirect_legend},jumpTo;{template_legend:hide},cal_ctemplate,customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID';
 $GLOBALS['TL_DCA']['tl_module']['palettes']['eventlist']        = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_noSpan,cal_format,cal_featured,cal_order,cal_readerModule,cal_limit,perPage,cal_ignoreDynamic,cal_hideRunning;{template_legend:hide},cal_template,customTpl;{image_legend:hide},imgSize;{protected_legend:hide},protected;{expert_legend:hide},cssID';
-$GLOBALS['TL_DCA']['tl_module']['palettes']['eventreader']      = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_hideRunning,overviewPage,customLabel;{template_legend:hide},cal_template,customTpl;{image_legend},imgSize;{protected_legend:hide},protected;{expert_legend:hide},cssID';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['eventreader']      = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_hideRunning,cal_keepCanonical,overviewPage,customLabel;{template_legend:hide},cal_template,customTpl;{image_legend},imgSize;{protected_legend:hide},protected;{expert_legend:hide},cssID';
 $GLOBALS['TL_DCA']['tl_module']['palettes']['eventmenu']        = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_noSpan,cal_format,cal_featured,cal_order,cal_showQuantity;{redirect_legend},jumpTo;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID';
 $GLOBALS['TL_DCA']['tl_module']['palettes']['eventmenucal_day'] = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_noSpan,cal_format,cal_featured,cal_startDay,cal_showQuantity;{redirect_legend},jumpTo;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID';
 
@@ -133,6 +133,14 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_featured'] = array
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module']['events'],
 	'eval'                    => array('tl_class'=>'w50'),
 	'sql'                     => "varchar(16) COLLATE ascii_bin NOT NULL default 'all_items'"
+);
+
+$GLOBALS['TL_DCA']['tl_module']['fields']['cal_keepCanonical'] = array
+(
+	'inputType'               => 'checkbox',
+	'default'                 => true,
+	'eval'                    => array('tl_class'=>'w50'),
+	'sql'                     => array('type' => 'boolean', 'default' => false)
 );
 
 $bundles = System::getContainer()->getParameter('kernel.bundles');

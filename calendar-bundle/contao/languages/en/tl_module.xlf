@@ -80,6 +80,12 @@
       <trans-unit id="tl_module.cal_featured.1">
         <source>Here you can choose how featured events are handled.</source>
       </trans-unit>
+      <trans-unit id="tl_module.cal_keepCanonical.0">
+        <source>Use the current URL for canonical links</source>
+      </trans-unit>
+      <trans-unit id="tl_module.cal_keepCanonical.1">
+        <source>Keeps the current URL instead of the configured reader page for canonical links.</source>
+      </trans-unit>
       <trans-unit id="tl_module.cal_list">
         <source>Event list</source>
       </trans-unit>
