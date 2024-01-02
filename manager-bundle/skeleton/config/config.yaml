@@ -5,8 +5,6 @@ imports:
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
-    env(DNS_MAPPING): '[]'
-    contao.dns_mapping: '%env(json:DNS_MAPPING)%'
 
 # Framework configuration
 framework:
