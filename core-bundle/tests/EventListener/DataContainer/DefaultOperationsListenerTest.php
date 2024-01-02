@@ -141,10 +141,10 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        $this->assertSame(['edit', 'copy', 'copyChilds', 'cut', 'delete', 'show'], array_keys($operations));
+        $this->assertSame(['edit', 'copy', 'copyChildren', 'cut', 'delete', 'show'], array_keys($operations));
         $this->assertOperation($operations['edit'], 'act=edit', 'edit.svg', true);
         $this->assertOperation($operations['copy'], 'act=paste&amp;mode=copy', 'copy.svg', true);
-        $this->assertOperation($operations['copyChilds'], 'act=paste&amp;mode=copy&amp;childs=1', 'copychilds.svg', true);
+        $this->assertOperation($operations['copyChildren'], 'act=paste&amp;mode=copy&amp;children=1', 'copychildren.svg', true);
         $this->assertOperation($operations['cut'], 'act=paste&amp;mode=cut', 'cut.svg', true);
         $this->assertOperation($operations['delete'], 'act=delete', 'delete.svg', true);
         $this->assertOperation($operations['show'], 'act=show', 'show.svg', false);
@@ -596,8 +596,8 @@ class DefaultOperationsListenerTest extends TestCase
             ['foo' => 'bar', 'tstamp' => 0],
         ];
 
-        yield 'copyChilds operation in tree mode' => [
-            'copyChilds',
+        yield 'copyChildren operation in tree mode' => [
+            'copyChildren',
             CreateAction::class,
             ['id' => 15, 'pid' => 42, 'sorting' => 128, 'foo' => 'bar'],
             ['list' => ['sorting' => ['mode' => DataContainer::MODE_TREE]]],

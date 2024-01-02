@@ -138,12 +138,9 @@ class ModuleArticle extends Module
 				$this->cssID = $arrCss;
 			}
 
-			$article = $this->alias ?: $this->id;
-			$href = '/articles/' . (($this->inColumn != 'main') ? $this->inColumn . ':' : '') . $article;
-
 			$this->Template->teaserOnly = true;
 			$this->Template->headline = $this->headline;
-			$this->Template->href = $objPage->getFrontendUrl($href);
+			$this->Template->href = $objPage->getFrontendUrl('/articles/' . ($this->alias ?: $this->id));
 			$this->Template->teaser = $this->teaser ?? '';
 			$this->Template->readMore = StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $this->headline), true);
 			$this->Template->more = $GLOBALS['TL_LANG']['MSC']['more'];
@@ -152,9 +149,7 @@ class ModuleArticle extends Module
 		}
 
 		// Get section and article alias
-		$chunks = explode(':', Input::get('articles') ?? '');
-		$strSection = $chunks[0] ?? null;
-		$strArticle = $chunks[1] ?? $strSection;
+		$strArticle = Input::get('articles');
 
 		// Overwrite the page metadata (see #2853, #4955 and #87)
 		if (!$this->blnNoMarkup && $strArticle && ($strArticle == $this->id || $strArticle == $this->alias) && $this->title)
