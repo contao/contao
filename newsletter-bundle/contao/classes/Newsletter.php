@@ -17,6 +17,7 @@ use Contao\NewsletterBundle\Event\SendNewsletterEvent;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Mailer\Exception\TransportException;
 use Symfony\Component\Mime\Exception\RfcComplianceException;
+use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
 
 /**
  * Provide methods to handle newsletters.
@@ -297,7 +298,8 @@ class Newsletter extends Backend
     <td>' . implode(', ', $arrAttachments) . '</td>
   </tr>' : '') . '
 </table>' . (!$objNewsletter->sendText ? '
-<div class="preview_html">
+<div class="preview_html">' . ($objNewsletter->preheader ? '
+<p class="preheader">' . $objNewsletter->preheader . '</p>' : '') . '
 ' . $html . '
 </div>' : '') . '
 <div class="preview_text">
@@ -402,6 +404,11 @@ class Newsletter extends Backend
 	 */
 	protected function sendNewsletter(Email $objEmail, Result $objNewsletter, $arrRecipient, $text, $html, $css=null)
 	{
+		if (\count(\func_get_args()) > 5)
+		{
+			trigger_deprecation('contao/newsletter-bundle', '5.3', 'Passing CSS to the Newsletter::sendNewsletter() method has been deprecated and will no longer work in Contao 6. Add the CSS in the template instead.');
+		}
+
 		$simpleTokenParser = System::getContainer()->get('contao.string.simple_token_parser');
 
 		// Newsletters with an unsubscribe header are less likely to be blocked (see #2174)
@@ -418,12 +425,13 @@ class Newsletter extends Backend
 			$objTemplate = new BackendTemplate($objNewsletter->template ?: 'mail_default');
 			$objTemplate->setData($objNewsletter->row());
 			$objTemplate->title = $objNewsletter->subject;
+			$objTemplate->preheader = $objNewsletter->preheader;
 			$objTemplate->body = $simpleTokenParser->parse($html, $arrRecipient);
 			$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 			$objTemplate->recipient = $arrRecipient['email'];
 
-			// Parse template
-			$objEmail->html = $objTemplate->parse();
+			// Parse the template
+			$objEmail->html = (new CssToInlineStyles())->convert($objTemplate->parse());
 			$objEmail->imageDir = System::getContainer()->getParameter('kernel.project_dir') . '/';
 		}
 
