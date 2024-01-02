@@ -17,9 +17,9 @@ Incomplete pull requests will be moved to the next milestone after the deadline.
 
 ## Review
 
-Pull requests will be reviwed and merged until mid-January (February release) and mid-July (August release). During this
-time, there will most likely be questions or requests for changes that need to be addressed by the creator of the pull
-request. If there is no agreement by the end of the review phase, the pull request is moved to the next milestone.
+Pull requests will be reviewed and merged until mid-January (February release) and mid-July (August release). During
+this time, there will most likely be questions or requests for changes that need to be addressed by the creator of the
+pull request. If there is no agreement by the end of the review phase, the pull request is moved to the next milestone.
 
 ## Release candidate
 
