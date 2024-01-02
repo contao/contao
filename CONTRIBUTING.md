@@ -6,7 +6,14 @@ every February and August. This results in the following deadlines:
 ## Development
 
 Pull requests that add new features must be complete and submitted by the **end of December** (February release) and the
-**end of June** (August release). Incomplete pull requests will be moved to the next milestone after the deadline.
+**end of June** (August release). A pull request is considered "complete" if it meets the following requirements:
+
+ * The PR must no longer be a draft.
+ * All functions must be implemented.
+ * All unit tests must be in place.
+ * The CI checks must not fail.
+
+Incomplete pull requests will be moved to the next milestone after the deadline.
 
 ## Review
 
