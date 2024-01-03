@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\EventListener\DataContainer\Content;
+namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\DataContainer;
 use Symfony\Contracts\Translation\TranslatorInterface;

@@ -73,7 +73,7 @@ services:
             - '@request_stack'
 
     contao.listener.data_container.content.description_list_label:
-        class: Contao\CoreBundle\EventListener\DataContainer\Content\DescriptionListLabelListener
+        class: Contao\CoreBundle\EventListener\DataContainer\DescriptionListLabelListener
         public: true
         arguments:
             - '@translator'

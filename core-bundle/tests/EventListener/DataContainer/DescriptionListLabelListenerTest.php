@@ -10,9 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\EventListener\DataContainer\Content;
+namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
-use Contao\CoreBundle\EventListener\DataContainer\Content\DescriptionListLabelListener;
+use Contao\CoreBundle\EventListener\DataContainer\DescriptionListLabelListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -36,7 +36,6 @@ class DescriptionListLabelListenerTest extends TestCase
         ;
 
         $listener = new DescriptionListLabelListener($translator);
-
         $attributes = $listener([], $dc);
 
         $this->assertSame('tl_content.dl_label.0', $attributes['label']);
@@ -56,8 +55,8 @@ class DescriptionListLabelListenerTest extends TestCase
         ;
 
         $listener = new DescriptionListLabelListener($translator);
-
         $attributes = $listener([]);
+
         $this->assertEmpty($attributes);
     }
 
@@ -77,8 +76,8 @@ class DescriptionListLabelListenerTest extends TestCase
         ;
 
         $listener = new DescriptionListLabelListener($translator);
-
         $attributes = $listener([], $dc);
+
         $this->assertEmpty($attributes);
     }
 }
