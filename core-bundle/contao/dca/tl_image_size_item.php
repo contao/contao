@@ -34,7 +34,9 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
-				'pid' => 'index'
+				'pid' => 'index',
+				'tstamp' => 'index',
+				'sorting' => 'index',
 			)
 		)
 	),

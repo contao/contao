@@ -29,7 +29,8 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
-				'pid' => 'index'
+				'pid' => 'index',
+				'tstamp' => 'index',
 			)
 		),
 		'onload_callback' => array
