@@ -13,13 +13,13 @@ declare(strict_types=1);
 namespace Contao\CommentsBundle\Tests\EventListener\DataContainer;
 
 use Contao\CalendarBundle\ContaoCalendarBundle;
-use Contao\CommentsBundle\EventListener\DataContainer\CommentsConditionalFieldsListener;
+use Contao\CommentsBundle\EventListener\DataContainer\AddCommentFieldsListener;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\FaqBundle\ContaoFaqBundle;
 use Contao\NewsBundle\ContaoNewsBundle;
 use Contao\TestCase\ContaoTestCase;
 
-class CommentsConditionalFieldsListenerTest extends ContaoTestCase
+class AddCommentFieldsListenerTest extends ContaoTestCase
 {
     protected function tearDown(): void
     {
@@ -36,7 +36,7 @@ class CommentsConditionalFieldsListenerTest extends ContaoTestCase
         ];
 
         // Test will fail if tl_module is set due to palettes not existing
-        $listener = new CommentsConditionalFieldsListener(['ContaoNewsBundle' => ContaoNewsBundle::class]);
+        $listener = new AddCommentFieldsListener(['ContaoNewsBundle' => ContaoNewsBundle::class]);
         $listener('tl_module');
 
         $this->assertArrayNotHasKey('tl_module', $GLOBALS['TL_DCA']);
@@ -55,7 +55,7 @@ class CommentsConditionalFieldsListenerTest extends ContaoTestCase
             'eventreader' => $palettes,
         ];
 
-        $listener = new CommentsConditionalFieldsListener([
+        $listener = new AddCommentFieldsListener([
             'ContaoNewsBundle' => ContaoNewsBundle::class,
             'ContaoCalendarBundle' => ContaoCalendarBundle::class,
             'ContaoFaqBundle' => ContaoFaqBundle::class,
@@ -75,7 +75,7 @@ class CommentsConditionalFieldsListenerTest extends ContaoTestCase
         /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_module']['palettes']['fooreader'] = $palettes;
 
-        $listener = new CommentsConditionalFieldsListener(['FooBundle' => ContaoModuleBundle::class]);
+        $listener = new AddCommentFieldsListener(['FooBundle' => ContaoModuleBundle::class]);
         $listener('tl_module');
 
         $this->assertSame($palettes, $GLOBALS['TL_DCA']['tl_module']['palettes']['fooreader']);
@@ -127,7 +127,7 @@ class CommentsConditionalFieldsListenerTest extends ContaoTestCase
             'fields' => [],
         ];
 
-        $listener = new CommentsConditionalFieldsListener($bundles);
+        $listener = new AddCommentFieldsListener($bundles);
         $listener($table);
 
         $this->assertSame($expected, $GLOBALS['TL_DCA'][$table]['palettes']['default']);
@@ -159,7 +159,7 @@ class CommentsConditionalFieldsListenerTest extends ContaoTestCase
             $GLOBALS['TL_DCA'][$table]['palettes']['external'] = $palettes;
         }
 
-        $listener = new CommentsConditionalFieldsListener($bundles);
+        $listener = new AddCommentFieldsListener($bundles);
         $listener($table);
 
         $this->assertContains('allowComments', $GLOBALS['TL_DCA'][$table]['list']['sorting']['headerFields']);

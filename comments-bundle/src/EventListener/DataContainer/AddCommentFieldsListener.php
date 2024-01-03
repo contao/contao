@@ -16,7 +16,7 @@ use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 
 #[AsHook('loadDataContainer')]
-class CommentsConditionalFieldsListener
+class AddCommentFieldsListener
 {
     public function __construct(private readonly array $bundles)
     {

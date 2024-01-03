@@ -8,7 +8,7 @@ services:
             - '@contao.framework'
             - '@?monolog.logger.contao.cron'
 
-    contao_comments.listener.data_container.comments_conditional_fields:
-        class: Contao\CommentsBundle\EventListener\DataContainer\CommentsConditionalFieldsListener
+    contao_comments.listener.data_container.add_comment_fields:
+        class: Contao\CommentsBundle\EventListener\DataContainer\AddCommentFieldsListener
         arguments:
             - '%kernel.bundles%'
