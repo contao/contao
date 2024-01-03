@@ -82,6 +82,7 @@ services:
         class: Contao\NewsBundle\EventListener\SitemapListener
         arguments:
             - '@contao.framework'
+            - '@security.helper'
         tags:
             - kernel.event_listener
 
@@ -103,7 +104,12 @@ services:
         tags:
             - { name: contao.picker_provider, priority: 128 }
 
+    contao_news.security.news_access_voter:
+        class: Contao\NewsBundle\Security\Voter\NewsAccessVoter
+        arguments:
+            - '@security.access.decision_manager'
+
     contao_news.security.news_archive_access_voter:
         class: Contao\NewsBundle\Security\Voter\NewsArchiveAccessVoter
         arguments:
-            - '@security.helper'
+            - '@security.access.decision_manager'

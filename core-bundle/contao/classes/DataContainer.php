@@ -945,7 +945,11 @@ abstract class DataContainer extends Backend
 			$isPopup = $k == 'show';
 			$href = null;
 
-			if (!empty($config['route']))
+			if ($config->getUrl() !== null)
+			{
+				$href = $config->getUrl();
+			}
+			elseif (!empty($config['route']))
 			{
 				$params = array('id' => $arrRow['id']);
 
@@ -961,7 +965,7 @@ abstract class DataContainer extends Backend
 				$href = $this->addToUrl(($config['href'] ?? '') . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : '') . ($isPopup ? '&amp;popup=1' : ''));
 			}
 
-			parse_str(StringUtil::decodeEntities($config['href'] ?? ''), $params);
+			parse_str(StringUtil::decodeEntities($config['href'] ?? $v['href'] ?? ''), $params);
 
 			if (($params['act'] ?? null) == 'toggle' && isset($params['field']))
 			{
@@ -1668,7 +1672,7 @@ abstract class DataContainer extends Backend
 				}
 				elseif ((($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['isAssociative'] ?? null) || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$table]['fields'][$v]['options'] ?? null)) && isset($GLOBALS['TL_DCA'][$table]['fields'][$v]['options'][$row[$v]]))
 				{
-					$args[$k] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['options'][$row[$v]] ?? null;
+					$args[$k] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['options'][$row[$v]];
 				}
 				else
 				{
@@ -1805,7 +1809,7 @@ abstract class DataContainer extends Backend
 	 * @throws AccessDeniedException     if the current user has no read permission
 	 * @return array<string, mixed>|null
 	 */
-	public function getCurrentRecord(string|int $id = null, string $table = null): ?array
+	public function getCurrentRecord(string|int $id = null, string $table = null): array|null
 	{
 		$id = $id ?: $this->intId;
 		$table = $table ?: $this->strTable;

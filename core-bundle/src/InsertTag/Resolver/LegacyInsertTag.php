@@ -22,7 +22,6 @@ use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\Database;
-use Contao\Database\Result;
 use Contao\Date;
 use Contao\Environment;
 use Contao\File;
@@ -294,7 +293,6 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
             case 'article':
             case 'article_open':
             case 'article_url':
-            case 'article_title':
                 $objArticle = ArticleModel::findByIdOrAlias($insertTag->getParameters()->get(0));
 
                 if (!$objArticle instanceof ArticleModel) {
@@ -330,10 +328,13 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                     case 'article_url':
                         $result = $strUrl;
                         break;
+                }
+                break;
 
-                    case 'article_title':
-                        $result = StringUtil::specialcharsAttribute($objArticle->title);
-                        break;
+            // Article title
+            case 'article_title':
+                if ($objArticle = ArticleModel::findByIdOrAlias($insertTag->getParameters()->get(0))) {
+                    $result = StringUtil::specialcharsAttribute($objArticle->title);
                 }
                 break;
 
@@ -360,8 +361,6 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 }
 
                 $strQuery .= ' FROM tl_content';
-
-                /** @var Result&object{tc:int, tn:int, te:int} $objUpdate */
                 $objUpdate = Database::getInstance()->query($strQuery);
 
                 if ($objUpdate->numRows) {
@@ -630,7 +629,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                     break;
                 }
 
-                trigger_deprecation('contao/core-bundle', '5.0', 'Using the file insert tag to include templates has been deprecated and will no longer work in Contao 6.0. Use the Template content element instead.');
+                trigger_deprecation('contao/core-bundle', '5.0', 'Using the file insert tag to include templates has been deprecated and will no longer work in Contao 6. Use the "Template" content element instead.');
 
                 $arrGet = $_GET;
                 $strFile = $insertTag->getParameters()->get(0);

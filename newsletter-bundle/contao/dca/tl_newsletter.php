@@ -9,16 +9,13 @@
  */
 
 use Contao\Backend;
-use Contao\BackendUser;
 use Contao\Config;
 use Contao\Controller;
-use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\DC_Table;
 use Contao\Environment;
-use Contao\Input;
 use Contao\NewsletterChannelModel;
 use Contao\StringUtil;
 use Contao\System;
@@ -32,10 +29,6 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		'ptable'                      => 'tl_newsletter_channel',
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'subject',
-		'onload_callback' => array
-		(
-			array('tl_newsletter', 'checkPermission')
-		),
 		'sql' => array
 		(
 			'keys' => array
@@ -57,7 +50,8 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'panelLayout'             => 'filter;sort,search,limit',
 			'defaultSearchField'      => 'subject',
 			'child_record_callback'   => array('tl_newsletter', 'listNewsletters'),
-			'renderAsGrid'            => true
+			'renderAsGrid'            => true,
+			'limitHeight'             => 160
 		),
 		'operations' => array
 		(
@@ -99,7 +93,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('addFile'),
-		'default'                     => '{title_legend},subject,alias;{html_legend},content;{text_legend:hide},text;{attachment_legend},addFile;{template_legend:hide},template;{sender_legend:hide},sender,senderName,mailerTransport;{expert_legend:hide},sendText,externalImages'
+		'default'                     => '{title_legend},subject,alias;{html_legend},preheader,content;{text_legend:hide},text;{attachment_legend},addFile;{template_legend:hide},template;{sender_legend:hide},sender,senderName,mailerTransport;{expert_legend:hide},sendText,externalImages'
 	),
 
 	// Sub-palettes
@@ -144,6 +138,13 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 				array('tl_newsletter', 'generateAlias')
 			),
 			'sql'                     => "varchar(255) BINARY NOT NULL default ''"
+		),
+		'preheader' => array
+		(
+			'search'                  => true,
+			'inputType'               => 'text',
+			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255),
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'content' => array
 		(
@@ -260,130 +261,6 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 class tl_newsletter extends Backend
 {
 	/**
-	 * Check permissions to edit table tl_newsletter
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @throws AccessDeniedException
-	 */
-	public function checkPermission(DataContainer $dc)
-	{
-		$user = BackendUser::getInstance();
-
-		if ($user->isAdmin)
-		{
-			return;
-		}
-
-		// Set root IDs
-		if (empty($user->newsletters) || !is_array($user->newsletters))
-		{
-			$root = array(0);
-		}
-		else
-		{
-			$root = $user->newsletters;
-		}
-
-		$db = Database::getInstance();
-		$id = strlen(Input::get('id')) ? Input::get('id') : $dc->currentPid;
-
-		// Check current action
-		switch (Input::get('act'))
-		{
-			case 'paste':
-			case 'select':
-				// Check currentPid here (see #247)
-				if (!in_array($dc->currentPid, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to access newsletter channel ID ' . $id . '.');
-				}
-				break;
-
-			case 'create':
-				if (!Input::get('pid') || !in_array(Input::get('pid'), $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to create newsletters in channel ID ' . Input::get('pid') . '.');
-				}
-				break;
-
-			case 'cut':
-			case 'copy':
-				if (!in_array(Input::get('pid'), $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' newsletter ID ' . $id . ' to channel ID ' . Input::get('pid') . '.');
-				}
-				// no break
-
-			case 'edit':
-			case 'show':
-			case 'delete':
-				$objChannel = $db
-					->prepare("SELECT pid FROM tl_newsletter WHERE id=?")
-					->limit(1)
-					->execute($id);
-
-				if ($objChannel->numRows < 1)
-				{
-					throw new AccessDeniedException('Invalid newsletter ID ' . $id . '.');
-				}
-
-				if (!in_array($objChannel->pid, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' newsletter ID ' . $id . ' of newsletter channel ID ' . $objChannel->pid . '.');
-				}
-				break;
-
-			case 'editAll':
-			case 'deleteAll':
-			case 'overrideAll':
-			case 'cutAll':
-			case 'copyAll':
-				if (!in_array($id, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to access newsletter channel ID ' . $id . '.');
-				}
-
-				$objChannel = $db->prepare("SELECT id FROM tl_newsletter WHERE pid=?")->execute($id);
-				$objSession = System::getContainer()->get('request_stack')->getSession();
-
-				$session = $objSession->all();
-				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objChannel->fetchEach('id'));
-				$objSession->replace($session);
-				break;
-
-			default:
-				if (Input::get('act'))
-				{
-					throw new AccessDeniedException('Invalid command "' . Input::get('act') . '".');
-				}
-
-				if (Input::get('key') == 'send')
-				{
-					$objChannel = $db
-						->prepare("SELECT pid FROM tl_newsletter WHERE id=?")
-						->limit(1)
-						->execute($id);
-
-					if ($objChannel->numRows < 1)
-					{
-						throw new AccessDeniedException('Invalid newsletter ID ' . $id . '.');
-					}
-
-					if (!in_array($objChannel->pid, $root))
-					{
-						throw new AccessDeniedException('Not enough permissions to send newsletter ID ' . $id . ' of newsletter channel ID ' . $objChannel->pid . '.');
-					}
-				}
-				elseif (!in_array($id, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to access newsletter channel ID ' . $id . '.');
-				}
-				break;
-		}
-	}
-
-	/**
 	 * List records
 	 *
 	 * @param array $arrRow
@@ -394,7 +271,7 @@ class tl_newsletter extends Backend
 	{
 		return '
 <div class="cte_type ' . (($arrRow['sent'] && $arrRow['date']) ? 'published' : 'unpublished') . '"><strong>' . $arrRow['subject'] . '</strong> - ' . (($arrRow['sent'] && $arrRow['date']) ? sprintf($GLOBALS['TL_LANG']['tl_newsletter']['sentOn'], Date::parse(Config::get('datimFormat'), $arrRow['date'])) : $GLOBALS['TL_LANG']['tl_newsletter']['notSent']) . '</div>
-<div class="cte_preview limit_height' . (!Config::get('doNotCollapse') ? ' h112' : '') . '">' . (!$arrRow['sendText'] ? '
+<div class="cte_preview">' . (!$arrRow['sendText'] ? '
 ' . StringUtil::insertTagToSrc($arrRow['content']) . '<hr>' : '') . '
 <pre style="white-space:pre-wrap">' . $arrRow['text'] . '</pre>
 </div>' . "\n";

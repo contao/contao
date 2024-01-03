@@ -18,6 +18,7 @@
 	--icon-arrow-right: url("icons/arrow_right.svg");
 	--icon-visible: url("icons/visible.svg");
 	--icon-invisible: url("icons/invisible.svg");
+	--icon-loading: url("icons/loading.svg");
 }
 
 html[data-color-scheme="dark"] {
@@ -36,6 +37,19 @@ html[data-color-scheme="dark"] {
 	--icon-arrow-right: url("icons/arrow_right--dark.svg");
 	--icon-visible: url("icons/visible--dark.svg");
 	--icon-invisible: url("icons/invisible--dark.svg");
+	--icon-loading: url("icons/loading--dark.svg");
+}
+
+/* Account for the jump links bar */
+html {
+	scroll-padding-top: 36px;
+	scroll-behavior: smooth;
+}
+
+@media screen and (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
 }
 
 /* Body */
@@ -474,7 +488,7 @@ body.popup {
 /* Buttons */
 #tl_buttons {
 	margin: 0;
-	padding: 12px 15px;
+	padding: 9px 15px;
 	text-align: right;
 }
 
@@ -720,6 +734,64 @@ h2.sub_headline {
 	margin-left: 1%;
 }
 
+/* Jump targets */
+.jump-targets {
+	min-height: 30px;
+	padding-top: 1px;
+	background: var(--panel-bg);
+	border-bottom: 1px solid var(--content-border);
+	position: sticky;
+	top: 0;
+	z-index: 3;
+}
+
+.jump-targets .inner {
+	overflow-x: scroll;
+	scrollbar-width: none;
+}
+
+.jump-targets .inner::-webkit-scrollbar {
+	display: none;
+}
+
+.jump-targets ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	white-space: nowrap;
+}
+
+.jump-targets li {
+	display: inline-block;
+	padding: 9px 10px;
+	white-space: nowrap;
+	font-size: .75rem;
+}
+
+.jump-targets button {
+	padding: 0;
+	background: none;
+	border: none;
+}
+
+.jump-targets:before, .jump-targets:after {
+	content: "";
+	display: block;
+	width: 10px;
+	height: 100%;
+	position: absolute;
+	top: 0;
+}
+
+.jump-targets:before {
+	background: linear-gradient(-90deg, transparent 0, var(--panel-bg) 50%);
+}
+
+.jump-targets:after {
+	right: 0;
+	background: linear-gradient(90deg, transparent 0, var(--panel-bg) 50%);
+}
+
 /* Boxes */
 .tl_xpl {
 	padding: 0 18px;
@@ -776,6 +848,9 @@ h2.sub_headline {
 
 .tl_formbody_submit {
 	border-top: 1px solid var(--content-border);
+	position: sticky;
+	bottom: 0;
+	z-index: 2;
 }
 
 .tl_submit_container {
@@ -852,7 +927,6 @@ h2.sub_headline {
 #tl_crawl .progress {
 	display: flex;
 	height: 20px;
-	overflow: hidden;
 	background-color: var(--tree-header);
 	border-radius: 2px;
 }
@@ -1055,27 +1129,6 @@ h2.sub_headline {
 	opacity: 0.5;
 }
 
-/* Rebuild the search index */
-#tl_rebuild_index {
-	padding: 0 18px 18px;
-	line-height: 1.3;
-}
-
-#index_loading {
-	margin: 0;
-	padding: 12px 12px 12px 24px;
-	background: url("icons/loading.svg") no-repeat left center;
-	background-size: 16px;
-	color: var(--blue);
-}
-
-#index_complete {
-	margin: 0;
-	padding: 12px 12px 12px 24px;
-	background: url("icons/ok.svg") no-repeat left center;
-	color: var(--green);
-}
-
 /* Listing */
 table.tl_listing {
 	width: 100%;
@@ -1113,6 +1166,7 @@ table.tl_listing {
 }
 
 .tl_file, .tl_file_list {
+	position: relative;
 	padding: 5px 6px;
 	border-bottom: 1px solid var(--border);
 	background: var(--content-bg);
@@ -1282,7 +1336,6 @@ table.tl_listing {
 
 .tl_content {
 	border-bottom: 1px solid var(--border);
-	overflow: hidden;
 	position: relative;
 }
 
@@ -1593,6 +1646,7 @@ table.tl_listing {
 	border-top: 1px solid var(--border);
 }
 
+/* Backwards compatibility */
 .limit_height {
 	overflow: hidden;
 }
@@ -1615,7 +1669,6 @@ table.tl_listing {
 	width: 24px;
 	line-height: 8px;
 	color: var(--gray);
-	outline: none;
 	border-top-left-radius: 2px;
 	border-top-right-radius: 2px;
 }
@@ -1623,6 +1676,7 @@ table.tl_listing {
 .limit_toggler button span {
 	position: relative;
 	top: -4px;
+	z-index: 1;
 }
 
 /* Tree view */
@@ -1752,7 +1806,7 @@ label.tl_change_selected {
 #tl_breadcrumb {
 	margin: 0 0 12px;
 	padding: 4px 6px;
-	overflow: hidden;
+	display: flow-root;
 	background: var(--active-bg);
 	border: 1px solid var(--active-border);
 	border-radius: 2px;
@@ -1786,7 +1840,6 @@ label.tl_change_selected {
 	margin: 0 0 1px;
 	padding: 0;
 	list-style-type: none;
-	overflow: hidden;
 }
 
 .selector_container > ul > li {
@@ -1835,7 +1888,7 @@ label.tl_change_selected {
 }
 
 ul.sgallery {
-	overflow: hidden;
+	display: flow-root;
 }
 
 ul.sgallery li {
@@ -2146,7 +2199,6 @@ ul.sgallery li {
 }
 
 .tl_metawizard li {
-	overflow: hidden;
 	margin-bottom: 2px;
 	padding: 9px;
 }
@@ -2310,7 +2362,7 @@ ul.sgallery li {
 	position: absolute;
 	left: 50%;
 	margin-left: -150px;
-	background: var(--white) url("icons/loading.svg") no-repeat right 2em center;
+	background: var(--white) var(--icon-loading) no-repeat right 2em center;
 	border: 2px solid var(--black);
 	border-radius: 2px;
 	font-size: 1rem;
@@ -2329,7 +2381,7 @@ ul.sgallery li {
 
 /* Misc */
 .ce_gallery ul {
-	overflow: hidden;
+	display: flow-root;
 }
 
 .ce_gallery li {
@@ -2494,12 +2546,33 @@ time[title] {
 	transform: rotateZ(90deg);
 }
 
+.foldable--loading {
+	position: relative;
+	pointer-events: none;
+}
+
+.foldable--loading img {
+	visibility: hidden;
+}
+
+.foldable--loading::after {
+	content: "";
+	position: absolute;
+	inset: 2px auto auto 2px;
+	width: 14px;
+	height: 14px;
+	background: var(--icon-loading) 0 0/contain no-repeat
+}
+
 /* Default icon classes */
 .header_icon, .header_clipboard, .header_back, .header_new, .header_rss, .header_edit_all, .header_delete_all,
 .header_new_folder, .header_css_import, .header_theme_import, .header_store, .header_toggle, .header_sync {
+	display: inline-block;
 	padding: 3px 0 3px 21px;
+	background-color: transparent;
 	background-position: left center;
 	background-repeat: no-repeat;
+	border: none;
 	margin-left: 15px;
 }
 
@@ -2718,7 +2791,7 @@ fieldset.collapsed > legend {
 
 /* Pagination */
 .pagination {
-	overflow: hidden;
+	display: flow-root;
 	background: var(--panel-bg);
 	margin-bottom: 18px;
 	border: solid var(--border);
@@ -2754,24 +2827,6 @@ fieldset.collapsed > legend {
 }
 
 /* File synchronization */
-#sync-results {
-	overflow: hidden;
-	margin: 18px 15px 0;
-}
-
-#sync-results p {
-	margin-bottom: 0;
-}
-
-#sync-results .left {
-	float: left;
-	padding: 2px 0;
-}
-
-#sync-results .right {
-	float: right;
-}
-
 #result-list {
 	margin: 15px;
 }
@@ -2871,27 +2926,12 @@ fieldset.collapsed > legend {
 
 /* Tablet */
 @media (max-width: 991px) {
-	#header {
-		width: 100%;
-		padding: 0;
-		position: fixed;
-		top: 0;
-		z-index: 2;
-		transition: transform .2s ease;
-		-webkit-transform: none;
-		transform: none;
-		will-change: transform;
-	}
-
 	#container {
 		display: block;
-		padding-top: 40px;
-		overflow: hidden;
 	}
 
 	#main, #left {
 		float: none;
-		overflow: hidden;
 	}
 
 	#main {
@@ -2932,11 +2972,6 @@ fieldset.collapsed > legend {
 
 /* Handheld */
 @media (max-width: 767px) {
-	#header.down {
-		-webkit-transform: translateY(-40px);
-		transform: translateY(-40px);
-	}
-
 	#header h1 a {
 		min-width: 22px;
 		padding: 12px;

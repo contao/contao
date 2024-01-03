@@ -73,8 +73,14 @@ class TokenChecker
      */
     public function hasFrontendGuest(): bool
     {
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (!$request || !$request->hasPreviousSession()) {
+            return false;
+        }
+
         try {
-            $session = $this->requestStack->getSession();
+            $session = $request->getSession();
         } catch (SessionNotFoundException) {
             return false;
         }

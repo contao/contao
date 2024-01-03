@@ -17,8 +17,8 @@
         "ext-pdo": "*",
         "contao/core-bundle": "self.version",
         "doctrine/dbal": "^3.6",
-        "doctrine/orm": "^2.10",
-        "symfony/http-client": "^6.3"
+        "doctrine/orm": "^2.17",
+        "symfony/http-client": "^6.4"
     },
     "autoload": {
         "psr-4": {

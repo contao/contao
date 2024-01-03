@@ -10,8 +10,8 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\File\ModelMetadataTrait;
 use Contao\Model\Collection;
+use Contao\Model\MetadataTrait;
 
 /**
  * Reads and writes content elements
@@ -23,6 +23,7 @@ use Contao\Model\Collection;
  * @property integer           $tstamp
  * @property string            $type
  * @property string            $headline
+ * @property string            $sectionHeadline
  * @property string|null       $text
  * @property boolean           $addImage
  * @property boolean           $inline
@@ -47,6 +48,7 @@ use Contao\Model\Collection;
  * @property boolean           $sortable
  * @property integer           $sortIndex
  * @property string            $sortOrder
+ * @property boolean           $closeSections
  * @property string            $mooHeadline
  * @property string            $mooStyle
  * @property string            $mooClasses
@@ -116,6 +118,7 @@ use Contao\Model\Collection;
  * @method static ContentModel|null findOneByTstamp($val, array $opt=array())
  * @method static ContentModel|null findOneByType($val, array $opt=array())
  * @method static ContentModel|null findOneByHeadline($val, array $opt=array())
+ * @method static ContentModel|null findOneBySectionHeadline($val, array $opt=array())
  * @method static ContentModel|null findOneByText($val, array $opt=array())
  * @method static ContentModel|null findOneByAddImage($val, array $opt=array())
  * @method static ContentModel|null findOneByInline($val, array $opt=array())
@@ -140,6 +143,7 @@ use Contao\Model\Collection;
  * @method static ContentModel|null findOneBySortable($val, array $opt=array())
  * @method static ContentModel|null findOneBySortIndex($val, array $opt=array())
  * @method static ContentModel|null findOneBySortOrder($val, array $opt=array())
+ * @method static ContentModel|null findOneByCloseSections($val, array $opt=array())
  * @method static ContentModel|null findOneByMooHeadline($val, array $opt=array())
  * @method static ContentModel|null findOneByMooStyle($val, array $opt=array())
  * @method static ContentModel|null findOneByMooClasses($val, array $opt=array())
@@ -202,6 +206,7 @@ use Contao\Model\Collection;
  * @method static Collection<ContentModel>|ContentModel[]|null findByTstamp($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByType($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByHeadline($val, array $opt=array())
+ * @method static Collection<ContentModel>|ContentModel[]|null findBySectionHeadline($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByText($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByAddImage($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByInline($val, array $opt=array())
@@ -226,6 +231,7 @@ use Contao\Model\Collection;
  * @method static Collection<ContentModel>|ContentModel[]|null findBySortable($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findBySortIndex($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findBySortOrder($val, array $opt=array())
+ * @method static Collection<ContentModel>|ContentModel[]|null findByCloseSections($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByMooHeadline($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByMooStyle($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByMooClasses($val, array $opt=array())
@@ -292,6 +298,7 @@ use Contao\Model\Collection;
  * @method static integer countByTstamp($val, array $opt=array())
  * @method static integer countByType($val, array $opt=array())
  * @method static integer countByHeadline($val, array $opt=array())
+ * @method static integer countBySectionHeadline($val, array $opt=array())
  * @method static integer countByText($val, array $opt=array())
  * @method static integer countByAddImage($val, array $opt=array())
  * @method static integer countByInline($val, array $opt=array())
@@ -316,6 +323,7 @@ use Contao\Model\Collection;
  * @method static integer countBySortable($val, array $opt=array())
  * @method static integer countBySortIndex($val, array $opt=array())
  * @method static integer countBySortOrder($val, array $opt=array())
+ * @method static integer countByCloseSections($val, array $opt=array())
  * @method static integer countByMooHeadline($val, array $opt=array())
  * @method static integer countByMooStyle($val, array $opt=array())
  * @method static integer countByMooClasses($val, array $opt=array())
@@ -374,7 +382,7 @@ use Contao\Model\Collection;
  */
 class ContentModel extends Model
 {
-	use ModelMetadataTrait;
+	use MetadataTrait;
 
 	/**
 	 * Table name
