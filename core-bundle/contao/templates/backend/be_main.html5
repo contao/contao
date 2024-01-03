@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="<?= $this->language ?>" data-controller="contao--offset">
+<html lang="<?= $this->language ?>" data-controller="contao--scroll-offset">
 <head>
 
   <?php $this->block('head'); ?>

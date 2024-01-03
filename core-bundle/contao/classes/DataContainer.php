@@ -1301,7 +1301,7 @@ abstract class DataContainer extends Backend
 
 		if ($checked)
 		{
-			$checked .= ' data-contao--offset-target="scrollTo"';
+			$checked .= ' data-contao--scroll-offset-target="scrollTo"';
 		}
 
 		return sprintf(
@@ -1311,7 +1311,7 @@ abstract class DataContainer extends Backend
 			$id,
 			$this->strPickerFieldType,
 			StringUtil::specialchars(($this->objPickerCallback)($value)),
-			'data-action="focus->contao--offset#store"',
+			'data-action="focus->contao--scroll-offset#store"',
 			$checked,
 			$attributes
 		);
