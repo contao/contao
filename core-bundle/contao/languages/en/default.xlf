@@ -1764,7 +1764,7 @@
         <source>Quick link</source>
       </trans-unit>
       <trans-unit id="MSC.lostPassword">
-        <source>Lost your password?</source>
+        <source>Forgot your password?</source>
       </trans-unit>
       <trans-unit id="MSC.username">
         <source>Username</source>
