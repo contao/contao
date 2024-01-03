@@ -50,9 +50,9 @@
           <a href="<?= $this->route('contao_frontend_logout') ?>"><?= $this->cancel ?> ›</a>
         <?php endif; ?>
       </div>
-      <?php if ($this->passwordreset): ?>
+      <?php if ($this->passwordReset): ?>
         <div class="password-reset">
-          <a class="password-reset_link"><a href="<?= $this->passwordreset ?>" title="<?= $this->trans('MSC.lostPassword'); ?>"><?= $this->trans('MSC.lostPassword'); ?></a></a>
+          <a href="<?= $this->passwordReset ?>" title="<?= $this->trans('MSC.lostPassword'); ?>"><?= $this->trans('MSC.lostPassword'); ?></a>
         </div>
       <?php endif; ?>
     </div>

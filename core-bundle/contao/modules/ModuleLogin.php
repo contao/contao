@@ -206,7 +206,7 @@ class ModuleLogin extends Module
 		if (($objLostPasswordTarget = $this->objModel->getRelated('pwResetJumpTo')) instanceof PageModel)
 		{
 			/** @var PageModel $objLostPasswordTarget */
-			$this->Template->passwordreset = $objLostPasswordTarget->getFrontendUrl();
+			$this->Template->passwordReset = $objLostPasswordTarget->getFrontendUrl();
 		}
 
 		$this->Template->username = $GLOBALS['TL_LANG']['MSC']['username'];
