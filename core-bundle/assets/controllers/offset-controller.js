@@ -2,6 +2,7 @@ import { Controller } from '@hotwired/stimulus'
 
 export default class extends Controller {
     static targets = ['scrollTo'];
+
     static values = {
         sessionKey: {
             type: String,
@@ -17,7 +18,7 @@ export default class extends Controller {
         },
     };
 
-    // BC layers to automatically register the Stimulus controller if the legacy methods are used
+    // Backwards compatibility: automatically register the Stimulus controller if the legacy methods are used
     static afterLoad(identifier, application) {
         const loadFallback = () => {
             return new Promise((resolve, reject) => {
@@ -68,6 +69,7 @@ export default class extends Controller {
         }
 
         this.buttons = document.querySelectorAll('.tl_submit_container button[name]:not([name="save"])');
+
         this.buttons.forEach((button) => {
             button.addEventListener('click', this.store, { passive: true });
         });
@@ -78,6 +80,7 @@ export default class extends Controller {
             this.buttons.forEach((button) => {
                 button.removeEventListener('click', this.store);
             });
+
             this.buttons = null;
         }
     }
