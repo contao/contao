@@ -25,10 +25,8 @@ class PluginTest extends TestCase
 {
     public function testReturnsTheBundleConfiguration(): void
     {
-        $parser = $this->createMock(ParserInterface::class);
-
         /** @var BundleConfig $config */
-        $config = (new Plugin())->getBundles($parser)[0];
+        $config = (new Plugin())->getBundles($this->createMock(ParserInterface::class))[0];
 
         $plugins = [
             ContaoCalendarBundle::class,
@@ -36,8 +34,6 @@ class PluginTest extends TestCase
             ContaoFaqBundle::class,
             ContaoNewsBundle::class,
         ];
-
-        sort($plugins);
 
         $this->assertInstanceOf(BundleConfig::class, $config);
         $this->assertSame($plugins, $config->getLoadAfter());

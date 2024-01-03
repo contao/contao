@@ -42,7 +42,7 @@ class CommentsConditionalFieldsListener
             case 'tl_news':
             case 'tl_calendar_events':
             case 'tl_faq':
-                $this->applyChildrenFields($table);
+                $this->applyChildFields($table);
                 break;
         }
     }
@@ -132,16 +132,15 @@ class CommentsConditionalFieldsListener
         ;
     }
 
-    private function applyChildrenFields(string $table): void
+    private function applyChildFields(string $table): void
     {
         $GLOBALS['TL_DCA'][$table]['list']['sorting']['headerFields'][] = 'allowComments';
 
-        $GLOBALS['TL_DCA'][$table]['fields']['noComments'] =
-            [
-                'filter' => true,
-                'inputType' => 'checkbox',
-                'sql' => ['type' => 'boolean', 'default' => false],
-            ];
+        $GLOBALS['TL_DCA'][$table]['fields']['noComments'] = [
+            'filter' => true,
+            'inputType' => 'checkbox',
+            'sql' => ['type' => 'boolean', 'default' => false],
+        ];
 
         $pm = PaletteManipulator::create()
             ->addLegend('expert_legend', 'publish_legend', PaletteManipulator::POSITION_BEFORE, true)
@@ -150,13 +149,13 @@ class CommentsConditionalFieldsListener
         ;
 
         if ('tl_news' === $table || 'tl_calendar_events' === $table) {
-            $GLOBALS['TL_DCA'][$table]['fields']['noComments']['eval'] = ['tl_class' => 'w50 m12'];
-
             $pm
                 ->applyToPalette('internal', $table)
                 ->applyToPalette('article', $table)
                 ->applyToPalette('external', $table)
             ;
+
+            $GLOBALS['TL_DCA'][$table]['fields']['noComments']['eval'] = ['tl_class' => 'w50 m12'];
         }
     }
 }

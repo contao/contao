@@ -60,6 +60,7 @@ class CommentsConditionalFieldsListenerTest extends ContaoTestCase
             'ContaoCalendarBundle' => ContaoCalendarBundle::class,
             'ContaoFaqBundle' => ContaoFaqBundle::class,
         ]);
+
         $listener('tl_module');
 
         $this->assertSame($expected, $GLOBALS['TL_DCA']['tl_module']['palettes']['newsreader']);

@@ -35,7 +35,8 @@ class Plugin implements BundlePluginInterface
                     ContaoCalendarBundle::class,
                     ContaoFaqBundle::class,
                     ContaoNewsBundle::class,
-                ])->setReplace(['comments']),
+                ])
+                ->setReplace(['comments']),
         ];
     }
 }

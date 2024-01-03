@@ -50,6 +50,9 @@
       <trans-unit id="tl_news_archive.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>
       </trans-unit>
+      <trans-unit id="tl_news_archive.comments_legend">
+        <source>Comments</source>
+      </trans-unit>
       <trans-unit id="tl_news_archive.notify_admin">
         <source>System administrator</source>
       </trans-unit>
