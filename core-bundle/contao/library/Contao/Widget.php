@@ -1385,6 +1385,12 @@ abstract class Widget extends Controller
 				}
 			}
 
+			// Sort the options by key if they use language references
+			if ($blnIsAssociative && $blnUseReference)
+			{
+				ksort($arrAttributes['options']);
+			}
+
 			$arrAttributes['unknownOption'] = array_filter($unknown);
 		}
 
