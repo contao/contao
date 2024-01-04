@@ -176,8 +176,8 @@ class ModelTest extends TestCase
 
     public function getEnumFieldValues(): \Generator
     {
-        yield [StringBackedEnum::class, StringBackedEnum::OptionB->value, StringBackedEnum::OptionB];
-        yield [IntBackedEnum::class, IntBackedEnum::OptionB->value, IntBackedEnum::OptionB];
+        yield [StringBackedEnum::class, StringBackedEnum::optionB->value, StringBackedEnum::optionB];
+        yield [IntBackedEnum::class, IntBackedEnum::optionB->value, IntBackedEnum::optionB];
         yield [StringBackedEnum::class, 'foo', null];
         yield [IntBackedEnum::class, 100, null];
     }

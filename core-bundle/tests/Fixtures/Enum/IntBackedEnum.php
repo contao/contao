@@ -14,6 +14,6 @@ namespace Contao\CoreBundle\Tests\Fixtures\Enum;
 
 enum IntBackedEnum: int
 {
-    case OptionA = 13;
-    case OptionB = 42;
+    case optionA = 13;
+    case optionB = 42;
 }

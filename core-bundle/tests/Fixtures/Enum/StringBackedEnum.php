@@ -14,6 +14,6 @@ namespace Contao\CoreBundle\Tests\Fixtures\Enum;
 
 enum StringBackedEnum: string
 {
-    case OptionA = 'option_a';
-    case OptionB = 'option_b';
+    case optionA = 'option_a';
+    case optionB = 'option_b';
 }
