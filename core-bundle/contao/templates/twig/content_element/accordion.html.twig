@@ -5,15 +5,15 @@
     {% for element in elements %}
         {% block element %}
             {% block element_header %}
-                <h3{{ attrs(accordion_header|default).addClass('handorgel__header') }}>
-                    <button{{ attrs(accordion_header_button|default).addClass('handorgel__header__button') }}>
+                <{% block header_tag %}h3{% endblock %}{{ attrs(accordion_header_attributes|default).addClass('handorgel__header') }}>
+                    <button{{ attrs(accordion_header_button_attributes|default).addClass('handorgel__header__button') }}>
                         {{- element.header -}}
                     </button>
-                </h3>
+                </{{ block('header_tag') }}>
             {% endblock %}
             {% block element_content %}
-                <div{{ attrs(accordion_content|default).addClass('handorgel__content').set('data-open', element.is_open) }}>
-                    <div{{ attrs(accordion_content_inner|default).addClass('handorgel__content__inner') }}>
+                <div{{ attrs(accordion_content_attributes|default).addClass('handorgel__content').set('data-open', element.is_open) }}>
+                    <div{{ attrs(accordion_content_inner_attributes|default).addClass('handorgel__content__inner') }}>
                         {{ content_element(element.reference) }}
                     </div>
                 </div>
@@ -29,8 +29,8 @@
             (function () {
                 new handorgel(document.querySelector('.content-accordion'), {
                     {% block init_options %}
-                        // Put custom options here
                         multiSelectable: false,
+                        {# Put custom options here #}
                     {% endblock %}
                 });
             })();

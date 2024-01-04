@@ -17,12 +17,6 @@
       <trans-unit id="MSC.emptyList">
         <source>Currently there are no news items.</source>
       </trans-unit>
-      <trans-unit id="MSC.comments">
-        <source>Comments</source>
-      </trans-unit>
-      <trans-unit id="MSC.commentCount">
-        <source>(comments: %s)</source>
-      </trans-unit>
       <trans-unit id="MSC.news_items">
         <source>%d item(s)</source>
       </trans-unit>

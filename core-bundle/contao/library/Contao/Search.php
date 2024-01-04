@@ -171,8 +171,8 @@ class Search
 		$arrSet['checksum'] = md5($arrSet['text'] . $arrSet['meta']);
 
 		$blnIndexExists = $objDatabase
-			->prepare("SELECT EXISTS(SELECT id FROM tl_search WHERE checksum=? AND pid=? AND url=?) as indexExists")
-			->execute($arrSet['checksum'], $arrSet['pid'], $arrSet['url'])
+			->prepare("SELECT EXISTS(SELECT id FROM tl_search WHERE pid=? AND checksum=? AND url=?) as indexExists")
+			->execute($arrSet['pid'], $arrSet['checksum'], $arrSet['url'])
 			->indexExists;
 
 		// The page has already been indexed and has not changed (see #2235)
@@ -187,9 +187,9 @@ class Search
 		try
 		{
 			$objIndex = $objDatabase
-				->prepare("SELECT id, url FROM tl_search WHERE checksum=? AND pid=?")
+				->prepare("SELECT id, url FROM tl_search WHERE pid=? AND checksum=?")
 				->limit(1)
-				->execute($arrSet['checksum'], $arrSet['pid']);
+				->execute($arrSet['pid'], $arrSet['checksum']);
 
 			if ($objIndex->numRows)
 			{
