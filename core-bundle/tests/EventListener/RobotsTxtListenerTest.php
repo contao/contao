@@ -63,9 +63,8 @@ class RobotsTxtListenerTest extends TestCase
 
         $parser = new Parser();
         $parser->setSource($providedRobotsTxt);
-        $file = $parser->getFile();
 
-        $event = new RobotsTxtEvent($file, new Request(), $rootPage);
+        $event = new RobotsTxtEvent($parser->getFile(), new Request(), $rootPage);
 
         $listener = new RobotsTxtListener($framework, $webDebugToolbar);
         $listener($event);
