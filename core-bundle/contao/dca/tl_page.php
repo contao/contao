@@ -69,7 +69,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			(
 				'id' => 'primary',
 				'tstamp' => 'index',
-				'sorting' => 'index',
 				'alias' => 'index',
 				'type,dns,fallback,published,start,stop' => 'index',
 				'pid,published,type,start,stop' => 'index',

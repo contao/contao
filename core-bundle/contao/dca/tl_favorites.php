@@ -26,7 +26,6 @@ $GLOBALS['TL_DCA']['tl_favorites'] = array
 			(
 				'id' => 'primary',
 				'tstamp' => 'index',
-				'sorting' => 'index',
 				'pid,user' => 'index',
 				'url' => 'index'
 			)
