@@ -33,6 +33,8 @@ use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\CoreExtension;
 use Twig\Extension\EscaperExtension;
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Node;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
@@ -118,7 +120,7 @@ final class ContaoExtension extends AbstractExtension
                 'include',
                 function (Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = false, $sandboxed = false /* we need named arguments here */) use ($includeFunctionCallable) {
                     $args = \func_get_args();
-                    $args[2] = DynamicIncludeTokenParser::adjustTemplateName((string) $template, $this->hierarchy);
+                    $args[2] = DynamicIncludeTokenParser::adjustTemplateName($template, $this->hierarchy);
 
                     return $includeFunctionCallable(...$args);
                 },
@@ -177,17 +179,32 @@ final class ContaoExtension extends AbstractExtension
             return twig_escape_filter($env, $string, $strategy, $charset, $autoescape);
         };
 
+        $twigEscaperFilterIsSafe = static function (Node $filterArgs): array {
+            // Our escaper strategy variants that tolerate input encoding are
+            // also safe in the original context (e.g. for the filter argument
+            // 'contao_html' we will return ['contao_html', 'html']).
+            if (
+                ($expression = iterator_to_array($filterArgs)[0] ?? null) instanceof ConstantExpression
+                && \in_array($value = $expression->getAttribute('value'), ['contao_html', 'contao_html_attr'], true)
+            ) {
+                return [$value, substr($value, 7)];
+            }
+
+            return twig_escape_filter_is_safe($filterArgs);
+        };
+
         return [
-            // Overwrite the "escape" filter to additionally support chunked text
+            // Overwrite the "escape" filter to additionally support chunked
+            // text and our escaper strategies
             new TwigFilter(
                 'escape',
                 $escaperFilter,
-                ['needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe']
+                ['needs_environment' => true, 'is_safe_callback' => $twigEscaperFilterIsSafe],
             ),
             new TwigFilter(
                 'e',
                 $escaperFilter,
-                ['needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe']
+                ['needs_environment' => true, 'is_safe_callback' => $twigEscaperFilterIsSafe],
             ),
             new TwigFilter(
                 'insert_tag',

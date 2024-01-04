@@ -429,6 +429,26 @@ class PageRegistryTest extends TestCase
         $this->assertFalse($registry->isRoutable($pageModel));
     }
 
+    public function testServiceIsResetable(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->exactly(2))
+            ->method('fetchAllAssociative')
+            ->with("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'")
+            ->willReturn(['', '.html'])
+        ;
+
+        $registry = new PageRegistry($connection);
+
+        $this->assertEmpty($registry->getUrlPrefixes());
+        $this->assertEmpty($registry->getUrlPrefixes());
+
+        $registry->reset();
+
+        $this->assertEmpty($registry->getUrlPrefixes());
+    }
+
     private function mockConnectionWithPrefixAndSuffix(string $urlPrefix = '', string $urlSuffix = '.html'): Connection
     {
         $connection = $this->createMock(Connection::class);

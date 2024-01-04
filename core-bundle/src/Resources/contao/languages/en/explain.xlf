@@ -12,7 +12,7 @@
         <source>Insert tags</source>
       </trans-unit>
       <trans-unit id="XPL.insertTags.1.1">
-        <source>For more information on insert tags, please visit &lt;a href="https://docs.contao.org/dev/framework/insert-tags/" target="_blank" rel="noreferrer noopener"&gt;https://docs.contao.org/dev/framework/insert-tags/&lt;/a&gt;.</source>
+        <source>For more information on insert tags, please see the &lt;a href="https://to.contao.org/docs/insert-tags?lang=en" target="_blank" rel="noreferrer noopener"&gt;Contao manual&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="XPL.insertTags.2.0">
         <source>Code editor</source>
