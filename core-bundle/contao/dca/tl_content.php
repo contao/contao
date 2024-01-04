@@ -15,7 +15,6 @@ use Contao\ContentModel;
 use Contao\ContentTable;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
 use Contao\DataContainer;
@@ -42,7 +41,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			array('tl_content', 'adjustDcaByType'),
 			array('tl_content', 'showJsLibraryHint'),
 			array('tl_content', 'filterContentElements'),
-			array('tl_content', 'preserveReferenced')
 		),
 		'sql' => array
 		(
@@ -98,7 +96,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
 				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"',
-				'button_callback'     => array('tl_content', 'deleteElement')
 			),
 			'toggle' => array
 			(
@@ -1002,38 +999,6 @@ class tl_content extends Backend
 	}
 
 	/**
-	 * Prevent deleting referenced elements (see #4898)
-	 */
-	public function preserveReferenced()
-	{
-		$db = Database::getInstance();
-
-		if (Input::get('act') == 'delete')
-		{
-			$objCes = $db
-				->prepare("SELECT COUNT(*) AS cnt FROM tl_content WHERE type='alias' AND cteAlias=? AND ptable='tl_article'")
-				->execute(Input::get('id'));
-
-			if ($objCes->cnt > 0)
-			{
-				throw new InternalServerErrorException('Content element ID ' . Input::get('id') . ' is used in an alias element and can therefore not be deleted.');
-			}
-		}
-
-		if (Input::get('act') == 'deleteAll')
-		{
-			$objCes = $db
-				->prepare("SELECT cteAlias FROM tl_content WHERE type='alias' AND ptable='tl_article'")
-				->execute();
-
-			$objSession = System::getContainer()->get('request_stack')->getSession();
-			$session = $objSession->all();
-			$session['CURRENT']['IDS'] = array_diff($session['CURRENT']['IDS'], $objCes->fetchEach('cteAlias'));
-			$objSession->replace($session);
-		}
-	}
-
-	/**
 	 * Filter the content elements
 	 */
 	public function filterContentElements()
@@ -1486,34 +1451,6 @@ class tl_content extends Backend
 	public function disableButton($row, $href, $label, $title, $icon, $attributes)
 	{
 		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $row['type']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
-	}
-
-	/**
-	 * Return the delete content element button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function deleteElement($row, $href, $label, $title, $icon, $attributes)
-	{
-		// Disable the button if the element type is not allowed
-		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $row['type']))
-		{
-			return Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
-		}
-
-		$objElement = Database::getInstance()
-			->prepare("SELECT id FROM tl_content WHERE type='alias' AND cteAlias=?")
-			->limit(1)
-			->execute($row['id']);
-
-		return $objElement->numRows ? Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ' : '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ';
 	}
 
 	/**

@@ -149,7 +149,7 @@ final class ContaoExtension extends AbstractExtension
                 'include',
                 function (Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = false, $sandboxed = false /* we need named arguments here */) use ($includeFunctionCallable) {
                     $args = \func_get_args();
-                    $args[2] = DynamicIncludeTokenParser::adjustTemplateName((string) $template, $this->hierarchy);
+                    $args[2] = DynamicIncludeTokenParser::adjustTemplateName($template, $this->hierarchy);
 
                     return $includeFunctionCallable(...$args);
                 },
