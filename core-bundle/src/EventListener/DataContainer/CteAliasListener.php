@@ -29,12 +29,11 @@ use Symfony\Contracts\Service\ResetInterface;
  */
 class CteAliasListener implements ResetInterface
 {
-    private ?array $cteAliasCache = null;
-
     private RequestStack $requestStack;
     private Security $security;
     private Connection $db;
     private ContaoFramework $framework;
+    private ?array $cteAliasCache = null;
 
     public function __construct(RequestStack $requestStack, Security $security, Connection $db, ContaoFramework $framework)
     {
@@ -56,7 +55,7 @@ class CteAliasListener implements ResetInterface
         $id = $request->query->get('id');
 
         if ($id && 'delete' === $request->query->get('act') && isset($aliasRefs[$id])) {
-            throw new InternalServerErrorException('Content element ID '.$id.' is used in an alias element and can therefore not be deleted.');
+            throw new InternalServerErrorException(sprintf('Content element ID %s is used in an alias element and can therefore not be deleted.', $id));
         }
 
         if ('deleteAll' === $request->query->get('act')) {
