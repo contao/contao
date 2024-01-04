@@ -71,14 +71,7 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'__selector__'                => array('allowComments'),
-		'default'                     => '{title_legend},title,headline,jumpTo;{comments_legend:hide},allowComments'
-	),
-
-	// Sub-palettes
-	'subpalettes' => array
-	(
-		'allowComments'               => 'notify,sortOrder,perPage,moderate,bbcode,requireLogin,disableCaptcha'
+		'default'                     => '{title_legend},title,headline,jumpTo'
 	),
 
 	// Fields
@@ -113,59 +106,6 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 			'eval'                    => array('fieldType'=>'radio', 'tl_class'=>'clr'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
-		),
-		'allowComments' => array
-		(
-			'filter'                  => true,
-			'inputType'               => 'checkbox',
-			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
-		),
-		'notify' => array
-		(
-			'inputType'               => 'select',
-			'options'                 => array('notify_admin', 'notify_author', 'notify_both'),
-			'reference'               => &$GLOBALS['TL_LANG']['tl_faq_category'],
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "varchar(16) NOT NULL default 'notify_admin'"
-		),
-		'sortOrder' => array
-		(
-			'inputType'               => 'select',
-			'options'                 => array('ascending', 'descending'),
-			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'eval'                    => array('tl_class'=>'w50 clr'),
-			'sql'                     => "varchar(12) NOT NULL default 'ascending'"
-		),
-		'perPage' => array
-		(
-			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
-			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
-		),
-		'moderate' => array
-		(
-			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
-		),
-		'bbcode' => array
-		(
-			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
-		),
-		'requireLogin' => array
-		(
-			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
-		),
-		'disableCaptcha' => array
-		(
-			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
 		)
 	)
 );
@@ -178,18 +118,10 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 class tl_faq_category extends Backend
 {
 	/**
-	 * Set the root IDs and unset the "allowComments" field if the comments bundle is not available.
+	 * Set the root IDs.
 	 */
 	public function adjustDca()
 	{
-		$bundles = System::getContainer()->getParameter('kernel.bundles');
-
-		// HOOK: comments extension required
-		if (!isset($bundles['ContaoCommentsBundle']))
-		{
-			unset($GLOBALS['TL_DCA']['tl_faq_category']['fields']['allowComments']);
-		}
-
 		$user = BackendUser::getInstance();
 
 		if ($user->isAdmin)
