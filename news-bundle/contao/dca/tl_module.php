@@ -105,14 +105,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_showQuantity'] = array
 	'sql'                     => array('type' => 'boolean', 'default' => false)
 );
 
-$bundles = System::getContainer()->getParameter('kernel.bundles');
-
-// Add the comments template drop-down menu
-if (isset($bundles['ContaoCommentsBundle']))
-{
-	$GLOBALS['TL_DCA']['tl_module']['palettes']['newsreader'] = str_replace('{protected_legend:hide}', '{comment_legend:hide},com_template;{protected_legend:hide}', $GLOBALS['TL_DCA']['tl_module']['palettes']['newsreader']);
-}
-
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
