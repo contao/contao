@@ -1508,6 +1508,9 @@ class tl_page extends Backend
 
 				// Create a new version
 				$objVersions->create();
+
+				// Update the record stored in the page registry (see #6542)
+				PageModel::findByPk($id)->alias = $strAlias;
 			}
 
 			$this->redirect($this->getReferer());

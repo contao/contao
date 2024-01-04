@@ -164,7 +164,8 @@
         "phpunit/phpunit": "^9.5.19",
         "roave/better-reflection": "^4.12.2 || ^5.0",
         "symfony/browser-kit": "^5.4 || ^6.0",
-        "symfony/phpunit-bridge": "^5.4 || ^6.0"
+        "symfony/phpunit-bridge": "^5.4 || ^6.0",
+        "symfony/web-profiler-bundle": "^5.4 || ^6.0"
     },
     "conflict": {
         "contao-community-alliance/composer-plugin": "<3.0",
