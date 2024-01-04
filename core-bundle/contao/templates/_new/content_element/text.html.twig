@@ -26,7 +26,7 @@
             {% if as_editor_view %}
                 {{ text|raw }}
             {% else %}
-                {{ text|insert_tag|raw }}
+                {{ text|insert_tag|encode_email|raw }}
             {% endif %}
         </div>
     {% endblock %}

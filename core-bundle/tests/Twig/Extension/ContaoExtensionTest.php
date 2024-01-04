@@ -126,6 +126,7 @@ class ContaoExtensionTest extends TestCase
             'highlight_auto',
             'format_bytes',
             'sanitize_html',
+            'encode_email',
         ];
 
         $this->assertCount(\count($expectedFilters), $filters);

@@ -43,11 +43,13 @@ use Contao\CoreBundle\Twig\Runtime\FormatterRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
+use Contao\CoreBundle\Twig\Runtime\StringRuntime;
 use Contao\DcaExtractor;
 use Contao\DcaLoader;
 use Contao\Input;
 use Contao\InsertTags;
 use Contao\PageModel;
+use Contao\StringUtil;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Highlight\Highlighter;
@@ -280,6 +282,7 @@ class ContentElementTestCase extends TestCase
                 HighlighterRuntime::class => static fn () => new HighlighterRuntime(),
                 SchemaOrgRuntime::class => static fn () => new SchemaOrgRuntime($responseContextAccessor),
                 FormatterRuntime::class => static fn () => new FormatterRuntime($framework),
+                StringRuntime::class => static fn () => new StringRuntime($framework),
             ])
         );
 
@@ -469,11 +472,18 @@ class ContentElementTestCase extends TestCase
             })
         ;
 
+        $stringUtil = $this->mockAdapter(['encodeEmail']);
+        $stringUtil
+            ->method('encodeEmail')
+            ->willReturnArgument(0)
+        ;
+
         return $this->mockContaoFramework([
             Config::class => $configAdapter,
             Input::class => $inputAdapter,
             PageModel::class => $pageAdapter,
             ArticleModel::class => $articleAdapter,
+            StringUtil::class => $stringUtil,
         ]);
     }
 }
