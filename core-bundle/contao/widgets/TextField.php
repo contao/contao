@@ -160,7 +160,7 @@ class TextField extends Widget
 			}
 
 			return sprintf(
-				'<input type="%s" name="%s" id="ctrl_%s" class="tl_text%s" value="%s"%s data-action="contao--scroll-offset#store">%s',
+				'<input type="%s" name="%s" id="ctrl_%s" class="tl_text%s" value="%s"%s data-action="focus->contao--scroll-offset#store">%s',
 				$strType,
 				$this->strName,
 				$this->strId,
@@ -188,7 +188,7 @@ class TextField extends Widget
 		for ($i=0; $i<$this->size; $i++)
 		{
 			$arrFields[] = sprintf(
-				'<input type="%s" name="%s[]" id="ctrl_%s" class="tl_text_%s" value="%s"%s%s data-action="contao--scroll-offset#store">',
+				'<input type="%s" name="%s[]" id="ctrl_%s" class="tl_text_%s" value="%s"%s%s data-action="focus->contao--scroll-offset#store">',
 				$strType,
 				$this->strName,
 				$this->strId . '_' . $i,

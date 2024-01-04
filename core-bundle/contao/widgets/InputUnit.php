@@ -148,7 +148,7 @@ class InputUnit extends Widget
 		}
 
 		return sprintf(
-			'<input type="text" name="%s[value]" id="ctrl_%s" class="tl_text_unit%s" value="%s"%s onfocus="Backend.getScrollOffset()"> <select name="%s[unit]" class="tl_select_unit" onfocus="Backend.getScrollOffset()"%s>%s</select>%s',
+			'<input type="text" name="%s[value]" id="ctrl_%s" class="tl_text_unit%s" value="%s"%s data-action="focus->contao--scroll-offset#store"> <select name="%s[unit]" class="tl_select_unit" data-action="focus->contao--scroll-offset#store"%s>%s</select>%s',
 			$this->strName,
 			$this->strId,
 			$this->strClass ? ' ' . $this->strClass : '',

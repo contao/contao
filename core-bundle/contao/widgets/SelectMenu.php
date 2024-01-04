@@ -194,7 +194,7 @@ class SelectMenu extends Widget
 		}
 
 		return sprintf(
-			'%s<select name="%s" id="ctrl_%s" class="%s%s"%s onfocus="Backend.getScrollOffset()">%s</select>%s',
+			'%s<select name="%s" id="ctrl_%s" class="%s%s"%s data-action="focus->contao--scroll-offset#store">%s</select>%s',
 			$this->multiple ? '<input type="hidden" name="' . (substr($this->strName, -2) == '[]' ? substr($this->strName, 0, -2) : $this->strName) . '" value="">' : '',
 			$this->strName,
 			$this->strId,

@@ -149,7 +149,7 @@ class TimePeriod extends Widget
 		}
 
 		return sprintf(
-			'<input type="text" name="%s[value]" id="ctrl_%s" class="tl_text_interval%s" value="%s"%s onfocus="Backend.getScrollOffset()"> <select name="%s[unit]" class="tl_select_interval" onfocus="Backend.getScrollOffset()"%s>%s</select>%s',
+			'<input type="text" name="%s[value]" id="ctrl_%s" class="tl_text_interval%s" value="%s"%s data-action="focus->contao--scroll-offset#store"> <select name="%s[unit]" class="tl_select_interval" data-action="focus->contao--scroll-offset#store"%s>%s</select>%s',
 			$this->strName,
 			$this->strId,
 			$this->strClass ? ' ' . $this->strClass : '',

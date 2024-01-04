@@ -203,7 +203,7 @@ class FileUpload extends Backend
 	{
 		$return = '
   <div>
-    <input type="file" name="' . $this->strName . '[]" class="tl_upload_field" onfocus="Backend.getScrollOffset()" multiple required>
+    <input type="file" name="' . $this->strName . '[]" class="tl_upload_field" data-action="focus->contao--scroll-offset#store" multiple required>
   </div>';
 
 		if (isset($GLOBALS['TL_LANG']['tl_files']['fileupload'][1]))

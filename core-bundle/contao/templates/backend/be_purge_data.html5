@@ -26,7 +26,7 @@
           <tbody>
             <?php foreach ($this->jobs as $value => $job): ?>
               <tr class="hover-row toggle_select">
-                <td><input type="checkbox" name="purge[<?= $job['group'] ?>][]" id="<?= $job['id'] ?>" class="tl_checkbox" value="<?= $value ?>" onfocus="Backend.getScrollOffset()"></td>
+                <td><input type="checkbox" name="purge[<?= $job['group'] ?>][]" id="<?= $job['id'] ?>" class="tl_checkbox" value="<?= $value ?>" data-action="focus->contao--scroll-offset#store"></td>
                 <td class="nw"><label for="<?= $job['id'] ?>"><?= $job['title'] ?></label><?= $job['affected'] ?></td>
                 <td><?= $job['description'] ?></td>
               </tr>

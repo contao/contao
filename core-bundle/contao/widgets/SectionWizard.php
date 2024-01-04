@@ -121,7 +121,7 @@ class SectionWizard extends Widget
 			}
 
 			$return .= '
-    <td><select name="' . $this->strId . '[' . $i . '][template]" class="tl_select" onfocus="Backend.getScrollOffset()">' . $options . '</select></td>';
+    <td><select name="' . $this->strId . '[' . $i . '][template]" class="tl_select" data-action="focus->contao--scroll-offset#store">' . $options . '</select></td>';
 
 			$options = '';
 
@@ -132,7 +132,7 @@ class SectionWizard extends Widget
 			}
 
 			$return .= '
-    <td><select name="' . $this->strId . '[' . $i . '][position]" class="tl_select" onfocus="Backend.getScrollOffset()">' . $options . '</select></td>
+    <td><select name="' . $this->strId . '[' . $i . '][position]" class="tl_select" data-action="focus->contao--scroll-offset#store">' . $options . '</select></td>
     <td>';
 
 			// Add the buttons

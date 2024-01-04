@@ -240,7 +240,7 @@ class CheckBox extends Widget
 	protected function generateCheckbox($arrOption, $i)
 	{
 		return sprintf(
-			'<input type="checkbox" name="%s" id="opt_%s" class="tl_checkbox" value="%s"%s%s onfocus="Backend.getScrollOffset()"> <label for="opt_%s">%s%s%s</label>%s',
+			'<input type="checkbox" name="%s" id="opt_%s" class="tl_checkbox" value="%s"%s%s data-action="focus->contao--scroll-offset#store"> <label for="opt_%s">%s%s%s</label>%s',
 			$this->strName . ($this->multiple ? '[]' : ''),
 			$this->strId . '_' . $i,
 			$this->multiple ? self::specialcharsValue($arrOption['value']) : 1,

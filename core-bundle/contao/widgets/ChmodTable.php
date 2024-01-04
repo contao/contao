@@ -58,7 +58,7 @@ class ChmodTable extends Widget
 			for ($j=1; $j<=6; $j++)
 			{
 				$return .= '
-      <td><input type="checkbox" name="' . $this->strName . '[]" value="' . self::specialcharsValue($k . $j) . '"' . $this->getAttributes() . static::optionChecked($k . $j, $this->varValue) . ' onfocus="Backend.getScrollOffset()"></td>';
+      <td><input type="checkbox" name="' . $this->strName . '[]" value="' . self::specialcharsValue($k . $j) . '"' . $this->getAttributes() . static::optionChecked($k . $j, $this->varValue) . ' data-action="focus->contao--scroll-offset#store"></td>';
 			}
 
 			$return .= '

@@ -192,7 +192,7 @@ class ModuleWizard extends Widget
 
 			$return .= '
   <tr>
-    <td><select name="' . $this->strId . '[' . $i . '][mod]" class="tl_select tl_chosen" onfocus="Backend.getScrollOffset()">' . $options . '</select></td>';
+    <td><select name="' . $this->strId . '[' . $i . '][mod]" class="tl_select tl_chosen" data-action="focus->contao--scroll-offset#store">' . $options . '</select></td>';
 
 			$options = '<option value="">-</option>';
 
@@ -203,7 +203,7 @@ class ModuleWizard extends Widget
 			}
 
 			$return .= '
-    <td><select name="' . $this->strId . '[' . $i . '][col]" class="tl_select_column" onfocus="Backend.getScrollOffset()">' . $options . '</select></td>
+    <td><select name="' . $this->strId . '[' . $i . '][col]" class="tl_select_column" data-action="focus->contao--scroll-offset#store">' . $options . '</select></td>
     <td>';
 
 			// Add buttons
@@ -220,7 +220,7 @@ class ModuleWizard extends Widget
 				}
 				elseif ($button == 'enable')
 				{
-					$return .= ' <input name="' . $this->strId . '[' . $i . '][enable]" type="checkbox" class="tl_checkbox mw_enable" value="1" onfocus="Backend.getScrollOffset()"' . (($this->varValue[$i]['enable'] ?? null) ? ' checked' : '') . '><button type="button" data-command="enable" class="mw_enable" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['mw_enable']) . '"></button>';
+					$return .= ' <input name="' . $this->strId . '[' . $i . '][enable]" type="checkbox" class="tl_checkbox mw_enable" value="1" data-action="focus->contao--scroll-offset#store"' . (($this->varValue[$i]['enable'] ?? null) ? ' checked' : '') . '><button type="button" data-command="enable" class="mw_enable" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['mw_enable']) . '"></button>';
 				}
 				else
 				{

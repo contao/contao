@@ -219,7 +219,7 @@ class ImageSize extends Widget
 		}
 
 		$arrFields[] = sprintf(
-			'<select name="%s[2]" id="ctrl_%s" class="tl_select_interval" onfocus="Backend.getScrollOffset()"%s>%s</select>',
+			'<select name="%s[2]" id="ctrl_%s" class="tl_select_interval" data-action="focus->contao--scroll-offset#store"%s>%s</select>',
 			$this->strName,
 			$this->strId . '_3',
 			$this->getAttribute('disabled'),
@@ -229,7 +229,7 @@ class ImageSize extends Widget
 		for ($i=0; $i<2; $i++)
 		{
 			$arrFields[] = sprintf(
-				'<input type="text" name="%s[%s]" id="ctrl_%s" class="tl_text_4 tl_imageSize_%s" value="%s"%s onfocus="Backend.getScrollOffset()">',
+				'<input type="text" name="%s[%s]" id="ctrl_%s" class="tl_text_4 tl_imageSize_%s" value="%s"%s data-action="focus->contao--scroll-offset#store">',
 				$this->strName,
 				$i,
 				$this->strId . '_' . $i,
