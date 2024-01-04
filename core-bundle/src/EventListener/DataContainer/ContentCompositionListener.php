@@ -165,7 +165,7 @@ class ContentCompositionListener
         }
 
         return sprintf(
-            '<a href="%s" title="%s" onclick="Backend.getScrollOffset()">%s</a> ',
+            '<a href="%s" title="%s" data-action="contao--scroll-offset#store">%s</a> ',
             $this->backend->addToUrl('act='.$clipboard['mode'].'&amp;mode=2&amp;pid='.$row['id'].(!\is_array($clipboard['id'] ?? null) ? '&amp;id='.$clipboard['id'] : '')),
             StringUtil::specialchars($this->translator->trans($dc->table.'.pasteinto.1', [$row['id']], 'contao_'.$dc->table)),
             $this->image->getHtml('pasteinto.svg', $this->translator->trans($dc->table.'.pasteinto.1', [$row['id']], 'contao_'.$dc->table)),
@@ -196,7 +196,7 @@ class ContentCompositionListener
         }
 
         return sprintf(
-            '<a href="%s" title="%s" onclick="Backend.getScrollOffset()">%s</a> ',
+            '<a href="%s" title="%s" data-action="contao--scroll-offset#store">%s</a> ',
             $this->backend->addToUrl('act='.$clipboard['mode'].'&amp;mode=1&amp;pid='.$row['id'].(!\is_array($clipboard['id']) ? '&amp;id='.$clipboard['id'] : '')),
             StringUtil::specialchars($this->translator->trans($dc->table.'.pasteafter.1', [$row['id']], 'contao_'.$dc->table)),
             $this->image->getHtml('pasteafter.svg', $this->translator->trans($dc->table.'.pasteafter.1', [$row['id']], 'contao_'.$dc->table)),

@@ -1010,7 +1010,7 @@ abstract class DataContainer extends Backend
 						$titleDisabled = (\is_array($v['label']) && isset($v['label'][2])) ? sprintf($v['label'][2], $arrRow['id']) : $config['title'];
 					}
 
-					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($state ? $config['title'] : $titleDisabled) . '" data-title="' . StringUtil::specialchars($config['title']) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $config['label'], 'data-icon="' . $icon . '" data-icon-disabled="' . $_icon . '" data-state="' . $state . '"') . '</a> ';
+					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($state ? $config['title'] : $titleDisabled) . '" data-title="' . StringUtil::specialchars($config['title']) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" data-action="contao--scroll-offset#store" onclick="return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $config['label'], 'data-icon="' . $icon . '" data-icon-disabled="' . $_icon . '" data-state="' . $state . '"') . '</a> ';
 				}
 			}
 			elseif ($href === null)
@@ -1236,7 +1236,7 @@ abstract class DataContainer extends Backend
 
 				$titleDisabled = (\is_array($v['label']) && isset($v['label'][2])) ? sprintf($v['label'][2], $arrRow['id']) : $title;
 
-				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($state ? $title : $titleDisabled) . '" data-title="' . StringUtil::specialchars($title) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $label, 'data-icon="' . $icon . '" data-icon-disabled="' . $_icon . '" data-state="' . $state . '"') . '</a> ';
+				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($state ? $title : $titleDisabled) . '" data-title="' . StringUtil::specialchars($title) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" data-action="contao--scroll-offset#store" onclick="return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $label, 'data-icon="' . $icon . '" data-icon-disabled="' . $_icon . '" data-state="' . $state . '"') . '</a> ';
 			}
 			else
 			{

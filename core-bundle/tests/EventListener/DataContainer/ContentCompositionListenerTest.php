@@ -801,7 +801,7 @@ class ContentCompositionListenerTest extends TestCase
         ;
 
         $this->assertSame(
-            '<a href="link" title="" onclick="Backend.getScrollOffset()"><img src="pasteinto.svg"></a> ',
+            '<a href="link" title="" data-action="contao--scroll-offset#store"><img src="pasteinto.svg"></a> ',
             $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', false, ['mode' => 'paste', 'id' => 17]),
         );
     }
@@ -1052,7 +1052,7 @@ class ContentCompositionListenerTest extends TestCase
         ;
 
         $this->assertSame(
-            '<a href="link" title="" onclick="Backend.getScrollOffset()"><img src="pasteafter.svg"></a> ',
+            '<a href="link" title="" data-action="contao--scroll-offset#store"><img src="pasteafter.svg"></a> ',
             $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false, ['mode' => 'paste', 'id' => 17]),
         );
     }

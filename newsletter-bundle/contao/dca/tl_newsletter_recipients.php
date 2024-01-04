@@ -59,7 +59,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 			(
 				'href'                => 'key=import',
 				'class'               => 'header_css_import',
-				'attributes'          => 'onclick="Backend.getScrollOffset()"'
+				'attributes'          => 'data-action="contao--scroll-offset#store"'
 			),
 			'all'
 		)
