@@ -16,6 +16,7 @@ use Contao\CoreBundle\Event\RobotsTxtEvent;
 use Contao\CoreBundle\EventListener\RobotsTxtListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
+use Symfony\Bundle\WebProfilerBundle\EventListener\WebDebugToolbarListener;
 use Symfony\Component\HttpFoundation\Request;
 use webignition\RobotsTxt\Directive\Directive;
 use webignition\RobotsTxt\DirectiveList\DirectiveList;
@@ -28,7 +29,7 @@ class RobotsTxtListenerTest extends TestCase
     /**
      * @dataProvider disallowProvider
      */
-    public function testRobotsTxt(string $providedRobotsTxt, string $expectedRobotsTxt): void
+    public function testRobotsTxt(string $providedRobotsTxt, ?bool $withWebProfiler, string $expectedRobotsTxt): void
     {
         $rootPage = $this->mockClassWithProperties(PageModel::class);
         $rootPage->id = 42;
@@ -49,13 +50,23 @@ class RobotsTxtListenerTest extends TestCase
             ->method('initialize')
         ;
 
+        $webDebugToolbar = null;
+
+        if (\is_bool($withWebProfiler)) {
+            $webDebugToolbar = $this->createMock(WebDebugToolbarListener::class);
+            $webDebugToolbar
+                ->expects($this->atLeastOnce())
+                ->method('isEnabled')
+                ->willReturn($withWebProfiler)
+            ;
+        }
+
         $parser = new Parser();
         $parser->setSource($providedRobotsTxt);
-        $file = $parser->getFile();
 
-        $event = new RobotsTxtEvent($file, new Request(), $rootPage);
+        $event = new RobotsTxtEvent($parser->getFile(), new Request(), $rootPage);
 
-        $listener = new RobotsTxtListener($framework);
+        $listener = new RobotsTxtListener($framework, $webDebugToolbar);
         $listener($event);
 
         // Output should be the same, if there is another listener
@@ -68,6 +79,7 @@ class RobotsTxtListenerTest extends TestCase
     {
         yield 'Empty robots.txt content in root page' => [
             '',
+            null,
             <<<'EOF'
                 user-agent:*
                 disallow:/contao/
@@ -83,6 +95,7 @@ class RobotsTxtListenerTest extends TestCase
                 allow:/
                 EOF
             ,
+            null,
             <<<'EOF'
                 user-agent:*
                 allow:/
@@ -99,12 +112,64 @@ class RobotsTxtListenerTest extends TestCase
                 allow:/
                 EOF
             ,
+            null,
             <<<'EOF'
                 user-agent:googlebot
                 allow:/
                 disallow:/contao/
                 disallow:/_contao/
 
+                user-agent:*
+                disallow:/contao/
+                disallow:/_contao/
+
+                sitemap:https://www.foobar.com/sitemap.xml
+                EOF,
+        ];
+
+        yield 'Empty robots.txt with web profiler enabled' => [
+            '',
+            true,
+            <<<'EOF'
+                user-agent:*
+                disallow:/contao/
+                disallow:/_contao/
+                disallow:/_profiler/
+                disallow:/_wdt/
+
+                sitemap:https://www.foobar.com/sitemap.xml
+                EOF,
+        ];
+
+        yield 'Multiple user-agents with web profiler enabled' => [
+            <<<'EOF'
+                user-agent:googlebot
+                allow:/
+                EOF
+            ,
+            true,
+            <<<'EOF'
+                user-agent:googlebot
+                allow:/
+                disallow:/contao/
+                disallow:/_contao/
+                disallow:/_profiler/
+                disallow:/_wdt/
+
+                user-agent:*
+                disallow:/contao/
+                disallow:/_contao/
+                disallow:/_profiler/
+                disallow:/_wdt/
+
+                sitemap:https://www.foobar.com/sitemap.xml
+                EOF,
+        ];
+
+        yield 'Empty robots.txt with web profiler disabled' => [
+            '',
+            false,
+            <<<'EOF'
                 user-agent:*
                 disallow:/contao/
                 disallow:/_contao/
@@ -155,7 +220,7 @@ class RobotsTxtListenerTest extends TestCase
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageModelAdapter]);
 
-        $listener = new RobotsTxtListener($framework, $routePrefix);
+        $listener = new RobotsTxtListener($framework, null, $routePrefix);
         $listener($event);
     }
 
