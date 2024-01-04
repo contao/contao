@@ -74,7 +74,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			(
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\''.($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null).'\'))return false"'
+				'attributes'          => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false"'
 			),
 			'show' => array
 			(
