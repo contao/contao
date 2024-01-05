@@ -165,7 +165,8 @@
         "league/flysystem-memory": "^3.0",
         "phpunit/phpunit": "^9.5.19",
         "symfony/browser-kit": "^6.4",
-        "symfony/phpunit-bridge": "^6.4"
+        "symfony/phpunit-bridge": "^6.4",
+        "symfony/web-profiler-bundle": "^6.4"
     },
     "conflict": {
         "contao-community-alliance/composer-plugin": "<3.0",

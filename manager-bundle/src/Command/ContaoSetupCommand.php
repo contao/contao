@@ -78,7 +78,7 @@ class ContaoSetupCommand extends Command
             $io->info('An APP_SECRET was generated and written to your .env.local file.');
 
             if (!$filesystem->exists($envPath = Path::join($this->projectDir, '.env'))) {
-                $filesystem->touch($envPath);
+                $filesystem->dumpFile($envPath, "#DATABASE_URL='mysql://username:password@localhost/database_name'\n#MAILER_DSN=");
 
                 $io->info('An empty .env file was created.');
             }

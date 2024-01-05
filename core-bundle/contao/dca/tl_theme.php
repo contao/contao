@@ -9,14 +9,12 @@
  */
 
 use Contao\Backend;
-use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\FilesModel;
 use Contao\Folder;
 use Contao\Image;
-use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 
@@ -171,32 +169,6 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
  */
 class tl_theme extends Backend
 {
-	/**
-	 * Check permissions to edit the table
-	 *
-	 * @throws AccessDeniedException
-	 */
-	public function checkPermission()
-	{
-		// Check the theme import and export permissions (see #5835)
-		switch (Input::get('key'))
-		{
-			case 'importTheme':
-				if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_IMPORT_THEMES))
-				{
-					throw new AccessDeniedException('Not enough permissions to import themes.');
-				}
-				break;
-
-			case 'exportTheme':
-				if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_IMPORT_THEMES))
-				{
-					throw new AccessDeniedException('Not enough permissions to export themes.');
-				}
-				break;
-		}
-	}
-
 	/**
 	 * Add an image to each record
 	 *

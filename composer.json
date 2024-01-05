@@ -177,7 +177,8 @@
         "composer/composer": "^2.0",
         "league/flysystem-memory": "^3.0",
         "symfony/browser-kit": "^6.4",
-        "symfony/phpunit-bridge": "^6.4"
+        "symfony/phpunit-bridge": "^6.4",
+        "symfony/web-profiler-bundle": "^6.4"
     },
     "replace": {
         "contao/calendar-bundle": "self.version",
