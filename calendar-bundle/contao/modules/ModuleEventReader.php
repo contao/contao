@@ -162,7 +162,7 @@ class ModuleEventReader extends Events
 				$htmlHeadBag->setMetaRobots($objEvent->robots);
 			}
 
-			if ($objCalendar->enableCanonical && $objEvent->canonicalLink)
+			if ($objEvent->canonicalLink)
 			{
 				$url = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objEvent->canonicalLink);
 
