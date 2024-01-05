@@ -203,6 +203,13 @@ class ModuleLogin extends Module
 			return;
 		}
 
+		$pwResetPage = $this->objModel->getRelated('pwResetPage');
+
+		if ($pwResetPage instanceof PageModel)
+		{
+			$this->Template->pwResetUrl = $pwResetPage->getFrontendUrl();
+		}
+
 		$this->Template->username = $GLOBALS['TL_LANG']['MSC']['username'];
 		$this->Template->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['login']);
