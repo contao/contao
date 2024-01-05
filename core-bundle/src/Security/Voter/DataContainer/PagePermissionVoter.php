@@ -92,7 +92,8 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
             };
 
             return ($this->canEdit($action, $token, $pageId) || $this->canChangeHierarchy($action, $token, $pageId))
-                && $this->canAccessPage($token, $pageId);
+                && $this->canAccessPage($token, $pageId)
+                && $this->canCreate(new CreateAction($action->getDataSource()), $token);
         }
 
         // Check access to any page on `create` operation
