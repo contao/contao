@@ -62,6 +62,8 @@ class NewsFeedControllerTest extends ContaoTestCase
             'title' => 'Latest News',
             'alias' => 'latest-news',
             'feedFormat' => $format,
+            'urlPrefix' => '',
+            'urlSuffix' => '',
         ]);
 
         $route = new PageRoute($pageModel);
@@ -79,6 +81,8 @@ class NewsFeedControllerTest extends ContaoTestCase
             'title' => 'Latest News',
             'alias' => 'latest-news',
             'feedFormat' => 'foo',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
         ]);
 
         $route = new PageRoute($pageModel);

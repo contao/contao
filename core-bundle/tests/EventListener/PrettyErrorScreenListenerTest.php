@@ -115,6 +115,8 @@ class PrettyErrorScreenListenerTest extends TestCase
             'pid' => 1,
             'type' => 'error_'.$type,
             'rootLanguage' => '',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
         ]);
 
         $request = $this->getRequest('frontend');
@@ -149,6 +151,8 @@ class PrettyErrorScreenListenerTest extends TestCase
             'pid' => 1,
             'type' => 'error_401',
             'rootLanguage' => '',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
             'protected' => true,
             'groups' => '',
         ]);
@@ -180,6 +184,8 @@ class PrettyErrorScreenListenerTest extends TestCase
             'pid' => 1,
             'type' => 'error_403',
             'rootLanguage' => '',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
         ]);
 
         $request = $this->getRequest('frontend');
@@ -208,6 +214,8 @@ class PrettyErrorScreenListenerTest extends TestCase
             'pid' => 1,
             'type' => 'error_403',
             'rootLanguage' => '',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
         ]);
 
         $request = $this->getRequest('frontend');
