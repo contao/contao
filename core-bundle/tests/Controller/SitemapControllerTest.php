@@ -75,6 +75,8 @@ class SitemapControllerTest extends TestCase
                 'groups' => [],
                 'published' => true,
                 'rootLanguage' => 'en',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
             ],
             ['' => 'https://www.foobar.com:8000/en/page1.html'],
         );
@@ -106,6 +108,8 @@ class SitemapControllerTest extends TestCase
                 'groups' => [],
                 'published' => true,
                 'rootLanguage' => 'en',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
             ],
             ['' => 'https://www.foobar.com/en/page1.html'],
         );
@@ -135,6 +139,8 @@ class SitemapControllerTest extends TestCase
                 'groups' => [],
                 'published' => true,
                 'rootLanguage' => 'en',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
             ],
             ['' => 'https://www.foobar.com/en/page1.html'],
         );
@@ -147,6 +153,8 @@ class SitemapControllerTest extends TestCase
                 'groups' => [],
                 'published' => true,
                 'rootLanguage' => 'en',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
             ],
             ['' => 'https://www.foobar.com/en/page2.html'],
         );
@@ -188,6 +196,8 @@ class SitemapControllerTest extends TestCase
             'groups' => [],
             'published' => false,
             'rootLanguage' => 'en',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
         ]);
 
         $page2 = $this->mockPage(
@@ -198,6 +208,8 @@ class SitemapControllerTest extends TestCase
                 'groups' => [],
                 'published' => true,
                 'rootLanguage' => 'en',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
             ],
             ['' => 'https://www.foobar.com/en/page2.html'],
         );
@@ -237,6 +249,8 @@ class SitemapControllerTest extends TestCase
             'published' => true,
             'requireItem' => true,
             'rootLanguage' => 'en',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
         ]);
 
         $page2 = $this->mockPage(
@@ -247,6 +261,8 @@ class SitemapControllerTest extends TestCase
                 'groups' => [],
                 'published' => true,
                 'rootLanguage' => 'en',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
             ],
             ['' => 'https://www.foobar.com/en/page2.html'],
         );
@@ -285,6 +301,8 @@ class SitemapControllerTest extends TestCase
             'groups' => [],
             'published' => true,
             'rootLanguage' => 'en',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
         ]);
 
         $page2 = $this->mockPage(
@@ -295,6 +313,8 @@ class SitemapControllerTest extends TestCase
                 'groups' => [],
                 'published' => true,
                 'rootLanguage' => 'en',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
             ],
             ['' => 'https://www.foobar.com/en/page2.html'],
         );
@@ -347,6 +367,8 @@ class SitemapControllerTest extends TestCase
             'groups' => [],
             'published' => true,
             'rootLanguage' => 'en',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
         ]);
 
         $page2 = $this->mockPage(
@@ -357,6 +379,8 @@ class SitemapControllerTest extends TestCase
                 'groups' => [],
                 'published' => true,
                 'rootLanguage' => 'en',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
             ],
             ['' => 'https://www.foobar.com/en/page2.html'],
         );
@@ -406,6 +430,8 @@ class SitemapControllerTest extends TestCase
             'groups' => [],
             'published' => '1',
             'rootLanguage' => 'en',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
         ]);
 
         $page1
@@ -422,6 +448,8 @@ class SitemapControllerTest extends TestCase
                 'groups' => [],
                 'published' => '1',
                 'rootLanguage' => 'en',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
             ],
             ['' => 'https://www.foobar.com/en/page2.html'],
         );
@@ -473,6 +501,8 @@ class SitemapControllerTest extends TestCase
                 'groups' => [],
                 'published' => true,
                 'rootLanguage' => 'en',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
             ],
             ['' => 'https://www.foobar.com/en/page1.html'],
         );
@@ -485,6 +515,8 @@ class SitemapControllerTest extends TestCase
             'groups' => [],
             'published' => true,
             'rootLanguage' => 'en',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
         ]);
 
         $page3 = $this->mockPage(
@@ -496,6 +528,8 @@ class SitemapControllerTest extends TestCase
                 'groups' => ['2'],
                 'published' => true,
                 'rootLanguage' => 'en',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
             ],
             ['' => 'https://www.foobar.com/en/page3.html'],
         );
@@ -539,6 +573,8 @@ class SitemapControllerTest extends TestCase
                 'groups' => [],
                 'published' => true,
                 'rootLanguage' => 'en',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
             ],
             [
                 '' => 'https://www.foobar.com/en/page1.html',
@@ -578,6 +614,8 @@ class SitemapControllerTest extends TestCase
                 'groups' => [],
                 'published' => true,
                 'rootLanguage' => 'en',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
             ],
             [
                 '' => 'https://www.foobar.com/en/page1.html',
@@ -617,6 +655,8 @@ class SitemapControllerTest extends TestCase
                 'published' => true,
                 'robots' => 'index,follow',
                 'rootLanguage' => 'en',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
             ],
             ['' => 'https://www.foobar.com/en/page1.html'],
         );
@@ -629,6 +669,8 @@ class SitemapControllerTest extends TestCase
             'published' => true,
             'robots' => 'noindex,nofollow',
             'rootLanguage' => 'en',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
         ]);
 
         $pages = [
@@ -662,6 +704,8 @@ class SitemapControllerTest extends TestCase
             'groups' => [],
             'published' => true,
             'rootLanguage' => 'en',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
         ]);
 
         $page2 = $this->mockPage(
@@ -672,6 +716,8 @@ class SitemapControllerTest extends TestCase
                 'groups' => [],
                 'published' => true,
                 'rootLanguage' => 'en',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
             ],
             ['' => 'https://www.foobar.com/en/page2.html'],
         );
