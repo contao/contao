@@ -19,6 +19,7 @@ $GLOBALS['TL_DCA']['tl_version'] = array
 			(
 				'id' => 'primary',
 				'pid,fromTable,version' => 'unique',
+				'tstamp' => 'index',
 				'userid' => 'index'
 			)
 		)
