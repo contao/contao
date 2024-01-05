@@ -31,7 +31,7 @@ class PageTypeAccessVoterTest extends TestCase
     {
         $voter = new PageTypeAccessVoter(
             $this->createMock(AccessDecisionManagerInterface::class),
-            $this->createMock(Connection::class)
+            $this->createMock(Connection::class),
         );
 
         $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_page'));
@@ -69,7 +69,7 @@ class PageTypeAccessVoterTest extends TestCase
     /**
      * @dataProvider decidesAccessOnPageTypeInActionProvider
      */
-    public function testDecidesAccessOnPageTypeInAction(CreateAction|ReadAction|UpdateAction|DeleteAction $subject, array $types, int $expected): void
+    public function testDecidesAccessOnPageTypeInAction(CreateAction|DeleteAction|ReadAction|UpdateAction $subject, array $types, int $expected): void
     {
         $token = $this->createMock(TokenInterface::class);
 
@@ -94,43 +94,43 @@ class PageTypeAccessVoterTest extends TestCase
         yield [
             new CreateAction('tl_page', ['type' => 'regular']),
             ['regular' => true],
-            VoterInterface::ACCESS_ABSTAIN
+            VoterInterface::ACCESS_ABSTAIN,
         ];
 
         yield [
             new UpdateAction('tl_page', ['pid' => 42, 'type' => 'forward']),
             ['forward' => true],
-            VoterInterface::ACCESS_ABSTAIN
+            VoterInterface::ACCESS_ABSTAIN,
         ];
 
         yield [
             new UpdateAction('tl_page', ['pid' => 42, 'type' => 'forward']),
             ['forward' => false],
-            VoterInterface::ACCESS_DENIED
+            VoterInterface::ACCESS_DENIED,
         ];
 
         yield [
             new UpdateAction('tl_page', ['pid' => 42, 'type' => 'forward'], ['type' => 'redirect']),
             ['forward' => true, 'redirect' => true],
-            VoterInterface::ACCESS_ABSTAIN
+            VoterInterface::ACCESS_ABSTAIN,
         ];
 
         yield [
             new UpdateAction('tl_page', ['pid' => 42, 'type' => 'forward'], ['type' => 'redirect']),
             ['forward' => true, 'redirect' => false],
-            VoterInterface::ACCESS_DENIED
+            VoterInterface::ACCESS_DENIED,
         ];
 
         yield [
             new DeleteAction('tl_page', ['pid' => 42, 'type' => 'forward']),
             ['forward' => true],
-            VoterInterface::ACCESS_ABSTAIN
+            VoterInterface::ACCESS_ABSTAIN,
         ];
 
         yield [
             new DeleteAction('tl_page', ['pid' => 42, 'type' => 'forward']),
             ['forward' => false],
-            VoterInterface::ACCESS_DENIED
+            VoterInterface::ACCESS_DENIED,
         ];
     }
 
@@ -196,7 +196,7 @@ class PageTypeAccessVoterTest extends TestCase
             new CreateAction('tl_page', ['pid' => 42, 'sorting' => 128, 'type' => 'error_404']),
             [
                 [42, 'root'],
-                [['error_404', 42], 21]
+                [['error_404', 42], 21],
             ],
             VoterInterface::ACCESS_DENIED,
         ];
@@ -223,7 +223,7 @@ class PageTypeAccessVoterTest extends TestCase
             new UpdateAction('tl_page', ['pid' => 42, 'type' => 'regular'], ['type' => 'error_404']),
             [
                 [42, 'root'],
-                [['error_404', 42], false]
+                [['error_404', 42], false],
             ],
             VoterInterface::ACCESS_ABSTAIN,
         ];
@@ -232,7 +232,7 @@ class PageTypeAccessVoterTest extends TestCase
             new UpdateAction('tl_page', ['pid' => 42, 'type' => 'regular'], ['type' => 'error_404']),
             [
                 [42, 'root'],
-                [['error_404', 42], 21]
+                [['error_404', 42], 21],
             ],
             VoterInterface::ACCESS_DENIED,
         ];

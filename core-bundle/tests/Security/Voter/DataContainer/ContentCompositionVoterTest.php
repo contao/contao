@@ -192,8 +192,6 @@ class ContentCompositionVoterTest extends TestCase
         $this->assertSame(VoterInterface::ACCESS_DENIED, $result);
     }
 
-
-
     public function testAbstainsIfPageLayoutHasArticleModule(): void
     {
         $token = $this->createMock(TokenInterface::class);

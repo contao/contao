@@ -73,19 +73,19 @@ class ArticleContentVoterTest extends TestCase
         yield 'Abstains when access is allowed' => [
             ['ptable' => 'tl_article', 'pid' => 42],
             true,
-            VoterInterface::ACCESS_ABSTAIN
+            VoterInterface::ACCESS_ABSTAIN,
         ];
 
         yield 'Only votes on ptable=tl_article' => [
             ['ptable' => 'tl_news', 'pid' => 42],
             null,
-            VoterInterface::ACCESS_ABSTAIN
+            VoterInterface::ACCESS_ABSTAIN,
         ];
 
         yield 'Denies access if decision manager denies' => [
             ['ptable' => 'tl_article', 'pid' => 42],
             false,
-            VoterInterface::ACCESS_DENIED
+            VoterInterface::ACCESS_DENIED,
         ];
     }
 }
