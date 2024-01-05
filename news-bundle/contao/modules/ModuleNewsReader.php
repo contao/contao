@@ -129,7 +129,6 @@ class ModuleNewsReader extends ModuleNews
 			$this->news_template = 'news_full';
 		}
 
-
 		$arrArticle = $this->parseArticle($objArticle);
 		$this->Template->articles = $arrArticle;
 
