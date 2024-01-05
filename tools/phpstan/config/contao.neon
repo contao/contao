@@ -17,6 +17,7 @@ parameters:
         alwaysTrueAlwaysReported: false
         detectDeadTypeInMultiCatch: false
         disableCheckMissingIterableValueType: false
+        promotedPropertyAttribute: false
 
     paths:
         - %currentWorkingDirectory%/calendar-bundle/src
