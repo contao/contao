@@ -320,7 +320,7 @@ class PageTypeAccessVoterTest extends TestCase
             VoterInterface::ACCESS_ABSTAIN,
         ];
 
-        yield 'Denies root page outside root' => [
+        yield 'Cannot create root page outside root' => [
             new CreateAction('tl_page', ['pid' => 42, 'type' => 'root']),
             VoterInterface::ACCESS_DENIED,
         ];
@@ -328,6 +328,11 @@ class PageTypeAccessVoterTest extends TestCase
         yield 'Ignores root page outside root' => [
             new UpdateAction('tl_page', ['pid' => 42, 'type' => 'root']),
             VoterInterface::ACCESS_ABSTAIN,
+        ];
+
+        yield 'Cannot change type to root outside root' => [
+            new UpdateAction('tl_page', ['pid' => 42, 'type' => 'regular'], ['type' => 'root']),
+            VoterInterface::ACCESS_DENIED,
         ];
 
         yield 'Can move root page to root' => [

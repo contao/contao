@@ -124,8 +124,8 @@ class PageTypeAccessVoter extends AbstractDataContainerVoter
         }
 
         if (
-            (null === $action->getNewPid() && !isset($action->getNew()['type']))
-            || ($action instanceof CreateAction && !isset($action->getNew()['type']))
+            ($action instanceof CreateAction && !isset($action->getNew()['type']))
+            || (null === $action->getNewPid() && !isset($action->getNew()['type']))
         ) {
             return true;
         }
@@ -133,7 +133,7 @@ class PageTypeAccessVoter extends AbstractDataContainerVoter
         $type = $action->getNew()['type'] ?? ($action instanceof UpdateAction ? ($action->getCurrent()['type'] ?? null) : null);
         $pid = (int) ($action->getNewPid() ?? ($action instanceof UpdateAction ? $action->getCurrentPid() : -1));
 
-        return ('root' !== $type || 0 === (int) $action->getNewPid())
+        return ('root' !== $type || 0 === $pid)
             && (0 !== $pid || 'root' === $type);
     }
 
