@@ -38,8 +38,8 @@
       <trans-unit id="tl_calendar.protected_legend">
         <source>Access protection</source>
       </trans-unit>
-      <trans-unit id="tl_calendar.global_legend">
-        <source>Global settings</source>
+      <trans-unit id="tl_calendar.feed_legend">
+        <source>RSS/Atom feed</source>
       </trans-unit>
       <trans-unit id="tl_calendar.notify_admin">
         <source>System administrator</source>

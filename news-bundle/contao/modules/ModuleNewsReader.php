@@ -129,10 +129,8 @@ class ModuleNewsReader extends ModuleNews
 			$this->news_template = 'news_full';
 		}
 
-		/** @var NewsArchiveModel $objArchive */
-		$objArchive = $objArticle->getRelated('pid');
-		$arrArticle = $this->parseArticle($objArticle);
 
+		$arrArticle = $this->parseArticle($objArticle);
 		$this->Template->articles = $arrArticle;
 
 		// Overwrite the page metadata (see #2853, #4955 and #87)
@@ -200,6 +198,8 @@ class ModuleNewsReader extends ModuleNews
 			return;
 		}
 
+		/** @var NewsArchiveModel $objArchive */
+		$objArchive = $objArticle->getRelated('pid');
 		$this->Template->allowComments = $objArchive->allowComments;
 
 		// Comments are not allowed

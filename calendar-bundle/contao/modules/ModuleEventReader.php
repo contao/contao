@@ -127,9 +127,6 @@ class ModuleEventReader extends Events
 				throw new InternalServerErrorException('Empty target URL');
 		}
 
-		/** @var CalendarModel $objCalendar */
-		$objCalendar = $objEvent->getRelated('pid');
-
 		// Overwrite the page metadata (see #2853, #4955 and #87)
 		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
@@ -460,6 +457,8 @@ class ModuleEventReader extends Events
 			return;
 		}
 
+		/** @var CalendarModel $objCalendar */
+		$objCalendar = $objEvent->getRelated('pid');
 		$this->Template->allowComments = $objCalendar->allowComments;
 
 		// Comments are not allowed
