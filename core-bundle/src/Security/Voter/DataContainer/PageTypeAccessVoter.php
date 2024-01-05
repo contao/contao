@@ -90,14 +90,20 @@ class PageTypeAccessVoter extends AbstractDataContainerVoter
             return true;
         }
 
+        // Cannot create a page without a parent ID
+        if ($action instanceof CreateAction && null === $action->getNewPid()) {
+            return false;
+        }
+
         $type = $action->getNew()['type'] ?? ($action instanceof UpdateAction ? $action->getCurrent()['type'] : null);
+        $pid = (int) ($action->getNewPid() ?? ($action instanceof UpdateAction ? $action->getCurrentPid() : null));
 
         if (
-            null !== $action->getNewPid()
-            && null !== $action->getNew()['sorting']
+            (null !== $action->getNewPid() || null !== ($action->getNew()['sorting'] ?? null))
+            && (!$action instanceof UpdateAction || \in_array($type, self::FIRST_LEVEL_TYPES, true))
             && (
-                !$this->isRootPage((int) $action->getNewPid())
-                || $this->hasPageTypeInRoot($type, (int) $action->getNewPid())
+                !$this->isRootPage($pid)
+                || $this->hasPageTypeInRoot($type, $pid)
             )
         ) {
             return false;
