@@ -27,7 +27,7 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
-				'tstamp' => 'index',
+				'tstamp' => 'index'
 			)
 		)
 	),

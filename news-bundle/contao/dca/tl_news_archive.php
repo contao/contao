@@ -51,7 +51,7 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 			(
 				'id' => 'primary',
 				'tstamp' => 'index',
-				'jumpTo' => 'index',
+				'jumpTo' => 'index'
 			)
 		)
 	),

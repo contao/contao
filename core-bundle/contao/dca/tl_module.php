@@ -38,7 +38,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
-				'tstamp' => 'index',
+				'tstamp' => 'index'
 			)
 		)
 	),

@@ -45,7 +45,7 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 			(
 				'id' => 'primary',
 				'tstamp' => 'index',
-				'jumpTo' => 'index',
+				'jumpTo' => 'index'
 			)
 		)
 	),

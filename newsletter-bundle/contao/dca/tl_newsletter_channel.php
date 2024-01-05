@@ -45,7 +45,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
-				'tstamp' => 'index',
+				'tstamp' => 'index'
 			)
 		)
 	),
