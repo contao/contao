@@ -310,6 +310,11 @@ class PageTypeAccessVoterTest extends TestCase
             VoterInterface::ACCESS_ABSTAIN,
         ];
 
+        yield 'Can paste new node in root' => [
+            new CreateAction('tl_page', ['pid' => 0]),
+            VoterInterface::ACCESS_ABSTAIN,
+        ];
+
         yield 'Allows root page in root' => [
             new CreateAction('tl_page', ['pid' => 0, 'type' => 'root']),
             VoterInterface::ACCESS_ABSTAIN,
