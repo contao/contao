@@ -43,8 +43,7 @@ class PageTypeAccessVoter extends AbstractDataContainerVoter
     {
         return $this->validateAccessToPageType($token, $action)
             && $this->validateFirstLevelType($action)
-            && $this->validateRootType($action)
-            && $this->validateRootNode($action);
+            && $this->validateRootType($action);
     }
 
     private function validateAccessToPageType(TokenInterface $token, CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
@@ -124,41 +123,15 @@ class PageTypeAccessVoter extends AbstractDataContainerVoter
             return true;
         }
 
-        if (
-            (!$action instanceof UpdateAction || 'root' !== $action->getCurrent()['type'])
-            && (!isset($action->getNew()['type']) || 'root' !== $action->getNew()['type'])
-        ) {
+        if (null === $action->getNewPid() && !isset($action->getNew()['type'])) {
             return true;
         }
 
-        if ($action instanceof UpdateAction && 0 !== (int) $action->getCurrentPid()) {
-            return false;
-        }
+        $type = $action->getNew()['type'] ?? ($action instanceof UpdateAction ? ($action->getCurrent()['type'] ?? null) : null);
+        $pid = (int) ($action->getNewPid() ?? ($action instanceof UpdateAction ? $action->getCurrentPid() : -1));
 
-        return 0 === (int) $action->getNewPid();
-    }
-
-    private function validateRootNode(CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
-    {
-        if ($action instanceof ReadAction || $action instanceof DeleteAction) {
-            return true;
-        }
-
-        if (
-            (!$action instanceof UpdateAction || (int) $action->getCurrentPid() > 0)
-            && (null === $action->getNewPid() || (int) $action->getNewPid() > 0)
-        ) {
-            return true;
-        }
-
-        if (
-            ($action instanceof UpdateAction && 'root' !== $action->getCurrent()['type'])
-            || (isset($action->getNew()['type']) && 'root' !== $action->getNew()['type'])
-        ) {
-            return false;
-        }
-
-        return true;
+        return ('root' !== $type || 0 === (int) $action->getNewPid())
+            && (0 !== $pid || 'root' === $type);
     }
 
     private function isRootPage(int $pageId): bool
