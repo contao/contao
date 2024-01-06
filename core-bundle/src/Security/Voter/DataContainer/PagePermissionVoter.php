@@ -88,7 +88,7 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
             $pageId = match ($action->getDataSource()) {
                 'tl_page' => (int) $action->getNewId(),
                 'tl_article' => (int) $action->getNewPid(),
-                default => throw new \UnexpectedValueException('Unsupported data source "'.$action->getDataSource().'"'),
+                default => throw new \UnexpectedValueException(sprintf('Unsupported data source "%s"', $action->getDataSource())),
             };
 
             return ($this->canEdit($action, $token, $pageId) || $this->canChangeHierarchy($action, $token, $pageId))
