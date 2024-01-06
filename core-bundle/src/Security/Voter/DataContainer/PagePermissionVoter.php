@@ -96,7 +96,7 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
                 && $this->canCreate(new CreateAction($action->getDataSource()), $token);
         }
 
-        // Check access to any page on `create` operation
+        // Check access to any page on `new` operation
         if (null === $action->getNewPid()) {
             $pageIds = $this->getPagemounts($token);
         } else {
