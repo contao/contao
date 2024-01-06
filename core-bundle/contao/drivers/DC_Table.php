@@ -123,6 +123,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$this->intId = Input::get('id');
+		$this->strTable = $strTable;
 
 		// Clear the clipboard
 		if (Input::get('clipboard') !== null)
@@ -176,28 +177,39 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			elseif (Input::post('cut') !== null || Input::post('copy') !== null || Input::post('copyMultiple') !== null)
 			{
 				$arrClipboard = $objSession->get('CLIPBOARD');
+				$security = $container->get('security.helper');
 
-				$arrClipboard[$strTable] = array
-				(
-					'id' => $ids,
-					'mode' => (Input::post('cut') !== null ? 'cutAll' : 'copyAll'),
-					'keep' => Input::post('copyMultiple') !== null
-				);
+				$mode = Input::post('cut') !== null ? 'cutAll' : 'copyAll';
+				$ids = array_filter($ids, fn ($id) => $security->isGranted(...$this->getClipboardPermission($mode, (int) $id)));
 
-				$objSession->set('CLIPBOARD', $arrClipboard);
-
-				// Support copyAll in the list view (see #7499)
-				if ((Input::post('copy') !== null || Input::post('copyMultiple') !== null) && ($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['mode'] ?? 0) < self::MODE_PARENT)
+				if (empty($ids))
 				{
-					$this->redirect(str_replace('act=select', 'act=copyAll', Environment::get('requestUri')));
+					unset($arrClipboard[$strTable]);
+					$objSession->set('CLIPBOARD', $arrClipboard);
+				}
+				else
+				{
+					$arrClipboard[$strTable] = array
+					(
+						'id' => $ids,
+						'mode' => $mode,
+						'keep' => Input::post('copyMultiple') !== null
+					);
+
+					$objSession->set('CLIPBOARD', $arrClipboard);
+
+					// Support copyAll in the list view (see #7499)
+					if ((Input::post('copy') !== null || Input::post('copyMultiple') !== null) && ($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['mode'] ?? 0) < self::MODE_PARENT)
+					{
+						$this->redirect(str_replace('act=select', 'act=copyAll', Environment::get('requestUri')));
+					}
 				}
 
 				$this->redirect($this->getReferer());
 			}
 		}
 
-		$this->strTable = $strTable;
-		$this->ptable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] ?? null;
+		$this->ptable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] = $this->findPtable();
 		$this->ctable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'] ?? null;
 		$this->treeView = \in_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null, array(self::MODE_TREE, self::MODE_TREE_EXTENDED));
 		$this->arrModule = $arrModule;
@@ -291,6 +303,34 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		return null;
 	}
 
+	private function findPtable(): string|null
+	{
+		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
+		{
+			$act = Input::get('act');
+			$mode = Input::get('mode');
+
+			// For these actions the id parameter refers to the parent record, so they need to be excluded
+			if ($this->intId && ($act !== 'paste' || $mode !== 'create') && !\in_array($act, array(null, 'create', 'select', 'editAll', 'overrideAll', 'deleteAll'), true))
+			{
+				$currentRecord = $this->getCurrentRecord($this->intId);
+
+				if (!empty($currentRecord['ptable']))
+				{
+					return $currentRecord['ptable'];
+				}
+			}
+
+			// Use the ptable query parameter if it points to itself (nested elements case)
+			if (Input::get('ptable') === $this->strTable && \in_array($this->strTable, $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'] ?? array(), true))
+			{
+				return $this->strTable;
+			}
+		}
+
+		return $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] ?? null;
+	}
+
 	/**
 	 * Return an object property
 	 *
@@ -333,6 +373,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Add to clipboard
 		if (Input::get('act') == 'paste')
 		{
+			$this->denyAccessUnlessGranted(...$this->getClipboardPermission(Input::get('mode'), (int) Input::get('id')));
+
 			$children = Input::get('children');
 
 			// Backwards compatibility
@@ -3623,6 +3665,22 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
+		// Call onpalette_callback
+		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onpalette_callback'] ?? null))
+		{
+			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onpalette_callback'] as $callback)
+			{
+				if (\is_array($callback))
+				{
+					$strPalette = System::importStatic($callback[0])->{$callback[1]}($strPalette, $this);
+				}
+				elseif (\is_callable($callback))
+				{
+					$strPalette = $callback($strPalette, $this);
+				}
+			}
+		}
+
 		return $strPalette;
 	}
 
@@ -4023,7 +4081,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$_buttons = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback']($this, array('id'=>0), $table, false, $arrClipboard);
 			}
-			elseif (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid'=>0))))
+			elseif (!$this->canPasteClipboard($arrClipboard, array('pid'=>0)))
 			{
 				$_buttons = Image::getHtml('pasteinto--disabled.svg') . ' ';
 			}
@@ -4282,11 +4340,25 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$currentRecord = null;
 		}
 
+		// Special handling for visible root trails, which are tree nodes the user does not have access to.
+		// $this->getCurrentRecord() can deny access, but we still need the record to render a label.
+		if (null === $currentRecord && !empty($this->visibleRootTrails))
+		{
+			$currentRecord = Database::getInstance()
+				->prepare("SELECT * FROM " . $table . " WHERE id=?")
+				->execute($id)
+				->fetchAssoc()
+			;
+
+			if (!$currentRecord || $checkIdAllowed ? !\in_array($id, $this->visibleRootTrails) : !\in_array($currentRecord['pid'] ?? null, $this->visibleRootTrails))
+			{
+				return '';
+			}
+		}
+
 		// Return if there is no result
 		if (null === $currentRecord)
 		{
-			$objSessionBag->replace($session);
-
 			return '';
 		}
 
@@ -4432,9 +4504,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 					else
 					{
-						$security = System::getContainer()->get('security.helper');
-
-						if ((!$this->rootPaste && \in_array($id, $this->root)) || !$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1))))
+						if ((!$this->rootPaste && \in_array($id, $this->root)) || !$this->canPasteClipboard($arrClipboard, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1)))
 						{
 							$_buttons .= Image::getHtml('pasteafter--disabled.svg') . ' ';
 						}
@@ -4443,7 +4513,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 							$_buttons .= '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(sprintf($labelPasteAfter[1], $id)) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a> ';
 						}
 
-						if (!$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $id))))
+						if (!$this->canPasteClipboard($arrClipboard, array('pid' => $id, 'sorting' => 0)))
 						{
 							$_buttons .= Image::getHtml('pasteinto--disabled.svg') . ' ';
 						}
@@ -4460,7 +4530,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					// Paste after the selected record (e.g. paste article after article X)
 					if ($this->strTable == $table)
 					{
-						if (($arrClipboard['mode'] == 'cut' && ($blnCircularReference || $arrClipboard['id'] == $id)) || ($arrClipboard['mode'] == 'cutAll' && ($blnCircularReference || \in_array($id, $arrClipboard['id']))) || !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1))))
+						if (($arrClipboard['mode'] == 'cut' && ($blnCircularReference || $arrClipboard['id'] == $id)) || ($arrClipboard['mode'] == 'cutAll' && ($blnCircularReference || \in_array($id, $arrClipboard['id']))) || !$this->canPasteClipboard($arrClipboard, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1)))
 						{
 							$_buttons .= Image::getHtml('pasteafter--disabled.svg') . ' ';
 						}
@@ -4473,7 +4543,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					// Paste into the selected record (e.g. paste article into page X)
 					else
 					{
-						if (System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid'=>$id))))
+						if (!$this->canPasteClipboard($arrClipboard, array('pid' => $id, 'sorting' => 0)))
 						{
 							$_buttons .= Image::getHtml('pasteinto--disabled.svg') . ' ';
 						}
@@ -5278,7 +5348,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <table class="tl_listing' . (($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null) ? ' showColumns' : '') . ($this->strPickerFieldType ? ' picker unselectable' : '') . '">';
 
 			// Automatically add the "order by" field as last column if we do not have group headers
-			if ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null)
+			if (($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null) && false !== ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showFirstOrderBy'] ?? null))
 			{
 				$blnFound = false;
 
@@ -6631,7 +6701,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	}
 
 	/**
-	 * Initialize the root pages
+	 * Initialize the root nodes
 	 */
 	protected function initRoots()
 	{
@@ -6752,5 +6822,39 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		return $data;
+	}
+
+	protected function canPasteClipboard(array $arrClipboard, array $new): bool
+	{
+		$security = System::getContainer()->get('security.helper');
+
+		if ($arrClipboard['mode'] === 'create')
+		{
+			return $security->isGranted(...$this->getClipboardPermission($arrClipboard['mode'], 0, $new));
+		}
+
+		foreach ((array) $arrClipboard['id'] as $id)
+		{
+			if (!$security->isGranted(...$this->getClipboardPermission($arrClipboard['mode'], (int) $id, $new)))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	protected function getClipboardPermission(string $mode, int $id, array|null $new = null): array
+	{
+		$action = match ($mode)
+		{
+			'create' => new CreateAction($this->strTable, $new),
+			'cut',
+			'cutAll' => new UpdateAction($this->strTable, $this->getCurrentRecord($id, $this->strTable), array_replace(array('sorting' => null), (array) $new)),
+			'copy',
+			'copyAll' => new CreateAction($this->strTable, array_replace($this->getCurrentRecord($id, $this->strTable), array('tstamp' => null, 'sorting' => null), (array) $new))
+		};
+
+		return array(ContaoCorePermissions::DC_PREFIX . $this->strTable, $action);
 	}
 }

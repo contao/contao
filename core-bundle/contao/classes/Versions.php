@@ -219,7 +219,7 @@ class Versions extends Controller
 		}
 
 		$db = Database::getInstance();
-		$strDescription = mb_substr($strDescription, 0, System::getContainer()->get('database_connection')->getSchemaManager()->listTableColumns('tl_version')['description']->getLength());
+		$strDescription = mb_substr($strDescription, 0, System::getContainer()->get('database_connection')->createSchemaManager()->listTableColumns('tl_version')['description']->getLength());
 
 		$intId = $db
 			->prepare("INSERT INTO tl_version (pid, tstamp, version, fromTable, username, userid, description, editUrl, active, data) VALUES (?, ?, IFNULL((SELECT MAX(version) FROM (SELECT version FROM tl_version WHERE pid=? AND fromTable=?) v), 0) + 1, ?, ?, ?, ?, ?, 1, ?)")

@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database\Result;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\String\UnicodeString;
@@ -41,6 +43,11 @@ class Theme extends Backend
 	public function importTheme()
 	{
 		Config::set('uploadTypes', Config::get('uploadTypes') . ',cto,sql');
+
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_IMPORT_THEMES))
+		{
+			throw new AccessDeniedException('Not enough permissions to import themes.');
+		}
 
 		$objUploader = new FileUpload();
 
@@ -778,6 +785,11 @@ class Theme extends Backend
 	 */
 	public function exportTheme(DataContainer $dc)
 	{
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EXPORT_THEMES))
+		{
+			throw new AccessDeniedException('Not enough permissions to export themes.');
+		}
+
 		// Get the theme metadata
 		$objTheme = Database::getInstance()
 			->prepare("SELECT * FROM tl_theme WHERE id=?")

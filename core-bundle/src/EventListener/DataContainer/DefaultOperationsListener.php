@@ -168,7 +168,7 @@ class DefaultOperationsListener
     {
         return function (DataContainerOperation $operation) use ($actionClass, $table): void {
             if (!$this->isGranted($actionClass, $table, $operation)) {
-                $this->disableOperation($operation);
+                $operation->disable();
             }
         };
     }
@@ -177,7 +177,7 @@ class DefaultOperationsListener
     {
         return function (DataContainerOperation $operation) use ($table): void {
             if (!$this->isGranted(CreateAction::class, $table, $operation)) {
-                $this->disableOperation($operation);
+                $operation->disable();
 
                 return;
             }
@@ -188,7 +188,7 @@ class DefaultOperationsListener
             );
 
             if ($childCount < 1) {
-                $this->disableOperation($operation);
+                $operation->disable();
             }
         };
     }
@@ -244,14 +244,5 @@ class DefaultOperationsListener
         }
 
         return new CreateAction($table, $new);
-    }
-
-    private function disableOperation(DataContainerOperation $operation): void
-    {
-        unset($operation['route'], $operation['href']);
-
-        if (isset($operation['icon'])) {
-            $operation['icon'] = str_replace('.svg', '--disabled.svg', $operation['icon']);
-        }
     }
 }

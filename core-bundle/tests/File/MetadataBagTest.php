@@ -117,8 +117,8 @@ class MetadataBagTest extends TestCase
             'string',
         ];
 
-        yield 'invalid object' => [[
-            'en' => new Metadata([]), 'de' => new \stdClass(), ],
+        yield 'invalid object' => [
+            ['en' => new Metadata([]), 'de' => new \stdClass()],
             \stdClass::class,
         ];
     }

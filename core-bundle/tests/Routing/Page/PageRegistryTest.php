@@ -197,7 +197,11 @@ class PageRegistryTest extends TestCase
 
     public function testConfiguresTheRoute(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'foo']);
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'type' => 'foo',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
+        ]);
 
         $enhancer1 = $this->createMock(DynamicRouteInterface::class);
         $enhancer1
@@ -319,7 +323,11 @@ class PageRegistryTest extends TestCase
 
     public function testOverwritesExistingTypes(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'foo']);
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'type' => 'foo',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
+        ]);
 
         $config1 = new RouteConfig();
         $config2 = new RouteConfig();
