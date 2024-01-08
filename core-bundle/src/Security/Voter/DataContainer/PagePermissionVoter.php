@@ -127,10 +127,13 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
         $pageId = $this->getCurrentPageId($action);
         $newRecord = $action->getNew();
 
+        if (!$this->canAccessPage($token, $pageId)) {
+            return false;
+        }
+
         // Edit operation
         if (null === $newRecord) {
-            return $this->canEdit($action, $token, $pageId)
-                && $this->canAccessPage($token, $pageId);
+            return $this->canEdit($action, $token, $pageId);
         }
 
         // Move existing record
@@ -139,10 +142,7 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
 
         if (
             ($changeSorting || $changePid)
-            && (
-                !$this->canChangeHierarchy($action, $token, $pageId)
-                || !$this->canAccessPage($token, $pageId)
-            )
+            && !$this->canChangeHierarchy($action, $token, $pageId)
         ) {
             return false;
         }
@@ -150,8 +150,8 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
         if (
             $changePid
             && (
-                !$this->canChangeHierarchy($action, $token, (int) $action->getNewPid())
-                || !$this->canAccessPage($token, (int) $action->getNewPid())
+                !$this->canAccessPage($token, (int) $action->getNewPid())
+                || !$this->canChangeHierarchy($action, $token, (int) $action->getNewPid())
             )
         ) {
             return false;
@@ -164,19 +164,20 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
             return true;
         }
 
-        return $this->canEdit($action, $token, $pageId)
-            && $this->canAccessPage($token, $pageId);
+        return $this->canEdit($action, $token, $pageId);
     }
 
     private function canDelete(DeleteAction $action, TokenInterface $token): bool
     {
+        $pageId = $this->getCurrentPageId($action);
         $permission = match ($action->getDataSource()) {
             'tl_page' => ContaoCorePermissions::USER_CAN_DELETE_PAGE,
             'tl_article' => ContaoCorePermissions::USER_CAN_DELETE_ARTICLES,
             default => throw new \UnexpectedValueException('Unsupported data source "'.$action->getDataSource().'"'),
         };
 
-        return $this->accessDecisionManager->decide($token, [$permission], $this->getCurrentPageId($action));
+        return $this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_ACCESS_PAGE], $pageId)
+            && $this->accessDecisionManager->decide($token, [$permission], $pageId);
     }
 
     private function getPagemounts(TokenInterface $token): array
