@@ -198,10 +198,7 @@ class InsertTagParserTest extends TestCase
                     {
                     }
 
-                    /**
-                     * @phpstan-ignore-next-line
-                     */
-                    public function __invoke(&$a, &$b, $c, &$d, &$e, $f, &$g, &$h)
+                    public function __invoke(string &$a, bool &$b, string $c, array &$d, array &$e, array $f, int &$g, int|string &$h): string
                     {
                         return ($this->hook)($a, $b, $c, $d, $e, $f, $g, $h);
                     }
@@ -302,10 +299,7 @@ class InsertTagParserTest extends TestCase
                     {
                     }
 
-                    /**
-                     * @phpstan-ignore-next-line
-                     */
-                    public function __invoke(&$a, &$b, &$c, &$d, &$e, &$f, $g, &$h, &$i)
+                    public function __invoke(string &$a, string &$b, string &$c, array &$d, bool &$e, array &$f, array $g, int &$h, int &$i): string
                     {
                         return ($this->hook)($a, $b, $c, $d, $e, $f, $g, $h, $i);
                     }

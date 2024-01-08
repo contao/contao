@@ -708,11 +708,11 @@ class PageModel extends Model
 		}
 
 		$t = static::$strTable;
-		$arrColumns = array("$t.dns=? AND $t.fallback=1");
+		$arrColumns = array("$t.type='root' AND $t.dns=? AND $t.fallback=1");
 
 		if (isset($arrOptions['fallbackToEmpty']) && $arrOptions['fallbackToEmpty'] === true)
 		{
-			$arrColumns = array("($t.dns=? OR $t.dns='') AND $t.fallback=1");
+			$arrColumns = array("$t.type='root' AND ($t.dns=? OR $t.dns='') AND $t.fallback=1");
 
 			if (!isset($arrOptions['order']))
 			{

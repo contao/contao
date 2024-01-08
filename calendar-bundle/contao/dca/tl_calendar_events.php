@@ -41,7 +41,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		'markAsCopy'                  => 'title',
 		'onload_callback' => array
 		(
-			array('tl_calendar_events', 'adjustDca'),
 			array('tl_calendar_events', 'generateFeed')
 		),
 		'oncut_callback' => array
@@ -66,6 +65,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
+				'tstamp' => 'index',
 				'alias' => 'index',
 				'pid,published,featured,start,stop' => 'index'
 			)
@@ -79,7 +79,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		(
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('startTime DESC'),
-			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'protected', 'allowComments'),
+			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'protected'),
 			'panelLayout'             => 'filter;sort,search,limit',
 			'defaultSearchField'      => 'title',
 			'child_record_callback'   => array('tl_calendar_events', 'listEvents')
@@ -110,10 +110,10 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('source', 'addTime', 'addImage', 'recurring', 'addEnclosure', 'overwriteMeta'),
-		'default'                     => '{title_legend},title,featured,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,linkText;{meta_legend},pageTitle,robots,description,serpPreview;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments;{publish_legend},published,start,stop',
-		'internal'                    => '{title_legend},title,featured,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,jumpTo,linkText;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments;{publish_legend},published,start,stop',
-		'article'                     => '{title_legend},title,featured,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,articleId,linkText;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments;{publish_legend},published,start,stop',
-		'external'                    => '{title_legend},title,featured,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,url,target,linkText;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments;{publish_legend},published,start,stop'
+		'default'                     => '{title_legend},title,featured,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,linkText;{meta_legend},pageTitle,robots,description,serpPreview;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass;{publish_legend},published,start,stop',
+		'internal'                    => '{title_legend},title,featured,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,jumpTo,linkText;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass;{publish_legend},published,start,stop',
+		'article'                     => '{title_legend},title,featured,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,articleId,linkText;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass;{publish_legend},published,start,stop',
+		'external'                    => '{title_legend},title,featured,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,url,target,linkText;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass;{publish_legend},published,start,stop'
 	),
 
 	// Sub-palettes
@@ -448,12 +448,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
-		'noComments' => array
-		(
-			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
-		),
 		'published' => array
 		(
 			'toggle'                  => true,
@@ -487,21 +481,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
  */
 class tl_calendar_events extends Backend
 {
-	/**
-	 * Unset the "allowComments" field if the comments bundle is not available.
-	 */
-	public function adjustDca()
-	{
-		$bundles = System::getContainer()->getParameter('kernel.bundles');
-
-		// HOOK: comments extension required
-		if (!isset($bundles['ContaoCommentsBundle']))
-		{
-			$key = array_search('allowComments', $GLOBALS['TL_DCA']['tl_calendar_events']['list']['sorting']['headerFields'] ?? array());
-			unset($GLOBALS['TL_DCA']['tl_calendar_events']['list']['sorting']['headerFields'][$key], $GLOBALS['TL_DCA']['tl_calendar_events']['fields']['noComments']);
-		}
-	}
-
 	/**
 	 * Auto-generate the event alias if it has not been set yet
 	 *

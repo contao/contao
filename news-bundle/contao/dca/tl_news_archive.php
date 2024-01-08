@@ -49,7 +49,9 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 		(
 			'keys' => array
 			(
-				'id' => 'primary'
+				'id' => 'primary',
+				'tstamp' => 'index',
+				'jumpTo' => 'index'
 			)
 		)
 	),
@@ -75,15 +77,14 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'__selector__'                => array('protected', 'allowComments'),
-		'default'                     => '{title_legend},title,jumpTo;{protected_legend:hide},protected;{comments_legend:hide},allowComments'
+		'__selector__'                => array('protected'),
+		'default'                     => '{title_legend},title,jumpTo;{protected_legend:hide},protected'
 	),
 
 	// Sub-palettes
 	'subpalettes' => array
 	(
-		'protected'                   => 'groups',
-		'allowComments'               => 'notify,sortOrder,perPage,moderate,bbcode,requireLogin,disableCaptcha'
+		'protected'                   => 'groups'
 	),
 
 	// Fields
@@ -126,59 +127,6 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 			'eval'                    => array('mandatory'=>true, 'multiple'=>true),
 			'sql'                     => "blob NULL",
 			'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
-		),
-		'allowComments' => array
-		(
-			'filter'                  => true,
-			'inputType'               => 'checkbox',
-			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
-		),
-		'notify' => array
-		(
-			'inputType'               => 'select',
-			'options'                 => array('notify_admin', 'notify_author', 'notify_both'),
-			'eval'                    => array('tl_class'=>'w50'),
-			'reference'               => &$GLOBALS['TL_LANG']['tl_news_archive'],
-			'sql'                     => "varchar(16) NOT NULL default 'notify_admin'"
-		),
-		'sortOrder' => array
-		(
-			'inputType'               => 'select',
-			'options'                 => array('ascending', 'descending'),
-			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'eval'                    => array('tl_class'=>'w50 clr'),
-			'sql'                     => "varchar(32) NOT NULL default 'ascending'"
-		),
-		'perPage' => array
-		(
-			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
-			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
-		),
-		'moderate' => array
-		(
-			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
-		),
-		'bbcode' => array
-		(
-			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
-		),
-		'requireLogin' => array
-		(
-			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
-		),
-		'disableCaptcha' => array
-		(
-			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
 		)
 	)
 );
@@ -193,18 +141,10 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 class tl_news_archive extends Backend
 {
 	/**
-	 * Set the root IDs and unset the "allowComments" field if the comments bundle is not available.
+	 * Set the root IDs.
 	 */
 	public function adjustDca()
 	{
-		$bundles = System::getContainer()->getParameter('kernel.bundles');
-
-		// HOOK: comments extension required
-		if (!isset($bundles['ContaoCommentsBundle']))
-		{
-			unset($GLOBALS['TL_DCA']['tl_news_archive']['fields']['allowComments']);
-		}
-
 		$user = BackendUser::getInstance();
 
 		if ($user->isAdmin)
