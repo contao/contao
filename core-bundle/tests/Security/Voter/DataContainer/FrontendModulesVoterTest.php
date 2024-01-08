@@ -36,7 +36,7 @@ class FrontendModulesVoterTest extends TestCase
             ->willReturn($user)
         ;
 
-        $voter = new FrontendModulesVoter($security);
+        $voter = new FrontendModulesVoter();
 
         $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_module'));
         $this->assertTrue($voter->supportsType(CreateAction::class));
@@ -50,7 +50,7 @@ class FrontendModulesVoterTest extends TestCase
             VoterInterface::ACCESS_ABSTAIN,
             $voter->vote(
                 $token,
-                new ReadAction('foo', ['id' => 42]),
+                new ReadAction('foo', ['id' => 42, 'type' => 'navigation']),
                 ['whatever']
             )
         );
@@ -61,24 +61,21 @@ class FrontendModulesVoterTest extends TestCase
      */
     public function testUserCanOnlyAccessPermittedModuleTypes(array $userData, array $expected): void
     {
-        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 1, 'isAdmin' => false, ...$userData]);
+        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 1, ...$userData]);
 
-        $security = $this->createMock(Security::class);
-        $security
-            ->method('getUser')
+        $token = $this->createMock(TokenInterface::class);
+        $token->method('getUser')
             ->willReturn($user)
         ;
 
-        $token = $this->createMock(TokenInterface::class);
-
-        $voter = new FrontendModulesVoter($security);
+        $voter = new FrontendModulesVoter();
 
         // Reading is always permitted
         $this->assertSame(
-            VoterInterface::ACCESS_GRANTED,
+            VoterInterface::ACCESS_ABSTAIN,
             $voter->vote(
                 $token,
-                new ReadAction('foo', ['id' => 42]),
+                new ReadAction('foo', ['id' => 42, 'type' => 'navigation']),
                 [ContaoCorePermissions::DC_PREFIX.'tl_module']
             )
         );
@@ -144,15 +141,15 @@ class FrontendModulesVoterTest extends TestCase
     {
         yield 'Admin user has unlimited access' => [
             ['isAdmin' => true],
-            ['html' => VoterInterface::ACCESS_GRANTED, 'navigation' => VoterInterface::ACCESS_GRANTED],
+            ['html' => VoterInterface::ACCESS_ABSTAIN, 'navigation' => VoterInterface::ACCESS_ABSTAIN],
         ];
         yield 'User has unlimited access to front end modules' => [
             ['isAdmin' => false, 'frontendModules' => []],
-            ['html' => VoterInterface::ACCESS_GRANTED, 'navigation' => VoterInterface::ACCESS_GRANTED],
+            ['html' => VoterInterface::ACCESS_ABSTAIN, 'navigation' => VoterInterface::ACCESS_ABSTAIN],
         ];
         yield 'User access limited to specific module type' => [
             ['isAdmin' => false, 'frontendModules' => ['navigation']],
-            ['html' => VoterInterface::ACCESS_DENIED, 'navigation' => VoterInterface::ACCESS_GRANTED],
+            ['html' => VoterInterface::ACCESS_DENIED, 'navigation' => VoterInterface::ACCESS_ABSTAIN],
         ];
     }
 }
