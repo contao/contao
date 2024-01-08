@@ -1,4 +1,3 @@
-<?php $this->addCspSource('frame-src', $this->src); ?>
 <?php $this->extend('block_unsearchable'); ?>
 
 <?php $this->block('content'); ?>
@@ -35,3 +34,5 @@
   </figure>
 
 <?php $this->endblock(); ?>
+
+<?php $this->addCspSource('frame-src', $this->src); ?>
