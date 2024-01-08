@@ -624,6 +624,7 @@ class PageRegular extends Frontend
 			$customScript = trim($objLayout->script);
 
 			// Add nonces to the <script> tags since we consider this safe user input.
+			// Do NOT copy the str_replace() into your own code unless you know what you're doing - it will defeat the purpose of CSP.
 			if ($nonce = $this->Template->nonce('script-src'))
 			{
 				$customScript = str_replace('<script', '<script nonce="' . $nonce . '"', $customScript);

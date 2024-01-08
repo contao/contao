@@ -425,7 +425,7 @@ abstract class Template extends Controller
 
 		if (!$responseContext || !$responseContext->has(CspHandler::class))
 		{
-			return '';
+			return null;
 		}
 
 		/** @var CspHandler $csp */
