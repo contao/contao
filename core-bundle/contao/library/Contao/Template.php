@@ -674,7 +674,16 @@ abstract class Template extends Controller
 	 */
 	public static function generateInlineStyle($script)
 	{
-		$nonce = self::nonce('style-src');
+		$nonce = null;
+		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
+
+		if (!$responseContext || !$responseContext->has(CspHandler::class))
+		{
+			/** @var CspHandler $csp */
+			$csp = $responseContext->get(CspHandler::class);
+	
+			$nonce = $csp->getNonce('style-src');
+		}
 
 		return '<style' . ($nonce ? ' nonce="' . $nonce . '"' : '') . '>' . $script . '</style>';
 	}
@@ -733,7 +742,16 @@ abstract class Template extends Controller
 	 */
 	public static function generateInlineScript($script)
 	{
-		$nonce = self::nonce('script-src');
+		$nonce = null;
+		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
+
+		if (!$responseContext || !$responseContext->has(CspHandler::class))
+		{
+			/** @var CspHandler $csp */
+			$csp = $responseContext->get(CspHandler::class);
+	
+			$nonce = $csp->getNonce('script-src');
+		}
 
 		return '<script' . ($nonce ? ' nonce="' . $nonce . '"' : '') . '>' . $script . '</script>';
 	}
