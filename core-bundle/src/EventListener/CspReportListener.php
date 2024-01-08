@@ -40,7 +40,11 @@ class CspReportListener
             uri: $report->getSourceFile(),
         );
 
-        $msg = sprintf('Content-Security-Policy violation reported for "%s" on line %d', $report->getDirective(), $report->getData()['line-number'] ?? 0);
+        $msg = sprintf('Content-Security-Policy violation reported for "%s"', $report->getDirective());
+
+        if (null !== ($line = ($report->getData()['line-number'] ?? null))) {
+            $msg .= ' on line '.$line;
+        }
 
         $this->logger->error($msg, ['contao' => $context]);
     }
