@@ -105,7 +105,7 @@ services:
             - '@contao.framework'
             - '@translator'
 
-contao.listener.data_container.frontend_module_permissions:
+    contao.listener.data_container.frontend_module_permissions:
         class: Contao\CoreBundle\EventListener\DataContainer\FrontendModulePermissionsListener
         arguments:
             - '@security.helper'
