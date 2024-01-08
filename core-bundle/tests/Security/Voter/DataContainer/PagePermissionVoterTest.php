@@ -68,7 +68,7 @@ class PagePermissionVoterTest extends TestCase
     /**
      * @dataProvider voterProvider
      */
-    public function testVoter(CreateAction|ReadAction|UpdateAction|DeleteAction $subject, array $decisions, bool $accessGranted, array|null $pagemounts = null): void
+    public function testVoter(CreateAction|DeleteAction|ReadAction|UpdateAction $subject, array $decisions, bool $accessGranted, array|null $pagemounts = null): void
     {
         $token = $this->mockToken($pagemounts);
 
@@ -243,7 +243,6 @@ class PagePermissionVoterTest extends TestCase
             [1, 2, 3],
         ];
 
-
         // ### COPY BUTTON
 
         yield 'Can copy page if editable and any pagemount is editable (1)' => [
@@ -412,7 +411,6 @@ class PagePermissionVoterTest extends TestCase
             [3, 2, 1],
         ];
 
-
         // PASTE NEW
 
         yield 'Can paste page if parent is allowed' => [
@@ -489,7 +487,6 @@ class PagePermissionVoterTest extends TestCase
             false,
         ];
 
-
         // READ / INFO BUTTON
 
         yield 'Can read page' => [
@@ -524,7 +521,6 @@ class PagePermissionVoterTest extends TestCase
             false,
         ];
 
-
         // EDIT BUTTON
 
         yield 'Edit page operation is enabled' => [
@@ -553,7 +549,6 @@ class PagePermissionVoterTest extends TestCase
             false,
         ];
 
-
         yield 'Edit article operation is enabled' => [
             new UpdateAction('tl_article', ['pid' => 42]),
             [
@@ -571,7 +566,6 @@ class PagePermissionVoterTest extends TestCase
             false,
         ];
 
-
         yield 'Edit article operation is disabled if permission is not given' => [
             new UpdateAction('tl_article', ['pid' => 42]),
             [
@@ -580,7 +574,6 @@ class PagePermissionVoterTest extends TestCase
             ],
             false,
         ];
-
 
         // MOVE & PASTE EXISTING RECORD
 
@@ -734,7 +727,6 @@ class PagePermissionVoterTest extends TestCase
             false,
         ];
 
-
         // EDIT ACTION
 
         yield 'Can edit page' => [
@@ -743,7 +735,7 @@ class PagePermissionVoterTest extends TestCase
                 [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
                 [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 42],
             ],
-            true
+            true,
         ];
 
         yield 'Cannot edit page if not in pagemounts' => [
@@ -751,7 +743,7 @@ class PagePermissionVoterTest extends TestCase
             [
                 [false, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
             ],
-            false
+            false,
         ];
 
         yield 'Cannot edit page if permission is not given' => [
@@ -760,7 +752,7 @@ class PagePermissionVoterTest extends TestCase
                 [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
                 [false, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 42],
             ],
-            false
+            false,
         ];
 
         yield 'Can edit article' => [
@@ -769,7 +761,7 @@ class PagePermissionVoterTest extends TestCase
                 [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
                 [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 42],
             ],
-            true
+            true,
         ];
 
         yield 'Cannot edit article if parent page is not in pagemounts' => [
@@ -777,7 +769,7 @@ class PagePermissionVoterTest extends TestCase
             [
                 [false, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
             ],
-            false
+            false,
         ];
 
         yield 'Cannot edit article if permission is not given' => [
@@ -786,9 +778,8 @@ class PagePermissionVoterTest extends TestCase
                 [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
                 [false, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 42],
             ],
-            false
+            false,
         ];
-
 
         // DELETE BUTTON / ACTION
 
@@ -798,7 +789,7 @@ class PagePermissionVoterTest extends TestCase
                 [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
                 [true, ContaoCorePermissions::USER_CAN_DELETE_PAGE, 42],
             ],
-            true
+            true,
         ];
 
         yield 'Cannot delete page if not in pagemounts' => [
@@ -806,7 +797,7 @@ class PagePermissionVoterTest extends TestCase
             [
                 [false, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
             ],
-            false
+            false,
         ];
 
         yield 'Cannot delete page if permission is not given' => [
@@ -815,7 +806,7 @@ class PagePermissionVoterTest extends TestCase
                 [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
                 [false, ContaoCorePermissions::USER_CAN_DELETE_PAGE, 42],
             ],
-            false
+            false,
         ];
 
         yield 'Can delete article' => [
@@ -824,7 +815,7 @@ class PagePermissionVoterTest extends TestCase
                 [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
                 [true, ContaoCorePermissions::USER_CAN_DELETE_ARTICLES, 42],
             ],
-            true
+            true,
         ];
 
         yield 'Cannot delete article if parent page is not in pagemounts' => [
@@ -832,7 +823,7 @@ class PagePermissionVoterTest extends TestCase
             [
                 [false, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
             ],
-            false
+            false,
         ];
 
         yield 'Cannot delete article if permission is not given' => [
@@ -841,9 +832,8 @@ class PagePermissionVoterTest extends TestCase
                 [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
                 [false, ContaoCorePermissions::USER_CAN_DELETE_ARTICLES, 42],
             ],
-            false
+            false,
         ];
-
 
         // POTENTIAL API CALL THAT EDITS AND MOVES TO NEW PARENT
 
