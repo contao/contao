@@ -110,7 +110,7 @@ class FrontendModulePermissionsListenerTest extends TestCase
                     1 => 'Main Navigation (ID 1)',
                 ],
             ],
-            $listener->allowedFrontendModuleOptions()
+            $listener->allowedFrontendModuleOptions(),
         );
     }
 }

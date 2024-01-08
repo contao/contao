@@ -18,7 +18,7 @@ class FrontendModulesVoter extends AbstractDataContainerVoter
         return 'tl_module';
     }
 
-    protected function hasAccess(TokenInterface $token, UpdateAction|CreateAction|ReadAction|DeleteAction $action): bool
+    protected function hasAccess(TokenInterface $token, CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
     {
         $user = $token->getUser();
 

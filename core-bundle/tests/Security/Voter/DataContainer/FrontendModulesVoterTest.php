@@ -51,8 +51,8 @@ class FrontendModulesVoterTest extends TestCase
             $voter->vote(
                 $token,
                 new ReadAction('foo', ['id' => 42, 'type' => 'navigation']),
-                ['whatever']
-            )
+                ['whatever'],
+            ),
         );
     }
 
@@ -64,7 +64,8 @@ class FrontendModulesVoterTest extends TestCase
         $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 1, ...$userData]);
 
         $token = $this->createMock(TokenInterface::class);
-        $token->method('getUser')
+        $token
+            ->method('getUser')
             ->willReturn($user)
         ;
 
@@ -76,8 +77,8 @@ class FrontendModulesVoterTest extends TestCase
             $voter->vote(
                 $token,
                 new ReadAction('foo', ['id' => 42, 'type' => 'navigation']),
-                [ContaoCorePermissions::DC_PREFIX.'tl_module']
-            )
+                [ContaoCorePermissions::DC_PREFIX.'tl_module'],
+            ),
         );
 
         // The HTML module is not permitted for any user in this dataset (create, update, delete)
@@ -86,8 +87,8 @@ class FrontendModulesVoterTest extends TestCase
             $voter->vote(
                 $token,
                 new CreateAction('foo', ['id' => 42, 'type' => 'html']),
-                [ContaoCorePermissions::DC_PREFIX.'tl_module']
-            )
+                [ContaoCorePermissions::DC_PREFIX.'tl_module'],
+            ),
         );
 
         $this->assertSame(
@@ -95,8 +96,8 @@ class FrontendModulesVoterTest extends TestCase
             $voter->vote(
                 $token,
                 new UpdateAction('foo', ['id' => 42, 'type' => 'html']),
-                [ContaoCorePermissions::DC_PREFIX.'tl_module']
-            )
+                [ContaoCorePermissions::DC_PREFIX.'tl_module'],
+            ),
         );
 
         $this->assertSame(
@@ -104,8 +105,8 @@ class FrontendModulesVoterTest extends TestCase
             $voter->vote(
                 $token,
                 new DeleteAction('foo', ['id' => 42, 'type' => 'html']),
-                [ContaoCorePermissions::DC_PREFIX.'tl_module']
-            )
+                [ContaoCorePermissions::DC_PREFIX.'tl_module'],
+            ),
         );
 
         // The navigation module is only permitted for one user in this dataset (create, update, delete)
@@ -114,8 +115,8 @@ class FrontendModulesVoterTest extends TestCase
             $voter->vote(
                 $token,
                 new CreateAction('foo', ['id' => 42, 'type' => 'navigation']),
-                [ContaoCorePermissions::DC_PREFIX.'tl_module']
-            )
+                [ContaoCorePermissions::DC_PREFIX.'tl_module'],
+            ),
         );
 
         $this->assertSame(
@@ -123,8 +124,8 @@ class FrontendModulesVoterTest extends TestCase
             $voter->vote(
                 $token,
                 new UpdateAction('foo', ['id' => 42, 'type' => 'navigation']),
-                [ContaoCorePermissions::DC_PREFIX.'tl_module']
-            )
+                [ContaoCorePermissions::DC_PREFIX.'tl_module'],
+            ),
         );
 
         $this->assertSame(
@@ -132,8 +133,8 @@ class FrontendModulesVoterTest extends TestCase
             $voter->vote(
                 $token,
                 new DeleteAction('foo', ['id' => 42, 'type' => 'navigation']),
-                [ContaoCorePermissions::DC_PREFIX.'tl_module']
-            )
+                [ContaoCorePermissions::DC_PREFIX.'tl_module'],
+            ),
         );
     }
 
