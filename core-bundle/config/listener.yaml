@@ -83,6 +83,14 @@ services:
             - '@database_connection'
             - '@request_stack'
 
+    contao.listener.data_container.cte_alias:
+        class: Contao\CoreBundle\EventListener\DataContainer\CteAliasListener
+        arguments:
+            - '@request_stack'
+            - '@security.helper'
+            - '@database_connection'
+            - '@contao.framework'
+
     contao.listener.data_container.default_global_operations:
         class: Contao\CoreBundle\EventListener\DataContainer\DefaultGlobalOperationsListener
 
@@ -103,6 +111,11 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\DisableCanonicalFieldsListener
         arguments:
             - '@contao.framework'
+            - '@translator'
+
+    contao.listener.data_container.enum_options:
+        class: Contao\CoreBundle\EventListener\DataContainer\EnumOptionsListener
+        arguments:
             - '@translator'
 
     contao.listener.data_container.layout_options:
@@ -508,6 +521,7 @@ services:
         class: Contao\CoreBundle\EventListener\RobotsTxtListener
         arguments:
             - '@contao.framework'
+            - '@?web_profiler.debug_toolbar'
             - '%contao.backend.route_prefix%'
         tags:
             - kernel.event_listener

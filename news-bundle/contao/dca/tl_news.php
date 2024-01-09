@@ -48,6 +48,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
+				'tstamp' => 'index',
 				'alias' => 'index',
 				'pid,published,featured,start,stop' => 'index'
 			)
