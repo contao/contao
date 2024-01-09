@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use MatthiasMullie\Minify\CSS;
@@ -414,6 +415,14 @@ abstract class Template extends Controller
 			->getGraphForSchema(JsonLdManager::SCHEMA_ORG)
 			->set($type, $jsonLd['identifier'] ?? Graph::IDENTIFIER_DEFAULT)
 		;
+	}
+
+	/**
+	 * @param iterable<string, string|int|bool|\Stringable|null>|string|self|null $attributes
+	 */
+	public function attr(HtmlAttributes|iterable|string|null $attributes = null): HtmlAttributes
+	{
+		return new HtmlAttributes($attributes);
 	}
 
 	/**

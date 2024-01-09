@@ -1,6 +1,6 @@
 
 <script src="<?= $this->asset('js/jquery-ui.min.js', 'contao-components/jquery-ui') ?>"></script>
-<script<?php if ($nonce = $this->nonce('script-src')): ?> nonce="<?= $nonce ?>"<?php endif; ?>>
+<script<?= $this->attr()->setIfExists('nonce', $this->nonce('script-src')) ?>>
   jQuery(function($) {
     $(document).accordion({
       // Put custom options here

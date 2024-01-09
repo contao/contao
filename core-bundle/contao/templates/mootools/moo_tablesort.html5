@@ -6,7 +6,7 @@ $GLOBALS['TL_CSS'][] = 'assets/tablesort/css/tablesort.min.css|static';
 ?>
 
 <script src="<?= $this->asset('js/tablesort.min.js', 'contao-components/tablesort') ?>"></script>
-<script<?php if ($nonce = $this->nonce('script-src')): ?> nonce="<?= $nonce ?>"<?php endif; ?>>
+<script<?= $this->attr()->setIfExists('nonce', $this->nonce('script-src')) ?>>
   window.addEvent('domready', function() {
     $$('.ce_table .sortable').each(function(table) {
       new TableSort(table, '<?= $this->trans('MSC.thousandsSeparator') ?>', '<?= $this->trans('MSC.decimalSeparator') ?>');
