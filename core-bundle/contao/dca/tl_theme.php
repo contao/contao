@@ -33,10 +33,6 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 			(
 				'id' => 'primary'
 			)
-		),
-		'onload_callback' => array
-		(
-			array('tl_theme', 'checkPermission'),
 		)
 	),
 
