@@ -49,6 +49,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
+				'tstamp' => 'index',
 				'username' => 'unique',
 				'email' => 'index'
 			)
