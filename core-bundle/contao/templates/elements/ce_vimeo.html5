@@ -25,7 +25,7 @@
         <iframe<?= $this->size ?> src="<?= $this->src ?>" allowfullscreen></iframe>
       <?php endif; ?>
     <?php if ($this->aspect): ?>
-      </divs>
+      </div>
     <?php endif; ?>
     <?php if ($this->caption): ?>
       <figcaption class="caption"><?= $this->caption ?></figcaption>
