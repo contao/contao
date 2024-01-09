@@ -34,7 +34,8 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
-				'pid' => 'index'
+				'pid' => 'index',
+				'tstamp' => 'index'
 			)
 		)
 	),
@@ -93,7 +94,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('addFile'),
-		'default'                     => '{title_legend},subject,alias;{html_legend},content;{text_legend:hide},text;{attachment_legend},addFile;{template_legend:hide},template;{sender_legend:hide},sender,senderName,mailerTransport;{expert_legend:hide},sendText,externalImages'
+		'default'                     => '{title_legend},subject,alias;{html_legend},preheader,content;{text_legend:hide},text;{attachment_legend},addFile;{template_legend:hide},template;{sender_legend:hide},sender,senderName,mailerTransport;{expert_legend:hide},sendText,externalImages'
 	),
 
 	// Sub-palettes
@@ -138,6 +139,13 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 				array('tl_newsletter', 'generateAlias')
 			),
 			'sql'                     => "varchar(255) BINARY NOT NULL default ''"
+		),
+		'preheader' => array
+		(
+			'search'                  => true,
+			'inputType'               => 'text',
+			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255),
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'content' => array
 		(
