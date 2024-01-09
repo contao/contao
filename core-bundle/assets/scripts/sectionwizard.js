@@ -2,6 +2,7 @@
     'use strict';
 
     const initializedRows = new WeakMap();
+    const saveScrollOffsetEvent = new CustomEvent('save-scroll-offset');
 
     const init = (row) => {
         // Check if this row has already been initialized
@@ -43,7 +44,7 @@
                 switch (command) {
                     case 'copy':
                         bt.addEventListener('click', () => {
-                            Backend.getScrollOffset();
+                            window.dispatchEvent(saveScrollOffsetEvent);
                             const ntr = tr.cloneNode(true);
                             const selects = tr.querySelectorAll('select');
                             const nselects = ntr.querySelectorAll('select');
@@ -58,7 +59,7 @@
 
                     case 'delete':
                         bt.addEventListener('click', () => {
-                            Backend.getScrollOffset();
+                            window.dispatchEvent(saveScrollOffsetEvent);
                             if (tbody.children.length > 1) {
                                 tr.remove();
                             } else {

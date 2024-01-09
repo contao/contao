@@ -28,7 +28,7 @@ window.tinymce && tinymce.init({
     if (document.activeElement && document.activeElement.id && document.activeElement.id == editor.id) {
       editor.editorManager.get(editor.id).focus();
     }
-    editor.on('focus', () => Backend.getScrollOffset());
+    editor.on('focus', () => window.dispatchEvent(new CustomEvent('save-scroll-offset')));
   },
 
   <?php $this->block('picker'); ?>
