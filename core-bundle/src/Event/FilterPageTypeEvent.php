@@ -15,7 +15,8 @@ namespace Contao\CoreBundle\Event;
 use Contao\DataContainer;
 
 /**
- * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6. Use DCA permissions instead.
+ * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+ *             use DCA permissions instead.
  */
 class FilterPageTypeEvent
 {
@@ -37,7 +38,7 @@ class FilterPageTypeEvent
 
     public function setOptions(array $options): self
     {
-        trigger_deprecation('contao/core-bundle', '5.3', 'The FilterPageTypeEvent is deprecated, use DCA permissions instead.');
+        trigger_deprecation('contao/core-bundle', '5.3', 'Using the FilterPageTypeEvent has been deprecated and will no longer work in Contao 6. Use DCA permissions instead.');
 
         $this->options = $options;
 
@@ -46,7 +47,7 @@ class FilterPageTypeEvent
 
     public function addOption(string $option): self
     {
-        trigger_deprecation('contao/core-bundle', '5.3', 'The FilterPageTypeEvent is deprecated, use DCA permissions instead.');
+        trigger_deprecation('contao/core-bundle', '5.3', 'Using the FilterPageTypeEvent has been deprecated and will no longer work in Contao 6. Use DCA permissions instead.');
 
         if (!\in_array($option, $this->options, true)) {
             $this->options[] = $option;
@@ -57,7 +58,7 @@ class FilterPageTypeEvent
 
     public function removeOption(string $option): self
     {
-        trigger_deprecation('contao/core-bundle', '5.3', 'The FilterPageTypeEvent is deprecated, use DCA permissions instead.');
+        trigger_deprecation('contao/core-bundle', '5.3', 'Using the FilterPageTypeEvent has been deprecated and will no longer work in Contao 6. Use DCA permissions instead.');
 
         $key = array_search($option, $this->options, true);
 
