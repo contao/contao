@@ -113,6 +113,11 @@ services:
             - '@contao.framework'
             - '@translator'
 
+    contao.listener.data_container.enum_options:
+        class: Contao\CoreBundle\EventListener\DataContainer\EnumOptionsListener
+        arguments:
+            - '@translator'
+
     contao.listener.data_container.layout_options:
         class: Contao\CoreBundle\EventListener\DataContainer\LayoutOptionsListener
         arguments:
