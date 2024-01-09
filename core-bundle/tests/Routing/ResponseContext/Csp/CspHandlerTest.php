@@ -75,7 +75,18 @@ class CspHandlerTest extends TestCase
         $response = new Response();
         $cspHandler->applyHeaders($response);
 
-        $this->assertStringContainsString("default-src 'self' foobar.com; frame-src 'self' www.youtube.com; img-src 'self' foobar.com data:", $response->headers->get('Content-Security-Policy'));
+        $this->assertSame("default-src 'self' foobar.com; frame-src 'self' www.youtube.com; img-src 'self' foobar.com data:", $response->headers->get('Content-Security-Policy'));
+    }
+
+    public function testDoesNotAddSource(): void
+    {
+        $cspHandler = $this->getCspHandler(['style-src' => "'self'"]);
+        $cspHandler->addSource('frame-src', 'foobar.com');
+
+        $response = new Response();
+        $cspHandler->applyHeaders($response);
+
+        $this->assertSame("style-src 'self'", $response->headers->get('Content-Security-Policy'));
     }
 
     public function testChecksIfDiretiveOrFallbackIsSet(): void
