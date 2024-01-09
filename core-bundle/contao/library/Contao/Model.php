@@ -94,6 +94,12 @@ abstract class Model
 	protected $arrRelated = array();
 
 	/**
+	 * Enums
+	 * @var array
+	 */
+	protected $arrEnums = array();
+
+	/**
 	 * Prevent saving
 	 * @var boolean
 	 */
@@ -115,6 +121,7 @@ abstract class Model
 
 		$objDca = DcaExtractor::getInstance(static::$strTable);
 		$this->arrRelations = $objDca->getRelations();
+		$this->arrEnums = $objDca->getEnums();
 
 		if ($objResult !== null)
 		{
@@ -736,6 +743,27 @@ abstract class Model
 		}
 
 		return $this->arrRelated[$strKey];
+	}
+
+	public function getEnum($strKey): \BackedEnum|null
+	{
+		$enum = $this->arrEnums[$strKey] ?? null;
+
+		// The enum does not exist
+		if (null === $enum)
+		{
+			throw new \Exception(sprintf('Field %s.%s has no enum configured', static::getTable(), $strKey));
+		}
+
+		$varValue = $this->{$strKey};
+
+		// The value is invalid
+		if (!\is_string($varValue) && !\is_int($varValue))
+		{
+			throw new \Exception(sprintf('Value of %s.%s must be a string or an integer to resolve a backed enumeration', static::getTable(), $strKey));
+		}
+
+		return $this->arrEnums[$strKey]::tryFrom($varValue);
 	}
 
 	/**
