@@ -66,8 +66,9 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
+				'tstamp' => 'index',
 				'alias' => 'index',
-				'type,dns' => 'index',
+				'type,dns,fallback,published,start,stop' => 'index',
 				'pid,published,type,start,stop' => 'index'
 			)
 		)
@@ -1037,6 +1038,9 @@ class tl_page extends Backend
 
 				// Create a new version
 				$objVersions->create();
+
+				// Update the record stored in the page registry (see #6542)
+				PageModel::findByPk($id)->alias = $strAlias;
 			}
 
 			$this->redirect($this->getReferer());

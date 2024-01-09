@@ -868,6 +868,16 @@ services:
         arguments:
             - '@security.access.decision_manager'
 
+    contao.security.data_container.image_size_access_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\ImageSizeAccessVoter
+        arguments:
+            - '@security.access.decision_manager'
+
+    contao.security.data_container.image_size_item_access_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\ImageSizeItemAccessVoter
+        arguments:
+            - '@security.access.decision_manager'
+
     contao.security.data_container.page_permission_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\PagePermissionVoter
         arguments:
