@@ -65,7 +65,7 @@ final class CspHandler
             throw new \InvalidArgumentException('Invalid directive');
         }
 
-        if (!$this->isDirectiveSet($directive)) {
+        if (!$this->getDirective($directive)) {
             return null;
         }
 
@@ -84,7 +84,7 @@ final class CspHandler
             throw new \InvalidArgumentException('Invalid directive');
         }
 
-        if (!$this->isDirectiveSet($directive)) {
+        if (!$this->getDirective($directive)) {
             return $this;
         }
 
@@ -98,15 +98,16 @@ final class CspHandler
     /**
      * Sets or appends a source for a directive, e.g. frame-src https://www.youtube.com/….
      *
-     * @param string $directive  the directive for which the source should be added
-     * @param string $source     the source for the directive
-     * @param bool   $autoIgnore does not add the source if no directive (or its fallback) is set yet
+     * @param string $directive   the directive for which the source should be added
+     * @param string $source      the source for the directive
+     * @param bool   $autoIgnore  does not add the source if no directive (or its fallback) is set yet
+     * @param bool   $useFallback whether to automatically add to the fallback of the directive
      */
-    public function addSource(string $directive, string $source, bool $autoIgnore = true): self
+    public function addSource(string $directive, string $source, bool $autoIgnore = true, bool $useFallback = true): self
     {
-        if ($this->isDirectiveSet($directive, true) || !$autoIgnore) {
+        if (($sources = $this->getDirective($directive, $useFallback)) || !$autoIgnore) {
             $parser = new ContentSecurityPolicyParser();
-            $existingValues = explode(' ', (string) $this->directives->getDirective($directive));
+            $existingValues = explode(' ', (string) $sources);
             $newValues = array_unique(array_merge($existingValues, explode(' ', $source)));
             $value = $parser->parseSourceList($newValues);
 
@@ -117,25 +118,26 @@ final class CspHandler
     }
 
     /**
-     * Checks if a directive or any of its fallbacks are set.
+     * Returns the sources of a directive if set.
      *
      * @param string $directive       the directive
-     * @param bool   $includeFallback whether to include the fallbacks of the directive in the check
+     * @param bool   $includeFallback whether to automatically return the fallback of the directive
      */
-    public function isDirectiveSet(string $directive, bool $includeFallback = true): bool
+    public function getDirective(string $directive, bool $includeFallback = true): string|null
     {
-        if ($this->directives->getDirective($directive)) {
-            return true;
+        if ($sources = $this->directives->getDirective($directive)) {
+            return $sources;
         }
 
+        // Only source directives can have a fallback
         if (!$includeFallback || (DirectiveSet::getNames()[$directive] ?? null) !== DirectiveSet::TYPE_SRC_LIST) {
-            return false;
+            return null;
         }
 
         return match ($directive) {
-            'script-src-attr', 'script-src-elem' => $this->isDirectiveSet('script-src', $includeFallback),
-            'style-src-attr', 'style-src-elem' => $this->isDirectiveSet('style-src', $includeFallback),
-            default => $this->isDirectiveSet('default-src', false),
+            'script-src-attr', 'script-src-elem' => $this->getDirective('script-src', $includeFallback),
+            'style-src-attr', 'style-src-elem' => $this->getDirective('style-src', $includeFallback),
+            default => $this->getDirective('default-src', false),
         };
     }
 

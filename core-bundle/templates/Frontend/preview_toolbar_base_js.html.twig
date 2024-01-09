@@ -1,3 +1,4 @@
+{% do csp_handler.addSource('img-src', 'data:') %}
 {% set styleNonce = csp_handler.getNonce('style-src') %}
 <style{% if styleNonce %} nonce="{{ styleNonce }}"{% endif %}>
     .cto-toolbar {

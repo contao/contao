@@ -68,22 +68,23 @@ class CspHandlerTest extends TestCase
 
     public function testAddsSource(): void
     {
-        $cspHandler = $this->getCspHandler(['frame-src' => "'self'"]);
+        $cspHandler = $this->getCspHandler(['default-src' => "'self' foobar.com", 'frame-src' => "'self'"]);
         $cspHandler->addSource('frame-src', 'www.youtube.com');
+        $cspHandler->addSource('img-src', 'data:');
 
         $response = new Response();
         $cspHandler->applyHeaders($response);
 
-        $this->assertStringContainsString("frame-src 'self' www.youtube.com", $response->headers->get('Content-Security-Policy'));
+        $this->assertStringContainsString("default-src 'self' foobar.com; frame-src 'self' www.youtube.com; img-src 'self' foobar.com data:", $response->headers->get('Content-Security-Policy'));
     }
 
     public function testChecksIfDiretiveOrFallbackIsSet(): void
     {
         $cspHandler = $this->getCspHandler(['default-src' => "'self'"]);
-        $this->assertTrue($cspHandler->isDirectiveSet('script-src'));
+        $this->assertNotNull($cspHandler->getDirective('script-src'));
 
         $cspHandler = $this->getCspHandler(['default-src' => "'self'"]);
-        $this->assertFalse($cspHandler->isDirectiveSet('script-src', false));
+        $this->assertNull($cspHandler->getDirective('script-src', false));
     }
 
     public function testAppliesHeaders(): void
