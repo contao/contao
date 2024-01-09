@@ -56,26 +56,24 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
 
     public function vote(TokenInterface $token, $subject, array $attributes): int
     {
-        foreach ($attributes as $attribute) {
-            if (!$this->supportsAttribute($attribute)) {
-                continue;
-            }
+        if (!array_filter($attributes, $this->supportsAttribute(...))) {
+            return self::ACCESS_ABSTAIN;
+        }
 
-            if ($this->accessDecisionManager->decide($token, ['ROLE_ADMIN'])) {
-                return self::ACCESS_ABSTAIN;
-            }
+        if ($this->accessDecisionManager->decide($token, ['ROLE_ADMIN'])) {
+            return self::ACCESS_ABSTAIN;
+        }
 
-            $isGranted = match (true) {
-                $subject instanceof CreateAction => $this->canCreate($subject, $token),
-                $subject instanceof ReadAction => $this->canRead($subject, $token),
-                $subject instanceof UpdateAction => $this->canUpdate($subject, $token),
-                $subject instanceof DeleteAction => $this->canDelete($subject, $token),
-                default => null,
-            };
+        $isGranted = match (true) {
+            $subject instanceof CreateAction => $this->canCreate($subject, $token),
+            $subject instanceof ReadAction => $this->canRead($subject, $token),
+            $subject instanceof UpdateAction => $this->canUpdate($subject, $token),
+            $subject instanceof DeleteAction => $this->canDelete($subject, $token),
+            default => null,
+        };
 
-            if (false === $isGranted) {
-                return self::ACCESS_DENIED;
-            }
+        if (false === $isGranted) {
+            return self::ACCESS_DENIED;
         }
 
         return self::ACCESS_ABSTAIN;
