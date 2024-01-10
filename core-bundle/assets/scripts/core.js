@@ -680,7 +680,7 @@ window.Backend =
 	 * @param {object} el The DOM element
 	 */
 	autoSubmit: function(el) {
-		window.dispatchEvent(new CustomEvent('save-scroll-offset'));
+		window.dispatchEvent(new Event('store-scroll-offset'));
 
 		var hidden = new Element('input', {
 			'type': 'hidden',
@@ -746,7 +746,7 @@ window.Backend =
 			});
 		}
 
-		window.dispatchEvent(new CustomEvent('save-scroll-offset'));
+		window.dispatchEvent(new Event('store-scroll-offset'));
 	},
 
 	/**
@@ -764,7 +764,7 @@ window.Backend =
 			}
 		});
 
-		window.dispatchEvent(new CustomEvent('save-scroll-offset'));
+		window.dispatchEvent(new Event('store-scroll-offset'));
 	},
 
 	/**
@@ -1018,7 +1018,7 @@ window.Backend =
 						return;
 					}
 
-					window.dispatchEvent(new CustomEvent('save-scroll-offset'));
+					window.dispatchEvent(new Event('store-scroll-offset'));
 					document.location.href = options.url + '&id=' + encodeURIComponent(id) + '&pid=' + encodeURIComponent(pid);
 				},
 				onLeave: function(element, droppable) {
@@ -1073,7 +1073,7 @@ window.Backend =
 					switch (command) {
 						case 'copy':
 							bt.addEvent('click', function() {
-								window.dispatchEvent(new CustomEvent('save-scroll-offset'));
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								clone = li.clone(true).inject(li, 'before');
 								if (input = li.getFirst('input')) {
 									clone.getFirst('input').value = input.value;
@@ -1083,7 +1083,7 @@ window.Backend =
 							break;
 						case 'delete':
 							bt.addEvent('click', function() {
-								window.dispatchEvent(new CustomEvent('save-scroll-offset'));
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								if (ul.getChildren().length > 1) {
 									li.destroy();
 								}
@@ -1163,7 +1163,7 @@ window.Backend =
 					switch (command) {
 						case 'rcopy':
 							bt.addEvent('click', function() {
-								window.dispatchEvent(new CustomEvent('save-scroll-offset'));
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								ntr = new Element('tr');
 								children = tr.getChildren();
 								for (i=0; i<children.length; i++) {
@@ -1179,7 +1179,7 @@ window.Backend =
 							break;
 						case 'rdelete':
 							bt.addEvent('click', function() {
-								window.dispatchEvent(new CustomEvent('save-scroll-offset'));
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								if (tbody.getChildren().length > 1) {
 									tr.destroy();
 								}
@@ -1188,7 +1188,7 @@ window.Backend =
 							break;
 						case 'ccopy':
 							bt.addEvent('click', function() {
-								window.dispatchEvent(new CustomEvent('save-scroll-offset'));
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								index = getIndex(bt);
 								children = tbody.getChildren();
 								for (i=0; i<children.length; i++) {
@@ -1207,7 +1207,7 @@ window.Backend =
 							break;
 						case 'cmovel':
 							bt.addEvent('click', function() {
-								window.dispatchEvent(new CustomEvent('save-scroll-offset'));
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								index = getIndex(bt);
 								children = tbody.getChildren();
 								if (index > 0) {
@@ -1226,7 +1226,7 @@ window.Backend =
 							break;
 						case 'cmover':
 							bt.addEvent('click', function() {
-								window.dispatchEvent(new CustomEvent('save-scroll-offset'));
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								index = getIndex(bt);
 								children = tbody.getChildren();
 								if (index < (tr.getChildren().length - 2)) {
@@ -1245,7 +1245,7 @@ window.Backend =
 							break;
 						case 'cdelete':
 							bt.addEvent('click', function() {
-								window.dispatchEvent(new CustomEvent('save-scroll-offset'));
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								index = getIndex(bt);
 								children = tbody.getChildren();
 								if (tr.getChildren().length > 2) {
@@ -1391,7 +1391,7 @@ window.Backend =
 					switch (command) {
 						case 'copy':
 							bt.addEvent('click', function() {
-								window.dispatchEvent(new CustomEvent('save-scroll-offset'));
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								ntr = new Element('tr');
 								children = tr.getChildren();
 								for (i=0; i<children.length; i++) {
@@ -1410,7 +1410,7 @@ window.Backend =
 							break;
 						case 'delete':
 							bt.addEvent('click', function() {
-								window.dispatchEvent(new CustomEvent('save-scroll-offset'));
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								if (tbody.getChildren().length > 1) {
 									tr.destroy();
 								}
@@ -1490,7 +1490,7 @@ window.Backend =
 					switch (command) {
 						case 'copy':
 							bt.addEvent('click', function() {
-								window.dispatchEvent(new CustomEvent('save-scroll-offset'));
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								ntr = new Element('tr');
 								children = tr.getChildren();
 								for (i=0; i<children.length; i++) {
@@ -1506,7 +1506,7 @@ window.Backend =
 							break;
 						case 'delete':
 							bt.addEvent('click', function() {
-								window.dispatchEvent(new CustomEvent('save-scroll-offset'));
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								if (tbody.getChildren().length > 1) {
 									tr.destroy();
 								}
@@ -1926,7 +1926,7 @@ window.Backend =
 			}
 
 			dzElement.addClass('dropzone-filetree-enabled');
-            window.dispatchEvent(new CustomEvent('save-scroll-offset'));
+            window.dispatchEvent(new Event('store-scroll-offset'));
 		});
 
 		dz.on('dragleave', function() {

@@ -2,7 +2,7 @@
     'use strict';
 
     const initializedRows = new WeakMap();
-    const saveScrollOffsetEvent = new CustomEvent('save-scroll-offset');
+    const saveScrollOffsetEvent = new Event('store-scroll-offset');
 
     const init = (row) => {
         // Check if this row has already been initialized
