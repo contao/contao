@@ -56,11 +56,11 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
 
     public function vote(TokenInterface $token, $subject, array $attributes): int
     {
-        if (!array_filter($attributes, $this->supportsAttribute(...))) {
+        if ($this->accessDecisionManager->decide($token, ['ROLE_ADMIN'])) {
             return self::ACCESS_ABSTAIN;
         }
 
-        if ($this->accessDecisionManager->decide($token, ['ROLE_ADMIN'])) {
+        if (!array_filter($attributes, $this->supportsAttribute(...))) {
             return self::ACCESS_ABSTAIN;
         }
 
@@ -125,11 +125,12 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
     private function canUpdate(UpdateAction $action, TokenInterface $token): bool
     {
         $pageId = $this->getCurrentPageId($action);
-        $newRecord = $action->getNew();
 
         if (!$this->canAccessPage($token, $pageId)) {
             return false;
         }
+
+        $newRecord = $action->getNew();
 
         // Edit operation
         if (null === $newRecord) {
@@ -144,14 +145,12 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
             return false;
         }
 
-        if (
-            $changePid
-            && (
-                !$this->canAccessPage($token, (int) $action->getNewPid())
-                || !$this->canChangeHierarchy($action, $token, (int) $action->getNewPid())
-            )
-        ) {
-            return false;
+        if ($changePid) {
+            $newPid = (int) $action->getNewPid();
+
+            if (!$this->canAccessPage($token, $newPid) || !$this->canChangeHierarchy($action, $token, $newPid)) {
+                return false;
+            }
         }
 
         unset($newRecord['pid'], $newRecord['sorting'], $newRecord['tstamp']);

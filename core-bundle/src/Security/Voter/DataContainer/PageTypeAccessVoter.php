@@ -117,10 +117,7 @@ class PageTypeAccessVoter extends AbstractDataContainerVoter
             return true;
         }
 
-        if (
-            ($action instanceof CreateAction && !isset($action->getNew()['type']))
-            || (null === $action->getNewPid() && !isset($action->getNew()['type']))
-        ) {
+        if (($action instanceof CreateAction || null === $action->getNewPid()) && !isset($action->getNew()['type'])) {
             return true;
         }
 
