@@ -29,7 +29,7 @@ class SyncExclude extends \RecursiveFilterIterator
 	public function accept(): bool
 	{
 		// The resource is to be ignored
-		if (strncmp($this->current()->getFilename(), '.', 1) === 0)
+		if (str_starts_with($this->current()->getFilename(), '.'))
 		{
 			return false;
 		}

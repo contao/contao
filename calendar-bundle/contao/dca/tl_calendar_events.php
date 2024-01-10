@@ -703,7 +703,7 @@ class tl_calendar_events extends Backend
 		}
 
 		// Add the option currently set
-		if ($dc->activeRecord && $dc->activeRecord->source)
+		if ($dc->activeRecord?->source)
 		{
 			$arrOptions[] = $dc->activeRecord->source;
 			$arrOptions = array_unique($arrOptions);

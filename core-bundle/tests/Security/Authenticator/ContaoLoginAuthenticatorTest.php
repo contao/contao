@@ -27,7 +27,6 @@ use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Scheb\TwoFactorBundle\Security\Http\Authenticator\Passport\Credentials\TwoFactorCodeCredentials;
 use Scheb\TwoFactorBundle\Security\Http\Authenticator\TwoFactorAuthenticator;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -48,6 +47,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerI
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Token\PostAuthenticationToken;
+use Symfony\Component\Security\Http\SecurityRequestAttributes;
 
 class ContaoLoginAuthenticatorTest extends TestCase
 {
@@ -232,7 +232,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
         $session
             ->expects($exception ? $this->never() : $this->once())
             ->method('set')
-            ->with(Security::LAST_USERNAME, $username)
+            ->with(SecurityRequestAttributes::LAST_USERNAME, $username)
         ;
 
         $request = new Request();

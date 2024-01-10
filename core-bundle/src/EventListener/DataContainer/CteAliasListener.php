@@ -20,8 +20,8 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Image;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Service\ResetInterface;
 
 /**

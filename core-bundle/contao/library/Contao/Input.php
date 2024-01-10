@@ -658,16 +658,16 @@ class Input
 					return str_replace('&#35;', '#', self::encodeInput($strText, InputEncodingMode::encodeAll, false));
 				};
 
-				if ($blnCommentOpen && substr($matches[0], -3) === '-->')
+				if ($blnCommentOpen && str_ends_with($matches[0], '-->'))
 				{
 					$blnCommentOpen = false;
 
 					return $encode(substr($matches[0], 0, -3)) . '-->';
 				}
 
-				if (!$blnCommentOpen && 0 === strncmp($matches[0], '<!--', 4))
+				if (!$blnCommentOpen && str_starts_with($matches[0], '<!--'))
 				{
-					if (substr($matches[0], -3) === '-->')
+					if (str_ends_with($matches[0], '-->'))
 					{
 						return '<!--' . $encode(substr($matches[0], 4, -3)) . '-->';
 					}
@@ -769,7 +769,7 @@ class Input
 			$strAttribute = strtolower($arrMatch[1]);
 
 			// Skip attributes that end with dashes or use a double dash
-			if (substr($strAttribute, -1) === '-' || false !== strpos($strAttribute, '--'))
+			if (str_ends_with($strAttribute, '-') || str_contains($strAttribute, '--'))
 			{
 				continue;
 			}
@@ -779,8 +779,8 @@ class Input
 
 			// Remove the quotes if matched by the regular expression
 			if (
-				(strpos($strValue, '"') === 0 && substr($strValue, -1) === '"')
-				|| (strpos($strValue, "'") === 0 && substr($strValue, -1) === "'")
+				(str_starts_with($strValue, '"') && str_ends_with($strValue, '"'))
+				|| (str_starts_with($strValue, "'") && str_ends_with($strValue, "'"))
 			) {
 				$strValue = substr($strValue, 1, -1);
 			}

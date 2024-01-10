@@ -89,9 +89,9 @@ class InsertTagParserTest extends TestCase
         $parser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'env', null, true, false));
         System::getContainer()->set('contao.insert_tag.parser', $parser);
 
-        $this->assertSame('<br>', $parser->render('br'));
-        $this->assertSame('', $parser->render('env::empty-insert-tag'));
-        $this->assertSame('{{does_not_exist}}', $parser->render('does_not_exist'));
+        $this->assertSame('<br>', $parser->renderTag('br')->getValue());
+        $this->assertSame('', $parser->renderTag('env::empty-insert-tag')->getValue());
+        $this->assertSame('{{does_not_exist}}', $parser->renderTag('does_not_exist')->getValue());
 
         $this->expectExceptionMessage('Rendering a single insert tag has to return a single chunk');
         $this->expectDeprecation('%sInvalid insert tag name%s');
@@ -162,7 +162,7 @@ class InsertTagParserTest extends TestCase
 
         $this->expectDeprecation('%sInsert tags with uppercase letters%s');
 
-        $this->assertSame('<br>', $parser->render('bR'));
+        $this->assertSame('<br>', $parser->renderTag('bR')->getValue());
     }
 
     public function testReplaceFragment(): void

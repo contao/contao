@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 use Contao\BackendUser;
 use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener;
-use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
@@ -48,11 +47,6 @@ class ContentCompositionListenerTest extends TestCase
 
     private RequestStack&MockObject $requestStack;
 
-    /**
-     * @var Adapter<PageModel>&MockObject
-     */
-    private Adapter&MockObject $pageModelAdapter;
-
     private array $pageRecord = [
         'id' => 17,
         'alias' => 'foo/bar',
@@ -68,10 +62,9 @@ class ContentCompositionListenerTest extends TestCase
         $GLOBALS['TL_DCA']['tl_article']['config']['ptable'] = 'tl_page';
 
         $this->security = $this->createMock(Security::class);
-        $this->pageModelAdapter = $this->mockAdapter(['findByPk']);
 
         $this->framework = $this->mockContaoFramework([
-            PageModel::class => $this->pageModelAdapter,
+            PageModel::class => $this->mockAdapter(['findByPk']),
         ]);
 
         $this->pageRegistry = $this->createMock(PageRegistry::class);

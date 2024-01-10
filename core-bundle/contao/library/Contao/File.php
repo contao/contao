@@ -615,15 +615,15 @@ class File extends System
 		$strContent = file_get_contents($this->strRootDir . '/' . ($this->strTmp ?: $this->strFile));
 
 		// Remove BOMs (see #4469)
-		if (strncmp($strContent, "\xEF\xBB\xBF", 3) === 0)
+		if (str_starts_with($strContent, "\xEF\xBB\xBF"))
 		{
 			$strContent = substr($strContent, 3);
 		}
-		elseif (strncmp($strContent, "\xFF\xFE", 2) === 0)
+		elseif (str_starts_with($strContent, "\xFF\xFE"))
 		{
 			$strContent = substr($strContent, 2);
 		}
-		elseif (strncmp($strContent, "\xFE\xFF", 2) === 0)
+		elseif (str_starts_with($strContent, "\xFE\xFF"))
 		{
 			$strContent = substr($strContent, 2);
 		}
@@ -823,7 +823,7 @@ class File extends System
 			$this->strTmp = 'system/tmp/' . md5(uniqid(mt_rand(), true));
 
 			// Copy the contents of the original file to append data
-			if (strncmp($strMode, 'a', 1) === 0 && file_exists($this->strRootDir . '/' . $this->strFile))
+			if (str_starts_with($strMode, 'a') && file_exists($this->strRootDir . '/' . $this->strFile))
 			{
 				$filesObj->copy($this->strFile, $this->strTmp);
 			}

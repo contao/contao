@@ -5085,7 +5085,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </div>';
 
 		// Add another panel at the end of the page
-		if (strpos($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? '', 'limit') !== false)
+		if (str_contains($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? '', 'limit'))
 		{
 			$return .= $this->paginationMenu();
 		}
@@ -5355,7 +5355,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Extract the real key and compare it to $firstOrderBy
 				foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'] as $f)
 				{
-					if (strpos($f, ':') !== false)
+					if (str_contains($f, ':'))
 					{
 						list($f) = explode(':', $f, 2);
 					}
@@ -5382,7 +5382,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'] as $f)
 				{
-					if (strpos($f, ':') !== false)
+					if (str_contains($f, ':'))
 					{
 						list($f) = explode(':', $f, 2);
 					}
@@ -5512,7 +5512,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </div>';
 
 			// Add another panel at the end of the page
-			if (strpos($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? '', 'limit') !== false)
+			if (str_contains($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? '', 'limit'))
 			{
 				$return .= $this->paginationMenu();
 			}

@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 use Contao\Controller;
 use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\EventListener\DataContainer\DefaultOperationsListener;
-use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\AbstractAction;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
@@ -29,11 +28,6 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 class DefaultOperationsListenerTest extends TestCase
 {
-    /**
-     * @var Adapter<Controller>&MockObject
-     */
-    private Adapter&MockObject $controllerAdapter;
-
     private Security&MockObject $security;
 
     private DefaultOperationsListener $listener;
@@ -44,8 +38,8 @@ class DefaultOperationsListenerTest extends TestCase
 
         unset($GLOBALS['TL_DCA']);
 
-        $this->controllerAdapter = $this->mockAdapter(['loadDataContainer']);
-        $framework = $this->mockContaoFramework([Controller::class => $this->controllerAdapter]);
+        $controllerAdapter = $this->mockAdapter(['loadDataContainer']);
+        $framework = $this->mockContaoFramework([Controller::class => $controllerAdapter]);
 
         $this->security = $this->createMock(Security::class);
         $this->listener = new DefaultOperationsListener($framework, $this->security, $this->createMock(Connection::class));

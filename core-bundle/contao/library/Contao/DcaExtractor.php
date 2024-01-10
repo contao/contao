@@ -296,7 +296,7 @@ class DcaExtractor extends Controller
 		foreach ($this->arrKeys as $k=>$v)
 		{
 			// Handle multi-column indexes (see #5556)
-			if (strpos($k, ',') !== false)
+			if (str_contains($k, ','))
 			{
 				$f = array_map($quote, StringUtil::trimsplit(',', $k));
 				$k = str_replace(',', '_', $k);

@@ -59,7 +59,7 @@ class RobotsTxtListener
             $directiveList->add(new Directive('Disallow', $this->routePrefix.'/'));
             $directiveList->add(new Directive('Disallow', '/_contao/'));
 
-            if ($this->webDebugToolbarListener && $this->webDebugToolbarListener->isEnabled()) {
+            if ($this->webDebugToolbarListener?->isEnabled()) {
                 $directiveList->add(new Directive('Disallow', '/_profiler/'));
                 $directiveList->add(new Directive('Disallow', '/_wdt/'));
             }

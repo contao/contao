@@ -112,7 +112,7 @@ class Automator extends System
 		// Walk through the subfolders
 		foreach (Folder::scan($strRootDir . '/' . $strTargetPath) as $dir)
 		{
-			if (strncmp($dir, '.', 1) !== 0)
+			if (!str_starts_with($dir, '.'))
 			{
 				$objFolder = new Folder($strTargetPath . '/' . $dir);
 				$objFolder->purge();
@@ -137,7 +137,7 @@ class Automator extends System
 		// Walk through the subfolders
 		foreach (Folder::scan($strRootDir . '/' . $strTargetPath) as $dir)
 		{
-			if (strncmp($dir, '.', 1) !== 0)
+			if (!str_starts_with($dir, '.'))
 			{
 				$objFolder = new Folder($strTargetPath . '/' . $dir);
 				$objFolder->purge();

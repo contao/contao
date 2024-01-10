@@ -1477,7 +1477,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 						$this->varValue = $objFile->filename;
 
 						// Fix hidden Unix system files
-						if (strncmp($this->varValue, '.', 1) === 0)
+						if (str_starts_with($this->varValue, '.'))
 						{
 							$this->strExtension = '';
 						}
@@ -1777,7 +1777,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 						$this->varValue = $objFile->filename;
 
 						// Fix hidden Unix system files
-						if (strncmp($this->varValue, '.', 1) === 0)
+						if (str_starts_with($this->varValue, '.'))
 						{
 							$this->strExtension = '';
 						}
@@ -2604,7 +2604,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			foreach (Folder::scan($path) as $v)
 			{
-				if (strncmp($v, '.', 1) === 0)
+				if (str_starts_with($v, '.'))
 				{
 					continue;
 				}
@@ -2664,7 +2664,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Subtract files that will not be shown
 			foreach ($content as $file)
 			{
-				if (strncmp($file, '.', 1) === 0)
+				if (str_starts_with($file, '.'))
 				{
 					--$countFiles;
 				}
@@ -3091,7 +3091,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 				foreach ($this->arrFilemounts as $strFolder)
 				{
-					if (0 === strpos($strPath, $strFolder))
+					if (str_starts_with($strPath, $strFolder))
 					{
 						$blnValid = true;
 						break;
