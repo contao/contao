@@ -89,7 +89,7 @@ class ModuleNewsletterReader extends Module
 		{
 			$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
-			if ($responseContext && $responseContext->has(HtmlHeadBag::class))
+			if ($responseContext?->has(HtmlHeadBag::class))
 			{
 				$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 

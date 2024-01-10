@@ -156,7 +156,7 @@ class ModuleArticle extends Module
 		{
 			$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
-			if ($responseContext && $responseContext->has(HtmlHeadBag::class))
+			if ($responseContext?->has(HtmlHeadBag::class))
 			{
 				$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 
@@ -227,7 +227,7 @@ class ModuleArticle extends Module
 			$this->Template->print = '#';
 			$this->Template->encUrl = Environment::get('uri');
 			$this->Template->encTitle = $objPage->pageTitle;
-			$this->Template->href = $request . ((strpos($request, '?') !== false) ? '&amp;' : '?') . 'pdf=' . $this->id;
+			$this->Template->href = $request . (str_contains($request, '?') ? '&amp;' : '?') . 'pdf=' . $this->id;
 
 			$this->Template->printTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['printPage']);
 			$this->Template->pdfTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['printAsPdf']);

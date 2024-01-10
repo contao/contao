@@ -175,7 +175,7 @@ class BackendAccessVoterTest extends TestCase
 
         yield 'Compares numeric strings and integers' => [
             ['forms' => [15]],
-            ContaoCorePermissions::USER_CAN_ACCESS_FORM,
+            ContaoCorePermissions::USER_CAN_EDIT_FORM,
             '15',
         ];
 

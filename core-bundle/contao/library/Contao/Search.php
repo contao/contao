@@ -493,7 +493,7 @@ class Search
 
 		foreach (array_unique($arrChunks[0]) as $strKeyword)
 		{
-			if (($strKeyword[0] === '*' || substr($strKeyword, -1) === '*') && \strlen($strKeyword) > 1)
+			if (($strKeyword[0] === '*' || str_ends_with($strKeyword, '*')) && \strlen($strKeyword) > 1)
 			{
 				$arrWildcardWords = self::splitIntoWords(trim($strKeyword, '*'), $GLOBALS['TL_LANGUAGE']);
 
@@ -504,12 +504,12 @@ class Search
 						$strWord = '%' . $strWord;
 					}
 
-					if ($intIndex === \count($arrWildcardWords) - 1 && substr($strKeyword, -1) === '*')
+					if ($intIndex === \count($arrWildcardWords) - 1 && str_ends_with($strKeyword, '*'))
 					{
 						$strWord .= '%';
 					}
 
-					if ($strWord[0] === '%' || substr($strWord, -1) === '%')
+					if ($strWord[0] === '%' || str_ends_with($strWord, '%'))
 					{
 						$arrWildcards[] = $strWord;
 					}
@@ -795,12 +795,12 @@ class Search
 	 */
 	private static function compareUrls($strUrlA, $strUrlB)
 	{
-		if (strpos($strUrlA, '?') === false && strpos($strUrlB, '?') !== false)
+		if (!str_contains($strUrlA, '?') && str_contains($strUrlB, '?'))
 		{
 			return -1;
 		}
 
-		if (strpos($strUrlA, '?') !== false && strpos($strUrlB, '?') === false)
+		if (str_contains($strUrlA, '?') && !str_contains($strUrlB, '?'))
 		{
 			return 1;
 		}
