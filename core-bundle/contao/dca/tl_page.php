@@ -695,6 +695,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'csp' => array
 		(
 			'inputType'               => 'textarea',
+			'default'                 => "default-src 'self'",
 			'eval'                    => array('decodeEntities'=>true),
 			'sql'                     => array('type'=>'text', 'notnull'=>false),
 		),
