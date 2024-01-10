@@ -84,7 +84,6 @@ class PagePermissionVoterTest extends TestCase
     public function voterProvider(): \Generator
     {
         // NEW BUTTON
-
         yield 'Allows new page (1)' => [
             new CreateAction('tl_page'),
             [
@@ -243,8 +242,7 @@ class PagePermissionVoterTest extends TestCase
             [1, 2, 3],
         ];
 
-        // ### COPY BUTTON
-
+        // COPY BUTTON
         yield 'Can copy page if editable and any pagemount is editable (1)' => [
             new CreateAction('tl_page', ['id' => 42]),
             [
@@ -412,7 +410,6 @@ class PagePermissionVoterTest extends TestCase
         ];
 
         // PASTE NEW
-
         yield 'Can paste page if parent is allowed' => [
             new CreateAction('tl_page', ['pid' => 42, 'sorting' => 128]),
             [
@@ -487,8 +484,7 @@ class PagePermissionVoterTest extends TestCase
             false,
         ];
 
-        // READ / INFO BUTTON
-
+        // READ/INFO BUTTON
         yield 'Can read page' => [
             new ReadAction('tl_page', ['id' => 42]),
             [
@@ -522,7 +518,6 @@ class PagePermissionVoterTest extends TestCase
         ];
 
         // EDIT BUTTON
-
         yield 'Edit page operation is enabled' => [
             new UpdateAction('tl_page', ['id' => 42]),
             [
@@ -575,8 +570,7 @@ class PagePermissionVoterTest extends TestCase
             false,
         ];
 
-        // MOVE & PASTE EXISTING RECORD
-
+        // MOVE AND PASTE EXISTING RECORD
         yield 'Can move page' => [
             new UpdateAction('tl_page', ['id' => 42], ['sorting' => 128]),
             [
@@ -728,7 +722,6 @@ class PagePermissionVoterTest extends TestCase
         ];
 
         // EDIT ACTION
-
         yield 'Can edit page' => [
             new UpdateAction('tl_page', ['id' => 42], ['foo' => 'bar']),
             [
@@ -781,8 +774,7 @@ class PagePermissionVoterTest extends TestCase
             false,
         ];
 
-        // DELETE BUTTON / ACTION
-
+        // DELETE BUTTON/ACTION
         yield 'Can delete page' => [
             new DeleteAction('tl_page', ['id' => 42]),
             [
@@ -836,7 +828,6 @@ class PagePermissionVoterTest extends TestCase
         ];
 
         // POTENTIAL API CALL THAT EDITS AND MOVES TO NEW PARENT
-
         yield 'Can move and edit page' => [
             new UpdateAction('tl_page', ['id' => 42], ['pid' => 21, 'sorting' => 128, 'foo' => 'bar']),
             [

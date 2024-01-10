@@ -111,7 +111,6 @@ class ContentCompositionVoterTest extends TestCase
         $subject = new CreateAction('tl_article', ['pid' => 42]);
 
         $pageModel = $this->mockClassWithProperties(PageModel::class);
-
         $pageModel
             ->expects($this->once())
             ->method('loadDetails')

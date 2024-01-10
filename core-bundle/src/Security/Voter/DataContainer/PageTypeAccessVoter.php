@@ -100,10 +100,7 @@ class PageTypeAccessVoter extends AbstractDataContainerVoter
         if (
             (null !== $action->getNewPid() || null !== ($action->getNew()['sorting'] ?? null))
             && (!$action instanceof UpdateAction || \in_array($type, self::FIRST_LEVEL_TYPES, true))
-            && (
-                !$this->isRootPage($pid)
-                || $this->hasPageTypeInRoot($type, $pid)
-            )
+            && (!$this->isRootPage($pid) || $this->hasPageTypeInRoot($type, $pid))
         ) {
             return false;
         }
@@ -111,10 +108,7 @@ class PageTypeAccessVoter extends AbstractDataContainerVoter
         return !($action instanceof UpdateAction
             && isset($action->getNew()['type'])
             && \in_array($action->getNew()['type'], self::FIRST_LEVEL_TYPES, true)
-            && (
-                !$this->isRootPage((int) $action->getCurrentPid())
-                || $this->hasPageTypeInRoot($type, (int) $action->getCurrentPid())
-            ));
+            && (!$this->isRootPage((int) $action->getCurrentPid()) || $this->hasPageTypeInRoot($type, (int) $action->getCurrentPid())));
     }
 
     private function validateRootType(CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
@@ -133,8 +127,7 @@ class PageTypeAccessVoter extends AbstractDataContainerVoter
         $type = $action->getNew()['type'] ?? ($action instanceof UpdateAction ? ($action->getCurrent()['type'] ?? null) : null);
         $pid = (int) ($action->getNewPid() ?? ($action instanceof UpdateAction ? $action->getCurrentPid() : -1));
 
-        return ('root' !== $type || 0 === $pid)
-            && (0 !== $pid || 'root' === $type);
+        return ('root' !== $type || 0 === $pid) && (0 !== $pid || 'root' === $type);
     }
 
     private function isRootPage(int $pageId): bool

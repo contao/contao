@@ -81,8 +81,10 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
 
     private function canCreate(CreateAction $action, TokenInterface $token): bool
     {
+        $newAction = $action->getNew();
+
         // The copy operation is allowed if either hierarchy or edit is allowed.
-        if (null !== $action->getNew() && null === ($action->getNew()['sorting'] ?? null)) {
+        if (null !== $newAction && null === ($newAction['sorting'] ?? null)) {
             $pageId = match ($action->getDataSource()) {
                 'tl_page' => (int) $action->getNewId(),
                 'tl_article' => (int) $action->getNewPid(),
@@ -138,10 +140,7 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
         $changeSorting = \array_key_exists('sorting', $newRecord);
         $changePid = \array_key_exists('pid', $newRecord) && $action->getCurrentPid() !== $action->getNewPid();
 
-        if (
-            ($changeSorting || $changePid)
-            && !$this->canChangeHierarchy($action, $token, $pageId)
-        ) {
+        if (($changeSorting || $changePid) && !$this->canChangeHierarchy($action, $token, $pageId)) {
             return false;
         }
 
@@ -168,6 +167,7 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
     private function canDelete(DeleteAction $action, TokenInterface $token): bool
     {
         $pageId = $this->getCurrentPageId($action);
+
         $permission = match ($action->getDataSource()) {
             'tl_page' => ContaoCorePermissions::USER_CAN_DELETE_PAGE,
             'tl_article' => ContaoCorePermissions::USER_CAN_DELETE_ARTICLES,
