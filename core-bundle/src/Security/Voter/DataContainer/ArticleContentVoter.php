@@ -45,18 +45,16 @@ class ArticleContentVoter implements VoterInterface, CacheableVoterInterface
      */
     public function vote(TokenInterface $token, $subject, array $attributes): int
     {
-        foreach ($attributes as $attribute) {
-            if (
-                !$subject instanceof ReadAction
-                || 'tl_article' !== ($subject->getCurrent()['ptable'] ?? null)
-                || !$this->supportsAttribute($attribute)
-            ) {
-                continue;
-            }
+        if (!$subject instanceof ReadAction || 'tl_article' !== ($subject->getCurrent()['ptable'] ?? null)) {
+            return self::ACCESS_ABSTAIN;
+        }
 
-            if (!$this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], $subject->getCurrentPid())) {
-                return self::ACCESS_DENIED;
-            }
+        if (!array_filter($attributes, $this->supportsAttribute(...))) {
+            return self::ACCESS_ABSTAIN;
+        }
+
+        if (!$this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], $subject->getCurrentPid())) {
+            return self::ACCESS_DENIED;
         }
 
         return self::ACCESS_ABSTAIN;

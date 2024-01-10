@@ -47,18 +47,16 @@ class ContentCompositionVoter implements VoterInterface, CacheableVoterInterface
 
     public function vote(TokenInterface $token, $subject, array $attributes): int
     {
-        foreach ($attributes as $attribute) {
-            if (
-                (!$subject instanceof CreateAction && !$subject instanceof UpdateAction)
-                || !$this->supportsAttribute($attribute)
-                || !$subject->getNewPid()
-            ) {
-                continue;
-            }
+        if ((!$subject instanceof CreateAction && !$subject instanceof UpdateAction) || !$subject->getNewPid()) {
+            return self::ACCESS_ABSTAIN;
+        }
 
-            if (!$this->supportsContentComposition((int) $subject->getNewPid())) {
-                return self::ACCESS_DENIED;
-            }
+        if (!array_filter($attributes, $this->supportsAttribute(...))) {
+            return self::ACCESS_ABSTAIN;
+        }
+
+        if (!$this->supportsContentComposition((int) $subject->getNewPid())) {
+            return self::ACCESS_DENIED;
         }
 
         return self::ACCESS_ABSTAIN;
