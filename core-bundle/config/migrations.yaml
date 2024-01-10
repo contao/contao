@@ -64,3 +64,9 @@ services:
         class: Contao\CoreBundle\Migration\Version502\AlwaysForwardMigration
         arguments:
             - '@database_connection'
+
+    contao.migration.version_503.frontend_modules:
+        class: Contao\CoreBundle\Migration\Version503\FrontendModulesMigration
+        arguments:
+            - '@database_connection'
+            - '@contao.framework'

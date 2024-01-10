@@ -580,13 +580,17 @@ class tl_module extends Backend
 	 */
 	public function getModules()
 	{
+		$security = System::getContainer()->get('security.helper');
 		$groups = array();
 
 		foreach ($GLOBALS['FE_MOD'] as $k=>$v)
 		{
 			foreach (array_keys($v) as $kk)
 			{
-				$groups[$k][] = $kk;
+				if ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULE_TYPE, $kk))
+				{
+					$groups[$k][] = $kk;
+				}
 			}
 		}
 
