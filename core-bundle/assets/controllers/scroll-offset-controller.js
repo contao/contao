@@ -60,7 +60,7 @@ export default class extends Controller {
 
     connect () {
         if (this.offset) {
-            this.element.scrollTo({
+            window.scrollTo({
                 top: this.offset + this.additionalOffset,
                 behavior: this.behaviorValue
             });
