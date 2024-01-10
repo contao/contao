@@ -26,12 +26,14 @@ class FrontendModulePermissionsListenerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         unset($GLOBALS['TL_DCA'], $GLOBALS['FE_MOD']);
     }
 
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_DCA'], $GLOBALS['FE_MOD']);
+
         parent::tearDown();
     }
 
@@ -45,11 +47,9 @@ class FrontendModulePermissionsListenerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $connection = $this->createMock(Connection::class);
-
         $GLOBALS['TL_DCA']['tl_module']['fields']['type']['sql']['default'] = 'text';
 
-        $listener = new FrontendModulePermissionsListener($security, $connection);
+        $listener = new FrontendModulePermissionsListener($security, $this->createMock(Connection::class));
         $listener->setDefaultType();
 
         $this->assertSame('navigation', $GLOBALS['TL_DCA']['tl_module']['fields']['type']['default']);
@@ -65,18 +65,33 @@ class FrontendModulePermissionsListenerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $connection = $this->createMock(Connection::class);
+        $GLOBALS['FE_MOD'] = [
+            'events' => [
+                'eventlist' => ModuleEventlist::class,
+            ],
+            'navigationMenu' => [
+                'navigation' => ModuleNavigation::class,
+            ],
+        ];
 
-        $GLOBALS['FE_MOD'] = ['events' => ['eventlist' => ModuleEventlist::class], 'navigationMenu' => ['navigation' => ModuleNavigation::class]];
+        $listener = new FrontendModulePermissionsListener($security, $this->createMock(Connection::class));
 
-        $listener = new FrontendModulePermissionsListener($security, $connection);
-
-        $this->assertSame(['events' => ['eventlist'], 'navigationMenu' => ['navigation']], $listener->frontendModuleOptions());
+        $this->assertSame(
+            [
+                'events' => ['eventlist'],
+                'navigationMenu' => ['navigation'],
+            ],
+            $listener->frontendModuleOptions(),
+        );
     }
 
     public function testFilterFrontendModuleOptions(): void
     {
-        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 1, 'isAdmin' => false, 'frontendModules' => ['navigation']]);
+        $user = $this->mockClassWithProperties(BackendUser::class, [
+            'id' => 1,
+            'isAdmin' => false,
+            'frontendModules' => ['navigation'],
+        ]);
 
         $security = $this->createMock(Security::class);
         $security
@@ -104,6 +119,7 @@ class FrontendModulePermissionsListenerTest extends TestCase
         ;
 
         $listener = new FrontendModulePermissionsListener($security, $connection);
+
         $this->assertSame(
             [
                 'Default Theme' => [

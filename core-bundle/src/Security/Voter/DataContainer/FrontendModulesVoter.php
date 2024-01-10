@@ -26,11 +26,7 @@ class FrontendModulesVoter extends AbstractDataContainerVoter
             return false;
         }
 
-        if ($user->isAdmin) {
-            return true;
-        }
-
-        if (empty($user->frontendModules)) {
+        if ($user->isAdmin || empty($user->frontendModules)) {
             return true;
         }
 
@@ -45,11 +41,9 @@ class FrontendModulesVoter extends AbstractDataContainerVoter
             if (null === $type) {
                 return true;
             }
-
-            return \in_array($type, $user->frontendModules, true);
+        } else {
+            $type = $subject->getCurrent()['type'];
         }
-
-        $type = $subject->getCurrent()['type'];
 
         return \in_array($type, $user->frontendModules, true);
     }

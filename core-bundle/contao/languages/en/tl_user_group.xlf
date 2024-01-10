@@ -41,9 +41,6 @@
       <trans-unit id="tl_user_group.elements_legend">
         <source>Allowed elements</source>
       </trans-unit>
-      <trans-unit id="tl_user_group.frontendModules_legend">
-        <source>Allowed front end modules</source>
-      </trans-unit>
       <trans-unit id="tl_user_group.pagemounts_legend">
         <source>Pagemounts</source>
       </trans-unit>

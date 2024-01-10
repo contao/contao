@@ -144,10 +144,12 @@ class FrontendModulesVoterTest extends TestCase
             ['isAdmin' => true],
             ['html' => VoterInterface::ACCESS_ABSTAIN, 'navigation' => VoterInterface::ACCESS_ABSTAIN],
         ];
+
         yield 'User has unlimited access to front end modules' => [
             ['isAdmin' => false, 'frontendModules' => []],
             ['html' => VoterInterface::ACCESS_ABSTAIN, 'navigation' => VoterInterface::ACCESS_ABSTAIN],
         ];
+
         yield 'User access limited to specific module type' => [
             ['isAdmin' => false, 'frontendModules' => ['navigation']],
             ['html' => VoterInterface::ACCESS_DENIED, 'navigation' => VoterInterface::ACCESS_ABSTAIN],

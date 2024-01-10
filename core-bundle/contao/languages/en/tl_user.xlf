@@ -230,9 +230,6 @@
       <trans-unit id="tl_user.elements_legend">
         <source>Allowed elements</source>
       </trans-unit>
-      <trans-unit id="tl_user.frontendModules_legend">
-        <source>Allowed front end modules</source>
-      </trans-unit>
       <trans-unit id="tl_user.pagemounts_legend">
         <source>Pagemounts</source>
       </trans-unit>
