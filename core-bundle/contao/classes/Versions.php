@@ -479,7 +479,7 @@ class Versions extends Controller
 							}
 							else
 							{
-								$blnIsBinary = strncmp($arrFields[$k], 'binary(', 7) === 0 || strncmp($arrFields[$k], 'blob ', 5) === 0;
+								$blnIsBinary = str_starts_with($arrFields[$k], 'binary(') || str_starts_with($arrFields[$k], 'blob ');
 							}
 						}
 

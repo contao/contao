@@ -81,7 +81,7 @@ class FileTree extends Widget
 			return '';
 		}
 
-		if (strpos($varInput, ',') === false)
+		if (!str_contains($varInput, ','))
 		{
 			$varInput = StringUtil::uuidToBin($varInput);
 
@@ -105,7 +105,7 @@ class FileTree extends Widget
 			return;
 		}
 
-		if (strpos($varInput, ',') === false)
+		if (!str_contains($varInput, ','))
 		{
 			$arrUuids = array($varInput);
 		}
@@ -140,7 +140,7 @@ class FileTree extends Widget
 			}
 
 			// Only files within a custom path can be selected
-			if ($this->path && strpos($objFile->path, $this->path . '/') !== 0)
+			if ($this->path && !str_starts_with($objFile->path, $this->path . '/'))
 			{
 				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['pathOnly'], $this->path));
 				break;

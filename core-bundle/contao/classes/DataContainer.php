@@ -19,6 +19,7 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\AbstractAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\Image\ResizeConfiguration;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
@@ -462,7 +463,7 @@ abstract class DataContainer extends Backend
 		}
 
 		// Convert insert tags in src attributes (see #5965)
-		if (isset($arrData['eval']['rte']) && strncmp($arrData['eval']['rte'], 'tiny', 4) === 0 && \is_string($this->varValue))
+		if (isset($arrData['eval']['rte']) && str_starts_with($arrData['eval']['rte'], 'tiny') && \is_string($this->varValue))
 		{
 			$this->varValue = StringUtil::removeBasePath($this->varValue);
 			$this->varValue = StringUtil::insertTagToSrc($this->varValue);
@@ -508,7 +509,7 @@ abstract class DataContainer extends Backend
 				}
 
 				// Convert file paths in src attributes (see #5965)
-				if ($varValue && isset($arrData['eval']['rte']) && strncmp($arrData['eval']['rte'], 'tiny', 4) === 0)
+				if ($varValue && isset($arrData['eval']['rte']) && str_starts_with($arrData['eval']['rte'], 'tiny'))
 				{
 					$varValue = StringUtil::srcToInsertTag($varValue);
 					$varValue = StringUtil::addBasePath($varValue);
@@ -978,7 +979,7 @@ abstract class DataContainer extends Backend
 				$icon = $config['icon'];
 				$_icon = pathinfo($config['icon'], PATHINFO_FILENAME) . '_.' . pathinfo($config['icon'], PATHINFO_EXTENSION);
 
-				if (false !== strpos($config['icon'], '/'))
+				if (str_contains($config['icon'], '/'))
 				{
 					$_icon = \dirname($config['icon']) . '/' . $_icon;
 				}
@@ -1064,7 +1065,7 @@ abstract class DataContainer extends Backend
 				$v['class'] = trim(($v['class'] ?? '') . ' header_icon');
 
 				// Add the theme path if only the file name is given
-				if (strpos($v['icon'], '/') === false)
+				if (!str_contains($v['icon'], '/'))
 				{
 					$v['icon'] = Image::getPath($v['icon']);
 				}
@@ -1154,7 +1155,7 @@ abstract class DataContainer extends Backend
 			$attributes = !empty($v['attributes']) ? ' ' . ltrim(sprintf($v['attributes'], $id, $id)) : '';
 
 			// Add the key as CSS class
-			if (strpos($attributes, 'class="') !== false)
+			if (str_contains($attributes, 'class="'))
 			{
 				$attributes = str_replace('class="', 'class="' . $k . ' ', $attributes);
 			}
@@ -1217,7 +1218,7 @@ abstract class DataContainer extends Backend
 				$icon = $v['icon'];
 				$_icon = pathinfo($v['icon'], PATHINFO_FILENAME) . '_.' . pathinfo($v['icon'], PATHINFO_EXTENSION);
 
-				if (false !== strpos($v['icon'], '/'))
+				if (str_contains($v['icon'], '/'))
 				{
 					$_icon = \dirname($v['icon']) . '/' . $_icon;
 				}
@@ -1440,7 +1441,7 @@ abstract class DataContainer extends Backend
 		// Compile limit menu if placeholder is present
 		foreach ($arrPanels as $key => $strPanel)
 		{
-			if (strpos($strPanel, '###limit_menu###') === false)
+			if (!str_contains($strPanel, '###limit_menu###'))
 			{
 				continue;
 			}
@@ -1633,7 +1634,7 @@ abstract class DataContainer extends Backend
 
 		foreach ($labelConfig['fields'] as $k=>$v)
 		{
-			if (strpos($v, ':') !== false)
+			if (str_contains($v, ':'))
 			{
 				list($strKey, $strTable) = explode(':', $v, 2);
 				list($strTable, $strField) = explode('.', $strTable, 2);
@@ -1796,7 +1797,7 @@ abstract class DataContainer extends Backend
 		$stmt = $connection->executeQuery(
 			'SELECT * FROM ' . $table . ' WHERE id IN (?)',
 			array($ids),
-			array(is_numeric(array_values($ids)[0]) ? Connection::PARAM_INT_ARRAY : Connection::PARAM_STR_ARRAY)
+			array(is_numeric(array_values($ids)[0]) ? ArrayParameterType::INTEGER : ArrayParameterType::STRING)
 		);
 
 		foreach ($stmt->iterateAssociative() as $row)

@@ -139,7 +139,7 @@ abstract class Model
 			// Look for joined fields
 			foreach ($arrData as $k=>$v)
 			{
-				if (strpos($k, '__') !== false)
+				if (str_contains($k, '__'))
 				{
 					list($key, $field) = explode('__', $k, 2);
 
@@ -358,7 +358,7 @@ abstract class Model
 	{
 		foreach ($arrData as $k=>$v)
 		{
-			if (strpos($k, '__') !== false)
+			if (str_contains($k, '__'))
 			{
 				unset($arrData[$k]);
 			}
@@ -385,7 +385,7 @@ abstract class Model
 	{
 		foreach ($arrData as $k=>$v)
 		{
-			if (strpos($k, '__') !== false)
+			if (str_contains($k, '__'))
 			{
 				continue;
 			}
@@ -1098,21 +1098,21 @@ abstract class Model
 	 */
 	public static function __callStatic($name, $args)
 	{
-		if (strncmp($name, 'findBy', 6) === 0)
+		if (str_starts_with($name, 'findBy'))
 		{
 			array_unshift($args, lcfirst(substr($name, 6)));
 
 			return static::findBy(...$args);
 		}
 
-		if (strncmp($name, 'findOneBy', 9) === 0)
+		if (str_starts_with($name, 'findOneBy'))
 		{
 			array_unshift($args, lcfirst(substr($name, 9)));
 
 			return static::findOneBy(...$args);
 		}
 
-		if (strncmp($name, 'countBy', 7) === 0)
+		if (str_starts_with($name, 'countBy'))
 		{
 			array_unshift($args, lcfirst(substr($name, 7)));
 

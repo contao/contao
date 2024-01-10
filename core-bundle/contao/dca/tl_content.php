@@ -748,7 +748,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'module' => array
 		(
 			'inputType'               => 'select',
-			'options_callback'        => array('tl_content', 'getModules'),
 			'eval'                    => array('mandatory'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50 wizard'),
 			'wizard' => array
 			(
@@ -1401,24 +1400,6 @@ class tl_content extends Backend
 		$href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$dc->value, 'popup'=>'1', 'nb'=>'1'));
 
 		return ' <a href="' . StringUtil::specialcharsUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $title)) . '\',\'url\':this.href});return false">' . Image::getHtml('alias.svg', $title) . '</a>';
-	}
-
-	/**
-	 * Get all modules and return them as array
-	 *
-	 * @return array
-	 */
-	public function getModules()
-	{
-		$arrModules = array();
-		$objModules = Database::getInstance()->execute("SELECT m.id, m.name, t.name AS theme FROM tl_module m LEFT JOIN tl_theme t ON m.pid=t.id ORDER BY t.name, m.name");
-
-		while ($objModules->next())
-		{
-			$arrModules[$objModules->theme][$objModules->id] = $objModules->name . ' (ID ' . $objModules->id . ')';
-		}
-
-		return $arrModules;
 	}
 
 	/**

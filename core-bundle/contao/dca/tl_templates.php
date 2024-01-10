@@ -320,7 +320,7 @@ class tl_templates extends Backend
 				$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 				// Validate the target path
-				if (strncmp($strTarget, 'templates', 9) !== 0 || !is_dir($projectDir . '/' . $strTarget))
+				if (!str_starts_with($strTarget, 'templates') || !is_dir($projectDir . '/' . $strTarget))
 				{
 					$strError = sprintf($GLOBALS['TL_LANG']['tl_templates']['invalid'], $strTarget);
 				}
@@ -474,7 +474,7 @@ class tl_templates extends Backend
 		else
 		{
 			// Try to find the base template by stripping suffixes
-			while (strpos($strName, '_') !== false)
+			while (str_contains($strName, '_'))
 			{
 				$strName = substr($strName, 0, strrpos($strName, '_'));
 
@@ -574,7 +574,7 @@ class tl_templates extends Backend
 	 */
 	public function compareButton($row, $href, $label, $title, $icon, $attributes)
 	{
-		return substr($row['id'], -6) == '.html5' && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . rawurldecode($row['id'])) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", rawurldecode($row['id']))) . '\',\'url\':this.href});return false"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+		return str_ends_with($row['id'], '.html5') && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . rawurldecode($row['id'])) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", rawurldecode($row['id']))) . '\',\'url\':this.href});return false"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -609,7 +609,7 @@ class tl_templates extends Backend
 
 		foreach (Folder::scan($strPath) as $strFile)
 		{
-			if (!is_dir($strPath . '/' . $strFile) || strncmp($strFile, '.', 1) === 0)
+			if (!is_dir($strPath . '/' . $strFile) || str_starts_with($strFile, '.'))
 			{
 				continue;
 			}

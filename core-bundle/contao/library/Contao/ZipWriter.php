@@ -134,7 +134,7 @@ class ZipWriter
 		}
 
 		// Remove leading slashes (see #4502)
-		if (strncmp($strName, '/', 1) === 0)
+		if (str_starts_with($strName, '/'))
 		{
 			$strName = substr($strName, 1);
 		}

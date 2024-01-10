@@ -156,7 +156,7 @@ class Form extends Hybrid
 
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-		if ($request && $request->hasPreviousSession())
+		if ($request?->hasPreviousSession())
 		{
 			$flashBag = $request->getSession()->getFlashBag();
 
@@ -666,7 +666,7 @@ class Form extends Hybrid
 			$request = $requestStack->getCurrentRequest();
 
 			// Throw the response exception if it's an AJAX request
-			if ($request && $targetPageData === null && $this->isAjaxEnabled() && $request->isXmlHttpRequest() && $request->headers->get('X-Contao-Ajax-Form') === $this->getFormId())
+			if ($targetPageData === null && $this->isAjaxEnabled() && $request?->isXmlHttpRequest() && $request->headers->get('X-Contao-Ajax-Form') === $this->getFormId())
 			{
 				$confirmationTemplate = new FrontendTemplate('form_message');
 				$confirmationTemplate->setData($this->Template->getData());
