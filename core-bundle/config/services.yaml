@@ -857,6 +857,11 @@ services:
         arguments:
             - '@security.access.decision_manager'
 
+    contao.security.data_container.frontend_modules_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\FrontendModulesVoter
+        arguments:
+            - '@security.helper'
+
     contao.security.data_container.image_size_access_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\ImageSizeAccessVoter
         arguments:

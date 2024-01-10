@@ -118,6 +118,12 @@ services:
         arguments:
             - '@translator'
 
+    contao.listener.data_container.frontend_module_permissions:
+        class: Contao\CoreBundle\EventListener\DataContainer\FrontendModulePermissionsListener
+        arguments:
+            - '@security.helper'
+            - '@database_connection'
+
     contao.listener.data_container.layout_options:
         class: Contao\CoreBundle\EventListener\DataContainer\LayoutOptionsListener
         arguments:
