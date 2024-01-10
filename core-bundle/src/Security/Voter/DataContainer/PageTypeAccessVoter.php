@@ -66,6 +66,8 @@ class PageTypeAccessVoter extends AbstractDataContainerVoter
             return true;
         }
 
+        // For the update action, the user needs access to both the current and
+        // the new page type, so if one is denied, return false.
         foreach ($types as $type) {
             if (!$this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], $type)) {
                 return false;

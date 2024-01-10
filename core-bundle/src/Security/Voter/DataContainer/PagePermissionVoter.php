@@ -96,14 +96,14 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
                 && $this->canCreate(new CreateAction($action->getDataSource()), $token);
         }
 
-        // Check access to any page on `new` operation
+        // Check access to any page for the "new" operation.
         if (null === $action->getNewPid()) {
             $pageIds = $this->getPagemounts($token);
         } else {
             $pageIds = [(int) $action->getNewPid()];
         }
 
-        // To actually create a record, both hierarchy and edit permissions must be available.
+        // To create a record, both hierarchy and edit permissions must be available.
         foreach ($pageIds as $pageId) {
             if (
                 $this->canEdit($action, $token, $pageId)
