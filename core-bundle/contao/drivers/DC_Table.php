@@ -4081,7 +4081,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$_buttons = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback']($this, array('id'=>0), $table, false, $arrClipboard);
 			}
-			elseif (!$this->canPasteClipboard($arrClipboard, array('pid'=>0)))
+			elseif (!$this->canPasteClipboard($arrClipboard, array('pid'=>0, 'sorting'=>0)))
 			{
 				$_buttons = Image::getHtml('pasteinto--disabled.svg') . ' ';
 			}
