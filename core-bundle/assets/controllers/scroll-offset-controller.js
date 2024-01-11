@@ -59,6 +59,11 @@ export default class extends Controller {
     }
 
     initialize () {
+        // Prevent automatic page location restoration
+        if (history.scrollRestoration) {
+            history.scrollRestoration = 'manual';
+        }
+
         this.store = this.store.bind(this);
     }
 
