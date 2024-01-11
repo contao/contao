@@ -26,9 +26,9 @@ final class ContaoMailer implements MailerInterface
     private MailerInterface $mailer;
     private AvailableTransports $transports;
     private RequestStack $requestStack;
-    private ?ContaoFramework $framework;
+    private ContaoFramework $framework;
 
-    public function __construct(MailerInterface $mailer, AvailableTransports $transports, RequestStack $requestStack, ContaoFramework $framework = null)
+    public function __construct(MailerInterface $mailer, AvailableTransports $transports, RequestStack $requestStack, ContaoFramework $framework)
     {
         $this->mailer = $mailer;
         $this->transports = $transports;
@@ -130,9 +130,7 @@ final class ContaoMailer implements MailerInterface
             return $GLOBALS['objPage'];
         }
 
-        if (!$this->framework) {
-            return null;
-        }
+        $this->framework->initialize();
 
         return $this->framework->getAdapter(PageModel::class)->findByPk((int) $pageModel);
     }
