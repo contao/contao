@@ -169,7 +169,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $handler = $this->getHandler($framework, null, $urlGenerator);
+        $handler = $this->getHandler($framework, null, false, $urlGenerator);
         $response = $handler->onAuthenticationSuccess(new Request(), $token);
 
         $this->assertSame('http://localhost/page', $response->getTargetUrl());
@@ -451,6 +451,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn($checkRequest)
         ;
 
-        return new AuthenticationSuccessHandler($framework, $trustedDeviceManager, $firewallMap, $uriSigner, $tokenStorage, $urlGenerator, $logger);
+        return new AuthenticationSuccessHandler($framework, $trustedDeviceManager, $firewallMap, $urlGenerator, $uriSigner, $tokenStorage, $logger);
     }
 }
