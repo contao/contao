@@ -58,7 +58,7 @@ final class ContaoMailer implements MailerInterface
             return;
         }
 
-        if (!($page = $this->getPageModel())) {
+        if (!$page = $this->getPageModel()) {
             return;
         }
 
