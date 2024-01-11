@@ -78,5 +78,6 @@ monolog:
             type: rotating_file
             max_files: 1
             path: '%kernel.logs_dir%/%kernel.environment%.log'
-            level: debug
+            level: error
             channels: ['!doctrine', '!event', '!php', '!deprecation']
+            include_stacktraces: true
