@@ -1,14 +1,16 @@
 {% extends "@Contao/content_element/_base.html.twig" %}
 
 {% block content %}
-    <dl>
+    <dl{{attrs(description_list_attributes|default)}}>
         {% for description in descriptions %}
-            {% if description.term is not empty %}
-                <dt>{{ description.term|insert_tag_raw }}</dt>
-            {% endif %}
-            {% if description.details is not empty %}
-                <dd>{{ description.details|insert_tag_raw }}</dd>
-            {% endif %}
+            {% block description %}
+                {% if description.term is not empty %}
+                    <dt{{attrs(description_term_attributes|default)}}>{{ description.term|insert_tag_raw }}</dt>
+                {% endif %}
+                {% if description.details is not empty %}
+                    <dd{{attrs(description_details_attributes|default)}}>{{ description.details|insert_tag_raw }}</dd>
+                {% endif %}
+            {% endblock %}
         {% endfor %}
     </dl>
 {% endblock %}
