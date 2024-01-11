@@ -75,7 +75,9 @@ class SitemapControllerTest extends TestCase
             'groups' => [],
             'published' => true,
             'rootLanguage' => 'en',
-        ]);
+        'urlPrefix' => '',
+                'urlSuffix' => '',
+            ]);
 
         $framework = $this->mockFrameworkWithPages([42 => [$page1], 43 => null, 21 => null], [43 => null]);
         $container = $this->getContainer($framework, null, 'https://www.foobar.com:8000');
@@ -111,7 +113,9 @@ class SitemapControllerTest extends TestCase
             'groups' => [],
             'published' => true,
             'rootLanguage' => 'en',
-        ]);
+        'urlPrefix' => '',
+                'urlSuffix' => '',
+            ]);
 
         $framework = $this->mockFrameworkWithPages([42 => [$page1], 43 => null, 21 => null], [43 => null]);
         $container = $this->getContainer($framework);
@@ -146,6 +150,8 @@ class SitemapControllerTest extends TestCase
                 'groups' => [],
                 'published' => true,
                 'rootLanguage' => 'en',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
             ],
         );
 
@@ -157,6 +163,8 @@ class SitemapControllerTest extends TestCase
                 'groups' => [],
                 'published' => true,
                 'rootLanguage' => 'en',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
             ],
         );
 
@@ -208,6 +216,8 @@ class SitemapControllerTest extends TestCase
             'groups' => [],
             'published' => false,
             'rootLanguage' => 'en',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
         ]);
 
         $page2 = $this->mockPage(
@@ -218,6 +228,8 @@ class SitemapControllerTest extends TestCase
                 'groups' => [],
                 'published' => true,
                 'rootLanguage' => 'en',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
             ],
         );
 
@@ -264,6 +276,8 @@ class SitemapControllerTest extends TestCase
             'published' => true,
             'requireItem' => true,
             'rootLanguage' => 'en',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
         ]);
 
         $page2 = $this->mockPage(
@@ -274,6 +288,8 @@ class SitemapControllerTest extends TestCase
                 'groups' => [],
                 'published' => true,
                 'rootLanguage' => 'en',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
             ],
         );
 
@@ -319,6 +335,8 @@ class SitemapControllerTest extends TestCase
             'groups' => [],
             'published' => true,
             'rootLanguage' => 'en',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
         ]);
 
         $page2 = $this->mockPage(
@@ -329,6 +347,8 @@ class SitemapControllerTest extends TestCase
                 'groups' => [],
                 'published' => true,
                 'rootLanguage' => 'en',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
             ],
         );
 
@@ -388,6 +408,8 @@ class SitemapControllerTest extends TestCase
             'groups' => [],
             'published' => true,
             'rootLanguage' => 'en',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
         ]);
 
         $page2 = $this->mockPage(
@@ -398,6 +420,8 @@ class SitemapControllerTest extends TestCase
                 'groups' => [],
                 'published' => true,
                 'rootLanguage' => 'en',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
             ],
         );
 
@@ -454,6 +478,8 @@ class SitemapControllerTest extends TestCase
             'groups' => [],
             'published' => '1',
             'rootLanguage' => 'en',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
         ]);
 
         $page2 = $this->mockPage(
@@ -464,6 +490,8 @@ class SitemapControllerTest extends TestCase
                 'groups' => [],
                 'published' => '1',
                 'rootLanguage' => 'en',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
             ],
         );
 
@@ -526,6 +554,8 @@ class SitemapControllerTest extends TestCase
                 'groups' => [],
                 'published' => true,
                 'rootLanguage' => 'en',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
             ],
         );
 
@@ -537,6 +567,8 @@ class SitemapControllerTest extends TestCase
             'groups' => [],
             'published' => true,
             'rootLanguage' => 'en',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
         ]);
 
         $page3 = $this->mockPage(
@@ -548,6 +580,8 @@ class SitemapControllerTest extends TestCase
                 'groups' => ['2'],
                 'published' => true,
                 'rootLanguage' => 'en',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
             ],
         );
 
@@ -601,6 +635,8 @@ class SitemapControllerTest extends TestCase
                 'groups' => [],
                 'published' => true,
                 'rootLanguage' => 'en',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
             ],
         );
 
@@ -644,6 +680,8 @@ class SitemapControllerTest extends TestCase
                 'published' => true,
                 'robots' => 'index,follow',
                 'rootLanguage' => 'en',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
             ],
         );
 
@@ -655,6 +693,8 @@ class SitemapControllerTest extends TestCase
             'published' => true,
             'robots' => 'noindex,nofollow',
             'rootLanguage' => 'en',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
         ]);
 
         $pages = [
@@ -696,6 +736,8 @@ class SitemapControllerTest extends TestCase
             'groups' => [],
             'published' => true,
             'rootLanguage' => 'en',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
         ]);
 
         $page2 = $this->mockPage(
@@ -706,6 +748,8 @@ class SitemapControllerTest extends TestCase
                 'groups' => [],
                 'published' => true,
                 'rootLanguage' => 'en',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
             ],
         );
 

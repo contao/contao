@@ -62,7 +62,7 @@ class ModuleLogin extends Module
 
 		// If the form was submitted and the credentials were wrong, take the target
 		// path from the submitted data as otherwise it would take the current page
-		if ($request && $request->isMethod('POST'))
+		if ($request?->isMethod('POST'))
 		{
 			$this->targetPath = base64_decode($request->request->get('_target_path'));
 		}
@@ -108,7 +108,7 @@ class ModuleLogin extends Module
 		$lastUsername = '';
 
 		// Only call the authentication utils if there is an active session to prevent starting an empty session
-		if ($request && $request->hasSession() && ($request->hasPreviousSession() || $request->getSession()->isStarted()))
+		if ($request?->hasSession() && ($request->hasPreviousSession() || $request->getSession()->isStarted()))
 		{
 			$authUtils = $container->get('security.authentication_utils');
 			$exception = $authUtils->getLastAuthenticationError();
@@ -200,6 +200,13 @@ class ModuleLogin extends Module
 			$this->Template->twoFactorAuthentication = $GLOBALS['TL_LANG']['MSC']['twoFactorAuthentication'];
 
 			return;
+		}
+
+		$pwResetPage = $this->objModel->getRelated('pwResetPage');
+
+		if ($pwResetPage instanceof PageModel)
+		{
+			$this->Template->pwResetUrl = $pwResetPage->getFrontendUrl();
 		}
 
 		$this->Template->username = $GLOBALS['TL_LANG']['MSC']['username'];

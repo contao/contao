@@ -21,12 +21,15 @@ use Contao\StringUtil;
 use Contao\User;
 use Psr\Log\LoggerInterface;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
+use Scheb\TwoFactorBundle\Security\Http\Authenticator\TwoFactorAuthenticator;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
@@ -45,6 +48,8 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         private readonly TrustedDeviceManagerInterface $trustedDeviceManager,
         private readonly FirewallMap $firewallMap,
         private readonly ContentUrlGenerator $urlGenerator,
+        private readonly UriSigner $uriSigner,
+        private readonly TokenStorageInterface $tokenStorage,
         private readonly LoggerInterface|null $logger = null,
     ) {
     }
@@ -65,16 +70,23 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         $this->user = $user;
 
         if ($token instanceof TwoFactorTokenInterface) {
-            $this->user->save();
+            if ($this->uriSigner->checkRequest($request) && $request->query->getBoolean(TwoFactorAuthenticator::FLAG_2FA_COMPLETE)) {
+                $authenticatedToken = $token->getAuthenticatedToken();
+                $authenticatedToken->setAttribute(TwoFactorAuthenticator::FLAG_2FA_COMPLETE, true);
 
-            $response = new RedirectResponse($request->getUri());
+                $this->tokenStorage->setToken($authenticatedToken);
+            } else {
+                $this->user->save();
 
-            // Used by the TwoFactorListener to redirect a user back to the authentication page
-            if ($request->hasSession() && $request->isMethodSafe() && !$request->isXmlHttpRequest()) {
-                $this->saveTargetPath($request->getSession(), $token->getFirewallName(), $request->getUri());
+                $response = new RedirectResponse($request->getUri());
+
+                // Used by the TwoFactorListener to redirect a user back to the authentication page
+                if ($request->hasSession() && $request->isMethodSafe() && !$request->isXmlHttpRequest()) {
+                    $this->saveTargetPath($request->getSession(), $token->getFirewallName(), $request->getUri());
+                }
+
+                return $response;
             }
-
-            return $response;
         }
 
         $this->user->lastLogin = $this->user->currentLogin;
@@ -123,6 +135,10 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
     private function decodeTargetPath(Request $request): string
     {
         $targetPath = $request->request->get('_target_path');
+
+        if (!\is_string($targetPath) && $this->uriSigner->checkRequest($request)) {
+            $targetPath = $request->query->get('_target_path');
+        }
 
         if (!\is_string($targetPath)) {
             throw new BadRequestHttpException('Missing form field "_target_path". You probably need to adjust your custom login template.');

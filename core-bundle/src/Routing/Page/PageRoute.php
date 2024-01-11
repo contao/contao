@@ -26,9 +26,9 @@ class PageRoute extends Route implements RouteObjectInterface
 
     private string $routeKey;
 
-    private string|null $urlPrefix;
+    private string $urlPrefix;
 
-    private string|null $urlSuffix;
+    private string $urlSuffix;
 
     /**
      * The referenced content object (can be anything).

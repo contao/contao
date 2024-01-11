@@ -26,7 +26,7 @@ class ContentHyperlink extends ContentElement
 	 */
 	protected function compile()
 	{
-		if (0 === strncmp($this->url, 'mailto:', 7))
+		if (str_starts_with($this->url, 'mailto:'))
 		{
 			$this->url = StringUtil::encodeEmail($this->url);
 		}

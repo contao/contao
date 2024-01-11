@@ -116,7 +116,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 
 		$objAuthenticator = System::getContainer()->get('contao.security.frontend_preview_authenticator');
 
-		if ($memberWidget && $memberWidget->value)
+		if ($memberWidget?->value)
 		{
 			$objMember = Database::getInstance()->prepare('SELECT username FROM tl_member WHERE id=?')
 												->execute((int) $memberWidget->value);

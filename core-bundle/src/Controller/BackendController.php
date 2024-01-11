@@ -45,6 +45,7 @@ class BackendController extends AbstractController
     }
 
     #[Route('/login', name: 'contao_backend_login')]
+    #[Route('/login-link', name: 'contao_backend_login_link')]
     public function loginAction(Request $request): Response
     {
         $this->initializeContaoFramework();

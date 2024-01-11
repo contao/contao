@@ -171,8 +171,8 @@ class Search
 		$arrSet['checksum'] = md5($arrSet['text'] . $arrSet['meta']);
 
 		$blnIndexExists = $objDatabase
-			->prepare("SELECT EXISTS(SELECT id FROM tl_search WHERE checksum=? AND pid=? AND url=?) as indexExists")
-			->execute($arrSet['checksum'], $arrSet['pid'], $arrSet['url'])
+			->prepare("SELECT EXISTS(SELECT id FROM tl_search WHERE pid=? AND checksum=? AND url=?) as indexExists")
+			->execute($arrSet['pid'], $arrSet['checksum'], $arrSet['url'])
 			->indexExists;
 
 		// The page has already been indexed and has not changed (see #2235)
@@ -187,9 +187,9 @@ class Search
 		try
 		{
 			$objIndex = $objDatabase
-				->prepare("SELECT id, url FROM tl_search WHERE checksum=? AND pid=?")
+				->prepare("SELECT id, url FROM tl_search WHERE pid=? AND checksum=?")
 				->limit(1)
-				->execute($arrSet['checksum'], $arrSet['pid']);
+				->execute($arrSet['pid'], $arrSet['checksum']);
 
 			if ($objIndex->numRows)
 			{
@@ -493,7 +493,7 @@ class Search
 
 		foreach (array_unique($arrChunks[0]) as $strKeyword)
 		{
-			if (($strKeyword[0] === '*' || substr($strKeyword, -1) === '*') && \strlen($strKeyword) > 1)
+			if (($strKeyword[0] === '*' || str_ends_with($strKeyword, '*')) && \strlen($strKeyword) > 1)
 			{
 				$arrWildcardWords = self::splitIntoWords(trim($strKeyword, '*'), $GLOBALS['TL_LANGUAGE']);
 
@@ -504,12 +504,12 @@ class Search
 						$strWord = '%' . $strWord;
 					}
 
-					if ($intIndex === \count($arrWildcardWords) - 1 && substr($strKeyword, -1) === '*')
+					if ($intIndex === \count($arrWildcardWords) - 1 && str_ends_with($strKeyword, '*'))
 					{
 						$strWord .= '%';
 					}
 
-					if ($strWord[0] === '%' || substr($strWord, -1) === '%')
+					if ($strWord[0] === '%' || str_ends_with($strWord, '%'))
 					{
 						$arrWildcards[] = $strWord;
 					}
@@ -795,12 +795,12 @@ class Search
 	 */
 	private static function compareUrls($strUrlA, $strUrlB)
 	{
-		if (strpos($strUrlA, '?') === false && strpos($strUrlB, '?') !== false)
+		if (!str_contains($strUrlA, '?') && str_contains($strUrlB, '?'))
 		{
 			return -1;
 		}
 
-		if (strpos($strUrlA, '?') !== false && strpos($strUrlB, '?') === false)
+		if (str_contains($strUrlA, '?') && !str_contains($strUrlB, '?'))
 		{
 			return 1;
 		}

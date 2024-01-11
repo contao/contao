@@ -96,13 +96,6 @@ services:
             - '@cache.app'
             - '@?logger'
 
-    contao.cron.messenger:
-        class: Contao\CoreBundle\Cron\MessengerCron
-        arguments:
-            - '@messenger.receiver_locator'
-            - '@contao.process_util'
-            - ~
-
     contao.cron.purge_expired_data:
         class: Contao\CoreBundle\Cron\PurgeExpiredDataCron
         arguments:
@@ -132,6 +125,11 @@ services:
             - '@filesystem'
             - '%kernel.project_dir%'
             - '@monolog.logger.contao.cron'
+
+    contao.cron.supervise_workers:
+        class: Contao\CoreBundle\Cron\SuperviseWorkersCron
+        arguments:
+            - '@contao.process_util'
 
     contao.csrf.token_manager:
         class: Contao\CoreBundle\Csrf\ContaoCsrfTokenManager
@@ -241,6 +239,10 @@ services:
             - '@contao.filesystem.mount_manager'
             - '@contao.filesystem.dbafs_manager'
 
+    contao.fragment.compositor:
+        class: Contao\CoreBundle\Fragment\FragmentCompositor
+        public: true
+
     contao.fragment.forward_renderer:
         class: Contao\CoreBundle\Fragment\ForwardFragmentRenderer
         arguments:
@@ -269,6 +271,7 @@ services:
 
     contao.fragment.registry:
         class: Contao\CoreBundle\Fragment\FragmentRegistry
+        public: true
 
     contao.framework:
         class: Contao\CoreBundle\Framework\ContaoFramework
@@ -849,6 +852,8 @@ services:
             - '@contao.framework'
             - '@contao.security.two_factor.trusted_device_manager'
             - '@security.firewall.map'
+            - '@uri_signer'
+            - '@security.token_storage'
             - '@contao.routing.content_url_generator'
             - '@?logger'
 
@@ -863,18 +868,68 @@ services:
             - '@contao.framework'
             - Contao\BackendUser
 
+    contao.security.data_container.article_content_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\ArticleContentVoter
+        arguments:
+            - '@security.access.decision_manager'
+
+    contao.security.data_container.content_composition_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\ContentCompositionVoter
+        arguments:
+            - '@contao.framework'
+            - '@contao.routing.page_registry'
+
     contao.security.data_container.favorites_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\FavoritesVoter
+
+    contao.security.data_container.form_access_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\FormAccessVoter
+        arguments:
+            - '@security.access.decision_manager'
+
+    contao.security.data_container.form_field_access_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\FormFieldAccessVoter
+        arguments:
+            - '@security.access.decision_manager'
+
+    contao.security.data_container.frontend_modules_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\FrontendModulesVoter
         arguments:
             - '@security.helper'
+
+    contao.security.data_container.image_size_access_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\ImageSizeAccessVoter
+        arguments:
+            - '@security.access.decision_manager'
+
+    contao.security.data_container.image_size_item_access_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\ImageSizeItemAccessVoter
+        arguments:
+            - '@security.access.decision_manager'
+
+    contao.security.data_container.page_permission_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\PagePermissionVoter
+        arguments:
+            - '@contao.framework'
+            - '@security.access.decision_manager'
+
+    contao.security.data_container.page_type_access_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\PageTypeAccessVoter
+        arguments:
+            - '@security.access.decision_manager'
             - '@database_connection'
 
     contao.security.data_container.table_access_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\TableAccessVoter
         arguments:
-            - '@security.helper'
+            - '@security.access.decision_manager'
         tags:
             - { name: security.voter, priority: 100 }
+
+    contao.security.data_container.undo_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\UndoVoter
+        arguments:
+            - '@security.access.decision_manager'
 
     contao.security.default_data_container_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\DefaultDataContainerVoter
