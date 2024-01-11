@@ -45,9 +45,9 @@ class ResponseContextAccessor
     }
 
     /**
-     * Every controller is free to call this method or not. After all, it's the
-     * controller that specifies the response context and which parts of it it
-     * wants to apply.
+     * Each controller is free to call this method or not. After all, it is
+     * the controller that specifies the response context and the parts of it
+     * that it wants to apply.
      *
      * This method applies the header bag and CSP and then ends the current context.
      */

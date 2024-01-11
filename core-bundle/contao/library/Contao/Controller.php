@@ -124,7 +124,7 @@ abstract class Controller extends System
 
 		/** @var TemplateHierarchyInterface $templateHierarchy */
 		$templateHierarchy = System::getContainer()->get('contao.twig.filesystem_loader');
-		$identifierPattern = sprintf('/^%s%s/', preg_quote($strPrefix, '/'), substr($strPrefix, -1) !== '_' ? '($|_)' : '');
+		$identifierPattern = sprintf('/^%s%s/', preg_quote($strPrefix, '/'), !str_ends_with($strPrefix, '_') ? '($|_)' : '');
 
 		$prefixedFiles = array_merge(
 			array_filter(
@@ -166,7 +166,7 @@ abstract class Controller extends System
 			{
 				$strTemplate = basename($strFile, strrchr($strFile, '.'));
 
-				if (strpos($strTemplate, '-') !== false)
+				if (str_contains($strTemplate, '-'))
 				{
 					throw new \RuntimeException(sprintf('Using hyphens in the template name "%s" is not allowed, use snake_case instead.', $strTemplate));
 				}
@@ -183,7 +183,7 @@ abstract class Controller extends System
 				{
 					foreach ($arrBundleTemplates as $strKey)
 					{
-						if (strpos($strTemplate, $strKey . '_') === 0)
+						if (str_starts_with($strTemplate, $strKey . '_'))
 						{
 							continue 2;
 						}
@@ -1452,7 +1452,7 @@ abstract class Controller extends System
 					$strHref = preg_replace('/(&(amp;)?|\?)file=[^&]+/', '', $strHref);
 				}
 
-				$strHref .= ((strpos($strHref, '?') !== false) ? '&amp;' : '?') . 'file=' . System::urlEncode($objFiles->path);
+				$strHref .= ((str_contains($strHref, '?')) ? '&amp;' : '?') . 'file=' . System::urlEncode($objFiles->path);
 
 				$arrMeta = Frontend::getMetaData($objFiles->meta, $objPage->language);
 
@@ -1552,7 +1552,7 @@ abstract class Controller extends System
 	protected static function braceGlob($pattern)
 	{
 		// Use glob() if possible
-		if (false === strpos($pattern, '/**/') && (\defined('GLOB_BRACE') || false === strpos($pattern, '{')))
+		if (!str_contains($pattern, '/**/') && (\defined('GLOB_BRACE') || !str_contains($pattern, '{')))
 		{
 			return glob($pattern, \defined('GLOB_BRACE') ? GLOB_BRACE : 0);
 		}

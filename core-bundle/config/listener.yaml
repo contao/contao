@@ -86,7 +86,6 @@ services:
             - '@contao.framework'
             - '@security.helper'
             - '@contao.routing.page_registry'
-            - '@translator'
             - '@database_connection'
             - '@request_stack'
 
@@ -110,6 +109,7 @@ services:
     contao.listener.data_container.default_operations:
         class: Contao\CoreBundle\EventListener\DataContainer\DefaultOperationsListener
         arguments:
+            - '@contao.framework'
             - '@security.helper'
             - '@database_connection'
 
@@ -289,13 +289,6 @@ services:
         tags:
             # The priority must be higher than the one of the response exception listener (defaults to 64)
             - { name: kernel.event_listener, priority: 96 }
-
-    contao.listener.filter_page_type:
-        class: Contao\CoreBundle\EventListener\FilterPageTypeListener
-        arguments:
-            - '@database_connection'
-        tags:
-            - kernel.event_listener
 
     contao.listener.form_field_template_options:
         class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener

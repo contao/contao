@@ -50,7 +50,7 @@ class Comments extends Frontend
 
 			// Calculate the key (e.g. tl_form_field becomes page_cff12)
 			$key = '';
-			$chunks = explode('_', substr($strSource, (strncmp($strSource, 'tl_', 3) === 0) ? 3 : 0));
+			$chunks = explode('_', substr($strSource, (str_starts_with($strSource, 'tl_')) ? 3 : 0));
 
 			foreach ($chunks as $chunk)
 			{
@@ -164,7 +164,7 @@ class Comments extends Frontend
 		}
 
 		// Confirm or remove a subscription
-		if (strncmp(Input::get('token'), 'com-', 4) === 0 || strncmp(Input::get('token'), 'cor-', 4) === 0)
+		if (str_starts_with(Input::get('token'), 'com-') || str_starts_with(Input::get('token'), 'cor-'))
 		{
 			static::changeSubscriptionStatus($objTemplate);
 
@@ -466,7 +466,7 @@ class Comments extends Frontend
 		$strComment = preg_replace($arrSearch, $arrReplace, $strComment);
 
 		// Encode e-mail addresses
-		if (strpos($strComment, 'mailto:') !== false)
+		if (str_contains($strComment, 'mailto:'))
 		{
 			$strComment = StringUtil::encodeEmail($strComment);
 		}
@@ -566,7 +566,7 @@ class Comments extends Frontend
 		$objNotify->setRow($arrSet)->save();
 
 		$strUrl = Idna::decode(Environment::get('base')) . $request;
-		$strConnector = (strpos($strUrl, '?') !== false) ? '&' : '?';
+		$strConnector = (str_contains($strUrl, '?')) ? '&' : '?';
 
 		$optIn = System::getContainer()->get('contao.opt_in');
 		$optInToken = $optIn->create('com', $objComment->email, array('tl_comments_notify'=>array($objNotify->id)));
@@ -582,7 +582,7 @@ class Comments extends Frontend
 	 */
 	public static function changeSubscriptionStatus(FrontendTemplate $objTemplate)
 	{
-		if (strncmp(Input::get('token'), 'com-', 4) === 0)
+		if (str_starts_with(Input::get('token'), 'com-'))
 		{
 			$optIn = System::getContainer()->get('contao.opt_in');
 
@@ -615,7 +615,7 @@ class Comments extends Frontend
 
 			$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['com_optInConfirm'];
 		}
-		elseif (strncmp(Input::get('token'), 'cor-', 4) === 0)
+		elseif (str_starts_with(Input::get('token'), 'cor-'))
 		{
 			$objNotify = CommentsNotifyModel::findOneByTokenRemove(Input::get('token'));
 
