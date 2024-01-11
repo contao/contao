@@ -135,7 +135,7 @@ class ContentDownload extends ContentElement
 			$strHref = preg_replace('/(&(amp;)?|\?)cid=\d+/', '', $strHref);
 		}
 
-		$strHref .= (strpos($strHref, '?') !== false ? '&amp;' : '?') . 'file=' . System::urlEncode($objFile->value) . '&amp;cid=' . $this->id;
+		$strHref .= (str_contains($strHref, '?') ? '&amp;' : '?') . 'file=' . System::urlEncode($objFile->value) . '&amp;cid=' . $this->id;
 
 		$this->Template->link = $this->linkTitle ?: $objFile->basename;
 		$this->Template->title = StringUtil::specialchars($this->titleText);

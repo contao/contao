@@ -333,7 +333,7 @@ class Combiner extends System
 			$content = file_get_contents($this->strRootDir . '/' . $arrFile['name']);
 
 			// Remove UTF-8 BOM
-			if (strncmp($content, "\xEF\xBB\xBF", 3) === 0)
+			if (str_starts_with($content, "\xEF\xBB\xBF"))
 			{
 				$content = substr($content, 3);
 			}
@@ -378,7 +378,7 @@ class Combiner extends System
 		$content = $this->fixPaths($content, $arrFile);
 
 		// Add the media type if there is no @media command in the code
-		if ($arrFile['media'] && $arrFile['media'] != 'all' && strpos($content, '@media') === false)
+		if ($arrFile['media'] && $arrFile['media'] != 'all' && !str_contains($content, '@media'))
 		{
 			$content = '@media ' . $arrFile['media'] . "{\n" . $content . "\n}";
 		}
@@ -441,7 +441,7 @@ class Combiner extends System
 		$strName = $arrFile['name'];
 
 		// Strip the contao.web_dir directory prefix
-		if (strpos($strName, $this->strWebDir . '/') === 0)
+		if (str_starts_with($strName, $this->strWebDir . '/'))
 		{
 			$strName = substr($strName, \strlen($this->strWebDir) + 1);
 		}
@@ -460,13 +460,13 @@ class Combiner extends System
 				}
 
 				// Skip absolute links and embedded images (see #5082)
-				if ($strData[0] == '/' || $strData[0] == '#' || strncmp($strData, 'data:', 5) === 0 || strncmp($strData, 'http://', 7) === 0 || strncmp($strData, 'https://', 8) === 0 || strncmp($strData, 'assets/css3pie/', 15) === 0)
+				if ($strData[0] == '/' || $strData[0] == '#' || str_starts_with($strData, 'data:') || str_starts_with($strData, 'http://') || str_starts_with($strData, 'https://') || str_starts_with($strData, 'assets/css3pie/'))
 				{
 					return $matches[0];
 				}
 
 				// Make the paths relative to the root (see #4161)
-				if (strncmp($strData, '../', 3) !== 0)
+				if (!str_starts_with($strData, '../'))
 				{
 					$strData = '../../' . $strGlue . $strData;
 				}
@@ -475,7 +475,7 @@ class Combiner extends System
 					$dir = $strDirname;
 
 					// Remove relative paths
-					while (strncmp($strData, '../', 3) === 0)
+					while (str_starts_with($strData, '../'))
 					{
 						$dir = \dirname($dir);
 						$strData = substr($strData, 3);
@@ -525,7 +525,7 @@ class Combiner extends System
 
 		while (($line = fgets($fh)) !== false)
 		{
-			if (strpos($line, '@media') !== false)
+			if (str_contains($line, '@media'))
 			{
 				$return = true;
 				break;

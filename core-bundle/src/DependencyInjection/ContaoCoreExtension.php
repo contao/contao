@@ -239,7 +239,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
     private function handleMessengerConfig(array $config, ContainerBuilder $container): void
     {
         if (
-            !$container->hasDefinition('contao.cron.messenger')
+            !$container->hasDefinition('contao.cron.supervise_workers')
             || !$container->hasDefinition('contao.command.supervise_workers')
         ) {
             return;
@@ -247,7 +247,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
         // No workers defined -> remove our cron job and the command
         if (0 === \count($config['messenger']['workers'])) {
-            $container->removeDefinition('contao.cron.messenger');
+            $container->removeDefinition('contao.cron.supervise_workers');
             $container->removeDefinition('contao.command.supervise_workers');
 
             return;

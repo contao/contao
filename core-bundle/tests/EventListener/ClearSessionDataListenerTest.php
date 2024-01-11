@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\EventListener;
 use Contao\CoreBundle\EventListener\ClearSessionDataListener;
 use Contao\CoreBundle\Session\Attribute\AutoExpiringAttribute;
 use Contao\CoreBundle\Tests\TestCase;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -23,6 +22,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Security\Http\SecurityRequestAttributes;
 
 class ClearSessionDataListenerTest extends TestCase
 {
@@ -41,14 +41,14 @@ class ClearSessionDataListenerTest extends TestCase
             new Response(),
         );
 
-        $session->set(Security::AUTHENTICATION_ERROR, 'error');
-        $session->set(Security::LAST_USERNAME, 'foobar');
+        $session->set(SecurityRequestAttributes::AUTHENTICATION_ERROR, 'error');
+        $session->set(SecurityRequestAttributes::LAST_USERNAME, 'foobar');
 
         $listener = new ClearSessionDataListener();
         $listener($event);
 
-        $this->assertFalse($session->has(Security::AUTHENTICATION_ERROR));
-        $this->assertFalse($session->has(Security::LAST_USERNAME));
+        $this->assertFalse($session->has(SecurityRequestAttributes::AUTHENTICATION_ERROR));
+        $this->assertFalse($session->has(SecurityRequestAttributes::LAST_USERNAME));
     }
 
     public function testClearsAutoExpiringAttributes(): void

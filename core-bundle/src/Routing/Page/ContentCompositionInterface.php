@@ -23,7 +23,7 @@ interface ContentCompositionInterface
 {
     /**
      * If the page supports content composition, its layout is defined by a
-     * Contao page layout and it supports articles and content elements.
+     * Contao page layout, and it supports articles and content elements.
      *
      * Most Contao page types do support composition. Pages that do not support
      * composition can be structural (e.g. a redirect page) or functional (e.g.

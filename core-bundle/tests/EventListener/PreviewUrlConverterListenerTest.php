@@ -181,7 +181,13 @@ class PreviewUrlConverterListenerTest extends TestCase
 
     public function testRediectsToFragmentUrlIfPreviewUrlThrowsException(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['id' => 42, 'rootLanguage' => 'en']);
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 42,
+            'rootLanguage' => 'en',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
+        ]);
+
         $pageModel
             ->expects($this->once())
             ->method('getAbsoluteUrl')
@@ -234,6 +240,8 @@ class PreviewUrlConverterListenerTest extends TestCase
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
             'id' => 42,
             'rootLanguage' => 'en',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
             'requireItem' => '1',
         ]);
 

@@ -95,11 +95,6 @@ services:
             - '@cache.app'
             - '@?logger'
 
-    contao.cron.messenger:
-        class: Contao\CoreBundle\Cron\MessengerCron
-        arguments:
-            - '@contao.process_util'
-
     contao.cron.purge_expired_data:
         class: Contao\CoreBundle\Cron\PurgeExpiredDataCron
         arguments:
@@ -129,6 +124,11 @@ services:
             - '@filesystem'
             - '%kernel.project_dir%'
             - '@monolog.logger.contao.cron'
+
+    contao.cron.supervise_workers:
+        class: Contao\CoreBundle\Cron\SuperviseWorkersCron
+        arguments:
+            - '@contao.process_util'
 
     contao.csrf.token_manager:
         class: Contao\CoreBundle\Csrf\ContaoCsrfTokenManager
@@ -844,6 +844,17 @@ services:
             - '@contao.framework'
             - Contao\BackendUser
 
+    contao.security.data_container.article_content_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\ArticleContentVoter
+        arguments:
+            - '@security.access.decision_manager'
+
+    contao.security.data_container.content_composition_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\ContentCompositionVoter
+        arguments:
+            - '@contao.framework'
+            - '@contao.routing.page_registry'
+
     contao.security.data_container.favorites_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\FavoritesVoter
 
@@ -856,6 +867,33 @@ services:
         class: Contao\CoreBundle\Security\Voter\DataContainer\FormFieldAccessVoter
         arguments:
             - '@security.access.decision_manager'
+
+    contao.security.data_container.frontend_modules_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\FrontendModulesVoter
+        arguments:
+            - '@security.helper'
+
+    contao.security.data_container.image_size_access_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\ImageSizeAccessVoter
+        arguments:
+            - '@security.access.decision_manager'
+
+    contao.security.data_container.image_size_item_access_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\ImageSizeItemAccessVoter
+        arguments:
+            - '@security.access.decision_manager'
+
+    contao.security.data_container.page_permission_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\PagePermissionVoter
+        arguments:
+            - '@contao.framework'
+            - '@security.access.decision_manager'
+
+    contao.security.data_container.page_type_access_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\PageTypeAccessVoter
+        arguments:
+            - '@security.access.decision_manager'
+            - '@database_connection'
 
     contao.security.data_container.table_access_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\TableAccessVoter
