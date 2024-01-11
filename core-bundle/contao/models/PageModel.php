@@ -87,6 +87,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string|integer    $stop
  * @property boolean           $enforceTwoFactor
  * @property integer           $twoFactorJumpTo
+ * @property boolean           $enableCsp
+ * @property string|null       $csp
+ * @property boolean           $cspReportOnly
+ * @property boolean           $cspReportLog
  *
  * @property array   $trail
  * @property string  $mainAlias
