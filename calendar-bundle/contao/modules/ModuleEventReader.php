@@ -158,6 +158,28 @@ class ModuleEventReader extends Events
 			{
 				$htmlHeadBag->setMetaRobots($objEvent->robots);
 			}
+
+			if ($objEvent->canonicalLink)
+			{
+				$url = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objEvent->canonicalLink);
+
+				// Ensure absolute links
+				if (!preg_match('#^https?://#', $url))
+				{
+					if (!$request = System::getContainer()->get('request_stack')->getCurrentRequest())
+					{
+						throw new \RuntimeException('The request stack did not contain a request');
+					}
+
+					$url = UrlUtil::makeAbsolute($url, $request->getUri());
+				}
+
+				$htmlHeadBag->setCanonicalUri($url);
+			}
+			elseif (!$this->cal_keepCanonical)
+			{
+				$htmlHeadBag->setCanonicalUri(Events::generateEventUrl($objEvent, true));
+			}
 		}
 
 		$intStartTime = $objEvent->startTime;
