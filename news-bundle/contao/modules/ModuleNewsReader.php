@@ -163,6 +163,28 @@ class ModuleNewsReader extends ModuleNews
 			{
 				$htmlHeadBag->setMetaRobots($objArticle->robots);
 			}
+
+			if ($objArticle->canonicalLink)
+			{
+				$url = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objArticle->canonicalLink);
+
+				// Ensure absolute links
+				if (!preg_match('#^https?://#', $url))
+				{
+					if (!$request = System::getContainer()->get('request_stack')->getCurrentRequest())
+					{
+						throw new \RuntimeException('The request stack did not contain a request');
+					}
+
+					$url = UrlUtil::makeAbsolute($url, $request->getUri());
+				}
+
+				$htmlHeadBag->setCanonicalUri($url);
+			}
+			elseif (!$this->news_keepCanonical)
+			{
+				$htmlHeadBag->setCanonicalUri(News::generateNewsUrl($objArticle, false, true));
+			}
 		}
 
 		$bundles = System::getContainer()->getParameter('kernel.bundles');
