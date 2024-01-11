@@ -48,9 +48,9 @@ class ContentUrlGenerator implements ResetInterface, RequestContextAwareInterfac
     /**
      * @throws ExceptionInterface
      */
-    public function generate(object $content, array $parameters = [], array $optionalParameters = []): string
+    public function generate(object $content, array $parameters = []): string
     {
-        $cacheKey = sha1(serialize($content)."\0".serialize($parameters)."\0".serialize($optionalParameters));
+        $cacheKey = sha1(serialize($content)."\0".serialize($parameters));
 
         if (isset($this->urlCache[$cacheKey])) {
             if ($this->urlCache[$cacheKey] instanceof ExceptionInterface) {
@@ -80,15 +80,16 @@ class ContentUrlGenerator implements ResetInterface, RequestContextAwareInterfac
 
             // The original content has changed, parameters are not valid anymore
             if ($targetContent !== $content && $target !== $content) {
-                $parameters = $optionalParameters = [];
+                $parameters = [];
             }
 
             $compiledRoute = $route->compile();
+            $optionalParameters = [];
 
             if ($targetContent) {
                 foreach ($this->urlResolvers as $resolver) {
                     foreach ($resolver->getParametersForContent($targetContent, $target) as $k => $v) {
-                        if (isset($optionalParameters[$k]) || isset($parameters[$k])) {
+                        if (isset($parameters[$k])) {
                             continue;
                         }
 
