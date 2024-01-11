@@ -38,6 +38,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 #[AsInsertTag('lang')]
 #[AsInsertTag('br')]
@@ -304,11 +305,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
 
                 try {
                     $blnAbsolute = \in_array('absolute', \array_slice($insertTag->getParameters()->all(), 1), true);
-                    $strUrl = $this->container->get('contao.routing.content_url_generator')->generate($objArticle);
-
-                    if (!$blnAbsolute) {
-                        $strUrl = UrlUtil::makeAbsolutePath($strUrl, Environment::get('base'));
-                    }
+                    $strUrl = $this->container->get('contao.routing.content_url_generator')->generate($objArticle, [], $blnAbsolute ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH);
                 } catch (ExceptionInterface) {
                     // Ignore routing exception
                 }

@@ -26,6 +26,7 @@ use Contao\FrontendUser;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class LinkInsertTag
 {
@@ -87,12 +88,10 @@ class LinkInsertTag
             if (\in_array($insertTag->getName(), ['link', 'link_open', 'link_url'], true)) {
                 try {
                     $blnAbsolute = \in_array('absolute', \array_slice($insertTag->getParameters()->all(), 1), true);
-                    $strUrl = $this->urlGenerator->generate($objNextPage);
+                    $strUrl = $this->urlGenerator->generate($objNextPage, [], $blnAbsolute ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH);
 
                     if (0 === strncasecmp($strUrl, 'mailto:', 7)) {
                         $strUrl = StringUtil::encodeEmail($strUrl);
-                    } elseif (!$blnAbsolute) {
-                        $strUrl = UrlUtil::makeAbsolutePath($strUrl, Environment::get('base'));
                     }
                 } catch (ExceptionInterface) {
                     // Use empty URL defined above

@@ -14,6 +14,7 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\UrlUtil;
 use Contao\Model\Collection;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Parent class for front end modules.
@@ -361,7 +362,7 @@ abstract class Module extends Frontend
 				}
 				else
 				{
-					$href = StringUtil::ampersand(UrlUtil::makeAbsolutePath($href, Environment::get('base')));
+					$href = StringUtil::ampersand($href);
 				}
 
 				$items[] = $this->compileNavigationRow($objPage, $objSubpage, $subitems, $href);

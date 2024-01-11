@@ -48,7 +48,7 @@ class ContentUrlGenerator implements ResetInterface, RequestContextAwareInterfac
     /**
      * @throws ExceptionInterface
      */
-    public function generate(object $content, array $parameters = []): string
+    public function generate(object $content, array $parameters = [], int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): string
     {
         $cacheKey = sha1(serialize($content)."\0".serialize($parameters));
 
@@ -103,7 +103,7 @@ class ContentUrlGenerator implements ResetInterface, RequestContextAwareInterfac
             return $this->urlCache[$cacheKey] = $this->urlGenerator->generate(
                 PageRoute::PAGE_BASED_ROUTE_NAME,
                 [...$optionalParameters, ...$parameters, RouteObjectInterface::ROUTE_OBJECT => $route],
-                UrlGeneratorInterface::ABSOLUTE_URL,
+                $referenceType,
             );
         } catch (ExceptionInterface $exception) {
             $this->urlCache[$cacheKey] = $exception;

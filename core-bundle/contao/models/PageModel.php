@@ -17,6 +17,7 @@ use Contao\Model\Collection;
 use Contao\Model\Registry;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Reads and writes pages
@@ -1087,7 +1088,36 @@ class PageModel extends Model
 	{
 		trigger_deprecation('contao/core-bundle', '5.3', __METHOD__ . ' is deprecated, use the content URL generator instead.');
 
-		return UrlUtil::makeAbsolutePath($this->getAbsoluteUrl($strParams), Environment::get('base'));
+		$this->loadDetails();
+
+		$objRouter = System::getContainer()->get('contao.routing.content_url_generator');
+
+		if (\is_array($strParams))
+		{
+			$parameters = $strParams;
+		}
+		else
+		{
+			$parameters = array('parameters' => $strParams);
+		}
+
+		try
+		{
+			$strUrl = $objRouter->generate($this, $parameters);
+		}
+		catch (RouteNotFoundException $e)
+		{
+			$pageRegistry = System::getContainer()->get('contao.routing.page_registry');
+
+			if (!$pageRegistry->isRoutable($this))
+			{
+				throw new ResourceNotFoundException(sprintf('Page ID %s is not routable', $this->id), 0, $e);
+			}
+
+			throw $e;
+		}
+
+		return $strUrl;
 	}
 
 	/**
@@ -1119,7 +1149,7 @@ class PageModel extends Model
 
 		try
 		{
-			$strUrl = $objRouter->generate($this, $parameters);
+			$strUrl = $objRouter->generate($this, $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
 		}
 		catch (RouteNotFoundException $e)
 		{

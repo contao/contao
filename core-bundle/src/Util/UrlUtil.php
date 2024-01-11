@@ -54,25 +54,4 @@ class UrlUtil
 
         return (string) $base->withPath($path)->withQuery($query)->withFragment($relative->getFragment());
     }
-
-    /**
-     * Makes an absolute URL relative to the given path. This will never make a protocol-relative URL, but
-     * will remove the host if it matches the base URL.
-     */
-    public static function makeAbsolutePath(string $absoluteUrl, string $baseUrl): string
-    {
-        $absolute = new Uri($absoluteUrl);
-
-        if ('' === $absolute->getAuthority()) {
-            return (string) $absolute->withPath($absolute->getPath() ?: '/');
-        }
-
-        $base = new Uri($baseUrl);
-
-        if ($base->getScheme() === $absolute->getScheme() && $base->getHost() === $absolute->getHost()) {
-            $absolute = $absolute->withScheme('')->withHost('');
-        }
-
-        return (string) $absolute->withPath($absolute->getPath() ?: '/');
-    }
 }
