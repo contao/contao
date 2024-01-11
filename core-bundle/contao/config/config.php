@@ -86,6 +86,7 @@ use Contao\PageError404;
 use Contao\PageForward;
 use Contao\PageLogout;
 use Contao\PageModel;
+use Contao\PageRedirect;
 use Contao\PageRegular;
 use Contao\PageTree;
 use Contao\Password;
@@ -337,6 +338,7 @@ $GLOBALS['TL_PTY'] = array
 (
 	'regular'   => PageRegular::class,
 	'forward'   => PageForward::class,
+	'redirect'  => PageRedirect::class,
 	'logout'    => PageLogout::class,
 	'error_401' => PageError401::class,
 	'error_403' => PageError403::class,
