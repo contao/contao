@@ -160,7 +160,7 @@ class TextField extends Widget
 			}
 
 			return sprintf(
-				'<input type="%s" name="%s" id="ctrl_%s" class="tl_text%s" value="%s"%s onfocus="Backend.getScrollOffset()">%s',
+				'<input type="%s" name="%s" id="ctrl_%s" class="tl_text%s" value="%s"%s onfocus="Backend.getScrollOffset()" data-contao--autofocus-target="input">%s',
 				$strType,
 				$this->strName,
 				$this->strId,
