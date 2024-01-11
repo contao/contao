@@ -20,5 +20,7 @@ if ($MatomoSite > 0 && '//www.example.com/matomo/' != $MatomoPath && !$this->has
   })();
 </script>
 
-<?php $this->addCspSource('script-src', $MatomoPath) ?>
-<?php endif; ?>
+<?php
+
+$this->addCspSource('script-src', $MatomoPath);
+endif;

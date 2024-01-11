@@ -100,14 +100,16 @@ class CspHandlerTest extends TestCase
 
     public function testAppliesHeaders(): void
     {
-        $cspHandler = $this->getCspHandler();
         $response = new Response();
+
+        $cspHandler = $this->getCspHandler();
         $cspHandler->applyHeaders($response);
 
         $this->assertSame("script-src 'self'", $response->headers->get('Content-Security-Policy'));
 
-        $cspHandler->setReportOnly(true);
         $response = new Response();
+
+        $cspHandler->setReportOnly(true);
         $cspHandler->applyHeaders($response);
 
         $this->assertSame("script-src 'self'", $response->headers->get('Content-Security-Policy-Report-Only'));

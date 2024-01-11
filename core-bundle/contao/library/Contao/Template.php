@@ -686,11 +686,10 @@ abstract class Template extends Controller
 		$nonce = null;
 		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
-		if ($responseContext && $responseContext->has(CspHandler::class))
+		if ($responseContext?->has(CspHandler::class))
 		{
 			/** @var CspHandler $csp */
 			$csp = $responseContext->get(CspHandler::class);
-
 			$nonce = $csp->getNonce('style-src');
 		}
 
@@ -754,11 +753,10 @@ abstract class Template extends Controller
 		$nonce = null;
 		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
-		if ($responseContext && $responseContext->has(CspHandler::class))
+		if ($responseContext?->has(CspHandler::class))
 		{
 			/** @var CspHandler $csp */
 			$csp = $responseContext->get(CspHandler::class);
-
 			$nonce = $csp->getNonce('script-src');
 		}
 

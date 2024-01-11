@@ -43,7 +43,7 @@ final class CspReporterController
             throw new NotFoundHttpException('CSP report logging not enabled on this page.');
         }
 
-        // Forward to controller from nelmio/security-bundle
+        // Forward to the nelmio/security-bundle controller
         return $this->nelmioController->indexAction($request);
     }
 }

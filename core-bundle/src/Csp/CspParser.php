@@ -32,7 +32,6 @@ class CspParser
 
         $parser = new ContentSecurityPolicyParser();
         $names = $directiveSet->getNames();
-
         $directives = array_filter(array_map('trim', explode(';', $header)));
 
         foreach ($directives as $directive) {

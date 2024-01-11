@@ -357,7 +357,7 @@
         <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
       </trans-unit>
       <trans-unit id="tl_page.enableCsp.0">
-        <source>Enable Content Security Policy</source>
+        <source>Enable CSP</source>
       </trans-unit>
       <trans-unit id="tl_page.enableCsp.1">
         <source>Enable Content Security Policy for this domain.</source>
@@ -366,19 +366,19 @@
         <source>Content Security Policy</source>
       </trans-unit>
       <trans-unit id="tl_page.csp.1">
-        <source>Enter custom Content Security Policy directives here.</source>
+        <source>Here you can enter custom Content Security Policy directives.</source>
       </trans-unit>
       <trans-unit id="tl_page.cspReportOnly.0">
         <source>Reporting only</source>
       </trans-unit>
       <trans-unit id="tl_page.cspReportOnly.1">
-        <source>Tells the browser to only report policy violations without enforcing them.</source>
+        <source>Only report policy violations without enforcing them.</source>
       </trans-unit>
       <trans-unit id="tl_page.cspReportLog.0">
         <source>Enable report logging</source>
       </trans-unit>
       <trans-unit id="tl_page.cspReportLog.1">
-        <source>Enables logging of CSP violations to the Contao system log.</source>
+        <source>Log CSP violations to the Contao system log.</source>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>

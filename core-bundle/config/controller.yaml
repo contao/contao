@@ -66,13 +66,6 @@ services:
         tags:
             - controller.service_arguments
 
-    Contao\CoreBundle\Controller\CspReporterController:
-        arguments:
-            - '@contao.framework'
-            - '@?nelmio_security.csp_reporter_controller'
-        tags:
-            - controller.service_arguments
-
     Contao\CoreBundle\Controller\ContentElement\AccordionController:
         arguments:
             - '@contao.framework'
@@ -134,6 +127,13 @@ services:
     Contao\CoreBundle\Controller\ContentElement\VideoController:
         arguments:
             - '@contao.image.studio'
+
+    Contao\CoreBundle\Controller\CspReporterController:
+        arguments:
+            - '@contao.framework'
+            - '@?nelmio_security.csp_reporter_controller'
+        tags:
+            - controller.service_arguments
 
     Contao\CoreBundle\Controller\FaviconController:
         arguments:

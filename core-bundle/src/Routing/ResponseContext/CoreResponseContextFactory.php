@@ -153,7 +153,6 @@ class CoreResponseContextFactory
         }
 
         $cspHandler = new CspHandler($directives, (bool) $pageModel->cspReportOnly);
-
         $context->add($cspHandler);
     }
 }

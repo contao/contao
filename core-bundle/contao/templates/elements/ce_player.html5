@@ -6,14 +6,14 @@
     <?php if ($this->isVideo): ?>
       <video<?= $this->size ?><?php if ($this->poster): ?> poster="<?= $this->poster ?>"<?php endif; ?><?php if ($this->preload): ?> preload="<?= $this->preload ?>"<?php endif; ?> <?= implode(' ', $this->attributes) ?>>
         <?php foreach ($this->files as $file): ?>
-          <?php $this->addCspSource('media-src', $file->path) ?>
+          <?php $this->addCspSource('media-src', $file->path); ?>
           <source type="<?= $file->mime ?>" src="<?= $file->path.$this->range ?>">
         <?php endforeach; ?>
       </video>
     <?php else: ?>
       <audio<?php if ($this->preload): ?> preload="<?= $this->preload ?>"<?php endif; ?> <?= implode(' ', $this->attributes) ?>>
         <?php foreach ($this->files as $file): ?>
-          <?php $this->addCspSource('media-src', $file->path) ?>
+          <?php $this->addCspSource('media-src', $file->path); ?>
           <source type="<?= $file->mime ?>" src="<?= $file->path ?>">
         <?php endforeach; ?>
       </audio>

@@ -35,4 +35,6 @@
 
 <?php $this->endblock(); ?>
 
-<?php $this->addCspSource('frame-src', $this->src); ?>
+<?php
+
+$this->addCspSource('frame-src', $this->src);

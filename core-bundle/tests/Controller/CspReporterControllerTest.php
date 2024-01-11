@@ -42,17 +42,17 @@ class CspReporterControllerTest extends TestCase
             ->willReturn($page)
         ;
 
-        $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
-
         $logger = $this->createMock(LoggerInterface::class);
         $logFormatter = $this->createMock(LogFormatterInterface::class);
         $nelmioLogger = new Logger($logger, $logFormatter, 'notice');
+
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $eventDispatcher
             ->expects($this->never())
             ->method('dispatch')
         ;
 
+        $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
         $inner = new ContentSecurityPolicyController($nelmioLogger, $eventDispatcher, new Filter());
 
         $this->expectException(NotFoundHttpException::class);
@@ -77,17 +77,17 @@ class CspReporterControllerTest extends TestCase
             ->willReturn($page)
         ;
 
-        $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
-
         $logger = $this->createMock(LoggerInterface::class);
         $logFormatter = $this->createMock(LogFormatterInterface::class);
         $nelmioLogger = new Logger($logger, $logFormatter, 'notice');
+
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $eventDispatcher
             ->expects($this->once())
             ->method('dispatch')
         ;
 
+        $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
         $inner = new ContentSecurityPolicyController($nelmioLogger, $eventDispatcher, new Filter());
 
         $controller = new CspReporterController($framework, $inner);

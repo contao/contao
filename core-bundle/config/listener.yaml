@@ -93,7 +93,6 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\CspSaveCallbackListener
         arguments:
             - '@contao.csp.parser'
-            - '@translator'
 
     contao.listener.data_container.cte_alias:
         class: Contao\CoreBundle\EventListener\DataContainer\CteAliasListener

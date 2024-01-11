@@ -95,7 +95,6 @@ class PreviewToolbarListener
         ]);
 
         $response->setContent(substr($content, 0, $pos)."\n".$toolbar."\n".substr($content, $pos));
-
         $cspHandler->applyHeaders($response, $request);
     }
 

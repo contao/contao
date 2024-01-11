@@ -666,7 +666,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type'=>'boolean', 'default'=>false),
-		),
+		)
 	)
 );
 

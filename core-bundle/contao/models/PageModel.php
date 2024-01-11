@@ -182,6 +182,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByStop($val, array $opt=array())
  * @method static PageModel|null findOneByEnforceTwoFactor($val, array $opt=array())
  * @method static PageModel|null findOneByTwoFactorJumpTo($val, array $opt=array())
+ * @method static PageModel|null findOneByEnableCsp($val, array $opt=array())
+ * @method static PageModel|null findOneByCsp($val, array $opt=array())
+ * @method static PageModel|null findOneByCspReportOnly($val, array $opt=array())
+ * @method static PageModel|null findOneByCspReportLog($val, array $opt=array())
  *
  * @method static Collection<PageModel>|PageModel[]|null findByPid($val, array $opt=array())
  * @method static Collection<PageModel>|PageModel[]|null findBySorting($val, array $opt=array())
@@ -242,6 +246,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection<PageModel>|PageModel[]|null findByStop($val, array $opt=array())
  * @method static Collection<PageModel>|PageModel[]|null findByEnforceTwoFactor($val, array $opt=array())
  * @method static Collection<PageModel>|PageModel[]|null findByTwoFactorJumpTo($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByEnableCsp($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByCsp($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByCspReportOnly($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByCspReportLog($val, array $opt=array())
  * @method static Collection<PageModel>|PageModel[]|null findMultipleByIds($val, array $opt=array())
  * @method static Collection<PageModel>|PageModel[]|null findBy($col, $val, array $opt=array())
  * @method static Collection<PageModel>|PageModel[]|null findAll(array $opt=array())
@@ -306,6 +314,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByStop($val, array $opt=array())
  * @method static integer countByEnforceTwoFactor($val, array $opt=array())
  * @method static integer countByTwoFactorJumpTo($val, array $opt=array())
+ * @method static integer countByEnableCsp($val, array $opt=array())
+ * @method static integer countByCsp($val, array $opt=array())
+ * @method static integer countByCspReportOnly($val, array $opt=array())
+ * @method static integer countByCspReportLog($val, array $opt=array())
  */
 class PageModel extends Model
 {

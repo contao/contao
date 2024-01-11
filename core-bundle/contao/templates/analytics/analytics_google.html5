@@ -15,5 +15,7 @@ if ('XXXXX' != $GoogleAnalyticsId && !$this->hasAuthenticatedBackendUser()): ?>
   gtag('config', '<?= $GoogleAnalyticsId ?>', {'anonymize_ip': true});
 </script>
 
-<?php $this->addCspSource('script-src', 'www.googletagmanager.com') ?>
-<?php endif; ?>
+<?php
+
+$this->addCspSource('script-src', 'www.googletagmanager.com');
+endif;

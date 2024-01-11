@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Monolog\ContaoContext;
-use Nelmio\SecurityBundle\ContentSecurityPolicy\Violation\Report;
 use Nelmio\SecurityBundle\ContentSecurityPolicy\Violation\ReportEvent;
 use Psr\Log\LoggerInterface;
 
@@ -30,7 +29,6 @@ class CspReportListener
 
     public function __invoke(ReportEvent $event): void
     {
-        /** @var Report $report */
         $report = $event->getReport();
 
         $context = new ContaoContext(

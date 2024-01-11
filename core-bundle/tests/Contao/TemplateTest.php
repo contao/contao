@@ -431,7 +431,6 @@ class TemplateTest extends TestCase
         $directives->setDirective('script-src', "'self'");
 
         $cspHandler = new CspHandler($directives);
-
         $responseContext = (new ResponseContext())->add($cspHandler);
 
         $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
@@ -452,7 +451,6 @@ class TemplateTest extends TestCase
         $directives->setDirective('script-src', "'self'");
 
         $cspHandler = new CspHandler($directives);
-
         $responseContext = (new ResponseContext())->add($cspHandler);
 
         $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
