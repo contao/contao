@@ -150,7 +150,8 @@
         "phpunit/phpunit": "^9.3",
         "roave/better-reflection": "^4.12.2 || ^5.0",
         "symfony/browser-kit": "^5.4",
-        "symfony/phpunit-bridge": "^5.4"
+        "symfony/phpunit-bridge": "^5.4",
+        "symfony/web-profiler-bundle": "^5.4"
     },
     "conflict": {
         "contao-community-alliance/composer-plugin": "<3.0",

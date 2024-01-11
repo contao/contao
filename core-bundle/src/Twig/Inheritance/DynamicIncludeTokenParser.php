@@ -17,6 +17,7 @@ use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\IncludeNode;
 use Twig\Node\Node;
+use Twig\TemplateWrapper;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
 
@@ -54,9 +55,23 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
     /**
      * Return the adjusted logical name or the unchanged input if it does not
      * match the Contao Twig namespace.
+     *
+     * TODO change signature to public static function adjustTemplateName(string|TemplateWrapper $name, TemplateHierarchyInterface $hierarchy): string|TemplateWrapper in Contao 5.1
+     *
+     * @param string|TemplateWrapper $name
+     *
+     * @return string|TemplateWrapper
      */
-    public static function adjustTemplateName(string $name, TemplateHierarchyInterface $hierarchy): string
+    public static function adjustTemplateName($name, TemplateHierarchyInterface $hierarchy)
     {
+        if (!\is_string($name)) {
+            if ($name instanceof TemplateWrapper) {
+                return $name;
+            }
+
+            throw new \TypeError(sprintf('Argument 1 passed to %s() must be of the type string|TemplateWrapper, %s given', __METHOD__, get_debug_type($name)));
+        }
+
         $parts = ContaoTwigUtil::parseContaoName($name);
 
         if ('Contao' !== ($parts[0] ?? null)) {

@@ -26,6 +26,7 @@
         "Michelf\\MarkdownExtra",
         "ProxyManager\\Configuration",
         "Roave\\BetterReflection\\BetterReflection",
-        "Symfony\\Bundle\\MonologBundle\\MonologBundle"
+        "Symfony\\Bundle\\MonologBundle\\MonologBundle",
+        "Symfony\\Bundle\\WebProfilerBundle\\EventListener\\WebDebugToolbarListener"
     ]
 }

@@ -185,6 +185,10 @@ class News extends Frontend
 				// Override the global page object (#2946)
 				$GLOBALS['objPage'] = $objParent;
 
+				// Override the assets and files context (#6563)
+				$GLOBALS['objPage']->staticFiles = rtrim($GLOBALS['objPage']->staticFiles ?: $strLink, '/');
+				$GLOBALS['objPage']->staticPlugins = rtrim($GLOBALS['objPage']->staticPlugins ?: $strLink, '/');
+
 				// Get the jumpTo URL
 				if (!isset($arrUrls[$jumpTo]))
 				{
