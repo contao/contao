@@ -24,6 +24,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as SymfonyAbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 abstract class AbstractController extends SymfonyAbstractController
 {
@@ -127,9 +128,9 @@ abstract class AbstractController extends SymfonyAbstractController
         return $response;
     }
 
-    protected function generateContentUrl(object $content, array $parameters = []): string
+    protected function generateContentUrl(object $content, array $parameters = [], int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): string
     {
-        return $this->container->get('contao.routing.content_url_generator')->generate($content, $parameters);
+        return $this->container->get('contao.routing.content_url_generator')->generate($content, $parameters, $referenceType);
     }
 
     protected function hasParameter(string $name): bool

@@ -14,6 +14,7 @@ use Nyholm\Psr7\Uri;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvents;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
 
@@ -179,7 +180,7 @@ class ModuleLogin extends Module
 		// Redirect to the jumpTo page
 		elseif (($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
 		{
-			$strRedirect = $container->get('contao.routing.content_url_generator')->generate($objTarget);
+			$strRedirect = $container->get('contao.routing.content_url_generator')->generate($objTarget, [], UrlGeneratorInterface::ABSOLUTE_URL);
 		}
 
 		$this->Template->formId = 'tl_login_' . $this->id;

@@ -18,6 +18,7 @@ use Contao\CoreBundle\Exception\NoActivePageFoundException;
 use Contao\PageModel;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @internal
@@ -33,7 +34,7 @@ class RootPageController extends AbstractController
     {
         $nextPage = $this->getNextPage($pageModel->id);
 
-        return $this->redirect($this->generateContentUrl($nextPage));
+        return $this->redirect($this->generateContentUrl($nextPage, [], UrlGeneratorInterface::ABSOLUTE_URL));
     }
 
     private function getNextPage(int $rootPageId): PageModel

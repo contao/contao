@@ -19,6 +19,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use Nyholm\Psr7\Uri;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Terminal42\Escargot\BaseUriCollection;
 use Terminal42\Escargot\Queue\InMemoryQueue;
 
@@ -62,7 +63,7 @@ class FactoryTest extends TestCase
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
             ->method('generate')
-            ->with($rootPage)
+            ->with($rootPage, [], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturn('https://contao.org')
         ;
 

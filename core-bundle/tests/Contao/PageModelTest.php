@@ -33,6 +33,7 @@ use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PageModelTest extends TestCase
 {
@@ -493,7 +494,7 @@ class PageModelTest extends TestCase
         $urlGenerator
             ->expects($this->once())
             ->method('generate')
-            ->with($page, ['parameters' => null])
+            ->with($page, ['parameters' => null], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturn('https://example.com/page')
         ;
 

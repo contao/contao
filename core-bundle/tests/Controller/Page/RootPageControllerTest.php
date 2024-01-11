@@ -21,6 +21,7 @@ use Contao\System;
 use Psr\Log\NullLogger;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class RootPageControllerTest extends TestCase
 {
@@ -56,7 +57,7 @@ class RootPageControllerTest extends TestCase
         $urlGenerator
             ->expects($this->once())
             ->method('generate')
-            ->with($childPage)
+            ->with($childPage, [], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturn('https://example.com/foobar')
         ;
 

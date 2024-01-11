@@ -32,6 +32,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Exception\RuntimeException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class SitemapControllerTest extends TestCase
@@ -90,7 +91,7 @@ class SitemapControllerTest extends TestCase
         $urlGenerator
             ->expects($this->once())
             ->method('generate')
-            ->with($page1)
+            ->with($page1, [], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturn('https://www.foobar.com:8000/en/page1.html')
         ;
 
@@ -126,7 +127,7 @@ class SitemapControllerTest extends TestCase
         $urlGenerator
             ->expects($this->once())
             ->method('generate')
-            ->with($page1)
+            ->with($page1, [], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturn('https://www.foobar.com/en/page1.html')
         ;
 
@@ -184,7 +185,7 @@ class SitemapControllerTest extends TestCase
         $urlGenerator
             ->expects($this->exactly(2))
             ->method('generate')
-            ->withConsecutive([$page1], [$page2])
+            ->withConsecutive([$page1, [], UrlGeneratorInterface::ABSOLUTE_URL], [$page2, [], UrlGeneratorInterface::ABSOLUTE_URL])
             ->willReturnOnConsecutiveCalls(
                 'https://www.foobar.com/en/page1.html',
                 'https://www.foobar.com/en/page2.html',
@@ -252,7 +253,7 @@ class SitemapControllerTest extends TestCase
         $urlGenerator
             ->expects($this->once())
             ->method('generate')
-            ->with($page1)
+            ->with($page1, [], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturn('https://www.foobar.com/en/page2.html')
         ;
 
@@ -312,7 +313,7 @@ class SitemapControllerTest extends TestCase
         $urlGenerator
             ->expects($this->once())
             ->method('generate')
-            ->with($page1)
+            ->with($page1, [], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturn('https://www.foobar.com/en/page2.html')
         ;
 
@@ -385,7 +386,7 @@ class SitemapControllerTest extends TestCase
         $urlGenerator
             ->expects($this->once())
             ->method('generate')
-            ->with($page1)
+            ->with($page1, [], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturn('https://www.foobar.com/en/page2.html')
         ;
 
@@ -455,7 +456,7 @@ class SitemapControllerTest extends TestCase
         $urlGenerator
             ->expects($this->once())
             ->method('generate')
-            ->with($page1)
+            ->with($page1, [], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturn('https://www.foobar.com/en/page2.html')
         ;
 
@@ -525,7 +526,7 @@ class SitemapControllerTest extends TestCase
         $urlGenerator
             ->expects($this->exactly(2))
             ->method('generate')
-            ->withConsecutive([$page1], [$page2])
+            ->withConsecutive([$page1, [], UrlGeneratorInterface::ABSOLUTE_URL], [$page2, [], UrlGeneratorInterface::ABSOLUTE_URL])
             ->willReturnCallback(static fn ($page) => match (true) {
                 $page === $page1 => throw new RuntimeException(),
                 $page === $page2 => 'https://www.foobar.com/en/page2.html',
@@ -601,7 +602,7 @@ class SitemapControllerTest extends TestCase
         $urlGenerator
             ->expects($this->exactly(2))
             ->method('generate')
-            ->withConsecutive([$page1], [$page3])
+            ->withConsecutive([$page1, [], UrlGeneratorInterface::ABSOLUTE_URL], [$page3, [], UrlGeneratorInterface::ABSOLUTE_URL])
             ->willReturnOnConsecutiveCalls(
                 'https://www.foobar.com/en/page1.html',
                 'https://www.foobar.com/en/page3.html',
@@ -655,7 +656,7 @@ class SitemapControllerTest extends TestCase
         $urlGenerator
             ->expects($this->exactly(2))
             ->method('generate')
-            ->withConsecutive([$page1], [$article1])
+            ->withConsecutive([$page1, [], UrlGeneratorInterface::ABSOLUTE_URL], [$article1, [], UrlGeneratorInterface::ABSOLUTE_URL])
             ->willReturnOnConsecutiveCalls('https://www.foobar.com/en/page1.html', 'https://www.foobar.com/en/page1/articles/foobar.html')
         ;
 
@@ -713,7 +714,7 @@ class SitemapControllerTest extends TestCase
         $urlGenerator
             ->expects($this->once())
             ->method('generate')
-            ->with($page1)
+            ->with($page1, [], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturn('https://www.foobar.com/en/page1.html')
         ;
 
@@ -772,7 +773,7 @@ class SitemapControllerTest extends TestCase
         $urlGenerator
             ->expects($this->once())
             ->method('generate')
-            ->with($page2)
+            ->with($page2, [], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturn('https://www.foobar.com/en/page2.html')
         ;
 

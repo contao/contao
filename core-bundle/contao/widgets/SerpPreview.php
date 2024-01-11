@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @property array    $titleFields
@@ -158,7 +159,7 @@ class SerpPreview extends Widget
 		{
 			try
 			{
-				$url = System::getContainer()->get('contao.routing.content_url_generator')->generate(self::importStatic($tempModel));
+				$url = System::getContainer()->get('contao.routing.content_url_generator')->generate($tempModel, [], UrlGeneratorInterface::ABSOLUTE_URL);
 			}
 			catch (ExceptionInterface $exception)
 			{

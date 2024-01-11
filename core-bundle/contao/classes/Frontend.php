@@ -15,6 +15,7 @@ use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Provide methods to manage front end controllers.
@@ -165,7 +166,7 @@ abstract class Frontend extends Controller
 		{
 			$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
 
-			$this->redirect($urlGenerator->generate($objNextPage, $strParams ? array('parameters' => $strParams) : array()));
+			$this->redirect($urlGenerator->generate($objNextPage, $strParams ? array('parameters' => $strParams) : array(), UrlGeneratorInterface::ABSOLUTE_URL));
 		}
 
 		$this->reload();

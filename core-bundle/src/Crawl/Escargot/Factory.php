@@ -20,6 +20,7 @@ use Doctrine\DBAL\Connection;
 use Nyholm\Psr7\Uri;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Terminal42\Escargot\BaseUriCollection;
@@ -130,7 +131,7 @@ class Factory
 
         foreach ($rootPages as $rootPage) {
             try {
-                $collection->add(new Uri($this->urlGenerator->generate($rootPage)));
+                $collection->add(new Uri($this->urlGenerator->generate($rootPage, [], UrlGeneratorInterface::ABSOLUTE_URL)));
             } catch (ExceptionInterface) {
             }
         }

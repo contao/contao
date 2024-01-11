@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -148,7 +149,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $urlGenerator
             ->expects($this->once())
             ->method('generate')
-            ->with($model)
+            ->with($model, [], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturn('http://localhost/page')
         ;
 

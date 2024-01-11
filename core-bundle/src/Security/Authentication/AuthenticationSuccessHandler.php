@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
@@ -126,7 +127,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         $groupPage = $pageModelAdapter->findFirstActiveByMemberGroups($groups);
 
         if ($groupPage instanceof PageModel) {
-            return $this->urlGenerator->generate($groupPage);
+            return $this->urlGenerator->generate($groupPage, [], UrlGeneratorInterface::ABSOLUTE_URL);
         }
 
         return $this->decodeTargetPath($request);

@@ -360,10 +360,6 @@ abstract class Module extends Frontend
 				{
 					$href = StringUtil::encodeEmail($href);
 				}
-				else
-				{
-					$href = StringUtil::ampersand($href);
-				}
 
 				$items[] = $this->compileNavigationRow($objPage, $objSubpage, $subitems, $href);
 			}

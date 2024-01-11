@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @internal
@@ -125,12 +126,12 @@ class SitemapController extends AbstractController
                 && 'html' === $this->pageRegistry->getRoute($pageModel)->getDefault('_format')
             ) {
                 try {
-                    $urls = [$this->urlGenerator->generate($pageModel)];
+                    $urls = [$this->urlGenerator->generate($pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL)];
 
                     // Get articles with teaser
                     if ($articleModels = $articleModelAdapter->findPublishedWithTeaserByPid($pageModel->id, ['ignoreFePreview' => true])) {
                         foreach ($articleModels as $articleModel) {
-                            $urls[] = $this->urlGenerator->generate($articleModel);
+                            $urls[] = $this->urlGenerator->generate($articleModel, [], UrlGeneratorInterface::ABSOLUTE_URL);
                         }
                     }
 
