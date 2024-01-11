@@ -3,7 +3,6 @@ import { definitionForModuleAndIdentifier, identifierForContextKey } from '@hotw
 
 import './scripts/mootao.js'
 import './scripts/core.js'
-import './scripts/autofocus.js'
 import './scripts/limit-height.js'
 import './scripts/modulewizard.js'
 import './scripts/sectionwizard.js'

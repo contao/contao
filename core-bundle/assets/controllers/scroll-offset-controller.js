@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus'
 
 export default class extends Controller {
-    static targets = ['scrollTo'];
+    static targets = ['scrollTo', 'autoFocus'];
 
     static values = {
         sessionKey: {
@@ -16,6 +16,10 @@ export default class extends Controller {
             type: String,
             default: 'instant'
         },
+        block: {
+            type: String,
+            default: 'center'
+        }
     };
 
     // Backwards compatibility: automatically register the Stimulus controller if the legacy methods are used
@@ -62,7 +66,8 @@ export default class extends Controller {
         if (this.offset) {
             window.scrollTo({
                 top: this.offset + this.additionalOffset,
-                behavior: this.behaviorValue
+                behavior: this.behaviorValue,
+                block: this.blockValue
             });
 
             this.offset = null;
@@ -87,8 +92,27 @@ export default class extends Controller {
 
     scrollToTargetConnected() {
         this.scrollToTarget.scrollIntoView({
-            behavior: this.behaviorValue
+            behavior: this.behaviorValue,
+            block: this.blockValue
         });
+    }
+
+    autoFocusTargetConnected() {
+        if (this.offset || this.autoFocus) return;
+
+        const input = this.autoFocusTarget;
+
+        if (
+            input.disabled || input.readonly
+            || !input.offsetWidth || !input.offsetHeight
+            || input.closest('.chzn-search')
+            || input.autocomplete && input.autocomplete !== 'off'
+        ) {
+            return;
+        }
+
+        this.autoFocus = true;
+        input.focus();
     }
 
     store () {

@@ -160,7 +160,7 @@ class TextField extends Widget
 			}
 
 			return sprintf(
-				'<input type="%s" name="%s" id="ctrl_%s" class="tl_text%s" value="%s"%s data-action="focus->contao--scroll-offset#store">%s',
+				'<input type="%s" name="%s" id="ctrl_%s" class="tl_text%s" value="%s"%s data-action="focus->contao--scroll-offset#store"  data-contao--scroll-offset-target="autoFocus">%s',
 				$strType,
 				$this->strName,
 				$this->strId,

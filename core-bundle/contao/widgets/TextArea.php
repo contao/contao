@@ -120,7 +120,7 @@ class TextArea extends Widget
 		}
 
 		return sprintf(
-			'<textarea name="%s" id="ctrl_%s" class="tl_textarea%s" rows="%s" cols="%s"%s data-action="focus->contao--scroll-offset#store">%s</textarea>%s',
+			'<textarea name="%s" id="ctrl_%s" class="tl_textarea%s" rows="%s" cols="%s"%s data-action="focus->contao--scroll-offset#store" data-contao--scroll-offset-target="autoFocus">%s</textarea>%s',
 			$this->strName,
 			$this->strId,
 			$this->strClass ? ' ' . $this->strClass : '',
