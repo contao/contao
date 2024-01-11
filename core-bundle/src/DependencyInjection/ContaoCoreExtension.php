@@ -148,6 +148,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleBackup($config, $container);
         $this->handleFallbackPreviewProvider($config, $container);
         $this->handleCronConfig($config, $container);
+        $this->handleSecurityConfig($config, $container);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -237,19 +238,23 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
     private function handleMessengerConfig(array $config, ContainerBuilder $container): void
     {
-        if (!$container->hasDefinition('contao.cron.messenger')) {
+        if (
+            !$container->hasDefinition('contao.cron.supervise_workers')
+            || !$container->hasDefinition('contao.command.supervise_workers')
+        ) {
             return;
         }
 
-        // No workers defined -> remove our cron job
+        // No workers defined -> remove our cron job and the command
         if (0 === \count($config['messenger']['workers'])) {
-            $container->removeDefinition('contao.cron.messenger');
+            $container->removeDefinition('contao.cron.supervise_workers');
+            $container->removeDefinition('contao.command.supervise_workers');
 
             return;
         }
 
-        $cron = $container->getDefinition('contao.cron.messenger');
-        $cron->setArgument(2, $config['messenger']['workers']);
+        $command = $container->getDefinition('contao.command.supervise_workers');
+        $command->setArgument(3, $config['messenger']['workers']);
     }
 
     private function handleSearchConfig(array $config, ContainerBuilder $container): void
@@ -508,5 +513,21 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         }
 
         return Path::join($projectDir, $publicDir);
+    }
+
+    private function handleSecurityConfig(array $config, ContainerBuilder $container): void
+    {
+        if (!$container->hasDefinition('contao.listener.transport_security_header')) {
+            return;
+        }
+
+        if (false === $config['security']['hsts']['enabled']) {
+            $container->removeDefinition('contao.listener.transport_security_header');
+
+            return;
+        }
+
+        $listener = $container->getDefinition('contao.listener.transport_security_header');
+        $listener->setArgument(1, $config['security']['hsts']['ttl']);
     }
 }

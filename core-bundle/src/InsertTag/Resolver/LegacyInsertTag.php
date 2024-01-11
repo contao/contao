@@ -22,7 +22,6 @@ use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\Database;
-use Contao\Database\Result;
 use Contao\Date;
 use Contao\Environment;
 use Contao\File;
@@ -362,8 +361,6 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 }
 
                 $strQuery .= ' FROM tl_content';
-
-                /** @var Result&object{tc:int, tn:int, te:int} $objUpdate */
                 $objUpdate = Database::getInstance()->query($strQuery);
 
                 if ($objUpdate->numRows) {

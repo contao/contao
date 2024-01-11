@@ -71,7 +71,7 @@ class PageTree extends Widget
 			return '';
 		}
 
-		if (strpos($varInput, ',') === false)
+		if (!str_contains($varInput, ','))
 		{
 			return $this->multiple ? array((int) $varInput) : (int) $varInput;
 		}
@@ -93,7 +93,7 @@ class PageTree extends Widget
 			return;
 		}
 
-		if (strpos($varInput, ',') === false)
+		if (!str_contains($varInput, ','))
 		{
 			$arrIds = array((int) $varInput);
 		}

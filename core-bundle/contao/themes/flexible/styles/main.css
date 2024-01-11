@@ -1676,6 +1676,7 @@ table.tl_listing {
 .limit_toggler button span {
 	position: relative;
 	top: -4px;
+	z-index: 1;
 }
 
 /* Tree view */

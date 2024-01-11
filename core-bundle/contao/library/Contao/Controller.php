@@ -15,6 +15,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
@@ -123,7 +124,7 @@ abstract class Controller extends System
 
 		/** @var TemplateHierarchyInterface $templateHierarchy */
 		$templateHierarchy = System::getContainer()->get('contao.twig.filesystem_loader');
-		$identifierPattern = sprintf('/^%s%s/', preg_quote($strPrefix, '/'), substr($strPrefix, -1) !== '_' ? '($|_)' : '');
+		$identifierPattern = sprintf('/^%s%s/', preg_quote($strPrefix, '/'), !str_ends_with($strPrefix, '_') ? '($|_)' : '');
 
 		$prefixedFiles = array_merge(
 			array_filter(
@@ -165,7 +166,7 @@ abstract class Controller extends System
 			{
 				$strTemplate = basename($strFile, strrchr($strFile, '.'));
 
-				if (strpos($strTemplate, '-') !== false)
+				if (str_contains($strTemplate, '-'))
 				{
 					throw new \RuntimeException(sprintf('Using hyphens in the template name "%s" is not allowed, use snake_case instead.', $strTemplate));
 				}
@@ -182,7 +183,7 @@ abstract class Controller extends System
 				{
 					foreach ($arrBundleTemplates as $strKey)
 					{
-						if (strpos($strTemplate, $strKey . '_') === 0)
+						if (str_starts_with($strTemplate, $strKey . '_'))
 						{
 							continue 2;
 						}
@@ -514,13 +515,27 @@ abstract class Controller extends System
 	/**
 	 * Generate a content element and return it as string
 	 *
-	 * @param mixed  $intId     A content element ID or a Model object
+	 * @param mixed  $intId     A content element ID, a Model object or a ContentElementReference
 	 * @param string $strColumn The column the element is in
 	 *
 	 * @return string The content element HTML markup
 	 */
 	public static function getContentElement($intId, $strColumn='main')
 	{
+		$contentElementReference = null;
+
+		if ($intId instanceof ContentElementReference)
+		{
+			if (\func_num_args() > 1)
+			{
+				throw new \InvalidArgumentException('Passing a column name is not supported when using a ContentElementReference.');
+			}
+
+			$contentElementReference = $intId;
+			$strColumn = $contentElementReference->getSection();
+			$intId = $contentElementReference->getContentModel();
+		}
+
 		if (\is_object($intId))
 		{
 			$objRow = $intId;
@@ -565,8 +580,27 @@ abstract class Controller extends System
 			$objStopwatch->start($strStopWatchId, 'contao.layout');
 		}
 
-		/** @var ContentElement $objElement */
-		$objElement = new $strClass($objRow, $strColumn);
+		$isContentProxy = is_a($strClass, ContentProxy::class, true);
+		$compositor = System::getContainer()->get('contao.fragment.compositor');
+
+		if ($isContentProxy && $contentElementReference)
+		{
+			$objElement = new $strClass($contentElementReference, $strColumn);
+		}
+		elseif ($isContentProxy && $objRow->id && $compositor->supportsNesting(ContentElementReference::TAG_NAME . '.' . $objRow->type))
+		{
+			$objElement = new $strClass(
+				$objRow,
+				$strColumn,
+				$compositor->getNestedFragments(ContentElementReference::TAG_NAME . '.' . $objRow->type, $objRow->id)
+			);
+		}
+		else
+		{
+			/** @var ContentElement $objElement */
+			$objElement = new $strClass($objRow, $strColumn);
+		}
+
 		$strBuffer = $objElement->generate();
 
 		// HOOK: add custom logic
@@ -1245,6 +1279,8 @@ abstract class Controller extends System
 		$db = Database::getInstance();
 		$arrParent = array();
 		$strParentTable = $strTable;
+		$intLastId = null;
+		$strLastParentTable = null;
 
 		do
 		{
@@ -1263,11 +1299,24 @@ abstract class Controller extends System
 			$strParentTable = $GLOBALS['TL_DCA'][$strParentTable]['config']['ptable'];
 			$intId = $objParent->pid;
 
+			// If both the parent table and the ID remain the same, we found the
+			// topmost record (usually the case with nested content elements).
+			if ($strParentTable == $strLastParentTable && $intId == $intLastId)
+			{
+				break;
+			}
+
 			// Add the log entry
 			$arrParent[] = $strParentTable . '.id=' . $intId;
 
 			// Load the data container of the parent table
-			$this->loadDataContainer($strParentTable);
+			if ($strParentTable != $strLastParentTable)
+			{
+				$this->loadDataContainer($strParentTable);
+			}
+
+			$intLastId = $intId;
+			$strLastParentTable = $strParentTable;
 		}
 		while ($intId && !empty($GLOBALS['TL_DCA'][$strParentTable]['config']['ptable']));
 
@@ -1403,7 +1452,7 @@ abstract class Controller extends System
 					$strHref = preg_replace('/(&(amp;)?|\?)file=[^&]+/', '', $strHref);
 				}
 
-				$strHref .= ((strpos($strHref, '?') !== false) ? '&amp;' : '?') . 'file=' . System::urlEncode($objFiles->path);
+				$strHref .= ((str_contains($strHref, '?')) ? '&amp;' : '?') . 'file=' . System::urlEncode($objFiles->path);
 
 				$arrMeta = Frontend::getMetaData($objFiles->meta, $objPage->language);
 
@@ -1503,7 +1552,7 @@ abstract class Controller extends System
 	protected static function braceGlob($pattern)
 	{
 		// Use glob() if possible
-		if (false === strpos($pattern, '/**/') && (\defined('GLOB_BRACE') || false === strpos($pattern, '{')))
+		if (!str_contains($pattern, '/**/') && (\defined('GLOB_BRACE') || !str_contains($pattern, '{')))
 		{
 			return glob($pattern, \defined('GLOB_BRACE') ? GLOB_BRACE : 0);
 		}

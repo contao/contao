@@ -241,7 +241,7 @@ abstract class Widget extends Controller
 				break;
 
 			case 'class':
-				if ($varValue && strpos($this->strClass ?? '', $varValue) === false)
+				if ($varValue && !str_contains($this->strClass ?? '', $varValue))
 				{
 					$this->strClass = trim($this->strClass . ' ' . $varValue);
 				}
@@ -333,8 +333,8 @@ abstract class Widget extends Controller
 				$this->objDca = $varValue;
 				break;
 
-			case strncmp($strKey, 'ng-', 3) === 0:
-			case strncmp($strKey, 'data-', 5) === 0:
+			case str_starts_with($strKey, 'ng-'):
+			case str_starts_with($strKey, 'data-'):
 				$this->arrAttributes[$strKey] = $varValue;
 				break;
 
@@ -845,12 +845,12 @@ abstract class Widget extends Controller
 		{
 			switch ($this->rgxp)
 			{
-				case strncmp($this->rgxp, 'digit_', 6) === 0:
+				case str_starts_with($this->rgxp, 'digit_'):
 					// Special validation rule for style sheets
 					$textual = explode('_', $this->rgxp);
 					array_shift($textual);
 
-					if (\in_array($varInput, $textual) || strncmp($varInput, '$', 1) === 0)
+					if (\in_array($varInput, $textual) || str_starts_with($varInput, '$'))
 					{
 						break;
 					}
@@ -858,7 +858,7 @@ abstract class Widget extends Controller
 
 				case 'digit':
 					// Support decimal commas and convert them automatically (see #3488)
-					if (substr_count($varInput, ',') == 1 && strpos($varInput, '.') === false)
+					if (substr_count($varInput, ',') == 1 && !str_contains($varInput, '.'))
 					{
 						$varInput = str_replace(',', '.', $varInput);
 					}
@@ -1053,7 +1053,7 @@ abstract class Widget extends Controller
 			}
 		}
 
-		if ($this->isHexColor && $varInput && strncmp($varInput, '$', 1) !== 0)
+		if ($this->isHexColor && $varInput && !str_starts_with($varInput, '$'))
 		{
 			$varInput = preg_replace('/[^a-f0-9]+/i', '', $varInput);
 		}
@@ -1285,7 +1285,7 @@ abstract class Widget extends Controller
 		if (!isset($arrAttributes['allowHtml']))
 		{
 			$rte = $arrData['eval']['rte'] ?? '';
-			$arrAttributes['allowHtml'] = 'ace|html' === $rte || 0 === strpos($rte, 'tiny');
+			$arrAttributes['allowHtml'] = 'ace|html' === $rte || str_starts_with($rte, 'tiny');
 		}
 
 		// Decode entities if HTML is allowed
@@ -1315,7 +1315,9 @@ abstract class Widget extends Controller
 		elseif (isset($arrData['foreignKey']))
 		{
 			$arrKey = explode('.', $arrData['foreignKey'], 2);
-			$objOptions = Database::getInstance()->query("SELECT id, " . $arrKey[1] . " AS value FROM " . $arrKey[0] . " WHERE tstamp>0 ORDER BY value");
+			$strField = Database::quoteIdentifier($arrData['relation']['field'] ?? 'id');
+			$objOptions = Database::getInstance()->query("SELECT $strField as id, " . $arrKey[1] . " AS value FROM " . $arrKey[0] . " WHERE tstamp>0 ORDER BY value");
+
 			$arrData['options'] = array();
 
 			while ($objOptions->next())
@@ -1383,6 +1385,12 @@ abstract class Widget extends Controller
 
 					$arrAttributes['options'][$key][] = array('value'=>$value, 'label'=>($blnUseReference && isset($arrData['reference'][$vv]) ? (($ref = (\is_array($arrData['reference'][$vv]) ? $arrData['reference'][$vv][0] : $arrData['reference'][$vv])) ? $ref : $vv) : $vv));
 				}
+			}
+
+			// Sort the options by key if they use language references
+			if ($blnIsAssociative && $blnUseReference)
+			{
+				ksort($arrAttributes['options']);
 			}
 
 			$arrAttributes['unknownOption'] = array_filter($unknown);

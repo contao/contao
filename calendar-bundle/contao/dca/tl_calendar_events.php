@@ -14,7 +14,6 @@ use Contao\Calendar;
 use Contao\CalendarEventsModel;
 use Contao\CalendarModel;
 use Contao\Config;
-use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
 use Contao\DataContainer;
@@ -42,7 +41,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		'markAsCopy'                  => 'title',
 		'onload_callback' => array
 		(
-			array('tl_calendar_events', 'checkPermission'),
 			array('tl_calendar_events', 'generateFeed')
 		),
 		'oncut_callback' => array
@@ -67,6 +65,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
+				'tstamp' => 'index',
 				'alias' => 'index',
 				'pid,published,featured,start,stop' => 'index'
 			)
@@ -80,7 +79,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		(
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('startTime DESC'),
-			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'protected', 'allowComments'),
+			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'protected'),
 			'panelLayout'             => 'filter;sort,search,limit',
 			'defaultSearchField'      => 'title',
 			'child_record_callback'   => array('tl_calendar_events', 'listEvents')
@@ -111,10 +110,10 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('source', 'addTime', 'addImage', 'recurring', 'addEnclosure', 'overwriteMeta'),
-		'default'                     => '{title_legend},title,featured,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,linkText;{meta_legend},pageTitle,robots,description,serpPreview;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments;{publish_legend},published,start,stop',
-		'internal'                    => '{title_legend},title,featured,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,jumpTo,linkText;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments;{publish_legend},published,start,stop',
-		'article'                     => '{title_legend},title,featured,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,articleId,linkText;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments;{publish_legend},published,start,stop',
-		'external'                    => '{title_legend},title,featured,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,url,target,linkText;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments;{publish_legend},published,start,stop'
+		'default'                     => '{title_legend},title,featured,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,linkText;{meta_legend},pageTitle,robots,description,serpPreview;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass;{publish_legend},published,start,stop',
+		'internal'                    => '{title_legend},title,featured,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,jumpTo,linkText;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass;{publish_legend},published,start,stop',
+		'article'                     => '{title_legend},title,featured,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,articleId,linkText;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass;{publish_legend},published,start,stop',
+		'external'                    => '{title_legend},title,featured,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,url,target,linkText;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass;{publish_legend},published,start,stop'
 	),
 
 	// Sub-palettes
@@ -449,12 +448,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
-		'noComments' => array
-		(
-			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
-		),
 		'published' => array
 		(
 			'toggle'                  => true,
@@ -488,122 +481,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
  */
 class tl_calendar_events extends Backend
 {
-	/**
-	 * Check permissions to edit table tl_calendar_events
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @throws AccessDeniedException
-	 */
-	public function checkPermission(DataContainer $dc)
-	{
-		$bundles = System::getContainer()->getParameter('kernel.bundles');
-
-		// HOOK: comments extension required
-		if (!isset($bundles['ContaoCommentsBundle']))
-		{
-			$key = array_search('allowComments', $GLOBALS['TL_DCA']['tl_calendar_events']['list']['sorting']['headerFields'] ?? array());
-			unset($GLOBALS['TL_DCA']['tl_calendar_events']['list']['sorting']['headerFields'][$key], $GLOBALS['TL_DCA']['tl_calendar_events']['fields']['noComments']);
-		}
-
-		$user = BackendUser::getInstance();
-
-		if ($user->isAdmin)
-		{
-			return;
-		}
-
-		// Set root IDs
-		if (empty($user->calendars) || !is_array($user->calendars))
-		{
-			$root = array(0);
-		}
-		else
-		{
-			$root = $user->calendars;
-		}
-
-		$id = strlen(Input::get('id')) ? Input::get('id') : $dc->currentPid;
-
-		// Check current action
-		switch (Input::get('act'))
-		{
-			case 'paste':
-			case 'select':
-				// Check currentPid here (see #247)
-				if (!in_array($dc->currentPid, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to access calendar ID ' . $id . '.');
-				}
-				break;
-
-			case 'create':
-				if (!Input::get('pid') || !in_array(Input::get('pid'), $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to create events in calendar ID ' . Input::get('pid') . '.');
-				}
-				break;
-
-			case 'cut':
-			case 'copy':
-				if (!in_array(Input::get('pid'), $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' event ID ' . $id . ' to calendar ID ' . Input::get('pid') . '.');
-				}
-				// no break
-
-			case 'edit':
-			case 'show':
-			case 'delete':
-			case 'toggle':
-				$objCalendar = Database::getInstance()
-					->prepare("SELECT pid FROM tl_calendar_events WHERE id=?")
-					->limit(1)
-					->execute($id);
-
-				if ($objCalendar->numRows < 1)
-				{
-					throw new AccessDeniedException('Invalid event ID ' . $id . '.');
-				}
-
-				if (!in_array($objCalendar->pid, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' event ID ' . $id . ' of calendar ID ' . $objCalendar->pid . '.');
-				}
-				break;
-
-			case 'editAll':
-			case 'deleteAll':
-			case 'overrideAll':
-			case 'cutAll':
-			case 'copyAll':
-				if (!in_array($id, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to access calendar ID ' . $id . '.');
-				}
-
-				$objCalendar = Database::getInstance()->prepare("SELECT id FROM tl_calendar_events WHERE pid=?")->execute($id);
-				$objSession = System::getContainer()->get('request_stack')->getSession();
-
-				$session = $objSession->all();
-				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objCalendar->fetchEach('id'));
-				$objSession->replace($session);
-				break;
-
-			default:
-				if (Input::get('act'))
-				{
-					throw new AccessDeniedException('Invalid command "' . Input::get('act') . '".');
-				}
-
-				if (!in_array($id, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to access calendar ID ' . $id . '.');
-				}
-				break;
-		}
-	}
-
 	/**
 	 * Auto-generate the event alias if it has not been set yet
 	 *
@@ -826,7 +703,7 @@ class tl_calendar_events extends Backend
 		}
 
 		// Add the option currently set
-		if ($dc->activeRecord && $dc->activeRecord->source)
+		if ($dc->activeRecord?->source)
 		{
 			$arrOptions[] = $dc->activeRecord->source;
 			$arrOptions = array_unique($arrOptions);
