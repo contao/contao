@@ -731,6 +731,18 @@
       <trans-unit id="tl_content.table.1">
         <source>Import table items from a CSV file</source>
       </trans-unit>
+      <trans-unit id="tl_content.dl_label.0">
+        <source>Description list items</source>
+      </trans-unit>
+      <trans-unit id="tl_content.dl_label.1">
+        <source>Please enter a list of terms and details for the description list. You can leave the term field empty to create multiple details for one term.</source>
+      </trans-unit>
+      <trans-unit id="tl_content.dl_key">
+        <source>Term</source>
+      </trans-unit>
+      <trans-unit id="tl_content.dl_value">
+        <source>Details</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

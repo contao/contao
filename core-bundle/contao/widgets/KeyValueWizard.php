@@ -64,7 +64,7 @@ class KeyValueWizard extends Widget
 			foreach ($options as $key=>$option)
 			{
 				// Unset empty rows
-				if (trim($option['key']) === '')
+				if (!$this->allowEmptyKeys && trim($option['key']) === '')
 				{
 					unset($options[$key]);
 					continue;
@@ -73,7 +73,7 @@ class KeyValueWizard extends Widget
 				$options[$key]['key'] = trim($option['key']);
 				$options[$key]['value'] = trim($option['value']);
 
-				if ($options[$key]['key'])
+				if ($options[$key]['key'] !== '' || ($this->allowEmptyKeys && $options[$key]['value'] !== ''))
 				{
 					$this->mandatory = false;
 				}
@@ -114,8 +114,8 @@ class KeyValueWizard extends Widget
 		$return = '<table id="ctrl_' . $this->strId . '" class="tl_key_value_wizard">
   <thead>
     <tr>
-      <th>' . $GLOBALS['TL_LANG']['MSC']['ow_key'] . '</th>
-      <th>' . $GLOBALS['TL_LANG']['MSC']['ow_value'] . '</th>
+      <th>' . ($this->keyLabel ?? $GLOBALS['TL_LANG']['MSC']['ow_key']) . '</th>
+      <th>' . ($this->valueLabel ?? $GLOBALS['TL_LANG']['MSC']['ow_value']) . '</th>
       <th></th>
     </tr>
   </thead>
