@@ -118,7 +118,7 @@ class DefaultOperationsListener
                 $operations['copy'] = [
                     'href' => 'act=paste&amp;mode=copy',
                     'icon' => 'copy.svg',
-                    'attributes' => 'onclick="Backend.getScrollOffset()"',
+                    'attributes' => 'data-action="contao--scroll-offset#store"',
                     'button_callback' => $this->isGrantedCallback(CreateAction::class, $table, ['sorting' => null]),
                 ];
 
@@ -126,7 +126,7 @@ class DefaultOperationsListener
                     $operations['copyChildren'] = [
                         'href' => 'act=paste&amp;mode=copy&amp;children=1',
                         'icon' => 'copychildren.svg',
-                        'attributes' => 'onclick="Backend.getScrollOffset()"',
+                        'attributes' => 'data-action="contao--scroll-offset#store"',
                         'button_callback' => $this->copyChildrenCallback($table),
                     ];
                 }
@@ -136,7 +136,7 @@ class DefaultOperationsListener
                 $operations['cut'] = [
                     'href' => 'act=paste&amp;mode=cut',
                     'icon' => 'cut.svg',
-                    'attributes' => 'onclick="Backend.getScrollOffset()"',
+                    'attributes' => 'data-action="contao--scroll-offset#store"',
                     'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table, ['sorting' => null]),
                 ];
             }
@@ -152,7 +152,7 @@ class DefaultOperationsListener
             $operations['delete'] = [
                 'href' => 'act=delete',
                 'icon' => 'delete.svg',
-                'attributes' => 'onclick="if(!confirm(\''.($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null).'\'))return false;Backend.getScrollOffset()"',
+                'attributes' => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\''.($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null).'\'))return false"',
                 'button_callback' => $this->isGrantedCallback(DeleteAction::class, $table),
             ];
         }
