@@ -30,6 +30,7 @@ class RedirectPageController
     public function __invoke(Request $request, PageModel $pageModel): Response
     {
         $status = 'temporary' === $pageModel->redirect ? Response::HTTP_SEE_OTHER : Response::HTTP_MOVED_PERMANENTLY;
+
         $url = $this->insertTagParser->replaceInline($pageModel->url);
         $url = UrlUtil::makeAbsolute($url, $request->getSchemeAndHttpHost().$request->getBasePath().'/');
 

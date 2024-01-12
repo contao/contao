@@ -34,11 +34,7 @@ class RedirectPageControllerTest extends TestCase
 
         $request = Request::create(
             'https://example.com/foobar/index.php/foobar',
-            'GET',
-            [],
-            [],
-            [],
-            [
+            server: [
                 'SCRIPT_FILENAME' => '/foobar/index.php',
                 'SCRIPT_NAME' => '/foobar/index.php',
             ],
