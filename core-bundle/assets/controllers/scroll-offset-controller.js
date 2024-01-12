@@ -8,10 +8,6 @@ export default class extends Controller {
             type: String,
             default: 'contao_backend_offset'
         },
-        addToAttribute: {
-            type: String,
-            default: 'data-add-to-scroll-offset'
-        },
         behavior: {
             type: String,
             default: 'instant'
@@ -66,7 +62,7 @@ export default class extends Controller {
         if (!this.offset) return;
 
         window.scrollTo({
-            top: this.offset + this.additionalOffset,
+            top: this.offset,
             behavior: this.behaviorValue,
             block: this.blockValue
         });
@@ -119,48 +115,5 @@ export default class extends Controller {
         } else {
             window.sessionStorage.setItem(this.sessionKeyValue, String(value));
         }
-    }
-
-    get additionalOffset () {
-        let additionalOffset = 0;
-
-        document.querySelectorAll(`[${this.addToAttributeValue}]`).forEach((el) => {
-            let offset = el.getAttribute(this.addToAttributeValue),
-                scrollSize = el.scrollTop,
-                negative = false,
-                percent = false;
-
-            // No specific offset desired, take scrollSize
-            if (!offset) {
-                additionalOffset += scrollSize;
-                return;
-            }
-
-            // Negative
-            if (offset.charAt(0) === '-') {
-                negative = true;
-                offset = offset.substring(1);
-            }
-
-            // Percent
-            if (offset.charAt(offset.length - 1) === '%') {
-                percent = true;
-                offset = offset.substring(0, offset.length - 1);
-            }
-
-            offset = parseInt(offset, 10);
-
-            if (percent) {
-                offset = Math.round(scrollSize * offset / 100);
-            }
-
-            if (negative) {
-                offset = offset * -1;
-            }
-
-            additionalOffset += offset;
-        });
-
-        return additionalOffset;
     }
 }
