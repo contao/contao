@@ -48,7 +48,7 @@ class ContaoMailerTest extends TestCase
 
         $email = new Email();
 
-        $contaoMailer = new ContaoMailer($mailer, $availableTransports, $requestStack);
+        $contaoMailer = new ContaoMailer($mailer, $availableTransports, $requestStack, $this->mockContaoFramework());
         $contaoMailer->send($email);
 
         $this->assertTrue($email->getHeaders()->has('X-Transport'));
@@ -65,7 +65,7 @@ class ContaoMailerTest extends TestCase
 
         $email = new Email(new Headers(new UnstructuredHeader('X-Transport', 'foobar')));
 
-        $contaoMailer = new ContaoMailer($mailer, $availableTransports, new RequestStack());
+        $contaoMailer = new ContaoMailer($mailer, $availableTransports, new RequestStack(), $this->mockContaoFramework());
         $contaoMailer->send($email);
 
         $from = $email->getFrom();
@@ -89,7 +89,7 @@ class ContaoMailerTest extends TestCase
         $email->returnPath('return-path@example.com');
         $email->sender('sender@example.com');
 
-        $contaoMailer = new ContaoMailer($mailer, $availableTransports, new RequestStack());
+        $contaoMailer = new ContaoMailer($mailer, $availableTransports, new RequestStack(), $this->mockContaoFramework());
         $contaoMailer->send($email);
 
         $from = $email->getFrom();
@@ -112,9 +112,49 @@ class ContaoMailerTest extends TestCase
         $email = new Email(new Headers(new UnstructuredHeader('X-Transport', 'foobar')));
         $envelope = new Envelope(Address::create('envelope-sender@example.com'), [Address::create('envelope-recipient@example.com')]);
 
-        $contaoMailer = new ContaoMailer($mailer, $availableTransports, new RequestStack());
+        $contaoMailer = new ContaoMailer($mailer, $availableTransports, new RequestStack(), $this->mockContaoFramework());
         $contaoMailer->send($email, $envelope);
 
         $this->assertSame('envelope-sender@example.com', $envelope->getSender()->getAddress());
+    }
+
+    public function testSetsTransportForFragmentRequest(): void
+    {
+        $request = new Request();
+        $request->attributes->set('pageModel', 42);
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $transport = $this->createMock(TransportInterface::class);
+        $mailer = new Mailer($transport);
+
+        $availableTransports = new AvailableTransports();
+        $availableTransports->addTransport(new TransportConfig('foobar', 'Lorem Ipsum <foo@example.org>'));
+
+        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel->mailerTransport = 'foobar';
+
+        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter
+            ->expects($this->once())
+            ->method('findByPk')
+            ->with(42)
+            ->willReturn($pageModel)
+        ;
+
+        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
+        $framework
+            ->expects($this->once())
+            ->method('initialize')
+        ;
+
+        $email = new Email();
+
+        $contaoMailer = new ContaoMailer($mailer, $availableTransports, $requestStack, $framework);
+        $contaoMailer->send($email);
+
+        $this->assertTrue($email->getHeaders()->has('X-Transport'));
+        $this->assertSame('foobar', $email->getHeaders()->get('X-Transport')->getBodyAsString());
     }
 }

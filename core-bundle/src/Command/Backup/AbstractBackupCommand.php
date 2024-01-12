@@ -52,7 +52,10 @@ abstract class AbstractBackupCommand extends Command
     protected function handleCommonConfig(InputInterface $input, AbstractConfig $config): AbstractConfig
     {
         if ($name = $input->getArgument('name')) {
-            $config = $config->withFileName($name);
+            $config = $config
+                ->withFileName($name)
+                ->withGzCompression(0 === strcasecmp(substr($name, -3), '.gz'))
+            ;
         }
 
         if ($tablesToIgnore = $input->getOption('ignore-tables')) {
