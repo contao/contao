@@ -416,6 +416,7 @@ services:
             - '@contao.mailer.inner'
             - '@contao.mailer.available_transports'
             - '@request_stack'
+            - '@contao.framework'
 
     contao.mailer.available_transports:
         class: Contao\CoreBundle\Mailer\AvailableTransports
