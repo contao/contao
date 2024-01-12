@@ -13,17 +13,24 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing\Content;
 
 use Contao\ArticleModel;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
 
 class ArticleResolver implements ContentUrlResolverInterface
 {
+    public function __construct(private readonly ContaoFramework $framework)
+    {
+    }
+
     public function resolve(object $content): ContentUrlResult
     {
         if (!$content instanceof ArticleModel) {
             return ContentUrlResult::abstain();
         }
 
-        return ContentUrlResult::resolve(PageModel::findWithDetails($content->pid));
+        $pageAdapter = $this->framework->getAdapter(PageModel::class);
+
+        return ContentUrlResult::resolve($pageAdapter->findWithDetails($content->pid));
     }
 
     public function getParametersForContent(object $content, PageModel $pageModel): array

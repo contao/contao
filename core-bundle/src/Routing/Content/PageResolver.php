@@ -12,10 +12,15 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\Content;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
 
 class PageResolver implements ContentUrlResolverInterface
 {
+    public function __construct(private readonly ContaoFramework $framework)
+    {
+    }
+
     public function resolve(object $content): ContentUrlResult
     {
         if (!$content instanceof PageModel) {
@@ -27,10 +32,12 @@ class PageResolver implements ContentUrlResolverInterface
                 return ContentUrlResult::url($content->url);
 
             case 'forward':
+                $pageAdapter = $this->framework->getAdapter(PageModel::class);
+
                 if ($content->jumpTo) {
-                    $forwardPage = PageModel::findPublishedById($content->jumpTo);
+                    $forwardPage = $pageAdapter->findPublishedById($content->jumpTo);
                 } else {
-                    $forwardPage = PageModel::findFirstPublishedRegularByPid($content->id);
+                    $forwardPage = $pageAdapter->findFirstPublishedRegularByPid($content->id);
                 }
 
                 return ContentUrlResult::redirect($forwardPage);
