@@ -51,7 +51,7 @@ class ContentUrlGenerator implements ResetInterface, RequestContextAwareInterfac
     public function generate(object $content, array $parameters = [], int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): string
     {
         try {
-            $cacheKey = sha1(serialize($content)."\0".serialize($parameters));
+            $cacheKey = sha1(serialize($content)."\0".serialize($parameters)."\0".$referenceType);
         } catch (\Throwable) {
             // If $content or $parameters is not serializable, e.g. contains closures, simply skip the cache.
             $cacheKey = null;
@@ -173,7 +173,7 @@ class ContentUrlGenerator implements ResetInterface, RequestContextAwareInterfac
     private function getRouteKey(object $content): string
     {
         if (is_subclass_of($content, Model::class)) {
-            return sprintf('%s.%s', $content::getTable(), $content->id);
+            return sprintf('%s.%s', $content::getTable(), $content->{$content::getPk()});
         }
 
         try {
@@ -183,7 +183,7 @@ class ContentUrlGenerator implements ResetInterface, RequestContextAwareInterfac
         }
 
         if (null === $metadata) {
-            return $content::class.'->'.spl_object_hash($content);
+            return $content::class.'->'.spl_object_id($content);
         }
 
         $identifier = $this->entityManager
