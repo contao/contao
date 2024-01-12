@@ -2196,7 +2196,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$this->objActiveRecord->{$this->strField} = $this->varValue;
 
 					// Build the row and pass the current palette string (thanks to Tristan Lins)
-					$blnAjax ? $arrAjax[$thisId] .= $this->row($this->strPalette) : $return .= $this->row($this->strPalette);
+					$blnAjax ? $arrAjax[$thisId] .= $this->row() : $return .= $this->row();
 				}
 
 				$class = 'tl_box';
@@ -2717,7 +2717,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$this->objActiveRecord->{$this->strField} = $this->varValue;
 
 						// Build the row and pass the current palette string (thanks to Tristan Lins)
-						$blnAjax ? $arrAjax[$thisId] .= $this->row($this->strPalette) : $box .= $this->row($this->strPalette);
+						$blnAjax ? $arrAjax[$thisId] .= $this->row() : $box .= $this->row();
 					}
 
 					// Save record
