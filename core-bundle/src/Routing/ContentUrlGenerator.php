@@ -50,9 +50,14 @@ class ContentUrlGenerator implements ResetInterface, RequestContextAwareInterfac
      */
     public function generate(object $content, array $parameters = [], int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): string
     {
-        $cacheKey = sha1(serialize($content)."\0".serialize($parameters));
+        try {
+            $cacheKey = sha1(serialize($content)."\0".serialize($parameters));
+        } catch (\Throwable) {
+            // If $content or $parameters is not serializable, e.g. contains closures, simply skip the cache.
+            $cacheKey = null;
+        }
 
-        if (isset($this->urlCache[$cacheKey])) {
+        if ($cacheKey && isset($this->urlCache[$cacheKey])) {
             if ($this->urlCache[$cacheKey] instanceof ExceptionInterface) {
                 throw $this->urlCache[$cacheKey];
             }
@@ -100,13 +105,21 @@ class ContentUrlGenerator implements ResetInterface, RequestContextAwareInterfac
                 $optionalParameters = array_intersect_key($optionalParameters, array_flip($compiledRoute->getVariables()));
             }
 
-            return $this->urlCache[$cacheKey] = $this->urlGenerator->generate(
+            $url = $this->urlGenerator->generate(
                 PageRoute::PAGE_BASED_ROUTE_NAME,
                 [...$optionalParameters, ...$parameters, RouteObjectInterface::ROUTE_OBJECT => $route],
                 $referenceType,
             );
+
+            if ($cacheKey) {
+                $this->urlCache[$cacheKey] = $url;
+            }
+
+            return $url;
         } catch (ExceptionInterface $exception) {
-            $this->urlCache[$cacheKey] = $exception;
+            if ($cacheKey) {
+                $this->urlCache[$cacheKey] = $exception;
+            }
 
             throw $exception;
         }
