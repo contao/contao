@@ -72,6 +72,8 @@ services:
 
     Contao\CoreBundle\Controller\ContentElement\CodeController: ~
 
+    Contao\CoreBundle\Controller\ContentElement\DescriptionListController: ~
+
     Contao\CoreBundle\Controller\ContentElement\DownloadsController:
         arguments:
             - '@security.helper'

@@ -385,14 +385,12 @@ abstract class DataContainer extends Backend
 	/**
 	 * Render a row of a box and return it as HTML string
 	 *
-	 * @param string|array|null $strPalette
-	 *
 	 * @return string
 	 *
 	 * @throws AccessDeniedException
 	 * @throws \Exception
 	 */
-	protected function row($strPalette=null)
+	protected function row()
 	{
 		$arrData = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField] ?? array();
 
@@ -775,7 +773,7 @@ abstract class DataContainer extends Backend
 		}
 
 		return $strPreview . '
-<div' . (!empty($arrData['eval']['tl_class']) ? ' class="' . trim($arrData['eval']['tl_class']) . '"' : '') . '>' . $objWidget->parse() . $updateMode . (!$objWidget->hasErrors() ? $this->help($strHelpClass) : '') . '
+<div' . (!empty($arrData['eval']['tl_class']) ? ' class="' . trim($arrData['eval']['tl_class']) . '"' : '') . '>' . $objWidget->parse() . $updateMode . (!$objWidget->hasErrors() ? $this->help($strHelpClass, $objWidget->description) : '') . '
 </div>';
 	}
 
@@ -786,9 +784,9 @@ abstract class DataContainer extends Backend
 	 *
 	 * @return string
 	 */
-	public function help($strClass='')
+	public function help($strClass='', $strDescription=null)
 	{
-		$return = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][1] ?? null;
+		$return = $strDescription ?? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][1] ?? null;
 
 		if (!$return || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] ?? null) == 'password' || !Config::get('showHelp'))
 		{
