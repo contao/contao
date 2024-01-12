@@ -75,7 +75,7 @@ class ModuleSubscribe extends Module
 		$this->Template->captcha = '';
 
 		// Activate e-mail address
-		if (strncmp(Input::get('token'), 'nl-', 3) === 0)
+		if (str_starts_with(Input::get('token'), 'nl-'))
 		{
 			$this->activateRecipient();
 
@@ -364,7 +364,7 @@ class ModuleSubscribe extends Module
 		$arrData = array();
 		$arrData['token'] = $optInToken->getIdentifier();
 		$arrData['domain'] = Idna::decode(Environment::get('host'));
-		$arrData['link'] = Idna::decode(Environment::get('url')) . Environment::get('requestUri') . ((strpos(Environment::get('requestUri'), '?') !== false) ? '&' : '?') . 'token=' . $optInToken->getIdentifier();
+		$arrData['link'] = Idna::decode(Environment::get('url')) . Environment::get('requestUri') . ((str_contains(Environment::get('requestUri'), '?')) ? '&' : '?') . 'token=' . $optInToken->getIdentifier();
 		$arrData['channel'] = $arrData['channels'] = implode("\n", $objChannel->fetchEach('title'));
 
 		// Send the token

@@ -310,8 +310,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$act = Input::get('act');
 			$mode = Input::get('mode');
 
-			// For these actions the id parameter refers to the parent record, so they need to be excluded
-			if ($this->intId && ($act !== 'paste' || $mode !== 'create') && !\in_array($act, array(null, 'create', 'select', 'editAll', 'overrideAll', 'deleteAll'), true))
+			// For these actions the id parameter refers to the parent record (or the old record for copy and cut), so they need to be excluded
+			if ($this->intId && ($act !== 'paste' || $mode !== 'create') && !\in_array($act, array(null, 'copy', 'cut', 'create', 'select', 'editAll', 'overrideAll', 'deleteAll'), true))
 			{
 				$currentRecord = $this->getCurrentRecord($this->intId);
 
@@ -4081,7 +4081,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$_buttons = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback']($this, array('id'=>0), $table, false, $arrClipboard);
 			}
-			elseif (!$this->canPasteClipboard($arrClipboard, array('pid'=>0)))
+			elseif (!$this->canPasteClipboard($arrClipboard, array('pid'=>0, 'sorting'=>0)))
 			{
 				$_buttons = Image::getHtml('pasteinto--disabled.svg') . ' ';
 			}
@@ -5085,7 +5085,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </div>';
 
 		// Add another panel at the end of the page
-		if (strpos($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? '', 'limit') !== false)
+		if (str_contains($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? '', 'limit'))
 		{
 			$return .= $this->paginationMenu();
 		}
@@ -5348,14 +5348,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <table class="tl_listing' . (($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null) ? ' showColumns' : '') . ($this->strPickerFieldType ? ' picker unselectable' : '') . '">';
 
 			// Automatically add the "order by" field as last column if we do not have group headers
-			if ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null)
+			if (($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null) && false !== ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showFirstOrderBy'] ?? null))
 			{
 				$blnFound = false;
 
 				// Extract the real key and compare it to $firstOrderBy
 				foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'] as $f)
 				{
-					if (strpos($f, ':') !== false)
+					if (str_contains($f, ':'))
 					{
 						list($f) = explode(':', $f, 2);
 					}
@@ -5382,7 +5382,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'] as $f)
 				{
-					if (strpos($f, ':') !== false)
+					if (str_contains($f, ':'))
 					{
 						list($f) = explode(':', $f, 2);
 					}
@@ -5512,7 +5512,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </div>';
 
 			// Add another panel at the end of the page
-			if (strpos($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? '', 'limit') !== false)
+			if (str_contains($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? '', 'limit'))
 			{
 				$return .= $this->paginationMenu();
 			}

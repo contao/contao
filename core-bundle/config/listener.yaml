@@ -79,9 +79,16 @@ services:
             - '@contao.framework'
             - '@security.helper'
             - '@contao.routing.page_registry'
-            - '@translator'
             - '@database_connection'
             - '@request_stack'
+
+    contao.listener.data_container.cte_alias:
+        class: Contao\CoreBundle\EventListener\DataContainer\CteAliasListener
+        arguments:
+            - '@request_stack'
+            - '@security.helper'
+            - '@database_connection'
+            - '@contao.framework'
 
     contao.listener.data_container.default_global_operations:
         class: Contao\CoreBundle\EventListener\DataContainer\DefaultGlobalOperationsListener
@@ -89,6 +96,7 @@ services:
     contao.listener.data_container.default_operations:
         class: Contao\CoreBundle\EventListener\DataContainer\DefaultOperationsListener
         arguments:
+            - '@contao.framework'
             - '@security.helper'
             - '@database_connection'
 
@@ -112,6 +120,17 @@ services:
         arguments:
             - '@contao.framework'
             - '@translator'
+
+    contao.listener.data_container.enum_options:
+        class: Contao\CoreBundle\EventListener\DataContainer\EnumOptionsListener
+        arguments:
+            - '@translator'
+
+    contao.listener.data_container.frontend_module_permissions:
+        class: Contao\CoreBundle\EventListener\DataContainer\FrontendModulePermissionsListener
+        arguments:
+            - '@security.helper'
+            - '@database_connection'
 
     contao.listener.data_container.layout_options:
         class: Contao\CoreBundle\EventListener\DataContainer\LayoutOptionsListener
@@ -265,13 +284,6 @@ services:
         tags:
             # The priority must be higher than the one of the response exception listener (defaults to 64)
             - { name: kernel.event_listener, priority: 96 }
-
-    contao.listener.filter_page_type:
-        class: Contao\CoreBundle\EventListener\FilterPageTypeListener
-        arguments:
-            - '@database_connection'
-        tags:
-            - kernel.event_listener
 
     contao.listener.form_field_template_options:
         class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
@@ -516,6 +528,7 @@ services:
         class: Contao\CoreBundle\EventListener\RobotsTxtListener
         arguments:
             - '@contao.framework'
+            - '@?web_profiler.debug_toolbar'
             - '%contao.backend.route_prefix%'
         tags:
             - kernel.event_listener

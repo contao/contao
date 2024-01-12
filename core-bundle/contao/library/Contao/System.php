@@ -152,7 +152,7 @@ abstract class System
 			{
 				$this->arrObjects[$strKey] = static::$arrSingletons[$strClass];
 			}
-			elseif ($container->has($strClass) && (strpos($strClass, '\\') !== false || !class_exists($strClass)))
+			elseif ($container->has($strClass) && (str_contains($strClass, '\\') || !class_exists($strClass)))
 			{
 				$this->arrObjects[$strKey] = $container->get($strClass);
 			}
@@ -225,7 +225,7 @@ abstract class System
 			{
 				static::$arrStaticObjects[$strKey] = static::$arrSingletons[$strClass];
 			}
-			elseif ($container->has($strClass) && (strpos($strClass, '\\') !== false || !class_exists($strClass)))
+			elseif ($container->has($strClass) && (str_contains($strClass, '\\') || !class_exists($strClass)))
 			{
 				static::$arrStaticObjects[$strKey] = $container->get($strClass);
 			}
@@ -339,7 +339,7 @@ abstract class System
 
 			// Remove parameters helper
 			$cleanUrl = static function ($url, $params = array('rt', 'ref', 'revise')) {
-				if (!$url || strpos($url, '?') === false)
+				if (!$url || !str_contains($url, '?'))
 				{
 					return $url;
 				}
@@ -679,7 +679,7 @@ abstract class System
 		}
 
 		// IPv6
-		if (strpos($strIp, ':') !== false)
+		if (str_contains($strIp, ':'))
 		{
 			return substr_replace($strIp, ':0000', strrpos($strIp, ':'));
 		}

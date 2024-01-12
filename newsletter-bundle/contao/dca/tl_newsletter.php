@@ -34,7 +34,8 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
-				'pid' => 'index'
+				'pid' => 'index',
+				'tstamp' => 'index'
 			)
 		)
 	),
@@ -348,7 +349,7 @@ class tl_newsletter extends Backend
 	 */
 	public function addSenderPlaceholder($varValue, DataContainer $dc)
 	{
-		if ($dc->activeRecord && $dc->activeRecord->pid)
+		if ($dc->activeRecord?->pid)
 		{
 			$objChannel = Database::getInstance()
 				->prepare("SELECT sender FROM tl_newsletter_channel WHERE id=?")
@@ -370,7 +371,7 @@ class tl_newsletter extends Backend
 	 */
 	public function addSenderNamePlaceholder($varValue, DataContainer $dc)
 	{
-		if ($dc->activeRecord && $dc->activeRecord->pid)
+		if ($dc->activeRecord?->pid)
 		{
 			$objChannel = Database::getInstance()
 				->prepare("SELECT senderName FROM tl_newsletter_channel WHERE id=?")

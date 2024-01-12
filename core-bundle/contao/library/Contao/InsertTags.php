@@ -186,7 +186,7 @@ class InsertTags extends Controller
 			// Skip certain elements if the output will be cached
 			if ($blnCache)
 			{
-				if (($elements[1] ?? null) == 'referer' || strncmp($elements[0], 'cache_', 6) === 0)
+				if (($elements[1] ?? null) == 'referer' || str_starts_with($elements[0], 'cache_'))
 				{
 					trigger_deprecation('contao/core-bundle', '5.0', 'Insert tag naming conventions {{cache_*}} and {{*::referer}} for fragments have been deprecated and will no longer work in Contao 6. Use #[AsInsertTag(asFragment: true)] instead.', $elements[0], strtolower($elements[0]));
 
@@ -341,7 +341,7 @@ class InsertTags extends Controller
 	 */
 	public function encodeHtmlAttributes($html)
 	{
-		if (strpos($html, '{{') === false && strpos($html, '}}') === false)
+		if (!str_contains($html, '{{') && !str_contains($html, '}}'))
 		{
 			return $html;
 		}
@@ -393,7 +393,7 @@ class InsertTags extends Controller
 
 			$tag = $matches[0][0];
 
-			if (strpos($tag, '{{') !== false || strpos($tag, '}}') !== false)
+			if (str_contains($tag, '{{') || str_contains($tag, '}}'))
 			{
 				// Encode insert tags
 				$tagPrefix = substr($tag, 0, $matches[1][1] - $matches[0][1] + \strlen($matches[1][0]));

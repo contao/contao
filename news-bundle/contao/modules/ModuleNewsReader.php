@@ -135,7 +135,7 @@ class ModuleNewsReader extends ModuleNews
 		// Overwrite the page metadata (see #2853, #4955 and #87)
 		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
-		if ($responseContext && $responseContext->has(HtmlHeadBag::class))
+		if ($responseContext?->has(HtmlHeadBag::class))
 		{
 			/** @var HtmlHeadBag $htmlHeadBag */
 			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
@@ -162,6 +162,28 @@ class ModuleNewsReader extends ModuleNews
 			if ($objArticle->robots)
 			{
 				$htmlHeadBag->setMetaRobots($objArticle->robots);
+			}
+
+			if ($objArticle->canonicalLink)
+			{
+				$url = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objArticle->canonicalLink);
+
+				// Ensure absolute links
+				if (!preg_match('#^https?://#', $url))
+				{
+					if (!$request = System::getContainer()->get('request_stack')->getCurrentRequest())
+					{
+						throw new \RuntimeException('The request stack did not contain a request');
+					}
+
+					$url = UrlUtil::makeAbsolute($url, $request->getUri());
+				}
+
+				$htmlHeadBag->setCanonicalUri($url);
+			}
+			elseif (!$this->news_keepCanonical)
+			{
+				$htmlHeadBag->setCanonicalUri(News::generateNewsUrl($objArticle, false, true));
 			}
 		}
 
