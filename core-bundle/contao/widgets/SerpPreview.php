@@ -159,7 +159,7 @@ class SerpPreview extends Widget
 		{
 			try
 			{
-				$url = System::getContainer()->get('contao.routing.content_url_generator')->generate($tempModel, [], UrlGeneratorInterface::ABSOLUTE_URL);
+				$url = System::getContainer()->get('contao.routing.content_url_generator')->generate($tempModel, array(), UrlGeneratorInterface::ABSOLUTE_URL);
 			}
 			catch (ExceptionInterface $exception)
 			{

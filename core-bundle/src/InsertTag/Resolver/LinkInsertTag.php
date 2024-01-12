@@ -20,8 +20,6 @@ use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
-use Contao\CoreBundle\Util\UrlUtil;
-use Contao\Environment;
 use Contao\FrontendUser;
 use Contao\PageModel;
 use Contao\StringUtil;

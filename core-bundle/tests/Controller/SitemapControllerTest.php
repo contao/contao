@@ -76,9 +76,9 @@ class SitemapControllerTest extends TestCase
             'groups' => [],
             'published' => true,
             'rootLanguage' => 'en',
-        'urlPrefix' => '',
-                'urlSuffix' => '',
-            ]);
+            'urlPrefix' => '',
+            'urlSuffix' => '',
+        ]);
 
         $framework = $this->mockFrameworkWithPages([42 => [$page1], 43 => null, 21 => null], [43 => null]);
         $container = $this->getContainer($framework, null, 'https://www.foobar.com:8000');
@@ -114,9 +114,9 @@ class SitemapControllerTest extends TestCase
             'groups' => [],
             'published' => true,
             'rootLanguage' => 'en',
-        'urlPrefix' => '',
-                'urlSuffix' => '',
-            ]);
+            'urlPrefix' => '',
+            'urlSuffix' => '',
+        ]);
 
         $framework = $this->mockFrameworkWithPages([42 => [$page1], 43 => null, 21 => null], [43 => null]);
         $container = $this->getContainer($framework);
