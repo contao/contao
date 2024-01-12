@@ -273,7 +273,7 @@ class ContentUrlGeneratorTest extends TestCase
     {
         $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
 
-        if (null === $route) {
+        if (!$route) {
             $urlGenerator
                 ->expects($this->never())
                 ->method('generate')
@@ -299,7 +299,7 @@ class ContentUrlGeneratorTest extends TestCase
     {
         $pageRegistry = $this->createMock(PageRegistry::class);
 
-        if (null === $route) {
+        if (!$route) {
             $pageRegistry
                 ->expects($this->never())
                 ->method('getRoute')
@@ -343,9 +343,9 @@ class ContentUrlGeneratorTest extends TestCase
     /**
      * @template T
      *
-     * @return T
+     * @return object<T>
      *
-     * @phpstan-return T
+     * @phpstan-return object<T>
      */
     private function createModel(string $modelClass, array $data = []): object
     {
