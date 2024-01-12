@@ -157,7 +157,6 @@ class DownloadsControllerTest extends ContentElementTestCase
     {
         $container = new ContainerBuilder();
         $container->set('contao.filesystem.file_download_helper', $this->createMock(FileDownloadHelper::class));
-        $container->setParameter('contao.downloadable_files', ['jpg', 'txt']);
 
         return $container;
     }

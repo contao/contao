@@ -98,21 +98,14 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
 
     protected function applyDownloadableFileExtensionsFilter(FilesystemItemIterator $filesystemItemIterator): FilesystemItemIterator
     {
-        // Only allow certain file extensions
-        $getAllowedFileExtensions = function (): array {
-            if ($this->hasParameter('contao.downloadable_files')) {
-                return $this->getParameter('contao.downloadable_files');
-            }
+        $this->initializeContaoFramework();
 
-            $this->initializeContaoFramework();
-
-            return StringUtil::trimsplit(',', $this->getContaoAdapter(Config::class)->get('allowedDownload'));
-        };
+        $allowedDownload = StringUtil::trimsplit(',', $this->getContaoAdapter(Config::class)->get('allowedDownload'));
 
         return $filesystemItemIterator->filter(
             static fn (FilesystemItem $item): bool => \in_array(
                 Path::getExtension($item->getPath(), true),
-                array_map('strtolower', $getAllowedFileExtensions()),
+                array_map('strtolower', $allowedDownload),
                 true,
             ),
         );
