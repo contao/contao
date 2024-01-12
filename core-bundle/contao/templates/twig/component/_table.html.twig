@@ -48,7 +48,6 @@
 #}
 
 {% trans_default_domain "contao_default" %}
-{% use "@Contao/component/_script.html.twig" %}
 
 {% block table_component %}
     {% set table = table|default(_context) %}
@@ -150,44 +149,46 @@
     {% block table_script %}
         {% if sorting %}
             {% add "tablesort_script" to head %}
-                {{ block('script_component') }}
+                {% set script_attributes = attrs(script_attributes|default)
+                    .setIfExists('nonce', contao_csp_nonce('script-src'))
+                %}
+
+                <script{{ script_attributes }}>
+                    {
+                        const instances = new WeakMap();
+
+                        const initTree = (root) => {
+                            const elements = root.matches('table[data-sortable-table]') ?
+                                [root] : root.querySelectorAll('table[data-sortable-table]');
+
+                            elements.forEach(element => {
+                                const options = JSON.parse(element.dataset.sortableTable);
+                                const table = instances.has(element) ? instances.get(element) : new Tablesort(element, options);
+                                instances.set(element, table);
+                            });
+                        }
+
+                        const script = document.createElement('script');
+                        script.src = '{{ asset('js/tablesort.min.js', 'contao-components/tristen-tablesort') }}';
+                        script.async = true;
+
+                        script.addEventListener('load', () => {
+                            new MutationObserver(function (mutations) {
+                                mutations.forEach(function (mutation) {
+                                    initTree(mutation.target)
+                                });
+                            }).observe(document, {
+                                childList: true,
+                                subtree: true
+                            });
+
+                            initTree(document.documentElement);
+                        })
+
+                        document.head.appendChild(script);
+                    }
+                </script>
             {% endadd %}
         {% endif %}
     {% endblock %}
-{% endblock %}
-
-{% block script_content %}
-    {
-        const instances = new WeakMap();
-
-        const initTree = (root) => {
-            const elements = root.matches('table[data-sortable-table]') ?
-                [root] : root.querySelectorAll('table[data-sortable-table]');
-
-            elements.forEach(element => {
-                const options = JSON.parse(element.dataset.sortableTable);
-                const table = instances.has(element) ? instances.get(element) : new Tablesort(element, options);
-                instances.set(element, table);
-            });
-        }
-
-        const script = document.createElement('script');
-        script.src = '{{ asset('js/tablesort.min.js', 'contao-components/tristen-tablesort') }}';
-        script.async = true;
-
-        script.addEventListener('load', () => {
-            new MutationObserver(function (mutations) {
-                mutations.forEach(function (mutation) {
-                    initTree(mutation.target)
-                });
-            }).observe(document, {
-                childList: true,
-                subtree: true
-            });
-
-            initTree(document.documentElement);
-        })
-
-        document.head.appendChild(script);
-    }
 {% endblock %}

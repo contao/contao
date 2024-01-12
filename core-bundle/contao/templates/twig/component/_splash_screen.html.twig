@@ -22,7 +22,6 @@
 #}
 
 {% trans_default_domain "contao_default" %}
-{% use "@Contao/component/_script.html.twig" %}
 
 {% block splash_screen_component %}
     {% set splash_button_attributes = attrs(splash_button_attributes|default)
@@ -42,16 +41,18 @@
 
     {% block splash_screen_script %}
         {% add "splash_screen_script" to body %}
-            {{ block('script_component') }}
+            {% set script_attributes = attrs(script_attributes|default)
+                .setIfExists('nonce', contao_csp_nonce('script-src'))
+            %}
+
+            <script{{ script_attributes }}>
+                document.querySelectorAll('*[data-splash-screen]').forEach(button => {
+                    button.addEventListener('click', () => {
+                        button.insertAdjacentHTML('afterend', button.querySelector('template').innerHTML);
+                        button.remove();
+                    })
+                });
+            </script>
         {% endadd %}
     {% endblock %}
-{% endblock %}
-
-{% block script_content %}
-    document.querySelectorAll('*[data-splash-screen]').forEach(button => {
-        button.addEventListener('click', () => {
-            button.insertAdjacentHTML('afterend', button.querySelector('template').innerHTML);
-            button.remove();
-        })
-    });
 {% endblock %}
