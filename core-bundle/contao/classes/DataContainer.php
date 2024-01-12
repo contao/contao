@@ -385,14 +385,12 @@ abstract class DataContainer extends Backend
 	/**
 	 * Render a row of a box and return it as HTML string
 	 *
-	 * @param string|array|null $strPalette
-	 *
 	 * @return string
 	 *
 	 * @throws AccessDeniedException
 	 * @throws \Exception
 	 */
-	protected function row($strPalette=null)
+	protected function row()
 	{
 		$arrData = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField] ?? array();
 
