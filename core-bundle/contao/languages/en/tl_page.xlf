@@ -360,7 +360,7 @@
         <source>Enable CSP</source>
       </trans-unit>
       <trans-unit id="tl_page.enableCsp.1">
-        <source>Enable Content Security Policy for this domain.</source>
+        <source>Enable Content Security Policy for this website root.</source>
       </trans-unit>
       <trans-unit id="tl_page.csp.0">
         <source>Content Security Policy</source>
