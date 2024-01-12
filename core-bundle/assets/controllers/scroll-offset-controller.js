@@ -59,16 +59,14 @@ export default class extends Controller {
     }
 
     initialize () {
-        // Prevent automatic page location restoration
-        if (history.scrollRestoration) {
-            history.scrollRestoration = 'manual';
-        }
-
         this.store = this.store.bind(this);
     }
 
     connect () {
         if (this.offset) {
+            // Prevent automatic page location restoration
+            history.scrollRestoration = 'manual';
+
             window.scrollTo({
                 top: this.offset + this.additionalOffset,
                 behavior: this.behaviorValue,
