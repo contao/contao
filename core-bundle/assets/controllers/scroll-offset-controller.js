@@ -63,31 +63,15 @@ export default class extends Controller {
     }
 
     connect () {
-        if (this.offset) {
-            window.scrollTo({
-                top: this.offset + this.additionalOffset,
-                behavior: this.behaviorValue,
-                block: this.blockValue
-            });
+        if (!this.offset) return;
 
-            this.offset = null;
-        }
-
-        this.buttons = document.querySelectorAll('.tl_submit_container button[name]:not([name="save"])');
-
-        this.buttons.forEach((button) => {
-            button.addEventListener('click', this.store, { passive: true });
+        window.scrollTo({
+            top: this.offset + this.additionalOffset,
+            behavior: this.behaviorValue,
+            block: this.blockValue
         });
-    }
 
-    disconnect () {
-        if (this.buttons) {
-            this.buttons.forEach((button) => {
-                button.removeEventListener('click', this.store);
-            });
-
-            this.buttons = null;
-        }
+        this.offset = null;
     }
 
     scrollToTargetConnected() {
