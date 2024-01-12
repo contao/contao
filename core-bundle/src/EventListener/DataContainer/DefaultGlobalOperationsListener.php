@@ -103,7 +103,7 @@ class DefaultGlobalOperationsListener
                 'all' => [
                     'href' => 'act=select',
                     'class' => 'header_edit_all',
-                    'attributes' => 'data-action="contao--scroll-offset#store" accesskey="e"',
+                    'attributes' => 'accesskey="e"',
                 ],
             ];
         }
