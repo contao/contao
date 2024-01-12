@@ -29,7 +29,7 @@ class DescriptionListController extends AbstractContentElementController
                 'term' => $row['key'],
                 'details' => $row['value'],
             ],
-            StringUtil::deserialize($model->data, true)
+            StringUtil::deserialize($model->data, true),
         ));
 
         return $template->getResponse();
