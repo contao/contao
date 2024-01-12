@@ -132,10 +132,9 @@ export default class extends Controller {
     set offset (value) {
         if (value === null || value === undefined) {
             window.sessionStorage.removeItem(this.sessionKeyValue);
-            return;
+        } else {
+            window.sessionStorage.setItem(this.sessionKeyValue, String(value));
         }
-
-        window.sessionStorage.setItem(this.sessionKeyValue, String(value))
     }
 
     get additionalOffset () {
