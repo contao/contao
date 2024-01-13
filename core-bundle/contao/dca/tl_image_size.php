@@ -10,12 +10,9 @@
 
 use Contao\Backend;
 use Contao\BackendUser;
-use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
-use Contao\Image;
 use Contao\Image\ResizeOptions;
 use Contao\StringUtil;
 use Contao\System;
@@ -35,10 +32,6 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'name',
-		'onload_callback' => array
-		(
-			array('tl_image_size', 'checkPermission')
-		),
 		'oncreate_callback' => array
 		(
 			array('tl_image_size', 'adjustPermissions')
@@ -52,7 +45,8 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
-				'pid' => 'index'
+				'pid' => 'index',
+				'tstamp' => 'index'
 			)
 		)
 	),
@@ -68,20 +62,6 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'defaultSearchField'      => 'name',
 			'headerFields'            => array('name', 'author', 'tstamp'),
 			'child_record_callback'   => array('tl_image_size', 'listImageSize')
-		),
-		'operations' => array
-		(
-			'edit' => array
-			(
-				'href'                => 'table=tl_image_size&amp;act=edit',
-				'icon'                => 'edit.svg',
-				'button_callback'     => array('tl_image_size', 'editHeader')
-			),
-			'children',
-			'copy',
-			'cut',
-			'delete',
-			'show'
 		)
 	),
 
@@ -215,24 +195,6 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 class tl_image_size extends Backend
 {
 	/**
-	 * Check permissions to edit the table
-	 *
-	 * @throws AccessDeniedException
-	 */
-	public function checkPermission()
-	{
-		if (BackendUser::getInstance()->isAdmin)
-		{
-			return;
-		}
-
-		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZES))
-		{
-			throw new AccessDeniedException('Not enough permissions to access the image sizes module.');
-		}
-	}
-
-	/**
 	 * Add the new image size to the permissions
 	 *
 	 * @param string|int $insertId
@@ -349,23 +311,6 @@ class tl_image_size extends Backend
 		$html .= "</div>\n";
 
 		return $html;
-	}
-
-	/**
-	 * Return the edit header button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function editHeader($row, $href, $label, $title, $icon, $attributes)
-	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, 'tl_image_size') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**

@@ -39,12 +39,14 @@ class RouteProviderTest extends TestCase
 
     public function testGetsARouteByName(): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class);
-        $page->id = 17;
-        $page->rootId = 1;
-        $page->urlPrefix = '';
-        $page->language = 'en';
-        $page->rootLanguage = 'en';
+        $page = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 17,
+            'rootId' => 1,
+            'language' => 'en',
+            'rootLanguage' => 'en',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
+        ]);
 
         $route = new PageRoute($page);
 
@@ -152,13 +154,15 @@ class RouteProviderTest extends TestCase
 
     public function testHandlesRoutesWithDomain(): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class);
-        $page->id = 17;
-        $page->rootId = 1;
-        $page->domain = 'example.org';
-        $page->urlPrefix = '';
-        $page->language = 'en';
-        $page->rootLanguage = 'en';
+        $page = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 17,
+            'rootId' => 1,
+            'domain' => 'example.org',
+            'language' => 'en',
+            'rootLanguage' => 'en',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
+        ]);
 
         $pageAdapter = $this->mockAdapter(['findByPk']);
         $pageAdapter
@@ -192,13 +196,15 @@ class RouteProviderTest extends TestCase
 
     public function testHandlesRoutesWithDomainAndPort(): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class);
-        $page->id = 17;
-        $page->rootId = 1;
-        $page->domain = 'example.org:8080';
-        $page->urlPrefix = '';
-        $page->language = 'en';
-        $page->rootLanguage = 'en';
+        $page = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 17,
+            'rootId' => 1,
+            'domain' => 'example.org:8080',
+            'language' => 'en',
+            'rootLanguage' => 'en',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
+        ]);
 
         $pageAdapter = $this->mockAdapter(['findByPk']);
         $pageAdapter
@@ -660,19 +666,23 @@ class RouteProviderTest extends TestCase
 
     public function testDoesNotAddRouteForUnroutablePage(): void
     {
-        $routablePage = $this->mockClassWithProperties(PageModel::class);
-        $routablePage->id = 17;
-        $routablePage->rootId = 1;
-        $routablePage->urlPrefix = '';
-        $routablePage->language = 'en';
-        $routablePage->rootLanguage = 'en';
+        $routablePage = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 17,
+            'rootId' => 1,
+            'language' => 'en',
+            'rootLanguage' => 'en',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
+        ]);
 
-        $unroutablePage = $this->mockClassWithProperties(PageModel::class);
-        $unroutablePage->id = 18;
-        $unroutablePage->rootId = 1;
-        $unroutablePage->urlPrefix = '';
-        $unroutablePage->language = 'en';
-        $unroutablePage->rootLanguage = 'en';
+        $unroutablePage = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 18,
+            'rootId' => 1,
+            'language' => 'en',
+            'rootLanguage' => 'en',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
+        ]);
 
         $route = new PageRoute($routablePage);
 

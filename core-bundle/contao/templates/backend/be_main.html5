@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="<?= $this->language ?>">
+<html lang="<?= $this->language ?>" data-controller="contao--scroll-offset" data-action="store-scroll-offset@window->contao--scroll-offset#store">
 <head>
 
   <?php $this->block('head'); ?>
@@ -100,8 +100,6 @@
   <?php endif; ?>
 
   <?= $this->mootools ?>
-
-  <script>Backend.initScrollOffset()</script>
 
 </body>
 </html>

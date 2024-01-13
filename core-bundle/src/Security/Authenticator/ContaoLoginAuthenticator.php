@@ -21,7 +21,6 @@ use Contao\PageModel;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Scheb\TwoFactorBundle\Security\Http\Authenticator\Passport\Credentials\TwoFactorCodeCredentials;
 use Scheb\TwoFactorBundle\Security\Http\Authenticator\TwoFactorAuthenticator;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -50,6 +49,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordC
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 use Symfony\Component\Security\Http\ParameterBagUtils;
+use Symfony\Component\Security\Http\SecurityRequestAttributes;
 
 class ContaoLoginAuthenticator extends AbstractAuthenticator implements AuthenticationEntryPointInterface, InteractiveAuthenticatorInterface
 {
@@ -199,7 +199,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
             throw new BadCredentialsException('Invalid username.');
         }
 
-        $request->getSession()->set(Security::LAST_USERNAME, $credentials['username']);
+        $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $credentials['username']);
 
         return $credentials;
     }

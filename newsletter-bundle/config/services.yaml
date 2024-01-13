@@ -19,3 +19,18 @@ services:
             - '@security.helper'
         tags:
             - kernel.event_listener
+
+    contao_newsletter.security.newsletter_access_voter:
+        class: Contao\NewsletterBundle\Security\Voter\NewsletterAccessVoter
+        arguments:
+            - '@security.access.decision_manager'
+
+    contao_newsletter.security.newsletter_channel_access_voter:
+        class: Contao\NewsletterBundle\Security\Voter\NewsletterChannelAccessVoter
+        arguments:
+            - '@security.access.decision_manager'
+
+    contao_newsletter.security.newsletter_recipients_access_voter:
+        class: Contao\NewsletterBundle\Security\Voter\NewsletterRecipientsAccessVoter
+        arguments:
+            - '@security.access.decision_manager'

@@ -60,7 +60,7 @@ class PreviewUrlConvertListener
             }
 
             try {
-                $event->setUrl($page->getPreviewUrl($this->getParams($request, $page->id)));
+                $event->setUrl($page->getAbsoluteUrl($this->getParams($request, $page->id)));
             } catch (RouteParametersException $e) {
                 $route = $e->getRoute();
 
@@ -88,7 +88,7 @@ class PreviewUrlConvertListener
         }
 
         // Add the /article/ fragment (see contao/core-bundle#673)
-        return sprintf('/articles/%s%s', 'main' !== $article->inColumn ? $article->inColumn.':' : '', $article->alias);
+        return '/articles/'.($article->alias ?: $article->id);
     }
 
     private function getFragmentUrl(Request $request, PageModel $pageModel): string

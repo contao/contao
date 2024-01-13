@@ -36,7 +36,6 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		'markAsCopy'                  => 'label',
 		'onload_callback' => array
 		(
-			array('tl_form_field', 'checkPermission'),
 			array('tl_form_field', 'filterFormFields')
 		),
 		'sql' => array
@@ -44,7 +43,8 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
-				'pid,invisible' => 'index'
+				'pid,invisible' => 'index',
+				'tstamp' => 'index'
 			)
 		)
 	),
@@ -75,7 +75,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			(
 				'href'                => 'act=paste&amp;mode=copy',
 				'icon'                => 'copy.svg',
-				'attributes'          => 'onclick="Backend.getScrollOffset()"',
+				'attributes'          => 'data-action="contao--scroll-offset#store"',
 				'button_callback'     => array('tl_form_field', 'disableButton')
 			),
 			'cut',
@@ -83,7 +83,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			(
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"',
+				'attributes'          => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false"',
 				'button_callback'     => array('tl_form_field', 'disableButton')
 			),
 			'toggle' => array
@@ -398,133 +398,6 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 class tl_form_field extends Backend
 {
 	/**
-	 * Check permissions to edit table tl_form_field
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @throws AccessDeniedException
-	 */
-	public function checkPermission(DataContainer $dc)
-	{
-		$user = BackendUser::getInstance();
-
-		if ($user->isAdmin)
-		{
-			return;
-		}
-
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-
-		// Set root IDs
-		if (empty($user->forms) || !is_array($user->forms))
-		{
-			$root = array(0);
-		}
-		else
-		{
-			$root = $user->forms;
-		}
-
-		$id = strlen(Input::get('id')) ? Input::get('id') : $dc->currentPid;
-
-		// Check current action
-		switch (Input::get('act'))
-		{
-			case 'paste':
-			case 'select':
-				// Check currentId here (see #247)
-				if (!in_array($dc->currentPid, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to access form ID ' . $id . '.');
-				}
-				break;
-
-			case 'create':
-			case 'cut':
-			case 'copy':
-				$pid = Input::get('pid');
-
-				// Get form ID
-				if (Input::get('mode') == 1)
-				{
-					$objField = Database::getInstance()
-						->prepare("SELECT pid FROM tl_form_field WHERE id=?")
-						->limit(1)
-						->execute(Input::get('pid'));
-
-					if ($objField->numRows < 1)
-					{
-						throw new AccessDeniedException('Invalid form field ID ' . Input::get('pid') . '.');
-					}
-
-					$pid = $objField->pid;
-				}
-
-				if (!in_array($pid, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' form field ID ' . $id . ' to form ID ' . $pid . '.');
-				}
-
-				if (Input::get('act') == 'create')
-				{
-					break;
-				}
-				// no break
-
-			case 'edit':
-			case 'show':
-			case 'delete':
-			case 'toggle':
-				$objField = Database::getInstance()
-					->prepare("SELECT pid FROM tl_form_field WHERE id=?")
-					->limit(1)
-					->execute($id);
-
-				if ($objField->numRows < 1)
-				{
-					throw new AccessDeniedException('Invalid form field ID ' . $id . '.');
-				}
-
-				if (!in_array($objField->pid, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' form field ID ' . $id . ' of form ID ' . $objField->pid . '.');
-				}
-				break;
-
-			case 'editAll':
-			case 'deleteAll':
-			case 'overrideAll':
-			case 'cutAll':
-			case 'copyAll':
-				if (!in_array($id, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to access form ID ' . $id . '.');
-				}
-
-				$objForm = Database::getInstance()
-					->prepare("SELECT id FROM tl_form_field WHERE pid=?")
-					->execute($id);
-
-				$session = $objSession->all();
-				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objForm->fetchEach('id'));
-				$objSession->replace($session);
-				break;
-
-			default:
-				if (Input::get('act'))
-				{
-					throw new AccessDeniedException('Invalid command "' . Input::get('act') . '".');
-				}
-
-				if (!in_array($id, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to access form ID ' . $id . '.');
-				}
-				break;
-		}
-	}
-
-	/**
 	 * Filter the form fields
 	 */
 	public function filterFormFields()
@@ -656,7 +529,7 @@ class tl_form_field extends Backend
 	 */
 	public function optionImportWizard()
 	{
-		return ' <a href="' . $this->addToUrl('key=option') . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['ow_import'][1]) . '" onclick="Backend.getScrollOffset()">' . Image::getHtml('tablewizard.svg', $GLOBALS['TL_LANG']['MSC']['ow_import'][0]) . '</a>';
+		return ' <a href="' . $this->addToUrl('key=option') . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['ow_import'][1]) . '" data-action="contao--scroll-offset#store">' . Image::getHtml('tablewizard.svg', $GLOBALS['TL_LANG']['MSC']['ow_import'][0]) . '</a>';
 	}
 
 	/**
@@ -758,6 +631,6 @@ class tl_form_field extends Backend
 
 		$titleDisabled = (is_array($GLOBALS['TL_DCA']['tl_form_field']['list']['operations']['toggle']['label']) && isset($GLOBALS['TL_DCA']['tl_form_field']['list']['operations']['toggle']['label'][2])) ? sprintf($GLOBALS['TL_DCA']['tl_form_field']['list']['operations']['toggle']['label'][2], $row['id']) : $title;
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars(!$row['invisible'] ? $title : $titleDisabled) . '" data-title="' . StringUtil::specialchars($title) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars(!$row['invisible'] ? $title : $titleDisabled) . '" data-title="' . StringUtil::specialchars($title) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" data-action="contao--scroll-offset#store" onclick="return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
 	}
 }

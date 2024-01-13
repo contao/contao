@@ -23,6 +23,7 @@ $GLOBALS['TL_DCA']['tl_comments_notify'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
+				'tstamp' => 'index',
 				'source,parent,active,email' => 'index',
 				'tokenRemove' => 'index'
 			)

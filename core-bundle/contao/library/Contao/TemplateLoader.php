@@ -77,7 +77,7 @@ class TemplateLoader
 	{
 		$prefix = preg_quote($prefix, '/');
 
-		if (substr($prefix, -1) != '_')
+		if (!str_ends_with($prefix, '_'))
 		{
 			$prefix .= '($|_)';
 		}

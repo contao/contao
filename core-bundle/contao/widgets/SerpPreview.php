@@ -109,20 +109,20 @@ class SerpPreview extends Widget
 	{
 		if (!isset($this->titleFields))
 		{
-			return $model->title;
+			return (string) $model->title;
 		}
 
-		return $model->{$this->titleFields[0]} ?: $model->{$this->titleFields[1]};
+		return (string) ($model->{$this->titleFields[0]} ?: $model->{$this->titleFields[1]});
 	}
 
 	private function getDescription(Model $model)
 	{
 		if (!isset($this->descriptionFields))
 		{
-			return $model->description;
+			return (string) $model->description;
 		}
 
-		return $model->{$this->descriptionFields[0]} ?: $model->{$this->descriptionFields[1]};
+		return (string) ($model->{$this->descriptionFields[0]} ?: $model->{$this->descriptionFields[1]});
 	}
 
 	private function getAlias(Model $model)

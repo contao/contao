@@ -156,7 +156,7 @@ class Form extends Hybrid
 
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-		if ($request && $request->hasPreviousSession())
+		if ($request?->hasPreviousSession())
 		{
 			$flashBag = $request->getSession()->getFlashBag();
 
@@ -397,6 +397,12 @@ class Form extends Hybrid
 			{
 				System::importStatic($callback[0])->{$callback[1]}($arrSubmitted, $arrLabels, $arrFields, $this, $arrFiles);
 			}
+		}
+
+		// Do not process the form data if there are errors (see #6611)
+		if ($this->hasErrors())
+		{
+			return;
 		}
 
 		// Store submitted data (possibly modified by hook or data added) in the session for 10 seconds,
@@ -660,7 +666,7 @@ class Form extends Hybrid
 			$request = $requestStack->getCurrentRequest();
 
 			// Throw the response exception if it's an AJAX request
-			if ($request && $targetPageData === null && $this->isAjaxEnabled() && $request->isXmlHttpRequest() && $request->headers->get('X-Contao-Ajax-Form') === $this->getFormId())
+			if ($targetPageData === null && $this->isAjaxEnabled() && $request?->isXmlHttpRequest() && $request->headers->get('X-Contao-Ajax-Form') === $this->getFormId())
 			{
 				$confirmationTemplate = new FrontendTemplate('form_message');
 				$confirmationTemplate->setData($this->Template->getData());

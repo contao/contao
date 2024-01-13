@@ -56,6 +56,15 @@
       <trans-unit id="tl_module.news_showQuantity.1">
         <source>Show the number of news items of each month.</source>
       </trans-unit>
+      <trans-unit id="tl_module.news_keepCanonical.0">
+        <source>Use the current URL for canonical links</source>
+      </trans-unit>
+      <trans-unit id="tl_module.news_keepCanonical.1">
+        <source>Keep the current URL instead of the configured reader page for canonical links.</source>
+      </trans-unit>
+      <trans-unit id="tl_module.news_overview_legend">
+        <source>Overview page</source>
+      </trans-unit>
       <trans-unit id="tl_module.news_day">
         <source>Day</source>
       </trans-unit>

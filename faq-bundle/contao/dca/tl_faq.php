@@ -12,7 +12,6 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
-use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
@@ -20,7 +19,6 @@ use Contao\DC_Table;
 use Contao\Environment;
 use Contao\FaqCategoryModel;
 use Contao\FaqModel;
-use Contao\Input;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
@@ -38,7 +36,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		'markAsCopy'                  => 'question',
 		'onload_callback' => array
 		(
-			array('tl_faq', 'checkPermission'),
 			array('tl_faq', 'removeMetaFields')
 		),
 		'sql' => array
@@ -46,7 +43,8 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
-				'pid,published' => 'index'
+				'pid,published' => 'index',
+				'tstamp' => 'index'
 			)
 		)
 	),
@@ -60,7 +58,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'fields'                  => array('sorting'),
 			'panelLayout'             => 'filter;search,limit',
 			'defaultSearchField'      => 'question',
-			'headerFields'            => array('title', 'headline', 'jumpTo', 'tstamp', 'allowComments'),
+			'headerFields'            => array('title', 'headline', 'jumpTo', 'tstamp'),
 			'child_record_callback'   => array('tl_faq', 'listQuestions'),
 			'renderAsGrid'            => true,
 			'limitHeight'             => 160
@@ -71,7 +69,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('addImage', 'addEnclosure', 'overwriteMeta'),
-		'default'                     => '{title_legend},question,alias,author;{meta_legend},pageTitle,robots,description,serpPreview;{answer_legend},answer;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},noComments;{publish_legend},published'
+		'default'                     => '{title_legend},question,alias,author;{meta_legend},pageTitle,robots,description,serpPreview;{answer_legend},answer;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{publish_legend},published'
 	),
 
 	// Sub-palettes
@@ -264,12 +262,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'isDownloads'=>true, 'extensions'=>Config::get('allowedDownload'), 'mandatory'=>true, 'isSortable'=>true),
 			'sql'                     => "blob NULL"
 		),
-		'noComments' => array
-		(
-			'filter'                  => true,
-			'inputType'               => 'checkbox',
-			'sql'                     => array('type' => 'boolean', 'default' => false)
-		),
 		'published' => array
 		(
 			'toggle'                  => true,
@@ -289,158 +281,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
  */
 class tl_faq extends Backend
 {
-	/**
-	 * Check permissions to edit table tl_faq
-	 *
-	 * @param DataContainer $dc
-	 */
-	public function checkPermission(DataContainer $dc)
-	{
-		$bundles = System::getContainer()->getParameter('kernel.bundles');
-
-		// HOOK: comments extension required
-		if (!isset($bundles['ContaoCommentsBundle']))
-		{
-			$key = array_search('allowComments', $GLOBALS['TL_DCA']['tl_faq']['list']['sorting']['headerFields'] ?? array());
-			unset($GLOBALS['TL_DCA']['tl_faq']['list']['sorting']['headerFields'][$key], $GLOBALS['TL_DCA']['tl_faq']['fields']['noComments']);
-		}
-
-		$user = BackendUser::getInstance();
-
-		if ($user->isAdmin)
-		{
-			return;
-		}
-
-		// Set the root IDs
-		if (empty($user->faqs) || !is_array($user->faqs))
-		{
-			$root = array(0);
-		}
-		else
-		{
-			$root = $user->faqs;
-		}
-
-		$id = strlen(Input::get('id')) ? Input::get('id') : $dc->currentPid;
-
-		// Check current action
-		switch (Input::get('act'))
-		{
-			case 'paste':
-			case 'select':
-				// Check currentPid here (see #247)
-				if (!in_array($dc->currentPid, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to access FAQ category ID ' . $id . '.');
-				}
-				break;
-
-			case 'create':
-				if (Input::get('mode') == 1)
-				{
-					$objFaq = Database::getInstance()
-						->prepare("SELECT pid FROM tl_faq WHERE id=?")
-						->limit(1)
-						->execute(Input::get('pid'));
-
-					if ($objFaq->numRows < 1)
-					{
-						throw new AccessDeniedException('Invalid FAQ ID ' . Input::get('pid') . '.');
-					}
-
-					$pid = $objFaq->pid;
-				}
-				else
-				{
-					$pid = Input::get('pid');
-				}
-
-				if (!in_array($pid, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to create FAQs in FAQ category ID ' . Input::get('pid') . '.');
-				}
-				break;
-
-			case 'cut':
-			case 'copy':
-				if (Input::get('act') == 'cut' && Input::get('mode') == 1)
-				{
-					$objFaq = Database::getInstance()
-						->prepare("SELECT pid FROM tl_faq WHERE id=?")
-						->limit(1)
-						->execute(Input::get('pid'));
-
-					if ($objFaq->numRows < 1)
-					{
-						throw new AccessDeniedException('Invalid FAQ ID ' . Input::get('pid') . '.');
-					}
-
-					$pid = $objFaq->pid;
-				}
-				else
-				{
-					$pid = Input::get('pid');
-				}
-
-				if (!in_array($pid, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' FAQ ID ' . $id . ' to FAQ category ID ' . $pid . '.');
-				}
-				// no break
-
-			case 'edit':
-			case 'show':
-			case 'delete':
-			case 'toggle':
-				$objFaq = Database::getInstance()
-					->prepare("SELECT pid FROM tl_faq WHERE id=?")
-					->limit(1)
-					->execute($id);
-
-				if ($objFaq->numRows < 1)
-				{
-					throw new AccessDeniedException('Invalid FAQ ID ' . $id . '.');
-				}
-
-				if (!in_array($objFaq->pid, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' FAQ ID ' . $id . ' of FAQ category ID ' . $objFaq->pid . '.');
-				}
-				break;
-
-			case 'editAll':
-			case 'deleteAll':
-			case 'overrideAll':
-			case 'cutAll':
-			case 'copyAll':
-				if (!in_array($id, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to access FAQ category ID ' . $id . '.');
-				}
-
-				$objFaq = Database::getInstance()->prepare("SELECT id FROM tl_faq WHERE pid=?")->execute($id);
-				$objSession = System::getContainer()->get('request_stack')->getSession();
-
-				$session = $objSession->all();
-				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objFaq->fetchEach('id'));
-				$objSession->replace($session);
-				break;
-
-			default:
-				if (strlen(Input::get('act')))
-				{
-					throw new AccessDeniedException('Invalid command "' . Input::get('act') . '".');
-				}
-
-				if (!in_array($id, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to access FAQ category ID ' . $id . '.');
-				}
-				break;
-		}
-	}
-
 	/**
 	 * Remove the meta fields if the FAQ category does not have a jumpTo page
 	 *

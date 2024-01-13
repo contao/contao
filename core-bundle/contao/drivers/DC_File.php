@@ -263,7 +263,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 		// Submit buttons
 		$arrButtons = array();
 		$arrButtons['save'] = '<button type="submit" name="save" id="save" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG']['MSC']['save'] . '</button>';
-		$arrButtons['saveNclose'] = '<button type="submit" name="saveNclose" id="saveNclose" class="tl_submit" accesskey="c">' . $GLOBALS['TL_LANG']['MSC']['saveNclose'] . '</button>';
+		$arrButtons['saveNclose'] = '<button type="submit" name="saveNclose" id="saveNclose" class="tl_submit" accesskey="c" data-action="contao--scroll-offset#discard">' . $GLOBALS['TL_LANG']['MSC']['saveNclose'] . '</button>';
 
 		// Call the buttons_callback (see #4691)
 		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback'] ?? null))
@@ -295,7 +295,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 		$return = Message::generate() . ($this->noReload ? '
 <p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['general'] . '</p>' : '') . '
 <div id="tl_buttons">
-<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
+<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" data-action="contao--scroll-offset#discard">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post"' . (!empty($this->onsubmit) ? ' onsubmit="' . implode(' ', $this->onsubmit) . '"' : '') . '>
 <div class="tl_formbody_edit">
@@ -535,6 +535,22 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 			foreach ($subpalettes as $k=>$v)
 			{
 				$strPalette = preg_replace('/\b' . preg_quote($k, '/') . '\b/i', $k . ',[' . $k . '],' . $v . ',[EOF]', $strPalette);
+			}
+		}
+
+		// Call onpalette_callback
+		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onpalette_callback'] ?? null))
+		{
+			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onpalette_callback'] as $callback)
+			{
+				if (\is_array($callback))
+				{
+					$strPalette = System::importStatic($callback[0])->{$callback[1]}($strPalette, $this);
+				}
+				elseif (\is_callable($callback))
+				{
+					$strPalette = $callback($strPalette, $this);
+				}
 			}
 		}
 

@@ -15,6 +15,20 @@ type = XLIFF
 source_lang = en
 resource_name = v5_3-modules
 
+[o:contao:p:comments-bundle:r:v5_3-tl_calendar]
+file_filter = contao/languages/<lang>/tl_calendar.xlf
+source_file = contao/languages/en/tl_calendar.xlf
+type = XLIFF
+source_lang = en
+resource_name = v5_3-tl_calendar
+
+[o:contao:p:comments-bundle:r:v5_3-tl_calendar_events]
+file_filter = contao/languages/<lang>/tl_calendar_events.xlf
+source_file = contao/languages/en/tl_calendar_events.xlf
+type = XLIFF
+source_lang = en
+resource_name = v5_3-tl_calendar_events
+
 [o:contao:p:comments-bundle:r:v5_3-tl_comments]
 file_filter = contao/languages/<lang>/tl_comments.xlf
 source_file = contao/languages/en/tl_comments.xlf
@@ -29,9 +43,37 @@ type = XLIFF
 source_lang = en
 resource_name = v5_3-tl_content
 
+[o:contao:p:comments-bundle:r:v5_3-tl_faq]
+file_filter = contao/languages/<lang>/tl_faq.xlf
+source_file = contao/languages/en/tl_faq.xlf
+type = XLIFF
+source_lang = en
+resource_name = v5_3-tl_faq
+
+[o:contao:p:comments-bundle:r:v5_3-tl_faq_category]
+file_filter = contao/languages/<lang>/tl_faq_category.xlf
+source_file = contao/languages/en/tl_faq_category.xlf
+type = XLIFF
+source_lang = en
+resource_name = v5_3-tl_faq_category
+
 [o:contao:p:comments-bundle:r:v5_3-tl_module]
 file_filter = contao/languages/<lang>/tl_module.xlf
 source_file = contao/languages/en/tl_module.xlf
 type = XLIFF
 source_lang = en
 resource_name = v5_3-tl_module
+
+[o:contao:p:comments-bundle:r:v5_3-tl_news]
+file_filter = contao/languages/<lang>/tl_news.xlf
+source_file = contao/languages/en/tl_news.xlf
+type = XLIFF
+source_lang = en
+resource_name = v5_3-tl_news
+
+[o:contao:p:comments-bundle:r:v5_3-tl_news_archive]
+file_filter = contao/languages/<lang>/tl_news_archive.xlf
+source_file = contao/languages/en/tl_news_archive.xlf
+type = XLIFF
+source_lang = en
+resource_name = v5_3-tl_news_archive

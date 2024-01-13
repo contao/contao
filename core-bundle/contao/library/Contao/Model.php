@@ -94,6 +94,12 @@ abstract class Model
 	protected $arrRelated = array();
 
 	/**
+	 * Enums
+	 * @var array
+	 */
+	protected $arrEnums = array();
+
+	/**
 	 * Prevent saving
 	 * @var boolean
 	 */
@@ -115,6 +121,7 @@ abstract class Model
 
 		$objDca = DcaExtractor::getInstance(static::$strTable);
 		$this->arrRelations = $objDca->getRelations();
+		$this->arrEnums = $objDca->getEnums();
 
 		if ($objResult !== null)
 		{
@@ -132,7 +139,7 @@ abstract class Model
 			// Look for joined fields
 			foreach ($arrData as $k=>$v)
 			{
-				if (strpos($k, '__') !== false)
+				if (str_contains($k, '__'))
 				{
 					list($key, $field) = explode('__', $k, 2);
 
@@ -236,7 +243,7 @@ abstract class Model
 
 		if ($varValue !== ($varNewValue = static::convertToPhpValue($strKey, $varValue)))
 		{
-			trigger_deprecation('contao/core-bundle', '5.0', 'Setting "%s::$%s" to type %s has been deprecated and will no longer work in Contao 6.0. Use type %s instead.', static::class, $strKey, get_debug_type($varValue), get_debug_type($varNewValue));
+			trigger_deprecation('contao/core-bundle', '5.0', 'Setting "%s::$%s" to type %s has been deprecated and will no longer work in Contao 6. Use type "%s" instead.', static::class, $strKey, get_debug_type($varValue), get_debug_type($varNewValue));
 		}
 	}
 
@@ -351,7 +358,7 @@ abstract class Model
 	{
 		foreach ($arrData as $k=>$v)
 		{
-			if (strpos($k, '__') !== false)
+			if (str_contains($k, '__'))
 			{
 				unset($arrData[$k]);
 			}
@@ -378,7 +385,7 @@ abstract class Model
 	{
 		foreach ($arrData as $k=>$v)
 		{
-			if (strpos($k, '__') !== false)
+			if (str_contains($k, '__'))
 			{
 				continue;
 			}
@@ -738,6 +745,27 @@ abstract class Model
 		return $this->arrRelated[$strKey];
 	}
 
+	public function getEnum($strKey): \BackedEnum|null
+	{
+		$enum = $this->arrEnums[$strKey] ?? null;
+
+		// The enum does not exist
+		if (null === $enum)
+		{
+			throw new \Exception(sprintf('Field %s.%s has no enum configured', static::getTable(), $strKey));
+		}
+
+		$varValue = $this->{$strKey};
+
+		// The value is invalid
+		if (!\is_string($varValue) && !\is_int($varValue))
+		{
+			throw new \Exception(sprintf('Value of %s.%s must be a string or an integer to resolve a backed enumeration', static::getTable(), $strKey));
+		}
+
+		return $this->arrEnums[$strKey]::tryFrom($varValue);
+	}
+
 	/**
 	 * Reload the data from the database discarding all modifications
 	 */
@@ -1070,21 +1098,21 @@ abstract class Model
 	 */
 	public static function __callStatic($name, $args)
 	{
-		if (strncmp($name, 'findBy', 6) === 0)
+		if (str_starts_with($name, 'findBy'))
 		{
 			array_unshift($args, lcfirst(substr($name, 6)));
 
 			return static::findBy(...$args);
 		}
 
-		if (strncmp($name, 'findOneBy', 9) === 0)
+		if (str_starts_with($name, 'findOneBy'))
 		{
 			array_unshift($args, lcfirst(substr($name, 9)));
 
 			return static::findOneBy(...$args);
 		}
 
-		if (strncmp($name, 'countBy', 7) === 0)
+		if (str_starts_with($name, 'countBy'))
 		{
 			array_unshift($args, lcfirst(substr($name, 7)));
 
@@ -1181,7 +1209,7 @@ abstract class Model
 		{
 			if (($arrOptions['return'] ?? null) == 'Array')
 			{
-				trigger_deprecation('contao/core-bundle', '5.2', 'Using "Array" as return type for model queries has been deprecated and will no longer work in Contao 6. Use the getModels() method instead.');
+				trigger_deprecation('contao/core-bundle', '5.2', 'Using "Array" as return type for model queries has been deprecated and will no longer work in Contao 6. Use the "getModels()" method instead.');
 
 				return array();
 			}
@@ -1206,7 +1234,7 @@ abstract class Model
 
 		if (($arrOptions['return'] ?? null) == 'Array')
 		{
-			trigger_deprecation('contao/core-bundle', '5.2', 'Using "Array" as return type for model queries has been deprecated and will no longer work in Contao 6. Use the getModels() method instead.');
+			trigger_deprecation('contao/core-bundle', '5.2', 'Using "Array" as return type for model queries has been deprecated and will no longer work in Contao 6. Use the "getModels()" method instead.');
 
 			return static::createCollectionFromDbResult($objResult, static::$strTable)->getModels();
 		}

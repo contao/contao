@@ -14,7 +14,7 @@
     <fieldset class="tl_tbox nolegend">
       <div class="widget w50">
         <h3><label for="separator"><?= $this->separatorLabel ?></label></h3>
-        <select name="separator" id="separator" class="tl_select" onfocus="Backend.getScrollOffset()">
+        <select name="separator" id="separator" class="tl_select" data-action="focus->contao--scroll-offset#store">
           <?php foreach ($this->separators as $separator): ?>
             <option value="<?= $separator['value'] ?>"><?= $separator['label'] ?></option>
           <?php endforeach; ?>

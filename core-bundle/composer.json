@@ -55,6 +55,7 @@
         "contao-components/mootools": "^1.6.0.1",
         "contao-components/simplemodal": "^3.0",
         "contao-components/swipe": "^2.0.3",
+        "contao-components/swiper": "^11.0",
         "contao-components/tablesort": "^4.0",
         "contao-components/tablesorter": "^2.1",
         "contao-components/tinymce4": "^5.0 || ^6.0",
@@ -150,6 +151,7 @@
         "symfony/yaml": "^6.4",
         "terminal42/escargot": "^1.6",
         "terminal42/service-annotation-bundle": "^1.1",
+        "toflar/cronjob-supervisor": "^1.0",
         "twig/string-extra": "^3.0",
         "twig/twig": "^3.8",
         "ua-parser/uap-php": "^3.9",
@@ -163,7 +165,8 @@
         "league/flysystem-memory": "^3.0",
         "phpunit/phpunit": "^9.5.19",
         "symfony/browser-kit": "^6.4",
-        "symfony/phpunit-bridge": "^6.4"
+        "symfony/phpunit-bridge": "^6.4",
+        "symfony/web-profiler-bundle": "^6.4"
     },
     "conflict": {
         "contao-community-alliance/composer-plugin": "<3.0",

@@ -38,3 +38,13 @@ services:
         class: Contao\FaqBundle\Routing\FaqResolver
         arguments:
             - '@contao.framework'
+
+    contao_faq.security.faq_access_voter:
+        class: Contao\FaqBundle\Security\Voter\FaqAccessVoter
+        arguments:
+            - '@security.access.decision_manager'
+
+    contao_faq.security.faq_category_access_voter:
+        class: Contao\FaqBundle\Security\Voter\FaqCategoryAccessVoter
+        arguments:
+            - '@security.access.decision_manager'

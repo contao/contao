@@ -136,7 +136,19 @@ abstract class ContaoTestCase extends TestCase
         if ($instances) {
             $framework
                 ->method('createInstance')
-                ->willReturnCallback(static fn (string $key): mixed => $instances[$key] ?? null)
+                ->willReturnCallback(
+                    static function (string $key) use ($instances): mixed {
+                        if (!isset($instances[$key])) {
+                            return null;
+                        }
+
+                        if ($instances[$key] instanceof \Closure) {
+                            return $instances[$key]();
+                        }
+
+                        return $instances[$key];
+                    },
+                )
             ;
         }
 

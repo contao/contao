@@ -199,6 +199,14 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     public function getExtensionConfig($extensionName, array $extensionConfigs, PluginContainerBuilder $container): array
     {
         switch ($extensionName) {
+            case 'contao':
+                if (!$container->hasParameter('contao.dns_mapping')) {
+                    $container->setParameter('env(DNS_MAPPING)', '[]');
+                    $container->setParameter('contao.dns_mapping', '%env(json:DNS_MAPPING)%');
+                }
+
+                return $extensionConfigs;
+
             case 'framework':
                 $extensionConfigs = $this->checkMailerTransport($extensionConfigs, $container);
                 $extensionConfigs = $this->addDefaultMailer($extensionConfigs);

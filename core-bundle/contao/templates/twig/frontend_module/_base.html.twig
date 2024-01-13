@@ -9,7 +9,7 @@
        template name (e.g. "frontend_module/navigation") as a class #}
     {% set attributes = attrs(attributes|default)
         .setIfExists('id', element_html_id)
-        .addClass([element_css_classes, "module-#{type}"])
+        .addClass([element_css_classes, "module-#{type|replace({'_': '-'})}"])
     %}
 
     {# Wrapper element around headline and content #}

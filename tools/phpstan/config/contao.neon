@@ -17,8 +17,6 @@ parameters:
         alwaysTrueAlwaysReported: false
         detectDeadTypeInMultiCatch: false
         disableCheckMissingIterableValueType: false
-        # TODO: Remove after the ModelMetadataTrait has been moved to the legacy code
-        notAnalysedTrait: false
 
     paths:
         - %currentWorkingDirectory%/calendar-bundle/src
@@ -38,6 +36,7 @@ parameters:
 
     universalObjectCratesClasses:
         - Contao\BackendUser
+        - Contao\Database\Result
         - Contao\Model
         - Contao\Template
 
@@ -51,6 +50,9 @@ parameters:
             # Ignore the unexpected type hint required for the tagged_locator
             message: '#type array<Symfony\\Component\\HttpKernel\\Fragment\\FragmentRendererInterface> is incompatible with native type Psr\\Container\\ContainerInterface#'
             path: %currentWorkingDirectory%/core-bundle/src/Fragment/FragmentHandler.php
+
+        # Ignore the unused ModelMetadataTrait that will be removed in Contao 6
+        - '#Trait Contao\\CoreBundle\\File\\ModelMetadataTrait is used zero times and is not analysed\.#'
 
         # Ignore the wrong return type hint of the UrlGeneratorInterface::generate() method
         - '#Method Contao\\CoreBundle\\Picker\\AbstractPickerProvider::generateUrl\(\) never returns null so it can be removed from the return type\.#'

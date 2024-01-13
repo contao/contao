@@ -651,6 +651,46 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('security.access.decision_manager', $definition->getDecoratedService()[0]);
     }
 
+    public function testHstsSecurityConfiguration(): void
+    {
+        $container = $this->getContainerBuilder();
+        (new ContaoCoreExtension())->load([], $container);
+
+        $this->assertTrue($container->hasDefinition('contao.listener.transport_security_header'));
+        $listener = $container->findDefinition('contao.listener.transport_security_header');
+        $this->assertSame(31536000, $listener->getArgument(1));
+
+        (new ContaoCoreExtension())->load(
+            [
+                'contao' => [
+                    'security' => [
+                        'hsts' => [
+                            'ttl' => 500,
+                        ],
+                    ],
+                ],
+            ],
+            $container,
+        );
+
+        $this->assertTrue($container->hasDefinition('contao.listener.transport_security_header'));
+        $listener = $container->findDefinition('contao.listener.transport_security_header');
+        $this->assertSame(500, $listener->getArgument(1));
+
+        (new ContaoCoreExtension())->load(
+            [
+                'contao' => [
+                    'security' => [
+                        'hsts' => false,
+                    ],
+                ],
+            ],
+            $container,
+        );
+
+        $this->assertFalse($container->hasDefinition('contao.listener.transport_security_header'));
+    }
+
     public function testRegistersAsContentElementAttribute(): void
     {
         $container = $this->getContainerBuilder();
@@ -673,6 +713,7 @@ class ContaoCoreExtensionTest extends TestCase
                     'template' => 'a_template',
                     'method' => 'aMethod',
                     'renderer' => 'inline',
+                    'nestedFragments' => false,
                 ],
             )
         ;

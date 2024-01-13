@@ -282,7 +282,7 @@ class ImageFactory implements ImageFactoryInterface
             return [$config, null, null];
         }
 
-        trigger_deprecation('contao/core-bundle', '5.0', 'Using the legacy resize mode "%s" has been deprecated and will no longer work in Contao 6.0.', $size[2]);
+        trigger_deprecation('contao/core-bundle', '5.0', 'Using the legacy resize mode "%s" has been deprecated and will no longer work in Contao 6.', $size[2]);
 
         $config->setMode(ResizeConfiguration::MODE_CROP);
 

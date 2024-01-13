@@ -111,21 +111,11 @@ class ContaoCacheWarmerTest extends TestCase
             file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/sql/tl_test.php')),
         );
 
-        $expected = <<<'TXT'
-            <?php
-            return array (
-              'en' =>
-              array (
-                'default' => true,
-                'tl_test' => true,
-              ),
-            );
+        $langs = include Path::join($this->getTempDir(), 'var/cache/contao/config/available-language-files.php');
 
-            TXT;
-
-        $file = Path::join($this->getTempDir(), 'var/cache/contao/config/available-language-files.php');
-
-        $this->assertSame($expected, preg_replace('/\s+\n/', "\n", file_get_contents($file)));
+        $this->assertArrayHasKey('en', $langs);
+        $this->assertArrayHasKey('default', $langs['en']);
+        $this->assertArrayHasKey('tl_test', $langs['en']);
     }
 
     public function testIsAnOptionalWarmer(): void

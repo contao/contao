@@ -16,6 +16,7 @@ use Contao\CoreBundle\Routing\Candidates\LocaleCandidates;
 use Contao\CoreBundle\Routing\Candidates\PageCandidates;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Tests\TestCase;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Result;
@@ -382,7 +383,7 @@ class PageCandidatesTest extends TestCase
         $queryBuilder
             ->expects($this->once())
             ->method('setParameter')
-            ->with('types', ['foo', 'bar'], Connection::PARAM_STR_ARRAY)
+            ->with('types', ['foo', 'bar'], ArrayParameterType::STRING)
             ->willReturnSelf()
         ;
 
@@ -416,7 +417,7 @@ class PageCandidatesTest extends TestCase
         $queryBuilder
             ->expects($this->once())
             ->method('setParameter')
-            ->with('types', ['foo', 'bar'], Connection::PARAM_STR_ARRAY)
+            ->with('types', ['foo', 'bar'], ArrayParameterType::STRING)
             ->willReturnSelf()
         ;
 
@@ -450,7 +451,7 @@ class PageCandidatesTest extends TestCase
         $queryBuilder
             ->expects($this->once())
             ->method('setParameter')
-            ->with('types', ['foo', 'bar'], Connection::PARAM_STR_ARRAY)
+            ->with('types', ['foo', 'bar'], ArrayParameterType::STRING)
             ->willReturnSelf()
         ;
 

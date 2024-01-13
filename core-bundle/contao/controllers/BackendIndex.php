@@ -70,7 +70,7 @@ class BackendIndex extends Backend
 		$targetPath = $router->generate('contao_backend', array(), UrlGeneratorInterface::ABSOLUTE_URL);
 		$request = $container->get('request_stack')->getCurrentRequest();
 
-		if ($request && $request->query->has('redirect'))
+		if ($request?->query->has('redirect'))
 		{
 			/** @var UriSigner $uriSigner */
 			$uriSigner = $container->get('uri_signer');

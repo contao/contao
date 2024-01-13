@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Event\RobotsTxtEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Symfony\Bundle\WebProfilerBundle\EventListener\WebDebugToolbarListener;
 use webignition\RobotsTxt\Directive\Directive;
 use webignition\RobotsTxt\Directive\UserAgentDirective;
 use webignition\RobotsTxt\Inspector\Inspector;
@@ -26,6 +27,7 @@ class RobotsTxtListener
 {
     public function __construct(
         private readonly ContaoFramework $contaoFramework,
+        private readonly WebDebugToolbarListener|null $webDebugToolbarListener = null,
         private readonly string $routePrefix = '/contao',
     ) {
     }
@@ -56,6 +58,11 @@ class RobotsTxtListener
             $directiveList = $record->getDirectiveList();
             $directiveList->add(new Directive('Disallow', $this->routePrefix.'/'));
             $directiveList->add(new Directive('Disallow', '/_contao/'));
+
+            if ($this->webDebugToolbarListener?->isEnabled()) {
+                $directiveList->add(new Directive('Disallow', '/_profiler/'));
+                $directiveList->add(new Directive('Disallow', '/_wdt/'));
+            }
         }
 
         $rootPage = $event->getRootPage();

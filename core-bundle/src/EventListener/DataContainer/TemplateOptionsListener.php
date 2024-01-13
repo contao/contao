@@ -18,6 +18,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Twig\Finder\FinderFactory;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\DataContainer;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -167,7 +168,7 @@ class TemplateOptionsListener
         $result = $this->connection->executeQuery(
             "SELECT type FROM $table WHERE id IN (?) GROUP BY type LIMIT 2",
             [$affectedIds],
-            [Connection::PARAM_INT_ARRAY],
+            [ArrayParameterType::STRING],
         );
 
         if (1 !== $result->rowCount()) {

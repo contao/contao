@@ -235,6 +235,10 @@ class Calendar extends Frontend
 					// Override the global page object (#2946)
 					$GLOBALS['objPage'] = $this->getPageWithDetails(CalendarModel::findByPk($event['pid'])->jumpTo);
 
+					// Override the assets and files context (#6563)
+					$GLOBALS['objPage']->staticFiles = rtrim($GLOBALS['objPage']->staticFiles ?: $strLink, '/');
+					$GLOBALS['objPage']->staticPlugins = rtrim($GLOBALS['objPage']->staticPlugins ?: $strLink, '/');
+
 					// Push a new request to the request stack (#3856)
 					$request = $this->createSubRequest($event['link'], $currentRequest);
 					$request->attributes->set('_scope', 'frontend');

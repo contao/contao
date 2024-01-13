@@ -66,7 +66,7 @@ abstract class Backend extends Controller
 
 		foreach ($arrThemes as $strTheme)
 		{
-			if (strncmp($strTheme, '.', 1) === 0 || !is_dir($projectDir . '/system/themes/' . $strTheme))
+			if (str_starts_with($strTheme, '.') || !is_dir($projectDir . '/system/themes/' . $strTheme))
 			{
 				continue;
 			}
@@ -498,7 +498,7 @@ abstract class Backend extends Controller
 				if ($do == 'files' || $do == 'tpl_editor')
 				{
 					// Handle new folders (see #7980)
-					if (strpos(Input::get('id'), '__new__') !== false)
+					if (str_contains(Input::get('id'), '__new__'))
 					{
 						$this->Template->headline .= ' <span>' . \dirname(Input::get('id')) . '</span> <span>' . $GLOBALS['TL_LANG'][$strTable]['new'][1] . '</span>';
 					}
@@ -958,7 +958,7 @@ abstract class Backend extends Controller
 	{
 		$host = Environment::get('host');
 
-		if (strpos($host, 'xn--') !== false)
+		if (str_contains($host, 'xn--'))
 		{
 			$host = Idna::decode($host);
 		}
@@ -1165,7 +1165,7 @@ abstract class Backend extends Controller
 		// Recursively list all files and folders
 		foreach ($arrPages as $strFile)
 		{
-			if (strncmp($strFile, '.', 1) === 0)
+			if (str_starts_with($strFile, '.'))
 			{
 				continue;
 			}

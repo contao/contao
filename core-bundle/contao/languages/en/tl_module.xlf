@@ -98,6 +98,12 @@
       <trans-unit id="tl_module.jumpTo.1">
         <source>Please choose the page to which visitors will be redirected when clicking a link or submitting a form.</source>
       </trans-unit>
+      <trans-unit id="tl_module.pwResetPage.0">
+        <source>Reset password page</source>
+      </trans-unit>
+      <trans-unit id="tl_module.pwResetPage.1">
+        <source>Here you can choose a page to which visitors will be redirected when clicking the &lt;em&gt;Forgot your password?&lt;/em&gt; link.</source>
+      </trans-unit>
       <trans-unit id="tl_module.overviewPage.0">
         <source>Overview page</source>
       </trans-unit>

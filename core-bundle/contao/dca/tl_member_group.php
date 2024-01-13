@@ -25,6 +25,7 @@ $GLOBALS['TL_DCA']['tl_member_group'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
+				'tstamp' => 'index',
 				'disable,start,stop' => 'index'
 			)
 		)

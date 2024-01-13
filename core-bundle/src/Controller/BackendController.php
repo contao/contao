@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * @internal
@@ -45,6 +45,7 @@ class BackendController extends AbstractController
     }
 
     #[Route('/login', name: 'contao_backend_login')]
+    #[Route('/login-link', name: 'contao_backend_login_link')]
     public function loginAction(Request $request): Response
     {
         $this->initializeContaoFramework();

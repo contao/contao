@@ -8,23 +8,21 @@
         {% block editor_view %}<pre>{{ code }}</pre>{% endblock %}
     {% else %}
         {% block highlighted %}
-            {% block style %}
-                {% add "highlighter_css" to head %}
-                    {% with {file: highlighter_css_file} %}{{ block('stylesheet_component') }}{% endwith %}
-                {% endadd %}
-            {% endblock %}
-
-            {% block code %}
-                {# @var \Contao\CoreBundle\Twig\Runtime\HighlightResult highlighted #}
-                {% set highlighted = code|highlight(language) %}
-                {% set code_attributes = attrs(code_attributes|default)
-                    .addClass('hljs')
-                    .addClass(highlighted.language)
-                %}
-                <pre><code{% block code_attributes %}{{ code_attributes }}{% endblock %}>
-                    {{- highlighted.value|raw -}}
-                </code></pre>
-            {% endblock %}
+            {# @var \Contao\CoreBundle\Twig\Runtime\HighlightResult highlighted #}
+            {% set highlighted = code|highlight(language) %}
+            {% set code_attributes = attrs(code_attributes|default)
+                .addClass('hljs')
+                .addClass(highlighted.language)
+            %}
+            <pre><code{% block code_attributes %}{{ code_attributes }}{% endblock %}>
+                {{- highlighted.value|raw -}}
+            </code></pre>
         {% endblock %}
     {% endif -%}
+{% endblock %}
+
+{% block style %}
+    {% add "highlighter_css" to head %}
+        {% with {file: highlighter_css_file} %}{{ block('stylesheet_component') }}{% endwith %}
+    {% endadd %}
 {% endblock %}

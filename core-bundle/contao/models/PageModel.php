@@ -708,11 +708,11 @@ class PageModel extends Model
 		}
 
 		$t = static::$strTable;
-		$arrColumns = array("$t.dns=? AND $t.fallback=1");
+		$arrColumns = array("$t.type='root' AND $t.dns=? AND $t.fallback=1");
 
 		if (isset($arrOptions['fallbackToEmpty']) && $arrOptions['fallbackToEmpty'] === true)
 		{
-			$arrColumns = array("($t.dns=? OR $t.dns='') AND $t.fallback=1");
+			$arrColumns = array("$t.type='root' AND ($t.dns=? OR $t.dns='') AND $t.fallback=1");
 
 			if (!isset($arrOptions['order']))
 			{
@@ -1177,6 +1177,8 @@ class PageModel extends Model
 	 */
 	public function getPreviewUrl($strParams=null)
 	{
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use "PageModel::getAbsoluteUrl()" and the contao_backend_preview route instead.', __METHOD__);
+
 		$container = System::getContainer();
 
 		if (!$previewScript = $container->getParameter('contao.preview_script'))
