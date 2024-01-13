@@ -13,10 +13,8 @@ namespace Contao;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
-use Contao\CoreBundle\Routing\Content\StringUrl;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Util\UrlUtil;
-use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * Front end module "event reader".

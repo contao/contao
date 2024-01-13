@@ -125,7 +125,7 @@ class CalendarEventsResolverTest extends ContaoTestCase
     {
         yield 'Uses the event alias' => [
             $this->mockClassWithProperties(CalendarEventsModel::class, ['id' => 42, 'alias' => 'foobar']),
-            ['parameters' => '/foobar']
+            ['parameters' => '/foobar'],
         ];
 
         yield 'Uses event ID if alias is empty' => [
