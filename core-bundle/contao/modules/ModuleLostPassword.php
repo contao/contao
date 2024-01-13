@@ -263,8 +263,10 @@ class ModuleLostPassword extends Module
 				// Redirect to the jumpTo page
 				if (($objTarget = $this->objModel->getRelated('reg_jumpTo')) instanceof PageModel)
 				{
+					$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
+
 					/** @var PageModel $objTarget */
-					$this->redirect($objTarget->getFrontendUrl());
+					$this->redirect($urlGenerator->generate($objTarget));
 				}
 
 				// Confirm

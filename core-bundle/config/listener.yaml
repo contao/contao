@@ -478,6 +478,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@contao.routing.page_registry'
+            - '@contao.routing.content_url_generator'
             - '@uri_signer'
             - '%fragment.path%'
         tags:

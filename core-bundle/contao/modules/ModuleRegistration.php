@@ -527,8 +527,9 @@ class ModuleRegistration extends Module
 		// Redirect to the jumpTo page
 		if (($objTarget = $this->objModel->getRelated('reg_jumpTo')) instanceof PageModel)
 		{
-			/** @var PageModel $objTarget */
-			$this->redirect($objTarget->getFrontendUrl());
+			$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
+
+			$this->redirect($urlGenerator->generate($objTarget));
 		}
 
 		// Confirm activation

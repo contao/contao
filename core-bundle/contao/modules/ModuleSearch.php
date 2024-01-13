@@ -88,8 +88,9 @@ class ModuleSearch extends Module
 		// Redirect page
 		if (($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
 		{
-			/** @var PageModel $objTarget */
-			$this->Template->action = $objTarget->getFrontendUrl();
+			$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
+
+			$this->Template->action = $urlGenerator->generate($objTarget);
 		}
 
 		$this->Template->pagination = '';

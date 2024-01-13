@@ -1223,7 +1223,7 @@ abstract class Controller extends System
 	 * @return string The URL of the target page
 	 *
 	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6.0.
-	 *             Use "PageModel::getAbsoluteUrl()" and the contao_backend_preview route instead.
+	 *             Use the contao_backend_preview route instead.
 	 */
 	protected function redirectToFrontendPage($intPage, $strArticle=null, $blnReturn=false)
 	{

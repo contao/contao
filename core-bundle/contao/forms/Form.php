@@ -357,10 +357,11 @@ class Form extends Hybrid
 		$this->Template->ajax = $this->isAjaxEnabled();
 
 		// Get the target URL
-		if ($this->method == 'GET' && ($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
+		if ($this->method == 'GET' && ($objTarget = $this->objModel->getRelated('jumpTo')) && $objTarget instanceof PageModel)
 		{
-			/** @var PageModel $objTarget */
-			$this->Template->action = $objTarget->getFrontendUrl();
+			$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
+
+			$this->Template->action = $urlGenerator->generate($objTarget);
 		}
 	}
 

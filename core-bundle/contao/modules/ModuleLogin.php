@@ -207,7 +207,7 @@ class ModuleLogin extends Module
 
 		if ($pwResetPage instanceof PageModel)
 		{
-			$this->Template->pwResetUrl = $pwResetPage->getFrontendUrl();
+			$this->Template->pwResetUrl = System::getContainer()->get('contao.routing.content_url_generator')->generate($pwResetPage);
 		}
 
 		$this->Template->username = $GLOBALS['TL_LANG']['MSC']['username'];
