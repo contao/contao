@@ -343,6 +343,8 @@ class ContentUrlGeneratorTest extends TestCase
     /**
      * @template T
      *
+     * @param class-string<T> $modelClass
+     *
      * @return object<T>
      *
      * @phpstan-return object<T>
