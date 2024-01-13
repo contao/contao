@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Controller\FrontendModule;
 use Contao\BackendUser;
 use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Controller\FrontendModule\TwoFactorController;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
 use Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager;
@@ -31,6 +32,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -167,9 +169,11 @@ class TwoFactorControllerTest extends TestCase
         $module = $this->mockClassWithProperties(ModuleModel::class);
 
         $page = $this->mockPageModel();
-        $page
+
+        $container
+            ->get('contao.routing.content_url_generator')
             ->expects($this->exactly(2))
-            ->method('getAbsoluteUrl')
+            ->method('generate')
             ->willReturn('https://localhost.wip/foobar')
         ;
 
@@ -202,8 +206,10 @@ class TwoFactorControllerTest extends TestCase
         $module = $this->mockClassWithProperties(ModuleModel::class);
 
         $page = $this->mockPageModel();
-        $page
-            ->method('getAbsoluteUrl')
+
+        $container
+            ->get('contao.routing.content_url_generator')
+            ->method('generate')
             ->willReturn('https://localhost.wip/foobar')
         ;
 
@@ -233,9 +239,12 @@ class TwoFactorControllerTest extends TestCase
         $module = $this->mockClassWithProperties(ModuleModel::class);
 
         $page = $this->mockPageModel();
-        $page
+
+        $container
+            ->get('contao.routing.content_url_generator')
             ->expects($this->exactly(2))
-            ->method('getAbsoluteUrl')
+            ->method('generate')
+            ->with($page, [], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturn('https://localhost.wip/foobar')
         ;
 
@@ -265,9 +274,12 @@ class TwoFactorControllerTest extends TestCase
         $module = $this->mockClassWithProperties(ModuleModel::class);
 
         $page = $this->mockPageModel();
-        $page
+
+        $container
+            ->get('contao.routing.content_url_generator')
             ->expects($this->exactly(2))
-            ->method('getAbsoluteUrl')
+            ->method('generate')
+            ->with($page, [], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturn('https://localhost.wip/foobar')
         ;
 
@@ -302,9 +314,12 @@ class TwoFactorControllerTest extends TestCase
         $module = $this->mockClassWithProperties(ModuleModel::class);
 
         $page = $this->mockPageModel();
-        $page
+
+        $container
+            ->get('contao.routing.content_url_generator')
             ->expects($this->once())
-            ->method('getAbsoluteUrl')
+            ->method('generate')
+            ->with($page, [], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturn('https://localhost.wip/foobar')
         ;
 
@@ -465,6 +480,7 @@ class TwoFactorControllerTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $framework);
+        $container->set('contao.routing.content_url_generator', $this->createMock(ContentUrlGenerator::class));
         $container->set('translator', $this->createMock(TranslatorInterface::class));
         $container->set('contao.security.two_factor.authenticator', $authenticator);
         $container->set('contao.security.two_factor.trusted_device_manager', $this->createMock(TrustedDeviceManager::class));
