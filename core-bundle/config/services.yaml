@@ -856,9 +856,9 @@ services:
             - '@contao.framework'
             - '@contao.security.two_factor.trusted_device_manager'
             - '@security.firewall.map'
+            - '@contao.routing.content_url_generator'
             - '@uri_signer'
             - '@security.token_storage'
-            - '@contao.routing.content_url_generator'
             - '@?logger'
 
     contao.security.backend_access_voter:
