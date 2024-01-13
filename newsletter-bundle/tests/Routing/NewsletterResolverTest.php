@@ -67,7 +67,7 @@ class NewsletterResolverTest extends ContaoTestCase
     {
         yield 'Uses the newsletter alias' => [
             $this->mockClassWithProperties(NewsletterModel::class, ['id' => 42, 'alias' => 'foobar']),
-            ['parameters' => '/foobar']
+            ['parameters' => '/foobar'],
         ];
 
         yield 'Uses newsletter ID if alias is empty' => [
