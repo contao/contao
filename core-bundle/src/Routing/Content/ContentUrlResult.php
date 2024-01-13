@@ -42,6 +42,9 @@ final class ContentUrlResult
         return \is_string($this->content);
     }
 
+    /**
+     * @return string An absolute URL.
+     */
     public function getTargetUrl(): string
     {
         if (!$this->hasTargetUrl()) {

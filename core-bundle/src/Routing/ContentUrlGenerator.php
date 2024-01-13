@@ -176,6 +176,7 @@ class ContentUrlGenerator implements ResetInterface, RequestContextAwareInterfac
             return sprintf('%s.%s', $content::getTable(), $content->{$content::getPk()});
         }
 
+        // If the content is a Doctrine ORM entity, try using its identifier
         try {
             $metadata = $this->entityManager->getClassMetadata($content::class);
         } catch (MappingException) {
