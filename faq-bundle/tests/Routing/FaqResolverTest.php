@@ -67,7 +67,7 @@ class FaqResolverTest extends ContaoTestCase
     {
         yield 'Uses the FAQ alias' => [
             $this->mockClassWithProperties(FaqModel::class, ['id' => 42, 'alias' => 'foobar']),
-            ['parameters' => '/foobar']
+            ['parameters' => '/foobar'],
         ];
 
         yield 'Uses FAQ ID if alias is empty' => [

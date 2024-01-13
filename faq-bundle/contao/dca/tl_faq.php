@@ -16,10 +16,7 @@ use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\DC_Table;
-use Contao\Environment;
 use Contao\FaqCategoryModel;
-use Contao\FaqModel;
-use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 
