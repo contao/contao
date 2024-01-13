@@ -284,7 +284,8 @@ class PreviewUrlConverterListenerTest extends TestCase
                     UrlGeneratorInterface::ABSOLUTE_URL,
                     new MissingMandatoryParametersException('tl_page.42', ['requireItem']),
                 ),
-            )        ;
+            )
+        ;
 
         $uriSigner = $this->createMock(UriSigner::class);
         $uriSigner

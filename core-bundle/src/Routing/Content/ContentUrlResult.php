@@ -43,7 +43,7 @@ final class ContentUrlResult
     }
 
     /**
-     * @return string An absolute URL.
+     * @return string an absolute URL
      */
     public function getTargetUrl(): string
     {
