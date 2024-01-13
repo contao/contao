@@ -341,7 +341,7 @@ class ContentUrlGeneratorTest extends TestCase
     }
 
     /**
-     * @template T
+     * @template T of object
      *
      * @param class-string<T> $modelClass
      *

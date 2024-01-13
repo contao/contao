@@ -58,7 +58,7 @@ class PreviewUrlConvertListener
         if ($request->query->has('article')) {
             $articleAdapter = $this->framework->getAdapter(ArticleModel::class);
 
-            if ($article = $articleAdapter->findByIdOrAliasAndPid($request->query->get('article'), $request->query->get('page'))) {
+            if ($article = $articleAdapter->findByIdOrAliasAndPid($request->query->get('article'), $request->query->getInt('page'))) {
                 try {
                     $event->setUrl($this->urlGenerator->generate($article, [], UrlGeneratorInterface::ABSOLUTE_URL));
 
