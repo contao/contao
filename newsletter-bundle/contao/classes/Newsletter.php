@@ -309,22 +309,22 @@ class Newsletter extends Backend
 <fieldset class="tl_tbox nolegend">
 <div class="w50 widget">
   <h3><label for="ctrl_mpc">' . $GLOBALS['TL_LANG']['tl_newsletter']['mailsPerCycle'][0] . '</label></h3>
-  <input type="text" name="mpc" id="ctrl_mpc" value="10" class="tl_text" onfocus="Backend.getScrollOffset()">' . (($GLOBALS['TL_LANG']['tl_newsletter']['mailsPerCycle'][1] && Config::get('showHelp')) ? '
+  <input type="text" name="mpc" id="ctrl_mpc" value="10" class="tl_text" data-action="focus->contao--scroll-offset#store">' . (($GLOBALS['TL_LANG']['tl_newsletter']['mailsPerCycle'][1] && Config::get('showHelp')) ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_newsletter']['mailsPerCycle'][1] . '</p>' : '') . '
 </div>
 <div class="w50 widget">
   <h3><label for="ctrl_timeout">' . $GLOBALS['TL_LANG']['tl_newsletter']['timeout'][0] . '</label></h3>
-  <input type="text" name="timeout" id="ctrl_timeout" value="1" class="tl_text" onfocus="Backend.getScrollOffset()">' . (($GLOBALS['TL_LANG']['tl_newsletter']['timeout'][1] && Config::get('showHelp')) ? '
+  <input type="text" name="timeout" id="ctrl_timeout" value="1" class="tl_text" data-action="focus->contao--scroll-offset#store">' . (($GLOBALS['TL_LANG']['tl_newsletter']['timeout'][1] && Config::get('showHelp')) ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_newsletter']['timeout'][1] . '</p>' : '') . '
 </div>
 <div class="w50 widget">
   <h3><label for="ctrl_start">' . $GLOBALS['TL_LANG']['tl_newsletter']['start'][0] . '</label></h3>
-  <input type="text" name="start" id="ctrl_start" value="0" class="tl_text" onfocus="Backend.getScrollOffset()">' . (($GLOBALS['TL_LANG']['tl_newsletter']['start'][1] && Config::get('showHelp')) ? '
+  <input type="text" name="start" id="ctrl_start" value="0" class="tl_text" data-action="focus->contao--scroll-offset#store">' . (($GLOBALS['TL_LANG']['tl_newsletter']['start'][1] && Config::get('showHelp')) ? '
   <p class="tl_help tl_tip">' . sprintf($GLOBALS['TL_LANG']['tl_newsletter']['start'][1], $objNewsletter->id) . '</p>' : '') . '
 </div>
 <div class="w50 widget">
   <h3><label for="ctrl_recipient">' . $GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][0] . '</label></h3>
-  <input type="text" name="recipient" id="ctrl_recipient" value="' . Idna::decodeEmail(BackendUser::getInstance()->email) . '" class="tl_text" onfocus="Backend.getScrollOffset()">' . ($objSession->has('tl_preview_mail_error') ? '
+  <input type="text" name="recipient" id="ctrl_recipient" value="' . Idna::decodeEmail(BackendUser::getInstance()->email) . '" class="tl_text" data-action="focus->contao--scroll-offset#store">' . ($objSession->has('tl_preview_mail_error') ? '
   <div class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['email'] . '</div>' : (($GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][1] && Config::get('showHelp')) ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][1] . '</p>' : '')) . '
 </div>
@@ -616,7 +616,7 @@ class Newsletter extends Backend
 <fieldset class="tl_tbox nolegend">
   <div class="widget w50">
     <h3><label for="separator">' . $GLOBALS['TL_LANG']['MSC']['separator'][0] . '</label></h3>
-    <select name="separator" id="separator" class="tl_select" onfocus="Backend.getScrollOffset()">
+    <select name="separator" id="separator" class="tl_select" data-action="focus->contao--scroll-offset#store">
       <option value="comma">' . $GLOBALS['TL_LANG']['MSC']['comma'] . '</option>
       <option value="semicolon">' . $GLOBALS['TL_LANG']['MSC']['semicolon'] . '</option>
       <option value="tabulator">' . $GLOBALS['TL_LANG']['MSC']['tabulator'] . '</option>

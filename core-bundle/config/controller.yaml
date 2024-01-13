@@ -72,6 +72,8 @@ services:
 
     Contao\CoreBundle\Controller\ContentElement\CodeController: ~
 
+    Contao\CoreBundle\Controller\ContentElement\DescriptionListController: ~
+
     Contao\CoreBundle\Controller\ContentElement\DownloadsController:
         arguments:
             - '@security.helper'
@@ -177,6 +179,10 @@ services:
     Contao\CoreBundle\Controller\Page\ErrorPageController:
         arguments:
             - '@contao.framework'
+
+    Contao\CoreBundle\Controller\Page\RedirectPageController:
+        arguments:
+            - '@contao.insert_tag.parser'
 
     Contao\CoreBundle\Controller\Page\RootPageController:
         arguments:

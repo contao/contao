@@ -27,6 +27,7 @@ use Contao\Model\MetadataTrait;
  * @property string         $pageTitle
  * @property string         $robots
  * @property string|null    $description
+ * @property string         $canonicalLink
  * @property string         $subheadline
  * @property string|null    $teaser
  * @property boolean        $addImage
@@ -67,6 +68,7 @@ use Contao\Model\MetadataTrait;
  * @method static NewsModel|null findOneByTime($val, array $opt=array())
  * @method static NewsModel|null findOneByPageTitle($val, array $opt=array())
  * @method static NewsModel|null findOneByDescription($val, array $opt=array())
+ * @method static NewsModel|null findOneByCanonicalLink($val, array $opt=array())
  * @method static NewsModel|null findOneByRobots($val, array $opt=array())
  * @method static NewsModel|null findOneBySubheadline($val, array $opt=array())
  * @method static NewsModel|null findOneByTeaser($val, array $opt=array())
@@ -102,6 +104,7 @@ use Contao\Model\MetadataTrait;
  * @method static Collection<NewsModel>|NewsModel[]|null findByTime($val, array $opt=array())
  * @method static Collection<NewsModel>|NewsModel[]|null findByPageTitle($val, array $opt=array())
  * @method static Collection<NewsModel>|NewsModel[]|null findByDescription($val, array $opt=array())
+ * @method static Collection<NewsModel>|NewsModel[]|null findByCanonicalLink($val, array $opt=array())
  * @method static Collection<NewsModel>|NewsModel[]|null findByRobots($val, array $opt=array())
  * @method static Collection<NewsModel>|NewsModel[]|null findBySubheadline($val, array $opt=array())
  * @method static Collection<NewsModel>|NewsModel[]|null findByTeaser($val, array $opt=array())
@@ -142,6 +145,7 @@ use Contao\Model\MetadataTrait;
  * @method static integer countByTime($val, array $opt=array())
  * @method static integer countByPageTitle($val, array $opt=array())
  * @method static integer countByDescription($val, array $opt=array())
+ * @method static integer countByCanonicalLink($val, array $opt=array())
  * @method static integer countByRobots($val, array $opt=array())
  * @method static integer countBySubheadline($val, array $opt=array())
  * @method static integer countByTeaser($val, array $opt=array())

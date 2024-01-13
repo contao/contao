@@ -37,7 +37,7 @@ class RootPageDependentSelect extends SelectMenu
 			$this->strLabel = $rootPage->title;
 
 			$fields[] = sprintf(
-				'<select name="%s[]" id="ctrl_%s" class="%s%s"%s onfocus="Backend.getScrollOffset()">%s</select>%s',
+				'<select name="%s[]" id="ctrl_%s" class="%s%s"%s data-action="focus->contao--scroll-offset#store">%s</select>%s',
 				$this->strName,
 				sprintf('%s-%s', $this->strId, $rootPage->id),
 				$cssClasses,

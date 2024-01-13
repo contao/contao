@@ -82,7 +82,6 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 			(
 				'href'                => 'table=tl_calendar_feed',
 				'class'               => 'header_rss',
-				'attributes'          => 'onclick="Backend.getScrollOffset()"',
 				'button_callback'     => array('tl_calendar', 'manageFeeds')
 			),
 			'all'

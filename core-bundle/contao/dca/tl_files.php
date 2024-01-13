@@ -97,21 +97,21 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			(
 				'href'                => 'act=paste&amp;mode=copy',
 				'icon'                => 'copy.svg',
-				'attributes'          => 'onclick="Backend.getScrollOffset()"',
+				'attributes'          => 'data-action="contao--scroll-offset#store"',
 				'button_callback'     => array('tl_files', 'copyFile')
 			),
 			'cut' => array
 			(
 				'href'                => 'act=paste&amp;mode=cut',
 				'icon'                => 'cut.svg',
-				'attributes'          => 'onclick="Backend.getScrollOffset()"',
+				'attributes'          => 'data-action="contao--scroll-offset#store"',
 				'button_callback'     => array('tl_files', 'cutFile')
 			),
 			'delete' => array
 			(
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirmFile'] ?? null) . '\'))return false;Backend.getScrollOffset()"',
+				'attributes'          => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirmFile'] ?? null) . '\'))return false',
 				'button_callback'     => array('tl_files', 'deleteFile')
 			),
 			'show' => array
@@ -902,7 +902,7 @@ class tl_files extends Backend
 		return '
 <div class="' . $class . '">
   <div id="ctrl_' . $dc->field . '" class="tl_checkbox_single_container">
-    <input type="hidden" name="' . $dc->inputName . '" value=""><input type="checkbox" name="' . $dc->inputName . '" id="opt_' . $dc->inputName . '_0" class="tl_checkbox" value="1"' . (($blnUnprotected || basename($strPath) == '__new__') ? ' checked="checked"' : '') . ' onfocus="Backend.getScrollOffset()"' . ($blnDisable ? ' disabled' : '') . '> <label for="opt_' . $dc->inputName . '_0">' . $GLOBALS['TL_LANG']['tl_files']['protected'][0] . '</label>
+    <input type="hidden" name="' . $dc->inputName . '" value=""><input type="checkbox" name="' . $dc->inputName . '" id="opt_' . $dc->inputName . '_0" class="tl_checkbox" value="1"' . (($blnUnprotected || basename($strPath) == '__new__') ? ' checked="checked"' : '') . ' data-action="focus->contao--scroll-offset#store"' . ($blnDisable ? ' disabled' : '') . '> <label for="opt_' . $dc->inputName . '_0">' . $GLOBALS['TL_LANG']['tl_files']['protected'][0] . '</label>
   </div>' . (Config::get('showHelp') ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_files']['protected'][1] . '</p>' : '') . '
 </div>';
@@ -981,7 +981,7 @@ class tl_files extends Backend
 		return '
 <div class="' . $class . '">
   <div id="ctrl_' . $dc->field . '" class="tl_checkbox_single_container">
-    <input type="hidden" name="' . $dc->inputName . '" value=""><input type="checkbox" name="' . $dc->inputName . '" id="opt_' . $dc->inputName . '_0" class="tl_checkbox" value="1"' . ($blnUnsynchronized ? ' checked="checked"' : '') . ' onfocus="Backend.getScrollOffset()"' . ($blnDisable ? ' disabled' : '') . '> <label for="opt_' . $dc->inputName . '_0">' . $GLOBALS['TL_LANG']['tl_files']['syncExclude'][0] . '</label>
+    <input type="hidden" name="' . $dc->inputName . '" value=""><input type="checkbox" name="' . $dc->inputName . '" id="opt_' . $dc->inputName . '_0" class="tl_checkbox" value="1"' . ($blnUnsynchronized ? ' checked="checked"' : '') . ' data-action="focus->contao--scroll-offset#store"' . ($blnDisable ? ' disabled' : '') . '> <label for="opt_' . $dc->inputName . '_0">' . $GLOBALS['TL_LANG']['tl_files']['syncExclude'][0] . '</label>
   </div>' . (Config::get('showHelp') ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_files']['syncExclude'][1] . '</p>' : '') . '
 </div>';

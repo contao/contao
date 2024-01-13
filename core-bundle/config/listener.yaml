@@ -100,6 +100,14 @@ services:
             - '@security.helper'
             - '@database_connection'
 
+    contao.listener.data_container.description_list_label:
+        class: Contao\CoreBundle\EventListener\DataContainer\DescriptionListLabelListener
+        public: true
+        arguments:
+            - '@translator'
+        tags:
+            - { name: contao.callback, table: tl_content, target: fields.data.attributes }
+
     contao.listener.data_container.disable_app_configured_settings:
         class: Contao\CoreBundle\EventListener\DataContainer\DisableAppConfiguredSettingsListener
         arguments:

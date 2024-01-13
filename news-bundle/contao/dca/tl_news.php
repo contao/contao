@@ -97,7 +97,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('source', 'addImage', 'addEnclosure', 'overwriteMeta'),
-		'default'                     => '{title_legend},headline,featured,alias,author;{date_legend},date,time;{source_legend},source,linkText;{meta_legend},pageTitle,robots,description,serpPreview;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass;{publish_legend},published,start,stop',
+		'default'                     => '{title_legend},headline,featured,alias,author;{date_legend},date,time;{source_legend},source,linkText,canonicalLink;{meta_legend},pageTitle,robots,description,serpPreview;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass;{publish_legend},published,start,stop',
 		'internal'                    => '{title_legend},headline,featured,alias,author;{date_legend},date,time;{source_legend},source,jumpTo,linkText;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass;{publish_legend},published,start,stop',
 		'article'                     => '{title_legend},headline,featured,alias,author;{date_legend},date,time;{source_legend},source,articleId,linkText;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass;{publish_legend},published,start,stop',
 		'external'                    => '{title_legend},headline,featured,alias,author;{date_legend},date,time;{source_legend},source,url,target,linkText;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass;{publish_legend},published,start,stop'
@@ -221,6 +221,13 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'inputType'               => 'serpPreview',
 			'eval'                    => array('url_callback'=>array('tl_news', 'getSerpUrl'), 'title_tag_callback'=>array('tl_news', 'getTitleTag'), 'titleFields'=>array('pageTitle', 'headline'), 'descriptionFields'=>array('description', 'teaser')),
 			'sql'                     => null
+		),
+		'canonicalLink' => array
+		(
+			'search'                  => true,
+			'inputType'               => 'text',
+			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(2048) NOT NULL default ''"
 		),
 		'subheadline' => array
 		(
