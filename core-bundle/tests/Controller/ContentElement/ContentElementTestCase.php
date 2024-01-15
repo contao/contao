@@ -458,6 +458,7 @@ class ContentElementTestCase extends TestCase
                         ['key' => '*', 'value' => 'data-*,id,class'],
                         ['key' => 'a', 'value' => 'href,rel,target'],
                     ]),
+                    'allowedDownload' => 'jpg,txt',
                 ][$key] ?? null,
             )
         ;
