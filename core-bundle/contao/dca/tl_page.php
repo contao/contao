@@ -644,12 +644,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 	)
 );
 
-// Disable the articles link in the modal window
-if (Input::get('popup'))
-{
-	unset($GLOBALS['TL_DCA']['tl_page']['list']['operations']['articles']);
-}
-
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
