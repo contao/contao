@@ -15,13 +15,14 @@ namespace Contao\CoreBundle\Routing\Content;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Util\UrlUtil;
 use Contao\PageModel;
+use Symfony\Component\HttpFoundation\UrlHelper;
 use Symfony\Component\Routing\RequestContext;
 
 class StringResolver implements ContentUrlResolverInterface
 {
     public function __construct(
         private readonly InsertTagParser $insertTagParser,
-        private readonly RequestContext $requestContext,
+        private readonly UrlHelper $urlHelper,
     ) {
     }
 
@@ -32,7 +33,7 @@ class StringResolver implements ContentUrlResolverInterface
         }
 
         $url = $this->insertTagParser->replaceInline($content->value);
-        $url = UrlUtil::makeAbsolute($url, $this->requestContext->getBaseUrl());
+        $url = $this->urlHelper->getAbsoluteUrl($url);
 
         return new ContentUrlResult($url);
     }

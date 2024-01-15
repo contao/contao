@@ -659,7 +659,7 @@ services:
         class: Contao\CoreBundle\Routing\Content\StringResolver
         arguments:
             - '@contao.insert_tag.parser'
-            - '@router.request_context'
+            - '@url_helper'
 
     contao.routing.content_url_generator:
         class: Contao\CoreBundle\Routing\ContentUrlGenerator
