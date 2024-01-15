@@ -13,10 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing\Content;
 
 use Contao\CoreBundle\InsertTag\InsertTagParser;
-use Contao\CoreBundle\Util\UrlUtil;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\UrlHelper;
-use Symfony\Component\Routing\RequestContext;
 
 class StringResolver implements ContentUrlResolverInterface
 {

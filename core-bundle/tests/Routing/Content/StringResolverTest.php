@@ -17,7 +17,9 @@ use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\Content\StringResolver;
 use Contao\CoreBundle\Routing\Content\StringUrl;
 use Contao\CoreBundle\Tests\TestCase;
-use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\UrlHelper;
 
 class StringResolverTest extends TestCase
 {
@@ -29,15 +31,10 @@ class StringResolverTest extends TestCase
             ->method($this->anything())
         ;
 
-        $requestContext = $this->createMock(RequestContext::class);
-        $requestContext
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
+        $urlHelper = new UrlHelper(new RequestStack());
         $content = $this->mockClassWithProperties(ArticleModel::class);
 
-        $resolver = new StringResolver($insertTagParser, $requestContext);
+        $resolver = new StringResolver($insertTagParser, $urlHelper);
         $result = $resolver->resolve($content);
 
         $this->assertTrue($result->isAbstained());
@@ -56,14 +53,12 @@ class StringResolverTest extends TestCase
             ->willReturn($insertTagResult)
         ;
 
-        $requestContext = $this->createMock(RequestContext::class);
-        $requestContext
-            ->expects($this->once())
-            ->method('getBaseUrl')
-            ->willReturn($baseUrl)
-        ;
+        $requestStack = new RequestStack();
+        $requestStack->push(Request::create($baseUrl));
 
-        $resolver = new StringResolver($insertTagParser, $requestContext);
+        $urlHelper = new UrlHelper($requestStack);
+
+        $resolver = new StringResolver($insertTagParser, $urlHelper);
         $result = $resolver->resolve($content);
 
         $this->assertTrue($result->hasTargetUrl());
