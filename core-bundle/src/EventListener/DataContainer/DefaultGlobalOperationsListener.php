@@ -103,7 +103,7 @@ class DefaultGlobalOperationsListener
                 'all' => [
                     'href' => 'act=select',
                     'class' => 'header_edit_all',
-                    'attributes' => 'onclick="Backend.getScrollOffset()" accesskey="e"',
+                    'attributes' => 'accesskey="e"',
                 ],
             ];
         }

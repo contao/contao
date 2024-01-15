@@ -29,7 +29,6 @@ return static function (RectorConfig $rectorConfig): void {
     ]);
 
     $rectorConfig->skip([
-        '*-bundle/contao/*',
         ClassPropertyAssignToConstructorPromotionRector::class => [
             '*/src/Entity/*',
         ],
@@ -41,7 +40,6 @@ return static function (RectorConfig $rectorConfig): void {
         NullToStrictStringFuncCallArgRector::class,
         SimplifyIfReturnBoolRector::class => [
             'core-bundle/src/EventListener/CommandSchedulerListener.php',
-            'core-bundle/src/HttpKernel/ModelArgumentResolver.php',
         ],
     ]);
 

@@ -74,14 +74,14 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 				'label'               => &$GLOBALS['TL_LANG']['tl_files']['copy'],
 				'href'                => 'act=paste&amp;mode=copy',
 				'icon'                => 'copy.svg',
-				'attributes'          => 'onclick="Backend.getScrollOffset()"'
+				'attributes'          => 'data-action="contao--scroll-offset#store"',
 			),
 			'cut' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_files']['cut'],
 				'href'                => 'act=paste&amp;mode=cut',
 				'icon'                => 'cut.svg',
-				'attributes'          => 'onclick="Backend.getScrollOffset()"'
+				'attributes'          => 'data-action="contao--scroll-offset#store"',
 			),
 			'delete',
 			'source' => array
@@ -408,7 +408,7 @@ class tl_templates extends Backend
 </div>' : '') . '
 
 <div id="tl_buttons">
-<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
+<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" data-action="contao--scroll-offset#store">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>
 
 <form id="tl_create_template" class="tl_form tl_edit_form" method="post">
@@ -418,12 +418,12 @@ class tl_templates extends Backend
 <div class="tl_tbox cf">
 <div class="w50 widget">
   <h3><label for="ctrl_original">' . $GLOBALS['TL_LANG']['tl_templates']['original'][0] . '</label></h3>
-  <select name="original" id="ctrl_original" class="tl_select tl_chosen" onfocus="Backend.getScrollOffset()">' . $strAllTemplates . '</select>' . (($GLOBALS['TL_LANG']['tl_templates']['original'][1] && Config::get('showHelp')) ? '
+  <select name="original" id="ctrl_original" class="tl_select tl_chosen" data-action="focus->contao--scroll-offset#store">' . $strAllTemplates . '</select>' . (($GLOBALS['TL_LANG']['tl_templates']['original'][1] && Config::get('showHelp')) ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_templates']['original'][1] . '</p>' : '') . '
 </div>
 <div class="w50 widget">
   <h3><label for="ctrl_target">' . $GLOBALS['TL_LANG']['tl_templates']['target'][0] . '</label></h3>
-  <select name="target" id="ctrl_target" class="tl_select" onfocus="Backend.getScrollOffset()"><option value="templates">templates</option>' . $this->getTargetFolders('templates') . '</select>' . (($GLOBALS['TL_LANG']['tl_templates']['target'][1] && Config::get('showHelp')) ? '
+  <select name="target" id="ctrl_target" class="tl_select" data-action="focus->contao--scroll-offset#store"><option value="templates">templates</option>' . $this->getTargetFolders('templates') . '</select>' . (($GLOBALS['TL_LANG']['tl_templates']['target'][1] && Config::get('showHelp')) ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_templates']['target'][1] . '</p>' : '') . '
 </div>
 </div>
