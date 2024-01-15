@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * Front end module "news archive".
@@ -74,8 +75,15 @@ class ModuleNewsMenu extends ModuleNews
 
 		if (($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
 		{
-			/** @var PageModel $objTarget */
-			$this->strUrl = $objTarget->getFrontendUrl();
+			try
+			{
+				$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
+
+				$this->strUrl = $urlGenerator->generate($objTarget);
+			}
+			catch (ExceptionInterface)
+			{
+			}
 		}
 
 		return parent::generate();
