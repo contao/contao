@@ -39,8 +39,6 @@ class ArticleResolver implements ContentUrlResolverInterface
             return [];
         }
 
-        return [
-            'parameters' => '/articles/'.($content->alias ?: $content->id),
-        ];
+        return ['parameters' => '/articles/'.($content->alias ?: $content->id)];
     }
 }

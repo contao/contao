@@ -186,10 +186,7 @@ class SitemapControllerTest extends TestCase
             ->expects($this->exactly(2))
             ->method('generate')
             ->withConsecutive([$page1, [], UrlGeneratorInterface::ABSOLUTE_URL], [$page2, [], UrlGeneratorInterface::ABSOLUTE_URL])
-            ->willReturnOnConsecutiveCalls(
-                'https://www.foobar.com/en/page1.html',
-                'https://www.foobar.com/en/page2.html',
-            )
+            ->willReturnOnConsecutiveCalls('https://www.foobar.com/en/page1.html', 'https://www.foobar.com/en/page2.html')
         ;
 
         $controller = new SitemapController($registry, $this->mockPageFinder($request), $urlGenerator);
@@ -603,10 +600,7 @@ class SitemapControllerTest extends TestCase
             ->expects($this->exactly(2))
             ->method('generate')
             ->withConsecutive([$page1, [], UrlGeneratorInterface::ABSOLUTE_URL], [$page3, [], UrlGeneratorInterface::ABSOLUTE_URL])
-            ->willReturnOnConsecutiveCalls(
-                'https://www.foobar.com/en/page1.html',
-                'https://www.foobar.com/en/page3.html',
-            )
+            ->willReturnOnConsecutiveCalls('https://www.foobar.com/en/page1.html', 'https://www.foobar.com/en/page3.html')
         ;
 
         $controller = new SitemapController($registry, $this->mockPageFinder($request), $urlGenerator);

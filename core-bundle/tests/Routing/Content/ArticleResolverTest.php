@@ -52,8 +52,6 @@ class ArticleResolverTest extends TestCase
 
     public function testThrowsExceptionIfPageOfArticleIsNotFound(): void
     {
-        $this->expectException(ForwardPageNotFoundException::class);
-
         $content = $this->mockClassWithProperties(ArticleModel::class, ['pid' => 42]);
 
         $pageAdapter = $this->mockAdapter(['findWithDetails']);
@@ -65,6 +63,9 @@ class ArticleResolverTest extends TestCase
         ;
 
         $resolver = new ArticleResolver($this->mockContaoFramework([PageModel::class => $pageAdapter]));
+
+        $this->expectException(ForwardPageNotFoundException::class);
+
         $resolver->resolve($content);
     }
 }

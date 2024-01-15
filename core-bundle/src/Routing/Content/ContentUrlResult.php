@@ -23,7 +23,7 @@ final class ContentUrlResult
     public function __construct(public readonly object|string|null $content)
     {
         if (\is_string($content) && !(new Uri($content))->getScheme()) {
-            throw new \InvalidArgumentException('ContentUrlResult must not be an relative URL.');
+            throw new \InvalidArgumentException('The content must not be a relative URL.');
         }
     }
 
@@ -48,7 +48,7 @@ final class ContentUrlResult
     public function getTargetUrl(): string
     {
         if (!$this->hasTargetUrl()) {
-            throw new \BadMethodCallException('ContentUrlResult does not have a target URL.');
+            throw new \BadMethodCallException('The content does not have a target URL.');
         }
 
         return $this->content;
@@ -96,8 +96,10 @@ final class ContentUrlResult
     }
 
     /**
-     * Returns a page model as the target page. The ContentUrlGenerator will then generate the URL for this target
-     * page with parameters for the content.
+     * Returns a page model as the target page.
+     *
+     * The ContentUrlGenerator will then generate the URL for this target page
+     * with parameters for the content.
      */
     public static function resolve(PageModel|null $content): self
     {

@@ -355,12 +355,10 @@ class ContentUrlGeneratorTest extends TestCase
         $model = $ref->newInstanceWithoutConstructor();
 
         $prop = $ref->getProperty('arrData');
-        $prop->setAccessible(true);
         $prop->setValue($model, $data);
 
         if (PageModel::class === $modelClass) {
             $prop = $ref->getProperty('blnDetailsLoaded');
-            $prop->setAccessible(true);
             $prop->setValue($model, true);
         }
 

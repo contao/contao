@@ -167,7 +167,6 @@ class TwoFactorControllerTest extends TestCase
         $request->request->set('FORM_SUBMIT', 'tl_two_factor_disable');
 
         $module = $this->mockClassWithProperties(ModuleModel::class);
-
         $page = $this->mockPageModel();
 
         $container
@@ -204,7 +203,6 @@ class TwoFactorControllerTest extends TestCase
         $request->request->set('2fa', 'enable');
 
         $module = $this->mockClassWithProperties(ModuleModel::class);
-
         $page = $this->mockPageModel();
 
         $container
@@ -237,7 +235,6 @@ class TwoFactorControllerTest extends TestCase
         $request->request->set('2fa', 'enable');
 
         $module = $this->mockClassWithProperties(ModuleModel::class);
-
         $page = $this->mockPageModel();
 
         $container
@@ -272,7 +269,6 @@ class TwoFactorControllerTest extends TestCase
         $request->request->set('verify', '123456');
 
         $module = $this->mockClassWithProperties(ModuleModel::class);
-
         $page = $this->mockPageModel();
 
         $container
@@ -312,7 +308,6 @@ class TwoFactorControllerTest extends TestCase
         $request->request->set('verify', '123456');
 
         $module = $this->mockClassWithProperties(ModuleModel::class);
-
         $page = $this->mockPageModel();
 
         $container

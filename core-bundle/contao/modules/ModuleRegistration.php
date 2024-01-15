@@ -524,12 +524,12 @@ class ModuleRegistration extends Module
 
 		System::getContainer()->get('monolog.logger.contao.access')->info('User account ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ') has been activated');
 
-		// Redirect to the jumpTo page
-		if (($objTarget = $this->objModel->getRelated('reg_jumpTo')) instanceof PageModel)
-		{
-			$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
+		$objTarget = $this->objModel->getRelated('reg_jumpTo');
 
-			$this->redirect($urlGenerator->generate($objTarget));
+		// Redirect to the jumpTo page
+		if ($objTarget instanceof PageModel)
+		{
+			$this->redirect(System::getContainer()->get('contao.routing.content_url_generator')->generate($objTarget));
 		}
 
 		// Confirm activation

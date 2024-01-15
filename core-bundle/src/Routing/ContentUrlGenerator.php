@@ -34,13 +34,13 @@ class ContentUrlGenerator implements ResetInterface, RequestContextAwareInterfac
      */
     private array $urlCache = [];
 
+    /**
+     * @param iterable<ContentUrlResolverInterface> $urlResolvers
+     */
     public function __construct(
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly PageRegistry $pageRegistry,
         private readonly EntityManagerInterface $entityManager,
-        /**
-         * @var iterable<ContentUrlResolverInterface> $urlResolvers
-         */
         private readonly iterable $urlResolvers,
     ) {
     }
@@ -141,7 +141,7 @@ class ContentUrlGenerator implements ResetInterface, RequestContextAwareInterfac
     }
 
     /**
-     * @throws ExceptionInterface
+     * @throws RouteNotFoundException
      */
     private function resolveContent(object ...$contents): array
     {
@@ -196,7 +196,7 @@ class ContentUrlGenerator implements ResetInterface, RequestContextAwareInterfac
     }
 
     /**
-     * @throws ExceptionInterface
+     * @throws RouteNotFoundException
      */
     private function throwRouteNotFoundException(object $content): never
     {

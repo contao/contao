@@ -1082,14 +1082,15 @@ class PageModel extends Model
 	 * @throws ResourceNotFoundException
 	 *
 	 * @return string A URL that can be used in the front end
+	 *
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 *             use the content URL generator instead.
 	 */
 	public function getFrontendUrl($strParams=null)
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', __METHOD__ . ' is deprecated, use the content URL generator instead.');
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the content URL generator instead.', __METHOD__);
 
 		$this->loadDetails();
-
-		$objRouter = System::getContainer()->get('contao.routing.content_url_generator');
 
 		if (\is_array($strParams))
 		{
@@ -1099,6 +1100,8 @@ class PageModel extends Model
 		{
 			$parameters = array('parameters' => $strParams);
 		}
+
+		$objRouter = System::getContainer()->get('contao.routing.content_url_generator');
 
 		try
 		{
@@ -1128,14 +1131,15 @@ class PageModel extends Model
 	 * @throws ResourceNotFoundException
 	 *
 	 * @return string An absolute URL that can be used in the front end
+	 *
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 *             use the content URL generator instead.
 	 */
 	public function getAbsoluteUrl($strParams=null)
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', __METHOD__ . ' is deprecated, use the content URL generator instead.');
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the content URL generator instead.', __METHOD__);
 
 		$this->loadDetails();
-
-		$objRouter = System::getContainer()->get('contao.routing.content_url_generator');
 
 		if (\is_array($strParams))
 		{
@@ -1145,6 +1149,8 @@ class PageModel extends Model
 		{
 			$parameters = array('parameters' => $strParams);
 		}
+
+		$objRouter = System::getContainer()->get('contao.routing.content_url_generator');
 
 		try
 		{
@@ -1174,6 +1180,9 @@ class PageModel extends Model
 	 * @throws ResourceNotFoundException
 	 *
 	 * @return string The front end preview URL
+	 *
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 *             use the content URL generator instead
 	 */
 	public function getPreviewUrl($strParams=null)
 	{

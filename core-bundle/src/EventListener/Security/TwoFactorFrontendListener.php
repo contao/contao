@@ -83,8 +83,7 @@ class TwoFactorFrontendListener
 
             // Redirect to two-factor page
             if ($page->id !== $twoFactorPage->id) {
-                $url = $this->urlGenerator->generate($twoFactorPage, [], UrlGeneratorInterface::ABSOLUTE_URL);
-                $event->setResponse(new RedirectResponse($url));
+                $event->setResponse(new RedirectResponse($this->urlGenerator->generate($twoFactorPage, [], UrlGeneratorInterface::ABSOLUTE_URL)));
             }
 
             return;

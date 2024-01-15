@@ -42,7 +42,6 @@ class RootPageControllerTest extends TestCase
     public function testRedirectsToTheFirstChildPage(): void
     {
         $rootPage = $this->mockClassWithProperties(PageModel::class, ['id' => 42]);
-
         $childPage = $this->mockClassWithProperties(PageModel::class);
 
         $adapter = $this->mockAdapter(['findFirstPublishedByPid']);
