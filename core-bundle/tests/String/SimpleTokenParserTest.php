@@ -163,6 +163,12 @@ class SimpleTokenParserTest extends TestCase
             'match',
         ];
 
+        yield 'Test prefixed with # works' => [
+            'This is my order ###order_number##',
+            ['order_number' => 42],
+            'This is my order #42',
+        ];
+
         yield 'Test else (match)' => [
             'This is my {if value=="foo"}match{else}else-match{endif}',
             ['value' => 'foo'],
