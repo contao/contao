@@ -35,7 +35,7 @@ class CspReportListener
             __METHOD__,
             ContaoContext::ERROR,
             browser: $report->getUserAgent(),
-            uri: $report->getSourceFile(),
+            uri: $report->getData()['document-uri'] ?? '',
         );
 
         $msg = sprintf('Content-Security-Policy violation reported for "%s"', $report->getDirective());
