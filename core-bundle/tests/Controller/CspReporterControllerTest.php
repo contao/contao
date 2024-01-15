@@ -77,8 +77,14 @@ class CspReporterControllerTest extends TestCase
             ->willReturn($page)
         ;
 
-        $logger = $this->createMock(LoggerInterface::class);
         $logFormatter = $this->createMock(LogFormatterInterface::class);
+        $logFormatter
+            ->expects($this->once())
+            ->method('format')
+            ->willReturn('')
+        ;
+
+        $logger = $this->createMock(LoggerInterface::class);
         $nelmioLogger = new Logger($logger, $logFormatter, 'notice');
 
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);

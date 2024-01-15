@@ -24,7 +24,7 @@ class CspReportListenerTest extends TestCase
     public function testLogsCspReportWithContaoContext(): void
     {
         $uri = 'https://example.com/foobar';
-        $line = 1337;
+        $line = '1337';
         $directive = 'script-src-elem';
         $expectedMessage = sprintf('Content-Security-Policy violation reported for "%s" on line %d', $directive, $line);
 
@@ -44,7 +44,6 @@ class CspReportListenerTest extends TestCase
             )
         ;
 
-        // @phpstan-ignore-next-line
         $report = new Report([
             'source-file' => $uri,
             'line-number' => $line,
