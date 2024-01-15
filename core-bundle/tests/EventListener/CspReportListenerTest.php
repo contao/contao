@@ -45,7 +45,7 @@ class CspReportListenerTest extends TestCase
         ;
 
         $report = new Report([
-            'source-file' => $uri,
+            'document-uri' => $uri,
             'line-number' => $line,
             'effective-directive' => $directive,
         ]);
