@@ -79,6 +79,7 @@ class DefaultGlobalOperationsListener
 
         $canEdit = !($GLOBALS['TL_DCA'][$table]['config']['notEditable'] ?? false);
         $canCopy = !($GLOBALS['TL_DCA'][$table]['config']['closed'] ?? false) && !($GLOBALS['TL_DCA'][$table]['config']['notCopyable'] ?? false);
+        $canDelete = !($GLOBALS['TL_DCA'][$table]['config']['notDeletable'] ?? false);
 
         if ($isDcFolder || $isTreeMode || $isExtendedTreeMode) {
             $operations += [
@@ -98,7 +99,7 @@ class DefaultGlobalOperationsListener
             ];
         }
 
-        if ($canEdit || $canCopy) {
+        if ($canEdit || $canCopy || $canDelete) {
             $operations += [
                 'all' => [
                     'href' => 'act=select',
