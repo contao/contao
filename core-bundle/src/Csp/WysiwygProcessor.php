@@ -10,7 +10,7 @@ use Masterminds\HTML5;
 
 class WysiwygProcessor
 {
-    private RandomClassGeneratorInterface $randomClassGenerator;
+    private readonly RandomClassGeneratorInterface $randomClassGenerator;
 
     public function __construct(RandomClassGeneratorInterface|null $randomClassGenerator = null)
     {
@@ -38,6 +38,7 @@ class WysiwygProcessor
     {
         $styleElement = $fragment->ownerDocument->createElement('style');
         $styleElement->setAttribute('nonce', $nonce);
+
         $styleCodes = [];
 
         foreach ($styles as $style => $className) {
