@@ -19,6 +19,8 @@ use Spatie\SchemaOrg\Graph;
 
 /**
  * Provides template methods.
+ *
+ * @internal
  */
 trait TemplateTrait
 {
