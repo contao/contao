@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\Routing;
 
 use Contao\ArticleModel;
 use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
-use Contao\CoreBundle\Routing\Content\ContentUrlResult;
+use Contao\CoreBundle\Routing\Content\ResolverDecision;
 use Contao\CoreBundle\Routing\Content\StringUrl;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
@@ -61,8 +61,8 @@ class ContentUrlGeneratorTest extends TestCase
         $entityManager = $this->createMock(EntityManagerInterface::class);
 
         $resolver = $this->mockResolver(
-            [$pageModel1, ContentUrlResult::redirect($pageModel2)],
-            [$pageModel2, ContentUrlResult::abstain()],
+            [$pageModel1, ResolverDecision::redirectToContent($pageModel2)],
+            [$pageModel2, ResolverDecision::abstain()],
         );
 
         $service = new ContentUrlGenerator($urlGenerator, $pageRegistry, $entityManager, [$resolver]);
@@ -81,7 +81,7 @@ class ContentUrlGeneratorTest extends TestCase
         $entityManager = $this->createMock(EntityManagerInterface::class);
 
         $resolver = $this->mockResolver(
-            [$pageModel2, ContentUrlResult::abstain()],
+            [$pageModel2, ResolverDecision::abstain()],
         );
 
         $service = new ContentUrlGenerator($urlGenerator, $pageRegistry, $entityManager, [$resolver]);
@@ -100,8 +100,8 @@ class ContentUrlGeneratorTest extends TestCase
         $entityManager = $this->createMock(EntityManagerInterface::class);
 
         $resolver = $this->mockResolver(
-            [$pageModel1, ContentUrlResult::redirect($pageModel2)],
-            [$pageModel2, ContentUrlResult::abstain()],
+            [$pageModel1, ResolverDecision::redirectToContent($pageModel2)],
+            [$pageModel2, ResolverDecision::abstain()],
         );
 
         $service = new ContentUrlGenerator($urlGenerator, $pageRegistry, $entityManager, [$resolver]);
@@ -117,7 +117,7 @@ class ContentUrlGeneratorTest extends TestCase
         $entityManager = $this->createMock(EntityManagerInterface::class);
 
         $resolver = $this->mockResolver(
-            [$content, new ContentUrlResult('https://example.net')],
+            [$content, ResolverDecision::resolveWithAbsoluteUrl('https://example.net')],
         );
 
         $service = new ContentUrlGenerator($urlGenerator, $pageRegistry, $entityManager, [$resolver]);
@@ -136,8 +136,8 @@ class ContentUrlGeneratorTest extends TestCase
         $entityManager = $this->createMock(EntityManagerInterface::class);
 
         $resolver = $this->mockResolver(
-            [$pageModel1, ContentUrlResult::redirect($pageModel2)],
-            [$pageModel2, new ContentUrlResult('https://example.net')],
+            [$pageModel1, ResolverDecision::redirectToContent($pageModel2)],
+            [$pageModel2, ResolverDecision::resolveWithAbsoluteUrl('https://example.net')],
         );
 
         $service = new ContentUrlGenerator($urlGenerator, $pageRegistry, $entityManager, [$resolver]);
@@ -155,8 +155,8 @@ class ContentUrlGeneratorTest extends TestCase
         $entityManager = $this->createMock(EntityManagerInterface::class);
 
         $resolver = $this->mockResolver(
-            [$content, ContentUrlResult::url('https://example.net')],
-            [$this->isInstanceOf(StringUrl::class), new ContentUrlResult('https://example.net')],
+            [$content, ResolverDecision::redirectToUrl('https://example.net')],
+            [$this->isInstanceOf(StringUrl::class), ResolverDecision::resolveWithAbsoluteUrl('https://example.net')],
         );
 
         $service = new ContentUrlGenerator($urlGenerator, $pageRegistry, $entityManager, [$resolver]);
@@ -174,12 +174,12 @@ class ContentUrlGeneratorTest extends TestCase
         $entityManager = $this->createMock(EntityManagerInterface::class);
 
         $pageResolver = $this->mockResolver(
-            [$content, ContentUrlResult::url('https://example.net')],
-            [$this->isInstanceOf(StringUrl::class), ContentUrlResult::abstain()],
+            [$content, ResolverDecision::redirectToUrl('https://example.net')],
+            [$this->isInstanceOf(StringUrl::class), ResolverDecision::abstain()],
         );
 
         $stringResolver = $this->mockResolver(
-            [$this->isInstanceOf(StringUrl::class), new ContentUrlResult('https://example.net')],
+            [$this->isInstanceOf(StringUrl::class), ResolverDecision::resolveWithAbsoluteUrl('https://example.net')],
         );
 
         $service = new ContentUrlGenerator($urlGenerator, $pageRegistry, $entityManager, [$pageResolver, $stringResolver]);
@@ -199,8 +199,8 @@ class ContentUrlGeneratorTest extends TestCase
         $entityManager = $this->createMock(EntityManagerInterface::class);
 
         $resolver = $this->mockResolver(
-            [$content, ContentUrlResult::resolve($target)],
-            [$target, ContentUrlResult::abstain()],
+            [$content, ResolverDecision::resolve($target)],
+            [$target, ResolverDecision::abstain()],
         );
 
         $service = new ContentUrlGenerator($urlGenerator, $pageRegistry, $entityManager, [$resolver]);
@@ -222,8 +222,8 @@ class ContentUrlGeneratorTest extends TestCase
         $entityManager = $this->createMock(EntityManagerInterface::class);
 
         $resolver = $this->mockResolver(
-            [$content, ContentUrlResult::resolve($target)],
-            [$target, ContentUrlResult::abstain()],
+            [$content, ResolverDecision::resolve($target)],
+            [$target, ResolverDecision::abstain()],
         );
 
         $resolver
@@ -251,8 +251,8 @@ class ContentUrlGeneratorTest extends TestCase
         $entityManager = $this->createMock(EntityManagerInterface::class);
 
         $resolver = $this->mockResolver(
-            [$content, ContentUrlResult::resolve($target)],
-            [$target, ContentUrlResult::abstain()],
+            [$content, ResolverDecision::resolve($target)],
+            [$target, ResolverDecision::abstain()],
         );
 
         $resolver

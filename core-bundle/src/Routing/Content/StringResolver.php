@@ -24,16 +24,16 @@ class StringResolver implements ContentUrlResolverInterface
     ) {
     }
 
-    public function resolve(object $content): ContentUrlResult
+    public function resolve(object $content): ResolverDecision
     {
         if (!$content instanceof StringUrl) {
-            return ContentUrlResult::abstain();
+            return ResolverDecision::abstain();
         }
 
         $url = $this->insertTagParser->replaceInline($content->value);
         $url = $this->urlHelper->getAbsoluteUrl($url);
 
-        return new ContentUrlResult($url);
+        return ResolverDecision::resolveWithAbsoluteUrl($url);
     }
 
     public function getParametersForContent(object $content, PageModel $pageModel): array

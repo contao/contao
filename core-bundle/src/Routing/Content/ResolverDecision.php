@@ -16,15 +16,12 @@ use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
 use Contao\PageModel;
 use Nyholm\Psr7\Uri;
 
-final class ContentUrlResult
+final class ResolverDecision
 {
     private bool $redirect = false;
 
-    public function __construct(public readonly object|string|null $content)
+    private function __construct(public readonly object|string|null $content)
     {
-        if (\is_string($content) && !(new Uri($content))->getScheme()) {
-            throw new \InvalidArgumentException('The content must not be a relative URL.');
-        }
     }
 
     public function isAbstained(): bool
@@ -65,7 +62,7 @@ final class ContentUrlResult
     /**
      * Result is a URL string which is possibly relative and could contain insert tags that should be resolved.
      */
-    public static function url(string $url): self
+    public static function redirectToUrl(string $url): self
     {
         if (!$url) {
             throw new ForwardPageNotFoundException('Empty target URL');
@@ -83,7 +80,7 @@ final class ContentUrlResult
      * Same as with an HTTP redirect, this will not include any parameters given
      * to the generate() method in the final URL.
      */
-    public static function redirect(object|null $content): self
+    public static function redirectToContent(object|null $content): self
     {
         if (null === $content) {
             throw new ForwardPageNotFoundException();
@@ -108,5 +105,17 @@ final class ContentUrlResult
         }
 
         return new self($content);
+    }
+
+    /**
+     * @internal Use `ResolverDecision::redirectToUrl` which will make sure insert tags are replaced and the URL is absolute.
+     */
+    public static function resolveWithAbsoluteUrl(string $value): self
+    {
+        if (\is_string($value) && !(new Uri($value))->getScheme()) {
+            throw new \InvalidArgumentException($value.' is not an absolute URL.');
+        }
+
+        return new self($value);
     }
 }
