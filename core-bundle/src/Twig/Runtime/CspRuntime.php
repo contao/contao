@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Runtime;
 
+use Contao\CoreBundle\Csp\WysiwygProcessor;
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Twig\Extension\RuntimeExtensionInterface;
@@ -21,8 +22,21 @@ final class CspRuntime implements RuntimeExtensionInterface
     /**
      * @internal
      */
-    public function __construct(private readonly ResponseContextAccessor $responseContextAccessor)
+    public function __construct(
+        private readonly ResponseContextAccessor $responseContextAccessor,
+        private readonly WysiwygProcessor $wysiwygProcessor,
+    ) {
+    }
+
+    public function wysiwygStyles(string $htmlFragment): string
     {
+        $nonce = $this->getNonce('style-src');
+
+        if (null === $nonce) {
+            return $htmlFragment;
+        }
+
+        return $this->wysiwygProcessor->processStyles($htmlFragment, $nonce);
     }
 
     public function getNonce(string $directive): string|null

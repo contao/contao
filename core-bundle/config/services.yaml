@@ -135,6 +135,9 @@ services:
         arguments:
             - '@contao.csp.policy_manager'
 
+    contao.csp.wysiwyg_processor:
+        class: Contao\CoreBundle\Csp\WysiwygProcessor
+
     contao.csp.policy_manager:
         class: Nelmio\SecurityBundle\ContentSecurityPolicy\PolicyManager
 
@@ -1104,6 +1107,7 @@ services:
         class: Contao\CoreBundle\Twig\Runtime\CspRuntime
         arguments:
             - '@contao.routing.response_context_accessor'
+            - '@contao.csp.wysiwyg_processor'
 
     contao.twig.extension:
         class: Contao\CoreBundle\Twig\Extension\ContaoExtension
