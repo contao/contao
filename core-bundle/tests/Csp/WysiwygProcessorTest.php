@@ -50,12 +50,20 @@ class WysiwygProcessorTest extends TestCase
         ];
 
         yield 'With nested tags' => [
-            '<div style="font-weight: bold"><p style="text-decoration: underline"</p></div>',
-            '<div class="csp-inline-style-a37292d22ed9eb6e"><p class="csp-inline-style-380c0bd9ca2b3793"></p></div><style nonce="39189c18">.csp-inline-style-380c0bd9ca2b3793 { text-decoration: underline }
+            '<div style="font-weight: bold"><p style="text-decoration: underline">Content</p></div>',
+            '<div class="csp-inline-style-a37292d22ed9eb6e"><p class="csp-inline-style-380c0bd9ca2b3793">Content</p></div><style nonce="39189c18">.csp-inline-style-380c0bd9ca2b3793 { text-decoration: underline }
 .csp-inline-style-a37292d22ed9eb6e { font-weight: bold }</style>',
             [
                 'csp-inline-style-380c0bd9ca2b3793',
                 'csp-inline-style-a37292d22ed9eb6e',
+            ],
+        ];
+
+        yield 'Test multiple identical styles are merged' => [
+            '<p style="text-decoration: underline">Content</p><span style="text-decoration: underline">Other Content</span>',
+            '<p class="csp-inline-style-380c0bd9ca2b3793">Content</p><span class="csp-inline-style-380c0bd9ca2b3793">Other Content</span><style nonce="39189c18">.csp-inline-style-380c0bd9ca2b3793 { text-decoration: underline }</style>',
+            [
+                'csp-inline-style-380c0bd9ca2b3793',
             ],
         ];
     }

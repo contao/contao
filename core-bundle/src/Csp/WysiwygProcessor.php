@@ -40,13 +40,16 @@ class WysiwygProcessor
         $styleElement->setAttribute('nonce', $nonce);
         $styleCodes = [];
 
-        foreach ($styles as $className => $style) {
+        foreach ($styles as $style => $className) {
             $styleCodes[] = '.'.$className.' { '.$style.' }';
         }
         $styleElement->nodeValue = implode("\n", $styleCodes);
         $fragment->appendChild($styleElement);
     }
 
+    /**
+     * @param \DOMNodeList<\DOMElement> $nodes
+     */
     private function processChildren(\DOMNodeList $nodes, array &$styles): void
     {
         foreach ($nodes as $node) {
@@ -58,9 +61,13 @@ class WysiwygProcessor
                 continue;
             }
 
-            $className = $this->randomClassGenerator->getRandomClass();
-            $styles[$className] = $node->getAttribute('style');
-            $node->setAttribute('class', $className);
+            $style = $node->getAttribute('style');
+
+            if (!isset($styles[$style])) {
+                $styles[$style] = $this->randomClassGenerator->getRandomClass();
+            }
+
+            $node->setAttribute('class', $styles[$style]);
             $node->removeAttribute('style');
         }
     }
