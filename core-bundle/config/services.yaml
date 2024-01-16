@@ -135,11 +135,11 @@ services:
         arguments:
             - '@contao.csp.policy_manager'
 
-    contao.csp.wysiwyg_processor:
-        class: Contao\CoreBundle\Csp\WysiwygProcessor
-
     contao.csp.policy_manager:
         class: Nelmio\SecurityBundle\ContentSecurityPolicy\PolicyManager
+
+    contao.csp.wysiwyg_processor:
+        class: Contao\CoreBundle\Csp\WysiwygProcessor
 
     contao.csrf.token_manager:
         class: Contao\CoreBundle\Csrf\ContaoCsrfTokenManager
