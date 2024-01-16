@@ -36,7 +36,7 @@
         "friendsofsymfony/http-cache": "^2.6",
         "friendsofsymfony/http-cache-bundle": "^2.6",
         "nelmio/cors-bundle": "^2.0.1",
-        "nelmio/security-bundle": "^2.2",
+        "nelmio/security-bundle": "^2.2 || ^3.0",
         "symfony/cache": "^6.4",
         "symfony/config": "^6.4",
         "symfony/console": "^6.4",

@@ -54,6 +54,13 @@ services:
         tags:
             - kernel.event_listener
 
+    contao.listener.csp_report:
+        class: Contao\CoreBundle\EventListener\CspReportListener
+        arguments:
+            - '@logger'
+        tags:
+            - kernel.event_listener
+
     contao.listener.csrf_token_cookie:
         class: Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber
         arguments:
@@ -81,6 +88,11 @@ services:
             - '@contao.routing.page_registry'
             - '@database_connection'
             - '@request_stack'
+
+    contao.listener.data_container.csp_save_callback:
+        class: Contao\CoreBundle\EventListener\DataContainer\CspSaveCallbackListener
+        arguments:
+            - '@contao.csp.parser'
 
     contao.listener.data_container.cte_alias:
         class: Contao\CoreBundle\EventListener\DataContainer\CteAliasListener
@@ -477,6 +489,7 @@ services:
             - '@contao.security.token_checker'
             - '@twig'
             - '@router'
+            - '@contao.csp.parser'
             - '%contao.preview_script%'
         tags:
             - kernel.event_listener

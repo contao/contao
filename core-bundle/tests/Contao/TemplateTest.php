@@ -18,9 +18,14 @@ use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\System;
+use Nelmio\SecurityBundle\ContentSecurityPolicy\DirectiveSet;
+use Nelmio\SecurityBundle\ContentSecurityPolicy\PolicyManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
@@ -418,5 +423,48 @@ class TemplateTest extends TestCase
         $template = new FrontendTemplate('test_template');
         $template->setData(['requestToken' => null]);
         $this->assertSame('false, NULL', $template->parse());
+    }
+
+    public function testRetrievesNonceFromCspBuilder(): void
+    {
+        $directives = new DirectiveSet(new PolicyManager());
+        $directives->setDirective('script-src', "'self'");
+
+        $cspHandler = new CspHandler($directives);
+        $responseContext = (new ResponseContext())->add($cspHandler);
+
+        $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
+        $responseContextAccessor
+            ->expects($this->once())
+            ->method('getResponseContext')
+            ->willReturn($responseContext)
+        ;
+
+        System::getContainer()->set('contao.routing.response_context_accessor', $responseContextAccessor);
+
+        $this->assertNotNull((new FrontendTemplate())->nonce('script-src'));
+    }
+
+    public function testAddsCspSource(): void
+    {
+        $directives = new DirectiveSet(new PolicyManager());
+        $directives->setDirective('script-src', "'self'");
+
+        $cspHandler = new CspHandler($directives);
+        $responseContext = (new ResponseContext())->add($cspHandler);
+
+        $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
+        $responseContextAccessor
+            ->expects($this->once())
+            ->method('getResponseContext')
+            ->willReturn($responseContext)
+        ;
+
+        System::getContainer()->set('contao.routing.response_context_accessor', $responseContextAccessor);
+        System::getContainer()->set('request_stack', new RequestStack());
+
+        (new FrontendTemplate())->addCspSource('script-src', 'https://example.com/files/foo/foobar.js');
+
+        $this->assertSame("'self' https://example.com/files/foo/foobar.js", $directives->getDirective('script-src'));
     }
 }

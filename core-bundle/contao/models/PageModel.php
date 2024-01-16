@@ -87,6 +87,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string|integer    $stop
  * @property boolean           $enforceTwoFactor
  * @property integer           $twoFactorJumpTo
+ * @property boolean           $enableCsp
+ * @property string|null       $csp
+ * @property boolean           $cspReportOnly
+ * @property boolean           $cspReportLog
  *
  * @property array   $trail
  * @property string  $mainAlias
@@ -178,6 +182,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByStop($val, array $opt=array())
  * @method static PageModel|null findOneByEnforceTwoFactor($val, array $opt=array())
  * @method static PageModel|null findOneByTwoFactorJumpTo($val, array $opt=array())
+ * @method static PageModel|null findOneByEnableCsp($val, array $opt=array())
+ * @method static PageModel|null findOneByCsp($val, array $opt=array())
+ * @method static PageModel|null findOneByCspReportOnly($val, array $opt=array())
+ * @method static PageModel|null findOneByCspReportLog($val, array $opt=array())
  *
  * @method static Collection<PageModel>|PageModel[]|null findByPid($val, array $opt=array())
  * @method static Collection<PageModel>|PageModel[]|null findBySorting($val, array $opt=array())
@@ -238,6 +246,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection<PageModel>|PageModel[]|null findByStop($val, array $opt=array())
  * @method static Collection<PageModel>|PageModel[]|null findByEnforceTwoFactor($val, array $opt=array())
  * @method static Collection<PageModel>|PageModel[]|null findByTwoFactorJumpTo($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByEnableCsp($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByCsp($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByCspReportOnly($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByCspReportLog($val, array $opt=array())
  * @method static Collection<PageModel>|PageModel[]|null findMultipleByIds($val, array $opt=array())
  * @method static Collection<PageModel>|PageModel[]|null findBy($col, $val, array $opt=array())
  * @method static Collection<PageModel>|PageModel[]|null findAll(array $opt=array())
@@ -302,6 +314,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByStop($val, array $opt=array())
  * @method static integer countByEnforceTwoFactor($val, array $opt=array())
  * @method static integer countByTwoFactorJumpTo($val, array $opt=array())
+ * @method static integer countByEnableCsp($val, array $opt=array())
+ * @method static integer countByCsp($val, array $opt=array())
+ * @method static integer countByCspReportOnly($val, array $opt=array())
+ * @method static integer countByCspReportLog($val, array $opt=array())
  */
 class PageModel extends Model
 {
@@ -997,6 +1013,10 @@ class PageModel extends Model
 			$this->mailerTransport = $objParentPage->mailerTransport;
 			$this->enableCanonical = $objParentPage->enableCanonical;
 			$this->maintenanceMode = $objParentPage->maintenanceMode;
+			$this->enableCsp = $objParentPage->enableCsp;
+			$this->csp = $objParentPage->csp;
+			$this->cspReportOnly = $objParentPage->cspReportOnly;
+			$this->cspReportLog = $objParentPage->cspReportLog;
 
 			// Store whether the root page has been published
 			$this->rootIsPublic = $objParentPage->published && (!$objParentPage->start || $objParentPage->start <= $time) && (!$objParentPage->stop || $objParentPage->stop > $time);
