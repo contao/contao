@@ -20,7 +20,7 @@ final class ContentUrlResult
 {
     private bool $redirect = false;
 
-    public function __construct(public readonly object|string|null $content)
+    public function __construct(public readonly object|string $content)
     {
         if (\is_string($content) && !(new Uri($content))->getScheme()) {
             throw new \InvalidArgumentException('The content must not be a relative URL.');
@@ -72,7 +72,7 @@ final class ContentUrlResult
      */
     public static function redirect(object|null $content): self
     {
-        if (null === $content) {
+        if (!$content) {
             throw new ForwardPageNotFoundException();
         }
 
