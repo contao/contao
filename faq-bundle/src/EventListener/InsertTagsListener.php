@@ -55,10 +55,6 @@ class InsertTagsListener
             return '';
         }
 
-        if (null === $faq) {
-            return '';
-        }
-
         $url = '';
 
         if ('faq_title' !== $key) {
