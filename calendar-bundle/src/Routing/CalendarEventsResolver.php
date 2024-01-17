@@ -25,10 +25,10 @@ class CalendarEventsResolver implements ContentUrlResolverInterface
     {
     }
 
-    public function resolve(object $content): ContentUrlResult
+    public function resolve(object $content): ContentUrlResult|null
     {
         if (!$content instanceof CalendarEventsModel) {
-            return ContentUrlResult::abstain();
+            return null;
         }
 
         switch ($content->source) {
