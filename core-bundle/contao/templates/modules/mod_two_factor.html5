@@ -20,6 +20,8 @@
         </div>
         <div class="widget">
           <p><?= $this->trans('MSC.twoFactorTextCode') ?></p>
+          <?php $this->addCspHash('style-src', 'word-break:break-all'); ?>
+          <?php $this->addCspSource('style-src', 'unsafe-hashes'); ?>
           <code style="word-break:break-all"><?= $this->secret ?></code>
         </div>
         <div class="widget widget-text">

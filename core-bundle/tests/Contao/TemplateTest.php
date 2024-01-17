@@ -31,6 +31,7 @@ use Symfony\Component\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\VarDumper\VarDumper;
 
@@ -466,5 +467,37 @@ class TemplateTest extends TestCase
         (new FrontendTemplate())->addCspSource('script-src', 'https://example.com/files/foo/foobar.js');
 
         $this->assertSame("'self' https://example.com/files/foo/foobar.js", $directives->getDirective('script-src'));
+    }
+
+    public function testAddsCspHash(): void
+    {
+        $directives = new DirectiveSet(new PolicyManager());
+        $directives->setLevel1Fallback(false);
+        $directives->setDirective('script-src', "'self'");
+
+        $cspHandler = new CspHandler($directives);
+        $responseContext = (new ResponseContext())->add($cspHandler);
+
+        $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
+        $responseContextAccessor
+            ->expects($this->once())
+            ->method('getResponseContext')
+            ->willReturn($responseContext)
+        ;
+
+        System::getContainer()->set('contao.routing.response_context_accessor', $responseContextAccessor);
+        System::getContainer()->set('request_stack', new RequestStack());
+
+        $script = 'this.form.requestSubmit()';
+        $algorithm = 'sha384';
+
+        (new FrontendTemplate())->addCspHash('script-src', 'this.form.requestSubmit()', $algorithm);
+
+        $response = new Response();
+        $cspHandler->applyHeaders($response);
+
+        $expectedHash = base64_encode(hash($algorithm, $script, true));
+
+        $this->assertSame(sprintf("script-src 'self' '%s-%s'", $algorithm, $expectedHash), $response->headers->get('Content-Security-Policy'));
     }
 }

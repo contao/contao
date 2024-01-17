@@ -103,6 +103,7 @@ use Doctrine\DBAL\Types\Types;
 abstract class Widget extends Controller
 {
 	use TemplateInheritance;
+	use TemplateTrait;
 
 	/**
 	 * Id
