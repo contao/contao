@@ -14,18 +14,22 @@ namespace Contao\FaqBundle\EventListener;
 
 use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
 use Contao\FaqCategoryModel;
 use Contao\FaqModel;
 use Contao\PageModel;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class SitemapListener
 {
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly Security $security,
+        private readonly ContentUrlGenerator $urlGenerator,
     ) {
     }
 
@@ -94,8 +98,10 @@ class SitemapListener
                     continue;
                 }
 
-                // Generate the URL
-                $arrPages[] = $objParent->getAbsoluteUrl('/'.($objItem->alias ?: $objItem->id));
+                try {
+                    $arrPages[] = $this->urlGenerator->generate($objItem, [], UrlGeneratorInterface::ABSOLUTE_URL);
+                } catch (ExceptionInterface) {
+                }
             }
         }
 

@@ -116,6 +116,7 @@ class ModuleQuicknav extends Module
 
 		$container = System::getContainer();
 		$security = $container->get('security.helper');
+		$urlGenerator = $container->get('contao.routing.content_url_generator');
 		$db = Database::getInstance();
 
 		foreach ($objSubpages as $objSubpage)
@@ -138,7 +139,7 @@ class ModuleQuicknav extends Module
 				{
 					try
 					{
-						$href = $objSubpage->getFrontendUrl();
+						$href = $urlGenerator->generate($objSubpage);
 					}
 					catch (ExceptionInterface $exception)
 					{

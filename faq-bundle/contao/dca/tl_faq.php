@@ -16,10 +16,7 @@ use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\DC_Table;
-use Contao\Environment;
 use Contao\FaqCategoryModel;
-use Contao\FaqModel;
-use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 
@@ -166,7 +163,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'inputType'               => 'serpPreview',
-			'eval'                    => array('url_callback'=>array('tl_faq', 'getSerpUrl'), 'titleFields'=>array('pageTitle', 'question'), 'descriptionFields'=>array('description', 'answer')),
+			'eval'                    => array('titleFields'=>array('pageTitle', 'question'), 'descriptionFields'=>array('description', 'answer')),
 			'sql'                     => null
 		),
 		'addImage' => array
@@ -335,39 +332,6 @@ class tl_faq extends Backend
 		}
 
 		return $varValue;
-	}
-
-	/**
-	 * Return the SERP URL
-	 *
-	 * @param FaqModel $objFaq
-	 *
-	 * @return string
-	 */
-	public function getSerpUrl(FaqModel $objFaq)
-	{
-		/** @var FaqCategoryModel $objCategory */
-		$objCategory = $objFaq->getRelated('pid');
-
-		if ($objCategory === null)
-		{
-			throw new Exception('Invalid FAQ category');
-		}
-
-		$jumpTo = $objCategory->jumpTo;
-
-		// A jumpTo page is not mandatory for FAQ categories (see #6226) but required for the FAQ list module
-		if ($jumpTo < 1)
-		{
-			throw new Exception('FAQ categories without redirect page cannot be used in an FAQ list');
-		}
-
-		if (!$objTarget = PageModel::findByPk($jumpTo))
-		{
-			return StringUtil::ampersand(Environment::get('request'));
-		}
-
-		return StringUtil::ampersand($objTarget->getAbsoluteUrl('/' . ($objFaq->alias ?: $objFaq->id)));
 	}
 
 	/**
