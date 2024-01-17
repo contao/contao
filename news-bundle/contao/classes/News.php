@@ -61,11 +61,12 @@ class News extends Frontend
 	public static function getSchemaOrgData(NewsModel $objArticle): array
 	{
 		$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
+		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
 
 		$jsonLd = array(
 			'@type' => 'NewsArticle',
 			'identifier' => '#/schema/news/' . $objArticle->id,
-			'url' => self::generateNewsUrl($objArticle),
+			'url' => $urlGenerator->generate($objArticle),
 			'headline' => $htmlDecoder->inputEncodedToPlainText($objArticle->headline),
 			'datePublished' => date('Y-m-d\TH:i:sP', $objArticle->date),
 		);

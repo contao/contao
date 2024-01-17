@@ -76,11 +76,13 @@ class ModuleNewsReader extends ModuleNews
 	 */
 	protected function compile()
 	{
+		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
+
 		$this->Template->articles = '';
 
 		if ($this->overviewPage && ($overviewPage = PageModel::findById($this->overviewPage)))
 		{
-			$this->Template->referer = System::getContainer()->get('contao.routing.content_url_generator')->generate($overviewPage);
+			$this->Template->referer = $urlGenerator->generate($overviewPage);
 			$this->Template->back = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['newsOverview'];
 		}
 
@@ -162,7 +164,7 @@ class ModuleNewsReader extends ModuleNews
 			}
 			elseif (!$this->news_keepCanonical)
 			{
-				$htmlHeadBag->setCanonicalUri(News::generateNewsUrl($objArticle, false, true));
+				$htmlHeadBag->setCanonicalUri($urlGenerator->generate($objArticle, array(), UrlGeneratorInterface::ABSOLUTE_URL));
 			}
 		}
 
