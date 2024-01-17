@@ -15,6 +15,7 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Util\UrlUtil;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Front end module "event reader".
@@ -102,7 +103,7 @@ class ModuleEventReader extends Events
 			case 'internal':
 			case 'article':
 			case 'external':
-				throw new RedirectResponseException(System::getContainer()->get('contao.routing.content_url_generator')->generate($objEvent), 301);
+				throw new RedirectResponseException(System::getContainer()->get('contao.routing.content_url_generator')->generate($objEvent, [], UrlGeneratorInterface::ABSOLUTE_URL), 301);
 		}
 
 		// Overwrite the page metadata (see #2853, #4955 and #87)

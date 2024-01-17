@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Provide methods regarding calendars.
@@ -376,7 +377,7 @@ class Calendar extends Frontend
 
 		try
 		{
-			$link = System::getContainer()->get('contao.routing.content_url_generator')->generate($objEvent);
+			$link = System::getContainer()->get('contao.routing.content_url_generator')->generate($objEvent, [], UrlGeneratorInterface::ABSOLUTE_URL);
 		}
 		catch (ExceptionInterface)
 		{

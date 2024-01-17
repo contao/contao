@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\UrlUtil;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Provide methods to get all events of a certain period from the database.
@@ -411,14 +412,14 @@ abstract class Events extends Module
 
 		try
 		{
-			$url = System::getContainer()->get('contao.routing.content_url_generator')->generate($objEvent);
+			$url = System::getContainer()->get('contao.routing.content_url_generator')->generate($objEvent, [], $blnAbsolute ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH);
 		}
 		catch (ExceptionInterface)
 		{
 			return StringUtil::ampersand(Environment::get('requestUri'));
 		}
 
-		return UrlUtil::makeAbsolutePath($url, Environment::get('base'));
+		return $url;
 	}
 
 	/**
