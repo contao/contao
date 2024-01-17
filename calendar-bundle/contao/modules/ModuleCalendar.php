@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * Front end module "calendar".
@@ -74,8 +75,14 @@ class ModuleCalendar extends Events
 
 		if (($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
 		{
-			/** @var PageModel $objTarget */
-			$this->strLink = $objTarget->getFrontendUrl();
+			try
+			{
+				$this->strLink = System::getContainer()->get('contao.routing.content_url_generator')->generate($objTarget);
+			}
+			catch (ExceptionInterface)
+			{
+				// Ignore if target URL cannot be generated and use the current request URL
+			}
 		}
 
 		// Tag the calendars (see #2137)
