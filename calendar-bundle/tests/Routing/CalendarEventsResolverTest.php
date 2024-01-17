@@ -81,7 +81,6 @@ class CalendarEventsResolverTest extends ContaoTestCase
     public function testResolveEventWithoutSource(): void
     {
         $target = $this->mockClassWithProperties(PageModel::class);
-
         $calendar = $this->mockClassWithProperties(CalendarModel::class, ['jumpTo' => 42]);
 
         $content = $this->mockClassWithProperties(CalendarEventsModel::class, ['source' => '']);
@@ -115,7 +114,6 @@ class CalendarEventsResolverTest extends ContaoTestCase
     public function testGetParametersForContent(object $content, array $expected): void
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class);
-
         $resolver = new CalendarEventsResolver($this->mockContaoFramework());
 
         $this->assertSame($expected, $resolver->getParametersForContent($content, $pageModel));

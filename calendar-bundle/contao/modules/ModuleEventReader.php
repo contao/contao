@@ -77,12 +77,12 @@ class ModuleEventReader extends Events
 	 */
 	protected function compile()
 	{
-		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
-
 		/** @var PageModel $objPage */
 		global $objPage;
 
 		$this->Template->event = '';
+
+		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
 
 		if ($this->overviewPage && ($overviewPage = PageModel::findById($this->overviewPage)))
 		{

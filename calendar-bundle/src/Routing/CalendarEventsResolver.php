@@ -61,8 +61,6 @@ class CalendarEventsResolver implements ContentUrlResolverInterface
             return [];
         }
 
-        return [
-            'parameters' => '/'.($content->alias ?: $content->id),
-        ];
+        return ['parameters' => '/'.($content->alias ?: $content->id)];
     }
 }
