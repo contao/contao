@@ -1592,7 +1592,7 @@
         <target>کلید‌های میانبر بخش مدیریت</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -1700,7 +1700,7 @@
       </trans-unit>
       <trans-unit id="MSC.delAllConfirm">
         <source>Do you really want to delete the selected records?</source>
-        <target>آیا واقعا می‌خواهید رکوردهای انتخاب شده را حذف نمایید؟</target>
+        <target>آیا واقعا می‌خواهید رکوردهای انتخاب‌شده را حذف نمایید؟</target>
       </trans-unit>
       <trans-unit id="MSC.deleteConfirmFile">
         <source>Do you really want to delete file or folder %s?</source>
@@ -1708,7 +1708,7 @@
       </trans-unit>
       <trans-unit id="MSC.delAllConfirmFile">
         <source>Do you really want to delete the selected resources?</source>
-        <target>آیا واقعا می‌خواهید منابع انتخاب شده را حذف نمایید؟</target>
+        <target>آیا واقعا می‌خواهید منابع انتخاب‌شده را حذف نمایید؟</target>
       </trans-unit>
       <trans-unit id="MSC.filterRecords">
         <source>Records</source>
@@ -2040,7 +2040,7 @@
       </trans-unit>
       <trans-unit id="MSC.resetSelected">
         <source>Reset selection</source>
-        <target>از نو انتخاب کردن</target>
+        <target>بازنشانی انتخاب</target>
       </trans-unit>
       <trans-unit id="MSC.filePicker">
         <source>Files</source>
@@ -2140,11 +2140,11 @@
       </trans-unit>
       <trans-unit id="MSC.updateAdd">
         <source>Add the selected values</source>
-        <target>افزودن مقادیر انتخاب شده</target>
+        <target>افزودن مقادیر انتخاب‌شده</target>
       </trans-unit>
       <trans-unit id="MSC.updateRemove">
         <source>Remove the selected values</source>
-        <target>حذف مقادیر انتخاب شده</target>
+        <target>حذف مقادیر انتخاب‌شده</target>
       </trans-unit>
       <trans-unit id="MSC.updateReplace">
         <source>Replace the existing entries</source>
@@ -2264,7 +2264,7 @@
       </trans-unit>
       <trans-unit id="MSC.currentlySelected">
         <source>Selected</source>
-        <target>انتخاب شده</target>
+        <target>انتخاب‌شده</target>
       </trans-unit>
       <trans-unit id="MSC.selectNode">
         <source>Only show this node</source>
@@ -2308,7 +2308,7 @@
       </trans-unit>
       <trans-unit id="MSC.identicalVersions">
         <source>The two selected versions are identical.</source>
-        <target>دو نسخه انتخاب شده یکسان هستند.</target>
+        <target>دو نسخه انتخاب‌شده یکسان هستند.</target>
       </trans-unit>
       <trans-unit id="MSC.selectNewPosition">
         <source>Next, please choose the (new) position of the element</source>
@@ -2576,7 +2576,7 @@
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb menu</source>
-        <target>منو بردکرامب</target>
+        <target>منو مسیرراهنما</target>
       </trans-unit>
       <trans-unit id="MSC.mainNavigation">
         <source>Main navigation</source>

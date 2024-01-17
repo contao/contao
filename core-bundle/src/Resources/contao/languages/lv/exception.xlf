@@ -30,8 +30,7 @@
         <target>Atveriet pašreizējo žurnāla datni direktorijā &lt;code&gt;var/logs&lt;/code&gt; un atrodiet saistīto kļūdas ziņojumu (parasti pēdējo).</target>
       </trans-unit>
       <trans-unit id="XPT.errorExplain">
-        <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, visit the &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
-        <target>Skripta izpilde apstājās, jo kaut kas nedarbojas pareizi. Patiesais kļūdas ziņojums drošības apsvērumu dēļ šajā paziņojumā ir paslēpts, un to var atrast pašreizējā žurnāla failā (skatīt augstāk). Ja nesaprotat kļūdas ziņojumu vai nezināt, kā novērst problēmu, apmeklējiet &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao atbalsta lapu&lt;/a&gt;.</target>
+        <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, visit the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="XPT.requestToken">
         <source>Invalid request token</source>
@@ -50,8 +49,7 @@
         <target>Šī kļūda rodas, ja tiek veikts POST pieprasījums bez derīga autentifikācijas marķiera. Contao 2.10 versijā atsauces pārbaude ir aizstāta ar pieprasījuma žetona sistēmu. Ja problēma saglabājas, iespējams, izmantojat nesaderīgu trešās puses paplašinājumu vai neesat pareizi atjauninājis Contao instalāciju.</target>
       </trans-unit>
       <trans-unit id="XPT.tokenExplainTwo">
-        <source>For more information, visit the &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
-        <target>Lai iegūtu vairāk informācijas, apmeklējiet &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao atbalsta lapu&lt;/a&gt;.</target>
+        <source>For more information, visit the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="XPT.unavailable">
         <source>Service unavailable</source>

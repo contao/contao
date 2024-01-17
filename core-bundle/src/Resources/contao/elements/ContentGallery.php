@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\Model\Collection;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Front end content element "gallery".
@@ -89,7 +90,7 @@ class ContentGallery extends ContentElement
 		while ($objFiles->next())
 		{
 			// Continue if the files has been processed or does not exist
-			if (isset($images[$objFiles->path]) || !file_exists($projectDir . '/' . $objFiles->path))
+			if (isset($images[$objFiles->path]) || !file_exists(Path::join($projectDir, $objFiles->path)))
 			{
 				continue;
 			}
@@ -123,8 +124,8 @@ class ContentGallery extends ContentElement
 
 				while ($objSubfiles->next())
 				{
-					// Skip subfolders
-					if ($objSubfiles->type == 'folder')
+					// Skip subfolders and files that do not exist
+					if ($objSubfiles->type == 'folder' || !file_exists(Path::join($projectDir, $objSubfiles->path)))
 					{
 						continue;
 					}

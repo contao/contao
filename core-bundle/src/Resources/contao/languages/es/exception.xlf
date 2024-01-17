@@ -30,8 +30,7 @@
         <target>Abra el archivo de registro actual en el directorio &lt;code&gt;var/logs&lt;/code&gt; y busque el mensaje de error asociado (generalmente el último).</target>
       </trans-unit>
       <trans-unit id="XPT.errorExplain">
-        <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, visit the &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
-        <target>La ejecución del script se detuvo porque algo no funciona correctamente. El mensaje de error real está oculto por este aviso por razones de seguridad y se puede encontrar en el archivo de registro actual (ver arriba). Si no entiende el mensaje de error o no sabe cómo solucionar el problema, visite la &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;página de soporte de Contao&lt;/a&gt;.</target>
+        <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, visit the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="XPT.requestToken">
         <source>Invalid request token</source>
@@ -50,8 +49,7 @@
         <target>Este tipo de error ocurre si una solicitud de POST se ha realizada sin una autentificación válida del token. En Contao 2.10, el referer check ha sido reemplazado con una solicitud token del sistema. Si los problemas persisten, seguramente esta usando extensiones de terceros que son incompatibles o la actualización e instalación de Contao no ha sido correcta.</target>
       </trans-unit>
       <trans-unit id="XPT.tokenExplainTwo">
-        <source>For more information, visit the &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
-        <target>Para obtener más información, visite la &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;página de soporte de Contao&lt;/a&gt;.</target>
+        <source>For more information, visit the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="XPT.unavailable">
         <source>Service unavailable</source>

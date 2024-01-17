@@ -30,8 +30,8 @@
         <target>Apri il file di log nel percorso &lt;code&gt;var/logs&lt;/code&gt; e cerca il messaggio di errore (solitamente in fondo al file).</target>
       </trans-unit>
       <trans-unit id="XPT.errorExplain">
-        <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, visit the &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
-        <target>L'esecuzione dello script si è arrestato, perché qualcosa non funziona correttamente. Il messaggio di errore effettivo è nascosto da questo avviso per motivi di sicurezza e può essere trovato nel file di log corrente (vedi sopra). Se non capisci il messaggio di errore o non sai come risolvere il problema, visita la pagina di &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;supporto di Contao&lt;/a&gt;.</target>
+        <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, visit the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
+        <target>'esecuzione dello script si è arrestato, perché qualcosa non funziona correttamente. Il messaggio di errore effettivo è nascosto da questo avviso per motivi di sicurezza e può essere trovato nel file di log corrente (vedi sopra). Se non capisci il messaggio di errore o non sai come risolvere il problema, visita la pagina di  &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;supporto di Contao &lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPT.requestToken">
         <source>Invalid request token</source>
@@ -50,7 +50,7 @@
         <target>Questo errore si verifica se c'è una richiesta POST senza un token di autenticazione valido. In Contao 2.10, il referer check è stato sostituito con un sistema di richiesta token. Se il problema persiste, è possibile che si stia utilizzando un'estensione di terzi non compatibile o non si abbia aggiornato correttamente l'installazione di Contao.</target>
       </trans-unit>
       <trans-unit id="XPT.tokenExplainTwo">
-        <source>For more information, visit the &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
+        <source>For more information, visit the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
         <target>Per maggiori informazioni, visita la &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;pagina di supporto di Contao&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPT.unavailable">
