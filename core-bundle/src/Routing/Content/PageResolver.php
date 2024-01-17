@@ -21,15 +21,15 @@ class PageResolver implements ContentUrlResolverInterface
     {
     }
 
-    public function resolve(object $content): ResolverDecision
+    public function resolve(object $content): ContentUrlResult
     {
         if (!$content instanceof PageModel) {
-            return ResolverDecision::abstain();
+            return ContentUrlResult::abstain();
         }
 
         switch ($content->type) {
             case 'redirect':
-                return ResolverDecision::redirectToUrl($content->url);
+                return ContentUrlResult::url($content->url);
 
             case 'forward':
                 $pageAdapter = $this->framework->getAdapter(PageModel::class);
@@ -40,10 +40,10 @@ class PageResolver implements ContentUrlResolverInterface
                     $forwardPage = $pageAdapter->findFirstPublishedRegularByPid($content->id);
                 }
 
-                return ResolverDecision::redirectToContent($forwardPage);
+                return ContentUrlResult::redirect($forwardPage);
         }
 
-        return ResolverDecision::abstain();
+        return ContentUrlResult::abstain();
     }
 
     public function getParametersForContent(object $content, PageModel $pageModel): array

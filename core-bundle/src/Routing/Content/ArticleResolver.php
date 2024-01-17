@@ -22,15 +22,15 @@ class ArticleResolver implements ContentUrlResolverInterface
     {
     }
 
-    public function resolve(object $content): ResolverDecision
+    public function resolve(object $content): ContentUrlResult
     {
         if (!$content instanceof ArticleModel) {
-            return ResolverDecision::abstain();
+            return ContentUrlResult::abstain();
         }
 
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
 
-        return ResolverDecision::resolve($pageAdapter->findWithDetails($content->pid));
+        return ContentUrlResult::resolve($pageAdapter->findWithDetails($content->pid));
     }
 
     public function getParametersForContent(object $content, PageModel $pageModel): array
