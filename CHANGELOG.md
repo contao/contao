@@ -2,6 +2,34 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.36] (2024-01-17)
+
+**Fixed issues:**
+
+- [#6721] Revert "Allow data-lightbox in TinyMCE by default" ([fritzmg])
+- [#6697] Fix an error if a gallery image does not exist ([fritzmg])
+- [#6474] Retrieve the `PageModel` correctly in `ContaoMailer` ([fritzmg])
+- [#6692] Make `FrontendTemplateTrait::getTemplate()` static ([Shadow-Devil])
+- [#6699] Fix the compression in the `contao:backup:create` command ([Toflar])
+- [#6700] Fix tests when `MAILER_DSN` env var is defined ([fritzmg])
+- [#6684] Do not overwrite `id`, `pid`, `ptable` and `sorting` when restoring a version ([leofeyer])
+- [#6463] Fix a PHP8 error in the `Frontend::addToUrl()` method ([zonky2])
+- [#6342] Fix a PHP 8 error in the `Form` class ([zonky2])
+- [#6689] Fix the description of the "template data" field ([fiedsch])
+- [#6622] Use the name of the related field when getting options from another record ([asconsulting])
+- [#6599] Disallow the web profiler in the `robots.txt` file ([aschempp])
+- [#6554] Fix NULL handling in the `SerpPreview` widget ([aschempp])
+- [#6434] Cache the `cteAlias` references ([fritzmg])
+- [#6169] Support the `template_from_string()` Twig function ([richardhj])
+- [#6644] Correctly check the theme export permissions ([aschempp])
+- [#6621] Add example content to the auto-generated `.env` file ([aschempp])
+- [#6549] Update page registry when generating multiple page aliases ([aschempp])
+- [#6625] Do not show the end time of open-ended events ([ausi])
+- [#6571] Fix relative asset paths in feeds ([fritzmg])
+- [#6616] Backport the cache warmer test fix ([fritzmg])
+- [#6593] Add a data container setting to hide the `orderBy` column in the back end listing ([ameotoko])
+- [#6602] Update the insert tags doc link ([aschempp])
+
 ## [4.13.35] (2023-11-30)
 
 **Fixed issues:**
@@ -871,6 +899,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.36]: https://github.com/contao/contao/releases/tag/4.13.36
 [4.13.35]: https://github.com/contao/contao/releases/tag/4.13.35
 [4.13.34]: https://github.com/contao/contao/releases/tag/4.13.34
 [4.13.33]: https://github.com/contao/contao/releases/tag/4.13.33
@@ -918,6 +947,7 @@ This project adheres to [Semantic Versioning].
 [AlexanderWillner]: https://github.com/AlexanderWillner
 [ameotoko]: https://github.com/ameotoko
 [aschempp]: https://github.com/aschempp
+[asconsulting]: https://github.com/asconsulting
 [ausi]: https://github.com/ausi
 [bennyborn]: https://github.com/bennyborn
 [bezin]: https://github.com/bezin
@@ -931,6 +961,7 @@ This project adheres to [Semantic Versioning].
 [dmolineus]: https://github.com/dmolineus
 [doishub]: https://github.com/doishub
 [e-spin]: https://github.com/e-spin
+[fiedsch]: https://github.com/fiedsch
 [fritzmg]: https://github.com/fritzmg
 [JanoschOltmanns]: https://github.com/JanoschOltmanns
 [leofeyer]: https://github.com/leofeyer
@@ -942,6 +973,7 @@ This project adheres to [Semantic Versioning].
 [rabauss]: https://github.com/rabauss
 [richardhj]: https://github.com/richardhj
 [SeverinGloeckle]: https://github.com/SeverinGloeckle
+[Shadow-Devil]: https://github.com/Shadow-Devil
 [sheeep]: https://github.com/sheeep
 [Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
@@ -1523,6 +1555,7 @@ This project adheres to [Semantic Versioning].
 [#6160]: https://github.com/contao/contao/pull/6160
 [#6161]: https://github.com/contao/contao/pull/6161
 [#6168]: https://github.com/contao/contao/pull/6168
+[#6169]: https://github.com/contao/contao/pull/6169
 [#6171]: https://github.com/contao/contao/pull/6171
 [#6180]: https://github.com/contao/contao/pull/6180
 [#6187]: https://github.com/contao/contao/pull/6187
@@ -1556,6 +1589,7 @@ This project adheres to [Semantic Versioning].
 [#6331]: https://github.com/contao/contao/pull/6331
 [#6332]: https://github.com/contao/contao/pull/6332
 [#6333]: https://github.com/contao/contao/pull/6333
+[#6342]: https://github.com/contao/contao/pull/6342
 [#6343]: https://github.com/contao/contao/pull/6343
 [#6345]: https://github.com/contao/contao/pull/6345
 [#6348]: https://github.com/contao/contao/pull/6348
@@ -1572,15 +1606,18 @@ This project adheres to [Semantic Versioning].
 [#6425]: https://github.com/contao/contao/pull/6425
 [#6430]: https://github.com/contao/contao/pull/6430
 [#6431]: https://github.com/contao/contao/pull/6431
+[#6434]: https://github.com/contao/contao/pull/6434
 [#6437]: https://github.com/contao/contao/pull/6437
 [#6444]: https://github.com/contao/contao/pull/6444
 [#6457]: https://github.com/contao/contao/pull/6457
 [#6459]: https://github.com/contao/contao/pull/6459
 [#6460]: https://github.com/contao/contao/pull/6460
 [#6462]: https://github.com/contao/contao/pull/6462
+[#6463]: https://github.com/contao/contao/pull/6463
 [#6466]: https://github.com/contao/contao/pull/6466
 [#6467]: https://github.com/contao/contao/pull/6467
 [#6473]: https://github.com/contao/contao/pull/6473
+[#6474]: https://github.com/contao/contao/pull/6474
 [#6487]: https://github.com/contao/contao/pull/6487
 [#6490]: https://github.com/contao/contao/pull/6490
 [#6492]: https://github.com/contao/contao/pull/6492
@@ -1593,7 +1630,25 @@ This project adheres to [Semantic Versioning].
 [#6532]: https://github.com/contao/contao/pull/6532
 [#6535]: https://github.com/contao/contao/pull/6535
 [#6545]: https://github.com/contao/contao/pull/6545
+[#6549]: https://github.com/contao/contao/pull/6549
+[#6554]: https://github.com/contao/contao/pull/6554
 [#6568]: https://github.com/contao/contao/pull/6568
+[#6571]: https://github.com/contao/contao/pull/6571
 [#6574]: https://github.com/contao/contao/pull/6574
 [#6575]: https://github.com/contao/contao/pull/6575
 [#6576]: https://github.com/contao/contao/pull/6576
+[#6593]: https://github.com/contao/contao/pull/6593
+[#6599]: https://github.com/contao/contao/pull/6599
+[#6602]: https://github.com/contao/contao/pull/6602
+[#6616]: https://github.com/contao/contao/pull/6616
+[#6621]: https://github.com/contao/contao/pull/6621
+[#6622]: https://github.com/contao/contao/pull/6622
+[#6625]: https://github.com/contao/contao/pull/6625
+[#6644]: https://github.com/contao/contao/pull/6644
+[#6684]: https://github.com/contao/contao/pull/6684
+[#6689]: https://github.com/contao/contao/pull/6689
+[#6692]: https://github.com/contao/contao/pull/6692
+[#6697]: https://github.com/contao/contao/pull/6697
+[#6699]: https://github.com/contao/contao/pull/6699
+[#6700]: https://github.com/contao/contao/pull/6700
+[#6721]: https://github.com/contao/contao/pull/6721

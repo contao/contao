@@ -47,6 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_undo.parent_modal">
         <source>Show origin of %s ID %s</source>
+        <target>Afficher l'origine de %s ID %s</target>
       </trans-unit>
     </body>
   </file>

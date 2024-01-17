@@ -30,7 +30,7 @@
         <target>پرونده لاگ فعلی را در دایرکتوری &lt;code&gt;var/logs&lt;/code&gt; را باز کنید و پیغام خطای مربوطه را پیدا کنید (معمولا آخرین مورد).</target>
       </trans-unit>
       <trans-unit id="XPT.errorExplain">
-        <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, visit the &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
+        <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, visit the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="XPT.requestToken">
         <source>Invalid request token</source>
@@ -48,8 +48,7 @@
         <target>این خطا زمانی رخ می‌دهد که درخواست POSTی بدون توکن تصدیق شده معتبر وجود داشته باشد. در کنتائو 2.10، بررسی ارجاعی با سامانه توکن درخواستی جایگزین شده است. اگر این مشکل ادامه یابد، شما ممکن است از یک افزونه غیرسازگار استفاده می‌کنید یا نصب کنتائو را به درستی به‌روز نکرده‌اید.</target>
       </trans-unit>
       <trans-unit id="XPT.tokenExplainTwo">
-        <source>For more information, visit the &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
-        <target>برای اطلاعات بیشتر از &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;صفحه‌ی پشتیبانی کنتائو&lt;/a&gt; دیدن کنید.</target>
+        <source>For more information, visit the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="XPT.unavailable">
         <source>Service unavailable</source>

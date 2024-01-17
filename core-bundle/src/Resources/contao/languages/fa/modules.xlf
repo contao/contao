@@ -238,11 +238,11 @@
       </trans-unit>
       <trans-unit id="FMD.breadcrumb.0">
         <source>Breadcrumb navigation</source>
-        <target>ناوبری مسیر پیموده شده</target>
+        <target>ناوبری مسیرراهنما</target>
       </trans-unit>
       <trans-unit id="FMD.breadcrumb.1">
         <source>Generates a breadcrumb navigation menu</source>
-        <target>منوی ناوبری مسیر پیموده شده را ایجاد می‌کند</target>
+        <target>یک منوی ناوبری مسیرراهنما ایجاد می‌کند</target>
       </trans-unit>
       <trans-unit id="FMD.quicknav.0">
         <source>Quick navigation</source>
