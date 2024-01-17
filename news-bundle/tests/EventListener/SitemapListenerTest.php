@@ -50,8 +50,6 @@ class SitemapListenerTest extends ContaoTestCase
      */
     public function testNewsArticleIsAdded(array $pageProperties, array $newsArchiveProperties, bool $hasAuthenticatedMember): void
     {
-        $jumpToPage = $this->mockClassWithProperties(PageModel::class, $pageProperties);
-
         $adapters = [
             NewsArchiveModel::class => $this->mockConfiguredAdapter([
                 'findByProtected' => [
@@ -62,7 +60,7 @@ class SitemapListenerTest extends ContaoTestCase
                 ],
             ]),
             PageModel::class => $this->mockConfiguredAdapter([
-                'findWithDetails' => $jumpToPage,
+                'findWithDetails' => $this->mockClassWithProperties(PageModel::class, $pageProperties),
             ]),
             NewsModel::class => $this->mockConfiguredAdapter([
                 'findPublishedDefaultByPid' => [

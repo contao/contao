@@ -146,6 +146,7 @@ class InsertTagsListenerTest extends ContaoTestCase
     {
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $logger = $this->createMock(LoggerInterface::class);
+
         $listener = new InsertTagsListener($this->mockContaoFramework(), $urlGenerator, $logger);
 
         $this->assertFalse($listener('link_url::2', false, null, []));

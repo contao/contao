@@ -77,9 +77,7 @@ class ModuleNewsMenu extends ModuleNews
 		{
 			try
 			{
-				$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
-
-				$this->strUrl = $urlGenerator->generate($objTarget);
+				$this->strUrl = System::getContainer()->get('contao.routing.content_url_generator')->generate($objTarget);
 			}
 			catch (ExceptionInterface)
 			{

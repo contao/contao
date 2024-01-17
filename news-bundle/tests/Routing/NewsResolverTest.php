@@ -81,7 +81,6 @@ class NewsResolverTest extends ContaoTestCase
     public function testResolveNewsWithoutSource(): void
     {
         $target = $this->mockClassWithProperties(PageModel::class);
-
         $newsArchive = $this->mockClassWithProperties(NewsArchiveModel::class, ['jumpTo' => 42]);
 
         $content = $this->mockClassWithProperties(NewsModel::class, ['source' => '']);
@@ -115,7 +114,6 @@ class NewsResolverTest extends ContaoTestCase
     public function testGetParametersForContent(object $content, array $expected): void
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class);
-
         $resolver = new NewsResolver($this->mockContaoFramework());
 
         $this->assertSame($expected, $resolver->getParametersForContent($content, $pageModel));

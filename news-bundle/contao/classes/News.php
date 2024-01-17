@@ -26,10 +26,13 @@ class News extends Frontend
 	 * @param boolean   $blnAbsolute
 	 *
 	 * @return string
+	 *
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 *             use the content URL generator instead.
 	 */
 	public static function generateNewsUrl($objItem, $blnAddArchive=false, $blnAbsolute=false)
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s" is deprecated, use the content URL generator instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the content URL generator instead.', __METHOD__);
 
 		try
 		{

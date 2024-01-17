@@ -56,8 +56,8 @@ class GeneratePageListener
                 continue;
             }
 
-            // TODO: Use ResponseContext, once it supports appending to <head>
             try {
+                // TODO: Use ResponseContext, once it supports appending to <head>
                 $GLOBALS['TL_HEAD'][] = $this->generateFeedTag($this->urlGenerator->generate($feed, [], UrlGeneratorInterface::ABSOLUTE_URL), $feed->feedFormat, $feed->title);
             } catch (ExceptionInterface) {
             }
