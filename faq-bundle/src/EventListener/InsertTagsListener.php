@@ -58,8 +58,9 @@ class InsertTagsListener
         $url = '';
 
         if ('faq_title' !== $key) {
+            $absolute = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true);
+
             try {
-                $absolute = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true);
                 $url = $this->urlGenerator->generate($faq, [], $absolute ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH);
             } catch (ExceptionInterface) {
                 return '';

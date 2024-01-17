@@ -137,18 +137,18 @@ class ModuleFaqList extends Module
 		// A jumpTo page is not mandatory for FAQ categories (see #6226) but required for the FAQ list module
 		if ($objCategory->jumpTo < 1)
 		{
-			throw new \Exception("FAQ categories without redirect page cannot be used in an FAQ list");
+			throw new \Exception('FAQ categories without redirect page cannot be used in an FAQ list');
 		}
 
 		try
 		{
 			$url = System::getContainer()->get('contao.routing.content_url_generator')->generate($objFaq);
-
-			return StringUtil::ampersand($url);
 		}
 		catch (ExceptionInterface)
 		{
-			return StringUtil::ampersand(Environment::get('requestUri'));
+			$url = Environment::get('requestUri');
 		}
+
+		return StringUtil::ampersand($url);
 	}
 }

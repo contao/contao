@@ -47,7 +47,6 @@ class InsertTagsListenerTest extends ContaoTestCase
         ];
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
-
         $urlGenerator
             ->expects($this->exactly(10))
             ->method('generate')

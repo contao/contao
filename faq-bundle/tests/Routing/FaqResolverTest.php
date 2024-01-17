@@ -23,7 +23,6 @@ class FaqResolverTest extends ContaoTestCase
     public function testResolveNewsletter(): void
     {
         $target = $this->mockClassWithProperties(PageModel::class);
-
         $newsletterChannel = $this->mockClassWithProperties(FaqCategoryModel::class, ['jumpTo' => 42]);
 
         $content = $this->mockClassWithProperties(FaqModel::class);
@@ -57,7 +56,6 @@ class FaqResolverTest extends ContaoTestCase
     public function testGetParametersForContent(object $content, array $expected): void
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class);
-
         $resolver = new FaqResolver($this->mockContaoFramework());
 
         $this->assertSame($expected, $resolver->getParametersForContent($content, $pageModel));
