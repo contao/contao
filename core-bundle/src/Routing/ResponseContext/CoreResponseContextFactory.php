@@ -12,7 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\ResponseContext;
 
+use Contao\CoreBundle\Controller\CspReporterController;
+use Contao\CoreBundle\Csp\CspParser;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
@@ -22,6 +25,8 @@ use Contao\CoreBundle\Util\UrlUtil;
 use Contao\PageModel;
 use Spatie\SchemaOrg\WebPage;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class CoreResponseContextFactory
@@ -33,6 +38,8 @@ class CoreResponseContextFactory
         private readonly HtmlDecoder $htmlDecoder,
         private readonly RequestStack $requestStack,
         private readonly InsertTagParser $insertTagParser,
+        private readonly CspParser $cspParser,
+        private readonly UrlGeneratorInterface $urlGenerator,
     ) {
     }
 
@@ -114,6 +121,38 @@ class CoreResponseContextFactory
             )
         ;
 
+        $this->addCspHandler($context, $pageModel);
+
         return $context;
+    }
+
+    private function addCspHandler(ResponseContext $context, PageModel $pageModel): void
+    {
+        if (!$pageModel->enableCsp) {
+            return;
+        }
+
+        $directives = $this->cspParser->parseHeader((string) $pageModel->csp);
+        $directives->setLevel1Fallback(false);
+
+        if ($pageModel->cspReportLog) {
+            $urlContext = $this->urlGenerator->getContext();
+            $baseUrl = $urlContext->getBaseUrl();
+
+            // Remove preview script if present
+            $urlContext->setBaseUrl('');
+
+            try {
+                $reportUri = $this->urlGenerator->generate(CspReporterController::class, ['page' => $pageModel->id], UrlGeneratorInterface::ABSOLUTE_URL);
+                $directives->setDirective('report-uri', $reportUri);
+            } catch (RouteNotFoundException) {
+                // noop
+            } finally {
+                $urlContext->setBaseUrl($baseUrl);
+            }
+        }
+
+        $cspHandler = new CspHandler($directives, (bool) $pageModel->cspReportOnly);
+        $context->add($cspHandler);
     }
 }

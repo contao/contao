@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Controller;
 use Contao\ArticleModel;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\SitemapEvent;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
@@ -23,6 +24,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @internal
@@ -33,6 +35,7 @@ class SitemapController extends AbstractController
     public function __construct(
         private readonly PageRegistry $pageRegistry,
         private readonly PageFinder $pageFinder,
+        private readonly ContentUrlGenerator $urlGenerator,
     ) {
     }
 
@@ -123,12 +126,12 @@ class SitemapController extends AbstractController
                 && 'html' === $this->pageRegistry->getRoute($pageModel)->getDefault('_format')
             ) {
                 try {
-                    $urls = [$pageModel->getAbsoluteUrl()];
+                    $urls = [$this->urlGenerator->generate($pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL)];
 
                     // Get articles with teaser
                     if ($articleModels = $articleModelAdapter->findPublishedWithTeaserByPid($pageModel->id, ['ignoreFePreview' => true])) {
                         foreach ($articleModels as $articleModel) {
-                            $urls[] = $pageModel->getAbsoluteUrl('/articles/'.($articleModel->alias ?: $articleModel->id));
+                            $urls[] = $this->urlGenerator->generate($articleModel, [], UrlGeneratorInterface::ABSOLUTE_URL);
                         }
                     }
 

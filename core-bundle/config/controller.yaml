@@ -130,6 +130,13 @@ services:
         arguments:
             - '@contao.image.studio'
 
+    Contao\CoreBundle\Controller\CspReporterController:
+        arguments:
+            - '@contao.framework'
+            - '@?nelmio_security.csp_reporter_controller'
+        tags:
+            - controller.service_arguments
+
     Contao\CoreBundle\Controller\FaviconController:
         arguments:
             - '@contao.framework'
@@ -214,5 +221,6 @@ services:
         arguments:
             - '@contao.routing.page_registry'
             - '@contao.routing.page_finder'
+            - '@contao.routing.content_url_generator'
         tags:
             - controller.service_arguments

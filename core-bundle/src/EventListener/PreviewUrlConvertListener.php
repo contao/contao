@@ -16,6 +16,7 @@ use Contao\ArticleModel;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Exception\RouteParametersException;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\PageModel;
@@ -24,6 +25,7 @@ use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentUriGenerator;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @internal
@@ -33,6 +35,7 @@ class PreviewUrlConvertListener
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly PageRegistry $pageRegistry,
+        private readonly ContentUrlGenerator $urlGenerator,
         private readonly UriSigner $signer,
         private readonly string $fragmentPath = '/_fragment',
     ) {
@@ -52,6 +55,20 @@ class PreviewUrlConvertListener
             return;
         }
 
+        if ($request->query->has('article')) {
+            $articleAdapter = $this->framework->getAdapter(ArticleModel::class);
+            $article = $articleAdapter->findByIdOrAliasAndPid($request->query->get('article'), $request->query->getInt('page'));
+
+            if ($article) {
+                try {
+                    $event->setUrl($this->urlGenerator->generate($article, [], UrlGeneratorInterface::ABSOLUTE_URL));
+
+                    return;
+                } catch (ExceptionInterface) {
+                }
+            }
+        }
+
         if ($request->query->has('page')) {
             $pageAdapter = $this->framework->getAdapter(PageModel::class);
 
@@ -60,7 +77,7 @@ class PreviewUrlConvertListener
             }
 
             try {
-                $event->setUrl($page->getAbsoluteUrl($this->getParams($request, $page->id)));
+                $event->setUrl($this->urlGenerator->generate($page, [], UrlGeneratorInterface::ABSOLUTE_URL));
             } catch (RouteParametersException $e) {
                 $route = $e->getRoute();
 
@@ -73,22 +90,6 @@ class PreviewUrlConvertListener
                 $event->setUrl($this->getFragmentUrl($request, $page));
             }
         }
-    }
-
-    private function getParams(Request $request, int $pageId): string|null
-    {
-        if (!$request->query->has('article')) {
-            return null;
-        }
-
-        $articleAdapter = $this->framework->getAdapter(ArticleModel::class);
-
-        if (!$article = $articleAdapter->findByIdOrAliasAndPid($request->query->get('article'), $pageId)) {
-            return null;
-        }
-
-        // Add the /article/ fragment (see contao/core-bundle#673)
-        return '/articles/'.($article->alias ?: $article->id);
     }
 
     private function getFragmentUrl(Request $request, PageModel $pageModel): string

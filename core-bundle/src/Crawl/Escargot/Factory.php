@@ -14,10 +14,13 @@ namespace Contao\CoreBundle\Crawl\Escargot;
 
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\EscargotSubscriberInterface;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use Nyholm\Psr7\Uri;
 use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Terminal42\Escargot\BaseUriCollection;
@@ -45,6 +48,7 @@ class Factory
     public function __construct(
         private readonly Connection $connection,
         private readonly ContaoFramework $framework,
+        private readonly ContentUrlGenerator $urlGenerator,
         private readonly array $additionalUris = [],
         private readonly array $defaultHttpClientOptions = [],
     ) {
@@ -126,7 +130,10 @@ class Factory
         }
 
         foreach ($rootPages as $rootPage) {
-            $collection->add(new Uri($rootPage->getAbsoluteUrl()));
+            try {
+                $collection->add(new Uri($this->urlGenerator->generate($rootPage, [], UrlGeneratorInterface::ABSOLUTE_URL)));
+            } catch (ExceptionInterface) {
+            }
         }
 
         return $collection;

@@ -19,6 +19,7 @@
                     {% set iframe_attrs = attrs({width, height, src: source.url, allowfullscreen: true})
                         .mergeWith(iframe_attrs|default)
                     %}
+                    {% do add_csp_source('frame-src', iframe_attrs.src) %}
                     <iframe{{ iframe_attrs }}></iframe>
                 {% endblock %}
             {% endif %}

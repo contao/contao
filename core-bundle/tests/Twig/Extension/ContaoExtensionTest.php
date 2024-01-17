@@ -96,6 +96,8 @@ class ContaoExtensionTest extends TestCase
             'prefix_url' => [],
             'frontend_module' => ['html'],
             'content_element' => ['html'],
+            'contao_csp_nonce' => [],
+            'add_csp_source' => [],
         ];
 
         $functions = $this->getContaoExtension()->getFunctions();

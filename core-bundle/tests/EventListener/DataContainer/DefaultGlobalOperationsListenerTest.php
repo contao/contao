@@ -37,7 +37,7 @@ class DefaultGlobalOperationsListenerTest extends TestCase
     /**
      * @dataProvider editAllOperationProvider
      */
-    public function testAddsEditAllOperation(bool $closed, bool $notEditable, bool $notCopyable, bool $hasOperation): void
+    public function testAddsEditAllOperation(bool $closed, bool $notEditable, bool $notCopyable, bool $notDeletable, bool $hasOperation): void
     {
         /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
@@ -46,6 +46,7 @@ class DefaultGlobalOperationsListenerTest extends TestCase
                 'closed' => $closed,
                 'notEditable' => $notEditable,
                 'notCopyable' => $notCopyable,
+                'notDeletable' => $notDeletable,
             ],
             'list' => [
                 'sorting' => [
@@ -68,17 +69,19 @@ class DefaultGlobalOperationsListenerTest extends TestCase
 
     public function editAllOperationProvider(): \Generator
     {
-        yield 'has operation if DCA is editable' => [false, false, false, true];
+        yield 'has operation if DCA is editable' => [false, false, false, false, true];
 
-        yield 'has operation if records can be added' => [true, false, false, true];
+        yield 'has operation if records can be added' => [true, false, false, false, true];
 
-        yield 'has operation if records can be edited' => [true, false, true, true];
+        yield 'has operation if records can be edited' => [true, false, true, false, true];
 
-        yield 'has operation if records can be copied' => [false, false, true, true];
+        yield 'has operation if records can be copied' => [false, false, true, false, true];
 
-        yield 'does not have operation if records cannot be created or edited' => [true, true, false, false];
+        yield 'has operation if records can be deleted' => [false, false, false, true, true];
 
-        yield 'does not have operation if records cannot be edited or copied' => [false, true, true, false];
+        yield 'does not have operation if records cannot be created, edited and deleted' => [true, true, false, true, false];
+
+        yield 'does not have operation if records cannot be edited, copied and deleted' => [false, true, true, true, false];
     }
 
     /**

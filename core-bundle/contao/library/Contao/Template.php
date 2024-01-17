@@ -10,7 +10,9 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use MatthiasMullie\Minify\CSS;
@@ -416,6 +418,49 @@ abstract class Template extends Controller
 	}
 
 	/**
+	 * @param iterable<string, string|int|bool|\Stringable|null>|string|self|null $attributes
+	 */
+	public function attr(HtmlAttributes|iterable|string|null $attributes = null): HtmlAttributes
+	{
+		return new HtmlAttributes($attributes);
+	}
+
+	/**
+	 * Returns a nonce for the given CSP directive.
+	 */
+	public function nonce(string $directive): ?string
+	{
+		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
+
+		if (!$responseContext || !$responseContext->has(CspHandler::class))
+		{
+			return null;
+		}
+
+		/** @var CspHandler $csp */
+		$csp = $responseContext->get(CspHandler::class);
+
+		return $csp->getNonce($directive);
+	}
+
+	/**
+	 * Adds a source to the given CSP directive.
+	 */
+	public function addCspSource(string $directive, string $source): void
+	{
+		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
+
+		if (!$responseContext || !$responseContext->has(CspHandler::class))
+		{
+			return;
+		}
+
+		/** @var CspHandler $csp */
+		$csp = $responseContext->get(CspHandler::class);
+		$csp->addSource($directive, $source);
+	}
+
+	/**
 	 * Render a figure
 	 *
 	 * The provided configuration array is used to configure a FigureBuilder.
@@ -638,7 +683,17 @@ abstract class Template extends Controller
 	 */
 	public static function generateInlineStyle($script)
 	{
-		return '<style>' . $script . '</style>';
+		$nonce = null;
+		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
+
+		if ($responseContext?->has(CspHandler::class))
+		{
+			/** @var CspHandler $csp */
+			$csp = $responseContext->get(CspHandler::class);
+			$nonce = $csp->getNonce('style-src');
+		}
+
+		return '<style' . ($nonce ? ' nonce="' . $nonce . '"' : '') . '>' . $script . '</style>';
 	}
 
 	/**
@@ -695,7 +750,17 @@ abstract class Template extends Controller
 	 */
 	public static function generateInlineScript($script)
 	{
-		return '<script>' . $script . '</script>';
+		$nonce = null;
+		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
+
+		if ($responseContext?->has(CspHandler::class))
+		{
+			/** @var CspHandler $csp */
+			$csp = $responseContext->get(CspHandler::class);
+			$nonce = $csp->getNonce('script-src');
+		}
+
+		return '<script' . ($nonce ? ' nonce="' . $nonce . '"' : '') . '>' . $script . '</script>';
 	}
 
 	/**

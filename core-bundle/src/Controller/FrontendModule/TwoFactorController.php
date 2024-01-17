@@ -28,6 +28,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -81,7 +82,7 @@ class TwoFactorController extends AbstractFrontendModuleController
 
         $adapter = $this->getContaoAdapter(PageModel::class);
         $redirectPage = $model->jumpTo > 0 ? $adapter->findByPk($model->jumpTo) : null;
-        $return = $redirectPage instanceof PageModel ? $redirectPage->getAbsoluteUrl() : $this->pageModel->getAbsoluteUrl();
+        $return = $this->generateContentUrl($redirectPage instanceof PageModel ? $redirectPage : $this->pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL);
 
         $template->enforceTwoFactor = $this->pageModel->enforceTwoFactor;
         $template->targetPath = $return;
@@ -125,7 +126,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         }
 
         $template->isEnabled = (bool) $user->useTwoFactor;
-        $template->href = $this->pageModel->getAbsoluteUrl().'?2fa=enable';
+        $template->href = $this->generateContentUrl($this->pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL).'?2fa=enable';
         $template->trustedDevices = $this->container->get('contao.security.two_factor.trusted_device_manager')->getTrustedDevices($user);
 
         return $template->getResponse();
@@ -187,6 +188,6 @@ class TwoFactorController extends AbstractFrontendModuleController
         // Clear all trusted devices
         $this->container->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
 
-        return new RedirectResponse($this->pageModel->getAbsoluteUrl());
+        return new RedirectResponse($this->generateContentUrl($this->pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL));
     }
 }

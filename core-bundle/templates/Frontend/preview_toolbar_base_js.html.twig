@@ -1,4 +1,6 @@
-<style>
+{% do csp_handler.addSource('img-src', 'data:') %}
+{% set styleNonce = csp_handler.getNonce('style-src') %}
+<style{% if styleNonce %} nonce="{{ styleNonce }}"{% endif %}>
     .cto-toolbar {
         font-family: -apple-system,system-ui,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
         font-weight: 400;
@@ -205,7 +207,9 @@
         }
     }
 </style>
-<script>
+
+{% set scriptNonce = csp_handler.getNonce('script-src') %}
+<script{% if scriptNonce %} nonce="{{ scriptNonce }}"{% endif %}>
     (function () {
         const toolbar = document.createElement('div');
         toolbar.classList.add('cto-toolbar');
@@ -244,6 +248,14 @@
         request('GET', '{{ action }}', null, function () {
             if (200 === this.status) {
                 toolbar.innerHTML = this.responseText;
+
+                document.querySelectorAll('.cto-toolbar__share-url').forEach((link) => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        window.open(link.href+'&url='+location.href);
+                        return false;
+                    });
+                })
 
                 const event = new Event('cto-toolbar-loaded');
                 window.dispatchEvent(event);
