@@ -2,6 +2,17 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.2.8] (2024-01-17)
+
+**Fixed issues:**
+
+- [#6709] Set form action to response URL ([fritzmg])
+- [#6695] Fix undefined method `checkPermission` ([zoglo])
+- [#6658] Fix clipboard permission checks ([aschempp])
+- [#6659] Fix toggle operation parameter check ([aschempp])
+- [#6623] Do not process the form data if there are errors ([fritzmg])
+- [#6601] Update the markdown doc link ([aschempp])
+
 ## [5.2.7] (2023-11-30)
 
 **Fixed issues:**
@@ -137,6 +148,7 @@ This project adheres to [Semantic Versioning].
 - [#5881] Remove the inconsistent form field wrapper ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.2.8]: https://github.com/contao/contao/releases/tag/5.2.8
 [5.2.7]: https://github.com/contao/contao/releases/tag/5.2.7
 [5.2.6]: https://github.com/contao/contao/releases/tag/5.2.6
 [5.2.5]: https://github.com/contao/contao/releases/tag/5.2.5
@@ -160,6 +172,7 @@ This project adheres to [Semantic Versioning].
 [md-netdesign]: https://github.com/md-netdesign
 [qzminski]: https://github.com/qzminski
 [Toflar]: https://github.com/Toflar
+[zoglo]: https://github.com/zoglo
 [#4779]: https://github.com/contao/contao/pull/4779
 [#5419]: https://github.com/contao/contao/pull/5419
 [#5610]: https://github.com/contao/contao/pull/5610
@@ -227,3 +240,9 @@ This project adheres to [Semantic Versioning].
 [#6577]: https://github.com/contao/contao/pull/6577
 [#6579]: https://github.com/contao/contao/pull/6579
 [#6581]: https://github.com/contao/contao/pull/6581
+[#6601]: https://github.com/contao/contao/pull/6601
+[#6623]: https://github.com/contao/contao/pull/6623
+[#6658]: https://github.com/contao/contao/pull/6658
+[#6659]: https://github.com/contao/contao/pull/6659
+[#6695]: https://github.com/contao/contao/pull/6695
+[#6709]: https://github.com/contao/contao/pull/6709

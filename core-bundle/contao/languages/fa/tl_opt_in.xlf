@@ -1,0 +1,38 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_opt_in.php" source-language="en" target-language="fa">
+    <body>
+      <trans-unit id="tl_opt_in.token">
+        <source>Token</source>
+        <target>توکن</target>
+      </trans-unit>
+      <trans-unit id="tl_opt_in.confirmedOn">
+        <source>Confirmed at</source>
+        <target>تایید شده در</target>
+      </trans-unit>
+      <trans-unit id="tl_opt_in.removeOn">
+        <source>Remove at</source>
+        <target>حذف در</target>
+      </trans-unit>
+      <trans-unit id="tl_opt_in.invalidatedThrough">
+        <source>Invalidated through</source>
+        <target>نامعتبر شده طی</target>
+      </trans-unit>
+      <trans-unit id="tl_opt_in.emailSubject">
+        <source>E-mail subject</source>
+        <target>موضوع ایمیل</target>
+      </trans-unit>
+      <trans-unit id="tl_opt_in.emailText">
+        <source>E-mail text</source>
+        <target>متن ایمیل</target>
+      </trans-unit>
+      <trans-unit id="tl_opt_in.show">
+        <source>Show the details of token ID %s</source>
+        <target>نمایش جزئیات توکن شناسه %s</target>
+      </trans-unit>
+      <trans-unit id="tl_opt_in.resend">
+        <source>Resend token ID %s</source>
+        <target>ارسال مجدد توکن شناسه %s</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
