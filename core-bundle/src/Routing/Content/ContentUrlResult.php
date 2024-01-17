@@ -27,11 +27,6 @@ final class ContentUrlResult
         }
     }
 
-    public function isAbstained(): bool
-    {
-        return null === $this->content;
-    }
-
     public function isRedirect(): bool
     {
         return $this->redirect;
@@ -52,14 +47,6 @@ final class ContentUrlResult
         }
 
         return $this->content;
-    }
-
-    /**
-     * Provides no result to continue the resolver loop.
-     */
-    public static function abstain(): self
-    {
-        return new self(null);
     }
 
     /**

@@ -21,10 +21,10 @@ class PageResolver implements ContentUrlResolverInterface
     {
     }
 
-    public function resolve(object $content): ContentUrlResult
+    public function resolve(object $content): ContentUrlResult|null
     {
         if (!$content instanceof PageModel) {
-            return ContentUrlResult::abstain();
+            return null;
         }
 
         switch ($content->type) {
@@ -43,7 +43,7 @@ class PageResolver implements ContentUrlResolverInterface
                 return ContentUrlResult::redirect($forwardPage);
         }
 
-        return ContentUrlResult::abstain();
+        return null;
     }
 
     public function getParametersForContent(object $content, PageModel $pageModel): array

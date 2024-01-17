@@ -24,10 +24,10 @@ class StringResolver implements ContentUrlResolverInterface
     ) {
     }
 
-    public function resolve(object $content): ContentUrlResult
+    public function resolve(object $content): ContentUrlResult|null
     {
         if (!$content instanceof StringUrl) {
-            return ContentUrlResult::abstain();
+            return null;
         }
 
         $url = $this->insertTagParser->replaceInline($content->value);

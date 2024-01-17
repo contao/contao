@@ -148,7 +148,7 @@ class ContentUrlGenerator implements ResetInterface, RequestContextAwareInterfac
         foreach ($this->urlResolvers as $resolver) {
             $result = $resolver->resolve($contents[0]);
 
-            if ($result->isAbstained()) {
+            if (!$result) {
                 continue;
             }
 

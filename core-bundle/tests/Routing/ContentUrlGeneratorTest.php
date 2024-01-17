@@ -62,7 +62,7 @@ class ContentUrlGeneratorTest extends TestCase
 
         $resolver = $this->mockResolver(
             [$pageModel1, ContentUrlResult::redirect($pageModel2)],
-            [$pageModel2, ContentUrlResult::abstain()],
+            [$pageModel2, null],
         );
 
         $service = new ContentUrlGenerator($urlGenerator, $pageRegistry, $entityManager, [$resolver]);
@@ -81,7 +81,7 @@ class ContentUrlGeneratorTest extends TestCase
         $entityManager = $this->createMock(EntityManagerInterface::class);
 
         $resolver = $this->mockResolver(
-            [$pageModel2, ContentUrlResult::abstain()],
+            [$pageModel2, null],
         );
 
         $service = new ContentUrlGenerator($urlGenerator, $pageRegistry, $entityManager, [$resolver]);
@@ -101,7 +101,7 @@ class ContentUrlGeneratorTest extends TestCase
 
         $resolver = $this->mockResolver(
             [$pageModel1, ContentUrlResult::redirect($pageModel2)],
-            [$pageModel2, ContentUrlResult::abstain()],
+            [$pageModel2, null],
         );
 
         $service = new ContentUrlGenerator($urlGenerator, $pageRegistry, $entityManager, [$resolver]);
@@ -175,7 +175,7 @@ class ContentUrlGeneratorTest extends TestCase
 
         $pageResolver = $this->mockResolver(
             [$content, ContentUrlResult::url('https://example.net')],
-            [$this->isInstanceOf(StringUrl::class), ContentUrlResult::abstain()],
+            [$this->isInstanceOf(StringUrl::class), null],
         );
 
         $stringResolver = $this->mockResolver(
@@ -200,7 +200,7 @@ class ContentUrlGeneratorTest extends TestCase
 
         $resolver = $this->mockResolver(
             [$content, ContentUrlResult::resolve($target)],
-            [$target, ContentUrlResult::abstain()],
+            [$target, null],
         );
 
         $service = new ContentUrlGenerator($urlGenerator, $pageRegistry, $entityManager, [$resolver]);
@@ -223,7 +223,7 @@ class ContentUrlGeneratorTest extends TestCase
 
         $resolver = $this->mockResolver(
             [$content, ContentUrlResult::resolve($target)],
-            [$target, ContentUrlResult::abstain()],
+            [$target, null],
         );
 
         $resolver
@@ -252,7 +252,7 @@ class ContentUrlGeneratorTest extends TestCase
 
         $resolver = $this->mockResolver(
             [$content, ContentUrlResult::resolve($target)],
-            [$target, ContentUrlResult::abstain()],
+            [$target, null],
         );
 
         $resolver

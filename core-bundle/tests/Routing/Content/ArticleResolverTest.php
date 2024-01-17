@@ -27,7 +27,7 @@ class ArticleResolverTest extends TestCase
         $resolver = new ArticleResolver($this->mockContaoFramework());
         $result = $resolver->resolve($content);
 
-        $this->assertTrue($result->isAbstained());
+        $this->assertNull($result);
     }
 
     public function testResolvesArticleModel(): void

@@ -27,7 +27,7 @@ class PageResolverTest extends TestCase
         $resolver = new PageResolver($this->mockContaoFramework());
         $result = $resolver->resolve($content);
 
-        $this->assertTrue($result->isAbstained());
+        $this->assertNull($result);
     }
 
     public function testAbstainsIfContentPageModelIsNotRedirectOrForward(): void
@@ -36,15 +36,15 @@ class PageResolverTest extends TestCase
 
         $content = $this->mockClassWithProperties(PageModel::class, ['type' => 'regular']);
         $result = $resolver->resolve($content);
-        $this->assertTrue($result->isAbstained());
+        $this->assertNull($result);
 
         $content = $this->mockClassWithProperties(PageModel::class, ['type' => 'root']);
         $result = $resolver->resolve($content);
-        $this->assertTrue($result->isAbstained());
+        $this->assertNull($result);
 
         $content = $this->mockClassWithProperties(PageModel::class, ['type' => 'foobar']);
         $result = $resolver->resolve($content);
-        $this->assertTrue($result->isAbstained());
+        $this->assertNull($result);
     }
 
     public function testReturnsRedirectUrl(): void

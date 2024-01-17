@@ -37,7 +37,7 @@ class StringResolverTest extends TestCase
         $resolver = new StringResolver($insertTagParser, $urlHelper);
         $result = $resolver->resolve($content);
 
-        $this->assertTrue($result->isAbstained());
+        $this->assertNull($result);
     }
 
     /**

@@ -18,12 +18,12 @@ interface ContentUrlResolverInterface
 {
     /**
      * Returns a result for resolving the given content.
-     * - ContentUrlResult::abstain() if you cannot handle the content.
+     * - NULL if you cannot handle the content.
      * - ContentUrlResult::url() if the content has a URL string that could be relative or contain insert tags.
      * - ContentUrlResult::redirect() to generate the URL for a new content instead of the current one.
      * - ContentUrlResult::resolve() to generate the URL for the given PageModel with the current content.
      */
-    public function resolve(object $content): ContentUrlResult;
+    public function resolve(object $content): ContentUrlResult|null;
 
     /**
      * Returns an array of parameters for the given content that can be used
