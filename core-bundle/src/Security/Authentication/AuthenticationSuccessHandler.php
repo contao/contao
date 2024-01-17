@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Security\Authentication;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\FrontendUser;
 use Contao\PageModel;
 use Contao\StringUtil;
@@ -28,6 +29,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
@@ -46,6 +48,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         private readonly ContaoFramework $framework,
         private readonly TrustedDeviceManagerInterface $trustedDeviceManager,
         private readonly FirewallMap $firewallMap,
+        private readonly ContentUrlGenerator $urlGenerator,
         private readonly UriSigner $uriSigner,
         private readonly TokenStorageInterface $tokenStorage,
         private readonly LoggerInterface|null $logger = null,
@@ -124,7 +127,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         $groupPage = $pageModelAdapter->findFirstActiveByMemberGroups($groups);
 
         if ($groupPage instanceof PageModel) {
-            return $groupPage->getAbsoluteUrl();
+            return $this->urlGenerator->generate($groupPage, [], UrlGeneratorInterface::ABSOLUTE_URL);
         }
 
         return $this->decodeTargetPath($request);

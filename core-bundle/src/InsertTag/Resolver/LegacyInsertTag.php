@@ -30,7 +30,6 @@ use Contao\Frontend;
 use Contao\FrontendTemplate;
 use Contao\FrontendUser;
 use Contao\Idna;
-use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Validator;
@@ -38,6 +37,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 #[AsInsertTag('lang')]
 #[AsInsertTag('br')]
@@ -299,18 +299,12 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                     break;
                 }
 
-                $objPid = $objArticle->getRelated('pid');
-
-                if (!$objPid instanceof PageModel) {
-                    break;
-                }
-
-                $params = '/articles/'.($objArticle->alias ?: $objArticle->id);
                 $strTarget = \in_array('blank', \array_slice($insertTag->getParameters()->all(), 1), true) ? ' target="_blank" rel="noreferrer noopener"' : '';
                 $strUrl = '';
 
                 try {
-                    $strUrl = \in_array('absolute', \array_slice($insertTag->getParameters()->all(), 1), true) ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params);
+                    $blnAbsolute = \in_array('absolute', \array_slice($insertTag->getParameters()->all(), 1), true);
+                    $strUrl = $this->container->get('contao.routing.content_url_generator')->generate($objArticle, [], $blnAbsolute ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH);
                 } catch (ExceptionInterface) {
                     // Ignore routing exception
                 }

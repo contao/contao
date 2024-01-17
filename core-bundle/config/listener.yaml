@@ -499,6 +499,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@contao.routing.page_registry'
+            - '@contao.routing.content_url_generator'
             - '@uri_signer'
             - '%fragment.path%'
         tags:
@@ -585,6 +586,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@contao.routing.scope_matcher'
+            - '@contao.routing.content_url_generator'
             - '@security.token_storage'
             - '%scheb_two_factor.security_tokens%'
         tags:

@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Security\Authentication;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
@@ -28,6 +29,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -132,11 +134,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
     public function testUsesTheUrlOfThePage(): void
     {
         $model = $this->createMock(PageModel::class);
-        $model
-            ->expects($this->once())
-            ->method('getAbsoluteUrl')
-            ->willReturn('http://localhost/page')
-        ;
 
         $adapter = $this->mockAdapter(['findFirstActiveByMemberGroups']);
         $adapter
@@ -147,6 +144,14 @@ class AuthenticationSuccessHandlerTest extends TestCase
         ;
 
         $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
+
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->expects($this->once())
+            ->method('generate')
+            ->with($model, [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('http://localhost/page')
+        ;
 
         $user = $this->createPartialMock(FrontendUser::class, ['save']);
         $user->lastLogin = time() - 3600;
@@ -164,7 +169,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $handler = $this->getHandler($framework);
+        $handler = $this->getHandler($framework, null, false, $urlGenerator);
         $response = $handler->onAuthenticationSuccess(new Request(), $token);
 
         $this->assertSame('http://localhost/page', $response->getTargetUrl());
@@ -431,12 +436,13 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $this->getHandler()->onAuthenticationSuccess($request, $token);
     }
 
-    private function getHandler(ContaoFramework|null $framework = null, LoggerInterface|null $logger = null, bool $checkRequest = false): AuthenticationSuccessHandler
+    private function getHandler(ContaoFramework|null $framework = null, LoggerInterface|null $logger = null, bool $checkRequest = false, ContentUrlGenerator|null $urlGenerator = null): AuthenticationSuccessHandler
     {
         $framework ??= $this->mockContaoFramework();
         $trustedDeviceManager = $this->createMock(TrustedDeviceManagerInterface::class);
         $firewallMap = $this->createMock(FirewallMap::class);
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $urlGenerator ??= $this->createMock(ContentUrlGenerator::class);
         $logger ??= $this->createMock(LoggerInterface::class);
 
         $uriSigner = $this->createMock(UriSigner::class);
@@ -445,6 +451,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn($checkRequest)
         ;
 
-        return new AuthenticationSuccessHandler($framework, $trustedDeviceManager, $firewallMap, $uriSigner, $tokenStorage, $logger);
+        return new AuthenticationSuccessHandler($framework, $trustedDeviceManager, $firewallMap, $urlGenerator, $uriSigner, $tokenStorage, $logger);
     }
 }

@@ -64,6 +64,7 @@ class ModuleArticleList extends Module
 
 		$id = $objPage->id;
 		$objTarget = null;
+		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
 
 		$this->Template->request = Environment::get('requestUri');
 
@@ -72,8 +73,7 @@ class ModuleArticleList extends Module
 		{
 			$id = $objTarget->id;
 
-			/** @var PageModel $objTarget */
-			$this->Template->request = $objTarget->getFrontendUrl();
+			$this->Template->request = $urlGenerator->generate($objTarget);
 		}
 
 		// Get published articles
@@ -100,7 +100,7 @@ class ModuleArticleList extends Module
 
 			try
 			{
-				$href = $objHelper->getFrontendUrl('/articles/' . ($objArticles->alias ?: $objArticles->id));
+				$href = $urlGenerator->generate($objArticles->current());
 			}
 			catch (ExceptionInterface)
 			{

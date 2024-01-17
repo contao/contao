@@ -77,6 +77,7 @@ services:
         arguments:
             - '@database_connection'
             - '@contao.framework'
+            - '@contao.routing.content_url_generator'
 
     contao.crawl.escargot.search_index_subscriber:
         class: Contao\CoreBundle\Crawl\Escargot\Subscriber\SearchIndexSubscriber
@@ -467,6 +468,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@contao.security.token_checker'
+            - '@contao.routing.content_url_generator'
 
     contao.insert_tag.string_util_flag:
         class: Contao\CoreBundle\InsertTag\Flag\StringUtilFlag
@@ -650,6 +652,31 @@ services:
 
     contao.routing.backend_matcher:
         class: Contao\CoreBundle\Routing\Matcher\BackendMatcher
+
+    contao.routing.content.article_resolver:
+        class: Contao\CoreBundle\Routing\Content\ArticleResolver
+        arguments:
+            - '@contao.framework'
+
+    contao.routing.content.page_resolver:
+        class: Contao\CoreBundle\Routing\Content\PageResolver
+        arguments:
+            - '@contao.framework'
+
+    contao.routing.content.string_resolver:
+        class: Contao\CoreBundle\Routing\Content\StringResolver
+        arguments:
+            - '@contao.insert_tag.parser'
+            - '@url_helper'
+
+    contao.routing.content_url_generator:
+        class: Contao\CoreBundle\Routing\ContentUrlGenerator
+        arguments:
+            - '@router'
+            - '@contao.routing.page_registry'
+            - '@doctrine.orm.entity_manager'
+            - !tagged_iterator contao.content_url_resolver
+        public: true
 
     contao.routing.frontend_matcher:
         class: Contao\CoreBundle\Routing\Matcher\FrontendMatcher
@@ -839,6 +866,7 @@ services:
             - '@contao.framework'
             - '@contao.security.two_factor.trusted_device_manager'
             - '@security.firewall.map'
+            - '@contao.routing.content_url_generator'
             - '@uri_signer'
             - '@security.token_storage'
             - '@?logger'
@@ -1236,6 +1264,7 @@ services:
     Contao\CoreBundle\Mailer\AvailableTransports: '@contao.mailer.available_transports'
     Contao\CoreBundle\OptIn\OptIn: '@contao.opt_in'
     Contao\CoreBundle\Picker\PickerBuilderInterface: '@contao.picker.builder'
+    Contao\CoreBundle\Routing\ContentUrlGenerator: '@contao.routing.content_url_generator'
     Contao\CoreBundle\Routing\PageFinder: '@contao.routing.page_finder'
     Contao\CoreBundle\Routing\Page\PageRegistry: '@contao.routing.page_registry'
     Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor: '@contao.routing.response_context_accessor'
