@@ -14,10 +14,10 @@ namespace Contao\FaqBundle\EventListener;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
-use Contao\CoreBundle\Util\UrlUtil;
 use Contao\FaqModel;
 use Contao\StringUtil;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @internal
@@ -59,15 +59,15 @@ class InsertTagsListener
             return '';
         }
 
-        try {
-            $absolute = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true);
-            $url = $this->urlGenerator->generate($faq);
+        $url = '';
 
-            if (!$absolute) {
-                $url = ltrim(UrlUtil::makeAbsolutePath($url, $this->urlGenerator->getContext()->getBaseUrl()), '/');
+        if ('faq_title' !== $key) {
+            try {
+                $absolute = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true);
+                $url = $this->urlGenerator->generate($faq, [], $absolute ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH);
+            } catch (ExceptionInterface) {
+                return '';
             }
-        } catch (ExceptionInterface) {
-            return '';
         }
 
         return $this->generateReplacement($faq, $key, $url, \in_array('blank', \array_slice($elements, 2), true));

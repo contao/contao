@@ -23,6 +23,7 @@ use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class SitemapListenerTest extends ContaoTestCase
 {
@@ -60,7 +61,7 @@ class SitemapListenerTest extends ContaoTestCase
         $urlGenerator
             ->expects($this->once())
             ->method('generate')
-            ->with($faqModel)
+            ->with($faqModel, [], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturn('https://contao.org')
         ;
 

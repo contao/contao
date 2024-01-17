@@ -19,17 +19,13 @@ use Contao\FaqCategoryModel;
 use Contao\FaqModel;
 use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
-use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class InsertTagsListenerTest extends ContaoTestCase
 {
     public function testReplacesTheFaqTags(): void
     {
         $page = $this->createMock(PageModel::class);
-        $page
-            ->method('getFrontendUrl')
-            ->willReturn('faq/what-does-foobar-mean.html')
-        ;
 
         $categoryModel = $this->createMock(FaqCategoryModel::class);
         $categoryModel
@@ -53,14 +49,32 @@ class InsertTagsListenerTest extends ContaoTestCase
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
 
         $urlGenerator
+            ->expects($this->exactly(10))
             ->method('generate')
-            ->with($faqModel)
-            ->willReturn('http://domain.tld/faq/what-does-foobar-mean.html')
-        ;
-
-        $urlGenerator
-            ->method('getContext')
-            ->willReturn(new RequestContext('http://domain.tld'))
+            ->withConsecutive(
+                [$faqModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
+                [$faqModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
+                [$faqModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
+                [$faqModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
+                [$faqModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
+                [$faqModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
+                [$faqModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
+                [$faqModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
+                [$faqModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
+                [$faqModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
+            )
+            ->willReturnOnConsecutiveCalls(
+                'faq/what-does-foobar-mean.html',
+                'faq/what-does-foobar-mean.html',
+                'faq/what-does-foobar-mean.html',
+                'faq/what-does-foobar-mean.html',
+                'http://domain.tld/faq/what-does-foobar-mean.html',
+                'http://domain.tld/faq/what-does-foobar-mean.html',
+                'faq/what-does-foobar-mean.html',
+                'http://domain.tld/faq/what-does-foobar-mean.html',
+                'http://domain.tld/faq/what-does-foobar-mean.html',
+                'http://domain.tld/faq/what-does-foobar-mean.html',
+            )
         ;
 
         $listener = new InsertTagsListener($this->mockContaoFramework($adapters), $urlGenerator);

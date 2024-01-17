@@ -22,6 +22,7 @@ use Contao\FaqModel;
 use Contao\PageModel;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class SitemapListener
 {
@@ -98,7 +99,7 @@ class SitemapListener
                 }
 
                 try {
-                    $arrPages[] = $this->urlGenerator->generate($objItem);
+                    $arrPages[] = $this->urlGenerator->generate($objItem, [], UrlGeneratorInterface::ABSOLUTE_URL);
                 } catch (ExceptionInterface) {
                 }
             }
