@@ -327,7 +327,7 @@ class ImageFactory implements ImageFactoryInterface
         $filesModel = $this->framework->getAdapter(FilesModel::class);
         $file = $filesModel->findByPath($image->getPath());
 
-        if (!$file || !$file->importantPartWidth || !$file->importantPartHeight) {
+        if (!$file?->importantPartWidth || !$file->importantPartHeight) {
             return null;
         }
 

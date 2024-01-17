@@ -714,7 +714,7 @@ class tl_calendar_events extends Backend
 	public function adjustTime(DataContainer $dc)
 	{
 		// Return if there is no active record (override all) or no start date has been set yet
-		if (!$dc->activeRecord || !$dc->activeRecord->startDate)
+		if (!$dc->activeRecord?->startDate)
 		{
 			return;
 		}
@@ -827,7 +827,7 @@ class tl_calendar_events extends Backend
 	public function scheduleUpdate(DataContainer $dc)
 	{
 		// Return if there is no ID
-		if (!$dc->activeRecord || !$dc->activeRecord->pid || Input::get('act') == 'copy')
+		if (!$dc->activeRecord?->pid || Input::get('act') == 'copy')
 		{
 			return;
 		}

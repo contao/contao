@@ -445,8 +445,13 @@ class PageModelTest extends TestCase
         ];
     }
 
+    /**
+     * @group legacy
+     */
     public function testUsesAbsolutePathReferenceForFrontendUrl(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.3: Using "Contao\PageModel::getFrontendUrl()" has been deprecated%s');
+
         $page = new PageModel();
         $page->pid = 42;
         $page->domain = 'example.com';
@@ -464,8 +469,13 @@ class PageModelTest extends TestCase
         $this->assertSame('/page', $page->getFrontendUrl());
     }
 
+    /**
+     * @group legacy
+     */
     public function testUsesAbsoluteUrlReferenceForFrontendUrlOnOtherDomain(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.3: Using "Contao\PageModel::getFrontendUrl()" has been deprecated%s');
+
         $page = new PageModel();
         $page->pid = 42;
         $page->domain = 'foobar.com';
@@ -485,8 +495,13 @@ class PageModelTest extends TestCase
         $this->assertSame('https://foobar.com/page', $page->getFrontendUrl());
     }
 
+    /**
+     * @group legacy
+     */
     public function testUsesAbsoluteUrlReferenceForAbsoluteUrl(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.3: Using "Contao\PageModel::getAbsoluteUrl()" has been deprecated%s');
+
         $page = new PageModel();
         $page->pid = 42;
 
