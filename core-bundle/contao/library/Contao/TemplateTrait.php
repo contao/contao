@@ -181,7 +181,7 @@ trait TemplateTrait
 	{
 		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
-		if (!$responseContext || !$responseContext->has(CspHandler::class))
+		if (!$responseContext?->has(CspHandler::class))
 		{
 			return;
 		}

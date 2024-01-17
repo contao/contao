@@ -85,7 +85,6 @@ class CspRuntimeTest extends TestCase
         $algorithm = 'sha384';
 
         $runtime = new CspRuntime($responseContextAccessor);
-
         $runtime->addHash('script-src', $script, $algorithm);
 
         $response = new Response();

@@ -56,7 +56,7 @@ final class CspRuntime implements RuntimeExtensionInterface
     {
         $responseContext = $this->responseContextAccessor->getResponseContext();
 
-        if (!$responseContext || !$responseContext->has(CspHandler::class)) {
+        if (!$responseContext?->has(CspHandler::class)) {
             return;
         }
 
