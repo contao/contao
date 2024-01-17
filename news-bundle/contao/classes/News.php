@@ -10,17 +10,14 @@
 
 namespace Contao;
 
+use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
 /**
  * Provide methods regarding news archives.
  */
 class News extends Frontend
 {
-	/**
-	 * URL cache array
-	 * @var array
-	 */
-	private static $arrUrlCache = array();
-
 	/**
 	 * Generate a URL and return it as string
 	 *
@@ -29,86 +26,32 @@ class News extends Frontend
 	 * @param boolean   $blnAbsolute
 	 *
 	 * @return string
+	 *
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 *             use the content URL generator instead.
 	 */
 	public static function generateNewsUrl($objItem, $blnAddArchive=false, $blnAbsolute=false)
 	{
-		$strCacheKey = 'id_' . $objItem->id . ($blnAbsolute ? '_absolute' : '') . (($blnAddArchive && Input::get('month')) ? '_' . Input::get('month') : '');
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the content URL generator instead.', __METHOD__);
 
-		// Load the URL from cache
-		if (isset(self::$arrUrlCache[$strCacheKey]))
+		try
 		{
-			return self::$arrUrlCache[$strCacheKey];
-		}
-
-		// Initialize the cache
-		self::$arrUrlCache[$strCacheKey] = null;
-
-		switch ($objItem->source)
-		{
-			// Link to an external page
-			case 'external':
-				if (str_starts_with($objItem->url, 'mailto:'))
-				{
-					self::$arrUrlCache[$strCacheKey] = StringUtil::encodeEmail($objItem->url);
-				}
-				else
-				{
-					$url = $objItem->url;
-
-					if (Validator::isRelativeUrl($url))
-					{
-						$url = Environment::get('path') . '/' . $url;
-					}
-
-					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($url);
-				}
-				break;
-
-			// Link to an internal page
-			case 'internal':
-				if (($objTarget = $objItem->getRelated('jumpTo')) instanceof PageModel)
-				{
-					/** @var PageModel $objTarget */
-					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($blnAbsolute ? $objTarget->getAbsoluteUrl() : $objTarget->getFrontendUrl());
-				}
-				break;
-
-			// Link to an article
-			case 'article':
-				if (($objArticle = ArticleModel::findByPk($objItem->articleId)) instanceof ArticleModel && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
-				{
-					$params = '/articles/' . ($objArticle->alias ?: $objArticle->id);
-
-					/** @var PageModel $objPid */
-					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($blnAbsolute ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params));
-				}
-				break;
-		}
-
-		// Link to the default page
-		if (self::$arrUrlCache[$strCacheKey] === null)
-		{
-			$objPage = PageModel::findByPk($objItem->getRelated('pid')->jumpTo);
-
-			if (!$objPage instanceof PageModel)
-			{
-				self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand(Environment::get('requestUri'));
-			}
-			else
-			{
-				$params = '/' . ($objItem->alias ?: $objItem->id);
-
-				self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($blnAbsolute ? $objPage->getAbsoluteUrl($params) : $objPage->getFrontendUrl($params));
-			}
+			$parameters = array();
 
 			// Add the current archive parameter (news archive)
 			if ($blnAddArchive && Input::get('month'))
 			{
-				self::$arrUrlCache[$strCacheKey] .= '?month=' . Input::get('month');
+				$parameters['month'] = Input::get('month');
 			}
+
+			$url = System::getContainer()->get('contao.routing.content_url_generator')->generate($objItem, $parameters, $blnAbsolute ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH);
+		}
+		catch (ExceptionInterface)
+		{
+			return StringUtil::ampersand(Environment::get('requestUri'));
 		}
 
-		return self::$arrUrlCache[$strCacheKey];
+		return $url;
 	}
 
 	/**
@@ -121,11 +64,12 @@ class News extends Frontend
 	public static function getSchemaOrgData(NewsModel $objArticle): array
 	{
 		$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
+		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
 
 		$jsonLd = array(
 			'@type' => 'NewsArticle',
 			'identifier' => '#/schema/news/' . $objArticle->id,
-			'url' => self::generateNewsUrl($objArticle),
+			'url' => $urlGenerator->generate($objArticle),
 			'headline' => $htmlDecoder->inputEncodedToPlainText($objArticle->headline),
 			'datePublished' => date('Y-m-d\TH:i:sP', $objArticle->date),
 		);

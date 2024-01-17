@@ -13,10 +13,11 @@ declare(strict_types=1);
 namespace Contao\NewsBundle\EventListener;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\News;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\NewsModel;
 use Contao\StringUtil;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @internal
@@ -33,6 +34,7 @@ class InsertTagsListener
 
     public function __construct(
         private readonly ContaoFramework $framework,
+        private readonly ContentUrlGenerator $urlGenerator,
         private readonly LoggerInterface $logger,
     ) {
     }
@@ -65,23 +67,21 @@ class InsertTagsListener
             return '';
         }
 
-        $news = $this->framework->getAdapter(News::class);
-
         return match ($insertTag) {
             'news' => sprintf(
                 '<a href="%s" title="%s"%s>%s</a>',
-                $news->generateNewsUrl($model, false, \in_array('absolute', $arguments, true)) ?: './',
+                $this->urlGenerator->generate($model, [], \in_array('absolute', $arguments, true) ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH),
                 StringUtil::specialcharsAttribute($model->headline),
                 \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : '',
                 $model->headline,
             ),
             'news_open' => sprintf(
                 '<a href="%s" title="%s"%s>',
-                $news->generateNewsUrl($model, false, \in_array('absolute', $arguments, true)) ?: './',
+                $this->urlGenerator->generate($model, [], \in_array('absolute', $arguments, true) ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH),
                 StringUtil::specialcharsAttribute($model->headline),
                 \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : '',
             ),
-            'news_url' => $news->generateNewsUrl($model, false, \in_array('absolute', $arguments, true)) ?: './',
+            'news_url' => $this->urlGenerator->generate($model, [], \in_array('absolute', $arguments, true) ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH),
             'news_title' => StringUtil::specialcharsAttribute($model->headline),
             'news_teaser' => $model->teaser,
             default => '',
