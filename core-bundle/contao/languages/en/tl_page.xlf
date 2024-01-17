@@ -54,7 +54,7 @@
         <source>Robots tag</source>
       </trans-unit>
       <trans-unit id="tl_page.robots.1">
-        <source>Here you can define how search engines handle the page.</source>
+        <source>Here you can define how search engines handle the page and whether the page should appear in the sitemap.xml if necessary.</source>
       </trans-unit>
       <trans-unit id="tl_page.maintenanceMode.0">
         <source>Maintenance mode</source>
