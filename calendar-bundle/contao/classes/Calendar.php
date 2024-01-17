@@ -377,7 +377,7 @@ class Calendar extends Frontend
 
 		try
 		{
-			$link = System::getContainer()->get('contao.routing.content_url_generator')->generate($objEvent, [], UrlGeneratorInterface::ABSOLUTE_URL);
+			$link = System::getContainer()->get('contao.routing.content_url_generator')->generate($objEvent, array(), UrlGeneratorInterface::ABSOLUTE_URL);
 		}
 		catch (ExceptionInterface)
 		{

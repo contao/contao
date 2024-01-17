@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\Util\UrlUtil;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -412,7 +411,7 @@ abstract class Events extends Module
 
 		try
 		{
-			$url = System::getContainer()->get('contao.routing.content_url_generator')->generate($objEvent, [], $blnAbsolute ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH);
+			$url = System::getContainer()->get('contao.routing.content_url_generator')->generate($objEvent, array(), $blnAbsolute ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH);
 		}
 		catch (ExceptionInterface)
 		{

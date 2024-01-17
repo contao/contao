@@ -103,7 +103,7 @@ class ModuleEventReader extends Events
 			case 'internal':
 			case 'article':
 			case 'external':
-				throw new RedirectResponseException(System::getContainer()->get('contao.routing.content_url_generator')->generate($objEvent, [], UrlGeneratorInterface::ABSOLUTE_URL), 301);
+				throw new RedirectResponseException(System::getContainer()->get('contao.routing.content_url_generator')->generate($objEvent, array(), UrlGeneratorInterface::ABSOLUTE_URL), 301);
 		}
 
 		// Overwrite the page metadata (see #2853, #4955 and #87)
