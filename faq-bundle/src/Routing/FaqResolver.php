@@ -24,10 +24,10 @@ class FaqResolver implements ContentUrlResolverInterface
     {
     }
 
-    public function resolve(object $content): ContentUrlResult
+    public function resolve(object $content): ContentUrlResult|null
     {
         if (!$content instanceof FaqModel) {
-            return ContentUrlResult::abstain();
+            return null;
         }
 
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
