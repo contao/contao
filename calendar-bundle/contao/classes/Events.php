@@ -285,7 +285,7 @@ abstract class Events extends Module
 		$arrEvent['link'] = $objEvents->title;
 		$arrEvent['target'] = '';
 		$arrEvent['title'] = StringUtil::specialchars($objEvents->title, true);
-		$arrEvent['href'] = $this->generateEventUrl($objEvents);
+		$arrEvent['href'] = System::getContainer()->get('contao.routing.content_url_generator')->generate($objEvents);
 		$arrEvent['class'] = $objEvents->cssClass ? ' ' . $objEvents->cssClass : '';
 		$arrEvent['recurring'] = $recurring;
 		$arrEvent['until'] = $until;
@@ -431,12 +431,13 @@ abstract class Events extends Module
 	public static function getSchemaOrgData(CalendarEventsModel $objEvent): array
 	{
 		$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
+		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
 
 		$jsonLd = array(
 			'@type' => 'Event',
 			'identifier' => '#/schema/events/' . $objEvent->id,
 			'name' => $htmlDecoder->inputEncodedToPlainText($objEvent->title),
-			'url' => self::generateEventUrl($objEvent),
+			'url' => $urlGenerator->generate($objEvent),
 			'startDate' => $objEvent->addTime ? date('Y-m-d\TH:i:sP', $objEvent->startTime) : date('Y-m-d', $objEvent->startTime)
 		);
 

@@ -30,6 +30,7 @@ services:
         class: Contao\CalendarBundle\EventListener\InsertTagsListener
         arguments:
             - '@contao.framework'
+            - '@contao.routing.content_url_generator'
         tags:
             - { name: contao.hook, hook: replaceInsertTags }
 
@@ -37,6 +38,7 @@ services:
         class: Contao\CalendarBundle\EventListener\PreviewUrlConvertListener
         arguments:
             - '@contao.framework'
+            - '@contao.routing.content_url_generator'
         tags:
             - kernel.event_listener
 

@@ -77,6 +77,8 @@ class ModuleEventReader extends Events
 	 */
 	protected function compile()
 	{
+		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
+
 		/** @var PageModel $objPage */
 		global $objPage;
 
@@ -84,7 +86,7 @@ class ModuleEventReader extends Events
 
 		if ($this->overviewPage && ($overviewPage = PageModel::findById($this->overviewPage)))
 		{
-			$this->Template->referer = System::getContainer()->get('contao.routing.content_url_generator')->generate($overviewPage);
+			$this->Template->referer = $urlGenerator->generate($overviewPage);
 			$this->Template->back = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['eventOverview'];
 		}
 
@@ -103,7 +105,7 @@ class ModuleEventReader extends Events
 			case 'internal':
 			case 'article':
 			case 'external':
-				throw new RedirectResponseException(System::getContainer()->get('contao.routing.content_url_generator')->generate($objEvent, array(), UrlGeneratorInterface::ABSOLUTE_URL), 301);
+				throw new RedirectResponseException($urlGenerator->generate($objEvent, array(), UrlGeneratorInterface::ABSOLUTE_URL), 301);
 		}
 
 		// Overwrite the page metadata (see #2853, #4955 and #87)
@@ -157,7 +159,7 @@ class ModuleEventReader extends Events
 			}
 			elseif (!$this->cal_keepCanonical)
 			{
-				$htmlHeadBag->setCanonicalUri(Events::generateEventUrl($objEvent, true));
+				$htmlHeadBag->setCanonicalUri($urlGenerator->generate($objEvent, array(), UrlGeneratorInterface::ABSOLUTE_URL));
 			}
 		}
 

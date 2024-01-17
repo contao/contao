@@ -15,8 +15,9 @@ namespace Contao\CalendarBundle\Tests\EventListener;
 use Contao\CalendarBundle\EventListener\InsertTagsListener;
 use Contao\CalendarEventsModel;
 use Contao\CalendarFeedModel;
-use Contao\Events;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\TestCase\ContaoTestCase;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class InsertTagsListenerTest extends ContaoTestCase
 {
@@ -31,8 +32,9 @@ class InsertTagsListenerTest extends ContaoTestCase
         ];
 
         $framework = $this->mockContaoFramework($adapters);
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
 
-        $listener = new InsertTagsListener($framework);
+        $listener = new InsertTagsListener($framework, $urlGenerator);
         $url = $listener('calendar_feed::2', false, null, []);
 
         $this->assertSame('http://localhost/share/events.xml', $url);
@@ -44,26 +46,41 @@ class InsertTagsListenerTest extends ContaoTestCase
         $eventModel->title = 'The "foobar" event';
         $eventModel->teaser = '<p>The annual foobar event.</p>';
 
-        $events = $this->mockAdapter(['generateEventUrl']);
-        $events
-            ->method('generateEventUrl')
-            ->willReturnCallback(
-                static function (CalendarEventsModel $model, bool $absolute): string {
-                    if ($absolute) {
-                        return 'http://domain.tld/events/the-foobar-event.html';
-                    }
+        $adapters = [
+            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $eventModel]),
+        ];
 
-                    return 'events/the-foobar-event.html';
-                },
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->expects($this->exactly(10))
+            ->method('generate')
+            ->withConsecutive(
+                [$eventModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
+                [$eventModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
+                [$eventModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
+                [$eventModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
+                [$eventModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
+                [$eventModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
+                [$eventModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
+                [$eventModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
+                [$eventModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
+                [$eventModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
+            )
+            ->willReturnOnConsecutiveCalls(
+                'events/the-foobar-event.html',
+                'events/the-foobar-event.html',
+                'events/the-foobar-event.html',
+                'events/the-foobar-event.html',
+                'http://domain.tld/events/the-foobar-event.html',
+                'http://domain.tld/events/the-foobar-event.html',
+                'events/the-foobar-event.html',
+                'http://domain.tld/events/the-foobar-event.html',
+                'http://domain.tld/events/the-foobar-event.html',
+                'http://domain.tld/events/the-foobar-event.html',
             )
         ;
 
-        $adapters = [
-            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $eventModel]),
-            Events::class => $events,
-        ];
-
-        $listener = new InsertTagsListener($this->mockContaoFramework($adapters));
+        $listener = new InsertTagsListener($this->mockContaoFramework($adapters), $urlGenerator);
 
         $this->assertSame(
             '<a href="events/the-foobar-event.html" title="The &quot;foobar&quot; event">The "foobar" event</a>',
@@ -126,44 +143,10 @@ class InsertTagsListenerTest extends ContaoTestCase
         );
     }
 
-    public function testHandlesEmptyUrls(): void
-    {
-        $eventModel = $this->mockClassWithProperties(CalendarEventsModel::class);
-        $eventModel->title = 'The "foobar" event';
-        $eventModel->teaser = '<p>The annual foobar event.</p>';
-
-        $events = $this->mockAdapter(['generateEventUrl']);
-        $events
-            ->method('generateEventUrl')
-            ->willReturn('')
-        ;
-
-        $adapters = [
-            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $eventModel]),
-            Events::class => $events,
-        ];
-
-        $listener = new InsertTagsListener($this->mockContaoFramework($adapters));
-
-        $this->assertSame(
-            '<a href="./" title="The &quot;foobar&quot; event">The "foobar" event</a>',
-            $listener('event::2', false, null, []),
-        );
-
-        $this->assertSame(
-            '<a href="./" title="The &quot;foobar&quot; event">',
-            $listener('event_open::2', false, null, []),
-        );
-
-        $this->assertSame(
-            './',
-            $listener('event_url::2', false, null, []),
-        );
-    }
-
     public function testReturnsFalseIfTheTagIsUnknown(): void
     {
-        $listener = new InsertTagsListener($this->mockContaoFramework());
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $listener = new InsertTagsListener($this->mockContaoFramework(), $urlGenerator);
 
         $this->assertFalse($listener('link_url::2', false, null, []));
     }
@@ -175,7 +158,8 @@ class InsertTagsListenerTest extends ContaoTestCase
             CalendarFeedModel::class => $this->mockConfiguredAdapter(['findByPk' => null]),
         ];
 
-        $listener = new InsertTagsListener($this->mockContaoFramework($adapters));
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $listener = new InsertTagsListener($this->mockContaoFramework($adapters), $urlGenerator);
 
         $this->assertSame('', $listener('calendar_feed::3', false, null, []));
         $this->assertSame('', $listener('event_url::3', false, null, []));
