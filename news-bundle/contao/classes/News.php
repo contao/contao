@@ -27,7 +27,7 @@ class News extends Frontend
 	 *
 	 * @return string
 	 */
-	public static function generateNewsUrl($objItem, $blnAddArchive=false, $blnAbsolute=true)
+	public static function generateNewsUrl($objItem, $blnAddArchive=false, $blnAbsolute=false)
 	{
 		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s" is deprecated, use the content URL generator instead.', __METHOD__);
 
