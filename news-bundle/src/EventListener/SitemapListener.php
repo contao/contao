@@ -22,6 +22,7 @@ use Contao\NewsModel;
 use Contao\PageModel;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @internal
@@ -110,7 +111,7 @@ class SitemapListener
                 }
 
                 try {
-                    $arrPages[] = $this->urlGenerator->generate($objNews);
+                    $arrPages[] = $this->urlGenerator->generate($objNews, [], UrlGeneratorInterface::ABSOLUTE_URL);
                 } catch (ExceptionInterface) {
                 }
             }

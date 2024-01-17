@@ -15,6 +15,7 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Util\UrlUtil;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Front end module "newsreader".
@@ -98,7 +99,7 @@ class ModuleNewsReader extends ModuleNews
 			case 'internal':
 			case 'article':
 			case 'external':
-				throw new RedirectResponseException(System::getContainer()->get('contao.routing.content_url_generator')->generate($objArticle), 301);
+				throw new RedirectResponseException(System::getContainer()->get('contao.routing.content_url_generator')->generate($objArticle, [], UrlGeneratorInterface::ABSOLUTE_URL), 301);
 		}
 
 		// Set the default template

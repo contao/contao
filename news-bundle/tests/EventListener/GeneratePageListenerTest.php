@@ -21,6 +21,7 @@ use Contao\NewsBundle\EventListener\GeneratePageListener;
 use Contao\PageModel;
 use Contao\Template;
 use Contao\TestCase\ContaoTestCase;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class GeneratePageListenerTest extends ContaoTestCase
 {
@@ -56,7 +57,7 @@ class GeneratePageListenerTest extends ContaoTestCase
         $urlGenerator
             ->expects($this->once())
             ->method('generate')
-            ->with($newsFeedModel)
+            ->with($newsFeedModel, [], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturn('http://localhost/news.xml')
         ;
 

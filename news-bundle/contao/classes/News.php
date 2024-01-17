@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Util\UrlUtil;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Provide methods regarding news archives.
@@ -41,16 +42,11 @@ class News extends Frontend
 				$parameters['month'] = Input::get('month');
 			}
 
-			$url = System::getContainer()->get('contao.routing.content_url_generator')->generate($objItem, $parameters);
+			$url = System::getContainer()->get('contao.routing.content_url_generator')->generate($objItem, $parameters, $blnAbsolute ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH);
 		}
 		catch (ExceptionInterface)
 		{
 			return StringUtil::ampersand(Environment::get('requestUri'));
-		}
-
-		if (!$blnAbsolute)
-		{
-			$url = UrlUtil::makeAbsolutePath($url, Environment::get('base'));
 		}
 
 		return $url;
