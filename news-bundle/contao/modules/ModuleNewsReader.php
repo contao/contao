@@ -99,7 +99,7 @@ class ModuleNewsReader extends ModuleNews
 			case 'internal':
 			case 'article':
 			case 'external':
-				throw new RedirectResponseException(System::getContainer()->get('contao.routing.content_url_generator')->generate($objArticle, [], UrlGeneratorInterface::ABSOLUTE_URL), 301);
+				throw new RedirectResponseException(System::getContainer()->get('contao.routing.content_url_generator')->generate($objArticle, array(), UrlGeneratorInterface::ABSOLUTE_URL), 301);
 		}
 
 		// Set the default template
