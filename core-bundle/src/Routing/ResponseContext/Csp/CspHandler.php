@@ -130,7 +130,7 @@ final class CspHandler
         }
 
         // Only source directives can have a fallback
-        if (!$includeFallback || (DirectiveSet::getNames()[$directive] ?? null) !== DirectiveSet::TYPE_SRC_LIST) {
+        if (!$includeFallback || DirectiveSet::TYPE_SRC_LIST !== (DirectiveSet::getNames()[$directive] ?? null)) {
             return null;
         }
 

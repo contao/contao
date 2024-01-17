@@ -149,7 +149,7 @@ class TemplateOptionsListener
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (!$request || !$request->query->has('act')) {
+        if (!$request?->query->has('act')) {
             return false;
         }
 

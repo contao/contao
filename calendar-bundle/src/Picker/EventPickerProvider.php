@@ -84,7 +84,7 @@ class EventPickerProvider extends AbstractInsertTagPickerProvider implements Dca
     {
         $params = ['do' => 'calendar'];
 
-        if (!$config || !$config->getValue() || !$this->supportsValue($config)) {
+        if (!$config?->getValue() || !$this->supportsValue($config)) {
             return $params;
         }
 

@@ -318,7 +318,7 @@ class tl_comments extends Backend
 	public function notifyOfReply(DataContainer $dc)
 	{
 		// Return if there is no active record (override all) or no reply or the notification has been sent already
-		if (!$dc->activeRecord || !$dc->activeRecord->addReply || $dc->activeRecord->notifiedReply)
+		if (!$dc->activeRecord?->addReply || $dc->activeRecord->notifiedReply)
 		{
 			return;
 		}

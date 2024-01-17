@@ -810,7 +810,7 @@ class tl_page extends Backend
 	public function scheduleUpdate(DataContainer $dc)
 	{
 		// Return if there is no ID
-		if (!$dc->activeRecord || !$dc->activeRecord->id || Input::get('act') == 'copy')
+		if (!$dc->activeRecord?->id || Input::get('act') == 'copy')
 		{
 			return;
 		}

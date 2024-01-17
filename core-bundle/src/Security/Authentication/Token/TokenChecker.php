@@ -75,7 +75,7 @@ class TokenChecker
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (!$request || !$request->hasPreviousSession()) {
+        if (!$request?->hasPreviousSession()) {
             return false;
         }
 
@@ -143,7 +143,7 @@ class TokenChecker
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (!$request || !$request->attributes->get('_preview', false) || !$this->canAccessPreview()) {
+        if (!$request?->attributes->get('_preview', false) || !$this->canAccessPreview()) {
             return false;
         }
 
@@ -221,7 +221,7 @@ class TokenChecker
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (!$request || !$request->hasSession()) {
+        if (!$request?->hasSession()) {
             return null;
         }
 

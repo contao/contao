@@ -300,10 +300,10 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 }
 
                 $strTarget = \in_array('blank', \array_slice($insertTag->getParameters()->all(), 1), true) ? ' target="_blank" rel="noreferrer noopener"' : '';
+                $blnAbsolute = \in_array('absolute', \array_slice($insertTag->getParameters()->all(), 1), true);
                 $strUrl = '';
 
                 try {
-                    $blnAbsolute = \in_array('absolute', \array_slice($insertTag->getParameters()->all(), 1), true);
                     $strUrl = $this->container->get('contao.routing.content_url_generator')->generate($objArticle, [], $blnAbsolute ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH);
                 } catch (ExceptionInterface) {
                     // Ignore routing exception
