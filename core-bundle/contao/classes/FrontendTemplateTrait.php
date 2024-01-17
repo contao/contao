@@ -16,7 +16,8 @@ namespace Contao;
  * @property array   $sections
  * @property array   $positions
  * @property array   $matches
- * @method   string  getTemplate(string $strTemplate)
+ *
+ * @method static string getTemplate(string $strTemplate)
  *
  * @internal
  */
