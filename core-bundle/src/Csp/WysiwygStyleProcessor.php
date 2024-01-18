@@ -14,18 +14,16 @@ namespace Contao\CoreBundle\Csp;
 
 class WysiwygStyleProcessor
 {
+    /**
+     * @param array<string, string> $allowedCssProperties an array containing the CSS properties as keys and their regex
+     *                                                    for the value validation
+     */
     public function __construct(private readonly array $allowedCssProperties)
     {
     }
 
     public function extractStyles(string $htmlFragment): array
     {
-        // Shortcut for performance reasons
-        // TODO: worth it for a regex?
-        if (!str_contains($htmlFragment, 'style=')) {
-            return [];
-        }
-
         preg_match_all('/ style="([^\"]+)"/m', $htmlFragment, $matches);
 
         if (!isset($matches[1]) || !\is_array($matches[1])) {
@@ -35,11 +33,22 @@ class WysiwygStyleProcessor
         $styles = [];
 
         foreach ($matches[1] as $style) {
-            // TODO: do we need a simple parser here? ; could be within "" or so
+            // No need to use a real CSS parser here as the properties and values we want to support for CSP don't
+            // require this.
             foreach (explode(';', $style) as $definition) {
-                $property = trim(explode(':', $definition, 2)[0] ?? '');
+                $chunks = explode(':', $definition, 2);
+                $property = trim($chunks[0] ?? '');
+                $value = trim($chunks[1] ?? '');
 
-                if ('' !== $property && !\in_array($property, $this->allowedCssProperties, true)) {
+                if ('' === $property) {
+                    continue;
+                }
+
+                if (!isset($this->allowedCssProperties[$property])) {
+                    continue 2;
+                }
+
+                if (!preg_match('/^'.$this->allowedCssProperties[$property].'$/', $value)) {
                     continue 2;
                 }
             }

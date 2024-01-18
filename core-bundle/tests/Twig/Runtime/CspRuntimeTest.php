@@ -65,6 +65,7 @@ class CspRuntimeTest extends TestCase
 
         $this->assertSame("'self' https://example.com/files/foo/foobar.js", $directives->getDirective('script-src'));
     }
+
     public function testAddsCspHash(): void
     {
         $directives = new DirectiveSet(new PolicyManager());
@@ -84,7 +85,7 @@ class CspRuntimeTest extends TestCase
         $script = 'this.form.requestSubmit()';
         $algorithm = 'sha384';
 
-        $runtime = new CspRuntime($responseContextAccessor);
+        $runtime = new CspRuntime($responseContextAccessor, new WysiwygStyleProcessor([]));
         $runtime->addHash('script-src', $script, $algorithm);
 
         $response = new Response();

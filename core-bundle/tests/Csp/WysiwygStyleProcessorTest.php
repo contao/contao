@@ -37,25 +37,31 @@ class WysiwygStyleProcessorTest extends TestCase
         yield 'One matching property' => [
             '<p style="text-decoration: underline">Content</p>',
             ['text-decoration: underline'],
-            ['text-decoration'],
+            ['text-decoration' => 'underline'],
         ];
 
         yield 'Multiple matching properties' => [
-            '<p style="text-decoration: underline; font-size: 1.5rem">Content</p>',
-            ['text-decoration: underline; font-size: 1.5rem'],
-            ['text-decoration', 'font-size'],
+            '<p style="text-decoration: underline; font-size: 8pt">Content</p>',
+            ['text-decoration: underline; font-size: 8pt'],
+            ['text-decoration' => 'underline', 'font-size' => '(8|10|12|14|18|24|36)pt'],
         ];
 
         yield 'Multiple styles when matching multiple properties' => [
-            '<p style="text-decoration: underline; font-size: 1.5rem">Content<span style="color: red">I am red</span></p>',
-            ['text-decoration: underline; font-size: 1.5rem', 'color: red'],
-            ['text-decoration', 'font-size', 'color'],
+            '<p style="text-decoration: underline; font-size: 8pt">Content<span style="color: red">I am red</span></p>',
+            ['text-decoration: underline; font-size: 8pt', 'color: red'],
+            ['text-decoration' => 'underline', 'font-size' => '(8|10|12|14|18|24|36)pt', 'color' => 'red'],
         ];
 
-        yield 'Partial property allow list match should not extract the style' => [
-            '<p style="text-decoration: underline; font-size: 1.5rem">Content</p>',
+        yield 'Partial property allow list match should not extract the style (property not mentioned)' => [
+            '<p style="text-decoration: underline; font-size: 8pt">Content</p>',
             [],
-            ['text-decoration'],
+            ['text-decoration' => 'underline'],
+        ];
+
+        yield 'Partial property allow list match should not extract the style (regex does not match)' => [
+            '<p style="text-decoration: underline; font-size: 8pt">Content</p>',
+            [],
+            ['text-decoration' => 'underline', 'font-size' => '(18|24|36)pt'],
         ];
     }
 }
