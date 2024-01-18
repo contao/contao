@@ -370,22 +370,38 @@ class ConfigurationTest extends TestCase
         }
     }
 
-    public function testFailsOnInvalidAllowedInlineStylesRegex(): void
+    /**
+     * @dataProvider invalidAllowedInlineStylesRegexProvider
+     */
+    public function testFailsOnInvalidAllowedInlineStylesRegex(string $regex, string $exceptionMessage): void
     {
         $params = [
             [
                 'csp' => [
                     'allowed_inline_styles' => [
-                        'text-decoration' => '/test',
+                        'text-decoration' => $regex,
                     ],
                 ],
             ],
         ];
 
         $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessage('Invalid configuration for path "contao.csp.allowed_inline_styles": The regex "/test" for property "text-decoration" is invalid.');
+        $this->expectExceptionMessage($exceptionMessage);
 
         (new Processor())->processConfiguration($this->configuration, $params);
+    }
+
+    public function invalidAllowedInlineStylesRegexProvider(): \Generator
+    {
+        yield [
+            'te(st',
+            'Invalid configuration for path "contao.csp.allowed_inline_styles": The regex "te(st" for property "text-decoration" is invalid.',
+        ];
+
+        yield [
+            'te.*st',
+            'Invalid configuration for path "contao.csp.allowed_inline_styles": The regex "te.*st" for property "text-decoration" contains ".*" which is not allowed due to security reasons.',
+        ];
     }
 
     /**

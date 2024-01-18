@@ -63,5 +63,23 @@ class WysiwygStyleProcessorTest extends TestCase
             [],
             ['text-decoration' => 'underline', 'font-size' => '(18|24|36)pt'],
         ];
+
+        yield 'Empty property with value should not be be extracted' => [
+            '<p style=":bad-value">Content</p>',
+            [],
+            ['text-decoration' => 'underline'],
+        ];
+
+        yield 'Empty property with empty value should be ignored' => [
+            '<p style=" : ; text-decoration : underline ; ; ; ">Content</p>',
+            [' : ; text-decoration : underline ; ; ; '],
+            ['text-decoration' => 'underline'],
+        ];
+
+        yield 'Regex should only match with the whole value string' => [
+            '<p style="text-decoration: underline">Content</p>',
+            [],
+            ['text-decoration' => 'nderlin|nderline|underlin'],
+        ];
     }
 }

@@ -205,13 +205,18 @@ trait TemplateTrait
 			return $html;
 		}
 
-		/** @var CspHandler $csp */
-		$csp = $responseContext->get(CspHandler::class);
-
 		/** @var WysiwygStyleProcessor $styleProcessor */
 		$styleProcessor = System::getContainer()->get('contao.csp.wysiwyg_style_processor');
 
-		foreach ($styleProcessor->extractStyles($html) as $style)
+		if (!$styles = $styleProcessor->extractStyles($html))
+		{
+			return $html;
+		}
+
+		/** @var CspHandler $csp */
+		$csp = $responseContext->get(CspHandler::class);
+
+		foreach ($styles as $style)
 		{
 			$csp->addHash('style-src', $style);
 		}

@@ -843,9 +843,19 @@ class Configuration implements ConfigurationInterface
                     ->prototype('scalar')->end()
                     ->normalizeKeys(false)
                     ->defaultValue([
-                        // TODO: @ausi, this where you can add your list :-)
+                        'text-align' => 'left|center|right|justify',
                         'text-decoration' => 'underline',
-                        'font-size' => '(8|10|12|14|18|24|36)pt',
+                        'background-color' => 'rgb\(\d{1-3},\s?\d{1-3},\s?\d{1-3}\)|#([0-9a-f]{3}){1,2}',
+                        'color' => 'rgb\(\d{1-3},\s?\d{1-3},\s?\d{1-3}\)|#([0-9a-f]{3}){1,2}',
+                        'font-family' => '(\'[a-z0-9 _-]+\',\s*|[a-z0-9 _-]+,\s*)*(sans-)?serif',
+                        'font-size' => '[0-3]?\dpt',
+                        'line-height' => '[0-3](\.\d+)?',
+                        'padding-left' => '\d{1,3}px',
+                        'border-collapse' => 'collapse',
+                        'margin-right' => '0px|auto',
+                        'margin-left' => '0px|auto',
+                        'border-color' => 'rgb\(\d{1-3},\s?\d{1-3},\s?\d{1-3}\)|#([0-9a-f]{3}){1,2}',
+                        'vertical-align' => 'top|middle|bottom',
                     ])
                     ->validate()
                         ->always(
@@ -853,6 +863,10 @@ class Configuration implements ConfigurationInterface
                                 foreach ($allowedProperties as $property => $regex) {
                                     if (false === @preg_match(WysiwygStyleProcessor::prepareRegex($regex), '')) {
                                         throw new \InvalidArgumentException(sprintf('The regex "%s" for property "%s" is invalid.', $regex, $property));
+                                    }
+
+                                    if (str_contains($regex, '.*')) {
+                                        throw new \InvalidArgumentException(sprintf('The regex "%s" for property "%s" contains ".*" which is not allowed due to security reasons.', $regex, $property));
                                     }
                                 }
 

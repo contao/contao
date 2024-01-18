@@ -24,7 +24,7 @@ class WysiwygStyleProcessor
 
     public function extractStyles(string $htmlFragment): array
     {
-        preg_match_all('/ style="([^\"]+)"/m', $htmlFragment, $matches);
+        preg_match_all('/ style="([^\"]+)"/i', $htmlFragment, $matches);
 
         if (!isset($matches[1]) || !\is_array($matches[1])) {
             return [];
@@ -40,7 +40,7 @@ class WysiwygStyleProcessor
                 $property = trim($chunks[0] ?? '');
                 $value = trim($chunks[1] ?? '');
 
-                if ('' === $property) {
+                if ('' === $property && '' === $value) {
                     continue;
                 }
 
@@ -61,6 +61,6 @@ class WysiwygStyleProcessor
 
     public static function prepareRegex(string $regex): string
     {
-        return '/^'.$regex.'$/';
+        return '(^(?:'.$regex.')$)i';
     }
 }
