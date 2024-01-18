@@ -20,7 +20,6 @@ use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\DataContainer;
-use Contao\Input;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\StringUtil;
@@ -44,7 +43,7 @@ class ContentCompositionListener
     public function renderPageArticlesOperation(DataContainerOperation $operation): void
     {
         // Disable the articles link in the modal window
-        if (Input::get('popup')) {
+        if ($this->requestStack->getCurrentRequest()?->query->get('popup')) {
             $operation->setHtml('');
 
             return;

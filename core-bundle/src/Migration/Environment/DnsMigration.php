@@ -43,6 +43,8 @@ class DnsMigration extends AbstractMigration
             return false;
         }
 
+        $exp = $this->db->createExpressionBuilder();
+
         foreach ($this->mapping as $from => $to) {
             $from = $this->parseHost($from);
             $to = $this->parseHost($to);
@@ -77,7 +79,7 @@ class DnsMigration extends AbstractMigration
             }
 
             if ($or) {
-                $qb->andWhere($qb->expr()->or(...$or));
+                $qb->andWhere($exp->or(...$or));
             }
 
             if ($qb->executeQuery()->fetchOne()) {
