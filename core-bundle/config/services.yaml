@@ -141,8 +141,9 @@ services:
 
     contao.csp.wysiwyg_style_processor:
         class: Contao\CoreBundle\Csp\WysiwygStyleProcessor
+        public: true
         arguments:
-            - [text-decoration] # TODO: make this configurable via config.yaml
+            - []
 
     contao.csrf.token_manager:
         class: Contao\CoreBundle\Csrf\ContaoCsrfTokenManager

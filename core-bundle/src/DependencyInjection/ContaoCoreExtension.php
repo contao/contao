@@ -150,6 +150,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleFallbackPreviewProvider($config, $container);
         $this->handleCronConfig($config, $container);
         $this->handleSecurityConfig($config, $container);
+        $this->handleCspConfig($config, $container);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -535,5 +536,15 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
         $listener = $container->getDefinition('contao.listener.transport_security_header');
         $listener->setArgument(1, $config['security']['hsts']['ttl']);
+    }
+
+    private function handleCspConfig(array $config, ContainerBuilder $container): void
+    {
+        if (!$container->hasDefinition('contao.csp.wysiwyg_style_processor')) {
+            return;
+        }
+
+        $processor = $container->getDefinition('contao.csp.wysiwyg_style_processor');
+        $processor->setArgument(0, $config['csp']['allowed_inline_styles']);
     }
 }

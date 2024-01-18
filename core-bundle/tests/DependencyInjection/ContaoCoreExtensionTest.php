@@ -691,6 +691,44 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertFalse($container->hasDefinition('contao.listener.transport_security_header'));
     }
 
+    public function testCspConfiguration(): void
+    {
+        $container = $this->getContainerBuilder();
+        (new ContaoCoreExtension())->load([], $container);
+
+        $this->assertTrue($container->hasDefinition('contao.csp.wysiwyg_style_processor'));
+        $processor = $container->findDefinition('contao.csp.wysiwyg_style_processor');
+        $this->assertSame(
+            [
+                'text-decoration' => 'underline',
+                'font-size' => '(8|10|12|14|18|24|36)pt',
+            ],
+            $processor->getArgument(0),
+        );
+
+        (new ContaoCoreExtension())->load(
+            [
+                'contao' => [
+                    'csp' => [
+                        'allowed_inline_styles' => [
+                            'text-decoration' => 'underline',
+                        ],
+                    ],
+                ],
+            ],
+            $container,
+        );
+
+        $this->assertTrue($container->hasDefinition('contao.csp.wysiwyg_style_processor'));
+        $processor = $container->findDefinition('contao.csp.wysiwyg_style_processor');
+        $this->assertSame(
+            [
+                'text-decoration' => 'underline',
+            ],
+            $processor->getArgument(0),
+        );
+    }
+
     public function testRegistersAsContentElementAttribute(): void
     {
         $container = $this->getContainerBuilder();

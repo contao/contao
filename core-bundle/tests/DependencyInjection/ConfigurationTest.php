@@ -370,6 +370,24 @@ class ConfigurationTest extends TestCase
         }
     }
 
+    public function testFailsOnInvalidAllowedInlineStylesRegex(): void
+    {
+        $params = [
+            [
+                'csp' => [
+                    'allowed_inline_styles' => [
+                        'text-decoration' => '/test',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('Invalid configuration for path "contao.csp.allowed_inline_styles": The regex "/test" for property "text-decoration" is invalid.');
+
+        (new Processor())->processConfiguration($this->configuration, $params);
+    }
+
     /**
      * @dataProvider cronConfigurationProvider
      */

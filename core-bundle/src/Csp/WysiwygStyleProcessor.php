@@ -48,7 +48,7 @@ class WysiwygStyleProcessor
                     continue 2;
                 }
 
-                if (!preg_match('/^'.$this->allowedCssProperties[$property].'$/', $value)) {
+                if (!preg_match(self::prepareRegex($this->allowedCssProperties[$property]), $value)) {
                     continue 2;
                 }
             }
@@ -57,5 +57,10 @@ class WysiwygStyleProcessor
         }
 
         return array_values(array_unique($styles));
+    }
+
+    public static function prepareRegex(string $regex): string
+    {
+        return '/^'.$regex.'$/';
     }
 }

@@ -28,7 +28,7 @@ final class CspRuntime implements RuntimeExtensionInterface
     ) {
     }
 
-    public function wysiwygStyles(string $htmlFragment): string
+    public function extractStyleAttributes(string $htmlFragment): string
     {
         $responseContext = $this->responseContextAccessor->getResponseContext();
 

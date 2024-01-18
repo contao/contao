@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DependencyInjection;
 
 use Contao\Config;
+use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
 use Contao\CoreBundle\Doctrine\Backup\RetentionPolicy;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Image\Metadata\ExifFormat;
@@ -123,6 +124,7 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addBackupNode())
                 ->append($this->addSanitizerNode())
                 ->append($this->addCronNode())
+                ->append($this->addCspNode())
             ->end()
         ;
 
@@ -824,6 +826,40 @@ class Configuration implements ConfigurationInterface
                     ->info('Allows to enable or disable the kernel.terminate listener that executes cron jobs within the web process. "auto" will auto-disable it if a CLI cron is running.')
                     ->values(['auto', true, false])
                     ->defaultValue('auto')
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addCspNode(): NodeDefinition
+    {
+        return (new TreeBuilder('csp'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('allowed_inline_styles')
+                    ->info('Contao provides an "extract_styles_for_csp" Twig filter which is able to automatically generate CSP hashes for inline style attributes of WYSIWYG editors. For security reasons, the supported properties and their regex value have to be specified here.')
+                    ->useAttributeAsKey('property')
+                    ->prototype('scalar')->end()
+                    ->normalizeKeys(false)
+                    ->defaultValue([
+                        // TODO: @ausi, this where you can add your list :-)
+                        'text-decoration' => 'underline',
+                        'font-size' => '(8|10|12|14|18|24|36)pt',
+                    ])
+                    ->validate()
+                        ->always(
+                            static function (array $allowedProperties): array {
+                                foreach ($allowedProperties as $property => $regex) {
+                                    if (false === @preg_match(WysiwygStyleProcessor::prepareRegex($regex), '')) {
+                                        throw new \InvalidArgumentException(sprintf('The regex "%s" for property "%s" is invalid.', $regex, $property));
+                                    }
+                                }
+
+                                return $allowedProperties;
+                            },
+                        )
+                    ->end()
                 ->end()
             ->end()
         ;
