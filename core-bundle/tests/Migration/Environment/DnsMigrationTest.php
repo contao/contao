@@ -115,7 +115,7 @@ class DnsMigrationTest extends TestCase
 
         $db
             ->expects($this->once())
-            ->method('getExpressionBuilder')
+            ->method('createExpressionBuilder')
             ->willReturn(new ExpressionBuilder($db))
         ;
 
