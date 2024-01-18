@@ -2,5 +2,6 @@
 {% use "@Contao/component/_headline.html.twig" %}
 
 {% block wrapper %}
+    {% set headline = headline|merge({attributes: attrs(headline.attributes|default).addClass("content-#{type|replace({'_': '-'})}")}) %}
     {{- block('headline_component') -}}
 {% endblock %}
