@@ -1100,7 +1100,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	}
 
 	/**
-	 * @deprecated Deprecated in Contao 5.3, to be removed in Contao 6;
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
 	 *             use copyChildren() instead.
 	 */
 	protected function copyChilds($table, $insertID, $id, $parentId)
@@ -1804,7 +1804,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	}
 
 	/**
-	 * @deprecated Deprecated in Contao 5.3, to be removed in Contao 6;
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
 	 *             use deleteChildren() instead.
 	 */
 	protected function deleteChilds($table, $id, &$delete)

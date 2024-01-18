@@ -226,8 +226,8 @@ class Automator extends System
 	/**
 	 * Purge registrations that have not been activated within 24 hours
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
-	 *             Use MemberModel::findExpiredRegistrations() instead.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6;
+	 *             use MemberModel::findExpiredRegistrations() instead.
 	 */
 	public function purgeRegistrations()
 	{
@@ -251,8 +251,8 @@ class Automator extends System
 	/**
 	 * Purge opt-in tokens
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
-	 *             Use the "contao.opt_in" service instead.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6;
+	 *             use the "contao.opt_in" service instead.
 	 */
 	public function purgeOptInTokens()
 	{
