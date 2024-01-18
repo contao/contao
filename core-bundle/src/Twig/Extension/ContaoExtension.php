@@ -213,6 +213,10 @@ final class ContaoExtension extends AbstractExtension
                 'add_csp_source',
                 [CspRuntime::class, 'addSource'],
             ),
+            new TwigFunction(
+                'add_csp_hash',
+                [CspRuntime::class, 'addHash'],
+            ),
         ];
     }
 

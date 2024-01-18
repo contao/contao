@@ -15,8 +15,9 @@ namespace Contao\CalendarBundle\EventListener;
 use Contao\CalendarEventsModel;
 use Contao\CalendarFeedModel;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\Events;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\StringUtil;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @internal
@@ -31,8 +32,10 @@ class InsertTagsListener
         'event_teaser',
     ];
 
-    public function __construct(private readonly ContaoFramework $framework)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly ContentUrlGenerator $urlGenerator,
+    ) {
     }
 
     public function __invoke(string $tag, bool $useCache, mixed $cacheValue, array $flags): string|false
@@ -74,23 +77,21 @@ class InsertTagsListener
             return '';
         }
 
-        $events = $this->framework->getAdapter(Events::class);
-
         return match ($insertTag) {
             'event' => sprintf(
                 '<a href="%s" title="%s"%s>%s</a>',
-                $events->generateEventUrl($model, \in_array('absolute', $arguments, true)) ?: './',
+                $this->urlGenerator->generate($model, [], \in_array('absolute', $arguments, true) ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH),
                 StringUtil::specialcharsAttribute($model->title),
                 \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : '',
                 $model->title,
             ),
             'event_open' => sprintf(
                 '<a href="%s" title="%s"%s>',
-                $events->generateEventUrl($model, \in_array('absolute', $arguments, true)) ?: './',
+                $this->urlGenerator->generate($model, [], \in_array('absolute', $arguments, true) ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH),
                 StringUtil::specialcharsAttribute($model->title),
                 \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : '',
             ),
-            'event_url' => $events->generateEventUrl($model, \in_array('absolute', $arguments, true)) ?: './',
+            'event_url' => $this->urlGenerator->generate($model, [], \in_array('absolute', $arguments, true) ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH),
             'event_title' => StringUtil::specialcharsAttribute($model->title),
             'event_teaser' => $model->teaser,
             default => '',

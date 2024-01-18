@@ -19,7 +19,6 @@ use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\DC_Table;
-use Contao\Events;
 use Contao\Input;
 use Contao\LayoutModel;
 use Contao\PageModel;
@@ -255,7 +254,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'inputType'               => 'serpPreview',
-			'eval'                    => array('url_callback'=>array('tl_calendar_events', 'getSerpUrl'), 'title_tag_callback'=>array('tl_calendar_events', 'getTitleTag'), 'titleFields'=>array('pageTitle', 'title'), 'descriptionFields'=>array('description', 'teaser')),
+			'eval'                    => array('title_tag_callback'=>array('tl_calendar_events', 'getTitleTag'), 'titleFields'=>array('pageTitle', 'title'), 'descriptionFields'=>array('description', 'teaser')),
 			'sql'                     => null
 		),
 		'canonicalLink' => array
@@ -583,18 +582,6 @@ class tl_calendar_events extends Backend
 	}
 
 	/**
-	 * Return the SERP URL
-	 *
-	 * @param CalendarEventsModel $model
-	 *
-	 * @return string
-	 */
-	public function getSerpUrl(CalendarEventsModel $model)
-	{
-		return Events::generateEventUrl($model, true);
-	}
-
-	/**
 	 * Return the title tag from the associated page layout
 	 *
 	 * @param CalendarEventsModel $model
@@ -727,7 +714,7 @@ class tl_calendar_events extends Backend
 	public function adjustTime(DataContainer $dc)
 	{
 		// Return if there is no active record (override all) or no start date has been set yet
-		if (!$dc->activeRecord || !$dc->activeRecord->startDate)
+		if (!$dc->activeRecord?->startDate)
 		{
 			return;
 		}
@@ -840,7 +827,7 @@ class tl_calendar_events extends Backend
 	public function scheduleUpdate(DataContainer $dc)
 	{
 		// Return if there is no ID
-		if (!$dc->activeRecord || !$dc->activeRecord->pid || Input::get('act') == 'copy')
+		if (!$dc->activeRecord?->pid || Input::get('act') == 'copy')
 		{
 			return;
 		}

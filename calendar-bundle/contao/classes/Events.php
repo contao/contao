@@ -11,6 +11,8 @@
 namespace Contao;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Provide methods to get all events of a certain period from the database.
@@ -42,12 +44,6 @@ abstract class Events extends Module
 	 * @var array
 	 */
 	protected $arrEvents = array();
-
-	/**
-	 * URL cache array
-	 * @var array
-	 */
-	private static $arrUrlCache = array();
 
 	/**
 	 * Sort out protected archives
@@ -289,7 +285,7 @@ abstract class Events extends Module
 		$arrEvent['link'] = $objEvents->title;
 		$arrEvent['target'] = '';
 		$arrEvent['title'] = StringUtil::specialchars($objEvents->title, true);
-		$arrEvent['href'] = $this->generateEventUrl($objEvents);
+		$arrEvent['href'] = System::getContainer()->get('contao.routing.content_url_generator')->generate($objEvents);
 		$arrEvent['class'] = $objEvents->cssClass ? ' ' . $objEvents->cssClass : '';
 		$arrEvent['recurring'] = $recurring;
 		$arrEvent['until'] = $until;
@@ -408,80 +404,24 @@ abstract class Events extends Module
 	 * @param boolean             $blnAbsolute
 	 *
 	 * @return string
+	 *
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 *             use the content URL generator instead.
 	 */
 	public static function generateEventUrl($objEvent, $blnAbsolute=false)
 	{
-		$strCacheKey = 'id_' . $objEvent->id . ($blnAbsolute ? '_absolute' : '');
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the content URL generator instead.', __METHOD__);
 
-		// Load the URL from cache
-		if (isset(self::$arrUrlCache[$strCacheKey]))
+		try
 		{
-			return self::$arrUrlCache[$strCacheKey];
+			$url = System::getContainer()->get('contao.routing.content_url_generator')->generate($objEvent, array(), $blnAbsolute ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH);
+		}
+		catch (ExceptionInterface)
+		{
+			return StringUtil::ampersand(Environment::get('requestUri'));
 		}
 
-		// Initialize the cache
-		self::$arrUrlCache[$strCacheKey] = null;
-
-		switch ($objEvent->source)
-		{
-			// Link to an external page
-			case 'external':
-				if (str_starts_with($objEvent->url, 'mailto:'))
-				{
-					self::$arrUrlCache[$strCacheKey] = StringUtil::encodeEmail($objEvent->url);
-				}
-				else
-				{
-					$url = $objEvent->url;
-
-					if (Validator::isRelativeUrl($url))
-					{
-						$url = Environment::get('path') . '/' . $url;
-					}
-
-					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($url);
-				}
-				break;
-
-			// Link to an internal page
-			case 'internal':
-				if (($objTarget = $objEvent->getRelated('jumpTo')) instanceof PageModel)
-				{
-					/** @var PageModel $objTarget */
-					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($blnAbsolute ? $objTarget->getAbsoluteUrl() : $objTarget->getFrontendUrl());
-				}
-				break;
-
-			// Link to an article
-			case 'article':
-				if (($objArticle = ArticleModel::findByPk($objEvent->articleId)) instanceof ArticleModel && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
-				{
-					$params = '/articles/' . ($objArticle->alias ?: $objArticle->id);
-
-					/** @var PageModel $objPid */
-					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($blnAbsolute ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params));
-				}
-				break;
-		}
-
-		// Link to the default page
-		if (self::$arrUrlCache[$strCacheKey] === null)
-		{
-			$objPage = PageModel::findByPk($objEvent->getRelated('pid')->jumpTo);
-
-			if (!$objPage instanceof PageModel)
-			{
-				self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand(Environment::get('requestUri'));
-			}
-			else
-			{
-				$params = '/' . ($objEvent->alias ?: $objEvent->id);
-
-				self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($blnAbsolute ? $objPage->getAbsoluteUrl($params) : $objPage->getFrontendUrl($params));
-			}
-		}
-
-		return self::$arrUrlCache[$strCacheKey];
+		return $url;
 	}
 
 	/**
@@ -494,12 +434,13 @@ abstract class Events extends Module
 	public static function getSchemaOrgData(CalendarEventsModel $objEvent): array
 	{
 		$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
+		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
 
 		$jsonLd = array(
 			'@type' => 'Event',
 			'identifier' => '#/schema/events/' . $objEvent->id,
 			'name' => $htmlDecoder->inputEncodedToPlainText($objEvent->title),
-			'url' => self::generateEventUrl($objEvent),
+			'url' => $urlGenerator->generate($objEvent),
 			'startDate' => $objEvent->addTime ? date('Y-m-d\TH:i:sP', $objEvent->startTime) : date('Y-m-d', $objEvent->startTime)
 		);
 

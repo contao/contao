@@ -17,6 +17,7 @@ use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\EventListener\PreviewUrlConvertListener;
 use Contao\CoreBundle\Exception\RouteParametersException;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Tests\TestCase;
@@ -41,6 +42,7 @@ class PreviewUrlConverterListenerTest extends TestCase
         $listener = new PreviewUrlConvertListener(
             $this->mockContaoFramework(),
             $this->mockPageRegistry(),
+            $this->createMock(ContentUrlGenerator::class),
             $this->createMock(UriSigner::class),
         );
 
@@ -62,6 +64,7 @@ class PreviewUrlConverterListenerTest extends TestCase
         $listener = new PreviewUrlConvertListener(
             $framework,
             $this->mockPageRegistry(),
+            $this->createMock(ContentUrlGenerator::class),
             $this->createMock(UriSigner::class),
         );
 
@@ -78,6 +81,7 @@ class PreviewUrlConverterListenerTest extends TestCase
         $listener = new PreviewUrlConvertListener(
             $this->mockContaoFramework(),
             $this->mockPageRegistry(),
+            $this->createMock(ContentUrlGenerator::class),
             $this->createMock(UriSigner::class),
         );
 
@@ -94,30 +98,31 @@ class PreviewUrlConverterListenerTest extends TestCase
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 9;
 
-        $pageModel
-            ->expects($this->once())
-            ->method('getAbsoluteUrl')
-            ->with(null)
-            ->willReturn('/en/content-elements.html')
-        ;
-
         $adapters = [
             PageModel::class => $this->mockConfiguredAdapter(['findWithDetails' => $pageModel]),
             ArticleModel::class => $this->mockConfiguredAdapter(['findByIdOrAliasAndPid' => null]),
         ];
 
-        $framework = $this->mockContaoFramework($adapters);
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->expects($this->once())
+            ->method('generate')
+            ->with($pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('https://example.com/en/content-elements.html')
+        ;
+
         $event = new PreviewUrlConvertEvent($request);
 
         $listener = new PreviewUrlConvertListener(
-            $framework,
+            $this->mockContaoFramework($adapters),
             $this->mockPageRegistry(),
+            $urlGenerator,
             $this->createMock(UriSigner::class),
         );
 
         $listener($event);
 
-        $this->assertSame('/en/content-elements.html', $event->getUrl());
+        $this->assertSame('https://example.com/en/content-elements.html', $event->getUrl());
     }
 
     public function testDoesNotConvertThePreviewUrlIfThereIsNoPage(): void
@@ -131,9 +136,16 @@ class PreviewUrlConverterListenerTest extends TestCase
 
         $framework = $this->mockContaoFramework($adapters);
 
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->expects($this->never())
+            ->method('generate')
+        ;
+
         $listener = new PreviewUrlConvertListener(
             $framework,
             $this->mockPageRegistry(),
+            $urlGenerator,
             $this->createMock(UriSigner::class),
         );
 
@@ -142,7 +154,7 @@ class PreviewUrlConverterListenerTest extends TestCase
         $this->assertNull($event->getUrl());
     }
 
-    public function testConvertsThePreviewUrlWithPageAndArticle(): void
+    public function testConvertsThePreviewUrlWithArticle(): void
     {
         $request = new Request();
         $request->query->set('page', '9');
@@ -155,28 +167,31 @@ class PreviewUrlConverterListenerTest extends TestCase
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 9;
 
-        $pageModel
-            ->expects($this->once())
-            ->method('getAbsoluteUrl')
-            ->with('/articles/foobar')
-            ->willReturn('/en/content-elements/articles/foobar.html')
-        ;
-
         $adapters = [
             PageModel::class => $this->mockConfiguredAdapter(['findWithDetails' => $pageModel]),
             ArticleModel::class => $this->mockConfiguredAdapter(['findByIdOrAliasAndPid' => $articleModel]),
         ];
 
-        $framework = $this->mockContaoFramework($adapters);
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->expects($this->once())
+            ->method('generate')
+            ->with($articleModel, [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('https://example.com/en/content-elements/articles/foobar.html')
+        ;
+
         $event = new PreviewUrlConvertEvent($request);
 
         $listener = new PreviewUrlConvertListener(
-            $framework,
+            $this->mockContaoFramework($adapters),
             $this->mockPageRegistry(),
+            $urlGenerator,
             $this->createMock(UriSigner::class),
         );
 
         $listener($event);
+
+        $this->assertSame('https://example.com/en/content-elements/articles/foobar.html', $event->getUrl());
     }
 
     public function testRediectsToFragmentUrlIfPreviewUrlThrowsException(): void
@@ -187,12 +202,6 @@ class PreviewUrlConverterListenerTest extends TestCase
             'urlPrefix' => '',
             'urlSuffix' => '',
         ]);
-
-        $pageModel
-            ->expects($this->once())
-            ->method('getAbsoluteUrl')
-            ->willThrowException(new RouteNotFoundException())
-        ;
 
         $route = new PageRoute($pageModel);
 
@@ -208,6 +217,14 @@ class PreviewUrlConverterListenerTest extends TestCase
             PageModel::class => $this->mockConfiguredAdapter(['findWithDetails' => $pageModel]),
         ];
 
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->expects($this->once())
+            ->method('generate')
+            ->with($pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willThrowException(new RouteNotFoundException())
+        ;
+
         $uriSigner = $this->createMock(UriSigner::class);
         $uriSigner
             ->expects($this->once())
@@ -221,6 +238,7 @@ class PreviewUrlConverterListenerTest extends TestCase
         $listener = new PreviewUrlConvertListener(
             $framework,
             $this->mockPageRegistry($route),
+            $urlGenerator,
             $uriSigner,
         );
 
@@ -247,9 +265,18 @@ class PreviewUrlConverterListenerTest extends TestCase
 
         $route = new PageRoute($pageModel);
 
-        $pageModel
+        $request = $this->createMock(Request::class);
+        $request->query = new ParameterBag(['page' => '42']);
+
+        $adapters = [
+            PageModel::class => $this->mockConfiguredAdapter(['findWithDetails' => $pageModel]),
+        ];
+
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
             ->expects($this->once())
-            ->method('getAbsoluteUrl')
+            ->method('generate')
+            ->with($pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willThrowException(
                 new RouteParametersException(
                     $route,
@@ -259,13 +286,6 @@ class PreviewUrlConverterListenerTest extends TestCase
                 ),
             )
         ;
-
-        $request = $this->createMock(Request::class);
-        $request->query = new ParameterBag(['page' => '42']);
-
-        $adapters = [
-            PageModel::class => $this->mockConfiguredAdapter(['findWithDetails' => $pageModel]),
-        ];
 
         $uriSigner = $this->createMock(UriSigner::class);
         $uriSigner
@@ -279,6 +299,7 @@ class PreviewUrlConverterListenerTest extends TestCase
         $listener = new PreviewUrlConvertListener(
             $framework,
             $this->mockPageRegistry(),
+            $urlGenerator,
             $uriSigner,
         );
 

@@ -14,10 +14,12 @@ namespace Contao\CoreBundle\Tests\Crawl\Escargot;
 
 use Contao\CoreBundle\Crawl\Escargot\Factory;
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\EscargotSubscriberInterface;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use Nyholm\Psr7\Uri;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Terminal42\Escargot\BaseUriCollection;
 use Terminal42\Escargot\Queue\InMemoryQueue;
 
@@ -37,7 +39,7 @@ class FactoryTest extends TestCase
             ->willReturn('subscriber-2')
         ;
 
-        $factory = new Factory($this->createMock(Connection::class), $this->mockContaoFramework());
+        $factory = new Factory($this->createMock(Connection::class), $this->mockContaoFramework(), $this->createMock(ContentUrlGenerator::class));
         $factory->addSubscriber($subscriber1);
         $factory->addSubscriber($subscriber2);
 
@@ -51,10 +53,6 @@ class FactoryTest extends TestCase
     public function testBuildsUriCollectionsCorrectly(): void
     {
         $rootPage = $this->createMock(PageModel::class);
-        $rootPage
-            ->method('getAbsoluteUrl')
-            ->willReturn('https://contao.org')
-        ;
 
         $pageModelAdapter = $this->mockAdapter(['findPublishedRootPages']);
         $pageModelAdapter
@@ -62,9 +60,17 @@ class FactoryTest extends TestCase
             ->willReturn([$rootPage])
         ;
 
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->method('generate')
+            ->with($rootPage, [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('https://contao.org')
+        ;
+
         $factory = new Factory(
             $this->createMock(Connection::class),
             $this->mockContaoFramework([PageModel::class => $pageModelAdapter]),
+            $urlGenerator,
             ['https://example.com'],
         );
 
@@ -87,7 +93,7 @@ class FactoryTest extends TestCase
             ->willReturn('subscriber-1')
         ;
 
-        $factory = new Factory($this->createMock(Connection::class), $this->mockContaoFramework());
+        $factory = new Factory($this->createMock(Connection::class), $this->mockContaoFramework(), $this->createMock(ContentUrlGenerator::class));
         $factory->addSubscriber($subscriber1);
 
         $uriCollection = new BaseUriCollection([new Uri('https://contao.org')]);
@@ -110,7 +116,7 @@ class FactoryTest extends TestCase
             ->willReturn('subscriber-1')
         ;
 
-        $factory = new Factory($this->createMock(Connection::class), $this->mockContaoFramework());
+        $factory = new Factory($this->createMock(Connection::class), $this->mockContaoFramework(), $this->createMock(ContentUrlGenerator::class));
         $factory->addSubscriber($subscriber1);
 
         $queue = new InMemoryQueue();

@@ -31,6 +31,7 @@ use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
+use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Imagine\Exception\RuntimeException as ImagineRuntimeException;
 use Imagine\Gd\Imagine;
@@ -158,6 +159,11 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container
             ->registerForAutoconfiguration(MigrationInterface::class)
             ->addTag('contao.migration')
+        ;
+
+        $container
+            ->registerForAutoconfiguration(ContentUrlResolverInterface::class)
+            ->addTag('contao.content_url_resolver')
         ;
 
         $container->registerAttributeForAutoconfiguration(

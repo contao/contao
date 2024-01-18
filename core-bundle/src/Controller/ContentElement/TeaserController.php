@@ -37,7 +37,7 @@ class TeaserController extends AbstractContentElementController
 
         $template->set('article', $article);
         $template->set('page', $page);
-        $template->set('href', $page->getFrontendUrl('/articles/'.($article->alias ?: $article->id)));
+        $template->set('href', $this->generateContentUrl($article));
 
         return $template->getResponse();
     }

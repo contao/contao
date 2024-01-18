@@ -260,11 +260,12 @@ class ModuleLostPassword extends Module
 					}
 				}
 
+				$objTarget = $this->objModel->getRelated('reg_jumpTo');
+
 				// Redirect to the jumpTo page
-				if (($objTarget = $this->objModel->getRelated('reg_jumpTo')) instanceof PageModel)
+				if ($objTarget instanceof PageModel)
 				{
-					/** @var PageModel $objTarget */
-					$this->redirect($objTarget->getFrontendUrl());
+					$this->redirect(System::getContainer()->get('contao.routing.content_url_generator')->generate($objTarget));
 				}
 
 				// Confirm

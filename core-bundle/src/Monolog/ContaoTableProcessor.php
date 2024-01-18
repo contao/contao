@@ -111,7 +111,7 @@ class ContaoTableProcessor implements ProcessorInterface
 
     private function updatePageId(ContaoContext $context, Request|null $request = null): void
     {
-        if (!$request || !$request->attributes->has('pageModel')) {
+        if (!$request?->attributes->has('pageModel')) {
             return;
         }
 

@@ -248,7 +248,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'inputType'               => 'serpPreview',
-			'eval'                    => array('url_callback'=>array('tl_page', 'getSerpUrl'), 'title_tag_callback'=>array('tl_page', 'getTitleTag'), 'titleFields'=>array('pageTitle', 'title'), 'tl_class'=>'clr'),
+			'eval'                    => array('title_tag_callback'=>array('tl_page', 'getTitleTag'), 'titleFields'=>array('pageTitle', 'title'), 'tl_class'=>'clr'),
 			'sql'                     => null
 		),
 		'redirect' => array
@@ -749,18 +749,6 @@ class tl_page extends Backend
 	}
 
 	/**
-	 * Return the SERP URL
-	 *
-	 * @param PageModel $page
-	 *
-	 * @return string
-	 */
-	public function getSerpUrl(PageModel $page)
-	{
-		return $page->getAbsoluteUrl();
-	}
-
-	/**
 	 * Return the title tag from the associated page layout
 	 *
 	 * @param PageModel $page
@@ -822,7 +810,7 @@ class tl_page extends Backend
 	public function scheduleUpdate(DataContainer $dc)
 	{
 		// Return if there is no ID
-		if (!$dc->activeRecord || !$dc->activeRecord->id || Input::get('act') == 'copy')
+		if (!$dc->activeRecord?->id || Input::get('act') == 'copy')
 		{
 			return;
 		}

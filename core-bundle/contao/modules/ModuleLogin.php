@@ -14,6 +14,7 @@ use Nyholm\Psr7\Uri;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvents;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
 
@@ -179,8 +180,7 @@ class ModuleLogin extends Module
 		// Redirect to the jumpTo page
 		elseif (($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
 		{
-			/** @var PageModel $objTarget */
-			$strRedirect = $objTarget->getAbsoluteUrl();
+			$strRedirect = $container->get('contao.routing.content_url_generator')->generate($objTarget, array(), UrlGeneratorInterface::ABSOLUTE_URL);
 		}
 
 		$this->Template->formId = 'tl_login_' . $this->id;
@@ -207,7 +207,7 @@ class ModuleLogin extends Module
 
 		if ($pwResetPage instanceof PageModel)
 		{
-			$this->Template->pwResetUrl = $pwResetPage->getFrontendUrl();
+			$this->Template->pwResetUrl = System::getContainer()->get('contao.routing.content_url_generator')->generate($pwResetPage);
 		}
 
 		$this->Template->username = $GLOBALS['TL_LANG']['MSC']['username'];
