@@ -166,7 +166,8 @@ class InsertTagParser implements ResetInterface
     }
 
     /**
-     * @deprecated Deprecated since Contao 5.1 to be removed in Contao 6. Use renderTag() instead.
+     * @deprecated Deprecated since Contao 5.1, to be removed in Contao 6;
+     *             use renderTag() instead.
      */
     public function render(string $input): string
     {
