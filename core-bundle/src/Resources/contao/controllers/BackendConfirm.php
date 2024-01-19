@@ -50,6 +50,11 @@ class BackendConfirm extends Backend
 	{
 		$objSession = System::getContainer()->get('session');
 
+		if (!$objSession->has('INVALID_TOKEN_URL'))
+		{
+			$this->redirect(System::getContainer()->get('router')->generate('contao_backend'));
+		}
+
 		// Redirect to the back end home page
 		if (Input::post('FORM_SUBMIT') == 'invalid_token_url')
 		{
