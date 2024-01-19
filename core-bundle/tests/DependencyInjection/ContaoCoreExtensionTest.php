@@ -84,18 +84,18 @@ class ContaoCoreExtensionTest extends TestCase
         $container = $this->getContainerBuilder();
 
         $makeResponsePrivateDefinition = $container->getDefinition('contao.listener.make_response_private');
-        $attribute = $container->getReflectionClass($makeResponsePrivateDefinition->getClass())->getAttributes()[0];
+        $attribute = (new \ReflectionClass($makeResponsePrivateDefinition->getClass()))->getAttributes()[0];
         $makeResponsePrivatePriority = $attribute->getArguments()['priority'];
 
         $mergeHeadersListenerDefinition = $container->getDefinition('contao.listener.merge_http_headers');
-        $attribute = $container->getReflectionClass($mergeHeadersListenerDefinition->getClass())->getAttributes()[0];
+        $attribute = (new \ReflectionClass($mergeHeadersListenerDefinition->getClass()))->getAttributes()[0];
         $mergeHeadersListenerPriority = $attribute->getArguments()['priority'];
 
         // Ensure that the listener is registered after the MergeHeaderListener
         $this->assertTrue($makeResponsePrivatePriority < $mergeHeadersListenerPriority);
 
         $clearSessionDataListenerDefinition = $container->getDefinition('contao.listener.clear_session_data');
-        $attribute = $container->getReflectionClass($clearSessionDataListenerDefinition->getClass())->getAttributes()[0];
+        $attribute = (new \ReflectionClass($clearSessionDataListenerDefinition->getClass()))->getAttributes()[0];
         $clearSessionDataListenerPriority = $attribute->getArguments()['priority'];
 
         // Ensure that the listener is registered after the ClearSessionDataListener
