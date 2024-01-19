@@ -99,6 +99,8 @@ class WysiwygStyleProcessorTest extends TestCase
                         font-family: sans-serif;
                         font-family: &#039;Comic Sans MS&#039;, Georgia, sans-serif;
                         font-family: Comic Sans MS, sans-serif;
+                        font-family: monospace;
+                        font-family: system-ui;
                         font-size: 8pt;
                         font-size: 14pt;
                         font-size: 36pt;
@@ -132,6 +134,8 @@ class WysiwygStyleProcessorTest extends TestCase
                             font-family: sans-serif;
                             font-family: 'Comic Sans MS', Georgia, sans-serif;
                             font-family: Comic Sans MS, sans-serif;
+                            font-family: monospace;
+                            font-family: system-ui;
                             font-size: 8pt;
                             font-size: 14pt;
                             font-size: 36pt;
@@ -155,7 +159,7 @@ class WysiwygStyleProcessorTest extends TestCase
                 'text-decoration' => 'underline',
                 'background-color' => 'rgb\(\d{1,3},\s?\d{1,3},\s?\d{1,3}\)|#([0-9a-f]{3}){1,2}',
                 'color' => 'rgb\(\d{1,3},\s?\d{1,3},\s?\d{1,3}\)|#([0-9a-f]{3}){1,2}',
-                'font-family' => '(\'[a-z0-9 _-]+\',\s*|[a-z0-9 _-]+,\s*)*(sans-)?serif',
+                'font-family' => '((\'[a-z0-9 _-]+\'|[a-z0-9 _-]+)(,\s*|$))+',
                 'font-size' => '[0-3]?\dpt',
                 'line-height' => '[0-3](\.\d+)?',
                 'padding-left' => '\d{1,3}px',

@@ -704,7 +704,7 @@ class ContaoCoreExtensionTest extends TestCase
                 'text-decoration' => 'underline',
                 'background-color' => 'rgb\(\d{1,3},\s?\d{1,3},\s?\d{1,3}\)|#([0-9a-f]{3}){1,2}',
                 'color' => 'rgb\(\d{1,3},\s?\d{1,3},\s?\d{1,3}\)|#([0-9a-f]{3}){1,2}',
-                'font-family' => '(\'[a-z0-9 _-]+\',\s*|[a-z0-9 _-]+,\s*)*(sans-)?serif',
+                'font-family' => '((\'[a-z0-9 _-]+\'|[a-z0-9 _-]+)(,\s*|$))+',
                 'font-size' => '[0-3]?\dpt',
                 'line-height' => '[0-3](\.\d+)?',
                 'padding-left' => '\d{1,3}px',
