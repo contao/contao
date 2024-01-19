@@ -13,16 +13,39 @@ declare(strict_types=1);
 namespace Contao\Tools\ServiceLinter;
 
 use Contao\CoreBundle\Config\ResourceFinder;
+use Contao\CoreBundle\Crawl\Escargot\Subscriber\EscargotSubscriberInterface;
 use Contao\CoreBundle\Csrf\MemoryTokenStorage;
+use Contao\CoreBundle\Migration\MigrationInterface;
+use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
+use Contao\CoreBundle\Search\Indexer\IndexerInterface;
+use Monolog\Processor\ProcessorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\FrameworkBundle\Routing\RouteLoaderInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ServiceLocator;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpKernel\CacheClearer\CacheClearerInterface;
+use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
+use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
+use Symfony\Component\HttpKernel\DataCollector\DataCollectorInterface;
+use Symfony\Component\Messenger\Handler\BatchHandlerInterface;
+use Symfony\Component\Messenger\Transport\TransportFactoryInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Yaml\Yaml;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\Service\ResetInterface;
+use Symfony\Contracts\Service\ServiceSubscriberInterface;
+use Symfony\Contracts\Translation\LocaleAwareInterface;
+use Twig\Extension\ExtensionInterface;
+use Twig\Extension\RuntimeExtensionInterface;
+use Twig\Loader\LoaderInterface;
 
 #[AsCommand(
     name: 'contao:lint-service-ids',
@@ -79,7 +102,67 @@ class LintServiceIdsCommand extends Command
         'contao.migration.version_400.version_400_update',
     ];
 
-    public function __construct(public string $projectDir)
+    /**
+     * @var array<string>
+     */
+    private static array $tagToAttribute = [
+        'contao.content_element' => '#[AsContentElement]',
+        'contao.frontend_module' => '#[AsFrontendModule]',
+        'contao.page' => '#[AsPage]',
+        'contao.picker_provider' => '#[AsPickerProvider]',
+        'contao.cronjob' => '#[AsCronJob]',
+        'contao.hook' => '#[AsHook]',
+        'contao.callback' => '#[AsCallback]',
+        'contao.insert_tag' => '#[AsInsertTag]',
+        'contao.block_insert_tag' => '#[AsBlockInsertTag]',
+        'contao.insert_tag_flag' => '#[AsInsertTagFlag]',
+        'kernel.event_listener' => '#[AsEventListener]',
+        'controller.service_arguments' => '#[AsController]',
+        'remote_event.consumer' => '#[AsRemoteEventConsumer]',
+        'messenger.message_handler' => '#[AsMessageHandler]',
+        'controller.targeted_value_resolver' => '#[AsTargetedValueResolver]',
+        'scheduler.schedule_provider' => '#[AsSchedule]',
+        'scheduler.task' => '#[AsPeriodicTask]',
+        'monolog.logger' => '#[WithMonologChannel]',
+    ];
+
+    /**
+     * @var array<string>
+     */
+    private static array $tagToInterface = [
+        'contao.migration' => MigrationInterface::class,
+        'contao.content_url_resolver' => ContentUrlResolverInterface::class,
+        'contao.search_indexer' => IndexerInterface::class,
+        'contao.escargot_subscriber' => EscargotSubscriberInterface::class,
+        'container.service_subscriber' => ServiceSubscriberInterface::class,
+        'controller.argument_value_resolver' => ValueResolverInterface::class,
+        'data_collector' => DataCollectorInterface::class,
+        'kernel.cache_clearer' => CacheClearerInterface::class,
+        'kernel.cache_warmer' => CacheWarmerInterface::class,
+        'event_dispatcher.dispatcher' => EventDispatcherInterface::class,
+        'kernel.event_subscriber' => EventSubscriberInterface::class,
+        'kernel.locale_aware' => LocaleAwareInterface::class,
+        'kernel.reset' => ResetInterface::class,
+        'messenger.message_handler' => BatchHandlerInterface::class,
+        'messenger.transport_factory' => TransportFactoryInterface::class,
+        'routing.route_loader' => RouteLoaderInterface::class,
+        'monolog.processor' => ProcessorInterface::class,
+        'security.voter' => VoterInterface::class,
+        'twig.extension' => ExtensionInterface::class,
+        'twig.loader' => LoaderInterface::class,
+        'twig.runtime' => RuntimeExtensionInterface::class,
+    ];
+
+    /**
+     * @var array<string>
+     */
+    private static array $tagToParentClass = [
+        'console.command' => Command::class,
+        'container.service_locator' => ServiceLocator::class,
+        'controller.service_arguments' => AbstractController::class,
+    ];
+
+    public function __construct(private readonly string $projectDir)
     {
         parent::__construct();
     }
@@ -167,6 +250,46 @@ class LintServiceIdsCommand extends Command
 
                 if (!isset($config['class'])) {
                     continue;
+                }
+
+                if (isset($config['tags']) && false !== ($config['autoconfigure'] ?? null)) {
+                    foreach ($config['tags'] as $tag) {
+                        if (\is_array($tag)) {
+                            $tag = $tag['name'];
+                        }
+
+                        if (isset(self::$tagToParentClass[$tag])) {
+                            $hasError = true;
+
+                            $io->warning(sprintf(
+                                'The "%s" service defined in the %s file has a "%s" tag but should extend the %s class instead.',
+                                $serviceId,
+                                $fileName,
+                                $tag,
+                                self::$tagToInterface[$tag],
+                            ));
+                        } elseif (isset(self::$tagToInterface[$tag])) {
+                            $hasError = true;
+
+                            $io->warning(sprintf(
+                                'The "%s" service defined in the %s file has a "%s" tag but should implement the %s interface instead.',
+                                $serviceId,
+                                $fileName,
+                                $tag,
+                                self::$tagToInterface[$tag],
+                            ));
+                        } elseif (isset(self::$tagToAttribute[$tag]) && !$this->isExternal($serviceId, $config)) {
+                            $hasError = true;
+
+                            $io->warning(sprintf(
+                                'The "%s" service defined in the %s file has a "%s" tag but should use the %s attribute instead.',
+                                $serviceId,
+                                $fileName,
+                                $tag,
+                                self::$tagToAttribute[$tag],
+                            ));
+                        }
+                    }
                 }
 
                 if (!isset($config['deprecated'])) {
@@ -281,5 +404,19 @@ class LintServiceIdsCommand extends Command
         $path = implode('.', $chunks);
 
         return implode('.', array_filter([$path, $name]));
+    }
+
+    private function isExternal(string $serviceId, array $config): bool
+    {
+        [$namespace] = explode('.', $serviceId);
+        $chunks = explode('_', $namespace);
+
+        if (1 === \count($chunks) && 'contao' === $chunks[0]) {
+            $chunks = ['contao', 'core'];
+        }
+
+        $needle = ucfirst($chunks[0]).'\\'.ucfirst($chunks[1]).'Bundle\\';
+
+        return !str_starts_with($config['class'], $needle);
     }
 }
