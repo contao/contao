@@ -68,8 +68,6 @@ services:
         class: Contao\CoreBundle\Crawl\Escargot\Subscriber\BrokenLinkCheckerSubscriber
         arguments:
             - '@translator'
-        tags:
-            - contao.escargot_subscriber
 
     contao.crawl.escargot.factory:
         class: Contao\CoreBundle\Crawl\Escargot\Factory
@@ -84,8 +82,6 @@ services:
         arguments:
             - '@contao.search.indexer'
             - '@translator'
-        tags:
-            - contao.escargot_subscriber
 
     contao.cron:
         class: Contao\CoreBundle\Cron\Cron
@@ -599,8 +595,6 @@ services:
             - '@translator'
             - '@security.helper'
             - '%contao.upload_path%'
-        tags:
-            - { name: contao.picker_provider, priority: 160 }
 
     contao.picker.page_provider:
         class: Contao\CoreBundle\Picker\PagePickerProvider
@@ -609,8 +603,6 @@ services:
             - '@router'
             - '@?translator'
             - '@security.helper'
-        tags:
-            - { name: contao.picker_provider, priority: 192 }
 
     contao.picker.table_provider:
         class: Contao\CoreBundle\Picker\TablePickerProvider
@@ -620,8 +612,6 @@ services:
             - '@router'
             - '@translator'
             - '@database_connection'
-        tags:
-            - contao.picker_provider
 
     contao.process_util:
         class: Contao\CoreBundle\Util\ProcessUtil
@@ -832,8 +822,6 @@ services:
         arguments:
             - '@contao.framework'
             - '@database_connection'
-        tags:
-            - contao.search_indexer
 
     contao.search.delegating_indexer:
         class: Contao\CoreBundle\Search\Indexer\DelegatingIndexer
@@ -1173,9 +1161,6 @@ services:
             - '%kernel.project_dir%'
             - '%kernel.cache_dir%'
             - '%kernel.environment%'
-        tags:
-            - { name: kernel.cache_warmer }
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
     contao.twig.finder_factory:
         class: Contao\CoreBundle\Twig\Finder\FinderFactory

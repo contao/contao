@@ -25,6 +25,7 @@ use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\ServiceUnavailableException;
 use Contao\UnusedArgumentsException;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -35,7 +36,10 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 /**
  * @internal
+ *
+ * The priority must be higher than the one of the response exception listener (defaults to 64)
  */
+#[AsEventListener(priority: 96)]
 class ExceptionConverterListener
 {
     private const MAPPER = [

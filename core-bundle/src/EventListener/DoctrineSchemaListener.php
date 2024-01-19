@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 use Doctrine\ORM\Tools\Event\GenerateSchemaEventArgs;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Messenger\Bridge\Doctrine\Transport\DoctrineTransport;
@@ -20,6 +21,7 @@ use Symfony\Component\Messenger\Bridge\Doctrine\Transport\DoctrineTransport;
 /**
  * @internal
  */
+#[AsDoctrineListener('postGenerateSchema')]
 class DoctrineSchemaListener
 {
     public function __construct(

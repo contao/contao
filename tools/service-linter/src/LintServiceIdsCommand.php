@@ -33,11 +33,8 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\CacheClearer\CacheClearerInterface;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
-use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
-use Symfony\Component\HttpKernel\DataCollector\DataCollectorInterface;
 use Symfony\Component\Messenger\Handler\BatchHandlerInterface;
 use Symfony\Component\Messenger\Transport\TransportFactoryInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Service\ResetInterface;
@@ -45,7 +42,6 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Twig\Extension\ExtensionInterface;
 use Twig\Extension\RuntimeExtensionInterface;
-use Twig\Loader\LoaderInterface;
 
 #[AsCommand(
     name: 'contao:lint-service-ids',
@@ -123,7 +119,6 @@ class LintServiceIdsCommand extends Command
         'controller.targeted_value_resolver' => '#[AsTargetedValueResolver]',
         'scheduler.schedule_provider' => '#[AsSchedule]',
         'scheduler.task' => '#[AsPeriodicTask]',
-        'monolog.logger' => '#[WithMonologChannel]',
     ];
 
     /**
@@ -135,8 +130,6 @@ class LintServiceIdsCommand extends Command
         'contao.search_indexer' => IndexerInterface::class,
         'contao.escargot_subscriber' => EscargotSubscriberInterface::class,
         'container.service_subscriber' => ServiceSubscriberInterface::class,
-        'controller.argument_value_resolver' => ValueResolverInterface::class,
-        'data_collector' => DataCollectorInterface::class,
         'kernel.cache_clearer' => CacheClearerInterface::class,
         'kernel.cache_warmer' => CacheWarmerInterface::class,
         'event_dispatcher.dispatcher' => EventDispatcherInterface::class,
@@ -147,9 +140,7 @@ class LintServiceIdsCommand extends Command
         'messenger.transport_factory' => TransportFactoryInterface::class,
         'routing.route_loader' => RouteLoaderInterface::class,
         'monolog.processor' => ProcessorInterface::class,
-        'security.voter' => VoterInterface::class,
         'twig.extension' => ExtensionInterface::class,
-        'twig.loader' => LoaderInterface::class,
         'twig.runtime' => RuntimeExtensionInterface::class,
     ];
 

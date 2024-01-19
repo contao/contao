@@ -12,9 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
+
 /**
  * @internal
+ *
+ * The priority must be lower than 0 (see #3255)
  */
+#[AsHook('loadDataContainer', priority: -16)]
 class DataContainerCallbackListener
 {
     private const SINGLETONS = [

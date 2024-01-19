@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -21,7 +22,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @internal
+ *
+ * The priority must be lower than the one of the firewall listener (defaults to 8)
  */
+#[AsEventListener(priority: 7)]
 class PreviewAuthenticationListener
 {
     public function __construct(
