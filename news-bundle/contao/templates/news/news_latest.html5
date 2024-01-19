@@ -12,9 +12,9 @@
   <h2><?= $this->linkHeadline ?></h2>
 
   <?php if ($this->teaser): ?>
-  <div class="ce_text block">
-    <?= $this->extractStyleAttributesForCsp($this->teaser) ?>
-  </div>
+    <div class="ce_text block">
+      <?= $this->extractStyleAttributesForCsp($this->teaser) ?>
+    </div>
   <?php endif; ?>
 
   <?php if ($this->hasText || $this->hasTeaser): ?>
