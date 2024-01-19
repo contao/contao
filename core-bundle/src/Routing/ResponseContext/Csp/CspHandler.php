@@ -88,9 +88,8 @@ final class CspHandler
             return $this;
         }
 
-        $hash = base64_encode(hash($algorithm, $script, true));
-
-        $this->signatures[$directive][] = $algorithm.'-'.$hash;
+        $this->signatures[$directive][] = $algorithm.'-'.base64_encode(hash($algorithm, $script, true));
+        $this->signatures[$directive] = array_unique($this->signatures[$directive]);
 
         return $this;
     }

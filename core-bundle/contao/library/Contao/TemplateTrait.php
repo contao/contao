@@ -192,6 +192,26 @@ trait TemplateTrait
 		$csp->addHash($directive, $script, $algorithm);
 	}
 
+	/*
+	 * Adds a CSP hash for a given inline style and also adds the 'unsafe-hashes' source to the directive automatically.
+	 */
+	public function inlineStyle(string $style, string $algorithm = 'sha384'): string
+	{
+		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
+
+		if ($responseContext?->has(CspHandler::class))
+		{
+			/** @var CspHandler $csp */
+			$csp = $responseContext->get(CspHandler::class);
+			$csp
+				->addHash('style-src', $style, $algorithm)
+				->addSource('style-src', "'unsafe-hashes'")
+			;
+		}
+
+		return $style;
+	}
+
 	/**
 	 * Extracts all inline CSS style attributes of a given HTML string and automatically adds CSP hashes for those
 	 * to the current response context.
