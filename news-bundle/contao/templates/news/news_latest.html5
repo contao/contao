@@ -11,11 +11,9 @@
 
   <h2><?= $this->linkHeadline ?></h2>
 
-  <?php if ($this->teaser): ?>
-    <div class="ce_text block">
-      <?= $this->extractStyleAttributesForCsp($this->teaser) ?>
-    </div>
-  <?php endif; ?>
+  <div class="ce_text block">
+    <?= $this->extractStyleAttributesForCsp($this->teaser) ?>
+  </div>
 
   <?php if ($this->hasText || $this->hasTeaser): ?>
     <p class="more"><?= $this->more ?></p>
