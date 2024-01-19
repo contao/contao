@@ -284,7 +284,7 @@ final class ContaoExtension extends AbstractExtension
             new TwigFilter(
                 'encode_email',
                 [StringRuntime::class, 'encodeEmail'],
-                ['is_safe' => ['html']]
+                ['preserves_safety' => ['contao_html', 'html']]
             ),
         ];
     }
