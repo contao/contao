@@ -494,7 +494,7 @@ class Input
 	 *
 	 * @return mixed The clean name or array of names
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
 	 */
 	public static function cleanKey($varValue)
 	{
@@ -809,7 +809,7 @@ class Input
 	 *
 	 * @return mixed The cleaned string or array
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
 	 */
 	public static function xssClean($varValue, $blnStrictMode=false)
 	{
@@ -928,7 +928,7 @@ class Input
 	 *
 	 * @return mixed The decoded string or array
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
 	 */
 	public static function decodeEntities($varValue)
 	{
@@ -964,7 +964,7 @@ class Input
 	 *
 	 * @return mixed The string or array with the converted entities
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
 	 */
 	public static function preserveBasicEntities($varValue)
 	{
@@ -1003,7 +1003,7 @@ class Input
 	 *
 	 * @return mixed The encoded string or array
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
 	 */
 	public static function encodeSpecialChars($varValue)
 	{

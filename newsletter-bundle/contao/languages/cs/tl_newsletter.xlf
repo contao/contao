@@ -17,6 +17,12 @@
         <source>The newsletter alias is a unique reference to the newsletter which can be called instead of its numeric ID.</source>
         <target>Alias zpravodaje je jednoznačný odkaz, který může být použitý namísto čísla ID zpravodaje.</target>
       </trans-unit>
+      <trans-unit id="tl_newsletter.preheader.0">
+        <source>Preheader text</source>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.preheader.1">
+        <source>Here you can enter a preheader text. A preheader text should be between 40-130 characters long.</source>
+      </trans-unit>
       <trans-unit id="tl_newsletter.content.0">
         <source>HTML content</source>
         <target>Obsah v HTML</target>

@@ -25,70 +25,6 @@
         <source>Please choose the FAQ reader page to which visitors will be redirected when clicking a FAQ.</source>
         <target>Bitte wählen Sie die FAQ-Leser-Seite aus, zu der Besucher weitergeleitet werden, wenn sie eine FAQ anklicken.</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.allowComments.0">
-        <source>Enable comments</source>
-        <target>Kommentare aktivieren</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.allowComments.1">
-        <source>Allow visitors to comment FAQs.</source>
-        <target>Besuchern das Kommentieren von FAQs erlauben.</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.notify.0">
-        <source>Notify</source>
-        <target>Benachrichtigung an</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.notify.1">
-        <source>Please choose who to notify when comments are added.</source>
-        <target>Bitte legen Sie fest, wer beim Hinzufügen neuer Kommentare benachrichtigt wird.</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.sortOrder.0">
-        <source>Sort order</source>
-        <target>Sortierreihenfolge</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.sortOrder.1">
-        <source>By default, comments are sorted ascending, starting with the oldest one.</source>
-        <target>Standardmäßig werden Kommentare aufsteigend sortiert, beginnend mit dem ältesten.</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.perPage.0">
-        <source>Comments per page</source>
-        <target>Kommentare pro Seite</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.perPage.1">
-        <source>Number of comments per page. Set to 0 to disable pagination.</source>
-        <target>Anzahl an Kommentaren pro Seite. Geben Sie 0 ein, um den automatischen Seitenumbruch zu deaktivieren.</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.moderate.0">
-        <source>Moderate comments</source>
-        <target>Kommentare moderieren</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.moderate.1">
-        <source>Approve comments before they are published on the website.</source>
-        <target>Kommentare erst nach Bestätigung auf der Webseite veröffentlichen.</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.bbcode.0">
-        <source>Allow BBCode</source>
-        <target>BBCode erlauben</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.bbcode.1">
-        <source>Allow visitors to format their comments with BBCode.</source>
-        <target>Besuchern das Formatieren ihrer Kommentare mittels BBCode erlauben.</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.requireLogin.0">
-        <source>Require login to comment</source>
-        <target>Login zum Kommentieren benötigt</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.requireLogin.1">
-        <source>Allow only authenticated members to create comments.</source>
-        <target>Nur angemeldeten Mitgliedern das Erstellen von Kommentaren erlauben.</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.disableCaptcha.0">
-        <source>Disable spam protection</source>
-        <target>Spam-Schutz deaktivieren</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.disableCaptcha.1">
-        <source>Use this option only if you have limited comments to authenticated users.</source>
-        <target>Wählen Sie diese Option nur, wenn das Erstellen von Kommentaren auf authentifizierte Benutzer beschränkt ist.</target>
-      </trans-unit>
       <trans-unit id="tl_faq_category.tstamp.0">
         <source>Revision date</source>
         <target>Änderungsdatum</target>
@@ -100,22 +36,6 @@
       <trans-unit id="tl_faq_category.title_legend">
         <source>Title and redirect</source>
         <target>Titel und Weiterleitung</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.comments_legend">
-        <source>Comments</source>
-        <target>Kommentare</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.notify_admin">
-        <source>System administrator</source>
-        <target>Systemadministrator</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.notify_author">
-        <source>Author of the FAQ</source>
-        <target>Autor der Frage</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.notify_both">
-        <source>Author and system administrator</source>
-        <target>Autor und Systemadministrator</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.new.0">
         <source>New</source>
