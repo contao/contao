@@ -192,7 +192,7 @@ trait TemplateTrait
 		$csp->addHash($directive, $script, $algorithm);
 	}
 
-	/*
+	/**
 	 * Adds a CSP hash for a given inline style and also adds the 'unsafe-hashes' source to the directive automatically.
 	 */
 	public function inlineStyle(string $style, string $algorithm = 'sha384'): string
@@ -216,7 +216,7 @@ trait TemplateTrait
 	 * Extracts all inline CSS style attributes of a given HTML string and automatically adds CSP hashes for those
 	 * to the current response context.
 	 */
-	public function extractStyleAttributesForCsp(?string $html): null|string
+	public function extractStyleAttributesForCsp(?string $html): ?string
 	{
 		if (!$html)
 		{

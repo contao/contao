@@ -698,6 +698,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertTrue($container->hasDefinition('contao.csp.wysiwyg_style_processor'));
         $processor = $container->findDefinition('contao.csp.wysiwyg_style_processor');
+
         $this->assertSame(
             [
                 'text-align' => 'left|center|right|justify',
@@ -732,12 +733,8 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertTrue($container->hasDefinition('contao.csp.wysiwyg_style_processor'));
         $processor = $container->findDefinition('contao.csp.wysiwyg_style_processor');
-        $this->assertSame(
-            [
-                'text-decoration' => 'underline',
-            ],
-            $processor->getArgument(0),
-        );
+
+        $this->assertSame(['text-decoration' => 'underline'], $processor->getArgument(0));
     }
 
     public function testRegistersAsContentElementAttribute(): void
