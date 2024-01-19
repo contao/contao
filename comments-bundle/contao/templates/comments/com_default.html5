@@ -8,7 +8,7 @@
     <div class="reply">
       <p class="info"><?= $this->rby ?> <?= $this->author->name ?></p>
       <div class="comment">
-        <?= $this->reply ?>
+        <?= $this->extractStyleAttributesForCsp($this->reply) ?>
       </div>
     </div>
   <?php endif; ?>

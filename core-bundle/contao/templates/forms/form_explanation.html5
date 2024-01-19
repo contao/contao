@@ -1,4 +1,4 @@
 
 <div class="<?= $this->prefix ?> explanation<?php if ($this->class): ?> <?= $this->class ?><?php endif; ?>">
-  <?= $this->generate() ?>
+  <?= $this->extractStyleAttributesForCsp($this->generate()) ?>
 </div>
