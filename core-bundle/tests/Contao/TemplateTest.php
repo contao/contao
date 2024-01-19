@@ -523,7 +523,7 @@ class TemplateTest extends TestCase
         $style = 'display:none';
         $algorithm = 'sha384';
 
-        $result = (new FrontendTemplate())->cspInlineStyle($style, $algorithm);
+        $result = (new FrontendTemplate())->inlineStyle($style, $algorithm);
 
         $response = new Response();
         $cspHandler->applyHeaders($response);
