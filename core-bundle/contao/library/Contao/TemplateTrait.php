@@ -196,8 +196,13 @@ trait TemplateTrait
 	 * Extracts all inline CSS style attributes of a given HTML string and automatically adds CSP hashes for those
 	 * to the current response context.
 	 */
-	public function extractStyleAttributesForCsp(string $html): string
+	public function extractStyleAttributesForCsp(?string $html): null|string
 	{
+		if (!$html)
+		{
+			return $html;
+		}
+
 		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
 		if (!$responseContext?->has(CspHandler::class))
