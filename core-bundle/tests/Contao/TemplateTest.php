@@ -491,7 +491,7 @@ class TemplateTest extends TestCase
         $script = 'this.form.requestSubmit()';
         $algorithm = 'sha384';
 
-        (new FrontendTemplate())->addCspHash('script-src', 'this.form.requestSubmit()', $algorithm);
+        (new FrontendTemplate())->addCspHash('script-src', $script, $algorithm);
 
         $response = new Response();
         $cspHandler->applyHeaders($response);
@@ -499,5 +499,38 @@ class TemplateTest extends TestCase
         $expectedHash = base64_encode(hash($algorithm, $script, true));
 
         $this->assertSame(sprintf("script-src 'self' '%s-%s'", $algorithm, $expectedHash), $response->headers->get('Content-Security-Policy'));
+    }
+
+    public function testAddsCspInlineStyleHash(): void
+    {
+        $directives = new DirectiveSet(new PolicyManager());
+        $directives->setLevel1Fallback(false);
+        $directives->setDirective('style-src', "'self'");
+
+        $cspHandler = new CspHandler($directives);
+        $responseContext = (new ResponseContext())->add($cspHandler);
+
+        $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
+        $responseContextAccessor
+            ->expects($this->once())
+            ->method('getResponseContext')
+            ->willReturn($responseContext)
+        ;
+
+        System::getContainer()->set('contao.routing.response_context_accessor', $responseContextAccessor);
+        System::getContainer()->set('request_stack', new RequestStack());
+
+        $style = 'display:none';
+        $algorithm = 'sha384';
+
+        $result = (new FrontendTemplate())->inlineStyle($style, $algorithm);
+
+        $response = new Response();
+        $cspHandler->applyHeaders($response);
+
+        $expectedHash = base64_encode(hash($algorithm, $style, true));
+
+        $this->assertSame($style, $result);
+        $this->assertSame(sprintf("style-src 'self' 'unsafe-hashes' '%s-%s'", $algorithm, $expectedHash), $response->headers->get('Content-Security-Policy'));
     }
 }
