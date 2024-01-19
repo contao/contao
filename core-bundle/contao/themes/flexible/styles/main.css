@@ -742,7 +742,7 @@ h2.sub_headline {
 	border-bottom: 1px solid var(--content-border);
 	position: sticky;
 	top: 0;
-	z-index: 3;
+	z-index: 1;
 }
 
 .jump-targets .inner {
