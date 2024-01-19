@@ -103,7 +103,7 @@ abstract class Frontend extends Controller
 		// Merge the new request string
 		foreach ($arrFragments as $strFragment)
 		{
-			list($key, $value) = explode('=', $strFragment);
+			list($key, $value) = explode('=', $strFragment) + array(null, null);
 
 			if (!$value)
 			{

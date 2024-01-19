@@ -70,6 +70,11 @@
 
             const newForm = template.content.firstElementChild;
             form.replaceWith(newForm);
+
+            if (!newForm.getAttribute('action')) {
+              newForm.action = xhr.responseURL;
+            }
+
             initForm(newForm);
           });
         });

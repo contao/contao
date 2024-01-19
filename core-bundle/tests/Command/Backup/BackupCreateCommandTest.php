@@ -75,6 +75,7 @@ class BackupCreateCommandTest extends TestCase
             function (CreateConfig $config) {
                 $this->assertSame([], $config->getTablesToIgnore());
                 $this->assertSame('file__20211101141254.sql', $config->getBackup()->getFilename());
+                $this->assertFalse($config->isGzCompressionEnabled());
 
                 return true;
             },

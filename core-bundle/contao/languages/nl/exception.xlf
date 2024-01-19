@@ -30,8 +30,8 @@
         <target>Open het huidige log bestand in de &lt;code&gt;var/logs&lt;/code&gt;  map en zoek naar de bijbehorende foutmelding (meestal de laatste).</target>
       </trans-unit>
       <trans-unit id="XPT.errorExplain">
-        <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, visit the &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
-        <target>De uitvoering van het script is gestopt, omdat er iets niet goed werkt. De eigenlijke foutmelding wordt om veiligheidsredenen door deze melding verborgen en is terug te vinden in het huidige logbestand (zie hierboven). Als u de foutmelding niet begrijpt of niet weet hoe u het probleem kunt oplossen, raadpleeg de &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support pagina&lt;/a&gt;.</target>
+        <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, visit the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
+        <target>De uitvoering van het script is gestopt, omdat er iets niet goed werkt. De eigenlijke foutmelding wordt om veiligheidsredenen door deze melding verborgen en is terug te vinden in het huidige logbestand (zie hierboven). Als u de foutmelding niet begrijpt of niet weet hoe u het probleem kunt oplossen, raadpleeg de &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support pagina&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPT.requestToken">
         <source>Invalid request token</source>
@@ -50,8 +50,8 @@
         <target>Deze fout treedt op als er een POST-request zonder geldig authenticatie token wordt gedaan. In Contao 2,10 is de referer check vervangen door een request token systeem. Als het probleem zich blijft voortdoen maakt u mogelijk gebruik van een niet-compatibele extensie van derden of uw Contao installatie is niet correct geüpdatet.</target>
       </trans-unit>
       <trans-unit id="XPT.tokenExplainTwo">
-        <source>For more information, visit the &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
-        <target>Raadpleeg voor meer informatie de &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support pagina&lt;/a&gt;.</target>
+        <source>For more information, visit the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
+        <target>Ga voor meer informatie naar de &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support pagina&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPT.unavailable">
         <source>Service unavailable</source>

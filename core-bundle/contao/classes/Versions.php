@@ -320,6 +320,9 @@ class Versions extends Controller
 			}
 		}
 
+		// Do not overwrite ID, PID, ptable and sorting (see #6426)
+		unset($data['id'], $data['pid'], $data['ptable'], $data['sorting']);
+
 		try
 		{
 			$db
