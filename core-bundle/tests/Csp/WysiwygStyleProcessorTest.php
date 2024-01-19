@@ -81,5 +81,90 @@ class WysiwygStyleProcessorTest extends TestCase
             [],
             ['text-decoration' => 'nderlin|nderline|underlin'],
         ];
+
+        yield 'Default config should match all properties correctly' => [
+            <<<'EOF'
+                    <p style="
+                        text-align: left;
+                        text-align: center;
+                        text-align: right;
+                        text-decoration: underline;
+                        background-color: rgb(255, 0, 0);
+                        background-color: #ff0000;
+                        background-color: #FF0000;
+                        color: rgb(0,255,0);
+                        color: #00ff00;
+                        color: #00FF00;
+                        font-family: serif;
+                        font-family: sans-serif;
+                        font-family: &#039;Comic Sans MS&#039;, Georgia, sans-serif;
+                        font-family: Comic Sans MS, sans-serif;
+                        font-size: 8pt;
+                        font-size: 14pt;
+                        font-size: 36pt;
+                        line-height: 0;
+                        line-height: 1;
+                        line-height: 2.33333;
+                        padding-left: 10px;
+                        padding-left: 120px;
+                        border-collapse: collapse;
+                        margin-right: 0px;
+                        margin-left: auto;
+                        border-color: #00f;
+                        vertical-align: middle;
+                        vertical-align&#x3A;&#x20;bottom&#x3b;
+                    ">Content</p>
+                EOF,
+            [
+                <<<'EOF'
+
+                            text-align: left;
+                            text-align: center;
+                            text-align: right;
+                            text-decoration: underline;
+                            background-color: rgb(255, 0, 0);
+                            background-color: #ff0000;
+                            background-color: #FF0000;
+                            color: rgb(0,255,0);
+                            color: #00ff00;
+                            color: #00FF00;
+                            font-family: serif;
+                            font-family: sans-serif;
+                            font-family: 'Comic Sans MS', Georgia, sans-serif;
+                            font-family: Comic Sans MS, sans-serif;
+                            font-size: 8pt;
+                            font-size: 14pt;
+                            font-size: 36pt;
+                            line-height: 0;
+                            line-height: 1;
+                            line-height: 2.33333;
+                            padding-left: 10px;
+                            padding-left: 120px;
+                            border-collapse: collapse;
+                            margin-right: 0px;
+                            margin-left: auto;
+                            border-color: #00f;
+                            vertical-align: middle;
+                            vertical-align: bottom;
+
+                    EOF
+                .'    ',
+            ],
+            [
+                'text-align' => 'left|center|right|justify',
+                'text-decoration' => 'underline',
+                'background-color' => 'rgb\(\d{1,3},\s?\d{1,3},\s?\d{1,3}\)|#([0-9a-f]{3}){1,2}',
+                'color' => 'rgb\(\d{1,3},\s?\d{1,3},\s?\d{1,3}\)|#([0-9a-f]{3}){1,2}',
+                'font-family' => '(\'[a-z0-9 _-]+\',\s*|[a-z0-9 _-]+,\s*)*(sans-)?serif',
+                'font-size' => '[0-3]?\dpt',
+                'line-height' => '[0-3](\.\d+)?',
+                'padding-left' => '\d{1,3}px',
+                'border-collapse' => 'collapse',
+                'margin-right' => '0px|auto',
+                'margin-left' => '0px|auto',
+                'border-color' => 'rgb\(\d{1,3},\s?\d{1,3},\s?\d{1,3}\)|#([0-9a-f]{3}){1,2}',
+                'vertical-align' => 'top|middle|bottom',
+            ],
+        ];
     }
 }
