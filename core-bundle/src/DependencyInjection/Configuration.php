@@ -845,8 +845,8 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue([
                         'text-align' => 'left|center|right|justify',
                         'text-decoration' => 'underline',
-                        'background-color' => 'rgb\(\d{1-3},\s?\d{1-3},\s?\d{1-3}\)|#([0-9a-f]{3}){1,2}',
-                        'color' => 'rgb\(\d{1-3},\s?\d{1-3},\s?\d{1-3}\)|#([0-9a-f]{3}){1,2}',
+                        'background-color' => 'rgb\(\d{1,3},\s?\d{1,3},\s?\d{1,3}\)|#([0-9a-f]{3}){1,2}',
+                        'color' => 'rgb\(\d{1,3},\s?\d{1,3},\s?\d{1,3}\)|#([0-9a-f]{3}){1,2}',
                         'font-family' => '(\'[a-z0-9 _-]+\',\s*|[a-z0-9 _-]+,\s*)*(sans-)?serif',
                         'font-size' => '[0-3]?\dpt',
                         'line-height' => '[0-3](\.\d+)?',
@@ -854,7 +854,7 @@ class Configuration implements ConfigurationInterface
                         'border-collapse' => 'collapse',
                         'margin-right' => '0px|auto',
                         'margin-left' => '0px|auto',
-                        'border-color' => 'rgb\(\d{1-3},\s?\d{1-3},\s?\d{1-3}\)|#([0-9a-f]{3}){1,2}',
+                        'border-color' => 'rgb\(\d{1,3},\s?\d{1,3},\s?\d{1,3}\)|#([0-9a-f]{3}){1,2}',
                         'vertical-align' => 'top|middle|bottom',
                     ])
                     ->validate()
