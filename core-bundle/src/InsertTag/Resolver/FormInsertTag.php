@@ -30,7 +30,7 @@ class FormInsertTag
     public function replaceSessionData(ResolvedInsertTag $insertTag): InsertTagResult
     {
         return new InsertTagResult(
-            $this->requestStack->getCurrentRequest()?->getSession()->get(Form::SESSION_KEY)?->getValue()[$insertTag->getParameters()->get(0)],
+            $this->requestStack->getCurrentRequest()?->getSession()->get(Form::SESSION_KEY)?->getValue()[$insertTag->getParameters()->get(0)] ?? '',
             OutputType::text,
         );
     }

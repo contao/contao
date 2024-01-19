@@ -119,7 +119,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.start.1">
         <source>In case the sending process is interrupted, you can enter a numeric offset here to continue with a particular recipient. You can check how many mails have been sent by selecting the category &lt;code&gt;NEWSLETTER_%s&lt;/code&gt; in the system log. If there are 120 entries, enter &quot;120&quot; to continue with the 121st recipient (counting starts at 0).</source>
-        <target>Falls eine Versendung unterbrochen wurde, können Sie hier festlegen, ab welchem Empfänger diese weiterlaufen soll. Wählen Sie im System-Log die Kategorie &lt;code&gt;NEWSLETTER_%s&lt;/code&gt; aus, um zu prüfen wie viele Mails bereits versendet wurden. Waren es z. B. 120 Mails, geben Sie &quot;120&quot; ein, um mit dem 121. Empfänger fortzufahren (die Zählung beginnt bei 0).</target>
+        <target>Falls eine Versendung unterbrochen wurde, können Sie hier festlegen, ab welchem Empfänger diese weiterlaufen soll. Wählen Sie im System-Log die Kategorie &lt;code&gt;NEWSLETTER_%s&lt;/code&gt; aus, um zu prüfen, wie viele Mails bereits versendet wurden. Waren es z. B. 120 Mails, geben Sie &quot;120&quot; ein, um mit dem 121. Empfänger fortzufahren (die Zählung beginnt bei 0).</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendPreviewTo.0">
         <source>Send preview to</source>
@@ -223,7 +223,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.show">
         <source>Show the details of newsletter ID %s</source>
-        <target>Details des Newsletter ID %s anzeigen</target>
+        <target>Details des Newsletters ID %s anzeigen</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.edit">
         <source>Edit newsletter ID %s</source>

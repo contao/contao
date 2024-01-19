@@ -17,9 +17,9 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\StringUtil;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -148,8 +148,8 @@ class BackendMenuListener
                         'dark' => $this->translator->trans('MSC.darkMode', [], 'contao_default'),
                         'light' => $this->translator->trans('MSC.lightMode', [], 'contao_default'),
                     ],
-                    JSON_THROW_ON_ERROR
-                )
+                    JSON_THROW_ON_ERROR,
+                ),
             )
             ->setExtra('safe_label', true)
             ->setExtra('translation_domain', false)
@@ -228,7 +228,7 @@ class BackendMenuListener
             $this->router->generate('contao_backend_alerts'),
             htmlspecialchars($systemMessages),
             StringUtil::specialchars(str_replace("'", "\\'", $systemMessages)),
-            $systemMessages
+            $systemMessages,
         );
 
         $adapter = $this->framework->getAdapter(Backend::class);

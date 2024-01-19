@@ -142,7 +142,7 @@ class TranslatorTest extends TestCase
                     ;
 
                     return $catalogue;
-                }
+                },
             )
         ;
 
@@ -245,7 +245,7 @@ class TranslatorTest extends TestCase
                     ;
 
                     return $catalogue;
-                }
+                },
             )
         ;
 
@@ -282,7 +282,7 @@ class TranslatorTest extends TestCase
                         ;
 
                         return $catalogue;
-                    }
+                    },
                 )
             ;
         }

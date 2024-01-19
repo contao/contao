@@ -14,6 +14,12 @@
       <trans-unit id="tl_newsletter.alias.1">
         <source>The newsletter alias is a unique reference to the newsletter which can be called instead of its numeric ID.</source>
       </trans-unit>
+      <trans-unit id="tl_newsletter.preheader.0">
+        <source>Preheader text</source>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.preheader.1">
+        <source>Here you can enter a preheader text. A preheader text should be between 40-130 characters long.</source>
+      </trans-unit>
       <trans-unit id="tl_newsletter.content.0">
         <source>HTML content</source>
       </trans-unit>

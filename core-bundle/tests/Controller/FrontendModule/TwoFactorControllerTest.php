@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Controller\FrontendModule;
 use Contao\BackendUser;
 use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Controller\FrontendModule\TwoFactorController;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
 use Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager;
@@ -26,12 +27,13 @@ use Contao\PageModel;
 use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -50,7 +52,7 @@ class TwoFactorControllerTest extends TestCase
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
-            $this->mockSecurityHelper()
+            $this->mockSecurityHelper(),
         );
 
         $controller = new TwoFactorController();
@@ -72,7 +74,7 @@ class TwoFactorControllerTest extends TestCase
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
-            $this->mockSecurityHelper($user, true)
+            $this->mockSecurityHelper($user, true),
         );
 
         $controller = new TwoFactorController();
@@ -95,7 +97,7 @@ class TwoFactorControllerTest extends TestCase
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
-            $this->mockSecurityHelper($user, true)
+            $this->mockSecurityHelper($user, true),
         );
 
         $controller = new TwoFactorController();
@@ -120,7 +122,7 @@ class TwoFactorControllerTest extends TestCase
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
-            $this->mockSecurityHelper($user, true)
+            $this->mockSecurityHelper($user, true),
         );
 
         $controller = new TwoFactorController();
@@ -146,7 +148,7 @@ class TwoFactorControllerTest extends TestCase
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
-            $this->mockSecurityHelper($user, true)
+            $this->mockSecurityHelper($user, true),
         );
 
         $trustedDeviceManager = $this->createMock(TrustedDeviceManager::class);
@@ -165,11 +167,12 @@ class TwoFactorControllerTest extends TestCase
         $request->request->set('FORM_SUBMIT', 'tl_two_factor_disable');
 
         $module = $this->mockClassWithProperties(ModuleModel::class);
-
         $page = $this->mockPageModel();
-        $page
+
+        $container
+            ->get('contao.routing.content_url_generator')
             ->expects($this->exactly(2))
-            ->method('getAbsoluteUrl')
+            ->method('generate')
             ->willReturn('https://localhost.wip/foobar')
         ;
 
@@ -190,7 +193,7 @@ class TwoFactorControllerTest extends TestCase
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
-            $this->mockSecurityHelper($user, true)
+            $this->mockSecurityHelper($user, true),
         );
 
         $controller = new TwoFactorController();
@@ -200,10 +203,11 @@ class TwoFactorControllerTest extends TestCase
         $request->request->set('2fa', 'enable');
 
         $module = $this->mockClassWithProperties(ModuleModel::class);
-
         $page = $this->mockPageModel();
-        $page
-            ->method('getAbsoluteUrl')
+
+        $container
+            ->get('contao.routing.content_url_generator')
+            ->method('generate')
             ->willReturn('https://localhost.wip/foobar')
         ;
 
@@ -221,7 +225,7 @@ class TwoFactorControllerTest extends TestCase
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(new InvalidTwoFactorCodeException()),
-            $this->mockSecurityHelper($user, true)
+            $this->mockSecurityHelper($user, true),
         );
 
         $controller = new TwoFactorController();
@@ -231,11 +235,13 @@ class TwoFactorControllerTest extends TestCase
         $request->request->set('2fa', 'enable');
 
         $module = $this->mockClassWithProperties(ModuleModel::class);
-
         $page = $this->mockPageModel();
-        $page
+
+        $container
+            ->get('contao.routing.content_url_generator')
             ->expects($this->exactly(2))
-            ->method('getAbsoluteUrl')
+            ->method('generate')
+            ->with($page, [], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturn('https://localhost.wip/foobar')
         ;
 
@@ -251,7 +257,7 @@ class TwoFactorControllerTest extends TestCase
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator($user, false),
             $this->mockAuthenticationUtils(),
-            $this->mockSecurityHelper($user, true)
+            $this->mockSecurityHelper($user, true),
         );
 
         $controller = new TwoFactorController();
@@ -263,11 +269,13 @@ class TwoFactorControllerTest extends TestCase
         $request->request->set('verify', '123456');
 
         $module = $this->mockClassWithProperties(ModuleModel::class);
-
         $page = $this->mockPageModel();
-        $page
+
+        $container
+            ->get('contao.routing.content_url_generator')
             ->expects($this->exactly(2))
-            ->method('getAbsoluteUrl')
+            ->method('generate')
+            ->with($page, [], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturn('https://localhost.wip/foobar')
         ;
 
@@ -288,7 +296,7 @@ class TwoFactorControllerTest extends TestCase
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator($user, true),
             $this->mockAuthenticationUtils(),
-            $this->mockSecurityHelper($user, true)
+            $this->mockSecurityHelper($user, true),
         );
 
         $controller = new TwoFactorController();
@@ -300,11 +308,13 @@ class TwoFactorControllerTest extends TestCase
         $request->request->set('verify', '123456');
 
         $module = $this->mockClassWithProperties(ModuleModel::class);
-
         $page = $this->mockPageModel();
-        $page
+
+        $container
+            ->get('contao.routing.content_url_generator')
             ->expects($this->once())
-            ->method('getAbsoluteUrl')
+            ->method('generate')
+            ->with($page, [], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturn('https://localhost.wip/foobar')
         ;
 
@@ -322,7 +332,7 @@ class TwoFactorControllerTest extends TestCase
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
-            $this->mockSecurityHelper($user, true)
+            $this->mockSecurityHelper($user, true),
         );
 
         $controller = new TwoFactorController();
@@ -348,7 +358,7 @@ class TwoFactorControllerTest extends TestCase
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
-            $this->mockSecurityHelper($user, true)
+            $this->mockSecurityHelper($user, true),
         );
 
         $backupCodeManager = $container->get('contao.security.two_factor.backup_code_manager');
@@ -386,10 +396,7 @@ class TwoFactorControllerTest extends TestCase
         $this->assertArrayHasKey('translator', $services);
     }
 
-    /**
-     * @return Authenticator&MockObject
-     */
-    private function mockAuthenticator(FrontendUser|null $user = null, bool|null $return = null): Authenticator
+    private function mockAuthenticator(FrontendUser|null $user = null, bool|null $return = null): Authenticator&MockObject
     {
         $authenticator = $this->createMock(Authenticator::class);
 
@@ -405,10 +412,7 @@ class TwoFactorControllerTest extends TestCase
         return $authenticator;
     }
 
-    /**
-     * @return AuthenticationUtils&MockObject
-     */
-    private function mockAuthenticationUtils(AuthenticationException|null $authenticationException = null): AuthenticationUtils
+    private function mockAuthenticationUtils(AuthenticationException|null $authenticationException = null): AuthenticationUtils&MockObject
     {
         $authenticationUtils = $this->createMock(AuthenticationUtils::class);
 
@@ -423,10 +427,7 @@ class TwoFactorControllerTest extends TestCase
         return $authenticationUtils;
     }
 
-    /**
-     * @return Security&MockObject
-     */
-    private function mockSecurityHelper(UserInterface|null $user = null, bool $isFullyAuthenticated = false): Security
+    private function mockSecurityHelper(UserInterface|null $user = null, bool $isFullyAuthenticated = false): Security&MockObject
     {
         $security = $this->createMock(Security::class);
         $security
@@ -443,10 +444,7 @@ class TwoFactorControllerTest extends TestCase
         return $security;
     }
 
-    /**
-     * @return PageModel&MockObject
-     */
-    private function mockPageModel(): PageModel
+    private function mockPageModel(): PageModel&MockObject
     {
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->enforceTwoFactor = false;
@@ -477,6 +475,7 @@ class TwoFactorControllerTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $framework);
+        $container->set('contao.routing.content_url_generator', $this->createMock(ContentUrlGenerator::class));
         $container->set('translator', $this->createMock(TranslatorInterface::class));
         $container->set('contao.security.two_factor.authenticator', $authenticator);
         $container->set('contao.security.two_factor.trusted_device_manager', $this->createMock(TrustedDeviceManager::class));

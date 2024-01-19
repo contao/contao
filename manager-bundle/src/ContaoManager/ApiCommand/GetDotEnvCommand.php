@@ -23,7 +23,7 @@ use Symfony\Component\Filesystem\Path;
 
 #[AsCommand(
     name: 'dot-env:get',
-    description: 'Reads a parameter from the .env file.'
+    description: 'Reads a parameter from the .env file.',
 )]
 class GetDotEnvCommand extends Command
 {

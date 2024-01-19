@@ -20,7 +20,9 @@ final class ResponseContext
     public const REQUEST_ATTRIBUTE_NAME = '_contao_response_context';
 
     private array $services = [];
+
     private array $current = [];
+
     private PartialResponseHeaderBag|null $headerBag = null;
 
     public function dispatchEvent(AbstractResponseContextEvent $event): void

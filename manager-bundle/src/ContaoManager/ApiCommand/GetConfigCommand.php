@@ -21,7 +21,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 #[AsCommand(
     name: 'config:get',
-    description: 'Gets the Contao Manager configuration as JSON string.'
+    description: 'Gets the Contao Manager configuration as JSON string.',
 )]
 class GetConfigCommand extends Command
 {

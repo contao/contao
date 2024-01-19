@@ -57,7 +57,7 @@ class PluginTest extends ContaoTestCase
 
         $this->backupServerEnvGetPost();
 
-        unset($_SERVER['DATABASE_URL'], $_SERVER['APP_SECRET'], $_ENV['DATABASE_URL']);
+        unset($_SERVER['DATABASE_URL'], $_SERVER['APP_SECRET'], $_ENV['DATABASE_URL'], $_SERVER['MAILER_DSN'], $_ENV['MAILER_DSN']);
     }
 
     protected function tearDown(): void
@@ -183,7 +183,7 @@ class PluginTest extends ContaoTestCase
 
                         $resource($container);
                     }
-                }
+                },
             )
         ;
 
@@ -211,7 +211,7 @@ class PluginTest extends ContaoTestCase
 
                         $resource($container);
                     }
-                }
+                },
             )
         ;
 
@@ -248,7 +248,7 @@ class PluginTest extends ContaoTestCase
                     $collection->add(basename($file).'_foobar', new Route('/foobar'));
 
                     return $collection;
-                }
+                },
             )
         ;
 
@@ -285,7 +285,7 @@ class PluginTest extends ContaoTestCase
         foreach ($files as $file) {
             $this->assertContains(
                 'Contao\ManagerBundle\ContaoManager\ApiCommand\\'.$file->getBasename('.php'),
-                (new Plugin())->getApiCommands()
+                (new Plugin())->getApiCommands(),
             );
         }
     }
@@ -312,7 +312,7 @@ class PluginTest extends ContaoTestCase
                     'debug',
                 ],
             ],
-            (new Plugin())->getApiFeatures()
+            (new Plugin())->getApiFeatures(),
         );
     }
 
@@ -325,6 +325,31 @@ class PluginTest extends ContaoTestCase
         $bag = $container->getParameterBag()->all();
 
         $this->assertSame('ThisTokenIsNotSoSecretChangeIt', $bag['env(APP_SECRET)']);
+    }
+
+    public function testSetsDnsMappingParameterAndFallback(): void
+    {
+        $container = $this->getContainer();
+
+        (new Plugin())->getExtensionConfig('contao', [], $container);
+
+        $bag = $container->getParameterBag()->all();
+
+        $this->assertSame('[]', $bag['env(DNS_MAPPING)']);
+        $this->assertSame('%env(json:DNS_MAPPING)%', $bag['contao.dns_mapping']);
+    }
+
+    public function testDoesNotSetDnsParameterIfAlreadyDefined(): void
+    {
+        $container = $this->getContainer();
+        $container->setParameter('contao.dns_mapping', ['example.com' => 'example.local']);
+
+        (new Plugin())->getExtensionConfig('framework', [], $container);
+
+        $bag = $container->getParameterBag()->all();
+
+        $this->assertFalse(isset($bag['env(DNS_MAPPING)']));
+        $this->assertSame(['example.com' => 'example.local'], $bag['contao.dns_mapping']);
     }
 
     /**

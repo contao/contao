@@ -18,7 +18,9 @@ use Symfony\Component\Filesystem\Filesystem;
 class DotenvDumper
 {
     private readonly array $parameters;
+
     private array $setParameters = [];
+
     private array $unsetParameters = [];
 
     public function __construct(

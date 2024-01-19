@@ -332,7 +332,7 @@ class RequestTokenListenerTest extends TestCase
                     $tokenManager = new ContaoCsrfTokenManager($this->createMock(RequestStack::class), 'csrf_', new UriSafeTokenGenerator(), $this->createMock(TokenStorageInterface::class));
 
                     return $tokenManager->canSkipTokenValidation(...\func_get_args());
-                }
+                },
             )
         ;
 

@@ -41,7 +41,11 @@ class RefererIdListener
         $request = $event->getRequest();
 
         if (null === $this->token) {
-            $this->token = $this->tokenGenerator->generateToken();
+            if ($request->isXmlHttpRequest() && $request->query->has('ref')) {
+                $this->token = $request->query->get('ref');
+            } else {
+                $this->token = $this->tokenGenerator->generateToken();
+            }
         }
 
         $request->attributes->set('_contao_referer_id', $this->token);

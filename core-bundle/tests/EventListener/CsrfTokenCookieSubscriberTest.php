@@ -176,7 +176,7 @@ class CsrfTokenCookieSubscriberTest extends TestCase
                 .'<input name="REQUEST_TOKEN" value="'.$tokenValue2.'">'
                 .'</form></body></html>',
             200,
-            ['Content-Type' => 'text/html', 'Content-Length' => 1234]
+            ['Content-Type' => 'text/html', 'Content-Length' => 1234],
         );
 
         $listener = new CsrfTokenCookieSubscriber($tokenManager, $tokenStorage);
@@ -187,7 +187,7 @@ class CsrfTokenCookieSubscriberTest extends TestCase
                 .'<input name="REQUEST_TOKEN" value="">'
                 .'<input name="REQUEST_TOKEN" value="">'
                 .'</form></body></html>',
-            $response->getContent()
+            $response->getContent(),
         );
 
         $this->assertFalse($response->headers->has('Content-Length'));
@@ -220,7 +220,7 @@ class CsrfTokenCookieSubscriberTest extends TestCase
         $response = new Response(
             '<html><body><form><input name="REQUEST_TOKEN" value="tokenValue"></form></body></html>',
             200,
-            ['Content-Type' => 'text/html', 'Content-Length' => 1234]
+            ['Content-Type' => 'text/html', 'Content-Length' => 1234],
         );
 
         $listener = new CsrfTokenCookieSubscriber($tokenManager, $tokenStorage);
@@ -228,7 +228,7 @@ class CsrfTokenCookieSubscriberTest extends TestCase
 
         $this->assertSame(
             '<html><body><form><input name="REQUEST_TOKEN" value="tokenValue"></form></body></html>',
-            $response->getContent()
+            $response->getContent(),
         );
 
         $this->assertTrue($response->headers->has('Content-Length'));
@@ -283,7 +283,7 @@ class CsrfTokenCookieSubscriberTest extends TestCase
             $this->createMock(Kernel::class),
             new Request(),
             HttpKernelInterface::MAIN_REQUEST,
-            new Response()
+            new Response(),
         );
 
         $listener = new CsrfTokenCookieSubscriber($tokenManager, $tokenStorage);
@@ -303,7 +303,7 @@ class CsrfTokenCookieSubscriberTest extends TestCase
         $response = new Response(
             'value="'.$tokenValue.'"',
             200,
-            ['Content-Type' => 'application/octet-stream']
+            ['Content-Type' => 'application/octet-stream'],
         );
 
         $listener = new CsrfTokenCookieSubscriber($tokenManager, $tokenStorage);

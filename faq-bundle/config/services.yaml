@@ -11,6 +11,7 @@ services:
         class: Contao\FaqBundle\EventListener\InsertTagsListener
         arguments:
             - '@contao.framework'
+            - '@contao.routing.content_url_generator'
         tags:
             - { name: contao.hook, hook: replaceInsertTags }
 
@@ -18,6 +19,8 @@ services:
         class: Contao\FaqBundle\EventListener\SitemapListener
         arguments:
             - '@contao.framework'
+            - '@security.helper'
+            - '@contao.routing.content_url_generator'
         tags:
             - kernel.event_listener
 
@@ -30,3 +33,18 @@ services:
             - '@security.helper'
         tags:
             - { name: contao.picker_provider, priority: 64 }
+
+    contao_faq.routing.faq_resolver:
+        class: Contao\FaqBundle\Routing\FaqResolver
+        arguments:
+            - '@contao.framework'
+
+    contao_faq.security.faq_access_voter:
+        class: Contao\FaqBundle\Security\Voter\FaqAccessVoter
+        arguments:
+            - '@security.access.decision_manager'
+
+    contao_faq.security.faq_category_access_voter:
+        class: Contao\FaqBundle\Security\Voter\FaqCategoryAccessVoter
+        arguments:
+            - '@security.access.decision_manager'

@@ -21,7 +21,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 #[AsCommand(
     name: 'version',
-    description: 'Gets the Contao Manager API version and features.'
+    description: 'Gets the Contao Manager API version and features.',
 )]
 class VersionCommand extends Command
 {
@@ -38,7 +38,7 @@ class VersionCommand extends Command
                 'commands' => $this->getCommandNames(),
                 'features' => $this->getFeatures(),
             ],
-            JSON_THROW_ON_ERROR
+            JSON_THROW_ON_ERROR,
         ));
 
         return 0;

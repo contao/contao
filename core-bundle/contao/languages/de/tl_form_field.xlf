@@ -167,7 +167,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.placeholder.1">
         <source>Show this text as long as the field is empty (requires HTML5).</source>
-        <target>Dieser Text wird angezeigt solange das Feld noch nicht ausgefüllt wurde (benötigt HTML5).</target>
+        <target>Dieser Text wird angezeigt, solange das Feld noch nicht ausgefüllt wurde (benötigt HTML5).</target>
       </trans-unit>
       <trans-unit id="tl_form_field.customRgxp.0">
         <source>Custom regular expression</source>
@@ -449,9 +449,17 @@
         <source>Delete form field ID %s</source>
         <target>Formularfeld ID %s löschen</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.toggle">
-        <source>Hide/unhide form field ID %s</source>
-        <target>Formularfeld ID %s verstecken/anzeigen</target>
+      <trans-unit id="tl_form_field.toggle.0">
+        <source>Hide/unhide form field</source>
+        <target>Formularfeld verstecken/anzeigen</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.toggle.1">
+        <source>Hide form field ID %s</source>
+        <target>Formularfeld ID %s verstecken</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.toggle.2">
+        <source>Unhide form field ID %s</source>
+        <target>Formularfeld ID %s anzeigen</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.0">
         <source>Paste at the top</source>

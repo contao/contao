@@ -83,7 +83,7 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
         if (!$this->catalogues->contains($parentCatalog)) {
             $this->catalogues->attach(
                 $parentCatalog,
-                new MessageCatalogue($parentCatalog, $this->framework, $this->resourceFinder)
+                new MessageCatalogue($parentCatalog, $this->framework, $this->resourceFinder),
             );
         }
 

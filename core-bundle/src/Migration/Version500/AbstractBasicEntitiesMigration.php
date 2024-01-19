@@ -53,7 +53,7 @@ abstract class AbstractBasicEntitiesMigration extends AbstractMigration
             }
 
             $test = $this->connection->fetchOne(
-                "SELECT TRUE FROM $table WHERE `$column` REGEXP '\\\\[(&|&amp;|lt|gt|nbsp|-)\\\\]' LIMIT 1;"
+                "SELECT TRUE FROM $table WHERE `$column` REGEXP '\\\\[(&|&amp;|lt|gt|nbsp|-)\\\\]' LIMIT 1;",
             );
 
             if (false !== $test) {
@@ -77,7 +77,7 @@ abstract class AbstractBasicEntitiesMigration extends AbstractMigration
             }
 
             $values = $this->connection->fetchAllKeyValue(
-                "SELECT id, `$column` FROM $table WHERE `$column` REGEXP '\\\\[(&|&amp;|lt|gt|nbsp|-)\\\\]'"
+                "SELECT id, `$column` FROM $table WHERE `$column` REGEXP '\\\\[(&|&amp;|lt|gt|nbsp|-)\\\\]'",
             );
 
             foreach ($values as $id => $value) {

@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Twig\Runtime;
 
 use Contao\ContentModel;
 use Contao\Controller;
+use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\ModuleModel;
@@ -35,11 +36,34 @@ final class FragmentRuntime implements RuntimeExtensionInterface
         return $this->framework->getAdapter(Controller::class)->getFrontendModule($model);
     }
 
-    public function renderContent(int|string $typeOrId, array $data = []): string
+    public function renderContent(ContentElementReference|int|string $typeOrId, array $data = []): string
     {
-        $model = $this->getModel(ContentModel::class, $typeOrId, $data);
+        if ($typeOrId instanceof ContentElementReference) {
+            $modelOrReference = $typeOrId;
+        } elseif (\is_string($typeOrId) && \is_array($data['nested_fragments'] ?? null)) {
+            $modelOrReference = $this->getContentReference($typeOrId, $data);
+        } else {
+            $modelOrReference = $this->getModel(ContentModel::class, $typeOrId, $data);
+        }
 
-        return $this->framework->getAdapter(Controller::class)->getContentElement($model);
+        return $this->framework->getAdapter(Controller::class)->getContentElement($modelOrReference);
+    }
+
+    private function getContentReference(string $type, array $data = []): ContentElementReference
+    {
+        $nestedFragments = array_map(
+            fn (array $element) => $this->getContentReference($element['type'], $element),
+            $data['nested_fragments'] ?? [],
+        );
+
+        unset($data['nested_fragments']);
+
+        $model = $this->getModel(ContentModel::class, $type, $data);
+
+        $contentElementReference = new ContentElementReference($model, 'main', [], true);
+        $contentElementReference->setNestedFragments($nestedFragments);
+
+        return $contentElementReference;
     }
 
     /**

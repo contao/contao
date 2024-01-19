@@ -251,6 +251,12 @@ abstract class Hybrid extends Frontend
 			$this->Template->class .= ' ' . implode(' ', $this->objParent->classes);
 		}
 
+		// Tag the hybrid
+		if ($this->objModel !== null)
+		{
+			System::getContainer()->get('contao.cache.entity_tags')->tagWithModelInstance($this->objModel);
+		}
+
 		return $this->Template->parse();
 	}
 

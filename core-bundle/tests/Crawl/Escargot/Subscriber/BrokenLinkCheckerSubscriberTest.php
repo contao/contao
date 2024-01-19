@@ -62,8 +62,8 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
                             $this->assertSame(BrokenLinkCheckerSubscriber::class, $context['source']);
 
                             return true;
-                        }
-                    )
+                        },
+                    ),
                 )
             ;
         } else {
@@ -141,8 +141,8 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
                             $this->assertSame(BrokenLinkCheckerSubscriber::class, $context['source']);
 
                             return true;
-                        }
-                    )
+                        },
+                    ),
                 )
             ;
         } else {
@@ -253,8 +253,8 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
                             $this->assertSame(BrokenLinkCheckerSubscriber::class, $context['source']);
 
                             return true;
-                        }
-                    )
+                        },
+                    ),
                 )
             ;
         } else {
@@ -315,8 +315,8 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
                             $this->assertSame(BrokenLinkCheckerSubscriber::class, $context['source']);
 
                             return true;
-                        }
-                    )
+                        },
+                    ),
                 )
             ;
         } else {
@@ -367,10 +367,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         ];
     }
 
-    /**
-     * @return ResponseInterface&MockObject
-     */
-    private function mockResponse(int $statusCode = 200, string $url = 'https://contao.org'): ResponseInterface
+    private function mockResponse(int $statusCode = 200, string $url = 'https://contao.org'): ResponseInterface&MockObject
     {
         $response = $this->createMock(ResponseInterface::class);
         $response
@@ -395,17 +392,14 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
                     }
 
                     throw new \InvalidArgumentException('Invalid key: '.$key);
-                }
+                },
             )
         ;
 
         return $response;
     }
 
-    /**
-     * @return TranslatorInterface&MockObject
-     */
-    private function mockTranslator(): TranslatorInterface
+    private function mockTranslator(): TranslatorInterface&MockObject
     {
         $translator = $this->createMock(TranslatorInterface::class);
         $translator

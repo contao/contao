@@ -29,7 +29,7 @@ class SimpleTokenExpressionLanguage extends ExpressionLanguage
             static fn () => "throw new \\InvalidArgumentException('Cannot use the constant() function in the expression for security reasons.');",
             static function (): never {
                 throw new \InvalidArgumentException('Cannot use the constant() function in the expression for security reasons.');
-            }
+            },
         );
     }
 }

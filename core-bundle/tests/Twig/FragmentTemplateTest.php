@@ -34,7 +34,7 @@ class FragmentTemplateTest extends TestCase
 
         $this->assertSame(
             ['foobar' => 'foobar', 'foo' => 'f', 'bar' => 42, 'baz' => true],
-            $template->getData()
+            $template->getData(),
         );
 
         $this->assertSame('f', $template->get('foo'));
@@ -82,7 +82,7 @@ class FragmentTemplateTest extends TestCase
             return;
         }
 
-        $excluded = ['__construct', '__set', '__get', '__isset', 'setData', 'getData', 'setName', 'getName', 'getResponse'];
+        $excluded = ['__construct', '__set', '__get', '__isset', 'setData', 'getData', 'setName', 'getName', 'getResponse', 'addCspSource', 'addCspHash', 'nonce', 'attr'];
 
         foreach ($parent->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
             if (\in_array($name = $method->getName(), $excluded, true)) {
@@ -102,10 +102,10 @@ class FragmentTemplateTest extends TestCase
                         'string' => '',
                         'array' => [],
                         /** @phpstan-ignore-next-line because mocked type cannot be inferred */
-                        default => $this->createMock($name)
+                        default => $this->createMock($name),
                     };
                 },
-                $method->getParameters()
+                $method->getParameters(),
             );
 
             yield "accessing $name()" => [$name, $args];

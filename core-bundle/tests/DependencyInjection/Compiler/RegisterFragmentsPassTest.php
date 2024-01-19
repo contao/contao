@@ -16,6 +16,7 @@ use Contao\ContentProxy;
 use Contao\CoreBundle\Controller\FrontendModule\TwoFactorController;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\EventListener\GlobalsMapListener;
+use Contao\CoreBundle\Fragment\FragmentCompositor;
 use Contao\CoreBundle\Fragment\FragmentPreHandlerInterface;
 use Contao\CoreBundle\Fragment\FragmentRegistry;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
@@ -200,7 +201,7 @@ class RegisterFragmentsPassTest extends TestCase
 
         $this->assertSame(
             'contao.fragment._contao.content_element.fragment_pre_handler_interface',
-            (string) $arguments[0]['contao.content_element.fragment_pre_handler_interface']
+            (string) $arguments[0]['contao.content_element.fragment_pre_handler_interface'],
         );
     }
 
@@ -212,6 +213,7 @@ class RegisterFragmentsPassTest extends TestCase
         $container = new ContainerBuilder();
         $container->setDefinition('contao.fragment.registry', new Definition());
         $container->setDefinition('contao.command.debug_fragments', new Definition());
+        $container->setDefinition('contao.fragment.compositor', new Definition());
         $container->setDefinition('app.fragments.content_controller', $contentController);
 
         (new ResolveClassPass())->process($container);
@@ -257,7 +259,7 @@ class RegisterFragmentsPassTest extends TestCase
                     ],
                 ],
             ],
-            $definition->getTags()
+            $definition->getTags(),
         );
 
         $this->assertSame(
@@ -268,7 +270,7 @@ class RegisterFragmentsPassTest extends TestCase
                     ],
                 ],
             ],
-            $definition->getArguments()[0]
+            $definition->getArguments()[0],
         );
 
         $this->assertTrue($definition->isPublic());
@@ -307,7 +309,7 @@ class RegisterFragmentsPassTest extends TestCase
 
         $pass = new RegisterFragmentsPass(
             ContentElementReference::TAG_NAME,
-            templateOptionsListener: 'contao.listener.element_template_options'
+            templateOptionsListener: 'contao.listener.element_template_options',
         );
 
         $pass->process($container);
@@ -362,6 +364,7 @@ class RegisterFragmentsPassTest extends TestCase
         $container = new ContainerBuilder();
         $container->setDefinition('contao.fragment.registry', new Definition(FragmentRegistry::class));
         $container->setDefinition('contao.fragment.pre_handlers', new Definition(ServiceLocator::class, [[]]));
+        $container->setDefinition('contao.fragment.compositor', new Definition(FragmentCompositor::class, [[]]));
 
         return $container;
     }

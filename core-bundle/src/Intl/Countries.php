@@ -23,11 +23,8 @@ class Countries
      */
     private readonly array $countries;
 
-    /**
-     * @param TranslatorInterface&TranslatorBagInterface $translator
-     */
     public function __construct(
-        private readonly TranslatorInterface $translator,
+        private readonly TranslatorInterface&TranslatorBagInterface $translator,
         private readonly RequestStack $requestStack,
         array $defaultCountries,
         array $configCountries,

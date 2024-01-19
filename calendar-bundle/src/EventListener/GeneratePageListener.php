@@ -57,7 +57,7 @@ class GeneratePageListener
             $GLOBALS['TL_HEAD'][] = $template->generateFeedTag(
                 sprintf('%sshare/%s.xml', $feed->feedBase ?: $environment->get('base'), $feed->alias),
                 $feed->format,
-                $feed->title
+                $feed->title,
             );
         }
     }

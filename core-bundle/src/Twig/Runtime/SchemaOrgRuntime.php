@@ -29,11 +29,15 @@ final class SchemaOrgRuntime implements RuntimeExtensionInterface
     /**
      * Adds schema.org JSON-LD data to the current response context.
      */
-    public function add(array $jsonLd): void
+    public function add(array|null $jsonLd): void
     {
+        if (null === $jsonLd) {
+            return;
+        }
+
         $responseContext = $this->responseContextAccessor->getResponseContext();
 
-        if (!$responseContext || !$responseContext->has(JsonLdManager::class)) {
+        if (!$responseContext?->has(JsonLdManager::class)) {
             return;
         }
 

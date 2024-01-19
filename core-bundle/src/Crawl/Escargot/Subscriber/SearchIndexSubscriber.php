@@ -61,7 +61,7 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
             $this->logWithCrawlUri(
                 $crawlUri,
                 LogLevel::DEBUG,
-                'Do not request because it was marked to be skipped using the data-skip-search-index attribute.'
+                'Do not request because it was marked to be skipped using the data-skip-search-index attribute.',
             );
 
             return SubscriberInterface::DECISION_NEGATIVE;
@@ -72,7 +72,7 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
             $this->logWithCrawlUri(
                 $crawlUri,
                 LogLevel::DEBUG,
-                'Do not request because it was marked "noindex" in the robots.txt.'
+                'Do not request because it was marked "noindex" in the robots.txt.',
             );
 
             return SubscriberInterface::DECISION_NEGATIVE;
@@ -83,7 +83,7 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
             $this->logWithCrawlUri(
                 $crawlUri,
                 LogLevel::DEBUG,
-                'Do not request because the URI was disallowed to be followed by nofollow or robots.txt hints.'
+                'Do not request because the URI was disallowed to be followed by nofollow or robots.txt hints.',
             );
 
             return SubscriberInterface::DECISION_NEGATIVE;
@@ -94,7 +94,7 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
             $this->logWithCrawlUri(
                 $crawlUri,
                 LogLevel::DEBUG,
-                'Do not request because when the crawl URI was found, the "type" attribute was present and did not contain "text/html".'
+                'Do not request because when the crawl URI was found, the "type" attribute was present and did not contain "text/html".',
             );
 
             return SubscriberInterface::DECISION_NEGATIVE;
@@ -105,7 +105,7 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
             $this->logWithCrawlUri(
                 $crawlUri,
                 LogLevel::DEBUG,
-                'Did not index because it was not part of the base URI collection.'
+                'Did not index because it was not part of the base URI collection.',
             );
 
             return SubscriberInterface::DECISION_NEGATIVE;
@@ -126,8 +126,8 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
                 LogLevel::DEBUG,
                 sprintf(
                     'Did not index because according to the HTTP status code the response was not successful (%s).',
-                    $response->getStatusCode()
-                )
+                    $response->getStatusCode(),
+                ),
             );
 
             return SubscriberInterface::DECISION_NEGATIVE;
@@ -140,7 +140,7 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
             $this->logWithCrawlUri(
                 $crawlUri,
                 LogLevel::DEBUG,
-                'Did not index because it was not part of the base URI collection.'
+                'Did not index because it was not part of the base URI collection.',
             );
 
             return SubscriberInterface::DECISION_NEGATIVE;
@@ -151,7 +151,7 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
             $this->logWithCrawlUri(
                 $crawlUri,
                 LogLevel::DEBUG,
-                'Did not index because the response did not contain a "text/html" Content-Type header.'
+                'Did not index because the response did not contain a "text/html" Content-Type header.',
             );
 
             return SubscriberInterface::DECISION_NEGATIVE;
@@ -162,7 +162,7 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
             $this->logWithCrawlUri(
                 $crawlUri,
                 LogLevel::DEBUG,
-                'Do not request because it was marked "noindex" in the "X-Robots-Tag" header.'
+                'Do not request because it was marked "noindex" in the "X-Robots-Tag" header.',
             );
 
             return SubscriberInterface::DECISION_NEGATIVE;
@@ -179,7 +179,7 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
             $this->logWithCrawlUri(
                 $crawlUri,
                 LogLevel::DEBUG,
-                'Do not request because it was marked "noindex" in the <meta name="robots"> HTML tag.'
+                'Do not request because it was marked "noindex" in the <meta name="robots"> HTML tag.',
             );
 
             return;
@@ -189,7 +189,7 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
             $crawlUri->getUri(),
             $response->getStatusCode(),
             $response->getHeaders(),
-            $response->getContent()
+            $response->getContent(),
         );
 
         try {
@@ -199,7 +199,7 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
             $this->logWithCrawlUri(
                 $crawlUri,
                 LogLevel::INFO,
-                'Forwarded to the search indexer. Was indexed successfully.'
+                'Forwarded to the search indexer. Was indexed successfully.',
             );
         } catch (IndexerException $e) {
             if ($e->isOnlyWarning()) {
@@ -211,7 +211,7 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
             $this->logWithCrawlUri(
                 $crawlUri,
                 LogLevel::DEBUG,
-                sprintf('Forwarded to the search indexer. Did not index because of the following reason: %s', $e->getMessage())
+                sprintf('Forwarded to the search indexer. Did not index because of the following reason: %s', $e->getMessage()),
             );
         }
     }
@@ -228,7 +228,7 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
 
         $result = new SubscriberResult(
             0 === $stats['error'],
-            $this->translator->trans('CRAWL.searchIndex.summary', [$stats['ok'], $stats['error']], 'contao_default')
+            $this->translator->trans('CRAWL.searchIndex.summary', [$stats['ok'], $stats['error']], 'contao_default'),
         );
 
         if (0 !== $stats['warning']) {

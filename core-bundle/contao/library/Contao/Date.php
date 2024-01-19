@@ -635,7 +635,7 @@ class Date
 	 */
 	protected static function resolveCustomModifiers($strDate)
 	{
-		if (strpos($strDate, '::') === false)
+		if (!str_contains($strDate, '::'))
 		{
 			return $strDate;
 		}

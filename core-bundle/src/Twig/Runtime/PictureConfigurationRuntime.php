@@ -52,7 +52,7 @@ final class PictureConfigurationRuntime implements RuntimeExtensionInterface
 
                 return $sizeItem;
             },
-            $config['items'] ?? []
+            $config['items'] ?? [],
         );
 
         unset($config['items']);

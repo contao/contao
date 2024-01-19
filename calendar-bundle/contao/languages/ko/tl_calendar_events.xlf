@@ -274,16 +274,14 @@
         <target>에서 표시</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.start.1">
-        <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>특정 날짜/시간 전에 웹 사이트에 이벤트가 표시되지 않도록 하려면 여기에 이벤트를 입력할 수 있습니다. 그렇지 않으면 필드를 공백으로 둡니다.</target>
+        <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.0">
         <source>Show until</source>
         <target>까지 표시</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.1">
-        <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>특정 날짜/시간이 지난 후 이벤트가 웹 사이트에 표시되지 않도록 하려면 여기에 이벤트를 입력할 수 있습니다. 그렇지 않으면 필드를 공백으로 둡니다.</target>
+        <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.tstamp.0">
         <source>Revision date</source>
@@ -385,13 +383,24 @@
         <source>Delete event ID %s</source>
         <target>이벤트 ID %s 삭제</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.toggle">
-        <source>Publish/unpublish event ID %s</source>
-        <target>이벤트 ID %s 게시 / 게시 취소 </target>
+      <trans-unit id="tl_calendar_events.toggle.0">
+        <source>Publish/unpublish event</source>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.feature">
+      <trans-unit id="tl_calendar_events.toggle.1">
+        <source>Unpublish event ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.toggle.2">
+        <source>Publish event ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.feature.0">
         <source>Feature/unfeature event ID %s</source>
         <target>이벤트 ID %s 추천 / 비추천</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.feature.1">
+        <source>Unfeature event ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.feature.2">
+        <source>Feature event ID %s</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>

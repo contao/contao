@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
 class Document
 {
     private Crawler|null $crawler = null;
+
     private array|null $jsonLds = null;
 
     /**
@@ -131,7 +132,7 @@ class Document
                     } catch (\JsonException) {
                         return null;
                     }
-                }
+                },
             )
         ;
 
@@ -162,7 +163,7 @@ class Document
             new Uri($request->getUri()),
             $response->getStatusCode(),
             $response->headers->all(),
-            (string) $response->getContent()
+            (string) $response->getContent(),
         );
     }
 

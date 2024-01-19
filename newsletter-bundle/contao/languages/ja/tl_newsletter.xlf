@@ -159,10 +159,11 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.sent">
         <source>Sent</source>
-        <target>送信状態</target>
+        <target>送信済み</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sentOn">
         <source>Sent at %s</source>
+        <target>%sに送信済み</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.notSent">
         <source>Not sent yet</source>

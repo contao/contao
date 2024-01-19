@@ -45,7 +45,7 @@ final class LegacyTemplateFunctionsRuntime implements RuntimeExtensionInterface
         return $this->captureOutput(
             static function () use ($frontendTemplate, $key, $template): void {
                 $frontendTemplate->sections($key, $template);
-            }
+            },
         );
     }
 
@@ -65,7 +65,7 @@ final class LegacyTemplateFunctionsRuntime implements RuntimeExtensionInterface
         return $this->captureOutput(
             static function () use ($frontendTemplate, $key, $template): void {
                 $frontendTemplate->section($key, $template);
-            }
+            },
         );
     }
 

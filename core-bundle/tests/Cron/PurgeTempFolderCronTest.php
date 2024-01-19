@@ -42,7 +42,7 @@ class PurgeTempFolderCronTest extends ContaoTestCase
                     }
 
                     return false;
-                }
+                },
             ))
         ;
 

@@ -50,8 +50,8 @@ class DisableCanonicalFieldsListener
             '',
             sprintf(
                 'title="%s"',
-                StringUtil::specialchars($this->translator->trans('tl_page.relCanonical', [], 'contao_tl_page'))
-            )
+                StringUtil::specialchars($this->translator->trans('tl_page.relCanonical', [], 'contao_tl_page')),
+            ),
         );
 
         $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['disabled'] = true;

@@ -30,6 +30,7 @@ services:
         class: Contao\CalendarBundle\EventListener\InsertTagsListener
         arguments:
             - '@contao.framework'
+            - '@contao.routing.content_url_generator'
         tags:
             - { name: contao.hook, hook: replaceInsertTags }
 
@@ -37,6 +38,7 @@ services:
         class: Contao\CalendarBundle\EventListener\PreviewUrlConvertListener
         arguments:
             - '@contao.framework'
+            - '@contao.routing.content_url_generator'
         tags:
             - kernel.event_listener
 
@@ -52,6 +54,8 @@ services:
         class: Contao\CalendarBundle\EventListener\SitemapListener
         arguments:
             - '@contao.framework'
+            - '@security.helper'
+            - '@contao.routing.content_url_generator'
         tags:
             - kernel.event_listener
 
@@ -64,3 +68,18 @@ services:
             - '@security.helper'
         tags:
             - { name: contao.picker_provider, priority: 96 }
+
+    contao_calendar.routing.calendar_events_resolver:
+        class: Contao\CalendarBundle\Routing\CalendarEventsResolver
+        arguments:
+            - '@contao.framework'
+
+    contao_calendar.security.calendar_access_voter:
+        class: Contao\CalendarBundle\Security\Voter\CalendarAccessVoter
+        arguments:
+            - '@security.access.decision_manager'
+
+    contao_calendar.security.calendar_events_access_voter:
+        class: Contao\CalendarBundle\Security\Voter\CalendarEventsAccessVoter
+        arguments:
+            - '@security.access.decision_manager'

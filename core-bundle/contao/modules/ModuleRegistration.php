@@ -89,7 +89,7 @@ class ModuleRegistration extends Module
 		}
 
 		// Activate account
-		if (strncmp(Input::get('token'), 'reg-', 4) === 0)
+		if (str_starts_with(Input::get('token'), 'reg-'))
 		{
 			$this->activateAcount();
 
@@ -453,7 +453,7 @@ class ModuleRegistration extends Module
 		$arrTokenData = $arrData;
 		$arrTokenData['activation'] = $optInToken->getIdentifier();
 		$arrTokenData['domain'] = Idna::decode(Environment::get('host'));
-		$arrTokenData['link'] = Idna::decode(Environment::get('url')) . Environment::get('requestUri') . ((strpos(Environment::get('requestUri'), '?') !== false) ? '&' : '?') . 'token=' . $optInToken->getIdentifier();
+		$arrTokenData['link'] = Idna::decode(Environment::get('url')) . Environment::get('requestUri') . (str_contains(Environment::get('requestUri'), '?') ? '&' : '?') . 'token=' . $optInToken->getIdentifier();
 
 		$event = new MemberActivationMailEvent(
 			MemberModel::findByPk($arrData['id']),
@@ -524,11 +524,12 @@ class ModuleRegistration extends Module
 
 		System::getContainer()->get('monolog.logger.contao.access')->info('User account ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ') has been activated');
 
+		$objTarget = $this->objModel->getRelated('reg_jumpTo');
+
 		// Redirect to the jumpTo page
-		if (($objTarget = $this->objModel->getRelated('reg_jumpTo')) instanceof PageModel)
+		if ($objTarget instanceof PageModel)
 		{
-			/** @var PageModel $objTarget */
-			$this->redirect($objTarget->getFrontendUrl());
+			$this->redirect(System::getContainer()->get('contao.routing.content_url_generator')->generate($objTarget));
 		}
 
 		// Confirm activation

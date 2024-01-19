@@ -20,6 +20,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @property array   $groups
  * @property array   $elements
  * @property array   $fields
+ * @property array   $frontendModules
  * @property array   $pagemounts
  * @property array   $filemounts
  * @property array   $filemountIds
@@ -152,6 +153,9 @@ class BackendUser extends User
 	 * @param string       $array
 	 *
 	 * @return boolean
+	 *
+	 * @deprecated Deprecated since Contao 5.2, to be removed in Contao 6.0.
+	 *             Use the "ContaoCorePermissions::USER_CAN_ACCESS_*" permissions instead.
 	 */
 	public function hasAccess($field, $array)
 	{
@@ -239,7 +243,7 @@ class BackendUser extends User
 
 		// Inherit permissions
 		$always = array('alexf');
-		$depends = array('modules', 'themes', 'elements', 'fields', 'pagemounts', 'alpty', 'filemounts', 'fop', 'forms', 'formp', 'imageSizes', 'amg');
+		$depends = array('modules', 'themes', 'elements', 'fields', 'frontendModules', 'pagemounts', 'alpty', 'filemounts', 'fop', 'forms', 'formp', 'imageSizes', 'amg');
 
 		// HOOK: Take custom permissions
 		if (!empty($GLOBALS['TL_PERMISSIONS']) && \is_array($GLOBALS['TL_PERMISSIONS']))
@@ -257,7 +261,7 @@ class BackendUser extends User
 		}
 
 		// Merge permissions
-		$inherit = \in_array($this->inherit, array('group', 'extend')) ? array_merge($always, $depends) : $always;
+		$inherit = \in_array($this->inherit, array('group', 'extend')) ? array(...$always, ...$depends) : $always;
 		$time = Date::floorToMinute();
 		$db = Database::getInstance();
 

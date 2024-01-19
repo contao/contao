@@ -32,7 +32,7 @@ final class AddNode extends Node implements NodeOutputInterface
                 'identifier' => $identifier,
                 'location' => $location,
             ],
-            $lineno
+            $lineno,
         );
     }
 

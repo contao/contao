@@ -166,16 +166,14 @@
         <target>Nagłówek tabeli</target>
       </trans-unit>
       <trans-unit id="tl_content.thead.1">
-        <source>Make the first row of the table the table header.</source>
-        <target>Jeśli wybierzesz tę opcję, pierwszy wiersz tabeli zostanie użyty jako nagłówek tabeli.</target>
+        <source>Make the first row the table header.</source>
       </trans-unit>
       <trans-unit id="tl_content.tfoot.0">
         <source>Add table footer</source>
         <target>Stopka tabeli</target>
       </trans-unit>
       <trans-unit id="tl_content.tfoot.1">
-        <source>Make the last row of the table the table footer.</source>
-        <target>Jeśli wybierzesz tę opcję, ostatni wiersz tabeli zostanie użyty jako stopka tabeli.</target>
+        <source>Make the last row the table footer.</source>
       </trans-unit>
       <trans-unit id="tl_content.tleft.0">
         <source>Use row headers</source>
@@ -320,6 +318,12 @@
       <trans-unit id="tl_content.linkTitle.1">
         <source>The link text will be displayed instead of the target URL.</source>
         <target>Tytuł odnośnika będzie wyświetlony zamiast adresu URL lub linku do pliku. Jeśli generujesz obrazek jako odnośnik, obrazek zastąpi tytuł odnośnika.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.overwriteLink.0">
+        <source>Overwrite link</source>
+      </trans-unit>
+      <trans-unit id="tl_content.overwriteLink.1">
+        <source>Set a custom link text and link title.</source>
       </trans-unit>
       <trans-unit id="tl_content.titleText.0">
         <source>Link title</source>
@@ -630,16 +634,14 @@
         <target>Wrapper start</target>
       </trans-unit>
       <trans-unit id="tl_content.start.1">
-        <source>If you want to prevent the element from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Jeśli nie chcesz żeby element był wyświetlany przed jakąś datą, możesz wprowadzić ją tutaj. W przeciwnym wypadku zostaw to pole puste.</target>
+        <source>If you want to prevent the element from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_content.stop.0">
         <source>Show until</source>
         <target>Wrapper stop</target>
       </trans-unit>
       <trans-unit id="tl_content.stop.1">
-        <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Jeśli nie chcesz żeby element był wyświetlany po jakiejś dacie, możesz wprowadzić ją tutaj. W przeciwnym wypadku zostaw to pole puste.</target>
+        <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_content.type_legend">
         <source>Element type</source>
@@ -893,9 +895,14 @@
         <source>Edit content element ID %s</source>
         <target>Edytuj zawartość elementu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_content.toggle">
-        <source>Hide/unhide content element ID %s</source>
-        <target>Pokaż/ukryj zawartość elementu ID %s</target>
+      <trans-unit id="tl_content.toggle.0">
+        <source>Hide/unhide content element</source>
+      </trans-unit>
+      <trans-unit id="tl_content.toggle.1">
+        <source>Hide content element ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_content.toggle.2">
+        <source>Unhide content element ID %s</source>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>

@@ -31,7 +31,7 @@ class PageTrailCacheTagsListenerTest extends TestCase
             $this->createMock(KernelInterface::class),
             $this->createRequestWithPageModel([42, 18]),
             HttpKernelInterface::MAIN_REQUEST,
-            new Response()
+            new Response(),
         );
 
         $listener = new PageTrailCacheTagsListener($this->createScopeMatcher(true), null);
@@ -54,7 +54,7 @@ class PageTrailCacheTagsListenerTest extends TestCase
             $this->createMock(KernelInterface::class),
             $this->createRequestWithPageModel([14, 7]),
             HttpKernelInterface::SUB_REQUEST,
-            new Response()
+            new Response(),
         );
 
         $listener = new PageTrailCacheTagsListener($this->createScopeMatcher(false), $responseTagger);
@@ -74,7 +74,7 @@ class PageTrailCacheTagsListenerTest extends TestCase
             $this->createMock(KernelInterface::class),
             $this->createRequestWithPageModel([42, 18]),
             HttpKernelInterface::SUB_REQUEST,
-            new Response()
+            new Response(),
         );
 
         $listener = new PageTrailCacheTagsListener($this->createScopeMatcher(true), $responseTagger);

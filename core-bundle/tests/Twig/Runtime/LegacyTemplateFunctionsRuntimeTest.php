@@ -32,7 +32,7 @@ class LegacyTemplateFunctionsRuntimeTest extends TestCase
             ->willReturnCallback(
                 static function (): void {
                     echo 'output';
-                }
+                },
             )
         ;
 

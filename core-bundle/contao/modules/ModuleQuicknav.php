@@ -75,7 +75,7 @@ class ModuleQuicknav extends Module
 			$objRootPage = PageModel::findWithDetails($this->rootPage);
 
 			// Set the domain
-			if ($objRootPage->rootId != $objPage->rootId && $objRootPage->domain && $objRootPage->domain != $objPage->domain)
+			if ($objRootPage && $objRootPage->rootId != $objPage->rootId && $objRootPage->domain && $objRootPage->domain != $objPage->domain)
 			{
 				$host = $objRootPage->domain;
 			}
@@ -116,6 +116,7 @@ class ModuleQuicknav extends Module
 
 		$container = System::getContainer();
 		$security = $container->get('security.helper');
+		$urlGenerator = $container->get('contao.routing.content_url_generator');
 		$db = Database::getInstance();
 
 		foreach ($objSubpages as $objSubpage)
@@ -138,7 +139,7 @@ class ModuleQuicknav extends Module
 				{
 					try
 					{
-						$href = $objSubpage->getFrontendUrl();
+						$href = $urlGenerator->generate($objSubpage);
 					}
 					catch (ExceptionInterface $exception)
 					{

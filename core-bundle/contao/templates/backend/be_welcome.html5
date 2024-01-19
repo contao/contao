@@ -3,8 +3,8 @@
 
   <div id="tl_messages">
     <h2><?= $this->systemMessages ?></h2>
-    <?= $this->messages ?>
     <p><?= $this->loginMsg ?></p>
+    <?= $this->messages ?>
   </div>
 
   <div id="tl_shortcuts">

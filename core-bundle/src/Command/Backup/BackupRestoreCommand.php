@@ -22,7 +22,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'contao:backup:restore',
-    description: 'Restores a database backup.'
+    description: 'Restores a database backup.',
 )]
 class BackupRestoreCommand extends AbstractBackupCommand
 {

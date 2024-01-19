@@ -18,7 +18,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.1
+                  php-version: 8.2
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   ini-values: memory_limit=1G
                   coverage: none
@@ -33,7 +33,7 @@ jobs:
 
             - name: Get the Composer cache directory
               id: composer-cache
-              run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+              run: echo "name=dir::$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
             - name: Cache the dependencies
               uses: actions/cache@v3

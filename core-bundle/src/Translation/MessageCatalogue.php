@@ -139,6 +139,45 @@ final class MessageCatalogue implements MessageCatalogueInterface
         $this->inner->addResource($resource);
     }
 
+    /**
+     * Populates $GLOBALS['TL_LANG'] with all translations for the given domain.
+     */
+    public function populateGlobals(string $domain): void
+    {
+        if (!$this->isContaoDomain($domain)) {
+            return;
+        }
+
+        $translations = $this->inner->all($domain);
+
+        foreach ($translations as $k => $v) {
+            $parts = LegacyGlobalsProcessor::getPartsFromKey($k);
+
+            LegacyGlobalsProcessor::addGlobal($parts, $v);
+        }
+    }
+
+    /**
+     * Returns the $GLOBALS['TL_LANG'] PHP string representation for all translations of a given domain.
+     */
+    public function getGlobalsString(string $domain): string
+    {
+        if (!$this->isContaoDomain($domain)) {
+            return '';
+        }
+
+        $translations = $this->inner->all($domain);
+        $return = '';
+
+        foreach ($translations as $k => $v) {
+            $parts = LegacyGlobalsProcessor::getPartsFromKey($k);
+
+            $return .= LegacyGlobalsProcessor::getStringRepresentation($parts, $v);
+        }
+
+        return $return;
+    }
+
     private function isContaoDomain(string|null $domain): bool
     {
         return str_starts_with($domain ?? '', 'contao_');
@@ -159,10 +198,7 @@ final class MessageCatalogue implements MessageCatalogueInterface
      */
     private function getFromGlobals(string $id): string|null
     {
-        // Split the ID into chunks allowing escaped dots (\.) and backslashes (\\)
-        preg_match_all('/(?:\\\\[\\\\.]|[^.])++/', $id, $matches);
-
-        $parts = preg_replace('/\\\\([\\\\.])/', '$1', $matches[0]);
+        $parts = LegacyGlobalsProcessor::getPartsFromKey($id);
         $item = &$GLOBALS['TL_LANG'];
 
         foreach ($parts as $part) {

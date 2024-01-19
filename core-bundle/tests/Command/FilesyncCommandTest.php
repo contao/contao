@@ -99,9 +99,9 @@ class FilesyncCommandTest extends TestCase
                             'baz' => ChangeSet::TYPE_DIRECTORY,
                             'baz/deleted1' => ChangeSet::TYPE_FILE,
                             'baz/deleted2' => ChangeSet::TYPE_FILE,
-                        ]
+                        ],
                     );
-                }
+                },
             )
         ;
 

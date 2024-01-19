@@ -44,7 +44,6 @@ final class FragmentTemplate extends Template
 
     /**
      * @param string $key
-     * @param mixed  $value
      */
     public function __set($key, $value): void
     {
@@ -53,8 +52,6 @@ final class FragmentTemplate extends Template
 
     /**
      * @param string $key
-     *
-     * @return mixed
      */
     public function __get($key)
     {

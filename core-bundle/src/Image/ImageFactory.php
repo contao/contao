@@ -31,6 +31,7 @@ use Symfony\Component\Filesystem\Path;
 class ImageFactory implements ImageFactoryInterface
 {
     private array $predefinedSizes = [];
+
     private array $preserveMetadataFields;
 
     /**
@@ -281,7 +282,7 @@ class ImageFactory implements ImageFactoryInterface
             return [$config, null, null];
         }
 
-        trigger_deprecation('contao/core-bundle', '5.0', 'Using the legacy resize mode "%s" has been deprecated and will no longer work in Contao 6.0.', $size[2]);
+        trigger_deprecation('contao/core-bundle', '5.0', 'Using the legacy resize mode "%s" has been deprecated and will no longer work in Contao 6.', $size[2]);
 
         $config->setMode(ResizeConfiguration::MODE_CROP);
 
@@ -326,7 +327,7 @@ class ImageFactory implements ImageFactoryInterface
         $filesModel = $this->framework->getAdapter(FilesModel::class);
         $file = $filesModel->findByPath($image->getPath());
 
-        if (!$file || !$file->importantPartWidth || !$file->importantPartHeight) {
+        if (!$file?->importantPartWidth || !$file->importantPartHeight) {
             return null;
         }
 
@@ -334,7 +335,7 @@ class ImageFactory implements ImageFactoryInterface
             (float) $file->importantPartX,
             (float) $file->importantPartY,
             (float) $file->importantPartWidth,
-            (float) $file->importantPartHeight
+            (float) $file->importantPartHeight,
         );
     }
 }

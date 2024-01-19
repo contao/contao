@@ -21,10 +21,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class SetConfigCommandTest extends TestCase
 {
-    /**
-     * @var ManagerConfig&MockObject
-     */
-    private ManagerConfig $config;
+    private ManagerConfig&MockObject $config;
 
     private SetConfigCommand $command;
 

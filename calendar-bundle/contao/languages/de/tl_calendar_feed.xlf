@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_feed.language.1">
         <source>Please enter the feed language according to the ISO-639 standard (e.g. &lt;em&gt;en&lt;/em&gt; or &lt;em&gt;en-us&lt;/em&gt;).</source>
-        <target>Bitte geben Sie die Sprache der Seite gemäß des ISO-639 Standards ein (z. B. &lt;em&gt;de&lt;/em&gt;, &lt;em&gt;de-ch&lt;/em&gt;).</target>
+        <target>Bitte geben Sie die Sprache der Seite gemäß dem ISO-639 Standard ein (z. B. &lt;em&gt;de&lt;/em&gt;, &lt;em&gt;de-ch&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_calendar_feed.calendars.0">
         <source>Calendars</source>

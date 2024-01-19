@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="MSC.com_website">
         <source>Website</source>
-        <target>Web sitesi</target>
+        <target>Site</target>
       </trans-unit>
       <trans-unit id="MSC.com_comment">
         <source>Comment</source>
@@ -70,7 +70,7 @@ Click here to edit or answer the comment:
 
 %s
 </source>
-        <target>%s web sitenizde yeni bir yorum yaptı:
+        <target>%s sitenizde yeni bir yorum yaptı:
 
 ---
 

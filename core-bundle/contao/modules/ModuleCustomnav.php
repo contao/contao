@@ -85,6 +85,7 @@ class ModuleCustomnav extends Module
 
 		$container = System::getContainer();
 		$security = $container->get('security.helper');
+		$urlGenerator = $container->get('contao.routing.content_url_generator');
 
 		/** @var PageModel[] $objPages */
 		foreach ($objPages as $objModel)
@@ -94,46 +95,13 @@ class ModuleCustomnav extends Module
 			// PageModel->groups is an array after calling loadDetails()
 			if (!$objModel->protected || $this->showProtected || $security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objModel->groups))
 			{
-				// Get href
-				switch ($objModel->type)
+				try
 				{
-					case 'redirect':
-						$href = $objModel->url;
-						break;
-
-					case 'root':
-						// Overwrite the alias to link to the empty URL or language URL (see #1641)
-						$objModel->alias = 'index';
-						$href = $objModel->getFrontendUrl();
-						break;
-
-					case 'forward':
-						if ($objModel->jumpTo)
-						{
-							$objNext = PageModel::findPublishedById($objModel->jumpTo);
-						}
-						else
-						{
-							$objNext = PageModel::findFirstPublishedRegularByPid($objModel->id);
-						}
-
-						if ($objNext instanceof PageModel)
-						{
-							$href = $objNext->getFrontendUrl();
-							break;
-						}
-						// no break
-
-					default:
-						try
-						{
-							$href = $objModel->getFrontendUrl();
-						}
-						catch (ExceptionInterface $exception)
-						{
-							continue 2;
-						}
-						break;
+					$href = $urlGenerator->generate($objModel);
+				}
+				catch (ExceptionInterface $exception)
+				{
+					continue;
 				}
 
 				$trail = \in_array($objModel->id, $objPage->trail);

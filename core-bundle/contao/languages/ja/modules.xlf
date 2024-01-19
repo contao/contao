@@ -163,9 +163,11 @@
       </trans-unit>
       <trans-unit id="MOD.favorites.0">
         <source>Favorites</source>
+        <target>お気に入り</target>
       </trans-unit>
       <trans-unit id="MOD.favorites.1">
         <source>Manage your back end menu favorites</source>
+        <target>バックエンドのメニューのお気に入りを管理</target>
       </trans-unit>
       <trans-unit id="MOD.tl_content">
         <source>Content elements</source>
@@ -405,6 +407,7 @@
       </trans-unit>
       <trans-unit id="FMD.rssReader.0">
         <source>RSS reader (deprecated)</source>
+        <target>RSSリーダー(非推奨)</target>
       </trans-unit>
       <trans-unit id="FMD.rssReader.1">
         <source>Adds an RSS feed to the page</source>
@@ -412,9 +415,11 @@
       </trans-unit>
       <trans-unit id="FMD.feed_reader.0">
         <source>Feed reader</source>
+        <target>フィードリーダー</target>
       </trans-unit>
       <trans-unit id="FMD.feed_reader.1">
         <source>Adds an RSS, Atom or JSON feed to the page</source>
+        <target>ページにRSS、Atom、JSONのフィードを追加</target>
       </trans-unit>
       <trans-unit id="FMD.two_factor.0">
         <source>Two-factor authentication</source>

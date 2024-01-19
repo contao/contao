@@ -46,15 +46,15 @@ class DeprecationsNodeVisitorTest extends TestCase
     private function getEnvironment(string $templateContent): Environment
     {
         $environment = new Environment(
-            new ArrayLoader(['template.html.twig' => $templateContent])
+            new ArrayLoader(['template.html.twig' => $templateContent]),
         );
 
         $environment->addExtension(
             new ContaoExtension(
                 $environment,
                 $this->createMock(TemplateHierarchyInterface::class),
-                $this->createMock(ContaoCsrfTokenManager::class)
-            )
+                $this->createMock(ContaoCsrfTokenManager::class),
+            ),
         );
 
         return $environment;

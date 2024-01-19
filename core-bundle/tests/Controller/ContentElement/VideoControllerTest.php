@@ -39,7 +39,7 @@ class VideoControllerTest extends ContentElementTestCase
             ],
             null,
             false,
-            $responseContextData
+            $responseContextData,
         );
 
         $expectedOutput = <<<'HTML'
@@ -81,7 +81,7 @@ class VideoControllerTest extends ContentElementTestCase
             ],
             null,
             false,
-            $responseContextData
+            $responseContextData,
         );
 
         $expectedOutput = <<<'HTML'
@@ -109,7 +109,7 @@ class VideoControllerTest extends ContentElementTestCase
         $this->assertCount(1, $additionalBodyCode);
         $this->assertMatchesRegularExpression(
             '/<script>[^<]+button\.insertAdjacentHTML[^<]+<\/script>/',
-            $additionalBodyCode['splash_screen_script']
+            $additionalBodyCode['splash_screen_script'],
         );
     }
 }

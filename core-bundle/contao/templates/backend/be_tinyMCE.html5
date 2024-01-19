@@ -28,7 +28,7 @@ window.tinymce && tinymce.init({
     if (document.activeElement && document.activeElement.id && document.activeElement.id == editor.id) {
       editor.editorManager.get(editor.id).focus();
     }
-    editor.on('focus', () => Backend.getScrollOffset());
+    editor.on('focus', () => window.dispatchEvent(new Event('store-scroll-offset')));
   },
 
   <?php $this->block('picker'); ?>
@@ -37,7 +37,10 @@ window.tinymce && tinymce.init({
         'id': 'tl_listing',
         'title': document.getElement('.tox-dialog__title').get('text'),
         'url': Contao.routes.backend_picker + '?context=' + (meta.filetype == 'file' ? 'link' : 'file') + '&amp;extras[fieldType]=radio&amp;extras[filesOnly]=true&amp;extras[source]=<?= $this->source ?>&amp;value=' + value + '&amp;popup=1',
-        'callback': function(table, val) { callback(val.join(',')); }
+        'callback': function(table, val) {
+          document.getElement('.tox-dialog input')?.focus();
+          callback(val.join(','));
+        }
       });
     },
     file_picker_types: '<?= $this->fileBrowserTypes ?>',
@@ -52,7 +55,7 @@ window.tinymce && tinymce.init({
   <?php $this->endblock(); ?>
 
   <?php $this->block('valid_elements'); ?>
-    extended_valid_elements: 'q[cite|class|title],article,section,hgroup,figure,figcaption,a[rel|rev|charset|hreflang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur|data-lightbox]',
+    extended_valid_elements: 'q[cite|class|title],article,section,hgroup,figure,figcaption',
   <?php $this->endblock(); ?>
 
   <?php $this->block('menubar'); ?>

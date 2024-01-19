@@ -96,7 +96,7 @@ class InheritanceTest extends TestCase
 
         $bundles = array_combine(
             array_keys($bundlesMetadata),
-            array_fill(0, \count($bundlesMetadata), ContaoModuleBundle::class)
+            array_fill(0, \count($bundlesMetadata), ContaoModuleBundle::class),
         );
 
         $connection = $this->createMock(Connection::class);
@@ -120,8 +120,8 @@ class InheritanceTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $loader,
-                $this->createMock(ContaoCsrfTokenManager::class)
-            )
+                $this->createMock(ContaoCsrfTokenManager::class),
+            ),
         );
 
         return $environment;

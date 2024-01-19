@@ -295,8 +295,8 @@ class DebugContaoTwigCommandTest extends TestCase
             ->willReturnCallback(
                 static fn (string $name): TemplateInformation => new TemplateInformation(
                     new Source("… code of $name …", $name),
-                    ["{$name}_block1", "{$name}_block2"]
-                )
+                    ["{$name}_block1", "{$name}_block2"],
+                ),
             )
         ;
 
@@ -305,7 +305,7 @@ class DebugContaoTwigCommandTest extends TestCase
             $cacheWarmer ?? $this->createMock(ContaoFilesystemLoaderWarmer::class),
             new ThemeNamespace(),
             Path::canonicalize(__DIR__.'/../Fixtures/Twig/inheritance'),
-            $inspector
+            $inspector,
         );
     }
 }

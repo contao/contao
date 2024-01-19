@@ -35,7 +35,7 @@ class RememberMeTokenProvider implements TokenProviderInterface
             $rememberMe->getUserIdentifier(),
             $rememberMe->getSeries(),
             $rememberMe->getValue(),
-            \DateTime::createFromInterface($rememberMe->getLastUsed())
+            \DateTime::createFromInterface($rememberMe->getLastUsed()),
         );
     }
 
@@ -61,8 +61,8 @@ class RememberMeTokenProvider implements TokenProviderInterface
                 $token->getUserIdentifier(),
                 $token->getSeries(),
                 $token->getTokenValue(),
-                $token->getLastUsed()
-            )
+                $token->getLastUsed(),
+            ),
         );
     }
 

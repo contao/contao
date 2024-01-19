@@ -27,9 +27,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 final class Finder implements \IteratorAggregate, \Countable
 {
     private string|null $identifier = null;
+
     private string|null $themeSlug = null;
+
     private string|null $extension = null;
+
     private bool $variantsExclusive = false;
+
     private bool $variants = false;
 
     /**
@@ -131,14 +135,14 @@ final class Finder implements \IteratorAggregate, \Countable
                 '%s [%s • %s]',
                 $this->translator->trans($identifier, [], 'templates'),
                 $identifier,
-                implode(', ', $sourceLabels)
+                implode(', ', $sourceLabels),
             );
         };
 
         $getLabel = static fn (string $identifier, array $sourceLabels): string => sprintf(
             '%s [%s]',
             $identifier,
-            implode(', ', $sourceLabels)
+            implode(', ', $sourceLabels),
         );
 
         $options = [];
@@ -172,7 +176,7 @@ final class Finder implements \IteratorAggregate, \Countable
                 }
 
                 return false;
-            }
+            },
         );
 
         $this->sources = [];

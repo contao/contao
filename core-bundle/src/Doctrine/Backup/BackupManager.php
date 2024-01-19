@@ -184,10 +184,9 @@ class BackupManager
     }
 
     /**
-     * @param resource                 $fileHandle
-     * @param \DeflateContext|resource $deflateContext
+     * @param resource $fileHandle
      */
-    private function writeLine(string $data, $fileHandle, $deflateContext): void
+    private function writeLine(string $data, $fileHandle, \DeflateContext|null $deflateContext): void
     {
         $data .= PHP_EOL;
 
@@ -204,10 +203,9 @@ class BackupManager
     }
 
     /**
-     * @param resource                 $fileHandle
-     * @param \DeflateContext|resource $deflateContext
+     * @param resource $fileHandle
      */
-    private function finishWriting(Backup $backup, $fileHandle, $deflateContext): void
+    private function finishWriting(Backup $backup, $fileHandle, \DeflateContext|null $deflateContext): void
     {
         if ($deflateContext) {
             $data = deflate_add($deflateContext, '', ZLIB_FINISH);

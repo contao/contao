@@ -57,14 +57,6 @@
         <source>This overall limit takes effect if a user chooses the &quot;show all records&quot; option.</source>
         <target>Ограничение применяется, если пользователь выбирает значение 'Показать все записи'.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.doNotCollapse.0">
-        <source>Do not collapse elements</source>
-        <target>Не обрезать элементы</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.doNotCollapse.1">
-        <source>Do not collapse elements in the back end preview.</source>
-        <target>Не обрезать элементы контента и другие ресурсы при выводе в панели управления.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.allowedTags.0">
         <source>Allowed HTML tags</source>
         <target>Разрешенные HTML-теги</target>

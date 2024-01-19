@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="MSC.cal_until">
         <source>until %s</source>
-        <target>bis zum  %s</target>
+        <target>bis zum %s</target>
       </trans-unit>
       <trans-unit id="MSC.cal_single_days">
         <source>every day</source>

@@ -15,11 +15,17 @@ namespace Contao\CoreBundle\Tests\Fixtures\Twig;
 class ChildClassWithMembersStub extends ParentClassWithMembersStub
 {
     final public const PUBLIC_CONSTANT = 3;
+
     protected const PROTECTED_CONSTANT = 2;
+
     private const PRIVATE_CONSTANT = 1;
+
     public string $publicField = 'c';
+
     public static string $publicStaticField = 'C';
+
     protected string $protectedField = 'b';
+
     protected static string $protectedStaticField = 'B';
 
     private string $privateField = 'a';

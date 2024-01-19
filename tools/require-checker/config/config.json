@@ -24,6 +24,7 @@
         "Contao\\NewsletterChannelModel",
         "Michelf\\MarkdownExtra",
         "ProxyManager\\Configuration",
-        "Symfony\\Bundle\\MonologBundle\\MonologBundle"
+        "Symfony\\Bundle\\MonologBundle\\MonologBundle",
+        "Symfony\\Bundle\\WebProfilerBundle\\EventListener\\WebDebugToolbarListener"
     ]
 }

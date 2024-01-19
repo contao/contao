@@ -19,7 +19,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Result;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class PageListenerTest extends ContaoTestCase
 {
@@ -99,7 +99,7 @@ class PageListenerTest extends ContaoTestCase
                 42 => 'The answer to life, the universe and everything',
                 84 => 'Example news archive',
             ],
-            $listener->getAllowedArchives()
+            $listener->getAllowedArchives(),
         );
     }
 

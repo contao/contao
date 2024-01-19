@@ -57,14 +57,6 @@
         <source>This overall limit takes effect if a user chooses the &quot;show all records&quot; option.</source>
         <target>Hier legen Sie fest, wie viele Datensätze maximal angezeigt werden, wenn ein Benutzer die Option &quot;alle Datensätze anzeigen&quot; auswählt.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.doNotCollapse.0">
-        <source>Do not collapse elements</source>
-        <target>Elemente nicht verkürzen</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.doNotCollapse.1">
-        <source>Do not collapse elements in the back end preview.</source>
-        <target>Elemente in der Backend-Vorschau nicht verkürzen.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.allowedTags.0">
         <source>Allowed HTML tags</source>
         <target>Erlaubte HTML-Tags</target>

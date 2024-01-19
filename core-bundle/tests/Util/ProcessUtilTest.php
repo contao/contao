@@ -28,6 +28,14 @@ class ProcessUtilTest extends TestCase
         $this->assertSame('bin/console foobar argument-1 argument-2', $this->getCommandLine($process));
     }
 
+    public function testGetters(): void
+    {
+        $util = new ProcessUtil('bin/console');
+
+        $this->assertSame('bin/console', $util->getConsolePath());
+        $this->assertNotEmpty($util->getPhpBinary());
+    }
+
     /**
      * @dataProvider promiseTestProvider
      */

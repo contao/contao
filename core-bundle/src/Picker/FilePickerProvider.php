@@ -19,9 +19,9 @@ use Contao\StringUtil;
 use Contao\System;
 use Contao\Validator;
 use Knp\Menu\FactoryInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
@@ -136,7 +136,7 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
     {
         $attributes = array_intersect_key(
             $config->getExtras(),
-            array_flip(['fieldType', 'files', 'filesOnly', 'path', 'extensions'])
+            array_flip(['fieldType', 'files', 'filesOnly', 'path', 'extensions']),
         );
 
         if (!isset($attributes['fieldType'])) {

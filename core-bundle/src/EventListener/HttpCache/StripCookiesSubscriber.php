@@ -117,7 +117,7 @@ class StripCookiesSubscriber implements EventSubscriberInterface
         // Remove cookies that match the deny list or all if no deny list was set
         $removeCookies = preg_grep(
             '/^(?:'.implode(')$|^(?:', $denyList ?: ['.*']).')$/i',
-            array_keys($request->cookies->all())
+            array_keys($request->cookies->all()),
         );
 
         // Do not remove cookies that match the allow list

@@ -23,7 +23,7 @@ class HeadlineControllerTest extends ContentElementTestCase
             [
                 'type' => 'headline',
                 'headline' => serialize(['unit' => 'h2', 'value' => 'My Headline']),
-            ]
+            ],
         );
 
         $expectedOutput = '<h2 class="content-headline">My Headline</h2>';
@@ -38,7 +38,7 @@ class HeadlineControllerTest extends ContentElementTestCase
             [
                 'type' => 'headline',
                 'headline' => serialize(['value' => 'My Headline']),
-            ]
+            ],
         );
 
         $expectedOutput = '<h1 class="content-headline">My Headline</h1>';
@@ -54,7 +54,7 @@ class HeadlineControllerTest extends ContentElementTestCase
                 'type' => 'headline',
                 'headline' => serialize(['unit' => 'h2', 'value' => 'My Headline']),
                 'cssID' => serialize(['custom-id', 'custom-class']),
-            ]
+            ],
         );
 
         $expectedOutput = '<h2 id="custom-id" class="custom-class content-headline">My Headline</h2>';

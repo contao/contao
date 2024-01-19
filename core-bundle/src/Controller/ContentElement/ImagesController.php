@@ -22,9 +22,9 @@ use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\FrontendUser;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Security;
 
 #[AsContentElement('image', category: 'media')]
 #[AsContentElement('gallery', category: 'media')]
@@ -77,7 +77,7 @@ class ImagesController extends AbstractContentElementController
             fn (FilesystemItem $filesystemItem): Figure => $figureBuilder
                 ->fromStorage($this->filesStorage, $filesystemItem->getPath())
                 ->build(),
-            iterator_to_array($filesystemItems)
+            iterator_to_array($filesystemItems),
         );
 
         if (!$imageList) {

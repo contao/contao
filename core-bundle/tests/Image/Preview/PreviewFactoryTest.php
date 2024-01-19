@@ -227,7 +227,7 @@ class PreviewFactoryTest extends TestCase
                 ->setSize(
                     (new PictureConfigurationItem())
                         ->setDensities('1.5x')
-                        ->setResizeConfig((new ResizeConfiguration())->setWidth(123)->setHeight(456))
+                        ->setResizeConfig((new ResizeConfiguration())->setWidth(123)->setHeight(456)),
                 ),
             684,
         ];
@@ -237,7 +237,7 @@ class PreviewFactoryTest extends TestCase
                 ->setSize(
                     (new PictureConfigurationItem())
                         ->setDensities('1.5x')
-                        ->setResizeConfig((new ResizeConfiguration())->setWidth(123)->setHeight(123))
+                        ->setResizeConfig((new ResizeConfiguration())->setWidth(123)->setHeight(123)),
                 )
                 ->setSizeItems([
                     (new PictureConfigurationItem())
@@ -365,7 +365,7 @@ class PreviewFactoryTest extends TestCase
                     }
 
                     return new Image($path, $this->createMock(ImagineInterface::class));
-                }
+                },
             )
         ;
 
@@ -379,7 +379,7 @@ class PreviewFactoryTest extends TestCase
                     }
 
                     return new Picture(['src' => $path, 'srcset' => [[$path, '1x']]], []);
-                }
+                },
             )
         ;
 

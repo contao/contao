@@ -33,6 +33,7 @@ use Symfony\Component\HttpFoundation\Response;
 abstract class AbstractFragmentController extends AbstractController implements FragmentOptionsAwareInterface
 {
     protected array $options = [];
+
     private string|null $view = null;
 
     public function setFragmentOptions(array $options): void

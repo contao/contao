@@ -41,8 +41,11 @@ class PictureFactory implements PictureFactoryInterface
     ];
 
     private array $imageSizeItemsCache = [];
+
     private string $defaultDensities = '';
+
     private array $predefinedSizes = [];
+
     private array $preserveMetadataFields;
 
     /**
@@ -98,7 +101,7 @@ class PictureFactory implements PictureFactoryInterface
             && !isset($this->predefinedSizes[$size[2]])
             && 1 === substr_count($size[2], '_')
         ) {
-            trigger_deprecation('contao/core-bundle', '5.0', 'Using the legacy resize mode "%s" has been deprecated and will no longer work in Contao 6.0.', $size[2]);
+            trigger_deprecation('contao/core-bundle', '5.0', 'Using the legacy resize mode "%s" has been deprecated and will no longer work in Contao 6.', $size[2]);
 
             $image->setImportantPart($this->imageFactory->getImportantPartFromLegacyMode($image, $size[2]));
             $size[2] = ResizeConfiguration::MODE_CROP;
@@ -213,7 +216,7 @@ class PictureFactory implements PictureFactoryInterface
 
                             usort(
                                 $formats[$source],
-                                static fn ($a, $b) => (self::FORMATS_ORDER[$a] ?? $a) <=> (self::FORMATS_ORDER[$b] ?? $b)
+                                static fn ($a, $b) => (self::FORMATS_ORDER[$a] ?? $a) <=> (self::FORMATS_ORDER[$b] ?? $b),
                             );
                         }
                     }

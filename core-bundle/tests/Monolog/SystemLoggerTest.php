@@ -66,7 +66,7 @@ class SystemLoggerTest extends TestCase
             ->with(
                 $level,
                 $message,
-                $this->assertExpectedContaoContext(new ContaoContext(__METHOD__, $action))
+                $this->assertExpectedContaoContext(new ContaoContext(__METHOD__, $action)),
             )
         ;
 
@@ -88,7 +88,7 @@ class SystemLoggerTest extends TestCase
                 $this->assertSame($expectedContext->getUsername(), $contaoContext->getUsername());
 
                 return true;
-            }
+            },
         );
     }
 }

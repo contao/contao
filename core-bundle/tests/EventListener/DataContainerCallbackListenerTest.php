@@ -44,7 +44,7 @@ class DataContainerCallbackListenerTest extends TestCase
                         ['Test\CallbackListener', 'onLoadCallback'],
                     ]],
                 ],
-            ]
+            ],
         );
 
         $this->assertEmpty($GLOBALS['TL_DCA']['tl_page']);
@@ -61,7 +61,7 @@ class DataContainerCallbackListenerTest extends TestCase
                     ],
                 ],
             ],
-            $GLOBALS['TL_DCA']['tl_page']
+            $GLOBALS['TL_DCA']['tl_page'],
         );
     }
 
@@ -79,7 +79,7 @@ class DataContainerCallbackListenerTest extends TestCase
                         ['Test\CallbackListener', 'loadFieldCallback'],
                     ]],
                 ],
-            ]
+            ],
         );
 
         $this->assertEmpty($GLOBALS['TL_DCA']['tl_page']);
@@ -103,7 +103,7 @@ class DataContainerCallbackListenerTest extends TestCase
                     ],
                 ],
             ],
-            $GLOBALS['TL_DCA']['tl_page']
+            $GLOBALS['TL_DCA']['tl_page'],
         );
     }
 
@@ -118,7 +118,7 @@ class DataContainerCallbackListenerTest extends TestCase
                         ['Test\CallbackListener', 'onLoadCallback'],
                     ]],
                 ],
-            ]
+            ],
         );
 
         $this->assertEmpty($GLOBALS['TL_DCA']['tl_page']);
@@ -135,7 +135,7 @@ class DataContainerCallbackListenerTest extends TestCase
                     ],
                 ],
             ],
-            $GLOBALS['TL_DCA']['tl_page']
+            $GLOBALS['TL_DCA']['tl_page'],
         );
     }
 
@@ -150,7 +150,7 @@ class DataContainerCallbackListenerTest extends TestCase
                         ['Test\CallbackListener', 'onFoobarCallback'],
                     ]],
                 ],
-            ]
+            ],
         );
 
         $this->assertEmpty($GLOBALS['TL_DCA']['tl_page']);
@@ -169,7 +169,7 @@ class DataContainerCallbackListenerTest extends TestCase
                     ],
                 ],
             ],
-            $GLOBALS['TL_DCA']['tl_page']
+            $GLOBALS['TL_DCA']['tl_page'],
         );
     }
 
@@ -195,7 +195,7 @@ class DataContainerCallbackListenerTest extends TestCase
                         ],
                     ],
                 ],
-            ]
+            ],
         );
 
         $this->assertEmpty($GLOBALS['TL_DCA']['tl_page']);
@@ -215,7 +215,7 @@ class DataContainerCallbackListenerTest extends TestCase
                     ],
                 ],
             ],
-            $GLOBALS['TL_DCA']['tl_page']
+            $GLOBALS['TL_DCA']['tl_page'],
         );
     }
 
@@ -242,7 +242,7 @@ class DataContainerCallbackListenerTest extends TestCase
                         ],
                     ],
                 ],
-            ]
+            ],
         );
 
         $this->listener->onLoadDataContainer('tl_page');
@@ -260,7 +260,7 @@ class DataContainerCallbackListenerTest extends TestCase
                     ],
                 ],
             ],
-            $GLOBALS['TL_DCA']['tl_page']
+            $GLOBALS['TL_DCA']['tl_page'],
         );
     }
 
@@ -283,7 +283,7 @@ class DataContainerCallbackListenerTest extends TestCase
                         ['Test\CallbackListener', 'newCallback'],
                     ]],
                 ],
-            ]
+            ],
         );
 
         $this->listener->onLoadDataContainer('tl_page');
@@ -301,7 +301,7 @@ class DataContainerCallbackListenerTest extends TestCase
                     ],
                 ],
             ],
-            $GLOBALS['TL_DCA']['tl_page']
+            $GLOBALS['TL_DCA']['tl_page'],
         );
     }
 
@@ -324,7 +324,7 @@ class DataContainerCallbackListenerTest extends TestCase
                         ],
                     ],
                 ],
-            ]
+            ],
         );
 
         $this->listener->onLoadDataContainer('tl_page');
@@ -339,7 +339,7 @@ class DataContainerCallbackListenerTest extends TestCase
                     ],
                 ],
             ],
-            $GLOBALS['TL_DCA']['tl_page']
+            $GLOBALS['TL_DCA']['tl_page'],
         );
     }
 
@@ -360,7 +360,7 @@ class DataContainerCallbackListenerTest extends TestCase
                         ['Test\CallbackListener', 'newCallback'],
                     ]],
                 ],
-            ]
+            ],
         );
 
         $this->listener->onLoadDataContainer('tl_page');
@@ -375,7 +375,7 @@ class DataContainerCallbackListenerTest extends TestCase
                     ],
                 ],
             ],
-            $GLOBALS['TL_DCA']['tl_page']
+            $GLOBALS['TL_DCA']['tl_page'],
         );
     }
 
@@ -398,7 +398,7 @@ class DataContainerCallbackListenerTest extends TestCase
                         ],
                     ],
                 ],
-            ]
+            ],
         );
 
         $this->listener->onLoadDataContainer('tl_page');
@@ -413,7 +413,7 @@ class DataContainerCallbackListenerTest extends TestCase
                     ],
                 ],
             ],
-            $GLOBALS['TL_DCA']['tl_page']
+            $GLOBALS['TL_DCA']['tl_page'],
         );
     }
 
@@ -428,7 +428,7 @@ class DataContainerCallbackListenerTest extends TestCase
                         ['Test\CallbackListener', 'onLoadCallback'],
                     ]],
                 ],
-            ]
+            ],
         );
 
         $this->assertEmpty($GLOBALS['TL_DCA']['tl_page']);
@@ -447,7 +447,7 @@ class DataContainerCallbackListenerTest extends TestCase
                         ['Test\CallbackListener', 'onLoadCallback'],
                     ]],
                 ],
-            ]
+            ],
         );
 
         $this->assertArrayNotHasKey('tl_page', $GLOBALS['TL_DCA'] ?? []);

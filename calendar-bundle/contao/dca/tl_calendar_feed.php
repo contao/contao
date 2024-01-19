@@ -56,6 +56,7 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
+				'tstamp' => 'index',
 				'alias' => 'index'
 			)
 		),
@@ -78,15 +79,6 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 			'fields'                  => array('title'),
 			'format'                  => '%s'
 		),
-		'global_operations' => array
-		(
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			),
-		),
 		'operations' => array
 		(
 			'edit',
@@ -100,7 +92,7 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 			(
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"',
+				'attributes'          => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false"',
 				'button_callback'     => array('tl_calendar_feed', 'deleteFeed')
 			),
 			'show'

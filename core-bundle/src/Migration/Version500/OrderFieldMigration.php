@@ -111,7 +111,7 @@ class OrderFieldMigration extends AbstractMigration
                     'items' => serialize($items),
                     'field' => $row[$field],
                     'orderField' => $row[$orderField],
-                ]
+                ],
             );
         }
 

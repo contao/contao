@@ -48,8 +48,8 @@ class AddTokenParserTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $this->createMock(TemplateHierarchyInterface::class),
-                $this->createMock(ContaoCsrfTokenManager::class)
-            )
+                $this->createMock(ContaoCsrfTokenManager::class),
+            ),
         );
 
         $environment->addTokenParser(new AddTokenParser(ContaoExtension::class));

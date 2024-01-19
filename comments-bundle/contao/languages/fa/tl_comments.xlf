@@ -177,9 +177,17 @@
         <source>Delete comment ID %s</source>
         <target>حذف دیدگاه شناسه‌ی %s</target>
       </trans-unit>
-      <trans-unit id="tl_comments.toggle">
-        <source>Publish/unpublish comment ID %s</source>
-        <target>انتشار/لغو انتشار دیدگاه شناسه‌ی %s</target>
+      <trans-unit id="tl_comments.toggle.0">
+        <source>Publish/unpublish comment</source>
+        <target>انتشار/لغو انتشار دیدگاه</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.toggle.1">
+        <source>Unpublish comment ID %s</source>
+        <target>عدم انتشار دیدگاه شناسه %s</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.toggle.2">
+        <source>Publish comment ID %s</source>
+        <target>انتشار دیدگاه شناسه %s</target>
       </trans-unit>
     </body>
   </file>

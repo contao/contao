@@ -35,7 +35,7 @@ class CallbackTest extends TestCase
 
         $this->assertSame(
             ['table' => 'tl_foobar', 'target' => 'foo.bar', 'priority' => 17],
-            $annotation->getAttributes()
+            $annotation->getAttributes(),
         );
     }
 

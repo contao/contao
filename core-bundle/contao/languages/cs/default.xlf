@@ -30,12 +30,12 @@
         <target>Pole &quot;%s&quot; nesmí mít více než %d znaků!</target>
       </trans-unit>
       <trans-unit id="ERR.minval">
-        <source>Field &quot;%s&quot; has to be at least %d!</source>
-        <target>Pole &quot;%s&quot; má být nejméně %d!</target>
+        <source>Field &quot;%s&quot; has to be at least %s!</source>
+        <target>Pole &quot;%s&quot; má být nejméně %s!</target>
       </trans-unit>
       <trans-unit id="ERR.maxval">
-        <source>Field &quot;%s&quot; must not be greater than %d!</source>
-        <target>Pole &quot;%s&quot; musí být větší než %d!</target>
+        <source>Field &quot;%s&quot; must not be greater than %s!</source>
+        <target>Pole &quot;%s&quot; musí být větší než %s!</target>
       </trans-unit>
       <trans-unit id="ERR.digit">
         <source>Please enter digits only!</source>
@@ -163,6 +163,7 @@
       </trans-unit>
       <trans-unit id="ERR.tooManyLoginAttempts">
         <source>Too many failed login attempts, please try again later.</source>
+        <target>Příliš mnoho pokusů o přihlášení, zkuste to prosím později. </target>
       </trans-unit>
       <trans-unit id="ERR.invalidLogin">
         <source>Login failed (note that usernames and passwords are case-sensitive)!</source>
@@ -366,9 +367,11 @@
       </trans-unit>
       <trans-unit id="ERR.noAdminEmailUrl">
         <source>There is no administrator e-mail address set in the &lt;a href=&quot;%s&quot; target=&quot;_top&quot;&gt;system settings&lt;/a&gt;.</source>
+        <target>V &lt;a href=&quot;%s&quot; target=&quot;_top&quot;&gt;Nastavení systému&lt;/a&gt; není dosud uvedená žádná mailová adresa pro administrátora. </target>
       </trans-unit>
       <trans-unit id="ERR.noAdminEmail">
         <source>There is no administrator e-mail address set, please contact the site administrator.</source>
+        <target>Dosud není zadaná mailová adresa administrátora. Prosím kontaktujte správce webové stránky. </target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1957,6 +1960,10 @@
         <source>Metadata</source>
         <target>Metadata</target>
       </trans-unit>
+      <trans-unit id="MSC.imageMetadata">
+        <source>%s metadata</source>
+        <target>%s metadata</target>
+      </trans-unit>
       <trans-unit id="MSC.versioning">
         <source>Version management</source>
         <target>Správa verzí</target>
@@ -1999,12 +2006,15 @@
       </trans-unit>
       <trans-unit id="MSC.folderC">
         <source>Public folder</source>
+        <target>Veřejná složka</target>
       </trans-unit>
       <trans-unit id="MSC.folderCP">
         <source>Protected folder</source>
+        <target>Chráněná složka</target>
       </trans-unit>
       <trans-unit id="MSC.typeOfFile">
         <source>%s file</source>
+        <target>%s soubor</target>
       </trans-unit>
       <trans-unit id="MSC.loadingData">
         <source>Loading data</source>
@@ -2032,6 +2042,7 @@
       </trans-unit>
       <trans-unit id="MSC.copyMultiple">
         <source>Copy repeatedly</source>
+        <target>Opakovaně zkopírovat</target>
       </trans-unit>
       <trans-unit id="MSC.aliasSelected">
         <source>Generate aliases</source>
@@ -2119,6 +2130,7 @@
       </trans-unit>
       <trans-unit id="MSC.guests">
         <source>Guests (not logged in)</source>
+        <target>Hosté (nepřihlášení)</target>
       </trans-unit>
       <trans-unit id="MSC.updateMode">
         <source>Update mode</source>
@@ -2663,12 +2675,15 @@
       </trans-unit>
       <trans-unit id="MSC.favorites">
         <source>Favorites</source>
+        <target>Oblíbené</target>
       </trans-unit>
       <trans-unit id="MSC.favorite">
         <source>Save URL as favorite</source>
+        <target>Uložit odkaz do Oblíbených</target>
       </trans-unit>
       <trans-unit id="MSC.editFavorites">
         <source>Edit favorites</source>
+        <target>Upravit oblíbené</target>
       </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
@@ -2798,14 +2813,21 @@
         <source>visible from %s to %s</source>
         <target>viditelné z %s do %s</target>
       </trans-unit>
+      <trans-unit id="MSC.editImageSize">
+        <source>Edit the image size</source>
+        <target>Upravit obrázkové rozměry</target>
+      </trans-unit>
       <trans-unit id="MSC.booleanNot">
         <source>Not %s</source>
+        <target>Ne %s</target>
       </trans-unit>
       <trans-unit id="MSC.darkMode">
         <source>Dark mode</source>
+        <target>Tmavý vzhled</target>
       </trans-unit>
       <trans-unit id="MSC.lightMode">
         <source>Light mode</source>
+        <target>`Světlý vzhled</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2943,6 +2965,22 @@
         <source>Expand or collapse all nodes</source>
         <target>Rozevřít nebo zavřít všechny uzly</target>
       </trans-unit>
+      <trans-unit id="DCA.expandNodes.0">
+        <source>Expand all</source>
+        <target>Vše rozbalit</target>
+      </trans-unit>
+      <trans-unit id="DCA.expandNodes.1">
+        <source>Expand all nodes</source>
+        <target>Rozbalit všechny uzly</target>
+      </trans-unit>
+      <trans-unit id="DCA.collapseNodes.0">
+        <source>Collapse all</source>
+        <target>Sbalit všechny</target>
+      </trans-unit>
+      <trans-unit id="DCA.collapseNodes.1">
+        <source>Collapse all nodes</source>
+        <target>Sbalit všechny uzly</target>
+      </trans-unit>
       <trans-unit id="DCA.new.0">
         <source>New</source>
         <target>Nové</target>
@@ -2979,9 +3017,17 @@
         <source>Edit the child elements of element ID %s</source>
         <target>Upravit související elementy elementu ID %s</target>
       </trans-unit>
-      <trans-unit id="DCA.toggle">
-        <source>Publish/unpublish element ID %s</source>
-        <target>Zveřejnit/skrýt položku ID %s</target>
+      <trans-unit id="DCA.toggle.0">
+        <source>Publish/unpublish element</source>
+        <target>Zveřejnit / nezveřejnit element</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggle.1">
+        <source>Unpublish element ID %s</source>
+        <target>Nezveřejnit element ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggle.2">
+        <source>Publish element ID %s</source>
+        <target>Zveřejnit element ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.pasteinto.0">
         <source>Paste at the top</source>

@@ -112,7 +112,7 @@ class Automator extends System
 		// Walk through the subfolders
 		foreach (Folder::scan($strRootDir . '/' . $strTargetPath) as $dir)
 		{
-			if (strncmp($dir, '.', 1) !== 0)
+			if (!str_starts_with($dir, '.'))
 			{
 				$objFolder = new Folder($strTargetPath . '/' . $dir);
 				$objFolder->purge();
@@ -137,7 +137,7 @@ class Automator extends System
 		// Walk through the subfolders
 		foreach (Folder::scan($strRootDir . '/' . $strTargetPath) as $dir)
 		{
-			if (strncmp($dir, '.', 1) !== 0)
+			if (!str_starts_with($dir, '.'))
 			{
 				$objFolder = new Folder($strTargetPath . '/' . $dir);
 				$objFolder->purge();
@@ -231,7 +231,7 @@ class Automator extends System
 	 */
 	public function purgeRegistrations()
 	{
-		trigger_deprecation('contao/core-bundle', '5.0', 'Calling "%s()" has been deprecated and will no longer work in Contao 6.0. Use MemberModel::findExpiredRegistrations() instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use "MemberModel::findExpiredRegistrations()" instead.', __METHOD__);
 
 		$objMember = MemberModel::findExpiredRegistrations();
 
@@ -256,7 +256,7 @@ class Automator extends System
 	 */
 	public function purgeOptInTokens()
 	{
-		trigger_deprecation('contao/core-bundle', '5.0', 'Calling "%s()" has been deprecated and will no longer work in Contao 6.0. Use the "contao.opt_in" service instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the "contao.opt_in" service instead.', __METHOD__);
 
 		$optIn = System::getContainer()->get('contao.opt_in');
 		$optIn->purgeTokens();

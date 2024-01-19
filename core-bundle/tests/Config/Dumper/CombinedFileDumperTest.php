@@ -49,10 +49,7 @@ class CombinedFileDumperTest extends TestCase
         $dumper->setHeader('No opening PHP tag');
     }
 
-    /**
-     * @return Filesystem&MockObject
-     */
-    private function mockFilesystem(string $expects): Filesystem
+    private function mockFilesystem(string $expects): Filesystem&MockObject
     {
         $filesystem = $this->createMock(Filesystem::class);
         $filesystem
@@ -64,10 +61,7 @@ class CombinedFileDumperTest extends TestCase
         return $filesystem;
     }
 
-    /**
-     * @return PhpFileLoader&MockObject
-     */
-    private function mockLoader(): PhpFileLoader
+    private function mockLoader(): PhpFileLoader&MockObject
     {
         $loader = $this->createMock(PhpFileLoader::class);
         $loader

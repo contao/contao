@@ -305,7 +305,7 @@ class InsertTagsTest extends TestCase
                     $usedArguments = $arguments;
 
                     return '<figure>foo</figure>';
-                }
+                },
             )
         ;
 

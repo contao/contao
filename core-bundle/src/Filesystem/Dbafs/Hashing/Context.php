@@ -18,6 +18,7 @@ namespace Contao\CoreBundle\Filesystem\Dbafs\Hashing;
 final class Context
 {
     private int|null $newLastModified;
+
     private bool|string|null $result = false;
 
     /**

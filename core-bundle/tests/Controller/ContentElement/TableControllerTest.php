@@ -33,7 +33,7 @@ class TableControllerTest extends ContentElementTestCase
             ],
             null,
             false,
-            $responseContextData
+            $responseContextData,
         );
 
         $expectedOutput = <<<'HTML'
@@ -76,7 +76,7 @@ class TableControllerTest extends ContentElementTestCase
             ],
             null,
             false,
-            $responseContextData
+            $responseContextData,
         );
 
         $expectedOutput = <<<'HTML'
@@ -112,7 +112,7 @@ class TableControllerTest extends ContentElementTestCase
 
         $this->assertMatchesRegularExpression(
             '/<script>[^<]+tablesort.min.js[^<]+<\/script>/',
-            $additionalHeadCode['tablesort_script']
+            $additionalHeadCode['tablesort_script'],
         );
     }
 }

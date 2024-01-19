@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\BackendUser;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Image\ImageSizes;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 #[AsCallback(table: 'tl_layout', target: 'fields.lightboxSize.options')]
 #[AsCallback(table: 'tl_content', target: 'fields.size.options')]

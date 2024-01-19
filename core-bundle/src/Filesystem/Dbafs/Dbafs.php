@@ -39,15 +39,21 @@ use Symfony\Contracts\Service\ResetInterface;
 class Dbafs implements DbafsInterface, ResetInterface
 {
     final public const FILE_MARKER_EXCLUDED = '.nosync';
+
     final public const FILE_MARKER_PUBLIC = '.public';
 
     private const RESOURCE_FILE = ChangeSet::TYPE_FILE;
+
     private const RESOURCE_DIRECTORY = ChangeSet::TYPE_DIRECTORY;
+
     private const RESOURCE_DOES_NOT_EXIST = -1;
+
     private const PATH_SUFFIX_SHALLOW_DIRECTORY = '//';
 
     private string $dbPathPrefix = '';
+
     private int $bulkInsertSize = 100;
+
     private bool $useLastModified = true;
 
     /**
@@ -137,12 +143,12 @@ class Dbafs implements DbafsInterface, ResetInterface
         if ($deep) {
             $rows = $this->connection->fetchAllAssociative(
                 "SELECT * FROM $table WHERE path LIKE ? ORDER BY path",
-                [$searchLiteral]
+                [$searchLiteral],
             );
         } else {
             $rows = $this->connection->fetchAllAssociative(
                 "SELECT * FROM $table WHERE path LIKE ? AND path NOT LIKE ? ORDER BY path",
-                [$searchLiteral, "$searchLiteral/%"]
+                [$searchLiteral, "$searchLiteral/%"],
             );
         }
 
@@ -169,22 +175,14 @@ class Dbafs implements DbafsInterface, ResetInterface
         ];
 
         $columnFilter = array_flip($this->getExtraMetadataColumns());
-
-        $event = new StoreDbafsMetadataEvent(
-            $this->table,
-            $row,
-            // Remove non-matching columns before dispatching event
-            array_intersect_key($metadata, $columnFilter)
-        );
+        $event = new StoreDbafsMetadataEvent($this->table, $row, $metadata);
 
         $this->eventDispatcher->dispatch($event);
 
-        $this->connection->update(
-            $this->table,
-            // Filter columns again before performing the query
-            array_intersect_key($event->getRow(), $columnFilter),
-            ['uuid' => $uuid]
-        );
+        // Filter columns again before performing the query
+        if ($data = array_intersect_key($event->getRow(), $columnFilter)) {
+            $this->connection->update($this->table, $data, ['uuid' => $uuid]);
+        }
 
         // Update the cache
         $this->records[$path]['extra'] = $event->getExtraMetadata();
@@ -274,7 +272,7 @@ class Dbafs implements DbafsInterface, ResetInterface
             isset($record['lastModified']) ? (int) $record['lastModified'] : null,
             isset($record['fileSize']) ? (int) $record['fileSize'] : null,
             $record['mimeType'] ?? null,
-            [...$record['extra'], ...['uuid' => Uuid::fromBinary($uuid)]]
+            [...$record['extra'], ...['uuid' => Uuid::fromBinary($uuid)]],
         );
     }
 
@@ -386,7 +384,7 @@ class Dbafs implements DbafsInterface, ResetInterface
         // Ignore all children of shallow directories
         $shallowDirectories = array_filter(
             $searchPaths,
-            static fn (string $path): bool => self::PATH_SUFFIX_SHALLOW_DIRECTORY === substr($path, -2)
+            static fn (string $path): bool => self::PATH_SUFFIX_SHALLOW_DIRECTORY === substr($path, -2),
         );
 
         if ($shallowDirectories) {
@@ -404,7 +402,7 @@ class Dbafs implements DbafsInterface, ResetInterface
         foreach ($itemsToCreate as $path => $dataToInsert) {
             $candidates = array_intersect(
                 array_keys($itemsToDelete),
-                array_keys($allDbHashesByPath, $dataToInsert[ChangeSet::ATTR_HASH], true)
+                array_keys($allDbHashesByPath, $dataToInsert[ChangeSet::ATTR_HASH], true),
             );
 
             if (\count($candidates) > 1) {
@@ -412,7 +410,7 @@ class Dbafs implements DbafsInterface, ResetInterface
                 // identify them by their name.
                 $candidates = array_filter(
                     $candidates,
-                    static fn (string $candidatePath): bool => basename((string) $path) === basename($candidatePath)
+                    static fn (string $candidatePath): bool => basename((string) $path) === basename($candidatePath),
                 );
             }
 
@@ -444,7 +442,7 @@ class Dbafs implements DbafsInterface, ResetInterface
             array_reverse(array_values($itemsToCreate)),
             $itemsToUpdate,
             $itemsToDelete,
-            $lastModifiedUpdates
+            $lastModifiedUpdates,
         );
     }
 
@@ -452,7 +450,7 @@ class Dbafs implements DbafsInterface, ResetInterface
     {
         $row = $this->connection->fetchAssociative(
             sprintf('SELECT * FROM %s WHERE uuid=?', $this->connection->quoteIdentifier($this->table)),
-            [$uuid]
+            [$uuid],
         );
 
         if (false === $row) {
@@ -468,7 +466,7 @@ class Dbafs implements DbafsInterface, ResetInterface
     {
         $row = $this->connection->fetchAssociative(
             sprintf('SELECT * FROM %s WHERE id=?', $this->connection->quoteIdentifier($this->table)),
-            [$id]
+            [$id],
         );
 
         if (false === $row) {
@@ -484,7 +482,7 @@ class Dbafs implements DbafsInterface, ResetInterface
     {
         $row = $this->connection->fetchAssociative(
             sprintf('SELECT * FROM %s WHERE path=?', $this->connection->quoteIdentifier($this->table)),
-            [$this->convertToDatabasePath($path)]
+            [$this->convertToDatabasePath($path)],
         );
 
         if (false === $row) {
@@ -598,9 +596,9 @@ class Dbafs implements DbafsInterface, ResetInterface
                         'INSERT INTO %s (%s) VALUES %s',
                         $table,
                         $columns,
-                        implode(', ', array_fill(0, \count($chunk), $placeholders))
+                        implode(', ', array_fill(0, \count($chunk), $placeholders)),
                     ),
-                    array_merge(...array_map('array_values', $chunk))
+                    array_merge(...array_map('array_values', $chunk)),
                 );
             }
         }
@@ -627,19 +625,16 @@ class Dbafs implements DbafsInterface, ResetInterface
             $this->connection->update(
                 $this->table,
                 $dataToUpdate,
-                ['path' => $this->convertToDatabasePath($itemToUpdate->getExistingPath())]
+                ['path' => $this->convertToDatabasePath($itemToUpdate->getExistingPath())],
             );
         }
 
         // Deletes
         foreach ($changeSet->getItemsToDelete() as $itemToDelete) {
-            $this->connection->delete(
-                $this->table,
-                [
-                    'path' => $this->convertToDatabasePath($itemToDelete->getPath()),
-                    'type' => $itemToDelete->isFile() ? 'file' : 'folder',
-                ]
-            );
+            $this->connection->delete($this->table, [
+                'path' => $this->convertToDatabasePath($itemToDelete->getPath()),
+                'type' => $itemToDelete->isFile() ? 'file' : 'folder',
+            ]);
         }
 
         $this->connection->commit();
@@ -673,7 +668,7 @@ class Dbafs implements DbafsInterface, ResetInterface
                 "SELECT path, uuid, hash, IF(type='folder', 1, 0), %s FROM %s",
                 $this->useLastModified ? 'lastModified' : 'NULL',
                 $this->connection->quoteIdentifier($this->table),
-            )
+            ),
         );
 
         $fullScope = '' === $searchPaths[0];
@@ -872,7 +867,7 @@ class Dbafs implements DbafsInterface, ResetInterface
 
                 return $path;
             },
-            $paths
+            $paths,
         );
 
         if (!$paths || \in_array('', $paths, true)) {
@@ -900,7 +895,7 @@ class Dbafs implements DbafsInterface, ResetInterface
 
                 return $path;
             },
-            $paths
+            $paths,
         );
 
         $shallowDirectories = array_diff($shallowDirectories, $deepDirectories);
@@ -943,7 +938,7 @@ class Dbafs implements DbafsInterface, ResetInterface
     {
         $columns = array_map(
             static fn (Column $column): string => $column->getName(),
-            $this->connection->createSchemaManager()->listTableColumns($this->table)
+            $this->connection->createSchemaManager()->listTableColumns($this->table),
         );
 
         $defaultFields = [

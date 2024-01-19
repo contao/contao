@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_page.alias.1">
         <source>The page alias is a unique reference to the page which can be called instead of its numeric ID.</source>
-        <target>Sayfa kısaltması sayfa sayısal kodu olarak kullanılacak eşsiz bir belirteçtir.</target>
+        <target>Sayfa kısaltması sayfanın sayısal kimliği olarak kullanılacak eşsiz bir belirteçtir.</target>
       </trans-unit>
       <trans-unit id="tl_page.requireItem.0">
         <source>Require an item</source>
@@ -79,7 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_page.maintenanceMode.1">
         <source>Show visitors a page that this website is currently being maintained.</source>
-        <target>Bu seçenek etkinleştirildiğinde, ziyaretçilere web sitesinin bakımda olduğunu belirten bir sayfa görüntülenir.</target>
+        <target>Bu seçenek etkinleştirildiğinde, ziyaretçilere sitenin bakımda olduğunu belirten bir sayfa görüntülenir.</target>
       </trans-unit>
       <trans-unit id="tl_page.description.0">
         <source>Page description</source>
@@ -96,6 +96,14 @@
       <trans-unit id="tl_page.redirect.1">
         <source>Please choose the redirect type.</source>
         <target>Lütfen yönlendirme türünü seçin.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.alwaysForward.0">
+        <source>Always redirect</source>
+        <target>Her zaman yönlendirilsin</target>
+      </trans-unit>
+      <trans-unit id="tl_page.alwaysForward.1">
+        <source>Redirect to the target page even if there are query or path parameters.</source>
+        <target>Bu seçenek etkinleştirildiğinde, adreste sorgu ya da yol parametreleri olsa bile hedef sayfaya yönlendirme yapılır.</target>
       </trans-unit>
       <trans-unit id="tl_page.jumpTo.0">
         <source>Redirect page</source>
@@ -127,15 +135,15 @@
       </trans-unit>
       <trans-unit id="tl_page.disableLanguageRedirect.1">
         <source>Do not redirect visitors to this website root based on their preferred browser language.</source>
-        <target>Bu seçenek etkinleştirildiğinde, ziyaretçiler yeğledikleri web tarayıcı diline göre bu web sitesi köküne yönlendirilmez.</target>
+        <target>Bu seçenek etkinleştirildiğinde, ziyaretçiler kullandıkları tarayıcı diline göre bu sitenin köküne yönlendirilmez.</target>
       </trans-unit>
       <trans-unit id="tl_page.favicon.0">
         <source>Favicon</source>
-        <target>Favicon</target>
+        <target>Site simgesi</target>
       </trans-unit>
       <trans-unit id="tl_page.favicon.1">
         <source>Here you can select a favicon for the website.</source>
-        <target>Buradan web siteniz için bir favicon seçebilirsiniz.</target>
+        <target>Buradan siteniz için bir site simgesi seçebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_page.robotsTxt.0">
         <source>Custom robots.txt content</source>
@@ -175,7 +183,7 @@
       </trans-unit>
       <trans-unit id="tl_page.mailerTransport.1">
         <source>Here you can override the mailer transport used to send e-mails on this website.</source>
-        <target>Buradan bu web sitesinin e-postalarının gönderilmesi için kullanılacak e-posta aktarıcıyı değiştirebilirsiniz.</target>
+        <target>Buradan bu sitenin e-postalarının gönderilmesi için kullanılacak e-posta aktarıcıyı değiştirebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_page.enableCanonical.0">
         <source>Enable rel=&quot;canonical&quot;</source>
@@ -183,7 +191,7 @@
       </trans-unit>
       <trans-unit id="tl_page.enableCanonical.1">
         <source>Add rel=&quot;canonical&quot; tags to the website.</source>
-        <target>Bu seçenek etkinleştirildiğinde, web sitesine rel=&quot;canonical&quot; kod imleri eklenir.</target>
+        <target>Bu seçenek etkinleştirildiğinde, siteye rel=&quot;canonical&quot; kod imleri eklenir.</target>
       </trans-unit>
       <trans-unit id="tl_page.canonicalLink.0">
         <source>Custom URL</source>
@@ -191,7 +199,7 @@
       </trans-unit>
       <trans-unit id="tl_page.canonicalLink.1">
         <source>Here you can set a custom canonical URL like https://example.com/.</source>
-        <target>Buradan bir özel kanonik adres ayarlayabilirsiniz. Örnek: https://websitem.com/.</target>
+        <target>Buradan bir özel kanonik adres ayarlayabilirsiniz. Örnek: https://sitem.com/.</target>
       </trans-unit>
       <trans-unit id="tl_page.canonicalKeepParams.0">
         <source>Query parameters</source>
@@ -203,7 +211,7 @@
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>
-        <target>Web sitesi yöneticisinin e-posta adresi</target>
+        <target>Site yöneticisinin e-posta adresi</target>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.1">
         <source>This e-mail address will be used to send and receive system messages.</source>
@@ -255,7 +263,7 @@
       </trans-unit>
       <trans-unit id="tl_page.urlPrefix.1">
         <source>Enter a URL prefix (e.g. the language) that will be prepended to all page aliases below this website root page.</source>
-        <target>Bu web sitesinin kök sayfası altındaki tüm sayfa kısaltmalarının başına eklenecek adres ön ekini (dil gibi) yazın.</target>
+        <target>Bu sitenin kök sayfası altındaki tüm sayfa kısaltmalarının başına eklenecek adres ön ekini (dil gibi) yazın.</target>
       </trans-unit>
       <trans-unit id="tl_page.urlSuffix.0">
         <source>URL suffix</source>
@@ -271,7 +279,7 @@
       </trans-unit>
       <trans-unit id="tl_page.useSSL.1">
         <source>Here you can select which protocol to use for the website.</source>
-        <target>Buradan web siteniz için kullanılacak iletişim kuralını seçebilirsiniz.</target>
+        <target>Buradan siteniz için kullanılacak iletişim kuralını seçebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_page.autoforward.0">
         <source>Forward to another page</source>
@@ -431,14 +439,14 @@
       </trans-unit>
       <trans-unit id="tl_page.published.1">
         <source>Make the page publicly visible on the website.</source>
-        <target>Bu seçenek etkinleştirildiğinde, bu sayfa web sitesinde herkese açık olarak yayınlanır.</target>
+        <target>Bu seçenek etkinleştirildiğinde, bu sayfa sitede herkese açık olarak yayınlanır.</target>
       </trans-unit>
       <trans-unit id="tl_page.start.0">
         <source>Show from</source>
         <target>Görüntülenme başlangıcı</target>
       </trans-unit>
       <trans-unit id="tl_page.start.1">
-        <source>If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>Sayfanın belirli bir tarih/saatten önce sitede görüntülenmesini engellemek isterseniz buraya yazabilirsiniz. Bunun dışında bu alanı boş bırakın.</target>
       </trans-unit>
       <trans-unit id="tl_page.stop.0">
@@ -446,7 +454,7 @@
         <target>Görüntülenme bitişi</target>
       </trans-unit>
       <trans-unit id="tl_page.stop.1">
-        <source>If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>Sayfanın belirli bir tarih/saatten sonra sitede görüntülenmesini engellemek isterseniz buraya yazabilirsiniz. Bunun dışında bu alanı boş bırakın.</target>
       </trans-unit>
       <trans-unit id="tl_page.enforceTwoFactor.0">
@@ -499,7 +507,7 @@
       </trans-unit>
       <trans-unit id="tl_page.website_legend">
         <source>Website settings</source>
-        <target>Web sitesi ayarları</target>
+        <target>Site ayarları</target>
       </trans-unit>
       <trans-unit id="tl_page.global_legend">
         <source>Global settings</source>
@@ -579,31 +587,39 @@
       </trans-unit>
       <trans-unit id="tl_page.show">
         <source>Show the details of page ID %s</source>
-        <target>%s kodlu sayfanın ayrıntılarını görüntüle</target>
+        <target>%s kimlikli sayfanın ayrıntılarını görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_page.edit">
         <source>Edit page ID %s</source>
-        <target>%s kodlu sayfayı düzenle</target>
+        <target>%s kimlikli sayfayı düzenle</target>
       </trans-unit>
       <trans-unit id="tl_page.cut">
         <source>Move page ID %s</source>
-        <target>%s kodlu sayfayı taşı</target>
+        <target>%s kimlikli sayfayı taşı</target>
       </trans-unit>
       <trans-unit id="tl_page.copy">
         <source>Duplicate page ID %s</source>
-        <target>%s kodlu sayfayı kopyala</target>
+        <target>%s kimlikli sayfayı kopyala</target>
       </trans-unit>
       <trans-unit id="tl_page.copyChilds">
         <source>Duplicate page ID %s with its subpages</source>
-        <target>%s kodlu sayfayı ve alt sayfalarını kopyala</target>
+        <target>%s kimlikli sayfayı ve alt sayfalarını kopyala</target>
       </trans-unit>
       <trans-unit id="tl_page.delete">
         <source>Delete page ID %s</source>
-        <target>%s kodlu sayfayı sil</target>
+        <target>%s kimlikli sayfayı sil</target>
       </trans-unit>
-      <trans-unit id="tl_page.toggle">
-        <source>Publish/unpublish page ID %s</source>
-        <target>%s kodlu sayfayı yayınla/yayından kaldır</target>
+      <trans-unit id="tl_page.toggle.0">
+        <source>Publish/unpublish page</source>
+        <target>Sayfayı yayınla/yayından kaldır</target>
+      </trans-unit>
+      <trans-unit id="tl_page.toggle.1">
+        <source>Unpublish page ID %s</source>
+        <target>%s kimlikli sayfayı yayından kaldır</target>
+      </trans-unit>
+      <trans-unit id="tl_page.toggle.2">
+        <source>Publish page ID %s</source>
+        <target>%s kimlikli sayfayı yayınla</target>
       </trans-unit>
       <trans-unit id="tl_page.pasteinto.0">
         <source>Paste at the top</source>
@@ -611,15 +627,15 @@
       </trans-unit>
       <trans-unit id="tl_page.pasteinto.1">
         <source>Paste into page ID %s</source>
-        <target>%s kodlu sayfaya yapıştır</target>
+        <target>%s kimlikli sayfaya yapıştır</target>
       </trans-unit>
       <trans-unit id="tl_page.pasteafter.1">
         <source>Paste after page ID %s</source>
-        <target>%s kodlu sayfadan sonra yapıştır</target>
+        <target>%s kimlikli sayfadan sonra yapıştır</target>
       </trans-unit>
       <trans-unit id="tl_page.articles">
         <source>Edit the articles of page ID %s</source>
-        <target>%s kodlu sayfanın makalelerini görüntüle</target>
+        <target>%s kimlikli sayfanın makalelerini görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_page.routeConflicts.0">
         <source>Route conflicts</source>
@@ -631,7 +647,7 @@
       </trans-unit>
       <trans-unit id="tl_page.relCanonical">
         <source>Enable canonical URLs in the website root page to enable this configuration.</source>
-        <target>Bu yapılandırmayı kullanabilmek için web sitesi kök sayfasında kanonik adresleri etkinleştirin.</target>
+        <target>Bu yapılandırmayı kullanabilmek için site kök sayfasında kanonik adresleri etkinleştirin.</target>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+rm -rf cypress/webspace/vendor/contao/manager-bundle
+composer up --working-dir=cypress/webspace
+
+symfony server:start --port=8765 --dir=cypress/webspace --daemon
+yarn cypress run
+symfony server:stop --dir=cypress/webspace

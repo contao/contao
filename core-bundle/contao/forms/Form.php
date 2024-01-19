@@ -38,6 +38,7 @@ use Symfony\Component\HttpFoundation\Response;
 class Form extends Hybrid
 {
 	public const SESSION_KEY = 'contao.form.data';
+
 	public const SESSION_CONFIRMATION_KEY = 'contao.form.confirmation';
 
 	/**
@@ -153,16 +154,21 @@ class Form extends Hybrid
 		$this->Template->formSubmit = $formId;
 		$this->Template->method = ($this->method == 'GET') ? 'get' : 'post';
 
-		$flashBag = System::getContainer()->get('request_stack')->getSession()->getFlashBag();
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-		// Add a confirmation to the template and remove it afterward
-		if ($flashBag->has(self::SESSION_CONFIRMATION_KEY))
+		if ($request?->hasPreviousSession())
 		{
-			$confirmationData = $flashBag->peek(self::SESSION_CONFIRMATION_KEY);
+			$flashBag = $request->getSession()->getFlashBag();
 
-			if (isset($confirmationData['id']) && $this->id === $confirmationData['id'])
+			// Add a confirmation to the template and remove it afterward
+			if ($flashBag->has(self::SESSION_CONFIRMATION_KEY))
 			{
-				$this->Template->message = $flashBag->get(self::SESSION_CONFIRMATION_KEY)['message'];
+				$confirmationData = $flashBag->peek(self::SESSION_CONFIRMATION_KEY);
+
+				if (isset($confirmationData['id']) && $this->id === $confirmationData['id'])
+				{
+					$this->Template->message = $flashBag->get(self::SESSION_CONFIRMATION_KEY)['message'];
+				}
 			}
 		}
 
@@ -187,6 +193,8 @@ class Form extends Hybrid
 					$arrFields[] = $objFields->current();
 				}
 			}
+
+			System::getContainer()->get('contao.cache.entity_tags')->tagWith($objFields);
 		}
 
 		// HOOK: compile form fields
@@ -308,7 +316,7 @@ class Form extends Hybrid
 					$file->delete();
 				}
 
-				if (is_file($upload['tmp_name']))
+				if (isset($upload['tmp_name']) && is_file($upload['tmp_name']))
 				{
 					unlink($upload['tmp_name']);
 				}
@@ -349,10 +357,14 @@ class Form extends Hybrid
 		$this->Template->ajax = $this->isAjaxEnabled();
 
 		// Get the target URL
-		if ($this->method == 'GET' && ($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
+		if ($this->method == 'GET')
 		{
-			/** @var PageModel $objTarget */
-			$this->Template->action = $objTarget->getFrontendUrl();
+			$objTarget = $this->objModel->getRelated('jumpTo');
+
+			if ($objTarget instanceof PageModel)
+			{
+				$this->Template->action = System::getContainer()->get('contao.routing.content_url_generator')->generate($objTarget);
+			}
 		}
 	}
 
@@ -389,6 +401,12 @@ class Form extends Hybrid
 			{
 				System::importStatic($callback[0])->{$callback[1]}($arrSubmitted, $arrLabels, $arrFields, $this, $arrFiles);
 			}
+		}
+
+		// Do not process the form data if there are errors (see #6611)
+		if ($this->hasErrors())
+		{
+			return;
 		}
 
 		// Store submitted data (possibly modified by hook or data added) in the session for 10 seconds,
@@ -564,7 +582,7 @@ class Form extends Hybrid
 					$arrSet[$k] = $v;
 
 					// Convert date formats into timestamps (see #6827)
-					if ($arrSet[$k] && \in_array($arrFields[$k]->rgxp, array('date', 'time', 'datim')))
+					if ($arrSet[$k] && isset($arrFields[$k]) && \in_array($arrFields[$k]->rgxp, array('date', 'time', 'datim')))
 					{
 						$objDate = new Date($arrSet[$k], Date::getFormatFromRgxp($arrFields[$k]->rgxp));
 						$arrSet[$k] = $objDate->tstamp;
@@ -652,7 +670,7 @@ class Form extends Hybrid
 			$request = $requestStack->getCurrentRequest();
 
 			// Throw the response exception if it's an AJAX request
-			if ($request && $targetPageData === null && $this->isAjaxEnabled() && $request->isXmlHttpRequest() && $request->headers->get('X-Contao-Ajax-Form') === $this->getFormId())
+			if ($targetPageData === null && $this->isAjaxEnabled() && $request?->isXmlHttpRequest() && $request->headers->get('X-Contao-Ajax-Form') === $this->getFormId())
 			{
 				$confirmationTemplate = new FrontendTemplate('form_message');
 				$confirmationTemplate->setData($this->Template->getData());

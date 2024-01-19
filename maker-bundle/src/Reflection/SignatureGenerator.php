@@ -49,7 +49,7 @@ class SignatureGenerator
             'public function %s(%s)%s',
             $methodName,
             implode(', ', $parameterTemplates),
-            $this->getReturnType($method)
+            $this->getReturnType($method),
         );
     }
 

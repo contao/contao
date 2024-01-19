@@ -48,13 +48,13 @@ class SymlinkedLocalFilesProviderTest extends TestCase
         $provider = new SymlinkedLocalFilesProvider(
             $this->createMock(FilesystemAdapter::class),
             'upload/dir',
-            $this->createMock(RequestStack::class)
+            $this->createMock(RequestStack::class),
         );
 
         $uri = $provider->getUri(
             $this->createMock(FilesystemAdapter::class),
             'path/to/resource.txt',
-            null
+            null,
         );
 
         $this->assertNull($uri);

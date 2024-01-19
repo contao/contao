@@ -166,16 +166,16 @@
         <target>Tabellhuvud</target>
       </trans-unit>
       <trans-unit id="tl_content.thead.1">
-        <source>Make the first row of the table the table header.</source>
-        <target>Om du väljer detta alternativ kommer första raden i tabellen att användas som tabellhuvud.</target>
+        <source>Make the first row the table header.</source>
+        <target>Gör den första raden till tabellrubrik.</target>
       </trans-unit>
       <trans-unit id="tl_content.tfoot.0">
         <source>Add table footer</source>
         <target>Tabellfot</target>
       </trans-unit>
       <trans-unit id="tl_content.tfoot.1">
-        <source>Make the last row of the table the table footer.</source>
-        <target>Om du väljer detta alternativ kommer första raden i tabellen att användas som tabellfot.</target>
+        <source>Make the last row the table footer.</source>
+        <target>Gör den sista raden till tabellsidfot.</target>
       </trans-unit>
       <trans-unit id="tl_content.tleft.0">
         <source>Use row headers</source>
@@ -320,6 +320,14 @@
       <trans-unit id="tl_content.linkTitle.1">
         <source>The link text will be displayed instead of the target URL.</source>
         <target>Länktiteln kommer att visas för besökaren istället för URL'en.&lt;br /&gt;Om du använder en bildlänk kommer bilden att visas istället för länktiteln.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.overwriteLink.0">
+        <source>Overwrite link</source>
+        <target>Skriv över länk</target>
+      </trans-unit>
+      <trans-unit id="tl_content.overwriteLink.1">
+        <source>Set a custom link text and link title.</source>
+        <target>Ställ in en anpassad länktext och länktitel.</target>
       </trans-unit>
       <trans-unit id="tl_content.titleText.0">
         <source>Link title</source>
@@ -630,16 +638,16 @@
         <target>Börja visa fr.o.m</target>
       </trans-unit>
       <trans-unit id="tl_content.start.1">
-        <source>If you want to prevent the element from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Om du vill förhindra att elementet visas på webbplatsen före ett visst datum / tid kan du ange det här. Lämna annars fältet tomt.</target>
+        <source>If you want to prevent the element from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Om du vill förhindra att elementet visas på webbplatsen före ett visst datum/tid kan du ange det här. Annars lämnar du fältet tomt.</target>
       </trans-unit>
       <trans-unit id="tl_content.stop.0">
         <source>Show until</source>
         <target>Sluta visa fr.o.m</target>
       </trans-unit>
       <trans-unit id="tl_content.stop.1">
-        <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Om du vill förhindra att elementet visas på webbplatsen efter ett visst datum / tid kan du ange det här. Lämna annars fältet tomt.</target>
+        <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Om du vill förhindra att elementet visas på hemsidan efter ett visst datum/tid kan du ange det här. Annars lämnar du fältet tomt.</target>
       </trans-unit>
       <trans-unit id="tl_content.type_legend">
         <source>Element type</source>
@@ -893,9 +901,17 @@
         <source>Edit content element ID %s</source>
         <target>Redigera innehållselement med ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_content.toggle">
-        <source>Hide/unhide content element ID %s</source>
-        <target>Dölj / visa innehållselement-ID %s</target>
+      <trans-unit id="tl_content.toggle.0">
+        <source>Hide/unhide content element</source>
+        <target>Dölj/visa innehållselement</target>
+      </trans-unit>
+      <trans-unit id="tl_content.toggle.1">
+        <source>Hide content element ID %s</source>
+        <target>Dölj innehållselement ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_content.toggle.2">
+        <source>Unhide content element ID %s</source>
+        <target>Visa innehållselement ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>

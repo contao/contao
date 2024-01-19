@@ -305,7 +305,7 @@ class SimpleTokenParserTest extends TestCase
     {
         $this->assertSame(
             $match ? 'match' : 'no-match',
-            $this->getParser()->parse('{if value}match{else}no-match{endif}', ['value' => $value])
+            $this->getParser()->parse('{if value}match{else}no-match{endif}', ['value' => $value]),
         );
     }
 
@@ -342,7 +342,7 @@ class SimpleTokenParserTest extends TestCase
 
         $this->assertSame(
             $match ? 'match' : 'no-match',
-            $parser->parse("{if $condition}match{else}no-match{endif}", ['foobar' => 1])
+            $parser->parse("{if $condition}match{else}no-match{endif}", ['foobar' => 1]),
         );
     }
 
@@ -509,7 +509,7 @@ class SimpleTokenParserTest extends TestCase
 
         $this->assertSame(
             'This is <?php echo "I am evil";?> evil',
-            $this->getParser()->parse('This is ##open####open2####close## evil', $data)
+            $this->getParser()->parse('This is ##open####open2####close## evil', $data),
         );
     }
 
@@ -554,12 +554,12 @@ class SimpleTokenParserTest extends TestCase
         };
 
         $simpleTokenParser = $this->getParser(
-            new SimpleTokenExpressionLanguage(null, new IteratorAggregateStub([$stringExtensionProvider]))
+            new SimpleTokenExpressionLanguage(null, new IteratorAggregateStub([$stringExtensionProvider])),
         );
 
         $this->assertSame(
             'Custom function evaluated!',
-            $simpleTokenParser->parse("Custom function {if strtoupper(token) === 'FOO'}evaluated!{endif}", ['token' => 'foo'])
+            $simpleTokenParser->parse("Custom function {if strtoupper(token) === 'FOO'}evaluated!{endif}", ['token' => 'foo']),
         );
     }
 

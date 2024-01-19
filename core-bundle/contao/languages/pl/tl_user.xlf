@@ -244,16 +244,14 @@
         <target>Aktywuj w</target>
       </trans-unit>
       <trans-unit id="tl_user.start.1">
-        <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Jeśli nie chcesz, żeby konto redaktora było aktywne przed jakąś datą, możesz wprowadzić ją tutaj. W przeciwnym wypadku zostaw to pole puste.</target>
+        <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_user.stop.0">
         <source>Deactivate on</source>
         <target>Deaktywuj w</target>
       </trans-unit>
       <trans-unit id="tl_user.stop.1">
-        <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Jeśli nie chcesz żeby konto było aktywne po jakiejś dacie, możesz wprowadzić ją tutaj. W przeciwnym wypadku zostaw to pole puste.</target>
+        <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_user.session.0">
         <source>Purge data</source>
@@ -387,9 +385,15 @@
         <source>Delete user ID %s</source>
         <target>Usuń redaktora ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_user.toggle">
-        <source>Activate/deactivate user ID %s</source>
-        <target>Aktywuj/deaktywuj redaktora ID %s</target>
+      <trans-unit id="tl_user.toggle.0">
+        <source>Activate/deactivate user</source>
+        <target>Aktywuj/deaktywuj redaktora</target>
+      </trans-unit>
+      <trans-unit id="tl_user.toggle.1">
+        <source>Deactivate user ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_user.toggle.2">
+        <source>Activate user ID %s</source>
       </trans-unit>
       <trans-unit id="tl_user.su">
         <source>Switch to user ID %s</source>

@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="2" resname="contao_manager_title">
         <source>Manage updates and extensions and maintain the application</source>
-        <target>Güncellemeleri ve eklentileri yöneterek uygulamayı bakımlı tutun</target>
+        <target>Güncellemeleri ve eklentileri yöneterek uygulamanın bakımını yapın</target>
       </trans-unit>
     </body>
   </file>

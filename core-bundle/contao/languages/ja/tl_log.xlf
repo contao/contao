@@ -59,15 +59,19 @@
       </trans-unit>
       <trans-unit id="tl_log.uri.0">
         <source>Request URI</source>
+        <target>要求したURI</target>
       </trans-unit>
       <trans-unit id="tl_log.uri.1">
         <source>The URI of the request</source>
+        <target>要求のURI</target>
       </trans-unit>
       <trans-unit id="tl_log.page.0">
         <source>Page ID</source>
+        <target>ページID</target>
       </trans-unit>
       <trans-unit id="tl_log.page.1">
         <source>The ID of the page</source>
+        <target>ページのID</target>
       </trans-unit>
       <trans-unit id="tl_log.BE">
         <source>Back end</source>

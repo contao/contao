@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_page.language.1">
         <source>Please enter the page language according to the ISO-639 standard (e.g. &quot;en&quot; for English or &quot;en_US&quot; for American English).</source>
-        <target>Bitte geben Sie die Sprache der Seite gemäß des ISO-639 Standards ein (z. B. &quot;de&quot; für Deutsch oder &quot;de_CH&quot; für Schweizerdeutsch).</target>
+        <target>Bitte geben Sie die Sprache der Seite gemäß dem ISO-639 Standard ein (z. B. &quot;de&quot; für Deutsch oder &quot;de_CH&quot; für Schweizerdeutsch).</target>
       </trans-unit>
       <trans-unit id="tl_page.robots.0">
         <source>Robots tag</source>
@@ -96,6 +96,14 @@
       <trans-unit id="tl_page.redirect.1">
         <source>Please choose the redirect type.</source>
         <target>Bitte wählen Sie den Typ der Weiterleitung.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.alwaysForward.0">
+        <source>Always redirect</source>
+        <target>Immer weiterleiten</target>
+      </trans-unit>
+      <trans-unit id="tl_page.alwaysForward.1">
+        <source>Redirect to the target page even if there are query or path parameters.</source>
+        <target>Weiterleitung zur Zielseite, auch wenn Query- oder Pfadparameter vorhanden sind.</target>
       </trans-unit>
       <trans-unit id="tl_page.jumpTo.0">
         <source>Redirect page</source>
@@ -438,7 +446,7 @@
         <target>Anzeigen ab</target>
       </trans-unit>
       <trans-unit id="tl_page.start.1">
-        <source>If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>Wenn Sie die Seite erst ab einem bestimmten Zeitpunkt auf der Webseite anzeigen möchten, können Sie diesen hier eingeben. Andernfalls lassen Sie das Feld leer. </target>
       </trans-unit>
       <trans-unit id="tl_page.stop.0">
@@ -446,7 +454,7 @@
         <target>Anzeigen bis</target>
       </trans-unit>
       <trans-unit id="tl_page.stop.1">
-        <source>If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>Wenn Sie die Seite nur bis zu einem bestimmten Zeitpunkt auf der Webseite anzeigen möchten, können Sie diesen hier eingeben. Andernfalls lassen Sie das Feld leer. </target>
       </trans-unit>
       <trans-unit id="tl_page.enforceTwoFactor.0">
@@ -601,9 +609,17 @@
         <source>Delete page ID %s</source>
         <target>Seite ID %s löschen</target>
       </trans-unit>
-      <trans-unit id="tl_page.toggle">
-        <source>Publish/unpublish page ID %s</source>
-        <target>Seite ID %s veröffentlichen/unveröffentlichen</target>
+      <trans-unit id="tl_page.toggle.0">
+        <source>Publish/unpublish page</source>
+        <target>Seite veröffentlichen/unveröffentlichen</target>
+      </trans-unit>
+      <trans-unit id="tl_page.toggle.1">
+        <source>Unpublish page ID %s</source>
+        <target>Seite ID %s unveröffentlichen</target>
+      </trans-unit>
+      <trans-unit id="tl_page.toggle.2">
+        <source>Publish page ID %s</source>
+        <target>Seite ID %s veröffentlichen</target>
       </trans-unit>
       <trans-unit id="tl_page.pasteinto.0">
         <source>Paste at the top</source>

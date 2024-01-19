@@ -21,6 +21,7 @@ use Spatie\SchemaOrg\Type;
 class JsonLdManager
 {
     final public const SCHEMA_ORG = 'https://schema.org';
+
     final public const SCHEMA_CONTAO = 'https://schema.contao.org';
 
     /**
@@ -58,7 +59,7 @@ class JsonLdManager
             $data[] = $graph->toArray();
         }
 
-        // Reset graphs
+        // Reset the graphs
         $this->graphs = [];
 
         if (!$data) {
@@ -67,7 +68,17 @@ class JsonLdManager
 
         ArrayUtil::recursiveKeySort($data);
 
-        return '<script type="application/ld+json">'."\n".json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR)."\n".'</script>';
+        $return = [];
+
+        // Create one <script> block per JSON-LD context (see #6401)
+        foreach ($data as $context) {
+            $return[] = sprintf(
+                "<script type=\"application/ld+json\">\n%s\n</script>",
+                json_encode($context, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR),
+            );
+        }
+
+        return implode("\n", $return);
     }
 
     /**

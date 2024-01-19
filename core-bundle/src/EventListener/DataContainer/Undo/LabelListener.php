@@ -45,7 +45,7 @@ class LabelListener
 
         return $this->twig->render(
             '@ContaoCore/Backend/be_undo_label.html.twig',
-            $this->getTemplateData($table, $row, $originalRow)
+            $this->getTemplateData($table, $row, $originalRow),
         );
     }
 

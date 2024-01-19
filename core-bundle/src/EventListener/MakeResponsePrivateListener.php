@@ -78,8 +78,8 @@ class MakeResponsePrivateListener
                 $response,
                 sprintf(
                     'response-cookies (%s)',
-                    implode(', ', array_map(static fn (Cookie $cookie) => $cookie->getName(), $cookies))
-                )
+                    implode(', ', array_map(static fn (Cookie $cookie) => $cookie->getName(), $cookies)),
+                ),
             );
 
             return;
@@ -89,7 +89,7 @@ class MakeResponsePrivateListener
         if ($request->cookies->count() && \in_array('cookie', array_map('strtolower', $response->getVary()), true)) {
             $this->makePrivate(
                 $response,
-                sprintf('request-cookies (%s)', implode(', ', array_keys($request->cookies->all())))
+                sprintf('request-cookies (%s)', implode(', ', array_keys($request->cookies->all()))),
             );
         }
     }

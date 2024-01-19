@@ -53,7 +53,7 @@ class DynamicIncludeTokenParserTest extends TestCase
                     }
 
                     throw new \LogicException('Template not found in hierarchy.');
-                }
+                },
             )
         ;
 

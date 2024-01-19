@@ -26,7 +26,9 @@ use Psr\Log\LoggerInterface;
 class Cron
 {
     final public const MINUTELY_CACHE_KEY = 'contao.cron.minutely_run';
+
     final public const SCOPE_WEB = 'web';
+
     final public const SCOPE_CLI = 'cli';
 
     /**
@@ -70,7 +72,7 @@ class Cron
             function () use (&$promise): void {
                 $this->cachePool->commit();
                 $promise->resolve('Saved cache item.');
-            }
+            },
         );
     }
 
@@ -208,7 +210,7 @@ class Cron
                         } else {
                             $this->logger?->debug(sprintf('Asynchronous cron job "%s" failed: %s', $cron->getName(), $reason));
                         }
-                    }
+                    },
                 );
 
                 $promises[] = $promise;

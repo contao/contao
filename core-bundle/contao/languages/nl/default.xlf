@@ -30,12 +30,12 @@
         <target>Veld &quot;%s&quot; mag niet meer dan %d karakters bevatten!</target>
       </trans-unit>
       <trans-unit id="ERR.minval">
-        <source>Field &quot;%s&quot; has to be at least %d!</source>
-        <target>Veld &quot;%s&quot; moet tenminste %d zijn!</target>
+        <source>Field &quot;%s&quot; has to be at least %s!</source>
+        <target>Veld &quot;%s&quot; moet minimaal %s zijn!</target>
       </trans-unit>
       <trans-unit id="ERR.maxval">
-        <source>Field &quot;%s&quot; must not be greater than %d!</source>
-        <target>Veld &quot;%s&quot; mag niet groter dan %d zijn!</target>
+        <source>Field &quot;%s&quot; must not be greater than %s!</source>
+        <target>Veld &quot;%s&quot; mag niet groter zijn dan %s!</target>
       </trans-unit>
       <trans-unit id="ERR.digit">
         <source>Please enter digits only!</source>
@@ -163,6 +163,7 @@
       </trans-unit>
       <trans-unit id="ERR.tooManyLoginAttempts">
         <source>Too many failed login attempts, please try again later.</source>
+        <target>Te veel mislukte inlogpogingen, probeer het later opnieuw.</target>
       </trans-unit>
       <trans-unit id="ERR.invalidLogin">
         <source>Login failed (note that usernames and passwords are case-sensitive)!</source>
@@ -190,6 +191,7 @@
       </trans-unit>
       <trans-unit id="ERR.urlPrefixExists">
         <source>The URL prefix &quot;%s&quot; is already used by another website root page with the same domain name!</source>
+        <target>Het URL-voorvoegsel &quot;%s&quot; wordt al gebruikt door een andere hoofdpagina van een website met dezelfde domeinnaam!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlExists">
         <source>A page with the URL &quot;%s&quot; already exists!</source>
@@ -277,6 +279,7 @@
       </trans-unit>
       <trans-unit id="ERR.topLevelRegular">
         <source>There are top-level pages which are not website root pages.</source>
+        <target>Er zijn pagina's op het hoogste niveau die geen hoofdpagina's van een website zijn.</target>
       </trans-unit>
       <trans-unit id="ERR.form">
         <source>The form could not be sent</source>
@@ -356,15 +359,19 @@
       </trans-unit>
       <trans-unit id="ERR.versionNotRestored">
         <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
+        <target>Versie %d kon niet worden hersteld omdat deze niet langer compatibel is met de huidige databasestructuur. Herstel de gegevens handmatig.</target>
       </trans-unit>
       <trans-unit id="ERR.startStop">
         <source>The end time must be later than the start time.</source>
+        <target>De eindtijd moet later zijn dan de begintijd.</target>
       </trans-unit>
       <trans-unit id="ERR.noAdminEmailUrl">
         <source>There is no administrator e-mail address set in the &lt;a href=&quot;%s&quot; target=&quot;_top&quot;&gt;system settings&lt;/a&gt;.</source>
+        <target>Er is geen e-mailadres van de beheerder ingesteld in de &lt;a href=&quot;%s&quot; target=&quot;_top&quot;&gt;systeeminstellingen&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="ERR.noAdminEmail">
         <source>There is no administrator e-mail address set, please contact the site administrator.</source>
+        <target>Er is geen beheerder e-mailadres ingesteld, neem contact op met de sitebeheerder.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -776,6 +783,7 @@
       </trans-unit>
       <trans-unit id="PTY.forward.1">
         <source>This type of page automatically forwards visitors to another page.</source>
+        <target>Dit type pagina stuurt bezoekers automatisch door naar een andere pagina.</target>
       </trans-unit>
       <trans-unit id="PTY.root.0">
         <source>Website root</source>
@@ -783,6 +791,7 @@
       </trans-unit>
       <trans-unit id="PTY.root.1">
         <source>This type of page marks the starting point of a new website.</source>
+        <target>Dit type pagina markeert het startpunt van een nieuwe website.</target>
       </trans-unit>
       <trans-unit id="PTY.logout.0">
         <source>Logout</source>
@@ -822,6 +831,7 @@
       </trans-unit>
       <trans-unit id="PTY.error_503.1">
         <source>When a website root page is in maintenance mode, all requests will show a 503 error page.</source>
+        <target>Wanneer een hoofdpagina van een website zich in de onderhoudsmodus bevindt, wordt bij alle verzoeken een 503-foutpagina weergegeven.</target>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
@@ -1951,6 +1961,10 @@
         <source>Metadata</source>
         <target>Meta data</target>
       </trans-unit>
+      <trans-unit id="MSC.imageMetadata">
+        <source>%s metadata</source>
+        <target>%s metadata</target>
+      </trans-unit>
       <trans-unit id="MSC.versioning">
         <source>Version management</source>
         <target>Versie management</target>
@@ -1993,12 +2007,15 @@
       </trans-unit>
       <trans-unit id="MSC.folderC">
         <source>Public folder</source>
+        <target>Publieke map</target>
       </trans-unit>
       <trans-unit id="MSC.folderCP">
         <source>Protected folder</source>
+        <target>Beveiligde map</target>
       </trans-unit>
       <trans-unit id="MSC.typeOfFile">
         <source>%s file</source>
+        <target>%s bestand</target>
       </trans-unit>
       <trans-unit id="MSC.loadingData">
         <source>Loading data</source>
@@ -2026,6 +2043,7 @@
       </trans-unit>
       <trans-unit id="MSC.copyMultiple">
         <source>Copy repeatedly</source>
+        <target>Herhaaldelijk kopiëren</target>
       </trans-unit>
       <trans-unit id="MSC.aliasSelected">
         <source>Generate aliases</source>
@@ -2113,6 +2131,7 @@
       </trans-unit>
       <trans-unit id="MSC.guests">
         <source>Guests (not logged in)</source>
+        <target>Gasten (niet ingelogd)</target>
       </trans-unit>
       <trans-unit id="MSC.updateMode">
         <source>Update mode</source>
@@ -2552,6 +2571,7 @@
       </trans-unit>
       <trans-unit id="MSC.metaNoLanguages">
         <source>You have to add a website root page to enter file metadata.</source>
+        <target>U moet een hoofdpagina van een website toevoegen om de metagegevens van het bestand in te voeren.</target>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb menu</source>
@@ -2655,12 +2675,15 @@
       </trans-unit>
       <trans-unit id="MSC.favorites">
         <source>Favorites</source>
+        <target>Favorieten</target>
       </trans-unit>
       <trans-unit id="MSC.favorite">
         <source>Save URL as favorite</source>
+        <target>URL opslaan als favoriet</target>
       </trans-unit>
       <trans-unit id="MSC.editFavorites">
         <source>Edit favorites</source>
+        <target>Bewerk favorieten</target>
       </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
@@ -2772,27 +2795,39 @@
       </trans-unit>
       <trans-unit id="MSC.splashScreen">
         <source>Please click to load the video.</source>
+        <target>Klik om de video te laden.</target>
       </trans-unit>
       <trans-unit id="MSC.dataTransmission">
         <source>Your IP address will be transmitted to %s.</source>
+        <target>Uw IP-adres wordt verzonden naar %s.</target>
       </trans-unit>
       <trans-unit id="MSC.showFrom">
         <source>visible from %s</source>
+        <target>Zichtbaar vanaf %s</target>
       </trans-unit>
       <trans-unit id="MSC.showTo">
         <source>visible until %s</source>
+        <target>Zichtbaar tot %s</target>
       </trans-unit>
       <trans-unit id="MSC.showFromTo">
         <source>visible from %s to %s</source>
+        <target>zichtbaar van %s tot %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.editImageSize">
+        <source>Edit the image size</source>
+        <target>Bewerk het formaat van de afbeelding</target>
       </trans-unit>
       <trans-unit id="MSC.booleanNot">
         <source>Not %s</source>
+        <target>Niet %s</target>
       </trans-unit>
       <trans-unit id="MSC.darkMode">
         <source>Dark mode</source>
+        <target>Donkere modus</target>
       </trans-unit>
       <trans-unit id="MSC.lightMode">
         <source>Light mode</source>
+        <target>Lichte modus</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2930,6 +2965,22 @@
         <source>Expand or collapse all nodes</source>
         <target>Uitvouwen of samenvouwen van alle nodes</target>
       </trans-unit>
+      <trans-unit id="DCA.expandNodes.0">
+        <source>Expand all</source>
+        <target>Vouw alles uit</target>
+      </trans-unit>
+      <trans-unit id="DCA.expandNodes.1">
+        <source>Expand all nodes</source>
+        <target>Vouw alle bereiken uit</target>
+      </trans-unit>
+      <trans-unit id="DCA.collapseNodes.0">
+        <source>Collapse all</source>
+        <target>Vouw alles in</target>
+      </trans-unit>
+      <trans-unit id="DCA.collapseNodes.1">
+        <source>Collapse all nodes</source>
+        <target>Vouw alle bereiken in</target>
+      </trans-unit>
       <trans-unit id="DCA.new.0">
         <source>New</source>
         <target>Nieuw</target>
@@ -2966,9 +3017,17 @@
         <source>Edit the child elements of element ID %s</source>
         <target>Bewerk de child elementen van element ID %s</target>
       </trans-unit>
-      <trans-unit id="DCA.toggle">
-        <source>Publish/unpublish element ID %s</source>
-        <target>Publiceer/depubliceer element ID %s</target>
+      <trans-unit id="DCA.toggle.0">
+        <source>Publish/unpublish element</source>
+        <target>Publiceer/depubliceer element</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggle.1">
+        <source>Unpublish element ID %s</source>
+        <target>Depubliceer element ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggle.2">
+        <source>Publish element ID %s</source>
+        <target>Publiceer element ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.pasteinto.0">
         <source>Paste at the top</source>
@@ -3000,6 +3059,7 @@
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
         <source>%d URI(s) were skipped.</source>
+        <target>%d URI('s) zijn overgeslagen.</target>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>

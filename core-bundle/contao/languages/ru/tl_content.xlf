@@ -166,16 +166,16 @@
         <target>Добавить верхний колонтитул таблицы</target>
       </trans-unit>
       <trans-unit id="tl_content.thead.1">
-        <source>Make the first row of the table the table header.</source>
-        <target>Сделать первую строку в таблице верхним колонтитулом таблицы.</target>
+        <source>Make the first row the table header.</source>
+        <target>Сделать первую строку верхним колонтитулом таблицы.</target>
       </trans-unit>
       <trans-unit id="tl_content.tfoot.0">
         <source>Add table footer</source>
         <target>Добавить нижний колонтитул таблицы</target>
       </trans-unit>
       <trans-unit id="tl_content.tfoot.1">
-        <source>Make the last row of the table the table footer.</source>
-        <target>Сделать последнюю строку в таблице нижним колонтитулом таблицы.</target>
+        <source>Make the last row the table footer.</source>
+        <target>Сделать последнюю строку нижним колонтитулом таблицы.</target>
       </trans-unit>
       <trans-unit id="tl_content.tleft.0">
         <source>Use row headers</source>
@@ -320,6 +320,14 @@
       <trans-unit id="tl_content.linkTitle.1">
         <source>The link text will be displayed instead of the target URL.</source>
         <target>Текст ссылки будет показан посетителям веб-сайта вместо URL.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.overwriteLink.0">
+        <source>Overwrite link</source>
+        <target>Перезаписать ссылку</target>
+      </trans-unit>
+      <trans-unit id="tl_content.overwriteLink.1">
+        <source>Set a custom link text and link title.</source>
+        <target>Установите пользовательский текст ссылки и заголовок ссылки.</target>
       </trans-unit>
       <trans-unit id="tl_content.titleText.0">
         <source>Link title</source>
@@ -630,16 +638,16 @@
         <target>Публиковать с</target>
       </trans-unit>
       <trans-unit id="tl_content.start.1">
-        <source>If you want to prevent the element from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Если хотите запретить показ элемента на веб-сайте до определенной даты/времени, введите её здесь. В противном случае оставьте поле пустым.</target>
+        <source>If you want to prevent the element from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Если хотите запретить показ элемента на веб-сайте до определенной даты/времени, введите её здесь. В противном случае, оставьте поле пустым.</target>
       </trans-unit>
       <trans-unit id="tl_content.stop.0">
         <source>Show until</source>
         <target>Публиковать до</target>
       </trans-unit>
       <trans-unit id="tl_content.stop.1">
-        <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Если хотите запретить показ элемента на веб-сайте после определенной даты/времени, введите её здесь. В противном случае оставьте поле пустым.</target>
+        <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Если хотите запретить показ элемента на веб-сайте после определенной даты/времени, введите её здесь. В противном случае, оставьте поле пустым.</target>
       </trans-unit>
       <trans-unit id="tl_content.type_legend">
         <source>Element type</source>
@@ -893,9 +901,17 @@
         <source>Edit content element ID %s</source>
         <target>Редактировать элемент ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_content.toggle">
-        <source>Hide/unhide content element ID %s</source>
-        <target>Скрыть/показать элемент контента ID %s</target>
+      <trans-unit id="tl_content.toggle.0">
+        <source>Hide/unhide content element</source>
+        <target>Скрыть/показать элемент контента</target>
+      </trans-unit>
+      <trans-unit id="tl_content.toggle.1">
+        <source>Hide content element ID %s</source>
+        <target>Скрыть элемент контента ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_content.toggle.2">
+        <source>Unhide content element ID %s</source>
+        <target>Показать элемент контента ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>

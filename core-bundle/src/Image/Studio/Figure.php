@@ -282,7 +282,7 @@ final class Figure
             $htmlAttributes = array_map(
                 static fn (string $attribute, string $value) => sprintf('%s="%s"', $attribute, $value),
                 array_keys($linkAttributes),
-                $linkAttributes
+                $linkAttributes,
             );
 
             $templateData['attributes'] = ' '.implode(' ', $htmlAttributes);

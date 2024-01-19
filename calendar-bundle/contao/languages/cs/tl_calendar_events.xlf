@@ -274,7 +274,7 @@
         <target>Zobrazit od</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.start.1">
-        <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>Pokud chcete zabránit zobrazení události před jistým datem/časem, můžete to zadat tady. Jinak ponechte dané pole prázdné.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.0">
@@ -282,7 +282,7 @@
         <target>Zobrazit do</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.1">
-        <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>Pokud chcete zabránit zobrazení události po jistém datu/času, můžete to zadat tady. Jinak ponechte dané pole prázdné.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.tstamp.0">
@@ -385,13 +385,29 @@
         <source>Delete event ID %s</source>
         <target>Smazat událost ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.toggle">
-        <source>Publish/unpublish event ID %s</source>
-        <target>Publikovat / nepublikovat událost ID %s</target>
+      <trans-unit id="tl_calendar_events.toggle.0">
+        <source>Publish/unpublish event</source>
+        <target>Publikovat / nepublikovat</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.feature">
+      <trans-unit id="tl_calendar_events.toggle.1">
+        <source>Unpublish event ID %s</source>
+        <target>Nezveřejnit událost ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.toggle.2">
+        <source>Publish event ID %s</source>
+        <target>Zveřejnit událost ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.feature.0">
         <source>Feature/unfeature event ID %s</source>
         <target>ID zvýrazněné/nezvýrazněné události %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.feature.1">
+        <source>Unfeature event ID %s</source>
+        <target>Odstranit zdůraznění %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.feature.2">
+        <source>Feature event ID %s</source>
+        <target>Přidat zdůraznění %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>

@@ -71,10 +71,8 @@ class ModuleNavigation extends Module
 		$host = null;
 
 		// Overwrite the domain and language if the reference page belongs to a different root page (see #3765)
-		if ($this->defineRoot && $this->rootPage > 0)
+		if ($this->defineRoot && $this->rootPage > 0 && ($objRootPage = PageModel::findWithDetails($this->rootPage)))
 		{
-			$objRootPage = PageModel::findWithDetails($this->rootPage);
-
 			$lang = $objRootPage->rootLanguage;
 			$host = $objRootPage->domain;
 		}

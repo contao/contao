@@ -18,15 +18,15 @@ use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\DataContainer;
 use Contao\DC_File;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
-use Symfony\Component\Security\Core\Security;
 
 /**
  * @internal
  */
 class TableAccessVoter implements CacheableVoterInterface
 {
-    public function __construct(private readonly Security $security)
+    public function __construct(private readonly AccessDecisionManagerInterface $accessDecisionManager)
     {
     }
 
@@ -65,7 +65,7 @@ class TableAccessVoter implements CacheableVoterInterface
                 }
             }
 
-            if (!$hasNotExcluded && !$this->security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, $subject->getDataSource())) {
+            if (!$hasNotExcluded && !$this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE], $subject->getDataSource())) {
                 return self::ACCESS_DENIED;
             }
         }

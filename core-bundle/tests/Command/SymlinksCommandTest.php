@@ -33,7 +33,7 @@ class SymlinksCommandTest extends TestCase
         foreach (['assets', 'files', 'system', 'var', 'vendor'] as $directory) {
             $filesystem->mirror(
                 Path::join(__DIR__.'/../Fixtures', $directory),
-                Path::join(self::getTempDir(), $directory)
+                Path::join(self::getTempDir(), $directory),
             );
         }
     }
@@ -102,7 +102,7 @@ class SymlinksCommandTest extends TestCase
             'files',
             Path::join($this->getTempDir(), '/var/logs'),
             new ResourceFinder(Path::join($this->getTempDir(), 'vendor/contao/test-bundle/Resources/contao')),
-            $this->createMock(EventDispatcherInterface::class)
+            $this->createMock(EventDispatcherInterface::class),
         );
     }
 }

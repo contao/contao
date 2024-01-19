@@ -14,8 +14,8 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Util\LocaleUtil;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 
 /**

@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\Matcher;
 
-use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\PageModel;
 use Symfony\Cmf\Component\Routing\NestedMatcher\RouteFilterInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,16 +24,10 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class PublishedFilter implements RouteFilterInterface
 {
-    /**
-     * @internal
-     */
-    public function __construct(private readonly TokenChecker $tokenChecker)
-    {
-    }
-
     public function filter(RouteCollection $collection, Request $request): RouteCollection
     {
-        if ($this->tokenChecker->isPreviewMode()) {
+        // Route all pages in the preview entry point
+        if ($request->attributes->get('_preview', false)) {
             return $collection;
         }
 

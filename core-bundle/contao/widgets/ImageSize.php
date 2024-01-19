@@ -77,7 +77,7 @@ class ImageSize extends Widget
 	{
 		$varInput[2] = preg_replace('/[^a-z0-9_]+/', '', $varInput[2] ?? '');
 
-		if (!is_numeric($varInput[2]) && strpos($varInput[2], '_') !== 0)
+		if (!is_numeric($varInput[2]) && !str_starts_with($varInput[2], '_'))
 		{
 			switch ($varInput[2])
 			{
@@ -191,12 +191,12 @@ class ImageSize extends Widget
 			{
 				$arrOptions[] = sprintf(
 					'<option value="%s"%s>%s</option>',
-					self::specialcharsValue($arrOption['value'] ?? ''),
-					$this->optionSelected($arrOption['value'] ?? null, $this->varValue[2] ?? null),
+					self::specialcharsValue($arrOption['value']),
+					$this->optionSelected($arrOption['value'], $this->varValue[2] ?? null),
 					$arrOption['label'] ?? null
 				);
 
-				$arrValues[] = $arrOption['value'] ?? '';
+				$arrValues[] = $arrOption['value'];
 			}
 			else
 			{
@@ -219,7 +219,7 @@ class ImageSize extends Widget
 		}
 
 		$arrFields[] = sprintf(
-			'<select name="%s[2]" id="ctrl_%s" class="tl_select_interval" onfocus="Backend.getScrollOffset()"%s>%s</select>',
+			'<select name="%s[2]" id="ctrl_%s" class="tl_select_interval" data-action="focus->contao--scroll-offset#store"%s>%s</select>',
 			$this->strName,
 			$this->strId . '_3',
 			$this->getAttribute('disabled'),
@@ -229,7 +229,7 @@ class ImageSize extends Widget
 		for ($i=0; $i<2; $i++)
 		{
 			$arrFields[] = sprintf(
-				'<input type="text" name="%s[%s]" id="ctrl_%s" class="tl_text_4 tl_imageSize_%s" value="%s"%s onfocus="Backend.getScrollOffset()">',
+				'<input type="text" name="%s[%s]" id="ctrl_%s" class="tl_text_4 tl_imageSize_%s" value="%s"%s data-action="focus->contao--scroll-offset#store">',
 				$this->strName,
 				$i,
 				$this->strId . '_' . $i,

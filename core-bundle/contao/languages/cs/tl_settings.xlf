@@ -57,14 +57,6 @@
         <source>This overall limit takes effect if a user chooses the &quot;show all records&quot; option.</source>
         <target>Tato možnost přepíše, pokud návštěvník stránek zvolí &quot;zobrazit všechny záznamy&quot;.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.doNotCollapse.0">
-        <source>Do not collapse elements</source>
-        <target>Nesbalovat elementy</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.doNotCollapse.1">
-        <source>Do not collapse elements in the back end preview.</source>
-        <target>Nesbalovat elementy v backendu a v náhledu.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.allowedTags.0">
         <source>Allowed HTML tags</source>
         <target>Povolené HTML značky</target>

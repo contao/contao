@@ -51,7 +51,7 @@ class Dbafs
 		$projectDir = Path::normalize(System::getContainer()->getParameter('kernel.project_dir'));
 
 		// Remove trailing slashes (see #5707)
-		if (substr($strResource, -1) == '/')
+		if (str_ends_with($strResource, '/'))
 		{
 			$strResource = substr($strResource, 0, -1);
 		}

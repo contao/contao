@@ -16,7 +16,6 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Intl\Locales;
-use Contao\UserGroupModel;
 use Contao\Validator;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Types;
@@ -33,7 +32,7 @@ use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 
 #[AsCommand(
     name: 'contao:user:create',
-    description: 'Create a new Contao back end user.'
+    description: 'Create a new Contao back end user.',
 )]
 class UserCreateCommand extends Command
 {
@@ -176,7 +175,7 @@ class UserCreateCommand extends Command
             $input->getOption('language') ?? 'en',
             $isAdmin,
             $input->getOption('group'),
-            $input->getOption('change-password')
+            $input->getOption('change-password'),
         );
 
         $io->success(sprintf('User %s%s created.', $username, $isAdmin ? ' with admin permissions' : ''));
@@ -234,16 +233,7 @@ class UserCreateCommand extends Command
 
     private function getGroups(): array
     {
-        $this->framework->initialize();
-
-        $userGroupModel = $this->framework->getAdapter(UserGroupModel::class);
-        $groups = $userGroupModel->findAll();
-
-        if (null === $groups) {
-            return [];
-        }
-
-        return $groups->fetchEach('name');
+        return $this->connection->fetchAllKeyValue('SELECT id, name FROM tl_user_group');
     }
 
     private function persistUser(string $username, string $name, string $email, string $password, string $language, bool $isAdmin = false, array|null $groups = null, bool $pwChange = false): void

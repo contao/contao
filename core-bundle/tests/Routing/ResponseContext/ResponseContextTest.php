@@ -149,7 +149,7 @@ class ResponseContextTest extends TestCase
                     $this->assertSame($context, $event->getResponseContext());
 
                     return true;
-                }
+                },
             ))
         ;
 

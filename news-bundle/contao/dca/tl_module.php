@@ -21,7 +21,7 @@ $GLOBALS['TL_DCA']['tl_module']['palettes']['__selector__'][] = 'news_format';
 
 // Add palettes to tl_module
 $GLOBALS['TL_DCA']['tl_module']['palettes']['newslist']         = '{title_legend},name,headline,type;{config_legend},news_archives,news_readerModule,numberOfItems,news_featured,news_order,skipFirst,perPage;{template_legend:hide},news_template,customTpl;{image_legend:hide},imgSize;{protected_legend:hide},protected;{expert_legend:hide},cssID';
-$GLOBALS['TL_DCA']['tl_module']['palettes']['newsreader']       = '{title_legend},name,headline,type;{config_legend},news_archives,overviewPage,customLabel;{template_legend:hide},news_template,customTpl;{image_legend:hide},imgSize;{protected_legend:hide},protected;{expert_legend:hide},cssID';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['newsreader']       = '{title_legend},name,headline,type;{config_legend},news_archives,news_keepCanonical;{news_overview_legend},overviewPage,customLabel;{template_legend:hide},news_template,customTpl;{image_legend:hide},imgSize;{protected_legend:hide},protected;{expert_legend:hide},cssID';
 $GLOBALS['TL_DCA']['tl_module']['palettes']['newsarchive']      = '{title_legend},name,headline,type;{config_legend},news_archives,news_readerModule,news_format,news_order,news_jumpToCurrent,perPage;{template_legend:hide},news_template,customTpl;{image_legend:hide},imgSize;{protected_legend:hide},protected;{expert_legend:hide},cssID';
 $GLOBALS['TL_DCA']['tl_module']['palettes']['newsmenu']         = '{title_legend},name,headline,type;{config_legend},news_archives,news_showQuantity,news_format,news_order;{redirect_legend},jumpTo;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID';
 $GLOBALS['TL_DCA']['tl_module']['palettes']['newsmenunews_day'] = '{title_legend},name,headline,type;{config_legend},news_archives,news_showQuantity,news_format,news_startDay;{redirect_legend},jumpTo;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID';
@@ -105,13 +105,12 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_showQuantity'] = array
 	'sql'                     => array('type' => 'boolean', 'default' => false)
 );
 
-$bundles = System::getContainer()->getParameter('kernel.bundles');
-
-// Add the comments template drop-down menu
-if (isset($bundles['ContaoCommentsBundle']))
-{
-	$GLOBALS['TL_DCA']['tl_module']['palettes']['newsreader'] = str_replace('{protected_legend:hide}', '{comment_legend:hide},com_template;{protected_legend:hide}', $GLOBALS['TL_DCA']['tl_module']['palettes']['newsreader']);
-}
+$GLOBALS['TL_DCA']['tl_module']['fields']['news_keepCanonical'] = array
+(
+	'inputType'               => 'checkbox',
+	'eval'                    => array('tl_class'=>'w50'),
+	'sql'                     => array('type' => 'boolean', 'default' => false)
+);
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.

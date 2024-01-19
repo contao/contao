@@ -30,12 +30,12 @@
         <target>&quot;%s&quot;の欄は%d文字以下で入力してください。</target>
       </trans-unit>
       <trans-unit id="ERR.minval">
-        <source>Field &quot;%s&quot; has to be at least %d!</source>
-        <target>&quot;%s&quot;の欄は%d以上の値を入力してください。</target>
+        <source>Field &quot;%s&quot; has to be at least %s!</source>
+        <target>&quot;%s&quot;の欄は少なくとも%s以上でなければなりません。</target>
       </trans-unit>
       <trans-unit id="ERR.maxval">
-        <source>Field &quot;%s&quot; must not be greater than %d!</source>
-        <target>&quot;%s&quot;の欄は%d未満の値を入力してください。</target>
+        <source>Field &quot;%s&quot; must not be greater than %s!</source>
+        <target>&quot;%s&quot;の欄は%sを超えてはなりません。</target>
       </trans-unit>
       <trans-unit id="ERR.digit">
         <source>Please enter digits only!</source>
@@ -163,6 +163,7 @@
       </trans-unit>
       <trans-unit id="ERR.tooManyLoginAttempts">
         <source>Too many failed login attempts, please try again later.</source>
+        <target>ログインの失敗の回数が多すぎます、後でやり直してください。</target>
       </trans-unit>
       <trans-unit id="ERR.invalidLogin">
         <source>Login failed (note that usernames and passwords are case-sensitive)!</source>
@@ -366,9 +367,11 @@
       </trans-unit>
       <trans-unit id="ERR.noAdminEmailUrl">
         <source>There is no administrator e-mail address set in the &lt;a href=&quot;%s&quot; target=&quot;_top&quot;&gt;system settings&lt;/a&gt;.</source>
+        <target>&lt;a href=&quot;%s&quot; target=&quot;_top&quot;&gt;システム設定&lt;/a&gt;に管理者のメールアドレスが設定されていません。</target>
       </trans-unit>
       <trans-unit id="ERR.noAdminEmail">
         <source>There is no administrator e-mail address set, please contact the site administrator.</source>
+        <target>管理者の電子メールアドレスが設定されていません、サイトの管理者に連絡してください。</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1958,6 +1961,10 @@
         <source>Metadata</source>
         <target>メタデータ</target>
       </trans-unit>
+      <trans-unit id="MSC.imageMetadata">
+        <source>%s metadata</source>
+        <target>メタデータの%s</target>
+      </trans-unit>
       <trans-unit id="MSC.versioning">
         <source>Version management</source>
         <target>バージョン管理</target>
@@ -2036,6 +2043,7 @@
       </trans-unit>
       <trans-unit id="MSC.copyMultiple">
         <source>Copy repeatedly</source>
+        <target>繰り返してコピー</target>
       </trans-unit>
       <trans-unit id="MSC.aliasSelected">
         <source>Generate aliases</source>
@@ -2123,6 +2131,7 @@
       </trans-unit>
       <trans-unit id="MSC.guests">
         <source>Guests (not logged in)</source>
+        <target>ゲスト(ログインなし)</target>
       </trans-unit>
       <trans-unit id="MSC.updateMode">
         <source>Update mode</source>
@@ -2666,12 +2675,15 @@
       </trans-unit>
       <trans-unit id="MSC.favorites">
         <source>Favorites</source>
+        <target>お気に入り</target>
       </trans-unit>
       <trans-unit id="MSC.favorite">
         <source>Save URL as favorite</source>
+        <target>URLをお気に入りとして保存</target>
       </trans-unit>
       <trans-unit id="MSC.editFavorites">
         <source>Edit favorites</source>
+        <target>お気に入りを編集</target>
       </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
@@ -2801,14 +2813,21 @@
         <source>visible from %s to %s</source>
         <target>%sから%sまで表示</target>
       </trans-unit>
+      <trans-unit id="MSC.editImageSize">
+        <source>Edit the image size</source>
+        <target>画像の大きさを編集</target>
+      </trans-unit>
       <trans-unit id="MSC.booleanNot">
         <source>Not %s</source>
+        <target>%sでない</target>
       </trans-unit>
       <trans-unit id="MSC.darkMode">
         <source>Dark mode</source>
+        <target>ダークモード</target>
       </trans-unit>
       <trans-unit id="MSC.lightMode">
         <source>Light mode</source>
+        <target>ライトモード</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2946,6 +2965,22 @@
         <source>Expand or collapse all nodes</source>
         <target>すべてのノードの展開または折り畳み</target>
       </trans-unit>
+      <trans-unit id="DCA.expandNodes.0">
+        <source>Expand all</source>
+        <target>すべて展開</target>
+      </trans-unit>
+      <trans-unit id="DCA.expandNodes.1">
+        <source>Expand all nodes</source>
+        <target>すべてのノードを展開</target>
+      </trans-unit>
+      <trans-unit id="DCA.collapseNodes.0">
+        <source>Collapse all</source>
+        <target>すべて折り畳み</target>
+      </trans-unit>
+      <trans-unit id="DCA.collapseNodes.1">
+        <source>Collapse all nodes</source>
+        <target>すべてのノードを折り畳む</target>
+      </trans-unit>
       <trans-unit id="DCA.new.0">
         <source>New</source>
         <target>新規作成</target>
@@ -2982,9 +3017,17 @@
         <source>Edit the child elements of element ID %s</source>
         <target>ID %sの要素の子の要素を編集</target>
       </trans-unit>
-      <trans-unit id="DCA.toggle">
-        <source>Publish/unpublish element ID %s</source>
-        <target>ID %sの要素の公開/非公開を切り替え</target>
+      <trans-unit id="DCA.toggle.0">
+        <source>Publish/unpublish element</source>
+        <target>要素の公開または非公開</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggle.1">
+        <source>Unpublish element ID %s</source>
+        <target>ID %sの要素を非公開</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggle.2">
+        <source>Publish element ID %s</source>
+        <target>ID %sの要素を公開</target>
       </trans-unit>
       <trans-unit id="DCA.pasteinto.0">
         <source>Paste at the top</source>

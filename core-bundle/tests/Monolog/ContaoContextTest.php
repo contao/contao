@@ -47,7 +47,7 @@ class ContaoContextTest extends TestCase
                 'uri' => 'https://www.contao.org',
                 'pageId' => 42,
             ],
-            JSON_THROW_ON_ERROR
+            JSON_THROW_ON_ERROR,
         );
 
         $this->assertSame($json, (string) $context);

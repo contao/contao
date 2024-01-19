@@ -26,7 +26,9 @@ use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 class DbafsTest extends FunctionalTestCase
 {
     private VirtualFilesystem $filesystem;
+
     private Dbafs $dbafs;
+
     private FilesystemAdapter $adapter;
 
     protected function setUp(): void
@@ -35,7 +37,7 @@ class DbafsTest extends FunctionalTestCase
 
         $this->filesystem = new VirtualFilesystem(
             (new MountManager())->mount($this->adapter = new InMemoryFilesystemAdapter()),
-            $dbafsManager = new DbafsManager()
+            $dbafsManager = new DbafsManager(),
         );
 
         $container = $this->createClient()->getContainer();
@@ -45,7 +47,7 @@ class DbafsTest extends FunctionalTestCase
             $container->get('database_connection'),
             $container->get('event_dispatcher'),
             $this->filesystem,
-            'tl_files'
+            'tl_files',
         );
 
         $dbafsManager->register($this->dbafs, '');

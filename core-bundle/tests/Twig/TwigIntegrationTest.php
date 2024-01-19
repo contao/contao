@@ -77,8 +77,8 @@ class TwigIntegrationTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $this->createMock(TemplateHierarchyInterface::class),
-                $this->createMock(ContaoCsrfTokenManager::class)
-            )
+                $this->createMock(ContaoCsrfTokenManager::class),
+            ),
         );
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
@@ -120,21 +120,18 @@ class TwigIntegrationTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $this->createMock(TemplateHierarchyInterface::class),
-                $this->createMock(ContaoCsrfTokenManager::class)
-            )
+                $this->createMock(ContaoCsrfTokenManager::class),
+            ),
         );
 
-        $output = $environment->render(
-            'test.html.twig',
-            [
-                'attributes' => ['class' => 'block', 'data-thing' => 42],
-                'cssId' => ' id="my-id"',
-                'paragraph_attributes' => ' class="rte"',
-                'style' => '',
-                'headline' => 'Test headline',
-                'text' => 'Some text',
-            ]
-        );
+        $output = $environment->render('test.html.twig', [
+            'attributes' => ['class' => 'block', 'data-thing' => 42],
+            'cssId' => ' id="my-id"',
+            'paragraph_attributes' => ' class="rte"',
+            'style' => '',
+            'headline' => 'Test headline',
+            'text' => 'Some text',
+        ]);
 
         $this->assertSame($expectedOutput, $output);
     }
@@ -173,16 +170,13 @@ class TwigIntegrationTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $this->createMock(TemplateHierarchyInterface::class),
-                $this->createMock(ContaoCsrfTokenManager::class)
-            )
+                $this->createMock(ContaoCsrfTokenManager::class),
+            ),
         );
 
-        $output = $environment->render(
-            'test.html.twig',
-            [
-                'code' => 'function foo() { return "<b>ar"; };',
-            ]
-        );
+        $output = $environment->render('test.html.twig', [
+            'code' => 'function foo() { return "<b>ar"; };',
+        ]);
 
         $this->assertSame($expectedOutput, $output);
 
@@ -211,8 +205,8 @@ class TwigIntegrationTest extends TestCase
             ->willReturnCallback(
                 static fn (string $input): ChunkedText => match ($input) {
                     '<i>foo</i>{{br}}' => new ChunkedText(['<i>foo</i>', '<br>']),
-                    default => new ChunkedText([$input])
-                }
+                    default => new ChunkedText([$input]),
+                },
             )
         ;
 
@@ -229,8 +223,8 @@ class TwigIntegrationTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $this->createMock(TemplateHierarchyInterface::class),
-                $this->createMock(ContaoCsrfTokenManager::class)
-            )
+                $this->createMock(ContaoCsrfTokenManager::class),
+            ),
         );
 
         $output = $environment->render('test.html.twig', ['unsafe' => '<i>foo</i>{{br}}']);

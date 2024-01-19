@@ -41,7 +41,7 @@ class CommonMarkExtension implements ExtensionInterface
 
                     $link->setUrl(UrlEncoder::unescapeAndEncode($url));
                 }
-            }
+            },
         );
     }
 }

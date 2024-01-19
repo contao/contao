@@ -12,26 +12,20 @@ declare(strict_types=1);
 
 namespace Contao\FaqBundle\Tests\EventListener;
 
+use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\FaqBundle\EventListener\InsertTagsListener;
 use Contao\FaqCategoryModel;
 use Contao\FaqModel;
 use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class InsertTagsListenerTest extends ContaoTestCase
 {
     public function testReplacesTheFaqTags(): void
     {
         $page = $this->createMock(PageModel::class);
-        $page
-            ->method('getFrontendUrl')
-            ->willReturn('faq/what-does-foobar-mean.html')
-        ;
-
-        $page
-            ->method('getAbsoluteUrl')
-            ->willReturn('http://domain.tld/faq/what-does-foobar-mean.html')
-        ;
 
         $categoryModel = $this->createMock(FaqCategoryModel::class);
         $categoryModel
@@ -52,61 +46,91 @@ class InsertTagsListenerTest extends ContaoTestCase
             FaqModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $faqModel]),
         ];
 
-        $listener = new InsertTagsListener($this->mockContaoFramework($adapters));
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->expects($this->exactly(10))
+            ->method('generate')
+            ->withConsecutive(
+                [$faqModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
+                [$faqModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
+                [$faqModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
+                [$faqModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
+                [$faqModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
+                [$faqModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
+                [$faqModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
+                [$faqModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
+                [$faqModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
+                [$faqModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
+            )
+            ->willReturnOnConsecutiveCalls(
+                'faq/what-does-foobar-mean.html',
+                'faq/what-does-foobar-mean.html',
+                'faq/what-does-foobar-mean.html',
+                'faq/what-does-foobar-mean.html',
+                'http://domain.tld/faq/what-does-foobar-mean.html',
+                'http://domain.tld/faq/what-does-foobar-mean.html',
+                'faq/what-does-foobar-mean.html',
+                'http://domain.tld/faq/what-does-foobar-mean.html',
+                'http://domain.tld/faq/what-does-foobar-mean.html',
+                'http://domain.tld/faq/what-does-foobar-mean.html',
+            )
+        ;
+
+        $listener = new InsertTagsListener($this->mockContaoFramework($adapters), $urlGenerator);
 
         $this->assertSame(
             '<a href="faq/what-does-foobar-mean.html" title="What does &quot;foobar&quot; mean?">What does "foobar" mean?</a>',
-            $listener->onReplaceInsertTags('faq::2', false, null, [])
+            $listener->onReplaceInsertTags('faq::2', false, null, []),
         );
 
         $this->assertSame(
             '<a href="faq/what-does-foobar-mean.html" title="What does &quot;foobar&quot; mean?" target="_blank" rel="noreferrer noopener">What does "foobar" mean?</a>',
-            $listener->onReplaceInsertTags('faq::2::blank', false, null, [])
+            $listener->onReplaceInsertTags('faq::2::blank', false, null, []),
         );
 
         $this->assertSame(
             '<a href="faq/what-does-foobar-mean.html" title="What does &quot;foobar&quot; mean?">',
-            $listener->onReplaceInsertTags('faq_open::2', false, null, [])
+            $listener->onReplaceInsertTags('faq_open::2', false, null, []),
         );
 
         $this->assertSame(
             '<a href="faq/what-does-foobar-mean.html" title="What does &quot;foobar&quot; mean?" target="_blank" rel="noreferrer noopener">',
-            $listener->onReplaceInsertTags('faq_open::2::blank', false, null, [])
+            $listener->onReplaceInsertTags('faq_open::2::blank', false, null, []),
         );
 
         $this->assertSame(
             '<a href="http://domain.tld/faq/what-does-foobar-mean.html" title="What does &quot;foobar&quot; mean?" target="_blank" rel="noreferrer noopener">',
-            $listener->onReplaceInsertTags('faq_open::2::blank::absolute', false, null, [])
+            $listener->onReplaceInsertTags('faq_open::2::blank::absolute', false, null, []),
         );
 
         $this->assertSame(
             '<a href="http://domain.tld/faq/what-does-foobar-mean.html" title="What does &quot;foobar&quot; mean?" target="_blank" rel="noreferrer noopener">',
-            $listener->onReplaceInsertTags('faq_open::2::absolute::blank', false, null, [])
+            $listener->onReplaceInsertTags('faq_open::2::absolute::blank', false, null, []),
         );
 
         $this->assertSame(
             'faq/what-does-foobar-mean.html',
-            $listener->onReplaceInsertTags('faq_url::2', false, null, [])
+            $listener->onReplaceInsertTags('faq_url::2', false, null, []),
         );
 
         $this->assertSame(
             'http://domain.tld/faq/what-does-foobar-mean.html',
-            $listener->onReplaceInsertTags('faq_url::2', false, null, ['absolute'])
+            $listener->onReplaceInsertTags('faq_url::2', false, null, ['absolute']),
         );
 
         $this->assertSame(
             'http://domain.tld/faq/what-does-foobar-mean.html',
-            $listener->onReplaceInsertTags('faq_url::2::absolute', false, null, [])
+            $listener->onReplaceInsertTags('faq_url::2::absolute', false, null, []),
         );
 
         $this->assertSame(
             'http://domain.tld/faq/what-does-foobar-mean.html',
-            $listener->onReplaceInsertTags('faq_url::2::blank::absolute', false, null, [])
+            $listener->onReplaceInsertTags('faq_url::2::blank::absolute', false, null, []),
         );
 
         $this->assertSame(
             'What does &quot;foobar&quot; mean?',
-            $listener->onReplaceInsertTags('faq_title::2', false, null, [])
+            $listener->onReplaceInsertTags('faq_title::2', false, null, []),
         );
     }
 
@@ -137,27 +161,27 @@ class InsertTagsListenerTest extends ContaoTestCase
             FaqModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $faqModel]),
         ];
 
-        $listener = new InsertTagsListener($this->mockContaoFramework($adapters));
+        $listener = new InsertTagsListener($this->mockContaoFramework($adapters), $this->createMock(ContentUrlGenerator::class));
 
         $this->assertSame(
             '<a href="./" title="What does &quot;foobar&quot; mean?">What does "foobar" mean?</a>',
-            $listener->onReplaceInsertTags('faq::2', false, null, [])
+            $listener->onReplaceInsertTags('faq::2', false, null, []),
         );
 
         $this->assertSame(
             '<a href="./" title="What does &quot;foobar&quot; mean?">',
-            $listener->onReplaceInsertTags('faq_open::2', false, null, [])
+            $listener->onReplaceInsertTags('faq_open::2', false, null, []),
         );
 
         $this->assertSame(
             './',
-            $listener->onReplaceInsertTags('faq_url::2', false, null, [])
+            $listener->onReplaceInsertTags('faq_url::2', false, null, []),
         );
     }
 
     public function testReturnsFalseIfTheTagIsUnknown(): void
     {
-        $listener = new InsertTagsListener($this->mockContaoFramework());
+        $listener = new InsertTagsListener($this->mockContaoFramework(), $this->createMock(ContentUrlGenerator::class));
 
         $this->assertFalse($listener->onReplaceInsertTags('link_url::2', false, null, []));
     }
@@ -168,12 +192,12 @@ class InsertTagsListenerTest extends ContaoTestCase
             FaqModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => null]),
         ];
 
-        $listener = new InsertTagsListener($this->mockContaoFramework($adapters));
+        $listener = new InsertTagsListener($this->mockContaoFramework($adapters), $this->createMock(ContentUrlGenerator::class));
 
         $this->assertSame('', $listener->onReplaceInsertTags('faq_url::2', false, null, []));
     }
 
-    public function testReturnsAnEmptyStringIfThereIsNoCategoryModel(): void
+    public function testReturnsAnEmptyStringIfTheRouterThrowsAnException(): void
     {
         $faqModel = $this->createMock(FaqModel::class);
         $faqModel
@@ -185,7 +209,14 @@ class InsertTagsListenerTest extends ContaoTestCase
             FaqModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $faqModel]),
         ];
 
-        $listener = new InsertTagsListener($this->mockContaoFramework($adapters));
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->expects($this->once())
+            ->method('generate')
+            ->willThrowException(new ForwardPageNotFoundException())
+        ;
+
+        $listener = new InsertTagsListener($this->mockContaoFramework($adapters), $urlGenerator);
 
         $this->assertSame('', $listener->onReplaceInsertTags('faq_url::3', false, null, []));
     }

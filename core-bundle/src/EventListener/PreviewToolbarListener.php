@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
+use Contao\CoreBundle\Csp\CspParser;
+use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,16 +40,13 @@ class PreviewToolbarListener
         private readonly TokenChecker $tokenChecker,
         private readonly TwigEnvironment $twig,
         private readonly RouterInterface $router,
+        private readonly CspParser $cspParser,
         private readonly string $previewScript = '',
     ) {
     }
 
     public function __invoke(ResponseEvent $event): void
     {
-        if ($this->scopeMatcher->isBackendMainRequest($event) || !$this->tokenChecker->hasBackendUser()) {
-            return;
-        }
-
         $request = $event->getRequest();
         $response = $event->getResponse();
 
@@ -57,6 +56,11 @@ class PreviewToolbarListener
             || $request->isXmlHttpRequest()
             || !$response->isSuccessful() && !$response->isClientError()
         ) {
+            return;
+        }
+
+        // Do not inject the toolbar in the back end
+        if ($this->scopeMatcher->isBackendMainRequest($event) || !$this->tokenChecker->hasBackendUser()) {
             return;
         }
 
@@ -86,15 +90,30 @@ class PreviewToolbarListener
             return;
         }
 
-        $toolbar = $this->twig->render(
-            '@ContaoCore/Frontend/preview_toolbar_base_js.html.twig',
-            [
-                'action' => $this->router->generate('contao_backend_switch'),
-                'request' => $request,
-                'preview_script' => $this->previewScript,
-            ]
-        );
+        $cspHandler = $this->createCspHandler($response);
+
+        $toolbar = $this->twig->render('@ContaoCore/Frontend/preview_toolbar_base_js.html.twig', [
+            'action' => $this->router->generate('contao_backend_switch'),
+            'request' => $request,
+            'preview_script' => $this->previewScript,
+            'csp_handler' => $cspHandler,
+        ]);
 
         $response->setContent(substr($content, 0, $pos)."\n".$toolbar."\n".substr($content, $pos));
+        $cspHandler->applyHeaders($response, $request);
+    }
+
+    private function createCspHandler(Response $response): CspHandler
+    {
+        if ($cspHeader = $response->headers->get('Content-Security-Policy-Report-Only')) {
+            $reportOnly = true;
+        } else {
+            $cspHeader = $response->headers->get('Content-Security-Policy', '');
+        }
+
+        $directives = $this->cspParser->parseHeader($cspHeader);
+        $directives->setLevel1Fallback(false);
+
+        return new CspHandler($directives, $reportOnly ?? false);
     }
 }

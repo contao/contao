@@ -25,12 +25,14 @@ use Symfony\Component\Process\Process;
 
 #[AsCommand(
     name: 'contao:setup',
-    description: 'Sets up a Contao Managed Edition. This command will be run when executing the "contao-setup" binary.'
+    description: 'Sets up a Contao Managed Edition. This command will be run when executing the "contao-setup" binary.',
 )]
 class ContaoSetupCommand extends Command
 {
     private readonly string $webDir;
+
     private readonly string $consolePath;
+
     private readonly string|false $phpPath;
 
     /**
@@ -76,7 +78,7 @@ class ContaoSetupCommand extends Command
             $io->info('An APP_SECRET was generated and written to your .env.local file.');
 
             if (!$filesystem->exists($envPath = Path::join($this->projectDir, '.env'))) {
-                $filesystem->touch($envPath);
+                $filesystem->dumpFile($envPath, "#DATABASE_URL='mysql://username:password@localhost/database_name'\n#MAILER_DSN=");
 
                 $io->info('An empty .env file was created.');
             }
@@ -133,7 +135,7 @@ class ContaoSetupCommand extends Command
         $process->run(
             static function (string $type, string $buffer) use ($output): void {
                 $output->write($buffer);
-            }
+            },
         );
 
         if (!$process->isSuccessful()) {

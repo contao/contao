@@ -83,7 +83,7 @@ class PageUrlListener
         $value = $this->slug->generate(
             $pageModel->title ?? '',
             (int) $dc->id,
-            fn ($alias) => $isRoutable && $this->aliasExists(($pageModel->useFolderUrl ? $pageModel->folderUrl : '').$alias, $pageModel)
+            fn ($alias) => $isRoutable && $this->aliasExists(($pageModel->useFolderUrl ? $pageModel->folderUrl : '').$alias, $pageModel),
         );
 
         // Generate folder URL aliases (see #4933)
@@ -110,7 +110,7 @@ class PageUrlListener
                 'urlPrefix' => $value,
                 'dns' => $currentRecord['dns'] ?? null,
                 'rootId' => $dc->id,
-            ]
+            ],
         );
 
         if ($count > 0) {
@@ -201,7 +201,7 @@ class PageUrlListener
             $currentUrl = $this->urlGenerator->generate(
                 PageRoute::PAGE_BASED_ROUTE_NAME,
                 [RouteObjectInterface::ROUTE_OBJECT => $currentRoute],
-                UrlGeneratorInterface::ABSOLUTE_URL
+                UrlGeneratorInterface::ABSOLUTE_URL,
             );
         } catch (RouteParametersException) {
             // This route has mandatory parameters, only match exact path with placeholders

@@ -83,9 +83,11 @@
       </trans-unit>
       <trans-unit id="tl_user.doNotCollapse.0">
         <source>Do not collapse content elements</source>
+        <target>Content elementen niet samenvouwen</target>
       </trans-unit>
       <trans-unit id="tl_user.doNotCollapse.1">
         <source>Do not collapse content elements in the back end preview.</source>
+        <target>Content elementen in de back-end voorvertoning niet samenvouwen.</target>
       </trans-unit>
       <trans-unit id="tl_user.pwChange.0">
         <source>Password change required</source>
@@ -244,16 +246,16 @@
         <target>Activeer op</target>
       </trans-unit>
       <trans-unit id="tl_user.start.1">
-        <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Als u wilt voorkomen dat het account vóór een bepaalde datum / tijd actief is, kunt u dit hier invoeren. Laat het veld anders leeg.</target>
+        <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Als u wilt voorkomen dat het account voor een bepaalde datum/tijd actief is, kunt u dit hier invullen. Laat anders het veld leeg.</target>
       </trans-unit>
       <trans-unit id="tl_user.stop.0">
         <source>Deactivate on</source>
         <target>Deactiveer op</target>
       </trans-unit>
       <trans-unit id="tl_user.stop.1">
-        <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Als u wilt voorkomen dat het account na een bepaalde datum / tijd actief is, kunt u dit hier invoeren. Laat het veld anders leeg.</target>
+        <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Als u wilt voorkomen dat het account na een bepaalde datum/tijd actief wordt, kunt u dit hier invullen. Laat anders het veld leeg.</target>
       </trans-unit>
       <trans-unit id="tl_user.session.0">
         <source>Purge data</source>
@@ -387,9 +389,17 @@
         <source>Delete user ID %s</source>
         <target>Verwijder gebruiker ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_user.toggle">
-        <source>Activate/deactivate user ID %s</source>
-        <target>Activeer/deactiveer gebruiker ID %s</target>
+      <trans-unit id="tl_user.toggle.0">
+        <source>Activate/deactivate user</source>
+        <target>Activeer/deactiveer gebruiker</target>
+      </trans-unit>
+      <trans-unit id="tl_user.toggle.1">
+        <source>Deactivate user ID %s</source>
+        <target>Deactiveer gebruiker ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_user.toggle.2">
+        <source>Activate user ID %s</source>
+        <target>Activeer gebruiker ID %s</target>
       </trans-unit>
       <trans-unit id="tl_user.su">
         <source>Switch to user ID %s</source>

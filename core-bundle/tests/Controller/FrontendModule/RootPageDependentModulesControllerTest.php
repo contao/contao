@@ -112,7 +112,7 @@ class RootPageDependentModulesControllerTest extends TestCase
         $controller->getResponse(
             $this->createMock(Template::class),
             $this->createMock(ModuleModel::class),
-            new Request()
+            new Request(),
         );
     }
 
@@ -144,10 +144,7 @@ class RootPageDependentModulesControllerTest extends TestCase
         return $this->container;
     }
 
-    /**
-     * @return ModuleModel&MockObject
-     */
-    private function getModuleModel(): ModuleModel
+    private function getModuleModel(): ModuleModel&MockObject
     {
         return $this->mockClassWithProperties(ModuleModel::class);
     }

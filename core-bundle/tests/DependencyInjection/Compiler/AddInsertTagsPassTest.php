@@ -213,8 +213,8 @@ class AddInsertTagsPassTest extends TestCase
                     new Reference('request_stack'),
                     null,
                     ['*'],
-                ]
-            )
+                ],
+            ),
         );
 
         return $container;

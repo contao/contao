@@ -14,10 +14,13 @@ namespace Contao\CoreBundle\Crawl\Escargot;
 
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\EscargotSubscriberInterface;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use Nyholm\Psr7\Uri;
 use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Terminal42\Escargot\BaseUriCollection;
@@ -45,6 +48,7 @@ class Factory
     public function __construct(
         private readonly Connection $connection,
         private readonly ContaoFramework $framework,
+        private readonly ContentUrlGenerator $urlGenerator,
         private readonly array $additionalUris = [],
         private readonly array $defaultHttpClientOptions = [],
     ) {
@@ -68,7 +72,7 @@ class Factory
 
         return array_filter(
             $this->subscribers,
-            static fn (EscargotSubscriberInterface $subscriber): bool => \in_array($subscriber->getName(), $selectedSubscribers, true)
+            static fn (EscargotSubscriberInterface $subscriber): bool => \in_array($subscriber->getName(), $selectedSubscribers, true),
         );
     }
 
@@ -79,7 +83,7 @@ class Factory
     {
         return array_map(
             static fn (EscargotSubscriberInterface $subscriber): string => $subscriber->getName(),
-            $this->subscribers
+            $this->subscribers,
         );
     }
 
@@ -87,7 +91,7 @@ class Factory
     {
         return new LazyQueue(
             new InMemoryQueue(),
-            new DoctrineQueue($this->connection, static fn (): string => Uuid::v4()->toRfc4122(), 'tl_crawl_queue')
+            new DoctrineQueue($this->connection, static fn (): string => Uuid::v4()->toRfc4122(), 'tl_crawl_queue'),
         );
     }
 
@@ -126,7 +130,10 @@ class Factory
         }
 
         foreach ($rootPages as $rootPage) {
-            $collection->add(new Uri($rootPage->getAbsoluteUrl()));
+            try {
+                $collection->add(new Uri($this->urlGenerator->generate($rootPage, [], UrlGeneratorInterface::ABSOLUTE_URL)));
+            } catch (ExceptionInterface) {
+            }
         }
 
         return $collection;
@@ -166,8 +173,8 @@ class Factory
                     ],
                     'max_duration' => 10, // Ignore requests that take longer than 10 seconds
                 ],
-                array_merge_recursive($this->getDefaultHttpClientOptions(), $options)
-            )
+                array_merge_recursive($this->getDefaultHttpClientOptions(), $options),
+            ),
         );
     }
 

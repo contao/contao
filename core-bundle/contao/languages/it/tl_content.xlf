@@ -166,16 +166,14 @@
         <target>Intestazione tabella</target>
       </trans-unit>
       <trans-unit id="tl_content.thead.1">
-        <source>Make the first row of the table the table header.</source>
-        <target>Se si seleziona questa opzione, la prima riga della tabella verrà usata come intestazione.</target>
+        <source>Make the first row the table header.</source>
       </trans-unit>
       <trans-unit id="tl_content.tfoot.0">
         <source>Add table footer</source>
         <target>Fine tabella</target>
       </trans-unit>
       <trans-unit id="tl_content.tfoot.1">
-        <source>Make the last row of the table the table footer.</source>
-        <target>Se si seleziona questa opzione, l'ultima riga della tabella verrà usata come piè di pagina della tabella.</target>
+        <source>Make the last row the table footer.</source>
       </trans-unit>
       <trans-unit id="tl_content.tleft.0">
         <source>Use row headers</source>
@@ -320,6 +318,12 @@
       <trans-unit id="tl_content.linkTitle.1">
         <source>The link text will be displayed instead of the target URL.</source>
         <target>Il titolo del link verrà mostrato ai visitatori del vostro sito invece dell'URL o del nome del file. Se si genera un link immagine, l'immagine verrà mostrata invece del titolo link.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.overwriteLink.0">
+        <source>Overwrite link</source>
+      </trans-unit>
+      <trans-unit id="tl_content.overwriteLink.1">
+        <source>Set a custom link text and link title.</source>
       </trans-unit>
       <trans-unit id="tl_content.titleText.0">
         <source>Link title</source>
@@ -630,16 +634,14 @@
         <target>Visibile dal giorno</target>
       </trans-unit>
       <trans-unit id="tl_content.start.1">
-        <source>If you want to prevent the element from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Se si desidera impedire che l'elemento venga visualizzato sul sito Web prima di una determinata data / ora, è possibile inserirlo qui. Altrimenti lascia il campo vuoto.</target>
+        <source>If you want to prevent the element from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_content.stop.0">
         <source>Show until</source>
         <target>Visibile fino al giorno</target>
       </trans-unit>
       <trans-unit id="tl_content.stop.1">
-        <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Se si desidera impedire che l'elemento venga visualizzato sul sito Web dopo una determinata data / ora, è possibile inserirlo qui. Altrimenti lascia il campo vuoto.</target>
+        <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_content.type_legend">
         <source>Element type</source>
@@ -893,9 +895,14 @@
         <source>Edit content element ID %s</source>
         <target>Modifica l'elemento ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_content.toggle">
-        <source>Hide/unhide content element ID %s</source>
-        <target>Nascondi/mostra elemento di contenuto ID %s</target>
+      <trans-unit id="tl_content.toggle.0">
+        <source>Hide/unhide content element</source>
+      </trans-unit>
+      <trans-unit id="tl_content.toggle.1">
+        <source>Hide content element ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_content.toggle.2">
+        <source>Unhide content element ID %s</source>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>

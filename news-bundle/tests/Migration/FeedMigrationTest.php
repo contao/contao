@@ -124,27 +124,28 @@ class FeedMigrationTest extends ContaoTestCase
         $connection
             ->expects($this->once())
             ->method('insert')
-            ->with('tl_page', [
-                'pid' => 1,
-                'type' => 'news_feed',
-                'title' => 'Latest news',
-                'alias' => 'share/latest-news',
-                'feedSource' => 'source_teaser',
-                'feedFormat' => 'rss',
-                'newsArchives' => serialize([42]),
-                'maxFeedItems' => 0,
-                'feedDescription' => 'This is an example newsfeed',
-                'imgSize' => null,
-                'tstamp' => 16000000,
-            ])
+            ->with(
+                'tl_page',
+                [
+                    'pid' => 1,
+                    'type' => 'news_feed',
+                    'title' => 'Latest news',
+                    'alias' => 'share/latest-news',
+                    'feedSource' => 'source_teaser',
+                    'feedFormat' => 'rss',
+                    'newsArchives' => serialize([42]),
+                    'maxFeedItems' => 0,
+                    'feedDescription' => 'This is an example newsfeed',
+                    'imgSize' => null,
+                    'tstamp' => 16000000,
+                ],
+            )
         ;
 
         $connection
             ->expects($this->once())
             ->method('delete')
-            ->with('tl_news_feed', [
-                'id' => 1,
-            ])
+            ->with('tl_news_feed', ['id' => 1])
         ;
 
         $migration = new FeedMigration($connection, new NullLogger());
@@ -200,34 +201,40 @@ class FeedMigrationTest extends ContaoTestCase
             ->willReturnMap([
                 ['SELECT COUNT(*) FROM tl_news_feed', [], [], 1],
                 ["SELECT id FROM tl_page WHERE type = 'root' AND dns = :dns AND language = :language LIMIT 1", ['dns' => 'example.org', 'language' => 'en'], [], []],
-                ["SELECT id FROM tl_page WHERE type = 'root' AND fallback = '1' ORDER BY sorting ASC LIMIT 1", [], [], 2],
+                ["SELECT id FROM tl_page WHERE type = 'root' AND fallback = 1 ORDER BY sorting ASC LIMIT 1", [], [], 2],
             ])
         ;
 
         $connection
             ->expects($this->once())
             ->method('insert')
-            ->with('tl_page', [
-                'pid' => 2,
-                'type' => 'news_feed',
-                'title' => 'Latest news',
-                'alias' => 'share/latest-news',
-                'feedSource' => 'source_teaser',
-                'feedFormat' => 'rss',
-                'newsArchives' => serialize([42]),
-                'maxFeedItems' => 0,
-                'feedDescription' => 'This is an example newsfeed',
-                'imgSize' => null,
-                'tstamp' => 16000000,
-            ])
+            ->with(
+                'tl_page',
+                [
+                    'pid' => 2,
+                    'type' => 'news_feed',
+                    'title' => 'Latest news',
+                    'alias' => 'share/latest-news',
+                    'feedSource' => 'source_teaser',
+                    'feedFormat' => 'rss',
+                    'newsArchives' => serialize([42]),
+                    'maxFeedItems' => 0,
+                    'feedDescription' => 'This is an example newsfeed',
+                    'imgSize' => null,
+                    'tstamp' => 16000000,
+                ],
+            )
         ;
 
         $connection
             ->expects($this->once())
             ->method('delete')
-            ->with('tl_news_feed', [
-                'id' => 1,
-            ])
+            ->with(
+                'tl_news_feed',
+                [
+                    'id' => 1,
+                ],
+            )
         ;
 
         $migration = new FeedMigration($connection, new NullLogger());

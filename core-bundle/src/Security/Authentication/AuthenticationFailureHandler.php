@@ -17,8 +17,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
+use Symfony\Component\Security\Http\SecurityRequestAttributes;
 
 class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterface
 {
@@ -33,7 +33,7 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
     {
         $this->logger?->info($exception->getMessage());
 
-        $request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);
+        $request->getSession()->set(SecurityRequestAttributes::AUTHENTICATION_ERROR, $exception);
 
         return new RedirectResponse($request->getUri());
     }

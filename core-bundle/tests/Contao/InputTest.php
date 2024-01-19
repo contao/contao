@@ -468,6 +468,11 @@ class InputTest extends TestCase
             '<a href="{{email_url::javascript:alert(1)|urlattr}}">',
         ];
 
+        yield 'Does allow colon in URL anchors after insert tags' => [
+            '<a href="{{link_url::1|urlattr}}#foo:bar">',
+            '<a href="{{link_url::1|urlattr}}#foo%3Abar">',
+        ];
+
         yield 'Does not get tricked by stripping null escapes' => [
             '<img src="foo{{bar}\\0}baz">',
             '<img src="foo{{bar&#125;&#92;0&#125;baz">',
@@ -755,17 +760,17 @@ class InputTest extends TestCase
 
         $this->assertSame(
             '<script>alert(foo > bar);</script>foo &#62; bar',
-            Input::stripTags('<script>alert(foo > bar);</script>foo > bar', '<div><span><script>')
+            Input::stripTags('<script>alert(foo > bar);</script>foo > bar', '<div><span><script>'),
         );
 
         $this->assertSame(
             '<script><!-- alert(foo > bar); --></script>foo &#62; bar',
-            Input::stripTags('<script><!-- alert(foo > bar); --></script>foo > bar', '<div><span><script>')
+            Input::stripTags('<script><!-- alert(foo > bar); --></script>foo > bar', '<div><span><script>'),
         );
 
         $this->assertSame(
             '<script><!-- alert(foo > bar); </script>foo &#62; bar',
-            Input::stripTags('<scrIpt type="VBScript"><!-- alert(foo > bar); </SCRiPT >foo > bar', '<div><span><script>')
+            Input::stripTags('<scrIpt type="VBScript"><!-- alert(foo > bar); </SCRiPT >foo > bar', '<div><span><script>'),
         );
     }
 

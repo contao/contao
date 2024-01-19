@@ -65,7 +65,7 @@ class BackupCodeManagerTest extends TestCase
                 password_hash('123456', PASSWORD_DEFAULT),
                 password_hash('234567', PASSWORD_DEFAULT),
             ],
-            JSON_THROW_ON_ERROR
+            JSON_THROW_ON_ERROR,
         );
 
         $frontendUser = $this->mockClassWithProperties(FrontendUser::class);
@@ -87,7 +87,7 @@ class BackupCodeManagerTest extends TestCase
                 '$2y$10$vY0fVrqfUmzzHSQpT6ZMPOGwrYLq.9s/Y1M9cV9/0K0SlGH/kMotC', // 4ead45-4ea70a
                 '$2y$10$Ie2VHgQLiNTfAI1kDV19U.i9dsvIE4tt3h75rpVHnoWqJFS0Lq1Yy', // 0082ec-b95f03
             ],
-            JSON_THROW_ON_ERROR
+            JSON_THROW_ON_ERROR,
         );
 
         $user = $this->mockClassWithProperties(BackendUser::class);

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Filesystem;
 
+use Contao\CoreBundle\File\Metadata;
 use League\Flysystem\FileAttributes;
 use League\Flysystem\StorageAttributes;
 use Symfony\Component\Filesystem\Path;
@@ -57,7 +58,7 @@ class FilesystemItem implements \Stringable
                 $attributes->lastModified(),
                 $attributes->fileSize(),
                 $attributes->mimeType(),
-                $attributes->extraMetadata()
+                $attributes->extraMetadata(),
             );
         }
 
@@ -118,6 +119,60 @@ class FilesystemItem implements \Stringable
         return $this->path;
     }
 
+    public function isVideo(): bool
+    {
+        if (!$this->isFile()) {
+            return false;
+        }
+
+        return str_starts_with($this->getMimeType(), 'video/');
+    }
+
+    public function isAudio(): bool
+    {
+        if (!$this->isFile()) {
+            return false;
+        }
+
+        return str_starts_with($this->getMimeType(), 'audio/');
+    }
+
+    public function isImage(): bool
+    {
+        if (!$this->isFile()) {
+            return false;
+        }
+
+        return str_starts_with($this->getMimeType(), 'image/');
+    }
+
+    public function isPdf(): bool
+    {
+        if (!$this->isFile()) {
+            return false;
+        }
+
+        return 'application/pdf' === $this->getMimeType();
+    }
+
+    public function isSpreadsheet(): bool
+    {
+        if (!$this->isFile()) {
+            return false;
+        }
+
+        return \in_array(
+            $this->getMimeType(),
+            [
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'application/vnd.ms-excel',
+                'application/msexcel',
+                'application/x-msexcel',
+            ],
+            true,
+        );
+    }
+
     public function getExtension(bool $forceLowerCase = false): string
     {
         return Path::getExtension($this->path, $forceLowerCase);
@@ -172,6 +227,44 @@ class FilesystemItem implements \Stringable
     public function getUuid(): Uuid|null
     {
         return $this->getExtraMetadata()['uuid'] ?? null;
+    }
+
+    public function getSchemaOrgData(): array
+    {
+        $fileIdentifier = $this->getPath();
+
+        if ($this->getUuid()) {
+            $fileIdentifier = '#/schema/file/'.$this->getUuid();
+        }
+
+        $type = match (true) {
+            $this->isVideo() => 'VideoObject',
+            $this->isAudio() => 'AudioObject',
+            $this->isImage() => 'ImageObject',
+            $this->isPdf() => 'DigitalDocument',
+            $this->isSpreadsheet() => 'SpreadsheetDigitalDocument',
+            default => 'MediaObject',
+        };
+
+        $jsonLd = [
+            '@type' => $type,
+            'identifier' => $fileIdentifier,
+            'contentUrl' => $this->getPath(),
+            'encodingFormat' => $this->getMimeType(),
+        ];
+
+        if ($this->getMetaData()) {
+            $jsonLd = [...$this->getMetaData()->getSchemaOrgData($type), ...$jsonLd];
+        }
+
+        ksort($jsonLd);
+
+        return $jsonLd;
+    }
+
+    private function getMetaData(): Metadata|null
+    {
+        return ($this->getExtraMetadata()['metadata'] ?? null)?->getDefault();
     }
 
     private function assertIsFile(string $method): void

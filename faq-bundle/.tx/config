@@ -1,51 +1,51 @@
 [main]
-host = https://www.transifex.com
+host = https://app.transifex.com
 
-[o:contao:p:faq-bundle:r:v5_2-default]
+[o:contao:p:faq-bundle:r:v5_3-default]
 file_filter = contao/languages/<lang>/default.xlf
 source_file = contao/languages/en/default.xlf
 type = XLIFF
 source_lang = en
-resource_name = v5_2-default
+resource_name = v5_3-default
 
-[o:contao:p:faq-bundle:r:v5_2-modules]
+[o:contao:p:faq-bundle:r:v5_3-modules]
 file_filter = contao/languages/<lang>/modules.xlf
 source_file = contao/languages/en/modules.xlf
 type = XLIFF
 source_lang = en
-resource_name = v5_2-modules
+resource_name = v5_3-modules
 
-[o:contao:p:faq-bundle:r:v5_2-tl_faq]
+[o:contao:p:faq-bundle:r:v5_3-tl_faq]
 file_filter = contao/languages/<lang>/tl_faq.xlf
 source_file = contao/languages/en/tl_faq.xlf
 type = XLIFF
 source_lang = en
-resource_name = v5_2-tl_faq
+resource_name = v5_3-tl_faq
 
-[o:contao:p:faq-bundle:r:v5_2-tl_faq_category]
+[o:contao:p:faq-bundle:r:v5_3-tl_faq_category]
 file_filter = contao/languages/<lang>/tl_faq_category.xlf
 source_file = contao/languages/en/tl_faq_category.xlf
 type = XLIFF
 source_lang = en
-resource_name = v5_2-tl_faq_category
+resource_name = v5_3-tl_faq_category
 
-[o:contao:p:faq-bundle:r:v5_2-tl_module]
+[o:contao:p:faq-bundle:r:v5_3-tl_module]
 file_filter = contao/languages/<lang>/tl_module.xlf
 source_file = contao/languages/en/tl_module.xlf
 type = XLIFF
 source_lang = en
-resource_name = v5_2-tl_module
+resource_name = v5_3-tl_module
 
-[o:contao:p:faq-bundle:r:v5_2-tl_user]
+[o:contao:p:faq-bundle:r:v5_3-tl_user]
 file_filter = contao/languages/<lang>/tl_user.xlf
 source_file = contao/languages/en/tl_user.xlf
 type = XLIFF
 source_lang = en
-resource_name = v5_2-tl_user
+resource_name = v5_3-tl_user
 
-[o:contao:p:faq-bundle:r:v5_2-tl_user_group]
+[o:contao:p:faq-bundle:r:v5_3-tl_user_group]
 file_filter = contao/languages/<lang>/tl_user_group.xlf
 source_file = contao/languages/en/tl_user_group.xlf
 type = XLIFF
 source_lang = en
-resource_name = v5_2-tl_user_group
+resource_name = v5_3-tl_user_group

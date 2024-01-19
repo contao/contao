@@ -21,7 +21,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'contao:backup:create',
-    description: 'Creates a new database backup.'
+    description: 'Creates a new database backup.',
 )]
 class BackupCreateCommand extends AbstractBackupCommand
 {

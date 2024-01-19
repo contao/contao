@@ -22,15 +22,9 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class VersionCommandTest extends TestCase
 {
-    /**
-     * @var Application&MockObject
-     */
-    private Application $application;
+    private Application&MockObject $application;
 
-    /**
-     * @var PluginLoader&MockObject
-     */
-    private PluginLoader $pluginLoader;
+    private PluginLoader&MockObject $pluginLoader;
 
     private VersionCommand $command;
 
@@ -78,7 +72,7 @@ class VersionCommandTest extends TestCase
                 'commands' => [],
                 'features' => [],
             ],
-            JSON_THROW_ON_ERROR
+            JSON_THROW_ON_ERROR,
         );
 
         $this->assertSame($expected, $commandTester->getDisplay());
@@ -109,7 +103,7 @@ class VersionCommandTest extends TestCase
                 'commands' => ['foo:bar'],
                 'features' => [],
             ],
-            JSON_THROW_ON_ERROR
+            JSON_THROW_ON_ERROR,
         );
 
         $this->assertSame($expected, $commandTester->getDisplay());
@@ -155,7 +149,7 @@ class VersionCommandTest extends TestCase
                     ],
                 ],
             ],
-            JSON_THROW_ON_ERROR
+            JSON_THROW_ON_ERROR,
         );
 
         $this->assertSame($expected, $commandTester->getDisplay());

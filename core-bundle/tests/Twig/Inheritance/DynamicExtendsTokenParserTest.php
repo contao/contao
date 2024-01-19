@@ -53,7 +53,7 @@ class DynamicExtendsTokenParserTest extends TestCase
                     }
 
                     throw new \LogicException('Template not found in hierarchy.');
-                }
+                },
             )
         ;
 
@@ -63,7 +63,7 @@ class DynamicExtendsTokenParserTest extends TestCase
         $source = new Source(
             $code,
             'template.html.twig',
-            '/path/to/the/template.html.twig'
+            '/path/to/the/template.html.twig',
         );
 
         $tokenStream = (new Lexer($environment))->tokenize($source);
@@ -140,13 +140,13 @@ class DynamicExtendsTokenParserTest extends TestCase
         $environment = new Environment($this->createMock(LoaderInterface::class));
 
         $environment->addTokenParser(new DynamicExtendsTokenParser(
-            $this->createMock(TemplateHierarchyInterface::class)
+            $this->createMock(TemplateHierarchyInterface::class),
         ));
 
         $source = new Source(
             $code,
             'template.html.twig',
-            '/path/to/the/template.html.twig'
+            '/path/to/the/template.html.twig',
         );
 
         $tokenStream = (new Lexer($environment))->tokenize($source);

@@ -27,9 +27,11 @@
       </trans-unit>
       <trans-unit id="tl_form.confirmation.0">
         <source>Confirmation message</source>
+        <target>Potvrzovací zpráva</target>
       </trans-unit>
       <trans-unit id="tl_form.confirmation.1">
         <source>Here you can enter the confirmation message that will be displayed after submitting the form. You can use the submitted form data as simple tokens, e.g. &lt;code&gt;##field_name##&lt;/code&gt;. The confirmation message is also available as &lt;code&gt;{{form_confirmation}}&lt;/code&gt; insert tag.</source>
+        <target>Sem můžete zadat potvrzovací zprávu, která se zobrazí po úspěšném odeslání formuláře. Můžete použít jednoduchý kód (simple tokens), například  &lt;code&gt;##field_name##&lt;/code&gt;. Potvrzovací zpráva je také k dispozici jako inzertní tag &lt;code&gt;{{form_confirmation}}&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_form.sendViaEmail.0">
         <source>Send form data via e-mail</source>
@@ -193,9 +195,11 @@
       </trans-unit>
       <trans-unit id="tl_form.ajax.0">
         <source>Submit via Ajax</source>
+        <target>Odeslat pomocí Ajaxu</target>
       </trans-unit>
       <trans-unit id="tl_form.ajax.1">
         <source>Submit the form via Ajax instead of reloading the page.</source>
+        <target>Odeslat formulář pomocí Ajaxu místo znovunačtení stránky.</target>
       </trans-unit>
       <trans-unit id="tl_form.tstamp.0">
         <source>Revision date</source>
