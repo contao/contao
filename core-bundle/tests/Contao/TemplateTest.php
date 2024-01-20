@@ -557,7 +557,7 @@ class TemplateTest extends TestCase
 
         (new Filesystem())->dumpFile(
             Path::join($this->getTempDir(), 'templates/test_template.html5'),
-            '<?= $this->extractStyleAttributesForCsp(\'<p style="text-decoration: underline;">\') ?>',
+            '<?= $this->cspInlineStyles(\'<p style="text-decoration: underline;">\') ?>',
         );
 
         $this->assertSame('<p style="text-decoration: underline;">', (new FrontendTemplate('test_template'))->parse());

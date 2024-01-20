@@ -12,7 +12,7 @@
 
           <div class="ce_text block">
             <?php if (!$faq->addBefore): ?>
-              <?= $this->extractStyleAttributesForCsp($faq->answer) ?>
+              <?= $this->cspInlineStyles($faq->answer) ?>
             <?php endif; ?>
 
             <?php if ($faq->addImage): ?>
@@ -20,7 +20,7 @@
             <?php endif; ?>
 
             <?php if ($faq->addBefore): ?>
-              <?= $this->extractStyleAttributesForCsp($faq->answer) ?>
+              <?= $this->cspInlineStyles($faq->answer) ?>
             <?php endif; ?>
           </div>
 
