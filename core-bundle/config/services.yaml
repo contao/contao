@@ -1144,6 +1144,11 @@ services:
         arguments:
             - '@contao.routing.response_context_accessor'
 
+    contao.twig.string_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\StringRuntime
+        arguments:
+            - '@contao.framework'
+
     contao.twig.url_runtime:
         class: Contao\CoreBundle\Twig\Runtime\UrlRuntime
         arguments:
