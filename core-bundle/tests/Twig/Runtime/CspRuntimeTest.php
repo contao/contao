@@ -119,6 +119,6 @@ class CspRuntimeTest extends TestCase
         ;
 
         $runtime = new CspRuntime($responseContextAccessor, $wysiwygProcessor);
-        $runtime->extractStyleAttributes('foobar');
+        $runtime->inlineStyles('foobar');
     }
 }

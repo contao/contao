@@ -28,7 +28,7 @@ final class CspRuntime implements RuntimeExtensionInterface
     ) {
     }
 
-    public function extractStyleAttributes(string $htmlFragment): string
+    public function inlineStyles(string $htmlFragment): string
     {
         $responseContext = $this->responseContextAccessor->getResponseContext();
 

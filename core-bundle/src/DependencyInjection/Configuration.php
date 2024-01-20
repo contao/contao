@@ -838,7 +838,7 @@ class Configuration implements ConfigurationInterface
             ->addDefaultsIfNotSet()
             ->children()
                 ->arrayNode('allowed_inline_styles')
-                    ->info('Contao provides an "extract_styles_for_csp" Twig filter which is able to automatically generate CSP hashes for inline style attributes of WYSIWYG editors. For security reasons, the supported properties and their regex value have to be specified here.')
+                    ->info('Contao provides an "csp_inline_styles" Twig filter which is able to automatically generate CSP hashes for inline style attributes of WYSIWYG editors. For security reasons, the supported properties and their regex value have to be specified here.')
                     ->useAttributeAsKey('property')
                     ->prototype('scalar')->end()
                     ->normalizeKeys(false)

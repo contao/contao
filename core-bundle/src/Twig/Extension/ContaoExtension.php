@@ -294,8 +294,8 @@ final class ContaoExtension extends AbstractExtension
                 ['is_safe' => ['html']],
             ),
             new TwigFilter(
-                'extract_styles_for_csp',
-                [CspRuntime::class, 'extractStyleAttributes'],
+                'csp_inline_styles',
+                [CspRuntime::class, 'inlineStyles'],
                 ['preserves_safety' => ['html']],
             ),
         ];
