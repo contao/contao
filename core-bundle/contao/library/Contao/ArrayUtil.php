@@ -144,4 +144,9 @@ class ArrayUtil
 
 		return implode(', ', $result);
 	}
+
+	public static function mapRecursive(callable $fn, array $arr): array
+	{
+		return array_map(static fn ($item) => \is_array($item) ? self::mapRecursive($fn, $item) : $fn($item), $arr);
+	}
 }
