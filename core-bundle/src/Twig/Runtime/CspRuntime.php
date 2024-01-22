@@ -42,10 +42,6 @@ final class CspRuntime implements RuntimeExtensionInterface
             return $htmlFragment;
         }
 
-        if (!$styles = $this->wysiwygProcessor->extractStyles($htmlFragment)) {
-            return $htmlFragment;
-        }
-
         /** @var CspHandler $csp */
         $csp = $responseContext->get(CspHandler::class);
 
