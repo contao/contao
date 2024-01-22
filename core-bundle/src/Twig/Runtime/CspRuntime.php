@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Twig\Runtime;
 
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+use Nelmio\SecurityBundle\Twig\CSPRuntime as NelmioCSPRuntime;
 use Twig\Extension\RuntimeExtensionInterface;
 
 final class CspRuntime implements RuntimeExtensionInterface
@@ -21,8 +22,10 @@ final class CspRuntime implements RuntimeExtensionInterface
     /**
      * @internal
      */
-    public function __construct(private readonly ResponseContextAccessor $responseContextAccessor)
-    {
+    public function __construct(
+        private readonly ResponseContextAccessor $responseContextAccessor,
+        private readonly NelmioCSPRuntime|null $nelmioCSPRuntime = null,
+    ) {
     }
 
     public function getNonce(string $directive): string|null
@@ -30,6 +33,11 @@ final class CspRuntime implements RuntimeExtensionInterface
         $responseContext = $this->responseContextAccessor->getResponseContext();
 
         if (!$responseContext?->has(CspHandler::class)) {
+            // Forward to Nelmio's CSPRuntime method
+            if ($this->nelmioCSPRuntime) {
+                return $this->nelmioCSPRuntime->getCSPNonce(preg_replace('/^(script|style)-src/', '$1', $directive));
+            }
+
             return '';
         }
 
