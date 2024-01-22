@@ -806,10 +806,10 @@ services:
             - '@contao.string.html_decoder'
             - '@request_stack'
             - '@contao.insert_tag.parser'
-            - '@contao.routing.response_context.csp.handler_factory'
+            - '@contao.routing.response_context.csp_handler_factory'
             - '@router'
 
-    contao.routing.response_context.csp.handler_factory:
+    contao.routing.response_context.csp_handler_factory:
         class: Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandlerFactory
         arguments:
             - '@contao.csp.parser'

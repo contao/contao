@@ -540,8 +540,8 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
     private function handleCspConfig(array $config, ContainerBuilder $container): void
     {
-        if ($container->hasDefinition('contao.routing.response_context.csp.handler_factory')) {
-            $factory = $container->getDefinition('contao.routing.response_context.csp.handler_factory');
+        if ($container->hasDefinition('contao.routing.response_context.csp_handler_factory')) {
+            $factory = $container->getDefinition('contao.routing.response_context.csp_handler_factory');
             $factory->setArgument(1, $config['csp']['max_header_size']);
         }
 
