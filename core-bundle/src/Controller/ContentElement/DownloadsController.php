@@ -61,8 +61,8 @@ class DownloadsController extends AbstractDownloadContentElementController
 
         // Explicitly define title/text metadata for a single file
         if ('download' === $model->type && $model->overwriteLink && $downloads) {
-            $downloads[0]['title'] = $model->linkTitle;
-            $downloads[0]['text'] = $model->titleText;
+            $downloads[0]['title'] = $model->titleText;
+            $downloads[0]['text'] = $model->linkTitle;
         }
 
         $template->set('downloads', $downloads);
