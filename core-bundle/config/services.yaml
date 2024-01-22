@@ -1132,6 +1132,7 @@ services:
         class: Contao\CoreBundle\Twig\Runtime\CspRuntime
         arguments:
             - '@contao.routing.response_context_accessor'
+            - '@?nelmio_security.csp.runtime'
 
     contao.twig.extension:
         class: Contao\CoreBundle\Twig\Extension\ContaoExtension
