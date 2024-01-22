@@ -169,7 +169,7 @@ body.popup {
 	background: var(--content-bg);
 	border: 1px solid var(--content-border);
 	box-shadow: 0 1px 6px rgba(0,0,0,.2);
-	z-index: 4; /* above .jump-targets */
+	z-index: 4; /* Above .jump-targets */
 	color: var(--text);
 	text-align: left;
 	opacity: 0;
