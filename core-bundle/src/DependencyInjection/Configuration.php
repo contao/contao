@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DependencyInjection;
 
 use Contao\Config;
+use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
 use Contao\CoreBundle\Doctrine\Backup\RetentionPolicy;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Image\Metadata\ExifFormat;
@@ -123,6 +124,7 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addBackupNode())
                 ->append($this->addSanitizerNode())
                 ->append($this->addCronNode())
+                ->append($this->addCspNode())
             ->end()
         ;
 
@@ -824,6 +826,54 @@ class Configuration implements ConfigurationInterface
                     ->info('Allows to enable or disable the kernel.terminate listener that executes cron jobs within the web process. "auto" will auto-disable it if a CLI cron is running.')
                     ->values(['auto', true, false])
                     ->defaultValue('auto')
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addCspNode(): NodeDefinition
+    {
+        return (new TreeBuilder('csp'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('allowed_inline_styles')
+                    ->info('Contao provides an "csp_inline_styles" Twig filter which is able to automatically generate CSP hashes for inline style attributes of WYSIWYG editors. For security reasons, the supported properties and their regex value have to be specified here.')
+                    ->useAttributeAsKey('property')
+                    ->prototype('scalar')->end()
+                    ->normalizeKeys(false)
+                    ->defaultValue([
+                        'text-align' => 'left|center|right|justify',
+                        'text-decoration' => 'underline',
+                        'background-color' => 'rgb\(\d{1,3},\s?\d{1,3},\s?\d{1,3}\)|#([0-9a-f]{3}){1,2}',
+                        'color' => 'rgb\(\d{1,3},\s?\d{1,3},\s?\d{1,3}\)|#([0-9a-f]{3}){1,2}',
+                        'font-family' => '((\'[a-z0-9 _-]+\'|[a-z0-9 _-]+)(,\s*|$))+',
+                        'font-size' => '[0-3]?\dpt',
+                        'line-height' => '[0-3](\.\d+)?',
+                        'padding-left' => '\d{1,3}px',
+                        'border-collapse' => 'collapse',
+                        'margin-right' => '0px|auto',
+                        'margin-left' => '0px|auto',
+                        'border-color' => 'rgb\(\d{1,3},\s?\d{1,3},\s?\d{1,3}\)|#([0-9a-f]{3}){1,2}',
+                        'vertical-align' => 'top|middle|bottom',
+                    ])
+                    ->validate()
+                        ->always(
+                            static function (array $allowedProperties): array {
+                                foreach ($allowedProperties as $property => $regex) {
+                                    if (false === @preg_match(WysiwygStyleProcessor::prepareRegex($regex), '')) {
+                                        throw new \InvalidArgumentException(sprintf('The regex "%s" for property "%s" is invalid.', $regex, $property));
+                                    }
+
+                                    if (str_contains($regex, '.*')) {
+                                        throw new \InvalidArgumentException(sprintf('The regex "%s" for property "%s" contains ".*" which is not allowed due to security reasons.', $regex, $property));
+                                    }
+                                }
+
+                                return $allowedProperties;
+                            },
+                        )
+                    ->end()
                 ->end()
             ->end()
         ;
