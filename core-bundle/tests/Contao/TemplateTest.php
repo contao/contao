@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\BackendTemplate;
 use Contao\Config;
+use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
@@ -523,7 +524,7 @@ class TemplateTest extends TestCase
         $style = 'display:none';
         $algorithm = 'sha384';
 
-        $result = (new FrontendTemplate())->inlineStyle($style, $algorithm);
+        $result = (new FrontendTemplate())->cspInlineStyle($style, $algorithm);
 
         $response = new Response();
         $cspHandler->applyHeaders($response);
@@ -531,6 +532,42 @@ class TemplateTest extends TestCase
         $expectedHash = base64_encode(hash($algorithm, $style, true));
 
         $this->assertSame($style, $result);
+        $this->assertSame(sprintf("style-src 'self' 'unsafe-hashes' '%s-%s'", $algorithm, $expectedHash), $response->headers->get('Content-Security-Policy'));
+    }
+
+    public function testExtractsStyleAttributesForCsp(): void
+    {
+        $directives = new DirectiveSet(new PolicyManager());
+        $directives->setLevel1Fallback(false);
+        $directives->setDirective('style-src', "'self'");
+
+        $cspHandler = new CspHandler($directives);
+        $responseContext = (new ResponseContext())->add($cspHandler);
+
+        $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
+        $responseContextAccessor
+            ->expects($this->once())
+            ->method('getResponseContext')
+            ->willReturn($responseContext)
+        ;
+
+        System::getContainer()->set('contao.routing.response_context_accessor', $responseContextAccessor);
+        System::getContainer()->set('request_stack', new RequestStack());
+        System::getContainer()->set('contao.csp.wysiwyg_style_processor', new WysiwygStyleProcessor(['text-decoration' => 'underline']));
+
+        (new Filesystem())->dumpFile(
+            Path::join($this->getTempDir(), 'templates/test_template.html5'),
+            '<?= $this->cspInlineStyles(\'<p style="text-decoration: underline;">\') ?>',
+        );
+
+        $this->assertSame('<p style="text-decoration: underline;">', (new FrontendTemplate('test_template'))->parse());
+
+        $response = new Response();
+        $cspHandler->applyHeaders($response);
+
+        $algorithm = 'sha384';
+        $expectedHash = base64_encode(hash($algorithm, 'text-decoration: underline;', true));
+
         $this->assertSame(sprintf("style-src 'self' 'unsafe-hashes' '%s-%s'", $algorithm, $expectedHash), $response->headers->get('Content-Security-Policy'));
     }
 }

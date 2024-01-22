@@ -294,6 +294,11 @@ final class ContaoExtension extends AbstractExtension
                 [SanitizerRuntime::class, 'sanitizeHtml'],
                 ['is_safe' => ['html']],
             ),
+            new TwigFilter(
+                'csp_inline_styles',
+                [CspRuntime::class, 'inlineStyles'],
+                ['preserves_safety' => ['html']],
+            ),
         ];
     }
 

@@ -139,6 +139,12 @@ services:
     contao.csp.policy_manager:
         class: Nelmio\SecurityBundle\ContentSecurityPolicy\PolicyManager
 
+    contao.csp.wysiwyg_style_processor:
+        class: Contao\CoreBundle\Csp\WysiwygStyleProcessor
+        public: true
+        arguments:
+            - []
+
     contao.csrf.token_manager:
         class: Contao\CoreBundle\Csrf\ContaoCsrfTokenManager
         public: true
@@ -1132,6 +1138,7 @@ services:
         class: Contao\CoreBundle\Twig\Runtime\CspRuntime
         arguments:
             - '@contao.routing.response_context_accessor'
+            - '@contao.csp.wysiwyg_style_processor'
             - '@?nelmio_security.csp.runtime'
 
     contao.twig.extension:

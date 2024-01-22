@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Runtime;
 
+use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Nelmio\SecurityBundle\Twig\CSPRuntime as NelmioCSPRuntime;
@@ -24,8 +25,33 @@ final class CspRuntime implements RuntimeExtensionInterface
      */
     public function __construct(
         private readonly ResponseContextAccessor $responseContextAccessor,
+        private readonly WysiwygStyleProcessor $wysiwygProcessor,
         private readonly NelmioCSPRuntime|null $nelmioCSPRuntime = null,
     ) {
+    }
+
+    public function inlineStyles(string $htmlFragment): string
+    {
+        $responseContext = $this->responseContextAccessor->getResponseContext();
+
+        if (!$responseContext?->has(CspHandler::class)) {
+            return $htmlFragment;
+        }
+
+        if (!$styles = $this->wysiwygProcessor->extractStyles($htmlFragment)) {
+            return $htmlFragment;
+        }
+
+        /** @var CspHandler $csp */
+        $csp = $responseContext->get(CspHandler::class);
+
+        foreach ($styles as $style) {
+            $csp->addHash('style-src', $style);
+        }
+
+        $csp->addSource('style-src', 'unsafe-hashes');
+
+        return $htmlFragment;
     }
 
     public function getNonce(string $directive): string|null
