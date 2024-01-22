@@ -16,6 +16,7 @@ use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use Nelmio\SecurityBundle\ContentSecurityPolicy\DirectiveSet;
 use Nelmio\SecurityBundle\ContentSecurityPolicy\PolicyManager;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 class CspHandlerTest extends TestCase
@@ -89,7 +90,7 @@ class CspHandlerTest extends TestCase
         $this->assertSame("style-src 'self'", $response->headers->get('Content-Security-Policy'));
     }
 
-    public function testChecksIfDiretiveOrFallbackIsSet(): void
+    public function testChecksIfDirectiveOrFallbackIsSet(): void
     {
         $cspHandler = $this->getCspHandler(['default-src' => "'self'"]);
         $this->assertNotNull($cspHandler->getDirective('script-src'));
@@ -115,12 +116,145 @@ class CspHandlerTest extends TestCase
         $this->assertSame("script-src 'self'", $response->headers->get('Content-Security-Policy-Report-Only'));
     }
 
-    private function getCspHandler(array $directives = ['script-src' => "'self'"]): CspHandler
+    public function testCspExceedsMaximumLengthAndCannotBeReduced(): void
+    {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessageMatches('/^The generated Content Security Policy header exceeds 20 bytes. It is highly unlikely.+/');
+
+        $response = new Response();
+        $cspHandler = $this->getCspHandler(
+            [
+                'default-src' => "'self'",
+                'style-src' => "'self'",
+                'script-src' => "'self'",
+            ],
+            20,
+        );
+
+        for ($i = 0; $i < 5; ++$i) {
+            $cspHandler->addHash('style-src', bin2hex(random_bytes(20)));
+        }
+
+        $cspHandler->applyHeaders($response);
+    }
+
+    /**
+     * @dataProvider cspExceedsMaximumLengthIsProperlyReducedProvider
+     */
+    public function testCspExceedsMaximumLengthIsProperlyReduced(int $maxHeaderLength, array $styleHashes, array $scriptHashes, string $expectedLogMessage, string $expectedCspHeader): void
+    {
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger
+            ->expects('' === $expectedLogMessage ? $this->never() : $this->once())
+            ->method('critical')
+            ->with($expectedLogMessage)
+        ;
+
+        $response = new Response();
+        $cspHandler = $this->getCspHandler(['default-src' => "'self'"], $maxHeaderLength, $logger);
+
+        foreach ($styleHashes as $styleHash) {
+            $cspHandler->addHash('style-src', $styleHash);
+        }
+
+        foreach ($scriptHashes as $scriptHash) {
+            $cspHandler->addHash('script-src', $scriptHash);
+        }
+
+        $cspHandler->applyHeaders($response);
+
+        $this->assertSame($expectedCspHeader, $response->headers->get('Content-Security-Policy'));
+    }
+
+    public function cspExceedsMaximumLengthIsProperlyReducedProvider(): \Generator
+    {
+        yield 'All hashes fit into the header, nothing should be reduced' => [
+            4096,
+            [
+                'style-d9813b22',
+                'style-194c5b63',
+                'style-87ef01e8',
+            ],
+            [
+                'script-4bef1ebb',
+                'script-ebdca00f',
+                'script-096ccf1e',
+            ],
+            '',
+            "default-src 'self'; script-src 'self' 'sha384-WiH70QJ//IwHzEEazDLD3ib/HCBX/w5DVK7iLcwNctCgC1gny3WZhpHYVc6MjM9p' 'sha384-2C5rO1BSGnvaxlQR9JaYInkYkxIBgqypaFa5W2Ers/2Uo+TF7HaOLeGTGhv2OFqL' 'sha384-H4X1/C0N5XroCPXG9EsrS7uyO3Gr2++QGudhEO0BrXuRgO83gfa1jegPJfs9Pr7f'; style-src 'self' 'sha384-6ygZ/e3B2JsYp8JUU2hp06kb4zU3aV3N9xgzeKjSvx0RhCkYBh3hG3gS9+iaa/Pc' 'sha384-SfjF7vhH3AekJ2O/KUjiHQg3wZ1GvMZKSio0AbFkBjoq8JmX2VeOp++Jg+j6DmSZ' 'sha384-6EpNvRkpzXKc0/GqaxbbUjVVMY7ihAahgNJolwHhuXbgncyGzHtMDoKymvNwecrl'",
+        ];
+
+        yield 'Not all hashes fit in the header. Should reduce the last style hash' => [
+            480,
+            [
+                'style-d9813b22',
+                'style-194c5b63',
+                'style-87ef01e8',
+            ],
+            [
+                'script-4bef1ebb',
+                'script-ebdca00f',
+                'script-096ccf1e',
+            ],
+            'Allowed CSP header size of 480 bytes exhausted (tried to write 499 bytes)',
+            "default-src 'self'; script-src 'self' 'sha384-WiH70QJ//IwHzEEazDLD3ib/HCBX/w5DVK7iLcwNctCgC1gny3WZhpHYVc6MjM9p' 'sha384-2C5rO1BSGnvaxlQR9JaYInkYkxIBgqypaFa5W2Ers/2Uo+TF7HaOLeGTGhv2OFqL' 'sha384-H4X1/C0N5XroCPXG9EsrS7uyO3Gr2++QGudhEO0BrXuRgO83gfa1jegPJfs9Pr7f'; style-src 'self' 'sha384-6ygZ/e3B2JsYp8JUU2hp06kb4zU3aV3N9xgzeKjSvx0RhCkYBh3hG3gS9+iaa/Pc' 'sha384-SfjF7vhH3AekJ2O/KUjiHQg3wZ1GvMZKSio0AbFkBjoq8JmX2VeOp++Jg+j6DmSZ'",
+        ];
+
+        yield 'None of the style hashes fit' => [
+            350,
+            [
+                'style-d9813b22',
+                'style-194c5b63',
+                'style-87ef01e8',
+            ],
+            [
+                'script-4bef1ebb',
+                'script-ebdca00f',
+                'script-096ccf1e',
+            ],
+            'Allowed CSP header size of 350 bytes exhausted (tried to write 499 bytes)',
+            "default-src 'self'; script-src 'self' 'sha384-WiH70QJ//IwHzEEazDLD3ib/HCBX/w5DVK7iLcwNctCgC1gny3WZhpHYVc6MjM9p' 'sha384-2C5rO1BSGnvaxlQR9JaYInkYkxIBgqypaFa5W2Ers/2Uo+TF7HaOLeGTGhv2OFqL' 'sha384-H4X1/C0N5XroCPXG9EsrS7uyO3Gr2++QGudhEO0BrXuRgO83gfa1jegPJfs9Pr7f'; style-src 'self'",
+        ];
+
+        yield 'Not all of the script hashes fit either' => [
+            200,
+            [
+                'style-d9813b22',
+                'style-194c5b63',
+                'style-87ef01e8',
+            ],
+            [
+                'script-4bef1ebb',
+                'script-ebdca00f',
+                'script-096ccf1e',
+            ],
+            'Allowed CSP header size of 200 bytes exhausted (tried to write 499 bytes)',
+            "default-src 'self'; script-src 'self' 'sha384-WiH70QJ//IwHzEEazDLD3ib/HCBX/w5DVK7iLcwNctCgC1gny3WZhpHYVc6MjM9p'; style-src 'self'",
+        ];
+
+        yield 'None of the hashes fit' => [
+            100,
+            [
+                'style-d9813b22',
+                'style-194c5b63',
+                'style-87ef01e8',
+            ],
+            [
+                'script-4bef1ebb',
+                'script-ebdca00f',
+                'script-096ccf1e',
+            ],
+            'Allowed CSP header size of 100 bytes exhausted (tried to write 499 bytes)',
+            "default-src 'self'; script-src 'self' ; style-src 'self'",
+        ];
+    }
+
+    private function getCspHandler(array $directives = ['script-src' => "'self'"], int $maxHeaderLength = 4096, LoggerInterface|null $logger = null): CspHandler
     {
         $directiveSet = new DirectiveSet(new PolicyManager());
         $directiveSet->setDirectives($directives);
         $directiveSet->setLevel1Fallback(false);
 
-        return new CspHandler($directiveSet);
+        return new CspHandler($directiveSet, $maxHeaderLength, $logger);
     }
 }

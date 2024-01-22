@@ -14,11 +14,14 @@ namespace Contao\CoreBundle\Routing\ResponseContext\Csp;
 
 use Nelmio\SecurityBundle\ContentSecurityPolicy\ContentSecurityPolicyParser;
 use Nelmio\SecurityBundle\ContentSecurityPolicy\DirectiveSet;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 final class CspHandler
 {
+    private bool $reportOnly = false;
+
     private string|null $nonce = null;
 
     private array $directiveNonces = [];
@@ -31,7 +34,8 @@ final class CspHandler
 
     public function __construct(
         private DirectiveSet $directives,
-        private bool $reportOnly = false,
+        private readonly int $maxHeaderLength = 4096,
+        private readonly LoggerInterface|null $logger = null,
     ) {
     }
 
@@ -148,7 +152,7 @@ final class CspHandler
             $signatures[$name][] = 'nonce-'.$nonce;
         }
 
-        $headerValue = $this->directives->buildHeaderValue($request ?? new Request(), $signatures);
+        $headerValue = $this->buildHeaderConsideringMaxlength($request);
 
         if (!$headerValue) {
             return;
@@ -157,5 +161,67 @@ final class CspHandler
         $headerName = 'Content-Security-Policy'.($this->reportOnly ? '-Report-Only' : '');
 
         $response->headers->set($headerName, $headerValue);
+    }
+
+    private function buildHeaderConsideringMaxlength(Request|null $request = null): string
+    {
+        $headerValue = $this->buildHeaderValue($request);
+        $headerLength = \strlen($headerValue);
+
+        if ($headerLength < $this->maxHeaderLength) {
+            return $headerValue;
+        }
+
+        // We exceed the limit, write an error log
+        $this->logger?->critical(sprintf('Allowed CSP header size of %d bytes exhausted (tried to write %d bytes)',
+            $this->maxHeaderLength,
+            $headerLength,
+        ));
+
+        // Now let's try to not cause a 500 Internal Server error by removing some signatures. Let's remove some style-src
+        // signatures first because they likely have the least impact.
+        $this->reduceHashSignatures('style-src');
+
+        $headerValue = $this->buildHeaderValue($request);
+
+        if (\strlen($headerValue) < $this->maxHeaderLength) {
+            return $headerValue;
+        }
+
+        // We still exceed our limit, we have to reduce script-src now.
+        $this->reduceHashSignatures('script-src');
+
+        $headerValue = $this->buildHeaderValue($request);
+
+        if (\strlen($headerValue) < $this->maxHeaderLength) {
+            return $headerValue;
+        }
+
+        // Still couldn't make it - we have to throw an exception now.
+        throw new \LogicException(sprintf('The generated Content Security Policy header exceeds %d bytes. It is highly unlikely that your webserver will be able to handle such a big header value. Check the policy and ensure it stays below the %d bytes: %s', $this->maxHeaderLength, $this->maxHeaderLength, $headerValue));
+    }
+
+    private function buildHeaderValue(Request|null $request = null): string
+    {
+        $signatures = $this->signatures;
+
+        foreach ($this->directiveNonces as $name => $nonce) {
+            $signatures[$name][] = 'nonce-'.$nonce;
+        }
+
+        return trim($this->directives->buildHeaderValue($request ?? new Request(), $signatures));
+    }
+
+    private function reduceHashSignatures(string $source): void
+    {
+        if (!isset($this->signatures[$source])) {
+            return;
+        }
+
+        // Unset the ones added last first (in case of style-src, that would mean that the top inline styles would still
+        // work while towards the footer they might not work anymore)
+        do {
+            array_pop($this->signatures[$source]);
+        } while (\strlen($this->buildHeaderValue()) > $this->maxHeaderLength && [] !== $this->signatures[$source]);
     }
 }

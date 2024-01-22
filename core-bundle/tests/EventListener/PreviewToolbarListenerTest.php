@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\Csp\CspParser;
 use Contao\CoreBundle\EventListener\PreviewToolbarListener;
+use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandlerFactory;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Nelmio\SecurityBundle\ContentSecurityPolicy\PolicyManager;
@@ -42,7 +43,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext(),
-            new CspParser(new PolicyManager()),
+            new CspHandlerFactory(new CspParser(new PolicyManager())),
         );
 
         $response = new Response($content);
@@ -83,7 +84,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext(),
-            new CspParser(new PolicyManager()),
+            new CspHandlerFactory(new CspParser(new PolicyManager())),
         );
 
         $listener($event);
@@ -108,7 +109,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext(),
-            new CspParser(new PolicyManager()),
+            new CspHandlerFactory(new CspParser(new PolicyManager())),
         );
 
         $listener($event);
@@ -133,7 +134,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext(),
-            new CspParser(new PolicyManager()),
+            new CspHandlerFactory(new CspParser(new PolicyManager())),
         );
 
         $listener($event);
@@ -158,7 +159,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext(),
-            new CspParser(new PolicyManager()),
+            new CspHandlerFactory(new CspParser(new PolicyManager())),
         );
 
         $listener($event);
@@ -183,7 +184,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext(),
-            new CspParser(new PolicyManager()),
+            new CspHandlerFactory(new CspParser(new PolicyManager())),
         );
 
         $listener($event);
@@ -211,7 +212,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext(),
-            new CspParser(new PolicyManager()),
+            new CspHandlerFactory(new CspParser(new PolicyManager())),
         );
 
         $listener($event);
@@ -252,7 +253,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext(),
-            new CspParser(new PolicyManager()),
+            new CspHandlerFactory(new CspParser(new PolicyManager())),
         );
 
         $listener($event);
@@ -293,7 +294,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext(),
-            new CspParser(new PolicyManager()),
+            new CspHandlerFactory(new CspParser(new PolicyManager())),
         );
 
         $listener($event);
@@ -318,7 +319,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext(),
-            new CspParser(new PolicyManager()),
+            new CspHandlerFactory(new CspParser(new PolicyManager())),
         );
 
         $listener($event);
@@ -343,7 +344,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext(),
-            new CspParser(new PolicyManager()),
+            new CspHandlerFactory(new CspParser(new PolicyManager())),
         );
 
         $listener($event);
