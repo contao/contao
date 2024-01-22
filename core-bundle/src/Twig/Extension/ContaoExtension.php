@@ -205,16 +205,17 @@ final class ContaoExtension extends AbstractExtension
                 [FragmentRuntime::class, 'renderContent'],
                 ['is_safe' => ['html']],
             ),
+            // Overwrites the 'csp_nonce' method from nelmio/security-bundle
             new TwigFunction(
-                'contao_csp_nonce',
+                'csp_nonce',
                 [CspRuntime::class, 'getNonce'],
             ),
             new TwigFunction(
-                'add_csp_source',
+                'csp_source',
                 [CspRuntime::class, 'addSource'],
             ),
             new TwigFunction(
-                'add_csp_hash',
+                'csp_hash',
                 [CspRuntime::class, 'addHash'],
             ),
         ];

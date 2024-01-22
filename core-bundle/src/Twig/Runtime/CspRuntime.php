@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Twig\Runtime;
 use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+use Nelmio\SecurityBundle\Twig\CSPRuntime as NelmioCSPRuntime;
 use Twig\Extension\RuntimeExtensionInterface;
 
 final class CspRuntime implements RuntimeExtensionInterface
@@ -25,6 +26,7 @@ final class CspRuntime implements RuntimeExtensionInterface
     public function __construct(
         private readonly ResponseContextAccessor $responseContextAccessor,
         private readonly WysiwygStyleProcessor $wysiwygProcessor,
+        private readonly NelmioCSPRuntime|null $nelmioCSPRuntime = null,
     ) {
     }
 
@@ -57,6 +59,11 @@ final class CspRuntime implements RuntimeExtensionInterface
         $responseContext = $this->responseContextAccessor->getResponseContext();
 
         if (!$responseContext?->has(CspHandler::class)) {
+            // Forward to Nelmio's CSPRuntime method
+            if ($this->nelmioCSPRuntime) {
+                return $this->nelmioCSPRuntime->getCSPNonce(preg_replace('/^(script|style)-src/', '$1', $directive));
+            }
+
             return '';
         }
 
