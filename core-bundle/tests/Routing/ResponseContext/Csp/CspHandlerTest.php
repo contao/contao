@@ -196,7 +196,7 @@ class CspHandlerTest extends TestCase
                 'script-ebdca00f',
                 'script-096ccf1e',
             ],
-            'Allowed CSP header size of 480 bytes exhausted (tried to write 499 bytes)',
+            'Allowed CSP header size of 480 bytes exhausted (tried to write 499 bytes). Removed style-src hashes: sha384-6EpNvRkpzXKc0/GqaxbbUjVVMY7ihAahgNJolwHhuXbgncyGzHtMDoKymvNwecrl. Removed script-src hashes: none.',
             "default-src 'self'; script-src 'self' 'sha384-WiH70QJ//IwHzEEazDLD3ib/HCBX/w5DVK7iLcwNctCgC1gny3WZhpHYVc6MjM9p' 'sha384-2C5rO1BSGnvaxlQR9JaYInkYkxIBgqypaFa5W2Ers/2Uo+TF7HaOLeGTGhv2OFqL' 'sha384-H4X1/C0N5XroCPXG9EsrS7uyO3Gr2++QGudhEO0BrXuRgO83gfa1jegPJfs9Pr7f'; style-src 'self' 'sha384-6ygZ/e3B2JsYp8JUU2hp06kb4zU3aV3N9xgzeKjSvx0RhCkYBh3hG3gS9+iaa/Pc' 'sha384-SfjF7vhH3AekJ2O/KUjiHQg3wZ1GvMZKSio0AbFkBjoq8JmX2VeOp++Jg+j6DmSZ'",
         ];
 
@@ -212,7 +212,7 @@ class CspHandlerTest extends TestCase
                 'script-ebdca00f',
                 'script-096ccf1e',
             ],
-            'Allowed CSP header size of 350 bytes exhausted (tried to write 499 bytes)',
+            'Allowed CSP header size of 350 bytes exhausted (tried to write 499 bytes). Removed style-src hashes: sha384-6EpNvRkpzXKc0/GqaxbbUjVVMY7ihAahgNJolwHhuXbgncyGzHtMDoKymvNwecrl, sha384-SfjF7vhH3AekJ2O/KUjiHQg3wZ1GvMZKSio0AbFkBjoq8JmX2VeOp++Jg+j6DmSZ, sha384-6ygZ/e3B2JsYp8JUU2hp06kb4zU3aV3N9xgzeKjSvx0RhCkYBh3hG3gS9+iaa/Pc. Removed script-src hashes: none.',
             "default-src 'self'; script-src 'self' 'sha384-WiH70QJ//IwHzEEazDLD3ib/HCBX/w5DVK7iLcwNctCgC1gny3WZhpHYVc6MjM9p' 'sha384-2C5rO1BSGnvaxlQR9JaYInkYkxIBgqypaFa5W2Ers/2Uo+TF7HaOLeGTGhv2OFqL' 'sha384-H4X1/C0N5XroCPXG9EsrS7uyO3Gr2++QGudhEO0BrXuRgO83gfa1jegPJfs9Pr7f'; style-src 'self'",
         ];
 
@@ -228,7 +228,7 @@ class CspHandlerTest extends TestCase
                 'script-ebdca00f',
                 'script-096ccf1e',
             ],
-            'Allowed CSP header size of 200 bytes exhausted (tried to write 499 bytes)',
+            'Allowed CSP header size of 200 bytes exhausted (tried to write 499 bytes). Removed style-src hashes: sha384-6EpNvRkpzXKc0/GqaxbbUjVVMY7ihAahgNJolwHhuXbgncyGzHtMDoKymvNwecrl, sha384-SfjF7vhH3AekJ2O/KUjiHQg3wZ1GvMZKSio0AbFkBjoq8JmX2VeOp++Jg+j6DmSZ, sha384-6ygZ/e3B2JsYp8JUU2hp06kb4zU3aV3N9xgzeKjSvx0RhCkYBh3hG3gS9+iaa/Pc. Removed script-src hashes: sha384-H4X1/C0N5XroCPXG9EsrS7uyO3Gr2++QGudhEO0BrXuRgO83gfa1jegPJfs9Pr7f, sha384-2C5rO1BSGnvaxlQR9JaYInkYkxIBgqypaFa5W2Ers/2Uo+TF7HaOLeGTGhv2OFqL.',
             "default-src 'self'; script-src 'self' 'sha384-WiH70QJ//IwHzEEazDLD3ib/HCBX/w5DVK7iLcwNctCgC1gny3WZhpHYVc6MjM9p'; style-src 'self'",
         ];
 
@@ -244,7 +244,7 @@ class CspHandlerTest extends TestCase
                 'script-ebdca00f',
                 'script-096ccf1e',
             ],
-            'Allowed CSP header size of 100 bytes exhausted (tried to write 499 bytes)',
+            'Allowed CSP header size of 100 bytes exhausted (tried to write 499 bytes). Removed style-src hashes: sha384-6EpNvRkpzXKc0/GqaxbbUjVVMY7ihAahgNJolwHhuXbgncyGzHtMDoKymvNwecrl, sha384-SfjF7vhH3AekJ2O/KUjiHQg3wZ1GvMZKSio0AbFkBjoq8JmX2VeOp++Jg+j6DmSZ, sha384-6ygZ/e3B2JsYp8JUU2hp06kb4zU3aV3N9xgzeKjSvx0RhCkYBh3hG3gS9+iaa/Pc. Removed script-src hashes: sha384-H4X1/C0N5XroCPXG9EsrS7uyO3Gr2++QGudhEO0BrXuRgO83gfa1jegPJfs9Pr7f, sha384-2C5rO1BSGnvaxlQR9JaYInkYkxIBgqypaFa5W2Ers/2Uo+TF7HaOLeGTGhv2OFqL, sha384-WiH70QJ//IwHzEEazDLD3ib/HCBX/w5DVK7iLcwNctCgC1gny3WZhpHYVc6MjM9p.',
             "default-src 'self'; script-src 'self' ; style-src 'self'",
         ];
     }

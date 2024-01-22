@@ -26,6 +26,9 @@ final class CspHandler
 
     private array $directiveNonces = [];
 
+    /**
+     * @var array<string, array<string>>
+     */
     private array $signatures = [];
 
     private static array $validNonceDirectives = ['script-src', 'style-src', 'script-src-elem', 'style-src-elem'];
@@ -172,33 +175,41 @@ final class CspHandler
             return $headerValue;
         }
 
-        // We exceed the limit, write an error log
-        $this->logger?->critical(sprintf('Allowed CSP header size of %d bytes exhausted (tried to write %d bytes)',
-            $this->maxHeaderLength,
-            $headerLength,
-        ));
-
         // Now let's try to not cause a 500 Internal Server error by removing some signatures. Let's remove some style-src
         // signatures first because they likely have the least impact.
-        $this->reduceHashSignatures('style-src');
+        $removedStyleSrc = $this->reduceHashSignatures('style-src');
 
         $headerValue = $this->buildHeaderValue($request);
 
         if (\strlen($headerValue) < $this->maxHeaderLength) {
+            $this->logCspHeaderExceeded($headerLength, $removedStyleSrc, []);
+
             return $headerValue;
         }
 
         // We still exceed our limit, we have to reduce script-src now.
-        $this->reduceHashSignatures('script-src');
+        $removedScriptSrc = $this->reduceHashSignatures('script-src');
 
         $headerValue = $this->buildHeaderValue($request);
 
         if (\strlen($headerValue) < $this->maxHeaderLength) {
+            $this->logCspHeaderExceeded($headerLength, $removedStyleSrc, $removedScriptSrc);
+
             return $headerValue;
         }
 
         // Still couldn't make it - we have to throw an exception now.
         throw new \LogicException(sprintf('The generated Content Security Policy header exceeds %d bytes. It is highly unlikely that your webserver will be able to handle such a big header value. Check the policy and ensure it stays below the %d bytes: %s', $this->maxHeaderLength, $this->maxHeaderLength, $headerValue));
+    }
+
+    private function logCspHeaderExceeded(int $headerLength, array $removedStyleSrc, array $removedScriptSrc): void
+    {
+        $this->logger?->critical(sprintf('Allowed CSP header size of %d bytes exhausted (tried to write %d bytes). Removed style-src hashes: %s. Removed script-src hashes: %s.',
+            $this->maxHeaderLength,
+            $headerLength,
+            [] === $removedStyleSrc ? 'none' : implode(', ', $removedStyleSrc),
+            [] === $removedScriptSrc ? 'none' : implode(', ', $removedScriptSrc),
+        ));
     }
 
     private function buildHeaderValue(Request|null $request = null): string
@@ -212,16 +223,23 @@ final class CspHandler
         return trim($this->directives->buildHeaderValue($request ?? new Request(), $signatures));
     }
 
-    private function reduceHashSignatures(string $source): void
+    /**
+     * @return array<string> The removed hashes
+     */
+    private function reduceHashSignatures(string $source): array
     {
         if (!isset($this->signatures[$source])) {
-            return;
+            return [];
         }
+
+        $removed = [];
 
         // Unset the ones added last first (in case of style-src, that would mean that the top inline styles would still
         // work while towards the footer they might not work anymore)
         do {
-            array_pop($this->signatures[$source]);
+            $removed[] = array_pop($this->signatures[$source]);
         } while (\strlen($this->buildHeaderValue()) > $this->maxHeaderLength && [] !== $this->signatures[$source]);
+
+        return $removed;
     }
 }
