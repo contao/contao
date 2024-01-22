@@ -118,7 +118,7 @@ class SimpleTokenParser implements LoggerAwareInterface
     {
         // Replace tokens
         return preg_replace_callback(
-            '/##([^=!<>\s]+?)##/',
+            '/##([^#=!<>\s][^=!<>\s]*?)##/',
             function (array $matches) use ($data) {
                 if (!\array_key_exists($matches[1], $data)) {
                     if (null !== $this->logger) {
