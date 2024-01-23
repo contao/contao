@@ -169,7 +169,7 @@ class CspHandlerTest extends TestCase
     public function cspExceedsMaximumLengthIsProperlyReducedProvider(): \Generator
     {
         yield 'All hashes fit into the header, nothing should be reduced' => [
-            4096,
+            8192,
             [
                 'style-d9813b22',
                 'style-194c5b63',
@@ -249,7 +249,7 @@ class CspHandlerTest extends TestCase
         ];
     }
 
-    private function getCspHandler(array $directives = ['script-src' => "'self'"], int $maxHeaderLength = 4096, LoggerInterface|null $logger = null): CspHandler
+    private function getCspHandler(array $directives = ['script-src' => "'self'"], int $maxHeaderLength = 8192, LoggerInterface|null $logger = null): CspHandler
     {
         $directiveSet = new DirectiveSet(new PolicyManager());
         $directiveSet->setDirectives($directives);

@@ -37,7 +37,7 @@ final class CspHandler
 
     public function __construct(
         private DirectiveSet $directives,
-        private readonly int $maxHeaderLength = 4096,
+        private readonly int $maxHeaderLength = 8192,
         private readonly LoggerInterface|null $logger = null,
     ) {
     }

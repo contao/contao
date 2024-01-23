@@ -877,7 +877,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->integerNode('max_header_size')
                     ->info('The CSP header can get pretty long when adding lots of automatically calculated hashes. Contao will automatically remove signatures in order to prevent the CSP header to exceed the configured limit. This will affect the functionality of affected URLs but ensure you do not run into 500 server errors.')
-                    ->defaultValue(4096) // Nginx default maximum header length
+                    ->defaultValue(8192) // Nginx default maximum header length
                 ->end()
             ->end()
         ;
