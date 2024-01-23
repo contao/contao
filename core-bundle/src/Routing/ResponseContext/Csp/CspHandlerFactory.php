@@ -11,7 +11,7 @@ class CspHandlerFactory
 {
     public function __construct(
         private readonly CspParser $cspParser,
-        private readonly int $maxHeaderLength = 8192,
+        private readonly int $maxHeaderLength = 3072,
         private readonly LoggerInterface|null $logger = null,
     ) {
     }

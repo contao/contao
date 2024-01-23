@@ -53,7 +53,7 @@ class CspHandlerTest extends TestCase
         $response = new Response();
         $cspHandler->applyHeaders($response);
 
-        $this->assertStringContainsString("script-src 'self' 'sha384-", $response->headers->get('Content-Security-Policy'));
+        $this->assertStringContainsString("script-src 'self' 'sha256-", $response->headers->get('Content-Security-Policy'));
     }
 
     public function testDoesNotGenerateHashIfNoDirectiveSet(): void
@@ -169,7 +169,7 @@ class CspHandlerTest extends TestCase
     public function cspExceedsMaximumLengthIsProperlyReducedProvider(): \Generator
     {
         yield 'All hashes fit into the header, nothing should be reduced' => [
-            8192,
+            3072,
             [
                 'style-d9813b22',
                 'style-194c5b63',
@@ -181,7 +181,7 @@ class CspHandlerTest extends TestCase
                 'script-096ccf1e',
             ],
             '',
-            "default-src 'self'; script-src 'self' 'sha384-WiH70QJ//IwHzEEazDLD3ib/HCBX/w5DVK7iLcwNctCgC1gny3WZhpHYVc6MjM9p' 'sha384-2C5rO1BSGnvaxlQR9JaYInkYkxIBgqypaFa5W2Ers/2Uo+TF7HaOLeGTGhv2OFqL' 'sha384-H4X1/C0N5XroCPXG9EsrS7uyO3Gr2++QGudhEO0BrXuRgO83gfa1jegPJfs9Pr7f'; style-src 'self' 'sha384-6ygZ/e3B2JsYp8JUU2hp06kb4zU3aV3N9xgzeKjSvx0RhCkYBh3hG3gS9+iaa/Pc' 'sha384-SfjF7vhH3AekJ2O/KUjiHQg3wZ1GvMZKSio0AbFkBjoq8JmX2VeOp++Jg+j6DmSZ' 'sha384-6EpNvRkpzXKc0/GqaxbbUjVVMY7ihAahgNJolwHhuXbgncyGzHtMDoKymvNwecrl'",
+            "default-src 'self'; script-src 'self' 'sha256-a+0mzhM4TeUQTtFmlsaWPB988SYUV2n2vnFXp+JBoIQ=' 'sha256-3a7iEPAV/ivWCZtx6AriA82DkQuvKMcVKpKNj8ILy04=' 'sha256-aRR6Dmh6a7drNxbn9I/k9WmmJJqniT7Y8zeO36vFbhA='; style-src 'self' 'sha256-tVK6wOK9HGGNBOgrFlQj13so1JXwU7ex6nIwakWTERI=' 'sha256-kMZYJvKUwoVGHauo0TBrvrFT3ty0htezb0TsPp/eEcs=' 'sha256-PMMzh0dRoh0SVsGuNP+MiMGUaR3DGUF8b7J99b9RXFc='",
         ];
 
         yield 'Not all hashes fit in the header. Should reduce the last style hash' => [
@@ -196,8 +196,8 @@ class CspHandlerTest extends TestCase
                 'script-ebdca00f',
                 'script-096ccf1e',
             ],
-            'Allowed CSP header size of 480 bytes exhausted (tried to write 499 bytes). Removed style-src hashes: sha384-6EpNvRkpzXKc0/GqaxbbUjVVMY7ihAahgNJolwHhuXbgncyGzHtMDoKymvNwecrl. Removed script-src hashes: none.',
-            "default-src 'self'; script-src 'self' 'sha384-WiH70QJ//IwHzEEazDLD3ib/HCBX/w5DVK7iLcwNctCgC1gny3WZhpHYVc6MjM9p' 'sha384-2C5rO1BSGnvaxlQR9JaYInkYkxIBgqypaFa5W2Ers/2Uo+TF7HaOLeGTGhv2OFqL' 'sha384-H4X1/C0N5XroCPXG9EsrS7uyO3Gr2++QGudhEO0BrXuRgO83gfa1jegPJfs9Pr7f'; style-src 'self' 'sha384-6ygZ/e3B2JsYp8JUU2hp06kb4zU3aV3N9xgzeKjSvx0RhCkYBh3hG3gS9+iaa/Pc' 'sha384-SfjF7vhH3AekJ2O/KUjiHQg3wZ1GvMZKSio0AbFkBjoq8JmX2VeOp++Jg+j6DmSZ'",
+            '',
+            "default-src 'self'; script-src 'self' 'sha256-a+0mzhM4TeUQTtFmlsaWPB988SYUV2n2vnFXp+JBoIQ=' 'sha256-3a7iEPAV/ivWCZtx6AriA82DkQuvKMcVKpKNj8ILy04=' 'sha256-aRR6Dmh6a7drNxbn9I/k9WmmJJqniT7Y8zeO36vFbhA='; style-src 'self' 'sha256-tVK6wOK9HGGNBOgrFlQj13so1JXwU7ex6nIwakWTERI=' 'sha256-kMZYJvKUwoVGHauo0TBrvrFT3ty0htezb0TsPp/eEcs=' 'sha256-PMMzh0dRoh0SVsGuNP+MiMGUaR3DGUF8b7J99b9RXFc='",
         ];
 
         yield 'None of the style hashes fit' => [
@@ -212,8 +212,8 @@ class CspHandlerTest extends TestCase
                 'script-ebdca00f',
                 'script-096ccf1e',
             ],
-            'Allowed CSP header size of 350 bytes exhausted (tried to write 499 bytes). Removed style-src hashes: sha384-6EpNvRkpzXKc0/GqaxbbUjVVMY7ihAahgNJolwHhuXbgncyGzHtMDoKymvNwecrl, sha384-SfjF7vhH3AekJ2O/KUjiHQg3wZ1GvMZKSio0AbFkBjoq8JmX2VeOp++Jg+j6DmSZ, sha384-6ygZ/e3B2JsYp8JUU2hp06kb4zU3aV3N9xgzeKjSvx0RhCkYBh3hG3gS9+iaa/Pc. Removed script-src hashes: none.',
-            "default-src 'self'; script-src 'self' 'sha384-WiH70QJ//IwHzEEazDLD3ib/HCBX/w5DVK7iLcwNctCgC1gny3WZhpHYVc6MjM9p' 'sha384-2C5rO1BSGnvaxlQR9JaYInkYkxIBgqypaFa5W2Ers/2Uo+TF7HaOLeGTGhv2OFqL' 'sha384-H4X1/C0N5XroCPXG9EsrS7uyO3Gr2++QGudhEO0BrXuRgO83gfa1jegPJfs9Pr7f'; style-src 'self'",
+            'Allowed CSP header size of 350 bytes exhausted (tried to write 379 bytes). Removed style-src hashes: sha256-PMMzh0dRoh0SVsGuNP+MiMGUaR3DGUF8b7J99b9RXFc=. Removed script-src hashes: none.',
+            "default-src 'self'; script-src 'self' 'sha256-a+0mzhM4TeUQTtFmlsaWPB988SYUV2n2vnFXp+JBoIQ=' 'sha256-3a7iEPAV/ivWCZtx6AriA82DkQuvKMcVKpKNj8ILy04=' 'sha256-aRR6Dmh6a7drNxbn9I/k9WmmJJqniT7Y8zeO36vFbhA='; style-src 'self' 'sha256-tVK6wOK9HGGNBOgrFlQj13so1JXwU7ex6nIwakWTERI=' 'sha256-kMZYJvKUwoVGHauo0TBrvrFT3ty0htezb0TsPp/eEcs='",
         ];
 
         yield 'Not all of the script hashes fit either' => [
@@ -228,8 +228,8 @@ class CspHandlerTest extends TestCase
                 'script-ebdca00f',
                 'script-096ccf1e',
             ],
-            'Allowed CSP header size of 200 bytes exhausted (tried to write 499 bytes). Removed style-src hashes: sha384-6EpNvRkpzXKc0/GqaxbbUjVVMY7ihAahgNJolwHhuXbgncyGzHtMDoKymvNwecrl, sha384-SfjF7vhH3AekJ2O/KUjiHQg3wZ1GvMZKSio0AbFkBjoq8JmX2VeOp++Jg+j6DmSZ, sha384-6ygZ/e3B2JsYp8JUU2hp06kb4zU3aV3N9xgzeKjSvx0RhCkYBh3hG3gS9+iaa/Pc. Removed script-src hashes: sha384-H4X1/C0N5XroCPXG9EsrS7uyO3Gr2++QGudhEO0BrXuRgO83gfa1jegPJfs9Pr7f, sha384-2C5rO1BSGnvaxlQR9JaYInkYkxIBgqypaFa5W2Ers/2Uo+TF7HaOLeGTGhv2OFqL.',
-            "default-src 'self'; script-src 'self' 'sha384-WiH70QJ//IwHzEEazDLD3ib/HCBX/w5DVK7iLcwNctCgC1gny3WZhpHYVc6MjM9p'; style-src 'self'",
+            'Allowed CSP header size of 200 bytes exhausted (tried to write 379 bytes). Removed style-src hashes: sha256-PMMzh0dRoh0SVsGuNP+MiMGUaR3DGUF8b7J99b9RXFc=, sha256-kMZYJvKUwoVGHauo0TBrvrFT3ty0htezb0TsPp/eEcs=, sha256-tVK6wOK9HGGNBOgrFlQj13so1JXwU7ex6nIwakWTERI=. Removed script-src hashes: sha256-aRR6Dmh6a7drNxbn9I/k9WmmJJqniT7Y8zeO36vFbhA=.',
+            "default-src 'self'; script-src 'self' 'sha256-a+0mzhM4TeUQTtFmlsaWPB988SYUV2n2vnFXp+JBoIQ=' 'sha256-3a7iEPAV/ivWCZtx6AriA82DkQuvKMcVKpKNj8ILy04='; style-src 'self'",
         ];
 
         yield 'None of the hashes fit' => [
@@ -244,12 +244,12 @@ class CspHandlerTest extends TestCase
                 'script-ebdca00f',
                 'script-096ccf1e',
             ],
-            'Allowed CSP header size of 100 bytes exhausted (tried to write 499 bytes). Removed style-src hashes: sha384-6EpNvRkpzXKc0/GqaxbbUjVVMY7ihAahgNJolwHhuXbgncyGzHtMDoKymvNwecrl, sha384-SfjF7vhH3AekJ2O/KUjiHQg3wZ1GvMZKSio0AbFkBjoq8JmX2VeOp++Jg+j6DmSZ, sha384-6ygZ/e3B2JsYp8JUU2hp06kb4zU3aV3N9xgzeKjSvx0RhCkYBh3hG3gS9+iaa/Pc. Removed script-src hashes: sha384-H4X1/C0N5XroCPXG9EsrS7uyO3Gr2++QGudhEO0BrXuRgO83gfa1jegPJfs9Pr7f, sha384-2C5rO1BSGnvaxlQR9JaYInkYkxIBgqypaFa5W2Ers/2Uo+TF7HaOLeGTGhv2OFqL, sha384-WiH70QJ//IwHzEEazDLD3ib/HCBX/w5DVK7iLcwNctCgC1gny3WZhpHYVc6MjM9p.',
+            'Allowed CSP header size of 100 bytes exhausted (tried to write 379 bytes). Removed style-src hashes: sha256-PMMzh0dRoh0SVsGuNP+MiMGUaR3DGUF8b7J99b9RXFc=, sha256-kMZYJvKUwoVGHauo0TBrvrFT3ty0htezb0TsPp/eEcs=, sha256-tVK6wOK9HGGNBOgrFlQj13so1JXwU7ex6nIwakWTERI=. Removed script-src hashes: sha256-aRR6Dmh6a7drNxbn9I/k9WmmJJqniT7Y8zeO36vFbhA=, sha256-3a7iEPAV/ivWCZtx6AriA82DkQuvKMcVKpKNj8ILy04=, sha256-a+0mzhM4TeUQTtFmlsaWPB988SYUV2n2vnFXp+JBoIQ=.',
             "default-src 'self'; script-src 'self' ; style-src 'self'",
         ];
     }
 
-    private function getCspHandler(array $directives = ['script-src' => "'self'"], int $maxHeaderLength = 8192, LoggerInterface|null $logger = null): CspHandler
+    private function getCspHandler(array $directives = ['script-src' => "'self'"], int $maxHeaderLength = 3072, LoggerInterface|null $logger = null): CspHandler
     {
         $directiveSet = new DirectiveSet(new PolicyManager());
         $directiveSet->setDirectives($directives);

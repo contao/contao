@@ -794,7 +794,7 @@ services:
         class: Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandlerFactory
         arguments:
             - '@contao.csp.parser'
-            - 8192
+            - 3072
             - '@?logger'
         tags:
             - { name: monolog.logger, channel: contao.error }

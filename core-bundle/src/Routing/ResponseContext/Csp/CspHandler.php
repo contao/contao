@@ -37,7 +37,7 @@ final class CspHandler
 
     public function __construct(
         private DirectiveSet $directives,
-        private readonly int $maxHeaderLength = 8192,
+        private readonly int $maxHeaderLength = 3072,
         private readonly LoggerInterface|null $logger = null,
     ) {
     }
@@ -85,7 +85,7 @@ final class CspHandler
         return $this->nonce;
     }
 
-    public function addHash(string $directive, string $script, string $algorithm = 'sha384'): self
+    public function addHash(string $directive, string $script, string $algorithm = 'sha256'): self
     {
         if (!\in_array($directive, self::$validHashDirectives, true)) {
             throw new \InvalidArgumentException('Invalid directive');
