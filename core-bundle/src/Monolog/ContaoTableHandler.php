@@ -17,7 +17,9 @@ use Doctrine\DBAL\Connection;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\AbstractProcessingHandler;
+use Monolog\Level;
 use Monolog\Logger;
+use Monolog\LogRecord;
 
 class ContaoTableHandler extends AbstractProcessingHandler
 {
@@ -26,13 +28,13 @@ class ContaoTableHandler extends AbstractProcessingHandler
      */
     public function __construct(
         private readonly \Closure $connection,
-        $level = Logger::DEBUG,
+        $level = Level::Debug,
         bool $bubble = true,
     ) {
         parent::__construct($level, $bubble);
     }
 
-    public function handle(array $record): bool
+    public function handle(LogRecord $record): bool
     {
         if (!$this->isHandling($record)) {
             return false;
@@ -54,13 +56,12 @@ class ContaoTableHandler extends AbstractProcessingHandler
         return !$this->bubble;
     }
 
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
-        /** @var \DateTime $date */
-        $date = $record['datetime'];
+        $date = $record->datetime;
 
         /** @var ContaoContext $context */
-        $context = $record['extra']['contao'];
+        $context = $record->extra['contao'];
 
         ($this->connection)()->insert('tl_log', [
             'tstamp' => $date->format('U'),
