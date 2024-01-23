@@ -26,7 +26,7 @@ final class ContentUrlRuntime implements RuntimeExtensionInterface
      */
     public function __construct(
         private readonly ContentUrlGenerator $urlGenerator,
-        private readonly RoutingExtension $routingExtension
+        private readonly RoutingExtension $routingExtension,
     ) {
     }
 
