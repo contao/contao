@@ -1128,8 +1128,8 @@ services:
             - '@contao.framework'
             - '@contao.resource_finder'
 
-    contao.twig.content_url_extension:
-        class: Contao\CoreBundle\Twig\Extension\ContentUrlExtension
+    contao.twig.content_url_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\ContentUrlRuntime
         arguments:
             - '@contao.routing.content_url_generator'
             - '@twig.extension.routing'

@@ -10,16 +10,16 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Twig\Extension;
+namespace Contao\CoreBundle\Twig\Runtime;
 
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Symfony\Bridge\Twig\Extension\RoutingExtension;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFunction;
+use Twig\Extension\RuntimeExtensionInterface;
+use Twig\Node\Node;
 
-final class ContentUrlExtension extends AbstractExtension
+final class ContentUrlRuntime implements RuntimeExtensionInterface
 {
     /**
      * @internal
@@ -30,13 +30,6 @@ final class ContentUrlExtension extends AbstractExtension
     ) {
     }
 
-    public function getFunctions(): array
-    {
-        return [
-            new TwigFunction('content_url', $this->generate(...), ['is_safe_callback' => $this->routingExtension->isUrlGenerationSafe(...)]),
-        ];
-    }
-
     public function generate(object $content, array $parameters = [], bool $relative = false): string
     {
         try {
@@ -44,5 +37,10 @@ final class ContentUrlExtension extends AbstractExtension
         } catch (ExceptionInterface) {
             return '';
         }
+    }
+
+    public function isUrlGenerationSafe(Node $argsNode): array
+    {
+        return $this->routingExtension->isUrlGenerationSafe($argsNode);
     }
 }
