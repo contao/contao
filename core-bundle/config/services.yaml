@@ -790,6 +790,15 @@ services:
             - '@contao.routing.page_registry'
             - '@?logger'
 
+    contao.routing.response_context.csp_handler_factory:
+        class: Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandlerFactory
+        arguments:
+            - '@contao.csp.parser'
+            - 3072
+            - '@?logger'
+        tags:
+            - { name: monolog.logger, channel: contao.error }
+
     contao.routing.response_context_accessor:
         class: Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor
         public: true
@@ -806,7 +815,7 @@ services:
             - '@contao.string.html_decoder'
             - '@request_stack'
             - '@contao.insert_tag.parser'
-            - '@contao.csp.parser'
+            - '@contao.routing.response_context.csp_handler_factory'
             - '@router'
 
     contao.routing.route_404_provider:

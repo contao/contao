@@ -86,7 +86,7 @@ final class CspRuntime implements RuntimeExtensionInterface
         $csp->addSource($directive, $source);
     }
 
-    public function addHash(string $directive, string $source, string $algorithm = 'sha384'): void
+    public function addHash(string $directive, string $source, string $algorithm = 'sha256'): void
     {
         $responseContext = $this->responseContextAccessor->getResponseContext();
 

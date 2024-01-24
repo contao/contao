@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\CoreBundle\Csp\CspParser;
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
+use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandlerFactory;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,7 +40,7 @@ class PreviewToolbarListener
         private readonly TokenChecker $tokenChecker,
         private readonly TwigEnvironment $twig,
         private readonly RouterInterface $router,
-        private readonly CspParser $cspParser,
+        private readonly CspHandlerFactory $cspHandlerFactory,
         private readonly string $previewScript = '',
     ) {
     }
@@ -106,9 +106,10 @@ class PreviewToolbarListener
             $cspHeader = $response->headers->get('Content-Security-Policy', '');
         }
 
-        $directives = $this->cspParser->parseHeader($cspHeader);
-        $directives->setLevel1Fallback(false);
+        $cspHandler = $this->cspHandlerFactory->create($cspHeader);
+        $cspHandler->getDirectives()->setLevel1Fallback(false);
+        $cspHandler->setReportOnly($reportOnly ?? false);
 
-        return new CspHandler($directives, $reportOnly ?? false);
+        return $cspHandler;
     }
 }

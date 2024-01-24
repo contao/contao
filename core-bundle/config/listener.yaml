@@ -489,7 +489,7 @@ services:
             - '@contao.security.token_checker'
             - '@twig'
             - '@router'
-            - '@contao.csp.parser'
+            - '@contao.routing.response_context.csp_handler_factory'
             - '%contao.preview_script%'
         tags:
             - kernel.event_listener
