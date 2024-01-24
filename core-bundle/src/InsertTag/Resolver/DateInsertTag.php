@@ -12,14 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\InsertTag\Resolver;
 
-use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTag;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\Date;
 
-#[AsInsertTag('date', asFragment: true)]
 class DateInsertTag implements InsertTagResolverNestedResolvedInterface
 {
     private const MAPPER = [

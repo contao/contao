@@ -12,11 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\Widget;
 
-use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\Widget;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[AsHook('addCustomRegexp')]
 class CustomRgxpListener
 {
     final public const RGXP_NAME = 'custom';

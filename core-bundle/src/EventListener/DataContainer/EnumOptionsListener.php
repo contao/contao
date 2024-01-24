@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
-use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Translation\TranslatableLabelInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -28,7 +27,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  *
  * @internal
  */
-#[AsHook('loadDataContainer', priority: 200)]
 class EnumOptionsListener
 {
     public function __construct(private readonly TranslatorInterface $translator)

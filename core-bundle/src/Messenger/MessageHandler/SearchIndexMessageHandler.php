@@ -15,9 +15,7 @@ namespace Contao\CoreBundle\Messenger\MessageHandler;
 use Contao\CoreBundle\Messenger\Message\SearchIndexMessage;
 use Contao\CoreBundle\Search\Indexer\IndexerException;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-#[AsMessageHandler]
 class SearchIndexMessageHandler
 {
     public function __construct(private readonly IndexerInterface|null $indexer = null)

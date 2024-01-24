@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
-use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
 use Contao\Image;
@@ -20,8 +19,6 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[AsCallback(table: 'tl_page', target: 'fields.canonicalLink.load')]
-#[AsCallback(table: 'tl_page', target: 'fields.canonicalKeepParams.load')]
 class DisableCanonicalFieldsListener
 {
     public function __construct(

@@ -12,12 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\Widget;
 
-use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\Validator;
 use Contao\Widget;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[AsHook('addCustomRegexp')]
 class HttpUrlListener
 {
     final public const RGXP_NAME = 'httpurl';

@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Cron;
 
-use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
 use Doctrine\DBAL\Connection;
 
 /**
@@ -21,7 +20,6 @@ use Doctrine\DBAL\Connection;
  *
  * @internal
  */
-#[AsCronJob('daily')]
 class PurgePreviewLinksCron
 {
     public function __construct(private readonly Connection $connection)

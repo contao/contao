@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\InsertTags;
 
 use Contao\Config;
-use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Date;
 use Contao\PageModel;
@@ -56,7 +55,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
  *
  * @internal
  */
-#[AsHook('replaceInsertTags')]
 class DateListener
 {
     public function __construct(

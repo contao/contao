@@ -12,36 +12,30 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\InsertTag\Flag;
 
-use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTagFlag;
 use Contao\CoreBundle\InsertTag\InsertTagFlag;
 use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\OutputType;
 
-#[AsInsertTagFlag('addslashes')]
-#[AsInsertTagFlag('strtolower')]
-#[AsInsertTagFlag('strtoupper')]
-#[AsInsertTagFlag('ucfirst')]
-#[AsInsertTagFlag('lcfirst')]
-#[AsInsertTagFlag('ucwords')]
-#[AsInsertTagFlag('trim')]
-#[AsInsertTagFlag('rtrim')]
-#[AsInsertTagFlag('ltrim')]
-#[AsInsertTagFlag('urlencode')]
-#[AsInsertTagFlag('rawurlencode')]
 class PhpFunctionFlag implements InsertTagFlagInterface
 {
+    private static array $allowedNames = [
+        'addslashes',
+        'strtolower',
+        'strtoupper',
+        'ucfirst',
+        'lcfirst',
+        'ucwords',
+        'trim',
+        'rtrim',
+        'ltrim',
+        'urlencode',
+        'rawurlencode',
+    ];
+
     public function __invoke(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
     {
-        static $allowedNames = null;
-
-        if (null === $allowedNames) {
-            foreach ((new \ReflectionClass(__CLASS__))->getAttributes(AsInsertTagFlag::class) as $attribute) {
-                $allowedNames[] = $attribute->newInstance()->name;
-            }
-        }
-
         // Do not allow arbitrary PHP functions for security reasons
-        if (!\in_array($flag->getName(), $allowedNames, true)) {
+        if (!\in_array($flag->getName(), self::$allowedNames, true)) {
             throw new \LogicException(sprintf('Invalid flag "%s".', $flag->getName()));
         }
 

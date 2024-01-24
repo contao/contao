@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\Controller;
 use Contao\CoreBundle\DataContainer\DataContainerOperation;
-use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
@@ -28,7 +27,6 @@ use Symfony\Bundle\SecurityBundle\Security;
 /**
  * @internal
  */
-#[AsHook('loadDataContainer', priority: 200)]
 class DefaultOperationsListener
 {
     public function __construct(

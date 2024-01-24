@@ -13,9 +13,7 @@ declare(strict_types=1);
 namespace Contao\CommentsBundle\EventListener\DataContainer;
 
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
-use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 
-#[AsHook('loadDataContainer')]
 class AddCommentFieldsListener
 {
     public function __construct(private readonly array $bundles)

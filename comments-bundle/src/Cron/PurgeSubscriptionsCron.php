@@ -13,11 +13,9 @@ declare(strict_types=1);
 namespace Contao\CommentsBundle\Cron;
 
 use Contao\CommentsNotifyModel;
-use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Psr\Log\LoggerInterface;
 
-#[AsCronJob('daily')]
 class PurgeSubscriptionsCron
 {
     public function __construct(

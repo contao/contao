@@ -12,12 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Cron;
 
-use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
 use Contao\CoreBundle\Exception\CronExecutionSkippedException;
 use Contao\CoreBundle\Util\ProcessUtil;
 use GuzzleHttp\Promise\PromiseInterface;
 
-#[AsCronJob('minutely')]
 class SuperviseWorkersCron
 {
     public function __construct(private readonly ProcessUtil $processUtil)

@@ -12,12 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\InsertTag\Resolver;
 
-use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTag;
 use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 
-#[AsInsertTag('fragment', asFragment: true)]
 class FragmentInsertTag implements InsertTagResolverNestedResolvedInterface
 {
     public function __invoke(ResolvedInsertTag $insertTag): InsertTagResult

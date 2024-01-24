@@ -1,7 +1,4 @@
 services:
-    _defaults:
-        autoconfigure: true
-
     _instanceof:
         Contao\CoreBundle\Framework\FrameworkAwareInterface:
             calls:
@@ -11,56 +8,78 @@ services:
         class: Contao\CoreBundle\Command\AutomatorCommand
         arguments:
             - '@contao.framework'
+        tags:
+            - console.command
 
     contao.command.backup_create:
         class: Contao\CoreBundle\Command\Backup\BackupCreateCommand
         arguments:
             - '@contao.doctrine.backup_manager'
+        tags:
+            - console.command
 
     contao.command.backup_list:
         class: Contao\CoreBundle\Command\Backup\BackupListCommand
         arguments:
             - '@contao.doctrine.backup_manager'
+        tags:
+            - console.command
 
     contao.command.backup_restore:
         class: Contao\CoreBundle\Command\Backup\BackupRestoreCommand
         arguments:
             - '@contao.doctrine.backup_manager'
+        tags:
+            - console.command
 
     contao.command.backup_stream_content:
         class: Contao\CoreBundle\Command\Backup\BackupStreamContentCommand
         arguments:
             - '@contao.doctrine.backup_manager'
+        tags:
+            - console.command
 
     contao.command.crawl:
         class: Contao\CoreBundle\Command\CrawlCommand
         arguments:
             - '@contao.crawl.escargot.factory'
             - '@filesystem'
+        tags:
+            - console.command
 
     contao.command.cron:
         class: Contao\CoreBundle\Command\CronCommand
         arguments:
             - '@contao.cron'
+        tags:
+            - console.command
 
     contao.command.cron_list:
         class: Contao\CoreBundle\Command\CronListCommand
         arguments:
             - '@contao.cron'
+        tags:
+            - console.command
 
     contao.command.debug_dca:
         class: Contao\CoreBundle\Command\DebugDcaCommand
         arguments:
             - '@contao.framework'
+        tags:
+            - console.command
 
     contao.command.debug_fragments:
         class: Contao\CoreBundle\Command\DebugFragmentsCommand
+        tags:
+            - console.command
 
     contao.command.debug_pages:
         class: Contao\CoreBundle\Command\DebugPagesCommand
         arguments:
             - '@contao.framework'
             - '@contao.routing.page_registry'
+        tags:
+            - console.command
 
     contao.command.debug_twig:
         class: Contao\CoreBundle\Command\DebugContaoTwigCommand
@@ -70,11 +89,15 @@ services:
             - '@contao.twig.loader.theme_namespace'
             - '%kernel.project_dir%'
             - '@contao.twig.inspector'
+        tags:
+            - console.command
 
     contao.command.filesync:
         class: Contao\CoreBundle\Command\FilesyncCommand
         arguments:
             - '@contao.filesystem.dbafs_manager'
+        tags:
+            - console.command
 
     contao.command.install:
         class: Contao\CoreBundle\Command\InstallCommand
@@ -83,6 +106,8 @@ services:
             - '%kernel.project_dir%'
             - '%contao.upload_path%'
             - '%contao.image.target_dir%'
+        tags:
+            - console.command
 
     contao.command.migrate:
         class: Contao\CoreBundle\Command\MigrateCommand
@@ -93,6 +118,8 @@ services:
             - '@contao.doctrine.backup_manager'
             - '@contao.doctrine.schema_provider'
             - '@contao.doctrine.schema.mysql_innodb_row_size_calculator'
+        tags:
+            - console.command
 
     contao.command.resize_images:
         class: Contao\CoreBundle\Command\ResizeImagesCommand
@@ -102,6 +129,8 @@ services:
             - '%contao.image.target_dir%'
             - '@contao.image.deferred_image_storage'
             - '@?filesystem'
+        tags:
+            - console.command
 
     contao.command.supervise_workers:
         class: Contao\CoreBundle\Command\SuperviseWorkersCommand
@@ -111,6 +140,8 @@ services:
             - '@contao.process_util'
             - '%kernel.cache_dir%/worker-supervisor'
             - ~
+        tags:
+            - console.command
 
     contao.command.symlinks:
         class: Contao\CoreBundle\Command\SymlinksCommand
@@ -121,6 +152,8 @@ services:
             - '%kernel.logs_dir%'
             - '@contao.resource_finder'
             - '@event_dispatcher'
+        tags:
+            - console.command
 
     contao.command.user_create:
         class: Contao\CoreBundle\Command\UserCreateCommand
@@ -129,11 +162,15 @@ services:
             - '@database_connection'
             - '@security.password_hasher_factory'
             - '@contao.intl.locales'
+        tags:
+            - console.command
 
     contao.command.user_list:
         class: Contao\CoreBundle\Command\UserListCommand
         arguments:
             - '@database_connection'
+        tags:
+            - console.command
 
     contao.command.user_password:
         class: Contao\CoreBundle\Command\UserPasswordCommand
@@ -141,3 +178,5 @@ services:
             - '@contao.framework'
             - '@database_connection'
             - '@security.password_hasher_factory'
+        tags:
+            - console.command

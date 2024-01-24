@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
-use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\DataContainer;
 use Contao\DC_Folder;
 use Contao\DC_Table;
@@ -20,7 +19,6 @@ use Contao\DC_Table;
 /**
  * @internal
  */
-#[AsHook('loadDataContainer', priority: 200)]
 class DefaultGlobalOperationsListener
 {
     public function __invoke(string $table): void

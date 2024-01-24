@@ -49,7 +49,7 @@ class AddInsertTagsPass implements CompilerPassInterface
                     }
 
                     $class = $container->findDefinition($serviceId)->getClass();
-                    $method = $this->getMethod($attributes['method'], $serviceTag, $class, $serviceId);
+                    $method = $this->getMethod($attributes['method'] ?? null, $serviceTag, $class, $serviceId);
                     $attributes['resolveNestedTags'] ??= $this->getResolveNestedTagsFromMethod($class, $method);
 
                     $subscriptions[] = new Definition(InsertTagSubscription::class, [
@@ -61,7 +61,7 @@ class AddInsertTagsPass implements CompilerPassInterface
                         $attributes['asFragment'] ?? false,
                     ]);
 
-                    $priorities[] = $attributes['priority'];
+                    $priorities[] = $attributes['priority'] ?? 0;
                 }
             }
 
@@ -83,7 +83,7 @@ class AddInsertTagsPass implements CompilerPassInterface
                     throw new InvalidDefinitionException(sprintf('Invalid insert tag flag name "%s"', $attributes['name'] ?? ''));
                 }
 
-                $method = $this->getMethod($attributes['method'], 'contao.insert_tag_flag', $container->findDefinition($serviceId)->getClass(), $serviceId);
+                $method = $this->getMethod($attributes['method'] ?? null, 'contao.insert_tag_flag', $container->findDefinition($serviceId)->getClass(), $serviceId);
 
                 $flags[] = [
                     $attributes['name'],
@@ -91,7 +91,7 @@ class AddInsertTagsPass implements CompilerPassInterface
                     $method,
                 ];
 
-                $priorities[] = $attributes['priority'];
+                $priorities[] = $attributes['priority'] ?? 0;
             }
         }
 

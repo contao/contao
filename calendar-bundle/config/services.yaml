@@ -1,7 +1,4 @@
 services:
-    _defaults:
-        autoconfigure: true
-
     _instanceof:
         Contao\CoreBundle\Framework\FrameworkAwareInterface:
             calls:
@@ -11,20 +8,22 @@ services:
         class: Contao\CalendarBundle\Cron\GenerateFeedsCron
         arguments:
             - '@contao.framework'
+        tags:
+            - contao.cronjob: { interval: daily }
 
     contao_calendar.listener.data_container.start_stop_validation:
         class: Contao\CoreBundle\EventListener\DataContainer\StartStopValidationListener
         arguments:
             - '@translator'
         tags:
-            - { name: contao.callback, table: tl_calendar_events, target: config.onbeforesubmit }
+            - contao.callback: { table: tl_calendar_events, target: config.onbeforesubmit }
 
     contao_calendar.listener.generate_page:
         class: Contao\CalendarBundle\EventListener\GeneratePageListener
         arguments:
             - '@contao.framework'
         tags:
-            - { name: contao.hook, hook: generatePage }
+            - contao.hook: { hook: generatePage }
 
     contao_calendar.listener.insert_tags:
         class: Contao\CalendarBundle\EventListener\InsertTagsListener
@@ -32,7 +31,7 @@ services:
             - '@contao.framework'
             - '@contao.routing.content_url_generator'
         tags:
-            - { name: contao.hook, hook: replaceInsertTags }
+            - contao.hook: { hook: replaceInsertTags }
 
     contao_calendar.listener.preview_url_convert:
         class: Contao\CalendarBundle\EventListener\PreviewUrlConvertListener
@@ -67,19 +66,25 @@ services:
             - '@?translator'
             - '@security.helper'
         tags:
-            - { name: contao.picker_provider, priority: 96 }
+            - contao.picker_provider: { priority: 96 }
 
     contao_calendar.routing.calendar_events_resolver:
         class: Contao\CalendarBundle\Routing\CalendarEventsResolver
         arguments:
             - '@contao.framework'
+        tags:
+            - contao.content_url_resolver
 
     contao_calendar.security.calendar_access_voter:
         class: Contao\CalendarBundle\Security\Voter\CalendarAccessVoter
         arguments:
             - '@security.access.decision_manager'
+        tags:
+            - security.voter
 
     contao_calendar.security.calendar_events_access_voter:
         class: Contao\CalendarBundle\Security\Voter\CalendarEventsAccessVoter
         arguments:
             - '@security.access.decision_manager'
+        tags:
+            - security.voter

@@ -13,10 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
-use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\DataContainer;
 
-#[AsCallback(table: 'tl_content', target: 'config.onpalette')]
 class AccordionListener
 {
     public function __invoke(string $palette, DataContainer $dc): string

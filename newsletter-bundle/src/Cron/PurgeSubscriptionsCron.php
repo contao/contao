@@ -12,12 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\NewsletterBundle\Cron;
 
-use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\NewsletterRecipientsModel;
 use Psr\Log\LoggerInterface;
 
-#[AsCronJob('daily')]
 class PurgeSubscriptionsCron
 {
     public function __construct(

@@ -12,11 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
-use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\DataContainer;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-#[AsCallback(table: 'tl_page', target: 'config.onload')]
 class PageUseSslDefaultListener
 {
     public function __construct(private readonly RequestStack $requestStack)

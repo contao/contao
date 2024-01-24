@@ -1,7 +1,4 @@
 services:
-    _defaults:
-        autoconfigure: true
-
     Contao\ManagerBundle\Controller\DebugController:
         public: true
         arguments:

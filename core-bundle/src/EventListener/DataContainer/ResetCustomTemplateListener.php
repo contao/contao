@@ -12,15 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
-use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\DataContainer;
 use Doctrine\DBAL\Connection;
 
 /**
  * @internal
  */
-#[AsCallback(table: 'tl_content', target: 'fields.type.save')]
-#[AsCallback(table: 'tl_module', target: 'fields.type.save')]
 class ResetCustomTemplateListener
 {
     public function __construct(private readonly Connection $connection)

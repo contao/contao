@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\InsertTag\Resolver;
 
-use Contao\CoreBundle\DependencyInjection\Attribute\AsBlockInsertTag;
 use Contao\CoreBundle\InsertTag\Exception\InvalidInsertTagException;
 use Contao\CoreBundle\InsertTag\ParsedSequence;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
@@ -20,8 +19,6 @@ use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\StringUtil;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-#[AsBlockInsertTag('iflng', endTag: 'iflng')]
-#[AsBlockInsertTag('ifnlng', endTag: 'ifnlng')]
 class IfLanguageInsertTag implements BlockInsertTagResolverNestedResolvedInterface
 {
     public function __construct(private readonly RequestStack $requestStack)

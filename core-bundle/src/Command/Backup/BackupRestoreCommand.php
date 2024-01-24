@@ -13,24 +13,23 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command\Backup;
 
 use Contao\CoreBundle\Doctrine\Backup\BackupManagerException;
-use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-#[AsCommand(
-    name: 'contao:backup:restore',
-    description: 'Restores a database backup.',
-)]
 class BackupRestoreCommand extends AbstractBackupCommand
 {
     protected function configure(): void
     {
-        parent::configure();
+        $this
+            ->setName('contao:backup:restore')
+            ->setDescription('Restores a database backup.')
+            ->addOption('force', null, InputOption::VALUE_NONE, 'By default, this command only restores backup that have been generated with Contao. Use --force to bypass this check.')
+        ;
 
-        $this->addOption('force', null, InputOption::VALUE_NONE, 'By default, this command only restores backup that have been generated with Contao. Use --force to bypass this check.');
+        parent::configure();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

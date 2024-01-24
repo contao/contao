@@ -13,9 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\CoreBundle\Csp\CspParser;
-use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 
-#[AsCallback('tl_page', 'fields.csp.save')]
 class CspSaveCallbackListener
 {
     public function __construct(private readonly CspParser $cspParser)

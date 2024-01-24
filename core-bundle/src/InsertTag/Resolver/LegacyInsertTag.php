@@ -16,7 +16,6 @@ use Contao\ArrayUtil;
 use Contao\ArticleModel;
 use Contao\Controller;
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTag;
 use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
@@ -39,33 +38,6 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-#[AsInsertTag('lang')]
-#[AsInsertTag('br')]
-#[AsInsertTag('email')]
-#[AsInsertTag('email_open')]
-#[AsInsertTag('email_url')]
-#[AsInsertTag('label')]
-#[AsInsertTag('user')]
-#[AsInsertTag('email_close')]
-#[AsInsertTag('insert_article')]
-#[AsInsertTag('insert_content')]
-#[AsInsertTag('insert_module')]
-#[AsInsertTag('insert_form')]
-#[AsInsertTag('article')]
-#[AsInsertTag('article_open')]
-#[AsInsertTag('article_url')]
-#[AsInsertTag('article_title')]
-#[AsInsertTag('article_teaser')]
-#[AsInsertTag('last_update')]
-#[AsInsertTag('version')]
-#[AsInsertTag('env')]
-#[AsInsertTag('page')]
-#[AsInsertTag('abbr')]
-#[AsInsertTag('acronym')]
-#[AsInsertTag('figure')]
-#[AsInsertTag('image')]
-#[AsInsertTag('picture')]
-#[AsInsertTag('file')]
 /**
  * @internal
  *

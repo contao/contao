@@ -12,12 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\NewsBundle\EventListener\DataContainer;
 
-use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\NewsBundle\Controller\Page\NewsFeedController;
 use Contao\PageModel;
 
-#[AsCallback('tl_layout', target: 'fields.newsfeeds.options')]
 class LayoutFeedOptionsListener
 {
     public function __construct(private readonly ContaoFramework $framework)

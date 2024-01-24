@@ -2,9 +2,6 @@ parameters:
     contao.dns_mapping: []
 
 services:
-    _defaults:
-        autoconfigure: true
-
     contao.migration.collection:
         class: Contao\CoreBundle\Migration\MigrationCollection
         arguments:
@@ -22,16 +19,22 @@ services:
         arguments:
             - '@database_connection'
             - '%contao.dns_mapping%'
+        tags:
+            - contao.migration
 
     contao.migration.version_500.accesskey:
         class: Contao\CoreBundle\Migration\Version500\AccesskeyMigration
         arguments:
             - '@database_connection'
+        tags:
+            - contao.migration
 
     contao.migration.version_500.basic_entities:
         class: Contao\CoreBundle\Migration\Version500\BasicEntitiesMigration
         arguments:
             - '@database_connection'
+        tags:
+            - contao.migration
 
     contao.migration.version_500.boolean_fields:
         class: Contao\CoreBundle\Migration\Version500\BooleanFieldsMigration
@@ -39,34 +42,48 @@ services:
             - '@database_connection'
             - '@contao.framework'
             - '@contao.resource_finder'
+        tags:
+            - contao.migration
 
     contao.migration.version_500.empty_ptable:
         class: Contao\CoreBundle\Migration\Version500\EmptyPtableMigration
         arguments:
             - '@database_connection'
+        tags:
+            - contao.migration
 
     contao.migration.version_500.guests:
         class: Contao\CoreBundle\Migration\Version500\GuestsMigration
         arguments:
             - '@database_connection'
+        tags:
+            - contao.migration
 
     contao.migration.version_500.member_country_uppercase:
         class: Contao\CoreBundle\Migration\Version500\MemberCountryUppercaseMigration
         arguments:
             - '@database_connection'
+        tags:
+            - contao.migration
 
     contao.migration.version_500.order_field:
         class: Contao\CoreBundle\Migration\Version500\OrderFieldMigration
         arguments:
             - '@database_connection'
+        tags:
+            - contao.migration
 
     contao.migration.version_502.always_forward:
         class: Contao\CoreBundle\Migration\Version502\AlwaysForwardMigration
         arguments:
             - '@database_connection'
+        tags:
+            - contao.migration
 
     contao.migration.version_503.frontend_modules:
         class: Contao\CoreBundle\Migration\Version503\FrontendModulesMigration
         arguments:
             - '@database_connection'
             - '@contao.framework'
+        tags:
+            - contao.migration
