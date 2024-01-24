@@ -876,7 +876,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->integerNode('max_header_size')
-                    ->info('Do not increase this value beyond the allowed response headers size of your web server, as this will result in a 500 server error.')
+                    ->info('Do not increase this value beyond the allowed response header size of your web server, as this will result in a 500 server error.')
                     ->defaultValue(3072)
                 ->end()
             ->end()
