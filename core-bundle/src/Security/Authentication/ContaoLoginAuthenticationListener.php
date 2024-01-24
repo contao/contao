@@ -48,6 +48,7 @@ class ContaoLoginAuthenticationListener extends AbstractAuthenticationListener
     {
         return $request->isMethod('POST')
             && $request->request->has('FORM_SUBMIT')
+            && \is_string($request->request->get('FORM_SUBMIT'))
             && preg_match('/^tl_login(_[0-9]+)?$/', $request->request->get('FORM_SUBMIT'));
     }
 
