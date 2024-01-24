@@ -149,12 +149,6 @@ final class CspHandler
 
     public function applyHeaders(Response $response, Request|null $request = null): void
     {
-        $signatures = $this->signatures;
-
-        foreach ($this->directiveNonces as $name => $nonce) {
-            $signatures[$name][] = 'nonce-'.$nonce;
-        }
-
         $headerValue = $this->buildHeaderConsideringMaxlength($request);
 
         if (!$headerValue) {
