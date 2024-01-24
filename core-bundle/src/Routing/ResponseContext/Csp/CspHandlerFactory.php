@@ -21,10 +21,6 @@ class CspHandlerFactory
      */
     public function create(string|null $csp = null): CspHandler
     {
-        return new CspHandler(
-            $this->cspParser->parseHeader($csp),
-            $this->maxHeaderLength,
-            $this->logger,
-        );
+        return new CspHandler($this->cspParser->parseHeader($csp), $this->maxHeaderLength, $this->logger);
     }
 }

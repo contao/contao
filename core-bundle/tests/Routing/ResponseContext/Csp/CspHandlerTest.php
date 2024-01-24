@@ -118,10 +118,6 @@ class CspHandlerTest extends TestCase
 
     public function testCspExceedsMaximumLengthAndCannotBeReduced(): void
     {
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessageMatches('/^The generated Content Security Policy header exceeds 20 bytes. It is highly unlikely.+/');
-
-        $response = new Response();
         $cspHandler = $this->getCspHandler(
             [
                 'default-src' => "'self'",
@@ -135,7 +131,10 @@ class CspHandlerTest extends TestCase
             $cspHandler->addHash('style-src', bin2hex(random_bytes(20)));
         }
 
-        $cspHandler->applyHeaders($response);
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessageMatches('/^The generated Content Security Policy header exceeds 20 bytes..+/');
+
+        $cspHandler->applyHeaders(new Response());
     }
 
     /**
@@ -212,7 +211,7 @@ class CspHandlerTest extends TestCase
                 'script-ebdca00f',
                 'script-096ccf1e',
             ],
-            'Allowed CSP header size of 350 bytes exhausted (tried to write 379 bytes). Removed style-src hashes: sha256-PMMzh0dRoh0SVsGuNP+MiMGUaR3DGUF8b7J99b9RXFc=. Removed script-src hashes: none.',
+            'Allowed CSP header size of 350 bytes exceeded (tried to write 379 bytes). Removed style-src hashes: sha256-PMMzh0dRoh0SVsGuNP+MiMGUaR3DGUF8b7J99b9RXFc=. Removed script-src hashes: none.',
             "default-src 'self'; script-src 'self' 'sha256-a+0mzhM4TeUQTtFmlsaWPB988SYUV2n2vnFXp+JBoIQ=' 'sha256-3a7iEPAV/ivWCZtx6AriA82DkQuvKMcVKpKNj8ILy04=' 'sha256-aRR6Dmh6a7drNxbn9I/k9WmmJJqniT7Y8zeO36vFbhA='; style-src 'self' 'sha256-tVK6wOK9HGGNBOgrFlQj13so1JXwU7ex6nIwakWTERI=' 'sha256-kMZYJvKUwoVGHauo0TBrvrFT3ty0htezb0TsPp/eEcs='",
         ];
 
@@ -228,7 +227,7 @@ class CspHandlerTest extends TestCase
                 'script-ebdca00f',
                 'script-096ccf1e',
             ],
-            'Allowed CSP header size of 200 bytes exhausted (tried to write 379 bytes). Removed style-src hashes: sha256-PMMzh0dRoh0SVsGuNP+MiMGUaR3DGUF8b7J99b9RXFc=, sha256-kMZYJvKUwoVGHauo0TBrvrFT3ty0htezb0TsPp/eEcs=, sha256-tVK6wOK9HGGNBOgrFlQj13so1JXwU7ex6nIwakWTERI=. Removed script-src hashes: sha256-aRR6Dmh6a7drNxbn9I/k9WmmJJqniT7Y8zeO36vFbhA=.',
+            'Allowed CSP header size of 200 bytes exceeded (tried to write 379 bytes). Removed style-src hashes: sha256-PMMzh0dRoh0SVsGuNP+MiMGUaR3DGUF8b7J99b9RXFc=, sha256-kMZYJvKUwoVGHauo0TBrvrFT3ty0htezb0TsPp/eEcs=, sha256-tVK6wOK9HGGNBOgrFlQj13so1JXwU7ex6nIwakWTERI=. Removed script-src hashes: sha256-aRR6Dmh6a7drNxbn9I/k9WmmJJqniT7Y8zeO36vFbhA=.',
             "default-src 'self'; script-src 'self' 'sha256-a+0mzhM4TeUQTtFmlsaWPB988SYUV2n2vnFXp+JBoIQ=' 'sha256-3a7iEPAV/ivWCZtx6AriA82DkQuvKMcVKpKNj8ILy04='; style-src 'self'",
         ];
 
@@ -244,7 +243,7 @@ class CspHandlerTest extends TestCase
                 'script-ebdca00f',
                 'script-096ccf1e',
             ],
-            'Allowed CSP header size of 100 bytes exhausted (tried to write 379 bytes). Removed style-src hashes: sha256-PMMzh0dRoh0SVsGuNP+MiMGUaR3DGUF8b7J99b9RXFc=, sha256-kMZYJvKUwoVGHauo0TBrvrFT3ty0htezb0TsPp/eEcs=, sha256-tVK6wOK9HGGNBOgrFlQj13so1JXwU7ex6nIwakWTERI=. Removed script-src hashes: sha256-aRR6Dmh6a7drNxbn9I/k9WmmJJqniT7Y8zeO36vFbhA=, sha256-3a7iEPAV/ivWCZtx6AriA82DkQuvKMcVKpKNj8ILy04=, sha256-a+0mzhM4TeUQTtFmlsaWPB988SYUV2n2vnFXp+JBoIQ=.',
+            'Allowed CSP header size of 100 bytes exceeded (tried to write 379 bytes). Removed style-src hashes: sha256-PMMzh0dRoh0SVsGuNP+MiMGUaR3DGUF8b7J99b9RXFc=, sha256-kMZYJvKUwoVGHauo0TBrvrFT3ty0htezb0TsPp/eEcs=, sha256-tVK6wOK9HGGNBOgrFlQj13so1JXwU7ex6nIwakWTERI=. Removed script-src hashes: sha256-aRR6Dmh6a7drNxbn9I/k9WmmJJqniT7Y8zeO36vFbhA=, sha256-3a7iEPAV/ivWCZtx6AriA82DkQuvKMcVKpKNj8ILy04=, sha256-a+0mzhM4TeUQTtFmlsaWPB988SYUV2n2vnFXp+JBoIQ=.',
             "default-src 'self'; script-src 'self' ; style-src 'self'",
         ];
     }
