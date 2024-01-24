@@ -54,7 +54,6 @@ use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\DataCollector\DataCollectorInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\Handler\BatchHandlerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Messenger\Transport\TransportFactoryInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Yaml\Yaml;
@@ -158,7 +157,6 @@ class LintServiceIdsCommand extends Command
         EventDispatcherInterface::class => 'event_dispatcher.dispatcher',
         EventSubscriberInterface::class => 'kernel.event_subscriber',
         ResetInterface::class => 'kernel.reset',
-        MessageHandlerInterface::class => 'messenger.message_handler',
         BatchHandlerInterface::class => 'messenger.message_handler',
         TransportFactoryInterface::class => 'messenger.transport_factory',
         RouteLoaderInterface::class => 'routing.route_loader',
@@ -270,83 +268,7 @@ class LintServiceIdsCommand extends Command
                 }
 
                 if (true !== ($config['autoconfigure'] ?? null)) {
-                    $tags = [];
-
-                    if (isset($config['tags'])) {
-                        foreach ($config['tags'] as $tag) {
-                            if (\is_string($tag)) {
-                                $tags[$tag] = true;
-                            } elseif (!isset($tag['name'])) {
-                                $key = array_key_first($tag);
-                                $tags[$key] = $tag[$key];
-                            } else {
-                                if (1 === \count($tag)) {
-                                    $hasError = true;
-
-                                    $io->warning(sprintf(
-                                        'The "%s" tag of the "%s" service defined in the %s file should not be an array.',
-                                        $tag['name'],
-                                        $serviceId,
-                                        $fileName,
-                                    ));
-                                } else {
-                                    $attrs = [];
-
-                                    foreach ($tag as $k => $v) {
-                                        if ('name' !== $k) {
-                                            $attrs[] = "$k: $v";
-                                        }
-                                    }
-
-                                    $hasError = true;
-
-                                    $io->warning(sprintf(
-                                        'The tag of the "%s" service defined in the %s file should be "%s".',
-                                        $serviceId,
-                                        $fileName,
-                                        $tag['name'].': { '.implode(', ', $attrs).' }',
-                                    ));
-                                }
-
-                                $tags[$tag['name']] = $tag;
-                            }
-                        }
-                    }
-
-                    $r = new \ReflectionClass($config['class']);
-
-                    foreach (self::$parentClassToTag as $class => $tag) {
-                        if (!isset($tags[$tag]) && $r->isSubclassOf($class)) {
-                            $hasError = true;
-
-                            $io->warning(sprintf(
-                                'The "%s" service defined in the %s file should have a "%s" tag.',
-                                $serviceId,
-                                $fileName,
-                                $tag,
-                            ));
-                        }
-                    }
-
-                    $attributes = $r->getAttributes();
-
-                    foreach ($attributes as $attribute) {
-                        $name = $attribute->getName();
-
-                        if (!isset(self::$attributeToTag[$name])) {
-                            continue;
-                        }
-
-                        $hasError = true;
-
-                        $io->warning(sprintf(
-                            'The "%s" service defined in the %s file should have a "%s" tag instead of the #[%s] attribute.',
-                            $serviceId,
-                            $fileName,
-                            self::$attributeToTag[$name],
-                            (new \ReflectionClass($name))->getShortName(),
-                        ));
-                    }
+                    $this->checkTags($config, $serviceId, $fileName, $io, $hasError);
                 }
 
                 if (!isset($config['deprecated'])) {
@@ -392,6 +314,80 @@ class LintServiceIdsCommand extends Command
         $io->success('All service definitions are correct.');
 
         return 0;
+    }
+
+    private function checkTags(array $config, string $serviceId, string $fileName, SymfonyStyle $io, bool &$hasError): void
+    {
+        $tags = [];
+
+        if (isset($config['tags'])) {
+            foreach ($config['tags'] as $tag) {
+                if (\is_string($tag)) {
+                    $tags[$tag] = true;
+                } elseif (!isset($tag['name'])) {
+                    $key = array_key_first($tag);
+                    $tags[$key] = $tag[$key];
+                } else {
+                    $hasError = true;
+
+                    if (1 === \count($tag)) {
+                        $io->warning(sprintf(
+                            'The "%s" tag of the "%s" service defined in the %s file should not be an array.',
+                            $tag['name'],
+                            $serviceId,
+                            $fileName,
+                        ));
+                    } else {
+                        $attrs = array_map(static fn ($k, $v) => "$k: $v", array_keys($tag), array_values($tag));
+                        unset($attrs[0]);
+
+                        $io->warning(sprintf(
+                            'The tag of the "%s" service defined in the %s file should be "%s".',
+                            $serviceId,
+                            $fileName,
+                            $tag['name'].': { '.implode(', ', $attrs).' }',
+                        ));
+                    }
+
+                    $tags[$tag['name']] = $tag;
+                }
+            }
+        }
+
+        $r = new \ReflectionClass($config['class']);
+
+        foreach (self::$parentClassToTag as $class => $tag) {
+            if (!isset($tags[$tag]) && $r->isSubclassOf($class)) {
+                $hasError = true;
+
+                $io->warning(sprintf(
+                    'The "%s" service defined in the %s file should have a "%s" tag.',
+                    $serviceId,
+                    $fileName,
+                    $tag,
+                ));
+            }
+        }
+
+        $attributes = $r->getAttributes();
+
+        foreach ($attributes as $attribute) {
+            $name = $attribute->getName();
+
+            if (!isset(self::$attributeToTag[$name])) {
+                continue;
+            }
+
+            $hasError = true;
+
+            $io->warning(sprintf(
+                'The "%s" service defined in the %s file should have a "%s" tag instead of the #[%s] attribute.',
+                $serviceId,
+                $fileName,
+                self::$attributeToTag[$name],
+                (new \ReflectionClass($name))->getShortName(),
+            ));
+        }
     }
 
     private function getServiceIdFromClass(string $class): string|null
