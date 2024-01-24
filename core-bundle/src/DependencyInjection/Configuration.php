@@ -876,8 +876,8 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->integerNode('max_header_size')
-                    ->info('The CSP header can get pretty long when adding lots of automatically calculated hashes. Contao will automatically remove signatures in order to prevent the CSP header to exceed the configured limit. This will affect the functionality of affected URLs but ensure you do not run into 500 server errors.')
-                    ->defaultValue(3072) // Most browsers have a limit of 8-16kb for **all** headers in total
+                    ->info('Do not increase this value beyond the allowed response headers size of your web server, as this will result in a 500 server error.')
+                    ->defaultValue(3072)
                 ->end()
             ->end()
         ;
