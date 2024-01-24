@@ -131,7 +131,7 @@ $GLOBALS['TL_MIME'] = array
 	// Videos
 	'mp4'   => array('video/mp4', 'iconMP4.svg'),
 	'm4v'   => array('video/x-m4v', 'iconM4V.svg'),
-	'mov'   => array('video/mov', 'iconMOV.svg'),
+	'mov'   => array('video/quicktime', 'iconMOV.svg'),
 	'wmv'   => array('video/wmv', 'iconWMV.svg'),
 	'webm'  => array('video/webm', 'iconWEBM.svg'),
 	'qt'    => array('video/quicktime', 'iconQT.svg'),
