@@ -20,6 +20,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
 
@@ -78,7 +79,7 @@ class LintServiceIdsCommand extends Command
         'contao.migration.version_400.version_400_update',
     ];
 
-    public function __construct(public string $projectDir)
+    public function __construct(private readonly string $projectDir)
     {
         parent::__construct();
     }
@@ -141,6 +142,7 @@ class LintServiceIdsCommand extends Command
                 continue;
             }
 
+            $fileName = Path::makeRelative($file->getPathname(), $this->projectDir);
             $serviceIds = [];
 
             foreach ($yaml['services'] as $serviceId => $config) {
@@ -159,7 +161,7 @@ class LintServiceIdsCommand extends Command
                     $io->warning(sprintf(
                         'The %s service defined in the %s file uses a FQCN as service ID, which is only allowed for controllers.',
                         $serviceId,
-                        $file->getRelativePathname(),
+                        $fileName,
                     ));
                 }
 
@@ -183,11 +185,10 @@ class LintServiceIdsCommand extends Command
                     $hasError = true;
 
                     $io->warning(sprintf(
-                        'The %s service defined in the %s file should have the ID "%s" but has the ID "%s".',
-                        $config['class'],
-                        $file->getRelativePathname(),
-                        $id,
+                        'The "%s" service defined in the %s file should have the ID "%s".',
                         $serviceId,
+                        $fileName,
+                        $id,
                     ));
                 }
             }
@@ -199,7 +200,7 @@ class LintServiceIdsCommand extends Command
             if ($serviceIds !== $sortedIds) {
                 $hasError = true;
 
-                $io->warning(sprintf('The services in the %s file are not sorted correctly.', $file->getRelativePathname()));
+                $io->warning(sprintf('The services in the %s file are not sorted correctly.', $fileName));
                 $io->writeln((new \Diff($serviceIds, $sortedIds))->render(new \Diff_Renderer_Text_Unified()));
             }
         }
@@ -208,7 +209,7 @@ class LintServiceIdsCommand extends Command
             return 1;
         }
 
-        $io->success('All service IDs are correct.');
+        $io->success('All service definitions are correct.');
 
         return 0;
     }
