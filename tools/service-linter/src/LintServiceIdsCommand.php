@@ -13,21 +13,58 @@ declare(strict_types=1);
 namespace Contao\Tools\ServiceLinter;
 
 use Contao\CoreBundle\Config\ResourceFinder;
+use Contao\CoreBundle\Crawl\Escargot\Subscriber\EscargotSubscriberInterface;
 use Contao\CoreBundle\Csrf\MemoryTokenStorage;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsBlockInsertTag;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTag;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTagFlag;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
+use Contao\CoreBundle\Migration\MigrationInterface;
+use Contao\CoreBundle\Picker\PickerProviderInterface;
+use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
+use Contao\CoreBundle\Search\Indexer\IndexerInterface;
+use Monolog\Processor\ProcessorInterface;
+use Symfony\Bridge\Monolog\Processor\WebProcessor;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\FrameworkBundle\Routing\RouteLoaderInterface;
+use Symfony\Bundle\MakerBundle\MakerInterface;
+use Symfony\Component\Asset\PackageInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ServiceLocator;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\HttpKernel\Attribute\AsTargetedValueResolver;
+use Symfony\Component\HttpKernel\CacheClearer\CacheClearerInterface;
+use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
+use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
+use Symfony\Component\HttpKernel\DataCollector\DataCollectorInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+use Symfony\Component\Messenger\Handler\BatchHandlerInterface;
+use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Transport\TransportFactoryInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Yaml\Yaml;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\Service\ResetInterface;
+use Symfony\Contracts\Service\ServiceSubscriberInterface;
+use Twig\Extension\ExtensionInterface;
+use Twig\Extension\RuntimeExtensionInterface;
+use Twig\Loader\LoaderInterface;
 
-#[AsCommand(
-    name: 'contao:lint-service-ids',
-    description: 'Checks the Contao service IDs.',
-)]
 class LintServiceIdsCommand extends Command
 {
     /**
@@ -79,9 +116,72 @@ class LintServiceIdsCommand extends Command
         'contao.migration.version_400.version_400_update',
     ];
 
+    /**
+     * @var array<string>
+     */
+    private static array $attributeToTag = [
+        AsContentElement::class => 'contao.content_element',
+        AsFrontendModule::class => 'contao.frontend_module',
+        AsPage::class => 'contao.page',
+        AsPickerProvider::class => 'contao.picker_provider',
+        AsCronJob::class => 'contao.cronjob',
+        AsHook::class => 'contao.hook',
+        AsCallback::class => 'contao.callback',
+        AsInsertTag::class => 'contao.insert_tag',
+        AsBlockInsertTag::class => 'contao.block_insert_tag',
+        AsInsertTagFlag::class => 'contao.insert_tag_flag',
+        AsCommand::class => 'console.command',
+        AsEventListener::class => 'kernel.event_listener',
+        AsController::class => 'controller.service_arguments',
+        AsMessageHandler::class => 'messenger.message_handler',
+        AsTargetedValueResolver::class => 'controller.targeted_value_resolver',
+    ];
+
+    /**
+     * @var array<string>
+     */
+    private static array $parentClassToTag = [
+        PackageInterface::class => 'assets.package',
+        Command::class => 'console.command',
+        ServiceLocator::class => 'container.service_locator',
+        AbstractController::class => 'controller.service_arguments',
+        PickerProviderInterface::class => 'contao.picker_provider',
+        MigrationInterface::class => 'contao.migration',
+        ContentUrlResolverInterface::class => 'contao.content_url_resolver',
+        IndexerInterface::class => 'contao.search_indexer',
+        EscargotSubscriberInterface::class => 'contao.escargot_subscriber',
+        ServiceSubscriberInterface::class => 'container.service_subscriber',
+        ValueResolverInterface::class => 'controller.argument_value_resolver',
+        DataCollectorInterface::class => 'data_collector',
+        CacheClearerInterface::class => 'kernel.cache_clearer',
+        CacheWarmerInterface::class => 'kernel.cache_warmer',
+        EventDispatcherInterface::class => 'event_dispatcher.dispatcher',
+        EventSubscriberInterface::class => 'kernel.event_subscriber',
+        ResetInterface::class => 'kernel.reset',
+        MessageHandlerInterface::class => 'messenger.message_handler',
+        BatchHandlerInterface::class => 'messenger.message_handler',
+        TransportFactoryInterface::class => 'messenger.transport_factory',
+        RouteLoaderInterface::class => 'routing.route_loader',
+        MakerInterface::class => 'maker.command',
+        ProcessorInterface::class => 'monolog.processor',
+        WebProcessor::class => 'monolog.processor',
+        VoterInterface::class => 'security.voter',
+        ExtensionInterface::class => 'twig.extension',
+        LoaderInterface::class => 'twig.loader',
+        RuntimeExtensionInterface::class => 'twig.runtime',
+    ];
+
     public function __construct(private readonly string $projectDir)
     {
         parent::__construct();
+    }
+
+    protected function configure(): void
+    {
+        $this
+            ->setName('contao:lint-service-ids')
+            ->setDescription('Checks the Contao service IDs.')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -167,6 +267,86 @@ class LintServiceIdsCommand extends Command
 
                 if (!isset($config['class'])) {
                     continue;
+                }
+
+                if (true !== ($config['autoconfigure'] ?? null)) {
+                    $tags = [];
+
+                    if (isset($config['tags'])) {
+                        foreach ($config['tags'] as $tag) {
+                            if (\is_string($tag)) {
+                                $tags[$tag] = true;
+                            } elseif (!isset($tag['name'])) {
+                                $key = array_key_first($tag);
+                                $tags[$key] = $tag[$key];
+                            } else {
+                                if (1 === \count($tag)) {
+                                    $hasError = true;
+
+                                    $io->warning(sprintf(
+                                        'The "%s" tag of the "%s" service defined in the %s file should not be an array.',
+                                        $tag['name'],
+                                        $serviceId,
+                                        $fileName,
+                                    ));
+                                } else {
+                                    $attrs = [];
+
+                                    foreach ($tag as $k => $v) {
+                                        if ('name' !== $k) {
+                                            $attrs[] = "$k: $v";
+                                        }
+                                    }
+
+                                    $hasError = true;
+
+                                    $io->warning(sprintf(
+                                        'The tag of the "%s" service defined in the %s file should be "%s".',
+                                        $serviceId,
+                                        $fileName,
+                                        $tag['name'].': { '.implode(', ', $attrs).' }',
+                                    ));
+                                }
+
+                                $tags[$tag['name']] = $tag;
+                            }
+                        }
+                    }
+
+                    $r = new \ReflectionClass($config['class']);
+
+                    foreach (self::$parentClassToTag as $class => $tag) {
+                        if (!isset($tags[$tag]) && $r->isSubclassOf($class)) {
+                            $hasError = true;
+
+                            $io->warning(sprintf(
+                                'The "%s" service defined in the %s file should have a "%s" tag.',
+                                $serviceId,
+                                $fileName,
+                                $tag,
+                            ));
+                        }
+                    }
+
+                    $attributes = $r->getAttributes();
+
+                    foreach ($attributes as $attribute) {
+                        $name = $attribute->getName();
+
+                        if (!isset(self::$attributeToTag[$name])) {
+                            continue;
+                        }
+
+                        $hasError = true;
+
+                        $io->warning(sprintf(
+                            'The "%s" service defined in the %s file should have a "%s" tag instead of the #[%s] attribute.',
+                            $serviceId,
+                            $fileName,
+                            self::$attributeToTag[$name],
+                            (new \ReflectionClass($name))->getShortName(),
+                        ));
+                    }
                 }
 
                 if (!isset($config['deprecated'])) {
