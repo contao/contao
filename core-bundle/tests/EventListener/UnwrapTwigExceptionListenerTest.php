@@ -63,7 +63,7 @@ class UnwrapTwigExceptionListenerTest extends TestCase
                 'Error evaluating "text": This exception has no message. Use Sexception->getResponse) instead.',
                 0,
                 new RedirectResponseException('/foo'),
-            )
+            ),
         ];
     }
 
