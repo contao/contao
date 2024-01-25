@@ -969,6 +969,10 @@ h2.sub_headline {
 	line-height: 1.3;
 }
 
+#tl_crawl .crawl-hint a {
+	text-decoration: underline;
+}
+
 #tl_crawl .subscriber-log {
 	display: none;
 	padding: 5px 0;
