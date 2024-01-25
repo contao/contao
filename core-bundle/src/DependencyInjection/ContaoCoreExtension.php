@@ -150,6 +150,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleFallbackPreviewProvider($config, $container);
         $this->handleCronConfig($config, $container);
         $this->handleSecurityConfig($config, $container);
+        $this->handleCspConfig($config, $container);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -314,8 +315,8 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         }
 
         $factory = $container->getDefinition('contao.crawl.escargot.factory');
-        $factory->setArgument(2, $config['crawl']['additional_uris']);
-        $factory->setArgument(3, $config['crawl']['default_http_client_options']);
+        $factory->setArgument(3, $config['crawl']['additional_uris']);
+        $factory->setArgument(4, $config['crawl']['default_http_client_options']);
     }
 
     /**
@@ -535,5 +536,18 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
         $listener = $container->getDefinition('contao.listener.transport_security_header');
         $listener->setArgument(1, $config['security']['hsts']['ttl']);
+    }
+
+    private function handleCspConfig(array $config, ContainerBuilder $container): void
+    {
+        if ($container->hasDefinition('contao.routing.response_context.csp_handler_factory')) {
+            $factory = $container->getDefinition('contao.routing.response_context.csp_handler_factory');
+            $factory->setArgument(1, $config['csp']['max_header_size']);
+        }
+
+        if ($container->hasDefinition('contao.csp.wysiwyg_style_processor')) {
+            $processor = $container->getDefinition('contao.csp.wysiwyg_style_processor');
+            $processor->setArgument(0, $config['csp']['allowed_inline_styles']);
+        }
     }
 }

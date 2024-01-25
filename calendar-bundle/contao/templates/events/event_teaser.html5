@@ -21,7 +21,7 @@
 
   <div class="ce_text block">
     <?php if (!$this->addBefore): ?>
-      <?= $this->teaser ?>
+      <?= $this->cspInlineStyles($this->teaser) ?>
     <?php endif; ?>
 
     <?php if ($this->addImage): ?>
@@ -29,7 +29,7 @@
     <?php endif; ?>
 
     <?php if ($this->addBefore): ?>
-      <?= $this->teaser ?>
+      <?= $this->cspInlineStyles($this->teaser) ?>
     <?php endif; ?>
   </div>
 

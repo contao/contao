@@ -18,6 +18,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
+use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandlerFactory;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
@@ -60,7 +61,7 @@ class CoreResponseContextFactoryTest extends TestCase
             new HtmlDecoder($this->createMock(InsertTagParser::class)),
             $this->createMock(RequestStack::class),
             $this->createMock(InsertTagParser::class),
-            $this->createMock(CspParser::class),
+            $this->createMock(CspHandlerFactory::class),
             $this->createMock(UrlGeneratorInterface::class),
         );
 
@@ -84,7 +85,7 @@ class CoreResponseContextFactoryTest extends TestCase
             new HtmlDecoder($this->createMock(InsertTagParser::class)),
             $this->createMock(RequestStack::class),
             $this->createMock(InsertTagParser::class),
-            $this->createMock(CspParser::class),
+            $this->createMock(CspHandlerFactory::class),
             $this->createMock(UrlGeneratorInterface::class),
         );
 
@@ -130,7 +131,7 @@ class CoreResponseContextFactoryTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push(Request::create('https://example.com/'));
 
-        $cspParser = new CspParser(new PolicyManager());
+        $cpHandlerFactory = new CspHandlerFactory(new CspParser(new PolicyManager()));
 
         $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
         $urlGenerator
@@ -161,7 +162,7 @@ class CoreResponseContextFactoryTest extends TestCase
             new HtmlDecoder($insertTagsParser),
             $requestStack,
             $insertTagsParser,
-            $cspParser,
+            $cpHandlerFactory,
             $urlGenerator,
         );
 
@@ -235,7 +236,7 @@ class CoreResponseContextFactoryTest extends TestCase
             new HtmlDecoder($insertTagsParser),
             $requestStack,
             $insertTagsParser,
-            $this->createMock(CspParser::class),
+            $this->createMock(CspHandlerFactory::class),
             $this->createMock(UrlGeneratorInterface::class),
         );
 
@@ -281,7 +282,7 @@ class CoreResponseContextFactoryTest extends TestCase
             new HtmlDecoder($insertTagsParser),
             $this->createMock(RequestStack::class),
             $insertTagsParser,
-            $this->createMock(CspParser::class),
+            $this->createMock(CspHandlerFactory::class),
             $this->createMock(UrlGeneratorInterface::class),
         );
 

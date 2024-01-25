@@ -13,13 +13,17 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Session\Attribute\AutoExpiringAttribute;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
 
 /**
+ * The priority must be higher than the one of the Symfony save session listener (defaults to -1000).
+ *
  * @internal
  */
+#[AsEventListener(priority: -768)]
 class ClearSessionDataListener
 {
     /**

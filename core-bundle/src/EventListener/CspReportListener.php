@@ -15,12 +15,14 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Nelmio\SecurityBundle\ContentSecurityPolicy\Violation\ReportEvent;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 
 /**
  * Adds a system log entry for a CSP report.
  *
  * @internal
  */
+#[AsEventListener]
 class CspReportListener
 {
     public function __construct(private readonly LoggerInterface $logger)

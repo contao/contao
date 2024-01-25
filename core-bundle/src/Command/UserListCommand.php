@@ -13,17 +13,12 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command;
 
 use Doctrine\DBAL\Connection;
-use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-#[AsCommand(
-    name: 'contao:user:list',
-    description: 'Lists Contao back end users.',
-)]
 class UserListCommand extends Command
 {
     public function __construct(private readonly Connection $connection)
@@ -34,6 +29,8 @@ class UserListCommand extends Command
     protected function configure(): void
     {
         $this
+            ->setName('contao:user:list')
+            ->setDescription('Lists Contao back end users.')
             ->addOption('column', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'The columns display in the table')
             ->addOption('admins', null, InputOption::VALUE_NONE, 'Return only admins')
             ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt, json)', 'txt')

@@ -14,6 +14,7 @@ namespace Contao\CalendarBundle\EventListener;
 
 use Contao\CalendarEventsModel;
 use Contao\CalendarFeedModel;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\StringUtil;
@@ -22,6 +23,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 /**
  * @internal
  */
+#[AsHook('replaceInsertTags')]
 class InsertTagsListener
 {
     private const SUPPORTED_TAGS = [

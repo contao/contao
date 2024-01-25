@@ -14,8 +14,10 @@ namespace Contao\CoreBundle\EventListener\Security;
 
 use Contao\CoreBundle\Repository\RememberMeRepository;
 use Contao\User;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Security\Http\Event\TokenDeauthenticatedEvent;
 
+#[AsEventListener]
 class TokenDeauthenticatedListener
 {
     public function __construct(private readonly RememberMeRepository $rememberMeRepository)

@@ -96,9 +96,9 @@ class ContaoExtensionTest extends TestCase
             'prefix_url' => [],
             'frontend_module' => ['html'],
             'content_element' => ['html'],
-            'contao_csp_nonce' => [],
-            'add_csp_source' => [],
-            'add_csp_hash' => [],
+            'csp_nonce' => [],
+            'csp_source' => [],
+            'csp_hash' => [],
         ];
 
         $functions = $this->getContaoExtension()->getFunctions();
@@ -129,6 +129,8 @@ class ContaoExtensionTest extends TestCase
             'highlight_auto',
             'format_bytes',
             'sanitize_html',
+            'csp_inline_styles',
+            'encode_email',
         ];
 
         $this->assertCount(\count($expectedFilters), $filters);

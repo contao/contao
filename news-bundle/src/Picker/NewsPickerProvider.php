@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\NewsBundle\Picker;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Contao\CoreBundle\Picker\AbstractInsertTagPickerProvider;
@@ -24,6 +25,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+#[AsPickerProvider(priority: 128)]
 class NewsPickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
 {
     use FrameworkAwareTrait;

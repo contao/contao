@@ -14,7 +14,6 @@ namespace Contao\ManagerBundle\ContaoManager\ApiCommand;
 
 use Contao\ManagerBundle\Api\Application;
 use Contao\ManagerBundle\Dotenv\DotenvDumper;
-use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -22,10 +21,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Filesystem\Path;
 
-#[AsCommand(
-    name: 'dot-env:remove',
-    description: 'Removes a parameter from the .env file.',
-)]
 class RemoveDotEnvCommand extends Command
 {
     private readonly string $projectDir;
@@ -39,7 +34,11 @@ class RemoveDotEnvCommand extends Command
 
     protected function configure(): void
     {
-        $this->addArgument('key', InputArgument::REQUIRED, 'The variable name');
+        $this
+            ->setName('dot-env:remove')
+            ->setDescription('Removes a parameter from the .env file.')
+            ->addArgument('key', InputArgument::REQUIRED, 'The variable name')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

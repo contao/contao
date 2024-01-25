@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\CoreBundle\Event\RobotsTxtEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Symfony\Bundle\WebProfilerBundle\EventListener\WebDebugToolbarListener;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use webignition\RobotsTxt\Directive\Directive;
 use webignition\RobotsTxt\Directive\UserAgentDirective;
 use webignition\RobotsTxt\Inspector\Inspector;
@@ -23,6 +24,7 @@ use webignition\RobotsTxt\Record\Record;
 /**
  * @internal
  */
+#[AsEventListener]
 class RobotsTxtListener
 {
     public function __construct(

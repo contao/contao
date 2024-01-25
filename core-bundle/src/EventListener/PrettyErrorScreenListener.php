@@ -22,6 +22,7 @@ use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\StringUtil;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\AcceptHeader;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -36,8 +37,11 @@ use Twig\Environment;
 use Twig\Error\Error;
 
 /**
+ * The priority must be higher than the one of the Twig exception listener (defaults to -128).
+ *
  * @internal
  */
+#[AsEventListener(priority: -96)]
 class PrettyErrorScreenListener
 {
     public function __construct(

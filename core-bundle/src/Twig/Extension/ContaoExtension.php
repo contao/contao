@@ -37,6 +37,7 @@ use Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime;
 use Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime;
 use Contao\CoreBundle\Twig\Runtime\SanitizerRuntime;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
+use Contao\CoreBundle\Twig\Runtime\StringRuntime;
 use Contao\CoreBundle\Twig\Runtime\UrlRuntime;
 use Contao\FrontendTemplateTrait;
 use Contao\Template;
@@ -205,16 +206,17 @@ final class ContaoExtension extends AbstractExtension
                 [FragmentRuntime::class, 'renderContent'],
                 ['is_safe' => ['html']],
             ),
+            // Overwrites the 'csp_nonce' method from nelmio/security-bundle
             new TwigFunction(
-                'contao_csp_nonce',
+                'csp_nonce',
                 [CspRuntime::class, 'getNonce'],
             ),
             new TwigFunction(
-                'add_csp_source',
+                'csp_source',
                 [CspRuntime::class, 'addSource'],
             ),
             new TwigFunction(
-                'add_csp_hash',
+                'csp_hash',
                 [CspRuntime::class, 'addHash'],
             ),
         ];
@@ -292,6 +294,16 @@ final class ContaoExtension extends AbstractExtension
                 'sanitize_html',
                 [SanitizerRuntime::class, 'sanitizeHtml'],
                 ['is_safe' => ['html']],
+            ),
+            new TwigFilter(
+                'csp_inline_styles',
+                [CspRuntime::class, 'inlineStyles'],
+                ['preserves_safety' => ['html']],
+            ),
+            new TwigFilter(
+                'encode_email',
+                [StringRuntime::class, 'encodeEmail'],
+                ['preserves_safety' => ['contao_html', 'html']],
             ),
         ];
     }

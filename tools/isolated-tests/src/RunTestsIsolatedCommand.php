@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\Tools\IsolatedTests;
 
 use Contao\CoreBundle\Tests\PhpunitExtension\GlobalStateWatcher;
-use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -22,10 +21,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
-#[AsCommand(
-    name: 'contao:run-tests-isolated',
-    description: 'Runs the unit tests isolated from each other.',
-)]
 class RunTestsIsolatedCommand extends Command
 {
     private readonly string|false $phpPath;
@@ -39,16 +34,19 @@ class RunTestsIsolatedCommand extends Command
 
     protected function configure(): void
     {
-        $this->addOption('depth', null, InputOption::VALUE_REQUIRED, '1 for test classes, 2 for test methods, 3 for every single provider data set', '3');
-
-        $this->setHelp(
-            <<<'EOT'
-                The command runs each unit test completely isolated from the others, starting
-                a new PHPUnit process for each test class, method, or data set. This gives us
-                "real" isolation rather than shared state, unlike the PHPUnit option
-                --process-isolation does.
-                EOT,
-        );
+        $this
+            ->setName('contao:run-tests-isolated')
+            ->setDescription('Runs the unit tests isolated from each other.')
+            ->addOption('depth', null, InputOption::VALUE_REQUIRED, '1 for test classes, 2 for test methods, 3 for every single provider data set', '3')
+            ->setHelp(
+                <<<'EOT'
+                    The command runs each unit test completely isolated from the others, starting
+                    a new PHPUnit process for each test class, method, or data set. This gives us
+                    "real" isolation rather than shared state, unlike the PHPUnit option
+                    --process-isolation does.
+                    EOT,
+            )
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

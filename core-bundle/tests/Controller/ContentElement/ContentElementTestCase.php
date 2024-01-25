@@ -19,6 +19,7 @@ use Contao\Controller;
 use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
+use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\File\MetadataBag;
@@ -48,11 +49,13 @@ use Contao\CoreBundle\Twig\Runtime\FragmentRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
+use Contao\CoreBundle\Twig\Runtime\StringRuntime;
 use Contao\DcaExtractor;
 use Contao\DcaLoader;
 use Contao\Input;
 use Contao\InsertTags;
 use Contao\PageModel;
+use Contao\StringUtil;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Highlight\Highlighter;
@@ -311,7 +314,8 @@ class ContentElementTestCase extends TestCase
                 HighlighterRuntime::class => static fn () => new HighlighterRuntime(),
                 SchemaOrgRuntime::class => static fn () => new SchemaOrgRuntime($responseContextAccessor),
                 FormatterRuntime::class => static fn () => new FormatterRuntime($framework),
-                CspRuntime::class => static fn () => new CspRuntime($responseContextAccessor),
+                CspRuntime::class => static fn () => new CspRuntime($responseContextAccessor, new WysiwygStyleProcessor([])),
+                StringRuntime::class => static fn () => new StringRuntime($framework),
             ]),
         );
 
@@ -509,12 +513,19 @@ class ContentElementTestCase extends TestCase
             ->willReturnOnConsecutiveCalls(...array_map(static fn ($el) => $el->getContentModel()->type, $nestedFragments))
         ;
 
+        $stringUtil = $this->mockAdapter(['encodeEmail']);
+        $stringUtil
+            ->method('encodeEmail')
+            ->willReturnArgument(0)
+        ;
+
         return $this->mockContaoFramework([
             Config::class => $configAdapter,
             Input::class => $inputAdapter,
             PageModel::class => $pageAdapter,
             ArticleModel::class => $articleAdapter,
             Controller::class => $controllerAdapter,
+            StringUtil::class => $stringUtil,
         ]);
     }
 }
