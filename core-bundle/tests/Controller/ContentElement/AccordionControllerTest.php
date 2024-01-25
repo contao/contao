@@ -22,12 +22,12 @@ class AccordionControllerTest extends ContentElementTestCase
     {
         $text = $this->mockClassWithProperties(ContentModel::class, [
             'type' => 'text',
-            'sectionHeadline' => 'Text',
+            'sectionHeadline' => serialize(['value' => 'Text', 'unit' => 'h3']),
         ]);
 
         $image = $this->mockClassWithProperties(ContentModel::class, [
             'type' => 'image',
-            'sectionHeadline' => 'Image',
+            'sectionHeadline' => serialize(['value' => 'Image', 'unit' => 'h3']),
         ]);
 
         $response = $this->renderWithModelData(
@@ -76,12 +76,12 @@ class AccordionControllerTest extends ContentElementTestCase
     {
         $text = $this->mockClassWithProperties(ContentModel::class, [
             'type' => 'text',
-            'sectionHeadline' => 'Text',
+            'sectionHeadline' => serialize(['value' => 'Text', 'unit' => 'h3']),
         ]);
 
         $image = $this->mockClassWithProperties(ContentModel::class, [
             'type' => 'image',
-            'sectionHeadline' => 'Image',
+            'sectionHeadline' => serialize(['value' => 'Image', 'unit' => 'h3']),
         ]);
 
         $response = $this->renderWithModelData(

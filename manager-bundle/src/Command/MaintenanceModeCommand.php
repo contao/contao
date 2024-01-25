@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\Command;
 
 use Contao\CoreBundle\Intl\Locales;
-use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -24,10 +23,6 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
-#[AsCommand(
-    name: 'contao:maintenance-mode',
-    description: 'Changes the state of the system maintenance mode.',
-)]
 class MaintenanceModeCommand extends Command
 {
     public function __construct(
@@ -43,6 +38,8 @@ class MaintenanceModeCommand extends Command
     protected function configure(): void
     {
         $this
+            ->setName('contao:maintenance-mode')
+            ->setDescription('Changes the state of the system maintenance mode.')
             ->addArgument('state', InputArgument::OPTIONAL, 'Use "enable" to enable and "disable" to disable the maintenance mode. If the state is already the desired one, nothing happens. You can also use "on" and "off".')
             ->addOption('template', 't', InputOption::VALUE_REQUIRED, 'Allows to take a different Twig template name when enabling the maintenance mode.', '@ContaoCore/Error/service_unavailable.html.twig')
             ->addOption('templateVars', null, InputOption::VALUE_OPTIONAL, 'Add custom template variables to the Twig template when enabling the maintenance mode (provide as JSON).', '{}')

@@ -22,7 +22,6 @@ use Doctrine\DBAL\Driver\Mysqli\Driver as MysqliDriver;
 use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\VersionAwarePlatformDriver;
-use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Input\InputInterface;
@@ -30,10 +29,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-#[AsCommand(
-    name: 'contao:migrate',
-    description: 'Executes migrations and updates the database schema.',
-)]
 class MigrateCommand extends Command
 {
     private SymfonyStyle|null $io = null;
@@ -52,6 +47,8 @@ class MigrateCommand extends Command
     protected function configure(): void
     {
         $this
+            ->setName('contao:migrate')
+            ->setDescription('Executes migrations and updates the database schema.')
             ->addOption('with-deletes', null, InputOption::VALUE_NONE, 'Execute all database migrations including DROP queries. Can be used together with --no-interaction.')
             ->addOption('schema-only', null, InputOption::VALUE_NONE, 'Only update the database schema.')
             ->addOption('migrations-only', null, InputOption::VALUE_NONE, 'Only execute the migrations.')

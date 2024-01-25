@@ -18,7 +18,6 @@ use Contao\Image\DeferredImageStorageInterface;
 use Contao\Image\DeferredResizerInterface;
 use Contao\Image\Exception\FileNotExistsException;
 use Contao\Image\ResizerInterface;
-use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Helper\Table;
@@ -36,10 +35,6 @@ use Symfony\Component\Process\Exception\ProcessSignaledException;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
-#[AsCommand(
-    name: 'contao:resize-images',
-    description: 'Resizes deferred images that have not been processed yet.',
-)]
 class ResizeImagesCommand extends Command
 {
     private readonly DeferredResizerInterface|null $resizer;
@@ -68,6 +63,8 @@ class ResizeImagesCommand extends Command
     protected function configure(): void
     {
         $this
+            ->setName('contao:resize-images')
+            ->setDescription('Resizes deferred images that have not been processed yet.')
             ->addOption('time-limit', 'l', InputOption::VALUE_OPTIONAL, 'Time limit in seconds', '0')
             ->addOption('concurrent', 'c', InputOption::VALUE_OPTIONAL, 'Run multiple processes concurrently with a value larger than 1 or pause between resizes to limit CPU utilization with values lower than 1.0', '1')
             ->addOption('image', null, InputArgument::OPTIONAL, 'Image name to resize a single image')

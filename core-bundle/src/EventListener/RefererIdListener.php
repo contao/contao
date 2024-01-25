@@ -13,12 +13,16 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 
 /**
+ * The priority must be lower than the one of the Symfony route listener (defaults to 32).
+ *
  * @internal
  */
+#[AsEventListener(priority: 20)]
 class RefererIdListener
 {
     private string|null $token = null;

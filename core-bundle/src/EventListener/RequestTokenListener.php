@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Csrf\CsrfToken;
@@ -22,8 +23,12 @@ use Symfony\Component\Security\Csrf\CsrfToken;
 /**
  * Validates the request token if the request is a Contao request.
  *
+ * The priority must be lower than the one of the Symfony route listener (defaults to 32)
+ * and the Symfony locale aware listener (defaults to 15).
+ *
  * @internal
  */
+#[AsEventListener(priority: 14)]
 class RequestTokenListener
 {
     public function __construct(

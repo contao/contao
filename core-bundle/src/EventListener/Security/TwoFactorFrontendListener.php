@@ -19,6 +19,7 @@ use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\FrontendUser;
 use Contao\PageModel;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
@@ -29,6 +30,7 @@ use Symfony\Component\Security\Http\Util\TargetPathTrait;
 /**
  * @internal
  */
+#[AsEventListener]
 class TwoFactorFrontendListener
 {
     use TargetPathTrait;

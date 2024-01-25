@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\EventListener\Menu;
 
 use Contao\CoreBundle\Event\MenuEvent;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\SwitchUserToken;
 use Symfony\Component\Security\Http\Firewall\SwitchUserListener;
@@ -23,6 +24,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * @internal
  */
+#[AsEventListener(priority: -96)]
 class BackendLogoutListener
 {
     public function __construct(

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Picker;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Contao\FilesModel;
@@ -24,6 +25,7 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+#[AsPickerProvider(priority: 160)]
 class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
 {
     use FrameworkAwareTrait;

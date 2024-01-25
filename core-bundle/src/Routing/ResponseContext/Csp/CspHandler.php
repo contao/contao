@@ -14,15 +14,21 @@ namespace Contao\CoreBundle\Routing\ResponseContext\Csp;
 
 use Nelmio\SecurityBundle\ContentSecurityPolicy\ContentSecurityPolicyParser;
 use Nelmio\SecurityBundle\ContentSecurityPolicy\DirectiveSet;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 final class CspHandler
 {
+    private bool $reportOnly = false;
+
     private string|null $nonce = null;
 
     private array $directiveNonces = [];
 
+    /**
+     * @var array<string, array<string>>
+     */
     private array $signatures = [];
 
     private static array $validNonceDirectives = ['script-src', 'style-src', 'script-src-elem', 'style-src-elem'];
@@ -31,7 +37,8 @@ final class CspHandler
 
     public function __construct(
         private DirectiveSet $directives,
-        private bool $reportOnly = false,
+        private readonly int $maxHeaderLength = 3072,
+        private readonly LoggerInterface|null $logger = null,
     ) {
     }
 
@@ -78,7 +85,7 @@ final class CspHandler
         return $this->nonce;
     }
 
-    public function addHash(string $directive, string $script, string $algorithm = 'sha384'): self
+    public function addHash(string $directive, string $script, string $algorithm = 'sha256'): self
     {
         if (!\in_array($directive, self::$validHashDirectives, true)) {
             throw new \InvalidArgumentException('Invalid directive');
@@ -142,13 +149,7 @@ final class CspHandler
 
     public function applyHeaders(Response $response, Request|null $request = null): void
     {
-        $signatures = $this->signatures;
-
-        foreach ($this->directiveNonces as $name => $nonce) {
-            $signatures[$name][] = 'nonce-'.$nonce;
-        }
-
-        $headerValue = $this->directives->buildHeaderValue($request ?? new Request(), $signatures);
+        $headerValue = $this->buildHeaderConsideringMaxlength($request);
 
         if (!$headerValue) {
             return;
@@ -157,5 +158,80 @@ final class CspHandler
         $headerName = 'Content-Security-Policy'.($this->reportOnly ? '-Report-Only' : '');
 
         $response->headers->set($headerName, $headerValue);
+    }
+
+    private function buildHeaderConsideringMaxlength(Request|null $request = null): string
+    {
+        $headerValue = $this->buildHeaderValue($request);
+        $headerLength = \strlen($headerValue);
+
+        if ($headerLength < $this->maxHeaderLength) {
+            return $headerValue;
+        }
+
+        // Now let's try to not cause a 500 Internal Server error by removing some signatures. Let's remove some
+        // style-src signatures first because they likely have the least impact.
+        $removedStyleSrc = $this->reduceHashSignatures('style-src');
+        $headerValue = $this->buildHeaderValue($request);
+
+        if (\strlen($headerValue) < $this->maxHeaderLength) {
+            $this->logCspHeaderExceeded($headerLength, $removedStyleSrc, []);
+
+            return $headerValue;
+        }
+
+        // If we still exceed the limit, we have to reduce script-src now.
+        $removedScriptSrc = $this->reduceHashSignatures('script-src');
+        $headerValue = $this->buildHeaderValue($request);
+
+        if (\strlen($headerValue) < $this->maxHeaderLength) {
+            $this->logCspHeaderExceeded($headerLength, $removedStyleSrc, $removedScriptSrc);
+
+            return $headerValue;
+        }
+
+        // Still couldn't make it - we have to throw an exception now.
+        throw new \LogicException(sprintf('The generated Content Security Policy header exceeds %d bytes. It is very unlikely that your web server will be able to handle such a big header value. Check the policy and ensure it stays below %d bytes: %s', $this->maxHeaderLength, $this->maxHeaderLength, $headerValue));
+    }
+
+    private function logCspHeaderExceeded(int $headerLength, array $removedStyleSrc, array $removedScriptSrc): void
+    {
+        $this->logger?->critical(sprintf('Allowed CSP header size of %d bytes exceeded (tried to write %d bytes). Removed style-src hashes: %s. Removed script-src hashes: %s.',
+            $this->maxHeaderLength,
+            $headerLength,
+            [] === $removedStyleSrc ? 'none' : implode(', ', $removedStyleSrc),
+            [] === $removedScriptSrc ? 'none' : implode(', ', $removedScriptSrc),
+        ));
+    }
+
+    private function buildHeaderValue(Request|null $request = null): string
+    {
+        $signatures = $this->signatures;
+
+        foreach ($this->directiveNonces as $name => $nonce) {
+            $signatures[$name][] = 'nonce-'.$nonce;
+        }
+
+        return trim($this->directives->buildHeaderValue($request ?? new Request(), $signatures));
+    }
+
+    /**
+     * @return array<string> The removed hashes
+     */
+    private function reduceHashSignatures(string $source): array
+    {
+        if (!isset($this->signatures[$source])) {
+            return [];
+        }
+
+        $removed = [];
+
+        // First unset the ones added last. In case of style-src, that means that the top inline styles would still
+        // work while towards the footer they might not work anymore.
+        do {
+            $removed[] = array_pop($this->signatures[$source]);
+        } while (\strlen($this->buildHeaderValue()) > $this->maxHeaderLength && [] !== $this->signatures[$source]);
+
+        return $removed;
     }
 }

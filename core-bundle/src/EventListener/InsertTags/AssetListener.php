@@ -12,11 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\InsertTags;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Symfony\Component\Asset\Packages;
 
 /**
  * @internal
  */
+#[AsHook('replaceInsertTags')]
 class AssetListener
 {
     public function __construct(private readonly Packages $packages)

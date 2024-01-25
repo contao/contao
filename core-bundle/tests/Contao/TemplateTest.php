@@ -565,7 +565,7 @@ class TemplateTest extends TestCase
         $response = new Response();
         $cspHandler->applyHeaders($response);
 
-        $algorithm = 'sha384';
+        $algorithm = 'sha256';
         $expectedHash = base64_encode(hash($algorithm, 'text-decoration: underline;', true));
 
         $this->assertSame(sprintf("style-src 'self' 'unsafe-hashes' '%s-%s'", $algorithm, $expectedHash), $response->headers->get('Content-Security-Policy'));

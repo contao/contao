@@ -117,7 +117,7 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
         ;
 
         $warmer = $this->getContaoFilesystemLoaderWarmer($loader, null, $environment);
-        $warmer->onKernelRequest($event);
+        $warmer($event);
     }
 
     public function provideRequestScenarios(): \Generator

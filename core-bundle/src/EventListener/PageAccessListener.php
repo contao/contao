@@ -18,12 +18,17 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\PageModel;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
+ * The priority must be lower than the Symfony route listener (defaults to 32)
+ * and lower than the Symfony firewall listener (defaults to 8).
+ *
  * @internal
  */
+#[AsEventListener(priority: 7)]
 class PageAccessListener
 {
     public function __construct(

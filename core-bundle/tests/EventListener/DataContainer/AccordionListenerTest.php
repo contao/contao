@@ -44,7 +44,7 @@ class AccordionListenerTest extends TestCase
         ;
 
         $this->assertSame(
-            '{type_legend},type,headline;{section_legend},sectionHeadline;{template_legend},customTpl',
+            '{section_legend},sectionHeadline;{type_legend},type,headline;{template_legend},customTpl',
             (new AccordionListener())(self::PALETTE, $dc),
         );
     }
