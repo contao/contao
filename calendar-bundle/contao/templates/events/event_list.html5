@@ -22,7 +22,7 @@
     <?= $this->details ?>
   <?php else: ?>
     <div class="ce_text block">
-      <?= $this->teaser ?>
+      <?= $this->cspInlineStyles($this->teaser) ?>
     </div>
   <?php endif; ?>
 

@@ -13,9 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing\ResponseContext;
 
 use Contao\CoreBundle\Controller\CspReporterController;
-use Contao\CoreBundle\Csp\CspParser;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
-use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
+use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandlerFactory;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
@@ -38,7 +37,7 @@ class CoreResponseContextFactory
         private readonly HtmlDecoder $htmlDecoder,
         private readonly RequestStack $requestStack,
         private readonly InsertTagParser $insertTagParser,
-        private readonly CspParser $cspParser,
+        private readonly CspHandlerFactory $cspHandlerFactory,
         private readonly UrlGeneratorInterface $urlGenerator,
     ) {
     }
@@ -132,8 +131,9 @@ class CoreResponseContextFactory
             return;
         }
 
-        $directives = $this->cspParser->parseHeader((string) $pageModel->csp);
-        $directives->setLevel1Fallback(false);
+        $cspHandler = $this->cspHandlerFactory->create((string) $pageModel->csp);
+        $cspHandler->getDirectives()->setLevel1Fallback(false);
+        $cspHandler->setReportOnly($pageModel->cspReportOnly);
 
         if ($pageModel->cspReportLog) {
             $urlContext = $this->urlGenerator->getContext();
@@ -144,7 +144,7 @@ class CoreResponseContextFactory
 
             try {
                 $reportUri = $this->urlGenerator->generate(CspReporterController::class, ['page' => $pageModel->id], UrlGeneratorInterface::ABSOLUTE_URL);
-                $directives->setDirective('report-uri', $reportUri);
+                $cspHandler->getDirectives()->setDirective('report-uri', $reportUri);
             } catch (RouteNotFoundException) {
                 // noop
             } finally {
@@ -152,7 +152,6 @@ class CoreResponseContextFactory
             }
         }
 
-        $cspHandler = new CspHandler($directives, $pageModel->cspReportOnly);
         $context->add($cspHandler);
     }
 }

@@ -149,7 +149,7 @@
     {% block table_script %}
         {% if sorting %}
             {% add "tablesort_script" to head %}
-                <script{{ attrs(script_attributes|default).setIfExists('nonce', contao_csp_nonce('script-src')) }}>
+                <script{{ attrs(script_attributes|default).setIfExists('nonce', csp_nonce('script-src')) }}>
                     {
                         const instances = new WeakMap();
 

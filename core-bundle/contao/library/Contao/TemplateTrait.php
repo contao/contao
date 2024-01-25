@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\String\HtmlAttributes;
@@ -189,6 +190,65 @@ trait TemplateTrait
 		/** @var CspHandler $csp */
 		$csp = $responseContext->get(CspHandler::class);
 		$csp->addHash($directive, $script, $algorithm);
+	}
+
+	/**
+	 * Adds a CSP hash for a given inline style and also adds the 'unsafe-hashes' source to the directive automatically.
+	 */
+	public function cspInlineStyle(string $style, string $algorithm = 'sha384'): string
+	{
+		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
+
+		if ($responseContext?->has(CspHandler::class))
+		{
+			/** @var CspHandler $csp */
+			$csp = $responseContext->get(CspHandler::class);
+			$csp
+				->addHash('style-src', $style, $algorithm)
+				->addSource('style-src', "'unsafe-hashes'")
+			;
+		}
+
+		return $style;
+	}
+
+	/**
+	 * Extracts all inline CSS style attributes of a given HTML string and automatically adds CSP hashes for those
+	 * to the current response context.
+	 */
+	public function cspInlineStyles(?string $html): ?string
+	{
+		if (!$html)
+		{
+			return $html;
+		}
+
+		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
+
+		if (!$responseContext?->has(CspHandler::class))
+		{
+			return $html;
+		}
+
+		/** @var WysiwygStyleProcessor $styleProcessor */
+		$styleProcessor = System::getContainer()->get('contao.csp.wysiwyg_style_processor');
+
+		if (!$styles = $styleProcessor->extractStyles($html))
+		{
+			return $html;
+		}
+
+		/** @var CspHandler $csp */
+		$csp = $responseContext->get(CspHandler::class);
+
+		foreach ($styles as $style)
+		{
+			$csp->addHash('style-src', $style);
+		}
+
+		$csp->addSource('style-src', 'unsafe-hashes');
+
+		return $html;
 	}
 
 	/**
