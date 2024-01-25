@@ -3,7 +3,7 @@
 <?php $this->block('content'); ?>
 
   <?php if (!$this->addBefore): ?>
-    <?= $this->text ?>
+    <?= $this->cspInlineStyles($this->text) ?>
   <?php endif; ?>
 
   <?php if ($this->addImage): ?>
@@ -11,7 +11,7 @@
   <?php endif; ?>
 
   <?php if ($this->addBefore): ?>
-    <?= $this->text ?>
+    <?= $this->cspInlineStyles($this->text) ?>
   <?php endif; ?>
 
 <?php $this->endblock(); ?>

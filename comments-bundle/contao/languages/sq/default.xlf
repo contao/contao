@@ -5,6 +5,10 @@
         <source>Comments</source>
         <target>Komente</target>
       </trans-unit>
+      <trans-unit id="MSC.commentCount">
+        <source>(comments: %s)</source>
+        <target>(komentet: %s)</target>
+      </trans-unit>
       <trans-unit id="MSC.com_name">
         <source>Name</source>
         <target>Emri dhe llojet e mediave</target>

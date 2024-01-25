@@ -65,6 +65,14 @@
         <source>Here you can add a custom meta description to overwrite the default page description.</source>
         <target>Qui è possibile aggiungere una meta descrizione personalizzata per sovrascrivere la descrizione predefinita della pagina.</target>
       </trans-unit>
+      <trans-unit id="tl_news.canonicalLink.0">
+        <source>Canonical URL</source>
+        <target>Canonical URL</target>
+      </trans-unit>
+      <trans-unit id="tl_news.canonicalLink.1">
+        <source>Here you can set a custom canonical URL like https://example.com/.</source>
+        <target>Here you can set a custom canonical URL like https://example.com/.</target>
+      </trans-unit>
       <trans-unit id="tl_news.subheadline.0">
         <source>Subheadline</source>
         <target>Sottotitolo</target>
@@ -185,14 +193,6 @@
         <source>Here you can enter one or more classes.</source>
         <target>Qui puoi inserire una o più classi CSS.</target>
       </trans-unit>
-      <trans-unit id="tl_news.noComments.0">
-        <source>Disable comments</source>
-        <target>Disabilita commenti</target>
-      </trans-unit>
-      <trans-unit id="tl_news.noComments.1">
-        <source>Do not allow comments for this particular news item.</source>
-        <target>Disabilita i commenti per una particolare news.</target>
-      </trans-unit>
       <trans-unit id="tl_news.featured.0">
         <source>Feature item</source>
         <target>Notizia in evidenza</target>
@@ -307,12 +307,15 @@
       </trans-unit>
       <trans-unit id="tl_news.toggle.0">
         <source>Publish/unpublish news item</source>
+        <target>Pubblica/nascondi news</target>
       </trans-unit>
       <trans-unit id="tl_news.toggle.1">
         <source>Unpublish news item ID %s</source>
+        <target>Disattiva news ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.toggle.2">
         <source>Publish news item ID %s</source>
+        <target>Pubblica news ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.feature.0">
         <source>Feature/unfeature news item ID %s</source>
@@ -320,9 +323,11 @@
       </trans-unit>
       <trans-unit id="tl_news.feature.1">
         <source>Unfeature news item ID %s</source>
+        <target>Disattiva news ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.feature.2">
         <source>Feature news item ID %s</source>
+        <target>News in evidenza ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>

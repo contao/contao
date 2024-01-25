@@ -13,16 +13,11 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Fragment\FragmentConfig;
-use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-#[AsCommand(
-    name: 'debug:fragments',
-    description: 'Displays the fragment controller configuration.',
-)]
 class DebugFragmentsCommand extends Command
 {
     private array $identifiers = [];
@@ -39,6 +34,14 @@ class DebugFragmentsCommand extends Command
         $this->identifiers[] = $identifier;
         $this->configs[$identifier] = $config;
         $this->attributes[$identifier] = $attributes;
+    }
+
+    protected function configure(): void
+    {
+        $this
+            ->setName('debug:fragments')
+            ->setDescription('Displays the fragment controller configuration.')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

@@ -20,6 +20,7 @@ use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\Util\MenuManipulator;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
@@ -29,6 +30,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * @internal
  */
+#[AsEventListener]
 class BackendFavoritesListener
 {
     public function __construct(

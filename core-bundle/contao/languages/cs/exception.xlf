@@ -30,8 +30,7 @@
         <target>Otevřete současný soubor log ve složce &lt;code&gt;var/logs&lt;/code&gt; a najděte dané chybové hlášení (pravděpodobně jedno z posledních)</target>
       </trans-unit>
       <trans-unit id="XPT.errorExplain">
-        <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, visit the &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
-        <target>Spouštění skriptu bylo pozastaveno, protože něco nefunguje správně. Daná chybová zpráva je skrytá u této poznámky z bezpečnostních důvodů a lze ji najít v souboru (viz výš). Pokud nerozumíte chybové zprávě nebo nevíte, jak lze daný problém opravit, navštivte &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;stránku podpory Contaa&lt;/a&gt;.</target>
+        <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, visit the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="XPT.requestToken">
         <source>Invalid request token</source>
@@ -50,8 +49,7 @@
         <target>Chyba nastane, pokud je nastavený přenos POST bez platného potvrzovacího tokenu. V Contau 2.10 byla tato kontrola nahrazená tokenovým systémem. Přetrvává-li daný problém, nejspíš používáte nekompatibilní rozšíření třetích stran nebo není dobré zaktualizována instalace Vašeho Contaa.</target>
       </trans-unit>
       <trans-unit id="XPT.tokenExplainTwo">
-        <source>For more information, visit the &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
-        <target>Více informací najdete na &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;stránce podpory Contaa&lt;/a&gt;.</target>
+        <source>For more information, visit the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="XPT.unavailable">
         <source>Service unavailable</source>

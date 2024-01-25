@@ -249,7 +249,8 @@ abstract class DataContainer extends Backend
 	/**
 	 * Active record
 	 * @var Model|object|null
-	 * @deprecated Deprecated since Contao 5.0 to be removed in Contao 6. Use $dc->getCurrentRecord() instead.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6;
+	 *             use $dc->getCurrentRecord() instead.
 	 */
 	protected $objActiveRecord;
 

@@ -89,6 +89,13 @@
         <source>Here you can add a custom meta description to overwrite the default page description.</source>
         <target>Šeit jūs varat pievienot pielāgotu meta aprakstu, lai pārrakstītu noklusējuma lapas aprakstu.</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.canonicalLink.0">
+        <source>Canonical URL</source>
+        <target>Kanoniskais URL</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.canonicalLink.1">
+        <source>Here you can set a custom canonical URL like https://example.com/.</source>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.location.0">
         <source>Location name</source>
         <target>Vietas nosaukums</target>
@@ -244,14 +251,6 @@
       <trans-unit id="tl_calendar_events.cssClass.1">
         <source>Here you can enter one or more classes.</source>
         <target>Šeit jūs varat ievadīt vienu vai vairākas klases.</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.noComments.0">
-        <source>Disable comments</source>
-        <target>Atspējot komentārus</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.noComments.1">
-        <source>Do not allow comments for this particular event.</source>
-        <target>Neļaut komentārus šim notikumam.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.featured.0">
         <source>Feature event</source>

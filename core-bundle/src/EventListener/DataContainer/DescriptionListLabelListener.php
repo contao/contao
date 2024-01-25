@@ -12,9 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\DataContainer;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+#[AsCallback(table: 'tl_content', target: 'fields.data.attributes')]
 class DescriptionListLabelListener
 {
     public function __construct(private readonly TranslatorInterface $translator)

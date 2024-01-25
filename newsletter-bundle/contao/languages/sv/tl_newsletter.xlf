@@ -17,6 +17,14 @@
         <source>The newsletter alias is a unique reference to the newsletter which can be called instead of its numeric ID.</source>
         <target>Nyhetsbrevsalias är ett unik referensnamn som kan användas istället för nyhetsbrevets numeriska ID-nummer när man refererar till nyhetsbrevet.</target>
       </trans-unit>
+      <trans-unit id="tl_newsletter.preheader.0">
+        <source>Preheader text</source>
+        <target>Förhandstext</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.preheader.1">
+        <source>Here you can enter a preheader text. A preheader text should be between 40-130 characters long.</source>
+        <target>Här kan du skriva in en preheader-text. En preheader-text bör vara mellan 40-130 tecken lång.</target>
+      </trans-unit>
       <trans-unit id="tl_newsletter.content.0">
         <source>HTML content</source>
         <target>HTML-innehåll</target>

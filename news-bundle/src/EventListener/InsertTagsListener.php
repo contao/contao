@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\NewsBundle\EventListener;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\NewsModel;
@@ -22,6 +23,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 /**
  * @internal
  */
+#[AsHook('replaceInsertTags')]
 class InsertTagsListener
 {
     private const SUPPORTED_TAGS = [

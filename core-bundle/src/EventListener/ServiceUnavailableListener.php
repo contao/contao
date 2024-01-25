@@ -15,11 +15,16 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\CoreBundle\Exception\ServiceUnavailableException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\PageModel;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
+ * The priority must be lower than the Symfony route listener (defaults to 32)
+ * and lower than the Symfony firewall listener (defaults to 8).
+ *
  * @internal
  */
+#[AsEventListener(priority: 6)]
 class ServiceUnavailableListener
 {
     public function __construct(private readonly ScopeMatcher $scopeMatcher)

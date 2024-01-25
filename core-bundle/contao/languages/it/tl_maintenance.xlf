@@ -141,6 +141,14 @@
         <source>The crawler crawls all URLs it finds. Here you can decide what to do with these results.</source>
         <target>Il crawler esegue la scansione di tutti gli URL che trova. Qui puoi decidere cosa fare con questi risultati.</target>
       </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDepth.0">
+        <source>Maximum depth</source>
+        <target>Profondità massima</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDepth.1">
+        <source>The maximum depth to crawl.</source>
+        <target>La profondità massima da scansionare.</target>
+      </trans-unit>
       <trans-unit id="tl_maintenance.crawlMember.0">
         <source>Front end member</source>
         <target>Front end membro</target>
@@ -148,6 +156,10 @@
       <trans-unit id="tl_maintenance.crawlMember.1">
         <source>Automatically log in a front end member to index protected pages.</source>
         <target>Accedi automaticamente come un membro front-end per indicizzare le pagine protette.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlHint">
+        <source>Your website is currently crawled with %d concurrent requests. If your server can handle more than %1$d concurrent requests, ask your system administrator to increase the &lt;code&gt;%s&lt;/code&gt; setting in the system configuration to speed up the crawling process.</source>
+        <target>Il tuo sito web è attualmente sottoposto a scansione con %d richieste contemporanee. Se il tuo server può gestire più di %1$d richieste contemporanee, chiedi all'amministratore di sistema di aumentare l'impostazione di  &lt;code&gt;%s&lt;/code&gt; nella configurazione del sistema per accelerare il processo di scansione.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlWaitToBeFinished">
         <source>The crawler is currently working. Please wait for it to finish to see the results.</source>

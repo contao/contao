@@ -13,9 +13,15 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Exception\ResponseException;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Twig\Error\RuntimeError;
 
+/**
+ * The priority must be higher than the Symfony exception converter listener (defaults to 96)
+ * and higher than the Sentry error listener (defaults to 128).
+ */
+#[AsEventListener(priority: 256)]
 class UnwrapTwigExceptionListener
 {
     /**

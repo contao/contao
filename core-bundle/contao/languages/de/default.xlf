@@ -433,6 +433,14 @@
         <source>Generates an ordered or unordered list.</source>
         <target>Erzeugt eine geordnete oder ungeordnete Liste.</target>
       </trans-unit>
+      <trans-unit id="CTE.description_list.0">
+        <source>Description list</source>
+        <target>Beschreibungsliste</target>
+      </trans-unit>
+      <trans-unit id="CTE.description_list.1">
+        <source>Generates a description list with terms and details.</source>
+        <target>Generiert eine Beschreibungsliste mit Begriffen und Details.</target>
+      </trans-unit>
       <trans-unit id="CTE.table.0">
         <source>Table</source>
         <target>Tabelle</target>
@@ -441,29 +449,41 @@
         <source>Generates an optionally sortable table.</source>
         <target>Erzeugt eine optional sortierbare Tabelle.</target>
       </trans-unit>
-      <trans-unit id="CTE.accordion">
+      <trans-unit id="CTE.accordion.0">
         <source>Accordion</source>
         <target>Akkordeon</target>
       </trans-unit>
+      <trans-unit id="CTE.accordion.1">
+        <source>Generates an accordion.</source>
+        <target>Erzeugt ein Akkordeon.</target>
+      </trans-unit>
+      <trans-unit id="CTE.element_group.0">
+        <source>Element group</source>
+        <target>Elementgruppe</target>
+      </trans-unit>
+      <trans-unit id="CTE.element_group.1">
+        <source>Generates a group of nested elements.</source>
+        <target>Erzeugt eine Gruppe verschachtelter Elemente.</target>
+      </trans-unit>
       <trans-unit id="CTE.accordionStart.0">
-        <source>Wrapper start</source>
-        <target>Umschlag Anfang</target>
+        <source>Accordion wrapper start</source>
+        <target>Akkordeon Umschlag Anfang</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStart.1">
         <source>Generates the opening part of the accordion wrapper.</source>
         <target>Erzeugt den öffnenden Teil des Akkordeon-Umschlags.</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.0">
-        <source>Wrapper stop</source>
-        <target>Umschlag Ende</target>
+        <source>Accordion wrapper stop</source>
+        <target>Akkordeon Umschlag Ende</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.1">
         <source>Generates the closing part of the accordion wrapper.</source>
         <target>Erzeugt den schließenden Teil des Akkordeon-Umschlags.</target>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.0">
-        <source>Single element</source>
-        <target>Einzelelement</target>
+        <source>Accordion single element</source>
+        <target>Akkordeon Einzelelement</target>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.1">
         <source>Generates a single accordion element.</source>
@@ -493,21 +513,29 @@
         <source>Generates an element to insert a custom template.</source>
         <target>Erzeugt ein Element zum Einfügen eines individuellen Templates.</target>
       </trans-unit>
+      <trans-unit id="CTE.swiper.0">
+        <source>Content slider</source>
+        <target>Content-Slider</target>
+      </trans-unit>
+      <trans-unit id="CTE.swiper.1">
+        <source>Generates a content slider element.</source>
+        <target>Erzeugt ein Content-Slider-Element.</target>
+      </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
         <target>Content-Slider</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStart.0">
-        <source>Wrapper start</source>
-        <target>Umschlag Anfang</target>
+        <source>Slider wrapper start</source>
+        <target>Slider Umschlag Anfang</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStart.1">
         <source>Generates the opening part of the slider wrapper.</source>
         <target>Erzeugt den öffnenden Teil des Slider-Umschlags.</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStop.0">
-        <source>Wrapper stop</source>
-        <target>Umschlag Ende</target>
+        <source>Slider wrapper stop</source>
+        <target>Slider Umschlag Ende</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStop.1">
         <source>Generates the closing part of the slider wrapper.</source>
@@ -640,6 +668,10 @@
       <trans-unit id="CTE.teaser.1">
         <source>Displays the teaser text of an article.</source>
         <target>Zeigt den Teasertext eines Artikels an.</target>
+      </trans-unit>
+      <trans-unit id="CTE.legacy">
+        <source>Legacy elements</source>
+        <target>Legacy-Elemente</target>
       </trans-unit>
       <trans-unit id="FFL.explanation.0">
         <source>Explanation</source>
@@ -1602,8 +1634,8 @@
         <target>Backend-Tastaturkürzel</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>Wie Sie Ihren Arbeitsablauf durch die Verwendung von &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Tastaturkürzeln&lt;/a&gt; beschleunigen.</target>
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <target>Wie Sie Ihren Arbeitsablauf durch die Verwendung von &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Tastaturkürzeln&lt;/a&gt; beschleunigen.</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -2324,6 +2356,10 @@
       <trans-unit id="MSC.quicklink">
         <source>Quick link</source>
         <target>Quicklink</target>
+      </trans-unit>
+      <trans-unit id="MSC.lostPassword">
+        <source>Forgot your password?</source>
+        <target>Passwort vergessen?</target>
       </trans-unit>
       <trans-unit id="MSC.username">
         <source>Username</source>

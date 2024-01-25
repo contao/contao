@@ -13,14 +13,20 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
 
 /**
+ * The priority must be lower than the one of MergeHttpHeadersListener (defaults to 256) and
+ * must be lower than the one of the ClearSessionDataListener listener (defaults to -768) and
+ * must be lower than the one of the CsrfTokenCookieSubscriber listener (defaults to -832).
+ *
  * @internal
  */
+#[AsEventListener(priority: -896)]
 class MakeResponsePrivateListener
 {
     final public const DEBUG_HEADER = 'Contao-Private-Response-Reason';

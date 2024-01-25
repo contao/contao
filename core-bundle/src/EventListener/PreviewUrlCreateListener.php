@@ -16,10 +16,12 @@ use Contao\ArticleModel;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 
 /**
  * @internal
  */
+#[AsEventListener]
 class PreviewUrlCreateListener
 {
     public function __construct(private readonly ContaoFramework $framework)

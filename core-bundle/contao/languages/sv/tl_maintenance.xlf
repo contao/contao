@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.cacheTables.1">
         <source>Please select the data you want to purge or rebuild.</source>
-        <target>Välj vilken/vilka cache-tabell(er) som du vill rensa.</target>
+        <target>Välj den data du vill rensa eller bygga om.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.job">
         <source>Job</source>
@@ -43,7 +43,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.undo.1">
         <source>Truncates the &lt;code&gt;tl_undo&lt;/code&gt; table which stores the deleted records. This job permanently deletes these records.</source>
-        <target>Rensar tabellen &lt;em&gt;tl_undo&lt;/em&gt; som lagrar raderade poster. Detta raderar posterna permanent.</target>
+        <target>Rensar tabellen &lt;code&gt;tl_undo&lt;/code&gt; som lagrar raderade poster. Detta raderar posterna permanent.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.versions.0">
         <source>Purge the version table</source>
@@ -51,7 +51,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.versions.1">
         <source>Truncates the &lt;code&gt;tl_version&lt;/code&gt; table which stores the previous versions of a record. This job permanently deletes these records.</source>
-        <target>Rensar tabellen &lt;em&gt;tl_version&lt;/em&gt; som lagrar tidigare versioner av poster. Detta raderar posterna permanent.</target>
+        <target>Rensar tabellen &lt;code&gt;tl_version&lt;/code&gt; som lagrar tidigare versioner av poster. Detta raderar posterna permanent.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.log.0">
         <source>Purge the system log</source>
@@ -59,7 +59,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.log.1">
         <source>Truncates the &lt;code&gt;tl_log&lt;/code&gt; table which stores all the system log entries. This job permanently deletes these records.</source>
-        <target>Rensar tabellen &lt;em&gt;tl_log&lt;/em&gt; som lagrar alla systemloggar. Detta raderar posterna permanent.</target>
+        <target>Rensar tabellen &lt;code&gt;tl_log&lt;/code&gt; som lagrar alla systemloggar. Detta raderar posterna permanent.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.crawl_queue.0">
         <source>Purge the crawl queue</source>
@@ -141,6 +141,14 @@
         <source>The crawler crawls all URLs it finds. Here you can decide what to do with these results.</source>
         <target>Sökroboten genomsöker alla webbadresser som den hittar. Här kan du bestämma vad du ska göra med dessa resultat.</target>
       </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDepth.0">
+        <source>Maximum depth</source>
+        <target>Maximalt djup</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDepth.1">
+        <source>The maximum depth to crawl.</source>
+        <target>Maximalt djup för att krypa.</target>
+      </trans-unit>
       <trans-unit id="tl_maintenance.crawlMember.0">
         <source>Front end member</source>
         <target>Frontend- medlem</target>
@@ -148,6 +156,10 @@
       <trans-unit id="tl_maintenance.crawlMember.1">
         <source>Automatically log in a front end member to index protected pages.</source>
         <target>Logga automatiskt in en frontend-medlem för att indexera skyddade sidor.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlHint">
+        <source>Your website is currently crawled with %d concurrent requests. If your server can handle more than %1$d concurrent requests, ask your system administrator to increase the &lt;code&gt;%s&lt;/code&gt; setting in the system configuration to speed up the crawling process.</source>
+        <target>Din webbplats genomsöks för närvarande med %d samtidiga förfrågningar. Om din server kan hantera mer än %1$d samtidiga förfrågningar, be din systemadministratör att öka &lt;code&gt;%s&lt;/code&gt; inställningen i systemkonfigurationen för att påskynda genomsökningsprocessen.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlWaitToBeFinished">
         <source>The crawler is currently working. Please wait for it to finish to see the results.</source>

@@ -141,6 +141,14 @@
         <source>The crawler crawls all URLs it finds. Here you can decide what to do with these results.</source>
         <target>クローラーは見つけられるすべてのURLを巡回します。これらの結果に行いたいことを指定できます。</target>
       </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDepth.0">
+        <source>Maximum depth</source>
+        <target>最大の深さ</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDepth.1">
+        <source>The maximum depth to crawl.</source>
+        <target>クロールする最大の深さです。</target>
+      </trans-unit>
       <trans-unit id="tl_maintenance.crawlMember.0">
         <source>Front end member</source>
         <target>フロントエンドのメンバー</target>
@@ -148,6 +156,10 @@
       <trans-unit id="tl_maintenance.crawlMember.1">
         <source>Automatically log in a front end member to index protected pages.</source>
         <target>保護したページのインデックスを行うために自動的にフロントエンドのメンバーにログインします。</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlHint">
+        <source>Your website is currently crawled with %d concurrent requests. If your server can handle more than %1$d concurrent requests, ask your system administrator to increase the &lt;code&gt;%s&lt;/code&gt; setting in the system configuration to speed up the crawling process.</source>
+        <target>ウェブサイトは現在、%d個の要求を並行してクロールしています。サーバーが%1$d以上の要求を処理できる場合は、クロールの処理速度を向上するにはシステム管理者にシステム構成の&lt;code&gt;%s&lt;/code&gt;の設定を増やすように依頼してください。</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlWaitToBeFinished">
         <source>The crawler is currently working. Please wait for it to finish to see the results.</source>

@@ -81,14 +81,6 @@
         <source>Please choose the files you want to attach.</source>
         <target>Vyberte soubory, které chcete přiložit.</target>
       </trans-unit>
-      <trans-unit id="tl_faq.noComments.0">
-        <source>Disable comments</source>
-        <target>Vypnout komentáře</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.noComments.1">
-        <source>Do not allow comments for this particular FAQ.</source>
-        <target>Nepovolit přidávání komentářů k tomuto FAQ.</target>
-      </trans-unit>
       <trans-unit id="tl_faq.published.0">
         <source>Publish the FAQ</source>
         <target>Publikováno</target>
@@ -116,10 +108,6 @@
       <trans-unit id="tl_faq.enclosure_legend">
         <source>Enclosures</source>
         <target>Přílohy</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.expert_legend">
-        <source>Expert settings</source>
-        <target>Rozšířená nastavení</target>
       </trans-unit>
       <trans-unit id="tl_faq.publish_legend">
         <source>Publish settings</source>

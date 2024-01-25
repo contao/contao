@@ -41,7 +41,7 @@ final class FigureRuntime implements RuntimeExtensionInterface
      * @param int|string|array|PictureConfiguration|null $size          A picture size configuration or reference
      * @param array<string, mixed>                       $configuration Configuration for the FigureBuilder
      *
-     * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
+     * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
      */
     public function renderFigure(FilesModel|ImageInterface|int|string $from, PictureConfiguration|array|int|string|null $size, array $configuration = [], string $template = '@ContaoCore/Image/Studio/figure.html.twig'): string|null
     {

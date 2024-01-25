@@ -3,9 +3,9 @@ name: Split
 on:
     push:
         branches:
-            - 5.x
+            - 5.3
         tags:
-            - '*'
+            - 5.3.*
 
 permissions: read-all
 
