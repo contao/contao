@@ -151,7 +151,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleCronConfig($config, $container);
         $this->handleSecurityConfig($config, $container);
 
-        // Backwards compatibility (use the #[AsPickerProvider] attribute instead)
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
             ->addTag('contao.picker_provider')

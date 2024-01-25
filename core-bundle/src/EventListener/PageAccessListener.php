@@ -23,10 +23,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
- * @internal
- *
  * The priority must be lower than the Symfony route listener (defaults to 32)
- * and lower than the Symfony firewall listener (defaults to 8)
+ * and lower than the Symfony firewall listener (defaults to 8).
+ *
+ * @internal
  */
 #[AsEventListener(priority: 7)]
 class PageAccessListener

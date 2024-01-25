@@ -21,9 +21,9 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * @internal
+ * The priority must be lower than the one of the firewall listener (defaults to 8).
  *
- * The priority must be lower than the one of the firewall listener (defaults to 8)
+ * @internal
  */
 #[AsEventListener(priority: 7)]
 class PreviewAuthenticationListener

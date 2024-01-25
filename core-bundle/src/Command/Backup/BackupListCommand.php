@@ -13,16 +13,11 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command\Backup;
 
 use Contao\CoreBundle\Doctrine\Backup\Backup;
-use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-#[AsCommand(
-    name: 'contao:backup:list',
-    description: 'Lists the existing database backups.',
-)]
 class BackupListCommand extends AbstractBackupCommand
 {
     public static function getFormattedTimeZoneOffset(\DateTimeZone $timeZone): string
@@ -31,6 +26,16 @@ class BackupListCommand extends AbstractBackupCommand
         $formatted = str_pad(str_replace(['.', '-', '+'], [':', '', ''], sprintf('%05.2F', $offset)), 5, '0', STR_PAD_LEFT);
 
         return ($offset >= 0 ? '+' : '-').$formatted;
+    }
+
+    protected function configure(): void
+    {
+        $this
+            ->setName('contao:backup:list')
+            ->setDescription('Lists the existing database backups.')
+        ;
+
+        parent::configure();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

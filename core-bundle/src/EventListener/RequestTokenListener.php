@@ -23,10 +23,10 @@ use Symfony\Component\Security\Csrf\CsrfToken;
 /**
  * Validates the request token if the request is a Contao request.
  *
- * @internal
- *
  * The priority must be lower than the one of the Symfony route listener (defaults to 32)
- * and the Symfony locale aware listener (defaults to 15)
+ * and the Symfony locale aware listener (defaults to 15).
+ *
+ * @internal
  */
 #[AsEventListener(priority: 14)]
 class RequestTokenListener

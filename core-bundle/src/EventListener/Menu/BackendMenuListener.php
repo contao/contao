@@ -24,9 +24,9 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * @internal
+ * Make sure this listener comes before the other ones adding to its tree.
  *
- * Make sure this listener comes before the other ones adding to its tree
+ * @internal
  */
 #[AsEventListener(priority: 10)]
 class BackendMenuListener

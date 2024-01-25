@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\Command;
 
 use Contao\ManagerBundle\Dotenv\DotenvDumper;
-use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -23,10 +22,6 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
-#[AsCommand(
-    name: 'contao:setup',
-    description: 'Sets up a Contao Managed Edition. This command will be run when executing the "contao-setup" binary.',
-)]
 class ContaoSetupCommand extends Command
 {
     private readonly string $webDir;
@@ -60,7 +55,11 @@ class ContaoSetupCommand extends Command
 
     protected function configure(): void
     {
-        $this->setHidden(true);
+        $this
+            ->setName('contao:setup')
+            ->setDescription('Sets up a Contao Managed Edition. This command will be run when executing the "contao-setup" binary.')
+            ->setHidden(true)
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

@@ -20,11 +20,11 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
 
 /**
- * @internal
+ * The priority must be lower than the one of MergeHttpHeadersListener (defaults to 256) and
+ * must be lower than the one of the ClearSessionDataListener listener (defaults to -768) and
+ * must be lower than the one of the CsrfTokenCookieSubscriber listener (defaults to -832).
  *
- * The priority must be lower than the one of MergeHttpHeadersListener (defaults to 256)
- * and must be lower than the one of the ClearSessionDataListener listener (defaults to -768)
- * and must be lower than the one of the CsrfTokenCookieSubscriber listener (defaults to -832)
+ * @internal
  */
 #[AsEventListener(priority: -896)]
 class MakeResponsePrivateListener

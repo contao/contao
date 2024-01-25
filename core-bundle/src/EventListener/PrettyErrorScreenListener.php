@@ -37,9 +37,9 @@ use Twig\Environment;
 use Twig\Error\Error;
 
 /**
- * @internal
+ * The priority must be higher than the one of the Twig exception listener (defaults to -128).
  *
- * The priority must be higher than the one of the Twig exception listener (defaults to -128)
+ * @internal
  */
 #[AsEventListener(priority: -96)]
 class PrettyErrorScreenListener

@@ -19,9 +19,9 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
 
 /**
- * @internal
+ * The priority must be higher than the one of the Symfony save session listener (defaults to -1000).
  *
- * The priority must be higher than the one of the Symfony save session listener (defaults to -1000)
+ * @internal
  */
 #[AsEventListener(priority: -768)]
 class ClearSessionDataListener

@@ -661,12 +661,12 @@ services:
 
     contao.routing.content_url_generator:
         class: Contao\CoreBundle\Routing\ContentUrlGenerator
+        public: true
         arguments:
             - '@router'
             - '@contao.routing.page_registry'
             - '@doctrine.orm.entity_manager'
             - !tagged_iterator contao.content_url_resolver
-        public: true
 
     contao.routing.frontend_matcher:
         class: Contao\CoreBundle\Routing\Matcher\FrontendMatcher
@@ -997,8 +997,8 @@ services:
             - !service_closure '@contao.repository.remember_me'
 
     contao.security.token_checker:
-        public: true
         class: Contao\CoreBundle\Security\Authentication\Token\TokenChecker
+        public: true
         arguments:
             - '@request_stack'
             - '@security.firewall.map'

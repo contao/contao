@@ -18,9 +18,9 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 
 /**
- * @internal
+ * The priority must be lower than the one of the Symfony route listener (defaults to 32).
  *
- * The priority must be lower than the one of the Symfony route listener (defaults to 32)
+ * @internal
  */
 #[AsEventListener(priority: 20)]
 class RefererIdListener

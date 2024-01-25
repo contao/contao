@@ -35,9 +35,9 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 /**
- * @internal
+ * The priority must be higher than the one of the response exception listener (defaults to 64).
  *
- * The priority must be higher than the one of the response exception listener (defaults to 64)
+ * @internal
  */
 #[AsEventListener(priority: 96)]
 class ExceptionConverterListener
