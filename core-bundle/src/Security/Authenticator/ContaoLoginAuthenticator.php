@@ -108,7 +108,8 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
     {
         return $request->isMethod('POST')
             && $request->request->has('FORM_SUBMIT')
-            && preg_match('/^tl_login(_\d+)?$/', (string) $request->request->get('FORM_SUBMIT'));
+            && \is_string($request->request->get('FORM_SUBMIT'))
+            && preg_match('/^tl_login(_\d+)?$/', $request->request->get('FORM_SUBMIT'));
     }
 
     public function authenticate(Request $request): Passport
