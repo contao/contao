@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\HttpKernel;
 
-use Contao\CoreBundle\EventListener\HttpCache\StripCookiesSubscriber;
-use Contao\CoreBundle\EventListener\HttpCache\StripQueryParametersSubscriber;
+use Contao\ManagerBundle\EventListener\HttpCache\StripCookiesSubscriber;
+use Contao\ManagerBundle\EventListener\HttpCache\StripQueryParametersSubscriber;
 use FOS\HttpCache\SymfonyCache\CacheInvalidation;
 use FOS\HttpCache\SymfonyCache\CleanupCacheTagsListener;
 use FOS\HttpCache\SymfonyCache\EventDispatchingHttpCache;

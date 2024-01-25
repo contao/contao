@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Tests\HttpKernel;
 
-use Contao\CoreBundle\EventListener\HttpCache\StripCookiesSubscriber;
+use Contao\ManagerBundle\EventListener\HttpCache\StripCookiesSubscriber;
 use Contao\ManagerBundle\HttpKernel\ContaoCache;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Contao\TestCase\ContaoTestCase;

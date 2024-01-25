@@ -10,9 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\EventListener\HttpCache;
+namespace Contao\ManagerBundle\Tests\EventListener\HttpCache;
 
-use Contao\CoreBundle\EventListener\HttpCache\StripQueryParametersSubscriber;
+use Contao\ManagerBundle\EventListener\HttpCache\StripQueryParametersSubscriber;
 use FOS\HttpCache\SymfonyCache\CacheEvent;
 use FOS\HttpCache\SymfonyCache\CacheInvalidation;
 use FOS\HttpCache\SymfonyCache\Events;
