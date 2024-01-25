@@ -30,12 +30,12 @@ final class ContentUrlRuntime implements RuntimeExtensionInterface
     ) {
     }
 
-    public function generate(object $content, array $parameters = [], bool $relative = false): string
+    public function generate(object $content, array $parameters = [], bool $relative = false): string|null
     {
         try {
             return $this->urlGenerator->generate($content, $parameters, $relative ? UrlGeneratorInterface::ABSOLUTE_PATH : UrlGeneratorInterface::ABSOLUTE_URL);
         } catch (ExceptionInterface) {
-            return '';
+            return null;
         }
     }
 

@@ -99,6 +99,7 @@ class ContaoExtensionTest extends TestCase
             'csp_nonce' => [],
             'csp_source' => [],
             'csp_hash' => [],
+            'content_url' => [],
         ];
 
         $functions = $this->getContaoExtension()->getFunctions();
