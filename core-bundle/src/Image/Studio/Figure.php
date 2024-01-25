@@ -130,10 +130,17 @@ class Figure
             $imageIdentifier = '#/schema/image/'.$this->getMetadata()->getUuid();
         }
 
+        $imageSrc = $this->getImage()->getImageSrc();
+
+        // Workaround for Contao 4.13 only (see #6388)
+        if (!str_starts_with($imageSrc, 'http')) {
+            $imageSrc = '/'.$imageSrc;
+        }
+
         $jsonLd = [
             '@type' => 'ImageObject',
             'identifier' => $imageIdentifier,
-            'contentUrl' => $this->getImage()->getImageSrc(),
+            'contentUrl' => $imageSrc,
         ];
 
         if (!$this->hasMetadata()) {
