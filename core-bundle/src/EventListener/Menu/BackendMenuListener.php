@@ -18,13 +18,17 @@ use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\StringUtil;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
+ * Make sure this listener comes before the other ones adding to its tree.
+ *
  * @internal
  */
+#[AsEventListener(priority: 10)]
 class BackendMenuListener
 {
     public function __construct(

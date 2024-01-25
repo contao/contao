@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\HttpKernel\Header\HeaderStorageInterface;
 use Contao\CoreBundle\HttpKernel\Header\NativeHeaderStorage;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
@@ -23,6 +24,7 @@ use Symfony\Contracts\Service\ResetInterface;
 /**
  * @internal
  */
+#[AsEventListener(priority: 256)]
 class MergeHttpHeadersListener implements ResetInterface
 {
     private readonly HeaderStorageInterface $headerStorage;

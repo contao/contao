@@ -16,7 +16,9 @@ use Contao\CoreBundle\Event\MemberActivationMailEvent;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Types;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 
+#[AsEventListener]
 class MemberActivationMailListener
 {
     public function __construct(private readonly Connection $connection)

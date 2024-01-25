@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Command;
 
-use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -22,11 +21,6 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 
-#[AsCommand(
-    name: 'skeleton:install',
-    description: 'Installs the skeleton files of the manager bundle.',
-    aliases: ['contao:install-web-dir'], // Backwards compatibility
-)]
 class InstallSkeletonCommand extends Command
 {
     private Filesystem|null $fs = null;
@@ -40,7 +34,12 @@ class InstallSkeletonCommand extends Command
 
     protected function configure(): void
     {
-        $this->addArgument('web-dir', InputArgument::OPTIONAL, 'The web directory (defaults to "public")');
+        $this
+            ->setName('skeleton:install')
+            ->setDescription('Installs the skeleton files of the manager bundle.')
+            ->setAliases(['contao:install-web-dir']) // backwards compatibility
+            ->addArgument('web-dir', InputArgument::OPTIONAL, 'The web directory (defaults to "public")')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

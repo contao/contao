@@ -21,9 +21,11 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
 use Contao\PageModel;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+#[AsEventListener]
 class SitemapListener
 {
     public function __construct(

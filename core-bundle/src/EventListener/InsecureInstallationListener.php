@@ -13,11 +13,13 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Exception\InsecureInstallationException;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
  * @internal
  */
+#[AsEventListener]
 class InsecureInstallationListener
 {
     public function __construct(
