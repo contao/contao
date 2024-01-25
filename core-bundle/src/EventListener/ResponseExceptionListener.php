@@ -13,11 +13,13 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Exception\ResponseException;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 
 /**
  * @internal
  */
+#[AsEventListener(priority: 64)]
 class ResponseExceptionListener
 {
     /**

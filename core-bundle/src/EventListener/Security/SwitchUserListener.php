@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\Security;
 
 use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\SwitchUserToken;
 use Symfony\Component\Security\Http\Event\SwitchUserEvent;
@@ -20,6 +21,7 @@ use Symfony\Component\Security\Http\Event\SwitchUserEvent;
 /**
  * @internal
  */
+#[AsEventListener]
 class SwitchUserListener
 {
     public function __construct(

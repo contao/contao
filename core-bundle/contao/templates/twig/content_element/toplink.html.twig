@@ -18,7 +18,7 @@
     {% block script %}
         {% if not as_editor_view %}
             {% add "toplink_script" to body %}
-                <script{{ attrs(script_attributes|default).setIfExists('nonce', contao_csp_nonce('script-src')) }}>
+                <script{{ attrs(script_attributes|default).setIfExists('nonce', csp_nonce('script-src')) }}>
                     document.querySelectorAll('*[data-toplink]').forEach(link => {
                         link.href = location.href;
                         link.hash = '#top';

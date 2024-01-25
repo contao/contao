@@ -12,11 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\InsertTags;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
  */
+#[AsHook('replaceInsertTags')]
 class TranslationListener
 {
     public function __construct(private readonly TranslatorInterface $translator)

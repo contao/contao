@@ -12,8 +12,6 @@ services:
         class: Contao\NewsletterBundle\EventListener\MemberActivationMailListener
         arguments:
             - '@database_connection'
-        tags:
-            - kernel.event_listener
 
     contao_newsletter.listener.sitemap:
         class: Contao\NewsletterBundle\EventListener\SitemapListener
@@ -21,8 +19,6 @@ services:
             - '@contao.framework'
             - '@security.helper'
             - '@contao.routing.content_url_generator'
-        tags:
-            - kernel.event_listener
 
     contao_newsletter.routing.newsletter_resolver:
         class: Contao\NewsletterBundle\Routing\NewsletterResolver

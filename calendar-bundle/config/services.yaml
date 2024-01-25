@@ -23,32 +23,24 @@ services:
         class: Contao\CalendarBundle\EventListener\GeneratePageListener
         arguments:
             - '@contao.framework'
-        tags:
-            - { name: contao.hook, hook: generatePage }
 
     contao_calendar.listener.insert_tags:
         class: Contao\CalendarBundle\EventListener\InsertTagsListener
         arguments:
             - '@contao.framework'
             - '@contao.routing.content_url_generator'
-        tags:
-            - { name: contao.hook, hook: replaceInsertTags }
 
     contao_calendar.listener.preview_url_convert:
         class: Contao\CalendarBundle\EventListener\PreviewUrlConvertListener
         arguments:
             - '@contao.framework'
             - '@contao.routing.content_url_generator'
-        tags:
-            - kernel.event_listener
 
     contao_calendar.listener.preview_url_create:
         class: Contao\CalendarBundle\EventListener\PreviewUrlCreateListener
         arguments:
             - '@request_stack'
             - '@contao.framework'
-        tags:
-            - kernel.event_listener
 
     contao_calendar.listener.sitemap:
         class: Contao\CalendarBundle\EventListener\SitemapListener
@@ -56,8 +48,6 @@ services:
             - '@contao.framework'
             - '@security.helper'
             - '@contao.routing.content_url_generator'
-        tags:
-            - kernel.event_listener
 
     contao_calendar.picker.event_provider:
         class: Contao\CalendarBundle\Picker\EventPickerProvider
@@ -66,8 +56,6 @@ services:
             - '@router'
             - '@?translator'
             - '@security.helper'
-        tags:
-            - { name: contao.picker_provider, priority: 96 }
 
     contao_calendar.routing.calendar_events_resolver:
         class: Contao\CalendarBundle\Routing\CalendarEventsResolver

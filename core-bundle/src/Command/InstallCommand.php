@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Command;
 
-use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -21,10 +20,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
-#[AsCommand(
-    name: 'contao:install',
-    description: 'Installs the required Contao directories.',
-)]
 class InstallCommand extends Command
 {
     private Filesystem|null $fs = null;
@@ -43,7 +38,11 @@ class InstallCommand extends Command
 
     protected function configure(): void
     {
-        $this->addArgument('target', InputArgument::OPTIONAL, 'The target directory');
+        $this
+            ->setName('contao:install')
+            ->setDescription('Installs the required Contao directories.')
+            ->addArgument('target', InputArgument::OPTIONAL, 'The target directory')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

@@ -5,11 +5,11 @@
     {% for element in elements %}
         {% block element %}
             {% block element_header %}
-                <{% block header_tag %}h3{% endblock %}{{ attrs(accordion_header_attributes|default).addClass('handorgel__header') }}>
+                <{{ element.header_tag }}{{ attrs(accordion_header_attributes|default).addClass('handorgel__header') }}>
                     <button{{ attrs(accordion_header_button_attributes|default).addClass('handorgel__header__button') }}>
                         {{- element.header -}}
                     </button>
-                </{{ block('header_tag') }}>
+                </{{ element.header_tag }}>
             {% endblock %}
             {% block element_content %}
                 <div{{ attrs(accordion_content_attributes|default).addClass('handorgel__content').set('data-open', element.is_open) }}>
