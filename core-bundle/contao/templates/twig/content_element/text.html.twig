@@ -23,7 +23,7 @@
     {% block text %}
         {% set text_attributes = attrs(text_attributes|default).addClass('rte') %}
         <div{% block text_attributes %}{{ text_attributes }}{% endblock %}>
-            {{ text|csp_inline_styles|insert_tag|raw }}
+            {{ text|csp_inline_styles|insert_tag|encode_email|raw }}
         </div>
     {% endblock %}
 {% endblock %}

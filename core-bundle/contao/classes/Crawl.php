@@ -200,7 +200,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 			->withMaxDurationInSeconds(20)
 			->withLogger($this->createLogger($factory, $activeSubscribers, $jobId, $debugLogPath));
 
-		$template->hint = sprintf($GLOBALS['TL_LANG']['tl_maintenance']['crawlHint'], $concurrency, 'contao.backend.crawl_concurrency');
+		$template->hint = sprintf($GLOBALS['TL_LANG']['tl_maintenance']['crawlHint'], $concurrency, 'contao.backend.crawl_concurrency', 'https://to.contao.org/docs/crawler');
 
 		if (Environment::get('isAjaxRequest'))
 		{

@@ -38,6 +38,7 @@ use Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime;
 use Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime;
 use Contao\CoreBundle\Twig\Runtime\SanitizerRuntime;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
+use Contao\CoreBundle\Twig\Runtime\StringRuntime;
 use Contao\CoreBundle\Twig\Runtime\UrlRuntime;
 use Contao\FrontendTemplateTrait;
 use Contao\Template;
@@ -303,6 +304,11 @@ final class ContaoExtension extends AbstractExtension
                 'csp_inline_styles',
                 [CspRuntime::class, 'inlineStyles'],
                 ['preserves_safety' => ['html']],
+            ),
+            new TwigFilter(
+                'encode_email',
+                [StringRuntime::class, 'encodeEmail'],
+                ['preserves_safety' => ['contao_html', 'html']],
             ),
         ];
     }

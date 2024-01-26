@@ -17,9 +17,6 @@ use FOS\HttpCache\SymfonyCache\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @internal
- */
 class StripCookiesSubscriber implements EventSubscriberInterface
 {
     private const DENY_LIST = [
