@@ -140,8 +140,8 @@ export default class extends Controller {
             window.dispatchEvent(new CustomEvent('structure'));
             this.expandToggler(el);
 
-            // HOOK
-            window.dispatchEvent(new CustomEvent('ajax_change'));
+            // HOOK (see #6752)
+            window.fireEvent('ajax_change')
         }
 
         this.loadToggler(el, false);
