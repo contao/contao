@@ -133,7 +133,7 @@ class Figure
         $imageSrc = $this->getImage()->getImageSrc();
 
         // Workaround for Contao 4.13 only (see #6388)
-        if ('' !== $imageSrc && '/' !== $imageSrc[0] && !str_starts_with($imageSrc, 'http')) {
+        if ('' !== $imageSrc && '/' !== $imageSrc[0] && !preg_match('/^https?:/i', $imageSrc)) {
             $imageSrc = '/'.$imageSrc;
         }
 
