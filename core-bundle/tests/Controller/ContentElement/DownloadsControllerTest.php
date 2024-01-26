@@ -36,8 +36,10 @@ class DownloadsControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<'HTML'
-            <div class="download-element ext-jpg content-download">
-                <a href="https://example.com/files/image1.jpg" title="translated(contao_default:MSC.download[image1 title])" type="image/jpg">image1 title</a>
+            <div class="content-download">
+                <p class="download-element ext-jpg">
+                    <a href="https://example.com/files/image1.jpg" title="translated(contao_default:MSC.download[image1 title])" type="image/jpg">image1 title</a>
+                </p>
             </div>
             HTML;
 
@@ -62,8 +64,10 @@ class DownloadsControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<'HTML'
-            <div class="download-element ext-jpg content-download">
-                <a href="https://example.com/files/image1.jpg" title="translated(contao_default:MSC.download[Download the file])" type="image/jpg">The file</a>
+            <div class="content-download">
+                <p class="download-element ext-jpg">
+                    <a href="https://example.com/files/image1.jpg" title="translated(contao_default:MSC.download[Download the file])" type="image/jpg">The file</a>
+                </p>
             </div>
             HTML;
 
