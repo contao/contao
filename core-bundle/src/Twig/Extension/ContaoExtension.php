@@ -222,7 +222,6 @@ final class ContaoExtension extends AbstractExtension
             new TwigFunction(
                 'content_url',
                 [ContentUrlRuntime::class, 'generate'],
-                ['is_safe_callback' => [ContentUrlRuntime::class, 'isUrlGenerationSafe']],
             ),
         ];
     }

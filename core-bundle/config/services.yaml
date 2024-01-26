@@ -1135,7 +1135,6 @@ services:
         class: Contao\CoreBundle\Twig\Runtime\ContentUrlRuntime
         arguments:
             - '@contao.routing.content_url_generator'
-            - '@twig.extension.routing'
 
     contao.twig.csp_runtime:
         class: Contao\CoreBundle\Twig\Runtime\CspRuntime

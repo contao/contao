@@ -13,21 +13,17 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Runtime;
 
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
-use Symfony\Bridge\Twig\Extension\RoutingExtension;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Extension\RuntimeExtensionInterface;
-use Twig\Node\Node;
 
 final class ContentUrlRuntime implements RuntimeExtensionInterface
 {
     /**
      * @internal
      */
-    public function __construct(
-        private readonly ContentUrlGenerator $urlGenerator,
-        private readonly RoutingExtension $routingExtension,
-    ) {
+    public function __construct(private readonly ContentUrlGenerator $urlGenerator)
+    {
     }
 
     public function generate(object $content, array $parameters = [], bool $relative = false): string|null
@@ -37,10 +33,5 @@ final class ContentUrlRuntime implements RuntimeExtensionInterface
         } catch (ExceptionInterface) {
             return null;
         }
-    }
-
-    public function isUrlGenerationSafe(Node $argsNode): array
-    {
-        return $this->routingExtension->isUrlGenerationSafe($argsNode);
     }
 }
