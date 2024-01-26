@@ -2,6 +2,29 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.0-RC2] (2024-01-26)
+
+**New features:**
+
+- [#6738] Add a Twig function to generate content URLs ([aschempp])
+- [#6719] Support CSP on WYSIWYG editors like TinyMCE ([Toflar])
+
+**Fixed issues:**
+
+- [#6788] Use the content URL generator in the redirect page controller ([aschempp])
+- [#6775] Remove the `@internal` flag from the HTTP cache subscribers ([leofeyer])
+- [#6758] Improve how headlines can be adjusted in Twig ([m-vo])
+- [#6747] Increase the `z-index` of the jump targets ([zoglo])
+- [#6767] Use the `inputUnit` widget for the section headline field ([leofeyer])
+- [#6743] Use autoconfiguration where possible ([leofeyer])
+- [#6761] Limit the CSP header size to avoid server errors ([Toflar])
+- [#6760] Correctly set the link title and text in the downloads controller ([fritzmg])
+- [#6759] Normalize the Twig CSP method names ([fritzmg])
+- [#6744] Fix the "delete files" button in the file manager ([aschempp])
+- [#6740] Add the `TemplateTrait::inlineStyle()` method ([fritzmg])
+- [#6737] Properly assign parameters to `contao.crawl.escargot.factory` ([zoglo])
+- [#6736] Unify the deprecation messages ([leofeyer])
+
 ## [5.3.0-RC1] (2024-01-18)
 
 **New features:**
@@ -104,6 +127,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.0-RC2]: https://github.com/contao/contao/releases/tag/5.3.0-RC2
 [5.3.0-RC1]: https://github.com/contao/contao/releases/tag/5.3.0-RC1
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
@@ -207,4 +231,19 @@ This project adheres to [Semantic Versioning].
 [#6708]: https://github.com/contao/contao/pull/6708
 [#6714]: https://github.com/contao/contao/pull/6714
 [#6718]: https://github.com/contao/contao/pull/6718
+[#6719]: https://github.com/contao/contao/pull/6719
 [#6723]: https://github.com/contao/contao/pull/6723
+[#6736]: https://github.com/contao/contao/pull/6736
+[#6737]: https://github.com/contao/contao/pull/6737
+[#6738]: https://github.com/contao/contao/pull/6738
+[#6740]: https://github.com/contao/contao/pull/6740
+[#6743]: https://github.com/contao/contao/pull/6743
+[#6744]: https://github.com/contao/contao/pull/6744
+[#6747]: https://github.com/contao/contao/pull/6747
+[#6758]: https://github.com/contao/contao/pull/6758
+[#6759]: https://github.com/contao/contao/pull/6759
+[#6760]: https://github.com/contao/contao/pull/6760
+[#6761]: https://github.com/contao/contao/pull/6761
+[#6767]: https://github.com/contao/contao/pull/6767
+[#6775]: https://github.com/contao/contao/pull/6775
+[#6788]: https://github.com/contao/contao/pull/6788

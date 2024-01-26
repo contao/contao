@@ -475,27 +475,35 @@
       </trans-unit>
       <trans-unit id="tl_page.enableCsp.0">
         <source>Enable CSP</source>
+        <target>CSP kullanılsın</target>
       </trans-unit>
       <trans-unit id="tl_page.enableCsp.1">
         <source>Enable Content Security Policy for this website.</source>
+        <target>Bu site için içerik güvenliği ilkesinin kullanılmasını sağlar.</target>
       </trans-unit>
       <trans-unit id="tl_page.csp.0">
         <source>Content Security Policy</source>
+        <target>İçerik güvenliği ilkesi</target>
       </trans-unit>
       <trans-unit id="tl_page.csp.1">
         <source>Here you can enter custom Content Security Policy directives.</source>
+        <target>Buradan özel içerik güvenliği ilkesi yönergelerini yazabilirsiniz. </target>
       </trans-unit>
       <trans-unit id="tl_page.cspReportOnly.0">
         <source>Reporting only</source>
+        <target>Yalnızca bildirim</target>
       </trans-unit>
       <trans-unit id="tl_page.cspReportOnly.1">
         <source>Only report policy violations without enforcing them.</source>
+        <target>İlke ihlallerinin dayatılmadan yalnızca bildirilmesini sağlar.</target>
       </trans-unit>
       <trans-unit id="tl_page.cspReportLog.0">
         <source>Enable report logging</source>
+        <target>Bildirim günlüğü kullanılsın</target>
       </trans-unit>
       <trans-unit id="tl_page.cspReportLog.1">
         <source>Log CSP violations to the Contao system log.</source>
+        <target>İçerik güvenliği ilkesi ihlallerini Contao sistem günlüğüne kaydeder.</target>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
@@ -579,6 +587,7 @@
       </trans-unit>
       <trans-unit id="tl_page.csp_legend">
         <source>Content Security Policy</source>
+        <target>İçerik güvenliği ilkesi</target>
       </trans-unit>
       <trans-unit id="tl_page.permanent">
         <source>301 Permanent redirect</source>

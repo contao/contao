@@ -183,6 +183,7 @@
       </trans-unit>
       <trans-unit id="tl_user.frontendModules.1">
         <source>Here you can select the allowed front end module types.</source>
+        <target>許可するフロントエンドモジュールの種類を選択できます。</target>
       </trans-unit>
       <trans-unit id="tl_user.pagemounts.0">
         <source>Pagemounts</source>
