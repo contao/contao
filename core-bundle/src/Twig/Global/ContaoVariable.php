@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Contao\CoreBundle\Twig;
+namespace Contao\CoreBundle\Twig\Global;
 
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\PageModel;
@@ -15,6 +16,7 @@ class ContaoVariable
         private readonly ContaoFramework $framework,
         private readonly RequestStack $requestStack,
         private readonly TokenChecker $tokenChecker,
+        private readonly ContaoCsrfTokenManager $tokenManager
     ) {
     }
 
@@ -45,8 +47,13 @@ class ContaoVariable
         return $this->framework->getAdapter(PageModel::class)->findByPk((int) $pageModel);
     }
 
-    public function tokenChecker(): TokenChecker
+    public function security(): SecurityVariable
     {
-        return $this->tokenChecker;
+        return new SecurityVariable($this->tokenChecker);
+    }
+
+    public function requestToken(): string
+    {
+        return $this->tokenManager->getDefaultTokenValue();
     }
 }

@@ -16,7 +16,7 @@ use Contao\BackendTemplateTrait;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\String\HtmlAttributes;
-use Contao\CoreBundle\Twig\ContaoVariable;
+use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicUseTokenParser;
@@ -92,6 +92,8 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
 
                 public function __toString(): string
                 {
+                    trigger_deprecation('contao/core-bundle', '5.3', 'The request_token Twig variable has been deprecated and will no longer work in Contao 6. Use the contao.requestToken variable instead.');
+
                     return $this->tokenManager->getDefaultTokenValue();
                 }
             },
@@ -100,7 +102,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
 
     public function getGlobals(): array
     {
-        return [$this->contaoVariable];
+        return ['contao' => $this->contaoVariable];
     }
 
     /**
