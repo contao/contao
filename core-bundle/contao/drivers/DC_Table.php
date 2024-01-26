@@ -4461,7 +4461,18 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Regular buttons ($row, $table, $root, $blnCircularReference, $children, $previous, $next)
 		if ($this->strTable == $table && !$isVisibleRootTrailPage)
 		{
+			$security = System::getContainer()->get('security.helper');
+
 			$_buttons .= (Input::get('act') == 'select') ? '<input type="checkbox" name="IDS[]" id="ids_' . $id . '" class="tl_tree_checkbox" value="' . $id . '">' : $this->generateButtons($currentRecord, $table, $this->root, $blnCircularReference, $children, $previous, $next);
+
+			// Create new button
+			if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1))))
+			{
+				$labelPasteNew = $GLOBALS['TL_LANG'][$this->strTable]['pastenew'] ?? $GLOBALS['TL_LANG']['DCA']['pastenew'];
+				$imagePasteNew = Image::getHtml('new.svg', sprintf($labelPasteNew[1] ?? $labelPasteNew[0], $currentRecord['id']));
+
+				$_buttons .= ' <a href="' . $this->addToUrl('act=create&amp;mode=1&amp;pid=' . $currentRecord['id'] . '&amp;id=' . (Input::get('nb') ? '&amp;nc=1' : '')) . '" title="' . StringUtil::specialchars(sprintf($labelPasteNew[1], $currentRecord['id'])) . '">' . $imagePasteNew . '</a>';
+			}
 
 			if ($this->strPickerFieldType)
 			{
