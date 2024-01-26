@@ -24,7 +24,7 @@ class ContaoVariable
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (null === $request || !$request->attributes->has('pageModel')) {
+        if (!$request || !$request->attributes->has('pageModel')) {
             return null;
         }
 
