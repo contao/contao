@@ -16,7 +16,7 @@ class ContaoVariable
         private readonly ContaoFramework $framework,
         private readonly RequestStack $requestStack,
         private readonly TokenChecker $tokenChecker,
-        private readonly ContaoCsrfTokenManager $tokenManager
+        private readonly ContaoCsrfTokenManager $tokenManager,
     ) {
     }
 
