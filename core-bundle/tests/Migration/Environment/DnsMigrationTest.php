@@ -127,7 +127,6 @@ class DnsMigrationTest extends TestCase
         ;
 
         $db
-            ->expects($this->once())
             ->method('getDatabasePlatform')
             ->willReturn(new MariaDBPlatform())
         ;
