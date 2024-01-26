@@ -186,6 +186,7 @@ class ContaoExtensionTest extends TestCase
             $environment,
             $this->createMock(TemplateHierarchyInterface::class),
             $this->createMock(ContaoCsrfTokenManager::class),
+            $this->createMock(ContaoVariable::class),
         );
 
         $this->expectException(\RuntimeException::class);
