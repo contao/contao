@@ -975,6 +975,10 @@ h2.sub_headline {
 	margin: 0 15px;
 }
 
+.two-factor .qr-code img {
+	border: 3px solid #fff;
+}
+
 .two-factor .tl_listing_container {
 	margin-top: 6px;
 }
