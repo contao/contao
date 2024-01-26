@@ -29,8 +29,8 @@ class RouteProvider extends AbstractPageRouteProvider
 
         $pathInfo = rawurldecode($request->getPathInfo());
 
-        // The request string must not contain "auto_item" (see #4012)
-        if (str_contains($pathInfo, '/auto_item/')) {
+        // The request string must start with "/" and must not contain "auto_item" (see #4012)
+        if (!str_starts_with($pathInfo, '/') || str_contains($pathInfo, '/auto_item/')) {
             return new RouteCollection();
         }
 
@@ -164,11 +164,17 @@ class RouteProvider extends AbstractPageRouteProvider
     {
         $page = $route->getPageModel();
 
+        // Only create "root" routes for root pages or pages with root alias
         if ('root' !== $page->type && 'index' !== $page->alias && '/' !== $page->alias) {
             return;
         }
 
         $urlPrefix = $route->getUrlPrefix();
+
+        // Do not create a ".root" route for root pages without prefix if `disableLanguageRedirect` is enabled
+        if ('root' === $page->type && !$urlPrefix && $page->disableLanguageRedirect) {
+            return;
+        }
 
         $routes['tl_page.'.$page->id.'.root'] = new Route(
             $urlPrefix ? '/'.$urlPrefix.'/' : '/',
@@ -180,6 +186,7 @@ class RouteProvider extends AbstractPageRouteProvider
             $route->getMethods(),
         );
 
+        // Do not create ".fallback" route if `disableLanguageRedirect` is enabled
         if (!$urlPrefix || $page->loadDetails()->disableLanguageRedirect) {
             return;
         }

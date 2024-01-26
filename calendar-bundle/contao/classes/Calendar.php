@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Provide methods regarding calendars.
@@ -235,6 +237,10 @@ class Calendar extends Frontend
 					// Override the global page object (#2946)
 					$GLOBALS['objPage'] = $this->getPageWithDetails(CalendarModel::findByPk($event['pid'])->jumpTo);
 
+					// Override the assets and files context (#6563)
+					$GLOBALS['objPage']->staticFiles = rtrim($GLOBALS['objPage']->staticFiles ?: $strLink, '/');
+					$GLOBALS['objPage']->staticPlugins = rtrim($GLOBALS['objPage']->staticPlugins ?: $strLink, '/');
+
 					// Push a new request to the request stack (#3856)
 					$request = $this->createSubRequest($event['link'], $currentRequest);
 					$request->attributes->set('_scope', 'frontend');
@@ -368,40 +374,14 @@ class Calendar extends Frontend
 
 		// Add title and link
 		$title .= ' ' . $objEvent->title;
-		$link = '';
 
-		switch ($objEvent->source)
+		try
 		{
-			case 'external':
-				$url = $objEvent->url;
-
-				if (Validator::isRelativeUrl($url))
-				{
-					$url = Environment::get('path') . '/' . $url;
-				}
-
-				$link = $url;
-				break;
-
-			case 'internal':
-				if (($objTarget = $objEvent->getRelated('jumpTo')) instanceof PageModel)
-				{
-					/** @var PageModel $objTarget */
-					$link = $objTarget->getAbsoluteUrl();
-				}
-				break;
-
-			case 'article':
-				if (($objArticle = ArticleModel::findByPk($objEvent->articleId)) instanceof ArticleModel && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
-				{
-					/** @var PageModel $objPid */
-					$link = StringUtil::ampersand($objPid->getAbsoluteUrl('/articles/' . ($objArticle->alias ?: $objArticle->id)));
-				}
-				break;
-
-			default:
-				$link = $objParent->getAbsoluteUrl('/' . ($objEvent->alias ?: $objEvent->id));
-				break;
+			$link = System::getContainer()->get('contao.routing.content_url_generator')->generate($objEvent, array(), UrlGeneratorInterface::ABSOLUTE_URL);
+		}
+		catch (ExceptionInterface)
+		{
+			$link = '';
 		}
 
 		// Store the whole row (see #5085)

@@ -12,15 +12,18 @@ declare(strict_types=1);
 
 namespace Contao\FaqBundle\EventListener;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\FaqCategoryModel;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\FaqModel;
-use Contao\PageModel;
 use Contao\StringUtil;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @internal
  */
+#[AsHook('replaceInsertTags')]
 class InsertTagsListener
 {
     private const SUPPORTED_TAGS = [
@@ -30,8 +33,10 @@ class InsertTagsListener
         'faq_title',
     ];
 
-    public function __construct(private readonly ContaoFramework $framework)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly ContentUrlGenerator $urlGenerator,
+    ) {
     }
 
     /**
@@ -52,32 +57,19 @@ class InsertTagsListener
             return '';
         }
 
-        $absolute = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true);
+        $url = '';
 
-        if (false === ($url = $this->generateUrl($faq, $absolute))) {
-            return '';
+        if ('faq_title' !== $key) {
+            $absolute = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true);
+
+            try {
+                $url = $this->urlGenerator->generate($faq, [], $absolute ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH);
+            } catch (ExceptionInterface) {
+                return '';
+            }
         }
 
         return $this->generateReplacement($faq, $key, $url, \in_array('blank', \array_slice($elements, 2), true));
-    }
-
-    private function generateUrl(FaqModel $faq, bool $absolute): string|false
-    {
-        $category = $faq->getRelated('pid');
-
-        if (!$category instanceof FaqCategoryModel) {
-            return false;
-        }
-
-        $jumpTo = $category->getRelated('jumpTo');
-
-        if (!$jumpTo instanceof PageModel) {
-            return false;
-        }
-
-        $params = '/'.($faq->alias ?: $faq->id);
-
-        return $absolute ? $jumpTo->getAbsoluteUrl($params) : $jumpTo->getFrontendUrl($params);
     }
 
     private function generateReplacement(FaqModel $faq, string $key, string $url, bool $blank): string|false

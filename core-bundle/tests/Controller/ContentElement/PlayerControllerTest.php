@@ -37,8 +37,8 @@ class PlayerControllerTest extends ContentElementTestCase
             <div class="content-player">
                 <figure>
                     <video controls autoplay loop>
-                        <source src="https://example.com/files/video.mp4">
-                        <source src="https://example.com/files/video.ogv">
+                        <source type="video/mp4" src="https://example.com/files/video.mp4">
+                        <source type="video/ogg" src="https://example.com/files/video.ogv">
                     </video>
                     <figcaption>Caption</figcaption>
                 </figure>

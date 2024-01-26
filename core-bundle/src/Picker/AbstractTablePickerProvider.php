@@ -45,7 +45,13 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         }
 
         $module = array_keys($modules)[0];
-        [$ptable, $pid] = $this->getPtableAndPid($table, $config->getValue());
+        [$ptable, $pid, $id] = $this->getPtableAndPid($table, $config->getValue());
+
+        // If we have no selected entry, we need to start at the topmost parent table.
+        // This can also result in setting it to null for dynamic parent tables.
+        if (!$id) {
+            $table = $this->findTopMostParent($table);
+        }
 
         if ($ptable) {
             foreach ($modules as $key => $tables) {
@@ -58,11 +64,6 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
 
         // If the table is the first in the module, we do not need to add table=xy to the URL
         if (0 === array_search($table, $modules[$module], true)) {
-            return $this->getUrlForValue($config, $module);
-        }
-
-        // If the pid is missing for a child table do not add table=xy to the URL
-        if ($ptable && !$pid) {
             return $this->getUrlForValue($config, $module);
         }
 
@@ -210,16 +211,11 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
 
         $ptable = $GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null;
         $dynamicPtable = $GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? false;
-
-        if (!$ptable && !$dynamicPtable) {
-            return [null, null];
-        }
-
         $data = false;
 
         if ($id) {
             $qb = $this->connection->createQueryBuilder();
-            $qb->select('pid')->from($table)->where($qb->expr()->eq('id', $id));
+            $qb->select(['id', 'pid'])->from($table)->where($qb->expr()->eq('id', $id));
 
             if ($dynamicPtable) {
                 $qb->addSelect('ptable');
@@ -228,15 +224,29 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
             $data = $qb->executeQuery()->fetchAssociative();
         }
 
-        if ($dynamicPtable && !empty($data['ptable'])) {
-            $ptable = $data['ptable'];
+        return [
+            $data['ptable'] ?? $ptable ?? null,
+            (int) ($data['pid'] ?? 0) ?: null,
+            (int) ($data['id'] ?? 0) ?: null,
+        ];
+    }
+
+    protected function findTopMostParent(string $table): string|null
+    {
+        $this->framework->initialize();
+        $this->framework->createInstance(DcaLoader::class, [$table])->load();
+
+        if (DataContainer::MODE_PARENT !== ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null)) {
+            return $table;
         }
 
-        if (false === $data) {
-            return [$ptable, null];
+        $ptable = $GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null;
+
+        if ($ptable && $ptable !== $table) {
+            return $this->findTopMostParent($ptable);
         }
 
-        return [$ptable, (int) $data['pid']];
+        return null;
     }
 
     /**

@@ -81,14 +81,6 @@
         <source>Please choose the files you want to attach.</source>
         <target>Изаберите фајлове које желите прикачити.</target>
       </trans-unit>
-      <trans-unit id="tl_faq.noComments.0">
-        <source>Disable comments</source>
-        <target>Искључи коментаре</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.noComments.1">
-        <source>Do not allow comments for this particular FAQ.</source>
-        <target>Не дозволи коментаре за одређена ЧПП.</target>
-      </trans-unit>
       <trans-unit id="tl_faq.published.0">
         <source>Publish the FAQ</source>
         <target>Објави ЧПП</target>
@@ -116,10 +108,6 @@
       <trans-unit id="tl_faq.enclosure_legend">
         <source>Enclosures</source>
         <target>Прилози</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.expert_legend">
-        <source>Expert settings</source>
-        <target>Напредна подешавања</target>
       </trans-unit>
       <trans-unit id="tl_faq.publish_legend">
         <source>Publish settings</source>
@@ -153,9 +141,15 @@
         <source>Delete question ID %s</source>
         <target>Обриши питање  ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq.toggle">
-        <source>Publish/unpublish question ID %s</source>
-        <target>Објави/сакриј питање  ID %s</target>
+      <trans-unit id="tl_faq.toggle.0">
+        <source>Publish/unpublish question</source>
+        <target>Објави/сакриј питање</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.toggle.1">
+        <source>Unpublish question ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_faq.toggle.2">
+        <source>Publish question ID %s</source>
       </trans-unit>
       <trans-unit id="tl_faq.pasteafter.0">
         <source>Paste at the top</source>

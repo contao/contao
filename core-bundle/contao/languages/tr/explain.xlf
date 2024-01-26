@@ -14,8 +14,8 @@
         <target>Eklenebilecek kod imleri</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.1.1">
-        <source>For more information about insert tags, see &lt;a href=&quot;https://docs.contao.org/dev/framework/insert-tags/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://docs.contao.org/dev/framework/insert-tags/&lt;/a&gt;.</source>
-        <target>Eklenebilecek kod imleri hakkında ayrıntılı bilgi almak için &lt;a href=&quot;https://docs.contao.org/dev/framework/insert-tags/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://docs.contao.org/dev/framework/insert-tags/&lt;/a&gt; adresine bakabilirsiniz.</target>
+        <source>For more information about insert tags, see the &lt;a href=&quot;https://to.contao.org/docs/insert-tags?lang=en&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao manual&lt;/a&gt;.</source>
+        <target>Eklenebilecek kod imleri hakkında ayrıntılı bilgi almak için &lt;a href=&quot;https://to.contao.org/docs/insert-tags?lang=en&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao rehberi&lt;/a&gt; bölümüne bakabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.2.0">
         <source>Code editor</source>
@@ -30,8 +30,8 @@
         <target>Markdown</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.3.1">
-        <source>To learn more about markdown, see the &lt;a href=&quot;https://docs.contao.org/manual/en/article-management/content-elements/text-elements/#markdown&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao manual&lt;/a&gt;.</source>
-        <target>Markdown hakkında ayrıntılı bilgi almak için &lt;a href=&quot;https://docs.contao.org/manual/en/article-management/content-elements/text-elements/#markdown&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao rehberi&lt;/a&gt; bölümüne bakabilirsiniz.</target>
+        <source>To learn more about markdown, see the &lt;a href=&quot;https://to.contao.org/docs/markdown?lang=en&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao manual&lt;/a&gt;.</source>
+        <target>Markdown hakkında ayrıntılı bilgi almak için &lt;a href=&quot;https://to.contao.org/docs/markdown?lang=en&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao rehberi&lt;/a&gt; bölümüne bakabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="XPL.dateFormat.0.0">
         <source>colspan</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="XPL.dateFormat.0.1">
         <source>Contao supports all date and time formats that can be parsed with the PHP date() function. However, to ensure that any input can be transformed into a UNIX timestamp, you can only use numeric date and time formats (j, d, m, n, y, Y, g, G, h, H, i, s) in the back end.&lt;br&gt;&lt;br&gt;&lt;strong&gt;You can enter different front end formats in the website root pages.&lt;/strong&gt;&lt;br&gt;&lt;br&gt;&lt;em&gt;Here are some examples of valid date and time formats&lt;/em&gt;:</source>
-        <target>Contao, PHP date() işleviyle işlenebilen tüm tarih ve saat biçimlerini destekler. Ancak, herhangi bir kaydın bir UNIX zaman damgasına dönüştürülebilmesini sağlamak için, yönetim bölümünde yalnızca sayısal tarih ve saat biçimlerini (j, d, m, n, y, Y, g, G, h, H, i, s) kullanabilirsiniz..&lt;br&gt;&lt;br&gt;&lt;strong&gt;Web sitesinin kök sayfalarında farklı ön yüz biçimleri yazabilirsiniz.&lt;/strong&gt;&lt;br&gt;&lt;br&gt;&lt;em&gt;Bazı geçerli tarih ve saat biçimi örnekleri şu şekildedir&lt;/em&gt;:</target>
+        <target>Contao, PHP date() işleviyle işlenebilen tüm tarih ve saat biçimlerini destekler. Ancak, herhangi bir kaydın bir UNIX zaman damgasına dönüştürülebilmesini sağlamak için, yönetim bölümünde yalnızca sayısal tarih ve saat biçimlerini (j, d, m, n, y, Y, g, G, h, H, i, s) kullanabilirsiniz..&lt;br&gt;&lt;br&gt;&lt;strong&gt;Sitenin kök sayfalarında farklı ön yüz biçimleri yazabilirsiniz.&lt;/strong&gt;&lt;br&gt;&lt;br&gt;&lt;em&gt;Bazı geçerli tarih ve saat biçimi örnekleri şu şekildedir&lt;/em&gt;:</target>
       </trans-unit>
       <trans-unit id="XPL.dateFormat.1.0">
         <source>Y-m-d</source>

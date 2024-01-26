@@ -17,6 +17,14 @@
         <source>Here you can add a headline to the content element.</source>
         <target>Om du anger en rubrik här så kommer den att visas längst upp i innehållselementet.</target>
       </trans-unit>
+      <trans-unit id="tl_content.sectionHeadline.0">
+        <source>Section headline</source>
+        <target>Dragspelsrubrik</target>
+      </trans-unit>
+      <trans-unit id="tl_content.sectionHeadline.1">
+        <source>Here you can add a section headline, e.g. a tab title or accordion header.</source>
+        <target>Här kan du lägga till en avsnittsrubrik, t.ex. en fliktitel eller dragspelshuvud.</target>
+      </trans-unit>
       <trans-unit id="tl_content.text.0">
         <source>Text</source>
         <target>Text</target>
@@ -166,16 +174,16 @@
         <target>Tabellhuvud</target>
       </trans-unit>
       <trans-unit id="tl_content.thead.1">
-        <source>Make the first row of the table the table header.</source>
-        <target>Om du väljer detta alternativ kommer första raden i tabellen att användas som tabellhuvud.</target>
+        <source>Make the first row the table header.</source>
+        <target>Gör den första raden till tabellrubrik.</target>
       </trans-unit>
       <trans-unit id="tl_content.tfoot.0">
         <source>Add table footer</source>
         <target>Tabellfot</target>
       </trans-unit>
       <trans-unit id="tl_content.tfoot.1">
-        <source>Make the last row of the table the table footer.</source>
-        <target>Om du väljer detta alternativ kommer första raden i tabellen att användas som tabellfot.</target>
+        <source>Make the last row the table footer.</source>
+        <target>Gör den sista raden till tabellsidfot.</target>
       </trans-unit>
       <trans-unit id="tl_content.tleft.0">
         <source>Use row headers</source>
@@ -208,6 +216,14 @@
       <trans-unit id="tl_content.sortOrder.1">
         <source>Please choose the sort order.</source>
         <target>Ange en sorteringsordning.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.closeSections.0">
+        <source>Close all sections</source>
+        <target>Stäng alla avsnitt</target>
+      </trans-unit>
+      <trans-unit id="tl_content.closeSections.1">
+        <source>Do not open the first section by default.</source>
+        <target>Öppna inte det första avsnittet som standard.</target>
       </trans-unit>
       <trans-unit id="tl_content.mooType.0">
         <source>Operation mode</source>
@@ -310,8 +326,7 @@
         <target>Malldata</target>
       </trans-unit>
       <trans-unit id="tl_content.data.1">
-        <source>These values are available as &lt;code&gt;$this-&gt;data&lt;/code&gt; in the template.</source>
-        <target>Dessa värden är tillgängliga som &lt;code&gt;$this-&gt;data&lt;/code&gt; i mallen.</target>
+        <source>These values are available as &lt;code&gt;$this-&gt;keys&lt;/code&gt; in the template.</source>
       </trans-unit>
       <trans-unit id="tl_content.linkTitle.0">
         <source>Link text</source>
@@ -320,6 +335,14 @@
       <trans-unit id="tl_content.linkTitle.1">
         <source>The link text will be displayed instead of the target URL.</source>
         <target>Länktiteln kommer att visas för besökaren istället för URL'en.&lt;br /&gt;Om du använder en bildlänk kommer bilden att visas istället för länktiteln.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.overwriteLink.0">
+        <source>Overwrite link</source>
+        <target>Skriv över länk</target>
+      </trans-unit>
+      <trans-unit id="tl_content.overwriteLink.1">
+        <source>Set a custom link text and link title.</source>
+        <target>Ställ in en anpassad länktext och länktitel.</target>
       </trans-unit>
       <trans-unit id="tl_content.titleText.0">
         <source>Link title</source>
@@ -630,20 +653,32 @@
         <target>Börja visa fr.o.m</target>
       </trans-unit>
       <trans-unit id="tl_content.start.1">
-        <source>If you want to prevent the element from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Om du vill förhindra att elementet visas på webbplatsen före ett visst datum / tid kan du ange det här. Lämna annars fältet tomt.</target>
+        <source>If you want to prevent the element from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Om du vill förhindra att elementet visas på webbplatsen före ett visst datum/tid kan du ange det här. Annars lämnar du fältet tomt.</target>
       </trans-unit>
       <trans-unit id="tl_content.stop.0">
         <source>Show until</source>
         <target>Sluta visa fr.o.m</target>
       </trans-unit>
       <trans-unit id="tl_content.stop.1">
-        <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Om du vill förhindra att elementet visas på webbplatsen efter ett visst datum / tid kan du ange det här. Lämna annars fältet tomt.</target>
+        <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Om du vill förhindra att elementet visas på hemsidan efter ett visst datum/tid kan du ange det här. Annars lämnar du fältet tomt.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.tstamp.0">
+        <source>Revision date</source>
+        <target>Ändringsdatum</target>
+      </trans-unit>
+      <trans-unit id="tl_content.tstamp.1">
+        <source>Date and time of the latest revision</source>
+        <target>Datum och tid för senaste ändringen.</target>
       </trans-unit>
       <trans-unit id="tl_content.type_legend">
         <source>Element type</source>
         <target>Elementtyp</target>
+      </trans-unit>
+      <trans-unit id="tl_content.section_legend">
+        <source>Section settings</source>
+        <target>Sektionsinställningar</target>
       </trans-unit>
       <trans-unit id="tl_content.text_legend">
         <source>Text/HTML/Code</source>
@@ -682,6 +717,10 @@
         <target>Sorteringsinställningar</target>
       </trans-unit>
       <trans-unit id="tl_content.moo_legend">
+        <source>Accordion settings</source>
+        <target>Dragspelsinställningar</target>
+      </trans-unit>
+      <trans-unit id="tl_content.accordion_legend">
         <source>Accordion settings</source>
         <target>Dragspelsinställningar</target>
       </trans-unit>
@@ -893,9 +932,17 @@
         <source>Edit content element ID %s</source>
         <target>Redigera innehållselement med ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_content.toggle">
-        <source>Hide/unhide content element ID %s</source>
-        <target>Dölj / visa innehållselement-ID %s</target>
+      <trans-unit id="tl_content.toggle.0">
+        <source>Hide/unhide content element</source>
+        <target>Dölj/visa innehållselement</target>
+      </trans-unit>
+      <trans-unit id="tl_content.toggle.1">
+        <source>Hide content element ID %s</source>
+        <target>Dölj innehållselement ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_content.toggle.2">
+        <source>Unhide content element ID %s</source>
+        <target>Visa innehållselement ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>
@@ -924,6 +971,19 @@
       <trans-unit id="tl_content.table.1">
         <source>Import table items from a CSV file</source>
         <target>Importera tabellposter från en CSV-fil</target>
+      </trans-unit>
+      <trans-unit id="tl_content.dl_label.0">
+        <source>Description list items</source>
+      </trans-unit>
+      <trans-unit id="tl_content.dl_label.1">
+        <source>Please enter a list of terms and details for the description list. You can leave the term field empty to create multiple details for one term.</source>
+      </trans-unit>
+      <trans-unit id="tl_content.dl_key">
+        <source>Term</source>
+      </trans-unit>
+      <trans-unit id="tl_content.dl_value">
+        <source>Details</source>
+        <target>Detaljer</target>
       </trans-unit>
     </body>
   </file>

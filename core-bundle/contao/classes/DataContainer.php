@@ -19,6 +19,7 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\AbstractAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\Image\ResizeConfiguration;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
@@ -248,7 +249,8 @@ abstract class DataContainer extends Backend
 	/**
 	 * Active record
 	 * @var Model|object|null
-	 * @deprecated Deprecated since Contao 5.0 to be removed in Contao 6. Use $dc->getCurrentRecord() instead.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6;
+	 *             use $dc->getCurrentRecord() instead.
 	 */
 	protected $objActiveRecord;
 
@@ -384,14 +386,12 @@ abstract class DataContainer extends Backend
 	/**
 	 * Render a row of a box and return it as HTML string
 	 *
-	 * @param string|array|null $strPalette
-	 *
 	 * @return string
 	 *
 	 * @throws AccessDeniedException
 	 * @throws \Exception
 	 */
-	protected function row($strPalette=null)
+	protected function row()
 	{
 		$arrData = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField] ?? array();
 
@@ -462,7 +462,7 @@ abstract class DataContainer extends Backend
 		}
 
 		// Convert insert tags in src attributes (see #5965)
-		if (isset($arrData['eval']['rte']) && strncmp($arrData['eval']['rte'], 'tiny', 4) === 0 && \is_string($this->varValue))
+		if (isset($arrData['eval']['rte']) && str_starts_with($arrData['eval']['rte'], 'tiny') && \is_string($this->varValue))
 		{
 			$this->varValue = StringUtil::removeBasePath($this->varValue);
 			$this->varValue = StringUtil::insertTagToSrc($this->varValue);
@@ -508,7 +508,7 @@ abstract class DataContainer extends Backend
 				}
 
 				// Convert file paths in src attributes (see #5965)
-				if ($varValue && isset($arrData['eval']['rte']) && strncmp($arrData['eval']['rte'], 'tiny', 4) === 0)
+				if ($varValue && isset($arrData['eval']['rte']) && str_starts_with($arrData['eval']['rte'], 'tiny'))
 				{
 					$varValue = StringUtil::srcToInsertTag($varValue);
 					$varValue = StringUtil::addBasePath($varValue);
@@ -715,9 +715,9 @@ abstract class DataContainer extends Backend
 <div class="widget">
   <fieldset class="tl_radio_container">
   <legend>' . $GLOBALS['TL_LANG']['MSC']['updateMode'] . '</legend>
-    <input type="radio" name="' . $this->strInputName . '_update" id="opt_' . $this->strInputName . '_update_1" class="tl_radio" value="add" onfocus="Backend.getScrollOffset()"> <label for="opt_' . $this->strInputName . '_update_1">' . $GLOBALS['TL_LANG']['MSC']['updateAdd'] . '</label><br>
-    <input type="radio" name="' . $this->strInputName . '_update" id="opt_' . $this->strInputName . '_update_2" class="tl_radio" value="remove" onfocus="Backend.getScrollOffset()"> <label for="opt_' . $this->strInputName . '_update_2">' . $GLOBALS['TL_LANG']['MSC']['updateRemove'] . '</label><br>
-    <input type="radio" name="' . $this->strInputName . '_update" id="opt_' . $this->strInputName . '_update_0" class="tl_radio" value="replace" checked="checked" onfocus="Backend.getScrollOffset()"> <label for="opt_' . $this->strInputName . '_update_0">' . $GLOBALS['TL_LANG']['MSC']['updateReplace'] . '</label>
+    <input type="radio" name="' . $this->strInputName . '_update" id="opt_' . $this->strInputName . '_update_1" class="tl_radio" value="add" data-action="focus->contao--scroll-offset#store"> <label for="opt_' . $this->strInputName . '_update_1">' . $GLOBALS['TL_LANG']['MSC']['updateAdd'] . '</label><br>
+    <input type="radio" name="' . $this->strInputName . '_update" id="opt_' . $this->strInputName . '_update_2" class="tl_radio" value="remove" data-action="focus->contao--scroll-offset#store"> <label for="opt_' . $this->strInputName . '_update_2">' . $GLOBALS['TL_LANG']['MSC']['updateRemove'] . '</label><br>
+    <input type="radio" name="' . $this->strInputName . '_update" id="opt_' . $this->strInputName . '_update_0" class="tl_radio" value="replace" checked="checked" data-action="focus->contao--scroll-offset#store"> <label for="opt_' . $this->strInputName . '_update_0">' . $GLOBALS['TL_LANG']['MSC']['updateReplace'] . '</label>
   </fieldset>';
 		}
 
@@ -774,7 +774,7 @@ abstract class DataContainer extends Backend
 		}
 
 		return $strPreview . '
-<div' . (!empty($arrData['eval']['tl_class']) ? ' class="' . trim($arrData['eval']['tl_class']) . '"' : '') . '>' . $objWidget->parse() . $updateMode . (!$objWidget->hasErrors() ? $this->help($strHelpClass) : '') . '
+<div' . (!empty($arrData['eval']['tl_class']) ? ' class="' . trim($arrData['eval']['tl_class']) . '"' : '') . '>' . $objWidget->parse() . $updateMode . (!$objWidget->hasErrors() ? $this->help($strHelpClass, $objWidget->description) : '') . '
 </div>';
 	}
 
@@ -785,9 +785,9 @@ abstract class DataContainer extends Backend
 	 *
 	 * @return string
 	 */
-	public function help($strClass='')
+	public function help($strClass='', $strDescription=null)
 	{
-		$return = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][1] ?? null;
+		$return = $strDescription ?? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][1] ?? null;
 
 		if (!$return || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] ?? null) == 'password' || !Config::get('showHelp'))
 		{
@@ -945,7 +945,11 @@ abstract class DataContainer extends Backend
 			$isPopup = $k == 'show';
 			$href = null;
 
-			if (!empty($config['route']))
+			if ($config->getUrl() !== null)
+			{
+				$href = $config->getUrl();
+			}
+			elseif (!empty($config['route']))
 			{
 				$params = array('id' => $arrRow['id']);
 
@@ -961,7 +965,7 @@ abstract class DataContainer extends Backend
 				$href = $this->addToUrl(($config['href'] ?? '') . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : '') . ($isPopup ? '&amp;popup=1' : ''));
 			}
 
-			parse_str(StringUtil::decodeEntities($config['href'] ?? ''), $params);
+			parse_str(StringUtil::decodeEntities($config['href'] ?? $v['href'] ?? ''), $params);
 
 			if (($params['act'] ?? null) == 'toggle' && isset($params['field']))
 			{
@@ -974,7 +978,7 @@ abstract class DataContainer extends Backend
 				$icon = $config['icon'];
 				$_icon = pathinfo($config['icon'], PATHINFO_FILENAME) . '_.' . pathinfo($config['icon'], PATHINFO_EXTENSION);
 
-				if (false !== strpos($config['icon'], '/'))
+				if (str_contains($config['icon'], '/'))
 				{
 					$_icon = \dirname($config['icon']) . '/' . $_icon;
 				}
@@ -1006,7 +1010,7 @@ abstract class DataContainer extends Backend
 						$titleDisabled = (\is_array($v['label']) && isset($v['label'][2])) ? sprintf($v['label'][2], $arrRow['id']) : $config['title'];
 					}
 
-					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($state ? $config['title'] : $titleDisabled) . '" data-title="' . StringUtil::specialchars($config['title']) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $config['label'], 'data-icon="' . $icon . '" data-icon-disabled="' . $_icon . '" data-state="' . $state . '"') . '</a> ';
+					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($state ? $config['title'] : $titleDisabled) . '" data-title="' . StringUtil::specialchars($config['title']) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" data-action="contao--scroll-offset#store" onclick="return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $config['label'], 'data-icon="' . $icon . '" data-icon-disabled="' . $_icon . '" data-state="' . $state . '"') . '</a> ';
 				}
 			}
 			elseif ($href === null)
@@ -1060,7 +1064,7 @@ abstract class DataContainer extends Backend
 				$v['class'] = trim(($v['class'] ?? '') . ' header_icon');
 
 				// Add the theme path if only the file name is given
-				if (strpos($v['icon'], '/') === false)
+				if (!str_contains($v['icon'], '/'))
 				{
 					$v['icon'] = Image::getPath($v['icon']);
 				}
@@ -1150,7 +1154,7 @@ abstract class DataContainer extends Backend
 			$attributes = !empty($v['attributes']) ? ' ' . ltrim(sprintf($v['attributes'], $id, $id)) : '';
 
 			// Add the key as CSS class
-			if (strpos($attributes, 'class="') !== false)
+			if (str_contains($attributes, 'class="'))
 			{
 				$attributes = str_replace('class="', 'class="' . $k . ' ', $attributes);
 			}
@@ -1213,7 +1217,7 @@ abstract class DataContainer extends Backend
 				$icon = $v['icon'];
 				$_icon = pathinfo($v['icon'], PATHINFO_FILENAME) . '_.' . pathinfo($v['icon'], PATHINFO_EXTENSION);
 
-				if (false !== strpos($v['icon'], '/'))
+				if (str_contains($v['icon'], '/'))
 				{
 					$_icon = \dirname($v['icon']) . '/' . $_icon;
 				}
@@ -1232,7 +1236,7 @@ abstract class DataContainer extends Backend
 
 				$titleDisabled = (\is_array($v['label']) && isset($v['label'][2])) ? sprintf($v['label'][2], $arrRow['id']) : $title;
 
-				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($state ? $title : $titleDisabled) . '" data-title="' . StringUtil::specialchars($title) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $label, 'data-icon="' . $icon . '" data-icon-disabled="' . $_icon . '" data-state="' . $state . '"') . '</a> ';
+				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($state ? $title : $titleDisabled) . '" data-title="' . StringUtil::specialchars($title) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" data-action="contao--scroll-offset#store" onclick="return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $label, 'data-icon="' . $icon . '" data-icon-disabled="' . $_icon . '" data-state="' . $state . '"') . '</a> ';
 			}
 			else
 			{
@@ -1288,16 +1292,29 @@ abstract class DataContainer extends Backend
 	{
 		$id = is_numeric($value) ? $value : md5($value);
 
-		switch ($this->strPickerFieldType)
+		if (!\in_array($this->strPickerFieldType, array('checkbox', 'radio')))
 		{
-			case 'checkbox':
-				return ' <input type="checkbox" name="picker[]" id="picker_' . $id . '" class="tl_tree_checkbox" value="' . StringUtil::specialchars(($this->objPickerCallback)($value)) . '" onfocus="Backend.getScrollOffset()"' . Widget::optionChecked($value, $this->arrPickerValue) . $attributes . '>';
-
-			case 'radio':
-				return ' <input type="radio" name="picker" id="picker_' . $id . '" class="tl_tree_radio" value="' . StringUtil::specialchars(($this->objPickerCallback)($value)) . '" onfocus="Backend.getScrollOffset()"' . Widget::optionChecked($value, $this->arrPickerValue) . $attributes . '>';
+			return '';
 		}
 
-		return '';
+		$checked = Widget::optionChecked($value, $this->arrPickerValue);
+
+		if ($checked)
+		{
+			$checked .= ' data-contao--scroll-offset-target="scrollTo"';
+		}
+
+		return sprintf(
+			' <input type="%s" name="picker%s" id="picker_%s" class="tl_tree_%s" value="%s" %s%s%s>',
+			$this->strPickerFieldType,
+			$this->strPickerFieldType === 'checkbox' ? '[]' : '',
+			$id,
+			$this->strPickerFieldType,
+			StringUtil::specialchars(($this->objPickerCallback)($value)),
+			'data-action="focus->contao--scroll-offset#store"',
+			$checked,
+			$attributes
+		);
 	}
 
 	/**
@@ -1423,7 +1440,7 @@ abstract class DataContainer extends Backend
 		// Compile limit menu if placeholder is present
 		foreach ($arrPanels as $key => $strPanel)
 		{
-			if (strpos($strPanel, '###limit_menu###') === false)
+			if (!str_contains($strPanel, '###limit_menu###'))
 			{
 				continue;
 			}
@@ -1616,7 +1633,7 @@ abstract class DataContainer extends Backend
 
 		foreach ($labelConfig['fields'] as $k=>$v)
 		{
-			if (strpos($v, ':') !== false)
+			if (str_contains($v, ':'))
 			{
 				list($strKey, $strTable) = explode(':', $v, 2);
 				list($strTable, $strField) = explode('.', $strTable, 2);
@@ -1668,7 +1685,7 @@ abstract class DataContainer extends Backend
 				}
 				elseif ((($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['isAssociative'] ?? null) || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$table]['fields'][$v]['options'] ?? null)) && isset($GLOBALS['TL_DCA'][$table]['fields'][$v]['options'][$row[$v]]))
 				{
-					$args[$k] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['options'][$row[$v]] ?? null;
+					$args[$k] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['options'][$row[$v]];
 				}
 				else
 				{
@@ -1779,7 +1796,7 @@ abstract class DataContainer extends Backend
 		$stmt = $connection->executeQuery(
 			'SELECT * FROM ' . $table . ' WHERE id IN (?)',
 			array($ids),
-			array(is_numeric(array_values($ids)[0]) ? Connection::PARAM_INT_ARRAY : Connection::PARAM_STR_ARRAY)
+			array(is_numeric(array_values($ids)[0]) ? ArrayParameterType::INTEGER : ArrayParameterType::STRING)
 		);
 
 		foreach ($stmt->iterateAssociative() as $row)
@@ -1805,7 +1822,7 @@ abstract class DataContainer extends Backend
 	 * @throws AccessDeniedException     if the current user has no read permission
 	 * @return array<string, mixed>|null
 	 */
-	public function getCurrentRecord(string|int $id = null, string $table = null): ?array
+	public function getCurrentRecord(string|int $id = null, string $table = null): array|null
 	{
 		$id = $id ?: $this->intId;
 		$table = $table ?: $this->strTable;

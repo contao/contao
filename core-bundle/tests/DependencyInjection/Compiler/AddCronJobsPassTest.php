@@ -232,8 +232,6 @@ class AddCronJobsPassTest extends TestCase
         $definition = $container->getDefinition('contao.cron');
         $methodCalls = $definition->getMethodCalls();
 
-        $this->assertIsArray($methodCalls);
-
         $crons = [];
 
         foreach ($methodCalls as $methodCall) {

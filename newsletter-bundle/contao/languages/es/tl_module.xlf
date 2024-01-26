@@ -22,8 +22,7 @@
         <target>Texto personalizado</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_text.1">
-        <source>Here you can e.g. enter a privacy note to make the newsletter subscription GDPR compliant.</source>
-        <target>Aquí puede, p. ingrese una nota de privacidad para que la suscripción al boletín cumpla con GDPR.</target>
+        <source>Here you can e.g. enter a privacy note to make the newsletter subscription GDPR-compliant.</source>
       </trans-unit>
       <trans-unit id="tl_module.nl_hideChannels.0">
         <source>Hide channel menu</source>

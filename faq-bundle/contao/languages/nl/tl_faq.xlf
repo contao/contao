@@ -81,14 +81,6 @@
         <source>Please choose the files you want to attach.</source>
         <target>Kies het bestand dat u aan het antwoord wil toevoegen.</target>
       </trans-unit>
-      <trans-unit id="tl_faq.noComments.0">
-        <source>Disable comments</source>
-        <target>Reacties uitschakelen</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.noComments.1">
-        <source>Do not allow comments for this particular FAQ.</source>
-        <target>Geen reacties toestaan voor deze FAQ.</target>
-      </trans-unit>
       <trans-unit id="tl_faq.published.0">
         <source>Publish the FAQ</source>
         <target>Publiceer de FAQ</target>
@@ -116,10 +108,6 @@
       <trans-unit id="tl_faq.enclosure_legend">
         <source>Enclosures</source>
         <target>Bijlagen</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.expert_legend">
-        <source>Expert settings</source>
-        <target>Expert-instellingen</target>
       </trans-unit>
       <trans-unit id="tl_faq.publish_legend">
         <source>Publish settings</source>
@@ -153,9 +141,17 @@
         <source>Delete question ID %s</source>
         <target>Verwijder vraag ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq.toggle">
-        <source>Publish/unpublish question ID %s</source>
-        <target>Publiceer/verberg vraag ID %s</target>
+      <trans-unit id="tl_faq.toggle.0">
+        <source>Publish/unpublish question</source>
+        <target>Publiceer/verberg vraag</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.toggle.1">
+        <source>Unpublish question ID %s</source>
+        <target>Verberg vraag ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.toggle.2">
+        <source>Publish question ID %s</source>
+        <target>Publiceer vraag ID %s</target>
       </trans-unit>
       <trans-unit id="tl_faq.pasteafter.0">
         <source>Paste at the top</source>

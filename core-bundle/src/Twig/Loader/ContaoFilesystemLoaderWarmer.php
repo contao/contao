@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Loader;
 
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -22,6 +23,7 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 /**
  * @experimental
  */
+#[AsEventListener]
 class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
 {
     public function __construct(
@@ -34,7 +36,17 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
     ) {
     }
 
-    public function warmUp(string|null $cacheDir = null): array
+    /**
+     * Auto refresh in dev mode.
+     */
+    public function __invoke(RequestEvent $event): void
+    {
+        if ('dev' === $this->environment && $event->isMainRequest()) {
+            $this->refresh();
+        }
+    }
+
+    public function warmUp(string|null $cacheDir = null, string|null $buildDir = null): array
     {
         // Theme paths
         $themePaths = $this->templateLocator->findThemeDirectories();
@@ -77,16 +89,6 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
         $this->loader->clear();
 
         $this->warmUp();
-    }
-
-    /**
-     * Auto refresh in dev mode.
-     */
-    public function onKernelRequest(RequestEvent $event): void
-    {
-        if ('dev' === $this->environment && $event->isMainRequest()) {
-            $this->refresh();
-        }
     }
 
     /**

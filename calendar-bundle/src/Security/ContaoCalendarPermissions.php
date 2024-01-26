@@ -14,6 +14,8 @@ namespace Contao\CalendarBundle\Security;
 
 final class ContaoCalendarPermissions
 {
+    public const USER_CAN_ACCESS_MODULE = 'contao_user.modules.calendar';
+
     public const USER_CAN_EDIT_CALENDAR = 'contao_user.calendars';
 
     public const USER_CAN_CREATE_CALENDARS = 'contao_user.calendarp.create';

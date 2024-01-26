@@ -27,6 +27,7 @@ use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Contao\DataContainer;
 use Contao\ModuleProxy;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -133,7 +134,7 @@ class TemplateOptionsListenerTest extends TestCase
             ->with(
                 sprintf('SELECT type FROM %s WHERE id IN (?) GROUP BY type LIMIT 2', 'tl_foo'),
                 [[1, 2, 3]],
-                [Connection::PARAM_INT_ARRAY],
+                [ArrayParameterType::STRING],
             )
             ->willReturn($result)
         ;

@@ -102,8 +102,12 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
 
         $name = strtolower($name);
 
-        if (1 !== preg_match('/^[a-z](?:[_-]?[a-z0-9])*$/', $name)) {
-            throw new \InvalidArgumentException(sprintf('A HTML attribute name must only consist of the characters [a-z0-9_-], must start with a letter, must not end with a underscore/hyphen and must not contain two underscores/hyphens in a row, got "%s".', $name));
+        // Even though the HTML 5 parser supports attribute names starting with
+        // an equal sign, we have to disallow that in order to support
+        // serializing boolean attributes. Otherwise, serializing and parsing
+        // back something like `hidden="" =attr="value"` would fail the roundtrip.
+        if (1 !== preg_match('(^[^>\s/=]+$)', $name) || 1 !== preg_match('//u', $name)) {
+            throw new \InvalidArgumentException(sprintf('An HTML attribute name must be valid UTF-8 and not contain the characters >, /, = or whitespace, got "%s".', $name));
         }
 
         // Unset if value is set to false
@@ -148,7 +152,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             return $this;
         }
 
-        unset($this->attributes[$name]);
+        unset($this->attributes[strtolower($name)]);
 
         return $this;
     }
@@ -221,7 +225,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      *
      * If a falsy $condition is specified, the method is a no-op.
      *
-     * @param string|array<string, string> $styles
+     * @param string|array<int|string, string> $styles
      */
     public function addStyle(array|string $styles, mixed $condition = true): self
     {

@@ -65,9 +65,17 @@
         <source>Delete media query ID %s</source>
         <target>Удалить Media query (Медиа-запрос) ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.toggle">
-        <source>Activate/deactivate media query ID %s</source>
-        <target>Активировать/деактивировать Media query (Медиа-запрос) ID %s</target>
+      <trans-unit id="tl_image_size_item.toggle.0">
+        <source>Activate/deactivate media query</source>
+        <target>Активировать/деактивировать медиа-запрос</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.toggle.1">
+        <source>Deactivate media query ID %s</source>
+        <target>Деактивировать медиа-запрос ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.toggle.2">
+        <source>Activate media query ID %s</source>
+        <target>Активировать медиа-запрос ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pasteafter.0">
         <source>Paste at the top</source>

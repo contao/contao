@@ -22,7 +22,6 @@ use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\Database;
-use Contao\Database\Result;
 use Contao\Date;
 use Contao\Environment;
 use Contao\File;
@@ -31,7 +30,6 @@ use Contao\Frontend;
 use Contao\FrontendTemplate;
 use Contao\FrontendUser;
 use Contao\Idna;
-use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Validator;
@@ -39,6 +37,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 #[AsInsertTag('lang')]
 #[AsInsertTag('br')]
@@ -294,25 +293,18 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
             case 'article':
             case 'article_open':
             case 'article_url':
-            case 'article_title':
                 $objArticle = ArticleModel::findByIdOrAlias($insertTag->getParameters()->get(0));
 
                 if (!$objArticle instanceof ArticleModel) {
                     break;
                 }
 
-                $objPid = $objArticle->getRelated('pid');
-
-                if (!$objPid instanceof PageModel) {
-                    break;
-                }
-
-                $params = '/articles/'.($objArticle->alias ?: $objArticle->id);
                 $strTarget = \in_array('blank', \array_slice($insertTag->getParameters()->all(), 1), true) ? ' target="_blank" rel="noreferrer noopener"' : '';
+                $blnAbsolute = \in_array('absolute', \array_slice($insertTag->getParameters()->all(), 1), true);
                 $strUrl = '';
 
                 try {
-                    $strUrl = \in_array('absolute', \array_slice($insertTag->getParameters()->all(), 1), true) ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params);
+                    $strUrl = $this->container->get('contao.routing.content_url_generator')->generate($objArticle, [], $blnAbsolute ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH);
                 } catch (ExceptionInterface) {
                     // Ignore routing exception
                 }
@@ -330,10 +322,13 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                     case 'article_url':
                         $result = $strUrl;
                         break;
+                }
+                break;
 
-                    case 'article_title':
-                        $result = StringUtil::specialcharsAttribute($objArticle->title);
-                        break;
+            // Article title
+            case 'article_title':
+                if ($objArticle = ArticleModel::findByIdOrAlias($insertTag->getParameters()->get(0))) {
+                    $result = StringUtil::specialcharsAttribute($objArticle->title);
                 }
                 break;
 
@@ -360,8 +355,6 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 }
 
                 $strQuery .= ' FROM tl_content';
-
-                /** @var Result&object{tc:int, tn:int, te:int} $objUpdate */
                 $objUpdate = Database::getInstance()->query($strQuery);
 
                 if ($objUpdate->numRows) {
@@ -630,7 +623,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                     break;
                 }
 
-                trigger_deprecation('contao/core-bundle', '5.0', 'Using the file insert tag to include templates has been deprecated and will no longer work in Contao 6.0. Use the Template content element instead.');
+                trigger_deprecation('contao/core-bundle', '5.0', 'Using the file insert tag to include templates has been deprecated and will no longer work in Contao 6. Use the "Template" content element instead.');
 
                 $arrGet = $_GET;
                 $strFile = $insertTag->getParameters()->get(0);

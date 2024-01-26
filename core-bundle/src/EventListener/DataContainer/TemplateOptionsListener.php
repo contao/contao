@@ -13,14 +13,19 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\Controller;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Twig\Finder\FinderFactory;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\DataContainer;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+#[AsCallback(table: 'tl_content', target: 'fields.customTpl.options')]
+#[AsCallback(table: 'tl_form_field', target: 'fields.customTpl.options')]
+#[AsCallback(table: 'tl_module', target: 'fields.customTpl.options')]
 class TemplateOptionsListener
 {
     /**
@@ -148,7 +153,7 @@ class TemplateOptionsListener
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (!$request || !$request->query->has('act')) {
+        if (!$request?->query->has('act')) {
             return false;
         }
 
@@ -167,7 +172,7 @@ class TemplateOptionsListener
         $result = $this->connection->executeQuery(
             "SELECT type FROM $table WHERE id IN (?) GROUP BY type LIMIT 2",
             [$affectedIds],
-            [Connection::PARAM_INT_ARRAY],
+            [ArrayParameterType::STRING],
         );
 
         if (1 !== $result->rowCount()) {

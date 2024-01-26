@@ -195,6 +195,7 @@ class TokenCheckerTest extends TestCase
         ;
 
         $request->setSession($session);
+        $request->cookies->set($session->getName(), 'foo');
 
         $connection = $this->createMock(Connection::class);
         $connection
@@ -492,18 +493,26 @@ class TokenCheckerTest extends TestCase
     /**
      * @dataProvider getFrontendGuestData
      */
-    public function testIfAFrontendGuestIsAvailable(bool $expected, bool $hasFrontendGuest): void
+    public function testIfAFrontendGuestIsAvailable(bool $expected, bool $hasFrontendGuest, bool $hasPreviousSession): void
     {
         $session = $this->createMock(SessionInterface::class);
         $session
-            ->expects($this->once())
+            ->expects($hasPreviousSession ? $this->once() : $this->never())
             ->method('get')
             ->with(FrontendPreviewAuthenticator::SESSION_NAME)
             ->willReturn($hasFrontendGuest ? ['showUnpublished' => false, 'previewLinkId' => 123] : null)
         ;
 
-        $request = new Request();
-        $request->setSession($session);
+        $request = $this->createMock(Request::class);
+        $request
+            ->method('getSession')
+            ->willReturn($session)
+        ;
+
+        $request
+            ->method('hasPreviousSession')
+            ->willReturn($hasPreviousSession)
+        ;
 
         $connection = $this->createMock(Connection::class);
         $connection
@@ -529,8 +538,9 @@ class TokenCheckerTest extends TestCase
 
     public function getFrontendGuestData(): \Generator
     {
-        yield [false, false];
-        yield [true, true];
+        yield [false, false, false];
+        yield [false, false, true];
+        yield [true, true, true];
     }
 
     /**

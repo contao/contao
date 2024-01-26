@@ -11,11 +11,9 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
-use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -87,6 +85,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string|integer    $stop
  * @property boolean           $enforceTwoFactor
  * @property integer           $twoFactorJumpTo
+ * @property boolean           $enableCsp
+ * @property string|null       $csp
+ * @property boolean           $cspReportOnly
+ * @property boolean           $cspReportLog
  *
  * @property array   $trail
  * @property string  $mainAlias
@@ -178,6 +180,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByStop($val, array $opt=array())
  * @method static PageModel|null findOneByEnforceTwoFactor($val, array $opt=array())
  * @method static PageModel|null findOneByTwoFactorJumpTo($val, array $opt=array())
+ * @method static PageModel|null findOneByEnableCsp($val, array $opt=array())
+ * @method static PageModel|null findOneByCsp($val, array $opt=array())
+ * @method static PageModel|null findOneByCspReportOnly($val, array $opt=array())
+ * @method static PageModel|null findOneByCspReportLog($val, array $opt=array())
  *
  * @method static Collection<PageModel>|PageModel[]|null findByPid($val, array $opt=array())
  * @method static Collection<PageModel>|PageModel[]|null findBySorting($val, array $opt=array())
@@ -238,6 +244,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection<PageModel>|PageModel[]|null findByStop($val, array $opt=array())
  * @method static Collection<PageModel>|PageModel[]|null findByEnforceTwoFactor($val, array $opt=array())
  * @method static Collection<PageModel>|PageModel[]|null findByTwoFactorJumpTo($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByEnableCsp($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByCsp($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByCspReportOnly($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByCspReportLog($val, array $opt=array())
  * @method static Collection<PageModel>|PageModel[]|null findMultipleByIds($val, array $opt=array())
  * @method static Collection<PageModel>|PageModel[]|null findBy($col, $val, array $opt=array())
  * @method static Collection<PageModel>|PageModel[]|null findAll(array $opt=array())
@@ -302,6 +312,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByStop($val, array $opt=array())
  * @method static integer countByEnforceTwoFactor($val, array $opt=array())
  * @method static integer countByTwoFactorJumpTo($val, array $opt=array())
+ * @method static integer countByEnableCsp($val, array $opt=array())
+ * @method static integer countByCsp($val, array $opt=array())
+ * @method static integer countByCspReportOnly($val, array $opt=array())
+ * @method static integer countByCspReportLog($val, array $opt=array())
  */
 class PageModel extends Model
 {
@@ -708,11 +722,11 @@ class PageModel extends Model
 		}
 
 		$t = static::$strTable;
-		$arrColumns = array("$t.dns=? AND $t.fallback=1");
+		$arrColumns = array("$t.type='root' AND $t.dns=? AND $t.fallback=1");
 
 		if (isset($arrOptions['fallbackToEmpty']) && $arrOptions['fallbackToEmpty'] === true)
 		{
-			$arrColumns = array("($t.dns=? OR $t.dns='') AND $t.fallback=1");
+			$arrColumns = array("$t.type='root' AND ($t.dns=? OR $t.dns='') AND $t.fallback=1");
 
 			if (!isset($arrOptions['order']))
 			{
@@ -997,6 +1011,10 @@ class PageModel extends Model
 			$this->mailerTransport = $objParentPage->mailerTransport;
 			$this->enableCanonical = $objParentPage->enableCanonical;
 			$this->maintenanceMode = $objParentPage->maintenanceMode;
+			$this->enableCsp = $objParentPage->enableCsp;
+			$this->csp = $objParentPage->csp;
+			$this->cspReportOnly = $objParentPage->cspReportOnly;
+			$this->cspReportLog = $objParentPage->cspReportLog;
 
 			// Store whether the root page has been published
 			$this->rootIsPublic = $objParentPage->published && (!$objParentPage->start || $objParentPage->start <= $time) && (!$objParentPage->stop || $objParentPage->stop > $time);
@@ -1084,27 +1102,30 @@ class PageModel extends Model
 	 * @throws ResourceNotFoundException
 	 *
 	 * @return string A URL that can be used in the front end
+	 *
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 *             use the content URL generator instead.
 	 */
 	public function getFrontendUrl($strParams=null)
 	{
-		$page = $this;
-		$page->loadDetails();
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the content URL generator instead.', __METHOD__);
 
-		$objRouter = System::getContainer()->get('router');
-		$referenceType = $this->domain && $objRouter->getContext()->getHost() !== $this->domain ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH;
+		$this->loadDetails();
 
 		if (\is_array($strParams))
 		{
-			$parameters = array_merge($strParams, array(RouteObjectInterface::CONTENT_OBJECT => $page));
+			$parameters = $strParams;
 		}
 		else
 		{
-			$parameters = array(RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => $strParams);
+			$parameters = array('parameters' => $strParams);
 		}
+
+		$objRouter = System::getContainer()->get('contao.routing.content_url_generator');
 
 		try
 		{
-			$strUrl = $objRouter->generate(PageRoute::PAGE_BASED_ROUTE_NAME, $parameters, $referenceType);
+			$strUrl = $objRouter->generate($this, $parameters);
 		}
 		catch (RouteNotFoundException $e)
 		{
@@ -1130,25 +1151,30 @@ class PageModel extends Model
 	 * @throws ResourceNotFoundException
 	 *
 	 * @return string An absolute URL that can be used in the front end
+	 *
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 *             use the content URL generator instead.
 	 */
 	public function getAbsoluteUrl($strParams=null)
 	{
-		$this->loadDetails();
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the content URL generator instead.', __METHOD__);
 
-		$objRouter = System::getContainer()->get('router');
+		$this->loadDetails();
 
 		if (\is_array($strParams))
 		{
-			$parameters = array_merge($strParams, array(RouteObjectInterface::CONTENT_OBJECT => $this));
+			$parameters = $strParams;
 		}
 		else
 		{
-			$parameters = array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams);
+			$parameters = array('parameters' => $strParams);
 		}
+
+		$objRouter = System::getContainer()->get('contao.routing.content_url_generator');
 
 		try
 		{
-			$strUrl = $objRouter->generate(PageRoute::PAGE_BASED_ROUTE_NAME, $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
+			$strUrl = $objRouter->generate($this, $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
 		}
 		catch (RouteNotFoundException $e)
 		{
@@ -1174,9 +1200,14 @@ class PageModel extends Model
 	 * @throws ResourceNotFoundException
 	 *
 	 * @return string The front end preview URL
+	 *
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 *             use the content URL generator instead
 	 */
 	public function getPreviewUrl($strParams=null)
 	{
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the contao_backend_preview route instead.', __METHOD__);
+
 		$container = System::getContainer();
 
 		if (!$previewScript = $container->getParameter('contao.preview_script'))
@@ -1184,28 +1215,26 @@ class PageModel extends Model
 			return $this->getAbsoluteUrl($strParams);
 		}
 
-		$this->loadDetails();
+		$objRouter = System::getContainer()->get('contao.routing.content_url_generator');
 
-		$context = $container->get('router')->getContext();
+		$context = $objRouter->getContext();
 		$baseUrl = $context->getBaseUrl();
 
 		// Add the preview script
 		$context->setBaseUrl(preg_replace('(/[^/]*$)', '', $baseUrl) . $previewScript);
 
-		$objRouter = System::getContainer()->get('router');
-
 		if (\is_array($strParams))
 		{
-			$parameters = array_merge($strParams, array(RouteObjectInterface::CONTENT_OBJECT => $this));
+			$parameters = $strParams;
 		}
 		else
 		{
-			$parameters = array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams);
+			$parameters = array('parameters' => $strParams);
 		}
 
 		try
 		{
-			$strUrl = $objRouter->generate(PageRoute::PAGE_BASED_ROUTE_NAME, $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
+			$strUrl = $objRouter->generate($this, $parameters);
 		}
 		catch (RouteNotFoundException $e)
 		{
@@ -1218,8 +1247,10 @@ class PageModel extends Model
 
 			throw $e;
 		}
-
-		$context->setBaseUrl($baseUrl);
+		finally
+		{
+			$context->setBaseUrl($baseUrl);
+		}
 
 		return $strUrl;
 	}

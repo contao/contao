@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_opt_in_related.relId">
         <source>Related ID</source>
-        <target>İlişkili kod</target>
+        <target>İlişkili kimlik</target>
       </trans-unit>
     </body>
   </file>

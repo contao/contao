@@ -621,7 +621,17 @@ class PageRegular extends Frontend
 		// Add the custom JavaScript
 		if ($objLayout->script)
 		{
-			$strScripts .= "\n" . trim($objLayout->script) . "\n";
+			$customScript = trim($objLayout->script);
+
+			// Add a nonce to the <script> tags since we consider this safe user input.
+			// Do NOT copy the str_replace() into your own code unless you know what you are doing!
+			// It will defeat the purpose of CSP.
+			if ($nonce = $this->Template->nonce('script-src'))
+			{
+				$customScript = str_replace('<script', '<script nonce="' . $nonce . '"', $customScript);
+			}
+
+			$strScripts .= "\n" . $customScript . "\n";
 		}
 
 		$this->Template->mootools = $strScripts;

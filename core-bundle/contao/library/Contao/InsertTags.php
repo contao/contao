@@ -186,9 +186,9 @@ class InsertTags extends Controller
 			// Skip certain elements if the output will be cached
 			if ($blnCache)
 			{
-				if (($elements[1] ?? null) == 'referer' || strncmp($elements[0], 'cache_', 6) === 0)
+				if (($elements[1] ?? null) == 'referer' || str_starts_with($elements[0], 'cache_'))
 				{
-					trigger_deprecation('contao/core-bundle', '5.0', 'Insert tag naming conventions {{cache_*}} and {{*::referer}} for fragments have been deprecated and will no longer work in Contao 6.0. Use #[AsInsertTag(asFragment: true)] instead.', $elements[0], strtolower($elements[0]));
+					trigger_deprecation('contao/core-bundle', '5.0', 'Insert tag naming conventions {{cache_*}} and {{*::referer}} for fragments have been deprecated and will no longer work in Contao 6. Use #[AsInsertTag(asFragment: true)] instead.', $elements[0], strtolower($elements[0]));
 
 					/** @var FragmentHandler $fragmentHandler */
 					$fragmentHandler = $container->get('fragment.handler');
@@ -218,7 +218,7 @@ class InsertTags extends Controller
 
 			if (strtolower($elements[0]) !== $elements[0])
 			{
-				trigger_deprecation('contao/core-bundle', '5.0', 'Insert tags with uppercase letters ("%s") have been deprecated and will no longer work in Contao 6.0. Use "%s" instead.', $elements[0], strtolower($elements[0]));
+				trigger_deprecation('contao/core-bundle', '5.0', 'Insert tags with uppercase letters ("%s") have been deprecated and will no longer work in Contao 6. Use "%s" instead.', $elements[0], strtolower($elements[0]));
 			}
 
 			// Replace the tag
@@ -230,7 +230,7 @@ class InsertTags extends Controller
 					{
 						if (isset($GLOBALS['TL_HOOKS']['replaceInsertTags']) && \is_array($GLOBALS['TL_HOOKS']['replaceInsertTags']))
 						{
-							trigger_deprecation('contao/core-bundle', '5.2', 'Using the "replaceInsertTags" hook has been deprecated and will no longer work in Contao 6.0. Use the "%s" attribute instead.', AsInsertTag::class);
+							trigger_deprecation('contao/core-bundle', '5.2', 'Using the "replaceInsertTags" hook has been deprecated and will no longer work in Contao 6. Use the "%s" attribute instead.', AsInsertTag::class);
 
 							foreach ($GLOBALS['TL_HOOKS']['replaceInsertTags'] as $callback)
 							{
@@ -265,7 +265,7 @@ class InsertTags extends Controller
 					switch ($flag)
 					{
 						case 'flatten':
-							trigger_deprecation('contao/core-bundle', '5.0', 'The insert tag flag "|flatten" has been deprecated and will no longer work in Contao 6.0. Use a proper insert tag instead.');
+							trigger_deprecation('contao/core-bundle', '5.0', 'The insert tag flag "|flatten" has been deprecated and will no longer work in Contao 6. Use a proper insert tag instead.');
 
 							if (\is_array($arrCache[$strTag]))
 							{
@@ -290,7 +290,7 @@ class InsertTags extends Controller
 							// HOOK: pass unknown flags to callback functions
 							if (isset($GLOBALS['TL_HOOKS']['insertTagFlags']) && \is_array($GLOBALS['TL_HOOKS']['insertTagFlags']))
 							{
-								trigger_deprecation('contao/core-bundle', '5.2', 'Using the "insertTagFlags" hook has been deprecated and will no longer work in Contao 6.0. Use the "%s" attribute instead.', AsInsertTagFlag::class);
+								trigger_deprecation('contao/core-bundle', '5.2', 'Using the "insertTagFlags" hook has been deprecated and will no longer work in Contao 6. Use the "%s" attribute instead.', AsInsertTagFlag::class);
 
 								foreach ($GLOBALS['TL_HOOKS']['insertTagFlags'] as $callback)
 								{
@@ -341,7 +341,7 @@ class InsertTags extends Controller
 	 */
 	public function encodeHtmlAttributes($html)
 	{
-		if (strpos($html, '{{') === false && strpos($html, '}}') === false)
+		if (!str_contains($html, '{{') && !str_contains($html, '}}'))
 		{
 			return $html;
 		}
@@ -393,7 +393,7 @@ class InsertTags extends Controller
 
 			$tag = $matches[0][0];
 
-			if (strpos($tag, '{{') !== false || strpos($tag, '}}') !== false)
+			if (str_contains($tag, '{{') || str_contains($tag, '}}'))
 			{
 				// Encode insert tags
 				$tagPrefix = substr($tag, 0, $matches[1][1] - $matches[0][1] + \strlen($matches[1][0]));

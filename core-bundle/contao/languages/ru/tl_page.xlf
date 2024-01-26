@@ -97,6 +97,14 @@
         <source>Please choose the redirect type.</source>
         <target>Выберите тип перенаправления.</target>
       </trans-unit>
+      <trans-unit id="tl_page.alwaysForward.0">
+        <source>Always redirect</source>
+        <target>Всегда перенаправлять</target>
+      </trans-unit>
+      <trans-unit id="tl_page.alwaysForward.1">
+        <source>Redirect to the target page even if there are query or path parameters.</source>
+        <target>Перенаправлять на целевую страницу даже при наличии параметров запроса или пути.</target>
+      </trans-unit>
       <trans-unit id="tl_page.jumpTo.0">
         <source>Redirect page</source>
         <target>Перейти на страницу</target>
@@ -438,16 +446,16 @@
         <target>Публиковать с</target>
       </trans-unit>
       <trans-unit id="tl_page.start.1">
-        <source>If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Если хотите запретить показ страницы на веб-сайте до определенной даты/времени, введите её здесь. В противном случае оставьте поле пустым.</target>
+        <source>If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Если хотите запретить показ страницы на веб-сайте до определенной даты/времени, введите её здесь. В противном случае, оставьте поле пустым.</target>
       </trans-unit>
       <trans-unit id="tl_page.stop.0">
         <source>Show until</source>
         <target>Публиковать до</target>
       </trans-unit>
       <trans-unit id="tl_page.stop.1">
-        <source>If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Если хотите запретить показ страницы на веб-сайте после определенной даты/времени, введите её здесь. В противном случае оставьте поле пустым.</target>
+        <source>If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Если хотите запретить показ страницы на веб-сайте после определенной даты/времени, введите её здесь. В противном случае, оставьте поле пустым.</target>
       </trans-unit>
       <trans-unit id="tl_page.enforceTwoFactor.0">
         <source>Enforce two-factor authentication</source>
@@ -464,6 +472,38 @@
       <trans-unit id="tl_page.twoFactorJumpTo.1">
         <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
         <target>Выберите страницу, к которой будут перенаправлены посетители, чтобы настроить двухфакторную аутентификацию.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCsp.0">
+        <source>Enable CSP</source>
+        <target>Включить CSP</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCsp.1">
+        <source>Enable Content Security Policy for this website.</source>
+        <target>Включить Content Security Policy для этого веб-сайта.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.csp.0">
+        <source>Content Security Policy</source>
+        <target>Content Security Policy</target>
+      </trans-unit>
+      <trans-unit id="tl_page.csp.1">
+        <source>Here you can enter custom Content Security Policy directives.</source>
+        <target>Вы можете ввести собственные директивы Content Security Policy.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportOnly.0">
+        <source>Reporting only</source>
+        <target>Только отчетность</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportOnly.1">
+        <source>Only report policy violations without enforcing them.</source>
+        <target>Только сообщать о нарушениях политики, не применяя их.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportLog.0">
+        <source>Enable report logging</source>
+        <target>Включить ведение журнала отчетов</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportLog.1">
+        <source>Log CSP violations to the Contao system log.</source>
+        <target>Регистрировать нарушения CSP в системном журнале Contao.</target>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
@@ -545,6 +585,10 @@
         <source>Two-factor authentication</source>
         <target>Двухфакторная авторизация</target>
       </trans-unit>
+      <trans-unit id="tl_page.csp_legend">
+        <source>Content Security Policy</source>
+        <target>Content Security Policy</target>
+      </trans-unit>
       <trans-unit id="tl_page.permanent">
         <source>301 Permanent redirect</source>
         <target>301 Постоянное перенаправление</target>
@@ -593,7 +637,7 @@
         <source>Duplicate page ID %s</source>
         <target>Дублировать страницу ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.copyChilds">
+      <trans-unit id="tl_page.copyChildren">
         <source>Duplicate page ID %s with its subpages</source>
         <target>Дублировать страницу ID %s с подстраницами</target>
       </trans-unit>
@@ -601,9 +645,17 @@
         <source>Delete page ID %s</source>
         <target>Удалить страницу ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.toggle">
-        <source>Publish/unpublish page ID %s</source>
-        <target>Опубликовать/изъять страницу ID %s</target>
+      <trans-unit id="tl_page.toggle.0">
+        <source>Publish/unpublish page</source>
+        <target>Опубликовать/изъять страницу</target>
+      </trans-unit>
+      <trans-unit id="tl_page.toggle.1">
+        <source>Unpublish page ID %s</source>
+        <target>Отменить публикацию страницы ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.toggle.2">
+        <source>Publish page ID %s</source>
+        <target>Опубликовать страницу ID %s</target>
       </trans-unit>
       <trans-unit id="tl_page.pasteinto.0">
         <source>Paste at the top</source>

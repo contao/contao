@@ -70,7 +70,7 @@ class ModuleLostPassword extends Module
 		}
 
 		// Set new password
-		if (strncmp(Input::get('token'), 'pw-', 3) === 0)
+		if (str_starts_with(Input::get('token'), 'pw-'))
 		{
 			$this->setNewPassword();
 
@@ -260,11 +260,12 @@ class ModuleLostPassword extends Module
 					}
 				}
 
+				$objTarget = $this->objModel->getRelated('reg_jumpTo');
+
 				// Redirect to the jumpTo page
-				if (($objTarget = $this->objModel->getRelated('reg_jumpTo')) instanceof PageModel)
+				if ($objTarget instanceof PageModel)
 				{
-					/** @var PageModel $objTarget */
-					$this->redirect($objTarget->getFrontendUrl());
+					$this->redirect(System::getContainer()->get('contao.routing.content_url_generator')->generate($objTarget));
 				}
 
 				// Confirm
@@ -300,7 +301,7 @@ class ModuleLostPassword extends Module
 		$arrData = $objMember->row();
 		$arrData['activation'] = $optInToken->getIdentifier();
 		$arrData['domain'] = Idna::decode(Environment::get('host'));
-		$arrData['link'] = Idna::decode(Environment::get('url')) . Environment::get('requestUri') . ((strpos(Environment::get('requestUri'), '?') !== false) ? '&' : '?') . 'token=' . $optInToken->getIdentifier();
+		$arrData['link'] = Idna::decode(Environment::get('url')) . Environment::get('requestUri') . (str_contains(Environment::get('requestUri'), '?') ? '&' : '?') . 'token=' . $optInToken->getIdentifier();
 
 		// Send the token
 		$optInToken->send(

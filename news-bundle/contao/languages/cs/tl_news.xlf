@@ -65,6 +65,14 @@
         <source>Here you can add a custom meta description to overwrite the default page description.</source>
         <target>Zde můžete přidat vlastní popis události a tím přepsat výchozí popis, který se běžně vytváří z úvodníku události. Zobrazí se jen jako informace ve zdrojovém kódu dané stránky.</target>
       </trans-unit>
+      <trans-unit id="tl_news.canonicalLink.0">
+        <source>Canonical URL</source>
+        <target>Kanonické URL</target>
+      </trans-unit>
+      <trans-unit id="tl_news.canonicalLink.1">
+        <source>Here you can set a custom canonical URL like https://example.com/.</source>
+        <target>Zde můžete nastavit vlastní kanonickou URL jako https://example.com/.</target>
+      </trans-unit>
       <trans-unit id="tl_news.subheadline.0">
         <source>Subheadline</source>
         <target>Podnadpis</target>
@@ -185,14 +193,6 @@
         <source>Here you can enter one or more classes.</source>
         <target>Sem můžete zadat více tříd kaskádovitých stylů CSS (class)</target>
       </trans-unit>
-      <trans-unit id="tl_news.noComments.0">
-        <source>Disable comments</source>
-        <target>Vypnout komentáře</target>
-      </trans-unit>
-      <trans-unit id="tl_news.noComments.1">
-        <source>Do not allow comments for this particular news item.</source>
-        <target>Nepovolit vkládání komentářů pod novinky.</target>
-      </trans-unit>
       <trans-unit id="tl_news.featured.0">
         <source>Feature item</source>
         <target>Zvýraznit příspěvek</target>
@@ -214,7 +214,7 @@
         <target>Zobrazit od</target>
       </trans-unit>
       <trans-unit id="tl_news.start.1">
-        <source>If you want to prevent the news item from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the news item from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>Pokud chcete zabránit zobrazení příspěvku před jistým datem/časem, můžete to určit tady. Jinak ponechte dané pole prázdné.</target>
       </trans-unit>
       <trans-unit id="tl_news.stop.0">
@@ -222,8 +222,8 @@
         <target>Zobrazit do</target>
       </trans-unit>
       <trans-unit id="tl_news.stop.1">
-        <source>If you want to prevent the news item from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Pokud chcete zabránit zobrazení příspěvku před jistým datem/časem, můžete to určit tady. Jinak ponechte dané pole prázdné.</target>
+        <source>If you want to prevent the news item from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Pokud chcete zabránit zobrazení příspěvku po jistém datu/době, můžete to určit tady. Jinak ponechte dané pole prázdné.</target>
       </trans-unit>
       <trans-unit id="tl_news.tstamp.0">
         <source>Revision date</source>
@@ -305,13 +305,29 @@
         <source>Delete news item ID %s</source>
         <target>Smazat příspěvek ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.toggle">
-        <source>Publish/unpublish news item ID %s</source>
-        <target>Publikovat/nepublikovat příspěvek ID %s</target>
+      <trans-unit id="tl_news.toggle.0">
+        <source>Publish/unpublish news item</source>
+        <target>Zveřejnit / nezveřejnit příspěvek</target>
       </trans-unit>
-      <trans-unit id="tl_news.feature">
+      <trans-unit id="tl_news.toggle.1">
+        <source>Unpublish news item ID %s</source>
+        <target>Nezveřejnit novinku ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_news.toggle.2">
+        <source>Publish news item ID %s</source>
+        <target>Zveřejnit novinku ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_news.feature.0">
         <source>Feature/unfeature news item ID %s</source>
         <target>Zvýraznit/zrušit zvýraznění příspěvku ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_news.feature.1">
+        <source>Unfeature news item ID %s</source>
+        <target>Zrušit zvýraznění příspěvku ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_news.feature.2">
+        <source>Feature news item ID %s</source>
+        <target>Zvýraznit příspěvek ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>

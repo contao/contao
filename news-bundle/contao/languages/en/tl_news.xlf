@@ -50,6 +50,12 @@
       <trans-unit id="tl_news.description.1">
         <source>Here you can add a custom meta description to overwrite the default page description.</source>
       </trans-unit>
+      <trans-unit id="tl_news.canonicalLink.0">
+        <source>Canonical URL</source>
+      </trans-unit>
+      <trans-unit id="tl_news.canonicalLink.1">
+        <source>Here you can set a custom canonical URL like https://example.com/.</source>
+      </trans-unit>
       <trans-unit id="tl_news.subheadline.0">
         <source>Subheadline</source>
       </trans-unit>
@@ -139,12 +145,6 @@
       </trans-unit>
       <trans-unit id="tl_news.cssClass.1">
         <source>Here you can enter one or more classes.</source>
-      </trans-unit>
-      <trans-unit id="tl_news.noComments.0">
-        <source>Disable comments</source>
-      </trans-unit>
-      <trans-unit id="tl_news.noComments.1">
-        <source>Do not allow comments for this particular news item.</source>
       </trans-unit>
       <trans-unit id="tl_news.featured.0">
         <source>Feature item</source>

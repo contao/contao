@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_news.date.1">
         <source>Please enter the date according to the global date format.</source>
-        <target>Bitte geben Sie das Datum gemäß des globalen Datumsformats ein.</target>
+        <target>Bitte geben Sie das Datum gemäß dem globalen Datumsformat ein.</target>
       </trans-unit>
       <trans-unit id="tl_news.time.0">
         <source>Time</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_news.time.1">
         <source>Please enter the time according to the global time format.</source>
-        <target>Bitte geben Sie die Uhrzeit gemäß des globalen Zeitformats ein.</target>
+        <target>Bitte geben Sie die Uhrzeit gemäß dem globalen Zeitformat ein.</target>
       </trans-unit>
       <trans-unit id="tl_news.pageTitle.0">
         <source>Meta title</source>
@@ -64,6 +64,14 @@
       <trans-unit id="tl_news.description.1">
         <source>Here you can add a custom meta description to overwrite the default page description.</source>
         <target>Hier können Sie eine individuelle Meta-Beschreibung eingeben, um die Standard-Seitenbeschreibung zu überschreiben.</target>
+      </trans-unit>
+      <trans-unit id="tl_news.canonicalLink.0">
+        <source>Canonical URL</source>
+        <target>Kanonische URL</target>
+      </trans-unit>
+      <trans-unit id="tl_news.canonicalLink.1">
+        <source>Here you can set a custom canonical URL like https://example.com/.</source>
+        <target>Hier können Sie eine individuelle kanonische URL wie z. B. https://example.com/ setzen.</target>
       </trans-unit>
       <trans-unit id="tl_news.subheadline.0">
         <source>Subheadline</source>
@@ -185,14 +193,6 @@
         <source>Here you can enter one or more classes.</source>
         <target>Hier können Sie eine oder mehrere Klassen eingeben.</target>
       </trans-unit>
-      <trans-unit id="tl_news.noComments.0">
-        <source>Disable comments</source>
-        <target>Kommentare deaktivieren</target>
-      </trans-unit>
-      <trans-unit id="tl_news.noComments.1">
-        <source>Do not allow comments for this particular news item.</source>
-        <target>Die Kommentarfunktion für diesen Nachrichtenbeitrag deaktivieren.</target>
-      </trans-unit>
       <trans-unit id="tl_news.featured.0">
         <source>Feature item</source>
         <target>Beitrag hervorheben</target>
@@ -214,7 +214,7 @@
         <target>Anzeigen ab</target>
       </trans-unit>
       <trans-unit id="tl_news.start.1">
-        <source>If you want to prevent the news item from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the news item from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>Wenn Sie den Beitrag erst ab einem bestimmten Zeitpunkt auf der Webseite anzeigen möchten, können Sie diesen hier eingeben. Andernfalls lassen Sie das Feld leer. </target>
       </trans-unit>
       <trans-unit id="tl_news.stop.0">
@@ -222,7 +222,7 @@
         <target>Anzeigen bis</target>
       </trans-unit>
       <trans-unit id="tl_news.stop.1">
-        <source>If you want to prevent the news item from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the news item from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>Wenn Sie den Beitrag nur bis zu einem bestimmten Zeitpunkt auf der Webseite anzeigen möchten, können Sie diesen hier eingeben. Andernfalls lassen Sie das Feld leer. </target>
       </trans-unit>
       <trans-unit id="tl_news.tstamp.0">
@@ -305,13 +305,29 @@
         <source>Delete news item ID %s</source>
         <target>Beitrag ID %s löschen</target>
       </trans-unit>
-      <trans-unit id="tl_news.toggle">
-        <source>Publish/unpublish news item ID %s</source>
-        <target>Beitrag ID %s veröffentlichen/unveröffentlichen</target>
+      <trans-unit id="tl_news.toggle.0">
+        <source>Publish/unpublish news item</source>
+        <target>Beitrag veröffentlichen/unveröffentlichen</target>
       </trans-unit>
-      <trans-unit id="tl_news.feature">
+      <trans-unit id="tl_news.toggle.1">
+        <source>Unpublish news item ID %s</source>
+        <target>Beitrag ID %s unveröffentlichen</target>
+      </trans-unit>
+      <trans-unit id="tl_news.toggle.2">
+        <source>Publish news item ID %s</source>
+        <target>Beitrag ID %s veröffentlichen</target>
+      </trans-unit>
+      <trans-unit id="tl_news.feature.0">
         <source>Feature/unfeature news item ID %s</source>
         <target>Beitrag ID %s hervorheben/zurücksetzen</target>
+      </trans-unit>
+      <trans-unit id="tl_news.feature.1">
+        <source>Unfeature news item ID %s</source>
+        <target>Beitrag ID %s zurücksetzen</target>
+      </trans-unit>
+      <trans-unit id="tl_news.feature.2">
+        <source>Feature news item ID %s</source>
+        <target>Beitrag ID %s hervorheben</target>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>

@@ -260,7 +260,6 @@ class ModuleListing extends Module
 			}
 
 			$class = '';
-			$sort = 'asc';
 			$strField = $arrFields[$i];
 
 			// Field label
@@ -272,7 +271,7 @@ class ModuleListing extends Module
 			// Add a CSS class to the order_by column
 			if ($order_by == $arrFields[$i])
 			{
-				$sort = ($sort == 'asc') ? 'desc' : 'asc';
+				$sort =  ($sort == 'asc') ? 'desc' : 'asc';
 				$class = ' sorted ' . $sort;
 			}
 

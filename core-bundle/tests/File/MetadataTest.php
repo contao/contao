@@ -259,6 +259,21 @@ class MetadataTest extends TestCase
                     'caption' => 'caption',
                     'license' => 'https://creativecommons.org/licenses/by/4.0/',
                 ],
+                'VideoObject' => [
+                    'name' => 'title',
+                    'caption' => 'caption',
+                    'license' => 'https://creativecommons.org/licenses/by/4.0/',
+                ],
+                'DigitalDocument' => [
+                    'name' => 'title',
+                    'caption' => 'caption',
+                    'license' => 'https://creativecommons.org/licenses/by/4.0/',
+                ],
+                'SpreadsheetDigitalDocument' => [
+                    'name' => 'title',
+                    'caption' => 'caption',
+                    'license' => 'https://creativecommons.org/licenses/by/4.0/',
+                ],
             ],
             $metadata->getSchemaOrgData(),
         );

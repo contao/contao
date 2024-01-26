@@ -81,14 +81,6 @@
         <source>Please choose the files you want to attach.</source>
         <target>Wybierz plik, który chcesz załączyć do odpowiedzi.</target>
       </trans-unit>
-      <trans-unit id="tl_faq.noComments.0">
-        <source>Disable comments</source>
-        <target>Wyłącz komentarze</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.noComments.1">
-        <source>Do not allow comments for this particular FAQ.</source>
-        <target>Nie zezwalaj na komentarze dla tego FAQ.</target>
-      </trans-unit>
       <trans-unit id="tl_faq.published.0">
         <source>Publish the FAQ</source>
         <target>Opublikuj FAQ</target>
@@ -116,10 +108,6 @@
       <trans-unit id="tl_faq.enclosure_legend">
         <source>Enclosures</source>
         <target>Załacznik kanału RSS</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.expert_legend">
-        <source>Expert settings</source>
-        <target>Zaawansowane ustawienia</target>
       </trans-unit>
       <trans-unit id="tl_faq.publish_legend">
         <source>Publish settings</source>
@@ -153,9 +141,17 @@
         <source>Delete question ID %s</source>
         <target>Usuń pytanie ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq.toggle">
-        <source>Publish/unpublish question ID %s</source>
-        <target>Publikuj/nie publikuj pytania ID %s</target>
+      <trans-unit id="tl_faq.toggle.0">
+        <source>Publish/unpublish question</source>
+        <target>Publikuj/nie publikuj pytania</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.toggle.1">
+        <source>Unpublish question ID %s</source>
+        <target>Ukryj pytanie ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.toggle.2">
+        <source>Publish question ID %s</source>
+        <target>Opublikuj pytanie ID %s</target>
       </trans-unit>
       <trans-unit id="tl_faq.pasteafter.0">
         <source>Paste at the top</source>

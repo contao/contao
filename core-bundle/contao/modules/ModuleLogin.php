@@ -14,6 +14,7 @@ use Nyholm\Psr7\Uri;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvents;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
 
@@ -62,7 +63,7 @@ class ModuleLogin extends Module
 
 		// If the form was submitted and the credentials were wrong, take the target
 		// path from the submitted data as otherwise it would take the current page
-		if ($request && $request->isMethod('POST'))
+		if ($request?->isMethod('POST'))
 		{
 			$this->targetPath = base64_decode($request->request->get('_target_path'));
 		}
@@ -108,7 +109,7 @@ class ModuleLogin extends Module
 		$lastUsername = '';
 
 		// Only call the authentication utils if there is an active session to prevent starting an empty session
-		if ($request && $request->hasSession() && ($request->hasPreviousSession() || $request->getSession()->isStarted()))
+		if ($request?->hasSession() && ($request->hasPreviousSession() || $request->getSession()->isStarted()))
 		{
 			$authUtils = $container->get('security.authentication_utils');
 			$exception = $authUtils->getLastAuthenticationError();
@@ -179,8 +180,7 @@ class ModuleLogin extends Module
 		// Redirect to the jumpTo page
 		elseif (($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
 		{
-			/** @var PageModel $objTarget */
-			$strRedirect = $objTarget->getAbsoluteUrl();
+			$strRedirect = $container->get('contao.routing.content_url_generator')->generate($objTarget, array(), UrlGeneratorInterface::ABSOLUTE_URL);
 		}
 
 		$this->Template->formId = 'tl_login_' . $this->id;
@@ -201,6 +201,13 @@ class ModuleLogin extends Module
 			$this->Template->twoFactorAuthentication = $GLOBALS['TL_LANG']['MSC']['twoFactorAuthentication'];
 
 			return;
+		}
+
+		$pwResetPage = $this->objModel->getRelated('pwResetPage');
+
+		if ($pwResetPage instanceof PageModel)
+		{
+			$this->Template->pwResetUrl = System::getContainer()->get('contao.routing.content_url_generator')->generate($pwResetPage);
 		}
 
 		$this->Template->username = $GLOBALS['TL_LANG']['MSC']['username'];

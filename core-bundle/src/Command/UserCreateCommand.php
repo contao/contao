@@ -16,11 +16,9 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Intl\Locales;
-use Contao\UserGroupModel;
 use Contao\Validator;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Types;
-use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -31,10 +29,6 @@ use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 
-#[AsCommand(
-    name: 'contao:user:create',
-    description: 'Create a new Contao back end user.',
-)]
 class UserCreateCommand extends Command
 {
     private readonly array $locales;
@@ -53,6 +47,8 @@ class UserCreateCommand extends Command
     protected function configure(): void
     {
         $this
+            ->setName('contao:user:create')
+            ->setDescription('Create a new Contao back end user.')
             ->addOption('username', 'u', InputOption::VALUE_REQUIRED, 'The username to create')
             ->addOption('name', null, InputOption::VALUE_REQUIRED, 'The full name')
             ->addOption('email', null, InputOption::VALUE_REQUIRED, 'The e-mail address')
@@ -234,16 +230,7 @@ class UserCreateCommand extends Command
 
     private function getGroups(): array
     {
-        $this->framework->initialize();
-
-        $userGroupModel = $this->framework->getAdapter(UserGroupModel::class);
-        $groups = $userGroupModel->findAll();
-
-        if (null === $groups) {
-            return [];
-        }
-
-        return $groups->fetchEach('name');
+        return $this->connection->fetchAllKeyValue('SELECT id, name FROM tl_user_group');
     }
 
     private function persistUser(string $username, string $name, string $email, string $password, string $language, bool $isAdmin = false, array|null $groups = null, bool $pwChange = false): void

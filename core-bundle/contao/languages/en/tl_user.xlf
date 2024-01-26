@@ -134,6 +134,12 @@
       <trans-unit id="tl_user.fields.1">
         <source>Here you can select the allowed form field types.</source>
       </trans-unit>
+      <trans-unit id="tl_user.frontendModules.0">
+        <source>Front end modules</source>
+      </trans-unit>
+      <trans-unit id="tl_user.frontendModules.1">
+        <source>Here you can select the allowed front end module types.</source>
+      </trans-unit>
       <trans-unit id="tl_user.pagemounts.0">
         <source>Pagemounts</source>
       </trans-unit>

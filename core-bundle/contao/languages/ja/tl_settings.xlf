@@ -57,14 +57,6 @@
         <source>This overall limit takes effect if a user chooses the &quot;show all records&quot; option.</source>
         <target>「すべての項目を表示」のオプションを選択した場合の、項目の最大数となります。</target>
       </trans-unit>
-      <trans-unit id="tl_settings.doNotCollapse.0">
-        <source>Do not collapse elements</source>
-        <target>要素を折り畳まない</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.doNotCollapse.1">
-        <source>Do not collapse elements in the back end preview.</source>
-        <target>バックエンドのプレビューで要素を折り畳みません。</target>
-      </trans-unit>
       <trans-unit id="tl_settings.allowedTags.0">
         <source>Allowed HTML tags</source>
         <target>許可するHTMLタグ</target>

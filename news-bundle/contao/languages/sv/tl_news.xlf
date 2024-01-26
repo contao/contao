@@ -65,6 +65,14 @@
         <source>Here you can add a custom meta description to overwrite the default page description.</source>
         <target>Här kan du lägga till en anpassad metabeskrivning för att skriva över standardsidebeskrivningen.</target>
       </trans-unit>
+      <trans-unit id="tl_news.canonicalLink.0">
+        <source>Canonical URL</source>
+        <target>Kanonisk URL</target>
+      </trans-unit>
+      <trans-unit id="tl_news.canonicalLink.1">
+        <source>Here you can set a custom canonical URL like https://example.com/.</source>
+        <target>Här kan du ställa in en anpassad kanonisk URL som https://example.com/.</target>
+      </trans-unit>
       <trans-unit id="tl_news.subheadline.0">
         <source>Subheadline</source>
         <target>Underrubrik</target>
@@ -185,14 +193,6 @@
         <source>Here you can enter one or more classes.</source>
         <target>Här kan du ange en eller flera stilmallsklasser (CSS-klass)</target>
       </trans-unit>
-      <trans-unit id="tl_news.noComments.0">
-        <source>Disable comments</source>
-        <target>Avaktivera kommentarer</target>
-      </trans-unit>
-      <trans-unit id="tl_news.noComments.1">
-        <source>Do not allow comments for this particular news item.</source>
-        <target>Tillåt inte kommentarer från besökare för denna nyhetsartikel.</target>
-      </trans-unit>
       <trans-unit id="tl_news.featured.0">
         <source>Feature item</source>
         <target>Viktig nyhet</target>
@@ -214,16 +214,16 @@
         <target>Börja visa fr.o.m</target>
       </trans-unit>
       <trans-unit id="tl_news.start.1">
-        <source>If you want to prevent the news item from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Om du vill förhindra att nyheten visas på webbplatsen före ett visst datum / tid kan du ange den här. Lämna annars fältet tomt.</target>
+        <source>If you want to prevent the news item from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Om du vill förhindra att nyheten visas på hemsidan före ett visst datum/tid kan du ange det här. Annars lämnar du fältet tomt.</target>
       </trans-unit>
       <trans-unit id="tl_news.stop.0">
         <source>Show until</source>
         <target>Sluta visa fr.o.m</target>
       </trans-unit>
       <trans-unit id="tl_news.stop.1">
-        <source>If you want to prevent the news item from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Om du vill förhindra att nyheten visas på webbplatsen efter ett visst datum / tid kan du ange den här. Lämna annars fältet tomt.</target>
+        <source>If you want to prevent the news item from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Om du vill förhindra att nyheten visas på hemsidan efter ett visst datum/tid kan du ange det här. Annars lämnar du fältet tomt.</target>
       </trans-unit>
       <trans-unit id="tl_news.tstamp.0">
         <source>Revision date</source>
@@ -305,13 +305,29 @@
         <source>Delete news item ID %s</source>
         <target>Ta bort nyhet ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.toggle">
-        <source>Publish/unpublish news item ID %s</source>
-        <target>Publicera / avpublicera nyhet ID %s</target>
+      <trans-unit id="tl_news.toggle.0">
+        <source>Publish/unpublish news item</source>
+        <target>Publicera/avpublicera nyhet</target>
       </trans-unit>
-      <trans-unit id="tl_news.feature">
+      <trans-unit id="tl_news.toggle.1">
+        <source>Unpublish news item ID %s</source>
+        <target>Avpublicera nyhet ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_news.toggle.2">
+        <source>Publish news item ID %s</source>
+        <target>Publicera nyhet ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_news.feature.0">
         <source>Feature/unfeature news item ID %s</source>
         <target>Feature / unfeature nyhet ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_news.feature.1">
+        <source>Unfeature news item ID %s</source>
+        <target>Avmarkera nyhet ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_news.feature.2">
+        <source>Feature news item ID %s</source>
+        <target>Markera nyhet ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>

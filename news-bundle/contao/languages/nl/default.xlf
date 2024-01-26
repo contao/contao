@@ -21,14 +21,6 @@
         <source>Currently there are no news items.</source>
         <target>Momenteel zijn er geen nieuwsitems.</target>
       </trans-unit>
-      <trans-unit id="MSC.comments">
-        <source>Comments</source>
-        <target>Reacties</target>
-      </trans-unit>
-      <trans-unit id="MSC.commentCount">
-        <source>(comments: %s)</source>
-        <target>(reacties: %s)</target>
-      </trans-unit>
       <trans-unit id="MSC.news_items">
         <source>%d item(s)</source>
         <target>%d item(s)</target>
@@ -51,9 +43,11 @@
       </trans-unit>
       <trans-unit id="PTY.news_feed.0">
         <source>News feed</source>
+        <target>Nieuwsfeed</target>
       </trans-unit>
       <trans-unit id="PTY.news_feed.1">
         <source>Create an RSS, Atom or JSON feed from your news archives.</source>
+        <target>Maak een RSS, Atom of JSON -feed van uw nieuwsarchieven.</target>
       </trans-unit>
     </body>
   </file>

@@ -65,9 +65,17 @@
         <source>Delete media query ID %s</source>
         <target>Media-Query ID %s löschen</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.toggle">
-        <source>Activate/deactivate media query ID %s</source>
-        <target>Media-Query ID %s aktivieren/deaktivieren</target>
+      <trans-unit id="tl_image_size_item.toggle.0">
+        <source>Activate/deactivate media query</source>
+        <target>Media-Query aktivieren/deaktivieren</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.toggle.1">
+        <source>Deactivate media query ID %s</source>
+        <target>Media-Query ID %s deaktivieren</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.toggle.2">
+        <source>Activate media query ID %s</source>
+        <target>Media-Query ID %s aktivieren</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pasteafter.0">
         <source>Paste at the top</source>

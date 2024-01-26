@@ -25,6 +25,7 @@ $GLOBALS['TL_DCA']['tl_member_group'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
+				'tstamp' => 'index',
 				'disable,start,stop' => 'index'
 			)
 		)
@@ -46,15 +47,6 @@ $GLOBALS['TL_DCA']['tl_member_group'] = array
 			'fields'                  => array('name'),
 			'format'                  => '%s',
 			'label_callback'          => array('tl_member_group', 'addIcon')
-		),
-		'global_operations' => array
-		(
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
 		)
 	),
 

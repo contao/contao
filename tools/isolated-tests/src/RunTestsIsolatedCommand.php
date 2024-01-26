@@ -23,10 +23,6 @@ use Symfony\Component\Process\Process;
 
 class RunTestsIsolatedCommand extends Command
 {
-    protected static $defaultName = 'contao:run-tests-isolated';
-
-    protected static $defaultDescription = 'Runs the unit tests isolated from each other.';
-
     private readonly string|false $phpPath;
 
     public function __construct(private readonly string $projectDir)
@@ -38,18 +34,19 @@ class RunTestsIsolatedCommand extends Command
 
     protected function configure(): void
     {
-        parent::configure();
-
-        $this->addOption('depth', null, InputOption::VALUE_REQUIRED, '1 for test classes, 2 for test methods, 3 for every single provider data set', '3');
-
-        $this->setHelp(
-            <<<'EOT'
-                The command runs each unit test completely isolated from the others, starting
-                a new PHPUnit process for each test class, method, or data set. This gives us
-                "real" isolation rather than shared state, unlike the PHPUnit option
-                --process-isolation does.
-                EOT,
-        );
+        $this
+            ->setName('contao:run-tests-isolated')
+            ->setDescription('Runs the unit tests isolated from each other.')
+            ->addOption('depth', null, InputOption::VALUE_REQUIRED, '1 for test classes, 2 for test methods, 3 for every single provider data set', '3')
+            ->setHelp(
+                <<<'EOT'
+                    The command runs each unit test completely isolated from the others, starting
+                    a new PHPUnit process for each test class, method, or data set. This gives us
+                    "real" isolation rather than shared state, unlike the PHPUnit option
+                    --process-isolation does.
+                    EOT,
+            )
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

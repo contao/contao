@@ -181,6 +181,8 @@ class Dumper implements DumperInterface
             $filteredTables[] = $table;
         }
 
+        sort($filteredTables);
+
         return $filteredTables;
     }
 

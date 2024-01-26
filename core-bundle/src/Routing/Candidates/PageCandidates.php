@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing\Candidates;
 
 use Contao\CoreBundle\Routing\Page\PageRegistry;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Symfony\Component\HttpFoundation\Request;
@@ -104,7 +105,7 @@ class PageCandidates extends AbstractCandidates
 
         $queryBuilder
             ->orWhere('type IN (:types)')
-            ->setParameter('types', $types, Connection::PARAM_STR_ARRAY)
+            ->setParameter('types', $types, ArrayParameterType::STRING)
         ;
 
         return true;

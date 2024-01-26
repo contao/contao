@@ -26,7 +26,8 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 		(
 			'keys' => array
 			(
-				'id' => 'primary'
+				'id' => 'primary',
+				'tstamp' => 'index'
 			)
 		)
 	),
@@ -46,15 +47,6 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 			'fields'                  => array('tstamp', 'text'),
 			'format'                  => '<span class="label-date">[%s]</span> %s',
 			'label_callback'          => array('tl_log', 'colorize')
-		),
-		'global_operations' => array
-		(
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
 		),
 		'operations' => array
 		(

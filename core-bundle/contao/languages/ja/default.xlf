@@ -30,12 +30,12 @@
         <target>&quot;%s&quot;の欄は%d文字以下で入力してください。</target>
       </trans-unit>
       <trans-unit id="ERR.minval">
-        <source>Field &quot;%s&quot; has to be at least %d!</source>
-        <target>&quot;%s&quot;の欄は%d以上の値を入力してください。</target>
+        <source>Field &quot;%s&quot; has to be at least %s!</source>
+        <target>&quot;%s&quot;の欄は少なくとも%s以上でなければなりません。</target>
       </trans-unit>
       <trans-unit id="ERR.maxval">
-        <source>Field &quot;%s&quot; must not be greater than %d!</source>
-        <target>&quot;%s&quot;の欄は%d未満の値を入力してください。</target>
+        <source>Field &quot;%s&quot; must not be greater than %s!</source>
+        <target>&quot;%s&quot;の欄は%sを超えてはなりません。</target>
       </trans-unit>
       <trans-unit id="ERR.digit">
         <source>Please enter digits only!</source>
@@ -163,6 +163,7 @@
       </trans-unit>
       <trans-unit id="ERR.tooManyLoginAttempts">
         <source>Too many failed login attempts, please try again later.</source>
+        <target>ログインの失敗の回数が多すぎます、後でやり直してください。</target>
       </trans-unit>
       <trans-unit id="ERR.invalidLogin">
         <source>Login failed (note that usernames and passwords are case-sensitive)!</source>
@@ -366,9 +367,11 @@
       </trans-unit>
       <trans-unit id="ERR.noAdminEmailUrl">
         <source>There is no administrator e-mail address set in the &lt;a href=&quot;%s&quot; target=&quot;_top&quot;&gt;system settings&lt;/a&gt;.</source>
+        <target>&lt;a href=&quot;%s&quot; target=&quot;_top&quot;&gt;システム設定&lt;/a&gt;に管理者のメールアドレスが設定されていません。</target>
       </trans-unit>
       <trans-unit id="ERR.noAdminEmail">
         <source>There is no administrator e-mail address set, please contact the site administrator.</source>
+        <target>管理者の電子メールアドレスが設定されていません、サイトの管理者に連絡してください。</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -430,6 +433,14 @@
         <source>Generates an ordered or unordered list.</source>
         <target>順序付きや順序なしの箇条書きを生成します。</target>
       </trans-unit>
+      <trans-unit id="CTE.description_list.0">
+        <source>Description list</source>
+        <target>説明リスト</target>
+      </trans-unit>
+      <trans-unit id="CTE.description_list.1">
+        <source>Generates a description list with terms and details.</source>
+        <target>用語と詳細からなる説明リストを生成します。</target>
+      </trans-unit>
       <trans-unit id="CTE.table.0">
         <source>Table</source>
         <target>表</target>
@@ -438,29 +449,41 @@
         <source>Generates an optionally sortable table.</source>
         <target>並べ替えも可能な表を生成します。</target>
       </trans-unit>
-      <trans-unit id="CTE.accordion">
+      <trans-unit id="CTE.accordion.0">
         <source>Accordion</source>
         <target>アコーディオン</target>
       </trans-unit>
+      <trans-unit id="CTE.accordion.1">
+        <source>Generates an accordion.</source>
+        <target>アコーディオンを生成します。</target>
+      </trans-unit>
+      <trans-unit id="CTE.element_group.0">
+        <source>Element group</source>
+        <target>要素のグループ</target>
+      </trans-unit>
+      <trans-unit id="CTE.element_group.1">
+        <source>Generates a group of nested elements.</source>
+        <target>入れ子の要素のグループを生成します。</target>
+      </trans-unit>
       <trans-unit id="CTE.accordionStart.0">
-        <source>Wrapper start</source>
-        <target>ラッパーの開始</target>
+        <source>Accordion wrapper start</source>
+        <target>アコーディオンのラッパーの開始</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStart.1">
         <source>Generates the opening part of the accordion wrapper.</source>
         <target>アコーディオンのラッパーを開始する部分を生成します。</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.0">
-        <source>Wrapper stop</source>
-        <target>ラッパーの終了</target>
+        <source>Accordion wrapper stop</source>
+        <target>アコーディオンのラッパーの終了</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.1">
         <source>Generates the closing part of the accordion wrapper.</source>
         <target>アコーディオンのラッパーを終了する部分を生成します。</target>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.0">
-        <source>Single element</source>
-        <target>単一の要素</target>
+        <source>Accordion single element</source>
+        <target>単一のアコーディオンの要素</target>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.1">
         <source>Generates a single accordion element.</source>
@@ -490,21 +513,29 @@
         <source>Generates an element to insert a custom template.</source>
         <target>独自のテンプレートを挿入する要素を生成します。</target>
       </trans-unit>
+      <trans-unit id="CTE.swiper.0">
+        <source>Content slider</source>
+        <target>コンテントスライダー</target>
+      </trans-unit>
+      <trans-unit id="CTE.swiper.1">
+        <source>Generates a content slider element.</source>
+        <target>コンテントスライダーの要素を生成します。</target>
+      </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
         <target>コンテントスライダー</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStart.0">
-        <source>Wrapper start</source>
-        <target>ラッパーの開始</target>
+        <source>Slider wrapper start</source>
+        <target>スライダーのラッパーの開始</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStart.1">
         <source>Generates the opening part of the slider wrapper.</source>
         <target>スライダーのラッパーを開始する部分を生成します。</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStop.0">
-        <source>Wrapper stop</source>
-        <target>ラッパーの終了</target>
+        <source>Slider wrapper stop</source>
+        <target>スライダーのラッパーの終了</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStop.1">
         <source>Generates the closing part of the slider wrapper.</source>
@@ -638,6 +669,10 @@
         <source>Displays the teaser text of an article.</source>
         <target>アーティクルのティーザーのテキストを表示します。</target>
       </trans-unit>
+      <trans-unit id="CTE.legacy">
+        <source>Legacy elements</source>
+        <target>レガシーな要素</target>
+      </trans-unit>
       <trans-unit id="FFL.explanation.0">
         <source>Explanation</source>
         <target>説明</target>
@@ -748,7 +783,7 @@
       </trans-unit>
       <trans-unit id="FFL.captcha.1">
         <source>A simple math question to verify that the form is being submitted by a human (CAPTCHA).</source>
-        <target>(ボットのようなプログラムではなく)人間によってフォームが提出されたことを確認するための、やさしい計算問題です。(CAPTCHA)</target>
+        <target>フォームの提出が人によることを確認するための簡素な計算問題です。(CAPTCHA)</target>
       </trans-unit>
       <trans-unit id="FFL.submit.0">
         <source>Submit field</source>
@@ -1599,8 +1634,8 @@
         <target>バックエンドのキーボードのショートカット</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>&lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;キーボードのショートカット&lt;/a&gt;を使って、作業の流れを高速化する方法を学びましょう。</target>
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <target>&lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;キーボードのショートカット&lt;/a&gt;を使用した作業の流れを高速にする方法を学びましょう。</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -1958,6 +1993,10 @@
         <source>Metadata</source>
         <target>メタデータ</target>
       </trans-unit>
+      <trans-unit id="MSC.imageMetadata">
+        <source>%s metadata</source>
+        <target>メタデータの%s</target>
+      </trans-unit>
       <trans-unit id="MSC.versioning">
         <source>Version management</source>
         <target>バージョン管理</target>
@@ -2036,6 +2075,7 @@
       </trans-unit>
       <trans-unit id="MSC.copyMultiple">
         <source>Copy repeatedly</source>
+        <target>繰り返してコピー</target>
       </trans-unit>
       <trans-unit id="MSC.aliasSelected">
         <source>Generate aliases</source>
@@ -2123,6 +2163,7 @@
       </trans-unit>
       <trans-unit id="MSC.guests">
         <source>Guests (not logged in)</source>
+        <target>ゲスト(ログインなし)</target>
       </trans-unit>
       <trans-unit id="MSC.updateMode">
         <source>Update mode</source>
@@ -2315,6 +2356,10 @@
       <trans-unit id="MSC.quicklink">
         <source>Quick link</source>
         <target>クイックリンク</target>
+      </trans-unit>
+      <trans-unit id="MSC.lostPassword">
+        <source>Forgot your password?</source>
+        <target>パスワードを忘れましたか?</target>
       </trans-unit>
       <trans-unit id="MSC.username">
         <source>Username</source>
@@ -2666,12 +2711,15 @@
       </trans-unit>
       <trans-unit id="MSC.favorites">
         <source>Favorites</source>
+        <target>お気に入り</target>
       </trans-unit>
       <trans-unit id="MSC.favorite">
         <source>Save URL as favorite</source>
+        <target>URLをお気に入りとして保存</target>
       </trans-unit>
       <trans-unit id="MSC.editFavorites">
         <source>Edit favorites</source>
+        <target>お気に入りを編集</target>
       </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
@@ -2801,14 +2849,21 @@
         <source>visible from %s to %s</source>
         <target>%sから%sまで表示</target>
       </trans-unit>
+      <trans-unit id="MSC.editImageSize">
+        <source>Edit the image size</source>
+        <target>画像の大きさを編集</target>
+      </trans-unit>
       <trans-unit id="MSC.booleanNot">
         <source>Not %s</source>
+        <target>%sでない</target>
       </trans-unit>
       <trans-unit id="MSC.darkMode">
         <source>Dark mode</source>
+        <target>ダークモード</target>
       </trans-unit>
       <trans-unit id="MSC.lightMode">
         <source>Light mode</source>
+        <target>ライトモード</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2946,6 +3001,22 @@
         <source>Expand or collapse all nodes</source>
         <target>すべてのノードの展開または折り畳み</target>
       </trans-unit>
+      <trans-unit id="DCA.expandNodes.0">
+        <source>Expand all</source>
+        <target>すべて展開</target>
+      </trans-unit>
+      <trans-unit id="DCA.expandNodes.1">
+        <source>Expand all nodes</source>
+        <target>すべてのノードを展開</target>
+      </trans-unit>
+      <trans-unit id="DCA.collapseNodes.0">
+        <source>Collapse all</source>
+        <target>すべて折り畳み</target>
+      </trans-unit>
+      <trans-unit id="DCA.collapseNodes.1">
+        <source>Collapse all nodes</source>
+        <target>すべてのノードを折り畳む</target>
+      </trans-unit>
       <trans-unit id="DCA.new.0">
         <source>New</source>
         <target>新規作成</target>
@@ -2982,9 +3053,17 @@
         <source>Edit the child elements of element ID %s</source>
         <target>ID %sの要素の子の要素を編集</target>
       </trans-unit>
-      <trans-unit id="DCA.toggle">
-        <source>Publish/unpublish element ID %s</source>
-        <target>ID %sの要素の公開/非公開を切り替え</target>
+      <trans-unit id="DCA.toggle.0">
+        <source>Publish/unpublish element</source>
+        <target>要素の公開または非公開</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggle.1">
+        <source>Unpublish element ID %s</source>
+        <target>ID %sの要素を非公開</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggle.2">
+        <source>Publish element ID %s</source>
+        <target>ID %sの要素を公開</target>
       </trans-unit>
       <trans-unit id="DCA.pasteinto.0">
         <source>Paste at the top</source>

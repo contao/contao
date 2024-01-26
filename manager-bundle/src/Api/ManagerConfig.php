@@ -41,7 +41,7 @@ class ManagerConfig
         }
 
         if ($this->filesystem->exists($path = Path::join($projectDir, 'config/contao-manager.yml'))) {
-            trigger_deprecation('contao/manager-bundle', '5.0', 'Using a contao-manager.yml file has been deprecated and will no longer work in Contao 6.0. Use a contao-manager.yaml file instead.');
+            trigger_deprecation('contao/manager-bundle', '5.0', 'Using a contao-manager.yml file has been deprecated and will no longer work in Contao 6. Use a contao-manager.yaml file instead.');
 
             $this->configFile = $path;
         }

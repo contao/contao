@@ -27,10 +27,16 @@ final class ContaoCorePermissions
     public const USER_CAN_EDIT_PAGE_HIERARCHY = 'contao_user.can_edit_page_hierarchy';
 
     /**
-     * Access is granted if the current user can can delete the given page.
+     * Access is granted if the current user can delete the given page.
      * Subject must be a page ID, a PageModel or a tl_page record as array.
      */
     public const USER_CAN_DELETE_PAGE = 'contao_user.can_delete_page';
+
+    /**
+     * Access is granted if the current user can delete the given fron end module.
+     * Subject must be a module ID, a FrontendModule or a tl_module record as array.
+     */
+    public const USER_CAN_DELETE_FRONTEND_MODULE = 'contao_user.can_delete_frontend_module';
 
     /**
      * Access is granted if the current user can edit articles of the given page.
@@ -105,6 +111,12 @@ final class ContaoCorePermissions
     public const USER_CAN_ACCESS_ELEMENT_TYPE = 'contao_user.elements';
 
     /**
+     * Access is granted if the current user can access the front end module type.
+     * Subject must be a front end module type (e.g. "navigation").
+     */
+    public const USER_CAN_ACCESS_FRONTEND_MODULE_TYPE = 'contao_user.frontendModules';
+
+    /**
      * Access is granted if the current user can access the form field type.
      * Subject can be a content element type (e.g. "hidden") or null to
      * check if any field type is allowed.
@@ -172,10 +184,16 @@ final class ContaoCorePermissions
     public const USER_CAN_ACCESS_IMAGE_SIZE = 'contao_user.imageSizes';
 
     /**
-     * Access is granted if the current user can access the form.
-     * Subject must be a form ID from tl_form.
+     * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+     *             use USER_CAN_EDIT_FORM instead
      */
     public const USER_CAN_ACCESS_FORM = 'contao_user.forms';
+
+    /**
+     * Access is granted if the current user can edit the given form.
+     * Subject must be a form ID from tl_form.
+     */
+    public const USER_CAN_EDIT_FORM = 'contao_user.forms';
 
     /**
      * Access is granted if the current user can create forms.

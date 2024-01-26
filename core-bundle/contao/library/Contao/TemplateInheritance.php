@@ -226,7 +226,7 @@ trait TemplateInheritance
 			if ($this->arrBlocks[$name] != "[[TL_PARENT_$nonce]]")
 			{
 				// Output everything before the first TL_PARENT tag
-				if (strpos($this->arrBlocks[$name], "[[TL_PARENT_$nonce]]") !== false)
+				if (str_contains($this->arrBlocks[$name], "[[TL_PARENT_$nonce]]"))
 				{
 					list($content) = explode("[[TL_PARENT_$nonce]]", $this->arrBlocks[$name], 2);
 					echo $content;
@@ -281,7 +281,7 @@ trait TemplateInheritance
 			if ($this->arrBlocks[$name] != "[[TL_PARENT_$nonce]]")
 			{
 				// Output everything after the first TL_PARENT tag
-				if (strpos($this->arrBlocks[$name], "[[TL_PARENT_$nonce]]") !== false)
+				if (str_contains($this->arrBlocks[$name], "[[TL_PARENT_$nonce]]"))
 				{
 					list(, $content) = explode("[[TL_PARENT_$nonce]]", $this->arrBlocks[$name], 2);
 					echo $content;

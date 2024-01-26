@@ -15,12 +15,14 @@ namespace Contao\NewsBundle\EventListener;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\NewsModel;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @internal
  */
+#[AsEventListener]
 class PreviewUrlCreateListener
 {
     public function __construct(

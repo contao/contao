@@ -31,6 +31,7 @@ use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
+use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Imagine\Exception\RuntimeException as ImagineRuntimeException;
 use Imagine\Gd\Imagine;
@@ -131,6 +132,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('contao.backend.custom_js', $config['backend']['custom_js']);
         $container->setParameter('contao.backend.badge_title', $config['backend']['badge_title']);
         $container->setParameter('contao.backend.route_prefix', $config['backend']['route_prefix']);
+        $container->setParameter('contao.backend.crawl_concurrency', $config['backend']['crawl_concurrency']);
         $container->setParameter('contao.intl.locales', $config['intl']['locales']);
         $container->setParameter('contao.intl.enabled_locales', $config['intl']['enabled_locales']);
         $container->setParameter('contao.intl.countries', $config['intl']['countries']);
@@ -147,6 +149,8 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleBackup($config, $container);
         $this->handleFallbackPreviewProvider($config, $container);
         $this->handleCronConfig($config, $container);
+        $this->handleSecurityConfig($config, $container);
+        $this->handleCspConfig($config, $container);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -156,6 +160,11 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container
             ->registerForAutoconfiguration(MigrationInterface::class)
             ->addTag('contao.migration')
+        ;
+
+        $container
+            ->registerForAutoconfiguration(ContentUrlResolverInterface::class)
+            ->addTag('contao.content_url_resolver')
         ;
 
         $container->registerAttributeForAutoconfiguration(
@@ -236,19 +245,23 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
     private function handleMessengerConfig(array $config, ContainerBuilder $container): void
     {
-        if (!$container->hasDefinition('contao.cron.messenger')) {
+        if (
+            !$container->hasDefinition('contao.cron.supervise_workers')
+            || !$container->hasDefinition('contao.command.supervise_workers')
+        ) {
             return;
         }
 
-        // No workers defined -> remove our cron job
+        // No workers defined -> remove our cron job and the command
         if (0 === \count($config['messenger']['workers'])) {
-            $container->removeDefinition('contao.cron.messenger');
+            $container->removeDefinition('contao.cron.supervise_workers');
+            $container->removeDefinition('contao.command.supervise_workers');
 
             return;
         }
 
-        $cron = $container->getDefinition('contao.cron.messenger');
-        $cron->setArgument(2, $config['messenger']['workers']);
+        $command = $container->getDefinition('contao.command.supervise_workers');
+        $command->setArgument(3, $config['messenger']['workers']);
     }
 
     private function handleSearchConfig(array $config, ContainerBuilder $container): void
@@ -302,8 +315,8 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         }
 
         $factory = $container->getDefinition('contao.crawl.escargot.factory');
-        $factory->setArgument(2, $config['crawl']['additional_uris']);
-        $factory->setArgument(3, $config['crawl']['default_http_client_options']);
+        $factory->setArgument(3, $config['crawl']['additional_uris']);
+        $factory->setArgument(4, $config['crawl']['default_http_client_options']);
     }
 
     /**
@@ -507,5 +520,34 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         }
 
         return Path::join($projectDir, $publicDir);
+    }
+
+    private function handleSecurityConfig(array $config, ContainerBuilder $container): void
+    {
+        if (!$container->hasDefinition('contao.listener.transport_security_header')) {
+            return;
+        }
+
+        if (false === $config['security']['hsts']['enabled']) {
+            $container->removeDefinition('contao.listener.transport_security_header');
+
+            return;
+        }
+
+        $listener = $container->getDefinition('contao.listener.transport_security_header');
+        $listener->setArgument(1, $config['security']['hsts']['ttl']);
+    }
+
+    private function handleCspConfig(array $config, ContainerBuilder $container): void
+    {
+        if ($container->hasDefinition('contao.routing.response_context.csp_handler_factory')) {
+            $factory = $container->getDefinition('contao.routing.response_context.csp_handler_factory');
+            $factory->setArgument(1, $config['csp']['max_header_size']);
+        }
+
+        if ($container->hasDefinition('contao.csp.wysiwyg_style_processor')) {
+            $processor = $container->getDefinition('contao.csp.wysiwyg_style_processor');
+            $processor->setArgument(0, $config['csp']['allowed_inline_styles']);
+        }
     }
 }

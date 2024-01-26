@@ -282,7 +282,7 @@ class Installer extends Controller
 						', ',
 						array_map(
 							static function ($item) use ($quote) {
-								if (strpos($item, '(') === false)
+								if (!str_contains($item, '('))
 								{
 									return $quote($item);
 								}

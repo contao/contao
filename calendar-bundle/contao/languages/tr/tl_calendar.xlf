@@ -17,70 +17,6 @@
         <source>Please choose the event reader page to which visitors will be redirected when clicking an event.</source>
         <target>Ziyaretçiler bir etkinliğe tıkladığında yönlendirilecekleri etkinlik okuyucu sayfasını seçin.</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.allowComments.0">
-        <source>Enable comments</source>
-        <target>Yorum yapılabilsin</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.allowComments.1">
-        <source>Allow visitors to comment events.</source>
-        <target>Bu seçenek etkinleştirildiğinde, ziyaretçiler etkinliklere yorum yapabilir.</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.notify.0">
-        <source>Notify</source>
-        <target>Bildir</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.notify.1">
-        <source>Please choose who to notify when comments are added.</source>
-        <target>Lütfen yorum yapıldığında bildirim gönderilecek kişiyi seçin.</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.sortOrder.0">
-        <source>Sort order</source>
-        <target>Sıralama</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.sortOrder.1">
-        <source>By default, comments are sorted ascending, starting with the oldest one.</source>
-        <target>Yorumlar, varsayılan olarak eskiden yeniye doğru sıralanır.</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.perPage.0">
-        <source>Comments per page</source>
-        <target>Bir sayfadaki yorum sayısı</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.perPage.1">
-        <source>Number of comments per page. Set to 0 to disable pagination.</source>
-        <target>Bir sayfada görüntülenecek yorum sayısını yazın. Sayfalandırmayı devre dışı bırakmak için 0 yazın.</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.moderate.0">
-        <source>Moderate comments</source>
-        <target>Yorumlar onaylansın</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.moderate.1">
-        <source>Approve comments before they are published on the website.</source>
-        <target>Bu seçenek etkinleştirildiğinde, web sitesinde yayınlanmadan önce yorumların onaylanması gerekir.</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.bbcode.0">
-        <source>Allow BBCode</source>
-        <target>BBCode kullanılabilsin</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.bbcode.1">
-        <source>Allow visitors to format their comments with BBCode.</source>
-        <target>Bu seçenek etkinleştirildiğinde, ziyaretçiler yorumlarında BBCode kullanabilir.</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.requireLogin.0">
-        <source>Require login to comment</source>
-        <target>Oturum açmadan yorum yapılamasın</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.requireLogin.1">
-        <source>Allow only authenticated members to create comments.</source>
-        <target>Bu seçenek etkinleştirildiğinde, yalnızca oturum açmış kullanıcılar yorum yapabilir.</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.disableCaptcha.0">
-        <source>Disable spam protection</source>
-        <target>Spam koruması devre dışı bırakılsın</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.disableCaptcha.1">
-        <source>Use this option only if you have limited comments to authenticated users.</source>
-        <target>Bu seçeneği yalnızca oturum açmış kullanıcılar yorum yapabiliyorsa etkinleştirin.</target>
-      </trans-unit>
       <trans-unit id="tl_calendar.protected.0">
         <source>Protect calendar</source>
         <target>Takvimi koru</target>
@@ -109,10 +45,6 @@
         <source>Title and redirect page</source>
         <target>Başlık ve yönlendirme sayfası</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.comments_legend">
-        <source>Comments</source>
-        <target>Yorumlar</target>
-      </trans-unit>
       <trans-unit id="tl_calendar.protected_legend">
         <source>Access protection</source>
         <target>Erişim koruması</target>
@@ -127,11 +59,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar.notify_author">
         <source>Author of the event</source>
-        <target>Etkinliği oluşturan</target>
+        <target>Etkinliğin sahibi</target>
       </trans-unit>
       <trans-unit id="tl_calendar.notify_both">
         <source>Author and system administrator</source>
-        <target>Yazar ve sistem yöneticisi</target>
+        <target>Sahibi ve sistem yöneticisi</target>
       </trans-unit>
       <trans-unit id="tl_calendar.source_teaser">
         <source>Event teasers</source>
@@ -159,23 +91,23 @@
       </trans-unit>
       <trans-unit id="tl_calendar.show">
         <source>Show the details of calendar ID %s</source>
-        <target>%s kodlu takvimin ayrıntılarını görüntüle</target>
+        <target>%s kimlikli takvimin ayrıntılarını görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_calendar.edit">
         <source>Edit calendar ID %s</source>
-        <target>%s kodlu takvimi düzenle</target>
+        <target>%s kimlikli takvimi düzenle</target>
       </trans-unit>
       <trans-unit id="tl_calendar.children">
         <source>Edit the events of calendar ID %s</source>
-        <target>%s kodlu takvimin etkinliklerini düzenle</target>
+        <target>%s kimlikli takvimin ayarlarını düzenle</target>
       </trans-unit>
       <trans-unit id="tl_calendar.copy">
         <source>Duplicate calendar ID %s</source>
-        <target>%s kodlu takvimi kopyala</target>
+        <target>%s kimlikli takvimi kopyala</target>
       </trans-unit>
       <trans-unit id="tl_calendar.delete">
         <source>Delete calendar ID %s</source>
-        <target>%s kodlu takvimi sil</target>
+        <target>%s kimlikli takvimi sil</target>
       </trans-unit>
     </body>
   </file>

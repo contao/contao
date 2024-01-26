@@ -37,7 +37,9 @@ services:
             - '%contao.preview_script%'
             - '@contao.security.frontend_preview_authenticator'
             - '@event_dispatcher'
-            - '@security.authorization_checker'
+            - '@security.helper'
+            - '@security.authenticator.firewall_aware_login_link_handler'
+            - '@uri_signer'
         tags:
             - controller.service_arguments
 
@@ -64,16 +66,25 @@ services:
         tags:
             - controller.service_arguments
 
+    Contao\CoreBundle\Controller\ContentElement\AccordionController:
+        arguments:
+            - '@contao.framework'
+
     Contao\CoreBundle\Controller\ContentElement\CodeController: ~
+
+    Contao\CoreBundle\Controller\ContentElement\DescriptionListController: ~
 
     Contao\CoreBundle\Controller\ContentElement\DownloadsController:
         arguments:
             - '@security.helper'
             - '@contao.filesystem.virtual.files'
-            - '@contao.filesystem.file_download_helper'
-            - '@contao.image.preview_factory'
-            - '@contao.image.studio'
-            - '%kernel.project_dir%'
+        tags:
+            - controller.service_arguments
+            - { name: container.service_subscriber, id: contao.filesystem.file_download_helper }
+            - { name: container.service_subscriber, id: contao.image.preview_factory }
+            - { name: container.service_subscriber, id: contao.image.studio }
+
+    Contao\CoreBundle\Controller\ContentElement\ElementGroupController: ~
 
     Contao\CoreBundle\Controller\ContentElement\HeadlineController: ~
 
@@ -99,6 +110,8 @@ services:
         arguments:
             - '@contao.filesystem.virtual.files'
 
+    Contao\CoreBundle\Controller\ContentElement\SwiperController: ~
+
     Contao\CoreBundle\Controller\ContentElement\TableController: ~
 
     Contao\CoreBundle\Controller\ContentElement\TemplateController: ~
@@ -116,6 +129,13 @@ services:
     Contao\CoreBundle\Controller\ContentElement\VideoController:
         arguments:
             - '@contao.image.studio'
+
+    Contao\CoreBundle\Controller\CspReporterController:
+        arguments:
+            - '@contao.framework'
+            - '@?nelmio_security.csp_reporter_controller'
+        tags:
+            - controller.service_arguments
 
     Contao\CoreBundle\Controller\FaviconController:
         arguments:
@@ -167,6 +187,10 @@ services:
         arguments:
             - '@contao.framework'
 
+    Contao\CoreBundle\Controller\Page\RedirectPageController:
+        arguments:
+            - '@contao.routing.content_url_generator'
+
     Contao\CoreBundle\Controller\Page\RootPageController:
         arguments:
             - '@?logger'
@@ -181,6 +205,11 @@ services:
         tags:
             - controller.service_arguments
 
+    Contao\CoreBundle\Controller\RedirectController:
+        public: true
+        arguments:
+            - '@Symfony\Bundle\FrameworkBundle\Controller\RedirectController'
+
     Contao\CoreBundle\Controller\RobotsTxtController:
         arguments:
             - '@contao.routing.page_finder'
@@ -192,5 +221,6 @@ services:
         arguments:
             - '@contao.routing.page_registry'
             - '@contao.routing.page_finder'
+            - '@contao.routing.content_url_generator'
         tags:
             - controller.service_arguments

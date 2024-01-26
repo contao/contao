@@ -122,7 +122,7 @@ class ArrayUtil
 		}
 
 		// Append the left-over images at the end
-		return array_merge(array_values($arrOrder), array_values($arrItems));
+		return array(...array_values($arrOrder), ...array_values($arrItems));
 	}
 
 	public static function flattenToString(array $arrArray): string
@@ -143,5 +143,10 @@ class ArrayUtil
 		}
 
 		return implode(', ', $result);
+	}
+
+	public static function mapRecursive(callable $fn, array $arr): array
+	{
+		return array_map(static fn ($item) => \is_array($item) ? self::mapRecursive($fn, $item) : $fn($item), $arr);
 	}
 }

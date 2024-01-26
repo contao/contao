@@ -8,11 +8,14 @@ $GoogleAnalyticsId = 'XXXXX';
 if ('XXXXX' != $GoogleAnalyticsId && !$this->hasAuthenticatedBackendUser()): ?>
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=<?= $GoogleAnalyticsId ?>"></script>
-<script>
+<script<?= $this->attr()->setIfExists('nonce', $this->nonce('script-src')) ?>>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', '<?= $GoogleAnalyticsId ?>', {'anonymize_ip': true});
 </script>
 
-<?php endif; ?>
+<?php
+
+$this->addCspSource('script-src', 'www.googletagmanager.com');
+endif;

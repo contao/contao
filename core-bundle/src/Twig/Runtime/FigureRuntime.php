@@ -41,11 +41,11 @@ final class FigureRuntime implements RuntimeExtensionInterface
      * @param int|string|array|PictureConfiguration|null $size          A picture size configuration or reference
      * @param array<string, mixed>                       $configuration Configuration for the FigureBuilder
      *
-     * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
+     * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
      */
     public function renderFigure(FilesModel|ImageInterface|int|string $from, PictureConfiguration|array|int|string|null $size, array $configuration = [], string $template = '@ContaoCore/Image/Studio/figure.html.twig'): string|null
     {
-        trigger_deprecation('contao/core-bundle', '5.0', 'Using the "contao_figure" Twig function has been deprecated and will no longer work in Contao 6.0 use the "figure" Twig function instead.');
+        trigger_deprecation('contao/core-bundle', '5.0', 'Using the "contao_figure" Twig function has been deprecated and will no longer work in Contao 6. Use the "figure" Twig function instead.');
 
         return $this->figureRenderer->render($from, $size, $configuration, $template);
     }

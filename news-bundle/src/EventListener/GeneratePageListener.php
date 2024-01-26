@@ -12,19 +12,26 @@ declare(strict_types=1);
 
 namespace Contao\NewsBundle\EventListener;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\LayoutModel;
 use Contao\NewsBundle\Controller\Page\NewsFeedController;
 use Contao\PageModel;
 use Contao\StringUtil;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @internal
  */
+#[AsHook('generatePage')]
 class GeneratePageListener
 {
-    public function __construct(private readonly ContaoFramework $framework)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly ContentUrlGenerator $urlGenerator,
+    ) {
     }
 
     /**
@@ -51,8 +58,11 @@ class GeneratePageListener
                 continue;
             }
 
-            // TODO: Use ResponseContext, once it supports appending to <head>
-            $GLOBALS['TL_HEAD'][] = $this->generateFeedTag($feed->getAbsoluteUrl(), $feed->feedFormat, $feed->title);
+            try {
+                // TODO: Use ResponseContext, once it supports appending to <head>
+                $GLOBALS['TL_HEAD'][] = $this->generateFeedTag($this->urlGenerator->generate($feed, [], UrlGeneratorInterface::ABSOLUTE_URL), $feed->feedFormat, $feed->title);
+            } catch (ExceptionInterface) {
+            }
         }
     }
 

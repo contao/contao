@@ -15,18 +15,22 @@ namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 use Contao\ArticleModel;
 use Contao\Config;
 use Contao\ContentModel;
+use Contao\Controller;
 use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
+use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\File\MetadataBag;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
+use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
@@ -39,15 +43,19 @@ use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
+use Contao\CoreBundle\Twig\Runtime\CspRuntime;
 use Contao\CoreBundle\Twig\Runtime\FormatterRuntime;
+use Contao\CoreBundle\Twig\Runtime\FragmentRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
+use Contao\CoreBundle\Twig\Runtime\StringRuntime;
 use Contao\DcaExtractor;
 use Contao\DcaLoader;
 use Contao\Input;
 use Contao\InsertTags;
 use Contao\PageModel;
+use Contao\StringUtil;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Highlight\Highlighter;
@@ -57,6 +65,7 @@ use Symfony\Bridge\Twig\Extension\AssetExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Cache\Adapter\NullAdapter;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -104,11 +113,13 @@ class ContentElementTestCase extends TestCase
      *
      * @param-out array<string, array<int|string, string>> $responseContextData
      */
-    protected function renderWithModelData(AbstractContentElementController $controller, array $modelData, string|null $template = null, bool $asEditorView = false, array|null &$responseContextData = null): Response
+    protected function renderWithModelData(AbstractContentElementController $controller, array $modelData, string|null $template = null, bool $asEditorView = false, array|null &$responseContextData = null, ContainerBuilder|null $adjustedContainer = null, array $nestedFragments = []): Response
     {
+        $framework = $this->getDefaultFramework($nestedFragments);
+
         // Setup Twig environment
         $loader = $this->getContaoFilesystemLoader();
-        $environment = $this->getEnvironment($loader);
+        $environment = $this->getEnvironment($loader, $framework);
 
         // Setup container with helper services
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
@@ -119,14 +130,27 @@ class ContentElementTestCase extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.cache.entity_tags', $this->createMock(EntityCacheTags::class));
+        $container->set('contao.routing.content_url_generator', $this->createMock(ContentUrlGenerator::class));
         $container->set('contao.routing.scope_matcher', $scopeMatcher);
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
         $container->set('contao.twig.filesystem_loader', $loader);
         $container->set('contao.twig.interop.context_factory', new ContextFactory());
         $container->set('twig', $environment);
-        $container->set('contao.framework', $this->getDefaultFramework());
+        $container->set('contao.framework', $framework);
         $container->set('monolog.logger.contao.error', $this->createMock(LoggerInterface::class));
         $container->set('fragment.handler', $this->createMock(FragmentHandler::class));
+
+        if ($adjustedContainer) {
+            $container->merge($adjustedContainer);
+
+            foreach ($adjustedContainer->getServiceIds() as $serviceId) {
+                if ('service_container' === $serviceId) {
+                    continue;
+                }
+
+                $container->set($serviceId, $adjustedContainer->get($serviceId));
+            }
+        }
 
         $controller->setContainer($container);
         System::setContainer($container);
@@ -165,7 +189,10 @@ class ContentElementTestCase extends TestCase
             'type' => $modelData['type'],
         ]);
 
-        $response = $controller(new Request(), $model, 'main');
+        $request = new Request();
+        $request->attributes->set('nestedFragments', $nestedFragments);
+
+        $response = $controller($request, $model, 'main');
 
         // Record response context data
         $responseContextData = array_filter([
@@ -243,7 +270,7 @@ class ContentElementTestCase extends TestCase
         return $loader;
     }
 
-    protected function getEnvironment(ContaoFilesystemLoader $contaoFilesystemLoader): Environment
+    protected function getEnvironment(ContaoFilesystemLoader $contaoFilesystemLoader, ContaoFramework $framework): Environment
     {
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
@@ -279,14 +306,16 @@ class ContentElementTestCase extends TestCase
         // Runtime loaders
         $insertTagParser = $this->getDefaultInsertTagParser();
         $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
-        $framework = $this->getDefaultFramework();
 
         $environment->addRuntimeLoader(
             new FactoryRuntimeLoader([
+                FragmentRuntime::class => static fn () => new FragmentRuntime($framework),
                 InsertTagRuntime::class => static fn () => new InsertTagRuntime($insertTagParser),
                 HighlighterRuntime::class => static fn () => new HighlighterRuntime(),
                 SchemaOrgRuntime::class => static fn () => new SchemaOrgRuntime($responseContextAccessor),
                 FormatterRuntime::class => static fn () => new FormatterRuntime($framework),
+                CspRuntime::class => static fn () => new CspRuntime($responseContextAccessor, new WysiwygStyleProcessor([])),
+                StringRuntime::class => static fn () => new StringRuntime($framework),
             ]),
         );
 
@@ -321,10 +350,10 @@ class ContentElementTestCase extends TestCase
                                 ),
                             ],
                         ),
-                        self::FILE_IMAGE2 => new FilesystemItem(true, 'image2.jpg'),
-                        self::FILE_IMAGE3 => new FilesystemItem(true, 'image3.jpg'),
-                        self::FILE_VIDEO_MP4 => new FilesystemItem(true, 'video.mp4'),
-                        self::FILE_VIDEO_OGV => new FilesystemItem(true, 'video.ogv'),
+                        self::FILE_IMAGE2 => new FilesystemItem(true, 'image2.jpg', null, null, 'image/jpeg'),
+                        self::FILE_IMAGE3 => new FilesystemItem(true, 'image3.jpg', null, null, 'image/jpeg'),
+                        self::FILE_VIDEO_MP4 => new FilesystemItem(true, 'video.mp4', null, null, 'video/mp4'),
+                        self::FILE_VIDEO_OGV => new FilesystemItem(true, 'video.ogv', null, null, 'video/ogg'),
                     ];
 
                     return $storageMap[$uuid->toRfc4122()] ?? null;
@@ -415,7 +444,7 @@ class ContentElementTestCase extends TestCase
         return $insertTagParser;
     }
 
-    protected function getDefaultFramework(): ContaoFramework
+    protected function getDefaultFramework(array $nestedFragments = []): ContaoFramework
     {
         $GLOBALS['TL_LANG'] = [
             'MSC' => [
@@ -435,6 +464,7 @@ class ContentElementTestCase extends TestCase
                         ['key' => '*', 'value' => 'data-*,id,class'],
                         ['key' => 'a', 'value' => 'href,rel,target'],
                     ]),
+                    'allowedDownload' => 'jpg,txt',
                 ][$key] ?? null,
             )
         ;
@@ -476,11 +506,26 @@ class ContentElementTestCase extends TestCase
             })
         ;
 
+        $controllerAdapter = $this->mockAdapter(['getContentElement']);
+        $controllerAdapter
+            ->method('getContentElement')
+            ->with($this->isInstanceOf(ContentElementReference::class))
+            ->willReturnOnConsecutiveCalls(...array_map(static fn ($el) => $el->getContentModel()->type, $nestedFragments))
+        ;
+
+        $stringUtil = $this->mockAdapter(['encodeEmail']);
+        $stringUtil
+            ->method('encodeEmail')
+            ->willReturnArgument(0)
+        ;
+
         return $this->mockContaoFramework([
             Config::class => $configAdapter,
             Input::class => $inputAdapter,
             PageModel::class => $pageAdapter,
             ArticleModel::class => $articleAdapter,
+            Controller::class => $controllerAdapter,
+            StringUtil::class => $stringUtil,
         ]);
     }
 }

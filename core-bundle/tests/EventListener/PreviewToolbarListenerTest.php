@@ -12,9 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener;
 
+use Contao\CoreBundle\Csp\CspParser;
 use Contao\CoreBundle\EventListener\PreviewToolbarListener;
+use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandlerFactory;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
+use Nelmio\SecurityBundle\ContentSecurityPolicy\PolicyManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -40,6 +43,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext(),
+            new CspHandlerFactory(new CspParser(new PolicyManager())),
         );
 
         $response = new Response($content);
@@ -80,6 +84,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext(),
+            new CspHandlerFactory(new CspParser(new PolicyManager())),
         );
 
         $listener($event);
@@ -104,6 +109,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext(),
+            new CspHandlerFactory(new CspParser(new PolicyManager())),
         );
 
         $listener($event);
@@ -128,6 +134,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext(),
+            new CspHandlerFactory(new CspParser(new PolicyManager())),
         );
 
         $listener($event);
@@ -152,6 +159,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext(),
+            new CspHandlerFactory(new CspParser(new PolicyManager())),
         );
 
         $listener($event);
@@ -176,6 +184,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext(),
+            new CspHandlerFactory(new CspParser(new PolicyManager())),
         );
 
         $listener($event);
@@ -203,6 +212,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext(),
+            new CspHandlerFactory(new CspParser(new PolicyManager())),
         );
 
         $listener($event);
@@ -243,6 +253,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext(),
+            new CspHandlerFactory(new CspParser(new PolicyManager())),
         );
 
         $listener($event);
@@ -283,6 +294,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext(),
+            new CspHandlerFactory(new CspParser(new PolicyManager())),
         );
 
         $listener($event);
@@ -307,6 +319,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext(),
+            new CspHandlerFactory(new CspParser(new PolicyManager())),
         );
 
         $listener($event);
@@ -331,6 +344,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext(),
+            new CspHandlerFactory(new CspParser(new PolicyManager())),
         );
 
         $listener($event);

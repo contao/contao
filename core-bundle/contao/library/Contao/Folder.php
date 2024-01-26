@@ -450,7 +450,7 @@ class Folder extends System
 
 		foreach (static::scan($this->strRootDir . '/' . $this->strFolder, true) as $strFile)
 		{
-			if (strncmp($strFile, '.', 1) === 0)
+			if (str_starts_with($strFile, '.'))
 			{
 				continue;
 			}
@@ -509,7 +509,7 @@ class Folder extends System
 	public static function scan($strFolder, $blnUncached=false): array
 	{
 		// Add a trailing slash
-		if (substr($strFolder, -1, 1) != '/')
+		if (!str_ends_with($strFolder, '/'))
 		{
 			$strFolder .= '/';
 		}

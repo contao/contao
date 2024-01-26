@@ -14,6 +14,7 @@ namespace Contao\CalendarBundle\Picker;
 
 use Contao\CalendarEventsModel;
 use Contao\CalendarModel;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Contao\CoreBundle\Picker\AbstractInsertTagPickerProvider;
@@ -24,6 +25,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+#[AsPickerProvider(priority: 96)]
 class EventPickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
 {
     use FrameworkAwareTrait;
@@ -84,7 +86,7 @@ class EventPickerProvider extends AbstractInsertTagPickerProvider implements Dca
     {
         $params = ['do' => 'calendar'];
 
-        if (!$config || !$config->getValue() || !$this->supportsValue($config)) {
+        if (!$config?->getValue() || !$this->supportsValue($config)) {
             return $params;
         }
 

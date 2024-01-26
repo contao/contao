@@ -74,9 +74,9 @@ class ModuleFaqReader extends Module
 		/** @var PageModel $objPage */
 		global $objPage;
 
-		if ($this->overviewPage)
+		if ($this->overviewPage && ($overviewPage = PageModel::findById($this->overviewPage)))
 		{
-			$this->Template->referer = PageModel::findById($this->overviewPage)->getFrontendUrl();
+			$this->Template->referer = System::getContainer()->get('contao.routing.content_url_generator')->generate($overviewPage);
 			$this->Template->back = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['faqOverview'];
 		}
 
@@ -93,7 +93,7 @@ class ModuleFaqReader extends Module
 		// Overwrite the page metadata (see #2853, #4955 and #87)
 		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
-		if ($responseContext && $responseContext->has(HtmlHeadBag::class))
+		if ($responseContext?->has(HtmlHeadBag::class))
 		{
 			/** @var HtmlHeadBag $htmlHeadBag */
 			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);

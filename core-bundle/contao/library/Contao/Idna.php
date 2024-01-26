@@ -82,7 +82,7 @@ class Idna
 			return '';
 		}
 
-		if (strpos($strEmail, '@') === false)
+		if (!str_contains($strEmail, '@'))
 		{
 			return $strEmail; // see #6241
 		}
@@ -98,7 +98,7 @@ class Idna
 		$strQuery = null;
 
 		// Strip the query string (see #2149)
-		if (strpos($strHost, '?') !== false)
+		if (str_contains($strHost, '?'))
 		{
 			list($strHost, $strQuery) = explode('?', $strHost, 2);
 		}
@@ -127,7 +127,7 @@ class Idna
 			return '';
 		}
 
-		if (strpos($strEmail, '@') === false)
+		if (!str_contains($strEmail, '@'))
 		{
 			return $strEmail; // see #6241
 		}
@@ -143,7 +143,7 @@ class Idna
 		$strQuery = null;
 
 		// Strip the query string (see #2149)
-		if (strpos($strHost, '?') !== false)
+		if (str_contains($strHost, '?'))
 		{
 			list($strHost, $strQuery) = explode('?', $strHost, 2);
 		}
@@ -175,13 +175,13 @@ class Idna
 		}
 
 		// Empty anchor (see #3555) or insert tag
-		if ($strUrl == '#' || strncmp($strUrl, '{{', 2) === 0)
+		if ($strUrl == '#' || str_starts_with($strUrl, '{{'))
 		{
 			return $strUrl;
 		}
 
 		// E-mail address
-		if (strncmp($strUrl, 'mailto:', 7) === 0)
+		if (str_starts_with($strUrl, 'mailto:'))
 		{
 			return static::encodeEmail($strUrl);
 		}
@@ -194,10 +194,7 @@ class Idna
 		}
 
 		// Scheme
-		if (isset($arrUrl['scheme']))
-		{
-			$arrUrl['scheme'] .= ((substr($strUrl, \strlen($arrUrl['scheme']), 3) == '://') ? '://' : ':');
-		}
+		$arrUrl['scheme'] .= ((substr($strUrl, \strlen($arrUrl['scheme']), 3) == '://') ? '://' : ':');
 
 		// User
 		if (isset($arrUrl['user']))
@@ -267,13 +264,13 @@ class Idna
 		}
 
 		// Empty anchor (see #3555) or insert tag
-		if ($strUrl == '#' || strncmp($strUrl, '{{', 2) === 0)
+		if ($strUrl == '#' || str_starts_with($strUrl, '{{'))
 		{
 			return $strUrl;
 		}
 
 		// E-mail address
-		if (strncmp($strUrl, 'mailto:', 7) === 0)
+		if (str_starts_with($strUrl, 'mailto:'))
 		{
 			return static::decodeEmail($strUrl);
 		}
@@ -286,10 +283,7 @@ class Idna
 		}
 
 		// Scheme
-		if (isset($arrUrl['scheme']))
-		{
-			$arrUrl['scheme'] .= ((substr($strUrl, \strlen($arrUrl['scheme']), 3) == '://') ? '://' : ':');
-		}
+		$arrUrl['scheme'] .= ((substr($strUrl, \strlen($arrUrl['scheme']), 3) == '://') ? '://' : ':');
 
 		// User
 		if (isset($arrUrl['user']))

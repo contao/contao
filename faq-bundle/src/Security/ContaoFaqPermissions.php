@@ -14,6 +14,8 @@ namespace Contao\FaqBundle\Security;
 
 final class ContaoFaqPermissions
 {
+    public const USER_CAN_ACCESS_MODULE = 'contao_user.modules.faq';
+
     public const USER_CAN_EDIT_CATEGORY = 'contao_user.faqs';
 
     public const USER_CAN_CREATE_CATEGORIES = 'contao_user.faqp.create';

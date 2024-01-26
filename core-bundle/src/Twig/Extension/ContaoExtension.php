@@ -27,6 +27,8 @@ use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNode;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
 use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
+use Contao\CoreBundle\Twig\Runtime\ContentUrlRuntime;
+use Contao\CoreBundle\Twig\Runtime\CspRuntime;
 use Contao\CoreBundle\Twig\Runtime\FigureRuntime;
 use Contao\CoreBundle\Twig\Runtime\FormatterRuntime;
 use Contao\CoreBundle\Twig\Runtime\FragmentRuntime;
@@ -37,6 +39,7 @@ use Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime;
 use Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime;
 use Contao\CoreBundle\Twig\Runtime\SanitizerRuntime;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
+use Contao\CoreBundle\Twig\Runtime\StringRuntime;
 use Contao\CoreBundle\Twig\Runtime\UrlRuntime;
 use Contao\FrontendTemplateTrait;
 use Contao\Template;
@@ -46,6 +49,8 @@ use Twig\Extension\AbstractExtension;
 use Twig\Extension\CoreExtension;
 use Twig\Extension\EscaperExtension;
 use Twig\Extension\GlobalsInterface;
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Node;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
@@ -155,7 +160,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 'include',
                 function (Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = false, $sandboxed = false /* we need named arguments here */) use ($includeFunctionCallable) {
                     $args = \func_get_args();
-                    $args[2] = DynamicIncludeTokenParser::adjustTemplateName((string) $template, $this->hierarchy);
+                    $args[2] = DynamicIncludeTokenParser::adjustTemplateName($template, $this->hierarchy);
 
                     return $includeFunctionCallable(...$args);
                 },
@@ -210,6 +215,23 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 [FragmentRuntime::class, 'renderContent'],
                 ['is_safe' => ['html']],
             ),
+            // Overwrites the 'csp_nonce' method from nelmio/security-bundle
+            new TwigFunction(
+                'csp_nonce',
+                [CspRuntime::class, 'getNonce'],
+            ),
+            new TwigFunction(
+                'csp_source',
+                [CspRuntime::class, 'addSource'],
+            ),
+            new TwigFunction(
+                'csp_hash',
+                [CspRuntime::class, 'addHash'],
+            ),
+            new TwigFunction(
+                'content_url',
+                [ContentUrlRuntime::class, 'generate'],
+            ),
         ];
     }
 
@@ -231,27 +253,42 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             return twig_escape_filter($env, $string, $strategy, $charset, $autoescape);
         };
 
+        $twigEscaperFilterIsSafe = static function (Node $filterArgs): array {
+            // Our escaper strategy variants that tolerate input encoding are
+            // also safe in the original context (e.g. for the filter argument
+            // 'contao_html' we will return ['contao_html', 'html']).
+            if (
+                ($expression = iterator_to_array($filterArgs)[0] ?? null) instanceof ConstantExpression
+                && \in_array($value = $expression->getAttribute('value'), ['contao_html', 'contao_html_attr'], true)
+            ) {
+                return [$value, substr($value, 7)];
+            }
+
+            return twig_escape_filter_is_safe($filterArgs);
+        };
+
         return [
-            // Overwrite the "escape" filter to additionally support chunked text
+            // Overwrite the "escape" filter to additionally support chunked
+            // text and our escaper strategies
             new TwigFilter(
                 'escape',
                 $escaperFilter,
-                ['needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe'],
+                ['needs_environment' => true, 'is_safe_callback' => $twigEscaperFilterIsSafe],
             ),
             new TwigFilter(
                 'e',
                 $escaperFilter,
-                ['needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe'],
+                ['needs_environment' => true, 'is_safe_callback' => $twigEscaperFilterIsSafe],
             ),
             new TwigFilter(
                 'insert_tag',
                 [InsertTagRuntime::class, 'replaceInsertTags'],
-                ['preserves_safety' => ['html']],
+                ['needs_context' => true, 'preserves_safety' => ['html']],
             ),
             new TwigFilter(
                 'insert_tag_raw',
                 [InsertTagRuntime::class, 'replaceInsertTagsChunkedRaw'],
-                ['preserves_safety' => ['html']],
+                ['needs_context' => true, 'preserves_safety' => ['html']],
             ),
             new TwigFilter(
                 'highlight',
@@ -270,6 +307,16 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 'sanitize_html',
                 [SanitizerRuntime::class, 'sanitizeHtml'],
                 ['is_safe' => ['html']],
+            ),
+            new TwigFilter(
+                'csp_inline_styles',
+                [CspRuntime::class, 'inlineStyles'],
+                ['preserves_safety' => ['html']],
+            ),
+            new TwigFilter(
+                'encode_email',
+                [StringRuntime::class, 'encodeEmail'],
+                ['preserves_safety' => ['contao_html', 'html']],
             ),
         ];
     }

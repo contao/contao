@@ -20,4 +20,5 @@ enum SortMode: string
     case pathNaturalDescending = 'name_desc';
     case lastModifiedAscending = 'date_asc';
     case lastModifiedDescending = 'date_desc';
+    case mediaTypePriority = 'media_type_priority';
 }

@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\Routing\Exception\ExceptionInterface;
+
 /**
  * Front end module "newsletter unsubscribe".
  *
@@ -182,7 +184,7 @@ class ModuleUnsubscribe extends Module
 
 		$arrChannels = array_intersect($arrChannels, $this->nl_channels); // see #3240
 
-		if (empty($arrChannels) || !\is_array($arrChannels))
+		if (empty($arrChannels))
 		{
 			$this->Template->mclass = 'error';
 			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['noChannels'];
@@ -281,8 +283,14 @@ class ModuleUnsubscribe extends Module
 		// Redirect to the jumpTo page
 		if (($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
 		{
-			/** @var PageModel $objTarget */
-			$this->redirect($objTarget->getFrontendUrl());
+			try
+			{
+				$this->redirect(System::getContainer()->get('contao.routing.content_url_generator')->generate($objTarget));
+			}
+			catch (ExceptionInterface)
+			{
+				// Ignore if target URL cannot be generated and reload the page
+			}
 		}
 
 		System::getContainer()->get('request_stack')->getSession()->getFlashBag()->set('nl_removed', $GLOBALS['TL_LANG']['MSC']['nl_removed']);

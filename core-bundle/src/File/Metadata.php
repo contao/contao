@@ -145,18 +145,27 @@ class Metadata
             $this->schemaOrgJsonLd['AudioObject']['name'] = $this->getTitle();
             $this->schemaOrgJsonLd['ImageObject']['name'] = $this->getTitle();
             $this->schemaOrgJsonLd['MediaObject']['name'] = $this->getTitle();
+            $this->schemaOrgJsonLd['VideoObject']['name'] = $this->getTitle();
+            $this->schemaOrgJsonLd['DigitalDocument']['name'] = $this->getTitle();
+            $this->schemaOrgJsonLd['SpreadsheetDigitalDocument']['name'] = $this->getTitle();
         }
 
         if ($this->has(self::VALUE_CAPTION)) {
             $this->schemaOrgJsonLd['AudioObject']['caption'] = $this->getCaption();
             $this->schemaOrgJsonLd['ImageObject']['caption'] = $this->getCaption();
             $this->schemaOrgJsonLd['MediaObject']['caption'] = $this->getCaption();
+            $this->schemaOrgJsonLd['VideoObject']['caption'] = $this->getCaption();
+            $this->schemaOrgJsonLd['DigitalDocument']['caption'] = $this->getCaption();
+            $this->schemaOrgJsonLd['SpreadsheetDigitalDocument']['caption'] = $this->getCaption();
         }
 
         if ($this->has(self::VALUE_LICENSE)) {
             $this->schemaOrgJsonLd['AudioObject']['license'] = $this->getLicense();
             $this->schemaOrgJsonLd['ImageObject']['license'] = $this->getLicense();
             $this->schemaOrgJsonLd['MediaObject']['license'] = $this->getLicense();
+            $this->schemaOrgJsonLd['VideoObject']['license'] = $this->getLicense();
+            $this->schemaOrgJsonLd['DigitalDocument']['license'] = $this->getLicense();
+            $this->schemaOrgJsonLd['SpreadsheetDigitalDocument']['license'] = $this->getLicense();
         }
     }
 }

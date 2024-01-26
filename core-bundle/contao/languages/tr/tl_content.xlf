@@ -17,6 +17,14 @@
         <source>Here you can add a headline to the content element.</source>
         <target>Buradan bir manşet içerik bileşeni ekleyebilirsiniz.</target>
       </trans-unit>
+      <trans-unit id="tl_content.sectionHeadline.0">
+        <source>Section headline</source>
+        <target>Bölüm başlığı</target>
+      </trans-unit>
+      <trans-unit id="tl_content.sectionHeadline.1">
+        <source>Here you can add a section headline, e.g. a tab title or accordion header.</source>
+        <target>Buradan bir sekme başlığı ya da akordiyon başlığı gibi bir bölüm başlığı ekleyebilirsiniz.</target>
+      </trans-unit>
       <trans-unit id="tl_content.text.0">
         <source>Text</source>
         <target>Metin</target>
@@ -43,11 +51,11 @@
       </trans-unit>
       <trans-unit id="tl_content.inline.0">
         <source>Show in browser</source>
-        <target>Web tarayıcıda görüntülensin</target>
+        <target>Tarayıcıda görüntülensin</target>
       </trans-unit>
       <trans-unit id="tl_content.inline.1">
         <source>Show the file in the browser instead of opening the download dialog.</source>
-        <target>Bu seçenek etkinleştirildiğinde, dosya web tarayıcıda görüntülenir, indirme penceresi açılmaz.</target>
+        <target>Bu seçenek etkinleştirildiğinde, dosya tarayıcıda görüntülenir, indirme penceresi açılmaz.</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.0">
         <source>Overwrite metadata</source>
@@ -95,7 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_content.fullsize.1">
         <source>Open the full-size image in a lightbox or the link in a new browser window.</source>
-        <target>Tam boyutlu görüntüyü bir lightbox içinde ya da bağlantıyı yeni bir web tarayıcı penceresinde açar.</target>
+        <target>Tam boyutlu görüntüyü bir lightbox içinde ya da bağlantıyı yeni bir tarayıcı penceresinde açar.</target>
       </trans-unit>
       <trans-unit id="tl_content.floating.0">
         <source>Image alignment</source>
@@ -143,7 +151,7 @@
       </trans-unit>
       <trans-unit id="tl_content.listitems.1">
         <source>If JavaScript is disabled, make sure to save your changes before modifying the order.</source>
-        <target>JavaScript devre dışı bırakılmışsa, sıralamayı değiştirmeden önce değişikliklerinizi kaydettiğinizden emin olun.</target>
+        <target>JavaScript etkisizleştirilmişse, sıralamayı değiştirmeden önce değişikliklerinizi kaydettiğinizden emin olun.</target>
       </trans-unit>
       <trans-unit id="tl_content.tableitems.0">
         <source>Table items</source>
@@ -151,7 +159,7 @@
       </trans-unit>
       <trans-unit id="tl_content.tableitems.1">
         <source>If JavaScript is disabled, make sure to save your changes before modifying the order.</source>
-        <target>JavaScript devre dışı bırakılmışsa, sıralamayı değiştirmeden önce değişikliklerinizi kaydettiğinizden emin olun.</target>
+        <target>JavaScript etkisizleştirilmişse, sıralamayı değiştirmeden önce değişikliklerinizi kaydettiğinizden emin olun.</target>
       </trans-unit>
       <trans-unit id="tl_content.summary.0">
         <source>Table summary</source>
@@ -166,16 +174,16 @@
         <target>Tablo başlığı ekle</target>
       </trans-unit>
       <trans-unit id="tl_content.thead.1">
-        <source>Make the first row of the table the table header.</source>
-        <target>Tablonun ilk satırını tablo başlığı olarak ayarlayın.</target>
+        <source>Make the first row the table header.</source>
+        <target>İlk satırı tablo başlığı olarak ayarlayın.</target>
       </trans-unit>
       <trans-unit id="tl_content.tfoot.0">
         <source>Add table footer</source>
         <target>Tablo alt bilgisi ekle</target>
       </trans-unit>
       <trans-unit id="tl_content.tfoot.1">
-        <source>Make the last row of the table the table footer.</source>
-        <target>Tablonun son satırını tablo alt bilgisi olarak ayarlayın.</target>
+        <source>Make the last row the table footer.</source>
+        <target>Son satırı tablo alt bilgisi olarak ayarlayın.</target>
       </trans-unit>
       <trans-unit id="tl_content.tleft.0">
         <source>Use row headers</source>
@@ -208,6 +216,14 @@
       <trans-unit id="tl_content.sortOrder.1">
         <source>Please choose the sort order.</source>
         <target>Lütfen sıralamayı seçin.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.closeSections.0">
+        <source>Close all sections</source>
+        <target>Tüm bölümleri kapat</target>
+      </trans-unit>
+      <trans-unit id="tl_content.closeSections.1">
+        <source>Do not open the first section by default.</source>
+        <target>Varsayılan olarak ilk bölüm açılmasın.</target>
       </trans-unit>
       <trans-unit id="tl_content.mooType.0">
         <source>Operation mode</source>
@@ -310,8 +326,8 @@
         <target>Kalıp verileri</target>
       </trans-unit>
       <trans-unit id="tl_content.data.1">
-        <source>These values are available as &lt;code&gt;$this-&gt;data&lt;/code&gt; in the template.</source>
-        <target>Bu veriler kalıpta &lt;code&gt;$this-&gt;data&lt;/code&gt; şeklinde kullanılabilir.</target>
+        <source>These values are available as &lt;code&gt;$this-&gt;keys&lt;/code&gt; in the template.</source>
+        <target>Bu veriler kalıpta &lt;code&gt;$this-&gt;keys&lt;/code&gt; şeklinde kullanılabilir.</target>
       </trans-unit>
       <trans-unit id="tl_content.linkTitle.0">
         <source>Link text</source>
@@ -320,6 +336,14 @@
       <trans-unit id="tl_content.linkTitle.1">
         <source>The link text will be displayed instead of the target URL.</source>
         <target>Hedef adres yerine bağlantı metnini görüntüler.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.overwriteLink.0">
+        <source>Overwrite link</source>
+        <target>Değiştirilecek bağlantı</target>
+      </trans-unit>
+      <trans-unit id="tl_content.overwriteLink.1">
+        <source>Set a custom link text and link title.</source>
+        <target>Özel bir bağlantı metni ve başlığı ayarlayın.</target>
       </trans-unit>
       <trans-unit id="tl_content.titleText.0">
         <source>Link title</source>
@@ -383,7 +407,7 @@
       </trans-unit>
       <trans-unit id="tl_content.perPage.1">
         <source>The number of items per page. Set to 0 to disable pagination.</source>
-        <target>Bir sayfada görüntülenecek öge sayısını yazın. Sayfalandırmayı devre dışı bırakmak için 0 yazın.</target>
+        <target>Bir sayfada görüntülenecek öge sayısını yazın. Sayfalandırmayı etkisizleştirmek için 0 yazın.</target>
       </trans-unit>
       <trans-unit id="tl_content.sortBy.0">
         <source>Order by</source>
@@ -427,19 +451,19 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube.0">
         <source>YouTube ID</source>
-        <target>YouTube kodu</target>
+        <target>YouTube kimliği</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube.1">
         <source>Please enter the YouTube video ID (e.g. &lt;em&gt;j0sYj4wxyk0&lt;/em&gt;).</source>
-        <target>YouTube görüntüsünün kodunu yazın (&lt;em&gt;j0sYj4wxyk0&lt;/em&gt; gibi).</target>
+        <target>YouTube görüntüsünün kimliğini yazın (&lt;em&gt;j0sYj4wxyk0&lt;/em&gt; gibi).</target>
       </trans-unit>
       <trans-unit id="tl_content.vimeo.0">
         <source>Vimeo ID</source>
-        <target>Vimeo kodu</target>
+        <target>Vimeo kimliği</target>
       </trans-unit>
       <trans-unit id="tl_content.vimeo.1">
         <source>Please enter the Vimeo video ID (e.g. &lt;em&gt;275028611&lt;/em&gt;).</source>
-        <target>Vimeo görüntüsünün kodu (&lt;em&gt;275028611&lt;/em&gt; gibi).</target>
+        <target>Vimeo görüntüsünün kimliği (&lt;em&gt;275028611&lt;/em&gt; gibi).</target>
       </trans-unit>
       <trans-unit id="tl_content.posterSRC.0">
         <source>Preview image</source>
@@ -471,7 +495,7 @@
       </trans-unit>
       <trans-unit id="tl_content.playerPreload.1">
         <source>Here you can suggest how the browser shall preload the video.</source>
-        <target>Buradan web tarayıcının görüntüyü önceden nasıl yükleyeceğini önerebilirsiniz.</target>
+        <target>Buradan tarayıcının görüntüyü önceden nasıl yükleyeceğini önerebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_content.playerStart.0">
         <source>Start at</source>
@@ -527,7 +551,7 @@
       </trans-unit>
       <trans-unit id="tl_content.sliderDelay.1">
         <source>The time in milliseconds between slides (1000 = 1s). Set to 0 to disable auto sliding.</source>
-        <target>Milisaniye (1000 = 1s) cinsinden slaytlar arasındaki süre. Otomatik kaydırmayı devre dışı bırakmak için 0 olarak ayarlayın.</target>
+        <target>Milisaniye (1000 = 1s) cinsinden slaytlar arasındaki süre. Otomatik kaydırmayı etkisizleştirmek için 0 olarak ayarlayın.</target>
       </trans-unit>
       <trans-unit id="tl_content.sliderSpeed.0">
         <source>Transition speed</source>
@@ -611,11 +635,11 @@
       </trans-unit>
       <trans-unit id="tl_content.cssID.0">
         <source>CSS ID/class</source>
-        <target>CSS kodu/sınıfı</target>
+        <target>CSS kimliği/sınıfı</target>
       </trans-unit>
       <trans-unit id="tl_content.cssID.1">
         <source>Here you can set an ID and one or more classes.</source>
-        <target>Buradan bir kod ve bir ya da birkaç sınıf ayarlayabilirsiniz.</target>
+        <target>Buradan bir kimlik ve bir ya da birkaç sınıf ayarlayabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_content.invisible.0">
         <source>Invisible</source>
@@ -623,14 +647,14 @@
       </trans-unit>
       <trans-unit id="tl_content.invisible.1">
         <source>Hide the element on the website.</source>
-        <target>Bileşeni web sitesinde gizler.</target>
+        <target>Bileşeni sitede gizler.</target>
       </trans-unit>
       <trans-unit id="tl_content.start.0">
         <source>Show from</source>
         <target>Görüntülenme başlangıcı</target>
       </trans-unit>
       <trans-unit id="tl_content.start.1">
-        <source>If you want to prevent the element from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the element from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>Bileşenin belirli bir tarih/saatten önce sitede görüntülenmesini engellemek isterseniz buraya yazabilirsiniz. Bunun dışında bu alanı boş bırakın.</target>
       </trans-unit>
       <trans-unit id="tl_content.stop.0">
@@ -638,12 +662,24 @@
         <target>Görüntülenme bitişi</target>
       </trans-unit>
       <trans-unit id="tl_content.stop.1">
-        <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>Bileşenin belirli bir tarih/saatten sonra sitede görüntülenmesini engellemek isterseniz buraya yazabilirsiniz. Bunun dışında bu alanı boş bırakın.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.tstamp.0">
+        <source>Revision date</source>
+        <target>Düzenlenme tarihi</target>
+      </trans-unit>
+      <trans-unit id="tl_content.tstamp.1">
+        <source>Date and time of the latest revision</source>
+        <target>Son düzenlenme tarihi ve saati</target>
       </trans-unit>
       <trans-unit id="tl_content.type_legend">
         <source>Element type</source>
         <target>Bileşen türü</target>
+      </trans-unit>
+      <trans-unit id="tl_content.section_legend">
+        <source>Section settings</source>
+        <target>Bölüm ayarları</target>
       </trans-unit>
       <trans-unit id="tl_content.text_legend">
         <source>Text/HTML/Code</source>
@@ -682,6 +718,10 @@
         <target>Sıralama seçenekleri</target>
       </trans-unit>
       <trans-unit id="tl_content.moo_legend">
+        <source>Accordion settings</source>
+        <target>Akordiyon ayarları</target>
+      </trans-unit>
+      <trans-unit id="tl_content.accordion_legend">
         <source>Accordion settings</source>
         <target>Akordiyon ayarları</target>
       </trans-unit>
@@ -875,27 +915,35 @@
       </trans-unit>
       <trans-unit id="tl_content.show">
         <source>Show the details of content element ID %s</source>
-        <target>%s kodlu içerik bileşeninin bilgilerini görüntüle</target>
+        <target>%s kimlikli içerik bileşeninin bilgilerini görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_content.cut">
         <source>Move content element ID %s</source>
-        <target>%s kodlu içerik bileşenini taşı</target>
+        <target>%s kimlikli içerik bileşenini taşı</target>
       </trans-unit>
       <trans-unit id="tl_content.copy">
         <source>Duplicate content element ID %s</source>
-        <target>%s kodlu içerik bileşenini kopyala</target>
+        <target>%s kimlikli içerik bileşenini kopyala</target>
       </trans-unit>
       <trans-unit id="tl_content.delete">
         <source>Delete content element ID %s</source>
-        <target>%s kodlu içerik bileşenini sil</target>
+        <target>%s kimlikli içerik bileşenini sil</target>
       </trans-unit>
       <trans-unit id="tl_content.edit">
         <source>Edit content element ID %s</source>
-        <target>%s kodlu içerik bileşenini düzenle</target>
+        <target>%s kimlikli içerik bileşenini düzenle</target>
       </trans-unit>
-      <trans-unit id="tl_content.toggle">
-        <source>Hide/unhide content element ID %s</source>
-        <target>%s kodlu içerik bileşenini gizle/görüntüle</target>
+      <trans-unit id="tl_content.toggle.0">
+        <source>Hide/unhide content element</source>
+        <target>İçerik bileşenini gizle/görüntüle</target>
+      </trans-unit>
+      <trans-unit id="tl_content.toggle.1">
+        <source>Hide content element ID %s</source>
+        <target>%s kimlikli içerik bileşenini gizle</target>
+      </trans-unit>
+      <trans-unit id="tl_content.toggle.2">
+        <source>Unhide content element ID %s</source>
+        <target>%s kimlikli içerik bileşenini görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>
@@ -903,7 +951,7 @@
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.1">
         <source>Paste after content element ID %s</source>
-        <target>%s kodlu içerik bileşeninden sonra yapıştır</target>
+        <target>%s kimlikli içerik bileşeninden sonra yapıştır</target>
       </trans-unit>
       <trans-unit id="tl_content.pastenew.0">
         <source>Create a new content element at the top</source>
@@ -911,11 +959,11 @@
       </trans-unit>
       <trans-unit id="tl_content.pastenew.1">
         <source>Create a new content element after content element ID %s</source>
-        <target>%s kodlu içerik bileşeninden sonra yeni bir içerik bileşeni ekle</target>
+        <target>%s kimlikli içerik bileşeninden sonra yeni bir içerik bileşeni ekle</target>
       </trans-unit>
       <trans-unit id="tl_content.editalias">
         <source>Edit the source element ID %s</source>
-        <target>%s kodlu kaynak bileşenini düzenle</target>
+        <target>%s kimlikli kaynak bileşenini düzenle</target>
       </trans-unit>
       <trans-unit id="tl_content.list.1">
         <source>Import list items from a CSV file</source>
@@ -924,6 +972,22 @@
       <trans-unit id="tl_content.table.1">
         <source>Import table items from a CSV file</source>
         <target>Tablo ögelerini CSV dosyasından içe aktar</target>
+      </trans-unit>
+      <trans-unit id="tl_content.dl_label.0">
+        <source>Description list items</source>
+        <target>Açıklama listesi ögeleri</target>
+      </trans-unit>
+      <trans-unit id="tl_content.dl_label.1">
+        <source>Please enter a list of terms and details for the description list. You can leave the term field empty to create multiple details for one term.</source>
+        <target>Lütfen açıklama listesi için bir terim ve ayrıntılar listesi yazın. Bir terim için birden fazla ayrıntı oluşturulması için terim alanını boş bırakabilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.dl_key">
+        <source>Term</source>
+        <target>Terim</target>
+      </trans-unit>
+      <trans-unit id="tl_content.dl_value">
+        <source>Details</source>
+        <target>Ayrıntılar</target>
       </trans-unit>
     </body>
   </file>

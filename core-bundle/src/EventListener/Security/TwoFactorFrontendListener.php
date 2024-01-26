@@ -14,19 +14,23 @@ namespace Contao\CoreBundle\EventListener\Security;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\FrontendUser;
 use Contao\PageModel;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 /**
  * @internal
  */
+#[AsEventListener]
 class TwoFactorFrontendListener
 {
     use TargetPathTrait;
@@ -34,6 +38,7 @@ class TwoFactorFrontendListener
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly ScopeMatcher $scopeMatcher,
+        private readonly ContentUrlGenerator $urlGenerator,
         private readonly TokenStorageInterface $tokenStorage,
         private readonly array $supportedTokens,
     ) {
@@ -80,7 +85,7 @@ class TwoFactorFrontendListener
 
             // Redirect to two-factor page
             if ($page->id !== $twoFactorPage->id) {
-                $event->setResponse(new RedirectResponse($twoFactorPage->getAbsoluteUrl()));
+                $event->setResponse(new RedirectResponse($this->urlGenerator->generate($twoFactorPage, [], UrlGeneratorInterface::ABSOLUTE_URL)));
             }
 
             return;

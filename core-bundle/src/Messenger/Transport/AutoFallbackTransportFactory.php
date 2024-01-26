@@ -18,6 +18,9 @@ use Symfony\Component\Messenger\Exception\InvalidArgumentException;
 use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 use Symfony\Component\Messenger\Transport\TransportFactoryInterface;
 
+/**
+ * @implements TransportFactoryInterface<AutoFallbackTransport>
+ */
 class AutoFallbackTransportFactory implements TransportFactoryInterface
 {
     public function __construct(
