@@ -26,6 +26,7 @@ use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNode;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
 use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
+use Contao\CoreBundle\Twig\Runtime\ContentUrlRuntime;
 use Contao\CoreBundle\Twig\Runtime\CspRuntime;
 use Contao\CoreBundle\Twig\Runtime\FigureRuntime;
 use Contao\CoreBundle\Twig\Runtime\FormatterRuntime;
@@ -218,6 +219,10 @@ final class ContaoExtension extends AbstractExtension
             new TwigFunction(
                 'csp_hash',
                 [CspRuntime::class, 'addHash'],
+            ),
+            new TwigFunction(
+                'content_url',
+                [ContentUrlRuntime::class, 'generate'],
             ),
         ];
     }
