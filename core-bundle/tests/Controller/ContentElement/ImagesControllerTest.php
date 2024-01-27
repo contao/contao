@@ -153,4 +153,40 @@ class ImagesControllerTest extends ContentElementTestCase
 
         $this->assertSame('', $response->getContent());
     }
+
+    public function testIgnoresMissingImages(): void
+    {
+        $security = $this->createMock(Security::class);
+
+        $response = $this->renderWithModelData(
+            new ImagesController($security, $this->getDefaultStorage(), $this->getDefaultStudio(), ['svg', 'jpg', 'png']),
+            [
+                'type' => 'gallery',
+                'multiSRC' => serialize([
+                    StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE1),
+                    StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE_MISSING),
+                ]),
+                'sortBy' => 'name_desc',
+                'numberOfItems' => 0,
+                'size' => '',
+                'fullsize' => true,
+                'perPage' => 1,
+                'perRow' => 1,
+            ],
+        );
+
+        $expectedOutput = <<<'HTML'
+            <div class="content-gallery--cols-1 content-gallery">
+                <ul>
+                    <li>
+                        <figure>
+                            <img src="files/image1.jpg" alt>
+                        </figure>
+                    </li>
+                </ul>
+            </div>
+            HTML;
+
+        $this->assertSameHtml($expectedOutput, $response->getContent());
+    }
 }
