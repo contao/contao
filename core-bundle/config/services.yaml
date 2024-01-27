@@ -1150,7 +1150,7 @@ services:
             - '@twig'
             - '@contao.twig.filesystem_loader'
             - '@contao.csrf.token_manager'
-            - '@contao.twig.global.contao'
+            - '@contao.twig.global.variable'
 
     contao.twig.fail_tolerant_filesystem_loader:
         class: Contao\CoreBundle\Twig\Loader\FailTolerantFilesystemLoader
@@ -1202,7 +1202,7 @@ services:
         arguments:
             - '@contao.framework'
 
-    contao.twig.global.contao:
+    contao.twig.global.variable:
         class: Contao\CoreBundle\Twig\Global\ContaoVariable
         arguments:
             - '@contao.framework'

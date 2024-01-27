@@ -20,7 +20,7 @@ class ContaoVariable
     ) {
     }
 
-    public function page(): PageModel|null
+    public function getPage(): PageModel|null
     {
         $request = $this->requestStack->getCurrentRequest();
 
@@ -47,12 +47,17 @@ class ContaoVariable
         return $this->framework->getAdapter(PageModel::class)->findByPk((int) $pageModel);
     }
 
-    public function security(): SecurityVariable
+    public function getHas_backend_user(): bool
     {
-        return new SecurityVariable($this->tokenChecker);
+        return $this->tokenChecker->hasBackendUser();
     }
 
-    public function requestToken(): string
+    public function getIs_preview_mode(): bool
+    {
+        return $this->tokenChecker->isPreviewMode();
+    }
+
+    public function getRequest_token(): string
     {
         return $this->tokenManager->getDefaultTokenValue();
     }
