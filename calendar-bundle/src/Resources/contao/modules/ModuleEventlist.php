@@ -219,9 +219,13 @@ class ModuleEventlist extends Events
 						continue;
 					}
 
-					// Hide running non-recurring events (see #30)
-					if ($this->cal_hideRunning && !$event['recurring'] && $event['startTime'] < time())
-					{
+					// Hide running non-recurring events (see #30) for next_ 
+					if (preg_match("#^next_(.*)$#i", $this->cal_format) && $this->cal_hideRunning && !$event['recurring'] && $event['startTime'] < time()) {
+						continue;
+					}
+
+					// Hide running non-recurring events for past_ (see #6387)
+					if (preg_match("#^past_(.*)$#i", $this->cal_format) && $this->cal_hideRunning && !$event['recurring'] && $event['endTime'] > time()) {
 						continue;
 					}
 
