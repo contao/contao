@@ -23,10 +23,10 @@ class ContaoVariable
         $pageModel = $this->requestStack->getCurrentRequest()?->attributes->get('pageModel');
 
         if ($pageModel instanceof PageModel) {
-            return null;
+            return $pageModel;
         }
 
-        return $pageModel;
+        return null;
     }
 
     public function getHas_backend_user(): bool
