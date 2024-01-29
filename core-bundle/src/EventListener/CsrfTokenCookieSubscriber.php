@@ -115,7 +115,7 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
             return true;
         }
 
-        if ($request->hasSession() && $request->getSession()->isStarted()) {
+        if ($request->hasSession() && $request->getSession()->isStarted() && [] !== $request->getSession()->all()) {
             return true;
         }
 
