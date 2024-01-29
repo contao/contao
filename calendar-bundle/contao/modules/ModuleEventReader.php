@@ -334,7 +334,7 @@ class ModuleEventReader extends Events
 		}
 
 		// Add a function to retrieve upcoming dates (see #175)
-		$objTemplate->getUpcomingDates = function ($recurrences) use ($objEvent, $objPage, $intStartTime, $intEndTime, $arrRange, $span) {
+		$objTemplate->getUpcomingDates = function ($recurrences) use ($objEvent, $arrRange, $intStartTime, $intEndTime, $objPage, $span) {
 			if (!$objEvent->recurring || !isset($arrRange['unit'], $arrRange['value']))
 			{
 				return array();
@@ -371,7 +371,7 @@ class ModuleEventReader extends Events
 		};
 
 		// Add a function to retrieve past dates (see #175)
-		$objTemplate->getPastDates = function ($recurrences) use ($objEvent, $objPage, $intStartTime, $intEndTime, $arrRange, $span) {
+		$objTemplate->getPastDates = function ($recurrences) use ($objEvent, $arrRange, $intStartTime, $intEndTime, $objPage, $span) {
 			if (!$objEvent->recurring || !isset($arrRange['unit'], $arrRange['value']))
 			{
 				return array();
@@ -408,7 +408,7 @@ class ModuleEventReader extends Events
 		};
 
 		// schema.org information
-		$objTemplate->getSchemaOrgData = static function () use ($objTemplate, $objEvent): array {
+		$objTemplate->getSchemaOrgData = static function () use ($objEvent, $objTemplate): array {
 			$jsonLd = Events::getSchemaOrgData($objEvent);
 
 			if ($objTemplate->addImage && $objTemplate->figure)

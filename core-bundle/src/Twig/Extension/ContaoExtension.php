@@ -170,7 +170,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             ),
             new TwigFunction(
                 'attrs',
-                static fn (iterable|string|HtmlAttributes|null $attributes = null): HtmlAttributes => new HtmlAttributes($attributes),
+                static fn (HtmlAttributes|iterable|string|null $attributes = null): HtmlAttributes => new HtmlAttributes($attributes),
             ),
             new TwigFunction(
                 'figure',

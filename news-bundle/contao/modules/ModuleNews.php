@@ -234,7 +234,7 @@ abstract class ModuleNews extends Module
 		}
 
 		// schema.org information
-		$objTemplate->getSchemaOrgData = static function () use ($objTemplate, $objArticle): array {
+		$objTemplate->getSchemaOrgData = static function () use ($objArticle, $objTemplate): array {
 			$jsonLd = News::getSchemaOrgData($objArticle);
 
 			if ($objTemplate->addImage && $objTemplate->figure)

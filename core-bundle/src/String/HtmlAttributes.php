@@ -58,7 +58,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         }
 
         // Merge values if possible, set them otherwise
-        $mergeSet = function (string $name, string|int|bool|\Stringable|null $value): void {
+        $mergeSet = function (string $name, \Stringable|bool|int|string|null $value): void {
             if ('class' === $name) {
                 $this->addClass($value);
             } elseif ('style' === $name) {
