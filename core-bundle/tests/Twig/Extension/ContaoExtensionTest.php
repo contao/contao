@@ -428,8 +428,11 @@ class ContaoExtensionTest extends TestCase
             ])
         ;
 
-        $contaoVariable = $this->createMock(ContaoVariable::class);
-
-        return new ContaoExtension($environment, $hierarchy, $this->createMock(ContaoCsrfTokenManager::class), $contaoVariable);
+        return new ContaoExtension(
+            $environment,
+            $hierarchy,
+            $this->createMock(ContaoCsrfTokenManager::class),
+            $this->createMock(ContaoVariable::class),
+        );
     }
 }

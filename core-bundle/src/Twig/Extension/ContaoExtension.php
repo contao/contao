@@ -92,7 +92,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
 
                 public function __toString(): string
                 {
-                    trigger_deprecation('contao/core-bundle', '5.3', 'The request_token Twig variable has been deprecated and will no longer work in Contao 6. Use the contao.requestToken variable instead.');
+                    trigger_deprecation('contao/core-bundle', '5.3', 'The "request_token" Twig variable has been deprecated and will no longer work in Contao 6. Use the "contao.request_token" variable instead.');
 
                     return $this->tokenManager->getDefaultTokenValue();
                 }
