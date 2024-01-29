@@ -140,9 +140,6 @@ class PrettyErrorScreenListener
                 return;
             }
 
-            $errorPage->loadDetails();
-            $errorPage->protected = false;
-
             $route = $this->pageRegistry->getRoute($errorPage);
             $subRequest = $request->duplicate(null, null, $route->getDefaults());
 

@@ -30,7 +30,7 @@ class AccessDeniedHandler implements AccessDeniedHandlerInterface
     ) {
     }
 
-    public function handle(Request $request, AccessDeniedException $accessDeniedException): ?Response
+    public function handle(Request $request, AccessDeniedException $accessDeniedException): Response|null
     {
         $errorPage = $this->pageFinder->findFirstPageOfTypeForRequest($request, 'error_403');
 

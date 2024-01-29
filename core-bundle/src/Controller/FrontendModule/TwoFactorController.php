@@ -24,7 +24,6 @@ use Contao\PageModel;
 use Contao\Template;
 use ParagonIE\ConstantTime\Base32;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,7 +45,6 @@ class TwoFactorController extends AbstractFrontendModuleController
         $services['contao.routing.scope_matcher'] = ScopeMatcher::class;
         $services['contao.security.two_factor.authenticator'] = Authenticator::class;
         $services['security.authentication_utils'] = AuthenticationUtils::class;
-        $services['security.helper'] = Security::class;
         $services['translator'] = TranslatorInterface::class;
         $services['contao.security.two_factor.trusted_device_manager'] = TrustedDeviceManager::class;
         $services['contao.security.two_factor.backup_code_manager'] = BackupCodeManager::class;
@@ -56,10 +54,10 @@ class TwoFactorController extends AbstractFrontendModuleController
 
     protected function getResponse(Template $template, ModuleModel $model, Request $request): Response
     {
-        $user = $this->container->get('security.helper')->getUser();
-        $pageModel = $this->getPageModel();
+        $user = $this->getUser();
+        $pageModel = $request->attributes->get('pageModel');
 
-        if (!$user instanceof FrontendUser || !$pageModel) {
+        if (!$user instanceof FrontendUser || !$pageModel instanceof PageModel) {
             return new Response('', Response::HTTP_NO_CONTENT);
         }
 
