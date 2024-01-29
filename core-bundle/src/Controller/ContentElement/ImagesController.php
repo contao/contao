@@ -73,11 +73,11 @@ class ImagesController extends AbstractContentElementController
             $figureBuilder->setOverwriteMetadata($model->getOverwriteMetadata());
         }
 
-        $imageList = array_map(
-            fn (FilesystemItem $filesystemItem): Figure => $figureBuilder
+        $imageList = array_filter(array_map(
+            fn (FilesystemItem $filesystemItem): Figure|null => $figureBuilder
                 ->fromStorage($this->filesStorage, $filesystemItem->getPath())
-                ->build(),
-            iterator_to_array($filesystemItems)
+                ->buildIfResourceExists(),
+            iterator_to_array($filesystemItems)),
         );
 
         if (!$imageList) {
