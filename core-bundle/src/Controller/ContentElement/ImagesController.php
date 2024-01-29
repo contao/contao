@@ -74,7 +74,7 @@ class ImagesController extends AbstractContentElementController
         }
 
         $imageList = array_filter(array_map(
-            fn (FilesystemItem $filesystemItem): ?Figure => $figureBuilder
+            fn (FilesystemItem $filesystemItem): Figure|null => $figureBuilder
                 ->fromStorage($this->filesStorage, $filesystemItem->getPath())
                 ->buildIfResourceExists(),
             iterator_to_array($filesystemItems)),
