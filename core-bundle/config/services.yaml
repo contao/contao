@@ -1150,6 +1150,7 @@ services:
             - '@twig'
             - '@contao.twig.filesystem_loader'
             - '@contao.csrf.token_manager'
+            - '@contao.twig.global.variable'
 
     contao.twig.fail_tolerant_filesystem_loader:
         class: Contao\CoreBundle\Twig\Loader\FailTolerantFilesystemLoader
@@ -1200,6 +1201,13 @@ services:
         class: Contao\CoreBundle\Twig\Runtime\FragmentRuntime
         arguments:
             - '@contao.framework'
+
+    contao.twig.global.variable:
+        class: Contao\CoreBundle\Twig\Global\ContaoVariable
+        arguments:
+            - '@request_stack'
+            - '@contao.security.token_checker'
+            - '@contao.csrf.token_manager'
 
     contao.twig.highlighter_runtime:
         class: Contao\CoreBundle\Twig\Runtime\HighlighterRuntime

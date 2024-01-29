@@ -18,6 +18,7 @@ use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
+use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
@@ -78,6 +79,7 @@ class TwigIntegrationTest extends TestCase
                 $environment,
                 $this->createMock(TemplateHierarchyInterface::class),
                 $this->createMock(ContaoCsrfTokenManager::class),
+                $this->createMock(ContaoVariable::class),
             ),
         );
 
@@ -121,6 +123,7 @@ class TwigIntegrationTest extends TestCase
                 $environment,
                 $this->createMock(TemplateHierarchyInterface::class),
                 $this->createMock(ContaoCsrfTokenManager::class),
+                $this->createMock(ContaoVariable::class),
             ),
         );
 
@@ -171,6 +174,7 @@ class TwigIntegrationTest extends TestCase
                 $environment,
                 $this->createMock(TemplateHierarchyInterface::class),
                 $this->createMock(ContaoCsrfTokenManager::class),
+                $this->createMock(ContaoVariable::class),
             ),
         );
 
@@ -224,6 +228,7 @@ class TwigIntegrationTest extends TestCase
                 $environment,
                 $this->createMock(TemplateHierarchyInterface::class),
                 $this->createMock(ContaoCsrfTokenManager::class),
+                $this->createMock(ContaoVariable::class),
             ),
         );
 

@@ -20,6 +20,7 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Extension\DeprecationsNodeVisitor;
+use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicUseTokenParser;
@@ -185,6 +186,7 @@ class ContaoExtensionTest extends TestCase
             $environment,
             $this->createMock(TemplateHierarchyInterface::class),
             $this->createMock(ContaoCsrfTokenManager::class),
+            $this->createMock(ContaoVariable::class),
         );
 
         $this->expectException(\RuntimeException::class);
@@ -426,6 +428,11 @@ class ContaoExtensionTest extends TestCase
             ])
         ;
 
-        return new ContaoExtension($environment, $hierarchy, $this->createMock(ContaoCsrfTokenManager::class));
+        return new ContaoExtension(
+            $environment,
+            $hierarchy,
+            $this->createMock(ContaoCsrfTokenManager::class),
+            $this->createMock(ContaoVariable::class),
+        );
     }
 }
