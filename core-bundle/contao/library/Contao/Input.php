@@ -639,7 +639,7 @@ class Input
 		// Match every single starting and closing tag or special characters outside of tags
 		return preg_replace_callback(
 			'@</?([^\s<>/]*)([^<>]*)>?|-->|[>"\'=]+@',
-			static function ($matches) use ($strAllowedTags, $arrAllowedAttributes, &$blnCommentOpen, &$strOpenRawtext) {
+			static function ($matches) use (&$strOpenRawtext, &$blnCommentOpen, $strAllowedTags, $arrAllowedAttributes) {
 				$strTagName = strtolower($matches[1] ?? '');
 
 				if ($strOpenRawtext === $strTagName && '/' === $matches[0][1])
@@ -700,7 +700,7 @@ class Input
 				// Only keep allowed attributes
 				$arrAttributes = array_filter(
 					$arrAttributes,
-					static function ($strAttribute) use ($strTagName, $arrAllowedAttributes) {
+					static function ($strAttribute) use ($arrAllowedAttributes, $strTagName) {
 						// Skip if all attributes are allowed
 						if (\in_array('*', $arrAllowedAttributes[$strTagName] ?? array(), true))
 						{

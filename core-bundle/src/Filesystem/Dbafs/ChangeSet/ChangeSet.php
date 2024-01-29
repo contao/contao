@@ -145,7 +145,7 @@ class ChangeSet
         $lastModifiedUpdates = $this->lastModifiedUpdates;
 
         $items = array_map(
-            static function (string|int $existingPath, array $item) use ($includeLastModified, &$lastModifiedUpdates) {
+            static function (int|string $existingPath, array $item) use ($includeLastModified, &$lastModifiedUpdates) {
                 $lastModified = $includeLastModified && \array_key_exists($existingPath, $lastModifiedUpdates)
                     ? $lastModifiedUpdates[$existingPath]
                     : false;
@@ -168,7 +168,7 @@ class ChangeSet
         }
 
         return [...array_map(
-            static fn (string|int $existingPath, int $lastModified) => new ItemToUpdate(
+            static fn (int|string $existingPath, int $lastModified) => new ItemToUpdate(
                 (string) $existingPath,
                 null,
                 null,
@@ -187,7 +187,7 @@ class ChangeSet
     public function getItemsToDelete(): array
     {
         return array_map(
-            static fn (string|int $path, int $type): ItemToDelete => new ItemToDelete(
+            static fn (int|string $path, int $type): ItemToDelete => new ItemToDelete(
                 (string) $path,
                 self::TYPE_FILE === $type,
             ),
