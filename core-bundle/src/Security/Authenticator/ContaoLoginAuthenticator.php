@@ -103,6 +103,10 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         $route = $this->pageRegistry->getRoute($errorPage);
         $subRequest = $request->duplicate(null, null, $route->getDefaults());
 
+        if ($authException && !$subRequest->attributes->has(SecurityRequestAttributes::AUTHENTICATION_ERROR)) {
+            $subRequest->attributes->set(SecurityRequestAttributes::AUTHENTICATION_ERROR, $authException);
+        }
+
         try {
             return $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST, false);
         } catch (ResponseException $e) {

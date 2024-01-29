@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ResponseException;
 
 /**
@@ -48,11 +49,17 @@ class ModulePersonalData extends Module
 		}
 
 		$this->editable = StringUtil::deserialize($this->editable);
+		$security = $container->get('security.helper');
 
 		// Return if there are no editable fields or if there is no logged-in user
-		if (empty($this->editable) || !\is_array($this->editable) || !$container->get('contao.security.token_checker')->hasFrontendUser())
+		if (empty($this->editable) || !\is_array($this->editable) || !$security->getUser() instanceof FrontendUser)
 		{
 			return '';
+		}
+
+		if (!$security->isGranted('IS_AUTHENTICATED_FULLY'))
+		{
+			throw new AccessDeniedException('Full authentication is required to edit the personal data.');
 		}
 
 		if ($this->memberTpl)

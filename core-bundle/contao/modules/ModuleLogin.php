@@ -14,8 +14,10 @@ use Nyholm\Psr7\Uri;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvents;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\InsufficientAuthenticationException;
 use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
 
 /**
@@ -116,9 +118,7 @@ class ModuleLogin extends Module
 			$lastUsername = $authUtils->getLastUsername();
 		}
 
-		$authorizationChecker = $container->get('security.authorization_checker');
-
-		if ($authorizationChecker->isGranted('ROLE_MEMBER'))
+		if ($request && $this->isLoggedIn($exception))
 		{
 			$strRedirect = Environment::get('uri');
 
@@ -161,6 +161,11 @@ class ModuleLogin extends Module
 			$this->Template->hasError = true;
 			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['invalidTwoFactor'];
 		}
+		elseif ($exception instanceof InsufficientAuthenticationException)
+		{
+			$this->Template->hasError = true;
+			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['insufficientAuthentication'];
+		}
 		elseif ($exception instanceof AuthenticationException)
 		{
 			$this->Template->hasError = true;
@@ -186,6 +191,8 @@ class ModuleLogin extends Module
 		$this->Template->formId = 'tl_login_' . $this->id;
 		$this->Template->forceTargetPath = (int) $blnRedirectBack;
 		$this->Template->targetPath = StringUtil::specialchars(base64_encode($strRedirect));
+
+		$authorizationChecker = $container->get('security.authorization_checker');
 
 		if ($authorizationChecker->isGranted('IS_AUTHENTICATED_2FA_IN_PROGRESS'))
 		{
@@ -216,5 +223,25 @@ class ModuleLogin extends Module
 		$this->Template->value = Input::encodeInsertTags(StringUtil::specialchars($lastUsername));
 		$this->Template->autologin = $this->autologin;
 		$this->Template->autoLabel = $GLOBALS['TL_LANG']['MSC']['autologin'];
+	}
+
+	private function isLoggedIn(AuthenticationException|null $authException): bool
+	{
+		$container = System::getContainer();
+
+		$token = $container->get('security.token_storage')->getToken();
+		$trustResolver = $container->get('security.authentication.trust_resolver');
+
+		if (!$trustResolver->isAuthenticated($token))
+		{
+			return false;
+		}
+
+		if ($trustResolver->isFullFledged($token))
+		{
+			return true;
+		}
+
+		return !$authException instanceof InsufficientAuthenticationException;
 	}
 }
