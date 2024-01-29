@@ -1205,7 +1205,6 @@ services:
     contao.twig.global.variable:
         class: Contao\CoreBundle\Twig\Global\ContaoVariable
         arguments:
-            - '@contao.framework'
             - '@request_stack'
             - '@contao.security.token_checker'
             - '@contao.csrf.token_manager'
