@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\EventListener\Security;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\FrontendUser;
 use Contao\PageModel;
@@ -38,12 +39,17 @@ class TwoFactorFrontendListener
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly ScopeMatcher $scopeMatcher,
+        private readonly PageFinder $pageFinder,
         private readonly ContentUrlGenerator $urlGenerator,
         private readonly TokenStorageInterface $tokenStorage,
         private readonly array $supportedTokens,
     ) {
     }
 
+    /**
+     * If we are in the front end, make sure the user completes the two-factor login process,
+     * or sets up the two-factor authentication if it is enforced in the root page.
+     */
     public function __invoke(RequestEvent $event): void
     {
         if (!$this->scopeMatcher->isFrontendMainRequest($event)) {
@@ -60,31 +66,20 @@ class TwoFactorFrontendListener
         }
 
         $request = $event->getRequest();
-        $page = $request->attributes->get('pageModel');
-
-        // Check if actual page is available
-        if (!$page instanceof PageModel) {
-            return;
-        }
-
+        $rootPage = $this->pageFinder->findRootPageForRequest($request);
         $user = $token->getUser();
 
-        if (!$user instanceof FrontendUser) {
-            return;
-        }
-
-        $adapter = $this->framework->getAdapter(PageModel::class);
-
-        // Check if user has two-factor disabled but is enforced
-        if ($page->enforceTwoFactor && !$user->useTwoFactor) {
-            $twoFactorPage = $adapter->findPublishedById($page->twoFactorJumpTo);
+        // Check if user has two-factor disabled, but it is enforced in the current root page
+        if ($rootPage instanceof PageModel && $rootPage->enforceTwoFactor && $user instanceof FrontendUser && !$user->useTwoFactor) {
+            $adapter = $this->framework->getAdapter(PageModel::class);
+            $twoFactorPage = $adapter->findPublishedById($rootPage->twoFactorJumpTo);
 
             if (!$twoFactorPage instanceof PageModel) {
                 throw new PageNotFoundException('No two-factor authentication page found');
             }
 
             // Redirect to two-factor page
-            if ($page->id !== $twoFactorPage->id) {
+            if ($rootPage->id !== $twoFactorPage->id) {
                 $event->setResponse(new RedirectResponse($this->urlGenerator->generate($twoFactorPage, [], UrlGeneratorInterface::ABSOLUTE_URL)));
             }
 
@@ -96,11 +91,15 @@ class TwoFactorFrontendListener
             return;
         }
 
-        $page401 = $adapter->find401ByPid($page->rootId);
+        $currentPage = $request->attributes->get('pageModel');
 
         // Return if we are on the 401 target page already
-        if ($page401 instanceof PageModel && $page401->autoforward && $page->id === $page401->jumpTo) {
-            return;
+        if ($currentPage instanceof PageModel) {
+            $page401 = $this->pageFinder->findFirstPageOfTypeForRequest($request, 'error_401');
+
+            if ($page401 instanceof PageModel && $page401->autoforward && $currentPage->id === $page401->jumpTo) {
+                return;
+            }
         }
 
         $targetPath = $this->getTargetPath($request->getSession(), $token->getFirewallName());

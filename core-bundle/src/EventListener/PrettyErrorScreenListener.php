@@ -26,11 +26,9 @@ use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\AcceptHeader;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 use Twig\Environment;
@@ -90,14 +88,6 @@ class PrettyErrorScreenListener
         switch (true) {
             case $isBackendUser:
                 $this->renderBackendException($event);
-                break;
-
-            case $exception instanceof UnauthorizedHttpException:
-                $this->renderErrorScreenByType(401, $event);
-                break;
-
-            case $exception instanceof AccessDeniedHttpException:
-                $this->renderErrorScreenByType(403, $event);
                 break;
 
             case $exception instanceof NotFoundHttpException:
