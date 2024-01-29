@@ -109,6 +109,7 @@ class ModuleLogin extends Module
 		$request = $container->get('request_stack')->getCurrentRequest();
 		$exception = null;
 		$lastUsername = '';
+		$isRememberMe = $this->isRememberMe();
 
 		// Only call the authentication utils if there is an active session to prevent starting an empty session
 		if ($request?->hasSession() && ($request->hasPreviousSession() || $request->getSession()->isStarted()))
@@ -161,12 +162,12 @@ class ModuleLogin extends Module
 			$this->Template->hasError = true;
 			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['invalidTwoFactor'];
 		}
-		elseif ($exception instanceof InsufficientAuthenticationException)
+		elseif ($isRememberMe && $exception instanceof InsufficientAuthenticationException)
 		{
 			$this->Template->hasError = true;
 			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['insufficientAuthentication'];
 		}
-		elseif ($exception instanceof AuthenticationException)
+		elseif ($exception instanceof AuthenticationException && !$exception instanceof InsufficientAuthenticationException)
 		{
 			$this->Template->hasError = true;
 			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['invalidLogin'];
@@ -221,7 +222,8 @@ class ModuleLogin extends Module
 		$this->Template->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['login']);
 		$this->Template->value = Input::encodeInsertTags(StringUtil::specialchars($lastUsername));
-		$this->Template->autologin = $this->autologin;
+		$this->Template->autologin = $this->autologin && !$isRememberMe;
+		$this->Template->rememberMe = $this->autologin && $isRememberMe;
 		$this->Template->autoLabel = $GLOBALS['TL_LANG']['MSC']['autologin'];
 	}
 
@@ -243,5 +245,15 @@ class ModuleLogin extends Module
 		}
 
 		return !$authException instanceof InsufficientAuthenticationException;
+	}
+
+	private function isRememberMe(): bool
+	{
+		$container = System::getContainer();
+
+		$token = $container->get('security.token_storage')->getToken();
+		$trustResolver = $container->get('security.authentication.trust_resolver');
+
+		return $trustResolver->isRememberMe($token);
 	}
 }
