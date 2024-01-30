@@ -20,7 +20,7 @@ use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Index;
 use Doctrine\ORM\Mapping\Table;
 
-#[Table(name: 'tl_cron_job')]
+#[Table(name: 'cron_job')]
 #[Entity(repositoryClass: CronJobRepository::class)]
 #[Index(columns: ['name'], name: 'name')]
 class CronJob

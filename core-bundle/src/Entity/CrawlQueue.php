@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Index;
 use Doctrine\ORM\Mapping\Table;
 
-#[Table(name: 'tl_crawl_queue')]
+#[Table(name: 'crawl_queue')]
 #[Entity]
 #[Index(columns: ['job_id'], name: 'job_id')]
 #[Index(columns: ['uri_hash'], name: 'uri_hash')]

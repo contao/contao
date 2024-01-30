@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
 
-#[Table(name: 'tl_trusted_device')]
+#[Table(name: 'trusted_device')]
 #[Entity]
 class TrustedDevice
 {

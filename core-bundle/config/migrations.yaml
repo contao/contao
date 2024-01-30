@@ -70,3 +70,8 @@ services:
         arguments:
             - '@database_connection'
             - '@contao.framework'
+
+    contao.migration.version_503.rename_tables:
+        class: Contao\CoreBundle\Migration\Version503\RenameTablesMigration
+        arguments:
+            - '@database_connection'
