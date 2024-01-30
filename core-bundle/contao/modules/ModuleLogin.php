@@ -108,7 +108,6 @@ class ModuleLogin extends Module
 		$request = $container->get('request_stack')->getCurrentRequest();
 		$exception = null;
 		$lastUsername = '';
-		$isRememberMe = $this->isRememberMe();
 
 		// Only call the authentication utils if there is an active session to prevent starting an empty session
 		if ($request?->hasSession() && ($request->hasPreviousSession() || $request->getSession()->isStarted()))
@@ -150,6 +149,8 @@ class ModuleLogin extends Module
 
 			return;
 		}
+
+		$isRememberMe = $this->isRememberMe();
 
 		if ($exception instanceof TooManyLoginAttemptsAuthenticationException)
 		{
@@ -229,7 +230,6 @@ class ModuleLogin extends Module
 	private function isLoggedIn(AuthenticationException|null $authException): bool
 	{
 		$container = System::getContainer();
-
 		$token = $container->get('security.token_storage')->getToken();
 		$trustResolver = $container->get('security.authentication.trust_resolver');
 
@@ -249,7 +249,6 @@ class ModuleLogin extends Module
 	private function isRememberMe(): bool
 	{
 		$container = System::getContainer();
-
 		$token = $container->get('security.token_storage')->getToken();
 		$trustResolver = $container->get('security.authentication.trust_resolver');
 

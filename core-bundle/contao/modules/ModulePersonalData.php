@@ -49,10 +49,17 @@ class ModulePersonalData extends Module
 		}
 
 		$this->editable = StringUtil::deserialize($this->editable);
+
+		// Return if there are no editable fields
+		if (empty($this->editable) || !\is_array($this->editable))
+		{
+			return '';
+		}
+
 		$security = $container->get('security.helper');
 
-		// Return if there are no editable fields or if there is no logged-in user
-		if (empty($this->editable) || !\is_array($this->editable) || !$security->getUser() instanceof FrontendUser)
+		// Return if there is no logged-in user
+		if (!$security->getUser() instanceof FrontendUser)
 		{
 			return '';
 		}

@@ -97,7 +97,6 @@ class TwoFactorFrontendListenerTest extends TestCase
     public function testDoesNotEnforcesTwoFactorIfTheUserIsNotAFrontendUser(): void
     {
         $rootPage = $this->mockClassWithProperties(PageModel::class, ['enforceTwoFactor' => true]);
-
         $token = $this->mockToken(UsernamePasswordToken::class);
         $event = $this->getRequestEvent($this->getRequest(true));
 
@@ -532,7 +531,6 @@ class TwoFactorFrontendListenerTest extends TestCase
     private function mockPageFinder(PageModel|null $rootPage = null, PageModel|null $errorPage = null): PageFinder&MockObject
     {
         $pageFinder = $this->createMock(PageFinder::class);
-
         $pageFinder
             ->expects($rootPage ? $this->once() : $this->any())
             ->method('findRootPageForRequest')

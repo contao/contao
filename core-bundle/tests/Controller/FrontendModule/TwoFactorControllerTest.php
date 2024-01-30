@@ -51,12 +51,10 @@ class TwoFactorControllerTest extends TestCase
 
     public function testReturnsIfTheUserIsNotAFrontendUser(): void
     {
-        $user = $this->createMock(BackendUser::class);
-
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
-            $user,
+            $this->createMock(BackendUser::class),
             true,
         );
 
@@ -76,12 +74,10 @@ class TwoFactorControllerTest extends TestCase
 
     public function testReturnsIfTheRequestHasNoPageModel(): void
     {
-        $user = $this->createMock(BackendUser::class);
-
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
-            $user,
+            $this->createMock(BackendUser::class),
             true,
         );
 

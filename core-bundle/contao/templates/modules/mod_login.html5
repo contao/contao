@@ -16,7 +16,7 @@
       <input type="hidden" name="_target_path" value="<?= $this->targetPath ?>">
       <input type="hidden" name="_always_use_target_path" value="<?= $this->forceTargetPath ?>">
       <?php if ($this->rememberMe): ?>
-      <input type="hidden" name="autologin" value="1">
+        <input type="hidden" name="autologin" value="1">
       <?php endif; ?>
       <?php if ($this->logout): ?>
         <p class="login_info"><?= $this->loggedInAs ?><br><?= $this->lastLogin ?></p>
