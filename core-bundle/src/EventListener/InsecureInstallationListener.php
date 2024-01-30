@@ -23,7 +23,7 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 class InsecureInstallationListener
 {
     public function __construct(
-        private readonly string $secret,
+        #[\SensitiveParameter] private readonly string $secret,
         private readonly string $webDir = '/public',
     ) {
     }

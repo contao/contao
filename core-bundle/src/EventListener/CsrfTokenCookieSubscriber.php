@@ -22,6 +22,8 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -111,7 +113,21 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
             return true;
         }
 
-        return $request->hasSession() && $request->getSession()->isStarted();
+        return $request->hasSession() && !$this->isSessionEmpty($request->getSession());
+    }
+
+    private function isSessionEmpty(SessionInterface $session): bool
+    {
+        if (!$session->isStarted()) {
+            return true;
+        }
+
+        if ($session instanceof Session) {
+            // Marked @internal but no other way to check all attribute bags
+            return $session->isEmpty();
+        }
+
+        return [] === $session->all();
     }
 
     private function setCookies(Request $request, Response $response): void
