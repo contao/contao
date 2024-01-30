@@ -35,7 +35,7 @@ class RememberMe
     #[Column(type: 'binary_string', length: 88, nullable: false, options: ['fixed' => true])]
     protected string $series;
 
-    #[Column(type: 'binary_string', length: 64, nullable: false, options: ['fixed' => true])]
+    #[Column(type: 'binary_string', length: 88, nullable: false, options: ['fixed' => true])]
     protected string $value;
 
     #[Column(type: 'datetime', nullable: false)]
