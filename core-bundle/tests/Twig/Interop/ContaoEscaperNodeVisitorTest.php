@@ -106,7 +106,7 @@ class ContaoEscaperNodeVisitorTest extends TestCase
             ]
         );
 
-        $this->assertSame('&quot;A&quot; &amp; &lt;B&gt;', $output);
+        $this->assertSame('&QUOT;A&QUOT; &AMP; &LT;B&GT;', $output);
     }
 
     /**
