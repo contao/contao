@@ -97,7 +97,7 @@ class InputTest extends TestCase
 
         yield 'Reformats attributes' => [
             "<span \n \t title = \nwith-spaces class\n=' with \" and &#039; quotes' lang \t =\"with &quot; and ' quotes \t \n \" data-boolean-flag data-int = 0>",
-            "<span title=\"with-spaces\" class=\" with &quot; and &#039; quotes\" lang=\"with &quot; and &#039; quotes \t \n \" data-boolean-flag=\"\" data-int=\"0\">",
+            "<span title=\"with-spaces\" class=\" with &quot; and &#039; quotes\" lang=\"with &quot; and &apos; quotes \t \n \" data-boolean-flag=\"\" data-int=\"0\">",
         ];
 
         yield 'Encodes insert tags in attributes' => [
@@ -237,12 +237,12 @@ class InputTest extends TestCase
 
         yield [
             '<IMG SRC="javascript:alert(\'XSS\');">',
-            '<img src="javascript%3Aalert(&#039;XSS&#039;);">',
+            '<img src="javascript%3Aalert(&apos;XSS&apos;);">',
         ];
 
         yield [
             '<IMG SRC=JaVaScRiPt:alert(\'XSS\')>',
-            '<img src="JaVaScRiPt%3Aalert(&#039;XSS&#039;)">',
+            '<img src="JaVaScRiPt%3Aalert(&apos;XSS&apos;)">',
         ];
 
         yield [
@@ -287,12 +287,12 @@ class InputTest extends TestCase
 
         yield [
             '<IMG SRC="jav&#x0A;ascript:alert(\'XSS\');">',
-            '<img src="jav&#x0A;ascript%3Aalert(&#039;XSS&#039;);">',
+            '<img src="jav&#x0A;ascript%3Aalert(&apos;XSS&apos;);">',
         ];
 
         yield [
             '<IMG SRC=" &#14; javascript:alert(\'XSS\');">',
-            '<img src=" &#14; javascript%3Aalert(&#039;XSS&#039;);">',
+            '<img src=" &#14; javascript%3Aalert(&apos;XSS&apos;);">',
         ];
 
         yield [
