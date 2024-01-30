@@ -461,7 +461,7 @@ class FigureBuilder
 
         foreach ($attributes as $key => $value) {
             if (!\is_string($key) || !\is_string($value)) {
-                throw new \InvalidArgumentException('Link attributes must be an array of type <string, string>.');
+                throw new \InvalidArgumentException(sprintf('Link attributes must be an array of type <string, string>, <%s, %s> given.', get_debug_type($key), get_debug_type($value)));
             }
         }
 
