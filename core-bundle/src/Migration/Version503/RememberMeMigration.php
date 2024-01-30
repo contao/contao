@@ -21,9 +21,8 @@ use Doctrine\DBAL\Connection;
  */
 class RememberMeMigration extends AbstractMigration
 {
-    public function __construct(
-        private readonly Connection $connection,
-    ) {
+    public function __construct(private readonly Connection $connection)
+    {
     }
 
     public function shouldRun(): bool
@@ -35,7 +34,8 @@ class RememberMeMigration extends AbstractMigration
 
     public function run(): MigrationResult
     {
-        $this->connection->executeStatement(<<<'SQL'
+        $this->connection->executeStatement(
+            <<<'SQL'
                 CREATE TABLE `rememberme_token` (
                     `series`   varchar(88)  UNIQUE PRIMARY KEY NOT NULL,
                     `value`    varchar(88)  NOT NULL,
@@ -43,9 +43,23 @@ class RememberMeMigration extends AbstractMigration
                     `class`    varchar(100) NOT NULL,
                     `username` varchar(200) NOT NULL
                 );
-            SQL);
+                SQL,
+        );
 
-        $this->connection->executeStatement('INSERT INTO rememberme_token (SELECT TRIM(TRAILING CHAR(0x00) FROM series), TRIM(TRAILING CHAR(0x00) FROM value), lastUsed, class, userIdentifier FROM tl_remember_me)');
+        $this->connection->executeStatement(
+            <<<'SQL'
+                INSERT INTO rememberme_token (
+                    SELECT
+                        TRIM(TRAILING CHAR(0x00) FROM series),
+                        TRIM(TRAILING CHAR(0x00) FROM value),
+                        lastUsed,
+                        class,
+                        userIdentifier
+                    FROM tl_remember_me
+                )
+                SQL,
+        );
+
         $this->connection->executeStatement('DROP TABLE tl_remember_me');
 
         return $this->createResult(true);
