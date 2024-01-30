@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\Security;
 
-use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Routing\PageFinder;
@@ -75,7 +75,7 @@ class TwoFactorFrontendListener
             $twoFactorPage = $adapter->findPublishedById($rootPage->twoFactorJumpTo);
 
             if (!$twoFactorPage instanceof PageModel) {
-                throw new PageNotFoundException('No two-factor authentication page found');
+                throw new ForwardPageNotFoundException('No two-factor authentication page found');
             }
 
             // Redirect to two-factor page
