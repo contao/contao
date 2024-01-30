@@ -42,6 +42,8 @@ security:
             remember_me:
                 secret: '%kernel.secret%'
                 remember_me_parameter: autologin
+                token_provider:
+                    doctrine: true
 
             logout:
                 path: contao_frontend_logout
