@@ -629,11 +629,6 @@ services:
         arguments:
             - '@doctrine'
 
-    contao.repository.remember_me:
-        class: Contao\CoreBundle\Repository\RememberMeRepository
-        arguments:
-            - '@doctrine'
-
     contao.resource_finder:
         class: Contao\CoreBundle\Config\ResourceFinder
         public: true
@@ -990,26 +985,8 @@ services:
     contao.security.member_group_voter:
         class: Contao\CoreBundle\Security\Voter\MemberGroupVoter
 
-    contao.security.persistent_remember_me_handler:
-        class: Symfony\Component\Security\Http\RememberMe\PersistentRememberMeHandler
-        arguments:
-            - '@contao.security.remember_me_token_provider'
-            - '%kernel.secret%'
-            - '@contao.security.frontend_user_provider'
-            - '@request_stack'
-            - []
-            - '@?logger'
-            - ~
-        tags:
-            - { name: monolog.logger, channel: security }
-
     contao.security.priority_strategy:
         class: Symfony\Component\Security\Core\Authorization\Strategy\PriorityStrategy
-
-    contao.security.remember_me_token_provider:
-        class: Contao\CoreBundle\Security\Authentication\RememberMe\RememberMeTokenProvider
-        arguments:
-            - !service_closure '@contao.repository.remember_me'
 
     contao.security.token_checker:
         class: Contao\CoreBundle\Security\Authentication\Token\TokenChecker

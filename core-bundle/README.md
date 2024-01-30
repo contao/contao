@@ -107,7 +107,8 @@ security:
             remember_me:
                 secret: '%kernel.secret%'
                 remember_me_parameter: autologin
-                service: contao.security.persistent_remember_me_handler
+                token_provider:
+                    doctrine: true
 
             logout:
                 path: contao_frontend_logout
