@@ -12,13 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Migration\Version503;
 
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Schema\SchemaDiff;
-use Symfony\Bridge\Doctrine\Security\RememberMe\DoctrineTokenProvider;
-use Symfony\Component\Security\Http\RememberMe\PersistentRememberMeHandler;
 
 /**
  * @internal
@@ -40,14 +36,14 @@ class RememberMeMigration extends AbstractMigration
     public function run(): MigrationResult
     {
         $this->connection->executeStatement(<<<'SQL'
-            CREATE TABLE `rememberme_token` (
-                `series`   varchar(88)  UNIQUE PRIMARY KEY NOT NULL,
-                `value`    varchar(88)  NOT NULL,
-                `lastUsed` datetime     NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-                `class`    varchar(100) NOT NULL,
-                `username` varchar(200) NOT NULL
-            );
-        SQL);
+                CREATE TABLE `rememberme_token` (
+                    `series`   varchar(88)  UNIQUE PRIMARY KEY NOT NULL,
+                    `value`    varchar(88)  NOT NULL,
+                    `lastUsed` datetime     NOT NULL COMMENT '(DC2Type:datetime_immutable)',
+                    `class`    varchar(100) NOT NULL,
+                    `username` varchar(200) NOT NULL
+                );
+            SQL);
 
         $this->connection->executeStatement('INSERT INTO rememberme_token (SELECT TRIM(TRAILING CHAR(0x00) FROM series), TRIM(TRAILING CHAR(0x00) FROM value), lastUsed, class, userIdentifier FROM tl_remember_me)');
         $this->connection->executeStatement('DROP TABLE tl_remember_me');
