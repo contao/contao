@@ -820,7 +820,7 @@ class StringUtil
 			$strString = static::stripInsertTags($strString);
 		}
 
-		return htmlspecialchars((string) $strString, ENT_QUOTES, 'UTF-8', $blnDoubleEncode);
+		return htmlspecialchars((string) $strString, ENT_QUOTES | ENT_HTML5, 'UTF-8', $blnDoubleEncode);
 	}
 
 	/**

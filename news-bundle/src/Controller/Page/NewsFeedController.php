@@ -53,7 +53,7 @@ class NewsFeedController extends AbstractController implements DynamicRouteInter
     {
         $this->initializeContaoFramework();
 
-        $staticUrl = $this->contaoContext->getStaticUrl();
+        $staticUrl = $this->contaoContext->getBasePath();
         $baseUrl = $staticUrl ?: $request->getSchemeAndHttpHost();
 
         $feed = new Feed();

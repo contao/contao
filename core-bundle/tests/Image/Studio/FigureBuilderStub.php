@@ -104,12 +104,16 @@ class FigureBuilderStub extends FigureBuilder
             throw new InvalidResourceException('No path set.');
         }
 
+        if (!isset($this->imageMap[$this->path])) {
+            throw new InvalidResourceException('Resource does not exist.');
+        }
+
         return new Figure($this->imageMap[$this->path], $this->metadata, $this->linkAttributes);
     }
 
     public function buildIfResourceExists(): Figure|null
     {
-        if (null === $this->path) {
+        if (null === $this->path || !isset($this->imageMap[$this->path])) {
             return null;
         }
 

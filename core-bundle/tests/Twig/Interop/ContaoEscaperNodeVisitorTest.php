@@ -98,7 +98,7 @@ class ContaoEscaperNodeVisitorTest extends TestCase
             'content' => '&quot;a&quot; &amp; &lt;b&gt;',
         ]);
 
-        $this->assertSame('&quot;A&quot; &amp; &lt;B&gt;', $output);
+        $this->assertSame('&QUOT;A&QUOT; &AMP; &LT;B&GT;', $output);
     }
 
     /**

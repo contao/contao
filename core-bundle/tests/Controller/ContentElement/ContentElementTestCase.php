@@ -84,6 +84,8 @@ class ContentElementTestCase extends TestCase
 
     final public const FILE_IMAGE3 = '3045209c-b73d-4a69-b30b-cda8c8008099';
 
+    final public const FILE_IMAGE_MISSING = '33389f37-b15c-4990-910d-49fd93adcf93';
+
     final public const FILE_VIDEO_MP4 = 'e802b519-8e08-4075-913c-7603ec6f2376';
 
     final public const FILE_VIDEO_OGV = 'd950e33a-dacc-42ad-ba97-6387d05348c4';
@@ -354,6 +356,7 @@ class ContentElementTestCase extends TestCase
                         ),
                         self::FILE_IMAGE2 => new FilesystemItem(true, 'image2.jpg', null, null, 'image/jpeg'),
                         self::FILE_IMAGE3 => new FilesystemItem(true, 'image3.jpg', null, null, 'image/jpeg'),
+                        self::FILE_IMAGE_MISSING => new FilesystemItem(true, 'image_missing.jpg', null, null, 'image/jpeg'),
                         self::FILE_VIDEO_MP4 => new FilesystemItem(true, 'video.mp4', null, null, 'video/mp4'),
                         self::FILE_VIDEO_OGV => new FilesystemItem(true, 'video.ogv', null, null, 'video/ogg'),
                     ];
