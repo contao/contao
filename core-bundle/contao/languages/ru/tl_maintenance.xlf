@@ -158,8 +158,8 @@
         <target>Авторизовать участника внешнего интерфейса для индексирования защищенных страниц.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlHint">
-        <source>Your website is currently crawled with %d concurrent requests. If your server can handle more than %1$d concurrent requests, ask your system administrator to increase the &lt;code&gt;%s&lt;/code&gt; setting in the system configuration to speed up the crawling process.</source>
-        <target>В настоящее время веб-сайт сканируется с помощью %d одновременных запросов. Если ваш сервер может обрабатывать больше чем %1$d одновременных запросов, попросите системного администратора увеличить значение параметра &lt;code&gt;%s&lt;/code&gt; в конфигурации системы, чтобы ускорить процесс сканирования.</target>
+        <source>Your website is currently crawled with %d concurrent requests. If your server can handle more than %1$d concurrent requests, ask your system administrator to increase the &lt;code&gt;%s&lt;/code&gt; setting in the system configuration to speed up the crawling process. Refer to the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao manual&lt;/a&gt; for more information.</source>
+        <target>В настоящее время веб-сайт сканируется с помощью %d одновременных запросов. Если ваш сервер может обрабатывать больше чем %1$d одновременных запросов, попросите системного администратора увеличить значение параметра &lt;code&gt;%s&lt;/code&gt; в конфигурации системы, чтобы ускорить процесс сканирования. Для получения дополнительной информации, обратитесь к &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Инструкции Contao&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlWaitToBeFinished">
         <source>The crawler is currently working. Please wait for it to finish to see the results.</source>

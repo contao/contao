@@ -451,7 +451,7 @@ class Combiner extends System
 
 		return preg_replace_callback(
 			'/url\(("[^"\n]+"|\'[^\'\n]+\'|[^"\'\s()]+)\)/',
-			static function ($matches) use ($strDirname, $strGlue) {
+			static function ($matches) use ($strGlue, $strDirname) {
 				$strData = $matches[1];
 
 				if ($strData[0] == '"' || $strData[0] == "'")

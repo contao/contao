@@ -13,50 +13,35 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller\Page;
 
 use Contao\CoreBundle\Controller\Page\RedirectPageController;
-use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class RedirectPageControllerTest extends TestCase
 {
     /**
      * @dataProvider getRedirectPages
      */
-    public function testRedirectsToUrl(string $redirect, string $url, string $redirectUrl, string|null $insertTagResult = null): void
+    public function testRedirectsToUrl(string $redirect, string $url, string $redirectUrl): void
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
             'redirect' => $redirect,
             'url' => $url,
         ]);
 
-        $request = Request::create(
-            'https://example.com/foobar/index.php/foobar',
-            server: [
-                'SCRIPT_FILENAME' => '/foobar/index.php',
-                'SCRIPT_NAME' => '/foobar/index.php',
-            ],
-        );
-
-        $insertTagParser = $this->createMock(InsertTagParser::class);
-        $insertTagParser
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
             ->expects($this->once())
-            ->method('replaceInline')
-            ->willReturnCallback(
-                static function (string $value) use ($insertTagResult) {
-                    if (null !== $insertTagResult) {
-                        return $insertTagResult;
-                    }
-
-                    return $value;
-                },
-            )
+            ->method('generate')
+            ->with($pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn($redirectUrl)
         ;
 
-        $controller = new RedirectPageController($insertTagParser);
-        $response = $controller($request, $pageModel);
+        $controller = new RedirectPageController($urlGenerator);
+        $response = $controller($pageModel);
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame($redirectUrl, $response->getTargetUrl());
@@ -73,6 +58,6 @@ class RedirectPageControllerTest extends TestCase
         yield ['permanent', '/foobar/index.php/lorem/ipsum', 'https://example.com/foobar/index.php/lorem/ipsum'];
         yield ['temporary', '/foobar/index.php/lorem/ipsum', 'https://example.com/foobar/index.php/lorem/ipsum'];
         yield ['permanent', 'lorem/ipsum', 'https://example.com/foobar/lorem/ipsum'];
-        yield ['permanent', '{{link_url::123}}', 'https://example.com/foobar/index.php/lorem/ipsum', '/foobar/index.php/lorem/ipsum'];
+        yield ['permanent', '{{link_url::123}}', 'https://example.com/foobar/index.php/lorem/ipsum'];
     }
 }

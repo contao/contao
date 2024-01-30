@@ -158,8 +158,8 @@
         <target>Um geschützte Seiten zu indizieren, muss ein Frontend-Mitglied angemeldet werden.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlHint">
-        <source>Your website is currently crawled with %d concurrent requests. If your server can handle more than %1$d concurrent requests, ask your system administrator to increase the &lt;code&gt;%s&lt;/code&gt; setting in the system configuration to speed up the crawling process.</source>
-        <target>Die Webseite wird momentan mit %d gleichzeitigen Requests gecrawlt. Wenn ihr Server mehr als %1$d gleichzeitige Requests verarbeiten kann, bitten Sie den Systemadministrator, die Einstellung &lt;code&gt;%s&lt;/code&gt; in der Systemkonfiguration zu erhöhen, um den Crawling-Prozess zu beschleunigen.</target>
+        <source>Your website is currently crawled with %d concurrent requests. If your server can handle more than %1$d concurrent requests, ask your system administrator to increase the &lt;code&gt;%s&lt;/code&gt; setting in the system configuration to speed up the crawling process. Refer to the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao manual&lt;/a&gt; for more information.</source>
+        <target>Die Webseite wird momentan mit %d gleichzeitigen Requests gecrawlt. Wenn ihr Server mehr als %1$d gleichzeitige Requests verarbeiten kann, bitten Sie den Systemadministrator, die Einstellung &lt;code&gt;%s&lt;/code&gt; in der Systemkonfiguration zu erhöhen, um den Crawling-Prozess zu beschleunigen. Weitere Informationen dazu finden Sie im &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao-Handbuch&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlWaitToBeFinished">
         <source>The crawler is currently working. Please wait for it to finish to see the results.</source>

@@ -1,0 +1,110 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_preview_link.php" source-language="en" target-language="pl">
+    <body>
+      <trans-unit id="tl_preview_link.url.0">
+        <source>Target URL</source>
+        <target>Docelowy URL</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.url.1">
+        <source>The front end URL to be shared.</source>
+        <target>URL frontend do udostępnienia.</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.showUnpublished.0">
+        <source>Show unpublished</source>
+        <target>Pokaż nieopublikowane</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.showUnpublished.1">
+        <source>Show unpublished pages and elements when sharing this link.</source>
+        <target>Pokaż nieopublikowane strony i elementy podczas udostępniania tego linku.</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.restrictToUrl.0">
+        <source>Restrict access to specified URL</source>
+        <target>Ogranicz dostęp do określonego adresu URL</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.restrictToUrl.1">
+        <source>Allow access only to the specified URL instead of the entire website.</source>
+        <target>Dopuszczaj dostęp tylko do określonego adresu URL zamiast całej witryny.</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.createdAt.0">
+        <source>Created at</source>
+        <target>Utworzono</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.createdAt.1">
+        <source>Date and time when the preview link was created.</source>
+        <target>Data i godzina utworzenia linku do podglądu.</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.createdBy.0">
+        <source>Created by</source>
+        <target>Utworzono przez</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.createdBy.1">
+        <source>The user who created the preview link.</source>
+        <target>Użytkownik, który utworzył link do podglądu.</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.expiresAt.0">
+        <source>Valid until</source>
+        <target>Ważny do</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.expiresAt.1">
+        <source>Preview of the final date until which the link is available.</source>
+        <target>Podgląd ostatecznej daty, do której link jest dostępny.</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.published.0">
+        <source>Enable</source>
+        <target>Włącz</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.published.1">
+        <source>Activate the link for sharing.</source>
+        <target>Aktywuj link do udostępniania.</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.share.0">
+        <source>Copy to clipboard</source>
+        <target>Kopiuj do schowka</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.share.1">
+        <source>Copy the preview link ID %s to your clipboard.</source>
+        <target>Kopiuj link podglądu ID %s do swojego schowka.</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.url_legend">
+        <source>Target URL</source>
+        <target>Docelowy URL</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.config_legend">
+        <source>Configuration</source>
+        <target>Konfiguracja</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.publishing_legend">
+        <source>Publish settings</source>
+        <target>Ustawinia publikacji</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.expire_options.1">
+        <source>1 day</source>
+        <target>1 dzień</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.expire_options.7">
+        <source>7 days</source>
+        <target>7 dni</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.expire_options.30">
+        <source>30 days</source>
+        <target>30 dni</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.hintNew">
+        <source>To add a preview link, use the &quot;Share URL&quot; button in the front end preview toolbar.</source>
+        <target>Aby dodać link podglądu, użyj przycisk &quot;Udostępnij URL&quot; w pasku narzędziowym podglądu frontend.</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.hintSave">
+        <source>Please save this record to generate the preview link.</source>
+        <target>Zapisz rekord, aby wygenerować link podglądu.</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.hintEdit">
+        <source>Preview link</source>
+        <target>Podglądowy link</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.hintExpired">
+        <source>This preview link has expired and can no longer be shared.</source>
+        <target>Ten link podglądu stracił ważność i nie może być już udostępniany.</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

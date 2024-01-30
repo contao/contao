@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Migration\Environment;
 use Contao\CoreBundle\Migration\Environment\DnsMigration;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Platforms\MariaDBPlatform;
 use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
@@ -123,6 +124,11 @@ class DnsMigrationTest extends TestCase
             ->expects($this->once())
             ->method('executeQuery')
             ->with($query, $params)
+        ;
+
+        $db
+            ->method('getDatabasePlatform')
+            ->willReturn(new MariaDBPlatform())
         ;
 
         $migration = new DnsMigration($db, $mapping);

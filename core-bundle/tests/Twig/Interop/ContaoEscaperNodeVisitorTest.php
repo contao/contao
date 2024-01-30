@@ -19,6 +19,7 @@ use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
+use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
@@ -97,7 +98,7 @@ class ContaoEscaperNodeVisitorTest extends TestCase
             'content' => '&quot;a&quot; &amp; &lt;b&gt;',
         ]);
 
-        $this->assertSame('&quot;A&quot; &amp; &lt;B&gt;', $output);
+        $this->assertSame('&QUOT;A&QUOT; &AMP; &LT;B&GT;', $output);
     }
 
     /**
@@ -145,6 +146,7 @@ class ContaoEscaperNodeVisitorTest extends TestCase
             $environment,
             $this->createMock(TemplateHierarchyInterface::class),
             $this->createMock(ContaoCsrfTokenManager::class),
+            $this->createMock(ContaoVariable::class),
         );
 
         $contaoExtension->addContaoEscaperRule('/legacy\.html\.twig/');

@@ -23,6 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_content.sectionHeadline.1">
         <source>Here you can add a section headline, e.g. a tab title or accordion header.</source>
+        <target>Buradan bir sekme başlığı ya da akordiyon başlığı gibi bir bölüm başlığı ekleyebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_content.text.0">
         <source>Text</source>
@@ -218,9 +219,11 @@
       </trans-unit>
       <trans-unit id="tl_content.closeSections.0">
         <source>Close all sections</source>
+        <target>Tüm bölümleri kapat</target>
       </trans-unit>
       <trans-unit id="tl_content.closeSections.1">
         <source>Do not open the first section by default.</source>
+        <target>Varsayılan olarak ilk bölüm açılmasın.</target>
       </trans-unit>
       <trans-unit id="tl_content.mooType.0">
         <source>Operation mode</source>
@@ -324,6 +327,7 @@
       </trans-unit>
       <trans-unit id="tl_content.data.1">
         <source>These values are available as &lt;code&gt;$this-&gt;keys&lt;/code&gt; in the template.</source>
+        <target>Bu veriler kalıpta &lt;code&gt;$this-&gt;keys&lt;/code&gt; şeklinde kullanılabilir.</target>
       </trans-unit>
       <trans-unit id="tl_content.linkTitle.0">
         <source>Link text</source>
@@ -675,6 +679,7 @@
       </trans-unit>
       <trans-unit id="tl_content.section_legend">
         <source>Section settings</source>
+        <target>Bölüm ayarları</target>
       </trans-unit>
       <trans-unit id="tl_content.text_legend">
         <source>Text/HTML/Code</source>
@@ -970,12 +975,15 @@
       </trans-unit>
       <trans-unit id="tl_content.dl_label.0">
         <source>Description list items</source>
+        <target>Açıklama listesi ögeleri</target>
       </trans-unit>
       <trans-unit id="tl_content.dl_label.1">
         <source>Please enter a list of terms and details for the description list. You can leave the term field empty to create multiple details for one term.</source>
+        <target>Lütfen açıklama listesi için bir terim ve ayrıntılar listesi yazın. Bir terim için birden fazla ayrıntı oluşturulması için terim alanını boş bırakabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_content.dl_key">
         <source>Term</source>
+        <target>Terim</target>
       </trans-unit>
       <trans-unit id="tl_content.dl_value">
         <source>Details</source>

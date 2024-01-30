@@ -580,7 +580,7 @@ class InsertTagsTest extends TestCase
 
         yield 'Quote in single quoted attribute' => [
             '<span title="{{plain::\'}}">',
-            '<span title="&#039;">',
+            '<span title="&apos;">',
         ];
 
         yield 'Quote outside attribute' => [
@@ -600,7 +600,7 @@ class InsertTagsTest extends TestCase
 
         yield 'Trick tag detection with two tags' => [
             '<span /="notanattribute title="> {{plain::\'}} " > {{plain::\'}}',
-            '<span /="notanattribute title="> &#039; " > \'',
+            '<span /="notanattribute title="> &apos; " > \'',
         ];
 
         yield 'Trick tag detection with not a tag' => [

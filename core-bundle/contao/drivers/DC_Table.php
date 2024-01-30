@@ -311,7 +311,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$mode = Input::get('mode');
 
 			// For these actions the id parameter refers to the parent record (or the old record for copy and cut), so they need to be excluded
-			if ($this->intId && ($act !== 'paste' || $mode !== 'create') && !\in_array($act, array(null, 'copy', 'cut', 'create', 'select', 'editAll', 'overrideAll', 'deleteAll'), true))
+			if ($this->intId && ($act !== 'paste' || $mode !== 'create') && !\in_array($act, array(null, 'copy', 'cut', 'create', 'select', 'copyAll', 'cutAll', 'editAll', 'overrideAll', 'deleteAll'), true))
 			{
 				$currentRecord = $this->getCurrentRecord($this->intId);
 

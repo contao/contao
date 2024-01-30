@@ -143,7 +143,7 @@ trait TemplateTrait
 	/**
 	 * Returns a nonce for the given CSP directive.
 	 */
-	public function nonce(string $directive): ?string
+	public function nonce(string $directive): string|null
 	{
 		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
@@ -216,7 +216,7 @@ trait TemplateTrait
 	 * Extracts all inline CSS style attributes of a given HTML string and automatically adds CSP hashes for those
 	 * to the current response context.
 	 */
-	public function cspInlineStyles(?string $html): ?string
+	public function cspInlineStyles(string|null $html): string|null
 	{
 		if (!$html)
 		{

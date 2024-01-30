@@ -435,9 +435,11 @@
       </trans-unit>
       <trans-unit id="CTE.description_list.0">
         <source>Description list</source>
+        <target>説明リスト</target>
       </trans-unit>
       <trans-unit id="CTE.description_list.1">
         <source>Generates a description list with terms and details.</source>
+        <target>用語と詳細からなる説明リストを生成します。</target>
       </trans-unit>
       <trans-unit id="CTE.table.0">
         <source>Table</source>
