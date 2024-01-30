@@ -220,7 +220,7 @@ class ModuleEventlist extends Events
 					}
 
 					// Hide running non-recurring events (see #30)
-					if ($this->cal_hideRunning && !$event['recurring'] && $event['startTime'] < time())
+					if ($this->cal_hideRunning && !$event['recurring'] && $event['startTime'] < time() && $event['effectiveEndTime'] > time())
 					{
 						continue;
 					}
