@@ -33,6 +33,7 @@ security:
             request_matcher: contao.routing.frontend_matcher
             provider: contao.security.frontend_user_provider
             user_checker: contao.security.user_checker
+            access_denied_handler: contao.security.access_denied_handler
             switch_user: false
             login_throttling: ~
 
