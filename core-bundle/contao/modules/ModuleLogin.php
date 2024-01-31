@@ -122,7 +122,7 @@ class ModuleLogin extends Module
 		/**
 		 * Do not show the logout button if the user is REMEMBERME, and we are on the 401 page or the redirect page of the 401
 		 */
-		if ($user instanceof FrontendUser && !$isTwoFactorInProgress && (!$isRemembered || ($objPage->type != 'error_401' && $this->targetPath !== $request?->query->get('redirect'))))
+		if ($user instanceof FrontendUser && !$isTwoFactorInProgress && (!$isRemembered || ($objPage->type != 'error_401' && $request && $this->targetPath !== $request->query->get('redirect'))))
 		{
 			$strRedirect = Environment::get('uri');
 
@@ -154,7 +154,7 @@ class ModuleLogin extends Module
 		}
 
 		// Only call the authentication utils if there is an active session to prevent starting an empty session
-		if ($request?->hasSession() && ($request?->hasPreviousSession() || $request?->getSession()->isStarted()))
+		if ($request?->hasSession() && ($request->hasPreviousSession() || $request->getSession()->isStarted()))
 		{
 			$authUtils = $container->get('security.authentication_utils');
 			$exception = $authUtils->getLastAuthenticationError();
