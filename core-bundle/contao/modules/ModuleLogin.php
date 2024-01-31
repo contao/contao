@@ -119,7 +119,7 @@ class ModuleLogin extends Module
 		$isRemembered = $security->isGranted('IS_REMEMBERED');
 		$isTwoFactorInProgress = $security->isGranted('IS_AUTHENTICATED_2FA_IN_PROGRESS');
 
-		if ($request && $user instanceof FrontendUser && !$isTwoFactorInProgress && (!$isRemembered || $objPage->type !== 'error_401'))
+		if ($request && $user instanceof FrontendUser && !$isTwoFactorInProgress && (!$isRemembered || $objPage->type != 'error_401'))
 		{
 			$strRedirect = Environment::get('uri');
 
@@ -173,11 +173,6 @@ class ModuleLogin extends Module
 			$this->Template->hasError = true;
 			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['invalidLogin'];
 		}
-		elseif ($isRemembered)
-		{
-			$this->Template->hasError = true;
-			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['insufficientAuthentication'];
-		}
 
 		$blnRedirectBack = false;
 		$strRedirect = Environment::get('uri');
@@ -227,12 +222,13 @@ class ModuleLogin extends Module
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['login']);
 		$this->Template->value = Input::encodeInsertTags(StringUtil::specialchars($lastUsername));
 		$this->Template->autologin = $this->autologin;
-		$this->Template->remembered = false;
 		$this->Template->autoLabel = $GLOBALS['TL_LANG']['MSC']['autologin'];
+		$this->Template->remembered = false;
 
 		if ($isRemembered)
 		{
-			$this->Template->loggedInAs = sprintf($GLOBALS['TL_LANG']['MSC']['loggedInAs'], $user->getUserIdentifier());
+			$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['verify']);
+			$this->Template->reauthenticate = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['reauthenticate']);
 			$this->Template->value = Input::encodeInsertTags(StringUtil::specialchars($user->getUserIdentifier()));
 			$this->Template->remembered = true;
 		}
