@@ -92,6 +92,7 @@ abstract class ModuleNews extends Module
 		$objTemplate->text = '';
 		$objTemplate->hasTeaser = false;
 		$objTemplate->hasReader = true;
+        $objTemplate->author = null; // see #6827
 
 		// Clean the RTE output
 		if ($objArticle->teaser)
@@ -140,8 +141,7 @@ abstract class ModuleNews extends Module
 		$objTemplate->date = Date::parse($objPage->datimFormat, $objArticle->date);
 
 		/** @var UserModel $objAuthor */
-		if (($objAuthor = $objArticle->getRelated('author')) instanceof UserModel)
-		{
+		if (($objAuthor = $objArticle->getRelated('author')) instanceof UserModel) {
 			$objTemplate->author = $GLOBALS['TL_LANG']['MSC']['by'] . ' ' . $objAuthor->name;
 			$objTemplate->authorModel = $objAuthor;
 		}
@@ -234,7 +234,7 @@ abstract class ModuleNews extends Module
 		}
 
 		// schema.org information
-		$objTemplate->getSchemaOrgData = static function () use ($objTemplate, $objArticle): array {
+		$objTemplate->getSchemaOrgData = static function () use ($objArticle, $objTemplate): array {
 			$jsonLd = News::getSchemaOrgData($objArticle);
 
 			if ($objTemplate->addImage && $objTemplate->figure)
@@ -302,7 +302,7 @@ abstract class ModuleNews extends Module
 	{
 		$blnIsInternal = $objArticle->source != 'external';
 		$strReadMore = $blnIsInternal ? $GLOBALS['TL_LANG']['MSC']['readMore'] : $GLOBALS['TL_LANG']['MSC']['open'];
-		$strArticleUrl = News::generateNewsUrl($objArticle, $blnAddArchive);
+		$strArticleUrl = $this->generateContentUrl($objArticle, $blnAddArchive);
 
 		return sprintf(
 			'<a href="%s" title="%s"%s>%s%s</a>',
@@ -312,5 +312,18 @@ abstract class ModuleNews extends Module
 			$strLink,
 			$blnIsReadMore && $blnIsInternal ? '<span class="invisible"> ' . $objArticle->headline . '</span>' : ''
 		);
+	}
+
+	private function generateContentUrl(NewsModel $content, bool $addArchive): string
+	{
+		$parameters = array();
+
+		// Add the current archive parameter (news archive)
+		if ($addArchive && Input::get('month'))
+		{
+			$parameters['month'] = Input::get('month');
+		}
+
+		return System::getContainer()->get('contao.routing.content_url_generator')->generate($content, $parameters);
 	}
 }
