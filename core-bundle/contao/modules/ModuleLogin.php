@@ -16,7 +16,6 @@ use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvents;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\Exception\InsufficientAuthenticationException;
 use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
 
 /**
@@ -60,6 +59,13 @@ class ModuleLogin extends Module
 			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
+		}
+
+		$user = System::getContainer()->get('security.helper')->getUser();
+
+		if ($user && !$user instanceof FrontendUser)
+		{
+			return '';
 		}
 
 		// If the form was submitted and the credentials were wrong, take the target
@@ -106,18 +112,14 @@ class ModuleLogin extends Module
 
 		$container = System::getContainer();
 		$request = $container->get('request_stack')->getCurrentRequest();
+		$security = $container->get('security.helper');
+		$user = $security->getUser();
 		$exception = null;
 		$lastUsername = '';
+		$isRemembered = $security->isGranted('IS_REMEMBERED');
+		$isTwoFactorInProgress = $security->isGranted('IS_AUTHENTICATED_2FA_IN_PROGRESS');
 
-		// Only call the authentication utils if there is an active session to prevent starting an empty session
-		if ($request?->hasSession() && ($request->hasPreviousSession() || $request->getSession()->isStarted()))
-		{
-			$authUtils = $container->get('security.authentication_utils');
-			$exception = $authUtils->getLastAuthenticationError();
-			$lastUsername = $authUtils->getLastUsername();
-		}
-
-		if ($request && $this->isLoggedIn($exception))
+		if ($request && $user instanceof FrontendUser && !$isTwoFactorInProgress && (!$isRemembered || $objPage->type !== 'error_401'))
 		{
 			$strRedirect = Environment::get('uri');
 
@@ -133,12 +135,10 @@ class ModuleLogin extends Module
 				$strRedirect = Environment::get('base');
 			}
 
-			$user = FrontendUser::getInstance();
-
 			$this->Template->logout = true;
 			$this->Template->formId = 'tl_logout_' . $this->id;
 			$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['logout']);
-			$this->Template->loggedInAs = sprintf($GLOBALS['TL_LANG']['MSC']['loggedInAs'], $user->username);
+			$this->Template->loggedInAs = sprintf($GLOBALS['TL_LANG']['MSC']['loggedInAs'], $user->getUserIdentifier());
 			$this->Template->action = $container->get('security.logout_url_generator')->getLogoutPath();
 			$this->Template->targetPath = StringUtil::specialchars($strRedirect);
 
@@ -150,7 +150,13 @@ class ModuleLogin extends Module
 			return;
 		}
 
-		$isRememberMe = $this->isRememberMe();
+		// Only call the authentication utils if there is an active session to prevent starting an empty session
+		if ($request?->hasSession() && ($request->hasPreviousSession() || $request->getSession()->isStarted()))
+		{
+			$authUtils = $container->get('security.authentication_utils');
+			$exception = $authUtils->getLastAuthenticationError();
+			$lastUsername = $authUtils->getLastUsername();
+		}
 
 		if ($exception instanceof TooManyLoginAttemptsAuthenticationException)
 		{
@@ -162,15 +168,15 @@ class ModuleLogin extends Module
 			$this->Template->hasError = true;
 			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['invalidTwoFactor'];
 		}
-		elseif ($isRememberMe && $exception instanceof InsufficientAuthenticationException)
-		{
-			$this->Template->hasError = true;
-			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['insufficientAuthentication'];
-		}
-		elseif ($exception instanceof AuthenticationException && !$exception instanceof InsufficientAuthenticationException)
+		elseif ($exception instanceof AuthenticationException)
 		{
 			$this->Template->hasError = true;
 			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['invalidLogin'];
+		}
+		elseif ($isRemembered)
+		{
+			$this->Template->hasError = true;
+			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['insufficientAuthentication'];
 		}
 
 		$blnRedirectBack = false;
@@ -193,9 +199,7 @@ class ModuleLogin extends Module
 		$this->Template->forceTargetPath = (int) $blnRedirectBack;
 		$this->Template->targetPath = StringUtil::specialchars(base64_encode($strRedirect));
 
-		$authorizationChecker = $container->get('security.authorization_checker');
-
-		if ($authorizationChecker->isGranted('IS_AUTHENTICATED_2FA_IN_PROGRESS'))
+		if ($isTwoFactorInProgress)
 		{
 			// Dispatch 2FA form event to prepare 2FA providers
 			$token = $container->get('security.token_storage')->getToken();
@@ -222,36 +226,15 @@ class ModuleLogin extends Module
 		$this->Template->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['login']);
 		$this->Template->value = Input::encodeInsertTags(StringUtil::specialchars($lastUsername));
-		$this->Template->autologin = $this->autologin && !$isRememberMe;
-		$this->Template->rememberMe = $this->autologin && $isRememberMe;
+		$this->Template->autologin = $this->autologin;
+		$this->Template->remembered = false;
 		$this->Template->autoLabel = $GLOBALS['TL_LANG']['MSC']['autologin'];
-	}
 
-	private function isLoggedIn(AuthenticationException|null $authException): bool
-	{
-		$container = System::getContainer();
-		$token = $container->get('security.token_storage')->getToken();
-		$trustResolver = $container->get('security.authentication.trust_resolver');
-
-		if (!$trustResolver->isAuthenticated($token))
+		if ($isRemembered)
 		{
-			return false;
+			$this->Template->loggedInAs = sprintf($GLOBALS['TL_LANG']['MSC']['loggedInAs'], $user->getUserIdentifier());
+			$this->Template->value = Input::encodeInsertTags(StringUtil::specialchars($user->getUserIdentifier()));
+			$this->Template->remembered = true;
 		}
-
-		if ($trustResolver->isFullFledged($token))
-		{
-			return true;
-		}
-
-		return !$authException instanceof InsufficientAuthenticationException;
-	}
-
-	private function isRememberMe(): bool
-	{
-		$container = System::getContainer();
-		$token = $container->get('security.token_storage')->getToken();
-		$trustResolver = $container->get('security.authentication.trust_resolver');
-
-		return $trustResolver->isRememberMe($token);
 	}
 }

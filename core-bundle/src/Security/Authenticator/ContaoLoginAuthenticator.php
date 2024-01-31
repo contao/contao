@@ -94,7 +94,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         $errorPage = $this->pageFinder->findFirstPageOfTypeForRequest($request, 'error_401');
 
         if (!$errorPage) {
-            throw new UnauthorizedHttpException('', 'No error page found.', $authException);
+            throw new UnauthorizedHttpException('', 'No error_401 page found.', $authException);
         }
 
         $errorPage->loadDetails();
@@ -102,10 +102,6 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
 
         $route = $this->pageRegistry->getRoute($errorPage);
         $subRequest = $request->duplicate(null, null, $route->getDefaults());
-
-        if ($authException && !$subRequest->attributes->has(SecurityRequestAttributes::AUTHENTICATION_ERROR)) {
-            $subRequest->attributes->set(SecurityRequestAttributes::AUTHENTICATION_ERROR, $authException);
-        }
 
         try {
             return $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST, false);
