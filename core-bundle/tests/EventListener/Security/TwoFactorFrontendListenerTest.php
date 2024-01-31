@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\EventListener\Security;
 
 use Contao\CoreBundle\EventListener\Security\TwoFactorFrontendListener;
 use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
+use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Routing\ScopeMatcher;
@@ -27,7 +28,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -339,7 +339,7 @@ class TwoFactorFrontendListenerTest extends TestCase
         $this->assertInstanceOf(RedirectResponse::class, $event->getResponse());
     }
 
-    public function testThrowsAnUnauthorizedHttpException(): void
+    public function testThrowsAnInsufficientAuthenticationException(): void
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->useTwoFactor = false;
@@ -361,7 +361,7 @@ class TwoFactorFrontendListenerTest extends TestCase
             [UsernamePasswordToken::class],
         );
 
-        $this->expectException(UnauthorizedHttpException::class);
+        $this->expectException(InsufficientAuthenticationException::class);
 
         $listener($event);
     }
