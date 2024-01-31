@@ -119,9 +119,7 @@ class ModuleLogin extends Module
 		$isRemembered = $security->isGranted('IS_REMEMBERED');
 		$isTwoFactorInProgress = $security->isGranted('IS_AUTHENTICATED_2FA_IN_PROGRESS');
 
-		/*
-		 * Do not show the logout button if the user is REMEMBERME, and we are on the 401 page or the redirect page of the 401
-		 */
+		// Do not show the logout button if the user is REMEMBERME, and we are on the 401 page or the redirect page of the 401
 		if ($user instanceof FrontendUser && !$isTwoFactorInProgress && (!$isRemembered || ($objPage->type != 'error_401' && $request && $this->targetPath !== $request->query->get('redirect'))))
 		{
 			$strRedirect = Environment::get('uri');
