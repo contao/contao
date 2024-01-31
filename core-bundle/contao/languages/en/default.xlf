@@ -129,7 +129,7 @@
         <source>Login failed (note that usernames and passwords are case-sensitive)!</source>
       </trans-unit>
       <trans-unit id="ERR.insufficientAuthentication">
-        <source>Please re-authenticate to access this resource.</source>
+        <source>Please enter your password to continue.</source>
       </trans-unit>
       <trans-unit id="ERR.invalidColor">
         <source>Invalid color format!</source>
