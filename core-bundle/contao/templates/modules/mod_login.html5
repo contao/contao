@@ -33,7 +33,7 @@
         </div>
       <?php else: ?>
         <?php if ($this->remembered): ?>
-          <p class="login_info"><?= $this->reauthenticate ?></p>
+          <p class="login_info"><?= $this->loggedInAs ?><br><?= $this->reauthenticate ?></p>
         <?php else: ?>
           <div class="widget widget-text">
             <label for="username"><?= $this->username ?></label>
