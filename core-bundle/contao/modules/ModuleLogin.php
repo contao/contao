@@ -74,7 +74,7 @@ class ModuleLogin extends Module
 		{
 			$this->targetPath = base64_decode($request->request->get('_target_path'));
 		}
-		if ($request?->query->has('redirect'))
+		elseif ($request?->query->has('redirect'))
 		{
 			$uriSigner = System::getContainer()->get('uri_signer');
 
