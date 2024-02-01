@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\ArticleModel;
+use Contao\ContentModel;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\EventListener\PreviewUrlCreateListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
@@ -45,6 +46,27 @@ class PreviewUrlCreateListenerTest extends TestCase
         $pageModel = $this->mockClassWithProperties(PageModel::class);
 
         $adapters = [
+            ArticleModel::class => $this->mockConfiguredAdapter(['findByPk' => $articleModel]),
+            PageModel::class => $this->mockConfiguredAdapter(['findByPk' => $pageModel]),
+        ];
+
+        $framework = $this->mockContaoFramework($adapters);
+
+        $listener = new PreviewUrlCreateListener($framework);
+        $listener($event);
+
+        $this->assertSame('page=42', $event->getQuery());
+    }
+
+    public function testCreatesThePreviewUrlForContentElements(): void
+    {
+        $event = new PreviewUrlCreateEvent('content', 3);
+        $contentModel = $this->mockClassWithProperties(ContentModel::class, ['pid' => 7]);
+        $articleModel = $this->mockClassWithProperties(ArticleModel::class, ['pid' => 42]);
+        $pageModel = $this->mockClassWithProperties(PageModel::class);
+
+        $adapters = [
+            ContentModel::class => $this->mockConfiguredAdapter(['findByPk' => $contentModel]),
             ArticleModel::class => $this->mockConfiguredAdapter(['findByPk' => $articleModel]),
             PageModel::class => $this->mockConfiguredAdapter(['findByPk' => $pageModel]),
         ];

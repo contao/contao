@@ -78,6 +78,10 @@ class BackendPreviewListener
         $do = $request->query->get('do', '');
         $url = $this->router->generate('contao_backend_preview');
 
+        if ($request->query->has('ptable')) {
+            $do = substr($request->query->get('ptable'), 3);
+        }
+
         $event = new PreviewUrlCreateEvent($do, $id);
         $this->eventDispatcher->dispatch($event, ContaoCoreEvents::PREVIEW_URL_CREATE);
 
