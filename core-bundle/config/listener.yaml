@@ -476,16 +476,12 @@ services:
         tags:
             - { name: monolog.logger, channel: contao.access }
 
-    contao.listener.security.token_deauthenticated:
-        class: Contao\CoreBundle\EventListener\Security\TokenDeauthenticatedListener
-        arguments:
-            - '@contao.repository.remember_me'
-
     contao.listener.security.two_factor_frontend:
         class: Contao\CoreBundle\EventListener\Security\TwoFactorFrontendListener
         arguments:
             - '@contao.framework'
             - '@contao.routing.scope_matcher'
+            - '@contao.routing.page_finder'
             - '@contao.routing.content_url_generator'
             - '@security.token_storage'
             - '%scheb_two_factor.security_tokens%'

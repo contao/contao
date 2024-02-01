@@ -66,6 +66,9 @@ class StripCookiesSubscriber implements EventSubscriberInterface
 
         // Cookiebot Cookie Consent
         'CookieConsent',
+
+        // Cypress
+        '__cypress_initial',
     ];
 
     private array $removeFromDenyList = [];

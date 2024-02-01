@@ -629,11 +629,6 @@ services:
         arguments:
             - '@doctrine'
 
-    contao.repository.remember_me:
-        class: Contao\CoreBundle\Repository\RememberMeRepository
-        arguments:
-            - '@doctrine'
-
     contao.resource_finder:
         class: Contao\CoreBundle\Config\ResourceFinder
         public: true
@@ -856,6 +851,13 @@ services:
             - !tagged_iterator security.voter
             - '@contao.security.priority_strategy'
 
+    contao.security.access_denied_handler:
+        class: Contao\CoreBundle\Security\Authentication\AccessDeniedHandler
+        arguments:
+            - '@contao.routing.page_finder'
+            - '@contao.routing.page_registry'
+            - '@http_kernel'
+
     contao.security.authentication_failure_handler:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler
         arguments:
@@ -979,7 +981,7 @@ services:
             - '@contao.routing.scope_matcher'
             - '@router.default'
             - '@uri_signer'
-            - '@contao.framework'
+            - '@contao.routing.page_finder'
             - '@security.token_storage'
             - '@contao.routing.page_registry'
             - '@http_kernel'
@@ -990,26 +992,8 @@ services:
     contao.security.member_group_voter:
         class: Contao\CoreBundle\Security\Voter\MemberGroupVoter
 
-    contao.security.persistent_remember_me_handler:
-        class: Symfony\Component\Security\Http\RememberMe\PersistentRememberMeHandler
-        arguments:
-            - '@contao.security.remember_me_token_provider'
-            - '%kernel.secret%'
-            - '@contao.security.frontend_user_provider'
-            - '@request_stack'
-            - []
-            - '@?logger'
-            - ~
-        tags:
-            - { name: monolog.logger, channel: security }
-
     contao.security.priority_strategy:
         class: Symfony\Component\Security\Core\Authorization\Strategy\PriorityStrategy
-
-    contao.security.remember_me_token_provider:
-        class: Contao\CoreBundle\Security\Authentication\RememberMe\RememberMeTokenProvider
-        arguments:
-            - !service_closure '@contao.repository.remember_me'
 
     contao.security.token_checker:
         class: Contao\CoreBundle\Security\Authentication\Token\TokenChecker

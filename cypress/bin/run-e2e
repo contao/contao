@@ -3,6 +3,9 @@
 rm -rf cypress/webspace/vendor/contao/manager-bundle
 composer up --working-dir=cypress/webspace
 
+# Set the COOKIE_ALLOW_LIST environment variable (see #6837)
+export COOKIE_ALLOW_LIST=PHPSESSID,csrf_https-contao_csrf_token,csrf_contao_csrf_token,trusted_device,REMEMBERME
+
 symfony server:start --port=8765 --dir=cypress/webspace --daemon
 yarn cypress run
 symfony server:stop --dir=cypress/webspace

@@ -24,7 +24,6 @@ use Contao\PageModel;
 use Contao\Template;
 use ParagonIE\ConstantTime\Base32;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,24 +37,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[AsFrontendModule(category: 'user', template: 'mod_two_factor')]
 class TwoFactorController extends AbstractFrontendModuleController
 {
-    protected PageModel|null $pageModel = null;
-
-    public function __invoke(Request $request, ModuleModel $model, string $section, array|null $classes = null, PageModel|null $pageModel = null): Response
-    {
-        if (!$this->container->get('security.helper')->isGranted('IS_AUTHENTICATED_FULLY')) {
-            // TODO: front end users should be able to re-authenticate after REMEMBERME
-            return new Response('', Response::HTTP_NO_CONTENT);
-        }
-
-        if ($pageModel && $this->container->get('contao.routing.scope_matcher')->isFrontendRequest($request)) {
-            $pageModel->loadDetails();
-        }
-
-        $this->pageModel = $pageModel;
-
-        return parent::__invoke($request, $model, $section, $classes);
-    }
-
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();
@@ -64,7 +45,6 @@ class TwoFactorController extends AbstractFrontendModuleController
         $services['contao.routing.scope_matcher'] = ScopeMatcher::class;
         $services['contao.security.two_factor.authenticator'] = Authenticator::class;
         $services['security.authentication_utils'] = AuthenticationUtils::class;
-        $services['security.helper'] = Security::class;
         $services['translator'] = TranslatorInterface::class;
         $services['contao.security.two_factor.trusted_device_manager'] = TrustedDeviceManager::class;
         $services['contao.security.two_factor.backup_code_manager'] = BackupCodeManager::class;
@@ -74,29 +54,32 @@ class TwoFactorController extends AbstractFrontendModuleController
 
     protected function getResponse(Template $template, ModuleModel $model, Request $request): Response
     {
-        $user = $this->container->get('security.helper')->getUser();
+        $user = $this->getUser();
+        $pageModel = $request->attributes->get('pageModel');
 
-        if (!$user instanceof FrontendUser) {
+        if (!$user instanceof FrontendUser || !$pageModel instanceof PageModel) {
             return new Response('', Response::HTTP_NO_CONTENT);
         }
 
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY', null, 'Full authentication is required to configure the two-factor authentication.');
+
         $adapter = $this->getContaoAdapter(PageModel::class);
         $redirectPage = $model->jumpTo > 0 ? $adapter->findByPk($model->jumpTo) : null;
-        $return = $this->generateContentUrl($redirectPage instanceof PageModel ? $redirectPage : $this->pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL);
+        $return = $this->generateContentUrl($redirectPage instanceof PageModel ? $redirectPage : $pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL);
 
-        $template->enforceTwoFactor = $this->pageModel->enforceTwoFactor;
+        $template->enforceTwoFactor = $pageModel->enforceTwoFactor;
         $template->targetPath = $return;
 
         $translator = $this->container->get('translator');
 
         // Inform the user if 2FA is enforced
-        if ($this->pageModel->enforceTwoFactor) {
+        if ($pageModel->enforceTwoFactor) {
             $template->message = $translator->trans('MSC.twoFactorEnforced', [], 'contao_default');
         }
 
         $enable = 'enable' === $request->get('2fa');
 
-        if (!$user->useTwoFactor && $this->pageModel->enforceTwoFactor) {
+        if (!$user->useTwoFactor && $pageModel->enforceTwoFactor) {
             $enable = true;
         }
 
@@ -106,7 +89,7 @@ class TwoFactorController extends AbstractFrontendModuleController
 
         $formId = $request->request->get('FORM_SUBMIT');
 
-        if ('tl_two_factor_disable' === $formId && ($response = $this->disableTwoFactor($user))) {
+        if ('tl_two_factor_disable' === $formId && ($response = $this->disableTwoFactor($user, $pageModel))) {
             return $response;
         }
 
@@ -126,7 +109,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         }
 
         $template->isEnabled = (bool) $user->useTwoFactor;
-        $template->href = $this->generateContentUrl($this->pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL).'?2fa=enable';
+        $template->href = $this->generateContentUrl($pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL).'?2fa=enable';
         $template->trustedDevices = $this->container->get('contao.security.two_factor.trusted_device_manager')->getTrustedDevices($user);
 
         return $template->getResponse();
@@ -173,7 +156,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         return null;
     }
 
-    private function disableTwoFactor(FrontendUser $user): Response|null
+    private function disableTwoFactor(FrontendUser $user, PageModel $pageModel): Response|null
     {
         // Return if 2FA is disabled already
         if (!$user->useTwoFactor) {
@@ -188,6 +171,6 @@ class TwoFactorController extends AbstractFrontendModuleController
         // Clear all trusted devices
         $this->container->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
 
-        return new RedirectResponse($this->generateContentUrl($this->pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL));
+        return new RedirectResponse($this->generateContentUrl($pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL));
     }
 }

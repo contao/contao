@@ -83,7 +83,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         foreach (['autoload.php', 'config.php'] as $file) {
             $files = $this->findConfigFiles($file);
 
-            if (!empty($files)) {
+            if ([] !== $files) {
                 $dumper->dump($files, Path::join('config', $file), ['type' => 'namespaced']);
             }
         }
@@ -250,9 +250,9 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     }
 
     /**
-     * @return array<string>|string
+     * @return array<string>
      */
-    private function findConfigFiles(string $name): array|string
+    private function findConfigFiles(string $name): array
     {
         try {
             return $this->locator->locate(Path::join('config', $name), null, false);
