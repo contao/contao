@@ -125,7 +125,7 @@ class MakeResponsePrivateListener
              * – in case the admin has configured to do so. A typical use case would be 
              * serving public pages from cache to logged in members.
              */
-            if ($page->alwaysLoadFromCache) {
+            if ($page->cache && $page->alwaysLoadFromCache) {
                 return;
             }
         }
