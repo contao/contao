@@ -86,6 +86,7 @@ class ContaoCsrfTokenManager extends CsrfTokenManager implements ResetInterface
             && (
                 0 === $request->cookies->count()
                 || [$tokenCookieName] === $request->cookies->keys()
+                || ['__cypress_initial'] === $request->cookies->keys()
             )
             && !($request->hasSession() && $request->getSession()->isStarted());
     }
