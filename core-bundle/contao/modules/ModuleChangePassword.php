@@ -55,7 +55,7 @@ class ModuleChangePassword extends Module
 
 		if (!$security->isGranted('IS_AUTHENTICATED_FULLY'))
 		{
-			throw new AccessDeniedException('Full authentication is required to change the user password.');
+			throw new AccessDeniedException('Full authentication is required to change the password.');
 		}
 
 		return parent::generate();
