@@ -28,7 +28,7 @@ class ArticleContentVoter implements VoterInterface, CacheableVoterInterface
 {
     public function __construct(
         private readonly ContaoFramework $framework,
-        private readonly AccessDecisionManagerInterface $accessDecisionManager
+        private readonly AccessDecisionManagerInterface $accessDecisionManager,
     ) {
     }
 
