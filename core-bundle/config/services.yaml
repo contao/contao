@@ -851,6 +851,13 @@ services:
             - !tagged_iterator security.voter
             - '@contao.security.priority_strategy'
 
+    contao.security.access_denied_handler:
+        class: Contao\CoreBundle\Security\Authentication\AccessDeniedHandler
+        arguments:
+            - '@contao.routing.page_finder'
+            - '@contao.routing.page_registry'
+            - '@http_kernel'
+
     contao.security.authentication_failure_handler:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler
         arguments:
@@ -974,7 +981,7 @@ services:
             - '@contao.routing.scope_matcher'
             - '@router.default'
             - '@uri_signer'
-            - '@contao.framework'
+            - '@contao.routing.page_finder'
             - '@security.token_storage'
             - '@contao.routing.page_registry'
             - '@http_kernel'

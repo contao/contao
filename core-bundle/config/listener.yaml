@@ -481,6 +481,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@contao.routing.scope_matcher'
+            - '@contao.routing.page_finder'
             - '@contao.routing.content_url_generator'
             - '@security.token_storage'
             - '%scheb_two_factor.security_tokens%'

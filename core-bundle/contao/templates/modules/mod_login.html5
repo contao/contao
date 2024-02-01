@@ -15,6 +15,10 @@
       <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
       <input type="hidden" name="_target_path" value="<?= $this->targetPath ?>">
       <input type="hidden" name="_always_use_target_path" value="<?= $this->forceTargetPath ?>">
+      <?php if ($this->remembered): ?>
+        <input type="hidden" name="username" value="<?= $this->value ?>">
+        <input type="hidden" name="autologin" value="<?= $this->autologin ? '1' : '' ?>">
+      <?php endif; ?>
       <?php if ($this->logout): ?>
         <p class="login_info"><?= $this->loggedInAs ?><br><?= $this->lastLogin ?></p>
       <?php elseif ($this->twoFactorEnabled): ?>
@@ -28,15 +32,19 @@
           <label for="trusted"><?= $this->trans('MSC.twoFactorTrustDevice') ?></label>
         </div>
       <?php else: ?>
-        <div class="widget widget-text">
-          <label for="username"><?= $this->username ?></label>
-          <input type="text" name="username" id="username" class="text" value="<?= $this->value ?>" autocapitalize="off" autocomplete="username" required>
-        </div>
+        <?php if ($this->remembered): ?>
+          <p class="login_info"><?= $this->loggedInAs ?><br><?= $this->reauthenticate ?></p>
+        <?php else: ?>
+          <div class="widget widget-text">
+            <label for="username"><?= $this->username ?></label>
+            <input type="text" name="username" id="username" class="text" value="<?= $this->value ?>" autocapitalize="off" autocomplete="username" required>
+          </div>
+        <?php endif; ?>
         <div class="widget widget-password">
           <label for="password"><?= $this->password ?></label>
           <input type="password" name="password" id="password" class="text password" value="" autocomplete="current-password" required>
         </div>
-        <?php if ($this->autologin): ?>
+        <?php if ($this->autologin && !$this->remembered): ?>
           <div class="widget widget-checkbox">
             <fieldset class="checkbox_container">
               <span><input type="checkbox" name="autologin" id="autologin" value="1" class="checkbox"> <label for="autologin"><?= $this->autoLabel ?></label></span>

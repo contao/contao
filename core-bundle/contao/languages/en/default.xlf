@@ -1787,6 +1787,12 @@
       <trans-unit id="MSC.emptyField">
         <source>Please enter your username and password!</source>
       </trans-unit>
+      <trans-unit id="MSC.reauthenticate">
+        <source>Please enter your password to verify your identity.</source>
+      </trans-unit>
+      <trans-unit id="MSC.verify">
+        <source>Verify</source>
+      </trans-unit>
       <trans-unit id="MSC.confirmation">
         <source>Confirmation</source>
       </trans-unit>

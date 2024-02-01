@@ -61,6 +61,13 @@ class ModuleLogin extends Module
 			return $objTemplate->parse();
 		}
 
+		$user = System::getContainer()->get('security.helper')->getUser();
+
+		if ($user && !$user instanceof FrontendUser)
+		{
+			return '';
+		}
+
 		// If the form was submitted and the credentials were wrong, take the target
 		// path from the submitted data as otherwise it would take the current page
 		if ($request?->isMethod('POST'))
@@ -105,20 +112,18 @@ class ModuleLogin extends Module
 
 		$container = System::getContainer();
 		$request = $container->get('request_stack')->getCurrentRequest();
+		$security = $container->get('security.helper');
+		$user = $security->getUser();
 		$exception = null;
 		$lastUsername = '';
+		$isRemembered = $security->isGranted('IS_REMEMBERED');
+		$isTwoFactorInProgress = $security->isGranted('IS_AUTHENTICATED_2FA_IN_PROGRESS');
 
-		// Only call the authentication utils if there is an active session to prevent starting an empty session
-		if ($request?->hasSession() && ($request->hasPreviousSession() || $request->getSession()->isStarted()))
-		{
-			$authUtils = $container->get('security.authentication_utils');
-			$exception = $authUtils->getLastAuthenticationError();
-			$lastUsername = $authUtils->getLastUsername();
-		}
+		// The user can re-authenticate on the error_401 page or on the redirect page of the error_401 page
+		$canReauthenticate = $objPage->type == 'error_401' || $this->targetPath && $this->targetPath === $request?->query->get('redirect');
 
-		$authorizationChecker = $container->get('security.authorization_checker');
-
-		if ($authorizationChecker->isGranted('ROLE_MEMBER'))
+		// Show the logout button if the user is fully authenticated or cannot re-authenticate on the current page
+		if ($user instanceof FrontendUser && !$isTwoFactorInProgress && (!$isRemembered || !$canReauthenticate))
 		{
 			$strRedirect = Environment::get('uri');
 
@@ -134,12 +139,10 @@ class ModuleLogin extends Module
 				$strRedirect = Environment::get('base');
 			}
 
-			$user = FrontendUser::getInstance();
-
 			$this->Template->logout = true;
 			$this->Template->formId = 'tl_logout_' . $this->id;
 			$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['logout']);
-			$this->Template->loggedInAs = sprintf($GLOBALS['TL_LANG']['MSC']['loggedInAs'], $user->username);
+			$this->Template->loggedInAs = sprintf($GLOBALS['TL_LANG']['MSC']['loggedInAs'], $user->getUserIdentifier());
 			$this->Template->action = $container->get('security.logout_url_generator')->getLogoutPath();
 			$this->Template->targetPath = StringUtil::specialchars($strRedirect);
 
@@ -149,6 +152,14 @@ class ModuleLogin extends Module
 			}
 
 			return;
+		}
+
+		// Only call the authentication utils if there is an active session to prevent starting an empty session
+		if ($request?->hasSession() && ($request->hasPreviousSession() || $request->getSession()->isStarted()))
+		{
+			$authUtils = $container->get('security.authentication_utils');
+			$exception = $authUtils->getLastAuthenticationError();
+			$lastUsername = $authUtils->getLastUsername();
 		}
 
 		if ($exception instanceof TooManyLoginAttemptsAuthenticationException)
@@ -187,7 +198,7 @@ class ModuleLogin extends Module
 		$this->Template->forceTargetPath = (int) $blnRedirectBack;
 		$this->Template->targetPath = StringUtil::specialchars(base64_encode($strRedirect));
 
-		if ($authorizationChecker->isGranted('IS_AUTHENTICATED_2FA_IN_PROGRESS'))
+		if ($isTwoFactorInProgress && $request)
 		{
 			// Dispatch 2FA form event to prepare 2FA providers
 			$token = $container->get('security.token_storage')->getToken();
@@ -216,5 +227,15 @@ class ModuleLogin extends Module
 		$this->Template->value = Input::encodeInsertTags(StringUtil::specialchars($lastUsername));
 		$this->Template->autologin = $this->autologin;
 		$this->Template->autoLabel = $GLOBALS['TL_LANG']['MSC']['autologin'];
+		$this->Template->remembered = false;
+
+		if ($isRemembered)
+		{
+			$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['verify']);
+			$this->Template->loggedInAs = sprintf($GLOBALS['TL_LANG']['MSC']['loggedInAs'], $user->getUserIdentifier());
+			$this->Template->reauthenticate = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['reauthenticate']);
+			$this->Template->value = Input::encodeInsertTags(StringUtil::specialchars($user->getUserIdentifier()));
+			$this->Template->remembered = true;
+		}
 	}
 }
