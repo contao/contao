@@ -18,7 +18,7 @@ use Symfony\Contracts\Service\ResetInterface;
 
 class PageRegistry implements ResetInterface
 {
-    private const DISABLE_CONTENT_COMPOSITION = ['redirect', 'forward', 'logout'];
+    private const DISABLE_CONTENT_COMPOSITION = ['forward', 'logout'];
 
     private array|null $urlPrefixes = null;
 
