@@ -1282,11 +1282,20 @@ abstract class Controller extends System
 
 		do
 		{
+			$dynamicWhere = '';
+			$values = array($intId);
+
+			if ($GLOBALS['TL_DCA'][$strParentTable]['config']['dynamicPtable'])
+			{
+				$dynamicWhere = ' AND ptable=?';
+				$values[] = $strParentTable;
+			}
+
 			// Get the pid
 			$objParent = $db
-				->prepare("SELECT pid FROM " . $strParentTable . " WHERE id=?")
+				->prepare("SELECT pid FROM " . $strParentTable . " WHERE id=?$dynamicWhere")
 				->limit(1)
-				->execute($intId);
+				->execute(...$values);
 
 			if ($objParent->numRows < 1)
 			{
