@@ -37,8 +37,10 @@ class ContaoCsrfTokenManagerTest extends TestCase
         );
 
         $token = new CsrfToken('contao_csrf_token', $tokenManager->getDefaultTokenValue());
-
         $this->assertTrue($tokenManager->isTokenValid($token));
+
+        $secondToken = new CsrfToken('contao_csrf_token', $tokenManager->getDefaultTokenValue());
+        $this->assertSame($token->getValue(), $secondToken->getValue());
     }
 
     public function testGetDefaultTokenValueFailsIfTokenNameIsNotSet(): void

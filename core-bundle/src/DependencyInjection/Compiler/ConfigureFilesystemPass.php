@@ -18,6 +18,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 use Symfony\Component\Finder\Finder;
 
 class ConfigureFilesystemPass implements CompilerPassInterface
@@ -55,7 +56,11 @@ class ConfigureFilesystemPass implements CompilerPassInterface
         $projectDir = $parameterBag->resolveValue($parameterBag->get('kernel.project_dir'));
         $uploadDir = $parameterBag->resolveValue($parameterBag->get('contao.upload_path'));
 
-        $finder = (new Finder())->in($projectDir)->directories()->path('/^'.preg_quote($uploadDir, '/').'\//');
+        try {
+            $finder = (new Finder())->in(Path::join($projectDir, $uploadDir))->directories();
+        } catch (DirectoryNotFoundException $e) {
+            return;
+        }
 
         foreach ($finder as $item) {
             if (!$item->isLink()) {
@@ -70,7 +75,7 @@ class ConfigureFilesystemPass implements CompilerPassInterface
             }
 
             // Mount a local adapter in place of the symlink
-            $config->mountLocalAdapter($target, $item->getRelativePathname());
+            $config->mountLocalAdapter($target, Path::join($uploadDir, $item->getRelativePathname()));
         }
     }
 }
