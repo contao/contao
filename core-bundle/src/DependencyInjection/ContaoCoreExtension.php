@@ -110,6 +110,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('contao.web_dir', $this->getComposerPublicDir($projectDir) ?? Path::join($projectDir, 'public'));
         $container->setParameter('contao.console_path', $config['console_path']);
         $container->setParameter('contao.upload_path', $config['upload_path']);
+        $container->setParameter('contao.component_dir', $config['component_dir']);
         $container->setParameter('contao.editable_files', $config['editable_files']);
         $container->setParameter('contao.preview_script', $config['preview_script']);
         $container->setParameter('contao.csrf_cookie_prefix', $config['csrf_cookie_prefix']);
