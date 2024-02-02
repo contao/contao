@@ -1079,6 +1079,7 @@ window.Backend =
 									clone.getFirst('input').value = input.value;
 								}
 								addEventsTo(clone);
+								input.select();
 							});
 							break;
 						case 'delete':
@@ -1175,6 +1176,7 @@ window.Backend =
 								ntr.inject(tr, 'after');
 								addEventsTo(ntr);
 								makeSortable(tbody);
+								ntr.getFirst('td').getFirst('textarea').select();
 							});
 							break;
 						case 'rdelete':
@@ -1203,6 +1205,7 @@ window.Backend =
 								next = headFirst.clone(true).inject(head.getLast('td'), 'before');
 								addEventsTo(next);
 								makeSortable(tbody);
+								children[0].getChildren()[index + 1].getFirst('textarea').select();
 							});
 							break;
 						case 'cmovel':
@@ -1406,6 +1409,7 @@ window.Backend =
 								ntr.inject(tr, 'after');
 								addEventsTo(ntr);
 								makeSortable(tbody);
+								ntr.getFirst('td').getFirst('input').select();
 							});
 							break;
 						case 'delete':
@@ -1502,6 +1506,7 @@ window.Backend =
 								ntr.inject(tr, 'after');
 								addEventsTo(ntr);
 								makeSortable(tbody);
+								ntr.getFirst('td').getFirst('input').select();
 							});
 							break;
 						case 'delete':
@@ -1926,7 +1931,7 @@ window.Backend =
 			}
 
 			dzElement.addClass('dropzone-filetree-enabled');
-            window.dispatchEvent(new Event('store-scroll-offset'));
+			window.dispatchEvent(new Event('store-scroll-offset'));
 		});
 
 		dz.on('dragleave', function() {
