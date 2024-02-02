@@ -70,7 +70,7 @@ class ConfigureFilesystemPass implements CompilerPassInterface
             }
 
             // Mount a local adapter in place of the symlink
-            $config->mountLocalAdapter($target, $item->getRelativePathname());
+            $config->mountLocalAdapter($target, Path::join($uploadDir, $item->getRelativePathname()));
         }
     }
 }
