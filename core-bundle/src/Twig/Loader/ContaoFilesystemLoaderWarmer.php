@@ -71,6 +71,8 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
             $this->writeIdeAutoCompletionMapping($cacheDir ?? $this->cacheDir);
         }
 
+        $this->loader->clear();
+
         return [];
     }
 
