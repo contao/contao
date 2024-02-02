@@ -207,7 +207,7 @@ class SymlinksCommand extends Command
             )
             ->followLinks()
             ->in($path)
-            ;
+        ;
     }
 
     /**
