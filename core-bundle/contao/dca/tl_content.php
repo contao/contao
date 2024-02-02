@@ -721,6 +721,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'form' => array
 		(
 			'inputType'               => 'select',
+			'foreignKey'              => 'tl_form.title',
 			'options_callback'        => array('tl_content', 'getForms'),
 			'eval'                    => array('mandatory'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50 wizard'),
 			'wizard' => array
@@ -732,6 +733,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'module' => array
 		(
 			'inputType'               => 'select',
+			'foreignKey'              => 'tl_module.name',
 			'options_callback'        => array('tl_content', 'getModules'),
 			'eval'                    => array('mandatory'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50 wizard'),
 			'wizard' => array
