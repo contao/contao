@@ -186,7 +186,7 @@ class DefaultOperationsListener
     {
         return function (DataContainerOperation $operation) use ($ctable, $table): void {
             $data = [
-                'pid' => $operation->getRecord()['pid'] ?? null,
+                'pid' => $operation->getRecord()['id'] ?? null,
             ];
 
             if ($GLOBALS['TL_DCA'][$ctable]['config']['dynamicPtable'] ?? false) {
