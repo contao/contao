@@ -200,6 +200,12 @@ class BackendPreviewControllerTest extends TestCase
             'https://www.example.com/en/foo.html',
         ];
 
+        yield 'Redirect relative to front end' => [
+            'https://www.example.com/preview.php/contao/preview?page=17',
+            '/en/foo.html',
+            '/en/foo.html',
+        ];
+
         yield 'Redirects to login link URL for cross-domain previews' => [
             'https://www.example.com/preview.php/contao/preview?page=42',
             'https://www.example.org/en/foo.html',
