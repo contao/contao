@@ -153,7 +153,7 @@ class ModuleLogin extends Module
 		}
 
 		// Only call the authentication utils if there is an active session to prevent starting an empty session
-		if ($request && $request->hasSession() && ($request->hasPreviousSession() || $request->getSession()->isStarted()))
+		if ($request?->hasSession() && ($request->hasPreviousSession() || $request->getSession()->isStarted()))
 		{
 			$authUtils = $container->get('security.authentication_utils');
 			$exception = $authUtils->getLastAuthenticationError();
