@@ -17,6 +17,7 @@ use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvents
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
+use Symfony\Component\Security\Http\SecurityRequestAttributes;
 
 /**
  * Front end module "login".
@@ -157,6 +158,17 @@ class ModuleLogin extends Module
 			$authUtils = $container->get('security.authentication_utils');
 			$exception = $authUtils->getLastAuthenticationError();
 			$lastUsername = $authUtils->getLastUsername();
+
+			// Store exception and username again to make it available for additional login modules on the page (see contao/contao#6275)
+			if ($exception)
+			{
+				$request->attributes->set(SecurityRequestAttributes::AUTHENTICATION_ERROR, $exception);
+			}
+
+			if ($lastUsername)
+			{
+				$request->attributes->set(SecurityRequestAttributes::LAST_USERNAME, $lastUsername);
+			}
 		}
 
 		if ($exception instanceof TooManyLoginAttemptsAuthenticationException)
