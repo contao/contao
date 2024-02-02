@@ -1409,7 +1409,7 @@ window.Backend =
 								ntr.inject(tr, 'after');
 								addEventsTo(ntr);
 								makeSortable(tbody);
-                                ntr.getFirst('td').getFirst('input').select();
+								ntr.getFirst('td').getFirst('input').select();
 							});
 							break;
 						case 'delete':
@@ -1506,7 +1506,7 @@ window.Backend =
 								ntr.inject(tr, 'after');
 								addEventsTo(ntr);
 								makeSortable(tbody);
-                                ntr.getFirst('td').getFirst('input').select();
+								ntr.getFirst('td').getFirst('input').select();
 							});
 							break;
 						case 'delete':
@@ -1931,7 +1931,7 @@ window.Backend =
 			}
 
 			dzElement.addClass('dropzone-filetree-enabled');
-            window.dispatchEvent(new Event('store-scroll-offset'));
+			window.dispatchEvent(new Event('store-scroll-offset'));
 		});
 
 		dz.on('dragleave', function() {
