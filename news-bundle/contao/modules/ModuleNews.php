@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Model\Collection;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
  * Parent class for news modules.
@@ -80,13 +81,15 @@ abstract class ModuleNews extends Module
 			$strClass = ' featured' . $strClass;
 		}
 
+		$url = $this->generateContentUrl($objArticle, $blnAddArchive);
+
 		$objTemplate->class = $strClass;
 		$objTemplate->newsHeadline = $objArticle->headline;
 		$objTemplate->subHeadline = $objArticle->subheadline;
 		$objTemplate->hasSubHeadline = $objArticle->subheadline ? true : false;
 		$objTemplate->linkHeadline = $this->generateLink($objArticle->headline, $objArticle, $blnAddArchive);
 		$objTemplate->more = $this->generateLink($objArticle->linkText ?: $GLOBALS['TL_LANG']['MSC']['more'], $objArticle, $blnAddArchive, true);
-		$objTemplate->link = $this->generateContentUrl($objArticle, $blnAddArchive);
+		$objTemplate->link = $url;
 		$objTemplate->archive = $objArticle->getRelated('pid');
 		$objTemplate->count = $intCount; // see #5708
 		$objTemplate->text = '';
@@ -132,6 +135,14 @@ abstract class ModuleNews extends Module
 			$objTemplate->hasText = static function () use ($objArticle) {
 				return ContentModel::countPublishedByPidAndTable($objArticle->id, 'tl_news') > 0;
 			};
+		}
+
+		// Adjust template data if no URL could be generated
+		if (null === $url)
+		{
+			$objTemplate->linkHeadline = $objArticle->headline;
+			$objTemplate->hasText = false;
+			$objTemplate->hasTeaser = false;
 		}
 
 		/** @var PageModel $objPage */
@@ -314,7 +325,7 @@ abstract class ModuleNews extends Module
 		);
 	}
 
-	private function generateContentUrl(NewsModel $content, bool $addArchive): string
+	private function generateContentUrl(NewsModel $content, bool $addArchive): string|null
 	{
 		$parameters = array();
 
@@ -324,6 +335,10 @@ abstract class ModuleNews extends Module
 			$parameters['month'] = Input::get('month');
 		}
 
-		return System::getContainer()->get('contao.routing.content_url_generator')->generate($content, $parameters);
+		try {
+			return System::getContainer()->get('contao.routing.content_url_generator')->generate($content, $parameters);
+		} catch (RouteNotFoundException) {
+			return null;
+		}
 	}
 }

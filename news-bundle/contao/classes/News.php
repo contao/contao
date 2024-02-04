@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -66,10 +67,16 @@ class News extends Frontend
 		$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
 
+		try {
+			$url = $urlGenerator->generate($objArticle);
+		} catch (RouteNotFoundException) {
+			$url = null;
+		}
+
 		$jsonLd = array(
 			'@type' => 'NewsArticle',
 			'identifier' => '#/schema/news/' . $objArticle->id,
-			'url' => $urlGenerator->generate($objArticle),
+			'url' => $url,
 			'headline' => $htmlDecoder->inputEncodedToPlainText($objArticle->headline),
 			'datePublished' => date('Y-m-d\TH:i:sP', $objArticle->date),
 		);
