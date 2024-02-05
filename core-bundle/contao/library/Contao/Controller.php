@@ -1272,6 +1272,7 @@ abstract class Controller extends System
 	{
 		$getParentEntry = function ($table, $id) {
 			$this->loadDataContainer($table);
+
 			$columns = 'pid';
 			$ptable = $GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null;
 
