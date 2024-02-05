@@ -130,6 +130,7 @@ class SitemapControllerTest extends TestCase
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
         $this->assertSame('public, s-maxage=2592000', $response->headers->get('Cache-Control'));
         $this->assertSame($this->getExpectedSitemapContent(['https://www.foobar.com/en/page1.html']), $response->getContent());
+        $this->assertSame(['Cookie'], $response->getVary());
     }
 
     public function testRecursivelyWalksThePageTree(): void
