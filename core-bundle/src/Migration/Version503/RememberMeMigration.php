@@ -50,8 +50,8 @@ class RememberMeMigration extends AbstractMigration
             <<<'SQL'
                 INSERT INTO rememberme_token (
                     SELECT
-                        TRIM(TRAILING CHAR(0x00) FROM series),
-                        TRIM(TRAILING CHAR(0x00) FROM value),
+                        TRIM(TRAILING CHAR(0) FROM CAST(series AS char)),
+                        TRIM(TRAILING CHAR(0) FROM CAST(value AS char)),
                         lastUsed,
                         class,
                         userIdentifier
