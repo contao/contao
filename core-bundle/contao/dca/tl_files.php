@@ -229,25 +229,25 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50 clr'),
-			'sql'                     => "DOUBLE unsigned NOT NULL default 0"
+			'sql'                     => "DOUBLE unsigned NOT NULL default '0'"
 		),
 		'importantPartY' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "DOUBLE unsigned NOT NULL default 0"
+			'sql'                     => "DOUBLE unsigned NOT NULL default '0'"
 		),
 		'importantPartWidth' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50 clr'),
-			'sql'                     => "DOUBLE unsigned NOT NULL default 0"
+			'sql'                     => "DOUBLE unsigned NOT NULL default '0'"
 		),
 		'importantPartHeight' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "DOUBLE unsigned NOT NULL default 0"
+			'sql'                     => "DOUBLE unsigned NOT NULL default '0'"
 		),
 		'textTrackLanguage' => array
 		(
