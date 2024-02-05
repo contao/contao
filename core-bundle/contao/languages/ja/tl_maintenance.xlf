@@ -159,6 +159,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlHint">
         <source>Your website is currently crawled with %d concurrent requests. If your server can handle more than %1$d concurrent requests, ask your system administrator to increase the &lt;code&gt;%s&lt;/code&gt; setting in the system configuration to speed up the crawling process. Refer to the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao manual&lt;/a&gt; for more information.</source>
+        <target>現在ウェブサイトは%d個のクロールの要求を並行して行っています。サーバーが%1$d個以上の並行した要求を処理できる場合は、システム管理者にシステム構成の&lt;code&gt;%s&lt;/code&gt;の設定を増やすように依頼するとクロールの処理速度を向上できます。さらに詳しい情報は&lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contaoマニュアル&lt;/a&gt;を参照してください。</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlWaitToBeFinished">
         <source>The crawler is currently working. Please wait for it to finish to see the results.</source>

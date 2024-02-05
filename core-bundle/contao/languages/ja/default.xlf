@@ -2381,6 +2381,14 @@
         <source>Please enter your username and password!</source>
         <target>ユーザー名とパスワードを入力しください。</target>
       </trans-unit>
+      <trans-unit id="MSC.reauthenticate">
+        <source>Please enter your password to verify your identity.</source>
+        <target>パスワードを入力して、あなたの識別情報を検証してください。</target>
+      </trans-unit>
+      <trans-unit id="MSC.verify">
+        <source>Verify</source>
+        <target>検証</target>
+      </trans-unit>
       <trans-unit id="MSC.confirmation">
         <source>Confirmation</source>
         <target>パスワードの再入力</target>

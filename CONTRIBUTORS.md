@@ -89,6 +89,7 @@
  * Florian Krohmer ([Floxn](https://github.com/Floxn))
  * Florian Reuschel ([loilo](https://github.com/loilo))
  * Andreas ([Glumanda](https://github.com/Glumanda))
+ * Jan ([Jan](https://github.com/Jan))
  * Janosch Oltmanns ([JanoschOltmanns](https://github.com/JanoschOltmanns))
  * Jens Dutzi ([Blog404DE](https://github.com/Blog404DE))
  * MD-Netdesign ([MD-Netdesign](https://github.com/MD-Netdesign))

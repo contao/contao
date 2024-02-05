@@ -2368,6 +2368,12 @@
         <source>Please enter your username and password!</source>
         <target>Veuillez saisir votre identifiant et votre mot de passe !</target>
       </trans-unit>
+      <trans-unit id="MSC.reauthenticate">
+        <source>Please enter your password to verify your identity.</source>
+      </trans-unit>
+      <trans-unit id="MSC.verify">
+        <source>Verify</source>
+      </trans-unit>
       <trans-unit id="MSC.confirmation">
         <source>Confirmation</source>
         <target>Confirmation du mot de passe</target>
