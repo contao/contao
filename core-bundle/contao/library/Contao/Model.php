@@ -16,6 +16,7 @@ use Contao\Model\Collection;
 use Contao\Model\QueryBuilder;
 use Contao\Model\Registry;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Filesystem\Path;
 
@@ -449,7 +450,7 @@ abstract class Model
 		{
 			foreach ($table->getColumns() as $column)
 			{
-				$type = strtolower($column->getType()->getName());
+				$type = strtolower(Type::getTypeRegistry()->lookupName($column->getType()));
 
 				if (\in_array($type, array(Types::INTEGER, Types::SMALLINT, Types::FLOAT, Types::BOOLEAN), true))
 				{

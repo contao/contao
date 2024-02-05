@@ -55,11 +55,12 @@ class CommandCompiler
         }
 
         // Get a list of SQL statements from the schema diff
-        $diffCommands = $schemaManager
+        $schemaDiff = $schemaManager
             ->createComparator()
             ->compareSchemas($fromSchema, $toSchema)
-            ->toSql($this->connection->getDatabasePlatform())
         ;
+
+        $diffCommands = $this->connection->getDatabasePlatform()->getAlterSchemaSQL($schemaDiff);
 
         // Get a list of SQL statements that adjust the engine and collation options
         $engineAndCollationCommands = $this->compileEngineAndCollationCommands($fromSchema, $toSchema);

@@ -88,6 +88,9 @@ class DcaSchemaProvider
                         $options['platformOptions']['collation'] = $options['customSchemaOptions']['collation'];
                     }
 
+                    // Deprecated in doctrine/dbal 3.x and removed in 4.x
+                    unset($options['customSchemaOptions']);
+
                     $table->addColumn($conf['name'], $conf['type'], $options);
                 }
             }
