@@ -170,10 +170,7 @@ class DcaSchemaProvider
             'fixed' => $fixed,
             'default' => $default,
             'notnull' => $notnull,
-            'scale' => null,
-            'precision' => null,
             'autoincrement' => $autoincrement,
-            'comment' => null,
         ];
 
         if (null !== $scale && null !== $precision) {
