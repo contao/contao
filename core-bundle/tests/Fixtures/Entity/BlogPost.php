@@ -14,47 +14,45 @@ namespace Contao\CoreBundle\Tests\Fixtures\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\JoinTable;
+use Doctrine\ORM\Mapping\ManyToMany;
+use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\ORM\Mapping\Table;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="tl_blog_post")
- */
+#[Table(name: 'tl_blog_post')]
+#[Entity]
 class BlogPost
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(name="id", type="integer", options={"unsigned": true})
-     */
+    #[Id]
+    #[Column(type: 'integer', options: ['unsigned' => true])]
+    #[GeneratedValue]
     private int $id = -1;
 
-    /**
-     * @ORM\Column(options={"default": ""})
-     */
+    #[Column(type: 'string', options: ['default' => ''])]
     private string $text = '';
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Author::class, inversedBy="blogPosts")
-     * @ORM\JoinColumn(name="author", nullable=true)
-     */
+    #[ManyToOne(targetEntity: Author::class, inversedBy: 'blogPosts')]
+    #[JoinColumn(name: 'author', nullable: true)]
     private Author|null $author = null;
 
     /**
-     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="blogPost", orphanRemoval=true)
-     *
      * @var Collection<int, Comment>
      */
+    #[OneToMany(targetEntity: Comment::class, mappedBy: 'blogPost', orphanRemoval: true)]
     private Collection $comments;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Tag", inversedBy="blogPosts")
-     * @ORM\JoinTable(
-     *     name="tl_blog_post_tag",
-     *     joinColumns={@ORM\JoinColumn(name="blog_post", referencedColumnName="id", onDelete="CASCADE")},
-     *     inverseJoinColumns={@ORM\JoinColumn(name="tag", referencedColumnName="id", onDelete="CASCADE")}
-     * )
-     */
+    #[ManyToMany(targetEntity: 'Tag', inversedBy: 'blogPosts')]
+    #[JoinTable(
+        name: 'tl_blog_post_tag',
+        joinColumns: [new JoinColumn(name: 'blog_post', referencedColumnName: 'id', onDelete: 'CASCADE')],
+        inverseJoinColumns: [new JoinColumn(name: 'tag', referencedColumnName: 'id', onDelete: 'CASCADE')],
+    )]
     private Collection $tags;
 
     public function __construct()
