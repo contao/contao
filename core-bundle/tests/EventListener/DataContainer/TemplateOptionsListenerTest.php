@@ -235,7 +235,6 @@ class TemplateOptionsListenerTest extends TestCase
         ;
 
         $listener = $this->getTemplateOptionsListener(null, $requestStack, $connection, $hierarchy);
-
         $listener->setDefaultIdentifiersByType('tl_content', ['foo_element_type' => 'content_element/foo']);
         $listener->setDefaultIdentifiersByType('tl_module', ['foo_module_type' => 'frontend_module/foo']);
 
