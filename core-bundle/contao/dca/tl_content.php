@@ -101,7 +101,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			(
 				'href'                => 'act=toggle&amp;field=invisible',
 				'icon'                => 'visible.svg',
-				'button_callback'     => array('tl_content', 'toggleIcon')
+				'button_callback'     => array('tl_content', 'toggleIcon'),
+				'showInHeader'        => true
 			),
 			'show'
 		),
