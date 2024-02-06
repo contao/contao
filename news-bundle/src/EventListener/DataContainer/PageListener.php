@@ -50,7 +50,7 @@ class PageListener
             ->from('tl_news_archive')
         ;
 
-        if ($user instanceof BackendUser && !$this->security->isGranted('ROLE_ADMIN')) {
+        if ($user instanceof BackendUser && !$this->security->isGranted('ROLE_ADMIN') && $user->news) {
             $qb->where($qb->expr()->in('id', $user->news));
         }
 

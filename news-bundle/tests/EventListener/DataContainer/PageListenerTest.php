@@ -123,7 +123,7 @@ class PageListenerTest extends ContaoTestCase
 
         $expr = $this->createMock(ExpressionBuilder::class);
         $expr
-            ->expects($this->once())
+            ->expects($user->news ? $this->once() : $this->never())
             ->method('in')
             ->with('id', $user->news)
         ;
@@ -144,7 +144,7 @@ class PageListenerTest extends ContaoTestCase
         ;
 
         $queryBuilder
-            ->expects($this->once())
+            ->expects($user->news ? $this->once() : $this->never())
             ->method('expr')
             ->willReturn($expr)
         ;
