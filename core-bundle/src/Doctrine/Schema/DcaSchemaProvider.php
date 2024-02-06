@@ -64,7 +64,7 @@ class DcaSchemaProvider
 
             if (isset($definitions['SCHEMA_FIELDS'])) {
                 foreach ($definitions['SCHEMA_FIELDS'] as $fieldName => $conf) {
-                    if ($table->hasColumn($fieldName)) {
+                    if ($table->hasColumn($conf['name'] ?? $fieldName)) {
                         continue;
                     }
 
@@ -168,7 +168,6 @@ class DcaSchemaProvider
         }
 
         $options = [
-            'length' => $length,
             'unsigned' => $unsigned,
             'fixed' => $fixed,
             'default' => $default,
@@ -176,9 +175,13 @@ class DcaSchemaProvider
             'autoincrement' => $autoincrement,
         ];
 
+        if (null !== $length) {
+            $options['length'] = $length;
+        }
+
         if (null !== $scale && null !== $precision) {
-            $options['scale'] = $scale;
-            $options['precision'] = $precision;
+            $options['scale'] = (int) $scale;
+            $options['precision'] = (int) $precision;
         }
 
         $platformOptions = [];
