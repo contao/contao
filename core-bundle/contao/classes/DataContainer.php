@@ -962,7 +962,7 @@ abstract class DataContainer extends Backend
 			}
 			elseif (isset($config['href']))
 			{
-				$href = $this->addToUrl(($config['href'] ?? '') . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : '') . ($isPopup ? '&amp;popup=1' : ''));
+				$href = $this->addToUrl($config['href'] . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : '') . ($isPopup ? '&amp;popup=1' : ''));
 			}
 
 			parse_str(StringUtil::decodeEntities($config['href'] ?? $v['href'] ?? ''), $params);
@@ -1205,7 +1205,7 @@ abstract class DataContainer extends Backend
 			}
 			elseif (isset($config['href']))
 			{
-				$href = $this->addToUrl(($config['href'] ?? '') . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : '') . ($isPopup ? '&amp;popup=1' : ''));
+				$href = $this->addToUrl($config['href'] . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : '') . ($isPopup ? '&amp;popup=1' : ''));
 			}
 
 			parse_str(StringUtil::decodeEntities($config['href'] ?? $v['href'] ?? ''), $params);
