@@ -40,7 +40,7 @@ class CronJob
     {
         $this->name = $name;
 
-        if (null !== $lastRun && !$lastRun instanceof \DateTime) {
+        if ($lastRun && !$lastRun instanceof \DateTime) {
             $lastRun = \DateTime::createFromInterface($lastRun);
         }
 
