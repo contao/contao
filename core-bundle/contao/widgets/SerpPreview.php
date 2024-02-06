@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\RouteParametersException;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Exception\RuntimeException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -168,7 +169,7 @@ class SerpPreview extends Widget
 			}
 			catch (ExceptionInterface $exception)
 			{
-				throw new \LogicException('Unable to generate a content URL for the SERP widget, please provide the url_callback.', 0, $exception);
+				throw new RuntimeException('Unable to generate a content URL for the SERP widget, please provide the url_callback.', 0, $exception);
 			}
 		}
 
@@ -248,6 +249,12 @@ class SerpPreview extends Widget
 	private function convertUrlToItems($url): array
 	{
 		$chunks = parse_url($url);
+
+		if (!isset($chunks['path']))
+		{
+			return array();
+		}
+
 		$steps = array_filter(explode('/', $chunks['path']));
 
 		if (isset($chunks['host']))
