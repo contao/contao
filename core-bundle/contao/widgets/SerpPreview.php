@@ -12,7 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\RouteParametersException;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
-use Symfony\Component\Routing\Exception\RuntimeException;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -47,28 +47,37 @@ class SerpPreview extends Widget
 		$title = StringUtil::substr(str_replace(array('&nbsp;', '&shy;'), array(' ', ''), $this->getTitle($model)), 64);
 		$description = StringUtil::substr($this->getDescription($model), 160);
 		$alias = $this->getAlias($model);
+		$url = '';
+		$trail = '';
 
 		try
 		{
-			// Get the URL with a %s placeholder for the alias or ID
+			// Get the URL with an %s placeholder for the alias or ID
 			$url = $this->getUrl($model);
 		}
-		catch (ExceptionInterface $routingException)
+		catch (RouteParametersException)
 		{
 			return '<div class="serp-preview"><p class="tl_info">' . $GLOBALS['TL_LANG']['MSC']['noSerpPreview'] . '</p></div>';
 		}
-
-		list($baseUrl) = explode('%s', $url);
-		$trail = implode(' › ', $this->convertUrlToItems($baseUrl));
-
-		// Use the base URL for the index page
-		if ($model instanceof PageModel && $alias == 'index')
+		catch (ExceptionInterface)
 		{
-			$url = $trail;
+			// Ignore other routing exceptions
 		}
-		else
+
+		if ($url)
 		{
-			$url = implode(' › ', $this->convertUrlToItems($baseUrl . ($alias ?: $model->id)));
+			list($baseUrl) = explode('%s', $url);
+			$trail = implode(' › ', $this->convertUrlToItems($baseUrl));
+
+			// Use the base URL for the index page
+			if ($model instanceof PageModel && $alias == 'index')
+			{
+				$url = $trail;
+			}
+			else
+			{
+				$url = implode(' › ', $this->convertUrlToItems($baseUrl . ($alias ?: $model->id)));
+			}
 		}
 
 		// Get the input field suffix (edit multiple mode)
@@ -138,6 +147,9 @@ class SerpPreview extends Widget
 		return $model->{$this->aliasField};
 	}
 
+	/**
+	 * @throws ExceptionInterface
+	 */
 	private function getUrl(Model $model): string
 	{
 		$aliasField = $this->aliasField ?: 'alias';
@@ -163,13 +175,9 @@ class SerpPreview extends Widget
 			{
 				$url = System::getContainer()->get('contao.routing.content_url_generator')->generate($tempModel, array(), UrlGeneratorInterface::ABSOLUTE_URL);
 			}
-			catch (RouteParametersException $exception)
+			catch (RouteNotFoundException $exception)
 			{
-				throw $exception;
-			}
-			catch (ExceptionInterface $exception)
-			{
-				throw new RuntimeException('Unable to generate a content URL for the SERP widget, please provide the url_callback.', 0, $exception);
+				throw new \LogicException('Unable to generate a content URL for the SERP widget, please provide the url_callback.', 0, $exception);
 			}
 		}
 
