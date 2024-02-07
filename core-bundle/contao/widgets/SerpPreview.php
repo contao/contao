@@ -47,25 +47,12 @@ class SerpPreview extends Widget
 		$title = StringUtil::substr(str_replace(array('&nbsp;', '&shy;'), array(' ', ''), $this->getTitle($model)), 64);
 		$description = StringUtil::substr($this->getDescription($model), 160);
 		$alias = $this->getAlias($model);
-		$url = '';
-		$trail = '';
 
 		try
 		{
 			// Get the URL with an %s placeholder for the alias or ID
 			$url = $this->getUrl($model);
-		}
-		catch (RouteParametersException)
-		{
-			return '<div class="serp-preview"><p class="tl_info">' . $GLOBALS['TL_LANG']['MSC']['noSerpPreview'] . '</p></div>';
-		}
-		catch (ExceptionInterface)
-		{
-			// Ignore other routing exceptions
-		}
 
-		if ($url)
-		{
 			list($baseUrl) = explode('%s', $url);
 			$trail = implode(' › ', $this->convertUrlToItems($baseUrl));
 
@@ -78,6 +65,15 @@ class SerpPreview extends Widget
 			{
 				$url = implode(' › ', $this->convertUrlToItems($baseUrl . ($alias ?: $model->id)));
 			}
+		}
+		catch (RouteParametersException)
+		{
+			return '<div class="serp-preview"><p class="tl_info">' . $GLOBALS['TL_LANG']['MSC']['noSerpPreview'] . '</p></div>';
+		}
+		catch (ExceptionInterface)
+		{
+			$url = '';
+			$trail = '';
 		}
 
 		// Get the input field suffix (edit multiple mode)
