@@ -50,7 +50,7 @@ class SerpPreview extends Widget
 
 		try
 		{
-			// Get the URL with an %s placeholder for the alias or ID
+			// Get the URL with a %s placeholder for the alias or ID
 			$url = $this->getUrl($model);
 
 			list($baseUrl) = explode('%s', $url);
