@@ -629,6 +629,11 @@ services:
         arguments:
             - '@doctrine'
 
+    contao.repository.webauthn_credential:
+        class: Contao\CoreBundle\Repository\WebauthnCredentialRepository
+        arguments:
+            - '@doctrine'
+
     contao.resource_finder:
         class: Contao\CoreBundle\Config\ResourceFinder
         public: true
