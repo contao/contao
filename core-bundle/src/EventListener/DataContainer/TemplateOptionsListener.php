@@ -68,7 +68,7 @@ class TemplateOptionsListener
 
         $templateOptions = $this->finderFactory
             ->create()
-            ->identifier($identifier)
+            ->identifier((string) $identifier)
             ->extension('html.twig')
             ->withVariants()
             ->asTemplateOptions()

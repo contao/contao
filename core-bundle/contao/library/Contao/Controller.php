@@ -1270,53 +1270,41 @@ abstract class Controller extends System
 	 */
 	protected function getParentEntries($strTable, $intId)
 	{
-		// No parent table
-		if (empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']) && empty($GLOBALS['TL_DCA'][$strTable]['config']['dynamicPtable']))
-		{
-			return '';
-		}
+		$getParentEntry = function ($table, $id) {
+			$this->loadDataContainer($table);
 
-		$db = Database::getInstance();
-		$arrParent = array();
-		$strParentTable = $strTable;
-		$dynamicPtable = $GLOBALS['TL_DCA'][$strTable]['config']['dynamicPtable'] ?? null;
+			$columns = 'pid';
+			$ptable = $GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null;
 
-		do
-		{
-			// Get the pid
-			$objParent = $db
-				->prepare("SELECT pid" . ($dynamicPtable ? ", ptable" : "") . " FROM " . $strParentTable . " WHERE id=?")
+			if ($GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? null)
+			{
+				$columns .= ', ptable';
+			}
+			elseif (!$ptable)
+			{
+				return null;
+			}
+
+			$objParent = Database::getInstance()
+				->prepare("SELECT $columns FROM $table WHERE id=?")
 				->limit(1)
-				->execute($intId);
+				->execute($id);
 
 			if ($objParent->numRows < 1)
 			{
-				break;
+				return null;
 			}
 
-			// Store the parent table information
-			$strParentTable = $GLOBALS['TL_DCA'][$strParentTable]['config']['ptable'] ?? null;
-			$intId = $objParent->pid;
+			return array($objParent->ptable ?? $ptable, $objParent->pid);
+		};
 
-			if ($objParent->ptable)
-			{
-				$strParentTable = $objParent->ptable;
-			}
+		$arrParent = array();
 
-			if (!$strParentTable)
-			{
-				break;
-			}
-
-			$dynamicPtable = $GLOBALS['TL_DCA'][$strParentTable]['config']['dynamicPtable'] ?? null;
-
-			// Add the log entry
-			$arrParent[] = $strParentTable . '.id=' . $intId;
-
-			// Load the data container of the parent table
-			$this->loadDataContainer($strParentTable);
+		while ($parentEntry = $getParentEntry($strTable, $intId))
+		{
+			list($strTable, $intId) = $parentEntry;
+			$arrParent[] = "$strTable.id=$intId";
 		}
-		while ($intId);
 
 		if (empty($arrParent))
 		{
