@@ -443,6 +443,7 @@ abstract class Events extends Module
 	public static function getSchemaOrgData(CalendarEventsModel $objEvent): array
 	{
 		$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
+		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
 
 		$jsonLd = array(
 			'@type' => 'Event',
@@ -453,7 +454,7 @@ abstract class Events extends Module
 
 		try
 		{
-			$jsonLd['url'] = System::getContainer()->get('contao.routing.content_url_generator')->generate($objEvent);
+			$jsonLd['url'] = $urlGenerator->generate($objEvent);
 		}
 		catch (ExceptionInterface)
 		{
