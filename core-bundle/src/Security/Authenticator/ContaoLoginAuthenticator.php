@@ -120,8 +120,8 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
 
     public function authenticate(Request $request): Passport
     {
-        // When the firewall is lazy, the token is not initialized in the "supports" stage, so this check does only work
-        // within the "authenticate" stage.
+        // When the firewall is lazy, the token is not initialized in the "supports"
+        // stage, so this check does only work within the "authenticate" stage.
         $currentToken = $this->tokenStorage->getToken();
 
         if ($currentToken instanceof TwoFactorTokenInterface) {

@@ -361,8 +361,8 @@ class InsertTagParser implements ResetInterface
                 $wrapStart = null;
                 $wrapContent = [];
 
-                // Reprocess non-empty end tags to enable chaining block insert tags
-                // E.g. `{{iflng::de}}…{{iflng::en}}…{{iflng}}`
+                // Reprocess non-empty end tags to enable chaining block insert tags, e.g.
+                // `{{iflng::de}}…{{iflng::en}}…{{iflng}}`
                 if (!$item->getParameters()->all()) {
                     continue;
                 }

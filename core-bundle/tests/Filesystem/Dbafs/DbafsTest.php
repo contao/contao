@@ -410,9 +410,9 @@ class DbafsTest extends TestCase
     {
         $dbafs = $this->getDbafs();
 
-        // Due to the complexity of the inner workings, we are testing a method
-        // that isn't part of the API. Normalizing paths is the first isolated
-        // step when synchronizing, but we do not want to expose this functionality.
+        // Due to the complexity of the inner workings, we are testing a method that
+        // isn't part of the API. Normalizing paths is the first isolated step when
+        // synchronizing, but we do not want to expose this functionality.
         $method = new \ReflectionMethod($dbafs, 'getNormalizedSearchPaths');
 
         [$searchPaths, $parentPaths] = $method->invoke($dbafs, ...$paths);
@@ -1151,12 +1151,11 @@ class DbafsTest extends TestCase
         $dbafs = $this->getDbafs($connection, $filesystem);
         $dbafs->setDatabasePathPrefix('files');
 
-        // Lower bulk insert size so that we do not need excessive amounts of
-        // operations when testing
+        // Lower bulk insert size so that we do not need excessive amounts of operations
+        // when testing
         $dbafs->setBulkInsertSize(2);
 
-        // Prime internal cache to test if it gets updated and still points to
-        // this resource
+        // Prime internal cache to test if it gets updated and still points to this resource
         $this->assertSame($uuid->toRfc4122(), $dbafs->getRecord('baz')->getUuid()->toRfc4122());
 
         $dbafs->sync();

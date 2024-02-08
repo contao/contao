@@ -206,13 +206,13 @@ class LintServiceIdsCommand extends Command
 
                 $classesByServiceId[$serviceId] ??= $config['class'];
 
-                // The same service ID is used for two different classes (e.g. contao.routing.candidates).
+                // The service ID is used for two different classes, e.g. contao.routing.candidates.
                 if ($classesByServiceId[$serviceId] !== $config['class']) {
                     $ignoreClasses[] = $config['class'];
                     $ignoreClasses[] = $classesByServiceId[$serviceId];
                 }
 
-                // The same class is used for two different services (e.g. ArrayAttributeBag).
+                // The class is used for two different services, e.g. ArrayAttributeBag.
                 if (\in_array($config['class'], $allClasses, true)) {
                     $ignoreClasses[] = $config['class'];
                 }
@@ -342,8 +342,8 @@ class LintServiceIdsCommand extends Command
         // The last chunk is the class name.
         $name = array_pop($chunks);
 
-        // The remaining chunks make up the sub-namespaces between the bundle
-        // and the class name. We rename the ones from self::$renameNamespaces.
+        // The remaining chunks make up the sub-namespaces between the bundle and the
+        // class name. We rename the ones from self::$renameNamespaces.
         foreach ($chunks as $i => &$chunk) {
             $chunk = self::$renameNamespaces[$chunk] ?? $chunk;
 
@@ -361,8 +361,8 @@ class LintServiceIdsCommand extends Command
             }
         }
 
-        // Now we split up the class name to unset certain chunks of the path,
-        // e.g. we remove "Listener" from "BackendMenuListener".
+        // Now we split up the class name to unset certain chunks of the path, e.g. we
+        // remove "Listener" from "BackendMenuListener".
         $nameChunks = explode('_', $name);
 
         foreach ($nameChunks as $i => $nameChunk) {

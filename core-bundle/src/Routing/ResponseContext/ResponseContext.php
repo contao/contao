@@ -114,7 +114,8 @@ final class ResponseContext
         $aliases = [];
         $ref = new \ReflectionClass($classname);
 
-        // Automatically add aliases for all interfaces and parents (last one added automatically wins by overriding here)
+        // Automatically add aliases for all interfaces and parents (last one added
+        // automatically wins by overriding here)
         foreach ($ref->getInterfaceNames() as $interfaceName) {
             $aliases[] = $interfaceName;
         }

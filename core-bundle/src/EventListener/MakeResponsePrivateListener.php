@@ -59,7 +59,8 @@ class MakeResponsePrivateListener
         // Disable the default Symfony auto cache control
         $response->headers->set(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER, '1');
 
-        // If the response is not cacheable for a reverse proxy, we don't have to do anything anyway
+        // If the response is not cacheable for a reverse proxy, we don't have to do
+        // anything anyway
         if (!$response->isCacheable()) {
             return;
         }
@@ -78,7 +79,8 @@ class MakeResponsePrivateListener
             return;
         }
 
-        // 3) The response sets a cookie (same reason as 2 but for other cookies than the session cookie)
+        // 3) The response sets a cookie (same reason as 2 but for other cookies than the
+        // session cookie)
         if ($cookies = $response->headers->getCookies()) {
             $this->makePrivate(
                 $response,
@@ -91,7 +93,8 @@ class MakeResponsePrivateListener
             return;
         }
 
-        // 4) The response has a "Vary: Cookie" header and the request provides at least one cookie
+        // 4) The response has a "Vary: Cookie" header and the request provides at least
+        // one cookie
         if ($request->cookies->count() && \in_array('cookie', array_map('strtolower', $response->getVary()), true)) {
             $this->makePrivate(
                 $response,

@@ -80,8 +80,8 @@ class AbstractCandidates implements CandidatesInterface
         $candidates = [];
 
         foreach ($this->urlPrefixes as $prefix) {
-            // Language prefix only (e.g. URL = /en/)
-            // Includes "/en" to redirect to language prefix with slash
+            // Language prefix only, e.g. URL = /en or URL = /en/. If the trailing slash is
+            // missing, Contao will redirect to the URL with the slash.
             if ($url === $prefix.'/' || $url === $prefix) {
                 $candidates[] = 'index';
                 continue;
