@@ -40,31 +40,19 @@ class NewsResolver implements ContentUrlResolverInterface
             case 'internal':
                 $pageAdapter = $this->framework->getAdapter(PageModel::class);
 
-                if (!$page = $pageAdapter->findPublishedById($content->jumpTo)) {
-                    return null;
-                }
-
-                return ContentUrlResult::redirect($page);
+                return ContentUrlResult::redirect($pageAdapter->findPublishedById($content->jumpTo));
 
             // Link to an article
             case 'article':
                 $articleAdapter = $this->framework->getAdapter(ArticleModel::class);
 
-                if (!$article = $articleAdapter->findPublishedById($content->articleId)) {
-                    return null;
-                }
-
-                return ContentUrlResult::redirect($$article);
+                return ContentUrlResult::redirect($articleAdapter->findPublishedById($content->articleId));
         }
 
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
 
         // Link to the default page
-        if (!$page = $pageAdapter->findPublishedById((int) $content->getRelated('pid')?->jumpTo)) {
-            return null;
-        }
-
-        return ContentUrlResult::resolve($page);
+        return ContentUrlResult::resolve($pageAdapter->findPublishedById((int) $content->getRelated('pid')?->jumpTo));
     }
 
     public function getParametersForContent(object $content, PageModel $pageModel): array

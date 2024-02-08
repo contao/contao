@@ -12,7 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Model\Collection;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * Parent class for news modules.
@@ -87,14 +87,19 @@ abstract class ModuleNews extends Module
 		$objTemplate->newsHeadline = $objArticle->headline;
 		$objTemplate->subHeadline = $objArticle->subheadline;
 		$objTemplate->hasSubHeadline = $objArticle->subheadline ? true : false;
-		$objTemplate->linkHeadline = $this->generateLink($objArticle->headline, $objArticle, $blnAddArchive);
-		$objTemplate->more = $this->generateLink($objArticle->linkText ?: $GLOBALS['TL_LANG']['MSC']['more'], $objArticle, $blnAddArchive, true);
-		$objTemplate->link = $url;
+		$objTemplate->linkHeadline = $objArticle->headline;
 		$objTemplate->archive = $objArticle->getRelated('pid');
 		$objTemplate->count = $intCount; // see #5708
 		$objTemplate->text = '';
 		$objTemplate->hasTeaser = false;
 		$objTemplate->hasReader = true;
+
+		if (null !== $url)
+		{
+			$objTemplate->linkHeadline = $this->generateLink($objArticle->headline, $objArticle, $blnAddArchive);
+			$objTemplate->more = $this->generateLink($objArticle->linkText ?: $GLOBALS['TL_LANG']['MSC']['more'], $objArticle, $blnAddArchive, true);
+			$objTemplate->link = $url;
+		}
 
 		// Clean the RTE output
 		if ($objArticle->teaser)
@@ -108,7 +113,7 @@ abstract class ModuleNews extends Module
 		if ($objArticle->source != 'default')
 		{
 			$objTemplate->text = true;
-			$objTemplate->hasText = true;
+			$objTemplate->hasText = null !== $url;
 			$objTemplate->hasReader = false;
 		}
 
@@ -135,14 +140,6 @@ abstract class ModuleNews extends Module
 			$objTemplate->hasText = static function () use ($objArticle) {
 				return ContentModel::countPublishedByPidAndTable($objArticle->id, 'tl_news') > 0;
 			};
-		}
-
-		// Adjust template data if no URL could be generated
-		if (null === $url)
-		{
-			$objTemplate->linkHeadline = $objArticle->headline;
-			$objTemplate->hasText = false;
-			$objTemplate->hasTeaser = false;
 		}
 
 		/** @var PageModel $objPage */
@@ -337,7 +334,7 @@ abstract class ModuleNews extends Module
 
 		try {
 			return System::getContainer()->get('contao.routing.content_url_generator')->generate($content, $parameters);
-		} catch (RouteNotFoundException) {
+		} catch (ExceptionInterface) {
 			return null;
 		}
 	}
