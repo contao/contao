@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Symfony\Component\Routing\Exception\ExceptionInterface;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**

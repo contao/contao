@@ -332,9 +332,12 @@ abstract class ModuleNews extends Module
 			$parameters['month'] = Input::get('month');
 		}
 
-		try {
+		try
+		{
 			return System::getContainer()->get('contao.routing.content_url_generator')->generate($content, $parameters);
-		} catch (ExceptionInterface) {
+		}
+		catch (ExceptionInterface)
+		{
 			return null;
 		}
 	}
