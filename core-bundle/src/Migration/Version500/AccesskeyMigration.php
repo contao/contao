@@ -55,7 +55,7 @@ class AccesskeyMigration extends AbstractMigration
     {
         $schemaManager = $this->connection->createSchemaManager();
 
-        if (!$schemaManager->tablesExist($table)) {
+        if (!$schemaManager->tablesExist([$table])) {
             return false;
         }
 

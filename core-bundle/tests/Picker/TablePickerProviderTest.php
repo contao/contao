@@ -697,8 +697,8 @@ class TablePickerProviderTest extends ContaoTestCase
         $expr
             ->expects($this->once())
             ->method('eq')
-            ->with('id', $id)
-            ->willReturnSelf()
+            ->with('id', (string) $id)
+            ->willReturn(sprintf("%s.id = '%s'", $table, $id))
         ;
 
         $result = $this->createMock(Result::class);
@@ -718,7 +718,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $queryBuilder
             ->expects($this->once())
             ->method('select')
-            ->with(['id', 'pid'])
+            ->with('id', 'pid')
             ->willReturnSelf()
         ;
 
@@ -732,7 +732,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $queryBuilder
             ->expects($this->once())
             ->method('where')
-            ->with($expr)
+            ->with(sprintf("%s.id = '%s'", $table, $id))
             ->willReturnSelf()
         ;
 

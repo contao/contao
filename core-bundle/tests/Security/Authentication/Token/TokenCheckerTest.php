@@ -200,7 +200,7 @@ class TokenCheckerTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->method('fetchAssociative')
-            ->willReturn($previewLinkRow)
+            ->willReturn($previewLinkRow ?? false)
         ;
 
         $tokenChecker = new TokenChecker(

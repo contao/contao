@@ -13,6 +13,7 @@ namespace Contao\Database;
 use Contao\Database;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Result as DoctrineResult;
+use Doctrine\DBAL\ParameterType;
 
 /**
  * Create and execute queries
@@ -256,6 +257,11 @@ class Statement
 			},
 			$arrParams
 		);
+
+		// null types are deprecated in doctrine/dbal 3.x
+		$arrTypes = array_map(static function ($type) {
+			return null === $type ? ParameterType::STRING : $type;
+		}, $arrTypes);
 
 		// Execute the query
 		$this->statement = $this->resConnection->executeQuery($this->strQuery, $arrParams, $arrTypes);

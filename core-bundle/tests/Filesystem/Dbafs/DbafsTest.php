@@ -941,7 +941,7 @@ class DbafsTest extends TestCase
             ->expects($this->exactly(2))
             ->method('update')
             ->willReturnCallback(
-                function (string $table, array $update, array $criteria): void {
+                function (string $table, array $update, array $criteria): int|string {
                     $this->assertSame('tl_files', $table);
 
                     $file = $criteria['path'] ?? null;
@@ -949,13 +949,13 @@ class DbafsTest extends TestCase
                     if ('file1' === $file) {
                         $this->assertSame('file2', $update['path']);
 
-                        return;
+                        return 1;
                     }
 
                     if ('new' === $file) {
                         $this->assertSame(201, $update['lastModified']);
 
-                        return;
+                        return 1;
                     }
 
                     $this->fail();
@@ -1113,7 +1113,7 @@ class DbafsTest extends TestCase
             ->expects($this->exactly(2))
             ->method('update')
             ->willReturnCallback(
-                function (string $table, array $updates, array $criteria) use (&$invokedUpdate): void {
+                function (string $table, array $updates, array $criteria) use (&$invokedUpdate): int|string {
                     $this->assertSame('tl_files', $table);
                     $this->assertArrayHasKey('tstamp', $updates);
 
@@ -1126,6 +1126,8 @@ class DbafsTest extends TestCase
                     }
 
                     ++$invokedUpdate;
+
+                    return 1;
                 },
             )
         ;
@@ -1197,7 +1199,7 @@ class DbafsTest extends TestCase
             ->expects($this->exactly(3))
             ->method('update')
             ->willReturnCallback(
-                function (string $table, array $updates, array $criteria) use (&$expected): void {
+                function (string $table, array $updates, array $criteria) use (&$expected): int|string {
                     $this->assertSame('tl_files', $table);
                     $this->assertArrayHasKey('tstamp', $updates);
 
@@ -1207,6 +1209,8 @@ class DbafsTest extends TestCase
 
                     $this->assertSame($expectedCriteria, $criteria);
                     $this->assertSame($expectedUpdates, $updates);
+
+                    return 1;
                 },
             )
         ;

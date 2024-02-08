@@ -29,7 +29,7 @@ class RememberMeMigration extends AbstractMigration
     {
         $schemaManager = $this->connection->createSchemaManager();
 
-        return $schemaManager->tablesExist('tl_remember_me') && !$schemaManager->tablesExist('rememberme_token');
+        return $schemaManager->tablesExist(['tl_remember_me']) && !$schemaManager->tablesExist(['rememberme_token']);
     }
 
     public function run(): MigrationResult

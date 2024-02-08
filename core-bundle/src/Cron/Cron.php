@@ -127,7 +127,7 @@ class Cron
         $entityManager = ($this->entityManager)();
         $cronJobsToBeRun = [];
 
-        $now = new \DateTimeImmutable();
+        $now = new \DateTime();
 
         try {
             // Lock cron table
