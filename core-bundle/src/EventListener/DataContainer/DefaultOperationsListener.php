@@ -161,6 +161,7 @@ class DefaultOperationsListener
             $operations['toggle'] = [
                 'href' => 'act=toggle&amp;field='.$toggleField,
                 'icon' => 'visible.svg',
+                'showInHeader' => (bool) $ctable,
                 'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table),
             ];
         }
@@ -186,7 +187,7 @@ class DefaultOperationsListener
     {
         return function (DataContainerOperation $operation) use ($ctable, $table): void {
             $data = [
-                'pid' => $operation->getRecord()['pid'] ?? null,
+                'pid' => $operation->getRecord()['id'] ?? null,
             ];
 
             if ($GLOBALS['TL_DCA'][$ctable]['config']['dynamicPtable'] ?? false) {

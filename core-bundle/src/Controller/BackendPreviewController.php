@@ -80,7 +80,7 @@ class BackendPreviewController
 
         $targetUri = new Uri($targetUrl);
 
-        if ($request->getHost() === $targetUri->getHost() || !($user = $this->security->getUser())) {
+        if (!$targetUri->getHost() || $request->getHost() === $targetUri->getHost() || !($user = $this->security->getUser())) {
             return new RedirectResponse($targetUrl);
         }
 

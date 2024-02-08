@@ -46,8 +46,7 @@
         <target>Källfiler</target>
       </trans-unit>
       <trans-unit id="tl_theme.source.1">
-        <source>Here you can upload one or more .cto or .sql files to be imported.</source>
-        <target>Här kan du ladda upp en eller flera .cto- eller .sql-filer som ska importeras.</target>
+        <source>Here you can upload one or more .cto, .zip or .sql files to be imported.</source>
       </trans-unit>
       <trans-unit id="tl_theme.tstamp.0">
         <source>Revision date</source>

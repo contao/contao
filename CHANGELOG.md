@@ -2,6 +2,33 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.0-RC3] (2024-02-05)
+
+**New features:**
+
+- [#6819] Focus the first input/textarea after duplicating a wizard row ([leofeyer])
+- [#6436] Add a global Twig variable with Contao state ([aschempp])
+- [#6742] Add a basic entity for zero-width whitespaces ([aschempp])
+
+**Fixed issues:**
+
+- [#6851] Rewrite `Controller::getParentEntries()` ([ausi])
+- [#6833] Handle dynamic parent tables in the `Controller::getParentEntries()` method ([leofeyer])
+- [#6843] Fix relative front end preview links ([aschempp])
+- [#6840] Keep login module errors ([aschempp])
+- [#6838] Fix the article content voter ([aschempp])
+- [#6841] Remove obsolete hardcoded configuration in the page registry ([aschempp])
+- [#6835] Do not require full authentication in the "change password" module ([leofeyer])
+- [#6803] Fix the referrer URL if elements are moved inside a nested element ([leofeyer])
+- [#6839] Fix routes with parameters in the SERP widget ([aschempp])
+- [#6831] Correctly set the target path in the login module ([leofeyer])
+- [#6830] Fix the order of the content elements ([aschempp])
+- [#6805] Correctly handle denied access in the firewall ([aschempp])
+- [#6815] Drop the custom "remember me" implementation ([aschempp])
+- [#6807] Improve the debug message for `FigureBuilder` link attributes ([aschempp])
+- [#6809] Mark `$secret` as sensitive parameter ([aschempp])
+- [#6794] Fix ptable for copyAll and cutAll ([ausi])
+
 ## [5.3.0-RC2] (2024-01-26)
 
 **New features:**
@@ -127,6 +154,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.0-RC3]: https://github.com/contao/contao/releases/tag/5.3.0-RC3
 [5.3.0-RC2]: https://github.com/contao/contao/releases/tag/5.3.0-RC2
 [5.3.0-RC1]: https://github.com/contao/contao/releases/tag/5.3.0-RC1
 [aschempp]: https://github.com/aschempp
@@ -159,6 +187,7 @@ This project adheres to [Semantic Versioning].
 [#6392]: https://github.com/contao/contao/pull/6392
 [#6404]: https://github.com/contao/contao/pull/6404
 [#6429]: https://github.com/contao/contao/pull/6429
+[#6436]: https://github.com/contao/contao/pull/6436
 [#6446]: https://github.com/contao/contao/pull/6446
 [#6465]: https://github.com/contao/contao/pull/6465
 [#6469]: https://github.com/contao/contao/pull/6469
@@ -237,6 +266,7 @@ This project adheres to [Semantic Versioning].
 [#6737]: https://github.com/contao/contao/pull/6737
 [#6738]: https://github.com/contao/contao/pull/6738
 [#6740]: https://github.com/contao/contao/pull/6740
+[#6742]: https://github.com/contao/contao/pull/6742
 [#6743]: https://github.com/contao/contao/pull/6743
 [#6744]: https://github.com/contao/contao/pull/6744
 [#6747]: https://github.com/contao/contao/pull/6747
@@ -247,3 +277,20 @@ This project adheres to [Semantic Versioning].
 [#6767]: https://github.com/contao/contao/pull/6767
 [#6775]: https://github.com/contao/contao/pull/6775
 [#6788]: https://github.com/contao/contao/pull/6788
+[#6794]: https://github.com/contao/contao/pull/6794
+[#6803]: https://github.com/contao/contao/pull/6803
+[#6805]: https://github.com/contao/contao/pull/6805
+[#6807]: https://github.com/contao/contao/pull/6807
+[#6809]: https://github.com/contao/contao/pull/6809
+[#6815]: https://github.com/contao/contao/pull/6815
+[#6819]: https://github.com/contao/contao/pull/6819
+[#6830]: https://github.com/contao/contao/pull/6830
+[#6831]: https://github.com/contao/contao/pull/6831
+[#6833]: https://github.com/contao/contao/pull/6833
+[#6835]: https://github.com/contao/contao/pull/6835
+[#6838]: https://github.com/contao/contao/pull/6838
+[#6839]: https://github.com/contao/contao/pull/6839
+[#6840]: https://github.com/contao/contao/pull/6840
+[#6841]: https://github.com/contao/contao/pull/6841
+[#6843]: https://github.com/contao/contao/pull/6843
+[#6851]: https://github.com/contao/contao/pull/6851
