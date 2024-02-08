@@ -104,6 +104,11 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
             throw new LoaderError(sprintf('Tried to register an invalid Contao namespace "%s".', $namespace));
         }
 
+        // Skip execution if the given path and namespace was already registered
+        if (\in_array(rtrim($path, '/\\'), $this->paths[$namespace] ?? [], true)) {
+            return;
+        }
+
         try {
             parent::addPath($path, $namespace);
         } catch (LoaderError $error) {

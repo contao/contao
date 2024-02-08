@@ -46,6 +46,22 @@ class ContaoFilesystemLoaderTest extends TestCase
         $this->assertFalse($loader->exists('@Contao_foo-Bar_Baz2/2.html.twig'));
     }
 
+    public function testDoesNotAddPathTwice(): void
+    {
+        $loader = $this->getContaoFilesystemLoader();
+
+        $path1 = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/paths/1');
+        $path2 = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/paths/2');
+
+        $loader->addPath($path1);
+        $loader->addPath($path2, 'Contao_foo');
+        $loader->addPath($path1);
+        $loader->addPath($path2, 'Contao_foo');
+
+        $this->assertSame([$path1], $loader->getPaths());
+        $this->assertSame([$path2], $loader->getPaths('Contao_foo'));
+    }
+
     public function testPrependsPath(): void
     {
         $loader = $this->getContaoFilesystemLoader();
