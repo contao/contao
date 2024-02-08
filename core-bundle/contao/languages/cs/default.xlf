@@ -2366,6 +2366,12 @@
         <source>Please enter your username and password!</source>
         <target>Prosím vyplňte uživatelské jméno a heslo</target>
       </trans-unit>
+      <trans-unit id="MSC.reauthenticate">
+        <source>Please enter your password to verify your identity.</source>
+      </trans-unit>
+      <trans-unit id="MSC.verify">
+        <source>Verify</source>
+      </trans-unit>
       <trans-unit id="MSC.confirmation">
         <source>Confirmation</source>
         <target>Potvrzení</target>

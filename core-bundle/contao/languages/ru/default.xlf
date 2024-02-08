@@ -2381,6 +2381,14 @@
         <source>Please enter your username and password!</source>
         <target>Введите имя пользователя и пароль!</target>
       </trans-unit>
+      <trans-unit id="MSC.reauthenticate">
+        <source>Please enter your password to verify your identity.</source>
+        <target>Введите пароль, чтобы подтвердить свою личность.</target>
+      </trans-unit>
+      <trans-unit id="MSC.verify">
+        <source>Verify</source>
+        <target>Проверить</target>
+      </trans-unit>
       <trans-unit id="MSC.confirmation">
         <source>Confirmation</source>
         <target>Подтвердите пароль</target>

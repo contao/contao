@@ -27,11 +27,13 @@
         <script src="{{ asset('js/handorgel.min.js', 'contao-components/handorgel') }}"></script>
         <script>
             (function () {
-                new handorgel(document.querySelector('.content-accordion'), {
-                    {% block init_options %}
-                        multiSelectable: false,
-                        {# Put custom options here #}
-                    {% endblock %}
+                document.querySelectorAll('.content-accordion').forEach(el => {
+                    new handorgel(el, {
+                        {% block init_options %}
+                            multiSelectable: false,
+                            {# Put custom options here #}
+                        {% endblock %}
+                    });
                 });
             })();
         </script>

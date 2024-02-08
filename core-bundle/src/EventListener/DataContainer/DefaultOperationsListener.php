@@ -161,6 +161,7 @@ class DefaultOperationsListener
             $operations['toggle'] = [
                 'href' => 'act=toggle&amp;field='.$toggleField,
                 'icon' => 'visible.svg',
+                'showInHeader' => (bool) $ctable,
                 'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table),
             ];
         }
