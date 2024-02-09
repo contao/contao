@@ -397,8 +397,8 @@ class MountManager
         [$adapter, $adapterPath, $prefix] = $this->getAdapterAndPath($path);
 
         try {
-            // If $deep is true we shallow-read directories recursively, because
-            // there could be another adapter mounted further down in the tree.
+            // If $deep is true we shallow-read directories recursively, because there could
+            // be another adapter mounted further down in the tree.
             foreach ($adapter->listContents($adapterPath, FilesystemReader::LIST_SHALLOW) as $flysystemItem) {
                 $item = FilesystemItem::fromStorageAttributes($flysystemItem, $prefix);
                 $itemPath = $item->getPath();

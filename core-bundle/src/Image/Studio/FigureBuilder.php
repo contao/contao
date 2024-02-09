@@ -339,9 +339,8 @@ class FigureBuilder
             return $this;
         }
 
-        // TODO: After stream support is added to contao/image, remove this
-        // workaround and type restriction and directly pass on the stream to
-        // the resizer.
+        // TODO: After stream support is added to contao/image, remove this workaround
+        // and type restriction and directly pass on the stream to the resizer.
         $metadata = stream_get_meta_data($stream);
         $uri = $metadata['uri'];
 
@@ -694,8 +693,8 @@ class FigureBuilder
             ;
         }
 
-        // If no metadata can be obtained from the model, we create a container
-        // from the default meta fields with empty values instead
+        // If no metadata can be obtained from the model, we create a container from the
+        // default meta fields with empty values instead
         $metaFields = $this->getFilesModelAdapter()->getMetaFields();
 
         $data = [
@@ -768,7 +767,8 @@ class FigureBuilder
             return [$filePath, null];
         };
 
-        // Use explicitly set href (1) or lightbox resource (2), fall back to using metadata (3) or use the base resource (4) if empty
+        // Use explicitly set href (1) or lightbox resource (2), fall back to using
+        // metadata (3) or use the base resource (4) if empty
         $lightboxResourceOrUrl = $this->additionalLinkAttributes['href'] ?? $this->lightboxResourceOrUrl ?? $getMetadataUrl() ?? $this->filePath;
 
         [$filePathOrImage, $url] = $getResourceOrUrl($lightboxResourceOrUrl);

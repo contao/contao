@@ -102,8 +102,8 @@ class DebugContaoTwigCommand extends Command
 
         // Recursively display tree nodes
         $displayNode = static function (array $node, string $prefix = '', string $namePrefix = '') use ($io, $chains, &$displayNode): void {
-            // Make sure leaf nodes (files) come first and everything else is
-            // sorted ascending by its key (identifier part)
+            // Make sure leaf nodes (files) come first and everything else is sorted
+            // ascending by its key (identifier part)
             uksort(
                 $node,
                 static function ($keyA, $keyB) use ($node) {
@@ -124,8 +124,8 @@ class DebugContaoTwigCommand extends Command
                 $currentPrefixWithNewline = $prefix.($count ? '│  ' : '   ');
 
                 if (\is_array($element)) {
-                    // Display part of the template identifier. If this is the
-                    // last bit, we also display the effective @Contao name.
+                    // Display part of the template identifier. If this is the last bit, we also
+                    // display the effective @Contao name.
                     $identifier = ltrim("$namePrefix/$label", '/');
 
                     $io->writeln(sprintf(

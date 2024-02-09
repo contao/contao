@@ -28,7 +28,8 @@ class MakeResponsePrivateListenerTest extends TestCase
 {
     public function testIgnoresNonContaoMainRequests(): void
     {
-        // Public response with cookie, should be turned into a private response if it was a main request
+        // Public response with cookie, should be turned into a private response if it
+        // was a main request
         $response = new Response();
         $response->setPublic();
         $response->setMaxAge(600);

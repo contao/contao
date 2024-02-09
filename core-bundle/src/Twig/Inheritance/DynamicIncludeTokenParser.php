@@ -111,8 +111,8 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
                 try {
                     $this->traverseAndAdjustTemplateNames($child);
                 } catch (\LogicException $e) {
-                    // Allow missing templates if they are listed in an array
-                    // like "{% include ['@Contao/missing', '@Contao/existing'] %}"
+                    // Allow missing templates if they are listed in an array like "{% include
+                    // ['@Contao/missing', '@Contao/existing'] %}"
                     if (!$node instanceof ArrayExpression) {
                         throw $e;
                     }

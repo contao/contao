@@ -272,7 +272,8 @@ class PaletteManipulator
 
     private function applyFieldToLegend(array &$config, array $action, bool $skipLegends = false): void
     {
-        // If $skipLegends is true, we usually only have one legend without name, so we simply append to that
+        // If $skipLegends is true, we usually only have one legend without name, so we
+        // simply append to that
         if ($skipLegends) {
             if (self::POSITION_PREPEND === $action['position']) {
                 reset($config);

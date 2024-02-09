@@ -216,7 +216,8 @@ class CrawlCommand extends Command
 
             public function shouldRequest(CrawlUri $crawlUri): string
             {
-                // We advance with every shouldRequest() call to update the progress bar frequently enough
+                // We advance with every shouldRequest() call to update the progress bar
+                // frequently enough
                 $this->progressBar->advance();
                 $this->progressBar->setMaxSteps($this->escargot->getQueue()->countAll($this->escargot->getJobId()));
 

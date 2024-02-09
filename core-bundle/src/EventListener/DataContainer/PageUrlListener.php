@@ -189,8 +189,8 @@ class PageUrlListener
      */
     private function aliasExists(string $currentAlias, PageModel $currentPage, bool $throw = false): bool
     {
-        // We can safely modify the page model since loadDetails() detaches it
-        // from the registry and calls preventSaving()
+        // We can safely modify the page model since loadDetails() detaches it from the
+        // registry and calls preventSaving()
         $currentPage->loadDetails();
         $currentPage->alias = $currentAlias;
 
@@ -231,9 +231,9 @@ class PageUrlListener
 
             $aliasRoute = $this->pageRegistry->getRoute($aliasPage);
 
-            // Even if we cannot generate the path because of parameter requirements,
-            // two pages can never have the same path AND the same requirements. This
-            // could be two regular pages with same alias and "requireItem" enabled.
+            // Even if we cannot generate the path because of parameter requirements, two
+            // pages can never have the same path AND the same requirements. This could be
+            // two regular pages with same alias and "requireItem" enabled.
             if (
                 null === $currentUrl
                 && $currentRoute->getPath() === $aliasRoute->getPath()

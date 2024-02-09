@@ -72,8 +72,8 @@ class ProcessUtilTest extends TestCase
 
     private function getCommandLine(Process $process): string
     {
-        // Remove the PHP binary path and undo proper quoting (not relevant for
-        // this test and required for easier cross-platform CI runs
+        // Remove the PHP binary path and undo proper quoting (not relevant for this test
+        // and required for easier cross-platform CI runs
         return str_replace(["'", '"'], '', trim(strstr($process->getCommandLine(), ' ')));
     }
 

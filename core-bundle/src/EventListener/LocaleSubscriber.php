@@ -61,8 +61,8 @@ class LocaleSubscriber implements EventSubscriberInterface
     {
         return [
             KernelEvents::REQUEST => [
-                // The priority must be lower than the one of the Symfony route listener (defaults to 32)
-                // and higher than the Symfony locale listener (defaults to 16)
+                // The priority must be lower than the one of the Symfony route listener
+                // (defaults to 32) and higher than the Symfony locale listener (defaults to 16)
                 ['onKernelRequest', 20],
                 ['setTranslatorLocale', 100],
             ],
