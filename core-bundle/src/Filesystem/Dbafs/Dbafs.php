@@ -365,7 +365,7 @@ class Dbafs implements DbafsInterface, ResetInterface
                 }
 
                 // Hash has changed; update the record
-                $itemsToUpdate[$path] = [ChangeSet::ATTR_HASH => $hash];
+                $itemsToUpdate[$path] = [ChangeSet::ATTR_HASH => $hash, ChangeSet::ATTR_TYPE => $type];
             }
 
             unset($itemsToDelete[$path]);
@@ -411,7 +411,7 @@ class Dbafs implements DbafsInterface, ResetInterface
             $oldPath = reset($candidates);
 
             // We identified a move, transfer to update list
-            $itemsToUpdate[$oldPath] = [ChangeSet::ATTR_PATH => (string) $path];
+            $itemsToUpdate[$oldPath] = [ChangeSet::ATTR_PATH => (string) $path, ChangeSet::ATTR_TYPE => $dataToInsert['type']];
             unset($itemsToCreate[$path], $itemsToDelete[$oldPath]);
 
             if (null !== ($lastModified = $lastModifiedUpdates[$path] ?? null)) {
@@ -606,6 +606,7 @@ class Dbafs implements DbafsInterface, ResetInterface
                 // Backwards compatibility
                 if ('tl_files' === $this->table) {
                     $dataToUpdate['name'] = basename($itemToUpdate->getNewPath());
+                    $dataToUpdate['extension'] = $itemToUpdate->isFile() ? Path::getExtension($itemToUpdate->getNewPath()) : '';
                 }
             }
 

@@ -37,8 +37,8 @@ class ChangeSetTest extends TestCase
                 [ChangeSet::ATTR_HASH => 'd821', ChangeSet::ATTR_PATH => 'foo/new2', ChangeSet::ATTR_TYPE => ChangeSet::TYPE_DIRECTORY],
             ],
             [
-                'bar/old_path' => [ChangeSet::ATTR_PATH => 'bar/updated_path'],
-                'bar/file_that_changes' => [ChangeSet::ATTR_HASH => 'e127'],
+                'bar/old_path' => [ChangeSet::ATTR_PATH => 'bar/updated_path', ChangeSet::ATTR_TYPE => ChangeSet::TYPE_FILE],
+                'bar/file_that_changes' => [ChangeSet::ATTR_HASH => 'e127', ChangeSet::ATTR_TYPE => ChangeSet::TYPE_FILE],
             ],
             [
                 'baz' => ChangeSet::TYPE_DIRECTORY,
@@ -92,8 +92,8 @@ class ChangeSetTest extends TestCase
         $changeSet = new ChangeSet(
             [],
             [
-                'bar/old_path' => [ChangeSet::ATTR_PATH => 'bar/updated_path'],
-                'bar/file_that_changes' => [ChangeSet::ATTR_HASH => 'e127'],
+                'bar/old_path' => [ChangeSet::ATTR_PATH => 'bar/updated_path', ChangeSet::ATTR_TYPE => ChangeSet::TYPE_FILE],
+                'bar/file_that_changes' => [ChangeSet::ATTR_HASH => 'e127', ChangeSet::ATTR_TYPE => ChangeSet::TYPE_FILE],
             ],
             [],
             [
@@ -142,8 +142,8 @@ class ChangeSetTest extends TestCase
                 [ChangeSet::ATTR_HASH => '98c1', ChangeSet::ATTR_PATH => 'foo/new2', ChangeSet::ATTR_TYPE => ChangeSet::TYPE_FILE],
             ],
             [
-                'foo' => [ChangeSet::ATTR_HASH => 'e127'],
-                'foo/old_path' => [ChangeSet::ATTR_PATH => 'foo/updated_path'],
+                'foo' => [ChangeSet::ATTR_HASH => 'e127', ChangeSet::ATTR_TYPE => ChangeSet::TYPE_DIRECTORY],
+                'foo/old_path' => [ChangeSet::ATTR_PATH => 'foo/updated_path', ChangeSet::ATTR_TYPE => ChangeSet::TYPE_FILE],
             ],
             [
                 'foo/baz' => ChangeSet::TYPE_DIRECTORY,
@@ -168,9 +168,9 @@ class ChangeSetTest extends TestCase
                     [ChangeSet::ATTR_HASH => 'bf6e', ChangeSet::ATTR_PATH => 'new3', ChangeSet::ATTR_TYPE => ChangeSet::TYPE_FILE],
                 ],
                 [
-                    '' => [ChangeSet::ATTR_HASH => '6628'],
-                    'old_path' => [ChangeSet::ATTR_HASH => '8bba'],
-                    'boring_file' => [ChangeSet::ATTR_PATH => 'interesting_file'],
+                    '' => [ChangeSet::ATTR_HASH => '6628', 'type' => ChangeSet::TYPE_FILE],
+                    'old_path' => [ChangeSet::ATTR_HASH => '8bba', ChangeSet::ATTR_TYPE => ChangeSet::TYPE_FILE],
+                    'boring_file' => [ChangeSet::ATTR_PATH => 'interesting_file', ChangeSet::ATTR_TYPE => ChangeSet::TYPE_FILE],
                 ],
                 [
                     'baz' => ChangeSet::TYPE_DIRECTORY,
@@ -281,7 +281,7 @@ class ChangeSetTest extends TestCase
         $changeSet = new ChangeSet(
             [],
             [
-                1 => [ChangeSet::ATTR_HASH => '6628'],
+                1 => [ChangeSet::ATTR_HASH => '6628', ChangeSet::ATTR_TYPE => ChangeSet::TYPE_FILE],
             ],
             [
                 2 => ChangeSet::TYPE_DIRECTORY,
@@ -295,7 +295,7 @@ class ChangeSetTest extends TestCase
             new ChangeSet(
                 [],
                 [
-                    4 => [ChangeSet::ATTR_PATH => 'file'],
+                    4 => [ChangeSet::ATTR_PATH => 'file', ChangeSet::ATTR_TYPE => ChangeSet::TYPE_FILE],
                 ],
                 [
                     5 => ChangeSet::TYPE_FILE,

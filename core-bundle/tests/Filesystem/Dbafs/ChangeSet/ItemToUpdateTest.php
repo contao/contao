@@ -20,7 +20,7 @@ class ItemToUpdateTest extends TestCase
     public function testCreateAndReadFromItem(): void
     {
         // Everything changes
-        $item1 = new ItemToUpdate('a', 'e3ff', 'b', null);
+        $item1 = new ItemToUpdate('a', 'e3ff', 'b', true, null);
 
         $this->assertSame('a', $item1->getExistingPath());
         $this->assertTrue($item1->updatesPath());
@@ -31,7 +31,7 @@ class ItemToUpdateTest extends TestCase
         $this->assertNull($item1->getLastModified());
 
         // Only path changes
-        $item2 = new ItemToUpdate('a', null, 'b', false);
+        $item2 = new ItemToUpdate('a', null, 'b', true, false);
 
         $this->assertTrue($item2->updatesPath());
         $this->assertFalse($item2->updatesHash());
@@ -39,7 +39,7 @@ class ItemToUpdateTest extends TestCase
         $this->assertSame('b', $item2->getNewPath());
 
         // Only hash changes
-        $item3 = new ItemToUpdate('a', 'fa25', null, false);
+        $item3 = new ItemToUpdate('a', 'fa25', null, true, false);
 
         $this->assertFalse($item3->updatesPath());
         $this->assertTrue($item3->updatesHash());
@@ -47,7 +47,7 @@ class ItemToUpdateTest extends TestCase
         $this->assertSame('fa25', $item3->getNewHash());
 
         // Only last modified changes
-        $item3 = new ItemToUpdate('a', null, null, 6789);
+        $item3 = new ItemToUpdate('a', null, null, null, 6789);
 
         $this->assertFalse($item3->updatesPath());
         $this->assertFalse($item3->updatesHash());
@@ -57,7 +57,7 @@ class ItemToUpdateTest extends TestCase
 
     public function testThrowsWhenAccessingPathThatWasNotSet(): void
     {
-        $item = new ItemToUpdate('a', '12de', null, null);
+        $item = new ItemToUpdate('a', '12de', null, true, null);
 
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('The update to item "a" does not include a new path.');
@@ -67,7 +67,7 @@ class ItemToUpdateTest extends TestCase
 
     public function testThrowsWhenAccessingHashThatWasNotSet(): void
     {
-        $item = new ItemToUpdate('a', null, 'b', null);
+        $item = new ItemToUpdate('a', null, 'b', true, null);
 
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('The update to item "a" does not include a new hash.');
@@ -77,7 +77,7 @@ class ItemToUpdateTest extends TestCase
 
     public function testThrowsWhenAccessingLastModifiedThatWasNotSet(): void
     {
-        $item = new ItemToUpdate('a', '12de', null, false);
+        $item = new ItemToUpdate('a', '12de', null, true, false);
 
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('The update to item "a" does not include a last modified date.');

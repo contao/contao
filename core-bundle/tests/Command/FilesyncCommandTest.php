@@ -90,9 +90,11 @@ class FilesyncCommandTest extends TestCase
                         [
                             'bar/old_path' => [
                                 ChangeSet::ATTR_PATH => 'bar/updated_path',
+                                ChangeSet::ATTR_TYPE => ChangeSet::TYPE_FILE,
                             ],
                             'bar/file_that_changes' => [
                                 ChangeSet::ATTR_HASH => '8a1631a4eacf47253f3ebb5aea2ccce7',
+                                ChangeSet::ATTR_TYPE => ChangeSet::TYPE_FILE,
                             ],
                         ],
                         [

@@ -152,6 +152,7 @@ class ChangeSet
                     (string) $existingPath,
                     $item[self::ATTR_HASH] ?? null,
                     $item[self::ATTR_PATH] ?? null,
+                    self::TYPE_FILE === $item[self::ATTR_TYPE],
                     $lastModified,
                 );
             },
@@ -166,6 +167,7 @@ class ChangeSet
         return [...array_map(
             static fn (string|int $existingPath, int $lastModified) => new ItemToUpdate(
                 (string) $existingPath,
+                null,
                 null,
                 null,
                 $lastModified

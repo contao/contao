@@ -21,6 +21,7 @@ class ItemToUpdate
         private readonly string $existingPath,
         private readonly string|null $newHash,
         private readonly string|null $newPath,
+        private readonly bool|null $isFile,
         private readonly int|false|null $lastModified = false,
     ) {
     }
@@ -56,6 +57,15 @@ class ItemToUpdate
         }
 
         return $this->newPath;
+    }
+
+    public function isFile(): bool
+    {
+        if (null === $this->isFile) {
+            throw new \LogicException(sprintf('The update to item "%s" does not include a new path.', $this->existingPath));
+        }
+
+        return $this->isFile;
     }
 
     public function updatesLastModified(): bool

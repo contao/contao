@@ -602,7 +602,7 @@ class DbafsTest extends TestCase
                 ['hash' => '22af645d1859cb5ca6da0c484f1f37ea', 'path' => 'bar/new-file', 'type' => ChangeSet::TYPE_FILE],
             ],
             [
-                'bar' => ['hash' => 'c9baa6dc5b9218fb7bb83349ace1517b'],
+                'bar' => ['hash' => 'c9baa6dc5b9218fb7bb83349ace1517b', 'type' => ChangeSet::TYPE_DIRECTORY],
             ],
             []
         );
@@ -619,8 +619,8 @@ class DbafsTest extends TestCase
         $changeSet3 = new ChangeSet(
             [],
             [
-                'foo' => ['hash' => '9579cd3e9ff37b98c0bc5c702e4e5beb'],
-                'foo/baz' => ['hash' => 'd41d8cd98f00b204e9800998ecf8427e'],
+                'foo' => ['hash' => '9579cd3e9ff37b98c0bc5c702e4e5beb', 'type' => ChangeSet::TYPE_DIRECTORY],
+                'foo/baz' => ['hash' => 'd41d8cd98f00b204e9800998ecf8427e', 'type' => ChangeSet::TYPE_FILE],
             ],
             [
                 'file1' => ChangeSet::TYPE_FILE,
@@ -637,8 +637,8 @@ class DbafsTest extends TestCase
             new ChangeSet(
                 [],
                 [
-                    'foo' => ['hash' => '9579cd3e9ff37b98c0bc5c702e4e5beb'],
-                    'foo/baz' => ['hash' => 'd41d8cd98f00b204e9800998ecf8427e'],
+                    'foo' => ['hash' => '9579cd3e9ff37b98c0bc5c702e4e5beb', 'type' => ChangeSet::TYPE_DIRECTORY],
+                    'foo/baz' => ['hash' => 'd41d8cd98f00b204e9800998ecf8427e', 'type' => ChangeSet::TYPE_FILE],
                 ],
                 [
                     'foo/baz/file4' => ChangeSet::TYPE_FILE,
@@ -664,9 +664,9 @@ class DbafsTest extends TestCase
         $changeSet4 = new ChangeSet(
             [],
             [
-                'bar' => ['hash' => '8a33fd03a58a6e8e82c8bb5c38bde45f'],
-                'foo' => ['hash' => '0a12dc23f78b213ee41428f3c1090724'],
-                'foo/file3' => ['path' => 'bar/file3'],
+                'bar' => ['hash' => '8a33fd03a58a6e8e82c8bb5c38bde45f', 'type' => ChangeSet::TYPE_DIRECTORY],
+                'foo' => ['hash' => '0a12dc23f78b213ee41428f3c1090724', 'type' => ChangeSet::TYPE_DIRECTORY],
+                'foo/file3' => ['path' => 'bar/file3', 'type' => ChangeSet::TYPE_FILE],
             ],
             []
         );
@@ -680,7 +680,7 @@ class DbafsTest extends TestCase
             new ChangeSet(
                 [],
                 [
-                    'foo' => ['hash' => '0a12dc23f78b213ee41428f3c1090724'],
+                    'foo' => ['hash' => '0a12dc23f78b213ee41428f3c1090724', 'type' => ChangeSet::TYPE_DIRECTORY],
                 ],
                 [
                     'foo/file3' => ChangeSet::TYPE_FILE,
@@ -694,9 +694,9 @@ class DbafsTest extends TestCase
         $changeSet5 = new ChangeSet(
             [],
             [
-                'foo' => ['hash' => '7d4ff96366c1f971c052a092fca4a72e'],
-                'foo/baz' => ['hash' => '241e718d4016fe98aca816485e513129'],
-                'foo/file3' => ['path' => 'foo/baz/track-me'],
+                'foo' => ['hash' => '7d4ff96366c1f971c052a092fca4a72e', 'type' => ChangeSet::TYPE_DIRECTORY],
+                'foo/baz' => ['hash' => '241e718d4016fe98aca816485e513129', 'type' => ChangeSet::TYPE_FILE],
+                'foo/file3' => ['path' => 'foo/baz/track-me', 'type' => ChangeSet::TYPE_FILE],
             ],
             []
         );
@@ -714,9 +714,9 @@ class DbafsTest extends TestCase
             new ChangeSet(
                 [],
                 [
-                    'foo' => ['hash' => '9158456b71197cf99a5b59fba00f77f1'],
-                    'foo/file3' => ['hash' => 'e92c4f27d783ac09065352d0e0f7cb8b'],
-                    'file1' => ['hash' => 'e92c4f27d783ac09065352d0e0f7cb8b'],
+                    'foo' => ['hash' => '9158456b71197cf99a5b59fba00f77f1', 'type' => ChangeSet::TYPE_DIRECTORY],
+                    'foo/file3' => ['hash' => 'e92c4f27d783ac09065352d0e0f7cb8b', 'type' => ChangeSet::TYPE_FILE],
+                    'file1' => ['hash' => 'e92c4f27d783ac09065352d0e0f7cb8b', 'type' => ChangeSet::TYPE_FILE],
                 ],
                 []
             ),
@@ -728,8 +728,8 @@ class DbafsTest extends TestCase
             new ChangeSet(
                 [],
                 [
-                    'foo' => ['hash' => '9158456b71197cf99a5b59fba00f77f1'],
-                    'foo/file3' => ['hash' => 'e92c4f27d783ac09065352d0e0f7cb8b'],
+                    'foo' => ['hash' => '9158456b71197cf99a5b59fba00f77f1', 'type' => ChangeSet::TYPE_DIRECTORY],
+                    'foo/file3' => ['hash' => 'e92c4f27d783ac09065352d0e0f7cb8b', 'type' => ChangeSet::TYPE_FILE],
                 ],
                 []
             ),
@@ -766,11 +766,11 @@ class DbafsTest extends TestCase
             new ChangeSet(
                 [],
                 [
-                    'bar' => ['hash' => '1bc91408dac4048892e3603f6e7f80b4'],
-                    'foo' => ['path' => 'bar/foo'],
-                    'foo/baz' => ['path' => 'bar/foo/baz'],
-                    'foo/baz/file4' => ['path' => 'bar/foo/baz/file4'],
-                    'foo/file3' => ['path' => 'bar/foo/file3'],
+                    'bar' => ['hash' => '1bc91408dac4048892e3603f6e7f80b4', 'type' => ChangeSet::TYPE_DIRECTORY],
+                    'foo' => ['path' => 'bar/foo', 'type' => ChangeSet::TYPE_DIRECTORY],
+                    'foo/baz' => ['path' => 'bar/foo/baz', 'type' => ChangeSet::TYPE_DIRECTORY],
+                    'foo/baz/file4' => ['path' => 'bar/foo/baz/file4', 'type' => ChangeSet::TYPE_FILE],
+                    'foo/file3' => ['path' => 'bar/foo/file3', 'type' => ChangeSet::TYPE_FILE],
                 ],
                 []
             ),
@@ -786,9 +786,9 @@ class DbafsTest extends TestCase
             new ChangeSet(
                 [],
                 [
-                    'bar' => ['hash' => 'd41d8cd98f00b204e9800998ecf8427e'],
-                    'bar/file5a' => ['path' => 'file5a'],
-                    'bar/file5b' => ['path' => 'file5b'],
+                    'bar' => ['hash' => 'd41d8cd98f00b204e9800998ecf8427e', 'type' => ChangeSet::TYPE_DIRECTORY],
+                    'bar/file5a' => ['path' => 'file5a', 'type' => ChangeSet::TYPE_FILE],
+                    'bar/file5b' => ['path' => 'file5b', 'type' => ChangeSet::TYPE_FILE],
                 ],
                 []
             ),
@@ -806,7 +806,7 @@ class DbafsTest extends TestCase
                     ['hash' => 'd41d8cd98f00b204e9800998ecf8427e', 'path' => 'foo/file3', 'type' => ChangeSet::TYPE_DIRECTORY],
                 ],
                 [
-                    'foo' => ['hash' => '5d93d7dddf717617c820c623e9b3168c'],
+                    'foo' => ['hash' => '5d93d7dddf717617c820c623e9b3168c', 'type' => ChangeSet::TYPE_DIRECTORY],
                 ],
                 [
                     'foo/file3' => ChangeSet::TYPE_FILE,
@@ -835,11 +835,11 @@ class DbafsTest extends TestCase
                     ['hash' => '900150983cd24fb0d6963f7d28e17f72', 'path' => 'new/thing', 'type' => ChangeSet::TYPE_FILE],
                 ],
                 [
-                    'bar' => ['hash' => '10a3f34a1736690a9dad608c53740aa5'],
-                    'file1' => ['path' => 'new/file1'],
-                    'file2' => ['path' => 'new/new-name'],
-                    'foo' => ['hash' => '9158456b71197cf99a5b59fba00f77f1'],
-                    'foo/file3' => ['hash' => 'e92c4f27d783ac09065352d0e0f7cb8b'],
+                    'bar' => ['hash' => '10a3f34a1736690a9dad608c53740aa5', 'type' => ChangeSet::TYPE_DIRECTORY],
+                    'file1' => ['path' => 'new/file1', 'type' => ChangeSet::TYPE_FILE],
+                    'file2' => ['path' => 'new/new-name', 'type' => ChangeSet::TYPE_FILE],
+                    'foo' => ['hash' => '9158456b71197cf99a5b59fba00f77f1', 'type' => ChangeSet::TYPE_DIRECTORY],
+                    'foo/file3' => ['hash' => 'e92c4f27d783ac09065352d0e0f7cb8b', 'type' => ChangeSet::TYPE_FILE],
                 ],
                 [
                     'bar/file5a' => ChangeSet::TYPE_FILE,
@@ -853,8 +853,8 @@ class DbafsTest extends TestCase
             new ChangeSet(
                 [],
                 [
-                    'foo' => ['hash' => '9158456b71197cf99a5b59fba00f77f1'],
-                    'foo/file3' => ['hash' => 'e92c4f27d783ac09065352d0e0f7cb8b'],
+                    'foo' => ['hash' => '9158456b71197cf99a5b59fba00f77f1', 'type' => ChangeSet::TYPE_DIRECTORY],
+                    'foo/file3' => ['hash' => 'e92c4f27d783ac09065352d0e0f7cb8b', 'type' => ChangeSet::TYPE_FILE],
                 ],
                 []
             ),
