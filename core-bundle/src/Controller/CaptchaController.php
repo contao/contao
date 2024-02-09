@@ -37,7 +37,7 @@ class CaptchaController extends AbstractController
      */
     public function __invoke(Request $request): Response
     {
-        if (!$request->isXmlHttpRequest() || !str_contains($request->headers->get('Cache-Control') ?? '', 'no-cache')) {
+        if (!$request->isXmlHttpRequest()) {
             return new Response($this->getScriptSource(), 200, ['Content-Type' => 'text/javascript', 'Cache-Control' => 'private, max-age=604800']);
         }
 
