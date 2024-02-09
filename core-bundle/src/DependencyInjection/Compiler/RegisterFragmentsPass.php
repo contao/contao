@@ -41,6 +41,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
         private readonly string|null $globalsKey = null,
         private readonly string|null $proxyClass = null,
         private readonly string|null $templateOptionsListener = null,
+        private readonly string|null $dca = null,
     ) {
     }
 
@@ -131,8 +132,8 @@ class RegisterFragmentsPass implements CompilerPassInterface
         $this->addPreHandlers($container, $preHandlers);
         $this->addGlobalsMapListener($globals, $container);
 
-        if (null !== $this->templateOptionsListener && $container->hasDefinition($this->templateOptionsListener)) {
-            $container->findDefinition($this->templateOptionsListener)->addMethodCall('setDefaultIdentifiersByType', [$templates]);
+        if (null !== $this->dca && null !== $this->templateOptionsListener && $container->hasDefinition($this->templateOptionsListener)) {
+            $container->findDefinition($this->templateOptionsListener)->addMethodCall('setDefaultIdentifiersByType', [$this->dca, $templates]);
         }
     }
 

@@ -206,6 +206,15 @@ services:
         arguments:
             - '@translator'
 
+    contao.listener.data_container.template_options:
+        class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
+        arguments:
+            - '@contao.twig.finder_factory'
+            - '@database_connection'
+            - '@contao.framework'
+            - '@request_stack'
+            - '@contao.twig.filesystem_loader'
+
     contao.listener.data_container.theme_templates:
         class: Contao\CoreBundle\EventListener\DataContainer\ThemeTemplatesListener
         arguments:
@@ -251,29 +260,8 @@ services:
             - '@contao.doctrine.dca_schema_provider'
             - '@messenger.receiver_locator'
 
-    contao.listener.element_template_options:
-        class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
-        arguments:
-            - '@contao.twig.finder_factory'
-            - '@database_connection'
-            - '@contao.framework'
-            - '@request_stack'
-            - '@contao.twig.filesystem_loader'
-            - ce_
-            - Contao\ContentProxy
-
     contao.listener.exception_converter:
         class: Contao\CoreBundle\EventListener\ExceptionConverterListener
-
-    contao.listener.form_field_template_options:
-        class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
-        arguments:
-            - '@contao.twig.finder_factory'
-            - '@database_connection'
-            - '@contao.framework'
-            - '@request_stack'
-            - '@contao.twig.filesystem_loader'
-            - form_
 
     contao.listener.image_size_options:
         class: Contao\CoreBundle\EventListener\ImageSizeOptionsListener
@@ -363,17 +351,6 @@ services:
         class: Contao\CoreBundle\EventListener\MergeHttpHeadersListener
         arguments:
             - '@contao.framework'
-
-    contao.listener.module_template_options:
-        class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
-        arguments:
-            - '@contao.twig.finder_factory'
-            - '@database_connection'
-            - '@contao.framework'
-            - '@request_stack'
-            - '@contao.twig.filesystem_loader'
-            - mod_
-            - Contao\ModuleProxy
 
     contao.listener.page_access:
         class: Contao\CoreBundle\EventListener\PageAccessListener
