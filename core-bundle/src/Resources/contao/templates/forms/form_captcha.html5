@@ -15,11 +15,9 @@
 
   <input type="text" name="<?= $this->name ?>" id="ctrl_<?= $this->id ?>" class="captcha mandatory<?php if ($this->class): ?> <?= $this->class ?><?php endif; ?>" value="" aria-describedby="captcha_text_<?= $this->id ?>"<?= $this->getAttributes() ?>>
   <span id="captcha_text_<?= $this->id ?>" class="captcha_text<?php if ($this->class): ?> <?= $this->class ?><?php endif; ?>"><?= $this->getQuestion() ?></span>
-  <input type="hidden" name="<?= $this->name ?>_hash" value="<?= $this->hasErrors() ? $this->getHash() : '' ?>">
+  <input type="hidden" name="<?= $this->name ?>_hash<?= $this->hasErrors() ? 1 + $this->sum ** 2 : '' ?>" value="<?= $this->hasErrors() ? $this->getHash() : '' ?>">
 
-  <?php if ($this->hasErrors()): ?>
-    <script>document.getElementById('ctrl_<?= $this->id ?>').form.elements['<?= $this->name ?>_hash'].name+=<?= 1 + $this->sum ** 2 ?></script>
-  <?php else: ?>
+  <?php if (!$this->hasErrors()): ?>
     <div style="display:none">
       <label for="ctrl_<?= $this->id ?>_hp">Do not fill in this field</label>
       <input type="text" name="<?= $this->name ?>_name" id="ctrl_<?= $this->id ?>_hp" value="">
