@@ -1188,7 +1188,7 @@ class DbafsTest extends TestCase
             ],
             [
                 ['path' => 'a/file'],
-                ['path' => 'b/file', 'pid' => 'ab54'], // updated path and uuid of "files/b"
+                ['path' => 'b/file', 'pid' => 'ab54', 'name' => 'file'], // updated path and uuid of "files/b"
             ],
             [
                 ['path' => 'b'],
