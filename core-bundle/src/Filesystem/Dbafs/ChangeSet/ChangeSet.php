@@ -16,7 +16,7 @@ use Symfony\Component\Filesystem\Path;
 
 /**
  * @phpstan-type CreateItemDefinition array{hash: string, path: string, type: self::TYPE_*}
- * @phpstan-type UpdateItemDefinition array{hash?: string, path?: string, lastModified?: int|null}
+ * @phpstan-type UpdateItemDefinition array{hash?: string, path?: string, type?: self::TYPE_*, lastModified?: int|null}
  * @phpstan-type DeleteItemDefinition self::TYPE_*
  *
  * @experimental
