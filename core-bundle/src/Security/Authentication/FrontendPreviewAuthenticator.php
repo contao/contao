@@ -133,7 +133,8 @@ class FrontendPreviewAuthenticator
 
         $frontendGroups = StringUtil::deserialize($frontendUser->groups, true);
 
-        // The front end user does not belong to a group that the back end user is allowed to log in
+        // The front end user does not belong to a group that the back end user is
+        // allowed to log in
         if (!$this->security->isGranted('contao_user.amg', $frontendGroups)) {
             return null;
         }

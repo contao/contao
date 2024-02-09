@@ -74,10 +74,9 @@ class DynamicUseTokenParserTest extends TestCase
             ),
         );
 
-        // A component is adjusted by overwriting the component's template
-        // (here by adding the item "ice" and turning apples into pineapples).
-        // The changes should be visible wherever the component is used like in
-        // this element template:
+        // A component is adjusted by overwriting the component's template (here by
+        // adding the item "ice" and turning apples into pineapples). The changes should
+        // be visible wherever the component is used like in this element template:
         $this->assertSame(
             <<<'HTML'
                 <h1>Summer menu</h1>
@@ -92,11 +91,10 @@ class DynamicUseTokenParserTest extends TestCase
             trim($environment->render('@Contao/element/menu.html.twig')),
         );
 
-        // The rendered template overwrites blocks of a component used by the
-        // extended base template and another component used within this
-        // component. The adjustments (adding the item "secret sauce" and
-        // adding "from a tin" to the inner component's "apple" block) should
-        // be output, but only in this template:
+        // The rendered template overwrites blocks of a component used by the extended
+        // base template and another component used within this component. The
+        // adjustments (adding the item "secret sauce" and adding "from a tin" to the
+        // inner component's "apple" block) should be output, but only in this template:
         $this->assertSame(
             <<<'HTML'
                 <h1>How to make a fruit shake</h1>

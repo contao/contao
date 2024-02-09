@@ -193,8 +193,8 @@ class FilesystemConfiguration
 
         $this->container->setDefinition("contao.filesystem.dbafs.$virtualFilesystemName", $definition);
 
-        // Register the DBAFS in the DbafsManager using the same prefix as the
-        // associated virtual filesystem
+        // Register the DBAFS in the DbafsManager using the same prefix as the associated
+        // virtual filesystem
         $this->registerDbafs($definition, $prefix);
 
         return $definition;

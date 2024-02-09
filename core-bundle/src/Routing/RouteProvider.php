@@ -171,7 +171,8 @@ class RouteProvider extends AbstractPageRouteProvider
 
         $urlPrefix = $route->getUrlPrefix();
 
-        // Do not create a ".root" route for root pages without prefix if `disableLanguageRedirect` is enabled
+        // Do not create a ".root" route for root pages without prefix if
+        // `disableLanguageRedirect` is enabled
         if ('root' === $page->type && !$urlPrefix && $page->disableLanguageRedirect) {
             return;
         }

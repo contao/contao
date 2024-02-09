@@ -47,8 +47,8 @@ class BackendPreviewController
     #[Route('/preview', name: 'contao_backend_preview')]
     public function __invoke(Request $request): Response
     {
-        // Skip the redirect if there is no preview script, otherwise we will
-        // end up in an endless loop (see #1511)
+        // Skip the redirect if there is no preview script, otherwise we will end up in
+        // an endless loop (see #1511)
         if ($this->previewScript && substr($request->getScriptName(), \strlen($request->getBasePath())) !== $this->previewScript) {
             $qs = $request->getQueryString();
 

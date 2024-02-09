@@ -53,8 +53,8 @@ class TemplateOptionsListener
             : $dc->getCurrentRecord()['type'] ?? null;
 
         if (null === $type) {
-            // Add a blank option that allows to reset all custom templates to
-            // the default one when in "overrideAll" mode
+            // Add a blank option that allows to reset all custom templates to the default
+            // one when in "overrideAll" mode
             return $overrideAll ? ['' => '-'] : [];
         }
 
@@ -72,12 +72,12 @@ class TemplateOptionsListener
             ->asTemplateOptions()
         ;
 
-        // We will end up with no templates if the logic assumes a non-legacy
-        // template but the user did not add any or uses the old prefix. For
-        // example a "foo" content element fragment controller (without an
-        // explicit definition of a template in the service tag) used with a
-        // "ce_foo.html.twig" template - although this template will be
-        // rendered for BC reasons, the template selection won't be possible.
+        // We will end up with no templates if the logic assumes a non-legacy template
+        // but the user did not add any or uses the old prefix. For example a "foo"
+        // content element fragment controller (without an explicit definition of a
+        // template in the service tag) used with a "ce_foo.html.twig" template -
+        // although this template will be rendered for BC reasons, the template selection
+        // won't be possible.
         if (!$templateOptions) {
             $guessedType = $this->legacyTemplatePrefix.$type;
 

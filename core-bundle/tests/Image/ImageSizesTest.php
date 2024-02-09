@@ -82,8 +82,8 @@ class ImageSizesTest extends TestCase
 
         $options = $this->imageSizes->getOptionsForUser($user);
 
-        // Default options would not be returned without the admin check,
-        // because it is not within the allowed image sizes
+        // Default options would not be returned without the admin check, because it is
+        // not within the allowed image sizes
         $this->assertArrayHasKey('custom', $options);
     }
 

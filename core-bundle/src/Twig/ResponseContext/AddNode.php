@@ -38,14 +38,16 @@ final class AddNode extends Node implements NodeOutputInterface
 
     public function compile(Compiler $compiler): void
     {
-        // if ($this->env->isDebug()) { ob_start(); } else { ob_start(static function () { return ''; }); }
-        // try {
-        //     <sub-compiled content>
-        //     $__contao_document_content = ob_get_contents();
-        // } finally { ob_end_clean(); }
-        // $this->extensions["Contao\\…\\ContaoExtension"]->addDocumentContent(
-        //     '<identifier>', $__contao_document_content, Contao\…\DocumentLocation::<location>
-        // );
+        /*
+         * if ($this->env->isDebug()) { ob_start(); } else { ob_start(static function () { return ''; }); }
+         * try {
+         *     <sub-compiled content>
+         *     $__contao_document_content = ob_get_contents();
+         * } finally { ob_end_clean(); }
+         * $this->extensions["Contao\\…\\ContaoExtension"]->addDocumentContent(
+         *     '<identifier>', $__contao_document_content, Contao\…\DocumentLocation::<location>
+         * );
+         */
         $compiler
             ->write('if ($this->env->isDebug()) { ob_start(); } else { ob_start(static function () { return \'\'; }); }'."\n")
             ->write('try {'."\n")

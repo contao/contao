@@ -81,7 +81,8 @@ class FrontendModulesVoterTest extends TestCase
             ),
         );
 
-        // The HTML module is not permitted for any user in this dataset (create, update, delete)
+        // The HTML module is not permitted for any user in this dataset (create,
+        // update, delete)
         $this->assertSame(
             $expected['html'],
             $voter->vote(
@@ -109,7 +110,8 @@ class FrontendModulesVoterTest extends TestCase
             ),
         );
 
-        // The navigation module is only permitted for one user in this dataset (create, update, delete)
+        // The navigation module is only permitted for one user in this dataset (create,
+        // update, delete)
         $this->assertSame(
             $expected['navigation'],
             $voter->vote(

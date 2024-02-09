@@ -169,8 +169,9 @@ final class CspHandler
             return $headerValue;
         }
 
-        // Now let's try to not cause a 500 Internal Server error by removing some signatures. Let's remove some
-        // style-src signatures first because they likely have the least impact.
+        // Now let's try to not cause a 500 Internal Server error by removing some
+        // signatures. Let's remove some style-src signatures first because they likely
+        // have the least impact.
         $removedStyleSrc = $this->reduceHashSignatures('style-src');
         $headerValue = $this->buildHeaderValue($request);
 
@@ -226,8 +227,8 @@ final class CspHandler
 
         $removed = [];
 
-        // First unset the ones added last. In case of style-src, that means that the top inline styles would still
-        // work while towards the footer they might not work anymore.
+        // First unset the ones added last. In case of style-src, that means that the top
+        // inline styles would still work while towards the footer they might not work anymore.
         do {
             $removed[] = array_pop($this->signatures[$source]);
         } while (\strlen($this->buildHeaderValue()) > $this->maxHeaderLength && [] !== $this->signatures[$source]);
