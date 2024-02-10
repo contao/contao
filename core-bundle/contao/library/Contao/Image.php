@@ -74,7 +74,7 @@ class Image
 
 		$src = rawurldecode($src);
 
-		if (str_contains($src, '/'))
+		if (strpos($src, '/') !== false)
 		{
 			return $src;
 		}
