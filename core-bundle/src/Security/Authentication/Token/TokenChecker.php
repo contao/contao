@@ -30,6 +30,7 @@ use Symfony\Component\Security\Http\FirewallMapInterface;
 class TokenChecker
 {
     private const FRONTEND_FIREWALL = 'contao_frontend';
+
     private const BACKEND_FIREWALL = 'contao_backend';
 
     private array $previewLinks = [];
@@ -54,7 +55,7 @@ class TokenChecker
     {
         $token = $this->getToken(self::FRONTEND_FIREWALL);
 
-        return null !== $token && VoterInterface::ACCESS_GRANTED === $this->roleVoter->vote($token, null, ['ROLE_MEMBER']);
+        return $token && VoterInterface::ACCESS_GRANTED === $this->roleVoter->vote($token, null, ['ROLE_MEMBER']);
     }
 
     /**
@@ -64,7 +65,7 @@ class TokenChecker
     {
         $token = $this->getToken(self::BACKEND_FIREWALL);
 
-        return null !== $token && VoterInterface::ACCESS_GRANTED === $this->roleVoter->vote($token, null, ['ROLE_USER']);
+        return $token && VoterInterface::ACCESS_GRANTED === $this->roleVoter->vote($token, null, ['ROLE_USER']);
     }
 
     /**
@@ -74,7 +75,7 @@ class TokenChecker
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (!$request || !$request->hasPreviousSession()) {
+        if (!$request?->hasPreviousSession()) {
             return false;
         }
 
@@ -96,13 +97,17 @@ class TokenChecker
      */
     public function getFrontendUsername(): string|null
     {
-        $token = $this->getToken(self::FRONTEND_FIREWALL);
-
-        if (null === $token || !$token->getUser() instanceof FrontendUser) {
+        if (!$token = $this->getToken(self::FRONTEND_FIREWALL)) {
             return null;
         }
 
-        return $token->getUser()->getUserIdentifier();
+        $user = $token->getUser();
+
+        if (!$user instanceof FrontendUser) {
+            return null;
+        }
+
+        return $user->getUserIdentifier();
     }
 
     /**
@@ -110,13 +115,17 @@ class TokenChecker
      */
     public function getBackendUsername(): string|null
     {
-        $token = $this->getToken(self::BACKEND_FIREWALL);
-
-        if (null === $token || !$token->getUser() instanceof BackendUser) {
+        if (!$token = $this->getToken(self::BACKEND_FIREWALL)) {
             return null;
         }
 
-        return $token->getUser()->getUserIdentifier();
+        $user = $token->getUser();
+
+        if (!$user instanceof BackendUser) {
+            return null;
+        }
+
+        return $user->getUserIdentifier();
     }
 
     /**
@@ -134,7 +143,7 @@ class TokenChecker
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (null === $request || !$request->attributes->get('_preview', false) || !$this->canAccessPreview()) {
+        if (!$request?->attributes->get('_preview', false) || !$this->canAccessPreview()) {
             return false;
         }
 
@@ -167,7 +176,7 @@ class TokenChecker
     {
         $token = $this->getTokenFromStorage($context);
 
-        if (null === $token) {
+        if (!$token) {
             $token = $this->getTokenFromSession('_security_'.$context);
         }
 
@@ -195,7 +204,7 @@ class TokenChecker
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (!$this->firewallMap instanceof FirewallMap || null === $request) {
+        if (!$request || !$this->firewallMap instanceof FirewallMap) {
             return null;
         }
 
@@ -210,7 +219,9 @@ class TokenChecker
 
     private function getTokenFromSession(string $sessionKey): TokenInterface|null
     {
-        if ((!$request = $this->requestStack->getCurrentRequest()) || !$request->hasSession()) {
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (!$request?->hasSession()) {
             return null;
         }
 

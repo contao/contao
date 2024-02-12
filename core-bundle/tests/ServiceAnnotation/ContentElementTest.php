@@ -41,7 +41,7 @@ class ContentElementTest extends TestCase
                 'renderer' => 'esi',
                 'type' => 'foobar',
             ],
-            $annotation->getAttributes()
+            $annotation->getAttributes(),
         );
     }
 

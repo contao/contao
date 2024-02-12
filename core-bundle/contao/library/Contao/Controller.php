@@ -15,6 +15,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
@@ -123,7 +124,7 @@ abstract class Controller extends System
 
 		/** @var TemplateHierarchyInterface $templateHierarchy */
 		$templateHierarchy = System::getContainer()->get('contao.twig.filesystem_loader');
-		$identifierPattern = sprintf('/^%s%s/', preg_quote($strPrefix, '/'), substr($strPrefix, -1) !== '_' ? '($|_)' : '');
+		$identifierPattern = sprintf('/^%s%s/', preg_quote($strPrefix, '/'), !str_ends_with($strPrefix, '_') ? '($|_)' : '');
 
 		$prefixedFiles = array_merge(
 			array_filter(
@@ -165,7 +166,7 @@ abstract class Controller extends System
 			{
 				$strTemplate = basename($strFile, strrchr($strFile, '.'));
 
-				if (strpos($strTemplate, '-') !== false)
+				if (str_contains($strTemplate, '-'))
 				{
 					throw new \RuntimeException(sprintf('Using hyphens in the template name "%s" is not allowed, use snake_case instead.', $strTemplate));
 				}
@@ -182,7 +183,7 @@ abstract class Controller extends System
 				{
 					foreach ($arrBundleTemplates as $strKey)
 					{
-						if (strpos($strTemplate, $strKey . '_') === 0)
+						if (str_starts_with($strTemplate, $strKey . '_'))
 						{
 							continue 2;
 						}
@@ -304,24 +305,25 @@ abstract class Controller extends System
 			// Show a particular article only
 			if ($objPage->type == 'regular' && Input::get('articles'))
 			{
-				list($strSection, $strArticle) = explode(':', Input::get('articles')) + array(null, null);
+				$strArticle = Input::get('articles');
 
-				if ($strArticle === null)
+				if (str_contains($strArticle, ':'))
 				{
-					$strArticle = $strSection;
-					$strSection = 'main';
+					trigger_deprecation('contao/core-bundle', '5.3', 'Passing the column of an article in the URL is deprecated. Only provide the article alias instead.');
+
+					list(, $strArticle) = explode(':', Input::get('articles'));
 				}
 
-				if ($strSection == $strColumn)
+				$objArticle = ArticleModel::findPublishedByIdOrAliasAndPid($strArticle, $objPage->id);
+
+				// Send a 404 header if there is no published article
+				if (null === $objArticle)
 				{
-					$objArticle = ArticleModel::findPublishedByIdOrAliasAndPid($strArticle, $objPage->id);
+					throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
+				}
 
-					// Send a 404 header if there is no published article
-					if (null === $objArticle)
-					{
-						throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
-					}
-
+				if ($objArticle->inColumn == $strColumn)
+				{
 					// Send a 403 header if the article cannot be accessed
 					if (!static::isVisibleElement($objArticle))
 					{
@@ -513,13 +515,27 @@ abstract class Controller extends System
 	/**
 	 * Generate a content element and return it as string
 	 *
-	 * @param mixed  $intId     A content element ID or a Model object
+	 * @param mixed  $intId     A content element ID, a Model object or a ContentElementReference
 	 * @param string $strColumn The column the element is in
 	 *
 	 * @return string The content element HTML markup
 	 */
 	public static function getContentElement($intId, $strColumn='main')
 	{
+		$contentElementReference = null;
+
+		if ($intId instanceof ContentElementReference)
+		{
+			if (\func_num_args() > 1)
+			{
+				throw new \InvalidArgumentException('Passing a column name is not supported when using a ContentElementReference.');
+			}
+
+			$contentElementReference = $intId;
+			$strColumn = $contentElementReference->getSection();
+			$intId = $contentElementReference->getContentModel();
+		}
+
 		if (\is_object($intId))
 		{
 			$objRow = $intId;
@@ -564,8 +580,27 @@ abstract class Controller extends System
 			$objStopwatch->start($strStopWatchId, 'contao.layout');
 		}
 
-		/** @var ContentElement $objElement */
-		$objElement = new $strClass($objRow, $strColumn);
+		$isContentProxy = is_a($strClass, ContentProxy::class, true);
+		$compositor = System::getContainer()->get('contao.fragment.compositor');
+
+		if ($isContentProxy && $contentElementReference)
+		{
+			$objElement = new $strClass($contentElementReference, $strColumn);
+		}
+		elseif ($isContentProxy && $objRow->id && $compositor->supportsNesting(ContentElementReference::TAG_NAME . '.' . $objRow->type))
+		{
+			$objElement = new $strClass(
+				$objRow,
+				$strColumn,
+				$compositor->getNestedFragments(ContentElementReference::TAG_NAME . '.' . $objRow->type, $objRow->id)
+			);
+		}
+		else
+		{
+			/** @var ContentElement $objElement */
+			$objElement = new $strClass($objRow, $strColumn);
+		}
+
 		$strBuffer = $objElement->generate();
 
 		// HOOK: add custom logic
@@ -1186,9 +1221,14 @@ abstract class Controller extends System
 	 * @param boolean $blnReturn  If true, return the URL and don't redirect
 	 *
 	 * @return string The URL of the target page
+	 *
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 *             use the contao_backend_preview route instead.
 	 */
 	protected function redirectToFrontendPage($intPage, $strArticle=null, $blnReturn=false)
 	{
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the contao_backend_preview route instead.', __METHOD__);
+
 		if (($intPage = (int) $intPage) <= 0)
 		{
 			return '';
@@ -1204,9 +1244,9 @@ abstract class Controller extends System
 		$strParams = null;
 
 		// Add the /article/ fragment (see #673)
-		if ($strArticle !== null && ($objArticle = ArticleModel::findByAlias($strArticle)) !== null)
+		if ($strArticle)
 		{
-			$strParams = '/articles/' . (($objArticle->inColumn != 'main') ? $objArticle->inColumn . ':' : '') . $strArticle;
+			$strParams = '/articles/' . $strArticle;
 		}
 
 		$strUrl = $objPage->getPreviewUrl($strParams);
@@ -1230,39 +1270,41 @@ abstract class Controller extends System
 	 */
 	protected function getParentEntries($strTable, $intId)
 	{
-		// No parent table
-		if (empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']))
-		{
-			return '';
-		}
+		$getParentEntry = function ($table, $id) {
+			$this->loadDataContainer($table);
 
-		$db = Database::getInstance();
-		$arrParent = array();
+			$columns = 'pid';
+			$ptable = $GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null;
 
-		do
-		{
-			// Get the pid
-			$objParent = $db
-				->prepare("SELECT pid FROM " . $strTable . " WHERE id=?")
+			if ($GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? null)
+			{
+				$columns .= ', ptable';
+			}
+			elseif (!$ptable)
+			{
+				return null;
+			}
+
+			$objParent = Database::getInstance()
+				->prepare("SELECT $columns FROM $table WHERE id=?")
 				->limit(1)
-				->execute($intId);
+				->execute($id);
 
 			if ($objParent->numRows < 1)
 			{
-				break;
+				return null;
 			}
 
-			// Store the parent table information
-			$strTable = $GLOBALS['TL_DCA'][$strTable]['config']['ptable'];
-			$intId = $objParent->pid;
+			return array($objParent->ptable ?? $ptable, $objParent->pid);
+		};
 
-			// Add the log entry
-			$arrParent[] = $strTable . '.id=' . $intId;
+		$arrParent = array();
 
-			// Load the data container of the parent table
-			$this->loadDataContainer($strTable);
+		while ($parentEntry = $getParentEntry($strTable, $intId))
+		{
+			list($strTable, $intId) = $parentEntry;
+			$arrParent[] = "$strTable.id=$intId";
 		}
-		while ($intId && !empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']));
 
 		if (empty($arrParent))
 		{
@@ -1283,7 +1325,7 @@ abstract class Controller extends System
 	{
 		$arrPaths = array_filter($arrPaths);
 
-		if (empty($arrPaths) || !\is_array($arrPaths))
+		if (empty($arrPaths))
 		{
 			return array();
 		}
@@ -1396,7 +1438,7 @@ abstract class Controller extends System
 					$strHref = preg_replace('/(&(amp;)?|\?)file=[^&]+/', '', $strHref);
 				}
 
-				$strHref .= ((strpos($strHref, '?') !== false) ? '&amp;' : '?') . 'file=' . System::urlEncode($objFiles->path);
+				$strHref .= ((str_contains($strHref, '?')) ? '&amp;' : '?') . 'file=' . System::urlEncode($objFiles->path);
 
 				$arrMeta = Frontend::getMetaData($objFiles->meta, $objPage->language);
 
@@ -1496,7 +1538,7 @@ abstract class Controller extends System
 	protected static function braceGlob($pattern)
 	{
 		// Use glob() if possible
-		if (false === strpos($pattern, '/**/') && (\defined('GLOB_BRACE') || false === strpos($pattern, '{')))
+		if (!str_contains($pattern, '/**/') && (\defined('GLOB_BRACE') || !str_contains($pattern, '{')))
 		{
 			return glob($pattern, \defined('GLOB_BRACE') ? GLOB_BRACE : 0);
 		}

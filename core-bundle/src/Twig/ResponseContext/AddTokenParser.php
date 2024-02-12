@@ -39,10 +39,10 @@ class AddTokenParser extends AbstractTokenParser
         $locationToken = $stream->expect(Token::NAME_TYPE, null, '');
         $locationString = $locationToken->getValue();
 
-        if (null === ($location = DocumentLocation::tryFrom($locationString))) {
+        if (!$location = DocumentLocation::tryFrom($locationString)) {
             $validLocations = array_map(
                 static fn (DocumentLocation $location): string => $location->value,
-                DocumentLocation::cases()
+                DocumentLocation::cases(),
             );
 
             throw new SyntaxError(sprintf('The parameter "%s" is not a valid location for the "add" tag, use "%s" instead.', $locationString, implode('" or "', $validLocations)));

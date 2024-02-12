@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
-use Contao\ContentProxy;
 use Contao\ContentText;
 use Contao\Controller;
 use Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener;
@@ -26,7 +25,7 @@ use Contao\CoreBundle\Twig\Finder\FinderFactory;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Contao\DataContainer;
-use Contao\ModuleProxy;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -61,14 +60,14 @@ class TemplateOptionsListenerTest extends TestCase
 
     public function testReturnsElementTemplates(): void
     {
-        $callback = $this->getDefaultTemplateOptionsListener('ce_', ContentProxy::class);
+        $callback = $this->getDefaultTemplateOptionsListener();
 
         $this->assertSame(
             [
                 '' => 'content_element/foo [App]',
                 'content_element/foo/variant' => 'content_element/foo/variant [Global]',
             ],
-            $callback($this->mockDataContainer('tl_content', ['type' => 'foo_element_type']))
+            $callback($this->mockDataContainer('tl_content', ['type' => 'foo_element_type'])),
         );
 
         $this->assertSame(
@@ -76,22 +75,30 @@ class TemplateOptionsListenerTest extends TestCase
                 '' => 'ce_legacy_fragment_element',
                 'ce_legacy_fragment_element_variant' => 'ce_legacy_fragment_element_variant',
             ],
-            $callback($this->mockDataContainer('tl_content', ['type' => 'legacy_fragment_element']))
+            $callback($this->mockDataContainer('tl_content', ['type' => 'legacy_fragment_element'])),
+        );
+
+        $this->assertSame(
+            [
+                '' => 'form_widget',
+                'form_widget_variant' => 'form_widget_variant',
+            ],
+            $callback($this->mockDataContainer('tl_form_field', ['type' => 'widget'])),
         );
     }
 
     public function testReturnsModuleTemplates(): void
     {
-        $callback = $this->getDefaultTemplateOptionsListener('mod_', ModuleProxy::class);
+        $callback = $this->getDefaultTemplateOptionsListener();
 
         $this->assertSame(
             ['' => 'frontend_module/foo [App]'],
-            $callback($this->mockDataContainer('tl_module', ['type' => 'foo_module_type']))
+            $callback($this->mockDataContainer('tl_module', ['type' => 'foo_module_type'])),
         );
 
         $this->assertSame(
             ['' => 'mod_legacy_fragment_module'],
-            $callback($this->mockDataContainer('tl_module', ['type' => 'legacy_fragment_module']))
+            $callback($this->mockDataContainer('tl_module', ['type' => 'legacy_fragment_module'])),
         );
     }
 
@@ -131,16 +138,16 @@ class TemplateOptionsListenerTest extends TestCase
         $connection
             ->method('executeQuery')
             ->with(
-                sprintf('SELECT type FROM %s WHERE id IN (?) GROUP BY type LIMIT 2', 'tl_foo'),
+                sprintf('SELECT type FROM %s WHERE id IN (?) GROUP BY type LIMIT 2', 'tl_content'),
                 [[1, 2, 3]],
-                [Connection::PARAM_INT_ARRAY]
+                [ArrayParameterType::STRING],
             )
             ->willReturn($result)
         ;
 
-        $callback = $this->getDefaultTemplateOptionsListener('ce_', ContentProxy::class, $requestStack, $connection);
+        $callback = $this->getDefaultTemplateOptionsListener($requestStack, $connection);
 
-        $this->assertSame($expectedOptions, $callback($this->mockDataContainer('tl_foo')));
+        $this->assertSame($expectedOptions, $callback($this->mockDataContainer('tl_content')));
     }
 
     public function provideOverrideAllScenarios(): \Generator
@@ -178,14 +185,14 @@ class TemplateOptionsListenerTest extends TestCase
 
         $framework = $this->mockContaoFramework([Controller::class => $controllerAdapter]);
 
-        $listener = $this->getTemplateOptionsListener('ce_', ContentProxy::class, $framework);
-        $listener->setDefaultIdentifiersByType(['text' => 'content_element/text']);
+        $listener = $this->getTemplateOptionsListener($framework);
+        $listener->setDefaultIdentifiersByType('tl_content', ['text' => 'content_element/text']);
 
         $GLOBALS['TL_CTE']['texts']['text'] = ContentText::class;
 
         $this->assertSame(
             ['' => '[result from legacy class]'],
-            $listener($this->mockDataContainer('tl_content', ['type' => 'text']))
+            $listener($this->mockDataContainer('tl_content', ['type' => 'text'])),
         );
     }
 
@@ -200,16 +207,16 @@ class TemplateOptionsListenerTest extends TestCase
 
         $framework = $this->mockContaoFramework([Controller::class => $controllerAdapter]);
 
-        $listener = $this->getTemplateOptionsListener('ce_', ContentProxy::class, $framework);
-        $listener->setDefaultIdentifiersByType(['example' => 'ce_custom']);
+        $listener = $this->getTemplateOptionsListener($framework);
+        $listener->setDefaultIdentifiersByType('tl_content', ['example' => 'ce_custom']);
 
         $this->assertSame(
             ['' => '[result from legacy class]'],
-            $listener($this->mockDataContainer('tl_content', ['type' => 'example']))
+            $listener($this->mockDataContainer('tl_content', ['type' => 'example'])),
         );
     }
 
-    private function getDefaultTemplateOptionsListener(string $legacyTemplatePrefix, string $legacyProxyClass, RequestStack|null $requestStack = null, Connection|null $connection = null): TemplateOptionsListener
+    private function getDefaultTemplateOptionsListener(RequestStack|null $requestStack = null, Connection|null $connection = null): TemplateOptionsListener
     {
         $hierarchy = $this->createMock(TemplateHierarchyInterface::class);
         $hierarchy
@@ -227,17 +234,14 @@ class TemplateOptionsListenerTest extends TestCase
             ])
         ;
 
-        $listener = $this->getTemplateOptionsListener($legacyTemplatePrefix, $legacyProxyClass, null, $requestStack, $connection, $hierarchy);
-
-        $listener->setDefaultIdentifiersByType([
-            'foo_element_type' => 'content_element/foo',
-            'foo_module_type' => 'frontend_module/foo',
-        ]);
+        $listener = $this->getTemplateOptionsListener(null, $requestStack, $connection, $hierarchy);
+        $listener->setDefaultIdentifiersByType('tl_content', ['foo_element_type' => 'content_element/foo']);
+        $listener->setDefaultIdentifiersByType('tl_module', ['foo_module_type' => 'frontend_module/foo']);
 
         return $listener;
     }
 
-    private function getTemplateOptionsListener(string $legacyTemplatePrefix, string $legacyProxyClass, ContaoFramework|null $framework = null, RequestStack|null $requestStack = null, Connection|null $connection = null, TemplateHierarchyInterface|null $hierarchy = null): TemplateOptionsListener
+    private function getTemplateOptionsListener(ContaoFramework|null $framework = null, RequestStack|null $requestStack = null, Connection|null $connection = null, TemplateHierarchyInterface|null $hierarchy = null): TemplateOptionsListener
     {
         $hierarchy ??= $this->createMock(TemplateHierarchyInterface::class);
         $connection ??= $this->createMock(Connection::class);
@@ -262,15 +266,10 @@ class TemplateOptionsListenerTest extends TestCase
             $framework,
             $requestStack,
             $hierarchy,
-            $legacyTemplatePrefix,
-            $legacyProxyClass
         );
     }
 
-    /**
-     * @return ContaoFramework&MockObject
-     */
-    private function mockFramework(): ContaoFramework
+    private function mockFramework(): ContaoFramework&MockObject
     {
         $controllerAdapter = $this->mockAdapter(['getTemplateGroup']);
         $controllerAdapter
@@ -287,16 +286,19 @@ class TemplateOptionsListenerTest extends TestCase
                         '' => 'mod_legacy_fragment_module',
                     ],
                 ],
+                [
+                    'form_widget_', [], 'form_widget', [
+                        '' => 'form_widget',
+                        'form_widget_variant' => 'form_widget_variant',
+                    ],
+                ],
             ])
         ;
 
         return $this->mockContaoFramework([Controller::class => $controllerAdapter]);
     }
 
-    /**
-     * @return DataContainer&MockObject
-     */
-    private function mockDataContainer(string $table, array $currentRecord = []): DataContainer
+    private function mockDataContainer(string $table, array $currentRecord = []): DataContainer&MockObject
     {
         $dc = $this->mockClassWithProperties(DataContainer::class);
         $dc->table = $table;

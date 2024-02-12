@@ -129,10 +129,7 @@ class BackupCreateCommandTest extends TestCase
         ];
     }
 
-    /**
-     * @return BackupManager&MockObject
-     */
-    private function mockBackupManager(\Closure $expectedCreateConfig): BackupManager
+    private function mockBackupManager(\Closure $expectedCreateConfig): BackupManager&MockObject
     {
         $backupManager = $this->createMock(BackupManager::class);
 

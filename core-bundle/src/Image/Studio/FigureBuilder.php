@@ -44,6 +44,7 @@ use Symfony\Component\Uid\Uuid;
 class FigureBuilder
 {
     private readonly Filesystem $filesystem;
+
     private InvalidResourceException|null $lastException = null;
 
     /**
@@ -176,9 +177,7 @@ class FigureBuilder
     {
         $this->lastException = null;
 
-        $filesModel = $this->getFilesModelAdapter()->findByUuid($uuid);
-
-        if (null === $filesModel) {
+        if (!$filesModel = $this->getFilesModelAdapter()->findByUuid($uuid)) {
             $this->lastException = new InvalidResourceException(sprintf('DBAFS item with UUID "%s" could not be found.', $uuid));
 
             return $this;
@@ -194,9 +193,7 @@ class FigureBuilder
     {
         $this->lastException = null;
 
-        $filesModel = $this->getFilesModelAdapter()->findByPk($id);
-
-        if (null === $filesModel) {
+        if (!$filesModel = $this->getFilesModelAdapter()->findByPk($id)) {
             $this->lastException = new InvalidResourceException(sprintf('DBAFS item with ID "%s" could not be found.', $id));
 
             return $this;
@@ -233,7 +230,7 @@ class FigureBuilder
         if ($autoDetectDbafsPaths && null !== ($dbafsPath = $getDbafsPath($path))) {
             $filesModel = $this->getFilesModelAdapter()->findByPath($dbafsPath);
 
-            if (null !== $filesModel) {
+            if ($filesModel) {
                 return $this->fromFilesModel($filesModel);
             }
         }
@@ -342,9 +339,8 @@ class FigureBuilder
             return $this;
         }
 
-        // TODO: After stream support is added to contao/image, remove this
-        // workaround and type restriction and directly pass on the stream to
-        // the resizer.
+        // TODO: After stream support is added to contao/image, remove this workaround
+        // and type restriction and directly pass on the stream to the resizer.
         $metadata = stream_get_meta_data($stream);
         $uri = $metadata['uri'];
 
@@ -464,7 +460,7 @@ class FigureBuilder
 
         foreach ($attributes as $key => $value) {
             if (!\is_string($key) || !\is_string($value)) {
-                throw new \InvalidArgumentException('Link attributes must be an array of type <string, string>.');
+                throw new \InvalidArgumentException(sprintf('Link attributes must be an array of type <string, string>, <%s, %s> given.', get_debug_type($key), get_debug_type($value)));
             }
         }
 
@@ -582,7 +578,7 @@ class FigureBuilder
      */
     public function build(): Figure
     {
-        if (null !== $this->lastException) {
+        if ($this->lastException) {
             throw $this->lastException;
         }
 
@@ -595,7 +591,7 @@ class FigureBuilder
      */
     public function buildIfResourceExists(): Figure|null
     {
-        if (null !== $this->lastException) {
+        if ($this->lastException) {
             return null;
         }
 
@@ -641,17 +637,17 @@ class FigureBuilder
 
                     return $event->getMetadata();
                 },
-                $settings
+                $settings,
             ),
             \Closure::bind(
                 fn (Figure $figure): array => $this->onDefineLinkAttributes($figure),
-                $settings
+                $settings,
             ),
             \Closure::bind(
                 fn (Figure $figure): LightboxResult|null => $this->onDefineLightboxResult($figure),
-                $settings
+                $settings,
             ),
-            $settings->options
+            $settings->options,
         );
     }
 
@@ -665,7 +661,7 @@ class FigureBuilder
         }
 
         $getUuid = static function (FilesModel|null $filesModel): string|null {
-            if (null === $filesModel || null === $filesModel->uuid) {
+            if (!$filesModel || null === $filesModel->uuid) {
                 return null;
             }
 
@@ -677,11 +673,11 @@ class FigureBuilder
 
         $fileReferenceData = array_filter([Metadata::VALUE_UUID => $getUuid($this->filesModel)]);
 
-        if (null !== $this->metadata) {
+        if ($this->metadata) {
             return $this->metadata->with($fileReferenceData);
         }
 
-        if (null === $this->filesModel) {
+        if (!$this->filesModel) {
             return null;
         }
 
@@ -690,15 +686,15 @@ class FigureBuilder
         $metadata = $this->filesModel->getMetadata(...$locales);
         $overwriteMetadata = $this->overwriteMetadata ? $this->overwriteMetadata->all() : [];
 
-        if (null !== $metadata) {
+        if ($metadata) {
             return $metadata
                 ->with($fileReferenceData)
                 ->with($overwriteMetadata)
             ;
         }
 
-        // If no metadata can be obtained from the model, we create a container
-        // from the default meta fields with empty values instead
+        // If no metadata can be obtained from the model, we create a container from the
+        // default meta fields with empty values instead
         $metaFields = $this->getFilesModelAdapter()->getMetaFields();
 
         $data = [
@@ -771,7 +767,8 @@ class FigureBuilder
             return [$filePath, null];
         };
 
-        // Use explicitly set href (1) or lightbox resource (2), fall back to using metadata (3) or use the base resource (4) if empty
+        // Use explicitly set href (1) or lightbox resource (2), fall back to using
+        // metadata (3) or use the base resource (4) if empty
         $lightboxResourceOrUrl = $this->additionalLinkAttributes['href'] ?? $this->lightboxResourceOrUrl ?? $getMetadataUrl() ?? $this->filePath;
 
         [$filePathOrImage, $url] = $getResourceOrUrl($lightboxResourceOrUrl);
@@ -787,7 +784,7 @@ class FigureBuilder
                 $url,
                 $this->lightboxSizeConfiguration,
                 $this->lightboxGroupIdentifier,
-                $this->lightboxResizeOptions
+                $this->lightboxResizeOptions,
             )
         ;
     }

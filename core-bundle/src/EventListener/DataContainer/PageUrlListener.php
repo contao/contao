@@ -51,9 +51,8 @@ class PageUrlListener
     public function generateAlias(string $value, DataContainer $dc): string
     {
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
-        $pageModel = $pageAdapter->findWithDetails($dc->id);
 
-        if (null === $pageModel) {
+        if (!$pageModel = $pageAdapter->findWithDetails($dc->id)) {
             return $value;
         }
 
@@ -84,7 +83,7 @@ class PageUrlListener
         $value = $this->slug->generate(
             $pageModel->title ?? '',
             (int) $dc->id,
-            fn ($alias) => $isRoutable && $this->aliasExists(($pageModel->useFolderUrl ? $pageModel->folderUrl : '').$alias, $pageModel)
+            fn ($alias) => $isRoutable && $this->aliasExists(($pageModel->useFolderUrl ? $pageModel->folderUrl : '').$alias, $pageModel),
         );
 
         // Generate folder URL aliases (see #4933)
@@ -111,7 +110,7 @@ class PageUrlListener
                 'urlPrefix' => $value,
                 'dns' => $currentRecord['dns'] ?? null,
                 'rootId' => $dc->id,
-            ]
+            ],
         );
 
         if ($count > 0) {
@@ -119,9 +118,8 @@ class PageUrlListener
         }
 
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
-        $rootPage = $pageAdapter->findWithDetails($dc->id);
 
-        if (null === $rootPage) {
+        if (!$rootPage = $pageAdapter->findWithDetails($dc->id)) {
             return $value;
         }
 
@@ -146,9 +144,8 @@ class PageUrlListener
         }
 
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
-        $rootPage = $pageAdapter->findWithDetails($dc->id);
 
-        if (null === $rootPage) {
+        if (!$rootPage = $pageAdapter->findWithDetails($dc->id)) {
             return $value;
         }
 
@@ -192,8 +189,8 @@ class PageUrlListener
      */
     private function aliasExists(string $currentAlias, PageModel $currentPage, bool $throw = false): bool
     {
-        // We can safely modify the page model since loadDetails() detaches it
-        // from the registry and calls preventSaving()
+        // We can safely modify the page model since loadDetails() detaches it from the
+        // registry and calls preventSaving()
         $currentPage->loadDetails();
         $currentPage->alias = $currentAlias;
 
@@ -204,7 +201,7 @@ class PageUrlListener
             $currentUrl = $this->urlGenerator->generate(
                 PageRoute::PAGE_BASED_ROUTE_NAME,
                 [RouteObjectInterface::ROUTE_OBJECT => $currentRoute],
-                UrlGeneratorInterface::ABSOLUTE_URL
+                UrlGeneratorInterface::ABSOLUTE_URL,
             );
         } catch (RouteParametersException) {
             // This route has mandatory parameters, only match exact path with placeholders
@@ -234,9 +231,9 @@ class PageUrlListener
 
             $aliasRoute = $this->pageRegistry->getRoute($aliasPage);
 
-            // Even if we cannot generate the path because of parameter requirements,
-            // two pages can never have the same path AND the same requirements. This
-            // could be two regular pages with same alias and "requireItem" enabled.
+            // Even if we cannot generate the path because of parameter requirements, two
+            // pages can never have the same path AND the same requirements. This could be
+            // two regular pages with same alias and "requireItem" enabled.
             if (
                 null === $currentUrl
                 && $currentRoute->getPath() === $aliasRoute->getPath()

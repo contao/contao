@@ -32,12 +32,9 @@ class ControllerResolver implements ControllerResolverInterface
         if (
             $request->attributes->has('_controller')
             && \is_string($controller = $request->attributes->get('_controller'))
+            && ($fragmentConfig = $this->registry->get($controller))
         ) {
-            $fragmentConfig = $this->registry->get($controller);
-
-            if (null !== $fragmentConfig) {
-                $request->attributes->set('_controller', $fragmentConfig->getController());
-            }
+            $request->attributes->set('_controller', $fragmentConfig->getController());
         }
 
         return $this->resolver->getController($request);

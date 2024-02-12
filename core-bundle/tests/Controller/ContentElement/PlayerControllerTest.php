@@ -30,15 +30,15 @@ class PlayerControllerTest extends ContentElementTestCase
                     'player_autoplay', 'player_loop',
                 ]),
                 'playerCaption' => 'Caption',
-            ]
+            ],
         );
 
         $expectedOutput = <<<'HTML'
             <div class="content-player">
                 <figure>
                     <video controls autoplay loop>
-                        <source src="https://example.com/files/video.mp4">
-                        <source src="https://example.com/files/video.ogv">
+                        <source type="video/mp4" src="https://example.com/files/video.mp4">
+                        <source type="video/ogg" src="https://example.com/files/video.ogv">
                     </video>
                     <figcaption>Caption</figcaption>
                 </figure>
@@ -54,7 +54,7 @@ class PlayerControllerTest extends ContentElementTestCase
             new PlayerController($this->getDefaultStorage()),
             [
                 'type' => 'player',
-            ]
+            ],
         );
 
         $this->assertEmpty($response->getContent());
@@ -71,7 +71,7 @@ class PlayerControllerTest extends ContentElementTestCase
                     self::FILE_VIDEO_OGV,
                 ]),
             ],
-            asEditorView: true
+            asEditorView: true,
         );
 
         $expectedOutput = <<<'HTML'

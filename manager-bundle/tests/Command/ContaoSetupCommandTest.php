@@ -129,7 +129,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
             'project/dir',
             'project/dir/public',
             'secret',
-            $this->getCreateProcessHandler($this->getProcessMocks(false))
+            $this->getCreateProcessHandler($this->getProcessMocks(false)),
         );
 
         $commandTester = new CommandTester($command);
@@ -146,7 +146,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
             'project/dir',
             'project/dir/public',
             'secret',
-            $this->getCreateProcessHandler($this->getProcessMocks())
+            $this->getCreateProcessHandler($this->getProcessMocks()),
         );
 
         $commandTester = new CommandTester($command);
@@ -178,7 +178,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
             $projectDir,
             Path::join($projectDir, 'public'),
             $kernelSecret,
-            $this->getCreateProcessHandler($this->getProcessMocks())
+            $this->getCreateProcessHandler($this->getProcessMocks()),
         );
 
         $commandTester = new CommandTester($command);
@@ -194,13 +194,13 @@ class ContaoSetupCommandTest extends ContaoTestCase
 
         $this->assertStringContainsString(
             '[INFO] An APP_SECRET was generated and written to your .env.local file.',
-            $commandTester->getDisplay()
+            $commandTester->getDisplay(),
         );
 
         if (!$existingDotEnvFile) {
             $this->assertStringContainsString(
                 '[INFO] An empty .env file was created.',
-                $commandTester->getDisplay()
+                $commandTester->getDisplay(),
             );
         }
 
@@ -223,7 +223,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
             $projectDir,
             Path::join($projectDir, 'public'),
             '',
-            $this->getCreateProcessHandler($this->getProcessMocks())
+            $this->getCreateProcessHandler($this->getProcessMocks()),
         );
 
         $commandTester = new CommandTester($command);
@@ -284,7 +284,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
                         $callable('', "[output $i]");
 
                         return true;
-                    }
+                    },
                 ))
             ;
 

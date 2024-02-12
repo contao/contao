@@ -17,12 +17,14 @@ use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\EventListener\MakeResponsePrivateListener;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\PageModel;
 use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as SymfonyAbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 abstract class AbstractController extends SymfonyAbstractController
 {
@@ -31,6 +33,7 @@ abstract class AbstractController extends SymfonyAbstractController
         $services = parent::getSubscribedServices();
 
         $services['contao.framework'] = ContaoFramework::class;
+        $services['contao.routing.content_url_generator'] = ContentUrlGenerator::class;
         $services['event_dispatcher'] = EventDispatcherInterface::class;
         $services['logger'] = '?'.LoggerInterface::class;
         $services['fos_http_cache.http.symfony_response_tagger'] = '?'.SymfonyResponseTagger::class;
@@ -81,7 +84,8 @@ abstract class AbstractController extends SymfonyAbstractController
      */
     protected function setCacheHeaders(Response $response, PageModel $pageModel): Response
     {
-        // Do not cache the response if caching was not configured at all or disabled explicitly
+        // Do not cache the response if caching was not configured at all or
+        // disabled explicitly
         if ($pageModel->cache < 1 && $pageModel->clientCache < 1) {
             $response->headers->set('Cache-Control', 'no-cache, no-store');
 
@@ -123,5 +127,19 @@ abstract class AbstractController extends SymfonyAbstractController
         }
 
         return $response;
+    }
+
+    protected function generateContentUrl(object $content, array $parameters = [], int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): string
+    {
+        return $this->container->get('contao.routing.content_url_generator')->generate($content, $parameters, $referenceType);
+    }
+
+    protected function hasParameter(string $name): bool
+    {
+        if (!$this->container->has('parameter_bag')) {
+            return false;
+        }
+
+        return $this->container->get('parameter_bag')->has($name);
     }
 }

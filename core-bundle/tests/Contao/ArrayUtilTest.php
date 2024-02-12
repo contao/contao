@@ -138,7 +138,7 @@ class ArrayUtilTest extends TestCase
                     'foo' => 'bar',
                 ],
             ],
-            $unsorted
+            $unsorted,
         );
     }
 }

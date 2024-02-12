@@ -23,7 +23,7 @@ class HtmlControllerTest extends ContentElementTestCase
             [
                 'type' => 'html',
                 'html' => '<p>Hello{{br}}<b>world</b>!</p>',
-            ]
+            ],
         );
 
         $expectedOutput = '<p>Hello<br><b>world</b>!</p>';
@@ -39,7 +39,7 @@ class HtmlControllerTest extends ContentElementTestCase
                 'type' => 'html',
                 'html' => '<p>Hello{{br}}<b>world</b>!</p>',
             ],
-            asEditorView: true
+            asEditorView: true,
         );
 
         $expectedOutput = '<pre>&lt;p&gt;Hello{{br}}&lt;b&gt;world&lt;/b&gt;!&lt;/p&gt;</pre>';

@@ -36,7 +36,7 @@ class DropZone extends FileUpload
 		$return = '
   <input type="hidden" name="action" value="fileupload">
   <div class="fallback">
-    <input type="file" name="' . $this->strName . '[]" class="tl_upload_field" onfocus="Backend.getScrollOffset()" multiple>
+    <input type="file" name="' . $this->strName . '[]" class="tl_upload_field" data-action="focus->contao--scroll-offset#store" multiple>
   </div>
   <div class="dropzone">
     <div class="dz-default dz-message">

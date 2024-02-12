@@ -135,7 +135,7 @@ class TrblField extends Widget
 		foreach ($arrKeys as $strKey)
 		{
 			$arrFields[] = sprintf(
-				'<input type="text" name="%s[%s]" id="ctrl_%s" class="tl_text_trbl trbl_%s%s" value="%s"%s onfocus="Backend.getScrollOffset()">',
+				'<input type="text" name="%s[%s]" id="ctrl_%s" class="tl_text_trbl trbl_%s%s" value="%s"%s data-action="focus->contao--scroll-offset#store">',
 				$this->strName,
 				$strKey,
 				$this->strId . '_' . $strKey,
@@ -147,7 +147,7 @@ class TrblField extends Widget
 		}
 
 		return sprintf(
-			'%s <select name="%s[unit]" class="tl_select_unit" onfocus="Backend.getScrollOffset()"%s>%s</select>%s',
+			'%s <select name="%s[unit]" class="tl_select_unit" data-action="focus->contao--scroll-offset#store"%s>%s</select>%s',
 			implode(' ', $arrFields),
 			$this->strName,
 			$this->getAttribute('disabled'),

@@ -25,6 +25,12 @@ framework:
         cookie_secure: auto
         cookie_samesite: lax
     fragments: { path: /_fragment }
+    php_errors:
+        log: true
+    uid:
+        default_uuid_version: 7
+        time_based_uuid_version: 7
+    handle_all_throwables: true
     cache:
         pools:
             doctrine.result_cache_pool:
@@ -111,6 +117,7 @@ doctrine:
     orm:
         auto_mapping: true
         auto_generate_proxy_classes: false
+        enable_lazy_ghost_objects: true
         naming_strategy: doctrine.orm.naming_strategy.default
         metadata_cache_driver:
             type: pool

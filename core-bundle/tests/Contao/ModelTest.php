@@ -13,6 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
+use Contao\CoreBundle\Tests\Fixtures\Enum\IntBackedEnum;
+use Contao\CoreBundle\Tests\Fixtures\Enum\StringBackedEnum;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Model;
 use Contao\System;
@@ -35,8 +37,7 @@ class ModelTest extends TestCase
 
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
         $schemaManager
-            // Backwards compatibility with doctrine/dbal < 3.5
-            ->method(method_exists($schemaManager, 'introspectSchema') ? 'introspectSchema' : 'createSchema')
+            ->method('introspectSchema')
             ->willReturn($this->createSchema(true))
         ;
 
@@ -150,6 +151,35 @@ class ModelTest extends TestCase
         yield ['bool_null', null, null];
 
         yield ['floatNotNullCamelCase', '12.3', 12.3];
+    }
+
+    /**
+     * @dataProvider getEnumFieldValues
+     */
+    public function testResolvesEnumFields(string $enum, mixed $value, \BackedEnum|null $expected): void
+    {
+        $model = new class($enum) extends Model {
+            protected static $strTable = 'tl_foo';
+
+            public function __construct(string $enum)
+            {
+                $this->arrEnums = [
+                    'foo' => $enum,
+                ];
+            }
+        };
+
+        $model->foo = $value;
+
+        $this->assertSame($model->getEnum('foo'), $expected);
+    }
+
+    public function getEnumFieldValues(): \Generator
+    {
+        yield [StringBackedEnum::class, StringBackedEnum::optionB->value, StringBackedEnum::optionB];
+        yield [IntBackedEnum::class, IntBackedEnum::optionB->value, IntBackedEnum::optionB];
+        yield [StringBackedEnum::class, 'foo', null];
+        yield [IntBackedEnum::class, 100, null];
     }
 
     private function createSchema(bool $fromDatabase): Schema

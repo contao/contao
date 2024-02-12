@@ -44,7 +44,7 @@ class VideoController extends AbstractContentElementController
         $sourceParameters = match ($type = $template->get('type')) {
             'vimeo' => $this->getVimeoSourceParameters($model),
             'youtube' => $this->getYoutubeSourceParameters($model, $request->getLocale()),
-            default => throw new \InvalidArgumentException(sprintf('Unknown video provider "%s".', $type))
+            default => throw new \InvalidArgumentException(sprintf('Unknown video provider "%s".', $type)),
         };
 
         $template->set('source', $sourceParameters);

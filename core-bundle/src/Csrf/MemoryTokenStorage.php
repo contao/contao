@@ -19,6 +19,7 @@ use Symfony\Contracts\Service\ResetInterface;
 class MemoryTokenStorage implements TokenStorageInterface, ResetInterface
 {
     private array|null $tokens = null;
+
     private array $usedTokens = [];
 
     public function getToken(string $tokenId): string

@@ -47,7 +47,7 @@ final class DynamicExtendsTokenParser extends AbstractTokenParser
             throw new SyntaxError('Cannot use "extends" in a macro.', $token->getLine(), $stream->getSourceContext());
         }
 
-        if (null !== $this->parser->getParent()) {
+        if ($this->parser->getParent()) {
             throw new SyntaxError('Multiple extends tags are forbidden.', $token->getLine(), $stream->getSourceContext());
         }
 
@@ -76,8 +76,8 @@ final class DynamicExtendsTokenParser extends AbstractTokenParser
                 try {
                     $this->traverseAndAdjustTemplateNames($sourcePath, $child);
                 } catch (\LogicException $e) {
-                    // Allow missing templates if they are listed in an array
-                    // like "{% extends ['@Contao/missing', '@Contao/existing'] %}"
+                    // Allow missing templates if they are listed in an array like "{% extends
+                    // ['@Contao/missing', '@Contao/existing'] %}"
                     if (!$node instanceof ArrayExpression) {
                         throw $e;
                     }

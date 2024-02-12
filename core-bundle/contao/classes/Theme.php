@@ -271,7 +271,7 @@ class Theme extends Backend
 			// Loop through the archive
 			while ($objArchive->next())
 			{
-				if (strncmp($objArchive->file_name, 'templates/', 10) !== 0)
+				if (!str_starts_with($objArchive->file_name, 'templates/'))
 				{
 					continue;
 				}
@@ -389,7 +389,7 @@ class Theme extends Backend
 				}
 
 				// Limit file operations to files and the templates directory
-				if (strncmp($objArchive->file_name, 'files/', 6) !== 0 && strncmp($objArchive->file_name, 'tl_files/', 9) !== 0 && strncmp($objArchive->file_name, 'templates/', 10) !== 0)
+				if (!str_starts_with($objArchive->file_name, 'files/') && !str_starts_with($objArchive->file_name, 'tl_files/') && !str_starts_with($objArchive->file_name, 'templates/'))
 				{
 					continue;
 				}
@@ -399,7 +399,7 @@ class Theme extends Backend
 				{
 					File::putContent($this->customizeUploadPath($objArchive->file_name), $objArchive->unzip());
 
-					if (strncmp($objArchive->file_name, 'templates/', 10) === 0 && strtolower(pathinfo($objArchive->file_name, PATHINFO_EXTENSION)) === 'sql')
+					if (str_starts_with($objArchive->file_name, 'templates/') && strtolower(pathinfo($objArchive->file_name, PATHINFO_EXTENSION)) === 'sql')
 					{
 						$exampleWebsites[substr($objArchive->file_name, 10)] = $objArchive->file_name;
 					}
@@ -601,7 +601,7 @@ class Theme extends Backend
 						}
 
 						// Adjust the file paths in tl_files
-						elseif ($table == 'tl_files' && $name == 'path' && strpos($value, 'files') !== false)
+						elseif ($table == 'tl_files' && $name == 'path' && str_contains($value, 'files'))
 						{
 							$tmp = StringUtil::deserialize($value);
 
@@ -687,7 +687,7 @@ class Theme extends Backend
 					}
 
 					// Create the templates folder even if it is empty (see #4793)
-					if ($table == 'tl_theme' && isset($set['templates']) && strncmp($set['templates'], 'templates/', 10) === 0 && !is_dir($this->strRootDir . '/' . $set['templates']))
+					if ($table == 'tl_theme' && isset($set['templates']) && str_starts_with($set['templates'], 'templates/') && !is_dir($this->strRootDir . '/' . $set['templates']))
 					{
 						new Folder($set['templates']);
 					}
@@ -749,7 +749,7 @@ class Theme extends Backend
 
 			foreach ($tables as $table)
 			{
-				if (0 === strncmp($table, 'tl_', 3))
+				if (str_starts_with($table, 'tl_'))
 				{
 					$connection->executeStatement('TRUNCATE TABLE ' . $connection->quoteIdentifier($table));
 				}
@@ -1122,7 +1122,7 @@ class Theme extends Backend
 		foreach (Folder::scan($this->strRootDir . '/' . $strFolder) as $strFile)
 		{
 			// Skip hidden resources
-			if (strncmp($strFile, '.', 1) === 0)
+			if (str_starts_with($strFile, '.'))
 			{
 				continue;
 			}
@@ -1195,7 +1195,7 @@ class Theme extends Backend
 		// Add all template files to the archive (see #7048)
 		foreach (Folder::scan($this->strRootDir . '/' . $strFolder) as $strFile)
 		{
-			if (preg_match('/\.(html5|sql)$/', $strFile) && strncmp($strFile, 'be_', 3) !== 0 && strncmp($strFile, 'nl_', 3) !== 0)
+			if (preg_match('/\.(html5|sql)$/', $strFile) && !str_starts_with($strFile, 'be_') && !str_starts_with($strFile, 'nl_'))
 			{
 				$objArchive->addFile($strFolder . '/' . $strFile);
 			}

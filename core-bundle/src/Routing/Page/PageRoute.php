@@ -23,13 +23,17 @@ class PageRoute extends Route implements RouteObjectInterface
     final public const PAGE_BASED_ROUTE_NAME = 'page_routing_object';
 
     private readonly PageModel $pageModel;
-    private string|null $urlPrefix;
-    private string|null $urlSuffix;
+
+    private string $routeKey;
+
+    private string $urlPrefix;
+
+    private string $urlSuffix;
 
     /**
      * The referenced content object (can be anything).
      */
-    private mixed $content = null;
+    private object|null $content = null;
 
     /**
      * @param string|array<string> $methods
@@ -72,10 +76,11 @@ class PageRoute extends Route implements RouteObjectInterface
             $options,
             $pageModel->domain,
             $pageModel->rootUseSSL ? 'https' : 'http',
-            $methods
+            $methods,
         );
 
         $this->pageModel = $pageModel;
+        $this->routeKey = 'tl_page.'.$pageModel->id;
         $this->urlPrefix = $pageModel->urlPrefix;
         $this->urlSuffix = $pageModel->urlSuffix;
     }
@@ -128,7 +133,7 @@ class PageRoute extends Route implements RouteObjectInterface
     /**
      * Sets the object this URL points to.
      */
-    public function setContent(mixed $content): self
+    public function setContent(object|null $content): self
     {
         $this->content = $content;
 
@@ -140,8 +145,15 @@ class PageRoute extends Route implements RouteObjectInterface
         return $this->content;
     }
 
+    public function setRouteKey(string $routeKey): self
+    {
+        $this->routeKey = $routeKey;
+
+        return $this;
+    }
+
     public function getRouteKey(): string
     {
-        return 'tl_page.'.$this->pageModel->id;
+        return $this->routeKey;
     }
 }

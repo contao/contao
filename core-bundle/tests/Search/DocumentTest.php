@@ -44,10 +44,10 @@ class DocumentTest extends TestCase
             new Uri('https://example.com'),
             200,
             $headers,
-            $body
+            $body,
         );
 
-        if (null === $expectedCanonicalUri) {
+        if (!$expectedCanonicalUri) {
             $this->assertNull($document->extractCanonicalUri());
         } else {
             $this->assertSame((string) $expectedCanonicalUri, (string) $document->extractCanonicalUri());
@@ -84,7 +84,7 @@ class DocumentTest extends TestCase
             new Uri('https://example.com'),
             200,
             ['Content-Type' => ['text/html']],
-            $body
+            $body,
         );
 
         $this->assertSame('https://example.com', (string) $document->getUri());
@@ -268,7 +268,7 @@ class DocumentTest extends TestCase
             new Uri('https://example.com'),
             200,
             ['Content-Type' => ['text/html']],
-            '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","foobar":true}</script></body></html>'
+            '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","foobar":true}</script></body></html>',
         );
 
         $this->assertSame([], $document->extractJsonLdScripts('https://example.com/'));

@@ -129,7 +129,7 @@ class AddAssetsPackagesPass implements CompilerPassInterface
         $definition = $this->createPackageDefinition(
             'vendor/scrivo/highlight_php/styles',
             $this->createVersionStrategy($container, 'scrivo/highlight.php'),
-            new Reference('contao.assets.assets_context')
+            new Reference('contao.assets.assets_context'),
         );
 
         $container->setDefinition($serviceId, $definition);

@@ -49,7 +49,7 @@ class AddCronJobsPass implements CompilerPassInterface
                 $interval = str_replace(
                     ['minutely', 'hourly', 'daily', 'weekly', 'monthly', 'yearly'],
                     ['* * * * *', '@hourly', '@daily', '@weekly', '@monthly', '@yearly'],
-                    $interval
+                    $interval,
                 );
 
                 // Validate the cron expression

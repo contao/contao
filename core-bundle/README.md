@@ -66,6 +66,7 @@ sections:
 security:
     password_hashers:
         Contao\User: auto
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: auto
 
     providers:
         contao.security.backend_user_provider:
@@ -82,6 +83,11 @@ security:
             switch_user: true
             login_throttling: ~
 
+            login_link:
+                check_route: contao_backend_login_link
+                signature_properties: [username, lastLogin]
+                success_handler: contao.security.authentication_success_handler
+
             contao_login:
                 remember_me: false
 
@@ -92,6 +98,7 @@ security:
             request_matcher: contao.routing.frontend_matcher
             provider: contao.security.frontend_user_provider
             user_checker: contao.security.user_checker
+            access_denied_handler: contao.security.access_denied_handler
             switch_user: false
             login_throttling: ~
 
@@ -101,7 +108,8 @@ security:
             remember_me:
                 secret: '%kernel.secret%'
                 remember_me_parameter: autologin
-                service: contao.security.persistent_remember_me_handler
+                token_provider:
+                    doctrine: true
 
             logout:
                 path: contao_frontend_logout

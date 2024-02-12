@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\FaqBundle\Picker;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Contao\CoreBundle\Picker\AbstractInsertTagPickerProvider;
@@ -20,10 +21,11 @@ use Contao\CoreBundle\Picker\PickerConfig;
 use Contao\FaqCategoryModel;
 use Contao\FaqModel;
 use Knp\Menu\FactoryInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+#[AsPickerProvider(priority: 64)]
 class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
 {
     use FrameworkAwareTrait;
@@ -84,7 +86,7 @@ class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPi
     {
         $params = ['do' => 'faq'];
 
-        if (null === $config || !$config->getValue() || !$this->supportsValue($config)) {
+        if (!$config?->getValue() || !$this->supportsValue($config)) {
             return $params;
         }
 
@@ -104,12 +106,15 @@ class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPi
     private function getFaqCategoryId(int|string $id): int|null
     {
         $faqAdapter = $this->framework->getAdapter(FaqModel::class);
+        $faqModel = $faqAdapter->findById($id);
 
-        if (!($faqModel = $faqAdapter->findById($id)) instanceof FaqModel) {
+        if (!$faqModel instanceof FaqModel) {
             return null;
         }
 
-        if (!($faqCategory = $faqModel->getRelated('pid')) instanceof FaqCategoryModel) {
+        $faqCategory = $faqModel->getRelated('pid');
+
+        if (!$faqCategory instanceof FaqCategoryModel) {
             return null;
         }
 

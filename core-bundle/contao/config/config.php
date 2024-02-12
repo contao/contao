@@ -265,23 +265,25 @@ $GLOBALS['FE_MOD'] = array
 // Content elements
 $GLOBALS['TL_CTE'] = array
 (
-	'accordion' => array
-	(
-		'accordionSingle' => ContentAccordion::class,
-		'accordionStart'  => ContentAccordionStart::class,
-		'accordionStop'   => ContentAccordionStop::class
-	),
-	'slider' => array
-	(
-		'sliderStart'     => ContentSliderStart::class,
-		'sliderStop'      => ContentSliderStop::class
-	),
+	'texts' => array(),
+	'links' => array(),
+	'files' => array(),
+	'media' => array(),
+	'miscellaneous' => array(),
 	'includes' => array
 	(
 		'article'         => ContentArticle::class,
 		'alias'           => ContentAlias::class,
 		'form'            => Form::class,
 		'module'          => ContentModule::class,
+	),
+	'legacy' => array
+	(
+		'accordionSingle' => ContentAccordion::class,
+		'accordionStart'  => ContentAccordionStart::class,
+		'accordionStop'   => ContentAccordionStop::class,
+		'sliderStart'     => ContentSliderStart::class,
+		'sliderStop'      => ContentSliderStop::class
 	)
 );
 

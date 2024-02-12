@@ -12,9 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
+
 /**
+ * The priority must be lower than 0 (see #3255).
+ *
  * @internal
  */
+#[AsHook('loadDataContainer', priority: -16)]
 class DataContainerCallbackListener
 {
     private const SINGLETONS = [
@@ -87,12 +92,12 @@ class DataContainerCallbackListener
 
         $preCallbacks = array_merge(
             [],
-            ...array_filter($callbacks, static fn ($priority) => $priority > 0, ARRAY_FILTER_USE_KEY)
+            ...array_filter($callbacks, static fn ($priority) => $priority > 0, ARRAY_FILTER_USE_KEY),
         );
 
         $postCallbacks = array_merge(
             [],
-            ...array_filter($callbacks, static fn ($priority) => $priority <= 0, ARRAY_FILTER_USE_KEY)
+            ...array_filter($callbacks, static fn ($priority) => $priority <= 0, ARRAY_FILTER_USE_KEY),
         );
 
         if ($preCallbacks) {

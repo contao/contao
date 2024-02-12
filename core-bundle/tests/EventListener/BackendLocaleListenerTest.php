@@ -16,11 +16,11 @@ use Contao\BackendUser;
 use Contao\CoreBundle\EventListener\BackendLocaleListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 
 class BackendLocaleListenerTest extends TestCase

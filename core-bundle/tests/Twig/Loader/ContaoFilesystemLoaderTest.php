@@ -54,6 +54,22 @@ class ContaoFilesystemLoaderTest extends TestCase
         $this->assertFalse($loader->exists('@Contao_foo-Bar_Baz2/2.html.twig'));
     }
 
+    public function testDoesNotAddPathTwice(): void
+    {
+        $loader = $this->getContaoFilesystemLoader();
+
+        $path1 = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/paths/1');
+        $path2 = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/paths/2');
+
+        $loader->addPath($path1);
+        $loader->addPath($path2, 'Contao_foo');
+        $loader->addPath($path1);
+        $loader->addPath($path2, 'Contao_foo');
+
+        $this->assertSame([$path1], $loader->getPaths());
+        $this->assertSame([$path2], $loader->getPaths('Contao_foo'));
+    }
+
     public function testPrependsPath(): void
     {
         $loader = $this->getContaoFilesystemLoader();
@@ -179,7 +195,7 @@ class ContaoFilesystemLoaderTest extends TestCase
 
         $this->assertSame(
             'c'.Path::join($path, '1.html.twig'),
-            Path::normalize($loader->getCacheKey('@Contao/1.html.twig'))
+            Path::normalize($loader->getCacheKey('@Contao/1.html.twig')),
         );
     }
 
@@ -193,7 +209,7 @@ class ContaoFilesystemLoaderTest extends TestCase
 
         $this->assertSame(
             'c'.Path::join($basePath, 'templates/text.html.twig'),
-            Path::normalize($loader->getCacheKey('@Contao/text.html.twig'))
+            Path::normalize($loader->getCacheKey('@Contao/text.html.twig')),
         );
 
         // Reset and switch context
@@ -206,7 +222,7 @@ class ContaoFilesystemLoaderTest extends TestCase
 
         $this->assertSame(
             'c'.Path::join($basePath, 'templates/my/theme/text.html.twig'),
-            Path::normalize($loader->getCacheKey('@Contao/text.html.twig'))
+            Path::normalize($loader->getCacheKey('@Contao/text.html.twig')),
         );
     }
 
@@ -296,7 +312,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $loader = $this->getContaoFilesystemLoader();
         $loader->addPath(
             Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/templates/my/theme'),
-            'Contao_Theme_my_theme'
+            'Contao_Theme_my_theme',
         );
 
         $page = new \stdClass();
@@ -432,64 +448,64 @@ class ContaoFilesystemLoaderTest extends TestCase
         $this->assertSame(
             $expectedChains,
             $loader->getInheritanceChains('my_theme'),
-            'get all chains'
+            'get all chains',
         );
 
         // Get first with theme
         $this->assertSame(
             '@Contao_Theme_my_theme/text.html.twig',
             $loader->getFirst('text', 'my_theme'),
-            'get first template in chain (theme)'
+            'get first template in chain (theme)',
         );
 
         // Get first
         $this->assertSame(
             '@Contao_Global/text.html.twig',
             $loader->getFirst('text'),
-            'get first template in chain'
+            'get first template in chain',
         );
 
         // Next element by path
         $this->assertSame(
             '@Contao_Global/text.html.twig',
             $loader->getDynamicParent('text.html.twig', $themePath, 'my_theme'),
-            'chain: theme -> global'
+            'chain: theme -> global',
         );
 
         $this->assertSame(
             '@Contao_Global/text.html.twig',
             $loader->getDynamicParent('text.html.twig', 'other/template.html.twig'),
-            'chain: root -> global (using short name)'
+            'chain: root -> global (using short name)',
         );
 
         $this->assertSame(
             '@Contao_Global/text.html.twig',
             $loader->getDynamicParent('text', 'other/template.html.twig'),
-            'chain: root -> global (using identifier)'
+            'chain: root -> global (using identifier)',
         );
 
         $this->assertSame(
             '@Contao_App/text.html.twig',
             $loader->getDynamicParent('text.html.twig', $globalPath),
-            'chain: global -> app'
+            'chain: global -> app',
         );
 
         $this->assertSame(
             '@Contao_BarBundle/text.html.twig',
             $loader->getDynamicParent('text.html.twig', $appPath),
-            'chain: app -> bar bundle'
+            'chain: app -> bar bundle',
         );
 
         $this->assertSame(
             '@Contao_FooBundle/text.html.twig',
             $loader->getDynamicParent('text.html.twig', $barPath),
-            'chain: bar bundle -> foo bundle'
+            'chain: bar bundle -> foo bundle',
         );
 
         $this->assertSame(
             '@Contao_CoreBundle/text.html.twig',
             $loader->getDynamicParent('text.html.twig', $fooPath),
-            'chain: foo bundle -> core bundle'
+            'chain: foo bundle -> core bundle',
         );
 
         $this->expectException(\LogicException::class);
@@ -604,7 +620,7 @@ class ContaoFilesystemLoaderTest extends TestCase
             new NullAdapter(),
             $this->createMock(TemplateLocator::class),
             new ThemeNamespace(),
-            '/'
+            '/',
         );
 
         $this->expectException(InvalidThemePathException::class);
@@ -631,7 +647,7 @@ class ContaoFilesystemLoaderTest extends TestCase
             $bundles,
             $bundlesMetadata,
             new ThemeNamespace(),
-            $connection
+            $connection,
         );
     }
 
@@ -656,7 +672,7 @@ class ContaoFilesystemLoaderTest extends TestCase
                     }
                     EOPHP,
                 $namespace,
-                serialize($pathToMtime)
+                serialize($pathToMtime),
             );
 
             eval($mock);

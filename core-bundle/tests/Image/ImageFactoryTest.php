@@ -51,7 +51,7 @@ class ImageFactoryTest extends TestCase
         foreach (['assets', 'images'] as $directory) {
             $filesystem->mirror(
                 Path::join((new self())->getFixturesDir(), $directory),
-                Path::join(self::getTempDir(), $directory)
+                Path::join(self::getTempDir(), $directory),
             );
         }
 
@@ -82,7 +82,7 @@ class ImageFactoryTest extends TestCase
                         $this->assertSame($path, $image->getPath());
 
                         return true;
-                    }
+                    },
                 ),
                 $this->callback(
                     function (ResizeConfiguration $config): bool {
@@ -91,15 +91,15 @@ class ImageFactoryTest extends TestCase
                         $this->assertSame(ResizeConfiguration::MODE_BOX, $config->getMode());
 
                         return true;
-                    }
+                    },
                 ),
                 $this->callback(
                     function (ResizeOptions $options): bool {
                         $this->assertFalse($options->getSkipIfDimensionsMatch());
 
                         return true;
-                    }
-                )
+                    },
+                ),
             )
             ->willReturn($imageMock)
         ;
@@ -137,22 +137,22 @@ class ImageFactoryTest extends TestCase
                         $this->assertSame($path, $image->getPath());
 
                         return true;
-                    }
+                    },
                 ),
                 $this->callback(
                     function (ResizeConfiguration $config): bool {
                         $this->assertTrue($config->isEmpty());
 
                         return true;
-                    }
+                    },
                 ),
                 $this->callback(
                     function (ResizeOptions $options): bool {
                         $this->assertTrue($options->getSkipIfDimensionsMatch());
 
                         return true;
-                    }
-                )
+                    },
+                ),
             )
             ->willReturn($imageMock)
         ;
@@ -205,11 +205,11 @@ class ImageFactoryTest extends TestCase
 
                         $this->assertSameImportantPart(
                             new ImportantPart(0.5, 0.5, 0.25, 0.25),
-                            $image->getImportantPart()
+                            $image->getImportantPart(),
                         );
 
                         return true;
-                    }
+                    },
                 ),
                 $this->callback(
                     function (ResizeConfiguration $config): bool {
@@ -219,7 +219,7 @@ class ImageFactoryTest extends TestCase
                         $this->assertSame(50, $config->getZoomLevel());
 
                         return true;
-                    }
+                    },
                 ),
                 $this->callback(
                     function (ResizeOptions $options): bool {
@@ -233,7 +233,7 @@ class ImageFactoryTest extends TestCase
                                 'heic_quality' => 77,
                                 'jxl_quality' => 77,
                             ],
-                            $options->getImagineOptions()
+                            $options->getImagineOptions(),
                         );
 
                         $this->assertSame(
@@ -247,8 +247,8 @@ class ImageFactoryTest extends TestCase
                         $this->assertSame(Path::join($this->getTempDir(), 'target/path.jpg'), $options->getTargetPath());
 
                         return true;
-                    }
-                )
+                    },
+                ),
             )
             ->willReturn($imageMock)
         ;
@@ -313,7 +313,7 @@ class ImageFactoryTest extends TestCase
                     $this->assertTrue($config->isEmpty());
 
                     return $image;
-                }
+                },
             )
         ;
 
@@ -355,7 +355,7 @@ class ImageFactoryTest extends TestCase
                         $this->assertSameImage($imageMock, $image);
 
                         return true;
-                    }
+                    },
                 ),
                 $this->callback(
                     function (ResizeConfiguration $config) use ($predefinedSizes): bool {
@@ -365,7 +365,7 @@ class ImageFactoryTest extends TestCase
                         $this->assertSame($predefinedSizes['foobar']['zoom'], $config->getZoomLevel());
 
                         return true;
-                    }
+                    },
                 ),
                 $this->callback(
                     function (ResizeOptions $options) use ($predefinedSizes): bool {
@@ -375,7 +375,7 @@ class ImageFactoryTest extends TestCase
                                 'interlace' => ImagineImageInterface::INTERLACE_PLANE,
                                 'jxl_quality' => 66,
                             ],
-                            $options->getImagineOptions()
+                            $options->getImagineOptions(),
                         );
 
                         $this->assertSame(
@@ -391,8 +391,8 @@ class ImageFactoryTest extends TestCase
                         $this->assertSame(Path::join($this->getTempDir(), 'target/path.jpg'), $options->getTargetPath());
 
                         return true;
-                    }
-                )
+                    },
+                ),
             )
             ->willReturn($imageMock)
         ;
@@ -426,7 +426,7 @@ class ImageFactoryTest extends TestCase
                         $this->assertSameImage($imageMock, $image);
 
                         return true;
-                    }
+                    },
                 ),
                 $this->callback(
                     function (ResizeConfiguration $config) use ($resizeConfig): bool {
@@ -437,7 +437,7 @@ class ImageFactoryTest extends TestCase
                         $this->assertSame($resizeConfig->getZoomLevel(), $config->getZoomLevel());
 
                         return true;
-                    }
+                    },
                 ),
                 $this->callback(
                     function (ResizeOptions $options): bool {
@@ -449,8 +449,8 @@ class ImageFactoryTest extends TestCase
                         $this->assertSame(Path::join($this->getTempDir(), 'target/path.jpg'), $options->getTargetPath());
 
                         return true;
-                    }
-                )
+                    },
+                ),
             )
             ->willReturn($imageMock)
         ;
@@ -524,13 +524,13 @@ class ImageFactoryTest extends TestCase
                                 $expected[0],
                                 $expected[1],
                                 $expected[2],
-                                $expected[3]
+                                $expected[3],
                             ),
-                            $image->getImportantPart()
+                            $image->getImportantPart(),
                         );
 
                         return true;
-                    }
+                    },
                 ),
                 $this->callback(
                     function (ResizeConfiguration $config): bool {
@@ -540,8 +540,8 @@ class ImageFactoryTest extends TestCase
                         $this->assertSame(0, $config->getZoomLevel());
 
                         return true;
-                    }
-                )
+                    },
+                ),
             )
             ->willReturn($imageMock)
         ;
@@ -585,9 +585,9 @@ class ImageFactoryTest extends TestCase
                 $expected[0],
                 $expected[1],
                 $expected[2],
-                $expected[3]
+                $expected[3],
             ),
-            $imageFactory->getImportantPartFromLegacyMode($imageMock, $mode)
+            $imageFactory->getImportantPartFromLegacyMode($imageMock, $mode),
         );
     }
 
@@ -657,7 +657,7 @@ class ImageFactoryTest extends TestCase
             $bypassCache,
             $imagineOptions,
             $validExtensions,
-            $uploadDir
+            $uploadDir,
         );
     }
 

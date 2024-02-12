@@ -40,10 +40,16 @@ class RouteLoader implements RouteLoaderInterface
     {
         $collection = new RouteCollection();
 
-        // Load the routing.yaml file first if it exists, so it takes
-        // precedence over all other routes (see #2718)
+        // Load the routing.yaml file first if it exists, so it takes precedence over all
+        // other routes (see #2718)
         if ($configFile = $this->getConfigFile()) {
             $routes = $this->loader->getResolver()->resolve($configFile)->load($configFile);
+
+            if ($routes instanceof RouteCollection) {
+                $collection->addCollection($routes);
+            }
+        } elseif (is_dir($path = Path::join($this->projectDir, 'src/Controller'))) {
+            $routes = $this->loader->getResolver()->resolve($path)->load($path);
 
             if ($routes instanceof RouteCollection) {
                 $collection->addCollection($routes);
@@ -61,7 +67,7 @@ class RouteLoader implements RouteLoaderInterface
 
                 return $collection;
             },
-            $collection
+            $collection,
         );
 
         // Make sure the Contao frontend routes are always loaded last
@@ -81,7 +87,7 @@ class RouteLoader implements RouteLoaderInterface
         }
 
         if (file_exists($path = Path::join($this->projectDir, 'config/routes.yml'))) {
-            trigger_deprecation('contao/manager-bundle', '5.0', 'Using a routes.yml file has been deprecated and will no longer work in Contao 6.0. Use a routes.yaml file instead.');
+            trigger_deprecation('contao/manager-bundle', '5.0', 'Using a routes.yml file has been deprecated and will no longer work in Contao 6. Use a routes.yaml file instead.');
 
             return $path;
         }

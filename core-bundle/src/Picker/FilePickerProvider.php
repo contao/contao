@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Picker;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Contao\FilesModel;
@@ -19,11 +20,12 @@ use Contao\StringUtil;
 use Contao\System;
 use Contao\Validator;
 use Knp\Menu\FactoryInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+#[AsPickerProvider(priority: 160)]
 class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
 {
     use FrameworkAwareTrait;
@@ -105,9 +107,14 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
      */
     private function convertValueToPath(string $value): string
     {
-        $filesAdapter = $this->framework->getAdapter(FilesModel::class);
+        if (!Validator::isUuid($value)) {
+            return $value;
+        }
 
-        if (Validator::isUuid($value) && ($filesModel = $filesAdapter->findByUuid($value)) instanceof FilesModel) {
+        $filesAdapter = $this->framework->getAdapter(FilesModel::class);
+        $filesModel = $filesAdapter->findByUuid($value);
+
+        if ($filesModel instanceof FilesModel) {
             return $filesModel->path;
         }
 
@@ -131,7 +138,7 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
     {
         $attributes = array_intersect_key(
             $config->getExtras(),
-            array_flip(['fieldType', 'files', 'filesOnly', 'path', 'extensions'])
+            array_flip(['fieldType', 'files', 'filesOnly', 'path', 'extensions']),
         );
 
         if (!isset($attributes['fieldType'])) {

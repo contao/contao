@@ -32,7 +32,7 @@ use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 
 #[AsCommand(
     name: 'contao:user:create',
-    description: 'Create a new Contao back end user.'
+    description: 'Create a new Contao back end user.',
 )]
 class UserCreateCommand extends Command
 {
@@ -175,7 +175,7 @@ class UserCreateCommand extends Command
             $input->getOption('language') ?? 'en',
             $isAdmin,
             $input->getOption('group'),
-            $input->getOption('change-password')
+            $input->getOption('change-password'),
         );
 
         $io->success(sprintf('User %s%s created.', $username, $isAdmin ? ' with admin permissions' : ''));

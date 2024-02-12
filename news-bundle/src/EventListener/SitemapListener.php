@@ -14,21 +14,27 @@ namespace Contao\NewsBundle\EventListener;
 
 use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
 use Contao\NewsArchiveModel;
 use Contao\NewsModel;
 use Contao\PageModel;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @internal
  */
+#[AsEventListener]
 class SitemapListener
 {
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly Security $security,
+        private readonly ContentUrlGenerator $urlGenerator,
     ) {
     }
 
@@ -75,7 +81,7 @@ class SitemapListener
             $objParent = $this->framework->getAdapter(PageModel::class)->findWithDetails($objArchive->jumpTo);
 
             // The target page does not exist
-            if (null === $objParent) {
+            if (!$objParent) {
                 continue;
             }
 
@@ -106,7 +112,10 @@ class SitemapListener
                     continue;
                 }
 
-                $arrPages[] = $objParent->getAbsoluteUrl('/'.($objNews->alias ?: $objNews->id));
+                try {
+                    $arrPages[] = $this->urlGenerator->generate($objNews, [], UrlGeneratorInterface::ABSOLUTE_URL);
+                } catch (ExceptionInterface) {
+                }
             }
         }
 

@@ -30,7 +30,7 @@ use Symfony\Component\Filesystem\Path;
 
 #[AsCommand(
     name: 'debug:contao-twig',
-    description: 'Displays the Contao template hierarchy.'
+    description: 'Displays the Contao template hierarchy.',
 )]
 class DebugContaoTwigCommand extends Command
 {
@@ -64,7 +64,7 @@ class DebugContaoTwigCommand extends Command
             $chains = array_filter(
                 $chains,
                 static fn (string $identifier) => str_starts_with($identifier, $prefix),
-                ARRAY_FILTER_USE_KEY
+                ARRAY_FILTER_USE_KEY,
             );
         }
 
@@ -105,8 +105,8 @@ class DebugContaoTwigCommand extends Command
 
         // Recursively display tree nodes
         $displayNode = static function (array $node, string $prefix = '', string $namePrefix = '') use ($io, $chains, &$displayNode): void {
-            // Make sure leaf nodes (files) come first and everything else is
-            // sorted ascending by its key (identifier part)
+            // Make sure leaf nodes (files) come first and everything else is sorted
+            // ascending by its key (identifier part)
             uksort(
                 $node,
                 static function ($keyA, $keyB) use ($node) {
@@ -115,7 +115,7 @@ class DebugContaoTwigCommand extends Command
                     }
 
                     return $keyA <=> $keyB;
-                }
+                },
             );
 
             $count = \count($node);
@@ -127,15 +127,15 @@ class DebugContaoTwigCommand extends Command
                 $currentPrefixWithNewline = $prefix.($count ? '│  ' : '   ');
 
                 if (\is_array($element)) {
-                    // Display part of the template identifier. If this is the
-                    // last bit, we also display the effective @Contao name.
+                    // Display part of the template identifier. If this is the last bit, we also
+                    // display the effective @Contao name.
                     $identifier = ltrim("$namePrefix/$label", '/');
 
                     $io->writeln(sprintf(
                         '%s<fg=green;options=bold>%s</>%s',
                         $currentPrefix,
                         $label,
-                        isset($chains[$identifier]) ? " (<fg=yellow>@Contao/$identifier.html.twig</>)" : ''
+                        isset($chains[$identifier]) ? " (<fg=yellow>@Contao/$identifier.html.twig</>)" : '',
                     ));
 
                     $displayNode($element, $currentPrefixWithNewline, $identifier);
@@ -149,7 +149,7 @@ class DebugContaoTwigCommand extends Command
                 $io->writeln(sprintf(
                     '%s<fg=white>Original name:</> <fg=yellow>%s</>',
                     $currentPrefixWithNewline,
-                    $element
+                    $element,
                 ));
             }
         };
@@ -188,7 +188,7 @@ class DebugContaoTwigCommand extends Command
                         ...$this->formatMultiline(
                             'Blocks',
                             wordwrap(implode(', ', $blocks)),
-                            $blockCellStyle
+                            $blockCellStyle,
                         ),
                         ['', ''],
                     ];
@@ -200,7 +200,7 @@ class DebugContaoTwigCommand extends Command
                         ...$this->formatMultiline(
                             'Preview',
                             $this->createPreview($templateInformation->getCode()),
-                            $codeCellStyle
+                            $codeCellStyle,
                         ),
                         ['', ''],
                     ];

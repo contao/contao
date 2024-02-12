@@ -43,31 +43,26 @@ class CrawlCsvLogHandler extends StreamHandler
             return;
         }
 
-        /** @var CrawlUri|null $crawlUri */
-        $crawlUri = $record['context']['crawlUri'] ?? null;
+        $crawlUri = null;
+
+        if (($record['context']['crawlUri'] ?? null) instanceof CrawlUri) {
+            $crawlUri = $record['context']['crawlUri'];
+        }
 
         $stat = fstat($stream);
         $size = $stat['size'];
 
         if (0 === $size) {
-            fputcsv($stream, [
-                'Time',
-                'Source',
-                'URI',
-                'Found on URI',
-                'Found on level',
-                'Tags',
-                'Message',
-            ]);
+            fputcsv($stream, ['Time', 'Source', 'URI', 'Found on URI', 'Found on level', 'Tags', 'Message']);
         }
 
         $columns = [
             $record['datetime']->format(self::DATETIME_FORMAT),
             $record['context']['source'],
-            null === $crawlUri ? '---' : (string) $crawlUri->getUri(),
-            null === $crawlUri ? '---' : (string) $crawlUri->getFoundOn(),
-            null === $crawlUri ? '---' : $crawlUri->getLevel(),
-            null === $crawlUri ? '---' : implode(', ', $crawlUri->getTags()),
+            !$crawlUri ? '---' : (string) $crawlUri->getUri(),
+            !$crawlUri ? '---' : (string) $crawlUri->getFoundOn(),
+            !$crawlUri ? '---' : $crawlUri->getLevel(),
+            !$crawlUri ? '---' : implode(', ', $crawlUri->getTags()),
             preg_replace('/\r\n|\n|\r/', ' ', $record['message']),
         ];
 

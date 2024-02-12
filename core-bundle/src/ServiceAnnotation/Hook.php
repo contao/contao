@@ -32,6 +32,7 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
 final class Hook implements ServiceTagInterface
 {
     public string $value;
+
     public int|null $priority = null;
 
     public function getName(): string

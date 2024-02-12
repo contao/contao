@@ -87,10 +87,24 @@ class RefererIdListenerTest extends TestCase
         $this->assertSame('testValue', $request->attributes->get('_contao_referer_id'));
     }
 
-    /**
-     * @return TokenGeneratorInterface&MockObject
-     */
-    private function mockTokenGenerator(): TokenGeneratorInterface
+    public function testKeepsTheTokenForAjaxRequests(): void
+    {
+        $request = new Request();
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
+        $request->headers->set('X-Requested-With', 'XMLHttpRequest');
+        $request->query->set('ref', 'foobar');
+
+        $kernel = $this->createMock(KernelInterface::class);
+        $event = new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST);
+
+        $listener = new RefererIdListener($this->mockTokenGenerator(), $this->mockScopeMatcher());
+        $listener($event);
+
+        $this->assertTrue($request->attributes->has('_contao_referer_id'));
+        $this->assertSame('foobar', $request->attributes->get('_contao_referer_id'));
+    }
+
+    private function mockTokenGenerator(): TokenGeneratorInterface&MockObject
     {
         $tokenGenerator = $this->createMock(TokenGeneratorInterface::class);
         $tokenGenerator

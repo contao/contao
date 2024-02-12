@@ -30,8 +30,8 @@ class TemplateController extends AbstractContentElementController
             'keys',
             array_combine(
                 array_column($data, 'key'),
-                array_column($data, 'value')
-            )
+                array_column($data, 'value'),
+            ),
         );
 
         return $template->getResponse();

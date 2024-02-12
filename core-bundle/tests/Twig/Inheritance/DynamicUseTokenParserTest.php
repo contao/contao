@@ -16,6 +16,7 @@ use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
+use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inheritance\DynamicUseTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
@@ -46,7 +47,7 @@ class DynamicUseTokenParserTest extends TestCase
             ['FooBundle' => ContaoModuleBundle::class],
             ['FooBundle' => ['path' => Path::join($projectDir, 'bundle')]],
             $themeNamespace = new ThemeNamespace(),
-            $this->createMock(Connection::class)
+            $this->createMock(Connection::class),
         );
 
         $loader = new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $themeNamespace, $projectDir);
@@ -57,7 +58,7 @@ class DynamicUseTokenParserTest extends TestCase
             $projectDir,
             'cache',
             'prod',
-            $this->createMock(Filesystem::class)
+            $this->createMock(Filesystem::class),
         );
 
         $warmer->warmUp('');
@@ -68,14 +69,14 @@ class DynamicUseTokenParserTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $loader,
-                $this->createMock(ContaoCsrfTokenManager::class)
-            )
+                $this->createMock(ContaoCsrfTokenManager::class),
+                $this->createMock(ContaoVariable::class),
+            ),
         );
 
-        // A component is adjusted by overwriting the component's template
-        // (here by adding the item "ice" and turning apples into pineapples).
-        // The changes should be visible wherever the component is used like in
-        // this element template:
+        // A component is adjusted by overwriting the component's template (here by
+        // adding the item "ice" and turning apples into pineapples). The changes should
+        // be visible wherever the component is used like in this element template:
         $this->assertSame(
             <<<'HTML'
                 <h1>Summer menu</h1>
@@ -87,14 +88,13 @@ class DynamicUseTokenParserTest extends TestCase
                         <li>ice</li>
                     </ul>
                 HTML,
-            trim($environment->render('@Contao/element/menu.html.twig'))
+            trim($environment->render('@Contao/element/menu.html.twig')),
         );
 
-        // The rendered template overwrites blocks of a component used by the
-        // extended base template and another component used within this
-        // component. The adjustments (adding the item "secret sauce" and
-        // adding "from a tin" to the inner component's "apple" block) should
-        // be output, but only in this template:
+        // The rendered template overwrites blocks of a component used by the extended
+        // base template and another component used within this component. The
+        // adjustments (adding the item "secret sauce" and adding "from a tin" to the
+        // inner component's "apple" block) should be output, but only in this template:
         $this->assertSame(
             <<<'HTML'
                 <h1>How to make a fruit shake</h1>
@@ -111,7 +111,7 @@ class DynamicUseTokenParserTest extends TestCase
 
                 <p>Put everything in a blender and mix for 30 seconds.</p>
                 HTML,
-            trim($environment->render('@Contao/element/recipe.html.twig'))
+            trim($environment->render('@Contao/element/recipe.html.twig')),
         );
     }
 }

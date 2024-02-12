@@ -40,7 +40,7 @@ class AutoFallbackTransportTest extends TestCase
             $notifier,
             'foobar',
             $target,
-            $fallback
+            $fallback,
         );
 
         $transport->get();

@@ -15,8 +15,10 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\PageModel;
 use FOS\HttpCache\ResponseTagger;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
+#[AsEventListener]
 class PageTrailCacheTagsListener
 {
     public function __construct(
@@ -27,7 +29,7 @@ class PageTrailCacheTagsListener
 
     public function __invoke(ResponseEvent $event): void
     {
-        if (null === $this->responseTagger || !$this->scopeMatcher->isFrontendMainRequest($event)) {
+        if (!$this->responseTagger || !$this->scopeMatcher->isFrontendMainRequest($event)) {
             return;
         }
 

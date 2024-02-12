@@ -12,15 +12,18 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
+use Contao\Controller;
 use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
+use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\DataContainer;
 use Doctrine\DBAL\Connection;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 /**
  * @internal
@@ -29,6 +32,7 @@ use Symfony\Component\Security\Core\Security;
 class DefaultOperationsListener
 {
     public function __construct(
+        private readonly ContaoFramework $framework,
         private readonly Security $security,
         private readonly Connection $connection,
     ) {
@@ -55,7 +59,8 @@ class DefaultOperationsListener
 
         $operations = [];
 
-        // If none of the defined operations are name-only, we append the operations to the defaults.
+        // If none of the defined operations are name-only, we append the operations to
+        // the defaults.
         if (!array_filter($dca, static fn ($v, $k) => isset($defaults[$k]) || (\is_string($v) && isset($defaults[$v])), ARRAY_FILTER_USE_BOTH)) {
             $operations = $defaults;
         }
@@ -96,12 +101,17 @@ class DefaultOperationsListener
         }
 
         if ($ctable) {
-            $operations += [
-                'children' => [
-                    'href' => 'table='.$ctable,
-                    'icon' => 'children.svg',
-                ],
-            ];
+            $this->framework->getAdapter(Controller::class)->loadDataContainer($ctable);
+
+            if (DataContainer::MODE_TREE_EXTENDED !== ($GLOBALS['TL_DCA'][$ctable]['list']['sorting']['mode'] ?? null)) {
+                $operations += [
+                    'children' => [
+                        'href' => 'table='.$ctable,
+                        'icon' => 'children.svg',
+                        'button_callback' => $this->accessChildrenCallback($ctable, $table),
+                    ],
+                ];
+            }
         }
 
         if ($hasPtable || $isTreeMode) {
@@ -109,16 +119,16 @@ class DefaultOperationsListener
                 $operations['copy'] = [
                     'href' => 'act=paste&amp;mode=copy',
                     'icon' => 'copy.svg',
-                    'attributes' => 'onclick="Backend.getScrollOffset()"',
-                    'button_callback' => $this->isGrantedCallback(CreateAction::class, $table),
+                    'attributes' => 'data-action="contao--scroll-offset#store"',
+                    'button_callback' => $this->isGrantedCallback(CreateAction::class, $table, ['sorting' => null]),
                 ];
 
                 if ($isTreeMode) {
-                    $operations['copyChilds'] = [
-                        'href' => 'act=paste&amp;mode=copy&amp;childs=1',
-                        'icon' => 'copychilds.svg',
-                        'attributes' => 'onclick="Backend.getScrollOffset()"',
-                        'button_callback' => $this->copyChildsCallback($table),
+                    $operations['copyChildren'] = [
+                        'href' => 'act=paste&amp;mode=copy&amp;children=1',
+                        'icon' => 'copychildren.svg',
+                        'attributes' => 'data-action="contao--scroll-offset#store"',
+                        'button_callback' => $this->copyChildrenCallback($table),
                     ];
                 }
             }
@@ -127,8 +137,8 @@ class DefaultOperationsListener
                 $operations['cut'] = [
                     'href' => 'act=paste&amp;mode=cut',
                     'icon' => 'cut.svg',
-                    'attributes' => 'onclick="Backend.getScrollOffset()"',
-                    'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table),
+                    'attributes' => 'data-action="contao--scroll-offset#store"',
+                    'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table, ['sorting' => null]),
                 ];
             }
         } elseif ($canCopy) {
@@ -143,7 +153,7 @@ class DefaultOperationsListener
             $operations['delete'] = [
                 'href' => 'act=delete',
                 'icon' => 'delete.svg',
-                'attributes' => 'onclick="if(!confirm(\''.($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null).'\'))return false;Backend.getScrollOffset()"',
+                'attributes' => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\''.($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null).'\'))return false"',
                 'button_callback' => $this->isGrantedCallback(DeleteAction::class, $table),
             ];
         }
@@ -152,6 +162,7 @@ class DefaultOperationsListener
             $operations['toggle'] = [
                 'href' => 'act=toggle&amp;field='.$toggleField,
                 'icon' => 'visible.svg',
+                'showInHeader' => (bool) $ctable,
                 'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table),
             ];
         }
@@ -164,31 +175,50 @@ class DefaultOperationsListener
         ];
     }
 
-    private function isGrantedCallback(string $actionClass, string $table): \Closure
+    private function isGrantedCallback(string $actionClass, string $table, array|null $new = null): \Closure
     {
-        return function (DataContainerOperation $operation) use ($actionClass, $table): void {
-            if (!$this->isGranted($actionClass, $table, $operation)) {
-                $this->disableOperation($operation);
+        return function (DataContainerOperation $operation) use ($actionClass, $table, $new): void {
+            if (!$this->isGranted($actionClass, $table, $operation, $new)) {
+                $operation->disable();
             }
         };
     }
 
-    private function copyChildsCallback(string $table): \Closure
+    private function accessChildrenCallback(string $ctable, string $table): \Closure
+    {
+        return function (DataContainerOperation $operation) use ($ctable, $table): void {
+            $data = [
+                'pid' => $operation->getRecord()['id'] ?? null,
+            ];
+
+            if ($GLOBALS['TL_DCA'][$ctable]['config']['dynamicPtable'] ?? false) {
+                $data['ptable'] = $table;
+            }
+
+            $subject = new ReadAction($ctable, $data);
+
+            if (!$this->security->isGranted(ContaoCorePermissions::DC_PREFIX.$ctable, $subject)) {
+                $operation->disable();
+            }
+        };
+    }
+
+    private function copyChildrenCallback(string $table): \Closure
     {
         return function (DataContainerOperation $operation) use ($table): void {
-            if (!$this->isGranted(CreateAction::class, $table, $operation)) {
-                $this->disableOperation($operation);
+            if (!$this->isGranted(CreateAction::class, $table, $operation, ['sorting' => null])) {
+                $operation->disable();
 
                 return;
             }
 
             $childCount = $this->connection->fetchOne(
                 "SELECT COUNT(*) FROM $table WHERE pid=?",
-                [(string) $operation->getRecord()['id']]
+                [(string) $operation->getRecord()['id']],
             );
 
             if ($childCount < 1) {
-                $this->disableOperation($operation);
+                $operation->disable();
             }
         };
     }
@@ -200,7 +230,7 @@ class DefaultOperationsListener
     {
         $field = null;
 
-        foreach (($GLOBALS['TL_DCA'][$table]['fields'] ?? []) as $name => $config) {
+        foreach ($GLOBALS['TL_DCA'][$table]['fields'] ?? [] as $name => $config) {
             if (!($config['toggle'] ?? false) && !($config['reverseToggle'] ?? false)) {
                 continue;
             }
@@ -216,42 +246,15 @@ class DefaultOperationsListener
         return $field;
     }
 
-    private function isGranted(string $actionClass, string $table, DataContainerOperation $operation): bool
+    private function isGranted(string $actionClass, string $table, DataContainerOperation $operation, array|null $new = null): bool
     {
         $subject = match ($actionClass) {
-            CreateAction::class => $this->copyAction($table, $operation),
-            UpdateAction::class => new UpdateAction($table, $operation->getRecord()),
+            CreateAction::class => new CreateAction($table, array_replace($operation->getRecord(), (array) $new)),
+            UpdateAction::class => new UpdateAction($table, $operation->getRecord(), $new),
             DeleteAction::class => new DeleteAction($table, $operation->getRecord()),
             default => throw new \InvalidArgumentException(sprintf('Invalid action class "%s".', $actionClass)),
         };
 
         return $this->security->isGranted(ContaoCorePermissions::DC_PREFIX.$table, $subject);
-    }
-
-    private function copyAction(string $table, DataContainerOperation $operation): CreateAction
-    {
-        $new = $operation->getRecord();
-        unset($new['id']);
-        $new['tstamp'] = 0;
-
-        // Unset the PID field for the copy operation (act=paste&mode=copy), so a voter can differentiate
-        // between the copy operation (without PID) and the paste operation (with new target PID)
-        if (
-            DataContainer::MODE_TREE === ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null)
-            || !empty($GLOBALS['TL_DCA'][$table]['config']['ptable'])
-        ) {
-            unset($new['pid'], $new['sorting']);
-        }
-
-        return new CreateAction($table, $new);
-    }
-
-    private function disableOperation(DataContainerOperation $operation): void
-    {
-        unset($operation['route'], $operation['href']);
-
-        if (isset($operation['icon'])) {
-            $operation['icon'] = str_replace('.svg', '--disabled.svg', $operation['icon']);
-        }
     }
 }

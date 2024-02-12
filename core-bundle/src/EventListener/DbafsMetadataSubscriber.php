@@ -93,7 +93,7 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
 
                     return array_diff_key($metadata->all(), [Metadata::VALUE_UUID => null]);
                 },
-                $fileMetadata->all()
+                $fileMetadata->all(),
             );
 
             $event->set('meta', serialize($metadata));

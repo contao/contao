@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Config\Loader;
 
+use Contao\CoreBundle\Translation\LegacyGlobalsProcessor;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Filesystem\Path;
 
@@ -69,16 +70,18 @@ class XliffFileLoader extends Loader
         foreach ($units as $unit) {
             $node = $unit->getElementsByTagName($tagName);
 
-            if (null === $node->item(0)) {
+            if (!$node->item(0)) {
                 continue;
             }
 
-            $chunks = $this->getChunksFromUnit($unit);
+            $chunks = LegacyGlobalsProcessor::getPartsFromKey($unit->getAttribute('id'));
             $value = $this->fixClosingTags($node->item(0));
 
-            $return .= $this->getStringRepresentation($chunks, $value);
+            $return .= LegacyGlobalsProcessor::getStringRepresentation($chunks, $value);
 
-            $this->addGlobal($chunks, $value);
+            if ($this->addToGlobals) {
+                LegacyGlobalsProcessor::addGlobal($chunks, $value);
+            }
         }
 
         return $return;
@@ -103,84 +106,5 @@ class XliffFileLoader extends Loader
     private function fixClosingTags(\DOMNode $node): string
     {
         return str_replace('</ em>', '</em>', $node->nodeValue);
-    }
-
-    /**
-     * Splits the ID attribute and returns the chunks.
-     */
-    private function getChunksFromUnit(\DOMElement $unit): array
-    {
-        $chunks = explode('.', $unit->getAttribute('id'));
-
-        // Handle keys with dots
-        if (preg_match('/tl_layout\.[a-z]+\.css\./', $unit->getAttribute('id'))) {
-            $chunks = [$chunks[0], $chunks[1].'.'.$chunks[2], $chunks[3]];
-        }
-
-        return $chunks;
-    }
-
-    /**
-     * Returns a string representation of the global PHP language array.
-     */
-    private function getStringRepresentation(array $chunks, string $value): string
-    {
-        if (!$chunks) {
-            return '';
-        }
-
-        $string = "\$GLOBALS['TL_LANG']";
-
-        foreach ($chunks as $part) {
-            $string .= '['.$this->quoteKey($part).']';
-        }
-
-        return $string.' = '.$this->quoteValue($value).";\n";
-    }
-
-    /**
-     * Adds the labels to the global PHP language array.
-     */
-    private function addGlobal(array $chunks, string $value): void
-    {
-        if (!$this->addToGlobals) {
-            return;
-        }
-
-        $data = &$GLOBALS['TL_LANG'];
-
-        foreach ($chunks as $key) {
-            if (!\is_array($data)) {
-                $data = [];
-            }
-
-            $data = &$data[$key];
-        }
-
-        $data = $value;
-    }
-
-    private function quoteKey(string $key): int|string
-    {
-        if ('0' === $key) {
-            return 0;
-        }
-
-        if (is_numeric($key)) {
-            return (int) $key;
-        }
-
-        return "'".str_replace("'", "\\'", $key)."'";
-    }
-
-    private function quoteValue(string $value): string
-    {
-        $value = str_replace("\n", '\n', $value);
-
-        if (str_contains($value, '\n')) {
-            return '"'.str_replace(['$', '"'], ['\\$', '\\"'], $value).'"';
-        }
-
-        return "'".str_replace("'", "\\'", $value)."'";
     }
 }

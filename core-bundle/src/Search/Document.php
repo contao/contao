@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
 class Document
 {
     private Crawler|null $crawler = null;
+
     private array|null $jsonLds = null;
 
     /**
@@ -126,21 +127,20 @@ class Document
             ->filterXPath('descendant-or-self::script[@type = "application/ld+json"]')
             ->each(
                 static function (Crawler $node) {
-                    $data = json_decode($node->text(), true);
-
-                    if (JSON_ERROR_NONE !== json_last_error()) {
+                    try {
+                        return json_decode($node->text(), true, 512, JSON_THROW_ON_ERROR);
+                    } catch (\JsonException) {
                         return null;
                     }
-
-                    return $data;
-                }
+                },
             )
         ;
 
         // Filter invalid (null) and parse all values
         foreach (array_filter($jsonLds) as $jsonLd) {
-            // If array has numeric keys, it likely contains multiple data inside it which should be
-            // treated as if coming from separate sources, and thus moved to the root of an array.
+            // If array has numeric keys, it likely contains multiple data inside it which
+            // should be treated as if coming from separate sources, and thus moved to the
+            // root of an array.
             $jsonLdItems = ArrayUtil::isAssoc($jsonLd) ? [$jsonLd] : $jsonLd;
 
             // Parsed the grouped values under the @graph within the same context
@@ -164,7 +164,7 @@ class Document
             new Uri($request->getUri()),
             $response->getStatusCode(),
             $response->headers->all(),
-            (string) $response->getContent()
+            (string) $response->getContent(),
         );
     }
 

@@ -17,11 +17,11 @@ use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\EventListener\Menu\BackendPreviewListener;
 use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\MenuFactory;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BackendPreviewListenerTest extends ContaoTestCase
@@ -63,7 +63,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
                     $this->assertSame($id, $e->getId());
 
                     return true;
-                }
+                },
             ))
         ;
 
@@ -80,7 +80,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
             $router,
             $requestStack,
             $this->getTranslator(),
-            $eventDispatcher
+            $eventDispatcher,
         );
 
         $listener($event);
@@ -100,7 +100,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
                 'target' => '_blank',
                 'accesskey' => 'f',
             ],
-            $children['preview']->getLinkAttributes()
+            $children['preview']->getLinkAttributes(),
         );
     }
 
@@ -136,7 +136,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
             $router,
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(EventDispatcher::class)
+            $this->createMock(EventDispatcher::class),
         );
 
         $listener($event);
@@ -170,7 +170,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
             $router,
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(EventDispatcher::class)
+            $this->createMock(EventDispatcher::class),
         );
 
         $listener($event);

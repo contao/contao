@@ -45,7 +45,7 @@ class ThemeNamespace
 
                 return $chunk;
             },
-            explode('/', $path)
+            explode('/', $path),
         ));
 
         if ($invalidCharacters) {

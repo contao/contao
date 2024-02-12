@@ -1,0 +1,78 @@
+{% extends "@Contao/content_element/_base.html.twig" %}
+{% use "@Contao/component/_stylesheet.html.twig" %}
+
+{% set slider_attributes = attrs(slider_attributes|default)
+    .addClass('swiper')
+    .set('data-delay', delay)
+    .set('data-speed', speed)
+    .set('data-offset', offset)
+    .set('data-loop', loop)
+%}
+
+{% block content %}
+    <div{{ slider_attributes }}>
+        <div{{ attrs(slider_wrapper_attributes|default).addClass('swiper-wrapper') }}>
+            {% block slides %}
+                {% for element in nested_fragments %}
+                    {% block slide %}
+                        <div{{ attrs(slide_attributes|default).addClass('swiper-slide') }}>
+                            {% block slide_inner %}
+                                {{ content_element(element) }}
+                            {% endblock %}
+                        </div>
+                    {% endblock %}
+                {% endfor %}
+            {% endblock %}
+        </div>
+        {% block controls %}
+            <button{{ attrs(button_prev_attributes|default).set('type', 'button').addClass('swiper-button-prev') }}></button>
+            <button{{ attrs(button_next_attributes|default).set('type', 'button').addClass('swiper-button-next') }}></button>
+            <div{{ attrs(pagination_attributes|default).addClass('swiper-pagination') }}></div>
+        {% endblock %}
+    </div>
+{% endblock %}
+
+{% block script %}
+    {% add "swiper_js" to body %}
+        <script src="{{ asset('js/swiper-bundle.min.js', 'contao-components/swiper') }}"></script>
+        <script>
+            (function() {
+                const swiper = document.querySelectorAll('.swiper');
+                swiper.forEach (el => {
+                    let opts = {
+                        speed: el.getAttribute('data-speed'),
+                        initialSlide: el.getAttribute('data-offset'),
+                        loop: el.hasAttribute('data-loop'),
+                    };
+
+                    let delay = el.getAttribute('data-delay');
+                    if (delay > 0) {
+                        opts['autoplay'] = { delay: delay };
+                    }
+
+                    new Swiper(el, Object.assign({
+                        {% block init_options %}
+                            pagination: {
+                                el: '.swiper-pagination',
+                                clickable: true,
+                            },
+                            navigation: {
+                                prevEl: '.swiper-button-prev',
+                                nextEl: '.swiper-button-next',
+                            },
+                            {# Put custom options here #}
+                        {% endblock %}
+                    }, opts));
+                });
+            })();
+        </script>
+    {% endadd %}
+{% endblock %}
+
+{% block style %}
+    {% set swiper_css_file = asset('css/swiper-bundle.min.css', 'contao-components/swiper') %}
+
+    {% add "swiper_css" to head %}
+        {% with {file: swiper_css_file} %}{{ block('stylesheet_component') }}{% endwith %}
+    {% endadd %}
+{% endblock %}

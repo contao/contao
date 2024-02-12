@@ -39,6 +39,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
+				'tstamp' => 'index',
 				'username' => 'unique',
 				'email' => 'index',
 				'login,disable,start,stop' => 'index'
@@ -61,15 +62,6 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'fields'                  => array('', 'firstname', 'lastname', 'username', 'dateAdded'),
 			'showColumns'             => true,
 			'label_callback'          => array('tl_member', 'addIcon')
-		),
-		'global_operations' => array
-		(
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
 		),
 		'operations' => array
 		(

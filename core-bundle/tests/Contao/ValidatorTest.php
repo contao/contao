@@ -27,7 +27,7 @@ class ValidatorTest extends TestCase
         $this->assertSame(
             $expected,
             Validator::isEmail($email),
-            'Original: '.$email.' idna: '.Idna::encodeEmail($email)
+            'Original: '.$email.' idna: '.Idna::encodeEmail($email),
         );
     }
 

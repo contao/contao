@@ -30,7 +30,7 @@ trait ContaoDatabaseTrait
 
     protected static function getConnection(): Connection
     {
-        if (null === self::$connection) {
+        if (!self::$connection) {
             if (false !== getenv('DATABASE_URL')) {
                 $params = [
                     'driver' => 'pdo_mysql',

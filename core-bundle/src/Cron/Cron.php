@@ -26,7 +26,9 @@ use Psr\Log\LoggerInterface;
 class Cron
 {
     final public const MINUTELY_CACHE_KEY = 'contao.cron.minutely_run';
+
     final public const SCOPE_WEB = 'web';
+
     final public const SCOPE_CLI = 'cli';
 
     /**
@@ -63,14 +65,14 @@ class Cron
 
         $this->cachePool->saveDeferred($cacheItem);
 
-        // Using a promise here not because the cache file takes forever to create but in order to make sure
-        // it's one of the first cron jobs that are executed. The fact that we can use deferred cache item
-        // saving is an added bonus.
+        // Using a promise here not because the cache file takes forever to create but in
+        // order to make sure it's one of the first cron jobs that are executed. The fact
+        // that we can use deferred cache item saving is an added bonus.
         return $promise = new Promise(
             function () use (&$promise): void {
                 $this->cachePool->commit();
                 $promise->resolve('Saved cache item.');
-            }
+            },
         );
     }
 
@@ -140,7 +142,7 @@ class Cron
                 $lastRunDate = null;
                 $lastRunEntity = $repository->findOneByName($name);
 
-                if (null !== $lastRunEntity) {
+                if ($lastRunEntity) {
                     $lastRunDate = $lastRunEntity->getLastRun();
                 } else {
                     $lastRunEntity = new CronJobEntity($name);
@@ -150,7 +152,7 @@ class Cron
                 // Check if the cron should be run
                 $expression = CronExpression::factory($interval);
 
-                if (!$force && null !== $lastRunDate && $now < $expression->getNextRunDate($lastRunDate)) {
+                if (!$force && $lastRunDate && $now < $expression->getNextRunDate($lastRunDate)) {
                     continue;
                 }
 
@@ -208,7 +210,7 @@ class Cron
                         } else {
                             $this->logger?->debug(sprintf('Asynchronous cron job "%s" failed: %s', $cron->getName(), $reason));
                         }
-                    }
+                    },
                 );
 
                 $promises[] = $promise;
@@ -218,7 +220,7 @@ class Cron
                 // Catch any exceptions so that other cronjobs are still executed
                 $this->logger?->error((string) $e);
 
-                if (null === $exception) {
+                if (!$exception) {
                     $exception = $e;
                 }
             }
@@ -229,7 +231,7 @@ class Cron
         }
 
         // Throw the first exception
-        if (null !== $exception) {
+        if ($exception) {
             throw $exception;
         }
     }

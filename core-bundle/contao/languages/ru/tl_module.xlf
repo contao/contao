@@ -129,6 +129,14 @@
         <source>Please choose the page to which visitors will be redirected when clicking a link or submitting a form.</source>
         <target>Выберите страницу, к которой будут перенаправлены посетители при нажатии на ссылку или после отправки формы.</target>
       </trans-unit>
+      <trans-unit id="tl_module.pwResetPage.0">
+        <source>Reset password page</source>
+        <target>Страница сброса пароля</target>
+      </trans-unit>
+      <trans-unit id="tl_module.pwResetPage.1">
+        <source>Here you can choose a page to which visitors will be redirected when clicking the &lt;em&gt;Forgot your password?&lt;/em&gt; link.</source>
+        <target>Вы можете выбрать страницу, к которой будут перенаправлены посетители при нажатии ссылки &lt;em&gt;Забыли пароль?&lt;/em&gt;.</target>
+      </trans-unit>
       <trans-unit id="tl_module.overviewPage.0">
         <source>Overview page</source>
         <target>Обзорная страница</target>

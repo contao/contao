@@ -135,9 +135,10 @@ class PhpFileLoader extends Loader
         $prettyPrinter = new PrettyPrinter();
         $code = sprintf("\n%s\n", $prettyPrinter->prettyPrint($ast));
         $namespaceNode = $namespaceResolver->getNameContext()->getNamespace();
-        $namespace = null !== $namespaceNode ? $namespaceNode->toString() : '';
+        $namespace = $namespaceNode ? $namespaceNode->toString() : '';
 
-        // Force GC collection to reduce the total memory required when building the cache (see #4069)
+        // Force GC collection to reduce the total memory required when building the
+        // cache (see #4069)
         gc_collect_cycles();
 
         return [$code, $namespace];

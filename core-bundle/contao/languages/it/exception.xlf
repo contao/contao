@@ -51,7 +51,7 @@
       </trans-unit>
       <trans-unit id="XPT.tokenExplainTwo">
         <source>For more information, visit the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
-        <target>Per maggiori informazioni, visita la &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;pagina di supporto di Contao&lt;/a&gt;.</target>
+        <target>Per maggiori informazioni, visita la &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;pagina di supporto di Contao&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPT.unavailable">
         <source>Service unavailable</source>

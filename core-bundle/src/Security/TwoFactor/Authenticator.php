@@ -45,7 +45,7 @@ class Authenticator
             $issuer,
             rawurlencode($user->getUserIdentifier()).'@'.$issuer,
             $this->getUpperUnpaddedSecretForUser($user),
-            $issuer
+            $issuer,
         );
     }
 
@@ -56,7 +56,7 @@ class Authenticator
     {
         $renderer = new ImageRenderer(
             new RendererStyle(180, 0),
-            new SvgImageBackEnd()
+            new SvgImageBackEnd(),
         );
 
         $writer = new Writer($renderer);

@@ -13,7 +13,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.1
+                  php-version: 8.2
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
 
@@ -35,7 +35,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.1
+                  php-version: 8.2
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
 
@@ -57,7 +57,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.1
+                  php-version: 8.2
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
 
@@ -81,7 +81,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.1
+                  php-version: 8.2
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
 
@@ -94,7 +94,7 @@ jobs:
                   composer bin phpstan install --no-interaction --no-progress
 
             - name: Run PHPStan
-              run: tools/phpstan/vendor/bin/phpstan analyse --no-progress
+              run: tools/phpstan/vendor/bin/phpstan analyse -c tools/phpstan/config/contao.neon --no-progress
 
     yamllint:
         name: YAMLlint
@@ -117,7 +117,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.1
+                  php-version: 8.2
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
 
@@ -139,7 +139,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.1
+                  php-version: 8.2
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
 
@@ -166,7 +166,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php: [8.1, 8.2]
+                php: [8.1, 8.2, 8.3]
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -206,7 +206,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.1
+                  php-version: 8.2
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
 
@@ -220,14 +220,14 @@ jobs:
               run: vendor/bin/phpunit --order-by=reverse --extensions Contao\\CoreBundle\\Tests\\PhpunitExtension\\GlobalStateWatcher --colors=always
 
     nightly:
-        name: PHP 8.3
+        name: PHP 8.4
         runs-on: ubuntu-latest
         continue-on-error: true
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.3
+                  php-version: 8.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
 
@@ -257,7 +257,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.1
+                  php-version: 8.2
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
 
@@ -292,7 +292,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.1
+                  php-version: 8.2
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
 
@@ -332,7 +332,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.1
+                  php-version: 8.2
                   extensions: json, zlib
                   coverage: none
 

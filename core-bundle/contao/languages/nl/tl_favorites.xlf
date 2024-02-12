@@ -23,11 +23,11 @@
       </trans-unit>
       <trans-unit id="tl_favorites.show">
         <source>Show the details of favorite ID %s</source>
-        <target>Toon de details van favoriet ID %s</target>
+        <target>Toon de details van favoriete ID %s</target>
       </trans-unit>
       <trans-unit id="tl_favorites.edit">
         <source>Edit favorite ID %s</source>
-        <target>Bewerk favoriet ID %s</target>
+        <target>Bewerk favoriete ID %s</target>
       </trans-unit>
       <trans-unit id="tl_favorites.cut">
         <source>Move favorite ID %s</source>

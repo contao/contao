@@ -19,7 +19,7 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.restrictToUrl.0">
         <source>Restrict access to specified URL</source>
-        <target>Restreindre l'accès à une URL spécifiée</target>
+        <target>Restreindre l'accès à l'URL spécifié</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.restrictToUrl.1">
         <source>Allow access only to the specified URL instead of the entire website.</source>
@@ -99,7 +99,7 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.hintEdit">
         <source>Preview link</source>
-        <target>Lien de prévisualisation</target>
+        <target>Preview link</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.hintExpired">
         <source>This preview link has expired and can no longer be shared.</source>

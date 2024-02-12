@@ -141,7 +141,7 @@ class StringUtil
 					}
 
 					// Store opening tags in the open_tags array
-					if (strncmp($strTagName, '/', 1) !== 0)
+					if (!str_starts_with($strTagName, '/'))
 					{
 						if ($i<$c || !empty($arrChunks[$i]))
 						{
@@ -228,7 +228,7 @@ class StringUtil
 	 */
 	public static function convertBasicEntities($strBuffer)
 	{
-		return str_replace(array('&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;'), array('[&]', '[lt]', '[gt]', '[nbsp]', '[-]'), $strBuffer);
+		return str_replace(array('&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;', '&ZeroWidthSpace;'), array('[&]', '[lt]', '[gt]', '[nbsp]', '[-]', '[zwsp]'), $strBuffer);
 	}
 
 	/**
@@ -240,7 +240,7 @@ class StringUtil
 	 */
 	public static function restoreBasicEntities($strBuffer)
 	{
-		return str_replace(array('[&]', '[&amp;]', '[lt]', '[gt]', '[nbsp]', '[-]'), array('&amp;', '&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;'), $strBuffer);
+		return str_replace(array('[&]', '[&amp;]', '[lt]', '[gt]', '[nbsp]', '[-]', '[zwsp]'), array('&amp;', '&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;', '&ZeroWidthSpace;'), $strBuffer);
 	}
 
 	/**
@@ -256,7 +256,7 @@ class StringUtil
 		$strString = static::standardize(strip_tags($strString));
 
 		// Remove the prefix if the alias is not numeric (see #707)
-		if (strncmp($strString, 'id-', 3) === 0 && !is_numeric($strSubstr = substr($strString, 3)))
+		if (str_starts_with($strString, 'id-') && !is_numeric($strSubstr = substr($strString, 3)))
 		{
 			$strString = $strSubstr;
 		}
@@ -307,7 +307,7 @@ class StringUtil
 	 */
 	public static function encodeEmail($strString)
 	{
-		if (strpos($strString, '@') === false)
+		if (!str_contains($strString, '@'))
 		{
 			return $strString;
 		}
@@ -342,7 +342,7 @@ class StringUtil
 	{
 		$arrEmails = array();
 
-		if (strpos($strString, '@') === false)
+		if (!str_contains($strString, '@'))
 		{
 			return $arrEmails;
 		}
@@ -397,12 +397,12 @@ class StringUtil
 	 */
 	public static function splitFriendlyEmail($strEmail)
 	{
-		if (strpos($strEmail, '<') !== false)
+		if (str_contains($strEmail, '<'))
 		{
 			return array_map('trim', explode(' <', str_replace('>', '', $strEmail)));
 		}
 
-		if (strpos($strEmail, '[') !== false)
+		if (str_contains($strEmail, '['))
 		{
 			return array_map('trim', explode(' [', str_replace(']', '', $strEmail)));
 		}
@@ -987,7 +987,7 @@ class StringUtil
 		}
 
 		// Not a serialized array (see #1486)
-		if (strncmp($varValue, 'a:', 2) !== 0)
+		if (!str_starts_with($varValue, 'a:'))
 		{
 			return $blnForceArray ? array($varValue) : $varValue;
 		}

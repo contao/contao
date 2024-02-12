@@ -24,7 +24,7 @@ use Symfony\Component\Filesystem\Path;
 
 #[AsCommand(
     name: 'dot-env:remove',
-    description: 'Removes a parameter from the .env file.'
+    description: 'Removes a parameter from the .env file.',
 )]
 class RemoveDotEnvCommand extends Command
 {

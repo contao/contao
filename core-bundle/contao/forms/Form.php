@@ -38,6 +38,7 @@ use Symfony\Component\HttpFoundation\Response;
 class Form extends Hybrid
 {
 	public const SESSION_KEY = 'contao.form.data';
+
 	public const SESSION_CONFIRMATION_KEY = 'contao.form.confirmation';
 
 	/**
@@ -155,7 +156,7 @@ class Form extends Hybrid
 
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-		if ($request && $request->hasPreviousSession())
+		if ($request?->hasPreviousSession())
 		{
 			$flashBag = $request->getSession()->getFlashBag();
 
@@ -356,10 +357,14 @@ class Form extends Hybrid
 		$this->Template->ajax = $this->isAjaxEnabled();
 
 		// Get the target URL
-		if ($this->method == 'GET' && ($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
+		if ($this->method == 'GET')
 		{
-			/** @var PageModel $objTarget */
-			$this->Template->action = $objTarget->getFrontendUrl();
+			$objTarget = $this->objModel->getRelated('jumpTo');
+
+			if ($objTarget instanceof PageModel)
+			{
+				$this->Template->action = System::getContainer()->get('contao.routing.content_url_generator')->generate($objTarget);
+			}
 		}
 	}
 
@@ -665,7 +670,7 @@ class Form extends Hybrid
 			$request = $requestStack->getCurrentRequest();
 
 			// Throw the response exception if it's an AJAX request
-			if ($request && $targetPageData === null && $this->isAjaxEnabled() && $request->isXmlHttpRequest() && $request->headers->get('X-Contao-Ajax-Form') === $this->getFormId())
+			if ($targetPageData === null && $this->isAjaxEnabled() && $request?->isXmlHttpRequest() && $request->headers->get('X-Contao-Ajax-Form') === $this->getFormId())
 			{
 				$confirmationTemplate = new FrontendTemplate('form_message');
 				$confirmationTemplate->setData($this->Template->getData());

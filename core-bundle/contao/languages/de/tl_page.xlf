@@ -473,6 +473,38 @@
         <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
         <target>Bitte wählen Sie die Seite aus, zu der Mitglieder weitergeleitet werden, um die Zwei-Faktor-Authentifizierung einzurichten.</target>
       </trans-unit>
+      <trans-unit id="tl_page.enableCsp.0">
+        <source>Enable CSP</source>
+        <target>CSP aktivieren</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCsp.1">
+        <source>Enable Content Security Policy for this website.</source>
+        <target>Content-Security-Policy für diese Website aktivieren.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.csp.0">
+        <source>Content Security Policy</source>
+        <target>Content-Security-Policy</target>
+      </trans-unit>
+      <trans-unit id="tl_page.csp.1">
+        <source>Here you can enter custom Content Security Policy directives.</source>
+        <target>Hier können Sie benutzerdefinierte Content-Security-Policy-Direktiven eingeben.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportOnly.0">
+        <source>Reporting only</source>
+        <target>Nur-Bericht-Modus</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportOnly.1">
+        <source>Only report policy violations without enforcing them.</source>
+        <target>Richtlinienverstöße nur melden, ohne sie durchzusetzen.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportLog.0">
+        <source>Enable report logging</source>
+        <target>Protokollierung aktivieren</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportLog.1">
+        <source>Log CSP violations to the Contao system log.</source>
+        <target>CSP-Verstöße im Contao-Systemlog protokollieren.</target>
+      </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
         <target>Name und Typ</target>
@@ -553,6 +585,10 @@
         <source>Two-factor authentication</source>
         <target>Zwei-Faktor-Authentifizierung</target>
       </trans-unit>
+      <trans-unit id="tl_page.csp_legend">
+        <source>Content Security Policy</source>
+        <target>Content-Security-Policy</target>
+      </trans-unit>
       <trans-unit id="tl_page.permanent">
         <source>301 Permanent redirect</source>
         <target>301 Permanente Weiterleitung</target>
@@ -601,7 +637,7 @@
         <source>Duplicate page ID %s</source>
         <target>Seite ID %s duplizieren</target>
       </trans-unit>
-      <trans-unit id="tl_page.copyChilds">
+      <trans-unit id="tl_page.copyChildren">
         <source>Duplicate page ID %s with its subpages</source>
         <target>Seite ID %s inklusive Unterseiten duplizieren</target>
       </trans-unit>

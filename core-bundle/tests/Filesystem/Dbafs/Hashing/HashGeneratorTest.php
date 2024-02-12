@@ -119,7 +119,7 @@ class HashGeneratorTest extends TestCase
     {
         $filesystem = new VirtualFilesystem(
             (new MountManager())->mount(new InMemoryFilesystemAdapter()),
-            $this->createMock(DbafsManager::class)
+            $this->createMock(DbafsManager::class),
         );
 
         $filesystem->write('foo.txt', "foo\0bar");

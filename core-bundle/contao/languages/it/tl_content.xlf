@@ -17,6 +17,14 @@
         <source>Here you can add a headline to the content element.</source>
         <target>Se si inserisce una testata verrà visualizzata in cima all'elemento contenuto.</target>
       </trans-unit>
+      <trans-unit id="tl_content.sectionHeadline.0">
+        <source>Section headline</source>
+        <target>Intestazione fisarmonica</target>
+      </trans-unit>
+      <trans-unit id="tl_content.sectionHeadline.1">
+        <source>Here you can add a section headline, e.g. a tab title or accordion header.</source>
+        <target>Qui puoi aggiungere un titolo di sezione, ad es. un titolo di scheda o un'intestazione a fisarmonica.</target>
+      </trans-unit>
       <trans-unit id="tl_content.text.0">
         <source>Text</source>
         <target>Testo</target>
@@ -208,6 +216,14 @@
       <trans-unit id="tl_content.sortOrder.1">
         <source>Please choose the sort order.</source>
         <target>Scegli l'ordine predefinito.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.closeSections.0">
+        <source>Close all sections</source>
+        <target>Chiudi tutte le sezioni</target>
+      </trans-unit>
+      <trans-unit id="tl_content.closeSections.1">
+        <source>Do not open the first section by default.</source>
+        <target>Non aprire la prima sezione per impostazione predefinita.</target>
       </trans-unit>
       <trans-unit id="tl_content.mooType.0">
         <source>Operation mode</source>
@@ -649,9 +665,21 @@
         <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>Se desideri impedire che l'elemento venga visualizzato sul sito web dopo una determinata data/ora, puoi inserirlo qui. Altrimenti lascia il campo vuoto.</target>
       </trans-unit>
+      <trans-unit id="tl_content.tstamp.0">
+        <source>Revision date</source>
+        <target>Data revisione</target>
+      </trans-unit>
+      <trans-unit id="tl_content.tstamp.1">
+        <source>Date and time of the latest revision</source>
+        <target>Data e ora dell'ultima revisione</target>
+      </trans-unit>
       <trans-unit id="tl_content.type_legend">
         <source>Element type</source>
         <target>Tipologia elemento</target>
+      </trans-unit>
+      <trans-unit id="tl_content.section_legend">
+        <source>Section settings</source>
+        <target>Sezione configurazione</target>
       </trans-unit>
       <trans-unit id="tl_content.text_legend">
         <source>Text/HTML/Code</source>
@@ -690,6 +718,10 @@
         <target>Opzioni di ordinamento</target>
       </trans-unit>
       <trans-unit id="tl_content.moo_legend">
+        <source>Accordion settings</source>
+        <target>Impostazioni fisarmonica</target>
+      </trans-unit>
+      <trans-unit id="tl_content.accordion_legend">
         <source>Accordion settings</source>
         <target>Impostazioni fisarmonica</target>
       </trans-unit>
@@ -940,6 +972,19 @@
       <trans-unit id="tl_content.table.1">
         <source>Import table items from a CSV file</source>
         <target>Importa i dati della tabella da un file CSV</target>
+      </trans-unit>
+      <trans-unit id="tl_content.dl_label.0">
+        <source>Description list items</source>
+      </trans-unit>
+      <trans-unit id="tl_content.dl_label.1">
+        <source>Please enter a list of terms and details for the description list. You can leave the term field empty to create multiple details for one term.</source>
+      </trans-unit>
+      <trans-unit id="tl_content.dl_key">
+        <source>Term</source>
+      </trans-unit>
+      <trans-unit id="tl_content.dl_value">
+        <source>Details</source>
+        <target>Dettagli</target>
       </trans-unit>
     </body>
   </file>

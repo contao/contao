@@ -13,10 +13,10 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\Controller;
 
 use Contao\ManagerBundle\HttpKernel\JwtManager;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\Security;
 
 class DebugController
 {
@@ -46,9 +46,7 @@ class DebugController
             throw new AccessDeniedException();
         }
 
-        $request = $this->requestStack->getCurrentRequest();
-
-        if (null === $request) {
+        if (!$request = $this->requestStack->getCurrentRequest()) {
             throw new \RuntimeException('The request stack did not contain a request');
         }
 

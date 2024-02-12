@@ -66,6 +66,37 @@ class FilesystemItemIteratorTest extends TestCase
         $this->assertSameItems(['bar', 'baz.txt'], $iterator->filter($customFilter)->toArray());
     }
 
+    public function testSortByMediaType(): void
+    {
+        $videoWebm = new FilesystemItem(true, 'video.webm', 100, 100, 'video/webm');
+        $videoMp4 = new FilesystemItem(true, 'video.mp4', 100, 100, 'video/mp4');
+        $videoOgg = new FilesystemItem(true, 'video.ogv', 100, 100, 'video/ogg');
+
+        $audioWebm = new FilesystemItem(true, 'audio.m4a', 100, 100, 'audio/m4a');
+        $audioMp4 = new FilesystemItem(true, 'audio.mp3', 100, 100, 'audio/mp3');
+        $audioOgg = new FilesystemItem(true, 'audio.ogg', 100, 100, 'audio/ogg');
+
+        $completelyUnrelated = new FilesystemItem(true, 'file.jpg', 100, 100, 'image/jpeg');
+        $notEvenAFile = new FilesystemItem(false, '/path/to/somewhere');
+
+        $iterator = new FilesystemItemIterator([$audioWebm, $videoMp4, $notEvenAFile, $audioMp4, $completelyUnrelated, $audioOgg, $videoWebm, $videoOgg]);
+        $sorted = $iterator->sort(SortMode::mediaTypePriority);
+
+        $this->assertSame(
+            [
+                $videoWebm,
+                $videoMp4,
+                $videoOgg,
+                $audioWebm,
+                $audioMp4,
+                $audioOgg,
+                $completelyUnrelated,
+                $notEvenAFile,
+            ],
+            iterator_to_array($sorted),
+        );
+    }
+
     public function testSort(): void
     {
         $fileA = new FilesystemItem(true, 'foo/img2', 100);
@@ -184,7 +215,7 @@ class FilesystemItemIteratorTest extends TestCase
             new \ArrayIterator([
                 $first = new FilesystemItem(true, 'foo'),
                 new FilesystemItem(true, 'bar'),
-            ])
+            ]),
         );
 
         $this->assertSame($first, $iterator->first());

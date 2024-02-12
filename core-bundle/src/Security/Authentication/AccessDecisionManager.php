@@ -43,11 +43,11 @@ class AccessDecisionManager implements AccessDecisionManagerInterface
 
     private function isContaoContext(): bool
     {
-        // Use the main request here because sub-requests cannot have
-        // their own firewall in Symfony
+        // Use the main request here because sub-requests cannot have their own firewall
+        // in Symfony
         $request = $this->requestStack->getMainRequest();
 
-        if (!$this->firewallMap instanceof FirewallMap || null === $request) {
+        if (!$request || !$this->firewallMap instanceof FirewallMap) {
             return false;
         }
 

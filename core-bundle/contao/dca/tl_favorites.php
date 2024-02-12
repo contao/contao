@@ -25,6 +25,7 @@ $GLOBALS['TL_DCA']['tl_favorites'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
+				'tstamp' => 'index',
 				'pid,user' => 'index',
 				'url' => 'index'
 			)
@@ -45,28 +46,6 @@ $GLOBALS['TL_DCA']['tl_favorites'] = array
 		(
 			'fields'                  => array('title'),
 			'format'                  => '%s'
-		),
-		'global_operations' => array
-		(
-			'toggleNodes' => array
-			(
-				'href'                => 'ptg=all',
-				'class'               => 'header_toggle',
-				'showOnSelect'        => true
-			),
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
-		),
-		'operations' => array
-		(
-			'edit',
-			'cut',
-			'delete',
-			'show'
 		)
 	),
 

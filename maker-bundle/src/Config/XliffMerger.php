@@ -19,7 +19,7 @@ class XliffMerger
         $body = $root->getElementsByTagName('body')->item(0);
 
         // If there is no body tag, return the unchanged node
-        if (null === $body) {
+        if (!$body) {
             return $root;
         }
 

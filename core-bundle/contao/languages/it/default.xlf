@@ -433,6 +433,12 @@
         <source>Generates an ordered or unordered list.</source>
         <target>Genera un elenco ordinato e non.</target>
       </trans-unit>
+      <trans-unit id="CTE.description_list.0">
+        <source>Description list</source>
+      </trans-unit>
+      <trans-unit id="CTE.description_list.1">
+        <source>Generates a description list with terms and details.</source>
+      </trans-unit>
       <trans-unit id="CTE.table.0">
         <source>Table</source>
         <target>Tabella</target>
@@ -441,29 +447,41 @@
         <source>Generates an optionally sortable table.</source>
         <target>Genera una tabella (con opzioni di ordinamento).</target>
       </trans-unit>
-      <trans-unit id="CTE.accordion">
+      <trans-unit id="CTE.accordion.0">
         <source>Accordion</source>
         <target>Fisarmonica</target>
       </trans-unit>
+      <trans-unit id="CTE.accordion.1">
+        <source>Generates an accordion.</source>
+        <target>Genera un elemento a fisarmonica.</target>
+      </trans-unit>
+      <trans-unit id="CTE.element_group.0">
+        <source>Element group</source>
+        <target>Elemento del gruppo</target>
+      </trans-unit>
+      <trans-unit id="CTE.element_group.1">
+        <source>Generates a group of nested elements.</source>
+        <target>Genera un gruppo di elementi nidificati.</target>
+      </trans-unit>
       <trans-unit id="CTE.accordionStart.0">
-        <source>Wrapper start</source>
-        <target>Wrapper start</target>
+        <source>Accordion wrapper start</source>
+        <target>Inizio dell'elemento fisarmonica</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStart.1">
         <source>Generates the opening part of the accordion wrapper.</source>
         <target>Genera l'elemento di partenza di un elemento fisarmonica.</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.0">
-        <source>Wrapper stop</source>
-        <target>Wrapper stop</target>
+        <source>Accordion wrapper stop</source>
+        <target>Fine dell'elemento fisarmonica</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.1">
         <source>Generates the closing part of the accordion wrapper.</source>
         <target>Genera l'elemento di chiusura di un elemento fisarmonica.</target>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.0">
-        <source>Single element</source>
-        <target>Elemento singolo</target>
+        <source>Accordion single element</source>
+        <target>Elemento singolo a fisarmonica</target>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.1">
         <source>Generates a single accordion element.</source>
@@ -493,21 +511,29 @@
         <source>Generates an element to insert a custom template.</source>
         <target>Genera un elemento per inserire un template personalizzato.</target>
       </trans-unit>
+      <trans-unit id="CTE.swiper.0">
+        <source>Content slider</source>
+        <target>Contenuto slider</target>
+      </trans-unit>
+      <trans-unit id="CTE.swiper.1">
+        <source>Generates a content slider element.</source>
+        <target>Genera un elemento di conetnuto slide.</target>
+      </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
         <target>Contenuto slider</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStart.0">
-        <source>Wrapper start</source>
-        <target>Wrapper start</target>
+        <source>Slider wrapper start</source>
+        <target>Inizio elemento slide</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStart.1">
         <source>Generates the opening part of the slider wrapper.</source>
         <target>Genera l'elemento di partenza di un elemento slider.</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStop.0">
-        <source>Wrapper stop</source>
-        <target>Wrapper stop</target>
+        <source>Slider wrapper stop</source>
+        <target>Fine elemento slide</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStop.1">
         <source>Generates the closing part of the slider wrapper.</source>
@@ -640,6 +666,10 @@
       <trans-unit id="CTE.teaser.1">
         <source>Displays the teaser text of an article.</source>
         <target>Mostra il testo di anteprima di un articolo.</target>
+      </trans-unit>
+      <trans-unit id="CTE.legacy">
+        <source>Legacy elements</source>
+        <target>Elementi legacy</target>
       </trans-unit>
       <trans-unit id="FFL.explanation.0">
         <source>Explanation</source>
@@ -2325,6 +2355,10 @@
         <source>Quick link</source>
         <target>Link veloce</target>
       </trans-unit>
+      <trans-unit id="MSC.lostPassword">
+        <source>Forgot your password?</source>
+        <target>Hai dimenticato la password?</target>
+      </trans-unit>
       <trans-unit id="MSC.username">
         <source>Username</source>
         <target>Nome utente</target>
@@ -2344,6 +2378,12 @@
       <trans-unit id="MSC.emptyField">
         <source>Please enter your username and password!</source>
         <target>Inserisci nome utente e password!</target>
+      </trans-unit>
+      <trans-unit id="MSC.reauthenticate">
+        <source>Please enter your password to verify your identity.</source>
+      </trans-unit>
+      <trans-unit id="MSC.verify">
+        <source>Verify</source>
       </trans-unit>
       <trans-unit id="MSC.confirmation">
         <source>Confirmation</source>
@@ -3019,11 +3059,11 @@
       </trans-unit>
       <trans-unit id="DCA.toggle.0">
         <source>Publish/unpublish element</source>
-        <target>Publica/nascondi l'elemento</target>
+        <target>Publica/non pubblicare l'elemento</target>
       </trans-unit>
       <trans-unit id="DCA.toggle.1">
         <source>Unpublish element ID %s</source>
-        <target>Nascondi elemento ID %s</target>
+        <target>Annulla pubblicazione elemento ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.toggle.2">
         <source>Publish element ID %s</source>

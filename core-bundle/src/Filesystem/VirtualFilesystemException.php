@@ -18,16 +18,27 @@ namespace Contao\CoreBundle\Filesystem;
 class VirtualFilesystemException extends \RuntimeException
 {
     final public const UNABLE_TO_CHECK_IF_FILE_EXISTS = 0;
+
     final public const UNABLE_TO_CHECK_IF_DIRECTORY_EXISTS = 1;
+
     final public const UNABLE_TO_READ = 2;
+
     final public const UNABLE_TO_WRITE = 3;
+
     final public const UNABLE_TO_DELETE = 4;
+
     final public const UNABLE_TO_DELETE_DIRECTORY = 5;
+
     final public const UNABLE_TO_CREATE_DIRECTORY = 6;
+
     final public const UNABLE_TO_COPY = 7;
+
     final public const UNABLE_TO_MOVE = 8;
+
     final public const UNABLE_TO_LIST_CONTENTS = 9;
+
     final public const UNABLE_TO_RETRIEVE_METADATA = 10;
+
     final public const ENCOUNTERED_INVALID_PATH = 11;
 
     private function __construct(
@@ -50,7 +61,7 @@ class VirtualFilesystemException extends \RuntimeException
             $path,
             sprintf('Unable to check if a file exists at "%s".', $path),
             self::UNABLE_TO_CHECK_IF_FILE_EXISTS,
-            $previous
+            $previous,
         );
     }
 
@@ -60,7 +71,7 @@ class VirtualFilesystemException extends \RuntimeException
             $path,
             sprintf('Unable to check if a directory exists at "%s".', $path),
             self::UNABLE_TO_CHECK_IF_DIRECTORY_EXISTS,
-            $previous
+            $previous,
         );
     }
 
@@ -70,7 +81,7 @@ class VirtualFilesystemException extends \RuntimeException
             $path,
             sprintf('Unable to read from "%s".', $path),
             self::UNABLE_TO_READ,
-            $previous
+            $previous,
         );
     }
 
@@ -80,7 +91,7 @@ class VirtualFilesystemException extends \RuntimeException
             $path,
             sprintf('Unable to write to "%s".', $path),
             self::UNABLE_TO_WRITE,
-            $previous
+            $previous,
         );
     }
 
@@ -90,7 +101,7 @@ class VirtualFilesystemException extends \RuntimeException
             $path,
             sprintf('Unable to delete file at "%s".', $path),
             self::UNABLE_TO_DELETE,
-            $previous
+            $previous,
         );
     }
 
@@ -100,7 +111,7 @@ class VirtualFilesystemException extends \RuntimeException
             $path,
             sprintf('Unable to delete directory at "%s".', $path),
             self::UNABLE_TO_DELETE_DIRECTORY,
-            $previous
+            $previous,
         );
     }
 
@@ -110,7 +121,7 @@ class VirtualFilesystemException extends \RuntimeException
             $path,
             sprintf('Unable to create directory at "%s".', $path),
             self::UNABLE_TO_CREATE_DIRECTORY,
-            $previous
+            $previous,
         );
     }
 
@@ -120,7 +131,7 @@ class VirtualFilesystemException extends \RuntimeException
             $pathFrom,
             sprintf('Unable to copy file from "%s" to "%s".', $pathFrom, $pathTo),
             self::UNABLE_TO_COPY,
-            $previous
+            $previous,
         );
     }
 
@@ -130,7 +141,7 @@ class VirtualFilesystemException extends \RuntimeException
             $pathFrom,
             sprintf('Unable to move file from "%s" to "%s".', $pathFrom, $pathTo),
             self::UNABLE_TO_MOVE,
-            $previous
+            $previous,
         );
     }
 
@@ -140,7 +151,7 @@ class VirtualFilesystemException extends \RuntimeException
             $path,
             sprintf('Unable to list contents from "%s".', $path),
             self::UNABLE_TO_LIST_CONTENTS,
-            $previous
+            $previous,
         );
     }
 
@@ -150,7 +161,7 @@ class VirtualFilesystemException extends \RuntimeException
             $path,
             sprintf('Unable to retrieve metadata from "%s"%s', $path, $reason ? ": $reason" : '.'),
             self::UNABLE_TO_RETRIEVE_METADATA,
-            $previous
+            $previous,
         );
     }
 
@@ -159,7 +170,7 @@ class VirtualFilesystemException extends \RuntimeException
         return new self(
             $path,
             sprintf('The path "%s" is not supported, because it contains non-UTF-8 characters.', $path),
-            self::ENCOUNTERED_INVALID_PATH
+            self::ENCOUNTERED_INVALID_PATH,
         );
     }
 }

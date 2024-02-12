@@ -18,20 +18,23 @@ use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\MenuItem;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PagePickerProviderTest extends ContaoTestCase
 {
     public function testCreatesTheMenuItem(): void
     {
-        $config = json_encode([
-            'context' => 'link',
-            'extras' => [],
-            'current' => 'pagePicker',
-            'value' => '',
-        ]);
+        $config = json_encode(
+            [
+                'context' => 'link',
+                'extras' => [],
+                'current' => 'pagePicker',
+                'value' => '',
+            ],
+            JSON_THROW_ON_ERROR,
+        );
 
         if (\function_exists('gzencode') && false !== ($encoded = @gzencode($config))) {
             $config = $encoded;
@@ -113,7 +116,7 @@ class PagePickerProviderTest extends ContaoTestCase
                 'rootNodes' => [1, 2, 3],
                 'value' => [5],
             ],
-            $picker->getDcaAttributes(new PickerConfig('page', $extra, '5'))
+            $picker->getDcaAttributes(new PickerConfig('page', $extra, '5')),
         );
 
         $this->assertSame(
@@ -122,12 +125,12 @@ class PagePickerProviderTest extends ContaoTestCase
                 'value' => '5',
                 'flags' => ['urlattr'],
             ],
-            $picker->getDcaAttributes(new PickerConfig('link', [], '{{link_url::5|urlattr}}'))
+            $picker->getDcaAttributes(new PickerConfig('link', [], '{{link_url::5|urlattr}}')),
         );
 
         $this->assertSame(
             ['fieldType' => 'radio'],
-            $picker->getDcaAttributes(new PickerConfig('link', [], '{{article_url::5}}'))
+            $picker->getDcaAttributes(new PickerConfig('link', [], '{{article_url::5}}')),
         );
     }
 
@@ -148,16 +151,16 @@ class PagePickerProviderTest extends ContaoTestCase
             5,
             $picker->convertDcaValue(
                 new PickerConfig('page', ['insertTag' => '{{link_url::%s|absolute}}']),
-                5
-            )
+                5,
+            ),
         );
 
         $this->assertSame(
             '{{link_url::5|absolute}}',
             $picker->convertDcaValue(
                 new PickerConfig('link', ['insertTag' => '{{link_url::%s|absolute}}']),
-                5
-            )
+                5,
+            ),
         );
 
         // Picker specific insertTag extra
@@ -165,16 +168,16 @@ class PagePickerProviderTest extends ContaoTestCase
             5,
             $picker->convertDcaValue(
                 new PickerConfig('page', ['pagePicker' => ['insertTag' => '{{specific_insert_tag::%s}}']]),
-                5
-            )
+                5,
+            ),
         );
 
         $this->assertSame(
             '{{specific_insert_tag::5}}',
             $picker->convertDcaValue(
                 new PickerConfig('link', ['pagePicker' => ['insertTag' => '{{specific_insert_tag::%s}}']]),
-                5
-            )
+                5,
+            ),
         );
     }
 
@@ -199,7 +202,7 @@ class PagePickerProviderTest extends ContaoTestCase
                     $item->setUri($data['uri']);
 
                     return $item;
-                }
+                },
             )
         ;
 

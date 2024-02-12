@@ -19,11 +19,11 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
-use Symfony\Component\Security\Core\Security;
 
 class CteAliasListenerTest extends TestCase
 {

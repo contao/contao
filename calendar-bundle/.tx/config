@@ -1,65 +1,65 @@
 [main]
 host = https://app.transifex.com
 
-[o:contao:p:calendar-bundle:r:v5_2-default]
+[o:contao:p:calendar-bundle:r:v5_3-default]
 file_filter = contao/languages/<lang>/default.xlf
 source_file = contao/languages/en/default.xlf
 type = XLIFF
 source_lang = en
-resource_name = v5_2-default
+resource_name = v5_3-default
 
-[o:contao:p:calendar-bundle:r:v5_2-modules]
+[o:contao:p:calendar-bundle:r:v5_3-modules]
 file_filter = contao/languages/<lang>/modules.xlf
 source_file = contao/languages/en/modules.xlf
 type = XLIFF
 source_lang = en
-resource_name = v5_2-modules
+resource_name = v5_3-modules
 
-[o:contao:p:calendar-bundle:r:v5_2-tl_calendar]
+[o:contao:p:calendar-bundle:r:v5_3-tl_calendar]
 file_filter = contao/languages/<lang>/tl_calendar.xlf
 source_file = contao/languages/en/tl_calendar.xlf
 type = XLIFF
 source_lang = en
-resource_name = v5_2-tl_calendar
+resource_name = v5_3-tl_calendar
 
-[o:contao:p:calendar-bundle:r:v5_2-tl_calendar_events]
+[o:contao:p:calendar-bundle:r:v5_3-tl_calendar_events]
 file_filter = contao/languages/<lang>/tl_calendar_events.xlf
 source_file = contao/languages/en/tl_calendar_events.xlf
 type = XLIFF
 source_lang = en
-resource_name = v5_2-tl_calendar_events
+resource_name = v5_3-tl_calendar_events
 
-[o:contao:p:calendar-bundle:r:v5_2-tl_calendar_feed]
+[o:contao:p:calendar-bundle:r:v5_3-tl_calendar_feed]
 file_filter = contao/languages/<lang>/tl_calendar_feed.xlf
 source_file = contao/languages/en/tl_calendar_feed.xlf
 type = XLIFF
 source_lang = en
-resource_name = v5_2-tl_calendar_feed
+resource_name = v5_3-tl_calendar_feed
 
-[o:contao:p:calendar-bundle:r:v5_2-tl_layout]
+[o:contao:p:calendar-bundle:r:v5_3-tl_layout]
 file_filter = contao/languages/<lang>/tl_layout.xlf
 source_file = contao/languages/en/tl_layout.xlf
 type = XLIFF
 source_lang = en
-resource_name = v5_2-tl_layout
+resource_name = v5_3-tl_layout
 
-[o:contao:p:calendar-bundle:r:v5_2-tl_module]
+[o:contao:p:calendar-bundle:r:v5_3-tl_module]
 file_filter = contao/languages/<lang>/tl_module.xlf
 source_file = contao/languages/en/tl_module.xlf
 type = XLIFF
 source_lang = en
-resource_name = v5_2-tl_module
+resource_name = v5_3-tl_module
 
-[o:contao:p:calendar-bundle:r:v5_2-tl_user]
+[o:contao:p:calendar-bundle:r:v5_3-tl_user]
 file_filter = contao/languages/<lang>/tl_user.xlf
 source_file = contao/languages/en/tl_user.xlf
 type = XLIFF
 source_lang = en
-resource_name = v5_2-tl_user
+resource_name = v5_3-tl_user
 
-[o:contao:p:calendar-bundle:r:v5_2-tl_user_group]
+[o:contao:p:calendar-bundle:r:v5_3-tl_user_group]
 file_filter = contao/languages/<lang>/tl_user_group.xlf
 source_file = contao/languages/en/tl_user_group.xlf
 type = XLIFF
 source_lang = en
-resource_name = v5_2-tl_user_group
+resource_name = v5_3-tl_user_group

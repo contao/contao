@@ -36,7 +36,8 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 		(
 			'keys' => array
 			(
-				'id' => 'primary'
+				'id' => 'primary',
+				'tstamp' => 'index'
 			)
 		)
 	),
@@ -58,21 +59,12 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'format'                  => '%s',
 			'label_callback'          => array('tl_user_group', 'addIcon')
 		),
-		'global_operations' => array
-		(
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
-		)
 	),
 
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},name;{modules_legend},modules,themes;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{alexf_legend:hide},alexf;{account_legend},disable,start,stop',
+		'default'                     => '{title_legend},name;{modules_legend},modules,themes,frontendModules;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{alexf_legend:hide},alexf;{account_legend},disable,start,stop',
 	),
 
 	// Fields
@@ -131,6 +123,15 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'options'                 => array_keys($GLOBALS['TL_FFL']),
 			'reference'               => &$GLOBALS['TL_LANG']['FFL'],
 			'eval'                    => array('multiple'=>true, 'helpwizard'=>true),
+			'sql'                     => "blob NULL"
+		),
+		'frontendModules' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['frontendModules'],
+			'filter'                  => true,
+			'inputType'               => 'checkbox',
+			'reference'               => &$GLOBALS['TL_LANG']['FMD'],
+			'eval'                    => array('multiple'=>true, 'helpwizard'=>true, 'collapseUncheckedGroups'=>true),
 			'sql'                     => "blob NULL"
 		),
 		'pagemounts' => array

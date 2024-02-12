@@ -15,10 +15,13 @@ namespace Contao\CoreBundle\Doctrine\Backup;
 class Backup implements \Stringable
 {
     final public const DATETIME_FORMAT = 'YmdHis';
+
     final public const VALID_BACKUP_NAME_REGEX = '@^[^/]*__(\d{4}\d{2}\d{2}\d{2}\d{2}\d{2})\.sql(\.gz)?$@';
 
     private readonly string $filename;
+
     private readonly \DateTimeInterface $createdAt;
+
     private int $size = 0;
 
     /**
@@ -81,8 +84,8 @@ class Backup implements \Stringable
     {
         preg_match(self::VALID_BACKUP_NAME_REGEX, $filepath, $matches);
 
-        // No need to check for false here because the regex does not allow a format that does not work.
-        // PHP will even turn month 42 into a valid datetime.
+        // No need to check for false here because the regex does not allow a format that
+        // does not work. PHP will even turn month 42 into a valid datetime.
         return \DateTime::createFromFormat(self::DATETIME_FORMAT, $matches[1], new \DateTimeZone('UTC'));
     }
 

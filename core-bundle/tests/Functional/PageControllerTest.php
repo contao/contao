@@ -72,7 +72,7 @@ class PageControllerTest extends FunctionalTestCase
                             $request,
                             $withDefault ? 'yes' : 'no',
                             $withSuffix ? 'yes' : 'no',
-                            $withAlias ? 'yes' : 'no'
+                            $withAlias ? 'yes' : 'no',
                         );
 
                         yield $description => [
@@ -99,7 +99,7 @@ class PageControllerTest extends FunctionalTestCase
 
         static::loadFixtures(array_map(
             static fn ($file) => __DIR__.'/../Fixtures/Functional/PageController/'.$file.'.yaml',
-            $fileNames
+            $fileNames,
         ));
     }
 }

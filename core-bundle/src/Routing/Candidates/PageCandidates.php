@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing\Candidates;
 
 use Contao\CoreBundle\Routing\Page\PageRegistry;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Symfony\Component\HttpFoundation\Request;
@@ -87,13 +88,13 @@ class PageCandidates extends AbstractCandidates
 
         $prefixes = array_map(
             static fn ($prefix) => $prefix ? preg_quote('/'.$prefix, '#') : '',
-            $this->urlPrefixes
+            $this->urlPrefixes,
         );
 
         preg_match_all(
             '#^('.implode('|', $prefixes).')('.implode('|', $paths).')('.implode('|', array_map('preg_quote', $this->urlSuffixes)).')$#sD',
             $pathInfo,
-            $matches
+            $matches,
         );
 
         $types = array_keys(array_intersect_key($pathMap, array_filter($matches)));
@@ -104,7 +105,7 @@ class PageCandidates extends AbstractCandidates
 
         $queryBuilder
             ->orWhere('type IN (:types)')
-            ->setParameter('types', $types, Connection::PARAM_STR_ARRAY)
+            ->setParameter('types', $types, ArrayParameterType::STRING)
         ;
 
         return true;

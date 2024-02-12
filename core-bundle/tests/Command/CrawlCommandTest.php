@@ -76,10 +76,10 @@ class CrawlCommandTest extends TestCase
         $code = $tester->execute([]);
 
         $this->assertSame(0, $code);
-        $this->assertSame(10, $command->getEscargot()->getConcurrency());
+        $this->assertSame(5, $command->getEscargot()->getConcurrency());
         $this->assertSame(0, $command->getEscargot()->getRequestDelay());
         $this->assertSame(0, $command->getEscargot()->getMaxRequests());
-        $this->assertSame(10, $command->getEscargot()->getMaxDepth());
+        $this->assertSame(3, $command->getEscargot()->getMaxDepth());
 
         // Test options
         $escargot = Escargot::create($this->getBaseUriCollection(), new InMemoryQueue())->withHttpClient($client);
@@ -118,7 +118,7 @@ class CrawlCommandTest extends TestCase
                     $jobId = $escargot->getJobId();
 
                     return $escargot;
-                }
+                },
             )
         ;
 
@@ -171,10 +171,7 @@ class CrawlCommandTest extends TestCase
         return new BaseUriCollection([new Uri('https://contao.org')]);
     }
 
-    /**
-     * @return Factory&MockObject
-     */
-    private function mockEscargotFactory(BaseUriCollection|null $baseUriCollection = null): Factory
+    private function mockEscargotFactory(BaseUriCollection|null $baseUriCollection = null): Factory&MockObject
     {
         $baseUriCollection ??= $this->getBaseUriCollection();
 
@@ -188,10 +185,7 @@ class CrawlCommandTest extends TestCase
         return $escargotFactory;
     }
 
-    /**
-     * @return Factory&MockObject
-     */
-    private function mockValidEscargotFactory(Escargot $escargot, BaseUriCollection|null $baseUriCollection = null): Factory
+    private function mockValidEscargotFactory(Escargot $escargot, BaseUriCollection|null $baseUriCollection = null): Factory&MockObject
     {
         $escargotFactory = $this->mockEscargotFactory($baseUriCollection);
         $escargotFactory
@@ -208,10 +202,7 @@ class CrawlCommandTest extends TestCase
         return $escargotFactory;
     }
 
-    /**
-     * @return Factory&MockObject
-     */
-    private function mockInvalidEscargotFactory(\Exception $exception, bool $withExistingJobId = false): Factory
+    private function mockInvalidEscargotFactory(\Exception $exception, bool $withExistingJobId = false): Factory&MockObject
     {
         $escargotFactory = $this->mockEscargotFactory();
 

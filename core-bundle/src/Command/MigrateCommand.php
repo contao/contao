@@ -32,7 +32,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'contao:migrate',
-    description: 'Executes migrations and updates the database schema.'
+    description: 'Executes migrations and updates the database schema.',
 )]
 class MigrateCommand extends Command
 {
@@ -125,7 +125,7 @@ class MigrateCommand extends Command
         if (!$asJson) {
             $this->io->info(sprintf(
                 'Creating a database dump to "%s" with the default options. Use --no-backup to disable this feature.',
-                $config->getBackup()->getFilename()
+                $config->getBackup()->getFilename(),
             ));
         }
 
@@ -239,7 +239,7 @@ class MigrateCommand extends Command
                 }
             }
 
-            $actualHash = hash('sha256', json_encode($migrationLabels));
+            $actualHash = hash('sha256', json_encode($migrationLabels, JSON_THROW_ON_ERROR));
 
             if ($asJson) {
                 $this->writeNdjson('migration-pending', ['names' => $migrationLabels, 'hash' => $actualHash]);
@@ -285,9 +285,8 @@ class MigrateCommand extends Command
             }
 
             if (null !== $specifiedHash) {
-                // Do not run the schema update after migrations got executed
-                // if a hash was specified, because that hash could never match
-                // both, migrations and schema updates
+                // Do not run the schema update after migrations got executed if a hash was specified,
+                // because that hash could never match both, migrations and schema updates
                 $dryRun = true;
 
                 // Do not run the update recursive if a hash was specified
@@ -322,7 +321,7 @@ class MigrateCommand extends Command
             $hasNewCommands = [] !== array_diff($commands, $lastCommands);
             $lastCommands = $commands;
 
-            $commandsHash = hash('sha256', json_encode($commands));
+            $commandsHash = hash('sha256', json_encode($commands, JSON_THROW_ON_ERROR));
 
             if ($asJson) {
                 $this->writeNdjson('schema-pending', [
@@ -439,17 +438,8 @@ class MigrateCommand extends Command
 
     private function writeNdjson(string $type, array $data): void
     {
-        $this->io->writeln(
-            json_encode(
-                // make sure $type is the first in array but always wins
-                ['type' => $type] + $data,
-                JSON_INVALID_UTF8_SUBSTITUTE
-            )
-        );
-
-        if (JSON_ERROR_NONE !== json_last_error()) {
-            throw new \JsonException(json_last_error_msg());
-        }
+        // Make sure $type is the first in array but always wins
+        $this->io->writeln(json_encode(['type' => $type] + $data, JSON_INVALID_UTF8_SUBSTITUTE | JSON_THROW_ON_ERROR));
     }
 
     /**
@@ -475,7 +465,7 @@ class MigrateCommand extends Command
         $options = $this->connection->getParams()['defaultTableOptions'] ?? [];
 
         // Check the collation if the user has configured it
-        if (null !== $collate = ($options['collate'] ?? null)) {
+        if (null !== $collate = $options['collate'] ?? null) {
             $row = $this->connection->fetchAssociative("SHOW COLLATION LIKE '$collate'");
 
             if (false === $row) {
@@ -495,7 +485,7 @@ class MigrateCommand extends Command
         }
 
         // Check the engine if the user has configured it
-        if (null !== $engine = ($options['engine'] ?? null)) {
+        if (null !== $engine = $options['engine'] ?? null) {
             $engineFound = false;
             $rows = $this->connection->fetchAllAssociative('SHOW ENGINES');
 
@@ -548,9 +538,9 @@ class MigrateCommand extends Command
                 return $errors;
             }
 
-            // As there is no reliable way to get the vendor (see #84), we are
-            // guessing based on the version number. The check will not be run
-            // as of MySQL 8 and MariaDB 10.3, so this should be safe.
+            // As there is no reliable way to get the vendor (see #84), we are guessing based
+            // on the version number. The check will not be run as of MySQL 8 and MariaDB
+            // 10.3, so this should be safe.
             $vok = version_compare($version, '10', '>=') ? '10.2.2' : '5.7.7';
 
             // Large prefixes are always enabled as of MySQL 5.7.7 and MariaDB 10.2.2
@@ -667,7 +657,8 @@ class MigrateCommand extends Command
 
     private function validateDatabaseVersion(bool $asJson): bool
     {
-        // TODO: Find a replacement for getWrappedConnection() once doctrine/dbal 4.0 is released
+        // TODO: Find a replacement for getWrappedConnection() once doctrine/dbal
+        // 4.0 is released
         $driverConnection = $this->connection->getWrappedConnection();
 
         if (!$driverConnection instanceof ServerInfoAwareConnection) {

@@ -186,7 +186,7 @@ class CheckBoxWizard extends Widget
 	protected function generateCheckbox($arrOption, $i, $strButtons)
 	{
 		return sprintf(
-			'<span><input type="checkbox" name="%s" id="opt_%s" class="tl_checkbox" value="%s"%s%s onfocus="Backend.getScrollOffset()"> %s<label for="opt_%s">%s</label></span>',
+			'<span><input type="checkbox" name="%s" id="opt_%s" class="tl_checkbox" value="%s"%s%s data-action="focus->contao--scroll-offset#store"> %s<label for="opt_%s">%s</label></span>',
 			$this->strName . ($this->multiple ? '[]' : ''),
 			$this->strId . '_' . $i,
 			$this->multiple ? self::specialcharsValue($arrOption['value'] ?? '') : 1,

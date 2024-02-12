@@ -33,8 +33,8 @@ abstract class AbstractBasicEntitiesMigration extends AbstractMigration
     {
         $schemaManager = $this->connection->createSchemaManager();
 
-        // This migration is very intrusive thus we try to run it only if the
-        // database schema was not yet updated to Contao 5
+        // This migration is very intrusive thus we try to run it only if the database
+        // schema was not yet updated to Contao 5
         if (
             !$schemaManager->tablesExist(['tl_article'])
             || !isset($schemaManager->listTableColumns('tl_article')['keywords'])
@@ -53,7 +53,7 @@ abstract class AbstractBasicEntitiesMigration extends AbstractMigration
             }
 
             $test = $this->connection->fetchOne(
-                "SELECT TRUE FROM $table WHERE `$column` REGEXP '\\\\[(&|&amp;|lt|gt|nbsp|-)\\\\]' LIMIT 1;"
+                "SELECT TRUE FROM $table WHERE `$column` REGEXP '\\\\[(&|&amp;|lt|gt|nbsp|-)\\\\]' LIMIT 1;",
             );
 
             if (false !== $test) {
@@ -77,7 +77,7 @@ abstract class AbstractBasicEntitiesMigration extends AbstractMigration
             }
 
             $values = $this->connection->fetchAllKeyValue(
-                "SELECT id, `$column` FROM $table WHERE `$column` REGEXP '\\\\[(&|&amp;|lt|gt|nbsp|-)\\\\]'"
+                "SELECT id, `$column` FROM $table WHERE `$column` REGEXP '\\\\[(&|&amp;|lt|gt|nbsp|-)\\\\]'",
             );
 
             foreach ($values as $id => $value) {

@@ -16,9 +16,10 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Event\FilterPageTypeEvent;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\DataContainer;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Security\Core\Security;
 
 #[AsCallback(table: 'tl_page', target: 'fields.type.options')]
 #[AsCallback(table: 'tl_user', target: 'fields.alpty.options')]
@@ -40,7 +41,7 @@ class PageTypeOptionsListener
             return array_values($options);
         }
 
-        if (null !== $this->eventDispatcher) {
+        if ($this->eventDispatcher) {
             $options = $this->eventDispatcher
                 ->dispatch(new FilterPageTypeEvent($options, $dc))
                 ->getOptions()
@@ -51,7 +52,7 @@ class PageTypeOptionsListener
         foreach ($options as $k => $pageType) {
             if (
                 $pageType !== $dc->value
-                && !$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $pageType)
+                && !$this->security->isGranted(ContaoCorePermissions::DC_PREFIX.'tl_page', new UpdateAction('tl_page', $dc->getCurrentRecord(), ['type' => $pageType]))
             ) {
                 unset($options[$k]);
             }

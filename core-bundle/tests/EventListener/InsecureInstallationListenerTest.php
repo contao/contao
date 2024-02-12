@@ -23,6 +23,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 class InsecureInstallationListenerTest extends TestCase
 {
     private const DEFAULT_SECRET = 'ThisTokenIsNotSoSecretChangeIt';
+
     private const PSEUDO_SECRET = '0123456789abcdefghijklmnopqrstuv';
 
     public function testThrowsAnExceptionIfTheDocumentRootIsInsecure(): void

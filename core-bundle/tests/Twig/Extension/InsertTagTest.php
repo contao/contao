@@ -21,6 +21,7 @@ use Contao\CoreBundle\InsertTag\Resolver\LegacyInsertTag;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
+use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\InsertTags;
@@ -93,7 +94,8 @@ class InsertTagTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $this->createMock(TemplateHierarchyInterface::class),
-                $this->createMock(ContaoCsrfTokenManager::class)
+                $this->createMock(ContaoCsrfTokenManager::class),
+                $this->createMock(ContaoVariable::class),
             ),
         ]);
 
@@ -115,7 +117,7 @@ class InsertTagTest extends TestCase
         $environment->addRuntimeLoader(
             new FactoryRuntimeLoader([
                 InsertTagRuntime::class => static fn () => new InsertTagRuntime($insertTagParser),
-            ])
+            ]),
         );
 
         return $environment->render('@Contao/test.html.twig', $context);

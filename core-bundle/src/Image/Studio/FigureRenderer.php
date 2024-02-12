@@ -48,7 +48,7 @@ class FigureRenderer
      */
     public function render(FilesModel|ImageInterface|int|string $from, PictureConfiguration|array|int|string|null $size, array $configuration = [], string $template = '@ContaoCore/Image/Studio/figure.html.twig'): string|null
     {
-        if (null === ($figure = $this->buildFigure($from, $size, $configuration))) {
+        if (!$figure = $this->buildFigure($from, $size, $configuration)) {
             return null;
         }
 

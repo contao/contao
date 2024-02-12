@@ -74,14 +74,14 @@ class Image
 
 		$src = rawurldecode($src);
 
-		if (strpos($src, '/') !== false)
+		if (str_contains($src, '/'))
 		{
 			return $src;
 		}
 
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
-		if (strncmp($src, 'icon', 4) === 0)
+		if (str_starts_with($src, 'icon'))
 		{
 			if (pathinfo($src, PATHINFO_EXTENSION) == 'svg')
 			{

@@ -13,13 +13,17 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Session\Attribute\AutoExpiringAttribute;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Http\SecurityRequestAttributes;
 
 /**
+ * The priority must be higher than the one of the Symfony save session listener (defaults to -1000).
+ *
  * @internal
  */
+#[AsEventListener(priority: -768)]
 class ClearSessionDataListener
 {
     /**
@@ -49,8 +53,8 @@ class ClearSessionDataListener
 
     private function clearLoginData(SessionInterface $session): void
     {
-        $session->remove(Security::AUTHENTICATION_ERROR);
-        $session->remove(Security::LAST_USERNAME);
+        $session->remove(SecurityRequestAttributes::AUTHENTICATION_ERROR);
+        $session->remove(SecurityRequestAttributes::LAST_USERNAME);
     }
 
     private function clearAutoExpiringSessionAttributes(SessionInterface $session): void

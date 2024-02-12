@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\CoreBundle\Crawl\Escargot\Factory;
 use Contao\CoreBundle\Messenger\Message\SearchIndexMessage;
 use Contao\CoreBundle\Search\Document;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
@@ -23,9 +24,11 @@ use Symfony\Component\Messenger\MessageBusInterface;
 /**
  * @internal
  */
+#[AsEventListener]
 class SearchIndexListener
 {
     final public const FEATURE_INDEX = 0b01;
+
     final public const FEATURE_DELETE = 0b10;
 
     public function __construct(

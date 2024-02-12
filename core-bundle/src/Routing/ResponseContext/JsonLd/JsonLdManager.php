@@ -21,6 +21,7 @@ use Spatie\SchemaOrg\Type;
 class JsonLdManager
 {
     final public const SCHEMA_ORG = 'https://schema.org';
+
     final public const SCHEMA_CONTAO = 'https://schema.contao.org';
 
     /**
@@ -73,7 +74,7 @@ class JsonLdManager
         foreach ($data as $context) {
             $return[] = sprintf(
                 "<script type=\"application/ld+json\">\n%s\n</script>",
-                json_encode($context, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+                json_encode($context, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR),
             );
         }
 

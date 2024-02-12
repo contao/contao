@@ -24,11 +24,15 @@ use Symfony\Component\Filesystem\Path;
 class ChangeSet
 {
     final public const ATTR_HASH = 'hash';
+
     final public const ATTR_PATH = 'path';
+
     final public const ATTR_TYPE = 'type';
+
     final public const ATTR_LAST_MODIFIED = 'lastModified';
 
     final public const TYPE_FILE = 0;
+
     final public const TYPE_DIRECTORY = 1;
 
     /**
@@ -122,9 +126,9 @@ class ChangeSet
             static fn (array $item): ItemToCreate => new ItemToCreate(
                 $item['hash'],
                 $item['path'],
-                self::TYPE_FILE === $item['type']
+                self::TYPE_FILE === $item['type'],
             ),
-            $this->itemsToCreate
+            $this->itemsToCreate,
         );
     }
 
@@ -141,7 +145,7 @@ class ChangeSet
         $lastModifiedUpdates = $this->lastModifiedUpdates;
 
         $items = array_map(
-            static function (string|int $existingPath, array $item) use ($includeLastModified, &$lastModifiedUpdates) {
+            static function (int|string $existingPath, array $item) use ($includeLastModified, &$lastModifiedUpdates) {
                 $lastModified = $includeLastModified && \array_key_exists($existingPath, $lastModifiedUpdates)
                     ? $lastModifiedUpdates[$existingPath]
                     : false;
@@ -164,11 +168,11 @@ class ChangeSet
         }
 
         return [...array_map(
-            static fn (string|int $existingPath, int $lastModified) => new ItemToUpdate(
+            static fn (int|string $existingPath, int $lastModified) => new ItemToUpdate(
                 (string) $existingPath,
                 null,
                 null,
-                $lastModified
+                $lastModified,
             ),
             array_keys($lastModifiedUpdates),
             array_values($lastModifiedUpdates),
@@ -183,12 +187,12 @@ class ChangeSet
     public function getItemsToDelete(): array
     {
         return array_map(
-            static fn (string|int $path, int $type): ItemToDelete => new ItemToDelete(
+            static fn (int|string $path, int $type): ItemToDelete => new ItemToDelete(
                 (string) $path,
-                self::TYPE_FILE === $type
+                self::TYPE_FILE === $type,
             ),
             array_keys($this->itemsToDelete),
-            array_values($this->itemsToDelete)
+            array_values($this->itemsToDelete),
         );
     }
 }

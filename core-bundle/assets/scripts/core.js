@@ -15,7 +15,9 @@ window.AjaxRequest =
 	 * @returns {boolean}
 	 */
 	toggleNavigation: function(el, id, url) {
-		window.console && console.warn('AjaxRequest.toggleNavigation() is deprecated. Please use the stimulus controller instead.');
+		if (window.console) {
+			console.warn('AjaxRequest.toggleNavigation() is deprecated. Please use the stimulus controller instead.');
+		}
 
 		var item = $(id),
 			parent = $(el).getParent('li');
@@ -49,6 +51,10 @@ window.AjaxRequest =
 	 * @returns {boolean}
 	 */
 	toggleStructure: function(el, id, level, mode) {
+		if (window.console) {
+			console.warn('AjaxRequest.toggleStructure() is deprecated. Please use the stimulus controller instead.');
+		}
+
 		el.blur();
 
 		var item = $(id);
@@ -144,6 +150,10 @@ window.AjaxRequest =
 	 * @returns {boolean}
 	 */
 	toggleFileManager: function(el, id, folder, level) {
+		if (window.console) {
+			console.warn('AjaxRequest.toggleFileManager() is deprecated. Please use the stimulus controller instead.');
+		}
+
 		el.blur();
 
 		var item = $(id);
@@ -665,84 +675,12 @@ window.Backend =
 	},
 
 	/**
-	 * Store the current scroll offset in sessionStorage
-	 */
-	getScrollOffset: function() {
-		window.sessionStorage.setItem('contao_backend_offset', window.getScroll().y);
-	},
-
-	/**
-	 * Scroll to the current offset if
-	 * it was defined and add the "down" CSS class to the header.
-	 */
-	initScrollOffset: function() {
-		// Add events to the submit buttons, so they can reset the offset
-		// (except for "save", which always stays on the same page)
-		$$('.tl_submit_container button[name][name!="save"]').each(function(button) {
-			button.addEvent('click', function() {
-				window.sessionStorage.removeItem('contao_backend_offset');
-			});
-		});
-
-		var offset = window.sessionStorage.getItem('contao_backend_offset');
-		window.sessionStorage.removeItem('contao_backend_offset');
-
-		if (!offset) return;
-
-		var header = window.document.getElementById('header'),
-			additionalOffset = 0;
-
-		if (header) {
-			header.addClass('down');
-		}
-
-		$$('[data-add-to-scroll-offset]').each(function(el) {
-			var offset = el.get('data-add-to-scroll-offset'),
-				scrollSize = el.getScrollSize().y,
-				negative = false,
-				percent = false;
-
-			// No specific offset desired, take scrollSize
-			if (!offset) {
-				additionalOffset += scrollSize;
-				return;
-			}
-
-			// Negative
-			if (offset.charAt(0) === '-') {
-				negative = true;
-				offset = offset.substring(1);
-			}
-
-			// Percent
-			if (offset.charAt(offset.length - 1) === '%') {
-				percent = true;
-				offset = offset.substring(0, offset.length - 1);
-			}
-
-			offset = parseInt(offset, 10);
-
-			if (percent) {
-				offset = Math.round(scrollSize * offset / 100);
-			}
-
-			if (negative) {
-				offset = offset * -1;
-			}
-
-			additionalOffset += offset;
-		});
-
-		this.vScrollTo(parseInt(offset, 10) + additionalOffset);
-	},
-
-	/**
 	 * Automatically submit a form
 	 *
 	 * @param {object} el The DOM element
 	 */
 	autoSubmit: function(el) {
-		Backend.getScrollOffset();
+		window.dispatchEvent(new Event('store-scroll-offset'));
 
 		var hidden = new Element('input', {
 			'type': 'hidden',
@@ -808,7 +746,7 @@ window.Backend =
 			});
 		}
 
-		Backend.getScrollOffset();
+		window.dispatchEvent(new Event('store-scroll-offset'));
 	},
 
 	/**
@@ -826,7 +764,7 @@ window.Backend =
 			}
 		});
 
-		Backend.getScrollOffset();
+		window.dispatchEvent(new Event('store-scroll-offset'));
 	},
 
 	/**
@@ -1080,7 +1018,7 @@ window.Backend =
 						return;
 					}
 
-					Backend.getScrollOffset();
+					window.dispatchEvent(new Event('store-scroll-offset'));
 					document.location.href = options.url + '&id=' + encodeURIComponent(id) + '&pid=' + encodeURIComponent(pid);
 				},
 				onLeave: function(element, droppable) {
@@ -1135,17 +1073,18 @@ window.Backend =
 					switch (command) {
 						case 'copy':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								clone = li.clone(true).inject(li, 'before');
 								if (input = li.getFirst('input')) {
 									clone.getFirst('input').value = input.value;
 								}
 								addEventsTo(clone);
+								input.select();
 							});
 							break;
 						case 'delete':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								if (ul.getChildren().length > 1) {
 									li.destroy();
 								}
@@ -1194,12 +1133,12 @@ window.Backend =
 			tbody = table.getElement('tbody'),
 			makeSortable = function(tbody) {
 				var rows = tbody.getChildren(),
-					textarea, childs, i, j;
+					textarea, children, i, j;
 
 				for (i=0; i<rows.length; i++) {
-					childs = rows[i].getChildren();
-					for (j=0; j<childs.length; j++) {
-						if (textarea = childs[j].getFirst('textarea')) {
+					children = rows[i].getChildren();
+					for (j=0; j<children.length; j++) {
+						if (textarea = children[j].getFirst('textarea')) {
 							textarea.name = textarea.name.replace(/\[[0-9]+][[0-9]+]/g, '[' + i + '][' + j + ']')
 						}
 					}
@@ -1216,7 +1155,7 @@ window.Backend =
 			},
 			addEventsTo = function(tr) {
 				var head = thead.getFirst('tr'),
-					command, textarea, current, next, ntr, childs, index, i;
+					command, textarea, current, next, ntr, children, index, i;
 
 				tr.getElements('button').each(function(bt) {
 					if (bt.hasEvent('click')) return;
@@ -1225,23 +1164,24 @@ window.Backend =
 					switch (command) {
 						case 'rcopy':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								ntr = new Element('tr');
-								childs = tr.getChildren();
-								for (i=0; i<childs.length; i++) {
-									next = childs[i].clone(true).inject(ntr, 'bottom');
-									if (textarea = childs[i].getFirst('textarea')) {
+								children = tr.getChildren();
+								for (i=0; i<children.length; i++) {
+									next = children[i].clone(true).inject(ntr, 'bottom');
+									if (textarea = children[i].getFirst('textarea')) {
 										next.getFirst('textarea').value = textarea.value;
 									}
 								}
 								ntr.inject(tr, 'after');
 								addEventsTo(ntr);
 								makeSortable(tbody);
+								ntr.getFirst('td').getFirst('textarea').select();
 							});
 							break;
 						case 'rdelete':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								if (tbody.getChildren().length > 1) {
 									tr.destroy();
 								}
@@ -1250,11 +1190,11 @@ window.Backend =
 							break;
 						case 'ccopy':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								index = getIndex(bt);
-								childs = tbody.getChildren();
-								for (i=0; i<childs.length; i++) {
-									current = childs[i].getChildren()[index];
+								children = tbody.getChildren();
+								for (i=0; i<children.length; i++) {
+									current = children[i].getChildren()[index];
 									next = current.clone(true).inject(current, 'after');
 									if (textarea = current.getFirst('textarea')) {
 										next.getFirst('textarea').value = textarea.value;
@@ -1265,22 +1205,23 @@ window.Backend =
 								next = headFirst.clone(true).inject(head.getLast('td'), 'before');
 								addEventsTo(next);
 								makeSortable(tbody);
+								children[0].getChildren()[index + 1].getFirst('textarea').select();
 							});
 							break;
 						case 'cmovel':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								index = getIndex(bt);
-								childs = tbody.getChildren();
+								children = tbody.getChildren();
 								if (index > 0) {
-									for (i=0; i<childs.length; i++) {
-										current = childs[i].getChildren()[index];
+									for (i=0; i<children.length; i++) {
+										current = children[i].getChildren()[index];
 										current.inject(current.getPrevious(), 'before');
 									}
 								} else {
-									for (i=0; i<childs.length; i++) {
-										current = childs[i].getChildren()[index];
-										current.inject(childs[i].getLast(), 'before');
+									for (i=0; i<children.length; i++) {
+										current = children[i].getChildren()[index];
+										current.inject(children[i].getLast(), 'before');
 									}
 								}
 								makeSortable(tbody);
@@ -1288,18 +1229,18 @@ window.Backend =
 							break;
 						case 'cmover':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								index = getIndex(bt);
-								childs = tbody.getChildren();
+								children = tbody.getChildren();
 								if (index < (tr.getChildren().length - 2)) {
-									for (i=0; i<childs.length; i++) {
-										current = childs[i].getChildren()[index];
+									for (i=0; i<children.length; i++) {
+										current = children[i].getChildren()[index];
 										current.inject(current.getNext(), 'after');
 									}
 								} else {
-									for (i=0; i<childs.length; i++) {
-										current = childs[i].getChildren()[index];
-										current.inject(childs[i].getFirst(), 'before');
+									for (i=0; i<children.length; i++) {
+										current = children[i].getChildren()[index];
+										current.inject(children[i].getFirst(), 'before');
 									}
 								}
 								makeSortable(tbody);
@@ -1307,12 +1248,12 @@ window.Backend =
 							break;
 						case 'cdelete':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								index = getIndex(bt);
-								childs = tbody.getChildren();
+								children = tbody.getChildren();
 								if (tr.getChildren().length > 2) {
-									for (i=0; i<childs.length; i++) {
-										childs[i].getChildren()[index].destroy();
+									for (i=0; i<children.length; i++) {
+										children[i].getChildren()[index].destroy();
 									}
 									head.getFirst('td').destroy();
 								}
@@ -1420,12 +1361,12 @@ window.Backend =
 			tbody = table.getElement('tbody'),
 			makeSortable = function(tbody) {
 				var rows = tbody.getChildren(),
-					childs, i, j, input;
+					children, i, j, input;
 
 				for (i=0; i<rows.length; i++) {
-					childs = rows[i].getChildren();
-					for (j=0; j<childs.length; j++) {
-						if (input = childs[j].getFirst('input')) {
+					children = rows[i].getChildren();
+					for (j=0; j<children.length; j++) {
+						if (input = children[j].getFirst('input')) {
 							input.name = input.name.replace(/\[[0-9]+]/g, '[' + i + ']');
 							if (input.type == 'checkbox') {
 								input.id = input.name.replace(/\[[0-9]+]/g, '').replace(/\[/g, '_').replace(/]/g, '') + '_' + i;
@@ -1445,7 +1386,7 @@ window.Backend =
 				});
 			},
 			addEventsTo = function(tr) {
-				var command, input, next, ntr, childs, i;
+				var command, input, next, ntr, children, i;
 				tr.getElements('button').each(function(bt) {
 					if (bt.hasEvent('click')) return;
 					command = bt.getProperty('data-command');
@@ -1453,12 +1394,12 @@ window.Backend =
 					switch (command) {
 						case 'copy':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								ntr = new Element('tr');
-								childs = tr.getChildren();
-								for (i=0; i<childs.length; i++) {
-									next = childs[i].clone(true).inject(ntr, 'bottom');
-									if (input = childs[i].getFirst('input')) {
+								children = tr.getChildren();
+								for (i=0; i<children.length; i++) {
+									next = children[i].clone(true).inject(ntr, 'bottom');
+									if (input = children[i].getFirst('input')) {
 										next.getFirst('input').value = input.value;
 										if (input.type == 'checkbox') {
 											next.getFirst('input').checked = input.checked ? 'checked' : '';
@@ -1468,11 +1409,12 @@ window.Backend =
 								ntr.inject(tr, 'after');
 								addEventsTo(ntr);
 								makeSortable(tbody);
+								ntr.getFirst('td').getFirst('input').select();
 							});
 							break;
 						case 'delete':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								if (tbody.getChildren().length > 1) {
 									tr.destroy();
 								}
@@ -1523,12 +1465,12 @@ window.Backend =
 			tbody = table.getElement('tbody'),
 			makeSortable = function(tbody) {
 				var rows = tbody.getChildren(),
-					childs, i, j, input;
+					children, i, j, input;
 
 				for (i=0; i<rows.length; i++) {
-					childs = rows[i].getChildren();
-					for (j=0; j<childs.length; j++) {
-						if (input = childs[j].getFirst('input')) {
+					children = rows[i].getChildren();
+					for (j=0; j<children.length; j++) {
+						if (input = children[j].getFirst('input')) {
 							input.name = input.name.replace(/\[[0-9]+]/g, '[' + i + ']')
 						}
 					}
@@ -1544,7 +1486,7 @@ window.Backend =
 				});
 			},
 			addEventsTo = function(tr) {
-				var command, input, next, ntr, childs, i;
+				var command, input, next, ntr, children, i;
 				tr.getElements('button').each(function(bt) {
 					if (bt.hasEvent('click')) return;
 					command = bt.getProperty('data-command');
@@ -1552,23 +1494,24 @@ window.Backend =
 					switch (command) {
 						case 'copy':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								ntr = new Element('tr');
-								childs = tr.getChildren();
-								for (i=0; i<childs.length; i++) {
-									next = childs[i].clone(true).inject(ntr, 'bottom');
-									if (input = childs[i].getFirst('input')) {
+								children = tr.getChildren();
+								for (i=0; i<children.length; i++) {
+									next = children[i].clone(true).inject(ntr, 'bottom');
+									if (input = children[i].getFirst('input')) {
 										next.getFirst().value = input.value;
 									}
 								}
 								ntr.inject(tr, 'after');
 								addEventsTo(ntr);
 								makeSortable(tbody);
+								ntr.getFirst('td').getFirst('input').select();
 							});
 							break;
 						case 'delete':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								if (tbody.getChildren().length > 1) {
 									tr.destroy();
 								}
@@ -1988,7 +1931,7 @@ window.Backend =
 			}
 
 			dzElement.addClass('dropzone-filetree-enabled');
-			Backend.getScrollOffset();
+			window.dispatchEvent(new Event('store-scroll-offset'));
 		});
 
 		dz.on('dragleave', function() {
@@ -2286,44 +2229,6 @@ window.Theme =
 	},
 
 	/**
-	 * Hide the menu on scroll
-	 */
-	hideMenuOnScroll: function() {
-		var header = $('header');
-		if (!header) return;
-
-		var wh = window.getSize().y,
-			dh = window.getScrollSize().y - wh,
-			anchor = 0;
-
-		if (!('ontouchmove' in window) || wh >= dh) {
-			header.removeClass('down');
-			return;
-		}
-
-		window
-			.addEvent('touchmove', function() {
-				var ws = window.getScroll().y;
-
-				if (Math.abs(anchor - ws) < 20) return;
-
-				if (ws > 0 && ws > anchor) {
-					header.addClass('down');
-				} else {
-					header.removeClass('down');
-				}
-
-				anchor = ws;
-			})
-			.addEvent('scroll', function() {
-				if (window.getScroll().y < 1) {
-					header.removeClass('down');
-				}
-			})
-		;
-	},
-
-	/**
 	 * Set up the split button toggle
 	 */
 	setupSplitButtonToggle: function() {
@@ -2394,7 +2299,6 @@ window.addEvent('domready', function() {
 	Theme.setupTextareaResizing();
 	Theme.setupMenuToggle();
 	Theme.setupProfileToggle();
-	Theme.hideMenuOnScroll();
 	Theme.setupSplitButtonToggle();
 });
 

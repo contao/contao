@@ -63,9 +63,8 @@ class Route404Provider extends AbstractPageRouteProvider
         }
 
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
-        $page = $pageAdapter->findByPk($ids[0]);
 
-        if (null === $page) {
+        if (!$page = $pageAdapter->findByPk($ids[0])) {
             throw new RouteNotFoundException(sprintf('Page ID "%s" not found', $ids[0]));
         }
 
@@ -170,7 +169,7 @@ class Route404Provider extends AbstractPageRouteProvider
             $requirements,
             ['utf8' => true],
             $page->domain,
-            $page->rootUseSSL ? 'https' : 'http'
+            $page->rootUseSSL ? 'https' : 'http',
         );
 
         if (!$page->urlPrefix) {
@@ -185,7 +184,7 @@ class Route404Provider extends AbstractPageRouteProvider
             $requirements,
             ['utf8' => true],
             $page->domain,
-            $page->rootUseSSL ? 'https' : 'http'
+            $page->rootUseSSL ? 'https' : 'http',
         );
     }
 
@@ -221,12 +220,12 @@ class Route404Provider extends AbstractPageRouteProvider
             $route->getOptions(),
             $route->getHost(),
             $route->getSchemes(),
-            $route->getMethods()
+            $route->getMethods(),
         );
 
         $path = $route->getPath();
 
-        if (null !== $request) {
+        if ($request) {
             $path = '/'.$route->getUrlPrefix().$request->getPathInfo();
         }
 
@@ -282,7 +281,7 @@ class Route404Provider extends AbstractPageRouteProvider
                 }
 
                 return $this->compareRoutes($a, $b, $languages);
-            }
+            },
         );
     }
 }

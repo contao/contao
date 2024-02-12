@@ -16,13 +16,13 @@ use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\StoreRefererListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\User;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class StoreRefererListenerTest extends TestCase
@@ -150,7 +150,7 @@ class StoreRefererListenerTest extends TestCase
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MAIN_REQUEST,
-            new Response('', 404)
+            new Response('', 404),
         );
 
         $listener = $this->getListener();
@@ -166,7 +166,7 @@ class StoreRefererListenerTest extends TestCase
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MAIN_REQUEST,
-            new Response('', 404)
+            new Response('', 404),
         );
 
         $listener = $this->getListener();
@@ -269,7 +269,7 @@ class StoreRefererListenerTest extends TestCase
     {
         $security = $this->createMock(Security::class);
         $security
-            ->expects($expectsSecurityCall || null !== $user ? $this->once() : $this->never())
+            ->expects($expectsSecurityCall || $user ? $this->once() : $this->never())
             ->method('getUser')
             ->willReturn($user)
         ;

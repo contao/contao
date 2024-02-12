@@ -23,11 +23,8 @@ class Countries
      */
     private readonly array $countries;
 
-    /**
-     * @param TranslatorInterface&TranslatorBagInterface $translator
-     */
     public function __construct(
-        private readonly TranslatorInterface $translator,
+        private readonly TranslatorInterface&TranslatorBagInterface $translator,
         private readonly RequestStack $requestStack,
         array $defaultCountries,
         array $configCountries,
@@ -41,7 +38,7 @@ class Countries
      */
     public function getCountries(string|null $displayLocale = null): array
     {
-        if (null === $displayLocale && null !== ($request = $this->requestStack->getCurrentRequest())) {
+        if (null === $displayLocale && ($request = $this->requestStack->getCurrentRequest())) {
             $displayLocale = $request->getLocale();
         }
 

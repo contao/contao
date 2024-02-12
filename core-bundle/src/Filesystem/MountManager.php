@@ -357,7 +357,7 @@ class MountManager
         [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
 
         foreach ($this->publicUriProviders as $provider) {
-            if (null !== ($uri = $provider->getUri($adapter, $adapterPath, $options))) {
+            if ($uri = $provider->getUri($adapter, $adapterPath, $options)) {
                 return $uri;
             }
         }
@@ -375,14 +375,14 @@ class MountManager
 
             // Find the adapter with the longest (= most specific) matching prefix
             do {
-                if (null !== ($adapter = $this->mounts[$prefix] ?? null)) {
+                if ($adapter = $this->mounts[$prefix] ?? null) {
                     return [$adapter, Path::makeRelative($path, $prefix), $prefix];
                 }
             } while ('.' !== ($prefix = \dirname($prefix)));
         }
 
         // Root adapter
-        if (null !== ($adapter = $this->mounts[''] ?? null)) {
+        if ($adapter = $this->mounts[''] ?? null) {
             return [$adapter, $path, ''];
         }
 
@@ -397,8 +397,8 @@ class MountManager
         [$adapter, $adapterPath, $prefix] = $this->getAdapterAndPath($path);
 
         try {
-            // If $deep is true we shallow-read directories recursively, because
-            // there could be another adapter mounted further down in the tree.
+            // If $deep is true we shallow-read directories recursively, because there could
+            // be another adapter mounted further down in the tree.
             foreach ($adapter->listContents($adapterPath, FilesystemReader::LIST_SHALLOW) as $flysystemItem) {
                 $item = FilesystemItem::fromStorageAttributes($flysystemItem, $prefix);
                 $itemPath = $item->getPath();

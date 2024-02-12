@@ -61,7 +61,7 @@ class TaggedMigrationsPassTest extends TestCase
                 'Test\MigrationPrioNegative2',
                 'Test\MigrationPrioNegative12',
             ],
-            array_keys($migrationServices)
+            array_keys($migrationServices),
         );
     }
 }

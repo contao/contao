@@ -30,7 +30,7 @@ class ToplinkControllerTest extends ContentElementTestCase
             ],
             null,
             false,
-            $responseContextData
+            $responseContextData,
         );
 
         $expectedOutput = <<<HTML
@@ -49,7 +49,7 @@ class ToplinkControllerTest extends ContentElementTestCase
 
         $this->assertMatchesRegularExpression(
             '/<script>[^<]+link\.href = location\.href[^<]+<\/script>/',
-            $additionalBodyCode['toplink_script']
+            $additionalBodyCode['toplink_script'],
         );
     }
 
@@ -76,7 +76,7 @@ class ToplinkControllerTest extends ContentElementTestCase
             ],
             null,
             true,
-            $responseContextData
+            $responseContextData,
         );
 
         $this->assertEmpty($responseContextData);

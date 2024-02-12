@@ -16,6 +16,7 @@ use Contao\CoreBundle\Routing\Candidates\LocaleCandidates;
 use Contao\CoreBundle\Routing\Candidates\PageCandidates;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Tests\TestCase;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Result;
@@ -356,7 +357,8 @@ class PageCandidatesTest extends TestCase
             ],
         ];
 
-        // Ensure that 0 does not trigger the "AbstractCandidates::getCandidates cannot handle empty path" exception
+        // Ensure that 0 does not trigger the "AbstractCandidates::getCandidates cannot
+        // handle empty path" exception
         yield [
             '/0',
             ['.html'],
@@ -382,7 +384,7 @@ class PageCandidatesTest extends TestCase
         $queryBuilder
             ->expects($this->once())
             ->method('setParameter')
-            ->with('types', ['foo', 'bar'], Connection::PARAM_STR_ARRAY)
+            ->with('types', ['foo', 'bar'], ArrayParameterType::STRING)
             ->willReturnSelf()
         ;
 
@@ -416,7 +418,7 @@ class PageCandidatesTest extends TestCase
         $queryBuilder
             ->expects($this->once())
             ->method('setParameter')
-            ->with('types', ['foo', 'bar'], Connection::PARAM_STR_ARRAY)
+            ->with('types', ['foo', 'bar'], ArrayParameterType::STRING)
             ->willReturnSelf()
         ;
 
@@ -450,7 +452,7 @@ class PageCandidatesTest extends TestCase
         $queryBuilder
             ->expects($this->once())
             ->method('setParameter')
-            ->with('types', ['foo', 'bar'], Connection::PARAM_STR_ARRAY)
+            ->with('types', ['foo', 'bar'], ArrayParameterType::STRING)
             ->willReturnSelf()
         ;
 
@@ -469,10 +471,7 @@ class PageCandidatesTest extends TestCase
         $this->assertSame(['bar/baz', 'bar', 15], $candidates->getCandidates($request));
     }
 
-    /**
-     * @return Request&MockObject
-     */
-    private function mockRequest(string $pathInfo): Request
+    private function mockRequest(string $pathInfo): Request&MockObject
     {
         $request = $this->createMock(Request::class);
         $request
@@ -489,10 +488,7 @@ class PageCandidatesTest extends TestCase
         return $request;
     }
 
-    /**
-     * @return PageRegistry&MockObject
-     */
-    private function mockPageRegistry(array|null $urlPrefixes, array|null $urlSuffixes): PageRegistry
+    private function mockPageRegistry(array|null $urlPrefixes, array|null $urlSuffixes): PageRegistry&MockObject
     {
         $pageRegistry = $this->createMock(PageRegistry::class);
         $pageRegistry
@@ -512,10 +508,8 @@ class PageCandidatesTest extends TestCase
 
     /**
      * @param QueryBuilder&MockObject $queryBuilder
-     *
-     * @return Connection&MockObject
      */
-    private function mockConnection(QueryBuilder|null $queryBuilder = null): Connection
+    private function mockConnection(QueryBuilder|null $queryBuilder = null): Connection&MockObject
     {
         $queryBuilder ??= $this->createMock(QueryBuilder::class);
 

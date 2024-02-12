@@ -83,19 +83,19 @@ class SystemTest extends TestCase
         (new Filesystem())->dumpFile(
             "$tmpDir/contao/languages/en/default.php",
             '<?php $GLOBALS["TL_LANG"]["MSC"]["test"] = "Test English";'
-            .'$GLOBALS["TL_LANG"]["MSC"]["order_test"] = "en";'
+            .'$GLOBALS["TL_LANG"]["MSC"]["order_test"] = "en";',
         );
 
         (new Filesystem())->dumpFile(
             "$tmpDir/contao/languages/de/default.php",
             '<?php $GLOBALS["TL_LANG"]["MSC"]["test"] = "Test deutsch";'
-            .'$GLOBALS["TL_LANG"]["MSC"]["order_test"] .= "|de";'
+            .'$GLOBALS["TL_LANG"]["MSC"]["order_test"] .= "|de";',
         );
 
         (new Filesystem())->dumpFile(
             "$tmpDir/contao/languages/fr/default.php",
             '<?php $GLOBALS["TL_LANG"]["MSC"]["test"] = "Test français";'
-            .'$GLOBALS["TL_LANG"]["MSC"]["order_test"] .= "|fr";'
+            .'$GLOBALS["TL_LANG"]["MSC"]["order_test"] .= "|fr";',
         );
 
         $container = $this->getContainerWithContaoConfiguration($tmpDir);
@@ -146,7 +146,7 @@ class SystemTest extends TestCase
         (new Filesystem())->dumpFile(
             "$tmpDir/contao/languages/de/default.php",
             '<?php $GLOBALS["TL_LANG"]["MSC"]["test"] = "changed";'
-            .'$GLOBALS["TL_LANG"]["MSC"]["order_test"] .= "changed";'
+            .'$GLOBALS["TL_LANG"]["MSC"]["order_test"] .= "changed";',
         );
 
         System::loadLanguageFile('does_not_exist', 'fr');
@@ -155,13 +155,13 @@ class SystemTest extends TestCase
         $this->assertSame(
             'Test deutsch',
             $GLOBALS['TL_LANG']['MSC']['test'],
-            'Should have been cached, not loaded from the PHP file.'
+            'Should have been cached, not loaded from the PHP file.',
         );
 
         $this->assertSame(
             'en|de',
             $GLOBALS['TL_LANG']['MSC']['order_test'],
-            'Should have been cached, not loaded from the PHP file.'
+            'Should have been cached, not loaded from the PHP file.',
         );
     }
 }

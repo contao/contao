@@ -43,8 +43,10 @@ class ModuleChangePassword extends Module
 			return $objTemplate->parse();
 		}
 
+		$security = $container->get('security.helper');
+
 		// Return if there is no logged-in user
-		if (!$container->get('contao.security.token_checker')->hasFrontendUser())
+		if (!$security->getUser() instanceof FrontendUser)
 		{
 			return '';
 		}

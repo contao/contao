@@ -44,7 +44,7 @@ class MetadataBag implements \ArrayAccess
     public function get(string ...$locales): Metadata|null
     {
         foreach ($locales as $locale) {
-            if (null !== ($metadata = $this->metadata[$locale] ?? null)) {
+            if ($metadata = $this->metadata[$locale] ?? null) {
                 return $metadata;
             }
         }

@@ -22,8 +22,7 @@ use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\System;
 use Contao\TemplateLoader;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -32,15 +31,18 @@ use Symfony\Contracts\Service\ResetInterface;
 /**
  * @internal Do not use this class in your code; use the "contao.framework" service instead
  */
-class ContaoFramework implements ContainerAwareInterface, ResetInterface
+class ContaoFramework implements ResetInterface
 {
-    use ContainerAwareTrait;
-
     private static bool $initialized = false;
+
     private static string $nonce = '';
 
+    private ContainerInterface|null $container = null;
+
     private Request|null $request = null;
+
     private array $adapterCache = [];
+
     private array $hookListeners = [];
 
     public function __construct(
@@ -84,13 +86,18 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         // Set before calling any methods to prevent recursion
         self::$initialized = true;
 
-        if (null === $this->container) {
+        if (!$this->container) {
             throw new \LogicException('The service container has not been set.');
         }
 
         $this->request = $this->requestStack->getCurrentRequest();
 
         $this->initializeFramework();
+    }
+
+    public function setContainer(ContainerInterface $container): void
+    {
+        $this->container = $container;
     }
 
     public function setHookListeners(array $hookListeners): void
@@ -190,7 +197,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
     {
         $language = 'en';
 
-        if (null !== $this->request) {
+        if ($this->request) {
             $language = LocaleUtil::formatAsLanguageTag($this->request->getLocale());
         }
 

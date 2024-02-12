@@ -53,13 +53,13 @@ class BackendRebuildCacheMessageListenerTest extends TestCase
         $listener = new BackendRebuildCacheMessageListener(
             $scopeMatcher,
             $cacheItemPool,
-            $this->createMock(TranslatorInterface::class)
+            $this->createMock(TranslatorInterface::class),
         );
 
         $event = new RequestEvent(
             $this->createMock(KernelInterface::class),
             $request,
-            HttpKernelInterface::MAIN_REQUEST
+            HttpKernelInterface::MAIN_REQUEST,
         );
 
         $listener($event);
@@ -116,13 +116,13 @@ class BackendRebuildCacheMessageListenerTest extends TestCase
         $listener = new BackendRebuildCacheMessageListener(
             $scopeMatcher,
             $cacheItemPool,
-            $translator
+            $translator,
         );
 
         $event = new RequestEvent(
             $this->createMock(KernelInterface::class),
             $request,
-            HttpKernelInterface::MAIN_REQUEST
+            HttpKernelInterface::MAIN_REQUEST,
         );
 
         $listener($event);

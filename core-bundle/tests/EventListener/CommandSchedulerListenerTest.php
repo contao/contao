@@ -119,10 +119,7 @@ class CommandSchedulerListenerTest extends TestCase
         $listener($this->getTerminateEvent('contao_backend'));
     }
 
-    /**
-     * @return Connection&MockObject
-     */
-    private function mockConnection(): Connection
+    private function mockConnection(): Connection&MockObject
     {
         $schemaManager = $this->createMock(MySQLSchemaManager::class);
         $schemaManager

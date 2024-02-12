@@ -44,6 +44,7 @@ use Twig\Source;
 class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarchyInterface, ResetInterface
 {
     private const CACHE_KEY_PATHS = 'contao.twig.loader_paths';
+
     private const CACHE_KEY_HIERARCHY = 'contao.twig.template_hierarchy';
 
     private string|false|null $currentThemeSlug = null;
@@ -94,6 +95,11 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
     {
         if (null === ContaoTwigUtil::parseContaoName("@$namespace")) {
             throw new LoaderError(sprintf('Tried to register an invalid Contao namespace "%s".', $namespace));
+        }
+
+        // Skip execution if the given path and namespace was already registered
+        if (\in_array(rtrim($path, '/\\'), $this->paths[$namespace] ?? [], true)) {
+            return;
         }
 
         try {
@@ -175,10 +181,9 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
     {
         $templateName = $this->getThemeTemplateName($name) ?? $name;
 
-        // We prefix the cache key to make sure templates from the default
-        // Symfony loader won't be reused. Otherwise, we cannot reliably
-        // differentiate when to apply our input encoding tolerant escaper
-        // filters (see #4623).
+        // We prefix the cache key to make sure templates from the default Symfony loader
+        // won't be reused. Otherwise, we cannot reliably differentiate when to apply our
+        // input encoding tolerant escaper filters (see #4623).
         return 'c'.parent::getCacheKey($templateName);
     }
 
@@ -195,11 +200,10 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         $templateName = $this->getThemeTemplateName($name) ?? $name;
         $source = parent::getSourceContext($templateName);
 
-        // The Contao PHP templates will still be rendered by the Contao
-        // framework via a PhpTemplateProxyNode. We're removing the source to
-        // not confuse Twig's lexer and parser and just keep the block names.
-        // At some point we may transpile the source to valid Twig instead and
-        // drop the proxy.
+        // The Contao PHP templates will still be rendered by the Contao framework via a
+        // PhpTemplateProxyNode. We're removing the source to not confuse Twig's lexer
+        // and parser and just keep the block names. At some point we may transpile the
+        // source to valid Twig instead and drop the proxy.
         if ('html5' !== Path::getExtension($source->getPath(), true)) {
             return $source;
         }
@@ -209,7 +213,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
             1 === preg_match(
                 '/\$this\s*->\s*extend\s*\(\s*[\'"]([a-z0-9_-]+)[\'"]\s*\)/i',
                 (string) file_get_contents($source->getPath()),
-                $match
+                $match,
             )
             && '@Contao/'.$match[1].'.html5' !== $name
         ) {
@@ -219,7 +223,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         preg_match_all(
             '/\$this\s*->\s*block\s*\(\s*[\'"]([a-z0-9_-]+)[\'"]\s*\)/i',
             (string) file_get_contents($source->getPath()),
-            $matches
+            $matches,
         );
 
         return new Source(implode("\n", $matches[1] ?? []), $source->getName(), $source->getPath());

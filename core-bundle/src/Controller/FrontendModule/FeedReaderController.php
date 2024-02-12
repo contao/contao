@@ -58,7 +58,7 @@ class FeedReaderController extends AbstractFrontendModuleController
                         }
 
                         return $readerResult->getFeed();
-                    }
+                    },
                 );
             } catch (\Exception $exception) {
                 $feed = null;
@@ -82,10 +82,10 @@ class FeedReaderController extends AbstractFrontendModuleController
                         'feed' => $feed,
                         'item' => $item,
                     ],
-                    \array_slice([...$feed], $model->skipFirst, $model->numberOfItems ?: null)
+                    \array_slice([...$feed], $model->skipFirst, $model->numberOfItems ?: null),
                 ),
-                $feeds
-            )
+                $feeds,
+            ),
         );
 
         usort($elements, static fn (array $a, array $b): int => $a['item']->getLastModified() <=> $b['item']->getLastModified());

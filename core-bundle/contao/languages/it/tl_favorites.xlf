@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_favorites.title.0">
         <source>Title</source>
-        <target>Nome del modulo</target>
+        <target>Titolo</target>
       </trans-unit>
       <trans-unit id="tl_favorites.title.1">
         <source>The menu item title.</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_favorites.delete">
         <source>Delete favorite ID %s</source>
-        <target>Delete favorite ID %s</target>
+        <target>Elimina preferito ID %s</target>
       </trans-unit>
     </body>
   </file>

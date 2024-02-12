@@ -28,7 +28,7 @@ class InvalidThemePathException extends \InvalidArgumentException
                 'The theme path "%s" contains one or more invalid characters: "%s"',
                 $path,
                 implode('", "', $this->invalidCharacters),
-            )
+            ),
         );
     }
 

@@ -16,6 +16,7 @@ use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Extension\DeprecationsNodeVisitor;
+use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Twig\Environment;
@@ -46,15 +47,16 @@ class DeprecationsNodeVisitorTest extends TestCase
     private function getEnvironment(string $templateContent): Environment
     {
         $environment = new Environment(
-            new ArrayLoader(['template.html.twig' => $templateContent])
+            new ArrayLoader(['template.html.twig' => $templateContent]),
         );
 
         $environment->addExtension(
             new ContaoExtension(
                 $environment,
                 $this->createMock(TemplateHierarchyInterface::class),
-                $this->createMock(ContaoCsrfTokenManager::class)
-            )
+                $this->createMock(ContaoCsrfTokenManager::class),
+                $this->createMock(ContaoVariable::class),
+            ),
         );
 
         return $environment;

@@ -4,20 +4,70 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "797153aba7d1111e0c5d748525f64d77",
+    "content-hash": "94f9921d24a41c45381dd416dc240a0f",
     "packages": [
         {
-            "name": "phpstan/phpstan",
-            "version": "1.10.40",
+            "name": "contao/rector",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "93c84b5bf7669920d823631e39904d69b9c7dc5d"
+                "url": "https://github.com/contao/rector.git",
+                "reference": "524af814db6f6b196085a601ccf383e00fa60e4b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/93c84b5bf7669920d823631e39904d69b9c7dc5d",
-                "reference": "93c84b5bf7669920d823631e39904d69b9c7dc5d",
+                "url": "https://api.github.com/repos/contao/rector/zipball/524af814db6f6b196085a601ccf383e00fa60e4b",
+                "reference": "524af814db6f6b196085a601ccf383e00fa60e4b",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1",
+                "rector/rector": "^0.19"
+            },
+            "require-dev": {
+                "contao/easy-coding-standard": "^6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Contao\\Rector\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Leo Feyer",
+                    "homepage": "https://github.com/leofeyer"
+                }
+            ],
+            "description": "Rector configurations for Contao",
+            "support": {
+                "issues": "https://github.com/contao/rector/issues",
+                "source": "https://github.com/contao/rector/tree/1.0.3"
+            },
+            "funding": [
+                {
+                    "url": "https://to.contao.org/donate",
+                    "type": "custom"
+                }
+            ],
+            "time": "2024-01-19T13:43:46+00:00"
+        },
+        {
+            "name": "phpstan/phpstan",
+            "version": "1.10.57",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpstan/phpstan.git",
+                "reference": "1627b1d03446904aaa77593f370c5201d2ecc34e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/1627b1d03446904aaa77593f370c5201d2ecc34e",
+                "reference": "1627b1d03446904aaa77593f370c5201d2ecc34e",
                 "shasum": ""
             },
             "require": {
@@ -66,25 +116,25 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-10-30T14:48:31+00:00"
+            "time": "2024-01-24T11:51:34+00:00"
         },
         {
             "name": "rector/rector",
-            "version": "0.18.6",
+            "version": "0.19.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "02041b220704b9cbe075f0310d0954b2fda5c40c"
+                "reference": "de3b3bb159abd704b144aa86fb244f7f1f4ac947"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/02041b220704b9cbe075f0310d0954b2fda5c40c",
-                "reference": "02041b220704b9cbe075f0310d0954b2fda5c40c",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/de3b3bb159abd704b144aa86fb244f7f1f4ac947",
+                "reference": "de3b3bb159abd704b144aa86fb244f7f1f4ac947",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.2|^8.0",
-                "phpstan/phpstan": "^1.10.35"
+                "phpstan/phpstan": "^1.10.56"
             },
             "conflict": {
                 "rector/rector-doctrine": "*",
@@ -114,7 +164,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/0.18.6"
+                "source": "https://github.com/rectorphp/rector/tree/0.19.8"
             },
             "funding": [
                 {
@@ -122,7 +172,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-10-24T15:00:59+00:00"
+            "time": "2024-02-05T10:59:13+00:00"
         }
     ],
     "packages-dev": [],

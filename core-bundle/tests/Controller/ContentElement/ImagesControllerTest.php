@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
 use Contao\CoreBundle\Controller\ContentElement\ImagesController;
 use Contao\StringUtil;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class ImagesControllerTest extends ContentElementTestCase
 {

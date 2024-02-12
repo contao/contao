@@ -573,7 +573,7 @@ class StringUtilTest extends TestCase
                     ],
                 ],
             ],
-            $dereferenced
+            $dereferenced,
         );
     }
 
@@ -581,8 +581,7 @@ class StringUtilTest extends TestCase
     {
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
         $schemaManager
-            // Backwards compatibility with doctrine/dbal < 3.5
-            ->method(method_exists($schemaManager, 'introspectSchema') ? 'introspectSchema' : 'createSchema')
+            ->method('introspectSchema')
             ->willReturn(new Schema())
         ;
 
@@ -618,12 +617,12 @@ class StringUtilTest extends TestCase
 
         $this->assertSame(
             'Foo <img src="files/test.jpg" /> Bar',
-            StringUtil::insertTagToSrc('Foo <img src="{{file::9e474bae-ce18-11ec-9465-cadae3e5cf5d}}" /> Bar')
+            StringUtil::insertTagToSrc('Foo <img src="{{file::9e474bae-ce18-11ec-9465-cadae3e5cf5d}}" /> Bar'),
         );
 
         $this->assertSame(
             'Foo <img src="{{file::##simple-token##|urlattr}}" /> Bar',
-            StringUtil::insertTagToSrc('Foo <img src="{{file::##simple-token##|urlattr}}" /> Bar')
+            StringUtil::insertTagToSrc('Foo <img src="{{file::##simple-token##|urlattr}}" /> Bar'),
         );
     }
 }

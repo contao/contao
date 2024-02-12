@@ -45,7 +45,7 @@ class LayoutOptionsListenerTest extends TestCase
                     3 => 'Layout 3',
                 ],
             ],
-            $listener()
+            $listener(),
         );
     }
 
@@ -80,7 +80,7 @@ class LayoutOptionsListenerTest extends TestCase
                 ],
                 [
                     ['id' => 2, 'name' => 'Layout 2', 'theme' => 'Theme A'],
-                ]
+                ],
             )
         ;
 

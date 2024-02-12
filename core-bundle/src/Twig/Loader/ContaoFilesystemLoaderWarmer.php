@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Loader;
 
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -22,6 +23,7 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 /**
  * @experimental
  */
+#[AsEventListener]
 class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
 {
     public function __construct(
@@ -32,6 +34,16 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
         private readonly string $environment,
         private Filesystem|null $filesystem = null,
     ) {
+    }
+
+    /**
+     * Auto refresh in dev mode.
+     */
+    public function __invoke(RequestEvent $event): void
+    {
+        if ('dev' === $this->environment && $event->isMainRequest()) {
+            $this->refresh();
+        }
     }
 
     public function warmUp(string|null $cacheDir = null, string|null $buildDir = null): array
@@ -80,16 +92,6 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
     }
 
     /**
-     * Auto refresh in dev mode.
-     */
-    public function onKernelRequest(RequestEvent $event): void
-    {
-        if ('dev' === $this->environment && $event->isMainRequest()) {
-            $this->refresh();
-        }
-    }
-
-    /**
      * Writes an "ide-twig.json" file with path mapping information that
      * enables IDE auto-completion for all our dynamic namespaces.
      */
@@ -114,14 +116,14 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
             $data['namespaces'][] = ['namespace' => $namespace, 'path' => $path];
         }
 
-        if (null === $this->filesystem) {
+        if (!$this->filesystem) {
             $this->filesystem = new Filesystem();
         }
 
         try {
             $this->filesystem->dumpFile(
                 Path::join($targetDir, 'ide-twig.json'),
-                json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES)
+                json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES),
             );
         } catch (IOException) {
             // ignore

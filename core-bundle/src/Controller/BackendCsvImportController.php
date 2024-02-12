@@ -30,8 +30,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class BackendCsvImportController
 {
     final public const SEPARATOR_COMMA = 'comma';
+
     final public const SEPARATOR_LINEBREAK = 'linebreak';
+
     final public const SEPARATOR_SEMICOLON = 'semicolon';
+
     final public const SEPARATOR_TABULATOR = 'tabulator';
 
     /**
@@ -54,7 +57,7 @@ class BackendCsvImportController
             'listitems',
             (int) $dc->id,
             $this->translator->trans('MSC.lw_import.0', [], 'contao_default'),
-            true
+            true,
         );
     }
 
@@ -69,7 +72,7 @@ class BackendCsvImportController
             $dc->table,
             'tableitems',
             (int) $dc->id,
-            $this->translator->trans('MSC.tw_import.0', [], 'contao_default')
+            $this->translator->trans('MSC.tw_import.0', [], 'contao_default'),
         );
     }
 
@@ -89,15 +92,13 @@ class BackendCsvImportController
             $dc->table,
             'options',
             (int) $dc->id,
-            $this->translator->trans('MSC.ow_import.0', [], 'contao_default')
+            $this->translator->trans('MSC.ow_import.0', [], 'contao_default'),
         );
     }
 
     private function importFromTemplate(callable $callback, string $table, string $field, int $id, string|null $submitLabel = null, bool $allowLinebreak = false): Response
     {
-        $request = $this->requestStack->getCurrentRequest();
-
-        if (null === $request) {
+        if (!$request = $this->requestStack->getCurrentRequest()) {
             throw new InternalServerErrorException('No request object given.');
         }
 

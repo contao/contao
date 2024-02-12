@@ -20,7 +20,9 @@ final class ResponseContext
     public const REQUEST_ATTRIBUTE_NAME = '_contao_response_context';
 
     private array $services = [];
+
     private array $current = [];
+
     private PartialResponseHeaderBag|null $headerBag = null;
 
     public function dispatchEvent(AbstractResponseContextEvent $event): void
@@ -112,7 +114,8 @@ final class ResponseContext
         $aliases = [];
         $ref = new \ReflectionClass($classname);
 
-        // Automatically add aliases for all interfaces and parents (last one added automatically wins by overriding here)
+        // Automatically add aliases for all interfaces and parents (last one added
+        // automatically wins by overriding here)
         foreach ($ref->getInterfaceNames() as $interfaceName) {
             $aliases[] = $interfaceName;
         }

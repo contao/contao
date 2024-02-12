@@ -24,9 +24,9 @@ use Contao\CoreBundle\Picker\PickerConfig;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\UriSigner;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * @internal
@@ -45,6 +45,7 @@ class BackendController extends AbstractController
     }
 
     #[Route('/login', name: 'contao_backend_login')]
+    #[Route('/login-link', name: 'contao_backend_login_link')]
     public function loginAction(Request $request): Response
     {
         $this->initializeContaoFramework();
@@ -53,7 +54,8 @@ class BackendController extends AbstractController
             if ($request->query->has('redirect')) {
                 $uriSigner = $this->container->get('uri_signer');
 
-                // We cannot use $request->getUri() here as we want to work with the original URI (no query string reordering)
+                // We cannot use $request->getUri() here as we want to work with the original URI
+                // (no query string reordering)
                 if ($uriSigner->check($request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo().(null !== ($qs = $request->server->get('QUERY_STRING')) ? '?'.$qs : ''))) {
                     return new RedirectResponse($request->query->get('redirect'));
                 }

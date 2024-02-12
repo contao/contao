@@ -68,7 +68,7 @@ class ConfigureFilesystemPassTest extends TestCase
                         $this->assertSame($container, $config->getContainer());
 
                         return true;
-                    }
+                    },
                 ))
             ;
 
@@ -109,13 +109,13 @@ class ConfigureFilesystemPassTest extends TestCase
             new ParameterBag([
                 'kernel.project_dir' => $tempDir,
                 'contao.upload_path' => 'files',
-            ])
+            ]),
         );
 
         $container
             ->setDefinition(
                 $mountManagerId = 'contao.filesystem.mount_manager',
-                $mountManagerDefinition = new Definition(MountManager::class)
+                $mountManagerDefinition = new Definition(MountManager::class),
             )
             ->setPublic(true)
         ;
@@ -179,13 +179,13 @@ class ConfigureFilesystemPassTest extends TestCase
             new ParameterBag([
                 'kernel.project_dir' => $releaseFolder,
                 'contao.upload_path' => 'files',
-            ])
+            ]),
         );
 
         $container
             ->setDefinition(
                 'contao.filesystem.mount_manager',
-                $mountManagerDefinition = new Definition(MountManager::class)
+                $mountManagerDefinition = new Definition(MountManager::class),
             )
             ->setPublic(true)
         ;

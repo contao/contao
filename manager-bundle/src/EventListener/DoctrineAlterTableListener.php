@@ -12,12 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\EventListener;
 
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 use Doctrine\DBAL\Event\SchemaAlterTableRenameColumnEventArgs;
 use Doctrine\DBAL\Schema\TableDiff;
 
 /**
  * @internal
  */
+#[AsDoctrineListener('onSchemaAlterTableRenameColumn')]
 class DoctrineAlterTableListener
 {
     /**

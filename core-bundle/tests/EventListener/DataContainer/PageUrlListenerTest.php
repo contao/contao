@@ -71,7 +71,7 @@ class PageUrlListenerTest extends TestCase
             $this->mockConnection(),
             $this->mockPageRegistry(),
             $this->mockRouter(),
-            new UrlMatcher()
+            new UrlMatcher(),
         );
 
         $this->assertSame($expectedAlias, $listener->generateAlias('', $dc));
@@ -181,8 +181,8 @@ class PageUrlListenerTest extends TestCase
                         $this->assertSame($expectExists, $callback($generated));
 
                         return true;
-                    }
-                )
+                    },
+                ),
             )
             ->willReturn($generated)
         ;
@@ -202,7 +202,7 @@ class PageUrlListenerTest extends TestCase
             $this->mockConnection(),
             $pageRegistry,
             $this->mockRouter($throwParametersException ? false : $currentRoute),
-            new UrlMatcher()
+            new UrlMatcher(),
         );
 
         $listener->generateAlias('', $dc);
@@ -272,7 +272,7 @@ class PageUrlListenerTest extends TestCase
             $this->mockConnection(),
             $pageRegistry,
             $this->mockRouter($throwParametersException ? false : $currentRoute),
-            new UrlMatcher()
+            new UrlMatcher(),
         );
 
         $listener->generateAlias($value, $dc);
@@ -322,7 +322,7 @@ class PageUrlListenerTest extends TestCase
             $this->createMock(Connection::class),
             $this->mockPageRegistry([false]),
             $this->mockRouter(),
-            new UrlMatcher()
+            new UrlMatcher(),
         );
 
         $this->assertSame($value, $listener->generateAlias($value, $dc));
@@ -386,7 +386,7 @@ class PageUrlListenerTest extends TestCase
             $this->createMock(Connection::class),
             $pageRegistry,
             $this->mockRouter($currentRoute),
-            new UrlMatcher()
+            new UrlMatcher(),
         );
 
         $this->assertSame($value, $listener->generateAlias($value, $dc));
@@ -999,7 +999,7 @@ class PageUrlListenerTest extends TestCase
             $this->createMock(Connection::class),
             $this->mockPageRegistry(),
             $this->mockRouter(),
-            new UrlMatcher()
+            new UrlMatcher(),
         );
 
         $this->expectException(\RuntimeException::class);
@@ -1062,7 +1062,7 @@ class PageUrlListenerTest extends TestCase
             $this->mockConnection(true),
             $pageRegistry,
             $this->mockRouter($route),
-            new UrlMatcher()
+            new UrlMatcher(),
         );
 
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 1]);
@@ -1084,7 +1084,7 @@ class PageUrlListenerTest extends TestCase
             ->method('fetchOne')
             ->with(
                 "SELECT COUNT(*) FROM tl_page WHERE urlPrefix=:urlPrefix AND dns=:dns AND id!=:rootId AND type='root'",
-                ['urlPrefix' => 'en', 'dns' => 'www.example.com', 'rootId' => 1]
+                ['urlPrefix' => 'en', 'dns' => 'www.example.com', 'rootId' => 1],
             )
             ->willReturn(1)
         ;
@@ -1096,7 +1096,7 @@ class PageUrlListenerTest extends TestCase
             $connection,
             $this->mockPageRegistry(),
             $this->mockRouter(),
-            new UrlMatcher()
+            new UrlMatcher(),
         );
 
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 1]);
@@ -1205,7 +1205,7 @@ class PageUrlListenerTest extends TestCase
             $this->mockConnection(true),
             new PageRegistry($this->createMock(Connection::class)),
             $this->mockRouter(3),
-            new UrlMatcher()
+            new UrlMatcher(),
         );
 
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 1]);
@@ -1305,7 +1305,7 @@ class PageUrlListenerTest extends TestCase
             $this->mockConnection(true),
             new PageRegistry($this->createMock(Connection::class)),
             $this->mockRouter(2),
-            new UrlMatcher()
+            new UrlMatcher(),
         );
 
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 1]);
@@ -1334,7 +1334,7 @@ class PageUrlListenerTest extends TestCase
             $this->mockConnectionWithStatement(),
             $this->mockPageRegistry(),
             $this->mockRouter(),
-            new UrlMatcher()
+            new UrlMatcher(),
         );
 
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 1]);
@@ -1366,7 +1366,7 @@ class PageUrlListenerTest extends TestCase
             $this->mockConnectionWithStatement(),
             $this->mockPageRegistry(),
             $this->mockRouter(),
-            new UrlMatcher()
+            new UrlMatcher(),
         );
 
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 1]);
@@ -1400,7 +1400,7 @@ class PageUrlListenerTest extends TestCase
             $this->mockConnectionWithStatement(),
             $this->mockPageRegistry(),
             $this->mockRouter(),
-            new UrlMatcher()
+            new UrlMatcher(),
         );
 
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 1]);
@@ -1467,7 +1467,7 @@ class PageUrlListenerTest extends TestCase
             $this->mockConnection(),
             new PageRegistry($this->createMock(Connection::class)),
             $this->mockRouter(1),
-            new UrlMatcher()
+            new UrlMatcher(),
         );
 
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 1]);
@@ -1567,7 +1567,7 @@ class PageUrlListenerTest extends TestCase
             $this->mockConnection(),
             new PageRegistry($this->createMock(Connection::class)),
             $this->mockRouter(3),
-            new UrlMatcher()
+            new UrlMatcher(),
         );
 
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 1]);
@@ -1596,7 +1596,7 @@ class PageUrlListenerTest extends TestCase
             $this->createMock(Connection::class),
             $this->mockPageRegistry(),
             $this->mockRouter(),
-            new UrlMatcher()
+            new UrlMatcher(),
         );
 
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 1]);
@@ -1628,7 +1628,7 @@ class PageUrlListenerTest extends TestCase
             $this->createMock(Connection::class),
             $this->mockPageRegistry(),
             $this->mockRouter(),
-            new UrlMatcher()
+            new UrlMatcher(),
         );
 
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 1]);
@@ -1662,7 +1662,7 @@ class PageUrlListenerTest extends TestCase
             $this->createMock(Connection::class),
             $this->mockPageRegistry(),
             $this->mockRouter(),
-            new UrlMatcher()
+            new UrlMatcher(),
         );
 
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 1]);
@@ -1698,10 +1698,7 @@ class PageUrlListenerTest extends TestCase
         return $return;
     }
 
-    /**
-     * @return Connection&MockObject
-     */
-    private function mockConnection(bool $prefixCheck = false): Connection
+    private function mockConnection(bool $prefixCheck = false): Connection&MockObject
     {
         $connection = $this->createMock(Connection::class);
 
@@ -1720,7 +1717,7 @@ class PageUrlListenerTest extends TestCase
     /**
      * @return Adapter<Input>&MockObject
      */
-    private function mockInputAdapter(array $inputData): Adapter
+    private function mockInputAdapter(array $inputData): Adapter&MockObject
     {
         $inputAdapter = $this->mockAdapter(['post']);
         $inputAdapter
@@ -1731,10 +1728,7 @@ class PageUrlListenerTest extends TestCase
         return $inputAdapter;
     }
 
-    /**
-     * @return TranslatorInterface&MockObject
-     */
-    private function mockTranslator(string|null $messageKey = null, array $arguments = []): TranslatorInterface
+    private function mockTranslator(string|null $messageKey = null, array $arguments = []): TranslatorInterface&MockObject
     {
         $translator = $this->createMock(TranslatorInterface::class);
 
@@ -1760,10 +1754,7 @@ class PageUrlListenerTest extends TestCase
         return $translator;
     }
 
-    /**
-     * @return Connection&MockObject
-     */
-    private function mockConnectionWithStatement(): Connection
+    private function mockConnectionWithStatement(): Connection&MockObject
     {
         $connection = $this->createMock(Connection::class);
         $connection
@@ -1774,10 +1765,7 @@ class PageUrlListenerTest extends TestCase
         return $connection;
     }
 
-    /**
-     * @return PageRegistry&MockObject
-     */
-    private function mockPageRegistry(array $isRoutable = [true], array $routes = []): PageRegistry
+    private function mockPageRegistry(array $isRoutable = [true], array $routes = []): PageRegistry&MockObject
     {
         $pageRegistry = $this->createMock(PageRegistry::class);
         $pageRegistry
@@ -1793,10 +1781,7 @@ class PageUrlListenerTest extends TestCase
         return $pageRegistry;
     }
 
-    /**
-     * @return RouterInterface&MockObject
-     */
-    private function mockRouter(PageRoute|int|false|null $route = null): RouterInterface
+    private function mockRouter(PageRoute|int|false|null $route = null): RouterInterface&MockObject
     {
         $router = $this->createMock(RouterInterface::class);
 
@@ -1852,7 +1837,7 @@ class PageUrlListenerTest extends TestCase
                         }
 
                         return $path.$route->getUrlSuffix();
-                    }
+                    },
                 )
             ;
         }

@@ -35,7 +35,7 @@
       </trans-unit>
       <trans-unit id="ERR.maxval">
         <source>Field &quot;%s&quot; must not be greater than %s!</source>
-        <target>Le champ &quot;%s&quot; ne doit pas être supérieur à %s</target>
+        <target>Le champ &quot;%s&quot; ne doit pas être supérieur %s</target>
       </trans-unit>
       <trans-unit id="ERR.digit">
         <source>Please enter digits only!</source>
@@ -433,6 +433,12 @@
         <source>Generates an ordered or unordered list.</source>
         <target>Génère une liste numérotée ou une liste simple.</target>
       </trans-unit>
+      <trans-unit id="CTE.description_list.0">
+        <source>Description list</source>
+      </trans-unit>
+      <trans-unit id="CTE.description_list.1">
+        <source>Generates a description list with terms and details.</source>
+      </trans-unit>
       <trans-unit id="CTE.table.0">
         <source>Table</source>
         <target>Table</target>
@@ -441,29 +447,35 @@
         <source>Generates an optionally sortable table.</source>
         <target>Génère un tableau qui peut-être trié.</target>
       </trans-unit>
-      <trans-unit id="CTE.accordion">
+      <trans-unit id="CTE.accordion.0">
         <source>Accordion</source>
         <target>Accordéon</target>
       </trans-unit>
+      <trans-unit id="CTE.accordion.1">
+        <source>Generates an accordion.</source>
+      </trans-unit>
+      <trans-unit id="CTE.element_group.0">
+        <source>Element group</source>
+      </trans-unit>
+      <trans-unit id="CTE.element_group.1">
+        <source>Generates a group of nested elements.</source>
+      </trans-unit>
       <trans-unit id="CTE.accordionStart.0">
-        <source>Wrapper start</source>
-        <target>Début de l'enveloppe</target>
+        <source>Accordion wrapper start</source>
       </trans-unit>
       <trans-unit id="CTE.accordionStart.1">
         <source>Generates the opening part of the accordion wrapper.</source>
         <target>Génère l'ouverture du conteneur de l'accordéon.</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.0">
-        <source>Wrapper stop</source>
-        <target>Fin de l'enveloppe</target>
+        <source>Accordion wrapper stop</source>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.1">
         <source>Generates the closing part of the accordion wrapper.</source>
         <target>Génère la fermeture du conteneur de l'accordéon.</target>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.0">
-        <source>Single element</source>
-        <target>Élément seul</target>
+        <source>Accordion single element</source>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.1">
         <source>Generates a single accordion element.</source>
@@ -493,21 +505,26 @@
         <source>Generates an element to insert a custom template.</source>
         <target>Génère un élément pour insérer un modèle personnalisé.</target>
       </trans-unit>
+      <trans-unit id="CTE.swiper.0">
+        <source>Content slider</source>
+        <target>Galerie de contenu</target>
+      </trans-unit>
+      <trans-unit id="CTE.swiper.1">
+        <source>Generates a content slider element.</source>
+      </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
         <target>Galerie de contenu</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStart.0">
-        <source>Wrapper start</source>
-        <target>Début de l'enveloppe</target>
+        <source>Slider wrapper start</source>
       </trans-unit>
       <trans-unit id="CTE.sliderStart.1">
         <source>Generates the opening part of the slider wrapper.</source>
         <target>Génère l'ouverture du conteneur du slider.</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStop.0">
-        <source>Wrapper stop</source>
-        <target>Fin de l'enveloppe</target>
+        <source>Slider wrapper stop</source>
       </trans-unit>
       <trans-unit id="CTE.sliderStop.1">
         <source>Generates the closing part of the slider wrapper.</source>
@@ -640,6 +657,9 @@
       <trans-unit id="CTE.teaser.1">
         <source>Displays the teaser text of an article.</source>
         <target>Affiche l'accroche d'un article.</target>
+      </trans-unit>
+      <trans-unit id="CTE.legacy">
+        <source>Legacy elements</source>
       </trans-unit>
       <trans-unit id="FFL.explanation.0">
         <source>Explanation</source>
@@ -2325,6 +2345,9 @@
         <source>Quick link</source>
         <target>Lien rapide</target>
       </trans-unit>
+      <trans-unit id="MSC.lostPassword">
+        <source>Forgot your password?</source>
+      </trans-unit>
       <trans-unit id="MSC.username">
         <source>Username</source>
         <target>Identifiant</target>
@@ -2344,6 +2367,12 @@
       <trans-unit id="MSC.emptyField">
         <source>Please enter your username and password!</source>
         <target>Veuillez saisir votre identifiant et votre mot de passe !</target>
+      </trans-unit>
+      <trans-unit id="MSC.reauthenticate">
+        <source>Please enter your password to verify your identity.</source>
+      </trans-unit>
+      <trans-unit id="MSC.verify">
+        <source>Verify</source>
       </trans-unit>
       <trans-unit id="MSC.confirmation">
         <source>Confirmation</source>
@@ -2783,7 +2812,7 @@
       </trans-unit>
       <trans-unit id="MSC.shareURL">
         <source>Share URL</source>
-        <target>Partager l'URL</target>
+        <target>Share URL</target>
       </trans-unit>
       <trans-unit id="MSC.parent">
         <source>Parent</source>
@@ -2811,7 +2840,7 @@
       </trans-unit>
       <trans-unit id="MSC.showFromTo">
         <source>visible from %s to %s</source>
-        <target>visible depuis le %s jusqu'au %s</target>
+        <target>visible from %s to %s</target>
       </trans-unit>
       <trans-unit id="MSC.editImageSize">
         <source>Edit the image size</source>
@@ -3059,7 +3088,7 @@
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
         <source>%d URI(s) were skipped.</source>
-        <target>%d URI(s) ont été ignorées.</target>
+        <target>%d URI(s) ont été ignorés.</target>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>

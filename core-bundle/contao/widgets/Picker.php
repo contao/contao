@@ -52,7 +52,7 @@ class Picker extends Widget
 			return '';
 		}
 
-		if (strpos($varInput, ',') === false)
+		if (!str_contains($varInput, ','))
 		{
 			return $this->multiple ? array((int) $varInput) : (int) $varInput;
 		}
@@ -91,7 +91,7 @@ class Picker extends Widget
 
 			foreach ($showFields as $f)
 			{
-				if (strpos($f, ':') !== false)
+				if (str_contains($f, ':'))
 				{
 					list($f) = explode(':', $f, 2);
 				}
@@ -244,7 +244,7 @@ class Picker extends Widget
 
 	protected function getRelatedTable(): string
 	{
-		if (0 === strpos($this->context ?? '', 'dc.'))
+		if (str_starts_with($this->context ?? '', 'dc.'))
 		{
 			return substr($this->context, 3);
 		}

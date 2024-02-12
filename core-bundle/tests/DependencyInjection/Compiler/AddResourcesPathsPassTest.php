@@ -59,7 +59,7 @@ class AddResourcesPathsPassTest extends TestCase
                 $fixturesDir.'/system/modules/foobar',
                 $fixturesDir.'/contao',
             ],
-            $container->getParameter('contao.resources_paths')
+            $container->getParameter('contao.resources_paths'),
         );
     }
 }

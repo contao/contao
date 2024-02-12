@@ -46,7 +46,7 @@ final class ContextFactory
                 if ($value instanceof \Closure) {
                     $value = $this->getCallableWrapper($value);
                 }
-            }
+            },
         );
 
         return $data;

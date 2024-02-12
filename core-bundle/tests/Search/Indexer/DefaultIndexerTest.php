@@ -241,7 +241,7 @@ class DefaultIndexerTest extends TestCase
             ->withConsecutive(
                 ['TRUNCATE TABLE tl_search'],
                 ['TRUNCATE TABLE tl_search_index'],
-                ['TRUNCATE TABLE tl_search_term']
+                ['TRUNCATE TABLE tl_search_term'],
             )
         ;
 

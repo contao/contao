@@ -39,7 +39,7 @@ class MountManagerTest extends TestCase
                 '' => $rootAdapter,
             ],
             $manager->getMounts(),
-            'mounts root adapter by default'
+            'mounts root adapter by default',
         );
 
         $manager->mount($filesAdapter = new InMemoryFilesystemAdapter(), 'files');
@@ -52,7 +52,7 @@ class MountManagerTest extends TestCase
                 '' => $rootAdapter,
             ],
             $manager->getMounts(),
-            'lists in descending specificity'
+            'lists in descending specificity',
         );
 
         $manager->mount($newFilesAdapter = new InMemoryFilesystemAdapter(), 'files');
@@ -64,7 +64,7 @@ class MountManagerTest extends TestCase
                 '' => $rootAdapter,
             ],
             $manager->getMounts(),
-            'allows overwriting existing mount points'
+            'allows overwriting existing mount points',
         );
     }
 
@@ -397,7 +397,7 @@ class MountManagerTest extends TestCase
         // Normalize listing for comparison
         $listing = array_map(
             static fn (FilesystemItem $i): string => sprintf('%s (%s)', $i->getPath(), $i->isFile() ? 'file' : 'dir'),
-            [...$manager->listContents($path, $deep)]
+            [...$manager->listContents($path, $deep)],
         );
 
         sort($listing);
@@ -454,9 +454,8 @@ class MountManagerTest extends TestCase
             [
                 'file1 (file)',
                 'files (dir)',
-                // Note: "files/media" must not be reported as a directory
-                // here, because it is virtual and implicit (i.e. only the
-                // explicitly mounted "files/media/extra" is included).
+                // Note: "files/media" must not be reported as a directory here, because it is virtual
+                // and implicit (i.e. only the explicitly mounted "files/media/extra" is included).
                 'files/media/extra (dir)',
                 'files/media/extra/cat.avif (file)',
                 'files/media/extra/videos (dir)',
@@ -510,7 +509,7 @@ class MountManagerTest extends TestCase
                     }
 
                     $this->fail('Uncovered listing path.');
-                }
+                },
             )
         ;
 
@@ -598,7 +597,7 @@ class MountManagerTest extends TestCase
                     $this->assertNull($options);
 
                     return new Uri('https://example.com/files/bar/baz.jpg');
-                }
+                },
             )
         ;
 
@@ -617,12 +616,12 @@ class MountManagerTest extends TestCase
 
         $this->assertSame(
             'https://example.com/files/bar/baz.jpg',
-            (string) $mountManager->generatePublicUri('foo/bar/baz.jpg')
+            (string) $mountManager->generatePublicUri('foo/bar/baz.jpg'),
         );
 
         $this->assertSame(
             'https://some-service.org/user42/other.jpg',
-            (string) $mountManager->generatePublicUri('foo/other.jpg', $options)
+            (string) $mountManager->generatePublicUri('foo/other.jpg', $options),
         );
     }
 
@@ -664,7 +663,7 @@ class MountManagerTest extends TestCase
 
                         $this->assertSame($expectedArguments[$index], $argument);
                     }
-                }
+                },
             )
         ;
 

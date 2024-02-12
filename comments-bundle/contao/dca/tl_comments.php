@@ -72,22 +72,14 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 			'mode'                    => DataContainer::MODE_SORTABLE,
 			'fields'                  => array('date'),
 			'panelLayout'             => 'filter;sort,search,limit',
-			'defaultSearchField'      => 'comment'
+			'defaultSearchField'      => 'comment',
+			'limitHeight'             => 104
 		),
 		'label' => array
 		(
 			'fields'                  => array('name'),
 			'format'                  => '%s',
 			'label_callback'          => array('tl_comments', 'listComments')
-		),
-		'global_operations' => array
-		(
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
 		),
 		'operations' => array
 		(
@@ -101,7 +93,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 			(
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"',
+				'attributes'          => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false"',
 				'button_callback'     => array('tl_comments', 'deleteComment')
 			),
 			'toggle' => array
@@ -326,7 +318,7 @@ class tl_comments extends Backend
 	public function notifyOfReply(DataContainer $dc)
 	{
 		// Return if there is no active record (override all) or no reply or the notification has been sent already
-		if (!$dc->activeRecord || !$dc->activeRecord->addReply || $dc->activeRecord->notifiedReply)
+		if (!$dc->activeRecord?->addReply || $dc->activeRecord->notifiedReply)
 		{
 			return;
 		}
@@ -565,7 +557,7 @@ class tl_comments extends Backend
 
 		return '
 <div class="cte_type ' . $key . '"><a href="mailto:' . Idna::decodeEmail($arrRow['email']) . '" title="' . StringUtil::specialchars(Idna::decodeEmail($arrRow['email'])) . '">' . $arrRow['name'] . '</a>' . ($arrRow['website'] ? ' (<a href="' . $arrRow['website'] . '" title="' . StringUtil::specialchars($arrRow['website']) . '" target="_blank" rel="noreferrer noopener">' . $GLOBALS['TL_LANG']['MSC']['com_website'] . '</a>)' : '') . ' – ' . Date::parse(Config::get('datimFormat'), $arrRow['date']) . ' – IP ' . StringUtil::specialchars($arrRow['ip']) . '<br>' . $title . '</div>
-<div class="cte_preview limit_height' . (!Config::get('doNotCollapse') ? ' h60' : '') . '">
+<div class="cte_preview">
 ' . $arrRow['comment'] . '
 </div>' . "\n    ";
 	}
@@ -638,7 +630,7 @@ class tl_comments extends Backend
 
 		$titleDisabled = (is_array($GLOBALS['TL_DCA']['tl_comments']['list']['operations']['toggle']['label']) && isset($GLOBALS['TL_DCA']['tl_comments']['list']['operations']['toggle']['label'][2])) ? sprintf($GLOBALS['TL_DCA']['tl_comments']['list']['operations']['toggle']['label'][2], $row['id']) : $title;
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($row['published'] ? $title : $titleDisabled) . '" data-title="' . StringUtil::specialchars($title) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($row['published'] ? $title : $titleDisabled) . '" data-title="' . StringUtil::specialchars($title) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" data-action="contao--scroll-offset#store" onclick="return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
 	}
 
 	/**

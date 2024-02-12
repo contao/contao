@@ -21,8 +21,10 @@
                 <target>This is the fourth target</target>
             </trans-unit>
             <trans-unit id="MSC.fifth">
-                <source>This is the\nfifth source</source>
-                <target>This is the\nfifth target</target>
+                <source>This is the
+fifth source</source>
+                <target>This is the
+fifth target</target>
             </trans-unit>
             <trans-unit id="MSC.only_source">
                 <source>This is the source</source>

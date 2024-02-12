@@ -204,8 +204,8 @@ final class Figure
      */
     public function getLegacyTemplateData(array|string|null $margin = null, string|null $floating = null, bool $includeFullMetadata = true): array
     {
-        // Create a key-value list of the metadata and apply some renaming and
-        // formatting transformations to fit the legacy templates.
+        // Create a key-value list of the metadata and apply some renaming and formatting
+        // transformations to fit the legacy templates.
         $createLegacyMetadataMapping = static function (Metadata $metadata): array {
             if ($metadata->empty()) {
                 return [];
@@ -265,13 +265,14 @@ final class Figure
             $templateData['href'] = $href;
             $templateData['attributes'] = ''; // always define attributes key if href is set
 
-            // Use link "title" attribute for "linkTitle" as it is already output explicitly in image.html5 (see #3385)
+            // Use link "title" attribute for "linkTitle" as it is already output explicitly
+            // in image.html5 (see #3385)
             if (\array_key_exists('title', $linkAttributes)) {
                 $templateData['linkTitle'] = $linkAttributes['title'];
                 unset($linkAttributes['title']);
             } else {
                 // Map "imageTitle" to "linkTitle"
-                $templateData['linkTitle'] = ($templateData['imageTitle'] ?? null) ?? StringUtil::specialchars($metadata->getTitle());
+                $templateData['linkTitle'] = $templateData['imageTitle'] ?? StringUtil::specialchars($metadata->getTitle());
                 unset($templateData['imageTitle']);
             }
         } elseif ($metadata->has(Metadata::VALUE_TITLE)) {
@@ -282,7 +283,7 @@ final class Figure
             $htmlAttributes = array_map(
                 static fn (string $attribute, string $value) => sprintf('%s="%s"', $attribute, $value),
                 array_keys($linkAttributes),
-                $linkAttributes
+                $linkAttributes,
             );
 
             $templateData['attributes'] = ' '.implode(' ', $htmlAttributes);

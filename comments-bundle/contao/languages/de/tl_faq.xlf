@@ -1,0 +1,18 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_faq.php" source-language="en" target-language="de">
+    <body>
+      <trans-unit id="tl_faq.noComments.0">
+        <source>Disable comments</source>
+        <target>Kommentare deaktivieren</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.noComments.1">
+        <source>Do not allow comments for this particular FAQ.</source>
+        <target>Die Kommentarfunktion für diese Frage deaktivieren.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.expert_legend">
+        <source>Expert settings</source>
+        <target>Experteneinstellungen</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

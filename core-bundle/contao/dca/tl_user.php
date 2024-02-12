@@ -49,6 +49,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
+				'tstamp' => 'index',
 				'username' => 'unique',
 				'email' => 'index'
 			)
@@ -71,15 +72,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'showColumns'             => true,
 			'label_callback'          => array('tl_user', 'addIcon')
 		),
-		'global_operations' => array
-		(
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
-		),
 		'operations' => array
 		(
 			'edit' => array
@@ -98,7 +90,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			(
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"',
+				'attributes'          => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false"',
 				'button_callback'     => array('tl_user', 'deleteUser')
 			),
 			'toggle' => array
@@ -126,8 +118,8 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		'admin'                       => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{account_legend},disable,start,stop',
 		'default'                     => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{account_legend},disable,start,stop',
 		'group'                       => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{account_legend},disable,start,stop',
-		'extend'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{account_legend},disable,start,stop',
-		'custom'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{account_legend},disable,start,stop'
+		'extend'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes,frontendModules;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{account_legend},disable,start,stop',
+		'custom'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes,frontendModules;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{account_legend},disable,start,stop'
 	),
 
 	// Fields
@@ -295,6 +287,14 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'options'                 => array_keys($GLOBALS['TL_FFL']),
 			'reference'               => &$GLOBALS['TL_LANG']['FFL'],
 			'eval'                    => array('multiple'=>true, 'helpwizard'=>true),
+			'sql'                     => "blob NULL"
+		),
+		'frontendModules' => array
+		(
+			'filter'                  => true,
+			'inputType'               => 'checkbox',
+			'reference'               => &$GLOBALS['TL_LANG']['FMD'],
+			'eval'                    => array('multiple'=>true, 'helpwizard'=>true, 'collapseUncheckedGroups'=>true),
 			'sql'                     => "blob NULL"
 		),
 		'pagemounts' => array
@@ -776,10 +776,10 @@ class tl_user extends Backend
   <fieldset class="tl_checkbox_container">
     <legend>' . $GLOBALS['TL_LANG']['tl_user']['session'][0] . '</legend>
     <input type="checkbox" id="check_all_purge" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this, \'ctrl_purge\')"> <label for="check_all_purge" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label><br>
-    <input type="checkbox" name="purge[]" id="opt_purge_0" class="tl_checkbox" value="purge_session" onfocus="Backend.getScrollOffset()"> <label for="opt_purge_0">' . $GLOBALS['TL_LANG']['tl_user']['sessionLabel'] . '</label><br>
-    <input type="checkbox" name="purge[]" id="opt_purge_1" class="tl_checkbox" value="purge_images" onfocus="Backend.getScrollOffset()"> <label for="opt_purge_1">' . $GLOBALS['TL_LANG']['tl_user']['htmlLabel'] . '</label><br>
-    <input type="checkbox" name="purge[]" id="opt_purge_2" class="tl_checkbox" value="purge_previews" onfocus="Backend.getScrollOffset()"> <label for="opt_purge_2">' . $GLOBALS['TL_LANG']['tl_user']['previewLabel'] . '</label><br>
-    <input type="checkbox" name="purge[]" id="opt_purge_3" class="tl_checkbox" value="purge_pages" onfocus="Backend.getScrollOffset()"> <label for="opt_purge_3">' . $GLOBALS['TL_LANG']['tl_user']['tempLabel'] . '</label>
+    <input type="checkbox" name="purge[]" id="opt_purge_0" class="tl_checkbox" value="purge_session" data-action="focus->contao--scroll-offset#store"> <label for="opt_purge_0">' . $GLOBALS['TL_LANG']['tl_user']['sessionLabel'] . '</label><br>
+    <input type="checkbox" name="purge[]" id="opt_purge_1" class="tl_checkbox" value="purge_images" data-action="focus->contao--scroll-offset#store"> <label for="opt_purge_1">' . $GLOBALS['TL_LANG']['tl_user']['htmlLabel'] . '</label><br>
+    <input type="checkbox" name="purge[]" id="opt_purge_2" class="tl_checkbox" value="purge_previews" data-action="focus->contao--scroll-offset#store"> <label for="opt_purge_2">' . $GLOBALS['TL_LANG']['tl_user']['previewLabel'] . '</label><br>
+    <input type="checkbox" name="purge[]" id="opt_purge_3" class="tl_checkbox" value="purge_pages" data-action="focus->contao--scroll-offset#store"> <label for="opt_purge_3">' . $GLOBALS['TL_LANG']['tl_user']['tempLabel'] . '</label>
   </fieldset>' . $dc->help() . '
 </div>';
 	}
@@ -952,6 +952,6 @@ class tl_user extends Backend
 
 		$titleDisabled = (is_array($GLOBALS['TL_DCA']['tl_user']['list']['operations']['toggle']['label']) && isset($GLOBALS['TL_DCA']['tl_user']['list']['operations']['toggle']['label'][2])) ? sprintf($GLOBALS['TL_DCA']['tl_user']['list']['operations']['toggle']['label'][2], $row['id']) : $title;
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars(!$row['disable'] ? $title : $titleDisabled) . '" data-title="' . StringUtil::specialchars($title) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['disable'] ? 0 : 1) . '"') . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars(!$row['disable'] ? $title : $titleDisabled) . '" data-title="' . StringUtil::specialchars($title) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" data-action="contao--scroll-offset#store" onclick="return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['disable'] ? 0 : 1) . '"') . '</a> ';
 	}
 }

@@ -85,11 +85,12 @@ class ModuleSearch extends Module
 		$this->Template->matchAny = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['matchAny']);
 		$this->Template->advanced = $this->searchType == 'advanced';
 
+		$objTarget = $this->objModel->getRelated('jumpTo');
+
 		// Redirect page
-		if (($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
+		if ($objTarget instanceof PageModel)
 		{
-			/** @var PageModel $objTarget */
-			$this->Template->action = $objTarget->getFrontendUrl();
+			$this->Template->action = System::getContainer()->get('contao.routing.content_url_generator')->generate($objTarget);
 		}
 
 		$this->Template->pagination = '';

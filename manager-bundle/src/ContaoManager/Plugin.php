@@ -124,7 +124,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 }
 
                 $container->setParameter('container.dumper.inline_class_loader', true);
-            }
+            },
         );
     }
 
@@ -156,7 +156,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
                 return $carry;
             },
-            new RouteCollection()
+            new RouteCollection(),
         );
     }
 
@@ -199,6 +199,14 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     public function getExtensionConfig($extensionName, array $extensionConfigs, PluginContainerBuilder $container): array
     {
         switch ($extensionName) {
+            case 'contao':
+                if (!$container->hasParameter('contao.dns_mapping')) {
+                    $container->setParameter('env(DNS_MAPPING)', '[]');
+                    $container->setParameter('contao.dns_mapping', '%env(json:DNS_MAPPING)%');
+                }
+
+                return $extensionConfigs;
+
             case 'framework':
                 $extensionConfigs = $this->checkMailerTransport($extensionConfigs, $container);
                 $extensionConfigs = $this->addDefaultMailer($extensionConfigs);
@@ -308,8 +316,8 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             return $extensionConfigs;
         }
 
-        // Skip if a mapping with the name or alias "App" already exists or any
-        // mapping already targets "%kernel.project_dir%/src/Entity".
+        // Skip if a mapping with the name or alias "App" already exists or any mapping
+        // already targets "%kernel.project_dir%/src/Entity".
         foreach (array_replace(...$mappings) as $name => $values) {
             if (
                 'App' === $name
@@ -569,7 +577,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $userPassword,
             $container->hasParameter('database_host') ? $container->getParameter('database_host') : 'localhost',
             $container->hasParameter('database_port') ? (int) $container->getParameter('database_port') : 3306,
-            $dbName
+            $dbName,
         );
     }
 
@@ -606,7 +614,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $transport,
             $credentials,
             $container->hasParameter('mailer_host') ? $container->getParameter('mailer_host') : '127.0.0.1',
-            $portSuffix
+            $portSuffix,
         );
     }
 

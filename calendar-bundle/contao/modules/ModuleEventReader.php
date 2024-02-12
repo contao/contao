@@ -15,6 +15,7 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Util\UrlUtil;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Front end module "event reader".
@@ -81,9 +82,11 @@ class ModuleEventReader extends Events
 
 		$this->Template->event = '';
 
-		if ($this->overviewPage)
+		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
+
+		if ($this->overviewPage && ($overviewPage = PageModel::findById($this->overviewPage)))
 		{
-			$this->Template->referer = PageModel::findById($this->overviewPage)->getFrontendUrl();
+			$this->Template->referer = $urlGenerator->generate($overviewPage);
 			$this->Template->back = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['eventOverview'];
 		}
 
@@ -100,37 +103,15 @@ class ModuleEventReader extends Events
 		switch ($objEvent->source)
 		{
 			case 'internal':
-				if ($page = PageModel::findPublishedById($objEvent->jumpTo))
-				{
-					throw new RedirectResponseException($page->getAbsoluteUrl(), 301);
-				}
-
-				throw new InternalServerErrorException('Invalid "jumpTo" value or target page not public');
-
 			case 'article':
-				if (($article = ArticleModel::findByPk($objEvent->articleId)) && ($page = PageModel::findPublishedById($article->pid)))
-				{
-					throw new RedirectResponseException($page->getAbsoluteUrl('/articles/' . ($article->alias ?: $article->id)), 301);
-				}
-
-				throw new InternalServerErrorException('Invalid "articleId" value or target page not public');
-
 			case 'external':
-				if ($objEvent->url)
-				{
-					$url = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objEvent->url);
-					$url = UrlUtil::makeAbsolute($url, Environment::get('base'));
-
-					throw new RedirectResponseException($url, 301);
-				}
-
-				throw new InternalServerErrorException('Empty target URL');
+				throw new RedirectResponseException($urlGenerator->generate($objEvent, array(), UrlGeneratorInterface::ABSOLUTE_URL), 301);
 		}
 
 		// Overwrite the page metadata (see #2853, #4955 and #87)
 		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
-		if ($responseContext && $responseContext->has(HtmlHeadBag::class))
+		if ($responseContext?->has(HtmlHeadBag::class))
 		{
 			/** @var HtmlHeadBag $htmlHeadBag */
 			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
@@ -157,6 +138,28 @@ class ModuleEventReader extends Events
 			if ($objEvent->robots)
 			{
 				$htmlHeadBag->setMetaRobots($objEvent->robots);
+			}
+
+			if ($objEvent->canonicalLink)
+			{
+				$url = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objEvent->canonicalLink);
+
+				// Ensure absolute links
+				if (!preg_match('#^https?://#', $url))
+				{
+					if (!$request = System::getContainer()->get('request_stack')->getCurrentRequest())
+					{
+						throw new \RuntimeException('The request stack did not contain a request');
+					}
+
+					$url = UrlUtil::makeAbsolute($url, $request->getUri());
+				}
+
+				$htmlHeadBag->setCanonicalUri($url);
+			}
+			elseif (!$this->cal_keepCanonical)
+			{
+				$htmlHeadBag->setCanonicalUri($urlGenerator->generate($objEvent, array(), UrlGeneratorInterface::ABSOLUTE_URL));
 			}
 		}
 
@@ -331,7 +334,7 @@ class ModuleEventReader extends Events
 		}
 
 		// Add a function to retrieve upcoming dates (see #175)
-		$objTemplate->getUpcomingDates = function ($recurrences) use ($objEvent, $objPage, $intStartTime, $intEndTime, $arrRange, $span) {
+		$objTemplate->getUpcomingDates = function ($recurrences) use ($objEvent, $arrRange, $intStartTime, $intEndTime, $objPage, $span) {
 			if (!$objEvent->recurring || !isset($arrRange['unit'], $arrRange['value']))
 			{
 				return array();
@@ -368,7 +371,7 @@ class ModuleEventReader extends Events
 		};
 
 		// Add a function to retrieve past dates (see #175)
-		$objTemplate->getPastDates = function ($recurrences) use ($objEvent, $objPage, $intStartTime, $intEndTime, $arrRange, $span) {
+		$objTemplate->getPastDates = function ($recurrences) use ($objEvent, $arrRange, $intStartTime, $intEndTime, $objPage, $span) {
 			if (!$objEvent->recurring || !isset($arrRange['unit'], $arrRange['value']))
 			{
 				return array();
@@ -405,7 +408,7 @@ class ModuleEventReader extends Events
 		};
 
 		// schema.org information
-		$objTemplate->getSchemaOrgData = static function () use ($objTemplate, $objEvent): array {
+		$objTemplate->getSchemaOrgData = static function () use ($objEvent, $objTemplate): array {
 			$jsonLd = Events::getSchemaOrgData($objEvent);
 
 			if ($objTemplate->addImage && $objTemplate->figure)

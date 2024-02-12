@@ -79,11 +79,11 @@
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadata.0">
         <source>Preserve copyright metadata</source>
-        <target>Conserver les métadonnées des copyright</target>
+        <target>Préserver les métadonnées des copyright</target>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadata.1">
         <source>Preserve copyright-related metadata fields (EXIF, IPTC, XMP).</source>
-        <target>Conserver les champs de métadonnées liés aux droits d'auteur (EXIF, IPTC, XMP).</target>
+        <target>Préserver les champs de métadonnées liés aux droits d'auteur (EXIF, IPTC, XMP).</target>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataFields.0">
         <source>Metadata fields</source>

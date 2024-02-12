@@ -36,25 +36,21 @@ class PageRoutingListener
     {
         $pageModel = $this->framework->getAdapter(PageModel::class)->findByPk($dc->id);
 
-        if (null === $pageModel) {
+        if (!$pageModel) {
             return '';
         }
 
-        return $this->twig->render(
-            '@ContaoCore/Backend/be_route_path.html.twig',
-            [
-                'path' => $this->getPathWithParameters($this->pageRegistry->getRoute($pageModel)),
-            ]
-        );
+        return $this->twig->render('@ContaoCore/Backend/be_route_path.html.twig', [
+            'path' => $this->getPathWithParameters($this->pageRegistry->getRoute($pageModel)),
+        ]);
     }
 
     #[AsCallback(table: 'tl_page', target: 'fields.routeConflicts.input_field')]
     public function generateRouteConflicts(DataContainer $dc): string
     {
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
-        $currentPage = $pageAdapter->findWithDetails($dc->id);
 
-        if (null === $currentPage) {
+        if (!$currentPage = $pageAdapter->findWithDetails($dc->id)) {
             return '';
         }
 
@@ -92,12 +88,9 @@ class PageRoutingListener
             return '';
         }
 
-        return $this->twig->render(
-            '@ContaoCore/Backend/be_route_conflicts.html.twig',
-            [
-                'conflicts' => $conflicts,
-            ]
-        );
+        return $this->twig->render('@ContaoCore/Backend/be_route_conflicts.html.twig', [
+            'conflicts' => $conflicts,
+        ]);
     }
 
     /**

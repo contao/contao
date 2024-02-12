@@ -20,6 +20,7 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Extension\DeprecationsNodeVisitor;
+use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicUseTokenParser;
@@ -96,6 +97,10 @@ class ContaoExtensionTest extends TestCase
             'prefix_url' => [],
             'frontend_module' => ['html'],
             'content_element' => ['html'],
+            'csp_nonce' => [],
+            'csp_source' => [],
+            'csp_hash' => [],
+            'content_url' => [],
         ];
 
         $functions = $this->getContaoExtension()->getFunctions();
@@ -126,6 +131,7 @@ class ContaoExtensionTest extends TestCase
             'highlight_auto',
             'format_bytes',
             'sanitize_html',
+            'csp_inline_styles',
             'encode_email',
         ];
 
@@ -179,7 +185,8 @@ class ContaoExtensionTest extends TestCase
         $extension = new ContaoExtension(
             $environment,
             $this->createMock(TemplateHierarchyInterface::class),
-            $this->createMock(ContaoCsrfTokenManager::class)
+            $this->createMock(ContaoCsrfTokenManager::class),
+            $this->createMock(ContaoVariable::class),
         );
 
         $this->expectException(\RuntimeException::class);
@@ -195,7 +202,7 @@ class ContaoExtensionTest extends TestCase
 
         $traverser = new NodeTraverser(
             $this->createMock(Environment::class),
-            [$escaperNodeVisitor]
+            [$escaperNodeVisitor],
         );
 
         $node = new ModuleNode(
@@ -207,14 +214,14 @@ class ContaoExtensionTest extends TestCase
                     new ConstantExpression(null, 1),
                     new ConstantExpression(true, 1),
                 ]),
-                1
+                1,
             ),
             null,
             new Node(),
             new Node(),
             new Node(),
             null,
-            new Source('<code>', 'foo.html.twig')
+            new Source('<code>', 'foo.html.twig'),
         );
 
         $original = (string) $node;
@@ -242,7 +249,7 @@ class ContaoExtensionTest extends TestCase
         $extension = $this->getContaoExtension();
 
         $container = $this->getContainerWithContaoConfiguration(
-            Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy')
+            Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy'),
         );
 
         $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class)));
@@ -252,7 +259,7 @@ class ContaoExtensionTest extends TestCase
         $output = $extension->renderLegacyTemplate(
             'foo.html5',
             ['B' => ['overwritten B block']],
-            ['foo' => 'bar']
+            ['foo' => 'bar'],
         );
 
         $this->assertSame("foo: bar\noriginal A block\noverwritten B block", $output);
@@ -263,7 +270,7 @@ class ContaoExtensionTest extends TestCase
         $extension = $this->getContaoExtension();
 
         $container = $this->getContainerWithContaoConfiguration(
-            Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy')
+            Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy'),
         );
 
         $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class)));
@@ -276,7 +283,7 @@ class ContaoExtensionTest extends TestCase
         $output = $extension->renderLegacyTemplate(
             'baz.html5',
             ['B' => "root before B\n[[TL_PARENT_<nonce>]]root after B"],
-            ['foo' => 'bar']
+            ['foo' => 'bar'],
         );
 
         $this->assertSame(
@@ -293,7 +300,7 @@ class ContaoExtensionTest extends TestCase
                 'baz after B',
                 'root after B',
             ]),
-            $output
+            $output,
         );
     }
 
@@ -379,7 +386,7 @@ class ContaoExtensionTest extends TestCase
                 ($type = $parameter->getType()) instanceof \ReflectionNamedType ? $type->getName() : null,
                 $parameter->getName(),
             ],
-            (new \ReflectionFunction($function))->getParameters()
+            (new \ReflectionFunction($function))->getParameters(),
         );
         $this->assertSame($parameters, $expectedParameters);
     }
@@ -421,6 +428,11 @@ class ContaoExtensionTest extends TestCase
             ])
         ;
 
-        return new ContaoExtension($environment, $hierarchy, $this->createMock(ContaoCsrfTokenManager::class));
+        return new ContaoExtension(
+            $environment,
+            $hierarchy,
+            $this->createMock(ContaoCsrfTokenManager::class),
+            $this->createMock(ContaoVariable::class),
+        );
     }
 }

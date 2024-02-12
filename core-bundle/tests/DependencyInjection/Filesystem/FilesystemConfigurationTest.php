@@ -249,13 +249,13 @@ class FilesystemConfigurationTest extends TestCase
         // Set last modified
         $this->assertSame(
             ['useLastModified', [$useLastModified]],
-            $definition->getMethodCalls()[0]
+            $definition->getMethodCalls()[0],
         );
 
         // Registered at DbafsManager
         $this->assertSame(
             ['register', [$definition, 'some/prefix']],
-            $container->getDefinition('contao.filesystem.dbafs_manager')->getMethodCalls()[0]
+            $container->getDefinition('contao.filesystem.dbafs_manager')->getMethodCalls()[0],
         );
     }
 

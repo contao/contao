@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\NewsletterBundle\Tests\EventListener;
 
 use Contao\CoreBundle\Event\SitemapEvent;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
 use Contao\NewsletterBundle\EventListener\SitemapListener;
@@ -53,17 +54,10 @@ class SitemapListenerTest extends ContaoTestCase
             'groups' => [1],
         ]);
 
-        $jumpToPage
-            ->method('getAbsoluteUrl')
-            ->willReturn('https://contao.org')
-        ;
-
         $adapters = [
             NewsletterChannelModel::class => $this->mockConfiguredAdapter([
                 'findAll' => [
-                    $this->mockClassWithProperties(NewsletterChannelModel::class, [
-                        'jumpTo' => 42,
-                    ]),
+                    $this->mockClassWithProperties(NewsletterChannelModel::class, ['jumpTo' => 42]),
                 ],
             ]),
             PageModel::class => $this->mockConfiguredAdapter([
@@ -107,7 +101,13 @@ class SitemapListenerTest extends ContaoTestCase
             ;
         }
 
-        return new SitemapListener($framework, $security);
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->method('generate')
+            ->willReturn('https://contao.org')
+        ;
+
+        return new SitemapListener($framework, $security, $urlGenerator);
     }
 
     private function createSitemapEvent(array $rootPages): SitemapEvent

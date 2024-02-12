@@ -33,7 +33,7 @@ class SubrequestCacheSubscriberTest extends TestCase
                 KernelEvents::REQUEST => ['onKernelRequest', 255],
                 KernelEvents::RESPONSE => ['onKernelResponse', -255],
             ],
-            $subscriber::getSubscribedEvents()
+            $subscriber::getSubscribedEvents(),
         );
     }
 

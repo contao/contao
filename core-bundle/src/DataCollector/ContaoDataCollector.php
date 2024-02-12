@@ -156,9 +156,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
 
     private function getLayoutName(): string
     {
-        $layout = $this->getLayout();
-
-        if (null === $layout) {
+        if (!$layout = $this->getLayout()) {
             return '';
         }
 
@@ -167,9 +165,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
 
     private function getTemplateName(): string
     {
-        $layout = $this->getLayout();
-
-        if (null === $layout) {
+        if (!$layout = $this->getLayout()) {
             return '';
         }
 

@@ -51,7 +51,7 @@ class SimpleTokenParser implements LoggerAwareInterface
                 : '/({[^{}]+})\n?/',
             $subject,
             -1,
-            PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY
+            PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY,
         );
 
         // Parse the tokens
@@ -110,7 +110,7 @@ class SimpleTokenParser implements LoggerAwareInterface
 
                 return $data[$matches[1]];
             },
-            $subject
+            $subject,
         );
     }
 
@@ -160,7 +160,8 @@ class SimpleTokenParser implements LoggerAwareInterface
 
             $value = $tokens[$i]->value;
 
-            // Skip constant nodes (see Symfony/Component/ExpressionLanguage/Parser#parsePrimaryExpression()
+            // Skip constant nodes
+            /** @see Symfony/Component/ExpressionLanguage/Parser#parsePrimaryExpression() */
             if (\in_array($value, ['true', 'TRUE', 'false', 'FALSE', 'null'], true)) {
                 continue;
             }
@@ -182,13 +183,9 @@ class SimpleTokenParser implements LoggerAwareInterface
 
     private function logUnmatchedVariables(string ...$tokenNames): void
     {
-        if (null === $this->logger) {
-            return;
-        }
-
-        $this->logger->log(
+        $this->logger?->log(
             LogLevel::INFO,
-            sprintf('Tried to evaluate unknown simple token(s): "%s".', implode('", "', $tokenNames))
+            sprintf('Tried to evaluate unknown simple token(s): "%s".', implode('", "', $tokenNames)),
         );
     }
 }

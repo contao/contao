@@ -239,8 +239,8 @@ class ConfigurationTest extends TestCase
     public function testMessengerConfiguration(): void
     {
         $params = [
-            // This first configuration should be overridden by the latter (no deep merging), in order to control all the
-            // workers in your app.
+            // This first configuration should be overridden by the latter (no deep merging),
+            // in order to control all the workers in your app.
             [
                 'messenger' => [
                     'workers' => [
@@ -313,7 +313,7 @@ class ConfigurationTest extends TestCase
                     ],
                 ],
             ],
-            $configuration['messenger']
+            $configuration['messenger'],
         );
 
         try {
@@ -335,7 +335,7 @@ class ConfigurationTest extends TestCase
         } catch (InvalidConfigurationException $exception) {
             $this->assertStringContainsString(
                 'The child config "desired_size" under "contao.messenger.workers.0.autoscale" must be configured',
-                $exception->getMessage()
+                $exception->getMessage(),
             );
         }
 
@@ -359,9 +359,43 @@ class ConfigurationTest extends TestCase
         } catch (InvalidConfigurationException $exception) {
             $this->assertStringContainsString(
                 'The child config "max" under "contao.messenger.workers.0.autoscale" must be configured',
-                $exception->getMessage()
+                $exception->getMessage(),
             );
         }
+    }
+
+    /**
+     * @dataProvider invalidAllowedInlineStylesRegexProvider
+     */
+    public function testFailsOnInvalidAllowedInlineStylesRegex(string $regex, string $exceptionMessage): void
+    {
+        $params = [
+            [
+                'csp' => [
+                    'allowed_inline_styles' => [
+                        'text-decoration' => $regex,
+                    ],
+                ],
+            ],
+        ];
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage($exceptionMessage);
+
+        (new Processor())->processConfiguration($this->configuration, $params);
+    }
+
+    public function invalidAllowedInlineStylesRegexProvider(): \Generator
+    {
+        yield [
+            'te(st',
+            'Invalid configuration for path "contao.csp.allowed_inline_styles": The regex "te(st" for property "text-decoration" is invalid.',
+        ];
+
+        yield [
+            'te.*st',
+            'Invalid configuration for path "contao.csp.allowed_inline_styles": The regex "te.*st" for property "text-decoration" contains ".*" which is not allowed due to security reasons.',
+        ];
     }
 
     /**
@@ -421,9 +455,12 @@ class ConfigurationTest extends TestCase
                 $this->checkKeys($value->getChildren());
             }
 
-            /** @var ArrayNode $prototype */
-            if ($value instanceof PrototypedArrayNode && ($prototype = $value->getPrototype()) instanceof ArrayNode) {
-                $this->checkKeys($prototype->getChildren());
+            if ($value instanceof PrototypedArrayNode) {
+                $prototype = $value->getPrototype();
+
+                if ($prototype instanceof ArrayNode) {
+                    $this->checkKeys($prototype->getChildren());
+                }
             }
 
             if (\is_string($key) && !$value->isDeprecated()) {

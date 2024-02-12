@@ -38,7 +38,7 @@ class ImagesLoader extends Loader
                 '_controller' => ImagesController::class,
                 '_bypass_maintenance' => true,
             ],
-            ['path' => '.+']
+            ['path' => '.+'],
         );
 
         $routes = new RouteCollection();

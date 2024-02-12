@@ -16,16 +16,22 @@ use Contao\CalendarEventsModel;
 use Contao\CalendarModel;
 use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
 use Contao\PageModel;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+#[AsEventListener]
 class SitemapListener
 {
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly Security $security,
+        private readonly ContentUrlGenerator $urlGenerator,
     ) {
     }
 
@@ -72,7 +78,7 @@ class SitemapListener
             $objParent = $this->framework->getAdapter(PageModel::class)->findWithDetails($objCalendar->jumpTo);
 
             // The target page does not exist
-            if (null === $objParent) {
+            if (!$objParent) {
                 continue;
             }
 
@@ -103,7 +109,10 @@ class SitemapListener
                     continue;
                 }
 
-                $arrPages[] = $objParent->getAbsoluteUrl('/'.($objEvent->alias ?: $objEvent->id));
+                try {
+                    $arrPages[] = $this->urlGenerator->generate($objEvent, [], UrlGeneratorInterface::ABSOLUTE_URL);
+                } catch (ExceptionInterface) {
+                }
             }
         }
 

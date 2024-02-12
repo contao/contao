@@ -62,7 +62,7 @@ class RouteProvider extends AbstractPageRouteProvider
         $pageModel = $this->framework->getAdapter(PageModel::class);
         $page = $pageModel->findByPk($ids[0]);
 
-        if (null === $page || !$this->pageRegistry->isRoutable($page)) {
+        if (!$page || !$this->pageRegistry->isRoutable($page)) {
             throw new RouteNotFoundException(sprintf('Page ID "%s" not found', $ids[0]));
         }
 
@@ -171,7 +171,8 @@ class RouteProvider extends AbstractPageRouteProvider
 
         $urlPrefix = $route->getUrlPrefix();
 
-        // Do not create a ".root" route for root pages without prefix if `disableLanguageRedirect` is enabled
+        // Do not create a ".root" route for root pages without prefix if
+        // `disableLanguageRedirect` is enabled
         if ('root' === $page->type && !$urlPrefix && $page->disableLanguageRedirect) {
             return;
         }
@@ -183,7 +184,7 @@ class RouteProvider extends AbstractPageRouteProvider
             $route->getOptions(),
             $route->getHost(),
             $route->getSchemes(),
-            $route->getMethods()
+            $route->getMethods(),
         );
 
         // Do not create ".fallback" route if `disableLanguageRedirect` is enabled
@@ -203,7 +204,7 @@ class RouteProvider extends AbstractPageRouteProvider
             $route->getOptions(),
             $route->getHost(),
             $route->getSchemes(),
-            $route->getMethods()
+            $route->getMethods(),
         );
     }
 
@@ -248,7 +249,7 @@ class RouteProvider extends AbstractPageRouteProvider
                 }
 
                 return $this->compareRoutes($a, $b, $languages);
-            }
+            },
         );
     }
 

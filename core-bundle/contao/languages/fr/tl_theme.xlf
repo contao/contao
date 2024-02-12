@@ -46,8 +46,7 @@
         <target>Fichiers sources</target>
       </trans-unit>
       <trans-unit id="tl_theme.source.1">
-        <source>Here you can upload one or more .cto or .sql files to be imported.</source>
-        <target>Vous pouvez ici télécharger un ou plusieurs fichiers .cto ou .sql à importer.</target>
+        <source>Here you can upload one or more .cto, .zip or .sql files to be imported.</source>
       </trans-unit>
       <trans-unit id="tl_theme.tstamp.0">
         <source>Revision date</source>
@@ -123,7 +122,7 @@
       </trans-unit>
       <trans-unit id="tl_theme.selectExampleWebsite.1">
         <source>Here you can import an &lt;code&gt;.sql&lt;/code&gt; file. Any existing data will be deleted! If you only want to import a theme, do not select a file here.</source>
-        <target>Vous pouvez ici importer un fichier &lt;code&gt;.sql&lt;/code&gt;. Toutes les données existantes seront supprimées ! Si vous souhaitez uniquement importer un thème, ne sélectionnez pas de fichier ici.</target>
+        <target>Here you can import an &lt;code&gt;.sql&lt;/code&gt; file. Any existing data will be deleted! If you only want to import a theme, do not select a file here.</target>
       </trans-unit>
       <trans-unit id="tl_theme.exampleWebsiteImportType.0">
         <source>Import type</source>
@@ -143,7 +142,7 @@
       </trans-unit>
       <trans-unit id="tl_theme.exampleWebsiteImport.data_no_truncate">
         <source>Data only without truncating tables</source>
-        <target>Données uniquement sans vider les tables</target>
+        <target>Données uniquement sans tronquer les tables</target>
       </trans-unit>
       <trans-unit id="tl_theme.editmeta">
         <source>Edit the theme settings</source>

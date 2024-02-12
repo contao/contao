@@ -44,7 +44,6 @@ final class FragmentTemplate extends Template
 
     /**
      * @param string $key
-     * @param mixed  $value
      */
     public function __set($key, $value): void
     {
@@ -53,8 +52,6 @@ final class FragmentTemplate extends Template
 
     /**
      * @param string $key
-     *
-     * @return mixed
      */
     public function __get($key)
     {
@@ -133,10 +130,10 @@ final class FragmentTemplate extends Template
         return ($this->onGetResponse)($this, $preBuiltResponse);
     }
 
-    // We need to extend from the legacy Template class to keep existing type
-    // hints working. In the future, when people migrated their usages, we will
-    // drop the base class and the following overrides, that are only there to
-    // prevent usage of the base class functionalities.
+    // We need to extend from the legacy Template class to keep existing type hints
+    // working. In the future, when people migrated their usages, we will drop the
+    // base class and the following overrides, that are only there to prevent usage
+    // of the base class functionalities.
 
     /**
      * @internal

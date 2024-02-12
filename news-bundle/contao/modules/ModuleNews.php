@@ -86,7 +86,7 @@ abstract class ModuleNews extends Module
 		$objTemplate->hasSubHeadline = $objArticle->subheadline ? true : false;
 		$objTemplate->linkHeadline = $this->generateLink($objArticle->headline, $objArticle, $blnAddArchive);
 		$objTemplate->more = $this->generateLink($objArticle->linkText ?: $GLOBALS['TL_LANG']['MSC']['more'], $objArticle, $blnAddArchive, true);
-		$objTemplate->link = News::generateNewsUrl($objArticle, $blnAddArchive);
+		$objTemplate->link = $this->generateContentUrl($objArticle, $blnAddArchive);
 		$objTemplate->archive = $objArticle->getRelated('pid');
 		$objTemplate->count = $intCount; // see #5708
 		$objTemplate->text = '';
@@ -235,7 +235,7 @@ abstract class ModuleNews extends Module
 		}
 
 		// schema.org information
-		$objTemplate->getSchemaOrgData = static function () use ($objTemplate, $objArticle): array {
+		$objTemplate->getSchemaOrgData = static function () use ($objArticle, $objTemplate): array {
 			$jsonLd = News::getSchemaOrgData($objArticle);
 
 			if ($objTemplate->addImage && $objTemplate->figure)
@@ -303,7 +303,7 @@ abstract class ModuleNews extends Module
 	{
 		$blnIsInternal = $objArticle->source != 'external';
 		$strReadMore = $blnIsInternal ? $GLOBALS['TL_LANG']['MSC']['readMore'] : $GLOBALS['TL_LANG']['MSC']['open'];
-		$strArticleUrl = News::generateNewsUrl($objArticle, $blnAddArchive);
+		$strArticleUrl = $this->generateContentUrl($objArticle, $blnAddArchive);
 
 		return sprintf(
 			'<a href="%s" title="%s"%s>%s%s</a>',
@@ -313,5 +313,18 @@ abstract class ModuleNews extends Module
 			$strLink,
 			$blnIsReadMore && $blnIsInternal ? '<span class="invisible"> ' . $objArticle->headline . '</span>' : ''
 		);
+	}
+
+	private function generateContentUrl(NewsModel $content, bool $addArchive): string
+	{
+		$parameters = array();
+
+		// Add the current archive parameter (news archive)
+		if ($addArchive && Input::get('month'))
+		{
+			$parameters['month'] = Input::get('month');
+		}
+
+		return System::getContainer()->get('contao.routing.content_url_generator')->generate($content, $parameters);
 	}
 }

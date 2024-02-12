@@ -23,7 +23,7 @@ class TeaserControllerTest extends ContentElementTestCase
             [
                 'type' => 'teaser',
                 'article' => self::ARTICLE1,
-            ]
+            ],
         );
 
         $expectedOutput = <<<'HTML'
@@ -43,7 +43,7 @@ class TeaserControllerTest extends ContentElementTestCase
             [
                 'type' => 'teaser',
                 'article' => self::ARTICLE2,
-            ]
+            ],
         );
 
         $expectedOutput = <<<'HTML'
@@ -62,7 +62,7 @@ class TeaserControllerTest extends ContentElementTestCase
             [
                 'type' => 'teaser',
                 'article' => 789,
-            ]
+            ],
         );
 
         $this->assertEmpty($response->getContent());

@@ -16,6 +16,7 @@ use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
+use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
@@ -96,7 +97,7 @@ class InheritanceTest extends TestCase
 
         $bundles = array_combine(
             array_keys($bundlesMetadata),
-            array_fill(0, \count($bundlesMetadata), ContaoModuleBundle::class)
+            array_fill(0, \count($bundlesMetadata), ContaoModuleBundle::class),
         );
 
         $connection = $this->createMock(Connection::class);
@@ -120,8 +121,9 @@ class InheritanceTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $loader,
-                $this->createMock(ContaoCsrfTokenManager::class)
-            )
+                $this->createMock(ContaoCsrfTokenManager::class),
+                $this->createMock(ContaoVariable::class),
+            ),
         );
 
         return $environment;

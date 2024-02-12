@@ -43,7 +43,7 @@ class DateInsertTag implements InsertTagResolverNestedResolvedInterface
         // Add caching headers for supported formats
         $result = $result->withExpiresAt($this->getExpireAtFromFormat($format));
 
-        if (null !== $result->getExpiresAt() && ($rootId = $GLOBALS['objPage']->rootId ?? null)) {
+        if ($result->getExpiresAt() && ($rootId = $GLOBALS['objPage']->rootId ?? null)) {
             $result = $result->withCacheTags(["contao.db.tl_page.$rootId"]);
         }
 

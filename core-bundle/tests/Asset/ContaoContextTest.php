@@ -66,7 +66,7 @@ class ContaoContextTest extends TestCase
             [
                 'SCRIPT_FILENAME' => '/foobar/index.php',
                 'SCRIPT_NAME' => '/foobar/index.php',
-            ]
+            ],
         );
 
         $request->attributes->set('pageModel', $page);
@@ -195,8 +195,7 @@ class ContaoContextTest extends TestCase
 
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
         $schemaManager
-            // Backwards compatibility with doctrine/dbal < 3.5
-            ->method(method_exists($schemaManager, 'introspectSchema') ? 'introspectSchema' : 'createSchema')
+            ->method('introspectSchema')
             ->willReturn(new Schema())
         ;
 

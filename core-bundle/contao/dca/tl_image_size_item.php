@@ -9,8 +9,6 @@
  */
 
 use Contao\Backend;
-use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\System;
@@ -25,16 +23,13 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 		'dataContainer'               => DC_Table::class,
 		'ptable'                      => 'tl_image_size',
 		'enableVersioning'            => true,
-		'onload_callback' => array
-		(
-			array('tl_image_size_item', 'checkPermission')
-		),
 		'sql' => array
 		(
 			'keys' => array
 			(
 				'id' => 'primary',
-				'pid' => 'index'
+				'pid' => 'index',
+				'tstamp' => 'index'
 			)
 		)
 	),
@@ -49,15 +44,6 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 			'panelLayout'             => 'limit',
 			'headerFields'            => array('name', 'tstamp', 'width', 'height', 'resizeMode', 'zoom'),
 			'child_record_callback'   => array('tl_image_size_item', 'listImageSizeItem')
-		),
-		'global_operations' => array
-		(
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
 		)
 	),
 
@@ -157,19 +143,6 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
  */
 class tl_image_size_item extends Backend
 {
-	/**
-	 * Check permissions to edit the table
-	 *
-	 * @throws AccessDeniedException
-	 */
-	public function checkPermission()
-	{
-		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZES))
-		{
-			throw new AccessDeniedException('Not enough permissions to access the image sizes module.');
-		}
-	}
-
 	/**
 	 * List an image size item
 	 *

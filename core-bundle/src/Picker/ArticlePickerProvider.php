@@ -13,8 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Picker;
 
 use Knp\Menu\FactoryInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface

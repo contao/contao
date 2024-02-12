@@ -10,6 +10,7 @@
       </div>
       <p class="progress-count">0 / 0</p>
       <div class="results running">
+        <p class="crawl-hint show-when-running"><?= $this->hint ?></p>
         <?php foreach ($this->activeSubscribers as $subscriber): ?>
           <h3><?= $this->trans('tl_maintenance.crawlSubscriberNames.'.$subscriber->getName()) ?></h3>
           <div class="result" data-subscriber="<?= $subscriber->getName() ?>">
@@ -31,22 +32,28 @@
         <input type="hidden" name="do" value="maintenance">
         <input type="hidden" name="act" value="crawl">
         <input type="hidden" name="rt" value="<?= $this->requestToken ?>">
-        <div class="tl_tbox">
-          <div>
+        <fieldset class="tl_tbox">
+          <div class="widget">
             <?= $this->subscribersWidget->parse() ?>
             <?php if (!$this->subscribersWidget->hasErrors()): ?>
               <p class="tl_help tl_tip"><?= $this->trans('tl_maintenance.crawlSubscribers.1') ?></p>
             <?php endif; ?>
           </div>
+          <div class="widget w50">
+            <?= $this->maxDepthWidget->parse() ?>
+            <?php if (!$this->maxDepthWidget->hasErrors()): ?>
+              <p class="tl_help tl_tip"><?= $this->trans('tl_maintenance.crawlDepth.1') ?></p>
+            <?php endif; ?>
+          </div>
           <?php if ($this->memberWidget): ?>
-            <div>
+            <div class="widget w50 clr">
               <?= $this->memberWidget->parse() ?>
               <?php if (!$this->memberWidget->hasErrors()): ?>
                 <p class="tl_help tl_tip"><?= $this->trans('tl_maintenance.crawlMember.1') ?></p>
               <?php endif; ?>
             </div>
           <?php endif; ?>
-        </div>
+        </fieldset>
       </div>
       <div class="tl_submit_container">
         <button type="submit" class="tl_submit"><?= $this->trans('tl_maintenance.startCrawling') ?></button>

@@ -22,7 +22,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 #[AsCommand(
     name: 'jwt-cookie:parse',
-    description: 'Parses the content of the preview entry point cookie.'
+    description: 'Parses the content of the preview entry point cookie.',
 )]
 class ParseJwtCookieCommand extends Command
 {
@@ -44,7 +44,7 @@ class ParseJwtCookieCommand extends Command
     {
         $payload = $this->jwtManager->parseCookie($input->getArgument('content'));
 
-        $output->write(json_encode($payload));
+        $output->write(json_encode($payload, JSON_THROW_ON_ERROR));
 
         return 0;
     }

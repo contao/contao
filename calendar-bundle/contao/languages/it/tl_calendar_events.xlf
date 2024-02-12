@@ -89,6 +89,14 @@
         <source>Here you can add a custom meta description to overwrite the default page description.</source>
         <target>Qui è possibile aggiungere una meta descrizione personalizzata per sovrascrivere la descrizione predefinita della pagina.</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.canonicalLink.0">
+        <source>Canonical URL</source>
+        <target>Canonical URL</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.canonicalLink.1">
+        <source>Here you can set a custom canonical URL like https://example.com/.</source>
+        <target>Here you can set a custom canonical URL like https://example.com/.</target>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.location.0">
         <source>Location name</source>
         <target>Luogo</target>
@@ -244,14 +252,6 @@
       <trans-unit id="tl_calendar_events.cssClass.1">
         <source>Here you can enter one or more classes.</source>
         <target>Qui puoi inserire una o più classi CSS.</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.noComments.0">
-        <source>Disable comments</source>
-        <target>Disabilita commenti</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.noComments.1">
-        <source>Do not allow comments for this particular event.</source>
-        <target>Non consentire di aggiungere commenti relativi a questo particolare evento.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.featured.0">
         <source>Feature event</source>

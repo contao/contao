@@ -15,16 +15,21 @@ namespace Contao\CalendarBundle\EventListener;
 use Contao\CalendarEventsModel;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\Events;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @internal
  */
+#[AsEventListener]
 class PreviewUrlConvertListener
 {
-    public function __construct(private readonly ContaoFramework $framework)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly ContentUrlGenerator $urlGenerator,
+    ) {
     }
 
     /**
@@ -36,11 +41,11 @@ class PreviewUrlConvertListener
             return;
         }
 
-        if (null === ($eventModel = $this->getEventModel($event->getRequest()))) {
+        if (!$eventModel = $this->getEventModel($event->getRequest())) {
             return;
         }
 
-        $event->setUrl($this->framework->getAdapter(Events::class)->generateEventUrl($eventModel, true));
+        $event->setUrl($this->urlGenerator->generate($eventModel, [], UrlGeneratorInterface::ABSOLUTE_URL));
     }
 
     private function getEventModel(Request $request): CalendarEventsModel|null

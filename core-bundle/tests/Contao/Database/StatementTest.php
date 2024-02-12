@@ -93,7 +93,7 @@ class StatementTest extends TestCase
 
                             return $param ?? 'NULL';
                         },
-                        $params
+                        $params,
                     );
 
                     $builtQuery = '';
@@ -106,7 +106,7 @@ class StatementTest extends TestCase
                     $this->assertSame($expected, $builtQuery);
 
                     return $doctrineResult;
-                }
+                },
             )
         ;
 

@@ -78,7 +78,7 @@ abstract class DeprecatedClassesPhpunitExtension implements AfterLastTestHook, B
 
                 return false;
             },
-            E_DEPRECATED | E_USER_DEPRECATED
+            E_DEPRECATED | E_USER_DEPRECATED,
         );
 
         try {
@@ -96,7 +96,7 @@ abstract class DeprecatedClassesPhpunitExtension implements AfterLastTestHook, B
         if ($unhandledErrors) {
             (new StringMatchesFormatDescription($expectedDeprecation))->evaluate(
                 $unhandledErrors[0],
-                sprintf('Expected deprecation for "%s" did not match.', $className)
+                sprintf('Expected deprecation for "%s" did not match.', $className),
             );
         }
 

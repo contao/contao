@@ -17,12 +17,17 @@ use Contao\StringUtil;
 class PaletteManipulator
 {
     final public const POSITION_BEFORE = 'before';
+
     final public const POSITION_AFTER = 'after';
+
     final public const POSITION_PREPEND = 'prepend';
+
     final public const POSITION_APPEND = 'append';
 
     private array $legends = [];
+
     private array $fields = [];
+
     private array $removes = [];
 
     public static function create(): self
@@ -267,7 +272,8 @@ class PaletteManipulator
 
     private function applyFieldToLegend(array &$config, array $action, bool $skipLegends = false): void
     {
-        // If $skipLegends is true, we usually only have one legend without name, so we simply append to that
+        // If $skipLegends is true, we usually only have one legend without name, so we
+        // simply append to that
         if ($skipLegends) {
             if (self::POSITION_PREPEND === $action['position']) {
                 reset($config);
@@ -327,14 +333,11 @@ class PaletteManipulator
             // If the fallback palette was not found, create a new one
             $fallback = reset($action['fallback']);
 
-            $this->applyLegend(
-                $config,
-                [
-                    'name' => $fallback,
-                    'position' => self::POSITION_APPEND,
-                    'hide' => false,
-                ]
-            );
+            $this->applyLegend($config, [
+                'name' => $fallback,
+                'position' => self::POSITION_APPEND,
+                'hide' => false,
+            ]);
         }
 
         // If everything fails, add to the last legend

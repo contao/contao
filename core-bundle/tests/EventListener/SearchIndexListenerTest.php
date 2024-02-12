@@ -43,7 +43,7 @@ class SearchIndexListenerTest extends TestCase
                     $this->assertSame($delete, $message->shouldDelete());
 
                     return true;
-                }
+                },
             ))
             ->willReturnCallback(static fn (SearchIndexMessage $message) => new Envelope($message))
         ;

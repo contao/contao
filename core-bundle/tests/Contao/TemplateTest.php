@@ -14,18 +14,25 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\BackendTemplate;
 use Contao\Config;
+use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\System;
+use Nelmio\SecurityBundle\ContentSecurityPolicy\DirectiveSet;
+use Nelmio\SecurityBundle\ContentSecurityPolicy\PolicyManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\VarDumper\VarDumper;
 
@@ -58,7 +65,7 @@ class TemplateTest extends TestCase
     {
         (new Filesystem())->dumpFile(
             Path::join($this->getTempDir(), 'templates/test_template.html5'),
-            '<?= $this->value ?>'
+            '<?= $this->value ?>',
         );
 
         $template = new BackendTemplate('test_template');
@@ -73,7 +80,7 @@ class TemplateTest extends TestCase
     {
         (new Filesystem())->dumpFile(
             Path::join($this->getTempDir(), 'templates/test_template.html5'),
-            'test<?php throw new Exception ?>'
+            'test<?php throw new Exception ?>',
         );
 
         $template = new BackendTemplate('test_template');
@@ -106,7 +113,7 @@ class TemplateTest extends TestCase
                     $this->block('c');
                     echo 'test4';
                     throw new Exception;
-                EOF
+                EOF,
         );
 
         $template = new BackendTemplate('test_template');
@@ -147,7 +154,7 @@ class TemplateTest extends TestCase
                     $this->block('e');
                     echo 'test6';
                     throw new Exception;
-                EOF
+                EOF,
         );
 
         $filesystem->dumpFile(
@@ -167,7 +174,7 @@ class TemplateTest extends TestCase
                     echo 'test6';
                     $this->endblock('b');
                     echo 'test7';
-                EOF
+                EOF,
         );
 
         $template = new BackendTemplate('test_template');
@@ -206,7 +213,7 @@ class TemplateTest extends TestCase
                     echo 'test5';
                     $this->endblock('a');
                     echo 'test6';
-                EOF
+                EOF,
         );
 
         $template = new BackendTemplate('test_template');
@@ -256,7 +263,7 @@ class TemplateTest extends TestCase
         VarDumper::setHandler(
             static function ($var) use (&$dump): void {
                 $dump = $var;
-            }
+            },
         );
 
         $template->dumpTemplateVars();
@@ -268,7 +275,7 @@ class TemplateTest extends TestCase
     {
         (new Filesystem())->dumpFile(
             Path::join($this->getTempDir(), 'templates/test_template.html5'),
-            '<?= $this->value ?>'
+            '<?= $this->value ?>',
         );
 
         $template = new BackendTemplate('test_template');
@@ -418,5 +425,149 @@ class TemplateTest extends TestCase
         $template = new FrontendTemplate('test_template');
         $template->setData(['requestToken' => null]);
         $this->assertSame('false, NULL', $template->parse());
+    }
+
+    public function testRetrievesNonceFromCspBuilder(): void
+    {
+        $directives = new DirectiveSet(new PolicyManager());
+        $directives->setDirective('script-src', "'self'");
+
+        $cspHandler = new CspHandler($directives);
+        $responseContext = (new ResponseContext())->add($cspHandler);
+
+        $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
+        $responseContextAccessor
+            ->expects($this->once())
+            ->method('getResponseContext')
+            ->willReturn($responseContext)
+        ;
+
+        System::getContainer()->set('contao.routing.response_context_accessor', $responseContextAccessor);
+
+        $this->assertNotNull((new FrontendTemplate())->nonce('script-src'));
+    }
+
+    public function testAddsCspSource(): void
+    {
+        $directives = new DirectiveSet(new PolicyManager());
+        $directives->setDirective('script-src', "'self'");
+
+        $cspHandler = new CspHandler($directives);
+        $responseContext = (new ResponseContext())->add($cspHandler);
+
+        $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
+        $responseContextAccessor
+            ->expects($this->once())
+            ->method('getResponseContext')
+            ->willReturn($responseContext)
+        ;
+
+        System::getContainer()->set('contao.routing.response_context_accessor', $responseContextAccessor);
+        System::getContainer()->set('request_stack', new RequestStack());
+
+        (new FrontendTemplate())->addCspSource('script-src', 'https://example.com/files/foo/foobar.js');
+
+        $this->assertSame("'self' https://example.com/files/foo/foobar.js", $directives->getDirective('script-src'));
+    }
+
+    public function testAddsCspHash(): void
+    {
+        $directives = new DirectiveSet(new PolicyManager());
+        $directives->setLevel1Fallback(false);
+        $directives->setDirective('script-src', "'self'");
+
+        $cspHandler = new CspHandler($directives);
+        $responseContext = (new ResponseContext())->add($cspHandler);
+
+        $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
+        $responseContextAccessor
+            ->expects($this->once())
+            ->method('getResponseContext')
+            ->willReturn($responseContext)
+        ;
+
+        System::getContainer()->set('contao.routing.response_context_accessor', $responseContextAccessor);
+        System::getContainer()->set('request_stack', new RequestStack());
+
+        $script = 'this.form.requestSubmit()';
+        $algorithm = 'sha384';
+
+        (new FrontendTemplate())->addCspHash('script-src', $script, $algorithm);
+
+        $response = new Response();
+        $cspHandler->applyHeaders($response);
+
+        $expectedHash = base64_encode(hash($algorithm, $script, true));
+
+        $this->assertSame(sprintf("script-src 'self' '%s-%s'", $algorithm, $expectedHash), $response->headers->get('Content-Security-Policy'));
+    }
+
+    public function testAddsCspInlineStyleHash(): void
+    {
+        $directives = new DirectiveSet(new PolicyManager());
+        $directives->setLevel1Fallback(false);
+        $directives->setDirective('style-src', "'self'");
+
+        $cspHandler = new CspHandler($directives);
+        $responseContext = (new ResponseContext())->add($cspHandler);
+
+        $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
+        $responseContextAccessor
+            ->expects($this->once())
+            ->method('getResponseContext')
+            ->willReturn($responseContext)
+        ;
+
+        System::getContainer()->set('contao.routing.response_context_accessor', $responseContextAccessor);
+        System::getContainer()->set('request_stack', new RequestStack());
+
+        $style = 'display:none';
+        $algorithm = 'sha384';
+
+        $result = (new FrontendTemplate())->cspInlineStyle($style, $algorithm);
+
+        $response = new Response();
+        $cspHandler->applyHeaders($response);
+
+        $expectedHash = base64_encode(hash($algorithm, $style, true));
+
+        $this->assertSame($style, $result);
+        $this->assertSame(sprintf("style-src 'self' 'unsafe-hashes' '%s-%s'", $algorithm, $expectedHash), $response->headers->get('Content-Security-Policy'));
+    }
+
+    public function testExtractsStyleAttributesForCsp(): void
+    {
+        $directives = new DirectiveSet(new PolicyManager());
+        $directives->setLevel1Fallback(false);
+        $directives->setDirective('style-src', "'self'");
+
+        $cspHandler = new CspHandler($directives);
+        $responseContext = (new ResponseContext())->add($cspHandler);
+
+        $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
+        $responseContextAccessor
+            ->expects($this->once())
+            ->method('getResponseContext')
+            ->willReturn($responseContext)
+        ;
+
+        System::getContainer()->set('contao.routing.response_context_accessor', $responseContextAccessor);
+        System::getContainer()->set('request_stack', new RequestStack());
+        System::getContainer()->set('contao.csp.wysiwyg_style_processor', new WysiwygStyleProcessor(['text-decoration' => 'underline']));
+
+        (new Filesystem())->dumpFile(
+            Path::join($this->getTempDir(), 'templates/test_template.html5'),
+            '<?= $this->cspInlineStyles(\'<p style="text-decoration: underline;">\') ?>',
+        );
+
+        $this->assertSame('<p style="text-decoration: underline;">', (new FrontendTemplate('test_template'))->parse());
+
+        $response = new Response();
+        $cspHandler->applyHeaders($response);
+
+        $algorithm = 'sha256';
+        $expectedHash = base64_encode(hash($algorithm, 'text-decoration: underline;', true));
+
+        $this->assertSame(sprintf("style-src 'self' 'unsafe-hashes' '%s-%s'", $algorithm, $expectedHash), $response->headers->get('Content-Security-Policy'));
     }
 }

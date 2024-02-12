@@ -17,8 +17,11 @@ use Symfony\Contracts\EventDispatcher\Event;
 class SendNewsletterEvent extends Event
 {
     private bool $skipSending = false;
+
     private bool $htmlAllowed = true;
+
     private array $recipientData = [];
+
     private array $newsletterData = [];
 
     public function __construct(

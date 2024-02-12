@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Http\SecurityRequestAttributes;
 
 class ClearSessionDataListenerTest extends TestCase
 {
@@ -38,17 +38,17 @@ class ClearSessionDataListenerTest extends TestCase
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MAIN_REQUEST,
-            new Response()
+            new Response(),
         );
 
-        $session->set(Security::AUTHENTICATION_ERROR, 'error');
-        $session->set(Security::LAST_USERNAME, 'foobar');
+        $session->set(SecurityRequestAttributes::AUTHENTICATION_ERROR, 'error');
+        $session->set(SecurityRequestAttributes::LAST_USERNAME, 'foobar');
 
         $listener = new ClearSessionDataListener();
         $listener($event);
 
-        $this->assertFalse($session->has(Security::AUTHENTICATION_ERROR));
-        $this->assertFalse($session->has(Security::LAST_USERNAME));
+        $this->assertFalse($session->has(SecurityRequestAttributes::AUTHENTICATION_ERROR));
+        $this->assertFalse($session->has(SecurityRequestAttributes::LAST_USERNAME));
     }
 
     public function testClearsAutoExpiringAttributes(): void
@@ -63,19 +63,19 @@ class ClearSessionDataListenerTest extends TestCase
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MAIN_REQUEST,
-            new Response()
+            new Response(),
         );
 
         $nonExpired = new AutoExpiringAttribute(
             20,
             'foobar',
-            new \DateTime('-10 seconds')
+            new \DateTime('-10 seconds'),
         );
 
         $expired = new AutoExpiringAttribute(
             5,
             'foobar',
-            new \DateTime('-10 seconds')
+            new \DateTime('-10 seconds'),
         );
 
         $session->set('non-expired-attribute', $nonExpired);

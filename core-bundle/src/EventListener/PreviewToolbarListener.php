@@ -12,8 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
+use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
+use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandlerFactory;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
@@ -31,6 +34,7 @@ use Twig\Environment as TwigEnvironment;
  *
  * @internal
  */
+#[AsEventListener]
 class PreviewToolbarListener
 {
     public function __construct(
@@ -38,6 +42,7 @@ class PreviewToolbarListener
         private readonly TokenChecker $tokenChecker,
         private readonly TwigEnvironment $twig,
         private readonly RouterInterface $router,
+        private readonly CspHandlerFactory $cspHandlerFactory,
         private readonly string $previewScript = '',
     ) {
     }
@@ -82,15 +87,31 @@ class PreviewToolbarListener
             return;
         }
 
-        $toolbar = $this->twig->render(
-            '@ContaoCore/Frontend/preview_toolbar_base_js.html.twig',
-            [
-                'action' => $this->router->generate('contao_backend_switch'),
-                'request' => $request,
-                'preview_script' => $this->previewScript,
-            ]
-        );
+        $cspHandler = $this->createCspHandler($response);
+
+        $toolbar = $this->twig->render('@ContaoCore/Frontend/preview_toolbar_base_js.html.twig', [
+            'action' => $this->router->generate('contao_backend_switch'),
+            'request' => $request,
+            'preview_script' => $this->previewScript,
+            'csp_handler' => $cspHandler,
+        ]);
 
         $response->setContent(substr($content, 0, $pos)."\n".$toolbar."\n".substr($content, $pos));
+        $cspHandler->applyHeaders($response, $request);
+    }
+
+    private function createCspHandler(Response $response): CspHandler
+    {
+        if ($cspHeader = $response->headers->get('Content-Security-Policy-Report-Only')) {
+            $reportOnly = true;
+        } else {
+            $cspHeader = $response->headers->get('Content-Security-Policy', '');
+        }
+
+        $cspHandler = $this->cspHandlerFactory->create($cspHeader);
+        $cspHandler->getDirectives()->setLevel1Fallback(false);
+        $cspHandler->setReportOnly($reportOnly ?? false);
+
+        return $cspHandler;
     }
 }
