@@ -99,9 +99,11 @@
       </trans-unit>
       <trans-unit id="tl_page.alwaysForward.0">
         <source>Always redirect</source>
+        <target>Zawsze przekierowuj</target>
       </trans-unit>
       <trans-unit id="tl_page.alwaysForward.1">
         <source>Redirect to the target page even if there are query or path parameters.</source>
+        <target>Przekieruj do docelowej strony nawet jeśli są parametry zapytania lub ścieżki.</target>
       </trans-unit>
       <trans-unit id="tl_page.jumpTo.0">
         <source>Redirect page</source>

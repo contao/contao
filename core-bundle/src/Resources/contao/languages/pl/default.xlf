@@ -27,9 +27,11 @@
       </trans-unit>
       <trans-unit id="ERR.minval">
         <source>Field &quot;%s&quot; has to be at least %s!</source>
+        <target>Pole &quot;%s&quot; musi być co najmniej %s!</target>
       </trans-unit>
       <trans-unit id="ERR.maxval">
         <source>Field &quot;%s&quot; must not be greater than %s!</source>
+        <target>Pole &quot;%s&quot; nie może być większe niż %s!</target>
       </trans-unit>
       <trans-unit id="ERR.digit">
         <source>Please enter digits only!</source>
@@ -1593,6 +1595,7 @@
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
         <source>Learn more about speeding up your workflow by using &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <target>Dowiedz się więcej o przyspieszaniu swojego workflowu, korzystając ze &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;skrótów klawiszowych&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -1996,12 +1999,15 @@
       </trans-unit>
       <trans-unit id="MSC.folderC">
         <source>Public folder</source>
+        <target>Folder publiczny</target>
       </trans-unit>
       <trans-unit id="MSC.folderCP">
         <source>Protected folder</source>
+        <target>Folder chroniony</target>
       </trans-unit>
       <trans-unit id="MSC.typeOfFile">
         <source>%s file</source>
+        <target>plik %s</target>
       </trans-unit>
       <trans-unit id="MSC.loadingData">
         <source>Loading data</source>
@@ -2913,15 +2919,19 @@
       </trans-unit>
       <trans-unit id="DCA.expandNodes.0">
         <source>Expand all</source>
+        <target>Rozwiń wszystko</target>
       </trans-unit>
       <trans-unit id="DCA.expandNodes.1">
         <source>Expand all nodes</source>
+        <target>Rozwiń wszystkie węzły</target>
       </trans-unit>
       <trans-unit id="DCA.collapseNodes.0">
         <source>Collapse all</source>
+        <target>Zwiń wszystko</target>
       </trans-unit>
       <trans-unit id="DCA.collapseNodes.1">
         <source>Collapse all nodes</source>
+        <target>Zwiń wszystkie węzły</target>
       </trans-unit>
       <trans-unit id="DCA.new.0">
         <source>New</source>
