@@ -866,8 +866,8 @@ class DbafsTest extends TestCase
         );
 
         $filesystem->write('old', 'foo'); // untouched
-        $filesystem->write('file2', 'bar'); // moved
-        $filesystem->write('new', 'baz'); // new
+        $filesystem->write('file2.txt', 'bar'); // moved
+        $filesystem->write('new.txt', 'baz'); // new
 
         $hashGenerator = $this->createMock(HashGeneratorInterface::class);
         $hashGenerator
@@ -884,7 +884,7 @@ class DbafsTest extends TestCase
                         return;
                     }
 
-                    if ('file2' === $path) {
+                    if ('file2.txt' === $path) {
                         $this->assertNull($hashContext->getLastModified());
                         $this->assertFalse($hashContext->canSkipHashing());
                         $hashContext->updateLastModified(200);
@@ -893,7 +893,7 @@ class DbafsTest extends TestCase
                         return;
                     }
 
-                    if ('new' === $path) {
+                    if ('new.txt' === $path) {
                         $this->assertNull($hashContext->getLastModified());
                         $this->assertFalse($hashContext->canSkipHashing());
                         $hashContext->updateLastModified(201);
@@ -927,8 +927,9 @@ class DbafsTest extends TestCase
                 'INSERT INTO tl_files (`uuid`, `pid`, `path`, `hash`, `type`, `name`, `extension`, `tstamp`, `lastModified`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
                 $this->callback(
                     function (array $params) {
-                        $this->assertSame('new', $params[2]); // path
+                        $this->assertSame('new.txt', $params[2]); // path
                         $this->assertSame('cbab7', $params[3]); // hash
+                        $this->assertSame('txt', $params[6]); // extension
                         $this->assertSame(201, $params[8]); // lastModified
 
                         return true;
@@ -938,7 +939,7 @@ class DbafsTest extends TestCase
         ;
 
         $connection
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(3))
             ->method('update')
             ->willReturnCallback(
                 function (string $table, array $update, array $criteria): void {
@@ -946,13 +947,21 @@ class DbafsTest extends TestCase
 
                     $file = $criteria['path'] ?? null;
 
-                    if ('file1' === $file) {
-                        $this->assertSame('file2', $update['path']);
+                    if (isset($criteria['type'])) {
+                        $this->assertSame('file', $criteria['type']);
+                        $this->assertSame('file1', $criteria['path']);
+                        $this->assertSame('txt', $update['extension']);
 
                         return;
                     }
 
-                    if ('new' === $file) {
+                    if ('file1' === $file) {
+                        $this->assertSame('file2.txt', $update['path']);
+
+                        return;
+                    }
+
+                    if ('new.txt' === $file) {
                         $this->assertSame(201, $update['lastModified']);
 
                         return;
@@ -978,14 +987,14 @@ class DbafsTest extends TestCase
         $this->assertCount(1, $itemsToCreate);
 
         $this->assertSame('cbab7', $itemsToCreate[0]->getHash());
-        $this->assertSame('new', $itemsToCreate[0]->getPath());
+        $this->assertSame('new.txt', $itemsToCreate[0]->getPath());
         $this->assertTrue($itemsToCreate[0]->isFile());
 
         // Items to update
         $itemsToUpdate = $changeSet->getItemsToUpdate(true);
         $this->assertCount(2, $itemsToUpdate);
 
-        $this->assertSame('new', $itemsToUpdate[0]->getExistingPath());
+        $this->assertSame('new.txt', $itemsToUpdate[0]->getExistingPath());
         $this->assertFalse($itemsToUpdate[0]->updatesPath());
         $this->assertFalse($itemsToUpdate[0]->updatesHash());
         $this->assertTrue($itemsToUpdate[0]->updatesLastModified());
@@ -995,7 +1004,7 @@ class DbafsTest extends TestCase
         $this->assertTrue($itemsToUpdate[1]->updatesPath());
         $this->assertFalse($itemsToUpdate[1]->updatesHash());
         $this->assertTrue($itemsToUpdate[1]->updatesLastModified());
-        $this->assertSame('file2', $itemsToUpdate[1]->getNewPath());
+        $this->assertSame('file2.txt', $itemsToUpdate[1]->getNewPath());
         $this->assertSame(200, $itemsToUpdate[1]->getLastModified());
 
         // Items to delete
@@ -1110,10 +1119,18 @@ class DbafsTest extends TestCase
         $invokedUpdate = 0;
 
         $connection
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(3))
             ->method('update')
             ->willReturnCallback(
                 function (string $table, array $updates, array $criteria) use (&$invokedUpdate): void {
+                    if (isset($criteria['type'])) {
+                        $this->assertSame('file', $criteria['type']);
+                        $this->assertSame('files/baz', $criteria['path']);
+                        $this->assertSame('', $updates['extension']);
+
+                        return;
+                    }
+
                     $this->assertSame('tl_files', $table);
                     $this->assertArrayHasKey('tstamp', $updates);
 
@@ -1184,7 +1201,7 @@ class DbafsTest extends TestCase
             ],
             [
                 ['path' => 'a/file'],
-                ['path' => 'b/file', 'pid' => 'ab54'], // updated path and uuid of "files/b"
+                ['path' => 'b/file', 'pid' => 'ab54', 'name' => 'file'], // updated path and uuid of "files/b"
             ],
             [
                 ['path' => 'b'],
@@ -1193,10 +1210,18 @@ class DbafsTest extends TestCase
         ];
 
         $connection
-            ->expects($this->exactly(3))
+            ->expects($this->exactly(4))
             ->method('update')
             ->willReturnCallback(
                 function (string $table, array $updates, array $criteria) use (&$expected): void {
+                    if (isset($criteria['type'])) {
+                        $this->assertSame('file', $criteria['type']);
+                        $this->assertSame('a/file', $criteria['path']);
+                        $this->assertSame('', $updates['extension']);
+
+                        return;
+                    }
+
                     $this->assertSame('tl_files', $table);
                     $this->assertArrayHasKey('tstamp', $updates);
 

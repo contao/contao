@@ -56,17 +56,12 @@ class ConfigurationTest extends TestCase
     }
 
     /**
-     * @group legacy
-     *
      * @dataProvider getPaths
      */
     public function testResolvesThePaths(string $unix, string $windows): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 4.13: Setting the web directory in a config file is deprecated. Use the "extra.public-dir" config key in your root composer.json instead.');
-
         $params = [
             [
-                'web_dir' => $unix,
                 'image' => [
                     'target_dir' => $windows,
                 ],
@@ -75,7 +70,6 @@ class ConfigurationTest extends TestCase
 
         $configuration = (new Processor())->processConfiguration($this->configuration, $params);
 
-        $this->assertSame('/tmp/contao', $configuration['web_dir']);
         $this->assertSame('C:/Temp/contao', $configuration['image']['target_dir']);
     }
 

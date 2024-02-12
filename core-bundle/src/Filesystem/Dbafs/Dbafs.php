@@ -604,6 +604,20 @@ class Dbafs implements DbafsInterface, ResetInterface
             if ($itemToUpdate->updatesPath()) {
                 $dataToUpdate['path'] = $this->convertToDatabasePath($itemToUpdate->getNewPath());
                 $dataToUpdate['pid'] = $getParentUuid($itemToUpdate->getNewPath());
+
+                // Backwards compatibility
+                if ('tl_files' === $this->table) {
+                    $dataToUpdate['name'] = basename($itemToUpdate->getNewPath());
+
+                    $this->connection->update(
+                        $this->table,
+                        ['extension' => Path::getExtension($itemToUpdate->getNewPath())],
+                        [
+                            'path' => $this->convertToDatabasePath($itemToUpdate->getExistingPath()),
+                            'type' => 'file',
+                        ],
+                    );
+                }
             }
 
             if ($itemToUpdate->updatesHash()) {
