@@ -23,6 +23,7 @@ use Monolog\Processor\ProcessorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Routing\RouteLoaderInterface;
 use Symfony\Component\Asset\PackageInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -47,6 +48,10 @@ use Twig\Extension\ExtensionInterface;
 use Twig\Extension\RuntimeExtensionInterface;
 use Twig\Loader\LoaderInterface;
 
+#[AsCommand(
+    name: 'contao:lint-service-ids',
+    description: 'Checks the Contao service IDs.',
+)]
 class LintServiceIdsCommand extends Command
 {
     /**
@@ -112,6 +117,7 @@ class LintServiceIdsCommand extends Command
         'contao.insert_tag' => '#[AsInsertTag]',
         'contao.block_insert_tag' => '#[AsBlockInsertTag]',
         'contao.insert_tag_flag' => '#[AsInsertTagFlag]',
+        'console.command' => '#[AsCommand]',
         'kernel.event_listener' => '#[AsEventListener]',
         'controller.service_arguments' => '#[AsController]',
         'messenger.message_handler' => '#[AsMessageHandler]',
@@ -122,7 +128,6 @@ class LintServiceIdsCommand extends Command
      * @var array<string>
      */
     private static array $tagToParentClass = [
-        'console.command' => Command::class,
         'container.service_locator' => ServiceLocator::class,
         'controller.service_arguments' => AbstractController::class,
     ];
@@ -162,14 +167,6 @@ class LintServiceIdsCommand extends Command
     public function __construct(private readonly string $projectDir)
     {
         parent::__construct();
-    }
-
-    protected function configure(): void
-    {
-        $this
-            ->setName('contao:lint-service-ids')
-            ->setDescription('Checks the Contao service IDs.')
-        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
