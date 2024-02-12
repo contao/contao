@@ -66,6 +66,30 @@ class CspRuntimeTest extends TestCase
         $this->assertSame("'self' https://example.com/files/foo/foobar.js", $directives->getDirective('script-src'));
     }
 
+    public function testAddsMultipleCspSources(): void
+    {
+        $directives = new DirectiveSet(new PolicyManager());
+        $directives->setDirective('script-src', "'self'");
+        $directives->setDirective('style-src', "'self'");
+
+        $cspHandler = new CspHandler($directives);
+        $responseContext = (new ResponseContext())->add($cspHandler);
+
+        $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
+        $responseContextAccessor
+            ->expects($this->once())
+            ->method('getResponseContext')
+            ->willReturn($responseContext)
+        ;
+
+        $runtime = new CspRuntime($responseContextAccessor, new WysiwygStyleProcessor([]));
+
+        $runtime->addSource(['script-src', 'style-src'], 'https://cdn.example.com/');
+
+        $this->assertSame("'self' https://cdn.example.com/", $directives->getDirective('script-src'));
+        $this->assertSame("'self' https://cdn.example.com/", $directives->getDirective('style-src'));
+    }
+
     public function testAddsCspHash(): void
     {
         $directives = new DirectiveSet(new PolicyManager());
