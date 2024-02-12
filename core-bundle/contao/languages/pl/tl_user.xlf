@@ -83,9 +83,11 @@
       </trans-unit>
       <trans-unit id="tl_user.doNotCollapse.0">
         <source>Do not collapse content elements</source>
+        <target>Nie zwijaj elementów zawartości</target>
       </trans-unit>
       <trans-unit id="tl_user.doNotCollapse.1">
         <source>Do not collapse content elements in the back end preview.</source>
+        <target>Nie zwijaj elementów treści w podglądzie backendu.</target>
       </trans-unit>
       <trans-unit id="tl_user.pwChange.0">
         <source>Password change required</source>
@@ -245,6 +247,7 @@
       </trans-unit>
       <trans-unit id="tl_user.start.1">
         <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Jeśli chcesz zapobiec aktywacji konta przed określoną datą/czasem, możesz to wpisać tutaj. W przeciwnym razie pozostaw pole puste.</target>
       </trans-unit>
       <trans-unit id="tl_user.stop.0">
         <source>Deactivate on</source>
@@ -252,6 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_user.stop.1">
         <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Jeśli chcesz zapobiec aktywacji konta po określonej dacie/czasie, możesz to wpisać tutaj. W przeciwnym razie pozostaw pole puste.</target>
       </trans-unit>
       <trans-unit id="tl_user.session.0">
         <source>Purge data</source>
@@ -391,9 +395,11 @@
       </trans-unit>
       <trans-unit id="tl_user.toggle.1">
         <source>Deactivate user ID %s</source>
+        <target>Dezaktywuj użytkownika ID %s</target>
       </trans-unit>
       <trans-unit id="tl_user.toggle.2">
         <source>Activate user ID %s</source>
+        <target>Aktywuj użytkownika ID %s</target>
       </trans-unit>
       <trans-unit id="tl_user.su">
         <source>Switch to user ID %s</source>

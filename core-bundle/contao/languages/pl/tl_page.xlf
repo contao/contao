@@ -99,9 +99,11 @@
       </trans-unit>
       <trans-unit id="tl_page.alwaysForward.0">
         <source>Always redirect</source>
+        <target>Zawsze przekierowuj</target>
       </trans-unit>
       <trans-unit id="tl_page.alwaysForward.1">
         <source>Redirect to the target page even if there are query or path parameters.</source>
+        <target>Przekieruj do docelowej strony nawet jeśli są parametry zapytania lub ścieżki.</target>
       </trans-unit>
       <trans-unit id="tl_page.jumpTo.0">
         <source>Redirect page</source>
@@ -445,6 +447,7 @@
       </trans-unit>
       <trans-unit id="tl_page.start.1">
         <source>If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Jeśli chcesz zapobiec wyświetlaniu strony na stronie internetowej przed określoną datą/czasem, możesz to wprowadzić tutaj. W przeciwnym razie pozostaw pole puste.</target>
       </trans-unit>
       <trans-unit id="tl_page.stop.0">
         <source>Show until</source>
@@ -452,6 +455,7 @@
       </trans-unit>
       <trans-unit id="tl_page.stop.1">
         <source>If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Jeśli chcesz zapobiec wyświetlaniu strony na stronie internetowej po określonej dacie/czasie, możesz to wpisać tutaj. W przeciwnym razie pozostaw pole puste.</target>
       </trans-unit>
       <trans-unit id="tl_page.enforceTwoFactor.0">
         <source>Enforce two-factor authentication</source>
@@ -611,9 +615,11 @@
       </trans-unit>
       <trans-unit id="tl_page.toggle.1">
         <source>Unpublish page ID %s</source>
+        <target>Ukryj stronę ID %s</target>
       </trans-unit>
       <trans-unit id="tl_page.toggle.2">
         <source>Publish page ID %s</source>
+        <target>Opublikuj stronę ID %s</target>
       </trans-unit>
       <trans-unit id="tl_page.pasteinto.0">
         <source>Paste at the top</source>

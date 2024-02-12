@@ -2,6 +2,20 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.2.9] (2024-02-12)
+
+**Fixed issues:**
+
+- [#6872] Correctly update the file name when synchronizing the DBAFS ([leofeyer])
+- [#6845] Remove the `web_dir` node in the `Configuration` class ([leofeyer])
+- [#6828] Do not display deleted authors in news ([zoglo])
+- [#6791] Correctly generate the enclosure URLs in news feeds ([leofeyer])
+- [#6796] Prevent errors in the images controller if images are missing ([fritzmg])
+- [#6780] Add a white border to QR codes in dark mode ([bytehead])
+- [#6726] Correctly handle arrays in the Ajax confirmation message ([leofeyer])
+- [#6720] Allow insert tags in link titles ([aschempp])
+- [#6688] Add the `encode_email` Twig filter ([leofeyer])
+
 ## [5.2.8] (2024-01-17)
 
 **Fixed issues:**
@@ -148,6 +162,7 @@ This project adheres to [Semantic Versioning].
 - [#5881] Remove the inconsistent form field wrapper ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.2.9]: https://github.com/contao/contao/releases/tag/5.2.9
 [5.2.8]: https://github.com/contao/contao/releases/tag/5.2.8
 [5.2.7]: https://github.com/contao/contao/releases/tag/5.2.7
 [5.2.6]: https://github.com/contao/contao/releases/tag/5.2.6
@@ -244,5 +259,14 @@ This project adheres to [Semantic Versioning].
 [#6623]: https://github.com/contao/contao/pull/6623
 [#6658]: https://github.com/contao/contao/pull/6658
 [#6659]: https://github.com/contao/contao/pull/6659
+[#6688]: https://github.com/contao/contao/pull/6688
 [#6695]: https://github.com/contao/contao/pull/6695
 [#6709]: https://github.com/contao/contao/pull/6709
+[#6720]: https://github.com/contao/contao/pull/6720
+[#6726]: https://github.com/contao/contao/pull/6726
+[#6780]: https://github.com/contao/contao/pull/6780
+[#6791]: https://github.com/contao/contao/pull/6791
+[#6796]: https://github.com/contao/contao/pull/6796
+[#6828]: https://github.com/contao/contao/pull/6828
+[#6845]: https://github.com/contao/contao/pull/6845
+[#6872]: https://github.com/contao/contao/pull/6872
