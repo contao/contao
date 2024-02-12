@@ -78,8 +78,8 @@ class DeprecationsNodeVisitor extends AbstractNodeVisitor
             $node->getNodeTag(),
         );
 
-        // Set the source context, so that the template name can be inserted
-        // when compiling the DeprecatedNode.
+        // Set the source context, so that the template name can be inserted when
+        // compiling the DeprecatedNode.
         $deprecatedNode->setSourceContext($node->getSourceContext());
 
         return new Node([$node, $deprecatedNode]);

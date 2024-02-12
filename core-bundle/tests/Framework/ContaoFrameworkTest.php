@@ -294,8 +294,8 @@ class ContaoFrameworkTest extends TestCase
         $parseTemplate = $GLOBALS['TL_HOOKS']['parseTemplate'];
         $isVisibleElement = $GLOBALS['TL_HOOKS']['isVisibleElement'];
 
-        // Test hooks with high priority are added before low and legacy hooks
-        // Test legacy hooks are added before hooks with priority 0
+        // Test hooks with high priority are added before low and legacy hooks. Test
+        // legacy hooks are added before hooks with priority 0.
         $this->assertSame(
             [
                 ['test.listener.a', 'onGetPageLayout'],

@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Voter\DataContainer;
 
+use Contao\ArticleModel;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -24,8 +26,10 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
  */
 class ArticleContentVoter implements VoterInterface, CacheableVoterInterface
 {
-    public function __construct(private readonly AccessDecisionManagerInterface $accessDecisionManager)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly AccessDecisionManagerInterface $accessDecisionManager,
+    ) {
     }
 
     public function supportsAttribute(string $attribute): bool
@@ -53,7 +57,10 @@ class ArticleContentVoter implements VoterInterface, CacheableVoterInterface
             return self::ACCESS_ABSTAIN;
         }
 
-        if (!$this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], $subject->getCurrentPid())) {
+        $articleAdapter = $this->framework->getAdapter(ArticleModel::class);
+        $articleModel = $articleAdapter->findByPk($subject->getCurrentPid());
+
+        if ($articleModel && !$this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], $articleModel->pid)) {
             return self::ACCESS_DENIED;
         }
 

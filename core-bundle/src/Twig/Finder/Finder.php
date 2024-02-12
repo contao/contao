@@ -198,8 +198,8 @@ final class Finder implements \IteratorAggregate, \Countable
                 continue;
             }
 
-            // The loader makes sure that all files grouped under one
-            // identifier have the same extension
+            // The loader makes sure that all files grouped under one identifier have the
+            // same extension
             $extension = ContaoTwigUtil::getExtension(array_key_first($chain));
 
             if (null !== $this->extension && $this->extension !== $extension) {

@@ -97,6 +97,11 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
             throw new LoaderError(sprintf('Tried to register an invalid Contao namespace "%s".', $namespace));
         }
 
+        // Skip execution if the given path and namespace was already registered
+        if (\in_array(rtrim($path, '/\\'), $this->paths[$namespace] ?? [], true)) {
+            return;
+        }
+
         try {
             parent::addPath($path, $namespace);
         } catch (LoaderError) {
@@ -176,10 +181,9 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
     {
         $templateName = $this->getThemeTemplateName($name) ?? $name;
 
-        // We prefix the cache key to make sure templates from the default
-        // Symfony loader won't be reused. Otherwise, we cannot reliably
-        // differentiate when to apply our input encoding tolerant escaper
-        // filters (see #4623).
+        // We prefix the cache key to make sure templates from the default Symfony loader
+        // won't be reused. Otherwise, we cannot reliably differentiate when to apply our
+        // input encoding tolerant escaper filters (see #4623).
         return 'c'.parent::getCacheKey($templateName);
     }
 
@@ -196,11 +200,10 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         $templateName = $this->getThemeTemplateName($name) ?? $name;
         $source = parent::getSourceContext($templateName);
 
-        // The Contao PHP templates will still be rendered by the Contao
-        // framework via a PhpTemplateProxyNode. We're removing the source to
-        // not confuse Twig's lexer and parser and just keep the block names.
-        // At some point we may transpile the source to valid Twig instead and
-        // drop the proxy.
+        // The Contao PHP templates will still be rendered by the Contao framework via a
+        // PhpTemplateProxyNode. We're removing the source to not confuse Twig's lexer
+        // and parser and just keep the block names. At some point we may transpile the
+        // source to valid Twig instead and drop the proxy.
         if ('html5' !== Path::getExtension($source->getPath(), true)) {
             return $source;
         }

@@ -890,6 +890,7 @@ services:
     contao.security.data_container.article_content_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\ArticleContentVoter
         arguments:
+            - '@contao.framework'
             - '@security.access.decision_manager'
 
     contao.security.data_container.content_composition_voter:

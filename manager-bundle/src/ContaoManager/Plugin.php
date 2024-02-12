@@ -316,8 +316,8 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             return $extensionConfigs;
         }
 
-        // Skip if a mapping with the name or alias "App" already exists or any
-        // mapping already targets "%kernel.project_dir%/src/Entity".
+        // Skip if a mapping with the name or alias "App" already exists or any mapping
+        // already targets "%kernel.project_dir%/src/Entity".
         foreach (array_replace(...$mappings) as $name => $values) {
             if (
                 'App' === $name

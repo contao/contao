@@ -766,8 +766,8 @@ class PictureFactoryTest extends TestCase
     {
         $imageMock = $this->createMock(ImageInterface::class);
         $pictureConfig = $this->createMock(PictureConfiguration::class);
-        $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
 
+        $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
         $pictureGenerator
             ->expects($this->once())
             ->method('generate')

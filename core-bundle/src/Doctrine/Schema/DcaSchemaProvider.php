@@ -317,8 +317,8 @@ class DcaSchemaProvider
             return null;
         }
 
-        // Return if the field is shorter than the shortest possible index
-        // length (utf8mb4 on InnoDB without large prefixes)
+        // Return if the field is shorter than the shortest possible index length
+        // (utf8mb4 on InnoDB without large prefixes)
         if ($length <= 191) {
             return null;
         }
@@ -365,9 +365,9 @@ class DcaSchemaProvider
 
         [$ver] = explode('-', (string) $this->doctrine->getConnection()->fetchOne('SELECT @@version'));
 
-        // As there is no reliable way to get the vendor (see #84), we are
-        // guessing based on the version number. The check will not be run
-        // as of MySQL 8 and MariaDB 10.3, so this should be safe.
+        // As there is no reliable way to get the vendor (see #84), we are guessing based
+        // on the version number. The check will not be run as of MySQL 8 and MariaDB
+        // 10.3, so this should be safe.
         $vok = version_compare($ver, '10', '>=') ? '10.2.2' : '5.7.7';
 
         // Large prefixes are always enabled as of MySQL 5.7.7 and MariaDB 10.2.2

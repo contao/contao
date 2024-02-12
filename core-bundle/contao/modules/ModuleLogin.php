@@ -17,6 +17,7 @@ use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvents
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
+use Symfony\Component\Security\Http\SecurityRequestAttributes;
 
 /**
  * Front end module "login".
@@ -74,28 +75,25 @@ class ModuleLogin extends Module
 		{
 			$this->targetPath = base64_decode($request->request->get('_target_path'));
 		}
-		elseif ($request && $this->redirectBack)
+		elseif ($request?->query->has('redirect'))
 		{
-			if ($request->query->has('redirect'))
-			{
-				$uriSigner = System::getContainer()->get('uri_signer');
+			$uriSigner = System::getContainer()->get('uri_signer');
 
-				// We cannot use $request->getUri() here as we want to work with the original URI (no query string reordering)
-				if ($uriSigner->check($request->getSchemeAndHttpHost() . $request->getBaseUrl() . $request->getPathInfo() . (null !== ($qs = $request->server->get('QUERY_STRING')) ? '?' . $qs : '')))
-				{
-					$this->targetPath = $request->query->get('redirect');
-				}
+			// We cannot use $request->getUri() here as we want to work with the original URI (no query string reordering)
+			if ($uriSigner->check($request->getSchemeAndHttpHost() . $request->getBaseUrl() . $request->getPathInfo() . (null !== ($qs = $request->server->get('QUERY_STRING')) ? '?' . $qs : '')))
+			{
+				$this->targetPath = $request->query->get('redirect');
 			}
-			elseif ($referer = $request->headers->get('referer'))
-			{
-				$refererUri = new Uri($referer);
-				$requestUri = new Uri($request->getUri());
+		}
+		elseif ($referer = $request?->headers->get('referer'))
+		{
+			$refererUri = new Uri($referer);
+			$requestUri = new Uri($request->getUri());
 
-				// Use the HTTP referer as a fallback, but only if scheme and host matches with the current request (see #5860)
-				if ($refererUri->getScheme() === $requestUri->getScheme() && $refererUri->getHost() === $requestUri->getHost() && $refererUri->getPort() === $requestUri->getPort())
-				{
-					$this->targetPath = (string) $refererUri;
-				}
+			// Use the HTTP referer as a fallback, but only if scheme and host matches with the current request (see #5860)
+			if ($refererUri->getScheme() === $requestUri->getScheme() && $refererUri->getHost() === $requestUri->getHost() && $refererUri->getPort() === $requestUri->getPort())
+			{
+				$this->targetPath = (string) $refererUri;
 			}
 		}
 
@@ -160,6 +158,17 @@ class ModuleLogin extends Module
 			$authUtils = $container->get('security.authentication_utils');
 			$exception = $authUtils->getLastAuthenticationError();
 			$lastUsername = $authUtils->getLastUsername();
+
+			// Store exception and username again to make it available for additional login modules on the page (see contao/contao#6275)
+			if ($exception)
+			{
+				$request->attributes->set(SecurityRequestAttributes::AUTHENTICATION_ERROR, $exception);
+			}
+
+			if ($lastUsername)
+			{
+				$request->attributes->set(SecurityRequestAttributes::LAST_USERNAME, $lastUsername);
+			}
 		}
 
 		if ($exception instanceof TooManyLoginAttemptsAuthenticationException)

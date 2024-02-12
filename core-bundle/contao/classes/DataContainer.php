@@ -962,7 +962,7 @@ abstract class DataContainer extends Backend
 			}
 			elseif (isset($config['href']))
 			{
-				$href = $this->addToUrl(($config['href'] ?? '') . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : '') . ($isPopup ? '&amp;popup=1' : ''));
+				$href = $this->addToUrl($config['href'] . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : '') . ($isPopup ? '&amp;popup=1' : ''));
 			}
 
 			parse_str(StringUtil::decodeEntities($config['href'] ?? $v['href'] ?? ''), $params);
@@ -1135,33 +1135,6 @@ abstract class DataContainer extends Backend
 			}
 
 			$v = \is_array($v) ? $v : array($v);
-			$id = StringUtil::specialchars(rawurldecode($arrRow['id']));
-			$label = $title = $k;
-
-			if (isset($v['label']))
-			{
-				if (\is_array($v['label']))
-				{
-					$label = $v['label'][0];
-					$title = sprintf($v['label'][1], $id);
-				}
-				else
-				{
-					$label = $title = sprintf($v['label'], $id);
-				}
-			}
-
-			$attributes = !empty($v['attributes']) ? ' ' . ltrim(sprintf($v['attributes'], $id, $id)) : '';
-
-			// Add the key as CSS class
-			if (str_contains($attributes, 'class="'))
-			{
-				$attributes = str_replace('class="', 'class="' . $k . ' ', $attributes);
-			}
-			else
-			{
-				$attributes = ' class="' . $k . '"' . $attributes;
-			}
 
 			// Add the parent table to the href
 			if (isset($v['href']))
@@ -1173,22 +1146,53 @@ abstract class DataContainer extends Backend
 				$v['href'] = 'table=' . $strPtable;
 			}
 
+			$config = new DataContainerOperation($k, $v, $arrRow, $this);
+
 			// Call a custom function instead of using the default button
 			if (\is_array($v['button_callback'] ?? null))
 			{
-				$return .= System::importStatic($v['button_callback'][0])->{$v['button_callback'][1]}($arrRow, $v['href'], $label, $title, $v['icon'], $attributes, $strPtable, array(), null, false, null, null, $this);
-				continue;
+				$callback = System::importStatic($v['button_callback'][0]);
+				$ref = new \ReflectionMethod($callback, $v['button_callback'][1]);
+
+				if ($ref->getNumberOfParameters() === 1 && ($type = $ref->getParameters()[0]->getType()) && $type->getName() === DataContainerOperation::class)
+				{
+					$callback->{$v['button_callback'][1]}($config);
+				}
+				else
+				{
+					$return .= $callback->{$v['button_callback'][1]}($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strPtable, array(), null, false, null, null, $this);
+					continue;
+				}
+			}
+			elseif (\is_callable($v['button_callback'] ?? null))
+			{
+				$ref = new \ReflectionFunction($v['button_callback']);
+
+				if ($ref->getNumberOfParameters() === 1 && ($type = $ref->getParameters()[0]->getType()) && $type->getName() === DataContainerOperation::class)
+				{
+					$v['button_callback']($config);
+				}
+				else
+				{
+					$return .= $v['button_callback']($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strPtable, array(), null, false, null, null, $this);
+					continue;
+				}
 			}
 
-			if (\is_callable($v['button_callback'] ?? null))
+			if (($html = $config->getHtml()) !== null)
 			{
-				$return .= $v['button_callback']($arrRow, $v['href'], $label, $title, $v['icon'], $attributes, $strPtable, array(), null, false, null, null, $this);
+				$return .= $html;
 				continue;
 			}
 
 			$isPopup = $k == 'show';
+			$href = null;
 
-			if (!empty($v['route']))
+			if ($config->getUrl() !== null)
+			{
+				$href = $config->getUrl();
+			}
+			elseif (!empty($config['route']))
 			{
 				$params = array('id' => $arrRow['id']);
 
@@ -1197,14 +1201,14 @@ abstract class DataContainer extends Backend
 					$params['popup'] = '1';
 				}
 
-				$href = System::getContainer()->get('router')->generate($v['route'], $params);
+				$href = System::getContainer()->get('router')->generate($config['route'], $params);
 			}
-			else
+			elseif (isset($config['href']))
 			{
-				$href = $this->addToUrl($v['href'] . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : '') . ($isPopup ? '&amp;popup=1' : ''));
+				$href = $this->addToUrl($config['href'] . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : '') . ($isPopup ? '&amp;popup=1' : ''));
 			}
 
-			parse_str(StringUtil::decodeEntities($v['href']), $params);
+			parse_str(StringUtil::decodeEntities($config['href'] ?? $v['href'] ?? ''), $params);
 
 			if (($params['act'] ?? null) == 'toggle' && isset($params['field']))
 			{
@@ -1214,12 +1218,12 @@ abstract class DataContainer extends Backend
 					continue;
 				}
 
-				$icon = $v['icon'];
-				$_icon = pathinfo($v['icon'], PATHINFO_FILENAME) . '_.' . pathinfo($v['icon'], PATHINFO_EXTENSION);
+				$icon = $config['icon'];
+				$_icon = pathinfo($config['icon'], PATHINFO_FILENAME) . '_.' . pathinfo($config['icon'], PATHINFO_EXTENSION);
 
-				if (str_contains($v['icon'], '/'))
+				if (str_contains($config['icon'], '/'))
 				{
-					$_icon = \dirname($v['icon']) . '/' . $_icon;
+					$_icon = \dirname($config['icon']) . '/' . $_icon;
 				}
 
 				if ($icon == 'visible.svg')
@@ -1229,22 +1233,40 @@ abstract class DataContainer extends Backend
 
 				$state = $arrRow[$params['field']] ? 1 : 0;
 
-				if (($v['reverse'] ?? false) || ($GLOBALS['TL_DCA'][$strPtable]['fields'][$params['field']]['reverseToggle'] ?? false))
+				if (($config['reverse'] ?? false) || ($GLOBALS['TL_DCA'][$strPtable]['fields'][$params['field']]['reverseToggle'] ?? false))
 				{
 					$state = $arrRow[$params['field']] ? 0 : 1;
 				}
 
-				$titleDisabled = (\is_array($v['label']) && isset($v['label'][2])) ? sprintf($v['label'][2], $arrRow['id']) : $title;
+				if ($href === null)
+				{
+					$return .= Image::getHtml($config['icon'], $config['label']) . ' ';
+				}
+				else
+				{
+					if (isset($config['titleDisabled']))
+					{
+						$titleDisabled = $config['titleDisabled'];
+					}
+					else
+					{
+						$titleDisabled = (\is_array($v['label']) && isset($v['label'][2])) ? sprintf($v['label'][2], $arrRow['id']) : $config['title'];
+					}
 
-				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($state ? $title : $titleDisabled) . '" data-title="' . StringUtil::specialchars($title) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" data-action="contao--scroll-offset#store" onclick="return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $label, 'data-icon="' . $icon . '" data-icon-disabled="' . $_icon . '" data-state="' . $state . '"') . '</a> ';
+					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($state ? $config['title'] : $titleDisabled) . '" data-title="' . StringUtil::specialchars($config['title']) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" data-action="contao--scroll-offset#store" onclick="return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $config['label'], 'data-icon="' . $icon . '" data-icon-disabled="' . $_icon . '" data-state="' . $state . '"') . '</a> ';
+				}
+			}
+			elseif ($href === null)
+			{
+				$return .= Image::getHtml($config['icon'], $config['label']) . ' ';
 			}
 			else
 			{
-				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '"' . ($isPopup ? ' onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", sprintf(\is_array($GLOBALS['TL_LANG'][$strPtable]['show'] ?? null) ? $GLOBALS['TL_LANG'][$strPtable]['show'][1] : ($GLOBALS['TL_LANG'][$strPtable]['show'] ?? ''), $arrRow['id']))) . '\',\'url\':this.href});return false"' : '') . $attributes . '>' . Image::getHtml($v['icon'], $label) . '</a> ';
+				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($config['title']) . '"' . ($isPopup ? ' onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $config['label'])) . '\',\'url\':this.href});return false"' : '') . $config['attributes'] . '>' . Image::getHtml($config['icon'], $config['label']) . '</a> ';
 			}
 		}
 
-		return $return;
+		return trim($return);
 	}
 
 	/**

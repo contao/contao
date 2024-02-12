@@ -207,6 +207,7 @@ class PreviewUrlConverterListenerTest extends TestCase
 
         $request = $this->createMock(Request::class);
         $request->query = new ParameterBag(['page' => '9']);
+
         $request
             ->expects($this->once())
             ->method('getUriForPath')

@@ -1270,55 +1270,41 @@ abstract class Controller extends System
 	 */
 	protected function getParentEntries($strTable, $intId)
 	{
-		// No parent table
-		if (empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']))
-		{
-			return '';
-		}
+		$getParentEntry = function ($table, $id) {
+			$this->loadDataContainer($table);
 
-		$db = Database::getInstance();
-		$arrParent = array();
-		$strParentTable = $strTable;
-		$intLastId = null;
-		$strLastParentTable = null;
+			$columns = 'pid';
+			$ptable = $GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null;
 
-		do
-		{
-			// Get the pid
-			$objParent = $db
-				->prepare("SELECT pid FROM " . $strParentTable . " WHERE id=?")
+			if ($GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? null)
+			{
+				$columns .= ', ptable';
+			}
+			elseif (!$ptable)
+			{
+				return null;
+			}
+
+			$objParent = Database::getInstance()
+				->prepare("SELECT $columns FROM $table WHERE id=?")
 				->limit(1)
-				->execute($intId);
+				->execute($id);
 
 			if ($objParent->numRows < 1)
 			{
-				break;
+				return null;
 			}
 
-			// Store the parent table information
-			$strParentTable = $GLOBALS['TL_DCA'][$strParentTable]['config']['ptable'];
-			$intId = $objParent->pid;
+			return array($objParent->ptable ?? $ptable, $objParent->pid);
+		};
 
-			// If both the parent table and the ID remain the same, we found the
-			// topmost record (usually the case with nested content elements).
-			if ($strParentTable == $strLastParentTable && $intId == $intLastId)
-			{
-				break;
-			}
+		$arrParent = array();
 
-			// Add the log entry
-			$arrParent[] = $strParentTable . '.id=' . $intId;
-
-			// Load the data container of the parent table
-			if ($strParentTable != $strLastParentTable)
-			{
-				$this->loadDataContainer($strParentTable);
-			}
-
-			$intLastId = $intId;
-			$strLastParentTable = $strParentTable;
+		while ($parentEntry = $getParentEntry($strTable, $intId))
+		{
+			list($strTable, $intId) = $parentEntry;
+			$arrParent[] = "$strTable.id=$intId";
 		}
-		while ($intId && !empty($GLOBALS['TL_DCA'][$strParentTable]['config']['ptable']));
 
 		if (empty($arrParent))
 		{

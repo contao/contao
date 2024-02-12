@@ -38,9 +38,8 @@ class CommandCompiler
         $toSchema = $this->schemaProvider->createSchema();
         $fromSchema = $schemaManager->introspectSchema();
 
-        // If tables or columns should be preserved, we copy the missing
-        // definitions over to the $toSchema, so that no DROP commands
-        // will be issued in the diff.
+        // If tables or columns should be preserved, we copy the missing definitions over
+        // to the $toSchema, so that no DROP commands will be issued in the diff.
         if ($skipDropStatements) {
             foreach ($fromSchema->getTables() as $table) {
                 if (!$toSchema->hasTable($table->getName())) {
@@ -158,9 +157,9 @@ class CommandCompiler
                 $commands[] = $command;
             }
 
-            // Delete the indexes if the engine changes in case the existing
-            // indexes are too long. The migration then needs to be run multiple
-            // times to re-create the indexes with the correct length.
+            // Delete the indexes if the engine changes in case the existing indexes are too
+            // long. The migration then needs to be run multiple times to re-create the
+            // indexes with the correct length.
             if ($deleteIndexes) {
                 if (!$fromSchema->hasTable($tableName)) {
                     continue;

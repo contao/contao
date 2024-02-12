@@ -10,7 +10,9 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\RouteParametersException;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -50,23 +52,28 @@ class SerpPreview extends Widget
 		{
 			// Get the URL with a %s placeholder for the alias or ID
 			$url = $this->getUrl($model);
+
+			list($baseUrl) = explode('%s', $url);
+			$trail = implode(' › ', $this->convertUrlToItems($baseUrl));
+
+			// Use the base URL for the index page
+			if ($model instanceof PageModel && $alias == 'index')
+			{
+				$url = $trail;
+			}
+			else
+			{
+				$url = implode(' › ', $this->convertUrlToItems($baseUrl . ($alias ?: $model->id)));
+			}
 		}
-		catch (ExceptionInterface $routingException)
+		catch (RouteParametersException)
 		{
 			return '<div class="serp-preview"><p class="tl_info">' . $GLOBALS['TL_LANG']['MSC']['noSerpPreview'] . '</p></div>';
 		}
-
-		list($baseUrl) = explode('%s', $url);
-		$trail = implode(' › ', $this->convertUrlToItems($baseUrl));
-
-		// Use the base URL for the index page
-		if ($model instanceof PageModel && $alias == 'index')
+		catch (ExceptionInterface)
 		{
-			$url = $trail;
-		}
-		else
-		{
-			$url = implode(' › ', $this->convertUrlToItems($baseUrl . ($alias ?: $model->id)));
+			$url = '';
+			$trail = '';
 		}
 
 		// Get the input field suffix (edit multiple mode)
@@ -136,6 +143,9 @@ class SerpPreview extends Widget
 		return $model->{$this->aliasField};
 	}
 
+	/**
+	 * @throws ExceptionInterface
+	 */
 	private function getUrl(Model $model): string
 	{
 		$aliasField = $this->aliasField ?: 'alias';
@@ -161,7 +171,7 @@ class SerpPreview extends Widget
 			{
 				$url = System::getContainer()->get('contao.routing.content_url_generator')->generate($tempModel, array(), UrlGeneratorInterface::ABSOLUTE_URL);
 			}
-			catch (ExceptionInterface $exception)
+			catch (RouteNotFoundException $exception)
 			{
 				throw new \LogicException('Unable to generate a content URL for the SERP widget, please provide the url_callback.', 0, $exception);
 			}
@@ -243,6 +253,12 @@ class SerpPreview extends Widget
 	private function convertUrlToItems($url): array
 	{
 		$chunks = parse_url($url);
+
+		if (!isset($chunks['path']))
+		{
+			return array();
+		}
+
 		$steps = array_filter(explode('/', $chunks['path']));
 
 		if (isset($chunks['host']))

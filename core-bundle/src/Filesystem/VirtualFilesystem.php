@@ -294,8 +294,8 @@ class VirtualFilesystem implements VirtualFilesystemInterface
                 return false;
             }
 
-            // Do not care about VirtualFilesystem::FORCE_SYNC at this point as
-            // the resource was already found.
+            // Do not care about VirtualFilesystem::FORCE_SYNC at this point as the resource
+            // was already found.
 
             return true;
         }

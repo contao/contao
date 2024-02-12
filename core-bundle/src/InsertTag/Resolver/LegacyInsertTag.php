@@ -382,9 +382,9 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                         $result = Idna::decode(Environment::get('url'));
                         break;
 
-                    // As the "env::path" insert tag returned the base URL ever since, we
-                    // keep it as an alias to the "env::base" tag. Use "env::base_path" to
-                    // output the actual base path.
+                    // As the "env::path" insert tag returned the base URL ever since, we keep it as
+                    // an alias to the "env::base" tag. Use "env::base_path" to output the actual
+                    // base path.
                     case 'path':
                     case 'base':
                         $result = Idna::decode(Environment::get('base'));

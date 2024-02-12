@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Security\Voter\DataContainer;
 
+use Contao\ArticleModel;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
@@ -27,7 +28,7 @@ class ArticleContentVoterTest extends TestCase
 {
     public function testSupportsAttributesAndTypes(): void
     {
-        $voter = new ArticleContentVoter($this->createMock(AccessDecisionManagerInterface::class));
+        $voter = new ArticleContentVoter($this->mockContaoFramework(), $this->createMock(AccessDecisionManagerInterface::class));
 
         $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_content'));
         $this->assertTrue($voter->supportsType(ReadAction::class));
@@ -43,6 +44,18 @@ class ArticleContentVoterTest extends TestCase
      */
     public function testVoter(array $current, bool|null $accessGranted, int $expected): void
     {
+        $current['pid'] = 42;
+        $article = $this->mockClassWithProperties(ArticleModel::class, ['id' => 42, 'pid' => 21]);
+
+        $adapter = $this->mockAdapter(['findByPk']);
+        $adapter
+            ->method('findByPk')
+            ->with(42)
+            ->willReturn($article)
+        ;
+
+        $framework = $this->mockContaoFramework([ArticleModel::class => $adapter]);
+
         $token = $this->createMock(TokenInterface::class);
         $subject = new ReadAction('tl_article', $current);
 
@@ -57,12 +70,12 @@ class ArticleContentVoterTest extends TestCase
             $decisionManager
                 ->expects($this->once())
                 ->method('decide')
-                ->with($token, [ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], $subject->getCurrentPid())
+                ->with($token, [ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 21)
                 ->willReturn($accessGranted)
             ;
         }
 
-        $voter = new ArticleContentVoter($decisionManager);
+        $voter = new ArticleContentVoter($framework, $decisionManager);
         $result = $voter->vote($token, $subject, [ContaoCorePermissions::DC_PREFIX.'tl_content']);
 
         $this->assertSame($expected, $result);
@@ -71,19 +84,19 @@ class ArticleContentVoterTest extends TestCase
     public function voterProvider(): \Generator
     {
         yield 'Abstains when access is allowed' => [
-            ['ptable' => 'tl_article', 'pid' => 42],
+            ['ptable' => 'tl_article'],
             true,
             VoterInterface::ACCESS_ABSTAIN,
         ];
 
         yield 'Only votes on ptable=tl_article' => [
-            ['ptable' => 'tl_news', 'pid' => 42],
+            ['ptable' => 'tl_news'],
             null,
             VoterInterface::ACCESS_ABSTAIN,
         ];
 
         yield 'Denies access if decision manager denies' => [
-            ['ptable' => 'tl_article', 'pid' => 42],
+            ['ptable' => 'tl_article'],
             false,
             VoterInterface::ACCESS_DENIED,
         ];
