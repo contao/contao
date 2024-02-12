@@ -73,7 +73,7 @@ final class CspRuntime implements RuntimeExtensionInterface
         return $csp->getNonce($directive);
     }
 
-    public function addSource(string|array $directives, string $source): void
+    public function addSource(array|string $directives, string $source): void
     {
         $responseContext = $this->responseContextAccessor->getResponseContext();
 

@@ -173,7 +173,8 @@ trait TemplateTrait
 		/** @var CspHandler $csp */
 		$csp = $responseContext->get(CspHandler::class);
 
-		foreach ((array) $directives as $directive) {
+		foreach ((array) $directives as $directive)
+		{
 			$csp->addSource($directive, $source);
 		}
 	}
