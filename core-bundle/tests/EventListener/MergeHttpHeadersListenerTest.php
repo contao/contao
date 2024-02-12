@@ -314,8 +314,8 @@ class MergeHttpHeadersListenerTest extends TestCase
         $this->expectDeprecation('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s.');
 
         $response = new Response();
-        $response->headers = $this->createMock(ResponseHeaderBag::class);
 
+        $response->headers = $this->createMock(ResponseHeaderBag::class);
         $response->headers
             ->expects($this->exactly(2))
             ->method('set')

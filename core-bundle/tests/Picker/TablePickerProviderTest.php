@@ -647,7 +647,6 @@ class TablePickerProviderTest extends ContaoTestCase
         ;
 
         $framework = $this->createMock(ContaoFramework::class);
-
         $framework
             ->expects($this->atLeastOnce())
             ->method('createInstance')

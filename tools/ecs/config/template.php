@@ -10,6 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
+use Contao\EasyCodingStandard\Fixer\ChainedMethodBlockFixer;
 use Contao\EasyCodingStandard\Fixer\CommentLengthFixer;
 use PhpCsFixer\Fixer\ClassNotation\VisibilityRequiredFixer;
 use PhpCsFixer\Fixer\ControlStructure\NoAlternativeSyntaxFixer;
@@ -29,6 +30,7 @@ return static function (ECSConfig $ecsConfig): void {
 
     $ecsConfig->skip([
         BlankLineAfterOpeningTagFixer::class,
+        ChainedMethodBlockFixer::class,
         CommentLengthFixer::class,
         DeclareStrictTypesFixer::class,
         LinebreakAfterOpeningTagFixer::class,
