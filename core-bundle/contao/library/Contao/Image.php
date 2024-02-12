@@ -204,37 +204,19 @@ class Image
 				$darkSrc = substr($darkSrc, \strlen($webDir) + 1);
 			}
 
-			// Extract data icons for applying them to light and dark source (See #6869)
-			$attributes = new HtmlAttributes($attributes);
-			$arrAttributes = $attributes->getIterator()->getArrayCopy();
-
-			$lightSrcAttributes = array();
-			$darkSrcAttributes = array();
-
-			if (\array_key_exists('data-icon', $arrAttributes))
-			{
-				$lightSrcAttributes['data-icon'] = $arrAttributes['data-icon'];
-				$attributes->unset('data-icon');
-			}
-
-			if (\array_key_exists('data-icon-disabled', $arrAttributes))
-			{
-				$lightSrcAttributes['data-icon-disabled'] = $arrAttributes['data-icon-disabled'];
-				$attributes->unset('data-icon-disabled');
-			}
-
-			foreach ($lightSrcAttributes as $attribute => $src)
-			{
-				// Assuming every dark mode icon already coexists as $darkSrc has been found already
-				$darkSrcAttributes[$attribute] = pathinfo($src, PATHINFO_FILENAME) . '--dark.' . pathinfo($src, PATHINFO_EXTENSION);
-			}
-
 			$darkAttributes = new HtmlAttributes($attributes);
-			$darkAttributes->mergeWith($darkSrcAttributes);
 			$darkAttributes->mergeWith(array('class' => 'color-scheme--dark', 'loading' => 'lazy'));
 
+			foreach (array('data-icon', 'data-icon-disabled') as $icon)
+			{
+				if (isset($darkAttributes[$icon]))
+				{
+					$pathinfo = pathinfo($darkAttributes[$icon]);
+					$darkAttributes[$icon] = $pathinfo['filename'] . '--dark.' . $pathinfo['extension'];
+				}
+			}
+
 			$lightAttributes = new HtmlAttributes($attributes);
-			$lightAttributes->mergeWith($lightSrcAttributes);
 			$lightAttributes->mergeWith(array('class' => 'color-scheme--light', 'loading' => 'lazy'));
 
 			return '<img src="' . self::getUrl($darkSrc) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '"' . $darkAttributes . '><img src="' . self::getUrl($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '"' . $lightAttributes . '>';
