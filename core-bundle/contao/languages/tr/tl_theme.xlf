@@ -47,6 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_theme.source.1">
         <source>Here you can upload one or more .cto, .zip or .sql files to be imported.</source>
+        <target>Buradan içe aktarılacak bir ya da birkaç .cto, .zip ya da .sql dosyası yükleyebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_theme.tstamp.0">
         <source>Revision date</source>
