@@ -60,7 +60,6 @@ class CspRuntimeTest extends TestCase
         ;
 
         $runtime = new CspRuntime($responseContextAccessor, new WysiwygStyleProcessor([]));
-
         $runtime->addSource('script-src', 'https://example.com/files/foo/foobar.js');
 
         $this->assertSame("'self' https://example.com/files/foo/foobar.js", $directives->getDirective('script-src'));
@@ -83,7 +82,6 @@ class CspRuntimeTest extends TestCase
         ;
 
         $runtime = new CspRuntime($responseContextAccessor, new WysiwygStyleProcessor([]));
-
         $runtime->addSource(['script-src', 'style-src'], 'https://cdn.example.com/');
 
         $this->assertSame("'self' https://cdn.example.com/", $directives->getDirective('script-src'));
