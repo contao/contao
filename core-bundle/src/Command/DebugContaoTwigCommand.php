@@ -16,6 +16,7 @@ use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\TableCell;
 use Symfony\Component\Console\Helper\TableCellStyle;
@@ -27,6 +28,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Path;
 
+#[AsCommand(
+    name: 'debug:contao-twig',
+    description: 'Displays the Contao template hierarchy.',
+)]
 class DebugContaoTwigCommand extends Command
 {
     public function __construct(
@@ -42,8 +47,6 @@ class DebugContaoTwigCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('debug:contao-twig')
-            ->setDescription('Displays the Contao template hierarchy.')
             ->addOption('theme', 't', InputOption::VALUE_OPTIONAL, 'Include theme templates with a given theme path or slug.')
             ->addOption('tree', null, InputOption::VALUE_NONE, 'Display the templates as prefix tree.')
             ->addArgument('filter', InputArgument::OPTIONAL, 'Filter the output by an identifier or prefix.')

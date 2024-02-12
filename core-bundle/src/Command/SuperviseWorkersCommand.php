@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Util\ProcessUtil;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -23,6 +24,10 @@ use Toflar\CronjobSupervisor\BasicCommand;
 use Toflar\CronjobSupervisor\CommandInterface;
 use Toflar\CronjobSupervisor\Supervisor;
 
+#[AsCommand(
+    name: 'contao:supervise-workers',
+    description: 'Supervises the Contao workers.',
+)]
 class SuperviseWorkersCommand extends Command
 {
     /**
@@ -40,14 +45,6 @@ class SuperviseWorkersCommand extends Command
     public static function create(ContainerInterface $messengerTransportLocator, ProcessUtil $processUtil, string $storageDirectory, array $workers): self
     {
         return new self($messengerTransportLocator, $processUtil, new Supervisor($storageDirectory), $workers);
-    }
-
-    protected function configure(): void
-    {
-        $this
-            ->setName('contao:supervise-workers')
-            ->setDescription('Supervises the Contao workers.')
-        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

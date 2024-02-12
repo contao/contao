@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Cron\Cron;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -20,6 +21,10 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand(
+    name: 'contao:cron:list',
+    description: 'Lists all available cron jobs and their intervals.',
+)]
 class CronListCommand extends Command
 {
     public function __construct(private readonly Cron $cron)
@@ -29,11 +34,7 @@ class CronListCommand extends Command
 
     protected function configure(): void
     {
-        $this
-            ->setName('contao:cron:list')
-            ->setDescription('Lists all available cron jobs and their intervals.')
-            ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt, json)', 'txt')
-        ;
+        $this->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt, json)', 'txt');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

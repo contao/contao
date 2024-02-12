@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet\ChangeSet;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\Table;
@@ -22,6 +23,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand(
+    name: 'contao:filesync',
+    description: 'Synchronizes the registered DBAFS with the virtual filesystem.',
+)]
 class FilesyncCommand extends Command
 {
     public function __construct(private readonly DbafsManager $dbafsManager)
@@ -31,11 +36,7 @@ class FilesyncCommand extends Command
 
     protected function configure(): void
     {
-        $this
-            ->setName('contao:filesync')
-            ->setDescription('Synchronizes the registered DBAFS with the virtual filesystem.')
-            ->addArgument('paths', InputArgument::IS_ARRAY, 'Optional path(s) for partial synchronization.')
-        ;
+        $this->addArgument('paths', InputArgument::IS_ARRAY, 'Optional path(s) for partial synchronization.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
