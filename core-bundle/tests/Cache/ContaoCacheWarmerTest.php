@@ -80,13 +80,18 @@ class ContaoCacheWarmerTest extends TestCase
             ->willReturn('en')
         ;
 
+        $parentCatalogue
+            ->method('all')
+            ->with('contao_tl_foobar')
+            ->willReturn(['tl_foobar.new.0' => 'Create new foobar'])
+        ;
+
         $catalogue = new MessageCatalogue($parentCatalogue, $this->mockContaoFramework(), $this->createMock(ResourceFinder::class));
 
         $translator = $this->createMock(Translator::class);
         $translator
-            ->expects($this->once())
-            ->method('getCatalogues')
-            ->willReturn([$catalogue])
+            ->method('getCatalogue')
+            ->willReturn($catalogue)
         ;
 
         $warmer = $this->getCacheWarmer(translator: $translator);
