@@ -52,6 +52,7 @@ class ImagesController extends AbstractContentElementController
 
         $template->set('sort_mode', $sortMode);
         $template->set('randomize_order', $randomize = 'random' === $model->sortBy);
+        $template->set('searchable', 'image' === $model->type || !$randomize);
 
         // Limit elements; use client-side logic for only displaying the first $limit
         // elements in case we are dealing with a random order

@@ -66,6 +66,7 @@ class PlayerController extends AbstractContentElementController
 
         $template->set('figure', (object) $figureData);
         $template->set('source_files', $sourceFiles);
+        $template->set('searchable', false);
 
         return $template->getResponse();
     }

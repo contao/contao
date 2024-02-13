@@ -67,6 +67,7 @@ class VideoController extends AbstractContentElementController
         ;
 
         $template->set('splash_image', $figure);
+        $template->set('searchable', false);
 
         return $template->getResponse();
     }
