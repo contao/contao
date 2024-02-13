@@ -111,7 +111,7 @@ class ImagesControllerTest extends ContentElementTestCase
             ],
         );
 
-        $output = $response->getContent();as
+        $output = $response->getContent();
 
         $this->assertStringContainsString('<!-- indexer::stop -->', $output);
         $this->assertStringContainsString('<!-- indexer::continue -->', $output);
