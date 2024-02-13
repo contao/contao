@@ -69,7 +69,27 @@ class ContaoCacheWarmerTest extends TestCase
 
     public function testCreatesTheCacheFolder(): void
     {
-        $warmer = $this->getCacheWarmer();
+        $parentCatalogue = $this->createMock(MessageCatalogueInterface::class);
+        $parentCatalogue
+            ->method('getDomains')
+            ->willReturn(['contao_tl_foobar'])
+        ;
+
+        $parentCatalogue
+            ->method('getLocale')
+            ->willReturn('en')
+        ;
+
+        $catalogue = new MessageCatalogue($parentCatalogue, $this->mockContaoFramework(), $this->createMock(ResourceFinder::class));
+
+        $translator = $this->createMock(Translator::class);
+        $translator
+            ->expects($this->once())
+            ->method('getCatalogues')
+            ->willReturn([$catalogue])
+        ;
+
+        $warmer = $this->getCacheWarmer(translator: $translator);
         $warmer->warmUp(Path::join($this->getTempDir(), 'var/cache'));
 
         $this->assertFileExists(Path::join($this->getTempDir(), 'var/cache/contao'));
@@ -116,6 +136,7 @@ class ContaoCacheWarmerTest extends TestCase
         $this->assertArrayHasKey('en', $langs);
         $this->assertArrayHasKey('default', $langs['en']);
         $this->assertArrayHasKey('tl_test', $langs['en']);
+        $this->assertArrayHasKey('tl_foobar', $langs['en']);
     }
 
     public function testIsAnOptionalWarmer(): void

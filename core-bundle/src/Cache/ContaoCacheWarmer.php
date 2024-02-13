@@ -170,6 +170,15 @@ class ContaoCacheWarmer implements CacheWarmerInterface
             }
         }
 
+        // Add Contao translations that only exist as Symfony translations for the available language file cache (see #6741)
+        foreach ($this->translator->getCatalogues() as $catalogue) {
+            $domains = array_filter($catalogue->getDomains(), static fn (string $domain): bool => str_starts_with($domain, 'contao_'));
+
+            foreach ($domains as $domain) {
+                $processed[$catalogue->getLocale()][substr($domain, 7)] = true;
+            }
+        }
+
         // Cache the available Contao language files (see #6454)
         $this->filesystem->dumpFile(
             Path::join($cacheDir, 'contao/config/available-language-files.php'),
