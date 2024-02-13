@@ -34,6 +34,7 @@ class PlayerControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<'HTML'
+            <!-- indexer::stop -->
             <div class="content-player">
                 <figure>
                     <video controls autoplay loop>
@@ -43,6 +44,7 @@ class PlayerControllerTest extends ContentElementTestCase
                     <figcaption>Caption</figcaption>
                 </figure>
             </div>
+            <!-- indexer::continue -->
             HTML;
 
         $this->assertSameHtml($expectedOutput, $response->getContent());
@@ -75,6 +77,7 @@ class PlayerControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<'HTML'
+            <!-- indexer::stop -->
             <div class="content-player">
                 <ul>
                     <li>
@@ -85,6 +88,7 @@ class PlayerControllerTest extends ContentElementTestCase
                     </li>
                 </ul>
             </div>
+            <!-- indexer::continue -->
             HTML;
 
         $this->assertSameHtml($expectedOutput, $response->getContent());

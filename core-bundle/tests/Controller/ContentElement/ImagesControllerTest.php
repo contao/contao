@@ -89,6 +89,34 @@ class ImagesControllerTest extends ContentElementTestCase
         $this->assertSameHtml($expectedOutput, $response->getContent());
     }
 
+    public function testOutputsUnsearchableRandomGallery(): void
+    {
+        $security = $this->createMock(Security::class);
+
+        $response = $this->renderWithModelData(
+            new ImagesController($security, $this->getDefaultStorage(), $this->getDefaultStudio(), ['jpg']),
+            [
+                'type' => 'gallery',
+                'multiSRC' => serialize([
+                    StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE1),
+                    StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE2),
+                    StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE3),
+                ]),
+                'sortBy' => 'random',
+                'numberOfItems' => 2,
+                'size' => '',
+                'fullsize' => true,
+                'perPage' => 4,
+                'perRow' => 2,
+            ],
+        );
+
+        $output = $response->getContent();as
+
+        $this->assertStringContainsString('<!-- indexer::stop -->', $output);
+        $this->assertStringContainsString('<!-- indexer::continue -->', $output);
+    }
+
     public function testIgnoresInvalidTypes(): void
     {
         $security = $this->createMock(Security::class);

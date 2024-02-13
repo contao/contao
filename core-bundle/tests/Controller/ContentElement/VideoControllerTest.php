@@ -43,6 +43,7 @@ class VideoControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<'HTML'
+            <!-- indexer::stop -->
             <div class="content-youtube">
                 <figure class="aspect aspect--4:3">
                     <iframe
@@ -54,6 +55,7 @@ class VideoControllerTest extends ContentElementTestCase
                     <figcaption>Some caption</figcaption>
                 </figure>
             </div>
+            <!-- indexer::continue -->
             HTML;
 
         $this->assertSameHtml($expectedOutput, $response->getContent());
@@ -85,6 +87,7 @@ class VideoControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<'HTML'
+            <!-- indexer::stop -->
             <div class="content-vimeo">
                 <figure>
                 <button data-splash-screen>
@@ -100,6 +103,7 @@ class VideoControllerTest extends ContentElementTestCase
                 </button>
                 </figure>
             </div>
+            <!-- indexer::continue -->
             HTML;
 
         $this->assertSameHtml($expectedOutput, $response->getContent());
