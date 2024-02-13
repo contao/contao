@@ -99,11 +99,9 @@ class ImagesControllerTest extends ContentElementTestCase
                 'type' => 'gallery',
                 'multiSRC' => serialize([
                     StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE1),
-                    StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE2),
-                    StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE3),
                 ]),
                 'sortBy' => 'random',
-                'numberOfItems' => 2,
+                'numberOfItems' => 1,
                 'size' => '',
                 'fullsize' => true,
                 'perPage' => 4,
@@ -111,10 +109,21 @@ class ImagesControllerTest extends ContentElementTestCase
             ],
         );
 
-        $output = $response->getContent();
+        $expectedOutput = <<<'HTML'
+            <!-- indexer::stop -->
+            <div class="content-gallery--cols-2 content-gallery">
+                <ul data-list-random data-list-paginate="4,1">
+                    <li>
+                        <figure>
+                            <img src="files/image1.jpg" alt>
+                        </figure>
+                    </li>
+                </ul>
+            </div>
+            <!-- indexer::continue -->
+            HTML;
 
-        $this->assertStringContainsString('<!-- indexer::stop -->', $output);
-        $this->assertStringContainsString('<!-- indexer::continue -->', $output);
+        $this->assertSameHtml($expectedOutput, $response->getContent());
     }
 
     public function testIgnoresInvalidTypes(): void
