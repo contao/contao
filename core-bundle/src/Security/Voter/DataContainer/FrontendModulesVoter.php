@@ -30,6 +30,10 @@ class FrontendModulesVoter extends AbstractDataContainerVoter
             return true;
         }
 
+        if ($action instanceof ReadAction) {
+            return true;
+        }
+
         return $this->isAllowedModuleType($action, $user);
     }
 
