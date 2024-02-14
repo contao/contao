@@ -56,4 +56,11 @@
             {% endfor %}
         {% endblock %}
     {% endif %}
+
+    {# Add metadata #}
+    {% block schema_org %}
+        {% if download.file.schemaOrgData|default(false) %}
+            {% do add_schema_org(download.file.schemaOrgData) %}
+        {% endif %}
+    {% endblock %}
 {% endblock %}
