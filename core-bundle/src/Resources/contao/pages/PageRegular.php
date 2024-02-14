@@ -62,7 +62,7 @@ class PageRegular extends Frontend
 
 		$response = $this->Template->getResponse($blnCheckRequest);
 
-        // Allow subrequests on this controller (fragments) to dynamically influence the Cache-Control header
+		// Allow subrequests on this controller (fragments) to dynamically influence the Cache-Control header
 		$response->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, true);
 
 		// Finalize the response context so it cannot be used anymore
