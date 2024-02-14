@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
@@ -60,6 +61,9 @@ class PageRegular extends Frontend
 		$this->prepare($objPage);
 
 		$response = $this->Template->getResponse($blnCheckRequest);
+
+		// Allow subrequests on this controller (fragments) to dynamically influence the Cache-Control header
+		$response->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, true);
 
 		// Finalize the response context so it cannot be used anymore
 		System::getContainer()->get('contao.routing.response_context_accessor')->finalizeCurrentContext($response);
