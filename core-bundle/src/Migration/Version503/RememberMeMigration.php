@@ -47,7 +47,7 @@ class RememberMeMigration extends AbstractMigration
         );
 
         $schemaManager = $this->connection->createSchemaManager();
-        $username = isset($schemaManager->listTableColumns('tl_remember_me')['userIdentifier']) ? 'userIdentifier' : 'username';
+        $username = isset($schemaManager->listTableColumns('tl_remember_me')['useridentifier']) ? 'userIdentifier' : 'username';
 
         $this->connection->executeStatement(
             <<<SQL
