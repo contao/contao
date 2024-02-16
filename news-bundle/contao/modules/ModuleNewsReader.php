@@ -178,8 +178,13 @@ class ModuleNewsReader extends ModuleNews
 			return;
 		}
 
-		/** @var NewsArchiveModel $objArchive */
 		$objArchive = $objArticle->getRelated('pid');
+
+		if (!$objArchive instanceof NewsArchiveModel)
+		{
+			return;
+		}
+
 		$this->Template->allowComments = $objArchive->allowComments;
 
 		// Comments are not allowed
@@ -200,10 +205,14 @@ class ModuleNewsReader extends ModuleNews
 			$arrNotifies[] = $GLOBALS['TL_ADMIN_EMAIL'];
 		}
 
-		/** @var UserModel $objAuthor */
-		if ($objArchive->notify != 'notify_admin' && ($objAuthor = $objArticle->getRelated('author')) instanceof UserModel && $objAuthor->email)
+		if ($objArchive->notify != 'notify_admin')
 		{
-			$arrNotifies[] = $objAuthor->email;
+			$objAuthor = $objArticle->getRelated('author');
+
+			if ($objAuthor instanceof UserModel && $objAuthor->email)
+			{
+				$arrNotifies[] = $objAuthor->email;
+			}
 		}
 
 		$objConfig = new \stdClass();

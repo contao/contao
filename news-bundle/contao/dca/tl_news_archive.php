@@ -17,7 +17,6 @@ use Contao\News;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 $GLOBALS['TL_DCA']['tl_news_archive'] = array
 (
@@ -203,7 +202,6 @@ class tl_news_archive extends Backend
 
 		$db = Database::getInstance();
 
-		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 		$arrNew = $objSessionBag->get('new_records');
 

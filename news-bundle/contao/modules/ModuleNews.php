@@ -135,13 +135,13 @@ abstract class ModuleNews extends Module
 			};
 		}
 
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$objTemplate->date = Date::parse($objPage->datimFormat, $objArticle->date);
 
-		/** @var UserModel $objAuthor */
-		if (($objAuthor = $objArticle->getRelated('author')) instanceof UserModel)
+		$objAuthor = $objArticle->getRelated('author');
+
+		if ($objAuthor instanceof UserModel)
 		{
 			$objTemplate->author = $GLOBALS['TL_LANG']['MSC']['by'] . ' ' . $objAuthor->name;
 			$objTemplate->authorModel = $objAuthor;

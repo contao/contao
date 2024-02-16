@@ -490,22 +490,24 @@ class tl_news extends Backend
 	 */
 	public function getTitleTag(NewsModel $model)
 	{
-		/** @var NewsArchiveModel $archive */
-		if (!$archive = $model->getRelated('pid'))
+		$archive = $model->getRelated('pid');
+
+		if (!$archive instanceof NewsArchiveModel)
 		{
 			return '';
 		}
 
-		/** @var PageModel $page */
-		if (!$page = $archive->getRelated('jumpTo'))
+		$page = $archive->getRelated('jumpTo');
+
+		if (!$page instanceof PageModel)
 		{
 			return '';
 		}
 
 		$page->loadDetails();
+		$layout = $page->getRelated('layout');
 
-		/** @var LayoutModel $layout */
-		if (!$layout = $page->getRelated('layout'))
+		if (!$layout instanceof LayoutModel)
 		{
 			return '';
 		}
