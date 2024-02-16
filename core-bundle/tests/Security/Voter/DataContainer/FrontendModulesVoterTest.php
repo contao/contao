@@ -71,12 +71,12 @@ class FrontendModulesVoterTest extends TestCase
 
         $voter = new FrontendModulesVoter();
 
-        // Reading is always permitted
+        // Reading is always permitted, although type "listing" is not explicitly allowed
         $this->assertSame(
             VoterInterface::ACCESS_ABSTAIN,
             $voter->vote(
                 $token,
-                new ReadAction('foo', ['id' => 42, 'type' => 'navigation']),
+                new ReadAction('foo', ['id' => 42, 'type' => 'listing']),
                 [ContaoCorePermissions::DC_PREFIX.'tl_module'],
             ),
         );

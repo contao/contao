@@ -46,17 +46,20 @@ class RememberMeMigration extends AbstractMigration
                 SQL,
         );
 
+        $schemaManager = $this->connection->createSchemaManager();
+        $username = isset($schemaManager->listTableColumns('tl_remember_me')['useridentifier']) ? 'userIdentifier' : 'username';
+
         $this->connection->executeStatement(
-            <<<'SQL'
+            <<<SQL
                 INSERT INTO rememberme_token (
                     SELECT
                         TRIM(TRAILING CHAR(0) FROM CAST(series AS char)),
                         TRIM(TRAILING CHAR(0) FROM CAST(value AS char)),
                         lastUsed,
                         class,
-                        userIdentifier
+                        $username
                     FROM tl_remember_me
-                    WHERE userIdentifier != ''
+                    WHERE $username != ''
                 )
                 SQL,
         );
