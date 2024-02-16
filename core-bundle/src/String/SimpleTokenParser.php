@@ -160,7 +160,8 @@ class SimpleTokenParser implements LoggerAwareInterface
 
             $value = $tokens[$i]->value;
 
-            // Skip constant nodes (see Symfony/Component/ExpressionLanguage/Parser#parsePrimaryExpression()
+            // Skip constant nodes
+            /** @see Symfony/Component/ExpressionLanguage/Parser#parsePrimaryExpression() */
             if (\in_array($value, ['true', 'TRUE', 'false', 'FALSE', 'null'], true)) {
                 continue;
             }

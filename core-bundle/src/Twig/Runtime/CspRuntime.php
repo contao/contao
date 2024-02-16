@@ -73,7 +73,7 @@ final class CspRuntime implements RuntimeExtensionInterface
         return $csp->getNonce($directive);
     }
 
-    public function addSource(string $directive, string $source): void
+    public function addSource(array|string $directives, string $source): void
     {
         $responseContext = $this->responseContextAccessor->getResponseContext();
 
@@ -83,7 +83,10 @@ final class CspRuntime implements RuntimeExtensionInterface
 
         /** @var CspHandler $csp */
         $csp = $responseContext->get(CspHandler::class);
-        $csp->addSource($directive, $source);
+
+        foreach ((array) $directives as $directive) {
+            $csp->addSource($directive, $source);
+        }
     }
 
     public function addHash(string $directive, string $source, string $algorithm = 'sha256'): void

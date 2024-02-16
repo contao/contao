@@ -33,8 +33,8 @@ abstract class AbstractBasicEntitiesMigration extends AbstractMigration
     {
         $schemaManager = $this->connection->createSchemaManager();
 
-        // This migration is very intrusive thus we try to run it only if the
-        // database schema was not yet updated to Contao 5
+        // This migration is very intrusive thus we try to run it only if the database
+        // schema was not yet updated to Contao 5
         if (
             !$schemaManager->tablesExist(['tl_article'])
             || !isset($schemaManager->listTableColumns('tl_article')['keywords'])

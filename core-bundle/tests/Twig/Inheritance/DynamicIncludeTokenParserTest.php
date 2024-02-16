@@ -115,8 +115,8 @@ class DynamicIncludeTokenParserTest extends TestCase
         $environment = new Environment($this->createMock(LoaderInterface::class));
         $environment->addTokenParser(new DynamicIncludeTokenParser($templateHierarchy));
 
-        // Use a conditional expression here, so that we can test rethrowing
-        // exceptions in case the parent node is not an ArrayExpression
+        // Use a conditional expression here, so that we can test rethrowing exceptions
+        // in case the parent node is not an ArrayExpression
         $source = new Source("{% include true ? '@Contao/foo' : '' %}", 'template.html.twig');
         $tokenStream = (new Lexer($environment))->tokenize($source);
         $parser = new Parser($environment);

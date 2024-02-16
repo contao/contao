@@ -16,7 +16,7 @@
 <!-- indexer::continue -->
 
 <?php if ($this->ajax): ?>
-  <script>
+  <script<?= $this->attr()->setIfExists('nonce', $this->nonce('script-src')) ?>>
     window.addEventListener('DOMContentLoaded', () => {
       const el = document.querySelector('[data-ajax-form="<?= $this->id ?>"]');
 

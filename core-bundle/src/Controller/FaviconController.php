@@ -53,7 +53,8 @@ class FaviconController
             throw new NotFoundHttpException();
         }
 
-        // Cache the response for 1 year and tag it, so it is invalidated when the settings are edited
+        // Cache the response for 1 year and tag it, so it is invalidated when the
+        // settings are edited
         $response = new BinaryFileResponse(Path::join($this->projectDir, $faviconModel->path));
         $response->setSharedMaxAge(31556952);
 

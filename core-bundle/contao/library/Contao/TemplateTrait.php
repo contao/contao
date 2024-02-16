@@ -161,7 +161,7 @@ trait TemplateTrait
 	/**
 	 * Adds a source to the given CSP directive.
 	 */
-	public function addCspSource(string $directive, string $source): void
+	public function addCspSource(string|array $directives, string $source): void
 	{
 		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
@@ -172,7 +172,11 @@ trait TemplateTrait
 
 		/** @var CspHandler $csp */
 		$csp = $responseContext->get(CspHandler::class);
-		$csp->addSource($directive, $source);
+
+		foreach ((array) $directives as $directive)
+		{
+			$csp->addSource($directive, $source);
+		}
 	}
 
 	/**

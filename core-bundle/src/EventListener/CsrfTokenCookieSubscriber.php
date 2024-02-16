@@ -89,9 +89,11 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            // The priority must be higher than the one of the Symfony route listener (defaults to 32)
+            // The priority must be higher than the one of the Symfony route listener
+            // (defaults to 32)
             KernelEvents::REQUEST => ['onKernelRequest', 36],
-            // The priority must be higher than the one of the make-response-private listener (defaults to -896)
+            // The priority must be higher than the one of the make-response-private listener
+            // (defaults to -896)
             KernelEvents::RESPONSE => ['onKernelResponse', -832],
             ConsoleEvents::COMMAND => ['onCommand', 36],
         ];
@@ -181,9 +183,8 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
 
         $response->setContent($content);
 
-        // Remove the Content-Length header now that we have changed the
-        // content length (see #2416). Do not add the header or adjust an
-        // existing one (see symfony/symfony#1846).
+        // Remove the Content-Length header now that we have changed the content length (see
+        // #2416). Do not add the header or adjust an existing one (see symfony/symfony#1846).
         $response->headers->remove('Content-Length');
     }
 

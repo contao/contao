@@ -73,9 +73,8 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
         $escaperExtension->setEscaper('contao_html', $contaoEscaper->escapeHtml(...));
         $escaperExtension->setEscaper('contao_html_attr', $contaoEscaper->escapeHtmlAttr(...));
 
-        // Use our escaper on all templates in the "@Contao" and "@Contao_*"
-        // namespaces, as well as the existing bundle templates we're already
-        // shipping.
+        // Use our escaper on all templates in the "@Contao" and "@Contao_*" namespaces,
+        // as well as the existing bundle templates we're already shipping.
         $this->addContaoEscaperRule('%^@Contao(_[a-zA-Z0-9_-]*)?/%');
         $this->addContaoEscaperRule('%^@ContaoCore/%');
 
@@ -124,16 +123,14 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
     public function getNodeVisitors(): array
     {
         return [
-            // Enables the "contao_twig" escaper for Contao templates with
-            // input encoding
+            // Enables the "contao_twig" escaper for Contao templates with input encoding
             new ContaoEscaperNodeVisitor(
                 fn () => $this->contaoEscaperFilterRules,
             ),
-            // Allows rendering PHP templates with the legacy framework by
-            // installing proxy nodes
+            // Allows rendering PHP templates with the legacy framework by installing proxy nodes
             new PhpTemplateProxyNodeVisitor(self::class),
-            // Triggers PHP deprecations if deprecated constructs are found in
-            // the parsed templates.
+            // Triggers PHP deprecations if deprecated constructs are found in the
+            // parsed templates.
             new DeprecationsNodeVisitor(),
         ];
     }
@@ -141,8 +138,8 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
     public function getTokenParsers(): array
     {
         return [
-            // Overwrite the parsers for the "extends", "include" and "use"
-            // tags to additionally support the Contao template hierarchy
+            // Overwrite the parsers for the "extends", "include" and "use" tags to
+            // additionally support the Contao template hierarchy
             new DynamicExtendsTokenParser($this->hierarchy),
             new DynamicIncludeTokenParser($this->hierarchy),
             new DynamicUseTokenParser($this->hierarchy),
@@ -156,8 +153,8 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
         $includeFunctionCallable = $this->getTwigIncludeFunction()->getCallable();
 
         return [
-            // Overwrite the "include" function to additionally support the
-            // Contao template hierarchy
+            // Overwrite the "include" function to additionally support the Contao
+            // template hierarchy
             new TwigFunction(
                 'include',
                 function (Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = false, $sandboxed = false /* we need named arguments here */) use ($includeFunctionCallable) {
@@ -256,9 +253,9 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
         };
 
         $twigEscaperFilterIsSafe = static function (Node $filterArgs): array {
-            // Our escaper strategy variants that tolerate input encoding are
-            // also safe in the original context (e.g. for the filter argument
-            // 'contao_html' we will return ['contao_html', 'html']).
+            // Our escaper strategy variants that tolerate input encoding are also safe in
+            // the original context (e.g. for the filter argument 'contao_html' we will
+            // return ['contao_html', 'html']).
             if (
                 ($expression = iterator_to_array($filterArgs)[0] ?? null) instanceof ConstantExpression
                 && \in_array($value = $expression->getAttribute('value'), ['contao_html', 'contao_html_attr'], true)
@@ -270,8 +267,8 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
         };
 
         return [
-            // Overwrite the "escape" filter to additionally support chunked
-            // text and our escaper strategies
+            // Overwrite the "escape" filter to additionally support chunked text and our
+            // escaper strategies
             new TwigFilter(
                 'escape',
                 $escaperFilter,

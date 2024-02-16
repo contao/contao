@@ -69,7 +69,8 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $config = $container->getParameterBag()->resolveValue($config);
         $config = $this->processConfiguration($configuration, $config);
 
-        // Prepend the backend route prefix to make it available for third-party bundle configuration
+        // Prepend the backend route prefix to make it available for third-party
+        // bundle configuration
         $container->setParameter('contao.backend.route_prefix', $config['backend']['route_prefix']);
 
         // Make sure channels for all Contao log actions are available
@@ -221,9 +222,9 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         // User uploads
         $filesStorageName = 'files';
 
-        // TODO: Deprecate the "contao.upload_path" config key. In the next
-        // major version, $uploadPath can then be replaced with "files" and the
-        // redundant "files" attribute removed when mounting the local adapter.
+        // TODO: Deprecate the "contao.upload_path" config key. In the next major
+        // version, $uploadPath can then be replaced with "files" and the redundant
+        // "files" attribute removed when mounting the local adapter.
         $uploadPath = $config->getContainer()->getParameterBag()->resolveValue('%contao.upload_path%');
 
         $config
@@ -271,7 +272,8 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             ->addTag('contao.search_indexer')
         ;
 
-        // Set the two parameters, so they can be used in our legacy Config class for maximum BC
+        // Set the two parameters, so they can be used in our legacy Config class for
+        // maximum BC
         $container->setParameter('contao.search.default_indexer.enable', $config['search']['default_indexer']['enable']);
         $container->setParameter('contao.search.index_protected', $config['search']['index_protected']);
 
@@ -330,14 +332,16 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
         $imageSizes = [];
 
-        // Do not add a size with the special name "_defaults" but merge its values into all other definitions instead.
+        // Do not add a size with the special name "_defaults" but merge its values into
+        // all other definitions instead.
         foreach ($config['image']['sizes'] as $name => $value) {
             if ('_defaults' === $name) {
                 continue;
             }
 
             if (isset($config['image']['sizes']['_defaults'])) {
-                // Make sure that arrays defined under _defaults will take precedence over empty arrays (see #2783)
+                // Make sure that arrays defined under _defaults will take precedence over empty
+                // arrays (see #2783)
                 $value = [
                     ...$config['image']['sizes']['_defaults'],
                     ...array_filter($value, static fn ($v) => [] !== $v),

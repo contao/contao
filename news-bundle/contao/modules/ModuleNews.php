@@ -93,6 +93,7 @@ abstract class ModuleNews extends Module
 		$objTemplate->text = '';
 		$objTemplate->hasTeaser = false;
 		$objTemplate->hasReader = true;
+		$objTemplate->author = null; // see #6827
 
 		if (null !== $url)
 		{

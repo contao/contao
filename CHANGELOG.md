@@ -2,6 +2,23 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.0-RC4] (2024-02-12)
+
+**New features:**
+
+- [#6814] Allow adding a source to multiple CSP directives at once ([aschempp])
+- [#6858] Remove the `@internal` flag from the backup manager ([Toflar])
+
+**Fixed issues:**
+
+- [#6882] Make the commands lazy again ([leofeyer])
+- [#6852] Fix the `TemplateOptionsListener` ([fritzmg])
+- [#6867] Correctly initialize multiple accordions on the same page ([leofeyer])
+- [#6861] Hide the trail in the SERP preview if no URL can be generated ([leofeyer])
+- [#6856] Add the "toggle visibility" button for articles and content elements again ([aschempp])
+- [#6857] Fix the "remember me" migration ([leofeyer])
+- [#6855] Cast the template identifier to string ([leofeyer])
+
 ## [5.3.0-RC3] (2024-02-05)
 
 **New features:**
@@ -154,6 +171,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.0-RC4]: https://github.com/contao/contao/releases/tag/5.3.0-RC4
 [5.3.0-RC3]: https://github.com/contao/contao/releases/tag/5.3.0-RC3
 [5.3.0-RC2]: https://github.com/contao/contao/releases/tag/5.3.0-RC2
 [5.3.0-RC1]: https://github.com/contao/contao/releases/tag/5.3.0-RC1
@@ -282,6 +300,7 @@ This project adheres to [Semantic Versioning].
 [#6805]: https://github.com/contao/contao/pull/6805
 [#6807]: https://github.com/contao/contao/pull/6807
 [#6809]: https://github.com/contao/contao/pull/6809
+[#6814]: https://github.com/contao/contao/pull/6814
 [#6815]: https://github.com/contao/contao/pull/6815
 [#6819]: https://github.com/contao/contao/pull/6819
 [#6830]: https://github.com/contao/contao/pull/6830
@@ -294,3 +313,11 @@ This project adheres to [Semantic Versioning].
 [#6841]: https://github.com/contao/contao/pull/6841
 [#6843]: https://github.com/contao/contao/pull/6843
 [#6851]: https://github.com/contao/contao/pull/6851
+[#6852]: https://github.com/contao/contao/pull/6852
+[#6855]: https://github.com/contao/contao/pull/6855
+[#6856]: https://github.com/contao/contao/pull/6856
+[#6857]: https://github.com/contao/contao/pull/6857
+[#6858]: https://github.com/contao/contao/pull/6858
+[#6861]: https://github.com/contao/contao/pull/6861
+[#6867]: https://github.com/contao/contao/pull/6867
+[#6882]: https://github.com/contao/contao/pull/6882

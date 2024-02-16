@@ -41,6 +41,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
         private readonly string|null $globalsKey = null,
         private readonly string|null $proxyClass = null,
         private readonly string|null $templateOptionsListener = null,
+        private readonly string|null $dca = null,
     ) {
     }
 
@@ -69,10 +70,10 @@ class RegisterFragmentsPass implements CompilerPassInterface
         $command = $container->hasDefinition('contao.command.debug_fragments') ? $container->findDefinition('contao.command.debug_fragments') : null;
 
         foreach ($this->findAndSortTaggedServices($tag, $container) as $reference) {
-            // If a controller has multiple methods for different fragment types (e.g. a content
-            // element and a front end module), the first pass creates a child definition that
-            // inherits all tags from the original. On the next run, the pass would pick up the
-            // child definition and try to create duplicate fragments.
+            // If a controller has multiple methods for different fragment types (e.g. a
+            // content element and a front end module), the first pass creates a child
+            // definition that inherits all tags from the original. On the next run, the pass
+            // would pick up the child definition and try to create duplicate fragments.
             if (str_starts_with((string) $reference, 'contao.fragment._')) {
                 continue;
             }
@@ -131,8 +132,8 @@ class RegisterFragmentsPass implements CompilerPassInterface
         $this->addPreHandlers($container, $preHandlers);
         $this->addGlobalsMapListener($globals, $container);
 
-        if (null !== $this->templateOptionsListener && $container->hasDefinition($this->templateOptionsListener)) {
-            $container->findDefinition($this->templateOptionsListener)->addMethodCall('setDefaultIdentifiersByType', [$templates]);
+        if (null !== $this->dca && null !== $this->templateOptionsListener && $container->hasDefinition($this->templateOptionsListener)) {
+            $container->findDefinition($this->templateOptionsListener)->addMethodCall('setDefaultIdentifiersByType', [$this->dca, $templates]);
         }
     }
 

@@ -84,8 +84,8 @@ class Backup implements \Stringable
     {
         preg_match(self::VALID_BACKUP_NAME_REGEX, $filepath, $matches);
 
-        // No need to check for false here because the regex does not allow a format that does not work.
-        // PHP will even turn month 42 into a valid datetime.
+        // No need to check for false here because the regex does not allow a format that
+        // does not work. PHP will even turn month 42 into a valid datetime.
         return \DateTime::createFromFormat(self::DATETIME_FORMAT, $matches[1], new \DateTimeZone('UTC'));
     }
 

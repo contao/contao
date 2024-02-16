@@ -24,6 +24,7 @@ use Contao\ManagerPlugin\Config\ConfigPluginInterface;
 use Contao\ManagerPlugin\Config\ExtensionPluginInterface;
 use Contao\ManagerPlugin\Dependency\DependentPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\TableCell;
 use Symfony\Component\Console\Helper\TableSeparator;
@@ -34,6 +35,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Path;
 
+#[AsCommand(
+    name: 'debug:plugins',
+    description: 'Displays the Contao Manager plugin configurations.',
+)]
 class DebugPluginsCommand extends Command
 {
     private SymfonyStyle|null $io = null;
@@ -46,8 +51,6 @@ class DebugPluginsCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('debug:plugins')
-            ->setDescription('Displays the Contao Manager plugin configurations.')
             ->addArgument('name', InputArgument::OPTIONAL, 'The plugin class or package name')
             ->addOption('bundles', null, InputOption::VALUE_NONE, 'List all bundles or the bundle configuration of the given plugin')
         ;
