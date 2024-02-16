@@ -175,7 +175,7 @@ class Form extends Hybrid
 		$arrLabels = array();
 		$arrFiles = array();
 
-		// Get all form fields
+		/** @var array<FormFieldModel> $arrFields */
 		$arrFields = array();
 		$objFields = FormFieldModel::findPublishedByPid($this->id);
 
@@ -211,7 +211,7 @@ class Form extends Hybrid
 		{
 			foreach ($arrFields as $objField)
 			{
-				/** @var FormFieldModel $objField */
+				/** @var class-string<Widget> $strClass */
 				$strClass = $GLOBALS['TL_FFL'][$objField->type] ?? null;
 
 				// Continue if the class is not defined
@@ -237,7 +237,6 @@ class Form extends Hybrid
 					$arrData['value'] = '';
 				}
 
-				/** @var Widget $objWidget */
 				$objWidget = new $strClass($arrData);
 				$objWidget->required = $objField->mandatory ? true : false;
 

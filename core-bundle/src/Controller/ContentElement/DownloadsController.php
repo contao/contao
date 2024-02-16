@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Controller\ContentElement;
 
 use Contao\ContentModel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
-use Contao\CoreBundle\File\MetadataBag;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\FilesystemItemIterator;
 use Contao\CoreBundle\Filesystem\FilesystemUtil;
@@ -97,9 +96,7 @@ class DownloadsController extends AbstractDownloadContentElementController
         // Optionally filter out files without metadata
         if ('downloads' === $model->type && $model->metaIgnore) {
             $filesystemItems = $filesystemItems->filter(
-                static fn (FilesystemItem $item): bool =>
-                    /** @var MetadataBag|null $metadata */
-                    null !== ($metadata = $item->getExtraMetadata()['metadata'] ?? null)
+                static fn (FilesystemItem $item): bool => null !== ($metadata = $item->getExtraMetadata()['metadata'] ?? null)
                     && null !== $metadata->getDefault(),
             );
         }

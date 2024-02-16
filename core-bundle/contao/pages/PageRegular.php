@@ -78,8 +78,6 @@ class PageRegular extends Frontend
 
 		// Get the page layout
 		$objLayout = $this->getPageLayout($objPage);
-
-		/** @var ThemeModel $objTheme */
 		$objTheme = $objLayout->getRelated('pid');
 
 		// Set the default image densities
@@ -91,7 +89,12 @@ class PageRegular extends Frontend
 
 		// Set the layout template and template group
 		$objPage->template = $objLayout->template ?: 'fe_page';
-		$objPage->templateGroup = $objTheme->templates ?? null;
+		$objPage->templateGroup = null;
+
+		if ($objTheme instanceof ThemeModel)
+		{
+			$objPage->templateGroup = $objTheme->templates;
+		}
 
 		// Minify the markup
 		$objPage->minifyMarkup = $objLayout->minifyMarkup;

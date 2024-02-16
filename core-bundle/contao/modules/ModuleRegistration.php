@@ -129,6 +129,7 @@ class ModuleRegistration extends Module
 				'required' => true
 			);
 
+			/** @var class-string<FormCaptcha> $strClass */
 			$strClass = $GLOBALS['TL_FFL']['captcha'] ?? null;
 
 			// Fallback to default if the class is not defined
@@ -137,7 +138,6 @@ class ModuleRegistration extends Module
 				$strClass = 'FormCaptcha';
 			}
 
-			/** @var FormCaptcha $objCaptcha */
 			$objCaptcha = new $strClass($arrCaptcha);
 
 			if (Input::post('FORM_SUBMIT') == $strFormId)

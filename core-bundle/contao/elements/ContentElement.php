@@ -146,7 +146,6 @@ abstract class ContentElement extends Frontend
 	{
 		if ($objElement instanceof Model || $objElement instanceof Collection)
 		{
-			/** @var ContentModel $objModel */
 			$objModel = $objElement;
 
 			if ($objModel instanceof Collection)

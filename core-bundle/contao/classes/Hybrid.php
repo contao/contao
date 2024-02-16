@@ -85,7 +85,6 @@ abstract class Hybrid extends Frontend
 		// Store the parent element (see #4556)
 		if ($objElement instanceof Model || $objElement instanceof Collection)
 		{
-			/** @var ContentModel|FormModel|ModuleModel $objModel */
 			$objModel = $objElement;
 
 			if ($objModel instanceof Collection)
@@ -101,12 +100,12 @@ abstract class Hybrid extends Frontend
 			return;
 		}
 
+		/** @var class-string<Model> $strModelClass */
 		$strModelClass = Model::getClassFromTable($this->strTable);
 
 		// Load the model
 		if (class_exists($strModelClass))
 		{
-			/** @var Model|null $objHybrid */
 			$objHybrid = $strModelClass::findByPk($objElement->{$this->strKey});
 
 			if ($objHybrid === null)

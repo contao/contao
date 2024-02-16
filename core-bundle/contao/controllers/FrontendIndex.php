@@ -30,7 +30,6 @@ class FrontendIndex extends Frontend
 	 */
 	public function renderPage(PageModel $pageModel)
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$objPage = $pageModel;

@@ -105,7 +105,6 @@ class ModuleLogin extends Module
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$container = System::getContainer();

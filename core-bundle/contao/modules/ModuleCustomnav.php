@@ -63,7 +63,6 @@ class ModuleCustomnav extends Module
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$items = array();
@@ -87,7 +86,6 @@ class ModuleCustomnav extends Module
 		$security = $container->get('security.helper');
 		$urlGenerator = $container->get('contao.routing.content_url_generator');
 
-		/** @var PageModel[] $objPages */
 		foreach ($objPages as $objModel)
 		{
 			$objModel->loadDetails();

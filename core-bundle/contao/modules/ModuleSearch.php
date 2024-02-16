@@ -122,7 +122,6 @@ class ModuleSearch extends Module
 			// Website root
 			else
 			{
-				/** @var PageModel $objPage */
 				global $objPage;
 
 				$arrPages = $db->getChildRecords($objPage->rootId, 'tl_page');

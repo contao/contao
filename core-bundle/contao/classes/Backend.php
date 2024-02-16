@@ -17,7 +17,6 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 /**
  * Provide methods to manage back end controllers.
@@ -287,9 +286,8 @@ abstract class Backend extends Controller
 				trigger_error('Could not create a data container object', E_USER_ERROR);
 			}
 
+			/** @var class-string<DataContainer> $dataContainer */
 			$dataContainer = DataContainer::getDriverForTable($strTable);
-
-			/** @var DataContainer $dc */
 			$dc = new $dataContainer($strTable, $arrModule);
 
 			if ($picker !== null && $dc instanceof DataContainer)
@@ -561,7 +559,6 @@ abstract class Backend extends Controller
 	 */
 	public static function addPagesBreadcrumb($strKey='tl_page_node')
 	{
-		/** @var AttributeBagInterface $objSession */
 		$objSession = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		// Set a new node
@@ -759,7 +756,6 @@ abstract class Backend extends Controller
 	 */
 	public static function addFilesBreadcrumb($strKey='tl_files_node')
 	{
-		/** @var AttributeBagInterface $objSession */
 		$objSession = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		// Set a new node

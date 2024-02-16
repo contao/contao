@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\String\HtmlAttributes;
@@ -234,7 +233,6 @@ trait TemplateTrait
 			return $html;
 		}
 
-		/** @var WysiwygStyleProcessor $styleProcessor */
 		$styleProcessor = System::getContainer()->get('contao.csp.wysiwyg_style_processor');
 
 		if (!$styles = $styleProcessor->extractStyles($html))

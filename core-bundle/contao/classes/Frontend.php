@@ -86,7 +86,6 @@ abstract class Frontend extends Controller
 	 */
 	public static function addToUrl($strRequest, $blnIgnoreParams=false, $arrUnset=array())
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$arrGet = array();
@@ -151,7 +150,6 @@ abstract class Frontend extends Controller
 	 */
 	protected function jumpToOrReload($intId, $strParams=null)
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Always redirect if there are additional arguments (see #5734)

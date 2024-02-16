@@ -107,6 +107,7 @@ class ModuleLostPassword extends Module
 		// Initialize the widgets
 		foreach ($arrFields as $arrField)
 		{
+			/** @var class-string<Widget> $strClass */
 			$strClass = $GLOBALS['TL_FFL'][$arrField['inputType']] ?? null;
 
 			// Continue if the class is not defined
@@ -117,7 +118,6 @@ class ModuleLostPassword extends Module
 
 			$arrField['eval']['required'] = $arrField['eval']['mandatory'] ?? null;
 
-			/** @var Widget $objWidget */
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, $arrField['name']));
 			$objWidget->storeValues = true;
 
@@ -215,6 +215,8 @@ class ModuleLostPassword extends Module
 
 		// Define the form field
 		$arrField = $GLOBALS['TL_DCA']['tl_member']['fields']['password'];
+
+		/** @var class-string<Widget> $strClass */
 		$strClass = $GLOBALS['TL_FFL']['password'] ?? null;
 
 		// Fallback to default if the class is not defined
@@ -223,7 +225,6 @@ class ModuleLostPassword extends Module
 			$strClass = 'FormPassword';
 		}
 
-		/** @var Widget $objWidget */
 		$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, 'password'));
 		$objWidget->currentRecord = $objMember->id;
 

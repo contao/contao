@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RootPageDependentSelect extends SelectMenu
 {
@@ -19,8 +18,6 @@ class RootPageDependentSelect extends SelectMenu
 	{
 		/** @var ContaoFramework $framework */
 		$framework = System::getContainer()->get('contao.framework');
-
-		/** @var TranslatorInterface $translator */
 		$translator = System::getContainer()->get('translator');
 
 		$fields = array();
