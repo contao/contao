@@ -75,17 +75,17 @@ class RequestProcessorTest extends ContaoTestCase
     {
         yield [
             'https://example.com/foo/bar',
-            'GET'
+            'GET',
         ];
 
         yield [
             'https://example.com/foo/bar?bar=baz',
-            'GET'
+            'GET',
         ];
 
         yield [
             'https://example.com/foo/bar',
-            'POST'
+            'POST',
         ];
     }
 }
