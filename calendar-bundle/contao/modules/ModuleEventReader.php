@@ -77,7 +77,6 @@ class ModuleEventReader extends Events
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$this->Template->event = '';
@@ -438,8 +437,13 @@ class ModuleEventReader extends Events
 			return;
 		}
 
-		/** @var CalendarModel $objCalendar */
 		$objCalendar = $objEvent->getRelated('pid');
+
+		if (!$objCalendar instanceof CalendarModel)
+		{
+			return;
+		}
+
 		$this->Template->allowComments = $objCalendar->allowComments;
 
 		// Comments are not allowed
@@ -460,10 +464,14 @@ class ModuleEventReader extends Events
 			$arrNotifies[] = $GLOBALS['TL_ADMIN_EMAIL'];
 		}
 
-		/** @var UserModel $objAuthor */
-		if ($objCalendar->notify != 'notify_admin' && ($objAuthor = $objEvent->getRelated('author')) instanceof UserModel && $objAuthor->email)
+		if ($objCalendar->notify != 'notify_admin')
 		{
-			$arrNotifies[] = $objAuthor->email;
+			$objAuthor = $objEvent->getRelated('author');
+
+			if ($objAuthor instanceof UserModel && $objAuthor->email)
+			{
+				$arrNotifies[] = $objAuthor->email;
+			}
 		}
 
 		$objConfig = new \stdClass();
