@@ -69,10 +69,18 @@ class News extends Frontend
 		$jsonLd = array(
 			'@type' => 'NewsArticle',
 			'identifier' => '#/schema/news/' . $objArticle->id,
-			'url' => $urlGenerator->generate($objArticle),
 			'headline' => $htmlDecoder->inputEncodedToPlainText($objArticle->headline),
 			'datePublished' => date('Y-m-d\TH:i:sP', $objArticle->date),
 		);
+
+		try
+		{
+			$jsonLd['url'] = $urlGenerator->generate($objArticle);
+		}
+		catch (ExceptionInterface)
+		{
+			// noop
+		}
 
 		if ($objArticle->teaser)
 		{

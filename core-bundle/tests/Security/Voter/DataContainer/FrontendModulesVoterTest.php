@@ -71,7 +71,7 @@ class FrontendModulesVoterTest extends TestCase
 
         $voter = new FrontendModulesVoter();
 
-        // Reading is always permitted, although type `listing` is not explicitly allowed
+        // Reading is always permitted, although type "listing" is not explicitly allowed
         $this->assertSame(
             VoterInterface::ACCESS_ABSTAIN,
             $voter->vote(

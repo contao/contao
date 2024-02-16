@@ -2,6 +2,19 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.0] (2024-02-16)
+
+**Fixed issues:**
+
+- [#6854] Handle routing exceptions during news and event URL generation ([fritzmg])
+- [#6900] Improve logging of request parameters ([aschempp])
+- [#6898] Add `type="button"` to the accordion toggler ([fritzmg])
+- [#6895] Fix the column name in the "remember me" migration ([aschempp])
+- [#6893] Move adding the schema.org data to the `_download.html.twig` component ([leofeyer])
+- [#6889] Correctly cache Contao translations that only exist as Symfony translations ([fritzmg])
+- [#6890] Always allow the "read" action in the front end modules voter ([bezin])
+- [#6880] Correctly handle dark icons in `data-icon` and `data-icon-disabled` ([zoglo])
+
 ## [5.3.0-RC4] (2024-02-12)
 
 **New features:**
@@ -171,6 +184,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.0]: https://github.com/contao/contao/releases/tag/5.3.0
 [5.3.0-RC4]: https://github.com/contao/contao/releases/tag/5.3.0-RC4
 [5.3.0-RC3]: https://github.com/contao/contao/releases/tag/5.3.0-RC3
 [5.3.0-RC2]: https://github.com/contao/contao/releases/tag/5.3.0-RC2
@@ -314,10 +328,18 @@ This project adheres to [Semantic Versioning].
 [#6843]: https://github.com/contao/contao/pull/6843
 [#6851]: https://github.com/contao/contao/pull/6851
 [#6852]: https://github.com/contao/contao/pull/6852
+[#6854]: https://github.com/contao/contao/pull/6854
 [#6855]: https://github.com/contao/contao/pull/6855
 [#6856]: https://github.com/contao/contao/pull/6856
 [#6857]: https://github.com/contao/contao/pull/6857
 [#6858]: https://github.com/contao/contao/pull/6858
 [#6861]: https://github.com/contao/contao/pull/6861
 [#6867]: https://github.com/contao/contao/pull/6867
+[#6880]: https://github.com/contao/contao/pull/6880
 [#6882]: https://github.com/contao/contao/pull/6882
+[#6889]: https://github.com/contao/contao/pull/6889
+[#6890]: https://github.com/contao/contao/pull/6890
+[#6893]: https://github.com/contao/contao/pull/6893
+[#6895]: https://github.com/contao/contao/pull/6895
+[#6898]: https://github.com/contao/contao/pull/6898
+[#6900]: https://github.com/contao/contao/pull/6900
