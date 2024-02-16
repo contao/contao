@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.2.10] (2024-02-16)
+
+**Fixed issues:**
+
+- [#6897] Fix table picker for tables without parents ([ausi])
+
 ## [5.2.9] (2024-02-12)
 
 **Fixed issues:**
@@ -162,6 +168,7 @@ This project adheres to [Semantic Versioning].
 - [#5881] Remove the inconsistent form field wrapper ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.2.10]: https://github.com/contao/contao/releases/tag/5.2.10
 [5.2.9]: https://github.com/contao/contao/releases/tag/5.2.9
 [5.2.8]: https://github.com/contao/contao/releases/tag/5.2.8
 [5.2.7]: https://github.com/contao/contao/releases/tag/5.2.7
@@ -270,3 +277,4 @@ This project adheres to [Semantic Versioning].
 [#6828]: https://github.com/contao/contao/pull/6828
 [#6845]: https://github.com/contao/contao/pull/6845
 [#6872]: https://github.com/contao/contao/pull/6872
+[#6897]: https://github.com/contao/contao/pull/6897
