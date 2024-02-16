@@ -719,7 +719,7 @@ abstract class Model
 				// Handle UUIDs (see #6525 and #8850)
 				if ($arrRelation['table'] == 'tl_files' && $arrRelation['field'] == 'uuid')
 				{
-					$objModel = $strClass::findMultipleByUuids($arrValues, $arrOptions);
+					$objModel = FilesModel::findMultipleByUuids($arrValues, $arrOptions);
 				}
 				else
 				{
