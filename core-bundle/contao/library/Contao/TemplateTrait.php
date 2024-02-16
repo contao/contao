@@ -121,7 +121,6 @@ trait TemplateTrait
 			return;
 		}
 
-		/** @var JsonLdManager $jsonLdManager */
 		$jsonLdManager = $responseContext->get(JsonLdManager::class);
 		$type = $jsonLdManager->createSchemaOrgTypeFromArray($jsonLd);
 
@@ -151,10 +150,7 @@ trait TemplateTrait
 			return null;
 		}
 
-		/** @var CspHandler $csp */
-		$csp = $responseContext->get(CspHandler::class);
-
-		return $csp->getNonce($directive);
+		return $responseContext->get(CspHandler::class)->getNonce($directive);
 	}
 
 	/**
@@ -169,7 +165,6 @@ trait TemplateTrait
 			return;
 		}
 
-		/** @var CspHandler $csp */
 		$csp = $responseContext->get(CspHandler::class);
 
 		foreach ((array) $directives as $directive)
@@ -190,7 +185,6 @@ trait TemplateTrait
 			return;
 		}
 
-		/** @var CspHandler $csp */
 		$csp = $responseContext->get(CspHandler::class);
 		$csp->addHash($directive, $script, $algorithm);
 	}
@@ -204,7 +198,6 @@ trait TemplateTrait
 
 		if ($responseContext?->has(CspHandler::class))
 		{
-			/** @var CspHandler $csp */
 			$csp = $responseContext->get(CspHandler::class);
 			$csp
 				->addHash('style-src', $style, $algorithm)
@@ -240,7 +233,6 @@ trait TemplateTrait
 			return $html;
 		}
 
-		/** @var CspHandler $csp */
 		$csp = $responseContext->get(CspHandler::class);
 
 		foreach ($styles as $style)

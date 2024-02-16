@@ -645,10 +645,7 @@ class PageRegular extends Frontend
 				return '';
 			}
 
-			/** @var JsonLdManager $jsonLdManager */
-			$jsonLdManager = $this->responseContext->get(JsonLdManager::class);
-
-			return $jsonLdManager->collectFinalScriptFromGraphs();
+			return $this->responseContext->get(JsonLdManager::class)->collectFinalScriptFromGraphs();
 		};
 	}
 }

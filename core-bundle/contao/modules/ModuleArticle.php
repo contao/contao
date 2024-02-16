@@ -159,7 +159,6 @@ class ModuleArticle extends Module
 			{
 				$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 
-				/** @var HtmlHeadBag $htmlHeadBag */
 				$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
 				$htmlHeadBag->setTitle($htmlDecoder->inputEncodedToPlainText($this->title));
 
