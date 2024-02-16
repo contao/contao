@@ -97,10 +97,9 @@ class ModuleFaqList extends Module
 			$arrTemp['title'] = StringUtil::specialchars($objFaq->question, true);
 			$arrTemp['href'] = $this->generateFaqLink($objFaq);
 
-			/** @var FaqCategoryModel $objPid */
 			$objPid = $objFaq->getRelated('pid');
 
-			if (empty($arrFaq[$objFaq->pid]))
+			if ($objPid instanceof FaqCategoryModel && empty($arrFaq[$objFaq->pid]))
 			{
 				$arrFaq[$objFaq->pid] = $objPid->row();
 			}
@@ -131,11 +130,10 @@ class ModuleFaqList extends Module
 	 */
 	protected function generateFaqLink($objFaq)
 	{
-		/** @var FaqCategoryModel $objCategory */
 		$objCategory = $objFaq->getRelated('pid');
 
 		// A jumpTo page is not mandatory for FAQ categories (see #6226) but required for the FAQ list module
-		if ($objCategory->jumpTo < 1)
+		if ($objCategory instanceof FaqCategoryModel && $objCategory->jumpTo < 1)
 		{
 			throw new \Exception('FAQ categories without redirect page cannot be used in an FAQ list');
 		}

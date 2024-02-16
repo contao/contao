@@ -71,7 +71,6 @@ class ModuleFaqReader extends Module
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		if ($this->overviewPage && ($overviewPage = PageModel::findById($this->overviewPage)))
@@ -152,9 +151,9 @@ class ModuleFaqReader extends Module
 		}
 
 		$strAuthor = '';
+		$objAuthor = $objFaq->getRelated('author');
 
-		/** @var UserModel $objAuthor */
-		if (($objAuthor = $objFaq->getRelated('author')) instanceof UserModel)
+		if ($objAuthor instanceof UserModel)
 		{
 			$strAuthor = $objAuthor->name;
 		}
@@ -183,8 +182,13 @@ class ModuleFaqReader extends Module
 			return;
 		}
 
-		/** @var FaqCategoryModel $objCategory */
 		$objCategory = $objFaq->getRelated('pid');
+
+		if (!$objCategory instanceof FaqCategoryModel)
+		{
+			return;
+		}
+
 		$this->Template->allowComments = $objCategory->allowComments;
 
 		// Comments are not allowed
@@ -205,10 +209,14 @@ class ModuleFaqReader extends Module
 			$arrNotifies[] = $GLOBALS['TL_ADMIN_EMAIL'];
 		}
 
-		/** @var UserModel $objAuthor */
-		if ($objCategory->notify != 'notify_admin' && ($objAuthor = $objFaq->getRelated('author')) instanceof UserModel && $objAuthor->email)
+		if ($objCategory->notify != 'notify_admin')
 		{
-			$arrNotifies[] = $objAuthor->email;
+			$objAuthor = $objFaq->getRelated('author');
+
+			if ($objAuthor instanceof UserModel && $objAuthor->email)
+			{
+				$arrNotifies[] = $objAuthor->email;
+			}
 		}
 
 		$objConfig = new \stdClass();
