@@ -66,8 +66,8 @@ class PageTypeAccessVoter extends AbstractDataContainerVoter
             return true;
         }
 
-        // For the update action, the user needs access to both the current and
-        // the new page type, so if one is denied, return false.
+        // For the update action, the user needs access to both the current and the new
+        // page type, so if one is denied, return false.
         foreach ($types as $type) {
             if (!$this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], $type)) {
                 return false;
@@ -83,7 +83,8 @@ class PageTypeAccessVoter extends AbstractDataContainerVoter
             return true;
         }
 
-        // Allow if current page type is not an error page, or the new page type is not set to an error page type.
+        // Allow if current page type is not an error page, or the new page type is not
+        // set to an error page type.
         if (
             (!$action instanceof UpdateAction || !\in_array($action->getCurrent()['type'], self::FIRST_LEVEL_TYPES, true))
             && (!isset($action->getNew()['type']) || !\in_array($action->getNew()['type'], self::FIRST_LEVEL_TYPES, true))

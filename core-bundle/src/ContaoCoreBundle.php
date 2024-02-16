@@ -95,7 +95,8 @@ class ContaoCoreBundle extends Bundle
                 FrontendModuleReference::TAG_NAME,
                 FrontendModuleReference::GLOBALS_KEY,
                 FrontendModuleReference::PROXY_CLASS,
-                'contao.listener.module_template_options',
+                'contao.listener.data_container.template_options',
+                'tl_module',
             ),
         );
 
@@ -104,7 +105,8 @@ class ContaoCoreBundle extends Bundle
                 ContentElementReference::TAG_NAME,
                 ContentElementReference::GLOBALS_KEY,
                 ContentElementReference::PROXY_CLASS,
-                'contao.listener.element_template_options',
+                'contao.listener.data_container.template_options',
+                'tl_content',
             ),
         );
 

@@ -59,7 +59,8 @@ class DefaultOperationsListener
 
         $operations = [];
 
-        // If none of the defined operations are name-only, we append the operations to the defaults.
+        // If none of the defined operations are name-only, we append the operations to
+        // the defaults.
         if (!array_filter($dca, static fn ($v, $k) => isset($defaults[$k]) || (\is_string($v) && isset($defaults[$v])), ARRAY_FILTER_USE_BOTH)) {
             $operations = $defaults;
         }
@@ -161,6 +162,7 @@ class DefaultOperationsListener
             $operations['toggle'] = [
                 'href' => 'act=toggle&amp;field='.$toggleField,
                 'icon' => 'visible.svg',
+                'showInHeader' => (bool) $ctable,
                 'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table),
             ];
         }
@@ -186,7 +188,7 @@ class DefaultOperationsListener
     {
         return function (DataContainerOperation $operation) use ($ctable, $table): void {
             $data = [
-                'pid' => $operation->getRecord()['pid'] ?? null,
+                'pid' => $operation->getRecord()['id'] ?? null,
             ];
 
             if ($GLOBALS['TL_DCA'][$ctable]['config']['dynamicPtable'] ?? false) {

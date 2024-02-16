@@ -207,6 +207,15 @@ class Image
 			$darkAttributes = new HtmlAttributes($attributes);
 			$darkAttributes->mergeWith(array('class' => 'color-scheme--dark', 'loading' => 'lazy'));
 
+			foreach (array('data-icon', 'data-icon-disabled') as $icon)
+			{
+				if (isset($darkAttributes[$icon]))
+				{
+					$pathinfo = pathinfo($darkAttributes[$icon]);
+					$darkAttributes[$icon] = $pathinfo['filename'] . '--dark.' . $pathinfo['extension'];
+				}
+			}
+
 			$lightAttributes = new HtmlAttributes($attributes);
 			$lightAttributes->mergeWith(array('class' => 'color-scheme--light', 'loading' => 'lazy'));
 

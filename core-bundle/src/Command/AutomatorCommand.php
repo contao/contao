@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Command;
 
 use Contao\Automator;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -25,6 +26,10 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 /**
  * @internal
  */
+#[AsCommand(
+    name: 'contao:automator',
+    description: 'Runs automator tasks on the command line.',
+)]
 class AutomatorCommand extends Command
 {
     private array $commands = [];
@@ -36,11 +41,7 @@ class AutomatorCommand extends Command
 
     protected function configure(): void
     {
-        $this
-            ->setName('contao:automator')
-            ->setDescription('Runs automator tasks on the command line.')
-            ->addArgument('task', InputArgument::OPTIONAL, "The name of the task:\n  - ".implode("\n  - ", $this->getCommands()))
-        ;
+        $this->addArgument('task', InputArgument::OPTIONAL, "The name of the task:\n  - ".implode("\n  - ", $this->getCommands()));
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

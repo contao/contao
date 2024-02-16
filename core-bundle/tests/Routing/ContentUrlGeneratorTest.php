@@ -329,7 +329,6 @@ class ContentUrlGeneratorTest extends TestCase
     private function mockResolver(array ...$cases): ContentUrlResolverInterface&MockObject
     {
         $resolver = $this->createMock(ContentUrlResolverInterface::class);
-
         $resolver
             ->expects($this->exactly(\count($cases)))
             ->method('resolve')

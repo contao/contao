@@ -284,18 +284,16 @@ class Dbafs implements DbafsInterface, ResetInterface
      */
     private function doComputeChangeSet(array $dbPaths, array $allDbHashesByPath, array $allLastModifiedByPath, \Generator $filesystemIterator, array $searchPaths): ChangeSet
     {
-        // We're identifying items by their (old) path and store any detected
-        // changes as an array of definitions
+        // We're identifying items by their (old) path and store any detected changes as
+        // an array of definitions
         $itemsToCreate = [];
         $itemsToUpdate = [];
 
-        // To detect orphans, we start with a list of all items and remove them
-        // once found
+        // To detect orphans, we start with a list of all items and remove them once found
         $itemsToDelete = $dbPaths;
 
-        // We keep a list of hashes and names of traversed child elements
-        // indexed by their directory path, so that we are later able to
-        // compute the directory hash
+        // We keep a list of hashes and names of traversed child elements indexed by
+        // their directory path, so that we are later able to compute the directory hash
         $dirHashesParts = [];
         $lastModifiedUpdates = [];
 
@@ -309,9 +307,8 @@ class Dbafs implements DbafsInterface, ResetInterface
             if (self::RESOURCE_FILE === $type) {
                 $oldLastModified = $allLastModifiedByPath[$path] ?? null;
 
-                // Allow falling back (= skip hashing) to the existing hash if
-                // useLastModified is enabled, and we already got an existing
-                // timestamp
+                // Allow falling back (= skip hashing) to the existing hash if useLastModified is
+                // enabled, and we already got an existing timestamp
                 $fallback = $this->useLastModified && null !== $oldLastModified ? $oldHash : null;
 
                 $hashContext = new Context($fallback, $oldLastModified);
@@ -325,9 +322,8 @@ class Dbafs implements DbafsInterface, ResetInterface
             } elseif (self::RESOURCE_DIRECTORY === $type) {
                 $childHashes = $dirHashesParts[$path] ?? [];
 
-                // In partial sync we need to manually add child hashes of
-                // items that we do not traverse but which still contribute to
-                // the directory hash
+                // In partial sync we need to manually add child hashes of items that we do not
+                // traverse but which still contribute to the directory hash
                 if ($isPartialSync && !$this->inPath($path, $searchPaths, false)) {
                     $directChildrenPattern = sprintf('@^%s/[^/]+[/]?$@', preg_quote($path, '@'));
 
@@ -391,8 +387,8 @@ class Dbafs implements DbafsInterface, ResetInterface
             }
         }
 
-        // Detect moves: If items that should get created can be found in the
-        // list of orphans, only update their path.
+        // Detect moves: If items that should get created can be found in the list of
+        // orphans, only update their path.
         $hasMoves = false;
 
         foreach ($itemsToCreate as $path => $dataToInsert) {
@@ -402,8 +398,8 @@ class Dbafs implements DbafsInterface, ResetInterface
             );
 
             if (\count($candidates) > 1) {
-                // If two or more files with the same hash were moved, try to
-                // identify them by their name.
+                // If two or more files with the same hash were moved, try to identify them by
+                // their name.
                 $candidates = array_filter(
                     $candidates,
                     static fn (string $candidatePath): bool => basename((string) $path) === basename($candidatePath),
@@ -608,6 +604,20 @@ class Dbafs implements DbafsInterface, ResetInterface
             if ($itemToUpdate->updatesPath()) {
                 $dataToUpdate['path'] = $this->convertToDatabasePath($itemToUpdate->getNewPath());
                 $dataToUpdate['pid'] = $getParentUuid($itemToUpdate->getNewPath());
+
+                // Backwards compatibility
+                if ('tl_files' === $this->table) {
+                    $dataToUpdate['name'] = basename($itemToUpdate->getNewPath());
+
+                    $this->connection->update(
+                        $this->table,
+                        ['extension' => Path::getExtension($itemToUpdate->getNewPath())],
+                        [
+                            'path' => $this->convertToDatabasePath($itemToUpdate->getExistingPath()),
+                            'type' => 'file',
+                        ],
+                    );
+                }
             }
 
             if ($itemToUpdate->updatesHash()) {
@@ -672,8 +682,8 @@ class Dbafs implements DbafsInterface, ResetInterface
         foreach ($items as [$path, $uuid, $hash, $isDir, $lastModified]) {
             $path = $this->convertToFilesystemPath($path);
 
-            // Include a path if it is either inside the search paths or is a
-            // parent directory of it.
+            // Include a path if it is either inside the search paths or is a parent
+            // directory of it.
             if ($fullScope || $this->inPath($path, $searchPaths) || ($isDir && \in_array($path, $parentDirectories, true))) {
                 $dbPaths[$path] = $isDir ? self::RESOURCE_DIRECTORY : self::RESOURCE_FILE;
             }
@@ -742,11 +752,11 @@ class Dbafs implements DbafsInterface, ResetInterface
             return $paths;
         };
 
-        // If a search path does not point to an existing file, we need to
-        // determine if it's an existing directory or a non-existing resource.
-        // Directories are _only_ listed reliably when calling `listContents`
-        // on their parent directory (with deep=false). We keep track of
-        // existing analyzed paths and store whether they are a directory.
+        // If a search path does not point to an existing file, we need to determine if
+        // it's an existing directory or a non-existing resource. Directories are _only_
+        // listed reliably when calling `listContents` on their parent directory (with
+        // deep=false). We keep track of existing analyzed paths and store whether they
+        // are a directory.
         $analyzedPaths = [];
 
         foreach ($searchPaths as $searchPath) {
@@ -764,8 +774,8 @@ class Dbafs implements DbafsInterface, ResetInterface
             }
 
             if (null === ($isDir = $analyzedPaths[$searchPath] ?? null)) {
-                // Analyze parent path. Do not use array_merge or array
-                // unpacking here, because there could be integer keys!
+                // Analyze parent path. Do not use array_merge or array unpacking here, because
+                // there could be integer keys!
                 $analyzedPaths = $analyzeDirectory(Path::getDirectory($searchPath)) + $analyzedPaths;
                 $isDir = $analyzedPaths[$searchPath] ??= false;
             }

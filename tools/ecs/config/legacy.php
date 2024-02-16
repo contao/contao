@@ -10,6 +10,8 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
+use Contao\EasyCodingStandard\Fixer\ChainedMethodBlockFixer;
+use Contao\EasyCodingStandard\Fixer\CommentLengthFixer;
 use Contao\EasyCodingStandard\Fixer\MultiLineLambdaFunctionArgumentsFixer;
 use Contao\EasyCodingStandard\Fixer\TypeHintOrderFixer;
 use Contao\EasyCodingStandard\Sniffs\UseSprintfInExceptionsSniff;
@@ -61,6 +63,8 @@ return static function (ECSConfig $ecsConfig): void {
         '*/templates/*',
         '*/themes/*',
         BinaryOperatorSpacesFixer::class,
+        ChainedMethodBlockFixer::class,
+        CommentLengthFixer::class,
         DeclareStrictTypesFixer::class,
         DisallowArrayTypeHintSyntaxSniff::class,
         DuplicateSpacesSniff::class,

@@ -116,7 +116,8 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
         /** @var PageModel|null $pageB */
         $pageB = $b->getDefault('pageModel');
 
-        // Check if the page models are valid (should always be the case, as routes are generated from pages)
+        // Check if the page models are valid (should always be the case, as routes are
+        // generated from pages)
         if (!$pageA instanceof PageModel || !$pageB instanceof PageModel) {
             return 0;
         }
@@ -131,8 +132,9 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
             $langB = $this->getLocalePriority($fallbackB, $fallbackA, $languages);
 
             if (null === $langA && null === $langB && LocaleUtil::getPrimaryLanguage($pageA->rootLanguage) === LocaleUtil::getPrimaryLanguage($pageB->rootLanguage)) {
-                // If both pages have the same language without region and neither region has a priority,
-                // (e.g. user prefers "de" but we have "de-CH" and "de-DE"), sort by their root page order.
+                // If both pages have the same language without region and neither region has a
+                // priority, (e.g. user prefers "de" but we have "de-CH" and "de-DE"), sort by
+                // their root page order.
                 $langA = $pageA->rootSorting;
                 $langB = $pageB->rootSorting;
             }

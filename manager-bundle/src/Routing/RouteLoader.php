@@ -40,8 +40,8 @@ class RouteLoader implements RouteLoaderInterface
     {
         $collection = new RouteCollection();
 
-        // Load the routing.yaml file first if it exists, so it takes
-        // precedence over all other routes (see #2718)
+        // Load the routing.yaml file first if it exists, so it takes precedence over all
+        // other routes (see #2718)
         if ($configFile = $this->getConfigFile()) {
             $routes = $this->loader->getResolver()->resolve($configFile)->load($configFile);
 

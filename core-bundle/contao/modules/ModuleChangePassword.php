@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Exception\AccessDeniedException;
-
 /**
  * Front end module "change password".
  */
@@ -51,11 +49,6 @@ class ModuleChangePassword extends Module
 		if (!$security->getUser() instanceof FrontendUser)
 		{
 			return '';
-		}
-
-		if (!$security->isGranted('IS_AUTHENTICATED_FULLY'))
-		{
-			throw new AccessDeniedException('Full authentication is required to change the password.');
 		}
 
 		return parent::generate();

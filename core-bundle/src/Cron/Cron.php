@@ -65,9 +65,9 @@ class Cron
 
         $this->cachePool->saveDeferred($cacheItem);
 
-        // Using a promise here not because the cache file takes forever to create but in order to make sure
-        // it's one of the first cron jobs that are executed. The fact that we can use deferred cache item
-        // saving is an added bonus.
+        // Using a promise here not because the cache file takes forever to create but in
+        // order to make sure it's one of the first cron jobs that are executed. The fact
+        // that we can use deferred cache item saving is an added bonus.
         return $promise = new Promise(
             function () use (&$promise): void {
                 $this->cachePool->commit();

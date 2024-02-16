@@ -30,7 +30,8 @@ class SearchIndexerPass implements CompilerPassInterface
     {
         $indexers = $this->findAndSortTaggedServices('contao.search_indexer', $container);
 
-        // Make sure we do not add the delegating indexer to itself to prevent endless redirects
+        // Make sure we do not add the delegating indexer to itself to prevent
+        // endless redirects
         $indexers = array_filter(
             $indexers,
             static fn (Reference $reference): bool => self::DELEGATING_SERVICE_ID !== (string) $reference,
