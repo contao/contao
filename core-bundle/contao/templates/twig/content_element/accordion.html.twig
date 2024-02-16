@@ -6,7 +6,7 @@
         {% block element %}
             {% block element_header %}
                 <{{ element.header_tag }}{{ attrs(accordion_header_attributes|default).addClass('handorgel__header') }}>
-                    <button{{ attrs(accordion_header_button_attributes|default).addClass('handorgel__header__button') }}>
+                    <button{{ attrs(accordion_header_button_attributes|default).addClass('handorgel__header__button').set('type', 'button') }}>
                         {{- element.header -}}
                     </button>
                 </{{ element.header_tag }}>
