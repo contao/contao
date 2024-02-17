@@ -614,9 +614,12 @@ class Dbafs implements DbafsInterface, ResetInterface
 
         // Updates
         foreach ($changeSet->getItemsToUpdate($this->useLastModified) as $itemToUpdate) {
-            $dataToUpdate = [
-                'tstamp' => $currentTime,
-            ];
+            $dataToUpdate = [];
+
+            // Backwards compatibility
+            if ('tl_files' === $this->table) {
+                $dataToUpdate['tstamp'] = $currentTime;
+            }
 
             if ($itemToUpdate->updatesPath()) {
                 $dataToUpdate['path'] = $this->convertToDatabasePath($itemToUpdate->getNewPath());
