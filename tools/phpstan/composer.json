@@ -1,9 +1,16 @@
 {
+    "autoload": {
+        "psr-4": {
+            "Contao\\PhpStan\\": "src/"
+        }
+    },
     "require": {
+        "php": "^8.1",
         "phpstan/phpstan": "^1.0",
         "phpstan/phpstan-phpunit": "^1.0",
         "phpstan/phpstan-symfony": "^1.0",
         "slam/phpstan-extensions": "^6.0",
-        "thecodingmachine/phpstan-strict-rules": "^1.0"
+        "thecodingmachine/phpstan-strict-rules": "^1.0",
+        "composer/semver": "^3.4"
     }
 }

@@ -63,3 +63,8 @@ parameters:
     treatPhpDocTypesAsCertain: false
     checkMissingIterableValueType: false
     rememberPossiblyImpureFunctionValues: false
+
+services:
+    -
+        class: Contao\PhpStan\TriggerDeprecationRule
+        tags: [phpstan.rules.rule]
