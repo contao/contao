@@ -590,24 +590,19 @@ class tl_calendar_events extends Backend
 	 */
 	public function getTitleTag(CalendarEventsModel $model)
 	{
-		$calendar = $model->getRelated('pid');
-
-		if (!$calendar instanceof CalendarModel)
+		if (!$calendar = CalendarModel::findByPk($model->pid))
 		{
 			return '';
 		}
 
-		$page = $calendar->getRelated('jumpTo');
-
-		if (!$page instanceof PageModel)
+		if (!$page = PageModel::findByPk($calendar->jumpTo))
 		{
 			return '';
 		}
 
 		$page->loadDetails();
-		$layout = $page->getRelated('layout');
 
-		if (!$layout instanceof LayoutModel)
+		if (!$layout = LayoutModel::findByPk($page->layout))
 		{
 			return '';
 		}

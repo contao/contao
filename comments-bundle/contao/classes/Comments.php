@@ -110,7 +110,7 @@ class Comments extends Frontend
 				$objPartial->addReply = false;
 
 				// Reply
-				if ($objComments->addReply && $objComments->reply && ($objAuthor = $objComments->getRelated('author')) instanceof UserModel)
+				if ($objComments->addReply && $objComments->reply && ($objAuthor = UserModel::findByPk($objComments->author)))
 				{
 					$objPartial->addReply = true;
 					$objPartial->rby = $GLOBALS['TL_LANG']['MSC']['com_reply'];

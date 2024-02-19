@@ -355,14 +355,9 @@ class Form extends Hybrid
 		$this->Template->ajax = $this->isAjaxEnabled();
 
 		// Get the target URL
-		if ($this->method == 'GET')
+		if ($this->method == 'GET' && ($objTarget = PageModel::findByPk($this->objModel->jumpTo)))
 		{
-			$objTarget = $this->objModel->getRelated('jumpTo');
-
-			if ($objTarget instanceof PageModel)
-			{
-				$this->Template->action = System::getContainer()->get('contao.routing.content_url_generator')->generate($objTarget);
-			}
+			$this->Template->action = System::getContainer()->get('contao.routing.content_url_generator')->generate($objTarget);
 		}
 	}
 
@@ -652,7 +647,7 @@ class Form extends Hybrid
 		$targetPageData = null;
 
 		// Check whether there is a jumpTo page
-		if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
+		if ($objJumpTo = PageModel::findByPk($this->objModel->jumpTo))
 		{
 			$targetPageData = $objJumpTo->row();
 		}

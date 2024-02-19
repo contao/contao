@@ -142,17 +142,11 @@ class NewsPickerProviderTest extends ContaoTestCase
         $model->id = 1;
 
         $news = $this->createMock(NewsModel::class);
-        $news
-            ->expects($this->once())
-            ->method('getRelated')
-            ->with('pid')
-            ->willReturn($model)
-        ;
-
         $config = new PickerConfig('link', [], '{{news_url::1}}', 'newsPicker');
 
         $adapters = [
             NewsModel::class => $this->mockConfiguredAdapter(['findById' => $news]),
+            NewsArchiveModel::class => $this->mockConfiguredAdapter(['findByPk' => $model]),
         ];
 
         $picker = $this->getPicker();
@@ -188,17 +182,11 @@ class NewsPickerProviderTest extends ContaoTestCase
     public function testDoesNotAddTableAndIdIfThereIsNoModel(): void
     {
         $news = $this->createMock(NewsModel::class);
-        $news
-            ->expects($this->once())
-            ->method('getRelated')
-            ->with('pid')
-            ->willReturn(null)
-        ;
-
         $config = new PickerConfig('link', [], '{{news_url::1}}', 'newsPicker');
 
         $adapters = [
             NewsModel::class => $this->mockConfiguredAdapter(['findById' => $news]),
+            NewsArchiveModel::class => $this->mockConfiguredAdapter(['findByPk' => null]),
         ];
 
         $picker = $this->getPicker();

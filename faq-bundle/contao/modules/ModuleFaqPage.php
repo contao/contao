@@ -116,18 +116,15 @@ class ModuleFaqPage extends Module
 			}
 
 			$strAuthor = '';
-			$objAuthor = $objFaq->getRelated('author');
 
-			if ($objAuthor instanceof UserModel)
+			if ($objAuthor = UserModel::findByPk($objFaq->author))
 			{
 				$strAuthor = $objAuthor->name;
 			}
 
 			$objTemp->info = sprintf($GLOBALS['TL_LANG']['MSC']['faqCreatedBy'], Date::parse($objPage->dateFormat, $objFaq->tstamp), $strAuthor);
 
-			$objPid = $objFaq->getRelated('pid');
-
-			if ($objPid instanceof FaqCategoryModel && empty($arrFaqs[$objFaq->pid]))
+			if (($objPid = FaqCategoryModel::findByPk($objFaq->pid)) && empty($arrFaqs[$objFaq->pid]))
 			{
 				$arrFaqs[$objFaq->pid] = $objPid->row();
 			}

@@ -73,9 +73,7 @@ class ContentCompositionVoter implements VoterInterface, CacheableVoterInterface
 
         $pageModel->loadDetails();
 
-        $layout = $pageModel->getRelated('layout');
-
-        if (!$layout instanceof LayoutModel) {
+        if (!$layout = $this->framework->getAdapter(LayoutModel::class)->findByPk($pageModel->layout)) {
             return false;
         }
 

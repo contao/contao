@@ -499,7 +499,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					foreach ($value as $kk=>$vv)
 					{
-						if (($objFile = FilesModel::findByUuid($vv)) instanceof FilesModel)
+						if ($objFile = FilesModel::findByUuid($vv))
 						{
 							$value[$kk] = $objFile->path . ' (' . StringUtil::binToUuid($vv) . ')';
 						}
@@ -511,7 +511,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					$row[$i] = implode(', ', $value);
 				}
-				elseif (($objFile = FilesModel::findByUuid($value)) instanceof FilesModel)
+				elseif ($objFile = FilesModel::findByUuid($value))
 				{
 					$row[$i] = $objFile->path . ' (' . StringUtil::binToUuid($value) . ')';
 				}

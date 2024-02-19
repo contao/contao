@@ -39,9 +39,7 @@ class RootPageController extends AbstractController
 
     private function getNextPage(int $rootPageId): PageModel
     {
-        $nextPage = $this->getContaoAdapter(PageModel::class)->findFirstPublishedByPid($rootPageId);
-
-        if ($nextPage instanceof PageModel) {
+        if ($nextPage = $this->getContaoAdapter(PageModel::class)->findFirstPublishedByPid($rootPageId)) {
             return $nextPage;
         }
 

@@ -40,9 +40,7 @@ class Calendar extends Frontend
 	 */
 	public function generateFeed($intId)
 	{
-		$objCalendar = CalendarFeedModel::findByPk($intId);
-
-		if ($objCalendar === null)
+		if (!$objCalendar = CalendarFeedModel::findByPk($intId))
 		{
 			return;
 		}
@@ -157,10 +155,8 @@ class Calendar extends Frontend
 					continue;
 				}
 
-				$jumpTo = $objArticle->getRelated('pid')->jumpTo;
-
 				// No jumpTo page set (see #4784)
-				if (!$jumpTo)
+				if (!$jumpTo = PageModel::findByPk($objArticle->pid)->jumpTo)
 				{
 					continue;
 				}
@@ -514,16 +510,12 @@ class Calendar extends Frontend
 				return null;
 			}
 
-			$objLayout = $objPage->getRelated('layout');
-
-			if (!$objLayout instanceof LayoutModel)
+			if (!$objLayout = LayoutModel::findByPk($objPage->layout))
 			{
 				return $objPage;
 			}
 
-			$objTheme = $objLayout->getRelated('pid');
-
-			if (!$objTheme instanceof ThemeModel)
+			if (!$objTheme = ThemeModel::findByPk($objLayout->pid))
 			{
 				return $objPage;
 			}

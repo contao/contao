@@ -85,10 +85,8 @@ class ModuleSearch extends Module
 		$this->Template->matchAny = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['matchAny']);
 		$this->Template->advanced = $this->searchType == 'advanced';
 
-		$objTarget = $this->objModel->getRelated('jumpTo');
-
 		// Redirect page
-		if ($objTarget instanceof PageModel)
+		if ($objTarget = PageModel::findByPk($this->objModel->jumpTo))
 		{
 			$this->Template->action = System::getContainer()->get('contao.routing.content_url_generator')->generate($objTarget);
 		}

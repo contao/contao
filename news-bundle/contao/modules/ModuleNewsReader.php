@@ -177,9 +177,7 @@ class ModuleNewsReader extends ModuleNews
 			return;
 		}
 
-		$objArchive = $objArticle->getRelated('pid');
-
-		if (!$objArchive instanceof NewsArchiveModel)
+		if (!$objArchive = NewsArchiveModel::findByPk($objArticle->pid))
 		{
 			return;
 		}
@@ -204,14 +202,9 @@ class ModuleNewsReader extends ModuleNews
 			$arrNotifies[] = $GLOBALS['TL_ADMIN_EMAIL'];
 		}
 
-		if ($objArchive->notify != 'notify_admin')
+		if ($objArchive->notify != 'notify_admin' && ($objAuthor = UserModel::findByPk($objArticle->author)) && $objAuthor->email)
 		{
-			$objAuthor = $objArticle->getRelated('author');
-
-			if ($objAuthor instanceof UserModel && $objAuthor->email)
-			{
-				$arrNotifies[] = $objAuthor->email;
-			}
+			$arrNotifies[] = $objAuthor->email;
 		}
 
 		$objConfig = new \stdClass();

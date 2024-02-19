@@ -758,9 +758,8 @@ class tl_page extends Backend
 	public function getTitleTag(PageModel $page)
 	{
 		$page->loadDetails();
-		$layout = $page->getRelated('layout');
 
-		if (!$layout instanceof LayoutModel)
+		if (!$layout = LayoutModel::findByPk($page->layout))
 		{
 			return '';
 		}

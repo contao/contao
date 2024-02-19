@@ -132,9 +132,7 @@ class NewsFeedListener
 
     private function getAuthor(NewsModel $article): AuthorInterface|null
     {
-        $authorModel = $article->getRelated('author');
-
-        if ($authorModel instanceof UserModel) {
+        if ($authorModel = $this->framework->getAdapter(UserModel::class)->findByPk($article->author)) {
             return (new Author())->setName($authorModel->name);
         }
 

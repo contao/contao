@@ -261,10 +261,8 @@ class ModuleLostPassword extends Module
 					}
 				}
 
-				$objTarget = $this->objModel->getRelated('reg_jumpTo');
-
 				// Redirect to the jumpTo page
-				if ($objTarget instanceof PageModel)
+				if ($objTarget = PageModel::findByPk($this->objModel->reg_jumpTo))
 				{
 					$this->redirect(System::getContainer()->get('contao.routing.content_url_generator')->generate($objTarget));
 				}
@@ -313,7 +311,7 @@ class ModuleLostPassword extends Module
 		System::getContainer()->get('monolog.logger.contao.access')->info('A new password has been requested for user ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ')');
 
 		// Check whether there is a jumpTo page
-		if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
+		if ($objJumpTo = PageModel::findByPk($this->objModel->jumpTo))
 		{
 			$this->jumpToOrReload($objJumpTo->row());
 		}

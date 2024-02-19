@@ -150,9 +150,8 @@ class ModuleFaqReader extends Module
 		}
 
 		$strAuthor = '';
-		$objAuthor = $objFaq->getRelated('author');
 
-		if ($objAuthor instanceof UserModel)
+		if ($objAuthor = UserModel::findByPk($objFaq->author))
 		{
 			$strAuthor = $objAuthor->name;
 		}
@@ -181,9 +180,7 @@ class ModuleFaqReader extends Module
 			return;
 		}
 
-		$objCategory = $objFaq->getRelated('pid');
-
-		if (!$objCategory instanceof FaqCategoryModel)
+		if (!$objCategory = FaqCategoryModel::findByPk($objFaq->pid))
 		{
 			return;
 		}
@@ -208,14 +205,9 @@ class ModuleFaqReader extends Module
 			$arrNotifies[] = $GLOBALS['TL_ADMIN_EMAIL'];
 		}
 
-		if ($objCategory->notify != 'notify_admin')
+		if ($objCategory->notify != 'notify_admin' && ($objAuthor = UserModel::findByPk($objFaq->author)) && $objAuthor->email)
 		{
-			$objAuthor = $objFaq->getRelated('author');
-
-			if ($objAuthor instanceof UserModel && $objAuthor->email)
-			{
-				$arrNotifies[] = $objAuthor->email;
-			}
+			$arrNotifies[] = $objAuthor->email;
 		}
 
 		$objConfig = new \stdClass();

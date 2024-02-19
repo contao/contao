@@ -247,7 +247,7 @@ class ModuleEventReader extends Events
 		$objTemplate->recurring = $recurring;
 		$objTemplate->until = $until;
 		$objTemplate->locationLabel = $GLOBALS['TL_LANG']['MSC']['location'];
-		$objTemplate->calendar = $objEvent->getRelated('pid');
+		$objTemplate->calendar = CalendarModel::findByPk($objEvent->pid);
 		$objTemplate->count = 0; // see #74
 		$objTemplate->details = '';
 		$objTemplate->hasTeaser = false;
@@ -436,9 +436,7 @@ class ModuleEventReader extends Events
 			return;
 		}
 
-		$objCalendar = $objEvent->getRelated('pid');
-
-		if (!$objCalendar instanceof CalendarModel)
+		if (!$objCalendar = CalendarModel::findByPk($objEvent->pid))
 		{
 			return;
 		}
@@ -463,14 +461,9 @@ class ModuleEventReader extends Events
 			$arrNotifies[] = $GLOBALS['TL_ADMIN_EMAIL'];
 		}
 
-		if ($objCalendar->notify != 'notify_admin')
+		if ($objCalendar->notify != 'notify_admin' && ($objAuthor = UserModel::findByPk($objEvent->author)) && $objAuthor->email)
 		{
-			$objAuthor = $objEvent->getRelated('author');
-
-			if ($objAuthor instanceof UserModel && $objAuthor->email)
-			{
-				$arrNotifies[] = $objAuthor->email;
-			}
+			$arrNotifies[] = $objAuthor->email;
 		}
 
 		$objConfig = new \stdClass();

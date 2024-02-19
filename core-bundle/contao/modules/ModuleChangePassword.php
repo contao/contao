@@ -187,7 +187,7 @@ class ModuleChangePassword extends Module
 			$user->findBy('id', $objMember->id);
 
 			// Check whether there is a jumpTo page
-			if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
+			if ($objJumpTo = PageModel::findByPk($this->objModel->jumpTo))
 			{
 				$this->jumpToOrReload($objJumpTo->row());
 			}
