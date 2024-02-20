@@ -361,8 +361,6 @@ class tl_user_group extends Backend
 	public function getExcludedFields()
 	{
 		$processed = array();
-
-		/** @var SplFileInfo[] $files */
 		$files = System::getContainer()->get('contao.resource_finder')->findIn('dca')->depth(0)->files()->name('*.php');
 
 		foreach ($files as $file)

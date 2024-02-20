@@ -122,7 +122,6 @@ abstract class Module extends Frontend
 	{
 		if ($objModule instanceof Model || $objModule instanceof Collection)
 		{
-			/** @var ModuleModel $objModel */
 			$objModel = $objModule;
 
 			if ($objModel instanceof Collection)
@@ -296,7 +295,6 @@ abstract class Module extends Frontend
 		$db = Database::getInstance();
 		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
 
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Browse subpages

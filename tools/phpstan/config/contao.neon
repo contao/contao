@@ -22,6 +22,7 @@ parameters:
         - %currentWorkingDirectory%/calendar-bundle/src
         - %currentWorkingDirectory%/calendar-bundle/tests
         - %currentWorkingDirectory%/comments-bundle/src
+        - %currentWorkingDirectory%/comments-bundle/tests
         - %currentWorkingDirectory%/core-bundle/src
         - %currentWorkingDirectory%/core-bundle/tests
         - %currentWorkingDirectory%/faq-bundle/src
@@ -63,3 +64,13 @@ parameters:
     treatPhpDocTypesAsCertain: false
     checkMissingIterableValueType: false
     rememberPossiblyImpureFunctionValues: false
+
+services:
+    - class: Contao\Tools\PHPStan\HelperReturnTypeExtension
+      tags: [phpstan.broker.dynamicMethodReturnTypeExtension]
+
+    - class: Contao\Tools\PHPStan\ExtensionReturnTypeExtension
+      tags: [phpstan.broker.dynamicMethodReturnTypeExtension]
+
+    - class: Contao\Tools\PHPStan\GraphReturnTypeExtension
+      tags: [phpstan.broker.dynamicMethodReturnTypeExtension]

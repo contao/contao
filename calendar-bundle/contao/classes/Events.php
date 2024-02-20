@@ -191,7 +191,6 @@ abstract class Events extends Module
 	 */
 	protected function addEvent($objEvents, $intStart, $intEnd, $intBegin, $intLimit, $intCalendar)
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$intDate = $intStart;
@@ -290,7 +289,7 @@ abstract class Events extends Module
 		$arrEvent['day'] = $strDay;
 		$arrEvent['month'] = $strMonth;
 		$arrEvent['parent'] = $intCalendar;
-		$arrEvent['calendar'] = $objEvents->getRelated('pid');
+		$arrEvent['calendar'] = CalendarModel::findByPk($objEvents->pid);
 		$arrEvent['link'] = $objEvents->title;
 		$arrEvent['target'] = '';
 		$arrEvent['title'] = StringUtil::specialchars($objEvents->title, true);

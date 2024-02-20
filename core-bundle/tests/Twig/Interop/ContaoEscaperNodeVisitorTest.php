@@ -40,7 +40,7 @@ class ContaoEscaperNodeVisitorTest extends TestCase
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_MIME']);
+        unset($GLOBALS['TL_MIME'], $GLOBALS['objPage']);
 
         $this->resetStaticProperties([InsertTags::class, System::class, Config::class]);
 

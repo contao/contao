@@ -129,6 +129,7 @@ class ModuleRegistration extends Module
 				'required' => true
 			);
 
+			/** @var class-string<FormCaptcha> $strClass */
 			$strClass = $GLOBALS['TL_FFL']['captcha'] ?? null;
 
 			// Fallback to default if the class is not defined
@@ -137,7 +138,6 @@ class ModuleRegistration extends Module
 				$strClass = 'FormCaptcha';
 			}
 
-			/** @var FormCaptcha $objCaptcha */
 			$objCaptcha = new $strClass($arrCaptcha);
 
 			if (Input::post('FORM_SUBMIT') == $strFormId)
@@ -430,7 +430,7 @@ class ModuleRegistration extends Module
 		}
 
 		// Check whether there is a jumpTo page
-		if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
+		if ($objJumpTo = PageModel::findByPk($this->objModel->jumpTo))
 		{
 			$this->jumpToOrReload($objJumpTo->row());
 		}
@@ -524,10 +524,8 @@ class ModuleRegistration extends Module
 
 		System::getContainer()->get('monolog.logger.contao.access')->info('User account ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ') has been activated');
 
-		$objTarget = $this->objModel->getRelated('reg_jumpTo');
-
 		// Redirect to the jumpTo page
-		if ($objTarget instanceof PageModel)
+		if ($objTarget = PageModel::findByPk($this->objModel->reg_jumpTo))
 		{
 			$this->redirect(System::getContainer()->get('contao.routing.content_url_generator')->generate($objTarget));
 		}

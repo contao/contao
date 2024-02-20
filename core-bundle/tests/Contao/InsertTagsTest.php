@@ -56,7 +56,7 @@ class InsertTagsTest extends TestCase
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_HOOKS'], $GLOBALS['TL_MIME']);
+        unset($GLOBALS['TL_HOOKS'], $GLOBALS['TL_MIME'], $GLOBALS['objPage']);
 
         InsertTags::reset();
 

@@ -76,7 +76,6 @@ class ModuleFaqPage extends Module
 			return;
 		}
 
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$tags = array();
@@ -118,18 +117,14 @@ class ModuleFaqPage extends Module
 
 			$strAuthor = '';
 
-			/** @var UserModel $objAuthor */
-			if (($objAuthor = $objFaq->getRelated('author')) instanceof UserModel)
+			if ($objAuthor = UserModel::findByPk($objFaq->author))
 			{
 				$strAuthor = $objAuthor->name;
 			}
 
 			$objTemp->info = sprintf($GLOBALS['TL_LANG']['MSC']['faqCreatedBy'], Date::parse($objPage->dateFormat, $objFaq->tstamp), $strAuthor);
 
-			/** @var FaqCategoryModel $objPid */
-			$objPid = $objFaq->getRelated('pid');
-
-			if (empty($arrFaqs[$objFaq->pid]))
+			if (($objPid = FaqCategoryModel::findByPk($objFaq->pid)) && empty($arrFaqs[$objFaq->pid]))
 			{
 				$arrFaqs[$objFaq->pid] = $objPid->row();
 			}

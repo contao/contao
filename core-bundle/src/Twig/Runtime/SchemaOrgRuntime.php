@@ -41,7 +41,6 @@ final class SchemaOrgRuntime implements RuntimeExtensionInterface
             return;
         }
 
-        /** @var JsonLdManager $jsonLdManager */
         $jsonLdManager = $responseContext->get(JsonLdManager::class);
         $type = $jsonLdManager->createSchemaOrgTypeFromArray($jsonLd);
 

@@ -170,13 +170,6 @@ class NewsFeedListenerTest extends ContaoTestCase
             'addEnclosure' => serialize(['binary_uuid2']),
         ]);
 
-        $article
-            ->expects($this->once())
-            ->method('getRelated')
-            ->with('author')
-            ->willReturn($this->mockClassWithProperties(UserModel::class, ['name' => 'Jane Doe']))
-        ;
-
         $environment = $this->mockAdapter(['set', 'get']);
 
         $controller = $this->mockAdapter(['getContentElement', 'convertRelativeUrls']);
@@ -200,6 +193,8 @@ class NewsFeedListenerTest extends ContaoTestCase
             )
         ;
 
+        $userModel = $this->mockClassWithProperties(UserModel::class, ['name' => 'Jane Doe']);
+
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         System::setContainer($container);
 
@@ -208,6 +203,7 @@ class NewsFeedListenerTest extends ContaoTestCase
             Controller::class => $controller,
             ContentModel::class => $contentModel,
             FilesModel::class => $filesModel,
+            UserModel::class => $this->mockConfiguredAdapter(['findByPk' => $userModel]),
         ]);
 
         $framework->setContainer($container);

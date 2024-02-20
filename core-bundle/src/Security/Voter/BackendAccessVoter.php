@@ -197,7 +197,7 @@ class BackendAccessVoter extends Voter implements ResetInterface
             $row['cuser'] = false;
             $row['cgroup'] = false;
 
-            $parentPage = $this->framework->getAdapter(PageModel::class)->findById($pid);
+            $parentPage = $this->framework->getAdapter(PageModel::class)->findByPk($pid);
 
             while ($parentPage && false === $row['chmod'] && $pid > 0) {
                 $cacheIds[] = $parentPage->id;
@@ -207,7 +207,7 @@ class BackendAccessVoter extends Voter implements ResetInterface
                 $row['cuser'] = $parentPage->includeChmod ? $parentPage->cuser : false;
                 $row['cgroup'] = $parentPage->includeChmod ? $parentPage->cgroup : false;
 
-                $parentPage = $this->framework->getAdapter(PageModel::class)->findById($pid);
+                $parentPage = $this->framework->getAdapter(PageModel::class)->findByPk($pid);
             }
 
             // Set default values

@@ -107,6 +107,7 @@ class ModuleLostPassword extends Module
 		// Initialize the widgets
 		foreach ($arrFields as $arrField)
 		{
+			/** @var class-string<Widget> $strClass */
 			$strClass = $GLOBALS['TL_FFL'][$arrField['inputType']] ?? null;
 
 			// Continue if the class is not defined
@@ -117,7 +118,6 @@ class ModuleLostPassword extends Module
 
 			$arrField['eval']['required'] = $arrField['eval']['mandatory'] ?? null;
 
-			/** @var Widget $objWidget */
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, $arrField['name']));
 			$objWidget->storeValues = true;
 
@@ -215,6 +215,8 @@ class ModuleLostPassword extends Module
 
 		// Define the form field
 		$arrField = $GLOBALS['TL_DCA']['tl_member']['fields']['password'];
+
+		/** @var class-string<Widget> $strClass */
 		$strClass = $GLOBALS['TL_FFL']['password'] ?? null;
 
 		// Fallback to default if the class is not defined
@@ -223,7 +225,6 @@ class ModuleLostPassword extends Module
 			$strClass = 'FormPassword';
 		}
 
-		/** @var Widget $objWidget */
 		$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, 'password'));
 		$objWidget->currentRecord = $objMember->id;
 
@@ -260,10 +261,8 @@ class ModuleLostPassword extends Module
 					}
 				}
 
-				$objTarget = $this->objModel->getRelated('reg_jumpTo');
-
 				// Redirect to the jumpTo page
-				if ($objTarget instanceof PageModel)
+				if ($objTarget = PageModel::findByPk($this->objModel->reg_jumpTo))
 				{
 					$this->redirect(System::getContainer()->get('contao.routing.content_url_generator')->generate($objTarget));
 				}
@@ -312,7 +311,7 @@ class ModuleLostPassword extends Module
 		System::getContainer()->get('monolog.logger.contao.access')->info('A new password has been requested for user ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ')');
 
 		// Check whether there is a jumpTo page
-		if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
+		if ($objJumpTo = PageModel::findByPk($this->objModel->jumpTo))
 		{
 			$this->jumpToOrReload($objJumpTo->row());
 		}

@@ -17,7 +17,6 @@ use Contao\DC_Table;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 $GLOBALS['TL_DCA']['tl_calendar'] = array
 (
@@ -215,7 +214,6 @@ class tl_calendar extends Backend
 			return;
 		}
 
-		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 		$arrNew = $objSessionBag->get('new_records');
 

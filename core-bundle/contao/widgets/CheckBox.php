@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-
 /**
  * Provide methods to handle check boxes.
  *
@@ -123,7 +121,6 @@ class CheckBox extends Widget
 			$this->arrAttributes['required'] = 'required';
 		}
 
-		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 		$state = $objSessionBag->get('checkbox_groups');
 

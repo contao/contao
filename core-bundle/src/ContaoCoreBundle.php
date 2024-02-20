@@ -45,7 +45,6 @@ use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Event\SlugValidCharactersEvent;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
-use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
 use Symfony\Cmf\Component\Routing\DependencyInjection\Compiler\RegisterRouteEnhancersPass;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -67,7 +66,6 @@ class ContaoCoreBundle extends Bundle
     {
         parent::build($container);
 
-        /** @var SecurityExtension $extension */
         $extension = $container->getExtension('security');
         $extension->addAuthenticatorFactory(new ContaoLoginFactory());
 

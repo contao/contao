@@ -17,7 +17,6 @@ use Contao\CoreBundle\Tests\Fixtures\Enum\IntBackedEnum;
 use Contao\CoreBundle\Tests\Fixtures\Enum\StringBackedEnum;
 use Contao\CoreBundle\Tests\Fixtures\Enum\TranslatableEnum;
 use Contao\CoreBundle\Tests\TestCase;
-use Symfony\Component\Translation\TranslatableMessage;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class EnumOptionsListenerTest extends TestCase
@@ -116,8 +115,6 @@ class EnumOptionsListenerTest extends TestCase
         ];
 
         $translations = array_values($reference);
-
-        /** @var array<TranslatableMessage> $map */
         $map = array_map(static fn ($case) => $case->label(), TranslatableEnum::cases());
 
         $translator = $this->createMock(TranslatorInterface::class);

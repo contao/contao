@@ -73,7 +73,7 @@ class ModuleCalendar extends Events
 		$this->strUrl = preg_replace('/\?.*$/', '', Environment::get('requestUri'));
 		$this->strLink = $this->strUrl;
 
-		if (($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
+		if ($objTarget = PageModel::findByPk($this->objModel->jumpTo))
 		{
 			try
 			{

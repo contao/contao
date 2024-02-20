@@ -15,6 +15,7 @@ namespace Contao\FaqBundle\Routing;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
 use Contao\CoreBundle\Routing\Content\ContentUrlResult;
+use Contao\FaqCategoryModel;
 use Contao\FaqModel;
 use Contao\PageModel;
 
@@ -31,8 +32,9 @@ class FaqResolver implements ContentUrlResolverInterface
         }
 
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
+        $categoryAdapter = $this->framework->getAdapter(FaqCategoryModel::class);
 
-        return ContentUrlResult::resolve($pageAdapter->findPublishedById((int) $content->getRelated('pid')?->jumpTo));
+        return ContentUrlResult::resolve($pageAdapter->findPublishedById((int) $categoryAdapter->findByPk($content->pid)?->jumpTo));
     }
 
     public function getParametersForContent(object $content, PageModel $pageModel): array

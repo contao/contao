@@ -16,7 +16,6 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTagFlag;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
-use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 
 /**
  * A static class to replace insert tags
@@ -93,8 +92,7 @@ class InsertTags extends Controller
 	 */
 	private function executeReplace(string $strBuffer, bool $blnCache)
 	{
-		/** @var PageModel $objPage */
-		$objPage = $GLOBALS['objPage'] ?? null;
+		global $objPage;
 
 		$container = System::getContainer();
 
@@ -190,9 +188,6 @@ class InsertTags extends Controller
 				{
 					trigger_deprecation('contao/core-bundle', '5.0', 'Insert tag naming conventions {{cache_*}} and {{*::referer}} for fragments have been deprecated and will no longer work in Contao 6. Use #[AsInsertTag(asFragment: true)] instead.', $elements[0], strtolower($elements[0]));
 
-					/** @var FragmentHandler $fragmentHandler */
-					$fragmentHandler = $container->get('fragment.handler');
-
 					$attributes = array('insertTag' => '{{' . $strTag . '}}');
 
 					if (null !== $request && ($scope = $request->attributes->get('_scope')))
@@ -200,7 +195,7 @@ class InsertTags extends Controller
 						$attributes['_scope'] = $scope;
 					}
 
-					$arrBuffer[$_rit+1] = $fragmentHandler->render(
+					$arrBuffer[$_rit+1] = $container->get('fragment.handler')->render(
 						new ControllerReference(
 							InsertTagsController::class . '::renderAction',
 							$attributes,

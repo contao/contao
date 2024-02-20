@@ -73,11 +73,9 @@ class CoreResponseContextFactory
     public function createContaoWebpageResponseContext(PageModel $pageModel): ResponseContext
     {
         $context = $this->createWebpageResponseContext();
-        $htmlHeadBag = $context->get(HtmlHeadBag::class);
-        $jsonLdManager = $context->get(JsonLdManager::class);
-
         $title = $this->htmlDecoder->inputEncodedToPlainText($pageModel->pageTitle ?: $pageModel->title ?: '');
 
+        $htmlHeadBag = $context->get(HtmlHeadBag::class);
         $htmlHeadBag
             ->setTitle($title ?: '')
             ->setMetaDescription($this->htmlDecoder->inputEncodedToPlainText($pageModel->description ?: ''))
@@ -106,6 +104,7 @@ class CoreResponseContextFactory
             $htmlHeadBag->setKeepParamsForCanonical(array_map('trim', explode(',', $pageModel->canonicalKeepParams)));
         }
 
+        $jsonLdManager = $context->get(JsonLdManager::class);
         $jsonLdManager
             ->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)
             ->set(

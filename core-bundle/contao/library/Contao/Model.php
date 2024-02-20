@@ -168,7 +168,7 @@ abstract class Model
 
 				$table = $this->arrRelations[$key]['table'];
 
-				/** @var static $strClass */
+				/** @var class-string<Model> $strClass */
 				$strClass = static::getClassFromTable($table);
 				$intPk = $strClass::getPk();
 
@@ -693,7 +693,7 @@ abstract class Model
 
 		$arrRelation = $this->arrRelations[$strKey];
 
-		/** @var static $strClass */
+		/** @var class-string<Model> $strClass */
 		$strClass = static::getClassFromTable($arrRelation['table']);
 
 		// Load the related record(s)
@@ -719,8 +719,7 @@ abstract class Model
 				// Handle UUIDs (see #6525 and #8850)
 				if ($arrRelation['table'] == 'tl_files' && $arrRelation['field'] == 'uuid')
 				{
-					/** @var FilesModel $strClass */
-					$objModel = $strClass::findMultipleByUuids($arrValues, $arrOptions);
+					$objModel = FilesModel::findMultipleByUuids($arrValues, $arrOptions);
 				}
 				else
 				{
@@ -1358,10 +1357,7 @@ abstract class Model
 	 */
 	protected static function createModelFromDbResult(Result $objResult)
 	{
-		/**
-		 * @var static               $strClass
-		 * @var class-string<static> $strClass
-		 */
+		/** @var class-string<static> $strClass */
 		$strClass = static::getClassFromTable(static::$strTable);
 
 		return new $strClass($objResult);

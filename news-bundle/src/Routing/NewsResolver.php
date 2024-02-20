@@ -16,6 +16,7 @@ use Contao\ArticleModel;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
 use Contao\CoreBundle\Routing\Content\ContentUrlResult;
+use Contao\NewsArchiveModel;
 use Contao\NewsModel;
 use Contao\PageModel;
 
@@ -50,9 +51,10 @@ class NewsResolver implements ContentUrlResolverInterface
         }
 
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
+        $archiveAdapter = $this->framework->getAdapter(NewsArchiveModel::class);
 
         // Link to the default page
-        return ContentUrlResult::resolve($pageAdapter->findPublishedById((int) $content->getRelated('pid')?->jumpTo));
+        return ContentUrlResult::resolve($pageAdapter->findPublishedById((int) $archiveAdapter->findByPk($content->pid)?->jumpTo));
     }
 
     public function getParametersForContent(object $content, PageModel $pageModel): array

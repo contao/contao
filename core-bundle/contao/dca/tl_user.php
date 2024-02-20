@@ -23,8 +23,6 @@ use Contao\Input;
 use Contao\Message;
 use Contao\StringUtil;
 use Contao\System;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 $GLOBALS['TL_DCA']['tl_user'] = array
 (
@@ -697,7 +695,6 @@ class tl_user extends Backend
 		{
 			if (self::$origUserId === null)
 			{
-				/** @var TokenInterface $origToken */
 				$origToken = $security->getToken()->getOriginalToken();
 				$origUser = $origToken->getUser();
 
@@ -743,7 +740,6 @@ class tl_user extends Backend
 
 				if (in_array('purge_session', $arrPurge))
 				{
-					/** @var AttributeBagInterface $objSessionBag */
 					$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 					$objSessionBag->clear();
 					Message::addConfirmation($GLOBALS['TL_LANG']['tl_user']['sessionPurged']);
