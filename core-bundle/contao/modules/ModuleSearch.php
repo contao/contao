@@ -86,7 +86,7 @@ class ModuleSearch extends Module
 		$this->Template->advanced = $this->searchType == 'advanced';
 
 		// Redirect page
-		if ($objTarget = PageModel::findByPk($this->objModel->jumpTo))
+		if ($objTarget = PageModel::findById($this->objModel->jumpTo))
 		{
 			$this->Template->action = System::getContainer()->get('contao.routing.content_url_generator')->generate($objTarget);
 		}

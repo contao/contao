@@ -510,7 +510,7 @@ class tl_calendar_events extends Backend
 		// Generate the alias if there is none
 		if (!$varValue)
 		{
-			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->title, CalendarModel::findByPk($dc->activeRecord->pid)->jumpTo, $aliasExists);
+			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->title, CalendarModel::findById($dc->activeRecord->pid)->jumpTo, $aliasExists);
 		}
 		elseif (preg_match('/^[1-9]\d*$/', $varValue))
 		{
@@ -590,19 +590,19 @@ class tl_calendar_events extends Backend
 	 */
 	public function getTitleTag(CalendarEventsModel $model)
 	{
-		if (!$calendar = CalendarModel::findByPk($model->pid))
+		if (!$calendar = CalendarModel::findById($model->pid))
 		{
 			return '';
 		}
 
-		if (!$page = PageModel::findByPk($calendar->jumpTo))
+		if (!$page = PageModel::findById($calendar->jumpTo))
 		{
 			return '';
 		}
 
 		$page->loadDetails();
 
-		if (!$layout = LayoutModel::findByPk($page->layout))
+		if (!$layout = LayoutModel::findById($page->layout))
 		{
 			return '';
 		}
@@ -844,7 +844,7 @@ class tl_calendar_events extends Backend
 	 */
 	public function addSitemapCacheInvalidationTag($dc, array $tags)
 	{
-		$calendar = CalendarModel::findByPk($dc->activeRecord->pid);
+		$calendar = CalendarModel::findById($dc->activeRecord->pid);
 
 		if ($calendar === null)
 		{

@@ -68,6 +68,6 @@ class PreviewUrlCreateListener
 
     private function getNewsModel(int|string $id): NewsModel|null
     {
-        return $this->framework->getAdapter(NewsModel::class)->findByPk($id);
+        return $this->framework->getAdapter(NewsModel::class)->findById($id);
     }
 }

@@ -370,7 +370,7 @@ abstract class Controller extends System
 		}
 		else
 		{
-			$objRow = ModuleModel::findByPk($intId);
+			$objRow = ModuleModel::findById($intId);
 
 			if ($objRow === null)
 			{
@@ -542,7 +542,7 @@ abstract class Controller extends System
 				return '';
 			}
 
-			$objRow = ContentModel::findByPk($intId);
+			$objRow = ContentModel::findById($intId);
 
 			if ($objRow === null)
 			{
@@ -815,7 +815,7 @@ abstract class Controller extends System
 
 		global $objPage;
 
-		$objLayout = ($objPage !== null) ? LayoutModel::findByPk($objPage->layoutId) : null;
+		$objLayout = ($objPage !== null) ? LayoutModel::findById($objPage->layoutId) : null;
 		$blnCombineScripts = $objLayout !== null && $objLayout->combineScripts;
 
 		$arrReplace["[[TL_BODY_$nonce]]"] = $strScripts;

@@ -51,7 +51,7 @@ class LabelListener
 
     private function getTemplateData(string $table, array $row, array $originalRow): array
     {
-        $user = $this->framework->getAdapter(UserModel::class)->findByPk($row['pid']);
+        $user = $this->framework->getAdapter(UserModel::class)->findById($row['pid']);
         $config = $this->framework->getAdapter(Config::class);
 
         $parent = null;

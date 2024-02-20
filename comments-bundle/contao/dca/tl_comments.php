@@ -462,7 +462,7 @@ class tl_comments extends Backend
 	{
 		if ($varValue && ($id = Input::get('id')))
 		{
-			Comments::notifyCommentsSubscribers(CommentsModel::findByPk($id));
+			Comments::notifyCommentsSubscribers(CommentsModel::findById($id));
 		}
 
 		return $varValue;
@@ -643,7 +643,7 @@ class tl_comments extends Backend
 	 */
 	public function invalidateSourceCacheTags(DataContainer $dc, array $tags)
 	{
-		$commentModel = CommentsModel::findByPk($dc->id);
+		$commentModel = CommentsModel::findById($dc->id);
 
 		if (null !== $commentModel)
 		{

@@ -369,7 +369,7 @@ class tl_article extends Backend
 			// Get the layout sections
 			if ($objPage->layout)
 			{
-				$objLayout = LayoutModel::findByPk($objPage->layout);
+				$objLayout = LayoutModel::findById($objPage->layout);
 
 				if ($objLayout === null)
 				{
@@ -447,7 +447,7 @@ class tl_article extends Backend
 
 			foreach ($ids as $id)
 			{
-				$objArticle = ArticleModel::findByPk($id);
+				$objArticle = ArticleModel::findById($id);
 
 				if ($objArticle === null)
 				{

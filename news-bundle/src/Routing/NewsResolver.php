@@ -54,7 +54,7 @@ class NewsResolver implements ContentUrlResolverInterface
         $archiveAdapter = $this->framework->getAdapter(NewsArchiveModel::class);
 
         // Link to the default page
-        return ContentUrlResult::resolve($pageAdapter->findPublishedById((int) $archiveAdapter->findByPk($content->pid)?->jumpTo));
+        return ContentUrlResult::resolve($pageAdapter->findPublishedById((int) $archiveAdapter->findById($content->pid)?->jumpTo));
     }
 
     public function getParametersForContent(object $content, PageModel $pageModel): array

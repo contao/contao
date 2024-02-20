@@ -60,7 +60,7 @@ class ModuleCloseAccount extends Module
 		$this->loadDataContainer('tl_member');
 
 		$user = FrontendUser::getInstance();
-		$objMember = MemberModel::findByPk($user->id);
+		$objMember = MemberModel::findById($user->id);
 
 		// Initialize the password widget
 		$arrField = $GLOBALS['TL_DCA']['tl_member']['fields']['password'];
@@ -127,7 +127,7 @@ class ModuleCloseAccount extends Module
 				$container->get('request_stack')->getSession()->invalidate();
 
 				// Check whether there is a jumpTo page
-				if ($objJumpTo = PageModel::findByPk($this->objModel->jumpTo))
+				if ($objJumpTo = PageModel::findById($this->objModel->jumpTo))
 				{
 					$this->jumpToOrReload($objJumpTo->row());
 				}

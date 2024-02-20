@@ -866,9 +866,14 @@ abstract class Model
 	 * @param array           $arrOptions An optional options array
 	 *
 	 * @return static|null The model or null if the result is empty
+	 *
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 *             use findById() instead.
 	 */
 	public static function findByPk($varValue, array $arrOptions=array())
 	{
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using %s() has been deprecated and will no longer work in Contao 6. Use %s::findById() instead.', __METHOD__, __CLASS__);
+
 		// Try to load from the registry
 		if (empty($arrOptions))
 		{
@@ -887,6 +892,42 @@ abstract class Model
 				'limit'  => 1,
 				'column' => static::$strPk,
 				'value'  => $varValue,
+				'return' => 'Model'
+			),
+			$arrOptions
+		);
+
+		return static::find($arrOptions);
+	}
+
+	/**
+	 * Find a single record by its ID
+	 *
+	 * @param int|string $intId      The ID
+	 * @param array      $arrOptions An optional options array
+	 *
+	 * @return static|null The model or null if the result is empty
+	 */
+	public static function findById($intId, array $arrOptions=array())
+	{
+		// Try to load from the registry
+		if (empty($arrOptions))
+		{
+			$objModel = Registry::getInstance()->fetch(static::$strTable, $intId);
+
+			if ($objModel !== null)
+			{
+				return $objModel;
+			}
+		}
+
+		$arrOptions = array_merge
+		(
+			array
+			(
+				'limit'  => 1,
+				'column' => 'id',
+				'value'  => $intId,
 				'return' => 'Model'
 			),
 			$arrOptions

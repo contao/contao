@@ -37,7 +37,7 @@ class AccordionController extends AbstractContentElementController
             $nestedModel = $reference->getContentModel();
 
             if (!$nestedModel instanceof ContentModel) {
-                $nestedModel = $this->framework->getAdapter(ContentModel::class)->findByPk($nestedModel);
+                $nestedModel = $this->framework->getAdapter(ContentModel::class)->findById($nestedModel);
             }
 
             $header = StringUtil::deserialize($nestedModel->sectionHeadline, true);

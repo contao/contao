@@ -31,7 +31,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
         $eventModel->id = 1;
 
         $adapters = [
-            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findByPk' => $eventModel]),
+            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $eventModel]),
         ];
 
         $framework = $this->mockContaoFramework($adapters);
@@ -101,7 +101,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
         $eventModel->id = 2;
 
         $adapters = [
-            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findByPk' => $eventModel]),
+            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $eventModel]),
         ];
 
         $framework = $this->mockContaoFramework($adapters);
@@ -119,7 +119,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
         $requestStack->push(new Request());
 
         $adapters = [
-            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findByPk' => null]),
+            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => null]),
         ];
 
         $framework = $this->mockContaoFramework($adapters);
