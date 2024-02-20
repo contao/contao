@@ -20,8 +20,6 @@ use Contao\CoreBundle\Security\DataContainer\AbstractAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\Image\ResizeConfiguration;
 use Doctrine\DBAL\ArrayParameterType;
-use Doctrine\DBAL\Connection;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 /**
  * Provide methods to handle data container arrays.
@@ -436,6 +434,7 @@ abstract class DataContainer extends Backend
 			return $arrData['input_field_callback']($this, $xlabel);
 		}
 
+		/** @var class-string<Widget> $strClass */
 		$strClass = $GLOBALS['BE_FFL'][$arrData['inputType'] ?? null] ?? null;
 
 		// Return if the widget class does not exist
@@ -477,7 +476,6 @@ abstract class DataContainer extends Backend
 			$arrData['eval']['useRawRequestData'] = true;
 		}
 
-		/** @var Widget $objWidget */
 		$objWidget = new $strClass($strClass::getAttributesFromDca($arrData, $this->strInputName, $this->varValue, $this->strField, $this->strTable, $this));
 		$objWidget->xlabel = $xlabel;
 		$objWidget->currentRecord = $this->intId;
@@ -1375,7 +1373,6 @@ abstract class DataContainer extends Backend
 		// Reset all filters
 		if (Input::post('filter_reset') !== null && Input::post('FORM_SUBMIT') == 'tl_filters')
 		{
-			/** @var AttributeBagInterface $objSessionBag */
 			$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 			$data = $objSessionBag->all();
 
@@ -1812,7 +1809,6 @@ abstract class DataContainer extends Backend
 			self::clearCurrentRecordCache($id, $table);
 		}
 
-		/** @var Connection $connection */
 		$connection = System::getContainer()->get('database_connection');
 
 		$stmt = $connection->executeQuery(

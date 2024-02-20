@@ -84,12 +84,6 @@ class NewsResolverTest extends ContaoTestCase
         $newsArchive = $this->mockClassWithProperties(NewsArchiveModel::class, ['jumpTo' => 42]);
 
         $content = $this->mockClassWithProperties(NewsModel::class, ['source' => '']);
-        $content
-            ->expects($this->once())
-            ->method('getRelated')
-            ->with('pid')
-            ->willReturn($newsArchive)
-        ;
 
         $pageAdapter = $this->mockAdapter(['findPublishedById']);
         $pageAdapter
@@ -99,7 +93,10 @@ class NewsResolverTest extends ContaoTestCase
             ->willReturn($target)
         ;
 
-        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
+        $framework = $this->mockContaoFramework([
+            PageModel::class => $pageAdapter,
+            NewsArchiveModel::class => $this->mockConfiguredAdapter(['findByPk' => $newsArchive]),
+        ]);
 
         $resolver = new NewsResolver($framework);
         $result = $resolver->resolve($content);

@@ -345,8 +345,6 @@ class ContentUrlGeneratorTest extends TestCase
      * @param class-string<T> $modelClass
      *
      * @return T
-     *
-     * @phpstan-return T
      */
     private function createModel(string $modelClass, array $data = []): object
     {

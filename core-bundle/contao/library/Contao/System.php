@@ -18,7 +18,6 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\Filesystem\Path;
-use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
@@ -481,7 +480,6 @@ abstract class System
 				// Find the given filename either as .php or .xlf file
 				$finder = $container->get('contao.resource_finder')->findIn('languages/' . $strCreateLang)->name('/^' . $strName . '\.(php|xlf)$/');
 
-				/** @var SplFileInfo $file */
 				foreach ($finder as $file)
 				{
 					switch ($file->getExtension())

@@ -149,7 +149,7 @@ class Pagination
 		$this->lblLast = $GLOBALS['TL_LANG']['MSC']['last'];
 		$this->lblTotal = $GLOBALS['TL_LANG']['MSC']['totalPages'];
 
-		/** @var Adapter<Input>&Input $input */
+		/** @var Adapter<Input> $input */
 		$input = System::getContainer()->get('contao.framework')->getAdapter(Input::class);
 
 		if ($input->get($strParameter) > 0)
@@ -222,7 +222,7 @@ class Pagination
 			return '';
 		}
 
-		/** @var Adapter<Environment>&Environment $environment */
+		/** @var Adapter<Environment> $environment */
 		$environment = System::getContainer()->get('contao.framework')->getAdapter(Environment::class);
 
 		$blnQuery = false;

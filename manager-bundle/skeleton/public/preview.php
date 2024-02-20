@@ -10,7 +10,6 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-use Composer\Autoload\ClassLoader;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use FOS\HttpCache\TagHeaderFormatter\TagHeaderFormatter;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,7 +35,6 @@ if (file_exists(__DIR__.'/../var/maintenance.html')) {
     die($contents);
 }
 
-/** @var ClassLoader $loader */
 $loader = require __DIR__.'/../vendor/autoload.php';
 
 $request = Request::createFromGlobals();

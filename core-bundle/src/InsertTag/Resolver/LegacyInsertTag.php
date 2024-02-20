@@ -293,9 +293,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
             case 'article':
             case 'article_open':
             case 'article_url':
-                $objArticle = ArticleModel::findByIdOrAlias($insertTag->getParameters()->get(0));
-
-                if (!$objArticle instanceof ArticleModel) {
+                if (!$objArticle = ArticleModel::findByIdOrAlias($insertTag->getParameters()->get(0))) {
                     break;
                 }
 

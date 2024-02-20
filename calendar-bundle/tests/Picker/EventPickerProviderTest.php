@@ -142,17 +142,11 @@ class EventPickerProviderTest extends ContaoTestCase
         $calendarModel->id = 1;
 
         $calendarEvents = $this->createMock(CalendarEventsModel::class);
-        $calendarEvents
-            ->expects($this->once())
-            ->method('getRelated')
-            ->with('pid')
-            ->willReturn($calendarModel)
-        ;
-
         $config = new PickerConfig('link', [], '{{event_url::1}}', 'eventPicker');
 
         $adapters = [
-            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $calendarEvents]),
+            CalendarModel::class => $this->mockConfiguredAdapter(['findByPk' => $calendarModel]),
+            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findByPk' => $calendarEvents]),
         ];
 
         $picker = $this->getPicker();
@@ -171,7 +165,7 @@ class EventPickerProviderTest extends ContaoTestCase
         $config = new PickerConfig('link', [], '{{event_url::1}}', 'eventPicker');
 
         $adapters = [
-            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => null]),
+            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findByPk' => null]),
         ];
 
         $picker = $this->getPicker();
@@ -188,17 +182,11 @@ class EventPickerProviderTest extends ContaoTestCase
     public function testDoesNotAddTableAndIdIfThereIsNoCalendarModel(): void
     {
         $calendarEvents = $this->createMock(CalendarEventsModel::class);
-        $calendarEvents
-            ->expects($this->once())
-            ->method('getRelated')
-            ->with('pid')
-            ->willReturn(null)
-        ;
-
         $config = new PickerConfig('link', [], '{{event_url::1}}', 'eventPicker');
 
         $adapters = [
-            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $calendarEvents]),
+            CalendarModel::class => $this->mockConfiguredAdapter(['findByPk' => null]),
+            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findByPk' => $calendarEvents]),
         ];
 
         $picker = $this->getPicker();

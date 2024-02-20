@@ -315,9 +315,9 @@ trait TemplateInheritance
 	 */
 	public function insert($name, array $data=null)
 	{
-		/** @var Template $tpl */
 		if ($this instanceof Template)
 		{
+			/** @var Template $tpl */
 			$tpl = new static($name);
 		}
 		elseif (System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest(System::getContainer()->get('request_stack')->getCurrentRequest() ?? Request::create('')))

@@ -140,9 +140,7 @@ class ContentCompositionListener
     {
         $pageModel->loadDetails();
 
-        $layout = $pageModel->getRelated('layout');
-
-        if (!$layout instanceof LayoutModel) {
+        if (!$layout = $this->framework->getAdapter(LayoutModel::class)->findByPk($pageModel->layout)) {
             return 'main';
         }
 
@@ -156,7 +154,7 @@ class ContentCompositionListener
 
         $columns = array_filter(array_unique($columns));
 
-        if (empty($columns)) {
+        if ([] === $columns) {
             return null;
         }
 

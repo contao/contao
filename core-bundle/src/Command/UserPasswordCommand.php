@@ -21,7 +21,6 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Exception\RuntimeException;
-use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -120,7 +119,6 @@ class UserPasswordCommand extends Command
         $question->setHidden(true);
         $question->setMaxAttempts(3);
 
-        /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
 
         return $helper->ask($input, $output, $question);

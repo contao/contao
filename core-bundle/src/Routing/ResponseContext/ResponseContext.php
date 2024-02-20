@@ -68,7 +68,7 @@ final class ResponseContext
     }
 
     /**
-     * @template T of object
+     * @template T
      *
      * @param class-string<T> $serviceId
      *

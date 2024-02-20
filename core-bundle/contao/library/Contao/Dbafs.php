@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\Filter\SyncExclude;
-use Contao\Model\Collection;
 use Symfony\Component\Filesystem\Path;
 
 /**
@@ -326,8 +325,6 @@ class Dbafs
 		}
 
 		$strFolder = \dirname($strDestination);
-
-		/** @var FilesModel $objNewFile */
 		$objNewFile = clone $objFile->current();
 
 		// Set the new parent ID
@@ -365,7 +362,6 @@ class Dbafs
 
 				while ($objFiles->next())
 				{
-					/** @var FilesModel $objNew */
 					$objNew = clone $objFiles->current();
 
 					$objNew->pid    = $arrMapper[$objFiles->pid] ?? $objNewFile->uuid;
@@ -562,7 +558,6 @@ class Dbafs
 				}
 			}
 
-			/** @var Model $objModel */
 			$objModel = $arrModels[$strRelpath] ?? FilesModel::findByPath($strRelpath);
 
 			if ($objModel === null)
@@ -677,7 +672,6 @@ class Dbafs
 			$arrMapped = array();
 			$arrPidUpdate = array();
 
-			/** @var Collection|FilesModel $objFiles */
 			while ($objFiles->next())
 			{
 				$objFound = FilesModel::findBy(array('hash=?', 'found=2'), $objFiles->hash);

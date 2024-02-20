@@ -105,7 +105,6 @@ class ModuleLogin extends Module
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$container = System::getContainer();
@@ -198,7 +197,7 @@ class ModuleLogin extends Module
 		}
 
 		// Redirect to the jumpTo page
-		elseif (($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
+		elseif ($objTarget = PageModel::findByPk($this->objModel->jumpTo))
 		{
 			$strRedirect = $container->get('contao.routing.content_url_generator')->generate($objTarget, array(), UrlGeneratorInterface::ABSOLUTE_URL);
 		}
@@ -223,9 +222,7 @@ class ModuleLogin extends Module
 			return;
 		}
 
-		$pwResetPage = $this->objModel->getRelated('pwResetPage');
-
-		if ($pwResetPage instanceof PageModel)
+		if ($pwResetPage = PageModel::findByPk($this->objModel->pwResetPage))
 		{
 			$this->Template->pwResetUrl = System::getContainer()->get('contao.routing.content_url_generator')->generate($pwResetPage);
 		}

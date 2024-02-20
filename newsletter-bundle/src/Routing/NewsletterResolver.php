@@ -15,6 +15,7 @@ namespace Contao\NewsletterBundle\Routing;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
 use Contao\CoreBundle\Routing\Content\ContentUrlResult;
+use Contao\NewsletterChannelModel;
 use Contao\NewsletterModel;
 use Contao\PageModel;
 
@@ -31,8 +32,9 @@ class NewsletterResolver implements ContentUrlResolverInterface
         }
 
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
+        $channelAdapter = $this->framework->getAdapter(NewsletterChannelModel::class);
 
-        return ContentUrlResult::resolve($pageAdapter->findPublishedById((int) $content->getRelated('pid')?->jumpTo));
+        return ContentUrlResult::resolve($pageAdapter->findPublishedById((int) $channelAdapter->findByPk($content->pid)?->jumpTo));
     }
 
     public function getParametersForContent(object $content, PageModel $pageModel): array

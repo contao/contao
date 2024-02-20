@@ -34,7 +34,7 @@ class SerpPreview extends Widget
 	 */
 	public function generate()
 	{
-		/** @var Model $class */
+		/** @var class-string<Model> $class */
 		$class = Model::getClassFromTable($this->strTable);
 		$model = $class::findByPk($this->activeRecord->id);
 

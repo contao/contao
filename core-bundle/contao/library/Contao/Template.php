@@ -459,7 +459,6 @@ abstract class Template extends Controller
 
 		if ($responseContext?->has(CspHandler::class))
 		{
-			/** @var CspHandler $csp */
 			$csp = $responseContext->get(CspHandler::class);
 			$nonce = $csp->getNonce('style-src');
 		}
@@ -526,7 +525,6 @@ abstract class Template extends Controller
 
 		if ($responseContext?->has(CspHandler::class))
 		{
-			/** @var CspHandler $csp */
 			$csp = $responseContext->get(CspHandler::class);
 			$nonce = $csp->getNonce('script-src');
 		}

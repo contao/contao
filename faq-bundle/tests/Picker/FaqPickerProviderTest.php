@@ -142,17 +142,11 @@ class FaqPickerProviderTest extends ContaoTestCase
         $model->id = 1;
 
         $faq = $this->createMock(FaqModel::class);
-        $faq
-            ->expects($this->once())
-            ->method('getRelated')
-            ->with('pid')
-            ->willReturn($model)
-        ;
-
         $config = new PickerConfig('link', [], '{{faq_url::1}}', 'faqPicker');
 
         $adapters = [
-            FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faq]),
+            FaqModel::class => $this->mockConfiguredAdapter(['findByPk' => $faq]),
+            FaqCategoryModel::class => $this->mockConfiguredAdapter(['findByPk' => $model]),
         ];
 
         $picker = $this->getPicker();
@@ -171,7 +165,7 @@ class FaqPickerProviderTest extends ContaoTestCase
         $config = new PickerConfig('link', [], '{{faq_url::1}}', 'faqPicker');
 
         $adapters = [
-            FaqModel::class => $this->mockConfiguredAdapter(['findById' => null]),
+            FaqModel::class => $this->mockConfiguredAdapter(['findByPk' => null]),
         ];
 
         $picker = $this->getPicker();
@@ -185,20 +179,14 @@ class FaqPickerProviderTest extends ContaoTestCase
         $this->assertArrayNotHasKey('id', $params);
     }
 
-    public function testDoesNotAddTableAndIdIfThereIsNoCalendarModel(): void
+    public function testDoesNotAddTableAndIdIfThereIsNoCategoryModel(): void
     {
         $faq = $this->createMock(FaqModel::class);
-        $faq
-            ->expects($this->once())
-            ->method('getRelated')
-            ->with('pid')
-            ->willReturn(null)
-        ;
-
         $config = new PickerConfig('link', [], '{{faq_url::1}}', 'faqPicker');
 
         $adapters = [
-            FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faq]),
+            FaqModel::class => $this->mockConfiguredAdapter(['findByPk' => $faq]),
+            FaqCategoryModel::class => $this->mockConfiguredAdapter(['findByPk' => null]),
         ];
 
         $picker = $this->getPicker();

@@ -114,7 +114,6 @@ class FrontendTemplate extends Template
 			throw new UnusedArgumentsException('Unused arguments: ' . implode(', ', Input::getUnusedRouteParameters()));
 		}
 
-		/** @var PageModel|null $objPage */
 		global $objPage;
 
 		// Minify the markup
@@ -142,7 +141,6 @@ class FrontendTemplate extends Template
 	 */
 	private function setCacheHeaders(Response $response)
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Do not cache the response if caching was not configured

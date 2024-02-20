@@ -790,9 +790,7 @@ class FigureBuilder
     }
 
     /**
-     * @return FilesModel
-     *
-     * @phpstan-return Adapter<FilesModel>
+     * @return Adapter<FilesModel>
      */
     private function getFilesModelAdapter(): Adapter
     {
@@ -803,9 +801,7 @@ class FigureBuilder
     }
 
     /**
-     * @return Validator
-     *
-     * @phpstan-return Adapter<Validator>
+     * @return Adapter<Validator>
      */
     private function getValidatorAdapter(): Adapter
     {

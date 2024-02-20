@@ -281,7 +281,7 @@ class ModuleUnsubscribe extends Module
 		$objEmail->sendTo($strEmail);
 
 		// Redirect to the jumpTo page
-		if (($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
+		if ($objTarget = PageModel::findByPk($this->objModel->jumpTo))
 		{
 			try
 			{

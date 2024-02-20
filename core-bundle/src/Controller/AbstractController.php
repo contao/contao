@@ -53,7 +53,7 @@ abstract class AbstractController extends SymfonyAbstractController
      *
      * @param class-string<T> $class
      *
-     * @return T
+     * @return Adapter&T
      *
      * @phpstan-return Adapter<T>
      */

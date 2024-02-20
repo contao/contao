@@ -113,6 +113,7 @@ class ModuleChangePassword extends Module
 		// Initialize the widgets
 		foreach ($arrFields as $strKey=>$arrField)
 		{
+			/** @var class-string<Widget> $strClass */
 			$strClass = $GLOBALS['TL_FFL'][$arrField['inputType']] ?? null;
 
 			// Continue if the class is not defined
@@ -123,7 +124,6 @@ class ModuleChangePassword extends Module
 
 			$arrField['eval']['required'] = $arrField['eval']['mandatory'] ?? null;
 
-			/** @var Widget $objWidget */
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, $arrField['name']));
 			$objWidget->storeValues = true;
 			$objWidget->currentRecord = $objMember->id;
@@ -187,7 +187,7 @@ class ModuleChangePassword extends Module
 			$user->findBy('id', $objMember->id);
 
 			// Check whether there is a jumpTo page
-			if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
+			if ($objJumpTo = PageModel::findByPk($this->objModel->jumpTo))
 			{
 				$this->jumpToOrReload($objJumpTo->row());
 			}

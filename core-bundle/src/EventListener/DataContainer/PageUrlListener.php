@@ -163,9 +163,8 @@ class PageUrlListener
     private function recursiveValidatePages(int $pid, PageModel $rootPage): void
     {
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
-        $pages = $pageAdapter->findByPid($pid);
 
-        if (null === $pages) {
+        if (!$pages = $pageAdapter->findByPid($pid)) {
             return;
         }
 
@@ -208,9 +207,7 @@ class PageUrlListener
             $currentUrl = null;
         }
 
-        $aliasPages = $this->framework->getAdapter(PageModel::class)->findSimilarByAlias($currentPage);
-
-        if (null === $aliasPages) {
+        if (!$aliasPages = $this->framework->getAdapter(PageModel::class)->findSimilarByAlias($currentPage)) {
             return false;
         }
 

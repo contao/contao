@@ -17,7 +17,6 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\ResizeConfiguration;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\Definition\ArrayNode;
-use Symfony\Component\Config\Definition\BaseNode;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\Definition\PrototypedArrayNode;
@@ -192,7 +191,6 @@ class ConfigurationTest extends TestCase
 
     public function testAllowsOnlySnakeCaseKeys(): void
     {
-        /** @var ArrayNode $tree */
         $tree = $this->configuration->getConfigTreeBuilder()->buildTree();
 
         $this->assertInstanceOf(ArrayNode::class, $tree);
@@ -449,7 +447,6 @@ class ConfigurationTest extends TestCase
      */
     private function checkKeys(array $configuration): void
     {
-        /** @var BaseNode $value */
         foreach ($configuration as $key => $value) {
             if ($value instanceof ArrayNode) {
                 $this->checkKeys($value->getChildren());

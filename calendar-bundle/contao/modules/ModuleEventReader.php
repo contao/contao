@@ -77,14 +77,13 @@ class ModuleEventReader extends Events
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$this->Template->event = '';
 
 		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
 
-		if ($this->overviewPage && ($overviewPage = PageModel::findById($this->overviewPage)))
+		if ($this->overviewPage && ($overviewPage = PageModel::findByPk($this->overviewPage)))
 		{
 			$this->Template->referer = $urlGenerator->generate($overviewPage);
 			$this->Template->back = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['eventOverview'];
@@ -113,7 +112,6 @@ class ModuleEventReader extends Events
 
 		if ($responseContext?->has(HtmlHeadBag::class))
 		{
-			/** @var HtmlHeadBag $htmlHeadBag */
 			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
 			$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 
@@ -249,7 +247,7 @@ class ModuleEventReader extends Events
 		$objTemplate->recurring = $recurring;
 		$objTemplate->until = $until;
 		$objTemplate->locationLabel = $GLOBALS['TL_LANG']['MSC']['location'];
-		$objTemplate->calendar = $objEvent->getRelated('pid');
+		$objTemplate->calendar = CalendarModel::findByPk($objEvent->pid);
 		$objTemplate->count = 0; // see #74
 		$objTemplate->details = '';
 		$objTemplate->hasTeaser = false;
@@ -438,8 +436,11 @@ class ModuleEventReader extends Events
 			return;
 		}
 
-		/** @var CalendarModel $objCalendar */
-		$objCalendar = $objEvent->getRelated('pid');
+		if (!$objCalendar = CalendarModel::findByPk($objEvent->pid))
+		{
+			return;
+		}
+
 		$this->Template->allowComments = $objCalendar->allowComments;
 
 		// Comments are not allowed
@@ -460,8 +461,7 @@ class ModuleEventReader extends Events
 			$arrNotifies[] = $GLOBALS['TL_ADMIN_EMAIL'];
 		}
 
-		/** @var UserModel $objAuthor */
-		if ($objCalendar->notify != 'notify_admin' && ($objAuthor = $objEvent->getRelated('author')) instanceof UserModel && $objAuthor->email)
+		if ($objCalendar->notify != 'notify_admin' && ($objAuthor = UserModel::findByPk($objEvent->author)) && $objAuthor->email)
 		{
 			$arrNotifies[] = $objAuthor->email;
 		}

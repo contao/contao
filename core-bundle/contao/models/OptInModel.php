@@ -114,7 +114,6 @@ class OptInModel extends Model
 
 		while ($objResult->next())
 		{
-			/** @var OptInModel|Model $objOptIn */
 			if ($objOptIn = $objRegistry->fetch($t, $objResult->id))
 			{
 				$arrModels[] = $objOptIn;

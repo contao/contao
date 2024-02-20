@@ -71,7 +71,7 @@ class ModuleNewsletterReader extends Module
 	{
 		$this->Template->content = '';
 
-		if ($this->overviewPage && ($overviewPage = PageModel::findById($this->overviewPage)))
+		if ($this->overviewPage && ($overviewPage = PageModel::findByPk($this->overviewPage)))
 		{
 			$this->Template->referer = System::getContainer()->get('contao.routing.content_url_generator')->generate($overviewPage);
 			$this->Template->back = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['nl_overview'];
@@ -93,7 +93,6 @@ class ModuleNewsletterReader extends Module
 			{
 				$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 
-				/** @var HtmlHeadBag $htmlHeadBag */
 				$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
 				$htmlHeadBag->setTitle($htmlDecoder->inputEncodedToPlainText($objNewsletter->subject));
 			}

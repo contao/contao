@@ -14,7 +14,6 @@ use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -58,9 +57,7 @@ abstract class Frontend extends Controller
 	 */
 	public static function getRootPageFromUrl()
 	{
-		$objRequest = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		if ($objRequest instanceof Request)
+		if ($objRequest = System::getContainer()->get('request_stack')->getCurrentRequest())
 		{
 			$objPage = $objRequest->attributes->get('pageModel');
 
@@ -86,7 +83,6 @@ abstract class Frontend extends Controller
 	 */
 	public static function addToUrl($strRequest, $blnIgnoreParams=false, $arrUnset=array())
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$arrGet = array();
@@ -151,7 +147,6 @@ abstract class Frontend extends Controller
 	 */
 	protected function jumpToOrReload($intId, $strParams=null)
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Always redirect if there are additional arguments (see #5734)

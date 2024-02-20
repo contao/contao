@@ -135,7 +135,6 @@ class ContentDownloads extends ContentDownload
 				}
 				else
 				{
-					/** @var PageModel $objPage */
 					global $objPage;
 
 					$arrMeta = $this->getMetaData($objFiles->meta, $objPage->language);
@@ -227,7 +226,6 @@ class ContentDownloads extends ContentDownload
 					}
 					else
 					{
-						/** @var PageModel $objPage */
 						global $objPage;
 
 						$arrMeta = $this->getMetaData($objSubfiles->meta, $objPage->language);

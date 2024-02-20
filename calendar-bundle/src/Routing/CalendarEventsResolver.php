@@ -14,6 +14,7 @@ namespace Contao\CalendarBundle\Routing;
 
 use Contao\ArticleModel;
 use Contao\CalendarEventsModel;
+use Contao\CalendarModel;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
 use Contao\CoreBundle\Routing\Content\ContentUrlResult;
@@ -50,9 +51,10 @@ class CalendarEventsResolver implements ContentUrlResolverInterface
         }
 
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
+        $calendarAdapter = $this->framework->getAdapter(CalendarModel::class);
 
         // Link to the default page
-        return ContentUrlResult::resolve($pageAdapter->findPublishedById((int) $content->getRelated('pid')?->jumpTo));
+        return ContentUrlResult::resolve($pageAdapter->findPublishedById((int) $calendarAdapter->findByPk($content->pid)?->jumpTo));
     }
 
     public function getParametersForContent(object $content, PageModel $pageModel): array

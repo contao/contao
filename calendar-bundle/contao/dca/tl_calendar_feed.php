@@ -24,7 +24,6 @@ use Contao\Image;
 use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 (
@@ -342,7 +341,6 @@ class tl_calendar_feed extends Backend
 
 		$db = Database::getInstance();
 
-		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 		$arrNew = $objSessionBag->get('new_records');
 
