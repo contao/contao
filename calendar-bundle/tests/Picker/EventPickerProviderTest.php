@@ -141,7 +141,7 @@ class EventPickerProviderTest extends ContaoTestCase
         $calendarModel = $this->mockClassWithProperties(CalendarModel::class);
         $calendarModel->id = 1;
 
-        $calendarEvents = $this->mockClassWithProperties(CalendarEventsModel::class);
+        $calendarEvents = $this->createMock(CalendarEventsModel::class);
         $config = new PickerConfig('link', [], '{{event_url::1}}', 'eventPicker');
 
         $adapters = [
@@ -181,7 +181,7 @@ class EventPickerProviderTest extends ContaoTestCase
 
     public function testDoesNotAddTableAndIdIfThereIsNoCalendarModel(): void
     {
-        $calendarEvents = $this->mockClassWithProperties(CalendarEventsModel::class);
+        $calendarEvents = $this->createMock(CalendarEventsModel::class);
         $config = new PickerConfig('link', [], '{{event_url::1}}', 'eventPicker');
 
         $adapters = [

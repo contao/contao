@@ -24,7 +24,7 @@ class NewsletterResolverTest extends ContaoTestCase
     {
         $target = $this->mockClassWithProperties(PageModel::class);
         $channel = $this->mockClassWithProperties(NewsletterChannelModel::class, ['jumpTo' => 42]);
-        $content = $this->mockClassWithProperties(NewsletterModel::class);
+        $content = $this->createMock(NewsletterModel::class);
 
         $pageAdapter = $this->mockAdapter(['findPublishedById']);
         $pageAdapter

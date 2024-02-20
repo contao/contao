@@ -40,7 +40,9 @@ class Calendar extends Frontend
 	 */
 	public function generateFeed($intId)
 	{
-		if (!$objCalendar = CalendarFeedModel::findByPk($intId))
+		$objCalendar = CalendarFeedModel::findByPk($intId);
+
+		if ($objCalendar === null)
 		{
 			return;
 		}
