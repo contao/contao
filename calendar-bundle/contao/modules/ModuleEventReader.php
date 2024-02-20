@@ -83,7 +83,7 @@ class ModuleEventReader extends Events
 
 		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
 
-		if ($this->overviewPage && ($overviewPage = PageModel::findById($this->overviewPage)))
+		if ($this->overviewPage && ($overviewPage = PageModel::findByPk($this->overviewPage)))
 		{
 			$this->Template->referer = $urlGenerator->generate($overviewPage);
 			$this->Template->back = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['eventOverview'];

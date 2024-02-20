@@ -107,7 +107,7 @@ class NewsPickerProvider extends AbstractInsertTagPickerProvider implements DcaP
     {
         $newsAdapter = $this->framework->getAdapter(NewsModel::class);
 
-        if (!$newsModel = $newsAdapter->findById($id)) {
+        if (!$newsModel = $newsAdapter->findByPk($id)) {
             return null;
         }
 

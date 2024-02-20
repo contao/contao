@@ -107,7 +107,7 @@ class EventPickerProvider extends AbstractInsertTagPickerProvider implements Dca
     {
         $eventAdapter = $this->framework->getAdapter(CalendarEventsModel::class);
 
-        if (!$eventsModel = $eventAdapter->findById($id)) {
+        if (!$eventsModel = $eventAdapter->findByPk($id)) {
             return null;
         }
 
