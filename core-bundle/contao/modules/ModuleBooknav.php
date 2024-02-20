@@ -50,7 +50,6 @@ class ModuleBooknav extends Module
 			return $objTemplate->parse();
 		}
 
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		if (!$this->rootPage || !\in_array($this->rootPage, $objPage->trail))
@@ -67,7 +66,7 @@ class ModuleBooknav extends Module
 	protected function compile()
 	{
 		// Get the root page
-		if (!($objTarget = $this->objModel->getRelated('rootPage')) instanceof PageModel)
+		if (!$objTarget = PageModel::findByPk($this->objModel->rootPage))
 		{
 			return;
 		}
@@ -84,7 +83,6 @@ class ModuleBooknav extends Module
 		$this->arrPages[$objTarget->id] = $objTarget;
 		$this->getBookPages($objTarget->id, $groups, time());
 
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Upper page
@@ -192,7 +190,6 @@ class ModuleBooknav extends Module
 
 		$security = System::getContainer()->get('security.helper');
 
-		/** @var PageModel $objPage */
 		foreach ($arrPages as list('page' => $objPage, 'hasSubpages' => $blnHasSubpages))
 		{
 			$objPage->loadDetails();

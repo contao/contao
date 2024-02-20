@@ -15,9 +15,7 @@ use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvents;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
 
@@ -72,7 +70,6 @@ class BackendIndex extends Backend
 
 		if ($request?->query->has('redirect'))
 		{
-			/** @var UriSigner $uriSigner */
 			$uriSigner = $container->get('uri_signer');
 
 			// We cannot use $request->getUri() here as we want to work with the original URI (no query string reordering)
@@ -85,7 +82,6 @@ class BackendIndex extends Backend
 		$objTemplate = new BackendTemplate('be_login');
 		$objTemplate->headline = $GLOBALS['TL_LANG']['MSC']['loginBT'];
 
-		/** @var TokenInterface $token */
 		$token = $container->get('security.token_storage')->getToken();
 
 		if ($token instanceof TwoFactorToken)

@@ -153,6 +153,7 @@ class ModulePersonalData extends Module
 				$arrData['inputType'] = 'upload';
 			}
 
+			/** @var class-string<Widget> $strClass */
 			$strClass = $GLOBALS['TL_FFL'][$arrData['inputType'] ?? null] ?? null;
 
 			// Continue if the class does not exist
@@ -205,7 +206,6 @@ class ModulePersonalData extends Module
 				}
 			}
 
-			/** @var Widget $objWidget */
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrData, $field, $varValue, $field, $strTable, $this));
 
 			// Append the module ID to prevent duplicate IDs (see #1493)
@@ -370,7 +370,7 @@ class ModulePersonalData extends Module
 			}
 
 			// Check whether there is a jumpTo page
-			if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
+			if ($objJumpTo = PageModel::findByPk($this->objModel->jumpTo))
 			{
 				$this->jumpToOrReload($objJumpTo->row());
 			}

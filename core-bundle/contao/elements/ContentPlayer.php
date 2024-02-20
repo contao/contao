@@ -26,7 +26,7 @@ class ContentPlayer extends ContentElement
 
 	/**
 	 * Files object
-	 * @var Collection|FilesModel
+	 * @var Collection<FilesModel>
 	 */
 	protected $objFiles;
 
@@ -89,7 +89,6 @@ class ContentPlayer extends ContentElement
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$this->Template->poster = false;
@@ -101,8 +100,6 @@ class ContentPlayer extends ContentElement
 		}
 
 		$objFiles = $this->objFiles;
-
-		/** @var FilesModel $objFirst */
 		$objFirst = $objFiles->current();
 
 		// Pre-sort the array by preference
@@ -128,7 +125,6 @@ class ContentPlayer extends ContentElement
 		// Pass File objects to the template
 		foreach ($objFiles as $objFileModel)
 		{
-			/** @var FilesModel $objFileModel */
 			$objMeta = $objFileModel->getMetadata($strLanguage);
 			$strTitle = null;
 

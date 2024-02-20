@@ -30,7 +30,6 @@ use Imagine\Exception\RuntimeException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Security\Csrf\CsrfToken;
 
@@ -287,9 +286,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	public function showAll()
 	{
 		$return = '';
-		$objSession = System::getContainer()->get('request_stack')->getSession();
 
-		/** @var AttributeBagInterface $objSessionBag */
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 		$objSessionBag = $objSession->getBag('contao_backend');
 		$session = $objSessionBag->all();
 
@@ -1190,7 +1188,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$objSession->set('CLIPBOARD', $arrClipboard);
 		}
 
-		// Instantiate the uploader
+		/** @var class-string<FileUpload> $class */
 		$class = BackendUser::getInstance()->uploader;
 
 		// See #4086
@@ -1199,7 +1197,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$class = DropZone::class;
 		}
 
-		/** @var FileUpload $objUploader */
 		$objUploader = new $class();
 
 		// Process the uploaded files
@@ -1397,7 +1394,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$this->objActiveRecord = $objModel;
 				$this->blnCreateNewVersion = false;
 
-				/** @var FilesModel $objModel */
 				$objVersions = new Versions($this->strTable, $objModel->id);
 
 				if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['hideVersionMenu'] ?? null))
@@ -1735,7 +1731,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					$this->objActiveRecord = $objModel;
 					$this->blnCreateNewVersion = false;
 
-					/** @var FilesModel $objModel */
 					$objVersions = new Versions($this->strTable, $objModel->id);
 					$objVersions->initialize();
 				}
@@ -2084,7 +2079,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				// Update the database
 				if ($this->blnIsDbAssisted && $objMeta !== null)
 				{
-					/** @var FilesModel $objMeta */
 					$objMeta->hash = $objFile->hash;
 					$objMeta->save();
 
@@ -2565,7 +2559,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 */
 	protected function generateTree($path, $intMargin, $mount=false, $blnProtected=true, $arrClipboard=null, $arrFound=array())
 	{
-		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 		$session = $objSessionBag->all();
 
@@ -2885,7 +2878,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 */
 	protected function searchMenu()
 	{
-		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		$session = $objSessionBag->all();

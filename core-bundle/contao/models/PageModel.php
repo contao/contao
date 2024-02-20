@@ -727,10 +727,9 @@ class PageModel extends Model
 		// Try to load from the registry (see #8544)
 		if (empty($arrOptions))
 		{
-			/** @var PageModel|null $objModel */
 			$objModel = Registry::getInstance()->fetch(static::$strTable, $strHost, 'contao.dns-fallback');
 
-			if ($objModel !== null)
+			if ($objModel instanceof self)
 			{
 				return $objModel;
 			}
@@ -836,10 +835,9 @@ class PageModel extends Model
 			return null;
 		}
 
-		$objRegistry = Registry::getInstance();
+		$objPage = Registry::getInstance()->fetch('tl_page', $objResult->id);
 
-		/** @var PageModel|Model $objPage */
-		if ($objPage = $objRegistry->fetch('tl_page', $objResult->id))
+		if ($objPage instanceof self)
 		{
 			return $objPage;
 		}

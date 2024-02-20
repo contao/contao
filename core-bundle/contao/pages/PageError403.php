@@ -28,7 +28,6 @@ class PageError403 extends Frontend
 	 */
 	public function getResponse(PageModel $objRootPage=null)
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$obj403 = $this->prepare($objRootPage);

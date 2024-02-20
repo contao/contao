@@ -41,7 +41,6 @@ class ContaoJsonLdSchemaListener
 
         $htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
 
-        /** @var ContaoPageSchema $schema */
         $schema = $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class);
         $schema->updateFromHtmlHeadBag($htmlHeadBag);
     }

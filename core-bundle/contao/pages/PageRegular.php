@@ -79,9 +79,6 @@ class PageRegular extends Frontend
 		// Get the page layout
 		$objLayout = $this->getPageLayout($objPage);
 
-		/** @var ThemeModel $objTheme */
-		$objTheme = $objLayout->getRelated('pid');
-
 		// Set the default image densities
 		$container->get('contao.image.picture_factory')->setDefaultDensities($objLayout->defaultImageDensities);
 		$container->get('contao.image.preview_factory')->setDefaultDensities($objLayout->defaultImageDensities);
@@ -91,7 +88,12 @@ class PageRegular extends Frontend
 
 		// Set the layout template and template group
 		$objPage->template = $objLayout->template ?: 'fe_page';
-		$objPage->templateGroup = $objTheme->templates ?? null;
+		$objPage->templateGroup = null;
+
+		if ($objTheme = ThemeModel::findByPk($objLayout->pid))
+		{
+			$objPage->templateGroup = $objTheme->templates;
+		}
 
 		// Minify the markup
 		$objPage->minifyMarkup = $objLayout->minifyMarkup;
@@ -642,10 +644,7 @@ class PageRegular extends Frontend
 				return '';
 			}
 
-			/** @var JsonLdManager $jsonLdManager */
-			$jsonLdManager = $this->responseContext->get(JsonLdManager::class);
-
-			return $jsonLdManager->collectFinalScriptFromGraphs();
+			return $this->responseContext->get(JsonLdManager::class)->collectFinalScriptFromGraphs();
 		};
 	}
 }

@@ -176,7 +176,7 @@ class BackendPopup extends Backend
 			}
 
 			// Metadata
-			if (($objModel = FilesModel::findByPath($this->strFile)) instanceof FilesModel)
+			if ($objModel = FilesModel::findByPath($this->strFile))
 			{
 				$arrMeta = StringUtil::deserialize($objModel->meta);
 

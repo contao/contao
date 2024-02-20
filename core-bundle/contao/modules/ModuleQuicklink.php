@@ -67,7 +67,6 @@ class ModuleQuicklink extends Module
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Get all active pages
@@ -84,7 +83,6 @@ class ModuleQuicklink extends Module
 		$security = $container->get('security.helper');
 		$urlGenerator = $container->get('contao.routing.content_url_generator');
 
-		/** @var PageModel[] $objPages */
 		foreach ($objPages as $objSubpage)
 		{
 			$objSubpage->loadDetails();

@@ -11,7 +11,6 @@
 namespace Contao;
 
 use FOS\HttpCache\CacheInvalidator;
-use FOS\HttpCacheBundle\CacheManager;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Filesystem\Path;
@@ -183,7 +182,6 @@ class Automator extends System
 			return;
 		}
 
-		/** @var CacheManager $cacheManager */
 		$cacheManager = $container->get('fos_http_cache.cache_manager');
 
 		if (!$cacheManager->supports(CacheInvalidator::CLEAR))
@@ -322,7 +320,6 @@ class Automator extends System
 			return;
 		}
 
-		/** @var CacheManager $cacheManager */
 		$cacheManager = $container->get('fos_http_cache.cache_manager');
 		$tag = 'contao.sitemap';
 

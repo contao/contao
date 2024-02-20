@@ -12,10 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
-use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use ParagonIE\ConstantTime\Base32;
-use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Back end module "two factor".
@@ -34,8 +31,6 @@ class ModuleTwoFactor extends BackendModule
 	protected function compile()
 	{
 		$container = System::getContainer();
-
-		/** @var Security $security */
 		$security = $container->get('security.helper');
 
 		if (!$security->isGranted('IS_AUTHENTICATED_FULLY'))
@@ -99,10 +94,8 @@ class ModuleTwoFactor extends BackendModule
 		}
 
 		$container = System::getContainer();
-		$verifyHelp = $GLOBALS['TL_LANG']['MSC']['twoFactorVerificationHelp'];
-
-		/** @var Authenticator $authenticator */
 		$authenticator = $container->get('contao.security.two_factor.authenticator');
+		$verifyHelp = $GLOBALS['TL_LANG']['MSC']['twoFactorVerificationHelp'];
 
 		// Validate the verification code
 		if (Input::post('FORM_SUBMIT') == 'tl_two_factor')
@@ -127,7 +120,6 @@ class ModuleTwoFactor extends BackendModule
 			$user->save();
 		}
 
-		/** @var Request $request */
 		$request = $container->get('request_stack')->getCurrentRequest();
 
 		$this->Template->enable = true;

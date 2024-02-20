@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Symfony\Component\Filesystem\Path;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 /**
  * Provide methods to edit the local configuration file.
@@ -147,7 +146,6 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 				}
 			}
 
-			/** @var AttributeBagInterface $objSessionBag */
 			$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 			// Render boxes

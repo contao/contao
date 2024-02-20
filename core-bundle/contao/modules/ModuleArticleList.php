@@ -54,7 +54,6 @@ class ModuleArticleList extends Module
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		if (!$this->inColumn)
@@ -69,7 +68,7 @@ class ModuleArticleList extends Module
 		$this->Template->request = Environment::get('requestUri');
 
 		// Show the articles of a different page
-		if ($this->defineRoot && ($objTarget = $this->objModel->getRelated('rootPage')) instanceof PageModel)
+		if ($this->defineRoot && ($objTarget = PageModel::findByPk($this->objModel->rootPage)))
 		{
 			$id = $objTarget->id;
 

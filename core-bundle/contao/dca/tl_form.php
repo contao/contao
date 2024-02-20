@@ -17,7 +17,6 @@ use Contao\DC_Table;
 use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 $GLOBALS['TL_DCA']['tl_form'] = array
 (
@@ -306,7 +305,6 @@ class tl_form extends Backend
 			return;
 		}
 
-		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 		$arrNew = $objSessionBag->get('new_records');
 

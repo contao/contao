@@ -142,16 +142,10 @@ class EventPickerProviderTest extends ContaoTestCase
         $calendarModel->id = 1;
 
         $calendarEvents = $this->createMock(CalendarEventsModel::class);
-        $calendarEvents
-            ->expects($this->once())
-            ->method('getRelated')
-            ->with('pid')
-            ->willReturn($calendarModel)
-        ;
-
         $config = new PickerConfig('link', [], '{{event_url::1}}', 'eventPicker');
 
         $adapters = [
+            CalendarModel::class => $this->mockConfiguredAdapter(['findByPk' => $calendarModel]),
             CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $calendarEvents]),
         ];
 
@@ -188,16 +182,10 @@ class EventPickerProviderTest extends ContaoTestCase
     public function testDoesNotAddTableAndIdIfThereIsNoCalendarModel(): void
     {
         $calendarEvents = $this->createMock(CalendarEventsModel::class);
-        $calendarEvents
-            ->expects($this->once())
-            ->method('getRelated')
-            ->with('pid')
-            ->willReturn(null)
-        ;
-
         $config = new PickerConfig('link', [], '{{event_url::1}}', 'eventPicker');
 
         $adapters = [
+            CalendarModel::class => $this->mockConfiguredAdapter(['findByPk' => null]),
             CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $calendarEvents]),
         ];
 

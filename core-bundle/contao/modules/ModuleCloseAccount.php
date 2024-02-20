@@ -127,7 +127,7 @@ class ModuleCloseAccount extends Module
 				$container->get('request_stack')->getSession()->invalidate();
 
 				// Check whether there is a jumpTo page
-				if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
+				if ($objJumpTo = PageModel::findByPk($this->objModel->jumpTo))
 				{
 					$this->jumpToOrReload($objJumpTo->row());
 				}

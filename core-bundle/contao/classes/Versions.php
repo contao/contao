@@ -828,7 +828,9 @@ class Versions extends Controller
 			return $this->intUserId;
 		}
 
-		if (($user = System::getContainer()->get('security.helper')->getUser()) instanceof BackendUser)
+		$user = System::getContainer()->get('security.helper')->getUser();
+
+		if ($user instanceof BackendUser)
 		{
 			return $user->id;
 		}

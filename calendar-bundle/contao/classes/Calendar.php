@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
@@ -158,10 +157,8 @@ class Calendar extends Frontend
 					continue;
 				}
 
-				$jumpTo = $objArticle->getRelated('pid')->jumpTo;
-
 				// No jumpTo page set (see #4784)
-				if (!$jumpTo)
+				if (!$jumpTo = PageModel::findByPk($objArticle->pid)->jumpTo)
 				{
 					continue;
 				}
@@ -216,8 +213,7 @@ class Calendar extends Frontend
 
 		$container = System::getContainer();
 
-		/** @var RequestStack $requestStack */
-		$requestStack = System::getContainer()->get('request_stack');
+		$requestStack = $container->get('request_stack');
 		$currentRequest = $requestStack->getCurrentRequest();
 
 		$origObjPage = $GLOBALS['objPage'] ?? null;
@@ -288,7 +284,7 @@ class Calendar extends Frontend
 						$strDescription = $event['teaser'] ?? '';
 					}
 
-					$strDescription = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($strDescription);
+					$strDescription = $container->get('contao.insert_tag.parser')->replaceInline($strDescription);
 					$objItem->description = $this->convertRelativeUrls($strDescription, $strLink);
 
 					if (\is_array($event['media:content']))
@@ -319,7 +315,7 @@ class Calendar extends Frontend
 		$webDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
 
 		// Create the file
-		File::putContent($webDir . '/share/' . $strFile . '.xml', System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objFeed->$strType()));
+		File::putContent($webDir . '/share/' . $strFile . '.xml', $container->get('contao.insert_tag.parser')->replaceInline($objFeed->$strType()));
 
 		// Reset the default language file
 		System::loadLanguageFile('default');
@@ -345,7 +341,6 @@ class Calendar extends Frontend
 		$span = self::calculateSpan($intStart, $intEnd);
 		$format = $objEvent->addTime ? 'datimFormat' : 'dateFormat';
 
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		if ($objPage instanceof PageModel)
@@ -517,15 +512,16 @@ class Calendar extends Frontend
 				return null;
 			}
 
-			$objLayout = $objPage->getRelated('layout');
-
-			if (!$objLayout instanceof LayoutModel)
+			if (!$objLayout = LayoutModel::findByPk($objPage->layout))
 			{
 				return $objPage;
 			}
 
-			/** @var ThemeModel $objTheme */
-			$objTheme = $objLayout->getRelated('pid');
+			if (!$objTheme = ThemeModel::findByPk($objLayout->pid))
+			{
+				return $objPage;
+			}
+
 			$objPage->templateGroup = $objTheme->templates ?? null;
 		}
 

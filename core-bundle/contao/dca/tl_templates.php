@@ -28,7 +28,6 @@ use Contao\TemplateLoader;
 use Contao\Validator;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Twig\Error\LoaderError;
 
 System::loadLanguageFile('tl_files');
@@ -144,7 +143,6 @@ class tl_templates extends Backend
 	 */
 	public function addBreadcrumb()
 	{
-		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		// Set a new node
@@ -247,7 +245,6 @@ class tl_templates extends Backend
 			ksort($arrAllTemplates[$rootCategory]);
 		}
 
-		/** @var SplFileInfo[] $files */
 		$files = $container->get('contao.resource_finder')->findIn('templates')->files()->name('/\.html5$/');
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 

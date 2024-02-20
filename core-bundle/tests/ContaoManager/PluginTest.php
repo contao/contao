@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\ContaoManager;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\ContaoManager\Plugin;
-use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\DelegatingParser;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Knp\Bundle\MenuBundle\KnpMenuBundle;
@@ -38,8 +37,6 @@ class PluginTest extends TestCase
     public function testReturnsTheBundles(): void
     {
         $plugin = new Plugin();
-
-        /** @var array<BundleConfig> $bundles */
         $bundles = $plugin->getBundles(new DelegatingParser());
 
         $this->assertCount(6, $bundles);

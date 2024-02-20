@@ -21,7 +21,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -189,7 +188,6 @@ class UserCreateCommand extends Command
         $question->setMaxAttempts(3);
         $question->setValidator($callback);
 
-        /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
 
         return $helper->ask($input, $output, $question);
@@ -202,7 +200,6 @@ class UserCreateCommand extends Command
         $question->setMaxAttempts(3);
         $question->setValidator($callback);
 
-        /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
 
         return $helper->ask($input, $output, $question);
@@ -213,7 +210,6 @@ class UserCreateCommand extends Command
         $question = new ChoiceQuestion($label, $options);
         $question->setAutocompleterValues($options);
 
-        /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
 
         return $helper->ask($input, $output, $question);
@@ -225,7 +221,6 @@ class UserCreateCommand extends Command
         $question->setAutocompleterValues($options);
         $question->setMultiselect(true);
 
-        /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
 
         return $helper->ask($input, $output, $question);

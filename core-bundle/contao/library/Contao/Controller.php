@@ -18,7 +18,6 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\Database\Result;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\Glob;
@@ -64,7 +63,6 @@ abstract class Controller extends System
 		// Check for a theme folder
 		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request))
 		{
-			/** @var PageModel|null $objPage */
 			global $objPage;
 
 			if ($objPage->templateGroup ?? null)
@@ -122,7 +120,6 @@ abstract class Controller extends System
 		$arrMapper['mod'][] = 'article';
 		$arrMapper['mod'][] = 'message';
 
-		/** @var TemplateHierarchyInterface $templateHierarchy */
 		$templateHierarchy = System::getContainer()->get('contao.twig.filesystem_loader');
 		$identifierPattern = sprintf('/^%s%s/', preg_quote($strPrefix, '/'), !str_ends_with($strPrefix, '_') ? '($|_)' : '');
 
@@ -296,7 +293,6 @@ abstract class Controller extends System
 			return '';
 		}
 
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Articles
@@ -388,6 +384,7 @@ abstract class Controller extends System
 			return '';
 		}
 
+		/** @var class-string<Module> $strClass */
 		$strClass = Module::findClass($objRow->type);
 
 		// Return if the class does not exist
@@ -408,7 +405,6 @@ abstract class Controller extends System
 
 		$objRow->typePrefix = 'mod_';
 
-		/** @var Module $objModule */
 		$objModule = new $strClass($objRow, $strColumn);
 		$strBuffer = $objModule->generate();
 
@@ -447,7 +443,6 @@ abstract class Controller extends System
 	 */
 	public static function getArticle($varId, $blnMultiMode=false, $blnIsInsertTag=false, $strColumn='main')
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		if (\is_object($varId))
@@ -561,6 +556,7 @@ abstract class Controller extends System
 			return '';
 		}
 
+		/** @var class-string<ContentElement> $strClass */
 		$strClass = ContentElement::findClass($objRow->type);
 
 		// Return if the class does not exist
@@ -597,7 +593,6 @@ abstract class Controller extends System
 		}
 		else
 		{
-			/** @var ContentElement $objElement */
 			$objElement = new $strClass($objRow, $strColumn);
 		}
 
@@ -656,6 +651,7 @@ abstract class Controller extends System
 			}
 		}
 
+		/** @var class-string<Form> $strClass */
 		$strClass = $blnModule ? Module::findClass('form') : ContentElement::findClass('form');
 
 		if (!class_exists($strClass))
@@ -668,7 +664,6 @@ abstract class Controller extends System
 		$objRow->typePrefix = $blnModule ? 'mod_' : 'ce_';
 		$objRow->form = $objRow->id;
 
-		/** @var Form $objElement */
 		$objElement = new $strClass($objRow, $strColumn);
 		$strBuffer = $objElement->generate();
 
@@ -818,7 +813,6 @@ abstract class Controller extends System
 			$strScripts .= implode('', array_unique($GLOBALS['TL_BODY']));
 		}
 
-		/** @var PageModel|null $objPage */
 		global $objPage;
 
 		$objLayout = ($objPage !== null) ? LayoutModel::findByPk($objPage->layoutId) : null;
@@ -1412,7 +1406,6 @@ abstract class Controller extends System
 			$objFiles->reset();
 		}
 
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$arrEnclosures = array();

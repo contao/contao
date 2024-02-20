@@ -35,11 +35,9 @@ class PageLogout extends Frontend
 		{
 			$strRedirect = $strReferer;
 		}
-
 		// Redirect to jumpTo page
-		elseif (($objTarget = $objPage->getRelated('jumpTo')) instanceof PageModel)
+		elseif ($objTarget = PageModel::findByPk($objPage->jumpTo))
 		{
-			/** @var PageModel $objTarget */
 			$strRedirect = $objTarget->getAbsoluteUrl();
 		}
 

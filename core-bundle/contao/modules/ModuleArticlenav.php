@@ -48,7 +48,6 @@ class ModuleArticlenav extends Module
 			return $objTemplate->parse();
 		}
 
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$this->objArticles = ArticleModel::findPublishedWithTeaserByPidAndColumn($objPage->id, $this->strColumn);
@@ -80,7 +79,6 @@ class ModuleArticlenav extends Module
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');

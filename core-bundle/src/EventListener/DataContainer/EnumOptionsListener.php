@@ -63,7 +63,6 @@ class EnumOptionsListener
             if (!isset($config['reference']) && is_subclass_of($enum, TranslatableLabelInterface::class)) {
                 $reference = [];
 
-                /** @var TranslatableLabelInterface&\BackedEnum $case */
                 foreach ($enum::cases() as $case) {
                     $reference[$case->value] = $case->label()->trans($this->translator);
                 }

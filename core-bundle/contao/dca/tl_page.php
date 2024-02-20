@@ -759,8 +759,7 @@ class tl_page extends Backend
 	{
 		$page->loadDetails();
 
-		/** @var LayoutModel $layout */
-		if (!$layout = $page->getRelated('layout'))
+		if (!$layout = LayoutModel::findByPk($page->layout))
 		{
 			return '';
 		}

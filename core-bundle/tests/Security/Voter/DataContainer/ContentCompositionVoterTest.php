@@ -116,13 +116,6 @@ class ContentCompositionVoterTest extends TestCase
             ->method('loadDetails')
         ;
 
-        $pageModel
-            ->expects($this->once())
-            ->method('getRelated')
-            ->with('layout')
-            ->willReturn(null)
-        ;
-
         $pageAdapter = $this->mockAdapter(['findByPk']);
         $pageAdapter
             ->expects($this->once())
@@ -131,7 +124,17 @@ class ContentCompositionVoterTest extends TestCase
             ->willReturn($pageModel)
         ;
 
-        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
+        $layoutAdapter = $this->mockAdapter(['findByPk']);
+        $layoutAdapter
+            ->expects($this->once())
+            ->method('findByPk')
+            ->willReturn(null)
+        ;
+
+        $framework = $this->mockContaoFramework([
+            PageModel::class => $pageAdapter,
+            LayoutModel::class => $layoutAdapter,
+        ]);
 
         $pageRegistry = $this->createMock(PageRegistry::class);
         $pageRegistry
@@ -160,13 +163,6 @@ class ContentCompositionVoterTest extends TestCase
             ->method('loadDetails')
         ;
 
-        $pageModel
-            ->expects($this->once())
-            ->method('getRelated')
-            ->with('layout')
-            ->willReturn($layoutModel)
-        ;
-
         $pageAdapter = $this->mockAdapter(['findByPk']);
         $pageAdapter
             ->expects($this->once())
@@ -175,7 +171,17 @@ class ContentCompositionVoterTest extends TestCase
             ->willReturn($pageModel)
         ;
 
-        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
+        $layoutAdapter = $this->mockAdapter(['findByPk']);
+        $layoutAdapter
+            ->expects($this->once())
+            ->method('findByPk')
+            ->willReturn($layoutModel)
+        ;
+
+        $framework = $this->mockContaoFramework([
+            PageModel::class => $pageAdapter,
+            LayoutModel::class => $layoutAdapter,
+        ]);
 
         $pageRegistry = $this->createMock(PageRegistry::class);
         $pageRegistry
@@ -196,21 +202,12 @@ class ContentCompositionVoterTest extends TestCase
         $token = $this->createMock(TokenInterface::class);
         $subject = new CreateAction('tl_article', ['pid' => 42]);
 
-        $modules = [['mod' => 0]];
-
-        $layoutModel = $this->mockClassWithProperties(LayoutModel::class, ['modules' => serialize($modules)]);
+        $layoutModel = $this->mockClassWithProperties(LayoutModel::class, ['modules' => serialize([['mod' => 0]])]);
 
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel
             ->expects($this->once())
             ->method('loadDetails')
-        ;
-
-        $pageModel
-            ->expects($this->once())
-            ->method('getRelated')
-            ->with('layout')
-            ->willReturn($layoutModel)
         ;
 
         $pageAdapter = $this->mockAdapter(['findByPk']);
@@ -221,7 +218,17 @@ class ContentCompositionVoterTest extends TestCase
             ->willReturn($pageModel)
         ;
 
-        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
+        $layoutAdapter = $this->mockAdapter(['findByPk']);
+        $layoutAdapter
+            ->expects($this->once())
+            ->method('findByPk')
+            ->willReturn($layoutModel)
+        ;
+
+        $framework = $this->mockContaoFramework([
+            PageModel::class => $pageAdapter,
+            LayoutModel::class => $layoutAdapter,
+        ]);
 
         $pageRegistry = $this->createMock(PageRegistry::class);
         $pageRegistry

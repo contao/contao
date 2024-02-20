@@ -82,14 +82,7 @@ class CalendarEventsResolverTest extends ContaoTestCase
     {
         $target = $this->mockClassWithProperties(PageModel::class);
         $calendar = $this->mockClassWithProperties(CalendarModel::class, ['jumpTo' => 42]);
-
         $content = $this->mockClassWithProperties(CalendarEventsModel::class, ['source' => '']);
-        $content
-            ->expects($this->once())
-            ->method('getRelated')
-            ->with('pid')
-            ->willReturn($calendar)
-        ;
 
         $pageAdapter = $this->mockAdapter(['findPublishedById']);
         $pageAdapter
@@ -99,7 +92,10 @@ class CalendarEventsResolverTest extends ContaoTestCase
             ->willReturn($target)
         ;
 
-        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
+        $framework = $this->mockContaoFramework([
+            PageModel::class => $pageAdapter,
+            CalendarModel::class => $this->mockConfiguredAdapter(['findByPk' => $calendar]),
+        ]);
 
         $resolver = new CalendarEventsResolver($framework);
         $result = $resolver->resolve($content);

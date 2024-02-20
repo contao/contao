@@ -220,10 +220,9 @@ class MemberModel extends Model
 			return null;
 		}
 
-		$objRegistry = Registry::getInstance();
+		$objMember = Registry::getInstance()->fetch($t, $objResult->id);
 
-		/** @var MemberModel|Model $objMember */
-		if ($objMember = $objRegistry->fetch($t, $objResult->id))
+		if ($objMember instanceof self)
 		{
 			return $objMember;
 		}
@@ -275,10 +274,9 @@ class MemberModel extends Model
 			return null;
 		}
 
-		$objRegistry = Registry::getInstance();
+		$objMember = Registry::getInstance()->fetch($t, $objResult->id);
 
-		/** @var MemberModel|Model $objMember */
-		if ($objMember = $objRegistry->fetch($t, $objResult->id))
+		if ($objMember instanceof self)
 		{
 			return $objMember;
 		}
