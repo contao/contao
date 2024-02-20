@@ -44,6 +44,7 @@ class SymlinksCommand extends Command
     public function __construct(
         private readonly string $projectDir,
         private readonly string $uploadPath,
+        private readonly string $componentDir,
         private readonly string $logsDir,
         private readonly ResourceFinderInterface $resourceFinder,
         private readonly EventDispatcherInterface $eventDispatcher,
@@ -88,7 +89,7 @@ class SymlinksCommand extends Command
         $this->symlinkThemes();
 
         // Symlink the assets and themes directory
-        $this->symlink('assets', Path::join($this->webDir, 'assets'));
+        $this->symlink($this->componentDir, Path::join($this->webDir, $this->componentDir));
         $this->symlink('system/themes', Path::join($this->webDir, 'system/themes'));
 
         // Symlinks the logs directory
