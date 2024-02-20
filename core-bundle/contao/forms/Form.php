@@ -310,7 +310,7 @@ class Form extends Hybrid
 		{
 			foreach ($arrFiles as $upload)
 			{
-				if (!empty($upload['uuid']) && null !== ($file = FilesModel::findById($upload['uuid'])))
+				if (!empty($upload['uuid']) && null !== ($file = FilesModel::findByPk($upload['uuid'])))
 				{
 					$file->delete();
 				}

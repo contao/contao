@@ -73,7 +73,7 @@ class ModuleFaqReader extends Module
 	{
 		global $objPage;
 
-		if ($this->overviewPage && ($overviewPage = PageModel::findById($this->overviewPage)))
+		if ($this->overviewPage && ($overviewPage = PageModel::findByPk($this->overviewPage)))
 		{
 			$this->Template->referer = System::getContainer()->get('contao.routing.content_url_generator')->generate($overviewPage);
 			$this->Template->back = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['faqOverview'];

@@ -254,7 +254,7 @@ class Calendar extends Frontend
 						$objItem->guid = $event['link'] . '#' . date('Y-m-d', $event['startTime']);
 					}
 
-					if (($objAuthor = UserModel::findById($event['author'])) !== null)
+					if ($objAuthor = UserModel::findByPk($event['author']))
 					{
 						$objItem->author = $objAuthor->name;
 					}
