@@ -38,6 +38,7 @@ use Contao\Model\Collection;
  * @property integer           $overviewPage
  * @property boolean           $redirectBack
  * @property string|array|null $editable
+ * @property boolean           $reqFullAuth
  * @property string            $memberTpl
  * @property integer           $form
  * @property string            $queryType
@@ -108,6 +109,7 @@ use Contao\Model\Collection;
  * @method static ModuleModel|null findOneByOverviewPage($val, array $opt=array())
  * @method static ModuleModel|null findOneByRedirectBack($val, array $opt=array())
  * @method static ModuleModel|null findOneByEditable($val, array $opt=array())
+ * @method static ModuleModel|null findOneByReqFullAuth($val, array $opt=array())
  * @method static ModuleModel|null findOneByMemberTpl($val, array $opt=array())
  * @method static ModuleModel|null findOneByTableless($val, array $opt=array())
  * @method static ModuleModel|null findOneByForm($val, array $opt=array())
@@ -172,6 +174,7 @@ use Contao\Model\Collection;
  * @method static Collection<ModuleModel>|ModuleModel[]|null findByOverviewPage($val, array $opt=array())
  * @method static Collection<ModuleModel>|ModuleModel[]|null findByRedirectBack($val, array $opt=array())
  * @method static Collection<ModuleModel>|ModuleModel[]|null findByEditable($val, array $opt=array())
+ * @method static Collection<ModuleModel>|ModuleModel[]|null findByReqFullAuth($val, array $opt=array())
  * @method static Collection<ModuleModel>|ModuleModel[]|null findByMemberTpl($val, array $opt=array())
  * @method static Collection<ModuleModel>|ModuleModel[]|null findByTableless($val, array $opt=array())
  * @method static Collection<ModuleModel>|ModuleModel[]|null findByForm($val, array $opt=array())
@@ -240,6 +243,7 @@ use Contao\Model\Collection;
  * @method static integer countByOverviewPage($val, array $opt=array())
  * @method static integer countByRedirectBack($val, array $opt=array())
  * @method static integer countByEditable($val, array $opt=array())
+ * @method static integer countByReqFullAuth($val, array $opt=array())
  * @method static integer countByMemberTpl($val, array $opt=array())
  * @method static integer countByTableless($val, array $opt=array())
  * @method static integer countByForm($val, array $opt=array())
