@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "contao/rector",
-            "version": "1.0.3",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/contao/rector.git",
-                "reference": "524af814db6f6b196085a601ccf383e00fa60e4b"
+                "reference": "1d3121812c9ed6983b9c58d2cc414ef77751edb3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contao/rector/zipball/524af814db6f6b196085a601ccf383e00fa60e4b",
-                "reference": "524af814db6f6b196085a601ccf383e00fa60e4b",
+                "url": "https://api.github.com/repos/contao/rector/zipball/1d3121812c9ed6983b9c58d2cc414ef77751edb3",
+                "reference": "1d3121812c9ed6983b9c58d2cc414ef77751edb3",
                 "shasum": ""
             },
             "require": {
@@ -46,7 +46,7 @@
             "description": "Rector configurations for Contao",
             "support": {
                 "issues": "https://github.com/contao/rector/issues",
-                "source": "https://github.com/contao/rector/tree/1.0.3"
+                "source": "https://github.com/contao/rector/tree/1.0.4"
             },
             "funding": [
                 {
@@ -54,20 +54,20 @@
                     "type": "custom"
                 }
             ],
-            "time": "2024-01-19T13:43:46+00:00"
+            "time": "2024-02-14T17:52:57+00:00"
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.57",
+            "version": "1.10.59",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "1627b1d03446904aaa77593f370c5201d2ecc34e"
+                "reference": "e607609388d3a6d418a50a49f7940e8086798281"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/1627b1d03446904aaa77593f370c5201d2ecc34e",
-                "reference": "1627b1d03446904aaa77593f370c5201d2ecc34e",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e607609388d3a6d418a50a49f7940e8086798281",
+                "reference": "e607609388d3a6d418a50a49f7940e8086798281",
                 "shasum": ""
             },
             "require": {
@@ -116,7 +116,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-01-24T11:51:34+00:00"
+            "time": "2024-02-20T13:59:13+00:00"
         },
         {
             "name": "rector/rector",

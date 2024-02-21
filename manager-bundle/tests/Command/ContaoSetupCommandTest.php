@@ -259,7 +259,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
 
         return static function (array $command) use ($validateCommandArguments, &$invocationCount, $processes): Process {
             if (null !== $validateCommandArguments) {
-                self::assertEquals($validateCommandArguments[$invocationCount], $command);
+                self::assertSame($validateCommandArguments[$invocationCount], $command);
             }
 
             return $processes[$invocationCount++];

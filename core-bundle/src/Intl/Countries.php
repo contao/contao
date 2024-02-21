@@ -93,6 +93,6 @@ class Countries
 
         sort($countries);
 
-        return array_values($countries);
+        return $countries;
     }
 }
