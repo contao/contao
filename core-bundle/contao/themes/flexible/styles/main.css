@@ -125,7 +125,6 @@ body.popup {
 }
 
 #tmenu .burger button {
-	margin-right: -2px;
 	padding: 8px 10px 9px;
 	background: none;
 	border: 0;
@@ -344,7 +343,6 @@ body.popup {
 .popup #main .content {
 	margin: 0;
 	border: 0;
-	overflow: auto;
 }
 
 /* Navigation */
