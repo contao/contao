@@ -24,6 +24,6 @@
         <link rel="preload" as="style" href="{{ stylesheet.file }}" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="{{ stylesheet.file }}"></noscript>
     {% else %}
-        <link rel="stylesheet" href="{{ stylesheet.file }}">
+        <link rel="stylesheet" href="{{ stylesheet.file }}"{{ attrs(stylesheet_attributes|default).setIfExists('nonce', csp_nonce('style-src')) }}>
     {% endif %}
 {% endblock %}
