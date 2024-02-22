@@ -87,5 +87,12 @@ class StringResolverTest extends TestCase
             'https://foobar.com',
             'https://foobar.com/foo/bar',
         ];
+
+        yield 'Correctly handles mailto: links' => [
+            new StringUrl('mailto:info@example.org'),
+            'mailto:info@example.org',
+            'https://foobar.com',
+            'mailto:info@example.org',
+        ];
     }
 }
