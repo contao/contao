@@ -25,7 +25,7 @@
 {% block script %}
     {% add "handorgel_js" to body %}
         <script src="{{ asset('js/handorgel.min.js', 'contao-components/handorgel') }}"></script>
-        <script>
+        <script{{ attrs(script_attributes|default).setIfExists('nonce', csp_nonce('script-src')) }}>
             (function () {
                 document.querySelectorAll('.content-accordion').forEach(el => {
                     new handorgel(el, {
