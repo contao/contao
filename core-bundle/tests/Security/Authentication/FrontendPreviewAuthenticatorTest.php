@@ -94,10 +94,8 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->expects($this->once())
             ->method('setToken')
             ->with($this->callback(
-                static function (UsernamePasswordToken $token) use ($user): bool {
-                    return $user === $token->getUser()
-                        && ['ROLE_MEMBER'] === $token->getRoleNames();
-                },
+                static fn (UsernamePasswordToken $token): bool => $user === $token->getUser()
+                    && ['ROLE_MEMBER'] === $token->getRoleNames(),
             ))
         ;
 

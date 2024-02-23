@@ -171,7 +171,7 @@ class InsertTagParser implements ResetInterface
      */
     public function render(string $input): string
     {
-        trigger_deprecation('contao/core-bundle', '5.1', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use "%s::renderTag()" instead.', __METHOD__, __CLASS__);
+        trigger_deprecation('contao/core-bundle', '5.1', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use "%s::renderTag()" instead.', __METHOD__, self::class);
 
         return $this->renderTag($input)->getValue();
     }

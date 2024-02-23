@@ -26,12 +26,6 @@ class ModuleNewsletterList extends Module
 	protected $strTemplate = 'mod_newsletterlist';
 
 	/**
-	 * Page cache array
-	 * @var array
-	 */
-	private static $arrPageCache = array();
-
-	/**
 	 * Display a wildcard in the back end
 	 *
 	 * @return string
@@ -122,22 +116,5 @@ class ModuleNewsletterList extends Module
 		}
 
 		$this->Template->newsletters = $arrNewsletter;
-	}
-
-	/**
-	 * Return the page object with loaded details for the given page ID
-	 *
-	 * @param integer $intPageId
-	 *
-	 * @return PageModel|null
-	 */
-	private function getPageWithDetails($intPageId)
-	{
-		if (!\array_key_exists($intPageId, self::$arrPageCache))
-		{
-			self::$arrPageCache[$intPageId] = PageModel::findWithDetails($intPageId);
-		}
-
-		return self::$arrPageCache[$intPageId];
 	}
 }

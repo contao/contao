@@ -91,14 +91,12 @@ class Locales
     public function getLanguageLocaleIds(): array
     {
         $localeIds = array_map(
-            static function ($localeId) {
-                return \Locale::composeLocale(
-                    array_intersect_key(
-                        \Locale::parseLocale($localeId),
-                        [\Locale::LANG_TAG => null, \Locale::SCRIPT_TAG => null],
-                    ),
-                );
-            },
+            static fn ($localeId) => \Locale::composeLocale(
+                array_intersect_key(
+                    \Locale::parseLocale($localeId),
+                    [\Locale::LANG_TAG => null, \Locale::SCRIPT_TAG => null],
+                ),
+            ),
             $this->locales,
         );
 

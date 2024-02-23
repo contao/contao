@@ -35,7 +35,7 @@
 {% block script %}
     {% add "swiper_js" to body %}
         <script src="{{ asset('js/swiper-bundle.min.js', 'contao-components/swiper') }}"></script>
-        <script>
+        <script{{ attrs(script_attributes|default).setIfExists('nonce', csp_nonce('script-src')) }}>
             (function() {
                 const swiper = document.querySelectorAll('.swiper');
                 swiper.forEach (el => {
