@@ -70,7 +70,6 @@
 {% endblock %}
 
 {% block style %}
-    {% do csp_source('font-src', 'data:') %}
     {% set swiper_css_file = asset('css/swiper-bundle.min.css', 'contao-components/swiper') %}
 
     {% add "swiper_css" to head %}
