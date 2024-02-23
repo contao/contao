@@ -226,16 +226,16 @@
         },
         {
             "name": "contao/easy-coding-standard",
-            "version": "6.8.2",
+            "version": "6.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/contao/easy-coding-standard.git",
-                "reference": "d25cd0e893261efb80d375502f84a50e432331cc"
+                "reference": "3b95ccebfb07fe4486cc89e2538206309b5f45c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contao/easy-coding-standard/zipball/d25cd0e893261efb80d375502f84a50e432331cc",
-                "reference": "d25cd0e893261efb80d375502f84a50e432331cc",
+                "url": "https://api.github.com/repos/contao/easy-coding-standard/zipball/3b95ccebfb07fe4486cc89e2538206309b5f45c5",
+                "reference": "3b95ccebfb07fe4486cc89e2538206309b5f45c5",
                 "shasum": ""
             },
             "require": {
@@ -267,7 +267,7 @@
             "description": "EasyCodingStandard configurations for Contao",
             "support": {
                 "issues": "https://github.com/contao/easy-coding-standard/issues",
-                "source": "https://github.com/contao/easy-coding-standard/tree/6.8.2"
+                "source": "https://github.com/contao/easy-coding-standard/tree/6.9.0"
             },
             "funding": [
                 {
@@ -275,7 +275,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2024-02-20T11:52:01+00:00"
+            "time": "2024-02-23T16:39:17+00:00"
         },
         {
             "name": "dealerdirect/phpcodesniffer-composer-installer",
@@ -494,16 +494,16 @@
         },
         {
             "name": "phpstan/phpdoc-parser",
-            "version": "1.25.0",
+            "version": "1.26.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpdoc-parser.git",
-                "reference": "bd84b629c8de41aa2ae82c067c955e06f1b00240"
+                "reference": "231e3186624c03d7e7c890ec662b81e6b0405227"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/bd84b629c8de41aa2ae82c067c955e06f1b00240",
-                "reference": "bd84b629c8de41aa2ae82c067c955e06f1b00240",
+                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/231e3186624c03d7e7c890ec662b81e6b0405227",
+                "reference": "231e3186624c03d7e7c890ec662b81e6b0405227",
                 "shasum": ""
             },
             "require": {
@@ -535,9 +535,9 @@
             "description": "PHPDoc parser with support for nullable, intersection and generic types",
             "support": {
                 "issues": "https://github.com/phpstan/phpdoc-parser/issues",
-                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.25.0"
+                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.26.0"
             },
-            "time": "2024-01-04T17:06:16+00:00"
+            "time": "2024-02-23T16:05:55+00:00"
         },
         {
             "name": "psr/container",
@@ -2181,16 +2181,16 @@
         },
         {
             "name": "symplify/easy-coding-standard",
-            "version": "12.1.12",
+            "version": "12.1.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/easy-coding-standard/easy-coding-standard.git",
-                "reference": "d87f15506b5200a0098076cdbf6d00913b4e41f5"
+                "reference": "e3c4a241ee36704f7cf920d5931f39693e64afd5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/easy-coding-standard/easy-coding-standard/zipball/d87f15506b5200a0098076cdbf6d00913b4e41f5",
-                "reference": "d87f15506b5200a0098076cdbf6d00913b4e41f5",
+                "url": "https://api.github.com/repos/easy-coding-standard/easy-coding-standard/zipball/e3c4a241ee36704f7cf920d5931f39693e64afd5",
+                "reference": "e3c4a241ee36704f7cf920d5931f39693e64afd5",
                 "shasum": ""
             },
             "require": {
@@ -2223,7 +2223,7 @@
             ],
             "support": {
                 "issues": "https://github.com/easy-coding-standard/easy-coding-standard/issues",
-                "source": "https://github.com/easy-coding-standard/easy-coding-standard/tree/12.1.12"
+                "source": "https://github.com/easy-coding-standard/easy-coding-standard/tree/12.1.14"
             },
             "funding": [
                 {
@@ -2235,7 +2235,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-02-14T10:04:06+00:00"
+            "time": "2024-02-23T13:10:40+00:00"
         }
     ],
     "packages-dev": [],

@@ -28,7 +28,7 @@ class ListControllerTest extends ContentElementTestCase
             ],
         );
 
-        $expectedOutput = <<<'HTML'
+        $expectedOutput = <<<'EOT'
             <div class="content-list">
                 <h2>Ordered list</h2>
                 <ol>
@@ -37,7 +37,7 @@ class ListControllerTest extends ContentElementTestCase
                     <li>third</li>
                 </ol>
             </div>
-            HTML;
+            EOT;
 
         $this->assertSameHtml($expectedOutput, $response->getContent());
     }
@@ -54,14 +54,14 @@ class ListControllerTest extends ContentElementTestCase
             ],
         );
 
-        $expectedOutput = <<<'HTML'
+        $expectedOutput = <<<'EOT'
             <div class="my-class content-list">
                 <ul>
                     <li>foo</li>
                     <li>bar<br>baz <i>HTML</i></li>
                 </ul>
             </div>
-            HTML;
+            EOT;
 
         $this->assertSameHtml($expectedOutput, $response->getContent());
     }

@@ -73,7 +73,7 @@ class CoreResponseContextFactory
     public function createContaoWebpageResponseContext(PageModel $pageModel): ResponseContext
     {
         $context = $this->createWebpageResponseContext();
-        $title = $this->htmlDecoder->inputEncodedToPlainText($pageModel->pageTitle ?: $pageModel->title ?: '');
+        $title = $this->htmlDecoder->inputEncodedToPlainText(($pageModel->pageTitle ?: $pageModel->title) ?: '');
 
         $htmlHeadBag = $context->get(HtmlHeadBag::class);
         $htmlHeadBag
