@@ -301,7 +301,7 @@ class FeedReaderControllerTest extends TestCase
 
     private function getController(FeedIo $feedIo, CacheInterface $cache, RequestStack $requestStack, LoggerInterface|null $logger = null, ContainerInterface|null $container = null): FeedReaderController
     {
-        $logger = $logger ?? $this->createMock(LoggerInterface::class);
+        $logger ??= $this->createMock(LoggerInterface::class);
 
         $controller = new FeedReaderController($feedIo, $logger, $cache);
         $controller->setFragmentOptions(['template' => 'frontend_module/feed_reader']);
