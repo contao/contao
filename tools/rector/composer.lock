@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/contao/rector.git",
-                "reference": "97a1cf1c2400aa3fa6348ba978f34db93ad90d77"
+                "reference": "a5cb917f6f666e0c72cf273bf54187c0ba6864fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contao/rector/zipball/97a1cf1c2400aa3fa6348ba978f34db93ad90d77",
-                "reference": "97a1cf1c2400aa3fa6348ba978f34db93ad90d77",
+                "url": "https://api.github.com/repos/contao/rector/zipball/a5cb917f6f666e0c72cf273bf54187c0ba6864fe",
+                "reference": "a5cb917f6f666e0c72cf273bf54187c0ba6864fe",
                 "shasum": ""
             },
             "require": {
@@ -54,7 +54,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2024-02-23T13:32:32+00:00"
+            "time": "2024-02-23T16:41:43+00:00"
         },
         {
             "name": "phpstan/phpstan",

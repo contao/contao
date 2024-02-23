@@ -16,19 +16,17 @@ use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\Php81\Rector\Array_\FirstClassCallableRector;
 use Rector\Php81\Rector\FuncCall\NullToStrictStringFuncCallArgRector;
 
-return static function (RectorConfig $rectorConfig): void {
-    $rectorConfig->sets([__DIR__.'/../vendor/contao/rector/config/contao.php']);
-
-    $rectorConfig->paths([
+return RectorConfig::configure()
+    ->withSets([__DIR__.'/../vendor/contao/rector/config/contao.php'])
+    ->withPaths([
         __DIR__.'/../../../*/bin',
         __DIR__.'/../../../*/src',
         __DIR__.'/../../../*/tests',
         __DIR__.'/../../../tools/*/bin',
         __DIR__.'/../../../tools/*/config',
         __DIR__.'/../../../tools/*/src',
-    ]);
-
-    $rectorConfig->skip([
+    ])
+    ->withSkip([
         ClassPropertyAssignToConstructorPromotionRector::class => [
             '*/src/Entity/*',
         ],
@@ -41,8 +39,7 @@ return static function (RectorConfig $rectorConfig): void {
         SimplifyIfReturnBoolRector::class => [
             'core-bundle/src/EventListener/CommandSchedulerListener.php',
         ],
-    ]);
-
-    $rectorConfig->parallel();
-    $rectorConfig->cacheDirectory(sys_get_temp_dir().'/rector_cache');
-};
+    ])
+    ->withParallel()
+    ->withCache(sys_get_temp_dir().'/rector_cache')
+;
