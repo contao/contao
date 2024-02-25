@@ -18,7 +18,7 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Twig\Finder\FinderFactory;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\DataContainer;
 use Contao\ModuleProxy;
 use Doctrine\DBAL\ArrayParameterType;
@@ -40,7 +40,7 @@ class TemplateOptionsListener
         private readonly Connection $connection,
         private readonly ContaoFramework $framework,
         private readonly RequestStack $requestStack,
-        private readonly TemplateHierarchyInterface $hierarchy,
+        private readonly ContaoFilesystemLoader $filesystemLoader,
     ) {
     }
 
@@ -83,7 +83,7 @@ class TemplateOptionsListener
         if (!$templateOptions) {
             $guessedType = $legacyPrefix.$type;
 
-            if (isset($this->hierarchy->getInheritanceChains()[$guessedType])) {
+            if (isset($this->filesystemLoader->getInheritanceChains()[$guessedType])) {
                 $help = sprintf('In case you wanted to use the legacy type "%s", define it explicitly in the "template" property of your controller\'s service tag/attribute.', $guessedType);
             } else {
                 $help = 'Did you forget to create the default template?';
