@@ -259,18 +259,7 @@ class ContentElementTestCase extends TestCase
             $this->createMock(Connection::class),
         );
 
-        $loader = new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $themeNamespace);
-
-        foreach ($templateLocator->findResourcesPaths() as $name => $resourcesPaths) {
-            foreach ($resourcesPaths as $path) {
-                $loader->addPath($path);
-                $loader->addPath($path, "Contao_$name", true);
-            }
-        }
-
-        $loader->buildInheritanceChains();
-
-        return $loader;
+        return new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $themeNamespace, $resourceBasePath);
     }
 
     protected function getEnvironment(ContaoFilesystemLoader $contaoFilesystemLoader, ContaoFramework $framework): Environment

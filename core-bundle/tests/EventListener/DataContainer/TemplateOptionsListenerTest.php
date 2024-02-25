@@ -22,7 +22,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Translation\Translator;
 use Contao\CoreBundle\Twig\Finder\Finder;
 use Contao\CoreBundle\Twig\Finder\FinderFactory;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Contao\DataContainer;
 use Doctrine\DBAL\ArrayParameterType;
@@ -218,8 +218,8 @@ class TemplateOptionsListenerTest extends TestCase
 
     private function getDefaultTemplateOptionsListener(RequestStack|null $requestStack = null, Connection|null $connection = null): TemplateOptionsListener
     {
-        $hierarchy = $this->createMock(TemplateHierarchyInterface::class);
-        $hierarchy
+        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader
             ->method('getInheritanceChains')
             ->willReturn([
                 'content_element/foo' => [
@@ -234,22 +234,22 @@ class TemplateOptionsListenerTest extends TestCase
             ])
         ;
 
-        $listener = $this->getTemplateOptionsListener(null, $requestStack, $connection, $hierarchy);
+        $listener = $this->getTemplateOptionsListener(null, $requestStack, $connection, $filesystemLoader);
         $listener->setDefaultIdentifiersByType('tl_content', ['foo_element_type' => 'content_element/foo']);
         $listener->setDefaultIdentifiersByType('tl_module', ['foo_module_type' => 'frontend_module/foo']);
 
         return $listener;
     }
 
-    private function getTemplateOptionsListener(ContaoFramework|null $framework = null, RequestStack|null $requestStack = null, Connection|null $connection = null, TemplateHierarchyInterface|null $hierarchy = null): TemplateOptionsListener
+    private function getTemplateOptionsListener(ContaoFramework|null $framework = null, RequestStack|null $requestStack = null, Connection|null $connection = null, ContaoFilesystemLoader|null $filesystemLoader = null): TemplateOptionsListener
     {
-        $hierarchy ??= $this->createMock(TemplateHierarchyInterface::class);
+        $filesystemLoader ??= $this->createMock(ContaoFilesystemLoader::class);
         $connection ??= $this->createMock(Connection::class);
         $framework ??= $this->mockFramework();
         $requestStack ??= new RequestStack();
 
         $finder = new Finder(
-            $hierarchy,
+            $filesystemLoader,
             $this->createMock(ThemeNamespace::class),
             $this->createMock(Translator::class),
         );
@@ -265,7 +265,7 @@ class TemplateOptionsListenerTest extends TestCase
             $connection,
             $framework,
             $requestStack,
-            $hierarchy,
+            $filesystemLoader,
         );
     }
 
