@@ -286,7 +286,7 @@ class InsertTagsTest extends TestCase
             'foo%20%26%20bar',
         ];
 
-        yield 'Flag strtoupper' => [
+        yield 'Flag strtoupper 2' => [
             '{{plain::österreich|strtoupper}}',
             'ÖSTERREICH',
         ];
