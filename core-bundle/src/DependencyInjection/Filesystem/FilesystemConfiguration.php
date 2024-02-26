@@ -62,8 +62,10 @@ class FilesystemConfiguration
         $definition->setFactory(new Reference('contao.filesystem.virtual_factory'));
         $definition->addTag('contao.virtual_filesystem', compact('name', 'prefix'));
 
+        $aliasName = lcfirst(Container::camelize($name));
+
         $this->container->setDefinition($id = "contao.filesystem.virtual.$name", $definition);
-        $this->container->registerAliasForArgument($id, VirtualFilesystemInterface::class, "{$name}Storage");
+        $this->container->registerAliasForArgument($id, VirtualFilesystemInterface::class, "{$aliasName}Storage");
 
         return $definition;
     }
