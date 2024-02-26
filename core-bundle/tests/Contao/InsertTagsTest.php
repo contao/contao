@@ -286,27 +286,27 @@ class InsertTagsTest extends TestCase
             'foo%20%26%20bar',
         ];
 
-        yield 'Flag strtoupper 2' => [
+        yield 'Flag strtoupper utf-8' => [
             '{{plain::österreich|strtoupper}}',
             'ÖSTERREICH',
         ];
 
-        yield 'Flag strtolower' => [
+        yield 'Flag strtolower utf-8' => [
             '{{plain::ÖSTERREICH|strtolower}}',
             'österreich',
         ];
 
-        yield 'Flag ucfirst' => [
+        yield 'Flag ucfirst utf-8' => [
             '{{plain::österreich|ucfirst}}',
             'Österreich',
         ];
 
-        yield 'Flag lcfirst' => [
+        yield 'Flag lcfirst utf-8' => [
             '{{plain::ÖSTERREICH|lcfirst}}',
             'öSTERREICH',
         ];
 
-        yield 'Flag ucwords' => [
+        yield 'Flag ucwords utf-8' => [
             '{{plain::deutschland-österreich/schweiz|ucwords}}',
             'Deutschland-Österreich/Schweiz',
         ];
