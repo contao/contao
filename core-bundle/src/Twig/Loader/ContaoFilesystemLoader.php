@@ -326,7 +326,6 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
      */
     private function buildInheritanceChains(): array
     {
-        // Compile sources
         /** @var list<array{string, string}> $sources */
         $sources = [];
 
