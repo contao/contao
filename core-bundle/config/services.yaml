@@ -1165,8 +1165,6 @@ services:
         class: Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer
         arguments:
             - '@contao.twig.filesystem_loader'
-            - '@contao.twig.loader.template_locator'
-            - '%kernel.project_dir%'
             - '%kernel.cache_dir%'
             - '%kernel.environment%'
 

@@ -18,12 +18,10 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
-use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Cache\Adapter\NullAdapter;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
 
@@ -92,7 +90,6 @@ class InheritanceTest extends TestCase
             'CoreBundle' => ['path' => Path::join($projectDir, 'vendor-bundles/CoreBundle')],
             'FooBundle' => ['path' => Path::join($projectDir, 'vendor-bundles/FooBundle')],
             'BarBundle' => ['path' => Path::join($projectDir, 'vendor-bundles/BarBundle')],
-            'App' => ['path' => Path::join($projectDir, 'contao')],
         ];
 
         $bundles = array_combine(
@@ -110,13 +107,8 @@ class InheritanceTest extends TestCase
 
         $templateLocator = new TemplateLocator($projectDir, $bundles, $bundlesMetadata, $themeNamespace, $connection);
         $loader = new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $themeNamespace, $projectDir);
-        $filesystem = $this->createMock(Filesystem::class);
-
-        $warmer = new ContaoFilesystemLoaderWarmer($loader, $templateLocator, $projectDir, 'cache', 'prod', $filesystem);
-        $warmer->warmUp('');
 
         $environment = new Environment($loader);
-
         $environment->addExtension(
             new ContaoExtension(
                 $environment,
@@ -125,6 +117,9 @@ class InheritanceTest extends TestCase
                 $this->createMock(ContaoVariable::class),
             ),
         );
+
+        // Make sure errors are thrown (e.g. ambiguous templates)
+        $loader->warmUp();
 
         return $environment;
     }

@@ -20,11 +20,11 @@ use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicUseTokenParser;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaper;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNode;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
 use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
 use Contao\CoreBundle\Twig\Runtime\ContentUrlRuntime;
@@ -63,7 +63,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
 
     public function __construct(
         private readonly Environment $environment,
-        private readonly TemplateHierarchyInterface $hierarchy,
+        private readonly ContaoFilesystemLoader $filesystemLoader,
         ContaoCsrfTokenManager $tokenManager,
         private readonly ContaoVariable $contaoVariable,
     ) {
@@ -140,9 +140,9 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
         return [
             // Overwrite the parsers for the "extends", "include" and "use" tags to
             // additionally support the Contao template hierarchy
-            new DynamicExtendsTokenParser($this->hierarchy),
-            new DynamicIncludeTokenParser($this->hierarchy),
-            new DynamicUseTokenParser($this->hierarchy),
+            new DynamicExtendsTokenParser($this->filesystemLoader),
+            new DynamicIncludeTokenParser($this->filesystemLoader),
+            new DynamicUseTokenParser($this->filesystemLoader),
             // Add a parser for the Contao specific "add" tag
             new AddTokenParser(self::class),
         ];
@@ -159,7 +159,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 'include',
                 function (Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = false, $sandboxed = false /* we need named arguments here */) use ($includeFunctionCallable) {
                     $args = \func_get_args();
-                    $args[2] = DynamicIncludeTokenParser::adjustTemplateName($template, $this->hierarchy);
+                    $args[2] = DynamicIncludeTokenParser::adjustTemplateName($template, $this->filesystemLoader);
 
                     return $includeFunctionCallable(...$args);
                 },
