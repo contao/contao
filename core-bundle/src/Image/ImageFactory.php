@@ -69,7 +69,6 @@ class ImageFactory implements ImageFactoryInterface
         if ($path instanceof ImageInterface) {
             $image = $path;
         } else {
-            $path = (string) $path;
             $fileExtension = Path::getExtension($path, true);
 
             if (\in_array($fileExtension, ['svg', 'svgz'], true)) {
