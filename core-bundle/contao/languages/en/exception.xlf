@@ -39,7 +39,7 @@
         <source>Use the button above to reload the page and try again. Do not use the back button of your browser.</source>
       </trans-unit>
       <trans-unit id="XPT.tokenExplainOne">
-        <source>This error occurs if there is a POST request without a valid authentication token. If the problem persists, you may be using an incompatible third-party extension or have not correctly updated your Contao installation.</source>
+        <source>This error occurs if there is a POST request without a valid request token. If the problem persists, you may be using an incompatible third-party extension or have not correctly updated your Contao installation.</source>
       </trans-unit>
       <trans-unit id="XPT.tokenExplainTwo">
         <source>For more information, visit the &lt;a href="%s" target="_blank" rel="noreferrer noopener"&gt;Contao support page&lt;/a&gt;.</source>
