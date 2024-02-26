@@ -17,7 +17,6 @@ use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
-use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
  * @experimental
@@ -25,47 +24,21 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
 {
     private ContaoFilesystemLoader $loader;
-    private TemplateLocator $templateLocator;
-    private string $projectDir;
     private string $cacheDir;
     private string $environment;
     private ?Filesystem $filesystem;
 
-    public function __construct(ContaoFilesystemLoader $contaoFilesystemLoader, TemplateLocator $templateLocator, string $projectDir, string $cacheDir, string $environment, Filesystem $filesystem = null)
+    public function __construct(ContaoFilesystemLoader $loader, string $cacheDir, string $environment, Filesystem $filesystem = null)
     {
-        $this->loader = $contaoFilesystemLoader;
-        $this->templateLocator = $templateLocator;
-        $this->projectDir = $projectDir;
-        $this->cacheDir = $cacheDir;
-        $this->environment = $environment;
         $this->filesystem = $filesystem;
+        $this->environment = $environment;
+        $this->cacheDir = $cacheDir;
+        $this->loader = $loader;
     }
 
-    public function warmUp(string $cacheDir = null): array
+    public function warmUp(string $cacheDir = null, string $buildDir = null): array
     {
-        // Theme paths
-        $themePaths = $this->templateLocator->findThemeDirectories();
-
-        foreach ($themePaths as $slug => $path) {
-            $this->loader->addPath($path, "Contao_Theme_$slug", true);
-        }
-
-        // Global templates path
-        $globalTemplatesPath = Path::join($this->projectDir, 'templates');
-
-        $this->loader->addPath($globalTemplatesPath);
-        $this->loader->addPath($globalTemplatesPath, 'Contao_Global', true);
-
-        // Bundle paths (including App)
-        foreach ($this->templateLocator->findResourcesPaths() as $name => $resourcesPaths) {
-            foreach ($resourcesPaths as $path) {
-                $this->loader->addPath($path);
-                $this->loader->addPath($path, "Contao_$name", true);
-            }
-        }
-
-        $this->loader->buildInheritanceChains();
-        $this->loader->persist();
+        $this->loader->warmUp();
 
         if ('dev' === $this->environment) {
             $this->writeIdeAutoCompletionMapping($cacheDir ?? $this->cacheDir);
@@ -76,24 +49,7 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
 
     public function isOptional(): bool
     {
-        return false;
-    }
-
-    public function refresh(): void
-    {
-        $this->loader->clear();
-
-        $this->warmUp();
-    }
-
-    /**
-     * Auto refresh in dev mode.
-     */
-    public function onKernelRequest(RequestEvent $event): void
-    {
-        if ('dev' === $this->environment && $event->isMainRequest()) {
-            $this->refresh();
-        }
+        return true;
     }
 
     /**

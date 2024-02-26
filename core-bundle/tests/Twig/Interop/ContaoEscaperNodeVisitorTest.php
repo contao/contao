@@ -18,8 +18,8 @@ use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\InsertTags;
 use Contao\System;
@@ -142,7 +142,7 @@ class ContaoEscaperNodeVisitorTest extends TestCase
 
         $environment = new Environment($loader);
 
-        $contaoExtension = new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class));
+        $contaoExtension = new ContaoExtension($environment, $this->createMock(ContaoFilesystemLoader::class));
         $contaoExtension->addContaoEscaperRule('/legacy\.html\.twig/');
 
         $environment->addExtension($contaoExtension);

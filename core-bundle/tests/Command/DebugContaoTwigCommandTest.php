@@ -14,8 +14,7 @@ namespace Contao\CoreBundle\Tests\Command;
 
 use Contao\CoreBundle\Command\DebugContaoTwigCommand;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
-use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Terminal;
@@ -42,15 +41,16 @@ class DebugContaoTwigCommandTest extends TestCase
         $this->assertTrue($command->getDefinition()->hasArgument('filter'));
     }
 
-    public function testRefreshesLoader(): void
+    public function testRefreshesTemplateHierarchy(): void
     {
-        $cacheWarmer = $this->createMock(ContaoFilesystemLoaderWarmer::class);
-        $cacheWarmer
+        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader
             ->expects($this->once())
-            ->method('refresh')
+            ->method('warmUp')
+            ->with(true)
         ;
 
-        $command = $this->getCommand(null, $cacheWarmer);
+        $command = $this->getCommand($filesystemLoader);
 
         $tester = new CommandTester($command);
         $tester->execute([]);
@@ -63,8 +63,8 @@ class DebugContaoTwigCommandTest extends TestCase
      */
     public function testOutputsHierarchy(array $input, string $expectedOutput): void
     {
-        $hierarchy = $this->createMock(TemplateHierarchyInterface::class);
-        $hierarchy
+        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader
             ->expects($this->once())
             ->method('getInheritanceChains')
             ->willReturn([
@@ -81,7 +81,7 @@ class DebugContaoTwigCommandTest extends TestCase
             ])
         ;
 
-        $command = $this->getCommand($hierarchy);
+        $command = $this->getCommand($filesystemLoader);
 
         $tester = new CommandTester($command);
         $tester->execute($input);
@@ -153,15 +153,15 @@ class DebugContaoTwigCommandTest extends TestCase
      */
     public function testIncludesThemeTemplates(array $input, ?string $expectedThemeSlug): void
     {
-        $hierarchy = $this->createMock(TemplateHierarchyInterface::class);
-        $hierarchy
+        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader
             ->expects($this->once())
             ->method('getInheritanceChains')
             ->with($expectedThemeSlug)
             ->willReturn([])
         ;
 
-        $command = $this->getCommand($hierarchy);
+        $command = $this->getCommand($filesystemLoader);
 
         $tester = new CommandTester($command);
         $tester->execute($input);
@@ -192,11 +192,10 @@ class DebugContaoTwigCommandTest extends TestCase
         ];
     }
 
-    private function getCommand(TemplateHierarchyInterface $hierarchy = null, ContaoFilesystemLoaderWarmer $cacheWarmer = null): DebugContaoTwigCommand
+    private function getCommand(ContaoFilesystemLoader $filesystemLoader = null): DebugContaoTwigCommand
     {
         return new DebugContaoTwigCommand(
-            $hierarchy ?? $this->createMock(TemplateHierarchyInterface::class),
-            $cacheWarmer ?? $this->createMock(ContaoFilesystemLoaderWarmer::class),
+            $filesystemLoader ?? $this->createMock(ContaoFilesystemLoader::class),
             new ThemeNamespace(),
             Path::canonicalize(__DIR__.'/../Fixtures/Twig/inheritance')
         );

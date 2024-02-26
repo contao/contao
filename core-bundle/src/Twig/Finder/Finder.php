@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Finder;
 
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -24,7 +24,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 final class Finder implements \IteratorAggregate, \Countable
 {
-    private TemplateHierarchyInterface $hierarchy;
+    private ContaoFilesystemLoader $filesystemLoader;
     private ThemeNamespace $themeNamespace;
     private TranslatorInterface $translator;
 
@@ -42,9 +42,9 @@ final class Finder implements \IteratorAggregate, \Countable
     /**
      * @internal
      */
-    public function __construct(TemplateHierarchyInterface $hierarchy, ThemeNamespace $themeNamespace, TranslatorInterface $translator)
+    public function __construct(ContaoFilesystemLoader $filesystemLoader, ThemeNamespace $themeNamespace, TranslatorInterface $translator)
     {
-        $this->hierarchy = $hierarchy;
+        $this->filesystemLoader = $filesystemLoader;
         $this->themeNamespace = $themeNamespace;
         $this->translator = $translator;
     }
@@ -146,7 +146,7 @@ final class Finder implements \IteratorAggregate, \Countable
     {
         // Only include chains that contain at least one non-legacy template
         $chains = array_filter(
-            $this->hierarchy->getInheritanceChains($this->themeSlug),
+            $this->filesystemLoader->getInheritanceChains($this->themeSlug),
             static function (array $chain) {
                 foreach (array_keys($chain) as $path) {
                     if ('html5' !== Path::getExtension($path, true)) {
