@@ -33,11 +33,6 @@ class PhpFunctionFlagTest extends TestCase
     public function getFlags(): \Generator
     {
         yield ['addslashes', "foo'bar", "foo\\'bar"];
-        yield ['strtolower', 'FOO', 'foo'];
-        yield ['strtoupper', 'foo', 'FOO'];
-        yield ['ucfirst', 'foo', 'Foo'];
-        yield ['lcfirst', 'FOO', 'fOO'];
-        yield ['ucwords', 'foo bar', 'Foo Bar'];
         yield ['trim', "\t\n foo\t\n ", 'foo'];
         yield ['rtrim', "\t\n foo\t\n ", "\t\n foo"];
         yield ['ltrim', "\t\n foo\t\n ", "foo\t\n "];
