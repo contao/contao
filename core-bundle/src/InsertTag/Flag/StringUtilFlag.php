@@ -106,7 +106,13 @@ class StringUtilFlag
     #[AsInsertTagFlag('ucwords')]
     public function ucwords(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
     {
-        return $result->withValue((new UnicodeString($result->getValue()))->title(true)->toString());
+        return $result->withValue(
+            preg_replace_callback(
+                '/(?<=\s|^)./u',
+                static fn ($matches) => mb_strtoupper($matches[0]),
+                $result->getValue(),
+            ),
+        );
     }
 
     #[AsInsertTagFlag('utf8_romanize')]

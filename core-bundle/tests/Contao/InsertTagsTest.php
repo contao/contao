@@ -307,8 +307,8 @@ class InsertTagsTest extends TestCase
         ];
 
         yield 'Flag ucwords utf-8' => [
-            '{{plain::deutschland-österreich/schweiz|ucwords}}',
-            'Deutschland-Österreich/Schweiz',
+            "{{plain::deutschland österreich\nschweiz-züriCH|ucwords}}",
+            "Deutschland Österreich\nSchweiz-züriCH",
         ];
     }
 
