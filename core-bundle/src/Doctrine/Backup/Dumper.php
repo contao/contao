@@ -22,6 +22,8 @@ use Doctrine\DBAL\Schema\Table;
 
 class Dumper implements DumperInterface
 {
+    private array $quoteCache = [];
+
     public function dump(Connection $connection, CreateConfig $config): \Generator
     {
         try {
@@ -32,10 +34,12 @@ class Dumper implements DumperInterface
             }
 
             throw new BackupManagerException($exception->getMessage(), 0, $exception);
+        } finally {
+            $this->quoteCache = [];
         }
     }
 
-    public function doDump(Connection $connection, CreateConfig $config): \Generator
+    private function doDump(Connection $connection, CreateConfig $config): \Generator
     {
         yield 'SET FOREIGN_KEY_CHECKS = 0;';
 
@@ -76,7 +80,7 @@ class Dumper implements DumperInterface
     }
 
     /**
-     * @param AbstractSchemaManager<AbstractPlatform> $schemaManager
+     * @phpstan-param AbstractSchemaManager<AbstractPlatform> $schemaManager
      */
     private function dumpViews(AbstractSchemaManager $schemaManager, AbstractPlatform $platform): \Generator
     {
@@ -160,7 +164,11 @@ class Dumper implements DumperInterface
             return '0x'.bin2hex($value);
         }
 
-        return $connection->quote($value);
+        if (isset($this->quoteCache[$value])) {
+            return $this->quoteCache[$value];
+        }
+
+        return $this->quoteCache[$value] = $connection->quote($value);
     }
 
     /**
