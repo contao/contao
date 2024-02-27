@@ -564,7 +564,7 @@ class Comments extends Frontend
 		$objNotify = new CommentsNotifyModel();
 		$objNotify->setRow($arrSet)->save();
 
-		$strUrl = Idna::decode(Environment::get('base')) . $request;
+		$strUrl = Idna::decode(Environment::get('base')) . ltrim($request, '/');
 		$strConnector = (str_contains($strUrl, '?')) ? '&' : '?';
 
 		$optIn = System::getContainer()->get('contao.opt_in');
@@ -666,7 +666,7 @@ class Comments extends Frontend
 				}
 
 				// Prepare the URL
-				$strUrl = Idna::decode(Environment::get('base')) . $objNotify->url;
+				$strUrl = Idna::decode(Environment::get('base')) . ltrim($objNotify->url, '/');
 
 				$objEmail = new Email();
 				$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'] ?? null;

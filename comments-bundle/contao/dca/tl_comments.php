@@ -330,7 +330,7 @@ class tl_comments extends Backend
 			while ($objNotify->next())
 			{
 				// Prepare the URL
-				$strUrl = Idna::decode(Environment::get('base')) . $objNotify->url;
+				$strUrl = Idna::decode(Environment::get('base')) . ltrim($objNotify->url, '/');
 
 				$objEmail = new Email();
 				$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'] ?? null;
