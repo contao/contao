@@ -64,6 +64,7 @@ class ModulePersonalData extends Module
 			return '';
 		}
 
+		// Always require full authentication if the module allows to set a new password
 		$reqFullAuth = $this->reqFullAuth || \in_array('password', $this->editable, true);
 
 		if ($reqFullAuth && !$security->isGranted('IS_AUTHENTICATED_FULLY'))
