@@ -138,7 +138,7 @@
         <source>Require full authentication</source>
       </trans-unit>
       <trans-unit id="tl_module.reqFullAuth.1">
-        <source>Require users to verify their identity if they are only authenticated based on a "remember me" cookie.</source>
+        <source>Users with only a "remember me" cookie must verify their identity in order to access the module.</source>
       </trans-unit>
       <trans-unit id="tl_module.memberTpl.0">
         <source>Form template</source>
