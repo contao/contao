@@ -1195,13 +1195,6 @@ class InsertTags extends Controller
 						case 'standardize':
 						case 'ampersand':
 						case 'specialchars':
-						case 'strtolower':
-						case 'utf8_strtolower':
-						case 'strtoupper':
-						case 'utf8_strtoupper':
-						case 'ucfirst':
-						case 'lcfirst':
-						case 'ucwords':
 						case 'trim':
 						case 'rtrim':
 						case 'ltrim':
@@ -1209,6 +1202,35 @@ class InsertTags extends Controller
 						case 'urlencode':
 						case 'rawurlencode':
 							$arrCache[$strTag] = $flag($arrCache[$strTag]);
+							break;
+
+						case 'strtolower':
+						case 'utf8_strtolower':
+							$arrCache[$strTag] = mb_strtolower($arrCache[$strTag]);
+							break;
+
+						case 'strtoupper':
+						case 'utf8_strtoupper':
+							$arrCache[$strTag] = mb_strtoupper($arrCache[$strTag]);
+							break;
+
+						case 'ucfirst':
+							$arrCache[$strTag] = mb_strtoupper(mb_substr($arrCache[$strTag], 0, 1)) . mb_substr($arrCache[$strTag], 1);
+							break;
+
+						case 'lcfirst':
+							$arrCache[$strTag] = mb_strtolower(mb_substr($arrCache[$strTag], 0, 1)) . mb_substr($arrCache[$strTag], 1);
+							break;
+
+						case 'ucwords':
+							$arrCache[$strTag] = preg_replace_callback(
+								'/(?<=\s|^)./u',
+								static function ($matches)
+								{
+									return mb_strtoupper($matches[0]);
+								},
+								$arrCache[$strTag]
+							);
 							break;
 
 						case 'attr':
