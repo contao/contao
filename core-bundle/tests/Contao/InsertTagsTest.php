@@ -188,8 +188,8 @@ class InsertTagsTest extends TestCase
         ];
 
         yield 'ucwords flag' => [
-            '{{plain::deutschland-österreich/schweiz|ucwords}}',
-            'Deutschland-Österreich/Schweiz',
+            "{{plain::deutschland österreich\nschweiz-züriCH|ucwords}}",
+            "Deutschland Österreich\nSchweiz-züriCH",
         ];
     }
 

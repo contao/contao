@@ -20,7 +20,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
-use Symfony\Component\String\UnicodeString;
 
 /**
  * A static class to replace insert tags
@@ -1224,7 +1223,14 @@ class InsertTags extends Controller
 							break;
 
 						case 'ucwords':
-							$arrCache[$strTag] = (new UnicodeString($arrCache[$strTag]))->title(true)->toString();
+							$arrCache[$strTag] = preg_replace_callback(
+								'/(?<=\s|^)./u',
+								static function ($matches)
+								{
+									return mb_strtoupper($matches[0]);
+								},
+								$arrCache[$strTag]
+							);
 							break;
 
 						case 'attr':
