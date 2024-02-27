@@ -164,11 +164,7 @@ class Dumper implements DumperInterface
             return '0x'.bin2hex($value);
         }
 
-        if (isset($this->quoteCache[$value])) {
-            return $this->quoteCache[$value];
-        }
-
-        return $this->quoteCache[$value] = $connection->quote($value);
+        return $this->quoteCache[$value] ?? ($this->quoteCache[$value] = $connection->quote($value));
     }
 
     /**
