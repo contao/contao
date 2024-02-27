@@ -64,7 +64,9 @@ class ModulePersonalData extends Module
 			return '';
 		}
 
-		if ($this->reqFullAuth && !$security->isGranted('IS_AUTHENTICATED_FULLY'))
+		$reqFullAuth = $this->reqFullAuth || \in_array('password', $this->editable, true);
+
+		if ($reqFullAuth && !$security->isGranted('IS_AUTHENTICATED_FULLY'))
 		{
 			throw new AccessDeniedException('Full authentication is required to edit the personal data.');
 		}
