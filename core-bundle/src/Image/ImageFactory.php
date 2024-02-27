@@ -64,16 +64,11 @@ class ImageFactory implements ImageFactoryInterface
         $this->preserveMetadataFields = $preserveMetadataFields;
     }
 
-    public function create($path, ResizeConfiguration|array|int|string|null $size = null, $options = null): ImageInterface
+    public function create(ImageInterface|string $path, ResizeConfiguration|array|int|string|null $size = null, ResizeOptions|string|null $options = null): ImageInterface
     {
-        if (null !== $options && !\is_string($options) && !$options instanceof ResizeOptions) {
-            throw new \InvalidArgumentException('Options must be of type null, string or '.ResizeOptions::class);
-        }
-
         if ($path instanceof ImageInterface) {
             $image = $path;
         } else {
-            $path = (string) $path;
             $fileExtension = Path::getExtension($path, true);
 
             if (\in_array($fileExtension, ['svg', 'svgz'], true)) {
@@ -113,7 +108,7 @@ class ImageFactory implements ImageFactoryInterface
             [$resizeConfig, $importantPart, $options] = $this->createConfig($size, $image);
         }
 
-        if (!\is_object($path) || !$path instanceof ImageInterface) {
+        if (!$path instanceof ImageInterface) {
             if (null === $importantPart) {
                 try {
                     $importantPart = $this->createImportantPart($image);
@@ -150,7 +145,7 @@ class ImageFactory implements ImageFactoryInterface
         return $this->resizer->resize($image, $resizeConfig, $options);
     }
 
-    public function getImportantPartFromLegacyMode(ImageInterface $image, $mode): ImportantPart
+    public function getImportantPartFromLegacyMode(ImageInterface $image, string $mode): ImportantPart
     {
         if (1 !== substr_count($mode, '_')) {
             throw new \InvalidArgumentException(sprintf('"%s" is not a legacy resize mode', $mode));
