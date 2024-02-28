@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Util\UrlUtil;
 use Nyholm\Psr7\Uri;
 
 /**
@@ -564,7 +565,7 @@ class Comments extends Frontend
 		$objNotify = new CommentsNotifyModel();
 		$objNotify->setRow($arrSet)->save();
 
-		$strUrl = Idna::decode(Environment::get('base')) . ltrim($request, '/');
+		$strUrl = UrlUtil::makeAbsolute($request, Idna::decode(Environment::get('base')));
 		$strConnector = (str_contains($strUrl, '?')) ? '&' : '?';
 
 		$optIn = System::getContainer()->get('contao.opt_in');
@@ -649,6 +650,7 @@ class Comments extends Frontend
 		{
 			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 			$isFrontend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request);
+			$baseUrl = Idna::decode(Environment::get('base'));
 
 			while ($objNotify->next())
 			{
@@ -666,7 +668,7 @@ class Comments extends Frontend
 				}
 
 				// Prepare the URL
-				$strUrl = Idna::decode(Environment::get('base')) . ltrim($objNotify->url, '/');
+				$strUrl = UrlUtil::makeAbsolute($objNotify->url, $baseUrl);
 
 				$objEmail = new Email();
 				$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'] ?? null;
