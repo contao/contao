@@ -112,7 +112,8 @@ class ContaoFilesystemLoaderTest extends TestCase
     {
         $loader = $this->getContaoFilesystemLoaderWithPaths(
             $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance'),
-            themePaths: ['templates/my/theme'],
+            [],
+            ['templates/my/theme'],
         );
 
         $source = $loader->getSourceContext('@Contao/text.html.twig');
@@ -176,7 +177,8 @@ class ContaoFilesystemLoaderTest extends TestCase
     {
         $loader = $this->getContaoFilesystemLoaderWithPaths(
             Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance'),
-            themePaths: ['templates/my/theme'],
+            [],
+            ['templates/my/theme'],
         );
 
         $this->assertTrue($loader->exists('@Contao_Theme_my_theme/text.html.twig'));
