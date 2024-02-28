@@ -12,7 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Loader;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
+use Contao\TemplateLoader;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Contracts\Service\ResetInterface;
@@ -52,6 +54,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
         private readonly CacheItemPoolInterface $cachePool,
         private readonly TemplateLocator $templateLocator,
         private readonly ThemeNamespace $themeNamespace,
+        private readonly ContaoFramework $framework,
         private readonly string $projectDir,
     ) {
     }
@@ -105,16 +108,35 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
             return new Source(file_get_contents($path), $templateName, $path);
         }
 
+        $getExtendedTemplate = static function ($path): string|null {
+            if (
+                1 === preg_match(
+                    '/\$this\s*->\s*extend\s*\(\s*[\'"]([a-z0-9_-]+)[\'"]\s*\)/i',
+                    (string) file_get_contents($path),
+                    $match,
+                )
+            ) {
+                return $match[1];
+            }
+
+            return null;
+        };
+
+        // Use the default path of the template if it extends itself
+        if (
+            ($extendedTemplate = $getExtendedTemplate($path))
+            && "@Contao/$extendedTemplate.html5" === $name
+        ) {
+            $this->framework->initialize();
+            $path = $this->framework->getAdapter(TemplateLoader::class)->getDefaultPath($extendedTemplate, 'html5');
+        }
+
         // Look up the blocks of the parent template if present
         if (
-            1 === preg_match(
-                '/\$this\s*->\s*extend\s*\(\s*[\'"]([a-z0-9_-]+)[\'"]\s*\)/i',
-                (string) file_get_contents($path),
-                $match,
-            )
-            && '@Contao/'.$match[1].'.html5' !== $name
+            ($extendedTemplate = $getExtendedTemplate($path))
+            && "@Contao/$extendedTemplate.html5" !== $name
         ) {
-            return new Source($this->getSourceContext('@Contao/'.$match[1].'.html5')->getCode(), $templateName, $path);
+            return new Source($this->getSourceContext("@Contao/$extendedTemplate.html5")->getCode(), $templateName, $path);
         }
 
         preg_match_all(

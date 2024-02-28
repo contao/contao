@@ -259,7 +259,7 @@ class ContentElementTestCase extends TestCase
             $this->createMock(Connection::class),
         );
 
-        return new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $themeNamespace, $resourceBasePath);
+        return new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $themeNamespace, $this->createMock(ContaoFramework::class), $resourceBasePath);
     }
 
     protected function getEnvironment(ContaoFilesystemLoader $contaoFilesystemLoader, ContaoFramework $framework): Environment

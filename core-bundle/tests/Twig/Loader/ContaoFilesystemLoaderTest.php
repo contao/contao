@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Twig\Loader;
 
 use Contao\CoreBundle\Exception\InvalidThemePathException;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
@@ -368,6 +369,7 @@ class ContaoFilesystemLoaderTest extends TestCase
             new NullAdapter(),
             $this->createMock(TemplateLocator::class),
             new ThemeNamespace(),
+            $this->createMock(ContaoFramework::class),
             '/',
         );
 
@@ -422,6 +424,7 @@ class ContaoFilesystemLoaderTest extends TestCase
             new NullAdapter(),
             $templateLocator,
             new ThemeNamespace(),
+            $this->createMock(ContaoFramework::class),
             $projectDir,
         );
 
@@ -535,6 +538,7 @@ class ContaoFilesystemLoaderTest extends TestCase
             $cacheAdapter,
             $templateLocator1,
             new ThemeNamespace(),
+            $this->createMock(ContaoFramework::class),
             '/',
         );
 
@@ -563,6 +567,7 @@ class ContaoFilesystemLoaderTest extends TestCase
             $cacheAdapter,
             $templateLocator2,
             new ThemeNamespace(),
+            $this->createMock(ContaoFramework::class),
             '/',
         );
 
@@ -612,6 +617,7 @@ class ContaoFilesystemLoaderTest extends TestCase
             new NullAdapter(),
             $templateLocator,
             new ThemeNamespace(),
+            $this->createMock(ContaoFramework::class),
             '/',
         );
     }
@@ -656,6 +662,7 @@ class ContaoFilesystemLoaderTest extends TestCase
             new NullAdapter(),
             $templateLocator,
             new ThemeNamespace(),
+            $this->createMock(ContaoFramework::class),
             $projectDir,
         );
     }
