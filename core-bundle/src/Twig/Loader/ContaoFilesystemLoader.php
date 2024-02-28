@@ -458,6 +458,8 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
 
     /**
      * Returns and stores the current theme slug or false if not applicable.
+     *
+     * @return string|false
      */
     private function getThemeSlug()
     {
