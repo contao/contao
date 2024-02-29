@@ -74,3 +74,8 @@ services:
 
     # Autowiring aliases
     Contao\ManagerBundle\HttpKernel\JwtManager: '@contao_manager.jwt_manager'
+    
+    # Register the dotenv:dump command
+    Symfony\Component\Dotenv\Command\DotenvDumpCommand:
+        - '%kernel.project_dir%/.env'
+        - '%kernel.environment%'
