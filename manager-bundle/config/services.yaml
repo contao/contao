@@ -12,6 +12,12 @@ services:
         arguments:
             - '@kernel'
 
+    contao_manager.command.dotenv_dump:
+        class: Symfony\Component\Dotenv\Command\DotenvDumpCommand
+        arguments:
+            - '%kernel.project_dir%/.env'
+            - '%kernel.environment%'
+
     contao_manager.command.install_skeleton:
         class: Contao\ManagerBundle\Command\InstallSkeletonCommand
         arguments:
