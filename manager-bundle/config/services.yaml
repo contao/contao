@@ -12,7 +12,6 @@ services:
         arguments:
             - '@kernel'
 
-    # Register the dotenv:dump command
     contao_manager.command.dotenv_dump:
         class: Symfony\Component\Dotenv\Command\DotenvDumpCommand
         arguments:
