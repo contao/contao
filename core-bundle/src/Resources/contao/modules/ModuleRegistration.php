@@ -350,7 +350,7 @@ class ModuleRegistration extends Module
 		$this->Template->addressDetails = $GLOBALS['TL_LANG']['tl_member']['addressDetails'];
 		$this->Template->contactDetails = $GLOBALS['TL_LANG']['tl_member']['contactDetails'];
 		$this->Template->personalData = $GLOBALS['TL_LANG']['tl_member']['personalData'];
-		$this->Template->captchaDetails = $GLOBALS['TL_LANG']['MSC']['securityQuestion'];
+		$this->Template->captchaDetails = $GLOBALS['TL_LANG']['tl_member']['captchaDetails'];
 
 		// Add the groups
 		foreach ($arrFields as $k=>$v)
@@ -359,8 +359,7 @@ class ModuleRegistration extends Module
 			$this->Template->$k = $v;
 
 			$key = $k . (($k == 'personal') ? 'Data' : 'Details');
-			$legend = ($k == 'captcha') ? $GLOBALS['TL_LANG']['MSC']['securityQuestion'] : ($GLOBALS['TL_LANG']['tl_member'][$key] ?? '');
-			$arrGroups[$legend] = $v;
+			$arrGroups[$GLOBALS['TL_LANG']['tl_member'][$key] ?? ''] = $v;
 		}
 
 		$this->Template->categories = array_filter($arrGroups);
