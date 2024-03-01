@@ -7,10 +7,7 @@
 {% endblock %}
 
 {% block list_item_attributes %}
-    {{- attrs()
-        .mergeWith(list.item_attributes|default)
-        .addClass(['download-element', "ext-#{item.file.extension(true)}"])
-    -}}
+    {{- attrs(list.item_attributes|default).addClass(['download-element', "ext-#{item.file.extension(true)}"]) -}}
 {% endblock %}
 
 {% block list_item %}

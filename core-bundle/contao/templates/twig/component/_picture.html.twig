@@ -29,7 +29,6 @@
             {% set img = figure.image.img %}
             {% set defineProportions = img.width|default(false) and img.height|default(false) %}
             {% set img_attributes = attrs()
-                .mergeWith(img_attributes|default)
                 .set('src', img.src)
                 .set('alt', figure.hasMetadata ? figure.metadata.alt : '')
                 .setIfExists('title', figure.hasMetadata ? (figure.metadata.title ?: null) : null)
@@ -40,14 +39,15 @@
                 .setIfExists('loading', img.loading|default)
                 .addClass(img.class|default)
                 .mergeWith(figure.options.img_attr|default)
+                .mergeWith(img_attributes|default)
             %}
             <img{{ img_attributes }}>
         {% endblock %}
     {% else %}
         {# Picture with image and sources #}
         {% set picture_attributes = attrs()
-            .mergeWith(picture_attributes|default)
             .mergeWith(figure.options.picture_attr|default)
+            .mergeWith(picture_attributes|default)
         %}
         <picture{{ picture_attributes }}>
             {% block sources %}
@@ -55,7 +55,6 @@
                     {% block source %}
                         {% set defineProportions = source.width|default(false) and source.height|default(false) %}
                         {% set source_attributes = attrs()
-                            .mergeWith(source_attributes|default)
                             .set('srcset', source.srcset)
                             .setIfExists('sizes', source.sizes|default)
                             .setIfExists('media', source.media|default)
@@ -63,6 +62,7 @@
                             .setIfExists('width', defineProportions ? source.width : null)
                             .setIfExists('height', defineProportions ? source.height : null)
                             .mergeWith(figure.options.picture_attr|default)
+                            .mergeWith(source_attributes|default)
                         %}
                         <source{{ source_attributes }}>
                     {% endblock %}

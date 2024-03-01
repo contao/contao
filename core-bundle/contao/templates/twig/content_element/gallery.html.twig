@@ -3,8 +3,8 @@
 {% use "@Contao/component/_figure.html.twig" %}
 
 {% set attributes = attrs()
-    .mergeWith(attributes|default)
     .addClass("content-#{type}--cols-#{items_per_row|default(4)}")
+    .mergeWith(attributes|default)
 %}
 
 {% block content %}

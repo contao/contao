@@ -5,8 +5,8 @@
 
 {% block content %}
     {% set video_attributes = attrs()
-        .mergeWith(video_attributes|default)
         .addClass('aspect aspect--' ~ aspect_ratio, aspect_ratio)
+        .mergeWith(video_attributes|default)
     %}
 
     {% if as_editor_view %}
@@ -27,7 +27,7 @@
 
             {% block video_caption %}
                 {% if caption %}
-                    <figcaption{{ attrs().mergeWith(video_caption_attributes|default) }}>
+                    <figcaption{{ attrs(video_caption_attributes|default) }}>
                         {{- caption|insert_tag_raw -}}
                     </figcaption>
                 {% endif %}

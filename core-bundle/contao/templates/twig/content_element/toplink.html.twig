@@ -4,10 +4,10 @@
 {% block content %}
     {% block link %}
         {% set link_attributes = attrs()
-            .mergeWith(link_attributes|default)
             .set('href', '#top')
             .set('data-toplink')
             .setIfExists('title', link_text)
+            .mergeWith(link_attributes|default)
         %}
         <a{% block link_attributes %}{{ link_attributes }}{% endblock %}>
             {%- block link_inner %}
@@ -20,8 +20,8 @@
         {% if not as_editor_view %}
             {% add "toplink_script" to body %}
                 {% set script_attributes = attrs()
-                    .mergeWith(script_attributes|default)
                     .setIfExists('nonce', csp_nonce('script-src'))
+                    .mergeWith(script_attributes|default)
                 %}
                 <script{{ script_attributes }}>
                     document.querySelectorAll('*[data-toplink]').forEach(link => {

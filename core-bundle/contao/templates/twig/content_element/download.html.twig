@@ -3,8 +3,8 @@
 
 {% if downloads %}
     {% set attributes = attrs()
-        .mergeWith(attributes|default)
         .addClass(['download-element', "ext-#{(downloads|first).file.extension(true)}"])
+        .mergeWith(attributes|default)
     %}
 {% endif %}
 

@@ -53,14 +53,13 @@
     {% block list %}
         {# If the list should be shuffled, paginated or limited, add the
            respective data-attributes. #}
-        {% set list_attributes = attrs()
-            .mergeWith(list.list_attributes|default)
+        {% set list_attributes = attrs(list.list_attributes|default)
             .set('data-list-random', '', randomize_order)
             .set('data-list-paginate', items_per_page ~ ',' ~ limit, add_pagination or limit_elements)
         %}
         <{{ tag_name }}{% block list_attributes %}{{ list_attributes }}{% endblock %}>
         {% for item in list.items %}
-            <li{% block list_item_attributes %}{{ attrs().mergeWith(list.item_attributes|default) }}{% endblock %}>
+            <li{% block list_item_attributes %}{{ attrs(list.item_attributes|default) }}{% endblock %}>
                 {%- block list_item %}
                     {# Render the content of your list item here: {{ item }} #}
                 {% endblock -%}
@@ -71,7 +70,7 @@
 
     {% if add_pagination %}
         {% block pagination %}
-            {% set pagination_attributes = attrs().mergeWith(list.pagination_attributes|default)
+            {% set pagination_attributes = attrs(list.pagination_attributes|default)
                 .set('data-pagination')
                 .set('aria-label', 'MSC.pagination'|trans)
             %}
@@ -96,8 +95,8 @@
         {% block list_script %}
             {% add "list_script" to body %}
                 {% set script_attributes = attrs()
-                    .mergeWith(script_attributes|default)
                     .setIfExists('nonce', csp_nonce('script-src'))
+                    .mergeWith(script_attributes|default)
                 %}
                 <script{{ script_attributes }}>
                     {# Shuffle lists #}
