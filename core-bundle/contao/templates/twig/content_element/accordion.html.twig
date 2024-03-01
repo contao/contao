@@ -17,7 +17,7 @@
                 </{{ element.header_tag }}>
             {% endblock %}
             {% block element_content %}
-                {% set accordion_content_attributes = attrs().
+                {% set accordion_content_attributes = attrs()
                     .mergeWith(accordion_content_attributes|default)
                     .addClass('handorgel__content')
                     .set('data-open', element.is_open)
