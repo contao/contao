@@ -19,7 +19,8 @@
                         <h1>
                             {%- with {href: feed.link, text: feed.title} %}
                                 {%- block external_link %}
-                                    {%- set link_attributes = attrs(link_attributes|default)
+                                    {%- set link_attributes = attrs()
+                                        .mergeWith(link_attributes|default)
                                         .set('href', href)
                                         .set('target', '_blank')
                                         .set('rel', 'noreferrer noopener')

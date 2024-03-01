@@ -28,7 +28,8 @@
         {% block image %}
             {% set img = figure.image.img %}
             {% set defineProportions = img.width|default(false) and img.height|default(false) %}
-            {% set img_attributes = attrs(img_attributes|default)
+            {% set img_attributes = attrs()
+                .mergeWith(img_attributes|default)
                 .set('src', img.src)
                 .set('alt', figure.hasMetadata ? figure.metadata.alt : '')
                 .setIfExists('title', figure.hasMetadata ? (figure.metadata.title ?: null) : null)
@@ -44,7 +45,8 @@
         {% endblock %}
     {% else %}
         {# Picture with image and sources #}
-        {% set picture_attributes = attrs(picture_attributes|default)
+        {% set picture_attributes = attrs()
+            .mergeWith(picture_attributes|default)
             .mergeWith(figure.options.picture_attr|default)
         %}
         <picture{{ picture_attributes }}>
@@ -52,7 +54,8 @@
                 {% for source in figure.image.sources %}
                     {% block source %}
                         {% set defineProportions = source.width|default(false) and source.height|default(false) %}
-                        {% set source_attributes = attrs(source_attributes|default)
+                        {% set source_attributes = attrs()
+                            .mergeWith(source_attributes|default)
                             .set('srcset', source.srcset)
                             .setIfExists('sizes', source.sizes|default)
                             .setIfExists('media', source.media|default)

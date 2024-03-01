@@ -1,7 +1,8 @@
 {% extends "@Contao/content_element/_base.html.twig" %}
 {% use "@Contao/component/_stylesheet.html.twig" %}
 
-{% set slider_attributes = attrs(slider_attributes|default)
+{% set slider_attributes = attrs()
+    .mergeWith(slider_attributes|default)
     .addClass('swiper')
     .set('data-delay', delay)
     .set('data-speed', speed)
@@ -11,11 +12,11 @@
 
 {% block content %}
     <div{{ slider_attributes }}>
-        <div{{ attrs(slider_wrapper_attributes|default).addClass('swiper-wrapper') }}>
+        <div{{ attrs().mergeWith(slider_wrapper_attributes|default).addClass('swiper-wrapper') }}>
             {% block slides %}
                 {% for element in nested_fragments %}
                     {% block slide %}
-                        <div{{ attrs(slide_attributes|default).addClass('swiper-slide') }}>
+                        <div{{ attrs().mergeWith(slide_attributes|default).addClass('swiper-slide') }}>
                             {% block slide_inner %}
                                 {{ content_element(element) }}
                             {% endblock %}
@@ -25,17 +26,21 @@
             {% endblock %}
         </div>
         {% block controls %}
-            <button{{ attrs(button_prev_attributes|default).set('type', 'button').addClass('swiper-button-prev') }}></button>
-            <button{{ attrs(button_next_attributes|default).set('type', 'button').addClass('swiper-button-next') }}></button>
-            <div{{ attrs(pagination_attributes|default).addClass('swiper-pagination') }}></div>
+            <button{{ attrs().mergeWith(button_prev_attributes|default).set('type', 'button').addClass('swiper-button-prev') }}></button>
+            <button{{ attrs().mergeWith(button_next_attributes|default).set('type', 'button').addClass('swiper-button-next') }}></button>
+            <div{{ attrs().mergeWith(pagination_attributes|default).addClass('swiper-pagination') }}></div>
         {% endblock %}
     </div>
 {% endblock %}
 
 {% block script %}
     {% add "swiper_js" to body %}
+        {% set script_attributes = attrs()
+            .mergeWith(script_attributes|default)
+            .setIfExists('nonce', csp_nonce('script-src'))
+        %}
         <script src="{{ asset('js/swiper-bundle.min.js', 'contao-components/swiper') }}"></script>
-        <script{{ attrs(script_attributes|default).setIfExists('nonce', csp_nonce('script-src')) }}>
+        <script{{ script_attributes }}>
             (function() {
                 const swiper = document.querySelectorAll('.swiper');
                 swiper.forEach (el => {

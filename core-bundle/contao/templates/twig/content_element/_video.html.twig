@@ -4,7 +4,8 @@
 {% use "@Contao/component/_picture.html.twig" %}
 
 {% block content %}
-    {% set video_attributes = attrs(video_attributes|default)
+    {% set video_attributes = attrs()
+        .mergeWith(video_attributes|default)
         .addClass('aspect aspect--' ~ aspect_ratio, aspect_ratio)
     %}
 
@@ -26,7 +27,7 @@
 
             {% block video_caption %}
                 {% if caption %}
-                    <figcaption{{ attrs(video_caption_attributes|default) }}>
+                    <figcaption{{ attrs().mergeWith(video_caption_attributes|default) }}>
                         {{- caption|insert_tag_raw -}}
                     </figcaption>
                 {% endif %}

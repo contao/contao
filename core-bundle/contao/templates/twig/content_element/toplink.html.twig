@@ -3,7 +3,8 @@
 
 {% block content %}
     {% block link %}
-        {% set link_attributes = attrs(link_attributes|default)
+        {% set link_attributes = attrs()
+            .mergeWith(link_attributes|default)
             .set('href', '#top')
             .set('data-toplink')
             .setIfExists('title', link_text)
@@ -18,7 +19,11 @@
     {% block script %}
         {% if not as_editor_view %}
             {% add "toplink_script" to body %}
-                <script{{ attrs(script_attributes|default).setIfExists('nonce', csp_nonce('script-src')) }}>
+                {% set script_attributes = attrs()
+                    .mergeWith(script_attributes|default)
+                    .setIfExists('nonce', csp_nonce('script-src'))
+                %}
+                <script{{ script_attributes }}>
                     document.querySelectorAll('*[data-toplink]').forEach(link => {
                         link.href = location.href;
                         link.hash = '#top';

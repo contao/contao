@@ -24,7 +24,8 @@
 {% trans_default_domain "contao_default" %}
 
 {% block splash_screen_component %}
-    {% set splash_button_attributes = attrs(splash_button_attributes|default)
+    {% set splash_button_attributes = attrs()
+        .mergeWith(splash_button_attributes|default)
         .set('data-splash-screen')
     %}
     <button{{ splash_button_attributes }}>
@@ -41,7 +42,11 @@
 
     {% block splash_screen_script %}
         {% add "splash_screen_script" to body %}
-            <script{{ attrs(script_attributes|default).setIfExists('nonce', csp_nonce('script-src')) }}>
+            {% set script_attributes = attrs()
+                .mergeWith(script_attributes|default)
+                .setIfExists('nonce', csp_nonce('script-src'))
+            %}
+            <script{{ script_attributes }}>
                 document.querySelectorAll('*[data-splash-screen]').forEach(button => {
                     button.addEventListener('click', () => {
                         button.insertAdjacentHTML('afterend', button.querySelector('template').innerHTML);

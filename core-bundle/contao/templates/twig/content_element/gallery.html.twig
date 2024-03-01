@@ -2,7 +2,10 @@
 {% use "@Contao/component/_list.html.twig" %}
 {% use "@Contao/component/_figure.html.twig" %}
 
-{% set attributes = attrs(attributes|default).addClass("content-#{type}--cols-#{items_per_row|default(4)}") %}
+{% set attributes = attrs()
+    .mergeWith(attributes|default)
+    .addClass("content-#{type}--cols-#{items_per_row|default(4)}")
+%}
 
 {% block content %}
     {% with {items: images} %}{{ block('list_component') }}{% endwith %}

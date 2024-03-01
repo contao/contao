@@ -1,13 +1,15 @@
 {% extends "@Contao/content_element/_base.html.twig" %}
 {% use "@Contao/component/_figure.html.twig" %}
 
-{% set content_layout_attributes = attrs(content_layout_attributes|default)
+{% set content_layout_attributes = attrs()
+    .mergeWith(content_layout_attributes|default)
     .addClass('media media--' ~ layout, layout and image)
 %}
 
 {# By default we add the layout attributes to the wrapper element. If you want to
  disable this behavior, set "default_content_layout" to false. #}
-{% set attributes = attrs(attributes|default)
+{% set attributes = attrs()
+    .mergeWith(attributes|default)
     .mergeWith(content_layout_attributes, default_content_layout is not defined or default_content_layout)
 %}
 
@@ -21,7 +23,10 @@
 
     {# Richtext #}
     {% block text %}
-        {% set text_attributes = attrs(text_attributes|default).addClass('rte') %}
+        {% set text_attributes = attrs()
+            .mergeWith(text_attributes|default)
+            .addClass('rte')
+        %}
         <div{% block text_attributes %}{{ text_attributes }}{% endblock %}>
             {{ text|csp_inline_styles|insert_tag|encode_email|raw }}
         </div>

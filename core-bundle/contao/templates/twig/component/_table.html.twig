@@ -58,7 +58,7 @@
     {% set use_row_headers = table.use_row_headers|default(false) %}
 
     {% block table %}
-        {% set table_attributes = attrs(table_attributes|default) %}
+        {% set table_attributes = attrs().mergeWith(table_attributes|default) %}
         {% if sorting %}
             {# You can provide custom options for the tablesort script.
                See https://github.com/tristen/tablesort for more details. #}
@@ -84,7 +84,8 @@
                     {% block table_header_inner %}
                         <tr>
                             {% for cell in header %}
-                                {% set table_header_cell_attributes = attrs(default_header_cell_attributes|default)
+                                {% set table_header_cell_attributes = attrs()
+                                    .mergeWith(default_header_cell_attributes|default)
                                     .set('data-sort-method', 'none', sorting and loop.first and use_row_headers)
                                     .set('data-sort-default', '', sorting.column|default == loop.index0)
                                 %}
@@ -149,7 +150,11 @@
     {% block table_script %}
         {% if sorting %}
             {% add "tablesort_script" to head %}
-                <script{{ attrs(script_attributes|default).setIfExists('nonce', csp_nonce('script-src')) }}>
+                {% set script_attributes = attrs()
+                    .mergeWith(script_attributes|default)
+                    .setIfExists('nonce', csp_nonce('script-src'))
+                %}
+                <script{{ script_attributes }}>
                     {
                         const instances = new WeakMap();
 
