@@ -105,7 +105,7 @@ class FeedMigration extends AbstractMigration
 
     private function findMatchingRootPage(array $feed): int|null
     {
-        $feedBase = preg_replace('/^https?:\/\//', '', $feed['feedBase']);
+        $feedBase = parse_url($feed['feedBase'], PHP_URL_HOST) ?: $feed['feedBase'];
 
         $page = $this->connection->fetchOne(
             "SELECT id FROM tl_page WHERE type = 'root' AND dns = :dns AND language = :language LIMIT 1",
