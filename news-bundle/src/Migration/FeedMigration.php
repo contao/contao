@@ -14,6 +14,7 @@ namespace Contao\NewsBundle\Migration;
 
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
+use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
 
@@ -57,8 +58,10 @@ class FeedMigration extends AbstractMigration
             $this->connection->executeStatement("ALTER TABLE tl_page ADD $field $definition");
         }
 
-        // Migrate data from `tl_news_feeds` to `tl_page`
+        // Migrate data from `tl_news_feeds` to `tl_page` and update `tl_layout`
         $feeds = $this->connection->fetchAllAssociative('SELECT * FROM tl_news_feed');
+        $layouts = $this->connection->fetchAllKeyValue('SELECT id, newsfeeds FROM tl_layout WHERE newsfeeds IS NOT NULL');
+        $mapping = [];
 
         foreach ($feeds as $feed) {
             $rootPage = $this->findMatchingRootPage($feed);
@@ -82,7 +85,23 @@ class FeedMigration extends AbstractMigration
                 'imgSize' => $feed['imgSize'],
             ]);
 
+            $mapping[$feed['id']] = $this->connection->lastInsertId();
+
             $this->connection->delete('tl_news_feed', ['id' => $feed['id']]);
+        }
+
+        foreach ($layouts as $layoutId => $newsfeeds) {
+            $newsfeeds = StringUtil::deserialize($newsfeeds);
+
+            if (!\is_array($newsfeeds)) {
+                continue;
+            }
+
+            foreach ($newsfeeds as $k => $v) {
+                $newsfeeds[$k] = $mapping[$v] ?? $v;
+            }
+
+            $this->connection->update('tl_layout', ['newsfeeds' => serialize($newsfeeds)], ['id' => $layoutId]);
         }
 
         return $this->createResult(true);

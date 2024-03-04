@@ -114,6 +114,12 @@ class FeedMigrationTest extends ContaoTestCase
         ;
 
         $connection
+            ->method('fetchAllKeyValue')
+            ->with('SELECT id, newsfeeds FROM tl_layout WHERE newsfeeds IS NOT NULL')
+            ->willReturn([21 => serialize([1])])
+        ;
+
+        $connection
             ->method('fetchOne')
             ->willReturnMap([
                 ['SELECT COUNT(*) FROM tl_news_feed', [], [], 1],
@@ -144,8 +150,20 @@ class FeedMigrationTest extends ContaoTestCase
 
         $connection
             ->expects($this->once())
+            ->method('lastInsertId')
+            ->willReturn(42)
+        ;
+
+        $connection
+            ->expects($this->once())
             ->method('delete')
             ->with('tl_news_feed', ['id' => 1])
+        ;
+
+        $connection
+            ->expects($this->once())
+            ->method('update')
+            ->with('tl_layout', ['newsfeeds' => serialize([42])], ['id' => 21])
         ;
 
         $migration = new FeedMigration($connection, new NullLogger());
