@@ -60,7 +60,7 @@ class FeedMigration extends AbstractMigration
         $mapping = [];
 
         foreach ($feeds as $feed) {
-            $rootPage = $this->findMatchingRootPage($feed);
+            [$rootPage, $sorting] = $this->findMatchingRootPage($feed) + [null, null];
 
             if (!$rootPage) {
                 return $this->createResult(false, 'Could not migrate feed "'.$feed['title'].'" because there is no root page');
@@ -69,6 +69,7 @@ class FeedMigration extends AbstractMigration
             $this->connection->insert('tl_page', [
                 'type' => 'news_feed',
                 'pid' => $rootPage,
+                'sorting' => $sorting + 128,
                 'tstamp' => $feed['tstamp'],
                 'title' => $feed['title'],
                 'alias' => 'share/'.$feed['alias'],
@@ -103,20 +104,20 @@ class FeedMigration extends AbstractMigration
         return $this->createResult(true);
     }
 
-    private function findMatchingRootPage(array $feed): int|null
+    private function findMatchingRootPage(array $feed): array
     {
         $feedBase = parse_url($feed['feedBase'], PHP_URL_HOST) ?: $feed['feedBase'];
 
-        $page = $this->connection->fetchOne(
-            "SELECT id FROM tl_page WHERE type = 'root' AND dns = :dns AND language = :language LIMIT 1",
+        $page = $this->connection->fetchNumeric(
+            "SELECT r.id, MAX(c.sorting) FROM tl_page r LEFT JOIN tl_page c ON c.pid=r.id WHERE r.type = 'root' AND r.dns = :dns AND r.language = :language GROUP BY r.id LIMIT 1",
             ['dns' => $feedBase, 'language' => $feed['language']],
         );
 
         // Find first root page, if none matches by dns and language
         if (!$page) {
-            $page = $this->connection->fetchOne("SELECT id FROM tl_page WHERE type = 'root' AND fallback = 1 ORDER BY sorting ASC LIMIT 1");
+            $page = $this->connection->fetchNumeric("SELECT r.id, MAX(c.sorting) FROM tl_page r  LEFT JOIN tl_page c ON c.pid=r.id WHERE r.type = 'root' AND r.fallback = 1 GROUP BY r.id ORDER BY r.sorting ASC LIMIT 1");
         }
 
-        return $page ?: null;
+        return $page ?: [];
     }
 }
