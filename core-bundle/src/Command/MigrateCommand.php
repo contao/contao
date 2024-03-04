@@ -51,8 +51,6 @@ class MigrateCommand extends Command
     private ?Installer $installer;
     private ?SymfonyStyle $io = null;
 
-    private int $migrationsLoopControl = 9;
-
     public function __construct(MigrationCollection $migrations, FileLocator $fileLocator, string $projectDir, ContaoFramework $framework, BackupManager $backupManager, SchemaProvider $schemaProvider, MysqlInnodbRowSizeCalculator $rowSizeCalculator, Connection $connection, Installer $installer = null)
     {
         $this->migrations = $migrations;
@@ -252,7 +250,8 @@ class MigrateCommand extends Command
 
     private function executeMigrations(bool &$dryRun, bool $asJson, string $specifiedHash = null): bool
     {
-        while (--$this->migrationsLoopControl) {
+        $loopControl = 9;
+        while (--$loopControl) {
             $first = true;
             $migrationLabels = [];
 
