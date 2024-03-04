@@ -1766,12 +1766,10 @@ abstract class DataContainer extends Backend
 				{
 					$args[$k] = $row[$v];
 				}
-
-				$args[$k] = (string) $args[$k] !== '' ? $args[$k] : '';
 			}
 			else
 			{
-				$args[$k] = '';
+				$args[$k] = null;
 			}
 		}
 
