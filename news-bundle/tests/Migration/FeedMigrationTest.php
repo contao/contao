@@ -144,6 +144,7 @@ class FeedMigrationTest extends ContaoTestCase
                     'feedDescription' => 'This is an example newsfeed',
                     'imgSize' => null,
                     'tstamp' => 16000000,
+                    'published' => 1,
                 ],
             )
         ;
@@ -240,6 +241,7 @@ class FeedMigrationTest extends ContaoTestCase
                     'feedDescription' => 'This is an example newsfeed',
                     'imgSize' => null,
                     'tstamp' => 16000000,
+                    'published' => 1,
                 ],
             )
         ;

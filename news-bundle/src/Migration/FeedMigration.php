@@ -83,6 +83,7 @@ class FeedMigration extends AbstractMigration
                 'maxFeedItems' => $feed['maxItems'],
                 'feedDescription' => $feed['description'],
                 'imgSize' => $feed['imgSize'],
+                'published' => 1
             ]);
 
             $mapping[$feed['id']] = $this->connection->lastInsertId();
