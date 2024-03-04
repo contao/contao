@@ -16,14 +16,10 @@ use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
-use Psr\Log\LoggerInterface;
 
 class FeedMigration extends AbstractMigration
 {
-    public function __construct(
-        private readonly Connection $connection,
-        private readonly LoggerInterface $logger,
-    ) {
+    public function __construct(private readonly Connection $connection) {
     }
 
     public function shouldRun(): bool
@@ -67,8 +63,7 @@ class FeedMigration extends AbstractMigration
             $rootPage = $this->findMatchingRootPage($feed);
 
             if (!$rootPage) {
-                $this->logger->warning('Could not migrate feed "'.$feed['title'].'" because there is no root page');
-                continue;
+                return $this->createResult(false, 'Could not migrate feed "'.$feed['title'].'" because there is no root page');
             }
 
             $this->connection->insert('tl_page', [
