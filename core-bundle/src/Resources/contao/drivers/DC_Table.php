@@ -5105,6 +5105,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					foreach ($label as $j=>$arg)
 					{
 						$field = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'][$j] ?? null;
+						$value = (string) $arg !== '' ? $arg : '-';
 
 						$return .= '<td colspan="' . $colspan . '" class="tl_file_list col_' . explode(':', $field, 2)[0] . ($field == $firstOrderBy ? ' ordered_by' : '') . '">' . $value . '</td>';
 					}

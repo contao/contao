@@ -1707,7 +1707,7 @@ abstract class DataContainer extends Backend
 					->limit(1)
 					->execute($row[$strKey]);
 
-				$args[$k] = $objRef->numRows ? $objRef->$strField : '-';
+				$args[$k] = $objRef->numRows ? $objRef->$strField : '';
 			}
 			elseif (isset($row[$v], $GLOBALS['TL_DCA'][$table]['fields'][$v]['foreignKey']))
 			{
@@ -1718,7 +1718,7 @@ abstract class DataContainer extends Backend
 					->limit(1)
 					->execute($row[$v]);
 
-				$args[$k] = $objRef->numRows ? $objRef->value : '-';
+				$args[$k] = $objRef->numRows ? $objRef->value : '';
 			}
 			elseif (\in_array($GLOBALS['TL_DCA'][$table]['fields'][$v]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC)))
 			{
@@ -1767,11 +1767,11 @@ abstract class DataContainer extends Backend
 					$args[$k] = $row[$v];
 				}
 
-				$args[$k] = (string) $args[$k] !== '' ? $args[$k] : '-';
+				$args[$k] = (string) $args[$k] !== '' ? $args[$k] : '';
 			}
 			else
 			{
-				$args[$k] = '-';
+				$args[$k] = '';
 			}
 		}
 
