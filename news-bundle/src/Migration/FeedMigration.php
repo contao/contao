@@ -117,6 +117,6 @@ class FeedMigration extends AbstractMigration
             $page = $this->connection->fetchOne("SELECT id FROM tl_page WHERE type = 'root' AND fallback = 1 ORDER BY sorting ASC LIMIT 1");
         }
 
-        return $page;
+        return $page ?: null;
     }
 }
