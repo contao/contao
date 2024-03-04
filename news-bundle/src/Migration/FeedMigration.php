@@ -19,7 +19,8 @@ use Doctrine\DBAL\Connection;
 
 class FeedMigration extends AbstractMigration
 {
-    public function __construct(private readonly Connection $connection) {
+    public function __construct(private readonly Connection $connection)
+    {
     }
 
     public function shouldRun(): bool
@@ -79,7 +80,7 @@ class FeedMigration extends AbstractMigration
                 'maxFeedItems' => $feed['maxItems'],
                 'feedDescription' => $feed['description'],
                 'imgSize' => $feed['imgSize'],
-                'published' => 1
+                'published' => 1,
             ]);
 
             $mapping[$feed['id']] = $this->connection->lastInsertId();

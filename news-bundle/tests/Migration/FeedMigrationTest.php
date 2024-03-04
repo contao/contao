@@ -17,7 +17,6 @@ use Contao\NewsBundle\Migration\FeedMigration;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\MySQLSchemaManager;
-use Psr\Log\NullLogger;
 
 class FeedMigrationTest extends ContaoTestCase
 {
@@ -38,7 +37,7 @@ class FeedMigrationTest extends ContaoTestCase
             ->willReturn($schemaManager)
         ;
 
-        $migration = new FeedMigration($connection, new NullLogger());
+        $migration = new FeedMigration($connection);
 
         $this->assertFalse($migration->shouldRun());
     }
@@ -66,7 +65,7 @@ class FeedMigrationTest extends ContaoTestCase
             ->willReturn(0)
         ;
 
-        $migration = new FeedMigration($connection, new NullLogger());
+        $migration = new FeedMigration($connection);
 
         $this->assertFalse($migration->shouldRun());
     }
@@ -121,10 +120,14 @@ class FeedMigrationTest extends ContaoTestCase
 
         $connection
             ->method('fetchOne')
-            ->willReturnMap([
-                ['SELECT COUNT(*) FROM tl_news_feed', [], [], 1],
-                ["SELECT id FROM tl_page WHERE type = 'root' AND dns = :dns AND language = :language LIMIT 1", ['dns' => 'example.org', 'language' => 'en'], [], 1],
-            ])
+            ->with('SELECT COUNT(*) FROM tl_news_feed')
+            ->willReturn(1)
+        ;
+
+        $connection
+            ->method('fetchNumeric')
+            ->with("SELECT r.id, MAX(c.sorting) FROM tl_page r LEFT JOIN tl_page c ON c.pid=r.id WHERE r.type = 'root' AND r.dns = :dns AND r.language = :language GROUP BY r.id LIMIT 1", ['dns' => 'example.org', 'language' => 'en'])
+            ->willReturn([1, 128])
         ;
 
         $connection
@@ -134,6 +137,7 @@ class FeedMigrationTest extends ContaoTestCase
                 'tl_page',
                 [
                     'pid' => 1,
+                    'sorting' => 256,
                     'type' => 'news_feed',
                     'title' => 'Latest news',
                     'alias' => 'share/latest-news',
@@ -167,7 +171,7 @@ class FeedMigrationTest extends ContaoTestCase
             ->with('tl_layout', ['newsfeeds' => serialize([42])], ['id' => 21])
         ;
 
-        $migration = new FeedMigration($connection, new NullLogger());
+        $migration = new FeedMigration($connection);
 
         $this->assertTrue($migration->shouldRun());
         $this->assertEquals(new MigrationResult(true, 'Contao\NewsBundle\Migration\FeedMigration executed successfully'), $migration->run());
@@ -217,10 +221,15 @@ class FeedMigrationTest extends ContaoTestCase
 
         $connection
             ->method('fetchOne')
+            ->with('SELECT COUNT(*) FROM tl_news_feed')
+            ->willReturn(1)
+        ;
+
+        $connection
+            ->method('fetchNumeric')
             ->willReturnMap([
-                ['SELECT COUNT(*) FROM tl_news_feed', [], [], 1],
-                ["SELECT id FROM tl_page WHERE type = 'root' AND dns = :dns AND language = :language LIMIT 1", ['dns' => 'example.org', 'language' => 'en'], [], []],
-                ["SELECT id FROM tl_page WHERE type = 'root' AND fallback = 1 ORDER BY sorting ASC LIMIT 1", [], [], 2],
+                ["SELECT r.id, MAX(c.sorting) FROM tl_page r LEFT JOIN tl_page c ON c.pid=r.id WHERE r.type = 'root' AND r.dns = :dns AND r.language = :language GROUP BY r.id LIMIT 1", ['dns' => 'example.org', 'language' => 'en'], [], []],
+                ["SELECT r.id, MAX(c.sorting) FROM tl_page r  LEFT JOIN tl_page c ON c.pid=r.id WHERE r.type = 'root' AND r.fallback = 1 GROUP BY r.id ORDER BY r.sorting ASC LIMIT 1", [], [], [2, 768]],
             ])
         ;
 
@@ -231,6 +240,7 @@ class FeedMigrationTest extends ContaoTestCase
                 'tl_page',
                 [
                     'pid' => 2,
+                    'sorting' => 896,
                     'type' => 'news_feed',
                     'title' => 'Latest news',
                     'alias' => 'share/latest-news',
@@ -257,7 +267,7 @@ class FeedMigrationTest extends ContaoTestCase
             )
         ;
 
-        $migration = new FeedMigration($connection, new NullLogger());
+        $migration = new FeedMigration($connection);
 
         $this->assertTrue($migration->shouldRun());
         $this->assertEquals(new MigrationResult(true, 'Contao\NewsBundle\Migration\FeedMigration executed successfully'), $migration->run());
