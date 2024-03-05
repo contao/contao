@@ -14,9 +14,7 @@ services:
 
     contao_manager.command.dotenv_dump:
         class: Symfony\Component\Dotenv\Command\DotenvDumpCommand
-        arguments:
-            - '%kernel.project_dir%/.env'
-            - '%kernel.environment%'
+        factory: '@contao_manager.dotenv.dump_command_factory'
 
     contao_manager.command.install_skeleton:
         class: Contao\ManagerBundle\Command\InstallSkeletonCommand
@@ -37,6 +35,12 @@ services:
             - '%kernel.project_dir%'
             - '%contao.web_dir%'
             - '%kernel.secret%'
+
+    contao_manager.dotenv.dump_command_factory:
+        class: Contao\ManagerBundle\Dotenv\DotenvDumpCommandFactory
+        arguments:
+            - '%kernel.project_dir%'
+            - '%kernel.environment%'
 
     contao_manager.jwt_manager:
         public: true
