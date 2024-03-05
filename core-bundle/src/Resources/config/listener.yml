@@ -161,7 +161,7 @@ services:
     contao.listener.data_container.theme_templates:
         class: Contao\CoreBundle\EventListener\DataContainer\ThemeTemplatesListener
         arguments:
-            - '@contao.twig.filesystem_loader_warmer'
+            - '@contao.twig.filesystem_loader'
             - '@contao.twig.loader.theme_namespace'
             - '@translator'
 
@@ -556,6 +556,14 @@ services:
             - '@router'
             - '@translator'
             - '@contao.csrf.token_manager'
+
+    contao.twig.loader.auto_refresh_template_hierarchy_listener:
+        class: Contao\CoreBundle\Twig\Loader\AutoRefreshTemplateHierarchyListener
+        arguments:
+            - '@contao.twig.filesystem_loader'
+            - '%kernel.environment%'
+        tags:
+            - { name: kernel.event_listener, event: kernel.request }
 
     # Backwards compatibility
     Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener:

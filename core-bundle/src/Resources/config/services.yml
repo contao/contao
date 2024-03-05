@@ -975,13 +975,10 @@ services:
         class: Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer
         arguments:
             - '@contao.twig.filesystem_loader'
-            - '@contao.twig.loader.template_locator'
-            - '%kernel.project_dir%'
             - '%kernel.cache_dir%'
             - '%kernel.environment%'
         tags:
             - { name: kernel.cache_warmer }
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
     contao.twig.finder_factory:
         class: Contao\CoreBundle\Twig\Finder\FinderFactory

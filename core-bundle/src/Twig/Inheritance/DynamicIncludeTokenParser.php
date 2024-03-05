@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Inheritance;
 
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\IncludeNode;
@@ -29,11 +30,11 @@ use Twig\TokenParser\AbstractTokenParser;
  */
 final class DynamicIncludeTokenParser extends AbstractTokenParser
 {
-    private TemplateHierarchyInterface $hierarchy;
+    private ContaoFilesystemLoader $filesystemLoader;
 
-    public function __construct(TemplateHierarchyInterface $hierarchy)
+    public function __construct(ContaoFilesystemLoader $filesystemLoader)
     {
-        $this->hierarchy = $hierarchy;
+        $this->filesystemLoader = $filesystemLoader;
     }
 
     public function parse(Token $token): IncludeNode
@@ -56,13 +57,11 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
      * Return the adjusted logical name or the unchanged input if it does not
      * match the Contao Twig namespace.
      *
-     * TODO change signature to public static function adjustTemplateName(string|TemplateWrapper $name, TemplateHierarchyInterface $hierarchy): string|TemplateWrapper in Contao 5.1
-     *
      * @param string|TemplateWrapper $name
      *
      * @return string|TemplateWrapper
      */
-    public static function adjustTemplateName($name, TemplateHierarchyInterface $hierarchy)
+    public static function adjustTemplateName($name, ContaoFilesystemLoader $filesystemLoader)
     {
         if (!\is_string($name)) {
             if ($name instanceof TemplateWrapper) {
@@ -79,7 +78,7 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
         }
 
         try {
-            return $hierarchy->getFirst($parts[1] ?? '');
+            return $filesystemLoader->getFirst($parts[1] ?? '');
         } catch (\LogicException $e) {
             throw new \LogicException($e->getMessage().' Did you try to include a non-existent template or a template from a theme directory?', 0, $e);
         }
@@ -133,7 +132,7 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
         }
 
         $name = (string) $node->getAttribute('value');
-        $adjustedName = self::adjustTemplateName($name, $this->hierarchy);
+        $adjustedName = self::adjustTemplateName($name, $this->filesystemLoader);
 
         if ($name !== $adjustedName) {
             $node->setAttribute('value', $adjustedName);

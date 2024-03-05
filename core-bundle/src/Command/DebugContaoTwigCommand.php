@@ -12,8 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Command;
 
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
-use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\TableSeparator;
@@ -32,15 +31,13 @@ class DebugContaoTwigCommand extends Command
     protected static $defaultName = 'debug:contao-twig';
     protected static $defaultDescription = 'Displays the Contao template hierarchy.';
 
-    private TemplateHierarchyInterface $hierarchy;
-    private ContaoFilesystemLoaderWarmer $cacheWarmer;
+    private ContaoFilesystemLoader $filesystemLoader;
     private ThemeNamespace $themeNamespace;
     private string $projectDir;
 
-    public function __construct(TemplateHierarchyInterface $hierarchy, ContaoFilesystemLoaderWarmer $cacheWarmer, ThemeNamespace $themeNamespace, string $projectDir)
+    public function __construct(ContaoFilesystemLoader $filesystemLoader, ThemeNamespace $themeNamespace, string $projectDir)
     {
-        $this->hierarchy = $hierarchy;
-        $this->cacheWarmer = $cacheWarmer;
+        $this->filesystemLoader = $filesystemLoader;
         $this->themeNamespace = $themeNamespace;
         $this->projectDir = $projectDir;
 
@@ -58,10 +55,10 @@ class DebugContaoTwigCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // Make sure the template hierarchy is up-to-date
-        $this->cacheWarmer->refresh();
+        $this->filesystemLoader->warmUp(true);
 
         $rows = [];
-        $chains = $this->hierarchy->getInheritanceChains($this->getThemeSlug($input));
+        $chains = $this->filesystemLoader->getInheritanceChains($this->getThemeSlug($input));
 
         if (null !== ($prefix = $input->getArgument('filter'))) {
             $chains = array_filter(
