@@ -155,7 +155,7 @@ class Dbafs implements DbafsInterface, ResetInterface
         foreach ($rows as $row) {
             $itemPath = $this->convertToFilesystemPath($row['path']);
 
-            if (!\array_key_exists($itemPath, $this->records)) {
+            if (!\array_key_exists($itemPath, $this->records) || null === $this->records[$itemPath]) {
                 $this->populateRecord($row);
             }
 
@@ -230,6 +230,10 @@ class Dbafs implements DbafsInterface, ResetInterface
 
             $this->pathById = array_diff($this->pathById, [$itemToDelete->getPath()]);
             $this->pathByUuid = array_diff($this->pathByUuid, [$itemToDelete->getPath()]);
+        }
+
+        foreach ($changeSet->getItemsToCreate() as $itemToCreate) {
+            $this->loadRecordByPath($itemToCreate->getPath());
         }
 
         return $changeSet;
