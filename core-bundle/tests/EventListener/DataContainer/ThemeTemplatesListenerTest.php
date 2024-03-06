@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 use Contao\CoreBundle\EventListener\DataContainer\ThemeTemplatesListener;
 use Contao\CoreBundle\Exception\InvalidThemePathException;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -23,13 +23,14 @@ class ThemeTemplatesListenerTest extends TestCase
 {
     public function testRefreshesCache(): void
     {
-        $filesystemLoaderWarmer = $this->createMock(ContaoFilesystemLoaderWarmer::class);
-        $filesystemLoaderWarmer
+        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader
             ->expects($this->once())
-            ->method('refresh')
+            ->method('warmUp')
+            ->with(true)
         ;
 
-        $listener = $this->getListener($filesystemLoaderWarmer);
+        $listener = $this->getListener($filesystemLoader);
 
         $this->assertSame('templates/foo/bar', $listener('templates/foo/bar'));
     }
@@ -58,12 +59,12 @@ class ThemeTemplatesListenerTest extends TestCase
         $listener('<bad-path>');
     }
 
-    private function getListener(ContaoFilesystemLoaderWarmer $filesystemLoaderWarmer = null, ThemeNamespace $themeNamespace = null, TranslatorInterface $translator = null): ThemeTemplatesListener
+    private function getListener(ContaoFilesystemLoader $filesystemLoader = null, ThemeNamespace $themeNamespace = null, TranslatorInterface $translator = null): ThemeTemplatesListener
     {
         return new ThemeTemplatesListener(
-            $filesystemLoaderWarmer ?? $this->createMock(ContaoFilesystemLoaderWarmer::class),
+            $filesystemLoader ?? $this->createMock(ContaoFilesystemLoader::class),
             $themeNamespace ?? $this->createMock(ThemeNamespace::class),
-            $translator ?? $this->createMock(TranslatorInterface::class)
+            $translator ?? $this->createMock(TranslatorInterface::class),
         );
     }
 }

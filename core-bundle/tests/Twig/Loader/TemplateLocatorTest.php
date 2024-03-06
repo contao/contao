@@ -122,6 +122,7 @@ class TemplateLocatorTest extends TestCase
         $expectedResourcePaths = [
             'App' => [
                 Path::join($projectDir, 'contao/templates'),
+                Path::join($projectDir, 'contao/templates/other'),
                 Path::join($projectDir, 'contao/templates/some'),
                 Path::join($projectDir, 'contao/templates/some/random'),
                 Path::join($projectDir, 'src/Resources/contao/templates'),

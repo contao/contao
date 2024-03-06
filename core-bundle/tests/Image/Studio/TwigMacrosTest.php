@@ -21,7 +21,7 @@ use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
 use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
@@ -579,7 +579,7 @@ class TwigMacrosTest extends TestCase
         ];
 
         $environment = new Environment(new ArrayLoader($templates));
-        $environment->setExtensions([new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class))]);
+        $environment->setExtensions([new ContaoExtension($environment, $this->createMock(ContaoFilesystemLoader::class))]);
 
         $responseContextAccessor ??= $this->createMock(ResponseContextAccessor::class);
 

@@ -16,7 +16,7 @@ use Contao\Config;
 use Contao\ContentText;
 use Contao\Controller;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\DcaExtractor;
 use Contao\DcaLoader;
 use Contao\FormTextField;
@@ -56,7 +56,7 @@ class TemplateLoaderTest extends TestCase
         $GLOBALS['TL_LANG']['MSC']['global'] = 'global';
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
-        $container->set('contao.twig.filesystem_loader', $this->createMock(TemplateHierarchyInterface::class));
+        $container->set('contao.twig.filesystem_loader', $this->createMock(ContaoFilesystemLoader::class));
 
         System::setContainer($container);
     }
@@ -273,8 +273,8 @@ class TemplateLoaderTest extends TestCase
      */
     public function testReturnsACustomTwigTemplate(): void
     {
-        $templateHierarchy = $this->createMock(TemplateHierarchyInterface::class);
-        $templateHierarchy
+        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader
             ->method('getInheritanceChains')
             ->willReturn([
                 'mod_article' => ['some/path/mod_article.html.twig' => '@Contao_Global/mod_article.html.twig'],
@@ -283,7 +283,7 @@ class TemplateLoaderTest extends TestCase
             ])
         ;
 
-        System::getContainer()->set('contao.twig.filesystem_loader', $templateHierarchy);
+        System::getContainer()->set('contao.twig.filesystem_loader', $filesystemLoader);
 
         $this->assertSame(
             [
