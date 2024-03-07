@@ -310,7 +310,8 @@ class ModulePassword extends Module
 	 */
 	protected function sendPasswordLink($objMember)
 	{
-		$optIn = System::getContainer()->get('contao.opt_in');
+		$container = System::getContainer();
+		$optIn = $container->get('contao.opt_in');
 		$optInToken = $optIn->create('pw', $objMember->email, array('tl_member'=>array($objMember->id)));
 
 		// Prepare the simple token data
@@ -319,11 +320,11 @@ class ModulePassword extends Module
 		$arrData['domain'] = Idna::decode(Environment::get('host'));
 		$arrData['link'] = Idna::decode(Environment::get('base')) . Environment::get('request') . ((strpos(Environment::get('request'), '?') !== false) ? '&' : '?') . 'token=' . $optInToken->getIdentifier();
 
+		$text = $container->get('contao.string.simple_token_parser')->parse($this->reg_password, $arrData);
+		$text = $container->get('contao.insert_tag.parser')->replaceInline($text);
+
 		// Send the token
-		$optInToken->send(
-			sprintf($GLOBALS['TL_LANG']['MSC']['passwordSubject'], Idna::decode(Environment::get('host'))),
-			System::getContainer()->get('contao.string.simple_token_parser')->parse($this->reg_password, $arrData)
-		);
+		$optInToken->send(sprintf($GLOBALS['TL_LANG']['MSC']['passwordSubject'], Idna::decode(Environment::get('host'))), $text);
 
 		System::getContainer()->get('monolog.logger.contao.access')->info('A new password has been requested for user ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ')');
 
