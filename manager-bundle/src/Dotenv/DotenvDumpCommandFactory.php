@@ -18,8 +18,10 @@ use Symfony\Component\Filesystem\Path;
 
 class DotenvDumpCommandFactory
 {
-    public function __construct(private readonly string $projectDir, private readonly string $environment)
-    {
+    public function __construct(
+        private readonly string $projectDir,
+        private readonly string $environment,
+    ) {
     }
 
     public function __invoke(): DotenvDumpCommand
