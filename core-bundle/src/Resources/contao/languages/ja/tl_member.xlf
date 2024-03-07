@@ -241,6 +241,10 @@
         <source>Login details</source>
         <target>ログインの詳細</target>
       </trans-unit>
+      <trans-unit id="tl_member.captchaDetails">
+        <source>Verification</source>
+        <target>照合</target>
+      </trans-unit>
       <trans-unit id="tl_member.new.0">
         <source>New</source>
         <target>新規作成</target>
