@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\ArticleModel;
+use Contao\ContentModel;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
@@ -33,24 +34,47 @@ class PreviewUrlCreateListener
      */
     public function __invoke(PreviewUrlCreateEvent $event): void
     {
-        if (!$this->framework->isInitialized() || (!$id = $event->getId()) || !\in_array($event->getKey(), ['page', 'article'], true)) {
+        if (!$this->framework->isInitialized()) {
             return;
         }
 
-        if ('article' === $event->getKey()) {
-            $adapter = $this->framework->getAdapter(ArticleModel::class);
+        $id = $event->getId();
 
-            if (!$article = $adapter->findByPk($id)) {
-                return;
-            }
-
-            $id = $article->pid;
+        if (!$id || !\in_array($event->getKey(), ['page', 'article', 'content'], true)) {
+            return;
         }
 
-        $adapter = $this->framework->getAdapter(PageModel::class);
+        switch ($event->getKey()) {
+            case 'content':
+                $adapter = $this->framework->getAdapter(ContentModel::class);
 
-        if ($adapter->findByPk($id)) {
-            $event->setQuery('page='.$id);
+                do {
+                    if (!$element = $adapter->findByPk($id)) {
+                        break;
+                    }
+
+                    $id = $element->pid;
+                } while ('tl_content' === $element->ptable);
+                // no break
+
+            case 'article':
+                $adapter = $this->framework->getAdapter(ArticleModel::class);
+
+                if (!$article = $adapter->findByPk($id)) {
+                    return;
+                }
+
+                $id = $article->pid;
+                // no break
+
+            default:
+                $adapter = $this->framework->getAdapter(PageModel::class);
+
+                if (!$adapter->findByPk($id)) {
+                    return;
+                }
+
+                $event->setQuery('page='.$id);
         }
     }
 }
