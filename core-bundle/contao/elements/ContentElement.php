@@ -259,7 +259,7 @@ abstract class ContentElement extends Frontend
 
 		if (!empty($this->objModel->classes) && \is_array($this->objModel->classes))
 		{
-			trigger_deprecation('contao/core-bundle', '5.0', 'Using $model->classes is deprecated, update the `cssID` property instead.');
+			trigger_deprecation('contao/core-bundle', '5.0', 'Using $model->classes is deprecated, update the "cssID" property instead.');
 
 			$this->Template->class .= ' ' . implode(' ', $this->objModel->classes);
 		}
