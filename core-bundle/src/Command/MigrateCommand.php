@@ -250,7 +250,7 @@ class MigrateCommand extends Command
 
     private function executeMigrations(bool &$dryRun, bool $asJson, string $specifiedHash = null): bool
     {
-        $loopControl = 9;
+        $loopControl = 19;
 
         while (true) {
             $first = true;
