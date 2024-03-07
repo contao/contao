@@ -593,6 +593,11 @@ abstract class Controller extends System
 		}
 		else
 		{
+			if ($contentElementReference?->attributes['classes'] ?? null)
+			{
+				$objRow->classes = $contentElementReference->attributes['classes'];
+			}
+
 			$objElement = new $strClass($objRow, $strColumn);
 		}
 
