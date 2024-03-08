@@ -20,9 +20,10 @@
 {% block read_more_component %}
     {% set read_more = read_more|default(_context) %}
 
-    {% set read_more_link_attributes = attrs(read_more_link_attributes|default)
+    {% set read_more_link_attributes = attrs()
         .set('href', read_more.href)
         .setIfExists('title', read_more.title|default)
+        .mergeWith(read_more_link_attributes|default)
     %}
     <a{% block read_more_link_attributes %}{{ read_more_link_attributes }}{% endblock %}>
         {%- block read_more_content %}{{ read_more.text|default('MSC.more'|trans) }}{% endblock -%}

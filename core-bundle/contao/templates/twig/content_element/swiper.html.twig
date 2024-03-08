@@ -1,21 +1,29 @@
 {% extends "@Contao/content_element/_base.html.twig" %}
 {% use "@Contao/component/_stylesheet.html.twig" %}
 
-{% set slider_attributes = attrs(slider_attributes|default)
-    .addClass('swiper')
-    .set('data-delay', delay)
-    .set('data-speed', speed)
-    .set('data-offset', offset)
-    .set('data-loop', loop)
-%}
-
 {% block content %}
+    {% set slider_attributes = attrs()
+        .addClass('swiper')
+        .set('data-delay', delay)
+        .set('data-speed', speed)
+        .set('data-offset', offset)
+        .set('data-loop', loop)
+        .mergeWith(slider_attributes|default)
+    %}
     <div{{ slider_attributes }}>
-        <div{{ attrs(slider_wrapper_attributes|default).addClass('swiper-wrapper') }}>
+        {% set slider_wrapper_attributes = attrs()
+            .addClass('swiper-wrapper')
+            .mergeWith(slider_wrapper_attributes|default)
+        %}
+        <div{{ slider_wrapper_attributes }}>
             {% block slides %}
                 {% for element in nested_fragments %}
                     {% block slide %}
-                        <div{{ attrs(slide_attributes|default).addClass('swiper-slide') }}>
+                        {% set slide_attributes = attrs()
+                            .addClass('swiper-slide')
+                            .mergeWith(slide_attributes|default)
+                        %}
+                        <div{{ slide_attributes }}>
                             {% block slide_inner %}
                                 {{ content_element(element) }}
                             {% endblock %}
@@ -25,17 +33,35 @@
             {% endblock %}
         </div>
         {% block controls %}
-            <button{{ attrs(button_prev_attributes|default).set('type', 'button').addClass('swiper-button-prev') }}></button>
-            <button{{ attrs(button_next_attributes|default).set('type', 'button').addClass('swiper-button-next') }}></button>
-            <div{{ attrs(pagination_attributes|default).addClass('swiper-pagination') }}></div>
+            {% set button_prev_attributes = attrs()
+                .set('type', 'button')
+                .addClass('swiper-button-prev')
+                .mergeWith(button_prev_attributes|default)
+            %}
+            <button{{ button_prev_attributes }}></button>
+            {% set button_next_attributes = attrs()
+                .set('type', 'button')
+                .addClass('swiper-button-next')
+                .mergeWith(button_next_attributes|default)
+            %}
+            <button{{ button_next_attributes }}></button>
+            {% set pagination_attributes = attrs()
+                .addClass('swiper-pagination')
+                .mergeWith(pagination_attributes|default)
+            %}
+            <div{{ pagination_attributes }}></div>
         {% endblock %}
     </div>
 {% endblock %}
 
 {% block script %}
     {% add "swiper_js" to body %}
+        {% set script_attributes = attrs()
+            .setIfExists('nonce', csp_nonce('script-src'))
+            .mergeWith(script_attributes|default)
+        %}
         <script src="{{ asset('js/swiper-bundle.min.js', 'contao-components/swiper') }}"></script>
-        <script{{ attrs(script_attributes|default).setIfExists('nonce', csp_nonce('script-src')) }}>
+        <script{{ script_attributes }}>
             (function() {
                 const swiper = document.querySelectorAll('.swiper');
                 swiper.forEach (el => {

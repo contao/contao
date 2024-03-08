@@ -94,7 +94,11 @@
     {% if randomize_order or add_pagination or limit_elements %}
         {% block list_script %}
             {% add "list_script" to body %}
-                <script{{ attrs(script_attributes|default).setIfExists('nonce', csp_nonce('script-src')) }}>
+                {% set script_attributes = attrs()
+                    .setIfExists('nonce', csp_nonce('script-src'))
+                    .mergeWith(script_attributes|default)
+                %}
+                <script{{ script_attributes }}>
                     {# Shuffle lists #}
                     document.querySelectorAll('*[data-list-random]').forEach(list => {
                         {# Shuffle order of children by appending them at a random position. #}

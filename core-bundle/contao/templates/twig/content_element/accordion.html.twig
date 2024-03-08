@@ -5,15 +5,33 @@
     {% for element in elements %}
         {% block element %}
             {% block element_header %}
-                <{{ element.header_tag }}{{ attrs(accordion_header_attributes|default).addClass('handorgel__header') }}>
-                    <button{{ attrs(accordion_header_button_attributes|default).addClass('handorgel__header__button').set('type', 'button') }}>
+                {% set accordion_header_attributes = attrs()
+                    .addClass('handorgel__header')
+                    .mergeWith(accordion_header_attributes|default)
+                %}
+                <{{ element.header_tag }}{{ accordion_header_attributes }}>
+                    {% set accordion_header_button_attributes = attrs()
+                        .addClass('handorgel__header__button')
+                        .set('type', 'button')
+                        .mergeWith(accordion_header_button_attributes|default)
+                    %}
+                    <button{{ accordion_header_button_attributes }}>
                         {{- element.header -}}
                     </button>
                 </{{ element.header_tag }}>
             {% endblock %}
             {% block element_content %}
-                <div{{ attrs(accordion_content_attributes|default).addClass('handorgel__content').set('data-open', element.is_open) }}>
-                    <div{{ attrs(accordion_content_inner_attributes|default).addClass('handorgel__content__inner') }}>
+                {% set accordion_content_attributes = attrs()
+                    .addClass('handorgel__content')
+                    .set('data-open', element.is_open)
+                    .mergeWith(accordion_content_attributes|default)
+                %}
+                <div{{ accordion_content_attributes }}>
+                    {% set accordion_content_inner_attributes = attrs()
+                        .addClass('handorgel__content__inner')
+                        .mergeWith(accordion_content_inner_attributes|default)
+                    %}
+                    <div{{ accordion_content_inner_attributes }}>
                         {{ content_element(element.reference) }}
                     </div>
                 </div>
@@ -24,8 +42,12 @@
 
 {% block script %}
     {% add "handorgel_js" to body %}
+        {% set script_attributes = attrs()
+            .setIfExists('nonce', csp_nonce('script-src'))
+            .mergeWith(script_attributes|default)
+        %}
         <script src="{{ asset('js/handorgel.min.js', 'contao-components/handorgel') }}"></script>
-        <script{{ attrs(script_attributes|default).setIfExists('nonce', csp_nonce('script-src')) }}>
+        <script{{ script_attributes }}>
             (function () {
                 document.querySelectorAll('.content-accordion').forEach(el => {
                     new handorgel(el, {
