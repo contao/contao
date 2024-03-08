@@ -2,6 +2,40 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.1] (2024-03-08)
+
+**New features:**
+
+- [#6954] Register the `dotenv:dump` command by default in the Contao managed edition ([Toflar])
+
+**Fixed issues:**
+
+- [#6982] Cache `Image::getHtml()` to speed up the tree view ([Toflar])
+- [#6963] Fix the newsfeed migration ([aschempp])
+- [#6916] Use `Model::findById()` instead of `Model::findByPk()` ([leofeyer])
+- [#6960] Show the route configuration in the news feed page ([aschempp])
+- [#6969] Fix the `dotenv:dump` command ([aschempp])
+- [#6979] Allow using insert tags in image `alt` and `title` attributes ([leofeyer])
+- [#6975] Deprecate inheriting CSS classes in nested elements ([aschempp])
+- [#6978] Use `UrlUtil::makeAbsolute()` when converting relative URLs ([leofeyer])
+- [#6961] Fix a type error in the login module ([aschempp])
+- [#6956] Use `attrs().mergeWith()` in Twig templates ([leofeyer])
+- [#6962] Make sure the `.env.local.php` is loaded correctly ([Toflar])
+- [#6953] Fix double inheritance of legacy templates in Twig ([ausi])
+- [#6950] Correctly register the `AutoRefreshTemplateHierarchyListener` ([m-vo])
+- [#6951] Fix that the guests migration only migrates one field at a time ([aschempp])
+- [#6943] Correctly generate the URLs to subscribe to comments ([leofeyer])
+- [#6946] Improve the performance of the database dumper ([Toflar])
+- [#6944] Correctly check if a "jump to" page is set when generating event feeds ([leofeyer])
+- [#6919] Make full authentication optional in the personal data module ([leofeyer])
+- [#6941] Handle unicode strings in insert tag flags ([ausi])
+- [#6938] Add a button to the "invalid request token" template ([leofeyer])
+- [#6939] Correctly implement the `ImageFactoryInterface` ([leofeyer])
+- [#6936] Fix the Twig loader infrastructure ([m-vo])
+- [#6927] Use files instead of `data:` resources to avoid breaking CSP ([leofeyer])
+- [#6925] Only make string URL absolute if it does not have a scheme ([aschempp])
+- [#6917] Fix two CSS issues ([leofeyer])
+
 ## [5.3.0] (2024-02-16)
 
 **Fixed issues:**
@@ -184,6 +218,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.1]: https://github.com/contao/contao/releases/tag/5.3.1
 [5.3.0]: https://github.com/contao/contao/releases/tag/5.3.0
 [5.3.0-RC4]: https://github.com/contao/contao/releases/tag/5.3.0-RC4
 [5.3.0-RC3]: https://github.com/contao/contao/releases/tag/5.3.0-RC3
@@ -343,3 +378,29 @@ This project adheres to [Semantic Versioning].
 [#6895]: https://github.com/contao/contao/pull/6895
 [#6898]: https://github.com/contao/contao/pull/6898
 [#6900]: https://github.com/contao/contao/pull/6900
+[#6916]: https://github.com/contao/contao/pull/6916
+[#6917]: https://github.com/contao/contao/pull/6917
+[#6919]: https://github.com/contao/contao/pull/6919
+[#6925]: https://github.com/contao/contao/pull/6925
+[#6927]: https://github.com/contao/contao/pull/6927
+[#6936]: https://github.com/contao/contao/pull/6936
+[#6938]: https://github.com/contao/contao/pull/6938
+[#6939]: https://github.com/contao/contao/pull/6939
+[#6941]: https://github.com/contao/contao/pull/6941
+[#6943]: https://github.com/contao/contao/pull/6943
+[#6944]: https://github.com/contao/contao/pull/6944
+[#6946]: https://github.com/contao/contao/pull/6946
+[#6950]: https://github.com/contao/contao/pull/6950
+[#6951]: https://github.com/contao/contao/pull/6951
+[#6953]: https://github.com/contao/contao/pull/6953
+[#6954]: https://github.com/contao/contao/pull/6954
+[#6956]: https://github.com/contao/contao/pull/6956
+[#6960]: https://github.com/contao/contao/pull/6960
+[#6961]: https://github.com/contao/contao/pull/6961
+[#6962]: https://github.com/contao/contao/pull/6962
+[#6963]: https://github.com/contao/contao/pull/6963
+[#6969]: https://github.com/contao/contao/pull/6969
+[#6975]: https://github.com/contao/contao/pull/6975
+[#6978]: https://github.com/contao/contao/pull/6978
+[#6979]: https://github.com/contao/contao/pull/6979
+[#6982]: https://github.com/contao/contao/pull/6982

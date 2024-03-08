@@ -177,6 +177,14 @@
         <source>Show these fields in the front end form.</source>
         <target>Diese Felder im Frontend-Formular anzeigen.</target>
       </trans-unit>
+      <trans-unit id="tl_module.reqFullAuth.0">
+        <source>Require full authentication</source>
+        <target>Vollständige Authentifizierung erforderlich</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reqFullAuth.1">
+        <source>Users with only a &quot;remember me&quot; cookie must verify their identity in order to access the module.</source>
+        <target>Nutzer, die nur ein &quot;Remember me&quot;-Cookie haben, müssen ihre Identität bestätigen, um auf das Modul zugreifen zu können.</target>
+      </trans-unit>
       <trans-unit id="tl_module.memberTpl.0">
         <source>Form template</source>
         <target>Formular-Template</target>

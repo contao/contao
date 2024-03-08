@@ -95,6 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.canonicalLink.1">
         <source>Here you can set a custom canonical URL like https://example.com/.</source>
+        <target>Šeit varat iestatīt pielāgotu kanonisko URL, piemēram, https://example.com/.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.location.0">
         <source>Location name</source>
@@ -390,9 +391,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.toggle.1">
         <source>Unpublish event ID %s</source>
+        <target>Slēpt notikumu ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.toggle.2">
         <source>Publish event ID %s</source>
+        <target>Publicēt notikumu ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature.0">
         <source>Feature/unfeature event ID %s</source>
@@ -400,9 +403,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature.1">
         <source>Unfeature event ID %s</source>
+        <target>Neiezīmēt notikumu ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature.2">
         <source>Feature event ID %s</source>
+        <target>Iezīmēt notikumu ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>

@@ -71,6 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_news.canonicalLink.1">
         <source>Here you can set a custom canonical URL like https://example.com/.</source>
+        <target>Šeit varat iestatīt pielāgotu kanonisko URL, piemēram, https://example.com/.</target>
       </trans-unit>
       <trans-unit id="tl_news.subheadline.0">
         <source>Subheadline</source>
@@ -306,12 +307,15 @@
       </trans-unit>
       <trans-unit id="tl_news.toggle.0">
         <source>Publish/unpublish news item</source>
+        <target>Publicēt/nepublicēt jaunumu vienumu</target>
       </trans-unit>
       <trans-unit id="tl_news.toggle.1">
         <source>Unpublish news item ID %s</source>
+        <target>Nepublicēt jaunumu vienumu ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.toggle.2">
         <source>Publish news item ID %s</source>
+        <target>Publicēt jaunumu vienumu ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.feature.0">
         <source>Feature/unfeature news item ID %s</source>
@@ -319,9 +323,11 @@
       </trans-unit>
       <trans-unit id="tl_news.feature.1">
         <source>Unfeature news item ID %s</source>
+        <target>Neiezīmēt jaunumu vienumu ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.feature.2">
         <source>Feature news item ID %s</source>
+        <target>Iezīmēt jaunumu vienumu ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
