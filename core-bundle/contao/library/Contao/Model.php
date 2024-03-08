@@ -866,14 +866,9 @@ abstract class Model
 	 * @param array           $arrOptions An optional options array
 	 *
 	 * @return static|null The model or null if the result is empty
-	 *
-	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
-	 *             use findById() instead.
 	 */
 	public static function findByPk($varValue, array $arrOptions=array())
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using %s() has been deprecated and will no longer work in Contao 6. Use %s::findById() instead.', __METHOD__, __CLASS__);
-
 		// Try to load from the registry
 		if (empty($arrOptions))
 		{
