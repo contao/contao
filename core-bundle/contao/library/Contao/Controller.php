@@ -602,7 +602,7 @@ abstract class Controller extends System
 					$objRow = $objRow->cloneOriginal();
 				}
 
-				$objRow->classes = array_merge($objRow->classes ?? [], $contentElementReference->attributes['classes']);
+				$objRow->classes = array_merge($objRow->classes ?? array(), $contentElementReference->attributes['classes']);
 			}
 
 			$objElement = new $strClass($objRow, $strColumn);
