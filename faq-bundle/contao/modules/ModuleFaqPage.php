@@ -117,14 +117,14 @@ class ModuleFaqPage extends Module
 
 			$strAuthor = '';
 
-			if ($objAuthor = UserModel::findByPk($objFaq->author))
+			if ($objAuthor = UserModel::findById($objFaq->author))
 			{
 				$strAuthor = $objAuthor->name;
 			}
 
 			$objTemp->info = sprintf($GLOBALS['TL_LANG']['MSC']['faqCreatedBy'], Date::parse($objPage->dateFormat, $objFaq->tstamp), $strAuthor);
 
-			if (($objPid = FaqCategoryModel::findByPk($objFaq->pid)) && empty($arrFaqs[$objFaq->pid]))
+			if (($objPid = FaqCategoryModel::findById($objFaq->pid)) && empty($arrFaqs[$objFaq->pid]))
 			{
 				$arrFaqs[$objFaq->pid] = $objPid->row();
 			}

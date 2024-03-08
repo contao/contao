@@ -142,10 +142,10 @@ class ContentCompositionListenerTest extends TestCase
             'modules' => serialize([['mod' => 17, 'col' => 'main']]),
         ]);
 
-        $layoutAdapter = $this->mockAdapter(['findByPk']);
+        $layoutAdapter = $this->mockAdapter(['findById']);
         $layoutAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->willReturn($layout)
         ;
 
@@ -190,10 +190,10 @@ class ContentCompositionListenerTest extends TestCase
             'modules' => serialize([['mod' => 0, 'col' => 'main']]),
         ]);
 
-        $layoutAdapter = $this->mockAdapter(['findByPk']);
+        $layoutAdapter = $this->mockAdapter(['findById']);
         $layoutAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->willReturn($layout)
         ;
 
@@ -232,10 +232,10 @@ class ContentCompositionListenerTest extends TestCase
 
         $page = $this->mockPageWithRow();
 
-        $layoutAdapter = $this->mockAdapter(['findByPk']);
+        $layoutAdapter = $this->mockAdapter(['findById']);
         $layoutAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->willReturn(null)
         ;
 
@@ -479,10 +479,10 @@ class ContentCompositionListenerTest extends TestCase
             'modules' => serialize([['mod' => 17, 'col' => 'main']]),
         ]);
 
-        $layoutAdapter = $this->mockAdapter(['findByPk']);
+        $layoutAdapter = $this->mockAdapter(['findById']);
         $layoutAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->willReturn($layout)
         ;
 
@@ -522,10 +522,10 @@ class ContentCompositionListenerTest extends TestCase
             'modules' => serialize([['mod' => 0, 'col' => 'main']]),
         ]);
 
-        $layoutAdapter = $this->mockAdapter(['findByPk']);
+        $layoutAdapter = $this->mockAdapter(['findById']);
         $layoutAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->willReturn($layout)
         ;
 
@@ -565,10 +565,10 @@ class ContentCompositionListenerTest extends TestCase
             'modules' => serialize([['mod' => 0, 'col' => 'main']]),
         ]);
 
-        $layoutAdapter = $this->mockAdapter(['findByPk']);
+        $layoutAdapter = $this->mockAdapter(['findById']);
         $layoutAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->willReturn($layout)
         ;
 
@@ -608,10 +608,10 @@ class ContentCompositionListenerTest extends TestCase
             'modules' => serialize([['mod' => 0, 'col' => 'main']]),
         ]);
 
-        $layoutAdapter = $this->mockAdapter(['findByPk']);
+        $layoutAdapter = $this->mockAdapter(['findById']);
         $layoutAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->willReturn($layout)
         ;
 
@@ -661,10 +661,10 @@ class ContentCompositionListenerTest extends TestCase
             'modules' => serialize([['mod' => 0, 'col' => 'main']]),
         ]);
 
-        $layoutAdapter = $this->mockAdapter(['findByPk']);
+        $layoutAdapter = $this->mockAdapter(['findById']);
         $layoutAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->willReturn($layout)
         ;
 
@@ -716,10 +716,10 @@ class ContentCompositionListenerTest extends TestCase
             'modules' => serialize([['mod' => 0, 'col' => 'main']]),
         ]);
 
-        $layoutAdapter = $this->mockAdapter(['findByPk']);
+        $layoutAdapter = $this->mockAdapter(['findById']);
         $layoutAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->willReturn($layout)
         ;
 
@@ -787,10 +787,10 @@ class ContentCompositionListenerTest extends TestCase
 
         $layout = $this->mockClassWithProperties(LayoutModel::class, ['modules' => serialize($modules)]);
 
-        $layoutAdapter = $this->mockAdapter(['findByPk']);
+        $layoutAdapter = $this->mockAdapter(['findById']);
         $layoutAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->willReturn($layout)
         ;
 
@@ -959,7 +959,7 @@ class ContentCompositionListenerTest extends TestCase
 
     private function getListener(ContaoFramework|null $framework = null): ContentCompositionListener
     {
-        $framework ??= $this->mockContaoFramework([PageModel::class => $this->mockAdapter(['findByPk'])]);
+        $framework ??= $this->mockContaoFramework([PageModel::class => $this->mockAdapter(['findById'])]);
 
         return new ContentCompositionListener($framework, $this->security, $this->pageRegistry, $this->connection, $this->requestStack);
     }

@@ -6,9 +6,10 @@
 
 {# Wrapper attributes: add the user defined ID/classes and also add the
    template name (e.g. "content_element/text") as a class #}
-{% set attributes = attrs(attributes|default)
+{% set attributes = attrs()
     .setIfExists('id', element_html_id)
     .addClass([element_css_classes, "content-#{type|replace({'_': '-'})}"])
+    .mergeWith(attributes|default)
 %}
 
 {% block wrapper %}

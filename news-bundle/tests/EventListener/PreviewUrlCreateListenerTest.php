@@ -33,7 +33,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
         $newsModel->id = 1;
 
         $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findByPk' => $newsModel]),
+            NewsModel::class => $this->mockConfiguredAdapter(['findById' => $newsModel]),
         ];
 
         $framework = $this->mockContaoFramework($adapters);
@@ -101,7 +101,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
         $newsModel->id = 2;
 
         $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findByPk' => $newsModel]),
+            NewsModel::class => $this->mockConfiguredAdapter(['findById' => $newsModel]),
         ];
 
         $framework = $this->mockContaoFramework($adapters);
@@ -119,7 +119,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
         $requestStack->push(new Request());
 
         $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findByPk' => null]),
+            NewsModel::class => $this->mockConfiguredAdapter(['findById' => null]),
         ];
 
         $framework = $this->mockContaoFramework($adapters);

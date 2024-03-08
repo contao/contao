@@ -60,7 +60,7 @@ class RouteProvider extends AbstractPageRouteProvider
         }
 
         $pageModel = $this->framework->getAdapter(PageModel::class);
-        $page = $pageModel->findByPk($ids[0]);
+        $page = $pageModel->findById($ids[0]);
 
         if (!$page || !$this->pageRegistry->isRoutable($page)) {
             throw new RouteNotFoundException(sprintf('Page ID "%s" not found', $ids[0]));

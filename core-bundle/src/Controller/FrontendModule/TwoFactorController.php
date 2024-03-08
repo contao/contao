@@ -64,7 +64,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY', null, 'Full authentication is required to configure the two-factor authentication.');
 
         $adapter = $this->getContaoAdapter(PageModel::class);
-        $redirectPage = $model->jumpTo > 0 ? $adapter->findByPk($model->jumpTo) : null;
+        $redirectPage = $model->jumpTo > 0 ? $adapter->findById($model->jumpTo) : null;
         $return = $this->generateContentUrl($redirectPage instanceof PageModel ? $redirectPage : $pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL);
 
         $template->enforceTwoFactor = $pageModel->enforceTwoFactor;

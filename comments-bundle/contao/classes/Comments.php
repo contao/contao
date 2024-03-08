@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Util\UrlUtil;
 use Nyholm\Psr7\Uri;
 
 /**
@@ -110,7 +111,7 @@ class Comments extends Frontend
 				$objPartial->addReply = false;
 
 				// Reply
-				if ($objComments->addReply && $objComments->reply && ($objAuthor = UserModel::findByPk($objComments->author)))
+				if ($objComments->addReply && $objComments->reply && ($objAuthor = UserModel::findById($objComments->author)))
 				{
 					$objPartial->addReply = true;
 					$objPartial->rby = $GLOBALS['TL_LANG']['MSC']['com_reply'];
@@ -564,7 +565,7 @@ class Comments extends Frontend
 		$objNotify = new CommentsNotifyModel();
 		$objNotify->setRow($arrSet)->save();
 
-		$strUrl = Idna::decode(Environment::get('base')) . $request;
+		$strUrl = UrlUtil::makeAbsolute($request, Idna::decode(Environment::get('base')));
 		$strConnector = (str_contains($strUrl, '?')) ? '&' : '?';
 
 		$optIn = System::getContainer()->get('contao.opt_in');
@@ -586,7 +587,7 @@ class Comments extends Frontend
 			$optIn = System::getContainer()->get('contao.opt_in');
 
 			// Find an unconfirmed token with only one related record
-			if ((!$optInToken = $optIn->find(Input::get('token'))) || !$optInToken->isValid() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_comments_notify' || \count($arrIds = current($arrRelated)) != 1 || (!$objNotify = CommentsNotifyModel::findByPk($arrIds[0])))
+			if ((!$optInToken = $optIn->find(Input::get('token'))) || !$optInToken->isValid() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_comments_notify' || \count($arrIds = current($arrRelated)) != 1 || (!$objNotify = CommentsNotifyModel::findById($arrIds[0])))
 			{
 				$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['invalidToken'];
 
@@ -649,6 +650,7 @@ class Comments extends Frontend
 		{
 			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 			$isFrontend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request);
+			$baseUrl = Idna::decode(Environment::get('base'));
 
 			while ($objNotify->next())
 			{
@@ -666,7 +668,7 @@ class Comments extends Frontend
 				}
 
 				// Prepare the URL
-				$strUrl = Idna::decode(Environment::get('base')) . $objNotify->url;
+				$strUrl = UrlUtil::makeAbsolute($objNotify->url, $baseUrl);
 
 				$objEmail = new Email();
 				$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'] ?? null;

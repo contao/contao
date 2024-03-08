@@ -555,7 +555,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                     $strFile = $objFile->path;
                 } elseif (is_numeric($strFile)) {
                     // Handle numeric IDs (see #4805)
-                    if (!$objFile = FilesModel::findByPk($strFile)) {
+                    if (!$objFile = FilesModel::findById($strFile)) {
                         break;
                     }
 

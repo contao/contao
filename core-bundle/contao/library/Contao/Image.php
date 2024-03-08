@@ -58,6 +58,8 @@ class Image
 		'visible_',
 	);
 
+	private static array $htmlTemplateCache = array();
+
 	/**
 	 * Get the relative path to an image
 	 *
@@ -152,11 +154,45 @@ class Image
 	 */
 	public static function getHtml($src, $alt='', $attributes='')
 	{
+		$template = self::getHtmlTemplate($src);
+
+		$search = array('{alt}', '{attributes}');
+		$replace = array(StringUtil::specialchars($alt), $attributes ? ' ' . $attributes : '');
+
+		if (str_contains($template, '{darkAttributes}'))
+		{
+			$search[] = '{darkAttributes}';
+			$replace[] = (new HtmlAttributes($attributes))->mergeWith(array('class' => 'color-scheme--dark', 'loading' => 'lazy'))->toString();
+		}
+
+		if (str_contains($template, '{lightAttributes}'))
+		{
+			$search[] = '{lightAttributes}';
+			$replace[] = (new HtmlAttributes($attributes))->mergeWith(array('class' => 'color-scheme--light', 'loading' => 'lazy'))->toString();
+		}
+
+		return str_replace($search, $replace, $template);
+	}
+
+	private static function getHtmlTemplate($src): string
+	{
+		if (!$src)
+		{
+			return '';
+		}
+
+		$cacheKey = $src;
+
+		if (isset(self::$htmlTemplateCache[$cacheKey]))
+		{
+			return self::$htmlTemplateCache[$cacheKey];
+		}
+
 		$src = static::getPath($src);
 
 		if (!$src)
 		{
-			return '';
+			return self::$htmlTemplateCache[$cacheKey] = '';
 		}
 
 		$container = System::getContainer();
@@ -181,7 +217,7 @@ class Image
 			}
 			elseif (!$deferredImage instanceof DeferredImageInterface)
 			{
-				return '';
+				return self::$htmlTemplateCache[$cacheKey] = '';
 			}
 		}
 
@@ -204,24 +240,9 @@ class Image
 				$darkSrc = substr($darkSrc, \strlen($webDir) + 1);
 			}
 
-			$darkAttributes = new HtmlAttributes($attributes);
-			$darkAttributes->mergeWith(array('class' => 'color-scheme--dark', 'loading' => 'lazy'));
-
-			foreach (array('data-icon', 'data-icon-disabled') as $icon)
-			{
-				if (isset($darkAttributes[$icon]))
-				{
-					$pathinfo = pathinfo($darkAttributes[$icon]);
-					$darkAttributes[$icon] = $pathinfo['filename'] . '--dark.' . $pathinfo['extension'];
-				}
-			}
-
-			$lightAttributes = new HtmlAttributes($attributes);
-			$lightAttributes->mergeWith(array('class' => 'color-scheme--light', 'loading' => 'lazy'));
-
-			return '<img src="' . self::getUrl($darkSrc) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '"' . $darkAttributes . '><img src="' . self::getUrl($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '"' . $lightAttributes . '>';
+			return self::$htmlTemplateCache[$cacheKey] = '<img src="' . self::getUrl($darkSrc) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="{alt}"{darkAttributes}><img src="' . self::getUrl($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="{alt}"{lightAttributes}>';
 		}
 
-		return '<img src="' . self::getUrl($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '"' . ($attributes ? ' ' . $attributes : '') . '>';
+		return self::$htmlTemplateCache[$cacheKey] = '<img src="' . self::getUrl($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="{alt}"{attributes}>';
 	}
 }

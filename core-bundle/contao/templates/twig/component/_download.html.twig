@@ -41,7 +41,9 @@
         {% set download_link_attributes = attrs(download.link_attributes|default)
             .set('href', download.href)
             .set('title','MSC.download'|trans([title]))
-            .setIfExists('type', download.file.mimeType('')) %}
+            .setIfExists('type', download.file.mimeType(''))
+            .mergeWith(download_link_attributes|default)
+        %}
         <a{% block download_link_attributes %}{{ download_link_attributes }}{% endblock %}>
             {%- block download_link_inner %}{{ text }}{% endblock -%}
         </a>

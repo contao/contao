@@ -54,6 +54,6 @@ class PreviewUrlConvertListener
             return null;
         }
 
-        return $this->framework->getAdapter(CalendarEventsModel::class)->findByPk($request->query->get('calendar'));
+        return $this->framework->getAdapter(CalendarEventsModel::class)->findById($request->query->get('calendar'));
     }
 }

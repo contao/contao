@@ -1157,6 +1157,7 @@ services:
             - '@cache.system'
             - '@contao.twig.loader.template_locator'
             - '@contao.twig.loader.theme_namespace'
+            - '@contao.framework'
             - '%kernel.project_dir%'
         tags:
             - { name: twig.loader, priority: 2 }
@@ -1165,8 +1166,6 @@ services:
         class: Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer
         arguments:
             - '@contao.twig.filesystem_loader'
-            - '@contao.twig.loader.template_locator'
-            - '%kernel.project_dir%'
             - '%kernel.cache_dir%'
             - '%kernel.environment%'
 

@@ -95,7 +95,7 @@ class ModuleChangePassword extends Module
 		$strFields = '';
 		$doNotSubmit = false;
 		$user = FrontendUser::getInstance();
-		$objMember = MemberModel::findByPk($user->id);
+		$objMember = MemberModel::findById($user->id);
 		$strFormId = 'tl_change_password_' . $this->id;
 		$strTable = $objMember->getTable();
 		$session = System::getContainer()->get('request_stack')->getSession();
@@ -187,7 +187,7 @@ class ModuleChangePassword extends Module
 			$user->findBy('id', $objMember->id);
 
 			// Check whether there is a jumpTo page
-			if ($objJumpTo = PageModel::findByPk($this->objModel->jumpTo))
+			if ($objJumpTo = PageModel::findById($this->objModel->jumpTo))
 			{
 				$this->jumpToOrReload($objJumpTo->row());
 			}

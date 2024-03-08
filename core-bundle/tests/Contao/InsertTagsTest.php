@@ -121,16 +121,16 @@ class InsertTagsTest extends TestCase
         $insertTagParser->addFlagCallback('standardize', new StringUtilFlag(), 'standardize');
         $insertTagParser->addFlagCallback('ampersand', new StringUtilFlag(), 'ampersand');
         $insertTagParser->addFlagCallback('specialchars', new StringUtilFlag(), 'specialchars');
-        $insertTagParser->addFlagCallback('utf8_strtolower', new StringUtilFlag(), 'utf8Strtolower');
-        $insertTagParser->addFlagCallback('utf8_strtoupper', new StringUtilFlag(), 'utf8Strtoupper');
+        $insertTagParser->addFlagCallback('utf8_strtolower', new StringUtilFlag(), 'strtolower');
+        $insertTagParser->addFlagCallback('utf8_strtoupper', new StringUtilFlag(), 'strtoupper');
         $insertTagParser->addFlagCallback('utf8_romanize', new StringUtilFlag(), 'utf8Romanize');
         $insertTagParser->addFlagCallback('nl2br', new StringUtilFlag(), 'nl2Br');
         $insertTagParser->addFlagCallback('addslashes', new PhpFunctionFlag(), '__invoke');
-        $insertTagParser->addFlagCallback('strtolower', new PhpFunctionFlag(), '__invoke');
-        $insertTagParser->addFlagCallback('strtoupper', new PhpFunctionFlag(), '__invoke');
-        $insertTagParser->addFlagCallback('ucfirst', new PhpFunctionFlag(), '__invoke');
-        $insertTagParser->addFlagCallback('lcfirst', new PhpFunctionFlag(), '__invoke');
-        $insertTagParser->addFlagCallback('ucwords', new PhpFunctionFlag(), '__invoke');
+        $insertTagParser->addFlagCallback('strtolower', new StringUtilFlag(), 'strtolower');
+        $insertTagParser->addFlagCallback('strtoupper', new StringUtilFlag(), 'strtoupper');
+        $insertTagParser->addFlagCallback('ucfirst', new StringUtilFlag(), 'ucfirst');
+        $insertTagParser->addFlagCallback('lcfirst', new StringUtilFlag(), 'lcfirst');
+        $insertTagParser->addFlagCallback('ucwords', new StringUtilFlag(), 'ucwords');
         $insertTagParser->addFlagCallback('trim', new PhpFunctionFlag(), '__invoke');
         $insertTagParser->addFlagCallback('rtrim', new PhpFunctionFlag(), '__invoke');
         $insertTagParser->addFlagCallback('ltrim', new PhpFunctionFlag(), '__invoke');
@@ -284,6 +284,31 @@ class InsertTagsTest extends TestCase
         yield 'Flag rawurlencode' => [
             '{{plain::foo & bar|rawurlencode}}',
             'foo%20%26%20bar',
+        ];
+
+        yield 'Flag strtoupper utf-8' => [
+            '{{plain::österreich|strtoupper}}',
+            'ÖSTERREICH',
+        ];
+
+        yield 'Flag strtolower utf-8' => [
+            '{{plain::ÖSTERREICH|strtolower}}',
+            'österreich',
+        ];
+
+        yield 'Flag ucfirst utf-8' => [
+            '{{plain::österreich|ucfirst}}',
+            'Österreich',
+        ];
+
+        yield 'Flag lcfirst utf-8' => [
+            '{{plain::ÖSTERREICH|lcfirst}}',
+            'öSTERREICH',
+        ];
+
+        yield 'Flag ucwords utf-8' => [
+            "{{plain::deutschland österreich\nschweiz-züriCH|ucwords}}",
+            "Deutschland Österreich\nSchweiz-züriCH",
         ];
     }
 

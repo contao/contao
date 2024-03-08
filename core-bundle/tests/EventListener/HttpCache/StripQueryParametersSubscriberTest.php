@@ -17,6 +17,7 @@ use FOS\HttpCache\SymfonyCache\CacheEvent;
 use FOS\HttpCache\SymfonyCache\CacheInvalidation;
 use FOS\HttpCache\SymfonyCache\Events;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Request;
 
 class StripQueryParametersSubscriberTest extends TestCase
@@ -41,6 +42,7 @@ class StripQueryParametersSubscriberTest extends TestCase
         $subscriber->preHandle($event);
 
         $this->assertSame($expectedParameters, $request->query->all());
+        $this->assertSame(array_map('strval', $expectedParameters), HeaderUtils::parseQuery($request->server->get('QUERY_STRING')));
     }
 
     public function queryParametersProvider(): \Generator

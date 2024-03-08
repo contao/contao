@@ -18,11 +18,6 @@ use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\OutputType;
 
 #[AsInsertTagFlag('addslashes')]
-#[AsInsertTagFlag('strtolower')]
-#[AsInsertTagFlag('strtoupper')]
-#[AsInsertTagFlag('ucfirst')]
-#[AsInsertTagFlag('lcfirst')]
-#[AsInsertTagFlag('ucwords')]
 #[AsInsertTagFlag('trim')]
 #[AsInsertTagFlag('rtrim')]
 #[AsInsertTagFlag('ltrim')]

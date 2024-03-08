@@ -320,7 +320,7 @@ class tl_faq extends Backend
 		// Generate alias if there is none
 		if (!$varValue)
 		{
-			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->question, FaqCategoryModel::findByPk($dc->activeRecord->pid)->jumpTo, $aliasExists);
+			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->question, FaqCategoryModel::findById($dc->activeRecord->pid)->jumpTo, $aliasExists);
 		}
 		elseif (preg_match('/^[1-9]\d*$/', $varValue))
 		{

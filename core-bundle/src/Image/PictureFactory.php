@@ -153,7 +153,7 @@ class PictureFactory implements PictureFactoryInterface
             // Database record
             if (is_numeric($size[2])) {
                 $imageSizeModel = $this->framework->getAdapter(ImageSizeModel::class);
-                $imageSizes = $imageSizeModel->findByPk($size[2]);
+                $imageSizes = $imageSizeModel->findById($size[2]);
 
                 $config->setSize($this->createConfigItem($imageSizes?->row()));
 

@@ -40,7 +40,7 @@ class Calendar extends Frontend
 	 */
 	public function generateFeed($intId)
 	{
-		$objCalendar = CalendarFeedModel::findByPk($intId);
+		$objCalendar = CalendarFeedModel::findById($intId);
 
 		if ($objCalendar === null)
 		{
@@ -158,7 +158,7 @@ class Calendar extends Frontend
 				}
 
 				// No jumpTo page set (see #4784)
-				if (!$jumpTo = PageModel::findByPk($objArticle->pid)->jumpTo)
+				if (!$jumpTo = CalendarModel::findById($objArticle->pid)?->jumpTo)
 				{
 					continue;
 				}
@@ -231,7 +231,7 @@ class Calendar extends Frontend
 					}
 
 					// Override the global page object (#2946)
-					$GLOBALS['objPage'] = $this->getPageWithDetails(CalendarModel::findByPk($event['pid'])->jumpTo);
+					$GLOBALS['objPage'] = $this->getPageWithDetails(CalendarModel::findById($event['pid'])->jumpTo);
 
 					// Override the assets and files context (#6563)
 					$GLOBALS['objPage']->staticFiles = rtrim($GLOBALS['objPage']->staticFiles ?: $strLink, '/');
@@ -254,7 +254,7 @@ class Calendar extends Frontend
 						$objItem->guid = $event['link'] . '#' . date('Y-m-d', $event['startTime']);
 					}
 
-					if ($objAuthor = UserModel::findByPk($event['author']))
+					if ($objAuthor = UserModel::findById($event['author']))
 					{
 						$objItem->author = $objAuthor->name;
 					}
@@ -512,12 +512,12 @@ class Calendar extends Frontend
 				return null;
 			}
 
-			if (!$objLayout = LayoutModel::findByPk($objPage->layout))
+			if (!$objLayout = LayoutModel::findById($objPage->layout))
 			{
 				return $objPage;
 			}
 
-			if (!$objTheme = ThemeModel::findByPk($objLayout->pid))
+			if (!$objTheme = ThemeModel::findById($objLayout->pid))
 			{
 				return $objPage;
 			}

@@ -333,7 +333,7 @@ class ModuleRegistration extends Module
 		$this->Template->addressDetails = $GLOBALS['TL_LANG']['tl_member']['addressDetails'];
 		$this->Template->contactDetails = $GLOBALS['TL_LANG']['tl_member']['contactDetails'];
 		$this->Template->personalDetails = $GLOBALS['TL_LANG']['tl_member']['personalDetails'];
-		$this->Template->captchaDetails = $GLOBALS['TL_LANG']['MSC']['securityQuestion'];
+		$this->Template->captchaDetails = $GLOBALS['TL_LANG']['tl_member']['captchaDetails'];
 
 		// Add the groups
 		foreach ($arrFields as $k=>$v)
@@ -430,7 +430,7 @@ class ModuleRegistration extends Module
 		}
 
 		// Check whether there is a jumpTo page
-		if ($objJumpTo = PageModel::findByPk($this->objModel->jumpTo))
+		if ($objJumpTo = PageModel::findById($this->objModel->jumpTo))
 		{
 			$this->jumpToOrReload($objJumpTo->row());
 		}
@@ -456,7 +456,7 @@ class ModuleRegistration extends Module
 		$arrTokenData['link'] = Idna::decode(Environment::get('url')) . Environment::get('requestUri') . (str_contains(Environment::get('requestUri'), '?') ? '&' : '?') . 'token=' . $optInToken->getIdentifier();
 
 		$event = new MemberActivationMailEvent(
-			MemberModel::findByPk($arrData['id']),
+			MemberModel::findById($arrData['id']),
 			$optInToken,
 			sprintf($GLOBALS['TL_LANG']['MSC']['emailSubject'], Idna::decode(Environment::get('host'))),
 			$this->reg_text,
@@ -484,7 +484,7 @@ class ModuleRegistration extends Module
 		$optIn = System::getContainer()->get('contao.opt_in');
 
 		// Find an unconfirmed token with only one related record
-		if ((!$optInToken = $optIn->find(Input::get('token'))) || !$optInToken->isValid() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_member' || \count($arrIds = current($arrRelated)) != 1 || (!$objMember = MemberModel::findByPk($arrIds[0])))
+		if ((!$optInToken = $optIn->find(Input::get('token'))) || !$optInToken->isValid() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_member' || \count($arrIds = current($arrRelated)) != 1 || (!$objMember = MemberModel::findById($arrIds[0])))
 		{
 			$this->Template->type = 'error';
 			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['invalidToken'];
@@ -525,7 +525,7 @@ class ModuleRegistration extends Module
 		System::getContainer()->get('monolog.logger.contao.access')->info('User account ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ') has been activated');
 
 		// Redirect to the jumpTo page
-		if ($objTarget = PageModel::findByPk($this->objModel->reg_jumpTo))
+		if ($objTarget = PageModel::findById($this->objModel->reg_jumpTo))
 		{
 			$this->redirect(System::getContainer()->get('contao.routing.content_url_generator')->generate($objTarget));
 		}

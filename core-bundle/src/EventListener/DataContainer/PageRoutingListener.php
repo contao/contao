@@ -34,7 +34,7 @@ class PageRoutingListener
     #[AsCallback(table: 'tl_page', target: 'fields.routePath.input_field')]
     public function generateRoutePath(DataContainer $dc): string
     {
-        $pageModel = $this->framework->getAdapter(PageModel::class)->findByPk($dc->id);
+        $pageModel = $this->framework->getAdapter(PageModel::class)->findById($dc->id);
 
         if (!$pageModel) {
             return '';

@@ -64,10 +64,10 @@ class FragmentRuntimeTest extends TestCase
             ->willReturn('runtime-result')
         ;
 
-        $moduleAdapter = $this->mockAdapter(['findByPk']);
+        $moduleAdapter = $this->mockAdapter(['findById']);
         $moduleAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->with(42)
             ->willReturn($this->mockClassWithProperties(ModuleModel::class, ['id' => 42, 'type' => 'navigation']))
         ;
@@ -172,10 +172,10 @@ class FragmentRuntimeTest extends TestCase
             ->willReturn('runtime-result')
         ;
 
-        $contentAdapter = $this->mockAdapter(['findByPk']);
+        $contentAdapter = $this->mockAdapter(['findById']);
         $contentAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->with(42)
             ->willReturn($this->mockClassWithProperties(ContentModel::class, ['id' => 42, 'type' => 'text']))
         ;

@@ -19,6 +19,7 @@ use Contao\Controller;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Util\UrlUtil;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
@@ -327,10 +328,12 @@ class tl_comments extends Backend
 
 		if ($objNotify !== null)
 		{
+			$baseUrl = Idna::decode(Environment::get('base'));
+
 			while ($objNotify->next())
 			{
 				// Prepare the URL
-				$strUrl = Idna::decode(Environment::get('base')) . $objNotify->url;
+				$strUrl = UrlUtil::makeAbsolute($objNotify->url, $baseUrl);
 
 				$objEmail = new Email();
 				$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'] ?? null;
@@ -462,7 +465,7 @@ class tl_comments extends Backend
 	{
 		if ($varValue && ($id = Input::get('id')))
 		{
-			Comments::notifyCommentsSubscribers(CommentsModel::findByPk($id));
+			Comments::notifyCommentsSubscribers(CommentsModel::findById($id));
 		}
 
 		return $varValue;
@@ -643,7 +646,7 @@ class tl_comments extends Backend
 	 */
 	public function invalidateSourceCacheTags(DataContainer $dc, array $tags)
 	{
-		$commentModel = CommentsModel::findByPk($dc->id);
+		$commentModel = CommentsModel::findById($dc->id);
 
 		if (null !== $commentModel)
 		{

@@ -134,6 +134,12 @@
       <trans-unit id="tl_module.editable.1">
         <source>Show these fields in the front end form.</source>
       </trans-unit>
+      <trans-unit id="tl_module.reqFullAuth.0">
+        <source>Require full authentication</source>
+      </trans-unit>
+      <trans-unit id="tl_module.reqFullAuth.1">
+        <source>Users with only a "remember me" cookie must verify their identity in order to access the module.</source>
+      </trans-unit>
       <trans-unit id="tl_module.memberTpl.0">
         <source>Form template</source>
       </trans-unit>
