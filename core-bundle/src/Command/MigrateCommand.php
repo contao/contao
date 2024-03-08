@@ -368,7 +368,7 @@ class MigrateCommand extends Command
             if ($loopControl-- < 1) {
                 if ($asJson) {
                     $this->writeNdjson('error', [
-                        'message' => 'The migrations were stopped after 9 iterations as a precaution. There is a high chance of an infinite loop of migrations.',
+                        'message' => 'The migrations were stopped after 19 iterations as a precaution. There is a high chance of an infinite loop of migrations.',
                         'isSuccessful' => false,
                     ]);
                 } else {
