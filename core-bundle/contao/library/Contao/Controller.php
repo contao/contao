@@ -20,6 +20,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\UrlUtil;
 use Contao\Database\Result;
+use Contao\Model\Registry;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\Glob;
 
@@ -594,6 +595,16 @@ abstract class Controller extends System
 		}
 		else
 		{
+			if (\is_array($contentElementReference?->attributes['classes'] ?? null))
+			{
+				if ($objRow instanceof Model && Registry::getInstance()->isRegistered($objRow))
+				{
+					$objRow = $objRow->cloneOriginal();
+				}
+
+				$objRow->classes = array_merge($objRow->classes ?? [], $contentElementReference->attributes['classes']);
+			}
+
 			$objElement = new $strClass($objRow, $strColumn);
 		}
 
