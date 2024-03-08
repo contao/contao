@@ -16,13 +16,15 @@ use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\UrlHelper;
+use Symfony\Component\Routing\RequestContext;
 
 class StringResolver implements ContentUrlResolverInterface
 {
     public function __construct(
         private readonly InsertTagParser $insertTagParser,
         private readonly UrlHelper $urlHelper,
-        private readonly RequestStack $requestStack
+        private readonly RequestStack $requestStack,
+        private readonly RequestContext $requestContext,
     ) {
     }
 
@@ -40,7 +42,7 @@ class StringResolver implements ContentUrlResolverInterface
 
         // Resolve protocol-relative URLs that are ignored by the UrlHelper
         if (str_starts_with($url, '//')) {
-            $protocol = $this->requestStack->getCurrentRequest()?->getScheme() ?? 'http';
+            $protocol = $this->requestStack->getCurrentRequest()?->getScheme() ?? $this->requestContext->getScheme();
             $url = $protocol.':'.$url;
         }
 
