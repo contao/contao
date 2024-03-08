@@ -122,7 +122,7 @@ class ModulePersonalData extends Module
 
 		$blnModified = false;
 		$user = FrontendUser::getInstance();
-		$objMember = MemberModel::findByPk($user->id);
+		$objMember = MemberModel::findById($user->id);
 		$strTable = $objMember->getTable();
 		$strFormId = 'tl_member_' . $this->id;
 		$session = System::getContainer()->get('request_stack')->getSession();
@@ -373,7 +373,7 @@ class ModulePersonalData extends Module
 			}
 
 			// Check whether there is a jumpTo page
-			if ($objJumpTo = PageModel::findByPk($this->objModel->jumpTo))
+			if ($objJumpTo = PageModel::findById($this->objModel->jumpTo))
 			{
 				$this->jumpToOrReload($objJumpTo->row());
 			}

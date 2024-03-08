@@ -164,7 +164,7 @@ class ContentDownload extends ContentElement
 
 		if ($this->fullsize)
 		{
-			if (!empty($GLOBALS['objPage']) && ($layoutId = $GLOBALS['objPage']->layout) && ($layout = LayoutModel::findByPk($layoutId)))
+			if (!empty($GLOBALS['objPage']) && ($layoutId = $GLOBALS['objPage']->layout) && ($layout = LayoutModel::findById($layoutId)))
 			{
 				$lightboxSize = StringUtil::deserialize($layout->lightboxSize, true);
 			}

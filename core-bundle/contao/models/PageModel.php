@@ -794,7 +794,7 @@ class PageModel extends Model
 	{
 		$arrModels = array();
 
-		while ($intId > 0 && ($objPage = static::findByPk($intId)) !== null)
+		while ($intId > 0 && ($objPage = static::findById($intId)) !== null)
 		{
 			$intId = $objPage->pid;
 			$arrModels[] = $objPage;
@@ -854,7 +854,7 @@ class PageModel extends Model
 	 */
 	public static function findWithDetails($intId)
 	{
-		return static::findByPk($intId)?->loadDetails();
+		return static::findById($intId)?->loadDetails();
 	}
 
 	/**

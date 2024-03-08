@@ -62,7 +62,7 @@ class InsertTagsListener
 
         $adapter = $this->framework->getAdapter(CalendarFeedModel::class);
 
-        if (!$feed = $adapter->findByPk($feedId)) {
+        if (!$feed = $adapter->findById($feedId)) {
             return '';
         }
 

@@ -93,6 +93,6 @@ class PageAccessListener
 
         $this->framework->initialize();
 
-        return $this->framework->getAdapter(PageModel::class)->findByPk((int) $pageModel);
+        return $this->framework->getAdapter(PageModel::class)->findById((int) $pageModel);
     }
 }

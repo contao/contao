@@ -398,10 +398,10 @@ class BackendAccessVoterTest extends TestCase
             ])
         ;
 
-        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->with(1)
             ->willReturn($page)
         ;
@@ -435,10 +435,10 @@ class BackendAccessVoterTest extends TestCase
             ])
         ;
 
-        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->with(1)
             ->willReturn($page)
         ;
@@ -460,10 +460,10 @@ class BackendAccessVoterTest extends TestCase
             ->willReturn($user)
         ;
 
-        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->with(1)
             ->willReturn(null)
         ;

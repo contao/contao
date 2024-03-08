@@ -36,7 +36,7 @@ class NewsletterResolverTest extends ContaoTestCase
 
         $framework = $this->mockContaoFramework([
             PageModel::class => $pageAdapter,
-            NewsletterChannelModel::class => $this->mockConfiguredAdapter(['findByPk' => $channel]),
+            NewsletterChannelModel::class => $this->mockConfiguredAdapter(['findById' => $channel]),
         ]);
 
         $resolver = new NewsletterResolver($framework);

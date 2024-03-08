@@ -80,7 +80,7 @@ class ContaoDataCollectorTest extends TestCase
         $layout->id = 2;
         $layout->template = 'fe_page';
 
-        $adapter = $this->mockConfiguredAdapter(['findByPk' => $layout]);
+        $adapter = $this->mockConfiguredAdapter(['findById' => $layout]);
         $framework = $this->mockContaoFramework([LayoutModel::class => $adapter]);
 
         $page = $this->mockClassWithProperties(PageModel::class);
@@ -120,7 +120,7 @@ class ContaoDataCollectorTest extends TestCase
         $layout->id = 2;
         $layout->template = 'fe_page';
 
-        $adapter = $this->mockConfiguredAdapter(['findByPk' => $layout]);
+        $adapter = $this->mockConfiguredAdapter(['findById' => $layout]);
         $framework = $this->mockContaoFramework([LayoutModel::class => $adapter]);
 
         $page = $this->mockClassWithProperties(PageModel::class);

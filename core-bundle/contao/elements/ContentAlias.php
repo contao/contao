@@ -27,7 +27,7 @@ class ContentAlias extends ContentElement
 			return '';
 		}
 
-		if (!$objElement = ContentModel::findByPk($this->cteAlias))
+		if (!$objElement = ContentModel::findById($this->cteAlias))
 		{
 			return '';
 		}

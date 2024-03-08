@@ -73,7 +73,7 @@ class ModuleFaqReader extends Module
 	{
 		global $objPage;
 
-		if ($this->overviewPage && ($overviewPage = PageModel::findByPk($this->overviewPage)))
+		if ($this->overviewPage && ($overviewPage = PageModel::findById($this->overviewPage)))
 		{
 			$this->Template->referer = System::getContainer()->get('contao.routing.content_url_generator')->generate($overviewPage);
 			$this->Template->back = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['faqOverview'];
@@ -151,7 +151,7 @@ class ModuleFaqReader extends Module
 
 		$strAuthor = '';
 
-		if ($objAuthor = UserModel::findByPk($objFaq->author))
+		if ($objAuthor = UserModel::findById($objFaq->author))
 		{
 			$strAuthor = $objAuthor->name;
 		}
@@ -180,7 +180,7 @@ class ModuleFaqReader extends Module
 			return;
 		}
 
-		if (!$objCategory = FaqCategoryModel::findByPk($objFaq->pid))
+		if (!$objCategory = FaqCategoryModel::findById($objFaq->pid))
 		{
 			return;
 		}
@@ -205,7 +205,7 @@ class ModuleFaqReader extends Module
 			$arrNotifies[] = $GLOBALS['TL_ADMIN_EMAIL'];
 		}
 
-		if ($objCategory->notify != 'notify_admin' && ($objAuthor = UserModel::findByPk($objFaq->author)) && $objAuthor->email)
+		if ($objCategory->notify != 'notify_admin' && ($objAuthor = UserModel::findById($objFaq->author)) && $objAuthor->email)
 		{
 			$arrNotifies[] = $objAuthor->email;
 		}

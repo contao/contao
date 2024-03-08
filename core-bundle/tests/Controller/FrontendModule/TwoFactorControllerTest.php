@@ -488,9 +488,9 @@ class TwoFactorControllerTest extends TestCase
             ->willReturn(new Response())
         ;
 
-        $adapter = $this->mockAdapter(['findByPk']);
+        $adapter = $this->mockAdapter(['findById']);
         $adapter
-            ->method('findByPk')
+            ->method('findById')
             ->willReturn(null)
         ;
 

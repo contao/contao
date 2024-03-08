@@ -35,7 +35,7 @@ class LabelListenerTest extends TestCase
     {
         $row = $this->setupDataSet();
 
-        $userModelAdapter = $this->mockAdapter(['findByPk']);
+        $userModelAdapter = $this->mockAdapter(['findById']);
         $userModel = $this->mockClassWithProperties(UserModel::class, [
             'id' => 1,
             'username' => 'k.jones',
@@ -43,7 +43,7 @@ class LabelListenerTest extends TestCase
 
         $userModelAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->with(1)
             ->willReturn($userModel)
         ;
@@ -72,7 +72,7 @@ class LabelListenerTest extends TestCase
     {
         $row = $this->setupTabularDataSet();
 
-        $userModelAdapter = $this->mockAdapter(['findByPk']);
+        $userModelAdapter = $this->mockAdapter(['findById']);
         $userModel = $this->mockClassWithProperties(UserModel::class, [
             'id' => 1,
             'username' => 'k.jones',
@@ -80,7 +80,7 @@ class LabelListenerTest extends TestCase
 
         $userModelAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->with(1)
             ->willReturn($userModel)
         ;

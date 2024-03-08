@@ -48,10 +48,10 @@ class ContentCompositionVoterTest extends TestCase
         $token = $this->createMock(TokenInterface::class);
         $subject = new CreateAction('tl_article', ['pid' => 42]);
 
-        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->with(42)
             ->willReturn(null)
         ;
@@ -81,10 +81,10 @@ class ContentCompositionVoterTest extends TestCase
             ->method('loadDetails')
         ;
 
-        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->with(42)
             ->willReturn($pageModel)
         ;
@@ -116,18 +116,18 @@ class ContentCompositionVoterTest extends TestCase
             ->method('loadDetails')
         ;
 
-        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->with(42)
             ->willReturn($pageModel)
         ;
 
-        $layoutAdapter = $this->mockAdapter(['findByPk']);
+        $layoutAdapter = $this->mockAdapter(['findById']);
         $layoutAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->willReturn(null)
         ;
 
@@ -163,18 +163,18 @@ class ContentCompositionVoterTest extends TestCase
             ->method('loadDetails')
         ;
 
-        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->with(42)
             ->willReturn($pageModel)
         ;
 
-        $layoutAdapter = $this->mockAdapter(['findByPk']);
+        $layoutAdapter = $this->mockAdapter(['findById']);
         $layoutAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->willReturn($layoutModel)
         ;
 
@@ -210,18 +210,18 @@ class ContentCompositionVoterTest extends TestCase
             ->method('loadDetails')
         ;
 
-        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->with(42)
             ->willReturn($pageModel)
         ;
 
-        $layoutAdapter = $this->mockAdapter(['findByPk']);
+        $layoutAdapter = $this->mockAdapter(['findById']);
         $layoutAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->willReturn($layoutModel)
         ;
 

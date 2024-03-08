@@ -289,7 +289,7 @@ abstract class Events extends Module
 		$arrEvent['day'] = $strDay;
 		$arrEvent['month'] = $strMonth;
 		$arrEvent['parent'] = $intCalendar;
-		$arrEvent['calendar'] = CalendarModel::findByPk($objEvents->pid);
+		$arrEvent['calendar'] = CalendarModel::findById($objEvents->pid);
 		$arrEvent['link'] = $objEvents->title;
 		$arrEvent['target'] = '';
 		$arrEvent['title'] = StringUtil::specialchars($objEvents->title, true);

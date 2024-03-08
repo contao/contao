@@ -73,7 +73,7 @@ class ModuleNewsMenu extends ModuleNews
 
 		$this->strUrl = preg_replace('/\?.*$/', '', Environment::get('requestUri'));
 
-		if ($objTarget = PageModel::findByPk($this->objModel->jumpTo))
+		if ($objTarget = PageModel::findById($this->objModel->jumpTo))
 		{
 			try
 			{

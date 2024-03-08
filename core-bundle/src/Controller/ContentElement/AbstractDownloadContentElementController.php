@@ -158,7 +158,7 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
                 return null;
             }
 
-            $layoutModel = $this->getContaoAdapter(LayoutModel::class)->findByPk($page->layout);
+            $layoutModel = $this->getContaoAdapter(LayoutModel::class)->findById($page->layout);
 
             return $layoutModel?->lightboxSize ?: null;
         };

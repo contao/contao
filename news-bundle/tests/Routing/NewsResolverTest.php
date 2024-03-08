@@ -95,7 +95,7 @@ class NewsResolverTest extends ContaoTestCase
 
         $framework = $this->mockContaoFramework([
             PageModel::class => $pageAdapter,
-            NewsArchiveModel::class => $this->mockConfiguredAdapter(['findByPk' => $newsArchive]),
+            NewsArchiveModel::class => $this->mockConfiguredAdapter(['findById' => $newsArchive]),
         ]);
 
         $resolver = new NewsResolver($framework);

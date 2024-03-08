@@ -71,7 +71,7 @@ class ModuleNewsletterReader extends Module
 	{
 		$this->Template->content = '';
 
-		if ($this->overviewPage && ($overviewPage = PageModel::findByPk($this->overviewPage)))
+		if ($this->overviewPage && ($overviewPage = PageModel::findById($this->overviewPage)))
 		{
 			$this->Template->referer = System::getContainer()->get('contao.routing.content_url_generator')->generate($overviewPage);
 			$this->Template->back = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['nl_overview'];
