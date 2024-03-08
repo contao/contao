@@ -158,7 +158,7 @@ class Calendar extends Frontend
 				}
 
 				// No jumpTo page set (see #4784)
-				if (!$jumpTo = PageModel::findById($objArticle->pid)->jumpTo)
+				if (!$jumpTo = CalendarModel::findByPk($objArticle->pid)?->jumpTo)
 				{
 					continue;
 				}

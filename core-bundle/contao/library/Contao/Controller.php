@@ -18,6 +18,7 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Util\UrlUtil;
 use Contao\Database\Result;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\Glob;
@@ -1124,7 +1125,7 @@ abstract class Controller extends System
 
 			if (!preg_match('@^(?:[a-z0-9]+:|#|{{)@i', $strUrl))
 			{
-				$strUrl = $strBase . (($strUrl != '/') ? $strUrl : '');
+				$strUrl = UrlUtil::makeAbsolute($strUrl, $strBase);
 			}
 
 			$strContent .= $strAttribute . '="' . $strUrl . '"';

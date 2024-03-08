@@ -17,7 +17,7 @@ use Contao\EasyCodingStandard\Fixer\TypeHintOrderFixer;
 use Contao\EasyCodingStandard\Sniffs\UseSprintfInExceptionsSniff;
 use PhpCsFixer\Fixer\Alias\ModernizeStrposFixer;
 use PhpCsFixer\Fixer\ArrayNotation\ArraySyntaxFixer;
-use PhpCsFixer\Fixer\Basic\CurlyBracesPositionFixer;
+use PhpCsFixer\Fixer\Basic\BracesPositionFixer;
 use PhpCsFixer\Fixer\Basic\PsrAutoloadingFixer;
 use PhpCsFixer\Fixer\ClassNotation\OrderedClassElementsFixer;
 use PhpCsFixer\Fixer\ClassNotation\VisibilityRequiredFixer;
@@ -55,10 +55,9 @@ use SlevomatCodingStandard\Sniffs\Whitespaces\DuplicateSpacesSniff;
 use Symplify\EasyCodingStandard\Config\ECSConfig;
 use Symplify\EasyCodingStandard\ValueObject\Option;
 
-return static function (ECSConfig $ecsConfig): void {
-    $ecsConfig->sets([__DIR__.'/../vendor/contao/easy-coding-standard/config/contao.php']);
-
-    $ecsConfig->skip([
+return ECSConfig::configure()
+    ->withSets([__DIR__.'/../vendor/contao/easy-coding-standard/config/contao.php'])
+    ->withSkip([
         '*/languages/*',
         '*/templates/*',
         '*/themes/*',
@@ -97,44 +96,15 @@ return static function (ECSConfig $ecsConfig): void {
         VisibilityRequiredFixer::class,
         VoidReturnFixer::class,
         YodaStyleFixer::class,
-    ]);
-
-    $ecsConfig->ruleWithConfiguration(ArraySyntaxFixer::class, [
-        'syntax' => 'long',
-    ]);
-
-    $ecsConfig->ruleWithConfiguration(CurlyBracesPositionFixer::class, [
-        'control_structures_opening_brace' => CurlyBracesPositionFixer::NEXT_LINE_UNLESS_NEWLINE_AT_SIGNATURE_END,
-    ]);
-
-    $ecsConfig->ruleWithConfiguration(ConcatSpaceFixer::class, [
-        'spacing' => 'one',
-    ]);
-
-    $ecsConfig->ruleWithConfiguration(ControlStructureContinuationPositionFixer::class, [
-        'position' => ControlStructureContinuationPositionFixer::NEXT_LINE,
-    ]);
-
-    $ecsConfig->ruleWithConfiguration(HeaderCommentFixer::class, [
-        'header' => "This file is part of Contao.\n\n(c) Leo Feyer\n\n@license LGPL-3.0-or-later",
-    ]);
-
-    $ecsConfig->ruleWithConfiguration(ListSyntaxFixer::class, [
-        'syntax' => 'long',
-    ]);
-
-    $ecsConfig->ruleWithConfiguration(NoExtraBlankLinesFixer::class, [
-        'tokens' => [
-            'curly_brace_block',
-            'extra',
-            'parenthesis_brace_block',
-            'square_brace_block',
-            'use',
-        ],
-    ]);
-
-    $ecsConfig->parallel();
-    $ecsConfig->indentation(Option::INDENTATION_TAB);
-    $ecsConfig->lineEnding("\n");
-    $ecsConfig->cacheDirectory(sys_get_temp_dir().'/ecs_legacy_cache');
-};
+    ])
+    ->withParallel()
+    ->withSpacing(Option::INDENTATION_TAB, "\n")
+    ->withConfiguredRule(ArraySyntaxFixer::class, ['syntax' => 'long'])
+    ->withConfiguredRule(BracesPositionFixer::class, ['control_structures_opening_brace' => BracesPositionFixer::NEXT_LINE_UNLESS_NEWLINE_AT_SIGNATURE_END])
+    ->withConfiguredRule(ConcatSpaceFixer::class, ['spacing' => 'one'])
+    ->withConfiguredRule(ControlStructureContinuationPositionFixer::class, ['position' => ControlStructureContinuationPositionFixer::NEXT_LINE])
+    ->withConfiguredRule(HeaderCommentFixer::class, ['header' => "This file is part of Contao.\n\n(c) Leo Feyer\n\n@license LGPL-3.0-or-later"])
+    ->withConfiguredRule(ListSyntaxFixer::class, ['syntax' => 'long'])
+    ->withConfiguredRule(NoExtraBlankLinesFixer::class, ['tokens' => ['curly_brace_block', 'extra', 'parenthesis_brace_block', 'square_brace_block', 'use']])
+    ->withCache(sys_get_temp_dir().'/ecs_legacy_cache')
+;

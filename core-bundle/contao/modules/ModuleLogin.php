@@ -117,7 +117,7 @@ class ModuleLogin extends Module
 		$isTwoFactorInProgress = $security->isGranted('IS_AUTHENTICATED_2FA_IN_PROGRESS');
 
 		// The user can re-authenticate on the error_401 page or on the redirect page of the error_401 page
-		$canReauthenticate = $objPage->type == 'error_401' || $this->targetPath && $this->targetPath === $request?->query->get('redirect');
+		$canReauthenticate = $objPage?->type == 'error_401' || ($this->targetPath && $this->targetPath === $request?->query->get('redirect'));
 
 		// Show the logout button if the user is fully authenticated or cannot re-authenticate on the current page
 		if ($user instanceof FrontendUser && !$isTwoFactorInProgress && (!$isRemembered || !$canReauthenticate))

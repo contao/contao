@@ -40,6 +40,7 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
  * @property boolean $redirectBack
  * @property string  $cols
  * @property array   $editable
+ * @property boolean $reqFullAuth
  * @property string  $memberTpl
  * @property integer $form
  * @property string  $queryType

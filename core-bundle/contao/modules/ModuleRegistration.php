@@ -333,7 +333,7 @@ class ModuleRegistration extends Module
 		$this->Template->addressDetails = $GLOBALS['TL_LANG']['tl_member']['addressDetails'];
 		$this->Template->contactDetails = $GLOBALS['TL_LANG']['tl_member']['contactDetails'];
 		$this->Template->personalDetails = $GLOBALS['TL_LANG']['tl_member']['personalDetails'];
-		$this->Template->captchaDetails = $GLOBALS['TL_LANG']['MSC']['securityQuestion'];
+		$this->Template->captchaDetails = $GLOBALS['TL_LANG']['tl_member']['captchaDetails'];
 
 		// Add the groups
 		foreach ($arrFields as $k=>$v)

@@ -19,8 +19,8 @@ use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\FormText;
@@ -77,7 +77,7 @@ class TwigIntegrationTest extends TestCase
         $environment->addExtension(
             new ContaoExtension(
                 $environment,
-                $this->createMock(TemplateHierarchyInterface::class),
+                $this->createMock(ContaoFilesystemLoader::class),
                 $this->createMock(ContaoCsrfTokenManager::class),
                 $this->createMock(ContaoVariable::class),
             ),
@@ -121,7 +121,7 @@ class TwigIntegrationTest extends TestCase
         $environment->addExtension(
             new ContaoExtension(
                 $environment,
-                $this->createMock(TemplateHierarchyInterface::class),
+                $this->createMock(ContaoFilesystemLoader::class),
                 $this->createMock(ContaoCsrfTokenManager::class),
                 $this->createMock(ContaoVariable::class),
             ),
@@ -172,7 +172,7 @@ class TwigIntegrationTest extends TestCase
         $environment->addExtension(
             new ContaoExtension(
                 $environment,
-                $this->createMock(TemplateHierarchyInterface::class),
+                $this->createMock(ContaoFilesystemLoader::class),
                 $this->createMock(ContaoCsrfTokenManager::class),
                 $this->createMock(ContaoVariable::class),
             ),
@@ -226,7 +226,7 @@ class TwigIntegrationTest extends TestCase
         $environment->addExtension(
             new ContaoExtension(
                 $environment,
-                $this->createMock(TemplateHierarchyInterface::class),
+                $this->createMock(ContaoFilesystemLoader::class),
                 $this->createMock(ContaoCsrfTokenManager::class),
                 $this->createMock(ContaoVariable::class),
             ),

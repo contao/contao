@@ -7,9 +7,10 @@
 {% block wrapper %}
     {# Wrapper attributes: add the user defined ID/classes and also add the
        template name (e.g. "frontend_module/navigation") as a class #}
-    {% set attributes = attrs(attributes|default)
+    {% set attributes = attrs()
         .setIfExists('id', element_html_id)
         .addClass([element_css_classes, "module-#{type|replace({'_': '-'})}"])
+        .mergeWith(attributes|default)
     %}
 
     {# Wrapper element around headline and content #}

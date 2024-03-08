@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Inheritance;
 
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Twig\Error\SyntaxError;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
@@ -30,7 +31,7 @@ use Twig\TokenParser\UseTokenParser;
  */
 final class DynamicUseTokenParser extends AbstractTokenParser
 {
-    public function __construct(private readonly TemplateHierarchyInterface $hierarchy)
+    public function __construct(private readonly ContaoFilesystemLoader $filesystemLoader)
     {
     }
 
@@ -84,7 +85,7 @@ final class DynamicUseTokenParser extends AbstractTokenParser
             return;
         }
 
-        $nextOrFirst = $this->hierarchy->getDynamicParent($parts[1] ?? '', $sourcePath);
+        $nextOrFirst = $this->filesystemLoader->getDynamicParent($parts[1] ?? '', $sourcePath);
 
         // Adjust parent template according to the template hierarchy
         $node->setAttribute('value', $nextOrFirst);
