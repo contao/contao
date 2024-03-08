@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Crawl\Escargot\Subscriber;
 
-use Nyholm\Psr7\Uri;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LogLevel;
@@ -93,7 +92,7 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
         ++$this->stats['ok'];
 
         // Skip any redirected URLs that are now outside our base hosts (#4213)
-        $actualHost = (new Uri($response->getInfo('url')))->getHost();
+        $actualHost = parse_url($response->getInfo('url'), PHP_URL_HOST);
 
         if ($crawlUri->getUri()->getHost() !== $actualHost && !$this->escargot->getBaseUris()->containsHost($actualHost)) {
             return SubscriberInterface::DECISION_NEGATIVE;
