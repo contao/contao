@@ -193,7 +193,7 @@ class FigureBuilder
     {
         $this->lastException = null;
 
-        if (!$filesModel = $this->getFilesModelAdapter()->findByPk($id)) {
+        if (!$filesModel = $this->getFilesModelAdapter()->findById($id)) {
             $this->lastException = new InvalidResourceException(sprintf('DBAFS item with ID "%s" could not be found.', $id));
 
             return $this;

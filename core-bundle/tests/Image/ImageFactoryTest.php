@@ -272,7 +272,7 @@ class ImageFactoryTest extends TestCase
             ->willReturn($imageSizeProperties)
         ;
 
-        $imageSizeAdapter = $this->mockConfiguredAdapter(['findByPk' => $imageSizeModel]);
+        $imageSizeAdapter = $this->mockConfiguredAdapter(['findById' => $imageSizeModel]);
 
         $filesModel = $this->mockClassWithProperties(FilesModel::class);
         $filesModel->importantPartX = 0.5;
@@ -297,7 +297,7 @@ class ImageFactoryTest extends TestCase
     public function testCreatesAnImageObjectFromAnImagePathIfTheImageSizeIsMissing(): void
     {
         $path = Path::join($this->getTempDir(), 'images/dummy.jpg');
-        $imageSizeAdapter = $this->mockConfiguredAdapter(['findByPk' => null]);
+        $imageSizeAdapter = $this->mockConfiguredAdapter(['findById' => null]);
         $filesAdapter = $this->mockConfiguredAdapter(['findByPath' => null]);
 
         $adapters = [

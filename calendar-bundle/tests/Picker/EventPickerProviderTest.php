@@ -145,8 +145,8 @@ class EventPickerProviderTest extends ContaoTestCase
         $config = new PickerConfig('link', [], '{{event_url::1}}', 'eventPicker');
 
         $adapters = [
-            CalendarModel::class => $this->mockConfiguredAdapter(['findByPk' => $calendarModel]),
-            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findByPk' => $calendarEvents]),
+            CalendarModel::class => $this->mockConfiguredAdapter(['findById' => $calendarModel]),
+            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $calendarEvents]),
         ];
 
         $picker = $this->getPicker();
@@ -165,7 +165,7 @@ class EventPickerProviderTest extends ContaoTestCase
         $config = new PickerConfig('link', [], '{{event_url::1}}', 'eventPicker');
 
         $adapters = [
-            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findByPk' => null]),
+            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => null]),
         ];
 
         $picker = $this->getPicker();
@@ -185,8 +185,8 @@ class EventPickerProviderTest extends ContaoTestCase
         $config = new PickerConfig('link', [], '{{event_url::1}}', 'eventPicker');
 
         $adapters = [
-            CalendarModel::class => $this->mockConfiguredAdapter(['findByPk' => null]),
-            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findByPk' => $calendarEvents]),
+            CalendarModel::class => $this->mockConfiguredAdapter(['findById' => null]),
+            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $calendarEvents]),
         ];
 
         $picker = $this->getPicker();

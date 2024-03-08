@@ -36,7 +36,7 @@ class SerpPreview extends Widget
 	{
 		/** @var class-string<Model> $class */
 		$class = Model::getClassFromTable($this->strTable);
-		$model = $class::findByPk($this->activeRecord->id);
+		$model = $class::findById($this->activeRecord->id);
 
 		if (!$model instanceof Model)
 		{

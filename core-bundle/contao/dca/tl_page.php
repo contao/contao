@@ -759,7 +759,7 @@ class tl_page extends Backend
 	{
 		$page->loadDetails();
 
-		if (!$layout = LayoutModel::findByPk($page->layout))
+		if (!$layout = LayoutModel::findById($page->layout))
 		{
 			return '';
 		}
@@ -1050,7 +1050,7 @@ class tl_page extends Backend
 				$objVersions->create();
 
 				// Update the record stored in the page registry (see #6542)
-				PageModel::findByPk($id)->alias = $strAlias;
+				PageModel::findById($id)->alias = $strAlias;
 			}
 
 			$this->redirect($this->getReferer());

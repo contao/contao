@@ -145,8 +145,8 @@ class FaqPickerProviderTest extends ContaoTestCase
         $config = new PickerConfig('link', [], '{{faq_url::1}}', 'faqPicker');
 
         $adapters = [
-            FaqModel::class => $this->mockConfiguredAdapter(['findByPk' => $faq]),
-            FaqCategoryModel::class => $this->mockConfiguredAdapter(['findByPk' => $model]),
+            FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faq]),
+            FaqCategoryModel::class => $this->mockConfiguredAdapter(['findById' => $model]),
         ];
 
         $picker = $this->getPicker();
@@ -165,7 +165,7 @@ class FaqPickerProviderTest extends ContaoTestCase
         $config = new PickerConfig('link', [], '{{faq_url::1}}', 'faqPicker');
 
         $adapters = [
-            FaqModel::class => $this->mockConfiguredAdapter(['findByPk' => null]),
+            FaqModel::class => $this->mockConfiguredAdapter(['findById' => null]),
         ];
 
         $picker = $this->getPicker();
@@ -185,8 +185,8 @@ class FaqPickerProviderTest extends ContaoTestCase
         $config = new PickerConfig('link', [], '{{faq_url::1}}', 'faqPicker');
 
         $adapters = [
-            FaqModel::class => $this->mockConfiguredAdapter(['findByPk' => $faq]),
-            FaqCategoryModel::class => $this->mockConfiguredAdapter(['findByPk' => null]),
+            FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faq]),
+            FaqCategoryModel::class => $this->mockConfiguredAdapter(['findById' => null]),
         ];
 
         $picker = $this->getPicker();

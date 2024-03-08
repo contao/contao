@@ -84,7 +84,7 @@ class ModelArgumentResolver implements ValueResolverInterface
         /** @var Adapter<Model> $model */
         $model = $this->framework->getAdapter($type);
 
-        return $model->findByPk((int) $value);
+        return $model->findById((int) $value);
     }
 
     /**

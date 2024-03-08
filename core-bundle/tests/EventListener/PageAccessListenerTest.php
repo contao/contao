@@ -347,10 +347,10 @@ class PageAccessListenerTest extends TestCase
             return $framework;
         }
 
-        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->willReturn($pageModel)
         ;
 

@@ -159,9 +159,9 @@ class PreviewFactoryTest extends TestCase
             'densities' => '0.5x',
         ]);
 
-        $imageSizeAdapter = $this->mockAdapter(['findByPk']);
+        $imageSizeAdapter = $this->mockAdapter(['findById']);
         $imageSizeAdapter
-            ->method('findByPk')
+            ->method('findById')
             ->willReturn($imageSizeModel)
         ;
 

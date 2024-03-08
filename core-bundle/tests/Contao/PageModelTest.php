@@ -126,7 +126,7 @@ class PageModelTest extends TestCase
 
         $this->mockDatabase($database);
 
-        $pageModel = PageModel::findByPk(1);
+        $pageModel = PageModel::findById(1);
 
         $this->assertSame(1, $pageModel->id);
         $this->assertSame('alias', $pageModel->alias);

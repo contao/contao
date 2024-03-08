@@ -28,7 +28,7 @@ class InsertTagsListenerTest extends ContaoTestCase
         $feedModel->alias = 'events';
 
         $adapters = [
-            CalendarFeedModel::class => $this->mockConfiguredAdapter(['findByPk' => $feedModel]),
+            CalendarFeedModel::class => $this->mockConfiguredAdapter(['findById' => $feedModel]),
         ];
 
         $framework = $this->mockContaoFramework($adapters);
@@ -155,7 +155,7 @@ class InsertTagsListenerTest extends ContaoTestCase
     {
         $adapters = [
             CalendarEventsModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => null]),
-            CalendarFeedModel::class => $this->mockConfiguredAdapter(['findByPk' => null]),
+            CalendarFeedModel::class => $this->mockConfiguredAdapter(['findById' => null]),
         ];
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);

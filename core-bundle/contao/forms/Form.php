@@ -310,7 +310,7 @@ class Form extends Hybrid
 		{
 			foreach ($arrFiles as $upload)
 			{
-				if (!empty($upload['uuid']) && null !== ($file = FilesModel::findByPk($upload['uuid'])))
+				if (!empty($upload['uuid']) && null !== ($file = FilesModel::findById($upload['uuid'])))
 				{
 					$file->delete();
 				}
@@ -355,7 +355,7 @@ class Form extends Hybrid
 		$this->Template->ajax = $this->isAjaxEnabled();
 
 		// Get the target URL
-		if ($this->method == 'GET' && ($objTarget = PageModel::findByPk($this->objModel->jumpTo)))
+		if ($this->method == 'GET' && ($objTarget = PageModel::findById($this->objModel->jumpTo)))
 		{
 			$this->Template->action = System::getContainer()->get('contao.routing.content_url_generator')->generate($objTarget);
 		}
@@ -647,7 +647,7 @@ class Form extends Hybrid
 		$targetPageData = null;
 
 		// Check whether there is a jumpTo page
-		if ($objJumpTo = PageModel::findByPk($this->objModel->jumpTo))
+		if ($objJumpTo = PageModel::findById($this->objModel->jumpTo))
 		{
 			$targetPageData = $objJumpTo->row();
 		}

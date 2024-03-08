@@ -80,7 +80,7 @@ class ModuleNewsReader extends ModuleNews
 
 		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
 
-		if ($this->overviewPage && ($overviewPage = PageModel::findByPk($this->overviewPage)))
+		if ($this->overviewPage && ($overviewPage = PageModel::findById($this->overviewPage)))
 		{
 			$this->Template->referer = $urlGenerator->generate($overviewPage);
 			$this->Template->back = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['newsOverview'];
@@ -177,7 +177,7 @@ class ModuleNewsReader extends ModuleNews
 			return;
 		}
 
-		if (!$objArchive = NewsArchiveModel::findByPk($objArticle->pid))
+		if (!$objArchive = NewsArchiveModel::findById($objArticle->pid))
 		{
 			return;
 		}
@@ -202,7 +202,7 @@ class ModuleNewsReader extends ModuleNews
 			$arrNotifies[] = $GLOBALS['TL_ADMIN_EMAIL'];
 		}
 
-		if ($objArchive->notify != 'notify_admin' && ($objAuthor = UserModel::findByPk($objArticle->author)) && $objAuthor->email)
+		if ($objArchive->notify != 'notify_admin' && ($objAuthor = UserModel::findById($objArticle->author)) && $objAuthor->email)
 		{
 			$arrNotifies[] = $objAuthor->email;
 		}

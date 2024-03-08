@@ -52,9 +52,9 @@ class LightboxResultTest extends TestCase
         $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
         $layoutModel->lightboxSize = serialize($size);
 
-        $layoutModelAdapter = $this->mockAdapter(['findByPk']);
+        $layoutModelAdapter = $this->mockAdapter(['findById']);
         $layoutModelAdapter
-            ->method('findByPk')
+            ->method('findById')
             ->with($layoutId)
             ->willReturn($layoutModel)
         ;
@@ -99,9 +99,9 @@ class LightboxResultTest extends TestCase
         $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
         $layoutModel->lightboxSize = '';
 
-        $layoutModelAdapter = $this->mockAdapter(['findByPk']);
+        $layoutModelAdapter = $this->mockAdapter(['findById']);
         $layoutModelAdapter
-            ->method('findByPk')
+            ->method('findById')
             ->with($layoutId)
             ->willReturn($layoutModel)
         ;

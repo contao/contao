@@ -1037,7 +1037,7 @@ class tl_content extends Backend
 	 */
 	public function adjustDcaByType($dc)
 	{
-		$objCte = ContentModel::findByPk($dc->id);
+		$objCte = ContentModel::findById($dc->id);
 
 		if ($objCte === null)
 		{
@@ -1174,7 +1174,7 @@ class tl_content extends Backend
 			return;
 		}
 
-		$objCte = ContentModel::findByPk($dc->id);
+		$objCte = ContentModel::findById($dc->id);
 
 		if ($objCte === null)
 		{
