@@ -61,7 +61,7 @@ class FeedMigration extends AbstractMigration
         $mapping = [];
 
         foreach ($feeds as $feed) {
-            [$rootPage, $sorting] = $this->findMatchingRootPage($feed) + [null, null];
+            [$rootPage, $sorting] = $this->findMatchingRootPage($feed) + [null, 0];
 
             if (!$rootPage) {
                 return $this->createResult(false, 'Could not migrate feed "'.$feed['title'].'" because there is no root page');
@@ -110,13 +110,13 @@ class FeedMigration extends AbstractMigration
         $feedBase = parse_url($feed['feedBase'], PHP_URL_HOST) ?: $feed['feedBase'];
 
         $page = $this->connection->fetchNumeric(
-            "SELECT r.id, MAX(c.sorting) FROM tl_page r LEFT JOIN tl_page c ON c.pid=r.id WHERE r.type = 'root' AND r.dns = :dns AND r.language = :language GROUP BY r.id LIMIT 1",
+            "SELECT r.id, MAX(c.sorting) FROM tl_page r LEFT JOIN tl_page c ON c.pid = r.id WHERE r.type = 'root' AND r.dns = :dns AND r.language = :language GROUP BY r.id LIMIT 1",
             ['dns' => $feedBase, 'language' => $feed['language']],
         );
 
-        // Find first root page, if none matches by dns and language
+        // Find the first root page if none matches by DNS and language
         if (!$page) {
-            $page = $this->connection->fetchNumeric("SELECT r.id, MAX(c.sorting) FROM tl_page r  LEFT JOIN tl_page c ON c.pid=r.id WHERE r.type = 'root' AND r.fallback = 1 GROUP BY r.id ORDER BY r.sorting ASC LIMIT 1");
+            $page = $this->connection->fetchNumeric("SELECT r.id, MAX(c.sorting) FROM tl_page r LEFT JOIN tl_page c ON c.pid = r.id WHERE r.type = 'root' AND r.fallback = 1 GROUP BY r.id ORDER BY r.sorting ASC LIMIT 1");
         }
 
         return $page ?: [];

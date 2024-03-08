@@ -126,7 +126,7 @@ class FeedMigrationTest extends ContaoTestCase
 
         $connection
             ->method('fetchNumeric')
-            ->with("SELECT r.id, MAX(c.sorting) FROM tl_page r LEFT JOIN tl_page c ON c.pid=r.id WHERE r.type = 'root' AND r.dns = :dns AND r.language = :language GROUP BY r.id LIMIT 1", ['dns' => 'example.org', 'language' => 'en'])
+            ->with("SELECT r.id, MAX(c.sorting) FROM tl_page r LEFT JOIN tl_page c ON c.pid = r.id WHERE r.type = 'root' AND r.dns = :dns AND r.language = :language GROUP BY r.id LIMIT 1", ['dns' => 'example.org', 'language' => 'en'])
             ->willReturn([1, 128])
         ;
 
@@ -228,8 +228,18 @@ class FeedMigrationTest extends ContaoTestCase
         $connection
             ->method('fetchNumeric')
             ->willReturnMap([
-                ["SELECT r.id, MAX(c.sorting) FROM tl_page r LEFT JOIN tl_page c ON c.pid=r.id WHERE r.type = 'root' AND r.dns = :dns AND r.language = :language GROUP BY r.id LIMIT 1", ['dns' => 'example.org', 'language' => 'en'], [], []],
-                ["SELECT r.id, MAX(c.sorting) FROM tl_page r  LEFT JOIN tl_page c ON c.pid=r.id WHERE r.type = 'root' AND r.fallback = 1 GROUP BY r.id ORDER BY r.sorting ASC LIMIT 1", [], [], [2, 768]],
+                [
+                    "SELECT r.id, MAX(c.sorting) FROM tl_page r LEFT JOIN tl_page c ON c.pid = r.id WHERE r.type = 'root' AND r.dns = :dns AND r.language = :language GROUP BY r.id LIMIT 1",
+                    ['dns' => 'example.org', 'language' => 'en'],
+                    [],
+                    [],
+                ],
+                [
+                    "SELECT r.id, MAX(c.sorting) FROM tl_page r LEFT JOIN tl_page c ON c.pid = r.id WHERE r.type = 'root' AND r.fallback = 1 GROUP BY r.id ORDER BY r.sorting ASC LIMIT 1",
+                    [],
+                    [],
+                    [2, 768],
+                ],
             ])
         ;
 
