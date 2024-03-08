@@ -58,7 +58,7 @@ class Image
 		'visible_',
 	);
 
-	private static $htmlTemplateCache = array();
+	private static array $htmlTemplateCache = array();
 
 	/**
 	 * Get the relative path to an image
@@ -157,18 +157,18 @@ class Image
 		$template = self::getHtmlTemplate($src);
 
 		$search = array('{alt}', '{attributes}');
-		$replace = array(StringUtil::specialchars($alt), ($attributes === '') ? '' : (' ' . $attributes));
+		$replace = array(StringUtil::specialchars($alt), $attributes ? ' ' . $attributes : '');
 
 		if (str_contains($template, '{darkAttributes}'))
 		{
 			$search[] = '{darkAttributes}';
-			$replace[] = (new HtmlAttributes($attributes))->mergeWith(array('class' => 'color-scheme--dark', 'loading' => 'lazy'))->toString(true);
+			$replace[] = (new HtmlAttributes($attributes))->mergeWith(array('class' => 'color-scheme--dark', 'loading' => 'lazy'))->toString();
 		}
 
 		if (str_contains($template, '{lightAttributes}'))
 		{
 			$search[] = '{lightAttributes}';
-			$replace[] = (new HtmlAttributes($attributes))->mergeWith(array('class' => 'color-scheme--light', 'loading' => 'lazy'))->toString(true);
+			$replace[] = (new HtmlAttributes($attributes))->mergeWith(array('class' => 'color-scheme--light', 'loading' => 'lazy'))->toString();
 		}
 
 		return str_replace($search, $replace, $template);
