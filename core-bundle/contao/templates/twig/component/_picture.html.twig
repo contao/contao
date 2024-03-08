@@ -30,8 +30,8 @@
             {% set defineProportions = img.width|default(false) and img.height|default(false) %}
             {% set img_attributes = attrs()
                 .set('src', img.src)
-                .set('alt', figure.hasMetadata ? figure.metadata.alt : '')
-                .setIfExists('title', figure.hasMetadata ? (figure.metadata.title ?: null) : null)
+                .set('alt', figure.hasMetadata ? figure.metadata.alt|insert_tag : '')
+                .setIfExists('title', figure.hasMetadata ? figure.metadata.title|insert_tag : null)
                 .setIfExists('srcset', img.srcset is defined and img.srcset != img.src ? img.srcset : null)
                 .setIfExists('sizes', img.sizes|default)
                 .setIfExists('width', defineProportions ? img.width : null)
