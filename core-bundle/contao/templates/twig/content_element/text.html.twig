@@ -1,8 +1,9 @@
 {% extends "@Contao/content_element/_base.html.twig" %}
 {% use "@Contao/component/_figure.html.twig" %}
 
-{% set content_layout_attributes = attrs(content_layout_attributes|default)
+{% set content_layout_attributes = attrs()
     .addClass('media media--' ~ layout, layout and image)
+    .mergeWith(content_layout_attributes|default)
 %}
 
 {# By default we add the layout attributes to the wrapper element. If you want to
@@ -21,7 +22,10 @@
 
     {# Richtext #}
     {% block text %}
-        {% set text_attributes = attrs(text_attributes|default).addClass('rte') %}
+        {% set text_attributes = attrs()
+            .addClass('rte')
+            .mergeWith(text_attributes|default)
+        %}
         <div{% block text_attributes %}{{ text_attributes }}{% endblock %}>
             {{ text|csp_inline_styles|insert_tag|encode_email|raw }}
         </div>

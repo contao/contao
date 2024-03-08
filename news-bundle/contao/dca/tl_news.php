@@ -443,7 +443,7 @@ class tl_news extends Backend
 		// Generate alias if there is none
 		if (!$varValue)
 		{
-			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->headline, NewsArchiveModel::findByPk($dc->activeRecord->pid)->jumpTo, $aliasExists);
+			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->headline, NewsArchiveModel::findById($dc->activeRecord->pid)->jumpTo, $aliasExists);
 		}
 		elseif (preg_match('/^[1-9]\d*$/', $varValue))
 		{
@@ -490,19 +490,19 @@ class tl_news extends Backend
 	 */
 	public function getTitleTag(NewsModel $model)
 	{
-		if (!$archive = NewsArchiveModel::findByPk($model->pid))
+		if (!$archive = NewsArchiveModel::findById($model->pid))
 		{
 			return '';
 		}
 
-		if (!$page = PageModel::findByPk($archive->jumpTo))
+		if (!$page = PageModel::findById($archive->jumpTo))
 		{
 			return '';
 		}
 
 		$page->loadDetails();
 
-		if (!$layout = LayoutModel::findByPk($page->layout))
+		if (!$layout = LayoutModel::findById($page->layout))
 		{
 			return '';
 		}
@@ -602,7 +602,7 @@ class tl_news extends Backend
 	 */
 	public function addSitemapCacheInvalidationTag($dc, array $tags)
 	{
-		$archiveModel = NewsArchiveModel::findByPk($dc->activeRecord->pid);
+		$archiveModel = NewsArchiveModel::findById($dc->activeRecord->pid);
 
 		if ($archiveModel === null)
 		{

@@ -58,7 +58,7 @@ class ArticleContentVoter implements VoterInterface, CacheableVoterInterface
         }
 
         $articleAdapter = $this->framework->getAdapter(ArticleModel::class);
-        $articleModel = $articleAdapter->findByPk($subject->getCurrentPid());
+        $articleModel = $articleAdapter->findById($subject->getCurrentPid());
 
         if ($articleModel && !$this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], $articleModel->pid)) {
             return self::ACCESS_DENIED;

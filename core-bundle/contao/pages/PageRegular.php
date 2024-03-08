@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
@@ -46,6 +47,9 @@ class PageRegular extends Frontend
 		$this->prepare($objPage);
 
 		$response = $this->Template->getResponse($blnCheckRequest);
+
+		// Allow subrequests on this controller (fragments) to dynamically influence the Cache-Control header
+		$response->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, true);
 
 		// Finalize the response context so it cannot be used anymore
 		System::getContainer()->get('contao.routing.response_context_accessor')->finalizeCurrentContext($response);
@@ -90,7 +94,7 @@ class PageRegular extends Frontend
 		$objPage->template = $objLayout->template ?: 'fe_page';
 		$objPage->templateGroup = null;
 
-		if ($objTheme = ThemeModel::findByPk($objLayout->pid))
+		if ($objTheme = ThemeModel::findById($objLayout->pid))
 		{
 			$objPage->templateGroup = $objTheme->templates;
 		}
@@ -248,7 +252,7 @@ class PageRegular extends Frontend
 	 */
 	protected function getPageLayout($objPage)
 	{
-		$objLayout = LayoutModel::findByPk($objPage->layout);
+		$objLayout = LayoutModel::findById($objPage->layout);
 
 		// Die if there is no layout
 		if (null === $objLayout)

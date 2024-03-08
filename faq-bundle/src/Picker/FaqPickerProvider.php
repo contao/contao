@@ -107,11 +107,11 @@ class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPi
     {
         $faqAdapter = $this->framework->getAdapter(FaqModel::class);
 
-        if (!$faqModel = $faqAdapter->findByPk($id)) {
+        if (!$faqModel = $faqAdapter->findById($id)) {
             return null;
         }
 
-        if (!$faqCategory = $this->framework->getAdapter(FaqCategoryModel::class)->findByPk($faqModel->pid)) {
+        if (!$faqCategory = $this->framework->getAdapter(FaqCategoryModel::class)->findById($faqModel->pid)) {
             return null;
         }
 

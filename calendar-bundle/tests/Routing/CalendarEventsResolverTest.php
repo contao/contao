@@ -94,7 +94,7 @@ class CalendarEventsResolverTest extends ContaoTestCase
 
         $framework = $this->mockContaoFramework([
             PageModel::class => $pageAdapter,
-            CalendarModel::class => $this->mockConfiguredAdapter(['findByPk' => $calendar]),
+            CalendarModel::class => $this->mockConfiguredAdapter(['findById' => $calendar]),
         ]);
 
         $resolver = new CalendarEventsResolver($framework);

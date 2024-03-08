@@ -203,7 +203,7 @@ class NewsFeedListenerTest extends ContaoTestCase
             Controller::class => $controller,
             ContentModel::class => $contentModel,
             FilesModel::class => $filesModel,
-            UserModel::class => $this->mockConfiguredAdapter(['findByPk' => $userModel]),
+            UserModel::class => $this->mockConfiguredAdapter(['findById' => $userModel]),
         ]);
 
         $framework->setContainer($container);

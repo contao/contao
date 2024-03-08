@@ -54,7 +54,7 @@ class CalendarEventsResolver implements ContentUrlResolverInterface
         $calendarAdapter = $this->framework->getAdapter(CalendarModel::class);
 
         // Link to the default page
-        return ContentUrlResult::resolve($pageAdapter->findPublishedById((int) $calendarAdapter->findByPk($content->pid)?->jumpTo));
+        return ContentUrlResult::resolve($pageAdapter->findPublishedById((int) $calendarAdapter->findById($content->pid)?->jumpTo));
     }
 
     public function getParametersForContent(object $content, PageModel $pageModel): array

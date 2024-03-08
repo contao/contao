@@ -50,10 +50,10 @@ class RouteProviderTest extends TestCase
 
         $route = new PageRoute($page);
 
-        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->with(17)
             ->willReturn($page)
         ;
@@ -90,10 +90,10 @@ class RouteProviderTest extends TestCase
 
     public function testThrowsAnExceptionIfThePageIdIsInvalid(): void
     {
-        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->with(17)
         ;
 
@@ -164,10 +164,10 @@ class RouteProviderTest extends TestCase
             'urlSuffix' => '',
         ]);
 
-        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->with(17)
             ->willReturn($page)
         ;
@@ -206,10 +206,10 @@ class RouteProviderTest extends TestCase
             'urlSuffix' => '',
         ]);
 
-        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->with(17)
             ->willReturn($page)
         ;
@@ -686,10 +686,10 @@ class RouteProviderTest extends TestCase
 
         $route = new PageRoute($routablePage);
 
-        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->exactly(2))
-            ->method('findByPk')
+            ->method('findById')
             ->withConsecutive([17], [18])
             ->willReturnOnConsecutiveCalls($routablePage, $unroutablePage)
         ;

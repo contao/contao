@@ -83,7 +83,7 @@ class ModuleEventReader extends Events
 
 		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
 
-		if ($this->overviewPage && ($overviewPage = PageModel::findByPk($this->overviewPage)))
+		if ($this->overviewPage && ($overviewPage = PageModel::findById($this->overviewPage)))
 		{
 			$this->Template->referer = $urlGenerator->generate($overviewPage);
 			$this->Template->back = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['eventOverview'];
@@ -247,7 +247,7 @@ class ModuleEventReader extends Events
 		$objTemplate->recurring = $recurring;
 		$objTemplate->until = $until;
 		$objTemplate->locationLabel = $GLOBALS['TL_LANG']['MSC']['location'];
-		$objTemplate->calendar = CalendarModel::findByPk($objEvent->pid);
+		$objTemplate->calendar = CalendarModel::findById($objEvent->pid);
 		$objTemplate->count = 0; // see #74
 		$objTemplate->details = '';
 		$objTemplate->hasTeaser = false;
@@ -436,7 +436,7 @@ class ModuleEventReader extends Events
 			return;
 		}
 
-		if (!$objCalendar = CalendarModel::findByPk($objEvent->pid))
+		if (!$objCalendar = CalendarModel::findById($objEvent->pid))
 		{
 			return;
 		}
@@ -461,7 +461,7 @@ class ModuleEventReader extends Events
 			$arrNotifies[] = $GLOBALS['TL_ADMIN_EMAIL'];
 		}
 
-		if ($objCalendar->notify != 'notify_admin' && ($objAuthor = UserModel::findByPk($objEvent->author)) && $objAuthor->email)
+		if ($objCalendar->notify != 'notify_admin' && ($objAuthor = UserModel::findById($objEvent->author)) && $objAuthor->email)
 		{
 			$arrNotifies[] = $objAuthor->email;
 		}

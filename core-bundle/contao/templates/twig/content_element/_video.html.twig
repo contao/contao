@@ -4,8 +4,9 @@
 {% use "@Contao/component/_picture.html.twig" %}
 
 {% block content %}
-    {% set video_attributes = attrs(video_attributes|default)
+    {% set video_attributes = attrs()
         .addClass('aspect aspect--' ~ aspect_ratio, aspect_ratio)
+        .mergeWith(video_attributes|default)
     %}
 
     {% if as_editor_view %}

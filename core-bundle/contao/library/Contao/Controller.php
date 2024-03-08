@@ -18,6 +18,7 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Util\UrlUtil;
 use Contao\Database\Result;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\Glob;
@@ -370,7 +371,7 @@ abstract class Controller extends System
 		}
 		else
 		{
-			$objRow = ModuleModel::findByPk($intId);
+			$objRow = ModuleModel::findById($intId);
 
 			if ($objRow === null)
 			{
@@ -542,7 +543,7 @@ abstract class Controller extends System
 				return '';
 			}
 
-			$objRow = ContentModel::findByPk($intId);
+			$objRow = ContentModel::findById($intId);
 
 			if ($objRow === null)
 			{
@@ -815,7 +816,7 @@ abstract class Controller extends System
 
 		global $objPage;
 
-		$objLayout = ($objPage !== null) ? LayoutModel::findByPk($objPage->layoutId) : null;
+		$objLayout = ($objPage !== null) ? LayoutModel::findById($objPage->layoutId) : null;
 		$blnCombineScripts = $objLayout !== null && $objLayout->combineScripts;
 
 		$arrReplace["[[TL_BODY_$nonce]]"] = $strScripts;
@@ -1124,7 +1125,7 @@ abstract class Controller extends System
 
 			if (!preg_match('@^(?:[a-z0-9]+:|#|{{)@i', $strUrl))
 			{
-				$strUrl = $strBase . (($strUrl != '/') ? $strUrl : '');
+				$strUrl = UrlUtil::makeAbsolute($strUrl, $strBase);
 			}
 
 			$strContent .= $strAttribute . '="' . $strUrl . '"';

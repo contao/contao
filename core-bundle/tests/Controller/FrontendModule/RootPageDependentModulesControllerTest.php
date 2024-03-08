@@ -118,10 +118,10 @@ class RootPageDependentModulesControllerTest extends TestCase
 
     private function mockContainer(RequestStack|null $requestStack = null, string|null $content = null): ContainerBuilder
     {
-        $moduleAdapter = $this->mockAdapter(['findByPk']);
+        $moduleAdapter = $this->mockAdapter(['findById']);
         $moduleAdapter
             ->expects($content ? $this->once() : $this->never())
-            ->method('findByPk')
+            ->method('findById')
             ->willReturn($this->createMock(ModuleModel::class))
         ;
 
