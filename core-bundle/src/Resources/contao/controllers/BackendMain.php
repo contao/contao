@@ -221,12 +221,12 @@ class BackendMain extends Backend
 
 		$response = $this->Template->getResponse();
 
-        if (Input::get('popup') !== null)
-        {
-            $response->headers->set('Content-Security-Policy', "frame-ancestors 'self'");
-        }
+		if (Input::get('popup') !== null)
+		{
+			$response->headers->set('Content-Security-Policy', "frame-ancestors 'self'");
+		}
 
-        return $response;
+		return $response;
 	}
 
 	/**
