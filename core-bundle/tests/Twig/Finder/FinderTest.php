@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Tests\Twig\Finder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Finder\Finder;
 use Contao\CoreBundle\Twig\Finder\FinderFactory;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -144,8 +144,8 @@ class FinderTest extends TestCase
 
     private function getFinder(): Finder
     {
-        $hierarchy = $this->createMock(TemplateHierarchyInterface::class);
-        $hierarchy
+        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader
             ->method('getInheritanceChains')
             ->willReturnCallback(
                 static function (?string $themeSlug): array {
@@ -207,6 +207,6 @@ class FinderTest extends TestCase
             )
         ;
 
-        return (new FinderFactory($hierarchy, new ThemeNamespace(), $translator))->create();
+        return (new FinderFactory($filesystemLoader, new ThemeNamespace(), $translator))->create();
     }
 }

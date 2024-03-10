@@ -1659,6 +1659,8 @@ class tl_page extends Backend
 		// Generate the aliases
 		if (isset($_POST['alias']) && Input::post('FORM_SUBMIT') == 'tl_select')
 		{
+			$router = System::getContainer()->get('router');
+
 			$objSession = System::getContainer()->get('session');
 			$session = $objSession->all();
 			$ids = $session['CURRENT']['IDS'] ?? array();
@@ -1702,6 +1704,7 @@ class tl_page extends Backend
 
 				// Initialize the version manager
 				$objVersions = new Versions('tl_page', $id);
+				$objVersions->setEditUrl($router->generate('contao_backend', array('do'=>'page', 'act'=>'edit', 'id'=>$id, 'rt'=>'1')));
 				$objVersions->initialize();
 
 				// Store the new alias

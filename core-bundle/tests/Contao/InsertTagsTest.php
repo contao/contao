@@ -166,6 +166,31 @@ class InsertTagsTest extends TestCase
             'foo{{ins::1{{plain::2]]3}}baz',
             'foo{{ins::12}}3baz',
         ];
+
+        yield 'strtoupper flag' => [
+            '{{plain::österreich|strtoupper}}',
+            'ÖSTERREICH',
+        ];
+
+        yield 'strtolower flag' => [
+            '{{plain::ÖSTERREICH|strtolower}}',
+            'österreich',
+        ];
+
+        yield 'ucfirst flag' => [
+            '{{plain::österreich|ucfirst}}',
+            'Österreich',
+        ];
+
+        yield 'lcfirst flag' => [
+            '{{plain::ÖSTERREICH|lcfirst}}',
+            'öSTERREICH',
+        ];
+
+        yield 'ucwords flag' => [
+            "{{plain::deutschland österreich\nschweiz-züriCH|ucwords}}",
+            "Deutschland Österreich\nSchweiz-züriCH",
+        ];
     }
 
     /**

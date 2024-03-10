@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\Twig\Inheritance;
 
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Twig\Environment;
 use Twig\Lexer;
 use Twig\Loader\LoaderInterface;
@@ -28,7 +28,7 @@ class DynamicIncludeTokenParserTest extends TestCase
 {
     public function testGetTag(): void
     {
-        $tokenParser = new DynamicIncludeTokenParser($this->createMock(TemplateHierarchyInterface::class));
+        $tokenParser = new DynamicIncludeTokenParser($this->createMock(ContaoFilesystemLoader::class));
 
         $this->assertSame('include', $tokenParser->getTag());
     }
@@ -38,8 +38,8 @@ class DynamicIncludeTokenParserTest extends TestCase
      */
     public function testHandlesContaoIncludes(string $code, string ...$expectedStrings): void
     {
-        $templateHierarchy = $this->createMock(TemplateHierarchyInterface::class);
-        $templateHierarchy
+        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader
             ->method('getFirst')
             ->willReturnCallback(
                 static function (string $name) {
@@ -58,7 +58,7 @@ class DynamicIncludeTokenParserTest extends TestCase
         ;
 
         $environment = new Environment($this->createMock(LoaderInterface::class));
-        $environment->addTokenParser(new DynamicIncludeTokenParser($templateHierarchy));
+        $environment->addTokenParser(new DynamicIncludeTokenParser($filesystemLoader));
 
         $source = new Source($code, 'template.html.twig');
         $tokenStream = (new Lexer($environment))->tokenize($source);
@@ -105,15 +105,15 @@ class DynamicIncludeTokenParserTest extends TestCase
 
     public function testEnhancesErrorMessageWhenIncludingAnInvalidTemplate(): void
     {
-        $templateHierarchy = $this->createMock(TemplateHierarchyInterface::class);
-        $templateHierarchy
+        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader
             ->method('getFirst')
             ->with('foo')
             ->willThrowException(new \LogicException('<original message>'))
         ;
 
         $environment = new Environment($this->createMock(LoaderInterface::class));
-        $environment->addTokenParser(new DynamicIncludeTokenParser($templateHierarchy));
+        $environment->addTokenParser(new DynamicIncludeTokenParser($filesystemLoader));
 
         // Use a conditional expression here, so that we can test rethrowing
         // exceptions in case the parent node is not an ArrayExpression
@@ -133,7 +133,7 @@ class DynamicIncludeTokenParserTest extends TestCase
     public function testParsesArguments(string $source, ?AbstractExpression $variables, bool $only, bool $ignoreMissing): void
     {
         $environment = new Environment($this->createMock(LoaderInterface::class));
-        $environment->addTokenParser(new DynamicIncludeTokenParser($this->createMock(TemplateHierarchyInterface::class)));
+        $environment->addTokenParser(new DynamicIncludeTokenParser($this->createMock(ContaoFilesystemLoader::class)));
 
         $tokenStream = (new Lexer($environment))->tokenize(new Source($source, 'foo.html.twig'));
         $parser = new Parser($environment);

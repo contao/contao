@@ -2,6 +2,22 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.38] (2024-03-07)
+
+**Fixed issues:**
+
+- [#6959] Do not make a response private if the session is empty ([Toflar])
+- [#6965] Always lowercase the file extension in the DBAFS ([leofeyer])
+- [#6866] Correctly generate record labels with foreign keys ([aschempp])
+- [#6966] Set the correct URL when generating multiple aliases ([leofeyer])
+- [#6949] Fix the Twig loader infrastructure ([m-vo])
+- [#6947] Correctly output the legend for the security question ([fritzmg])
+- [#6940] Handle unicode strings in insert tag flags ([ausi])
+- [#6905] Camelize the file system service argument ([richardhj])
+- [#6906] Update the `tstamp` column only on `tl_files` in the DBAFS ([richardhj])
+- [#6909] Also strip query parameter from `QUERY_STRING` variable in `ServerBag` ([fritzmg])
+- [#6892] Merge the `Cache-Control` header in `PageRegular` ([MarkejN])
+
 ## [4.13.37] (2024-02-12)
 
 **Fixed issues:**
@@ -920,6 +936,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.38]: https://github.com/contao/contao/releases/tag/4.13.38
 [4.13.37]: https://github.com/contao/contao/releases/tag/4.13.37
 [4.13.36]: https://github.com/contao/contao/releases/tag/4.13.36
 [4.13.35]: https://github.com/contao/contao/releases/tag/4.13.35
@@ -1690,5 +1707,16 @@ This project adheres to [Semantic Versioning].
 [#6832]: https://github.com/contao/contao/pull/6832
 [#6848]: https://github.com/contao/contao/pull/6848
 [#6849]: https://github.com/contao/contao/pull/6849
+[#6866]: https://github.com/contao/contao/pull/6866
 [#6868]: https://github.com/contao/contao/pull/6868
 [#6870]: https://github.com/contao/contao/pull/6870
+[#6892]: https://github.com/contao/contao/pull/6892
+[#6905]: https://github.com/contao/contao/pull/6905
+[#6906]: https://github.com/contao/contao/pull/6906
+[#6909]: https://github.com/contao/contao/pull/6909
+[#6940]: https://github.com/contao/contao/pull/6940
+[#6947]: https://github.com/contao/contao/pull/6947
+[#6949]: https://github.com/contao/contao/pull/6949
+[#6959]: https://github.com/contao/contao/pull/6959
+[#6965]: https://github.com/contao/contao/pull/6965
+[#6966]: https://github.com/contao/contao/pull/6966

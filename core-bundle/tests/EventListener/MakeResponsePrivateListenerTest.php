@@ -18,7 +18,8 @@ use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -142,14 +143,38 @@ class MakeResponsePrivateListenerTest extends TestCase
         $this->assertFalse($response->headers->has(MakeResponsePrivateListener::DEBUG_HEADER));
     }
 
-    public function testMakesResponsePrivateWhenTheSessionWasStarted(): void
+    public function testIgnoresTheResponseWhenTheSessionWasStartedButIsEmpty(): void
     {
-        $session = $this->createMock(SessionInterface::class);
-        $session
-            ->expects($this->once())
-            ->method('isStarted')
-            ->willReturn(true)
-        ;
+        $session = new Session(new MockArraySessionStorage());
+        $session->set('foobar', 'foobaz'); // This starts the session
+        $session->remove('foobar'); // This removes the value but the session remains started
+
+        $response = new Response();
+        $response->setPublic();
+        $response->setMaxAge(600);
+
+        $request = new Request();
+        $request->setSession($session);
+
+        $event = new ResponseEvent(
+            $this->createMock(KernelInterface::class),
+            $request,
+            HttpKernelInterface::MAIN_REQUEST,
+            $response
+        );
+
+        $listener = new MakeResponsePrivateListener($this->createScopeMatcher(true));
+        $listener($event);
+
+        $this->assertTrue($response->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
+        $this->assertTrue($response->headers->getCacheControlDirective('public'));
+        $this->assertFalse($response->headers->has(MakeResponsePrivateListener::DEBUG_HEADER));
+    }
+
+    public function testMakesResponsePrivateWhenTheSessionIsStartedAndNotEmpty(): void
+    {
+        $session = new Session(new MockArraySessionStorage());
+        $session->set('foobar', 'foobaz');
 
         $response = new Response();
         $response->setPublic();

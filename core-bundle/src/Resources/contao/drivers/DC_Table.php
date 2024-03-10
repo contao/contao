@@ -5105,30 +5105,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					foreach ($label as $j=>$arg)
 					{
 						$field = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'][$j] ?? null;
-
-						if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['foreignKey']))
-						{
-							if ($arg)
-							{
-								$key = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['foreignKey'], 2);
-
-								$reference = $this->Database
-									->prepare("SELECT " . Database::quoteIdentifier($key[1]) . " AS value FROM " . $key[0] . " WHERE id=?")
-									->limit(1)
-									->execute($arg);
-
-								if ($reference->numRows)
-								{
-									$arg = $reference->value;
-								}
-							}
-
-							$value = $arg ?: '-';
-						}
-						else
-						{
-							$value = (string) $arg !== '' ? $arg : '-';
-						}
+						$value = (string) $arg !== '' ? $arg : '-';
 
 						$return .= '<td colspan="' . $colspan . '" class="tl_file_list col_' . explode(':', $field, 2)[0] . ($field == $firstOrderBy ? ' ordered_by' : '') . '">' . $value . '</td>';
 					}

@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Tests\Twig\Extension;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Extension\DeprecationsNodeVisitor;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
@@ -48,7 +48,7 @@ class DeprecationsNodeVisitorTest extends TestCase
             new ArrayLoader(['template.html.twig' => $templateContent])
         );
 
-        $contaoExtension = new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class));
+        $contaoExtension = new ContaoExtension($environment, $this->createMock(ContaoFilesystemLoader::class));
         $environment->addExtension($contaoExtension);
 
         return $environment;

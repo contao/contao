@@ -15,6 +15,8 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
 
@@ -68,8 +70,8 @@ class MakeResponsePrivateListener
             return;
         }
 
-        // 2) The session was started
-        if ($request->hasSession() && $request->getSession()->isStarted()) {
+        // 2) The session was started and is not empty
+        if ($request->hasSession() && !$this->isSessionEmpty($request->getSession())) {
             $this->makePrivate($response, 'session-cookie');
 
             return;
@@ -103,5 +105,19 @@ class MakeResponsePrivateListener
     {
         $response->setPrivate();
         $response->headers->set(self::DEBUG_HEADER, $reason);
+    }
+
+    private function isSessionEmpty(SessionInterface $session): bool
+    {
+        if (!$session->isStarted()) {
+            return true;
+        }
+
+        if ($session instanceof Session) {
+            // Marked @internal but no other way to check all attribute bags
+            return $session->isEmpty();
+        }
+
+        return [] === $session->all();
     }
 }
