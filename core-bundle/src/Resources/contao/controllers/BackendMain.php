@@ -223,7 +223,7 @@ class BackendMain extends Backend
 
         if (Input::get('popup') !== null)
         {
-            $response->headers->set('X-Frame-Options', 'sameorigin');
+            $response->headers->set('Content-Security-Policy', "frame-ancestors 'self'");
         }
 
         return $response;
