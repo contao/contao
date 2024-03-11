@@ -17,11 +17,63 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 
 class PageFinderTest extends TestCase
 {
+    public function testGetCurrentPageFromRequest(): void
+    {
+        $requestStack = $this->createMock(RequestStack::class);
+        $requestStack
+            ->expects($this->never())
+            ->method('getCurrentRequest')
+        ;
+
+        $pageFinder = new PageFinder(
+            $this->mockContaoFramework(),
+            $this->createMock(RequestMatcherInterface::class),
+            $requestStack,
+        );
+
+        $pageModel = $this->createMock(PageModel::class);
+
+        $request = Request::create('https://localhost');
+        $request->attributes->set('pageModel', $pageModel);
+
+        $this->assertSame($pageModel, $pageFinder->getCurrentPage($request));
+    }
+
+    public function testGetCurrentPageFromRequestStack(): void
+    {
+        $pageModel = $this->createMock(PageModel::class);
+
+        $request = Request::create('https://localhost');
+        $request->attributes->set('pageModel', $pageModel);
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $pageFinder = new PageFinder(
+            $this->mockContaoFramework(),
+            $this->createMock(RequestMatcherInterface::class),
+            $requestStack,
+        );
+
+        $this->assertSame($pageModel, $pageFinder->getCurrentPage());
+    }
+
+    public function testReturnsNullIfThereIsNoRequestStack(): void
+    {
+        $pageFinder = new PageFinder(
+            $this->mockContaoFramework(),
+            $this->createMock(RequestMatcherInterface::class),
+        );
+
+        $this->assertNull($pageFinder->getCurrentPage());
+    }
+
     public function testFindRootPageForHostReturnsNullIfRoutingHasNoPageModel(): void
     {
         $framework = $this->mockContaoFramework();
