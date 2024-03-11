@@ -553,6 +553,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@contao.routing.scope_matcher'
+            - '@contao.routing.page_finder'
         tags:
             # The priority must be higher than the one of the request attribute value resolver (defaults to 100)
             - { name: controller.argument_value_resolver, priority: 101 }

@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\HttpKernel;
 
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\Model;
 use Contao\PageModel;
@@ -29,6 +30,7 @@ class ModelArgumentResolver implements ValueResolverInterface
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly ScopeMatcher $scopeMatcher,
+        private readonly PageFinder $pageFinder,
     ) {
     }
 
@@ -71,14 +73,11 @@ class ModelArgumentResolver implements ValueResolverInterface
             return $value;
         }
 
+        $pageModel = $this->pageFinder->getCurrentPage();
+
         // Special handling for pageModel that could be globally registered
-        if (
-            isset($GLOBALS['objPage'])
-            && $GLOBALS['objPage'] instanceof PageModel
-            && $GLOBALS['objPage']->id === (int) $value
-            && is_a($type, PageModel::class, true)
-        ) {
-            return $GLOBALS['objPage'];
+        if ($pageModel && $pageModel->id === (int) $value && is_a($type, PageModel::class, true)) {
+            return $pageModel;
         }
 
         /** @var Adapter<Model> $model */
