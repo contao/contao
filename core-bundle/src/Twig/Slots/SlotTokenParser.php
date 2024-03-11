@@ -38,7 +38,7 @@ final class SlotTokenParser extends AbstractTokenParser
         // content at runtime.
         $markerExpression = new ConstantExpression('', 0);
         $this->parser->addImportedSymbol('function', 'slot', '', $markerExpression);
-        $body = $this->parser->subparse([$this, 'decideForFork']);
+        $body = $this->parser->subparse($this->decideForFork(...));
 
         if ($body->count()) {
             $this->traverseAndReplaceMarkerExpression($markerExpression, $nameToken->getValue(), $body);
