@@ -42,11 +42,6 @@ class SuperviseWorkersCommand extends Command
         parent::__construct();
     }
 
-    public static function create(ContainerInterface $messengerTransportLocator, ProcessUtil $processUtil, string $storageDirectory, array $workers): self
-    {
-        return new self($messengerTransportLocator, $processUtil, new Supervisor($storageDirectory), $workers);
-    }
-
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
