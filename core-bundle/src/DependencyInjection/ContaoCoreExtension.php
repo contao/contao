@@ -255,16 +255,16 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         }
 
         // Disable workers completely if supervision is not supported
-        if (Supervisor::canSuperviseWithProviders(Supervisor::getDefaultProviders())) {
-            $command = $container->getDefinition('contao.command.supervise_workers');
-            $command->setArgument(2,
-                (new Definition(Supervisor::class))
-                    ->setFactory([Supervisor::class, 'withDefaultProviders'])
-                    ->addArgument('%kernel.cache_dir%/worker-supervisor'),
-            );
-            $command->setArgument(3, $config['messenger']['workers']);
-        } else {
+        if (!Supervisor::canSuperviseWithProviders(Supervisor::getDefaultProviders())) {
             $config['messenger']['workers'] = [];
+        } else {
+            $supervisor = new Definition(Supervisor::class);
+            $supervisor->setFactory([Supervisor::class, 'withDefaultProviders']);
+            $supervisor->addArgument('%kernel.cache_dir%/worker-supervisor');
+
+            $command = $container->getDefinition('contao.command.supervise_workers');
+            $command->setArgument(2, $supervisor);
+            $command->setArgument(3, $config['messenger']['workers']);
         }
 
         // No workers defined -> remove our cron job and the command
