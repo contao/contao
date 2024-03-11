@@ -929,6 +929,11 @@ services:
         arguments:
             - '@security.access.decision_manager'
 
+    contao.security.data_container.layout_access_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\LayoutAccessVoter
+        arguments:
+            - '@security.access.decision_manager'
+
     contao.security.data_container.page_permission_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\PagePermissionVoter
         arguments:
