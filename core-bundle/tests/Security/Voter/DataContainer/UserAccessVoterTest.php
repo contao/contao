@@ -198,6 +198,19 @@ class UserAccessVoterTest extends TestCase
         $this->assertSame(VoterInterface::ACCESS_DENIED, $decision);
     }
 
+    public function testRegularUserCanCreateRegularUser(): void
+    {
+        $token = $this->mockToken(['id' => 42]);
+        $accessDecisionManager = $this->mockAccessDecisionManager($token);
+
+        $subject = new CreateAction('tl_user', ['id' => 2, 'admin' => 0]);
+
+        $voter = new UserAccessVoter($accessDecisionManager, $this->mockConnection());
+        $decision = $voter->vote($token, $subject, [ContaoCorePermissions::DC_PREFIX.'tl_user']);
+
+        $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $decision);
+    }
+
     public function testRegularUserCannotUpdateAdminUsers(): void
     {
         $token = $this->mockToken(['id' => 42]);

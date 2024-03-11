@@ -79,10 +79,10 @@ class UserAccessVoter extends AbstractDataContainerVoter implements ResetInterfa
             return true;
         }
 
-        // Regular user is not allowed to set the admin field
+        // Regular user is not allowed to create admin or update admin field
         if (
-            ($action instanceof CreateAction || $action instanceof UpdateAction)
-            && isset($action->getNew()['admin'])
+            ($action instanceof CreateAction && (1 === (int) ($action->getNew()['admin'] ?? 0)))
+            || ($action instanceof UpdateAction && isset($action->getNew()['admin']))
         ) {
             return false;
         }
