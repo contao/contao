@@ -14,6 +14,3 @@ contao_backend_redirect:
         _controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::redirectAction
         route: contao_backend
         permanent: true
-
-webauthn:
-    

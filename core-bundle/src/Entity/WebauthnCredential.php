@@ -13,13 +13,13 @@ use Symfony\Component\Uid\Ulid;
 use Webauthn\PublicKeyCredentialSource;
 use Webauthn\TrustPath\TrustPath;
 
-#[Table(name: "webauthn_credentials")]
+#[Table(name: 'webauthn_credentials')]
 #[Entity(repositoryClass: WebauthnCredentialRepository::class)]
 class WebauthnCredential extends PublicKeyCredentialSource
 {
     #[Id]
     #[Column(unique: true)]
-    #[GeneratedValue(strategy: "NONE")]
+    #[GeneratedValue(strategy: 'NONE')]
     private string $id;
 
     public function __construct(
