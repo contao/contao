@@ -12,6 +12,9 @@ use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 
+/**
+ * @internal
+ */
 class FrontendModulesVoter extends AbstractDataContainerVoter
 {
     public function __construct(private readonly AccessDecisionManagerInterface $accessDecisionManager)
