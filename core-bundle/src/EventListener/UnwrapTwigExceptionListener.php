@@ -34,10 +34,6 @@ class UnwrapTwigExceptionListener
 
         $previous = $throwable->getPrevious();
 
-        while ($previous && null !== $previous->getPrevious()) {
-            $previous = $previous->getPrevious();
-        }
-
         if (!$previous instanceof ResponseException) {
             return;
         }

@@ -57,14 +57,6 @@ class UnwrapTwigExceptionListenerTest extends TestCase
         yield 'RedirectResponseException' => [
             new RedirectResponseException('/foo'),
         ];
-
-        yield 'RuntimeException' => [
-            new \RuntimeException(
-                'Error evaluating "text": This exception has no message. Use Sexception->getResponse) instead.',
-                0,
-                new RedirectResponseException('/foo'),
-            ),
-        ];
     }
 
     /**
