@@ -411,6 +411,7 @@ services:
               contao.image.factory: '@contao.image.factory'
               contao.image.resizer: '@contao.image.resizer'
               contao.assets.files_context: '@contao.assets.files_context'
+              contao.routing.page_finder: '@contao.routing.page_finder'
               contao.framework: '@contao.framework'
               event_dispatcher: '@event_dispatcher'
             - '%kernel.project_dir%'
@@ -749,6 +750,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@router'
+            - '@request_stack'
 
     contao.routing.page_registry:
         class: Contao\CoreBundle\Routing\Page\PageRegistry
