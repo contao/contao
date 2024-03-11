@@ -823,6 +823,7 @@ services:
         arguments:
             - '@contao.routing.backend_matcher'
             - '@contao.routing.frontend_matcher'
+            - '@request_stack'
 
     contao.routing.url_matcher:
         class: Contao\CoreBundle\Routing\Matcher\UrlMatcher
