@@ -65,7 +65,7 @@ class ContentCompositionVoter implements VoterInterface, CacheableVoterInterface
     private function supportsContentComposition(int $pageId): bool
     {
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
-        $pageModel = $pageAdapter->findByPk($pageId);
+        $pageModel = $pageAdapter->findById($pageId);
 
         if (!$pageModel || !$this->pageRegistry->supportsContentComposition($pageModel)) {
             return false;
@@ -73,9 +73,7 @@ class ContentCompositionVoter implements VoterInterface, CacheableVoterInterface
 
         $pageModel->loadDetails();
 
-        $layout = $pageModel->getRelated('layout');
-
-        if (!$layout instanceof LayoutModel) {
+        if (!$layout = $this->framework->getAdapter(LayoutModel::class)->findById($pageModel->layout)) {
             return false;
         }
 

@@ -64,7 +64,10 @@ class ModulePersonalData extends Module
 			return '';
 		}
 
-		if (!$security->isGranted('IS_AUTHENTICATED_FULLY'))
+		// Always require full authentication if the module allows to set a new password
+		$reqFullAuth = $this->reqFullAuth || \in_array('password', $this->editable, true);
+
+		if ($reqFullAuth && !$security->isGranted('IS_AUTHENTICATED_FULLY'))
 		{
 			throw new AccessDeniedException('Full authentication is required to edit the personal data.');
 		}
@@ -119,7 +122,7 @@ class ModulePersonalData extends Module
 
 		$blnModified = false;
 		$user = FrontendUser::getInstance();
-		$objMember = MemberModel::findByPk($user->id);
+		$objMember = MemberModel::findById($user->id);
 		$strTable = $objMember->getTable();
 		$strFormId = 'tl_member_' . $this->id;
 		$session = System::getContainer()->get('request_stack')->getSession();
@@ -153,6 +156,7 @@ class ModulePersonalData extends Module
 				$arrData['inputType'] = 'upload';
 			}
 
+			/** @var class-string<Widget> $strClass */
 			$strClass = $GLOBALS['TL_FFL'][$arrData['inputType'] ?? null] ?? null;
 
 			// Continue if the class does not exist
@@ -205,7 +209,6 @@ class ModulePersonalData extends Module
 				}
 			}
 
-			/** @var Widget $objWidget */
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrData, $field, $varValue, $field, $strTable, $this));
 
 			// Append the module ID to prevent duplicate IDs (see #1493)
@@ -370,7 +373,7 @@ class ModulePersonalData extends Module
 			}
 
 			// Check whether there is a jumpTo page
-			if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
+			if ($objJumpTo = PageModel::findById($this->objModel->jumpTo))
 			{
 				$this->jumpToOrReload($objJumpTo->row());
 			}

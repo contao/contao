@@ -495,7 +495,7 @@ class tl_files extends Backend
 	 */
 	public function createVersion($table, $pid, $version, $data)
 	{
-		$model = FilesModel::findByPk($pid);
+		$model = FilesModel::findById($pid);
 
 		if ($model === null || !in_array($model->extension, StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA'][$table]['config']['editableFileTypes'] ?? System::getContainer()->getParameter('contao.editable_files')))))
 		{
@@ -528,7 +528,7 @@ class tl_files extends Backend
 	 */
 	public function restoreVersion($table, $pid, $version, $data)
 	{
-		$model = FilesModel::findByPk($pid);
+		$model = FilesModel::findById($pid);
 
 		if ($model === null || !in_array($model->extension, StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA'][$table]['config']['editableFileTypes'] ?? System::getContainer()->getParameter('contao.editable_files')))))
 		{

@@ -18,11 +18,6 @@ use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\OutputType;
 
 #[AsInsertTagFlag('addslashes')]
-#[AsInsertTagFlag('strtolower')]
-#[AsInsertTagFlag('strtoupper')]
-#[AsInsertTagFlag('ucfirst')]
-#[AsInsertTagFlag('lcfirst')]
-#[AsInsertTagFlag('ucwords')]
 #[AsInsertTagFlag('trim')]
 #[AsInsertTagFlag('rtrim')]
 #[AsInsertTagFlag('ltrim')]
@@ -35,7 +30,7 @@ class PhpFunctionFlag implements InsertTagFlagInterface
         static $allowedNames = null;
 
         if (null === $allowedNames) {
-            foreach ((new \ReflectionClass(__CLASS__))->getAttributes(AsInsertTagFlag::class) as $attribute) {
+            foreach ((new \ReflectionClass(self::class))->getAttributes(AsInsertTagFlag::class) as $attribute) {
                 $allowedNames[] = $attribute->newInstance()->name;
             }
         }

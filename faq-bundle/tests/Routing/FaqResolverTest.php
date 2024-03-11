@@ -20,18 +20,11 @@ use Contao\TestCase\ContaoTestCase;
 
 class FaqResolverTest extends ContaoTestCase
 {
-    public function testResolveNewsletter(): void
+    public function testResolveFaq(): void
     {
         $target = $this->mockClassWithProperties(PageModel::class);
-        $newsletterChannel = $this->mockClassWithProperties(FaqCategoryModel::class, ['jumpTo' => 42]);
-
-        $content = $this->mockClassWithProperties(FaqModel::class);
-        $content
-            ->expects($this->once())
-            ->method('getRelated')
-            ->with('pid')
-            ->willReturn($newsletterChannel)
-        ;
+        $category = $this->mockClassWithProperties(FaqCategoryModel::class, ['jumpTo' => 42]);
+        $content = $this->createMock(FaqModel::class);
 
         $pageAdapter = $this->mockAdapter(['findPublishedById']);
         $pageAdapter
@@ -41,7 +34,10 @@ class FaqResolverTest extends ContaoTestCase
             ->willReturn($target)
         ;
 
-        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
+        $framework = $this->mockContaoFramework([
+            PageModel::class => $pageAdapter,
+            FaqCategoryModel::class => $this->mockConfiguredAdapter(['findById' => $category]),
+        ]);
 
         $resolver = new FaqResolver($framework);
         $result = $resolver->resolve($content);

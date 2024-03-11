@@ -135,7 +135,7 @@ class PictureFactory implements PictureFactoryInterface
     /**
      * Creates a picture configuration.
      *
-     * @phpstan-return array{0:PictureConfiguration, 1:array<string, string>, 2:ResizeOptions}
+     * @return array{0: PictureConfiguration, 1: array<string, string>, 2: ResizeOptions}
      */
     private function createConfig(array|int|string|null $size): array
     {
@@ -153,7 +153,7 @@ class PictureFactory implements PictureFactoryInterface
             // Database record
             if (is_numeric($size[2])) {
                 $imageSizeModel = $this->framework->getAdapter(ImageSizeModel::class);
-                $imageSizes = $imageSizeModel->findByPk($size[2]);
+                $imageSizes = $imageSizeModel->findById($size[2]);
 
                 $config->setSize($this->createConfigItem($imageSizes?->row()));
 

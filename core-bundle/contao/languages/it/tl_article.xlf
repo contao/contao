@@ -111,7 +111,6 @@
       </trans-unit>
       <trans-unit id="tl_article.start.1">
         <source>If you want to prevent the article from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
-        <target>Se vuoi evitare che l'articolo venga visualizzato sul sito prima di una certa data/ora, puoi inserirlo qui. Altrimenti lascia il campo vuoto.</target>
       </trans-unit>
       <trans-unit id="tl_article.stop.0">
         <source>Show until</source>
@@ -119,7 +118,6 @@
       </trans-unit>
       <trans-unit id="tl_article.stop.1">
         <source>If you want to prevent the article from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
-        <target>Se vuoi evitare che l'articolo venga visualizzato sul sito dopo una certa data/ora, puoi inserirlo qui. Altrimenti lascia il campo vuoto.</target>
       </trans-unit>
       <trans-unit id="tl_article.tstamp.0">
         <source>Revision date</source>
@@ -215,11 +213,9 @@
       </trans-unit>
       <trans-unit id="tl_article.toggle.1">
         <source>Unpublish article ID %s</source>
-        <target>Nascondi articolo ID %s</target>
       </trans-unit>
       <trans-unit id="tl_article.toggle.2">
         <source>Publish article ID %s</source>
-        <target>Pubblica articolo ID %s</target>
       </trans-unit>
       <trans-unit id="tl_article.pasteafter.1">
         <source>Paste after article ID %s</source>

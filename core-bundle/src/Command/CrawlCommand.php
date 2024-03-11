@@ -19,6 +19,7 @@ use Monolog\Handler\GroupHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Monolog\Handler\ConsoleHandler;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -41,6 +42,10 @@ use Terminal42\Escargot\Queue\InMemoryQueue;
 use Terminal42\Escargot\Subscriber\FinishedCrawlingSubscriberInterface;
 use Terminal42\Escargot\Subscriber\SubscriberInterface;
 
+#[AsCommand(
+    name: 'contao:crawl',
+    description: 'Crawls the Contao root pages with the desired subscribers.',
+)]
 class CrawlCommand extends Command
 {
     private Escargot|null $escargot = null;
@@ -60,8 +65,6 @@ class CrawlCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('contao:crawl')
-            ->setDescription('Crawls the Contao root pages with the desired subscribers.')
             ->addArgument('job', InputArgument::OPTIONAL, 'An optional existing job ID')
             ->addOption('queue', null, InputArgument::OPTIONAL, 'Queue to use ("memory" or "doctrine")', 'memory')
             ->addOption('subscribers', 's', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'A list of subscribers to enable', $this->escargotFactory->getSubscriberNames())
@@ -216,7 +219,8 @@ class CrawlCommand extends Command
 
             public function shouldRequest(CrawlUri $crawlUri): string
             {
-                // We advance with every shouldRequest() call to update the progress bar frequently enough
+                // We advance with every shouldRequest() call to update the progress bar
+                // frequently enough
                 $this->progressBar->advance();
                 $this->progressBar->setMaxSteps($this->escargot->getQueue()->countAll($this->escargot->getJobId()));
 

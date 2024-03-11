@@ -69,7 +69,8 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $config = $container->getParameterBag()->resolveValue($config);
         $config = $this->processConfiguration($configuration, $config);
 
-        // Prepend the backend route prefix to make it available for third-party bundle configuration
+        // Prepend the backend route prefix to make it available for third-party
+        // bundle configuration
         $container->setParameter('contao.backend.route_prefix', $config['backend']['route_prefix']);
 
         // Make sure channels for all Contao log actions are available
@@ -107,9 +108,10 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $loader->load('migrations.yaml');
         $loader->load('services.yaml');
 
-        $container->setParameter('contao.web_dir', $this->getComposerPublicDir($projectDir) ?? Path::join($projectDir, 'public'));
+        $container->setParameter('contao.web_dir', Path::join($projectDir, $this->getComposerExtraConfig($projectDir, 'public-dir') ?? 'public'));
         $container->setParameter('contao.console_path', $config['console_path']);
         $container->setParameter('contao.upload_path', $config['upload_path']);
+        $container->setParameter('contao.component_dir', $this->getComposerExtraConfig($projectDir, 'contao-component-dir') ?? 'assets');
         $container->setParameter('contao.editable_files', $config['editable_files']);
         $container->setParameter('contao.preview_script', $config['preview_script']);
         $container->setParameter('contao.csrf_cookie_prefix', $config['csrf_cookie_prefix']);
@@ -221,9 +223,9 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         // User uploads
         $filesStorageName = 'files';
 
-        // TODO: Deprecate the "contao.upload_path" config key. In the next
-        // major version, $uploadPath can then be replaced with "files" and the
-        // redundant "files" attribute removed when mounting the local adapter.
+        // TODO: Deprecate the "contao.upload_path" config key. In the next major
+        // version, $uploadPath can then be replaced with "files" and the redundant
+        // "files" attribute removed when mounting the local adapter.
         $uploadPath = $config->getContainer()->getParameterBag()->resolveValue('%contao.upload_path%');
 
         $config
@@ -271,7 +273,8 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             ->addTag('contao.search_indexer')
         ;
 
-        // Set the two parameters, so they can be used in our legacy Config class for maximum BC
+        // Set the two parameters, so they can be used in our legacy Config class for
+        // maximum BC
         $container->setParameter('contao.search.default_indexer.enable', $config['search']['default_indexer']['enable']);
         $container->setParameter('contao.search.index_protected', $config['search']['index_protected']);
 
@@ -330,14 +333,16 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
         $imageSizes = [];
 
-        // Do not add a size with the special name "_defaults" but merge its values into all other definitions instead.
+        // Do not add a size with the special name "_defaults" but merge its values into
+        // all other definitions instead.
         foreach ($config['image']['sizes'] as $name => $value) {
             if ('_defaults' === $name) {
                 continue;
             }
 
             if (isset($config['image']['sizes']['_defaults'])) {
-                // Make sure that arrays defined under _defaults will take precedence over empty arrays (see #2783)
+                // Make sure that arrays defined under _defaults will take precedence over empty
+                // arrays (see #2783)
                 $value = [
                     ...$config['image']['sizes']['_defaults'],
                     ...array_filter($value, static fn ($v) => [] !== $v),
@@ -505,7 +510,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         }
     }
 
-    private function getComposerPublicDir(string $projectDir): string|null
+    private function getComposerExtraConfig(string $projectDir, string $extra): string|null
     {
         $fs = new Filesystem();
 
@@ -515,11 +520,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
         $composerConfig = json_decode(file_get_contents($composerJsonFilePath), true, 512, JSON_THROW_ON_ERROR);
 
-        if (null === ($publicDir = $composerConfig['extra']['public-dir'] ?? null)) {
-            return null;
-        }
-
-        return Path::join($projectDir, $publicDir);
+        return $composerConfig['extra'][$extra] ?? null;
     }
 
     private function handleSecurityConfig(array $config, ContainerBuilder $container): void

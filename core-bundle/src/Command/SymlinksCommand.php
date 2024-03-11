@@ -17,6 +17,7 @@ use Contao\CoreBundle\Config\ResourceFinderInterface;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\GenerateSymlinksEvent;
 use Contao\CoreBundle\Util\SymlinkUtil;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,6 +29,10 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
+#[AsCommand(
+    name: 'contao:symlinks',
+    description: 'Symlinks the public resources into the public directory.',
+)]
 class SymlinksCommand extends Command
 {
     private array $rows = [];
@@ -39,6 +44,7 @@ class SymlinksCommand extends Command
     public function __construct(
         private readonly string $projectDir,
         private readonly string $uploadPath,
+        private readonly string $componentDir,
         private readonly string $logsDir,
         private readonly ResourceFinderInterface $resourceFinder,
         private readonly EventDispatcherInterface $eventDispatcher,
@@ -48,11 +54,7 @@ class SymlinksCommand extends Command
 
     protected function configure(): void
     {
-        $this
-            ->setName('contao:symlinks')
-            ->setDescription('Symlinks the public resources into the public directory.')
-            ->addArgument('target', InputArgument::OPTIONAL, 'The target directory')
-        ;
+        $this->addArgument('target', InputArgument::OPTIONAL, 'The target directory');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -87,7 +89,7 @@ class SymlinksCommand extends Command
         $this->symlinkThemes();
 
         // Symlink the assets and themes directory
-        $this->symlink('assets', Path::join($this->webDir, 'assets'));
+        $this->symlink($this->componentDir, Path::join($this->webDir, $this->componentDir));
         $this->symlink('system/themes', Path::join($this->webDir, 'system/themes'));
 
         // Symlinks the logs directory

@@ -105,7 +105,6 @@ class ModuleLogin extends Module
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$container = System::getContainer();
@@ -118,7 +117,7 @@ class ModuleLogin extends Module
 		$isTwoFactorInProgress = $security->isGranted('IS_AUTHENTICATED_2FA_IN_PROGRESS');
 
 		// The user can re-authenticate on the error_401 page or on the redirect page of the error_401 page
-		$canReauthenticate = $objPage->type == 'error_401' || $this->targetPath && $this->targetPath === $request?->query->get('redirect');
+		$canReauthenticate = $objPage?->type == 'error_401' || ($this->targetPath && $this->targetPath === $request?->query->get('redirect'));
 
 		// Show the logout button if the user is fully authenticated or cannot re-authenticate on the current page
 		if ($user instanceof FrontendUser && !$isTwoFactorInProgress && (!$isRemembered || !$canReauthenticate))
@@ -198,7 +197,7 @@ class ModuleLogin extends Module
 		}
 
 		// Redirect to the jumpTo page
-		elseif (($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
+		elseif ($objTarget = PageModel::findById($this->objModel->jumpTo))
 		{
 			$strRedirect = $container->get('contao.routing.content_url_generator')->generate($objTarget, array(), UrlGeneratorInterface::ABSOLUTE_URL);
 		}
@@ -223,9 +222,7 @@ class ModuleLogin extends Module
 			return;
 		}
 
-		$pwResetPage = $this->objModel->getRelated('pwResetPage');
-
-		if ($pwResetPage instanceof PageModel)
+		if ($pwResetPage = PageModel::findById($this->objModel->pwResetPage))
 		{
 			$this->Template->pwResetUrl = System::getContainer()->get('contao.routing.content_url_generator')->generate($pwResetPage);
 		}

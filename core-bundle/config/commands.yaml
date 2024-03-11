@@ -66,7 +66,6 @@ services:
         class: Contao\CoreBundle\Command\DebugContaoTwigCommand
         arguments:
             - '@contao.twig.filesystem_loader'
-            - '@contao.twig.filesystem_loader_warmer'
             - '@contao.twig.loader.theme_namespace'
             - '%kernel.project_dir%'
             - '@contao.twig.inspector'
@@ -118,6 +117,7 @@ services:
         arguments:
             - '%kernel.project_dir%'
             - '%contao.upload_path%'
+            - '%contao.component_dir%'
             - '%kernel.logs_dir%'
             - '@contao.resource_finder'
             - '@event_dispatcher'

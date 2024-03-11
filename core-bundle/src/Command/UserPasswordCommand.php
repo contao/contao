@@ -17,10 +17,10 @@ use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Exception\RuntimeException;
-use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -29,6 +29,10 @@ use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 
+#[AsCommand(
+    name: 'contao:user:password',
+    description: 'Changes the password of a Contao back end user.',
+)]
 class UserPasswordCommand extends Command
 {
     public function __construct(
@@ -42,8 +46,6 @@ class UserPasswordCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('contao:user:password')
-            ->setDescription('Changes the password of a Contao back end user.')
             ->addArgument('username', InputArgument::REQUIRED, 'The username of the back end user')
             ->addOption('password', 'p', InputOption::VALUE_REQUIRED, 'The new password (using this option is not recommended for security reasons)')
             ->addOption('require-change', 'r', InputOption::VALUE_NONE, 'Require the user to change the password on their next login.')
@@ -117,7 +119,6 @@ class UserPasswordCommand extends Command
         $question->setHidden(true);
         $question->setMaxAttempts(3);
 
-        /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
 
         return $helper->ask($input, $output, $question);

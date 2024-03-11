@@ -168,7 +168,7 @@ abstract class Model
 
 				$table = $this->arrRelations[$key]['table'];
 
-				/** @var static $strClass */
+				/** @var class-string<Model> $strClass */
 				$strClass = static::getClassFromTable($table);
 				$intPk = $strClass::getPk();
 
@@ -693,7 +693,7 @@ abstract class Model
 
 		$arrRelation = $this->arrRelations[$strKey];
 
-		/** @var static $strClass */
+		/** @var class-string<Model> $strClass */
 		$strClass = static::getClassFromTable($arrRelation['table']);
 
 		// Load the related record(s)
@@ -719,8 +719,7 @@ abstract class Model
 				// Handle UUIDs (see #6525 and #8850)
 				if ($arrRelation['table'] == 'tl_files' && $arrRelation['field'] == 'uuid')
 				{
-					/** @var FilesModel $strClass */
-					$objModel = $strClass::findMultipleByUuids($arrValues, $arrOptions);
+					$objModel = FilesModel::findMultipleByUuids($arrValues, $arrOptions);
 				}
 				else
 				{
@@ -888,6 +887,42 @@ abstract class Model
 				'limit'  => 1,
 				'column' => static::$strPk,
 				'value'  => $varValue,
+				'return' => 'Model'
+			),
+			$arrOptions
+		);
+
+		return static::find($arrOptions);
+	}
+
+	/**
+	 * Find a single record by its ID
+	 *
+	 * @param int|string $intId      The ID
+	 * @param array      $arrOptions An optional options array
+	 *
+	 * @return static|null The model or null if the result is empty
+	 */
+	public static function findById($intId, array $arrOptions=array())
+	{
+		// Try to load from the registry
+		if (empty($arrOptions))
+		{
+			$objModel = Registry::getInstance()->fetch(static::$strTable, $intId);
+
+			if ($objModel !== null)
+			{
+				return $objModel;
+			}
+		}
+
+		$arrOptions = array_merge
+		(
+			array
+			(
+				'limit'  => 1,
+				'column' => 'id',
+				'value'  => $intId,
 				'return' => 'Model'
 			),
 			$arrOptions
@@ -1358,10 +1393,7 @@ abstract class Model
 	 */
 	protected static function createModelFromDbResult(Result $objResult)
 	{
-		/**
-		 * @var static               $strClass
-		 * @var class-string<static> $strClass
-		 */
+		/** @var class-string<static> $strClass */
 		$strClass = static::getClassFromTable(static::$strTable);
 
 		return new $strClass($objResult);

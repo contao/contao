@@ -10,6 +10,8 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
+use Contao\EasyCodingStandard\Fixer\ChainedMethodBlockFixer;
+use Contao\EasyCodingStandard\Fixer\CommentLengthFixer;
 use PhpCsFixer\Fixer\ClassNotation\VisibilityRequiredFixer;
 use PhpCsFixer\Fixer\ControlStructure\NoAlternativeSyntaxFixer;
 use PhpCsFixer\Fixer\FunctionNotation\VoidReturnFixer;
@@ -22,12 +24,14 @@ use PhpCsFixer\Fixer\Strict\StrictParamFixer;
 use PhpCsFixer\Fixer\Whitespace\StatementIndentationFixer;
 use SlevomatCodingStandard\Sniffs\Namespaces\ReferenceUsedNamesOnlySniff;
 use Symplify\EasyCodingStandard\Config\ECSConfig;
+use Symplify\EasyCodingStandard\ValueObject\Option;
 
-return static function (ECSConfig $ecsConfig): void {
-    $ecsConfig->sets([__DIR__.'/../vendor/contao/easy-coding-standard/config/contao.php']);
-
-    $ecsConfig->skip([
+return ECSConfig::configure()
+    ->withSets([__DIR__.'/../vendor/contao/easy-coding-standard/config/contao.php'])
+    ->withSkip([
         BlankLineAfterOpeningTagFixer::class,
+        ChainedMethodBlockFixer::class,
+        CommentLengthFixer::class,
         DeclareStrictTypesFixer::class,
         LinebreakAfterOpeningTagFixer::class,
         NoAlternativeSyntaxFixer::class,
@@ -38,10 +42,9 @@ return static function (ECSConfig $ecsConfig): void {
         StrictParamFixer::class,
         VisibilityRequiredFixer::class,
         VoidReturnFixer::class,
-    ]);
-
-    $ecsConfig->parallel();
-    $ecsConfig->lineEnding("\n");
-    $ecsConfig->fileExtensions(['html5']);
-    $ecsConfig->cacheDirectory(sys_get_temp_dir().'/ecs_template_cache');
-};
+    ])
+    ->withParallel()
+    ->withSpacing(Option::INDENTATION_SPACES, "\n")
+    ->withFileExtensions(['html5'])
+    ->withCache(sys_get_temp_dir().'/ecs_template_cache')
+;

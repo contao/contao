@@ -12,6 +12,10 @@ services:
         arguments:
             - '@kernel'
 
+    contao_manager.command.dotenv_dump:
+        class: Symfony\Component\Dotenv\Command\DotenvDumpCommand
+        factory: '@contao_manager.dotenv.dump_command_factory'
+
     contao_manager.command.install_skeleton:
         class: Contao\ManagerBundle\Command\InstallSkeletonCommand
         arguments:
@@ -32,6 +36,12 @@ services:
             - '%contao.web_dir%'
             - '%kernel.secret%'
 
+    contao_manager.dotenv.dump_command_factory:
+        class: Contao\ManagerBundle\Dotenv\DotenvDumpCommandFactory
+        arguments:
+            - '%kernel.project_dir%'
+            - '%kernel.environment%'
+
     contao_manager.jwt_manager:
         public: true
         synthetic: true
@@ -50,12 +60,8 @@ services:
     contao_manager.listener.doctrine_alter_table:
         class: Contao\ManagerBundle\EventListener\DoctrineAlterTableListener
 
-    contao_manager.monolog.web_processor:
-        class: Symfony\Bridge\Monolog\Processor\WebProcessor
-        arguments:
-            - { request_uri: REQUEST_URI, request_method: REQUEST_METHOD }
-        tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+    contao_manager.monolog.request_processor:
+        class: Contao\ManagerBundle\Monolog\RequestProcessor
 
     contao_manager.plugin_loader:
         public: true

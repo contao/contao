@@ -213,7 +213,7 @@ class ContentElementTestCase extends TestCase
 
     protected function normalizeWhiteSpaces(string $string): string
     {
-        // see https://stackoverflow.com/questions/5312349/minifying-final-html-output-using-regular-expressions-with-codeigniter
+        // https://stackoverflow.com/questions/5312349/minifying-final-html-output-using-regular-expressions-with-codeigniter
         $minifyRegex = '(                         # Collapse ws everywhere but in blacklisted elements
             (?>                                   # Match all whitespans other than single space
                 [^\S ]\s*                         # Either one [\t\r\n\f\v] and zero or more ws,
@@ -259,18 +259,7 @@ class ContentElementTestCase extends TestCase
             $this->createMock(Connection::class),
         );
 
-        $loader = new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $themeNamespace);
-
-        foreach ($templateLocator->findResourcesPaths() as $name => $resourcesPaths) {
-            foreach ($resourcesPaths as $path) {
-                $loader->addPath($path);
-                $loader->addPath($path, "Contao_$name", true);
-            }
-        }
-
-        $loader->buildInheritanceChains();
-
-        return $loader;
+        return new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $themeNamespace, $this->createMock(ContaoFramework::class), $resourceBasePath);
     }
 
     protected function getEnvironment(ContaoFilesystemLoader $contaoFilesystemLoader, ContaoFramework $framework): Environment

@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Controller\FrontendModule;
 
 use Contao\Controller;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
-use Contao\CoreBundle\Framework\Adapter;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\ModuleModel;
 use Contao\StringUtil;
 use Contao\Template;
@@ -40,12 +40,11 @@ class RootPageDependentModulesController extends AbstractFrontendModuleControlle
             return new Response();
         }
 
+        /** @var ContaoFramework $framework */
         $framework = $this->container->get('contao.framework');
-
-        /** @var Adapter<ModuleModel> $moduleModel */
         $moduleModel = $framework->getAdapter(ModuleModel::class);
 
-        if (!$module = $moduleModel->findByPk($modules[$pageModel->rootId])) {
+        if (!$module = $moduleModel->findById($modules[$pageModel->rootId])) {
             return new Response();
         }
 
@@ -59,7 +58,6 @@ class RootPageDependentModulesController extends AbstractFrontendModuleControlle
 
         $module->cssID = $cssID;
 
-        /** @var Adapter<Controller> $controller */
         $controller = $framework->getAdapter(Controller::class);
         $content = $controller->getFrontendModule($module);
 

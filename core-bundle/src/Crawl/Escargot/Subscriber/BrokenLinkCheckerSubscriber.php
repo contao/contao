@@ -99,8 +99,8 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
             return SubscriberInterface::DECISION_NEGATIVE;
         }
 
-        // When URI is part of the base uri collection, request content.
-        // This is needed to make sure HtmlCrawlerSubscriber::onLastChunk() is triggered.
+        // When URI is part of the base uri collection, request content. This is needed
+        // to make sure HtmlCrawlerSubscriber::onLastChunk() is triggered.
         if ($this->escargot->getBaseUris()->containsHost($crawlUri->getUri()->getHost())) {
             return SubscriberInterface::DECISION_POSITIVE;
         }

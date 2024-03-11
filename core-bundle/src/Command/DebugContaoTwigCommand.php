@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Command;
 
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Inspector\Inspector;
-use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\TableCell;
 use Symfony\Component\Console\Helper\TableCellStyle;
@@ -27,11 +27,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Path;
 
+#[AsCommand(
+    name: 'debug:contao-twig',
+    description: 'Displays the Contao template hierarchy.',
+)]
 class DebugContaoTwigCommand extends Command
 {
     public function __construct(
-        private readonly TemplateHierarchyInterface $hierarchy,
-        private readonly ContaoFilesystemLoaderWarmer $cacheWarmer,
+        private readonly ContaoFilesystemLoader $filesystemLoader,
         private readonly ThemeNamespace $themeNamespace,
         private readonly string $projectDir,
         private readonly Inspector $inspector,
@@ -42,8 +45,6 @@ class DebugContaoTwigCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('debug:contao-twig')
-            ->setDescription('Displays the Contao template hierarchy.')
             ->addOption('theme', 't', InputOption::VALUE_OPTIONAL, 'Include theme templates with a given theme path or slug.')
             ->addOption('tree', null, InputOption::VALUE_NONE, 'Display the templates as prefix tree.')
             ->addArgument('filter', InputArgument::OPTIONAL, 'Filter the output by an identifier or prefix.')
@@ -53,9 +54,9 @@ class DebugContaoTwigCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // Make sure the template hierarchy is up-to-date
-        $this->cacheWarmer->refresh();
+        $this->filesystemLoader->warmUp(true);
 
-        $chains = $this->hierarchy->getInheritanceChains($this->getThemeSlug($input));
+        $chains = $this->filesystemLoader->getInheritanceChains($this->getThemeSlug($input));
 
         if (null !== ($prefix = $input->getArgument('filter'))) {
             $chains = array_filter(
@@ -102,8 +103,8 @@ class DebugContaoTwigCommand extends Command
 
         // Recursively display tree nodes
         $displayNode = static function (array $node, string $prefix = '', string $namePrefix = '') use ($io, $chains, &$displayNode): void {
-            // Make sure leaf nodes (files) come first and everything else is
-            // sorted ascending by its key (identifier part)
+            // Make sure leaf nodes (files) come first and everything else is sorted
+            // ascending by its key (identifier part)
             uksort(
                 $node,
                 static function ($keyA, $keyB) use ($node) {
@@ -124,8 +125,8 @@ class DebugContaoTwigCommand extends Command
                 $currentPrefixWithNewline = $prefix.($count ? '│  ' : '   ');
 
                 if (\is_array($element)) {
-                    // Display part of the template identifier. If this is the
-                    // last bit, we also display the effective @Contao name.
+                    // Display part of the template identifier. If this is the last bit, we also
+                    // display the effective @Contao name.
                     $identifier = ltrim("$namePrefix/$label", '/');
 
                     $io->writeln(sprintf(

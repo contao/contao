@@ -104,7 +104,7 @@ class LightboxResult
 
         /** @var ContaoFramework $framework */
         $framework = $this->locator->get('contao.framework');
-        $layoutModel = $framework->getAdapter(LayoutModel::class)->findByPk($page->layout);
+        $layoutModel = $framework->getAdapter(LayoutModel::class)->findById($page->layout);
 
         if (!$layoutModel || empty($layoutModel->lightboxSize)) {
             return null;

@@ -54,6 +54,6 @@ class PreviewUrlConvertListener
             return null;
         }
 
-        return $this->framework->getAdapter(NewsModel::class)->findByPk($request->query->get('news'));
+        return $this->framework->getAdapter(NewsModel::class)->findById($request->query->get('news'));
     }
 }

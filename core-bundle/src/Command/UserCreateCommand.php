@@ -19,8 +19,8 @@ use Contao\CoreBundle\Intl\Locales;
 use Contao\Validator;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Types;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -29,6 +29,10 @@ use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 
+#[AsCommand(
+    name: 'contao:user:create',
+    description: 'Create a new Contao back end user.',
+)]
 class UserCreateCommand extends Command
 {
     private readonly array $locales;
@@ -47,8 +51,6 @@ class UserCreateCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('contao:user:create')
-            ->setDescription('Create a new Contao back end user.')
             ->addOption('username', 'u', InputOption::VALUE_REQUIRED, 'The username to create')
             ->addOption('name', null, InputOption::VALUE_REQUIRED, 'The full name')
             ->addOption('email', null, InputOption::VALUE_REQUIRED, 'The e-mail address')
@@ -186,7 +188,6 @@ class UserCreateCommand extends Command
         $question->setMaxAttempts(3);
         $question->setValidator($callback);
 
-        /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
 
         return $helper->ask($input, $output, $question);
@@ -199,7 +200,6 @@ class UserCreateCommand extends Command
         $question->setMaxAttempts(3);
         $question->setValidator($callback);
 
-        /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
 
         return $helper->ask($input, $output, $question);
@@ -210,7 +210,6 @@ class UserCreateCommand extends Command
         $question = new ChoiceQuestion($label, $options);
         $question->setAutocompleterValues($options);
 
-        /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
 
         return $helper->ask($input, $output, $question);
@@ -222,7 +221,6 @@ class UserCreateCommand extends Command
         $question->setAutocompleterValues($options);
         $question->setMultiselect(true);
 
-        /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
 
         return $helper->ask($input, $output, $question);

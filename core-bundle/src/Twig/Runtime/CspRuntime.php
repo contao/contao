@@ -42,7 +42,6 @@ final class CspRuntime implements RuntimeExtensionInterface
             return $htmlFragment;
         }
 
-        /** @var CspHandler $csp */
         $csp = $responseContext->get(CspHandler::class);
 
         foreach ($styles as $style) {
@@ -67,13 +66,10 @@ final class CspRuntime implements RuntimeExtensionInterface
             return '';
         }
 
-        /** @var CspHandler $csp */
-        $csp = $responseContext->get(CspHandler::class);
-
-        return $csp->getNonce($directive);
+        return $responseContext->get(CspHandler::class)->getNonce($directive);
     }
 
-    public function addSource(string $directive, string $source): void
+    public function addSource(array|string $directives, string $source): void
     {
         $responseContext = $this->responseContextAccessor->getResponseContext();
 
@@ -81,9 +77,11 @@ final class CspRuntime implements RuntimeExtensionInterface
             return;
         }
 
-        /** @var CspHandler $csp */
         $csp = $responseContext->get(CspHandler::class);
-        $csp->addSource($directive, $source);
+
+        foreach ((array) $directives as $directive) {
+            $csp->addSource($directive, $source);
+        }
     }
 
     public function addHash(string $directive, string $source, string $algorithm = 'sha256'): void
@@ -94,8 +92,6 @@ final class CspRuntime implements RuntimeExtensionInterface
             return;
         }
 
-        /** @var CspHandler $csp */
-        $csp = $responseContext->get(CspHandler::class);
-        $csp->addHash($directive, $source, $algorithm);
+        $responseContext->get(CspHandler::class)->addHash($directive, $source, $algorithm);
     }
 }

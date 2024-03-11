@@ -54,7 +54,7 @@ class InsertTagParserTest extends TestCase
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_MIME'], $GLOBALS['TL_HOOKS']);
+        unset($GLOBALS['TL_MIME'], $GLOBALS['TL_HOOKS'], $GLOBALS['objPage']);
 
         $this->resetStaticProperties([InsertTags::class, System::class, Config::class]);
 

@@ -58,7 +58,6 @@ class ModuleComments extends Module
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$objConfig = new \stdClass();

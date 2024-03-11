@@ -17,7 +17,6 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\ResizeConfiguration;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\Definition\ArrayNode;
-use Symfony\Component\Config\Definition\BaseNode;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\Definition\PrototypedArrayNode;
@@ -56,17 +55,12 @@ class ConfigurationTest extends TestCase
     }
 
     /**
-     * @group legacy
-     *
      * @dataProvider getPaths
      */
     public function testResolvesThePaths(string $unix, string $windows): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 4.13: Setting the web directory in a config file is deprecated. Use the "extra.public-dir" config key in your root composer.json instead.');
-
         $params = [
             [
-                'web_dir' => $unix,
                 'image' => [
                     'target_dir' => $windows,
                 ],
@@ -75,7 +69,6 @@ class ConfigurationTest extends TestCase
 
         $configuration = (new Processor())->processConfiguration($this->configuration, $params);
 
-        $this->assertSame('/tmp/contao', $configuration['web_dir']);
         $this->assertSame('C:/Temp/contao', $configuration['image']['target_dir']);
     }
 
@@ -198,7 +191,6 @@ class ConfigurationTest extends TestCase
 
     public function testAllowsOnlySnakeCaseKeys(): void
     {
-        /** @var ArrayNode $tree */
         $tree = $this->configuration->getConfigTreeBuilder()->buildTree();
 
         $this->assertInstanceOf(ArrayNode::class, $tree);
@@ -245,8 +237,8 @@ class ConfigurationTest extends TestCase
     public function testMessengerConfiguration(): void
     {
         $params = [
-            // This first configuration should be overridden by the latter (no deep merging), in order to control all the
-            // workers in your app.
+            // This first configuration should be overridden by the latter (no deep merging),
+            // in order to control all the workers in your app.
             [
                 'messenger' => [
                     'workers' => [
@@ -455,7 +447,6 @@ class ConfigurationTest extends TestCase
      */
     private function checkKeys(array $configuration): void
     {
-        /** @var BaseNode $value */
         foreach ($configuration as $key => $value) {
             if ($value instanceof ArrayNode) {
                 $this->checkKeys($value->getChildren());

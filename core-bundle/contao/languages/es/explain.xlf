@@ -1,0 +1,119 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/explain.php" source-language="en" target-language="es">
+    <body>
+      <trans-unit id="XPL.insertTags.0.0">
+        <source>Rich text editor</source>
+        <target>Editor rich text</target>
+      </trans-unit>
+      <trans-unit id="XPL.insertTags.0.1">
+        <source>For more information about TinyMCE, see &lt;a href=&quot;https://www.tiny.cloud/tinymce/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://www.tiny.cloud/tinymce/&lt;/a&gt;.</source>
+        <target>Para obtener más información sobre TinyMCE, consulte &lt;a href=&quot;https://www.tiny.cloud/tinymce/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://www.tiny.cloud/tinymce/&lt;/a&gt;.</target>
+      </trans-unit>
+      <trans-unit id="XPL.insertTags.1.0">
+        <source>Insert tags</source>
+        <target>Etiquetas inserción</target>
+      </trans-unit>
+      <trans-unit id="XPL.insertTags.1.1">
+        <source>For more information about insert tags, see &lt;a href=&quot;https://docs.contao.org/dev/framework/insert-tags/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://docs.contao.org/dev/framework/insert-tags/&lt;/a&gt;.</source>
+        <target>Para obtener más información sobre las etiquetas de inserción, consulte &lt;a href=&quot;https://docs.contao.org/dev/framework/insert-tags/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://docs.contao.org/dev/framework/insert-tags/&lt;/a&gt;.</target>
+      </trans-unit>
+      <trans-unit id="XPL.insertTags.2.0">
+        <source>Code editor</source>
+        <target>Editor de código</target>
+      </trans-unit>
+      <trans-unit id="XPL.insertTags.2.1">
+        <source>For more information about Ace, see &lt;a href=&quot;https://ace.c9.io&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://ace.c9.io&lt;/a&gt;.</source>
+        <target>Para obtener más información sobre Ace, consulte &lt;a href=&quot;https://ace.c9.io&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://ace.c9.io&lt;/a&gt;.</target>
+      </trans-unit>
+      <trans-unit id="XPL.insertTags.3.0">
+        <source>Markdown</source>
+        <target>Markdown</target>
+      </trans-unit>
+      <trans-unit id="XPL.insertTags.3.1">
+        <source>To learn more about markdown, see the &lt;a href=&quot;https://docs.contao.org/manual/en/article-management/content-elements/text-elements/#markdown&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao manual&lt;/a&gt;.</source>
+        <target>Para obtener más información sobre las rebajas, consulte el &lt;a href=&quot;https://docs.contao.org/manual/en/article-management/content-elements/text-elements/#markdown&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;manual de Contao&lt;/a&gt;.</target>
+      </trans-unit>
+      <trans-unit id="XPL.dateFormat.0.0">
+        <source>colspan</source>
+        <target>colspan</target>
+      </trans-unit>
+      <trans-unit id="XPL.dateFormat.0.1">
+        <source>Contao supports all date and time formats that can be parsed with the PHP date() function. However, to ensure that any input can be transformed into a UNIX timestamp, you can only use numeric date and time formats (j, d, m, n, y, Y, g, G, h, H, i, s) in the back end.&lt;br&gt;&lt;br&gt;&lt;strong&gt;You can enter different front end formats in the website root pages.&lt;/strong&gt;&lt;br&gt;&lt;br&gt;&lt;em&gt;Here are some examples of valid date and time formats&lt;/em&gt;:</source>
+        <target>
+Contao admite todos los formatos de fecha y hora que se pueden analizar con la función date() de PHP. Sin embargo, para asegurarse de que cualquier entrada se pueda transformar en una marca de tiempo UNIX, solo puede usar formatos numéricos de fecha y hora (j, d, m, n, y, Y, g, G, h, H, i, s) en el back-end. &lt;br&gt;&lt;br&gt;&lt;strong&gt;YPuede ingresar diferentes formatos de front-end en las páginas raíz del sitio web.&lt;/strong&gt;&lt;br&gt;&lt;br&gt;&lt;em&gt;Aquí hay algunos ejemplos de formatos válidos de fecha y hora&lt;/em&gt;:</target>
+      </trans-unit>
+      <trans-unit id="XPL.dateFormat.1.0">
+        <source>Y-m-d</source>
+        <target>Y-m-d</target>
+      </trans-unit>
+      <trans-unit id="XPL.dateFormat.1.1">
+        <source>YYYY-MM-DD, international ISO-8601, e.g. 2005-01-28</source>
+        <target>YYYY-MM-DD, internacional ISO 8601, por ejemplo 2005-01-28</target>
+      </trans-unit>
+      <trans-unit id="XPL.dateFormat.2.0">
+        <source>m/d/Y</source>
+        <target>m/d/Y</target>
+      </trans-unit>
+      <trans-unit id="XPL.dateFormat.2.1">
+        <source>MM/DD/YYYY, English format, e.g. 01/28/2005</source>
+        <target>MM/DD/AAAA, Formato inglés, por ejemplo 01/28/2005</target>
+      </trans-unit>
+      <trans-unit id="XPL.dateFormat.3.0">
+        <source>d.m.Y</source>
+        <target>d.m.Y</target>
+      </trans-unit>
+      <trans-unit id="XPL.dateFormat.3.1">
+        <source>DD.MM.YYYY, German format, e.g. 28.01.2005</source>
+        <target>DD.MM.AAAA, Formato alemán, por ejemplo 28.01.2005</target>
+      </trans-unit>
+      <trans-unit id="XPL.dateFormat.4.0">
+        <source>y-n-j</source>
+        <target>y-n-j</target>
+      </trans-unit>
+      <trans-unit id="XPL.dateFormat.4.1">
+        <source>YY-M-D, without leading zeros, e.g. 05-1-28</source>
+        <target>YY-M-D, sin ceros al inicio, por ejemplo 05-1-28</target>
+      </trans-unit>
+      <trans-unit id="XPL.dateFormat.5.0">
+        <source>Ymd</source>
+        <target>Ymd</target>
+      </trans-unit>
+      <trans-unit id="XPL.dateFormat.5.1">
+        <source>YYYYMMDD, timestamp, e.g. 20050128</source>
+        <target>YYYYMMDD, timestamp, por ejemplo 20050128</target>
+      </trans-unit>
+      <trans-unit id="XPL.dateFormat.6.0">
+        <source>H:i:s</source>
+        <target>H:i:s</target>
+      </trans-unit>
+      <trans-unit id="XPL.dateFormat.6.1">
+        <source>24 hours, minutes and seconds, e.g. 20:36:59</source>
+        <target>24 horas, minutos y segundos, por ejemplo 20:36:59</target>
+      </trans-unit>
+      <trans-unit id="XPL.dateFormat.7.0">
+        <source>g:i</source>
+        <target>g:i</target>
+      </trans-unit>
+      <trans-unit id="XPL.dateFormat.7.1">
+        <source>12 hours without leading zeros and minutes, e.g. 8:36</source>
+        <target>12 horas sin ceros al inicio y minutos, por ejemplo 8:36</target>
+      </trans-unit>
+      <trans-unit id="XPL.imageSizeDensities.0.0">
+        <source>Sizes attribute</source>
+        <target>Atributo tamaños</target>
+      </trans-unit>
+      <trans-unit id="XPL.imageSizeDensities.0.1">
+        <source>The HTML attribute &lt;code&gt;sizes&lt;/code&gt; defines the intended layout width of the image, optionally combined with a media query. You can use any CSS length value in this attribute.&lt;br&gt;&lt;br&gt;E.g. &lt;code&gt;(max-width: 600px) 100vw, 50vw&lt;/code&gt; means the image‘s width is 100% of the viewport for small screens and 50% of the viewport for larger screens.&lt;br&gt;&lt;br&gt;And &lt;code&gt;(max-width: 600px) calc(100vw - 20px), 500px&lt;/code&gt; means the image‘s width is 20px smaller than the viewport for small screens and 500px for larger screens.&lt;br&gt;&lt;br&gt;The sizes attribute shouldn’t be used for styling, use CSS instead. The sizes attribute does not necessarily have to match up exactly with the actual image width as specified in the CSS.&lt;br&gt;&lt;br&gt;For more information about the sizes attribute please visit &lt;a href=&quot;https://www.w3.org/TR/2016/PR-html51-20160915/semantics-embedded-content.html#element-attrdef-img-sizes&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;w3.org&lt;/a&gt;.</source>
+        <target>Los &lt;code&gt;tamaños&lt;/code&gt; de atributos HTML definen el ancho de diseño previsto de la imagen, combinado opcionalmente con una consulta de medios. Puede usar cualquier valor de longitud CSS en este atributo. &lt;br&gt;&lt;br&gt;P.ej. &lt;code&gt;(max-width: 600px) 100vw, 50vw&lt;/code&gt; significa que el ancho de la imagen es el 100 % de la ventana gráfica para pantallas pequeñas y el 50 % de la ventana gráfica para pantallas más grandes. &lt;br&gt;&lt;br&gt;Y &lt;code&gt;(max-width: 600px) calc(100vw - 20px), 500 px&lt;/code&gt; significa que el ancho de la imagen es 20 px más pequeño que la ventana gráfica para pantallas pequeñas y 500 px para pantallas más grandes.&lt;br&gt;&lt;br&gt;El atributo de tamaños no debe usarse para diseñar, use CSS en su lugar. El atributo de tamaños no necesariamente tiene que coincidir exactamente con el ancho real de la imagen como se especifica en el CSS.&lt;br&gt;&lt;br&gt;Para obtener más información sobre el atributo de tamaños, visite&lt;a href=&quot;https://www.w3.org/TR/2016/PR-html51-20160915/semantics-embedded-content.html#element-attrdef-img-sizes&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;w3.org&lt;/a&gt;.</target>
+      </trans-unit>
+      <trans-unit id="XPL.imageSizeDensities.1.0">
+        <source>Pixel densities/&lt;br&gt;scale factors</source>
+        <target>Factores de escala/&lt;br&gt;densidades de píxeles</target>
+      </trans-unit>
+      <trans-unit id="XPL.imageSizeDensities.1.1">
+        <source>If the sizes attribute is not defined, this setting simply defines the pixel densities you want to support. The dimensions of the images are adjusted automatically. E.g. &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; creates the following HTML code: &lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 1x, img-b.jpg 1.5x, img-c.jpg 2x&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;If the sizes attribute is defined, the same image sizes are generated but width descriptors are used for the srcset attribute. E.g. a 200 pixel wide image with the densities &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; creates the following HTML code: &lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 200w, img-b.jpg 300w, img-c.jpg 400w&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;For more information about the srcset attribute please visit &lt;a href=&quot;https://www.w3.org/TR/2016/PR-html51-20160915/semantics-embedded-content.html#element-attrdef-img-srcset&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;w3.org&lt;/a&gt;.</source>
+        <target>Si el atributo de tamaños no está definido, esta configuración simplemente define las densidades de píxeles que desea admitir. Las dimensiones de las imágenes se ajustan automáticamente. P.ej. &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; crea el siguiente código HTML: &lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 1x, img-b.jpg 1.5x, img-c.jpg 2x&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;Si se define el atributo de tamaños, el Se generan los mismos tamaños de imagen, pero se usan descriptores de ancho para el atributo srcset. P.ej. una imagen de 200 píxeles de ancho con las densidades &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; crea el siguiente código HTML: &lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 200w, img-b.jpg 300w, img-c.jpg 400w&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;Para Para obtener más información sobre el atributo srcset, visite &lt;a href=&quot;https://www.w3.org/TR/2016/PR-html51-20160915/semantics-embedded-content.html#element-attrdef-img-srcset&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;w3.org&lt;/a&gt;.</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -90,7 +90,6 @@ class ModuleEventlist extends Events
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$blnClearInput = false;
@@ -364,8 +363,7 @@ class ModuleEventlist extends Events
 			// Add an image
 			if ($event['addImage'])
 			{
-				/** @var CalendarEventsModel $eventModel */
-				$eventModel = CalendarEventsModel::findByPk($event['id']);
+				$eventModel = CalendarEventsModel::findById($event['id']);
 				$imgSize = $eventModel->size ?: null;
 
 				// Override the default image size

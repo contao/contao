@@ -20,6 +20,10 @@ class FrontendModulesVoter extends AbstractDataContainerVoter
 
     protected function hasAccess(TokenInterface $token, CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
     {
+        if ($action instanceof ReadAction) {
+            return true;
+        }
+
         $user = $token->getUser();
 
         if (!$user instanceof BackendUser) {

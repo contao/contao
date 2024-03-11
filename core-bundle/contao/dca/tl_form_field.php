@@ -494,6 +494,8 @@ class tl_form_field extends Backend
 	public function listFormFields($arrRow)
 	{
 		$arrRow['required'] = $arrRow['mandatory'];
+
+		/** @var class-string<Widget> $strClass */
 		$strClass = $GLOBALS['TL_FFL'][$arrRow['type']] ?? null;
 
 		if (!class_exists($strClass))
@@ -501,7 +503,6 @@ class tl_form_field extends Backend
 			return '';
 		}
 
-		/** @var Widget $objWidget */
 		$objWidget = new $strClass($arrRow);
 		$key = $arrRow['invisible'] ? 'unpublished' : 'published';
 

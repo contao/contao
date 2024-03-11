@@ -505,13 +505,15 @@ class Config
 			}
 		}
 
-		$objRequest = $container->get('request_stack')->getCurrentRequest();
-
-		/** @var PageModel $objPage */
-		if (null !== $objRequest && ($objPage = $objRequest->attributes->get('pageModel')) instanceof PageModel)
+		if ($objRequest = $container->get('request_stack')->getCurrentRequest())
 		{
-			$GLOBALS['TL_CONFIG']['addLanguageToUrl'] = $objPage->urlPrefix !== '';
-			$GLOBALS['TL_CONFIG']['urlSuffix'] = $objPage->urlSuffix;
+			$objPage = $objRequest->attributes->get('pageModel');
+
+			if ($objPage instanceof PageModel)
+			{
+				$GLOBALS['TL_CONFIG']['addLanguageToUrl'] = $objPage->urlPrefix !== '';
+				$GLOBALS['TL_CONFIG']['urlSuffix'] = $objPage->urlSuffix;
+			}
 		}
 	}
 

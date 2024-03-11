@@ -102,8 +102,8 @@ abstract class AbstractFragmentController extends AbstractController implements 
                 try {
                     $response = $legacyTemplate->getResponse();
                 } catch (\Exception $e) {
-                    // Enhance the exception if a modern template name is defined
-                    // but still delegate to the legacy framework
+                    // Enhance the exception if a modern template name is defined but still delegate
+                    // to the legacy framework
                     if (null !== ($definedTemplateName = $this->options['template'] ?? null) && preg_match('/^Could not find template "\S+"$/', $e->getMessage())) {
                         throw new \LogicException(sprintf('Could neither find template "%s" nor the legacy fallback template "%s". Did you forget to create a default template or manually define the "template" property of the controller\'s service tag/attribute?', $definedTemplateName, $templateName), 0, $e);
                     }
@@ -292,8 +292,8 @@ abstract class AbstractFragmentController extends AbstractController implements 
 
         $definedTemplateName = $this->options['template'] ?? null;
 
-        // Always use the defined name for legacy templates and for modern
-        // templates that exist (= those that do not need to have a fallback)
+        // Always use the defined name for legacy templates and for modern templates that
+        // exist (= those that do not need to have a fallback)
         if (null !== $definedTemplateName && ($this->isLegacyTemplate($definedTemplateName) || $exists($definedTemplateName))) {
             return $definedTemplateName;
         }

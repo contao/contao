@@ -71,7 +71,6 @@ class ModuleFaqReader extends Module
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		if ($this->overviewPage && ($overviewPage = PageModel::findById($this->overviewPage)))
@@ -95,7 +94,6 @@ class ModuleFaqReader extends Module
 
 		if ($responseContext?->has(HtmlHeadBag::class))
 		{
-			/** @var HtmlHeadBag $htmlHeadBag */
 			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
 			$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 
@@ -153,8 +151,7 @@ class ModuleFaqReader extends Module
 
 		$strAuthor = '';
 
-		/** @var UserModel $objAuthor */
-		if (($objAuthor = $objFaq->getRelated('author')) instanceof UserModel)
+		if ($objAuthor = UserModel::findById($objFaq->author))
 		{
 			$strAuthor = $objAuthor->name;
 		}
@@ -183,8 +180,11 @@ class ModuleFaqReader extends Module
 			return;
 		}
 
-		/** @var FaqCategoryModel $objCategory */
-		$objCategory = $objFaq->getRelated('pid');
+		if (!$objCategory = FaqCategoryModel::findById($objFaq->pid))
+		{
+			return;
+		}
+
 		$this->Template->allowComments = $objCategory->allowComments;
 
 		// Comments are not allowed
@@ -205,8 +205,7 @@ class ModuleFaqReader extends Module
 			$arrNotifies[] = $GLOBALS['TL_ADMIN_EMAIL'];
 		}
 
-		/** @var UserModel $objAuthor */
-		if ($objCategory->notify != 'notify_admin' && ($objAuthor = $objFaq->getRelated('author')) instanceof UserModel && $objAuthor->email)
+		if ($objCategory->notify != 'notify_admin' && ($objAuthor = UserModel::findById($objFaq->author)) && $objAuthor->email)
 		{
 			$arrNotifies[] = $objAuthor->email;
 		}

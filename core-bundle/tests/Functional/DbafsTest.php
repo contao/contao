@@ -61,8 +61,8 @@ class DbafsTest extends FunctionalTestCase
         // Expect no changes initially
         $this->assertTrue($this->dbafs->sync()->isEmpty());
 
-        // Write to the virtual filesystem; expect automatic syncing, thus no
-        // changes when syncing
+        // Write to the virtual filesystem; expect automatic syncing, thus no changes
+        // when syncing
         $this->filesystem->write('file1', '1');
         $this->filesystem->createDirectory('123');
         $this->filesystem->write('123/file2', '2');
@@ -85,9 +85,9 @@ class DbafsTest extends FunctionalTestCase
 
     public function testAutomaticallySyncsFiles(): void
     {
-        // Adding a file should automatically update the Dbafs; we're using
-        // paths with numeric strings here to also test their correct handling
-        // inside the Dbafs class (see #5618).
+        // Adding a file should automatically update the Dbafs; we're using paths with
+        // numeric strings here to also test their correct handling inside the Dbafs
+        // class (see #5618).
         $this->filesystem->write('1', '');
 
         $contents = $this->filesystem->listContents('')->toArray();

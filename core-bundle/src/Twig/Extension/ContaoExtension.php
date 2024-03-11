@@ -20,11 +20,11 @@ use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicUseTokenParser;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaper;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNode;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
 use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
 use Contao\CoreBundle\Twig\Runtime\ContentUrlRuntime;
@@ -63,7 +63,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
 
     public function __construct(
         private readonly Environment $environment,
-        private readonly TemplateHierarchyInterface $hierarchy,
+        private readonly ContaoFilesystemLoader $filesystemLoader,
         ContaoCsrfTokenManager $tokenManager,
         private readonly ContaoVariable $contaoVariable,
     ) {
@@ -73,9 +73,8 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
         $escaperExtension->setEscaper('contao_html', $contaoEscaper->escapeHtml(...));
         $escaperExtension->setEscaper('contao_html_attr', $contaoEscaper->escapeHtmlAttr(...));
 
-        // Use our escaper on all templates in the "@Contao" and "@Contao_*"
-        // namespaces, as well as the existing bundle templates we're already
-        // shipping.
+        // Use our escaper on all templates in the "@Contao" and "@Contao_*" namespaces,
+        // as well as the existing bundle templates we're already shipping.
         $this->addContaoEscaperRule('%^@Contao(_[a-zA-Z0-9_-]*)?/%');
         $this->addContaoEscaperRule('%^@ContaoCore/%');
 
@@ -124,16 +123,14 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
     public function getNodeVisitors(): array
     {
         return [
-            // Enables the "contao_twig" escaper for Contao templates with
-            // input encoding
+            // Enables the "contao_twig" escaper for Contao templates with input encoding
             new ContaoEscaperNodeVisitor(
                 fn () => $this->contaoEscaperFilterRules,
             ),
-            // Allows rendering PHP templates with the legacy framework by
-            // installing proxy nodes
+            // Allows rendering PHP templates with the legacy framework by installing proxy nodes
             new PhpTemplateProxyNodeVisitor(self::class),
-            // Triggers PHP deprecations if deprecated constructs are found in
-            // the parsed templates.
+            // Triggers PHP deprecations if deprecated constructs are found in the
+            // parsed templates.
             new DeprecationsNodeVisitor(),
         ];
     }
@@ -141,11 +138,11 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
     public function getTokenParsers(): array
     {
         return [
-            // Overwrite the parsers for the "extends", "include" and "use"
-            // tags to additionally support the Contao template hierarchy
-            new DynamicExtendsTokenParser($this->hierarchy),
-            new DynamicIncludeTokenParser($this->hierarchy),
-            new DynamicUseTokenParser($this->hierarchy),
+            // Overwrite the parsers for the "extends", "include" and "use" tags to
+            // additionally support the Contao template hierarchy
+            new DynamicExtendsTokenParser($this->filesystemLoader),
+            new DynamicIncludeTokenParser($this->filesystemLoader),
+            new DynamicUseTokenParser($this->filesystemLoader),
             // Add a parser for the Contao specific "add" tag
             new AddTokenParser(self::class),
         ];
@@ -156,13 +153,13 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
         $includeFunctionCallable = $this->getTwigIncludeFunction()->getCallable();
 
         return [
-            // Overwrite the "include" function to additionally support the
-            // Contao template hierarchy
+            // Overwrite the "include" function to additionally support the Contao
+            // template hierarchy
             new TwigFunction(
                 'include',
                 function (Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = false, $sandboxed = false /* we need named arguments here */) use ($includeFunctionCallable) {
                     $args = \func_get_args();
-                    $args[2] = DynamicIncludeTokenParser::adjustTemplateName($template, $this->hierarchy);
+                    $args[2] = DynamicIncludeTokenParser::adjustTemplateName($template, $this->filesystemLoader);
 
                     return $includeFunctionCallable(...$args);
                 },
@@ -256,9 +253,9 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
         };
 
         $twigEscaperFilterIsSafe = static function (Node $filterArgs): array {
-            // Our escaper strategy variants that tolerate input encoding are
-            // also safe in the original context (e.g. for the filter argument
-            // 'contao_html' we will return ['contao_html', 'html']).
+            // Our escaper strategy variants that tolerate input encoding are also safe in
+            // the original context (e.g. for the filter argument 'contao_html' we will
+            // return ['contao_html', 'html']).
             if (
                 ($expression = iterator_to_array($filterArgs)[0] ?? null) instanceof ConstantExpression
                 && \in_array($value = $expression->getAttribute('value'), ['contao_html', 'contao_html_attr'], true)
@@ -270,8 +267,8 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
         };
 
         return [
-            // Overwrite the "escape" filter to additionally support chunked
-            // text and our escaper strategies
+            // Overwrite the "escape" filter to additionally support chunked text and our
+            // escaper strategies
             new TwigFilter(
                 'escape',
                 $escaperFilter,

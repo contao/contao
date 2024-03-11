@@ -28,7 +28,6 @@ class PageError401 extends Frontend
 	 */
 	public function getResponse(PageModel $objRootPage=null)
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$obj401 = $this->prepare($objRootPage);

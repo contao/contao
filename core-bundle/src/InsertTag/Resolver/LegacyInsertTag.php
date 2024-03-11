@@ -293,9 +293,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
             case 'article':
             case 'article_open':
             case 'article_url':
-                $objArticle = ArticleModel::findByIdOrAlias($insertTag->getParameters()->get(0));
-
-                if (!$objArticle instanceof ArticleModel) {
+                if (!$objArticle = ArticleModel::findByIdOrAlias($insertTag->getParameters()->get(0))) {
                     break;
                 }
 
@@ -382,9 +380,9 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                         $result = Idna::decode(Environment::get('url'));
                         break;
 
-                    // As the "env::path" insert tag returned the base URL ever since, we
-                    // keep it as an alias to the "env::base" tag. Use "env::base_path" to
-                    // output the actual base path.
+                    // As the "env::path" insert tag returned the base URL ever since, we keep it as
+                    // an alias to the "env::base" tag. Use "env::base_path" to output the actual
+                    // base path.
                     case 'path':
                     case 'base':
                         $result = Idna::decode(Environment::get('base'));
@@ -557,7 +555,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                     $strFile = $objFile->path;
                 } elseif (is_numeric($strFile)) {
                     // Handle numeric IDs (see #4805)
-                    if (!$objFile = FilesModel::findByPk($strFile)) {
+                    if (!$objFile = FilesModel::findById($strFile)) {
                         break;
                     }
 

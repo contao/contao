@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\String\HtmlAttributes;
@@ -122,7 +121,6 @@ trait TemplateTrait
 			return;
 		}
 
-		/** @var JsonLdManager $jsonLdManager */
 		$jsonLdManager = $responseContext->get(JsonLdManager::class);
 		$type = $jsonLdManager->createSchemaOrgTypeFromArray($jsonLd);
 
@@ -152,16 +150,13 @@ trait TemplateTrait
 			return null;
 		}
 
-		/** @var CspHandler $csp */
-		$csp = $responseContext->get(CspHandler::class);
-
-		return $csp->getNonce($directive);
+		return $responseContext->get(CspHandler::class)->getNonce($directive);
 	}
 
 	/**
 	 * Adds a source to the given CSP directive.
 	 */
-	public function addCspSource(string $directive, string $source): void
+	public function addCspSource(string|array $directives, string $source): void
 	{
 		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
@@ -170,9 +165,12 @@ trait TemplateTrait
 			return;
 		}
 
-		/** @var CspHandler $csp */
 		$csp = $responseContext->get(CspHandler::class);
-		$csp->addSource($directive, $source);
+
+		foreach ((array) $directives as $directive)
+		{
+			$csp->addSource($directive, $source);
+		}
 	}
 
 	/**
@@ -187,7 +185,6 @@ trait TemplateTrait
 			return;
 		}
 
-		/** @var CspHandler $csp */
 		$csp = $responseContext->get(CspHandler::class);
 		$csp->addHash($directive, $script, $algorithm);
 	}
@@ -201,7 +198,6 @@ trait TemplateTrait
 
 		if ($responseContext?->has(CspHandler::class))
 		{
-			/** @var CspHandler $csp */
 			$csp = $responseContext->get(CspHandler::class);
 			$csp
 				->addHash('style-src', $style, $algorithm)
@@ -230,7 +226,6 @@ trait TemplateTrait
 			return $html;
 		}
 
-		/** @var WysiwygStyleProcessor $styleProcessor */
 		$styleProcessor = System::getContainer()->get('contao.csp.wysiwyg_style_processor');
 
 		if (!$styles = $styleProcessor->extractStyles($html))
@@ -238,7 +233,6 @@ trait TemplateTrait
 			return $html;
 		}
 
-		/** @var CspHandler $csp */
 		$csp = $responseContext->get(CspHandler::class);
 
 		foreach ($styles as $style)

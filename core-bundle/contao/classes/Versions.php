@@ -712,7 +712,7 @@ class Versions extends Controller
 			if (isset($arrRow['editUrl']))
 			{
 				// Adjust the edit URL of files in case they have been renamed (see #671)
-				if ($arrRow['fromTable'] == 'tl_files' && ($filesModel = FilesModel::findByPk($arrRow['pid'])))
+				if ($arrRow['fromTable'] == 'tl_files' && ($filesModel = FilesModel::findById($arrRow['pid'])))
 				{
 					$arrRow['editUrl'] = preg_replace('/id=[^&]+/', 'id=' . $filesModel->path, $arrRow['editUrl']);
 				}
@@ -828,7 +828,9 @@ class Versions extends Controller
 			return $this->intUserId;
 		}
 
-		if (($user = System::getContainer()->get('security.helper')->getUser()) instanceof BackendUser)
+		$user = System::getContainer()->get('security.helper')->getUser();
+
+		if ($user instanceof BackendUser)
 		{
 			return $user->id;
 		}

@@ -369,7 +369,7 @@ class tl_article extends Backend
 			// Get the layout sections
 			if ($objPage->layout)
 			{
-				$objLayout = LayoutModel::findByPk($objPage->layout);
+				$objLayout = LayoutModel::findById($objPage->layout);
 
 				if ($objLayout === null)
 				{
@@ -441,13 +441,15 @@ class tl_article extends Backend
 		// Generate the aliases
 		if (Input::post('alias') !== null && Input::post('FORM_SUBMIT') == 'tl_select')
 		{
+			$router = System::getContainer()->get('router');
+
 			$objSession = System::getContainer()->get('request_stack')->getSession();
 			$session = $objSession->all();
 			$ids = $session['CURRENT']['IDS'] ?? array();
 
 			foreach ($ids as $id)
 			{
-				$objArticle = ArticleModel::findByPk($id);
+				$objArticle = ArticleModel::findById($id);
 
 				if ($objArticle === null)
 				{
@@ -488,6 +490,7 @@ class tl_article extends Backend
 
 				// Initialize the version manager
 				$objVersions = new Versions('tl_article', $id);
+				$objVersions->setEditUrl($router->generate('contao_backend', array('do'=>'article', 'act'=>'edit', 'id'=>$id, 'rt'=>'1')));
 				$objVersions->initialize();
 
 				// Store the new alias

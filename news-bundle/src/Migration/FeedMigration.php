@@ -14,15 +14,13 @@ namespace Contao\NewsBundle\Migration;
 
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
+use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
-use Psr\Log\LoggerInterface;
 
 class FeedMigration extends AbstractMigration
 {
-    public function __construct(
-        private readonly Connection $connection,
-        private readonly LoggerInterface $logger,
-    ) {
+    public function __construct(private readonly Connection $connection)
+    {
     }
 
     public function shouldRun(): bool
@@ -57,20 +55,22 @@ class FeedMigration extends AbstractMigration
             $this->connection->executeStatement("ALTER TABLE tl_page ADD $field $definition");
         }
 
-        // Migrate data from `tl_news_feeds` to `tl_page`
+        // Migrate data from `tl_news_feeds` to `tl_page` and update `tl_layout`
         $feeds = $this->connection->fetchAllAssociative('SELECT * FROM tl_news_feed');
+        $layouts = $this->connection->fetchAllKeyValue('SELECT id, newsfeeds FROM tl_layout WHERE newsfeeds IS NOT NULL');
+        $mapping = [];
 
         foreach ($feeds as $feed) {
-            $rootPage = $this->findMatchingRootPage($feed);
+            [$rootPage, $sorting] = $this->findMatchingRootPage($feed) + [null, 0];
 
             if (!$rootPage) {
-                $this->logger->warning('Could not migrate feed "'.$feed['title'].'" because there is no root page');
-                continue;
+                return $this->createResult(false, 'Could not migrate feed "'.$feed['title'].'" because there is no root page');
             }
 
             $this->connection->insert('tl_page', [
                 'type' => 'news_feed',
                 'pid' => $rootPage,
+                'sorting' => $sorting + 128,
                 'tstamp' => $feed['tstamp'],
                 'title' => $feed['title'],
                 'alias' => 'share/'.$feed['alias'],
@@ -80,28 +80,45 @@ class FeedMigration extends AbstractMigration
                 'maxFeedItems' => $feed['maxItems'],
                 'feedDescription' => $feed['description'],
                 'imgSize' => $feed['imgSize'],
+                'published' => 1,
             ]);
 
+            $mapping[$feed['id']] = $this->connection->lastInsertId();
+
             $this->connection->delete('tl_news_feed', ['id' => $feed['id']]);
+        }
+
+        foreach ($layouts as $layoutId => $newsfeeds) {
+            $newsfeeds = StringUtil::deserialize($newsfeeds);
+
+            if (!\is_array($newsfeeds)) {
+                continue;
+            }
+
+            foreach ($newsfeeds as $k => $v) {
+                $newsfeeds[$k] = $mapping[$v] ?? $v;
+            }
+
+            $this->connection->update('tl_layout', ['newsfeeds' => serialize($newsfeeds)], ['id' => $layoutId]);
         }
 
         return $this->createResult(true);
     }
 
-    private function findMatchingRootPage(array $feed): int|null
+    private function findMatchingRootPage(array $feed): array
     {
-        $feedBase = preg_replace('/^https?:\/\//', '', $feed['feedBase']);
+        $feedBase = parse_url($feed['feedBase'], PHP_URL_HOST) ?: $feed['feedBase'];
 
-        $page = $this->connection->fetchOne(
-            "SELECT id FROM tl_page WHERE type = 'root' AND dns = :dns AND language = :language LIMIT 1",
+        $page = $this->connection->fetchNumeric(
+            "SELECT r.id, MAX(c.sorting) FROM tl_page r LEFT JOIN tl_page c ON c.pid = r.id WHERE r.type = 'root' AND r.dns = :dns AND r.language = :language GROUP BY r.id LIMIT 1",
             ['dns' => $feedBase, 'language' => $feed['language']],
         );
 
-        // Find first root page, if none matches by dns and language
+        // Find the first root page if none matches by DNS and language
         if (!$page) {
-            $page = $this->connection->fetchOne("SELECT id FROM tl_page WHERE type = 'root' AND fallback = 1 ORDER BY sorting ASC LIMIT 1");
+            $page = $this->connection->fetchNumeric("SELECT r.id, MAX(c.sorting) FROM tl_page r LEFT JOIN tl_page c ON c.pid = r.id WHERE r.type = 'root' AND r.fallback = 1 GROUP BY r.id ORDER BY r.sorting ASC LIMIT 1");
         }
 
-        return $page;
+        return $page ?: [];
     }
 }

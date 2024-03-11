@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\EventListener\Security;
 
 use Contao\ManagerBundle\HttpKernel\JwtManager;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
 
 class LogoutListener
@@ -27,9 +26,7 @@ class LogoutListener
 
     public function __invoke(LogoutEvent $event): void
     {
-        $response = $event->getResponse();
-
-        if (!$response instanceof Response) {
+        if (!$response = $event->getResponse()) {
             return;
         }
 

@@ -152,6 +152,10 @@ class ContaoCacheWarmer implements CacheWarmerInterface
 
             if ($catalogue instanceof MessageCatalogue) {
                 foreach (array_unique($catalogue->getDomains()) as $domain) {
+                    if (!str_starts_with($domain, 'contao_')) {
+                        continue;
+                    }
+
                     $php = $catalogue->getGlobalsString($domain);
 
                     if (!$php) {
@@ -166,6 +170,10 @@ class ContaoCacheWarmer implements CacheWarmerInterface
                     } else {
                         $this->filesystem->dumpFile($path, "<?php\n\n".$php);
                     }
+
+                    // Add Contao translations that only exist as Symfony translations for the
+                    // available language file cache (see #6741)
+                    $processed[$language][$name] = true;
                 }
             }
         }

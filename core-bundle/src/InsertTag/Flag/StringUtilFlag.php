@@ -77,16 +77,36 @@ class StringUtilFlag
         ;
     }
 
+    #[AsInsertTagFlag('strtolower')]
     #[AsInsertTagFlag('utf8_strtolower')]
-    public function utf8Strtolower(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
+    public function strtolower(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
     {
         return $result->withValue(mb_strtolower($result->getValue()));
     }
 
+    #[AsInsertTagFlag('strtoupper')]
     #[AsInsertTagFlag('utf8_strtoupper')]
-    public function utf8Strtoupper(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
+    public function strtoupper(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
     {
         return $result->withValue(mb_strtoupper($result->getValue()));
+    }
+
+    #[AsInsertTagFlag('ucfirst')]
+    public function ucfirst(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
+    {
+        return $result->withValue(mb_strtoupper(mb_substr($result->getValue(), 0, 1)).mb_substr($result->getValue(), 1));
+    }
+
+    #[AsInsertTagFlag('lcfirst')]
+    public function lcfirst(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
+    {
+        return $result->withValue(mb_strtolower(mb_substr($result->getValue(), 0, 1)).mb_substr($result->getValue(), 1));
+    }
+
+    #[AsInsertTagFlag('ucwords')]
+    public function ucwords(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
+    {
+        return $result->withValue(preg_replace_callback('/(?<=\s|^)./u', static fn ($matches) => mb_strtoupper($matches[0]), $result->getValue()));
     }
 
     #[AsInsertTagFlag('utf8_romanize')]

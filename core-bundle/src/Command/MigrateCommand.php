@@ -22,6 +22,7 @@ use Doctrine\DBAL\Driver\Mysqli\Driver as MysqliDriver;
 use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\VersionAwarePlatformDriver;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Input\InputInterface;
@@ -29,6 +30,10 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand(
+    name: 'contao:migrate',
+    description: 'Executes migrations and updates the database schema.',
+)]
 class MigrateCommand extends Command
 {
     private SymfonyStyle|null $io = null;
@@ -47,8 +52,6 @@ class MigrateCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('contao:migrate')
-            ->setDescription('Executes migrations and updates the database schema.')
             ->addOption('with-deletes', null, InputOption::VALUE_NONE, 'Execute all database migrations including DROP queries. Can be used together with --no-interaction.')
             ->addOption('schema-only', null, InputOption::VALUE_NONE, 'Only update the database schema.')
             ->addOption('migrations-only', null, InputOption::VALUE_NONE, 'Only execute the migrations.')
@@ -282,9 +285,8 @@ class MigrateCommand extends Command
             }
 
             if (null !== $specifiedHash) {
-                // Do not run the schema update after migrations got executed
-                // if a hash was specified, because that hash could never match
-                // both, migrations and schema updates
+                // Do not run the schema update after migrations got executed if a hash was specified,
+                // because that hash could never match both, migrations and schema updates
                 $dryRun = true;
 
                 // Do not run the update recursive if a hash was specified
@@ -536,9 +538,9 @@ class MigrateCommand extends Command
                 return $errors;
             }
 
-            // As there is no reliable way to get the vendor (see #84), we are
-            // guessing based on the version number. The check will not be run
-            // as of MySQL 8 and MariaDB 10.3, so this should be safe.
+            // As there is no reliable way to get the vendor (see #84), we are guessing based
+            // on the version number. The check will not be run as of MySQL 8 and MariaDB
+            // 10.3, so this should be safe.
             $vok = version_compare($version, '10', '>=') ? '10.2.2' : '5.7.7';
 
             // Large prefixes are always enabled as of MySQL 5.7.7 and MariaDB 10.2.2
@@ -655,7 +657,8 @@ class MigrateCommand extends Command
 
     private function validateDatabaseVersion(bool $asJson): bool
     {
-        // TODO: Find a replacement for getWrappedConnection() once doctrine/dbal 4.0 is released
+        // TODO: Find a replacement for getWrappedConnection() once doctrine/dbal
+        // 4.0 is released
         $driverConnection = $this->connection->getWrappedConnection();
 
         if (!$driverConnection instanceof ServerInfoAwareConnection) {

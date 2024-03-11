@@ -20,8 +20,6 @@ use Contao\CoreBundle\Security\DataContainer\AbstractAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\Image\ResizeConfiguration;
 use Doctrine\DBAL\ArrayParameterType;
-use Doctrine\DBAL\Connection;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 /**
  * Provide methods to handle data container arrays.
@@ -436,6 +434,7 @@ abstract class DataContainer extends Backend
 			return $arrData['input_field_callback']($this, $xlabel);
 		}
 
+		/** @var class-string<Widget> $strClass */
 		$strClass = $GLOBALS['BE_FFL'][$arrData['inputType'] ?? null] ?? null;
 
 		// Return if the widget class does not exist
@@ -477,7 +476,6 @@ abstract class DataContainer extends Backend
 			$arrData['eval']['useRawRequestData'] = true;
 		}
 
-		/** @var Widget $objWidget */
 		$objWidget = new $strClass($strClass::getAttributesFromDca($arrData, $this->strInputName, $this->varValue, $this->strField, $this->strTable, $this));
 		$objWidget->xlabel = $xlabel;
 		$objWidget->currentRecord = $this->intId;
@@ -1375,7 +1373,6 @@ abstract class DataContainer extends Backend
 		// Reset all filters
 		if (Input::post('filter_reset') !== null && Input::post('FORM_SUBMIT') == 'tl_filters')
 		{
-			/** @var AttributeBagInterface $objSessionBag */
 			$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 			$data = $objSessionBag->all();
 
@@ -1667,6 +1664,17 @@ abstract class DataContainer extends Backend
 
 				$args[$k] = $objRef->numRows ? $objRef->$strField : '';
 			}
+			elseif (isset($row[$v], $GLOBALS['TL_DCA'][$table]['fields'][$v]['foreignKey']))
+			{
+				$key = explode('.', $GLOBALS['TL_DCA'][$table]['fields'][$v]['foreignKey'], 2);
+
+				$objRef = Database::getInstance()
+					->prepare("SELECT " . Database::quoteIdentifier($key[1]) . " AS value FROM " . $key[0] . " WHERE id=?")
+					->limit(1)
+					->execute($row[$v]);
+
+				$args[$k] = $objRef->numRows ? $objRef->value : '';
+			}
 			elseif (\in_array($GLOBALS['TL_DCA'][$table]['fields'][$v]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_DAY_BOTH, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_MONTH_BOTH, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC, self::SORT_YEAR_BOTH)))
 			{
 				if (($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['rgxp'] ?? null) == 'date')
@@ -1684,7 +1692,7 @@ abstract class DataContainer extends Backend
 			}
 			elseif (($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['isBoolean'] ?? null) || (($GLOBALS['TL_DCA'][$table]['fields'][$v]['inputType'] ?? null) == 'checkbox' && !($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['multiple'] ?? null)))
 			{
-				$args[$k] = $row[$v] ? $GLOBALS['TL_LANG']['MSC']['yes'] : $GLOBALS['TL_LANG']['MSC']['no'];
+				$args[$k] = ($row[$v] ?? null) ? $GLOBALS['TL_LANG']['MSC']['yes'] : $GLOBALS['TL_LANG']['MSC']['no'];
 			}
 			elseif (isset($row[$v]))
 			{
@@ -1812,7 +1820,6 @@ abstract class DataContainer extends Backend
 			self::clearCurrentRecordCache($id, $table);
 		}
 
-		/** @var Connection $connection */
 		$connection = System::getContainer()->get('database_connection');
 
 		$stmt = $connection->executeQuery(

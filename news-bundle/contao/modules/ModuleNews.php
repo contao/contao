@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Model\Collection;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * Parent class for news modules.
@@ -80,18 +81,26 @@ abstract class ModuleNews extends Module
 			$strClass = ' featured' . $strClass;
 		}
 
+		$url = $this->generateContentUrl($objArticle, $blnAddArchive);
+
 		$objTemplate->class = $strClass;
 		$objTemplate->newsHeadline = $objArticle->headline;
 		$objTemplate->subHeadline = $objArticle->subheadline;
 		$objTemplate->hasSubHeadline = $objArticle->subheadline ? true : false;
-		$objTemplate->linkHeadline = $this->generateLink($objArticle->headline, $objArticle, $blnAddArchive);
-		$objTemplate->more = $this->generateLink($objArticle->linkText ?: $GLOBALS['TL_LANG']['MSC']['more'], $objArticle, $blnAddArchive, true);
-		$objTemplate->link = $this->generateContentUrl($objArticle, $blnAddArchive);
-		$objTemplate->archive = $objArticle->getRelated('pid');
+		$objTemplate->linkHeadline = $objArticle->headline;
+		$objTemplate->archive = NewsArchiveModel::findById($objArticle->pid);
 		$objTemplate->count = $intCount; // see #5708
 		$objTemplate->text = '';
 		$objTemplate->hasTeaser = false;
 		$objTemplate->hasReader = true;
+		$objTemplate->author = null; // see #6827
+
+		if (null !== $url)
+		{
+			$objTemplate->linkHeadline = $this->generateLink($objArticle->headline, $objArticle, $blnAddArchive);
+			$objTemplate->more = $this->generateLink($objArticle->linkText ?: $GLOBALS['TL_LANG']['MSC']['more'], $objArticle, $blnAddArchive, true);
+			$objTemplate->link = $url;
+		}
 
 		// Clean the RTE output
 		if ($objArticle->teaser)
@@ -105,7 +114,7 @@ abstract class ModuleNews extends Module
 		if ($objArticle->source != 'default')
 		{
 			$objTemplate->text = true;
-			$objTemplate->hasText = true;
+			$objTemplate->hasText = null !== $url;
 			$objTemplate->hasReader = false;
 		}
 
@@ -129,18 +138,16 @@ abstract class ModuleNews extends Module
 				return $strText;
 			};
 
-			$objTemplate->hasText = static function () use ($objArticle) {
+			$objTemplate->hasText = null === $url ? false : static function () use ($objArticle) {
 				return ContentModel::countPublishedByPidAndTable($objArticle->id, 'tl_news') > 0;
 			};
 		}
 
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$objTemplate->date = Date::parse($objPage->datimFormat, $objArticle->date);
 
-		/** @var UserModel $objAuthor */
-		if (($objAuthor = $objArticle->getRelated('author')) instanceof UserModel)
+		if ($objAuthor = UserModel::findById($objArticle->author))
 		{
 			$objTemplate->author = $GLOBALS['TL_LANG']['MSC']['by'] . ' ' . $objAuthor->name;
 			$objTemplate->authorModel = $objAuthor;
@@ -314,7 +321,7 @@ abstract class ModuleNews extends Module
 		);
 	}
 
-	private function generateContentUrl(NewsModel $content, bool $addArchive): string
+	private function generateContentUrl(NewsModel $content, bool $addArchive): string|null
 	{
 		$parameters = array();
 
@@ -324,6 +331,13 @@ abstract class ModuleNews extends Module
 			$parameters['month'] = Input::get('month');
 		}
 
-		return System::getContainer()->get('contao.routing.content_url_generator')->generate($content, $parameters);
+		try
+		{
+			return System::getContainer()->get('contao.routing.content_url_generator')->generate($content, $parameters);
+		}
+		catch (ExceptionInterface)
+		{
+			return null;
+		}
 	}
 }

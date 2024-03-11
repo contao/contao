@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
@@ -47,6 +48,9 @@ class PageRegular extends Frontend
 
 		$response = $this->Template->getResponse($blnCheckRequest);
 
+		// Allow subrequests on this controller (fragments) to dynamically influence the Cache-Control header
+		$response->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, true);
+
 		// Finalize the response context so it cannot be used anymore
 		System::getContainer()->get('contao.routing.response_context_accessor')->finalizeCurrentContext($response);
 
@@ -79,9 +83,6 @@ class PageRegular extends Frontend
 		// Get the page layout
 		$objLayout = $this->getPageLayout($objPage);
 
-		/** @var ThemeModel $objTheme */
-		$objTheme = $objLayout->getRelated('pid');
-
 		// Set the default image densities
 		$container->get('contao.image.picture_factory')->setDefaultDensities($objLayout->defaultImageDensities);
 		$container->get('contao.image.preview_factory')->setDefaultDensities($objLayout->defaultImageDensities);
@@ -91,7 +92,12 @@ class PageRegular extends Frontend
 
 		// Set the layout template and template group
 		$objPage->template = $objLayout->template ?: 'fe_page';
-		$objPage->templateGroup = $objTheme->templates ?? null;
+		$objPage->templateGroup = null;
+
+		if ($objTheme = ThemeModel::findById($objLayout->pid))
+		{
+			$objPage->templateGroup = $objTheme->templates;
+		}
 
 		// Minify the markup
 		$objPage->minifyMarkup = $objLayout->minifyMarkup;
@@ -246,7 +252,7 @@ class PageRegular extends Frontend
 	 */
 	protected function getPageLayout($objPage)
 	{
-		$objLayout = LayoutModel::findByPk($objPage->layout);
+		$objLayout = LayoutModel::findById($objPage->layout);
 
 		// Die if there is no layout
 		if (null === $objLayout)
@@ -642,10 +648,7 @@ class PageRegular extends Frontend
 				return '';
 			}
 
-			/** @var JsonLdManager $jsonLdManager */
-			$jsonLdManager = $this->responseContext->get(JsonLdManager::class);
-
-			return $jsonLdManager->collectFinalScriptFromGraphs();
+			return $this->responseContext->get(JsonLdManager::class)->collectFinalScriptFromGraphs();
 		};
 	}
 }

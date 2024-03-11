@@ -12,9 +12,9 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\Util\UrlUtil;
 use Contao\Database\Result;
 use Contao\NewsletterBundle\Event\SendNewsletterEvent;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Mailer\Exception\TransportException;
 use Symfony\Component\Mime\Exception\RfcComplianceException;
 use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
@@ -105,7 +105,6 @@ class Newsletter extends Backend
 		// Convert relative URLs
 		$html = $this->convertRelativeUrls($html);
 
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();
 		$token = Input::get('token');
 
@@ -244,7 +243,7 @@ class Newsletter extends Backend
 
 				Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['confirm'], $intTotal));
 
-				$href = Environment::get('base') . ltrim($referer, '/');
+				$href = UrlUtil::makeAbsolute($referer, Environment::get('base'));
 
 				echo '<script>setTimeout(\'window.location="' . $href . '"\',1000)</script>';
 				echo '<a href="' . $href . '">Please click here to proceed if you are not using JavaScript</a>';
@@ -254,7 +253,7 @@ class Newsletter extends Backend
 			else
 			{
 				$url = preg_replace('/&(amp;)?(start|mpc|recipient)=[^&]*/', '', Environment::get('requestUri')) . '&start=' . ($intStart + $intPages) . '&mpc=' . $intPages;
-				$href = Environment::get('base') . ltrim($url, '/');
+				$href = UrlUtil::makeAbsolute($url, Environment::get('base'));
 
 				echo '<script>setTimeout(\'window.location="' . $href . '"\',' . ($intTimeout * 1000) . ')</script>';
 				echo '<a href="' . $href . '">Please click here to proceed if you are not using JavaScript</a>';
@@ -451,7 +450,6 @@ class Newsletter extends Backend
 		$objEmail->html = $event->isHtmlAllowed() ? $event->getHtml() : '';
 		$arrRecipient = array_merge($event->getRecipientData(), array('email' => $event->getRecipientAddress()));
 
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();
 		$arrRejected = $objSession->get('rejected_recipients', array());
 

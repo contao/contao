@@ -5,10 +5,6 @@
         <source>Comments</source>
         <target>Kommentarer</target>
       </trans-unit>
-      <trans-unit id="MSC.commentCount">
-        <source>(comments: %s)</source>
-        <target>(kommentarer: %s)</target>
-      </trans-unit>
       <trans-unit id="MSC.com_name">
         <source>Name</source>
         <target>Namn och mediatyper</target>
