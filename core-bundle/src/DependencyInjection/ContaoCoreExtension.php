@@ -254,16 +254,13 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             return;
         }
 
-        $storageDirectory = $container->getParameter('kernel.cache_dir').'/worker-supervisor';
-        $supervisor = Supervisor::withDefaultProviders($storageDirectory);
-
         // Disable workers completely if supervision is not supported
-        if ($supervisor->canSupervise()) {
+        if (Supervisor::canSuperviseWithProviders(Supervisor::getDefaultProviders())) {
             $command = $container->getDefinition('contao.command.supervise_workers');
             $command->setArgument(2,
                 (new Definition(Supervisor::class))
                     ->setFactory([Supervisor::class, 'withDefaultProviders'])
-                    ->addArgument($storageDirectory),
+                    ->addArgument('%kernel.cache_dir%/worker-supervisor'),
             );
             $command->setArgument(3, $config['messenger']['workers']);
         } else {
