@@ -28,9 +28,9 @@ final class ContextFactory
 
         array_walk_recursive(
             $context,
-            function (&$value, $key): void {
+            function (&$value): void {
                 if ($value instanceof \Closure) {
-                    $value = $this->getCallableWrapper($value, (string) $key);
+                    $value = $this->getCallableWrapper($value);
                 }
             }
         );
@@ -78,7 +78,7 @@ final class ContextFactory
                 continue;
             }
 
-            $context[$name] = $this->getCallableWrapper($method->getClosure($object), $name);
+            $context[$name] = $this->getCallableWrapper($method->getClosure($object));
         }
 
         if (!isset($context['this'])) {
@@ -114,19 +114,17 @@ final class ContextFactory
     /**
      * Wraps a callable into an object so that it can be evaluated in a Twig template.
      */
-    private function getCallableWrapper(callable $callable, string $name): object
+    private function getCallableWrapper(callable $callable): object
     {
-        return new class($callable, $name) {
+        return new class($callable) {
             /**
              * @var callable
              */
             private $callable;
-            private string $name;
 
-            public function __construct(callable $callable, string $name)
+            public function __construct(callable $callable)
             {
                 $this->callable = $callable;
-                $this->name = $name;
             }
 
             /**
