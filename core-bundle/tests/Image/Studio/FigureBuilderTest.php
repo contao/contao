@@ -747,12 +747,6 @@ class FigureBuilderTest extends TestCase
         $currentPage->language = 'es';
         $currentPage->rootFallbackLanguage = 'de';
 
-        $request = Request::create('https://localhost');
-        $request->attributes->set('pageModel', $currentPage);
-
-        $requestStack = $container->get('request_stack');
-        $requestStack->push($request);
-
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
 
         $filesModel = $this->mockClassWithProperties(FilesModel::class, except: ['getMetadata']);
@@ -771,7 +765,7 @@ class FigureBuilderTest extends TestCase
         $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
         $studio = $this->mockStudioForImage($absoluteFilePath);
 
-        $figure = $this->getFigureBuilder($studio, $framework, null, $requestStack)
+        $figure = $this->getFigureBuilder($studio, $framework, null, $currentPage)
             ->fromFilesModel($filesModel)
             ->setLocale($locale)
             ->setOverwriteMetadata($overwriteMetadata)
@@ -1480,10 +1474,16 @@ class FigureBuilderTest extends TestCase
         return $studio;
     }
 
-    private function getFigureBuilder(Studio|null $studio = null, ContaoFramework|null $framework = null, EventDispatcher|null $eventDispatcher = null, RequestStack|null $requestStack = null): FigureBuilder
+    private function getFigureBuilder(Studio|null $studio = null, ContaoFramework|null $framework = null, EventDispatcher|null $eventDispatcher = null, PageModel|null $pageModel = null): FigureBuilder
     {
         [, , $projectDir, $uploadPath, $webDir] = $this->getTestFilePaths();
         $validExtensions = $this->getTestFileExtensions();
+
+        $request = Request::create('https://localhost');
+        $request->attributes->set('pageModel', $pageModel);
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
 
         $pageFinder = new PageFinder(
             $framework ?? $this->mockContaoFramework(),

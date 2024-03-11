@@ -139,7 +139,7 @@ class RootPageDependentModulesControllerTest extends TestCase
         $pageFinder = new PageFinder(
             $framework,
             $this->createMock(RequestMatcherInterface::class),
-            $requestStack,
+            $requestStack ?? new RequestStack(),
         );
 
         $this->container->set('contao.framework', $framework);

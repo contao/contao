@@ -750,6 +750,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@router'
+            - '@request_stack'
 
     contao.routing.page_registry:
         class: Contao\CoreBundle\Routing\Page\PageRegistry

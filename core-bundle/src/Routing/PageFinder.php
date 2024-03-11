@@ -24,7 +24,7 @@ class PageFinder
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly RequestMatcherInterface $requestMatcher,
-        private readonly RequestStack|null $requestStack = null,
+        private readonly RequestStack $requestStack,
     ) {
     }
 
@@ -33,11 +33,7 @@ class PageFinder
      */
     public function getCurrentPage(Request|null $request = null): PageModel|null
     {
-        if (!$request && $this->requestStack) {
-            $request = $this->requestStack->getCurrentRequest();
-        }
-
-        $pageModel = $request?->attributes->get('pageModel');
+        $pageModel = ($request ?? $this->requestStack->getCurrentRequest())?->attributes->get('pageModel');
 
         if ($pageModel instanceof PageModel) {
             return $pageModel;
