@@ -85,7 +85,6 @@ services:
         class: Contao\NewsBundle\Migration\FeedMigration
         arguments:
             - '@database_connection'
-            - '@logger'
 
     contao_news.picker.news_provider:
         class: Contao\NewsBundle\Picker\NewsPickerProvider

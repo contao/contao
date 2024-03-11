@@ -88,7 +88,7 @@ abstract class ModuleNews extends Module
 		$objTemplate->subHeadline = $objArticle->subheadline;
 		$objTemplate->hasSubHeadline = $objArticle->subheadline ? true : false;
 		$objTemplate->linkHeadline = $objArticle->headline;
-		$objTemplate->archive = NewsArchiveModel::findByPk($objArticle->pid);
+		$objTemplate->archive = NewsArchiveModel::findById($objArticle->pid);
 		$objTemplate->count = $intCount; // see #5708
 		$objTemplate->text = '';
 		$objTemplate->hasTeaser = false;
@@ -147,7 +147,7 @@ abstract class ModuleNews extends Module
 
 		$objTemplate->date = Date::parse($objPage->datimFormat, $objArticle->date);
 
-		if ($objAuthor = UserModel::findByPk($objArticle->author))
+		if ($objAuthor = UserModel::findById($objArticle->author))
 		{
 			$objTemplate->author = $GLOBALS['TL_LANG']['MSC']['by'] . ' ' . $objAuthor->name;
 			$objTemplate->authorModel = $objAuthor;

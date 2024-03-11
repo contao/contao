@@ -42,7 +42,7 @@ class ModelArgumentResolverTest extends TestCase
         System::setContainer($this->getContainerWithContaoConfiguration());
 
         $pageModel = $this->createMock(PageModel::class);
-        $adapter = $this->mockConfiguredAdapter(['findByPk' => $pageModel]);
+        $adapter = $this->mockConfiguredAdapter(['findById' => $pageModel]);
         $framework = $this->mockContaoFramework([$class => $adapter]);
 
         $request = Request::create('/foobar');
@@ -140,7 +140,7 @@ class ModelArgumentResolverTest extends TestCase
     public function testSupportsNullableArguments(): void
     {
         $pageModel = $this->createMock(PageModel::class);
-        $adapter = $this->mockConfiguredAdapter(['findByPk' => $pageModel]);
+        $adapter = $this->mockConfiguredAdapter(['findById' => $pageModel]);
         $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
 
         $request = Request::create('/foobar');
@@ -155,7 +155,7 @@ class ModelArgumentResolverTest extends TestCase
 
     public function testChecksIfTheModelExistsIfTheArgumentIsNotNullable(): void
     {
-        $adapter = $this->mockConfiguredAdapter(['findByPk' => null]);
+        $adapter = $this->mockConfiguredAdapter(['findById' => null]);
         $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
 
         $request = Request::create('/foobar');

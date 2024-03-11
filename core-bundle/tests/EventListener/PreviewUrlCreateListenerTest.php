@@ -27,7 +27,7 @@ class PreviewUrlCreateListenerTest extends TestCase
         $pageModel = $this->mockClassWithProperties(PageModel::class);
 
         $adapters = [
-            PageModel::class => $this->mockConfiguredAdapter(['findByPk' => $pageModel]),
+            PageModel::class => $this->mockConfiguredAdapter(['findById' => $pageModel]),
         ];
 
         $framework = $this->mockContaoFramework($adapters);
@@ -45,8 +45,8 @@ class PreviewUrlCreateListenerTest extends TestCase
         $pageModel = $this->mockClassWithProperties(PageModel::class);
 
         $adapters = [
-            ArticleModel::class => $this->mockConfiguredAdapter(['findByPk' => $articleModel]),
-            PageModel::class => $this->mockConfiguredAdapter(['findByPk' => $pageModel]),
+            ArticleModel::class => $this->mockConfiguredAdapter(['findById' => $articleModel]),
+            PageModel::class => $this->mockConfiguredAdapter(['findById' => $pageModel]),
         ];
 
         $framework = $this->mockContaoFramework($adapters);
@@ -112,8 +112,8 @@ class PreviewUrlCreateListenerTest extends TestCase
         $articleModel = $this->mockClassWithProperties(ArticleModel::class, ['pid' => 42]);
 
         $adapters = [
-            PageModel::class => $this->mockConfiguredAdapter(['findByPk' => null]),
-            ArticleModel::class => $this->mockConfiguredAdapter(['findByPk' => $articleModel]),
+            PageModel::class => $this->mockConfiguredAdapter(['findById' => null]),
+            ArticleModel::class => $this->mockConfiguredAdapter(['findById' => $articleModel]),
         ];
 
         $framework = $this->mockContaoFramework($adapters);

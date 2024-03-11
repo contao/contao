@@ -44,7 +44,7 @@ class RootPageDependentModulesController extends AbstractFrontendModuleControlle
         $framework = $this->container->get('contao.framework');
         $moduleModel = $framework->getAdapter(ModuleModel::class);
 
-        if (!$module = $moduleModel->findByPk($modules[$pageModel->rootId])) {
+        if (!$module = $moduleModel->findById($modules[$pageModel->rootId])) {
             return new Response();
         }
 

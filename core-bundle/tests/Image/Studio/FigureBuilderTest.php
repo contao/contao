@@ -155,9 +155,9 @@ class FigureBuilderTest extends TestCase
         $model->type = 'file';
         $model->path = $relativeFilePath;
 
-        $filesModelAdapter = $this->mockAdapter(['findByPk']);
+        $filesModelAdapter = $this->mockAdapter(['findById']);
         $filesModelAdapter
-            ->method('findByPk')
+            ->method('findById')
             ->with(5)
             ->willReturn($model)
         ;
@@ -170,7 +170,7 @@ class FigureBuilderTest extends TestCase
 
     public function testFromIdFailsWithNonExistingResource(): void
     {
-        $filesModelAdapter = $this->mockAdapter(['findByPk']);
+        $filesModelAdapter = $this->mockAdapter(['findById']);
         $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
 
         $figureBuilder = $this->getFigureBuilder(null, $framework)->fromId(99);
@@ -392,7 +392,7 @@ class FigureBuilderTest extends TestCase
         $filesModel->type = 'file';
         $filesModel->path = $relativeFilePath;
 
-        $filesModelAdapter = $this->mockAdapter(['findByUuid', 'findByPk', 'findByPath']);
+        $filesModelAdapter = $this->mockAdapter(['findByUuid', 'findById', 'findByPath']);
         $filesModelAdapter
             ->method('findByUuid')
             ->with('1d902bf1-2683-406e-b004-f0b59095e5a1')
@@ -400,7 +400,7 @@ class FigureBuilderTest extends TestCase
         ;
 
         $filesModelAdapter
-            ->method('findByPk')
+            ->method('findById')
             ->with(5)
             ->willReturn($filesModel)
         ;
@@ -590,7 +590,7 @@ class FigureBuilderTest extends TestCase
         $invalidModel = $this->mockClassWithProperties(FilesModel::class);
         $invalidModel->type = 'folder';
 
-        $filesModelAdapter = $this->mockAdapter(['findByUuid', 'findByPk', 'findByPath']);
+        $filesModelAdapter = $this->mockAdapter(['findByUuid', 'findById', 'findByPath']);
         $filesModelAdapter
             ->method('findByUuid')
             ->willReturnMap([
@@ -600,7 +600,7 @@ class FigureBuilderTest extends TestCase
         ;
 
         $filesModelAdapter
-            ->method('findByPk')
+            ->method('findById')
             ->willReturnMap([
                 [5, $model],
                 [123, null],

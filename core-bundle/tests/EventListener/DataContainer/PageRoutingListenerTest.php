@@ -31,10 +31,10 @@ class PageRoutingListenerTest extends TestCase
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class);
 
-        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->with(42)
             ->willReturn($pageModel)
         ;
@@ -110,10 +110,10 @@ class PageRoutingListenerTest extends TestCase
 
     public function testReturnsEmptyPathIfPageModelIsNotFound(): void
     {
-        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->with(42)
             ->willReturn(null)
         ;

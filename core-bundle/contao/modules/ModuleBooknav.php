@@ -66,7 +66,7 @@ class ModuleBooknav extends Module
 	protected function compile()
 	{
 		// Get the root page
-		if (!$objTarget = PageModel::findByPk($this->objModel->rootPage))
+		if (!$objTarget = PageModel::findById($this->objModel->rootPage))
 		{
 			return;
 		}

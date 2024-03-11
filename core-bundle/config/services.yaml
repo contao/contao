@@ -659,6 +659,8 @@ services:
         arguments:
             - '@contao.insert_tag.parser'
             - '@url_helper'
+            - '@request_stack'
+            - '@router.request_context'
 
     contao.routing.content_url_generator:
         class: Contao\CoreBundle\Routing\ContentUrlGenerator

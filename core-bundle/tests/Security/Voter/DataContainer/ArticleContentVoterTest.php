@@ -47,9 +47,9 @@ class ArticleContentVoterTest extends TestCase
         $current['pid'] = 42;
         $article = $this->mockClassWithProperties(ArticleModel::class, ['id' => 42, 'pid' => 21]);
 
-        $adapter = $this->mockAdapter(['findByPk']);
+        $adapter = $this->mockAdapter(['findById']);
         $adapter
-            ->method('findByPk')
+            ->method('findById')
             ->with(42)
             ->willReturn($article)
         ;

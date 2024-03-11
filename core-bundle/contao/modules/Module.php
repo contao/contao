@@ -478,7 +478,7 @@ abstract class Module extends Frontend
 		return array_map(
 			static function (array $row): array {
 				return array(
-					'page' => PageModel::findByPk($row['id']),
+					'page' => PageModel::findById($row['id']),
 					'hasSubpages' => (bool) $row['hasSubpages'],
 				);
 			},

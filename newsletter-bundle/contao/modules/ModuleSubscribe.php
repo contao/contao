@@ -189,7 +189,7 @@ class ModuleSubscribe extends Module
 		// Validate the token
 		foreach ($arrIds as $intId)
 		{
-			if (!$objRecipient = NewsletterRecipientsModel::findByPk($intId))
+			if (!$objRecipient = NewsletterRecipientsModel::findById($intId))
 			{
 				$this->Template->mclass = 'error';
 				$this->Template->message = $GLOBALS['TL_LANG']['MSC']['invalidToken'];
@@ -376,7 +376,7 @@ class ModuleSubscribe extends Module
 		);
 
 		// Redirect to the jumpTo page
-		if ($objTarget = PageModel::findByPk($this->objModel->jumpTo))
+		if ($objTarget = PageModel::findById($this->objModel->jumpTo))
 		{
 			try
 			{

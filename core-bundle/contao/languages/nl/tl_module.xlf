@@ -177,6 +177,12 @@
         <source>Show these fields in the front end form.</source>
         <target>Selecteer een of meerdere velden die bewerkbaar zijn in het front-end.</target>
       </trans-unit>
+      <trans-unit id="tl_module.reqFullAuth.0">
+        <source>Require full authentication</source>
+      </trans-unit>
+      <trans-unit id="tl_module.reqFullAuth.1">
+        <source>Users with only a &quot;remember me&quot; cookie must verify their identity in order to access the module.</source>
+      </trans-unit>
       <trans-unit id="tl_module.memberTpl.0">
         <source>Form template</source>
         <target>Formulier template</target>

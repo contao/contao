@@ -177,6 +177,14 @@
         <source>Show these fields in the front end form.</source>
         <target>Показать эти поля в форме персональной информации во внешнем интерфейсе.</target>
       </trans-unit>
+      <trans-unit id="tl_module.reqFullAuth.0">
+        <source>Require full authentication</source>
+        <target>Требовать полную авторизацию</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reqFullAuth.1">
+        <source>Users with only a &quot;remember me&quot; cookie must verify their identity in order to access the module.</source>
+        <target>Пользователи, имеющие только &quot;remember me&quot; cookie, должны подтвердить свою личность, чтобы получить доступ к модулю.</target>
+      </trans-unit>
       <trans-unit id="tl_module.memberTpl.0">
         <source>Form template</source>
         <target>Шаблон формы</target>

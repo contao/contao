@@ -75,9 +75,11 @@
       </trans-unit>
       <trans-unit id="tl_module.news_keepCanonical.0">
         <source>Use the current URL for canonical links</source>
+        <target>Izmantot pašreizējo URL kanoniskajām saitēm</target>
       </trans-unit>
       <trans-unit id="tl_module.news_keepCanonical.1">
         <source>Keep the current URL instead of the configured reader page for canonical links.</source>
+        <target>Kanoniskajām saitēm saglabāt pašreizējo URL, nevis konfigurēto lasītāja lapu.</target>
       </trans-unit>
       <trans-unit id="tl_module.news_overview_legend">
         <source>Overview page</source>
