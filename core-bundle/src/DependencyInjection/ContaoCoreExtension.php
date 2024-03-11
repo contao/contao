@@ -48,6 +48,7 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Toflar\CronjobSupervisor\Supervisor;
 
 class ContaoCoreExtension extends Extension implements PrependExtensionInterface, ConfigureFilesystemInterface
 {
@@ -253,16 +254,24 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             return;
         }
 
+        // Disable workers completely if supervision is not supported
+        if (!Supervisor::canSuperviseWithProviders(Supervisor::getDefaultProviders())) {
+            $config['messenger']['workers'] = [];
+        } else {
+            $supervisor = new Definition(Supervisor::class);
+            $supervisor->setFactory([Supervisor::class, 'withDefaultProviders']);
+            $supervisor->addArgument('%kernel.cache_dir%/worker-supervisor');
+
+            $command = $container->getDefinition('contao.command.supervise_workers');
+            $command->setArgument(2, $supervisor);
+            $command->setArgument(3, $config['messenger']['workers']);
+        }
+
         // No workers defined -> remove our cron job and the command
         if (0 === \count($config['messenger']['workers'])) {
             $container->removeDefinition('contao.cron.supervise_workers');
             $container->removeDefinition('contao.command.supervise_workers');
-
-            return;
         }
-
-        $command = $container->getDefinition('contao.command.supervise_workers');
-        $command->setArgument(3, $config['messenger']['workers']);
     }
 
     private function handleSearchConfig(array $config, ContainerBuilder $container): void
