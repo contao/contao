@@ -1015,7 +1015,7 @@ class tl_page extends Backend
 
 				// Check the type of the first page (not the following parent pages)
 				// In "edit multiple" mode, $ids contains only the parent ID, therefore check $id != $_GET['pid'] (see #5620)
-				if ($i == 0 && $id != Input::get('pid') && Input::get('act') != 'create' && !$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $objPage->type))
+				if ($i == 0 && $id != Input::get('pid') && Input::get('act') != 'create' && Input::get('act') != 'show' && !$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $objPage->type))
 				{
 					System::getContainer()->get('monolog.logger.contao.error')->error('Not enough permissions to  ' . Input::get('act') . ' ' . $objPage->type . ' pages');
 
@@ -1659,6 +1659,8 @@ class tl_page extends Backend
 		// Generate the aliases
 		if (isset($_POST['alias']) && Input::post('FORM_SUBMIT') == 'tl_select')
 		{
+			$router = System::getContainer()->get('router');
+
 			$objSession = System::getContainer()->get('session');
 			$session = $objSession->all();
 			$ids = $session['CURRENT']['IDS'] ?? array();
@@ -1702,6 +1704,7 @@ class tl_page extends Backend
 
 				// Initialize the version manager
 				$objVersions = new Versions('tl_page', $id);
+				$objVersions->setEditUrl($router->generate('contao_backend', array('do'=>'page', 'act'=>'edit', 'id'=>$id, 'rt'=>'1')));
 				$objVersions->initialize();
 
 				// Store the new alias

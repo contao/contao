@@ -32,6 +32,11 @@ class ContaoCsrfTokenManager extends CsrfTokenManager implements ResetInterface
     private array $usedTokenValues = [];
 
     /**
+     * @var array<string, CsrfToken>
+     */
+    private array $tokenCache = [];
+
+    /**
      * @param string|RequestStack|callable|null $namespace
      */
     public function __construct(RequestStack $requestStack, string $csrfCookiePrefix, TokenGeneratorInterface $generator = null, TokenStorageInterface $storage = null, $namespace = null, string $defaultTokenName = null)
@@ -53,18 +58,25 @@ class ContaoCsrfTokenManager extends CsrfTokenManager implements ResetInterface
 
     public function getToken($tokenId): CsrfToken
     {
-        $token = parent::getToken($tokenId);
-        $this->usedTokenValues[] = $token->getValue();
+        $this->tokenCache[$tokenId] ??= parent::getToken($tokenId);
+        $this->usedTokenValues[] = $this->tokenCache[$tokenId]->getValue();
 
-        return $token;
+        return $this->tokenCache[$tokenId];
     }
 
     public function refreshToken($tokenId): CsrfToken
     {
-        $token = parent::refreshToken($tokenId);
-        $this->usedTokenValues[] = $token->getValue();
+        $this->tokenCache[$tokenId] = parent::refreshToken($tokenId);
+        $this->usedTokenValues[] = $this->tokenCache[$tokenId]->getValue();
 
-        return $token;
+        return $this->tokenCache[$tokenId];
+    }
+
+    public function removeToken(string $tokenId): ?string
+    {
+        unset($this->tokenCache[$tokenId]);
+
+        return parent::removeToken($tokenId);
     }
 
     public function isTokenValid(CsrfToken $token): bool
@@ -107,5 +119,6 @@ class ContaoCsrfTokenManager extends CsrfTokenManager implements ResetInterface
     public function reset(): void
     {
         $this->usedTokenValues = [];
+        $this->tokenCache = [];
     }
 }

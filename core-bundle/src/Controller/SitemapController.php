@@ -95,6 +95,9 @@ class SitemapController extends AbstractController
         $response = new Response((string) $sitemap->saveXML(), 200, ['Content-Type' => 'application/xml; charset=UTF-8']);
         $response->setSharedMaxAge(2592000); // will be unset by the MakeResponsePrivateListener if a user is logged in
 
+        // Make sure an authorized request does not retrieve the sitemap from the HTTP cache (see #6832)
+        $response->setVary('Cookie');
+
         $this->tagResponse($tags);
 
         return $response;

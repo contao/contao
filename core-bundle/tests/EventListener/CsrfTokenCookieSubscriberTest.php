@@ -21,6 +21,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -126,6 +128,31 @@ class CsrfTokenCookieSubscriberTest extends TestCase
             ->expects($this->once())
             ->method('getUsedTokens')
             ->willReturn(['foo' => 'bar'])
+        ;
+
+        $response = new Response();
+
+        $listener = new CsrfTokenCookieSubscriber($tokenManager, $tokenStorage);
+        $listener->onKernelResponse($this->getResponseEvent($request, $response));
+
+        $this->assertCount(0, $response->headers->getCookies());
+    }
+
+    public function testDoesNotAddTheTokenCookiesIfTheSessionWasStartedButClearedAgain(): void
+    {
+        $session = new Session(new MockArraySessionStorage());
+        $session->set('foobar', 'foobaz'); // This starts the session
+        $session->remove('foobar'); // This removes the value but the session remains started
+
+        $request = Request::create('https://foobar.com');
+        $request->setSession($session);
+
+        $tokenManager = $this->createMock(ContaoCsrfTokenManager::class);
+
+        $tokenStorage = $this->createMock(MemoryTokenStorage::class);
+        $tokenStorage
+            ->expects($this->never())
+            ->method('getUsedTokens')
         ;
 
         $response = new Response();

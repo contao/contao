@@ -182,6 +182,9 @@
       <trans-unit id="tl_member.loginDetails">
         <source>Login details</source>
       </trans-unit>
+      <trans-unit id="tl_member.captchaDetails">
+        <source>Verification</source>
+      </trans-unit>
       <trans-unit id="tl_member.new.0">
         <source>New</source>
       </trans-unit>

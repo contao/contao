@@ -85,7 +85,7 @@ function specialchars($strString, $blnStripInsertTags=false)
 		$strString = strip_insert_tags($strString);
 	}
 
-	return htmlspecialchars($strString, ENT_QUOTES, System::getContainer()->getParameter('kernel.charset'), false);
+	return htmlspecialchars($strString, ENT_QUOTES | ENT_HTML5, System::getContainer()->getParameter('kernel.charset'), false);
 }
 
 /**

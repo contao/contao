@@ -43,10 +43,7 @@ final class ContaoEscaper
 
         $string = (string) $string;
 
-        // Handle uppercase entities
-        $string = str_replace(['&AMP;', '&QUOT;', '&LT;', '&GT;'], ['&amp;', '&quot;', '&lt;', '&gt;'], $string);
-
-        return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8', false);
+        return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8', false);
     }
 
     /**

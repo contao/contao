@@ -61,7 +61,12 @@ class ContaoEscaperTest extends TestCase
 
         yield 'string with uppercase entities' => [
             '&AMP; &QUOT; &LT; &GT;',
-            '&amp; &quot; &lt; &gt;',
+            '&AMP; &QUOT; &LT; &GT;',
+        ];
+
+        yield 'string with known and unknown entities' => [
+            '&amp; &AMP; &ZeroWidthSpace; &NotAnEntitiy; &123;',
+            '&amp; &AMP; &ZeroWidthSpace; &amp;NotAnEntitiy; &amp;123;',
         ];
     }
 

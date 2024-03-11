@@ -219,7 +219,14 @@ class BackendMain extends Backend
 	{
 		$this->Template->setData($this->compileTemplateData($this->Template->getData()));
 
-		return $this->Template->getResponse();
+		$response = $this->Template->getResponse();
+
+		if (Input::get('popup') !== null)
+		{
+			$response->headers->set('Content-Security-Policy', "frame-ancestors 'self'", false);
+		}
+
+		return $response;
 	}
 
 	/**

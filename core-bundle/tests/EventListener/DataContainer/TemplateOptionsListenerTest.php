@@ -22,7 +22,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Finder\Finder;
 use Contao\CoreBundle\Twig\Finder\FinderFactory;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Contao\Database\Result as ContaoResult;
 use Contao\DataContainer;
@@ -212,8 +212,8 @@ class TemplateOptionsListenerTest extends TestCase
 
     private function getDefaultTemplateOptionsListener(string $legacyTemplatePrefix, string $legacyProxyClass, RequestStack $requestStack = null, Connection $connection = null): TemplateOptionsListener
     {
-        $hierarchy = $this->createMock(TemplateHierarchyInterface::class);
-        $hierarchy
+        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader
             ->method('getInheritanceChains')
             ->willReturn([
                 'content_element/foo' => [
@@ -228,7 +228,7 @@ class TemplateOptionsListenerTest extends TestCase
             ])
         ;
 
-        $listener = $this->getTemplateOptionsListener($legacyTemplatePrefix, $legacyProxyClass, null, $requestStack, $connection, $hierarchy);
+        $listener = $this->getTemplateOptionsListener($legacyTemplatePrefix, $legacyProxyClass, null, $requestStack, $connection, $filesystemLoader);
 
         $listener->setDefaultIdentifiersByType([
             'foo_element_type' => 'content_element/foo',
@@ -238,15 +238,15 @@ class TemplateOptionsListenerTest extends TestCase
         return $listener;
     }
 
-    private function getTemplateOptionsListener(string $legacyTemplatePrefix, string $legacyProxyClass, ContaoFramework $framework = null, RequestStack $requestStack = null, Connection $connection = null, TemplateHierarchyInterface $hierarchy = null): TemplateOptionsListener
+    private function getTemplateOptionsListener(string $legacyTemplatePrefix, string $legacyProxyClass, ContaoFramework $framework = null, RequestStack $requestStack = null, Connection $connection = null, ContaoFilesystemLoader $filesystemLoader = null): TemplateOptionsListener
     {
-        $hierarchy = $hierarchy ?? $this->createMock(TemplateHierarchyInterface::class);
+        $filesystemLoader = $filesystemLoader ?? $this->createMock(ContaoFilesystemLoader::class);
         $connection = $connection ?? $this->createMock(Connection::class);
         $framework = $framework ?? $this->mockFramework();
         $requestStack = $requestStack ?? new RequestStack();
 
         $finder = new Finder(
-            $hierarchy,
+            $filesystemLoader,
             $this->createMock(ThemeNamespace::class),
             $this->createMock(TranslatorInterface::class)
         );

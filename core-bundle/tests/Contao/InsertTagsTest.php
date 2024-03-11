@@ -166,6 +166,31 @@ class InsertTagsTest extends TestCase
             'foo{{ins::1{{plain::2]]3}}baz',
             'foo{{ins::12}}3baz',
         ];
+
+        yield 'strtoupper flag' => [
+            '{{plain::österreich|strtoupper}}',
+            'ÖSTERREICH',
+        ];
+
+        yield 'strtolower flag' => [
+            '{{plain::ÖSTERREICH|strtolower}}',
+            'österreich',
+        ];
+
+        yield 'ucfirst flag' => [
+            '{{plain::österreich|ucfirst}}',
+            'Österreich',
+        ];
+
+        yield 'lcfirst flag' => [
+            '{{plain::ÖSTERREICH|lcfirst}}',
+            'öSTERREICH',
+        ];
+
+        yield 'ucwords flag' => [
+            "{{plain::deutschland österreich\nschweiz-züriCH|ucwords}}",
+            "Deutschland Österreich\nSchweiz-züriCH",
+        ];
     }
 
     /**
@@ -454,7 +479,7 @@ class InsertTagsTest extends TestCase
 
         yield 'Quote in single quoted attribute' => [
             '<span title="{{plain::\'}}">',
-            '<span title="&#039;">',
+            '<span title="&apos;">',
         ];
 
         yield 'Quote outside attribute' => [
@@ -489,7 +514,7 @@ class InsertTagsTest extends TestCase
 
         yield 'Trick tag detection with two tags' => [
             '<span /="notanattribute title="> {{plain::\'}} " > {{plain::\'}}',
-            '<span /="notanattribute title="> &#039; " > \'',
+            '<span /="notanattribute title="> &apos; " > \'',
         ];
 
         yield 'Trick tag detection with not a tag' => [
