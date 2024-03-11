@@ -15,12 +15,16 @@ namespace Contao\CoreBundle\Tests\Image\Studio;
 use Contao\CoreBundle\Image\Studio\ImageResult;
 use Contao\CoreBundle\Image\Studio\LightboxResult;
 use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\ImageInterface;
 use Contao\Image\ResizeOptions;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 
 class LightboxResultTest extends TestCase
 {
@@ -64,7 +68,17 @@ class LightboxResultTest extends TestCase
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->layout = $layoutId;
 
-        $GLOBALS['objPage'] = $pageModel;
+        $request = Request::create('https://localhost');
+        $request->attributes->set('pageModel', $pageModel);
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $pageFinder = new PageFinder(
+            $framework,
+            $this->createMock(RequestMatcherInterface::class),
+            $requestStack,
+        );
 
         $image = $this->createMock(ImageResult::class);
 
@@ -78,17 +92,15 @@ class LightboxResultTest extends TestCase
 
         $locator = $this->createMock(ContainerInterface::class);
         $locator
-            ->expects($this->exactly(2))
             ->method('get')
             ->willReturnMap([
                 ['contao.framework', $framework],
                 ['contao.image.studio', $studio],
+                ['contao.routing.page_finder', $pageFinder],
             ])
         ;
 
         new LightboxResult($locator, $resource, null);
-
-        unset($GLOBALS['objPage']);
     }
 
     public function testFallBackLightboxSizeConfigurationFailsIfNoLightboxSizeSet(): void
@@ -111,7 +123,17 @@ class LightboxResultTest extends TestCase
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->layout = $layoutId;
 
-        $GLOBALS['objPage'] = $pageModel;
+        $request = Request::create('https://localhost');
+        $request->attributes->set('pageModel', $pageModel);
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $pageFinder = new PageFinder(
+            $framework,
+            $this->createMock(RequestMatcherInterface::class),
+            $requestStack,
+        );
 
         $image = $this->createMock(ImageResult::class);
 
@@ -125,17 +147,15 @@ class LightboxResultTest extends TestCase
 
         $locator = $this->createMock(ContainerInterface::class);
         $locator
-            ->expects($this->exactly(2))
             ->method('get')
             ->willReturnMap([
                 ['contao.framework', $framework],
                 ['contao.image.studio', $studio],
+                ['contao.routing.page_finder', $pageFinder],
             ])
         ;
 
         new LightboxResult($locator, $resource, null);
-
-        unset($GLOBALS['objPage']);
     }
 
     public function testFallBackLightboxSizeConfigurationFailsIfNoPage(): void
@@ -154,15 +174,14 @@ class LightboxResultTest extends TestCase
 
         $locator = $this->createMock(ContainerInterface::class);
         $locator
-            ->expects($this->once())
             ->method('get')
             ->willReturnMap([
                 ['contao.framework', $framework],
                 ['contao.image.studio', $studio],
+                ['contao.routing.page_finder', $this->createMock(PageFinder::class)],
             ])
         ;
 
-        // Note: $GLOBALS['objPage'] is not set at this point
         new LightboxResult($locator, $resource, null);
     }
 
