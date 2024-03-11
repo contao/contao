@@ -56,8 +56,8 @@ class UserAccessVoter extends AbstractDataContainerVoter implements ResetInterfa
             && !$action instanceof CreateAction
             && (int) $user->id === (int) $action->getCurrentId();
 
-        // Current user can change its profile regardless of user module access,
-        // but is never allowed to delete or disable itself or change its admin state
+        // Current user can change its profile regardless of user module access, but is
+        // never allowed to delete or disable itself or change its admin state
         if ($isCurrentUser) {
             return $action instanceof ReadAction
                 || (

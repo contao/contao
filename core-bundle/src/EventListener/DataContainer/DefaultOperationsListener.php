@@ -229,7 +229,8 @@ class DefaultOperationsListener
             $new = [$toggleField => !($operation['record'][$toggleField] ?? false)];
 
             if (!$this->isGranted(UpdateAction::class, $table, $operation, $new)) {
-                // Do not use DataContainerOperation::disable() because it would not show the actual state
+                // Do not use DataContainerOperation::disable() because it would not show the
+                // actual state
                 unset($operation['route'], $operation['href']);
             }
         };

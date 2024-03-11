@@ -243,7 +243,6 @@ class UserAccessVoterTest extends TestCase
     private function mockAccessDecisionManager(TokenInterface $token, bool $allowModule = true, bool $isAdmin = false): AccessDecisionManagerInterface&MockObject
     {
         $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
-
         $accessDecisionManager
             ->method('decide')
             ->willReturnMap([
