@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Loader;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\TemplateLoader;
 use Psr\Cache\CacheItemPoolInterface;
@@ -55,6 +56,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
         private readonly TemplateLocator $templateLocator,
         private readonly ThemeNamespace $themeNamespace,
         private readonly ContaoFramework $framework,
+        private readonly PageFinder $pageFinder,
         private readonly string $projectDir,
     ) {
     }
@@ -458,7 +460,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
      */
     private function getThemeSlug(): string|false
     {
-        if (null === ($page = $GLOBALS['objPage'] ?? null) || null === ($path = $page->templateGroup)) {
+        if ((!$pageModel = $this->pageFinder->getCurrentPage()) || null === ($path = $pageModel->templateGroup)) {
             return $this->currentThemeSlug = false;
         }
 
