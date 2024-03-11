@@ -272,6 +272,7 @@ services:
             - '@request_stack'
             - '@contao.fragment.registry'
             - '@contao.fragment.pre_handlers'
+            - '@contao.routing.page_finder'
             - '%kernel.debug%'
 
     contao.fragment.pre_handlers:
