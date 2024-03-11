@@ -151,15 +151,15 @@ class ContextFactoryTest extends TestCase
         ;
 
         $content = '{{ lazy }}';
-        $environment = (new Environment(new ArrayLoader(['test.html.twig' => $content])));
+        $environment = new Environment(new ArrayLoader(['test.html.twig' => $content]));
         $context = (new ContextFactory())->fromContaoTemplate($template);
 
         $this->expectException(RuntimeError::class);
 
         $this->expectExceptionMessage(
             'An exception has been thrown during the rendering of a template ("'.
-            'Error evaluating "lazy": Object of class stdClass could not be converted to string'.
-            '") in "test.html.twig" at line 1.'
+            'Object of class stdClass could not be converted to string'.
+            '") in "test.html.twig" at line 1.',
         );
 
         $environment->render('test.html.twig', $context);
