@@ -37,7 +37,7 @@ class FrontendModulesVoter extends AbstractDataContainerVoter
         }
 
         if ($action instanceof CreateAction) {
-            $type = $action->getNew()['type'];
+            $type = $action->getNew()['type'] ?? null;
 
             if (null === $type) {
                 return true;

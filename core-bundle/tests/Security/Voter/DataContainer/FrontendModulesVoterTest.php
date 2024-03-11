@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Security\Voter\DataContainer;
 
-use Contao\BackendUser;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
@@ -20,23 +19,17 @@ use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Security\Voter\DataContainer\FrontendModulesVoter;
 use Contao\CoreBundle\Tests\TestCase;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class FrontendModulesVoterTest extends TestCase
 {
     public function testVoter(): void
     {
-        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 1]);
+        $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
 
-        $security = $this->createMock(Security::class);
-        $security
-            ->method('getUser')
-            ->willReturn($user)
-        ;
-
-        $voter = new FrontendModulesVoter();
+        $voter = new FrontendModulesVoter($accessDecisionManager);
 
         $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_module'));
         $this->assertTrue($voter->supportsType(CreateAction::class));
@@ -61,15 +54,21 @@ class FrontendModulesVoterTest extends TestCase
      */
     public function testUserCanOnlyAccessPermittedModuleTypes(array $userData, array $expected): void
     {
-        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 1, ...$userData]);
-
         $token = $this->createMock(TokenInterface::class);
-        $token
-            ->method('getUser')
-            ->willReturn($user)
+
+        $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
+        $accessDecisionManager
+            ->method('decide')
+            ->willReturnMap([
+                [$token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'themes', true],
+                [$token, [ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULES], null, true],
+                [$token, [ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULE_TYPE], 'listing', $userData['isAdmin'] || \in_array('html', $userData['frontendModules'], true)],
+                [$token, [ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULE_TYPE], 'html', $userData['isAdmin'] || \in_array('html', $userData['frontendModules'], true)],
+                [$token, [ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULE_TYPE], 'navigation', $userData['isAdmin'] || \in_array('navigation', $userData['frontendModules'], true)],
+            ])
         ;
 
-        $voter = new FrontendModulesVoter();
+        $voter = new FrontendModulesVoter($accessDecisionManager);
 
         // Reading is always permitted, although type "listing" is not explicitly allowed
         $this->assertSame(
@@ -149,7 +148,7 @@ class FrontendModulesVoterTest extends TestCase
 
         yield 'User has unlimited access to front end modules' => [
             ['isAdmin' => false, 'frontendModules' => []],
-            ['html' => VoterInterface::ACCESS_ABSTAIN, 'navigation' => VoterInterface::ACCESS_ABSTAIN],
+            ['html' => VoterInterface::ACCESS_DENIED, 'navigation' => VoterInterface::ACCESS_DENIED],
         ];
 
         yield 'User access limited to specific module type' => [
