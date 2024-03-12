@@ -16,8 +16,10 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\DcaPickerProviderInterface;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\Security\DataContainer\AbstractAction;
+use Contao\CoreBundle\Security\DataContainer\CreateAction;
+use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
+use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\Image\ResizeConfiguration;
 use Doctrine\DBAL\ArrayParameterType;
 
@@ -861,12 +863,14 @@ abstract class DataContainer extends Backend
 			return;
 		}
 
-		$message = 'Access denied.';
-
-		if ($subject instanceof AbstractAction)
+		$message = match (true)
 		{
-			$message = sprintf('Access denied to %s [%s].', $subject, $attribute);
-		}
+			$subject instanceof ReadAction => sprintf('Not enough permissions to read %s.', $subject),
+			$subject instanceof CreateAction => sprintf('Not enough permissions to create %s.', $subject),
+			$subject instanceof UpdateAction => sprintf('Not enough permissions to update %s.', $subject),
+			$subject instanceof DeleteAction => sprintf('Not enough permissions to delete %s.', $subject),
+			default => 'Access denied.'
+		};
 
 		$exception = new AccessDeniedException($message);
 		$exception->setAttributes($attribute);
