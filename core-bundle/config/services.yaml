@@ -914,8 +914,8 @@ services:
         arguments:
             - '@security.access.decision_manager'
 
-    contao.security.data_container.frontend_modules_voter:
-        class: Contao\CoreBundle\Security\Voter\DataContainer\FrontendModulesVoter
+    contao.security.data_container.frontend_module_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\FrontendModuleVoter
         arguments:
             - '@security.access.decision_manager'
 
