@@ -15,8 +15,10 @@ use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface
 /**
  * @internal
  */
-class FrontendModulesVoter extends AbstractDataContainerVoter
+class FrontendModuleVoter extends AbstractDataContainerVoter
 {
+    use TypeAccessTrait;
+
     public function __construct(private readonly AccessDecisionManagerInterface $accessDecisionManager)
     {
     }
@@ -39,16 +41,6 @@ class FrontendModulesVoter extends AbstractDataContainerVoter
             return true;
         }
 
-        if ($action instanceof CreateAction) {
-            $type = $action->getNew()['type'] ?? null;
-
-            if (null === $type) {
-                return true;
-            }
-        } else {
-            $type = $action->getCurrent()['type'];
-        }
-
-        return $this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULE_TYPE], $type);
+        return $this->hasAccessToType($token, ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULE_TYPE, $action);
     }
 }

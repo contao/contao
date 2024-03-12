@@ -17,7 +17,7 @@ use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
-use Contao\CoreBundle\Security\Voter\DataContainer\FrontendModulesVoter;
+use Contao\CoreBundle\Security\Voter\DataContainer\FrontendModuleVoter;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
@@ -29,7 +29,7 @@ class FrontendModulesVoterTest extends TestCase
     {
         $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
 
-        $voter = new FrontendModulesVoter($accessDecisionManager);
+        $voter = new FrontendModuleVoter($accessDecisionManager);
 
         $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_module'));
         $this->assertTrue($voter->supportsType(CreateAction::class));
@@ -68,7 +68,7 @@ class FrontendModulesVoterTest extends TestCase
             ])
         ;
 
-        $voter = new FrontendModulesVoter($accessDecisionManager);
+        $voter = new FrontendModuleVoter($accessDecisionManager);
 
         // Reading is always permitted, although type "listing" is not explicitly allowed
         $this->assertSame(
