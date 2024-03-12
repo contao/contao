@@ -886,6 +886,17 @@ services:
             - '@contao.framework'
             - '@contao.routing.page_registry'
 
+    contao.security.data_container.content_element_nesting_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\ContentElementNestingVoter
+        arguments:
+            - '@database_connection'
+            - '@contao.fragment.compositor'
+
+    contao.security.data_container.content_element_type_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\ContentElementTypeVoter
+        arguments:
+            - '@security.access.decision_manager'
+
     contao.security.data_container.favorites_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\FavoritesVoter
 
