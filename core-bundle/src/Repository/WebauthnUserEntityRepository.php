@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Repository;
 
-use Contao\CoreBundle\Entity\WebauthnCredential;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\User;
@@ -21,13 +20,11 @@ use Webauthn\Bundle\Repository\PublicKeyCredentialUserEntityRepositoryInterface;
 use Webauthn\PublicKeyCredentialUserEntity;
 
 /**
- * @template-extends ServiceEntityRepository<WebauthnCredential>
- *
- * @method WebauthnCredential|null findOneByName(string $name)
+ * @template-extends ServiceEntityRepository<PublicKeyCredentialUserEntity>
  *
  * @internal
  */
-class WebauthnCredentialRepository implements PublicKeyCredentialUserEntityRepositoryInterface
+class WebauthnUserEntityRepository implements PublicKeyCredentialUserEntityRepositoryInterface
 {
     public function __construct(
         private readonly ContaoUserProvider $userProvider,
@@ -43,9 +40,7 @@ class WebauthnCredentialRepository implements PublicKeyCredentialUserEntityRepos
 
     public function findOneByUserHandle(string $userHandle): ?PublicKeyCredentialUserEntity
     {
-        throw new \RuntimeException("Not sure what '$userHandle' really is.");
-
-        return $this->getUserEntity($this->userProvider->loadUserByIdentifier($userHandle));
+        return $this->getUserEntity($this->userProvider->loadUserById((int) $userHandle));
     }
 
     private function getUserEntity(null|User $user): ?PublicKeyCredentialUserEntity

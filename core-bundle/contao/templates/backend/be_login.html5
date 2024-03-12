@@ -29,7 +29,7 @@
   <?php $this->block('container'); ?>
     <div id="container">
       <main id="main">
-        <form class="tl_login_form" method="post">
+        <form class="tl_login_form" method="post" data-controller="contao--webauthn" data-contao--webauthn-request-result-url-value="<?= $this->route('webauthn.controller.security.contao_backend.request.result') ?>" data-contao--webauthn-request-options-url-value="<?= $this->route('webauthn.controller.security.contao_backend.request.options') ?>" data-contao--webauthn-request-success-redirect-uri-value="<?= $this->route('contao_backend') ?>">
           <div class="formbody">
             <input type="hidden" name="FORM_SUBMIT" value="tl_login">
             <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
@@ -49,7 +49,8 @@
             </div>
             <div class="submit_container cf">
               <button type="submit" name="login" id="login" class="tl_submit"><?= $this->loginButton ?></button>
-              <a href="/" class="footer_preview"><?= $this->feLink ?> ›</a>
+              <button type="button" class="tl_submit" data-action="contao--webauthn#signin">Login with Passkey</button>
+              <a href="/" class="footer_preview"><?= $this->feLink ?> ›</a>         
             </div>
           </div>
         </form>

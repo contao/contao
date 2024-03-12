@@ -114,5 +114,43 @@
       <a href="<?= $this->route('contao_backend', ['do' => 'security', 'act' => 'enable', 'ref' => $this->ref]) ?>" class="tl_submit"><?= $this->trans('MSC.enable') ?></a>
     </div>
   <?php endif; ?>
+</div>
 
+<div class="two-factor passkeys">
+  <h2 class="sub_headline">Passkeys</h2>
+  <p>Here you can add and manage your passkeys with which you can log into the back end. Passkeys allow you to sign in safely and easily, without requiring a password and two-factor authentication.</p>
+  <div class="tl_listing_container">
+    <?php if ($this->credentials): ?>
+      <form method="post">
+        <input type="hidden" name="FORM_SUBMIT" value="tl_passkeys_credentials">
+        <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
+        <div class="formbody">
+          <table class="tl_listing showColumns with-border with-padding credential-list">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Created at</th>
+                <th class="actions"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php foreach ($this->credentials as $credential): ?>
+                <tr class="hover-row">
+                  <td><?= $credential->getId() ?></td>
+                  <td><?= $credential->createdAt->format('j. F Y, H:i') ?></td>
+                  <td class="actions"><button type="submit" name="delete_passkey" value="<?= $credential->getId() ?>" onclick="if(!confirm('<?= $this->trans('MSC.deleteConfirm', [$credential->getId()]) ?>'))return false"><?= Contao\Image::getHtml('delete.svg', $this->trans('MSC.delete')) ?></button></td>
+                </tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
+        </div>
+      </form>
+    <?php endif; ?>
+  </div>
+  <form method="post" data-controller="contao--webauthn" data-contao--webauthn-creation-result-url-value="<?= $this->route('webauthn.controller.creation.response.contao_backend_add_authenticator') ?>" data-contao--webauthn-creation-options-url-value="<?= $this->route('webauthn.controller.creation.request.contao_backend_add_authenticator') ?>" data-contao--webauthn-creation-success-redirect-uri-value="<?= $this->webauthnCreationSuccessRedirectUri ?>">
+    <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
+    <div class="tl_submit_container">
+      <button class="tl_submit" type="submit" data-action="contao--webauthn#signup">Add Passkey</button>
+    </div>
+  </form>
 </div>

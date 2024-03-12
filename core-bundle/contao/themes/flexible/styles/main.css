@@ -1096,6 +1096,18 @@ h2.sub_headline {
 	line-height: 16px;
 }
 
+/* Passkeys */
+.passkeys .credential-list td.actions {
+	text-align: right;
+}
+
+.passkeys .credential-list td.actions button {
+	outline: 0;
+	border: 0;
+	padding: 0;
+	background-color: transparent;
+} 
+
 /* Picker search */
 #search {
 	margin: 18px 18px -9px;

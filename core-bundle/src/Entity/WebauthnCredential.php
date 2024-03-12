@@ -3,6 +3,7 @@
 namespace Contao\CoreBundle\Entity;
 
 use Contao\CoreBundle\Repository\WebauthnCredentialRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
@@ -22,6 +23,9 @@ class WebauthnCredential extends PublicKeyCredentialSource
     #[GeneratedValue(strategy: 'NONE')]
     private string $id;
 
+    #[Column(type: Types::DATETIME_IMMUTABLE)]
+    public readonly \DateTimeImmutable $createdAt;
+
     public function __construct(
         string $publicKeyCredentialId,
         string $type,
@@ -31,10 +35,11 @@ class WebauthnCredential extends PublicKeyCredentialSource
         AbstractUid $aaguid,
         string $credentialPublicKey,
         string $userHandle,
-        int $counter
+        int $counter,
     )
     {
         $this->id = Ulid::generate();
+        $this->createdAt = new \DateTimeImmutable();
         parent::__construct($publicKeyCredentialId, $type, $transports, $attestationType, $trustPath, $aaguid, $credentialPublicKey, $userHandle, $counter);
     }
 

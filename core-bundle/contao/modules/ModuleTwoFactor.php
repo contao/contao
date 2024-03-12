@@ -10,9 +10,12 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Entity\WebauthnCredential;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\CoreBundle\Repository\WebauthnCredentialRepository;
 use ParagonIE\ConstantTime\Base32;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * Back end module "two factor".
@@ -75,8 +78,46 @@ class ModuleTwoFactor extends BackendModule
 			$container->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
 		}
 
+		/** @var WebauthnCredentialRepository $credentialRepo */
+		$credentialRepo = $container->get('contao.repository.webauthn_credential');
+
+		if (Input::post('FORM_SUBMIT') == 'tl_passkeys_credentials')
+		{
+			if ($deleteCredentialId = Input::post('delete_passkey'))
+			{
+				/** @var WebauthnCredential $credential */
+				if ($credential = $credentialRepo->findOneById($deleteCredentialId))
+				{
+					if ((int) $credential->userHandle !== (int) $user->id)
+					{
+						throw new AccessDeniedHttpException('Cannot delete credential ID '.$deleteCredentialId);
+					}
+
+					$credentialRepo->remove($credential);
+				}
+			}
+
+			if ($editCredentialId = Input::post('edit_passkey'))
+			{
+				/** @var WebauthnCredential $credential */
+				if ($credential = $credentialRepo->findOneById($editCredentialId))
+				{
+					if ((int) $credential->userHandle !== (int) $user->id)
+					{
+						throw new AccessDeniedHttpException('Cannot delete credential ID '.$editCredentialId);
+					}
+
+					$credential->name = Input::post('name');
+				}
+			}
+
+			$this->reload();
+		}
+
 		$this->Template->isEnabled = $user->useTwoFactor;
 		$this->Template->trustedDevices = $container->get('contao.security.two_factor.trusted_device_manager')->getTrustedDevices($user);
+		$this->Template->webauthnCreationSuccessRedirectUri = $return;
+		$this->Template->credentials = $credentialRepo->getAllForUser($user);
 	}
 
 	/**
