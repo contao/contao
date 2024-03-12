@@ -14,10 +14,8 @@ namespace Contao\CoreBundle\HttpKernel;
 
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\Model;
-use Contao\PageModel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
@@ -30,7 +28,6 @@ class ModelArgumentResolver implements ValueResolverInterface
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly ScopeMatcher $scopeMatcher,
-        private readonly PageFinder $pageFinder,
     ) {
     }
 
