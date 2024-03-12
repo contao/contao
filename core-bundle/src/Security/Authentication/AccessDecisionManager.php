@@ -21,6 +21,8 @@ use Symfony\Component\Security\Http\FirewallMapInterface;
 
 class AccessDecisionManager implements AccessDecisionManagerInterface
 {
+    private iterable $voters;
+
     /**
      * @internal
      */
@@ -30,6 +32,10 @@ class AccessDecisionManager implements AccessDecisionManagerInterface
         private readonly RequestStack $requestStack,
         private readonly FirewallMapInterface $firewallMap,
     ) {
+        if (property_exists($inner, 'voters')) {
+            $reflection = new \ReflectionProperty($inner::class, 'voters');
+            $this->voters = $reflection->getValue($inner);
+        }
     }
 
     public function decide(TokenInterface $token, array $attributes, $object = null): bool
