@@ -953,6 +953,12 @@ services:
         arguments:
             - '@security.access.decision_manager'
 
+    contao.security.data_container.user_access_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\UserAccessVoter
+        arguments:
+            - '@security.access.decision_manager'
+            - '@database_connection'
+
     contao.security.default_data_container_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\DefaultDataContainerVoter
         tags:
