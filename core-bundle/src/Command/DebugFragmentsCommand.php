@@ -43,15 +43,15 @@ class DebugFragmentsCommand extends Command
 
         foreach ($identifiers as $identifier) {
             $config = $fragments[$identifier];
-            $controller = $this->container->get($config->getController()) ?? $config->getController();
             $class = new \ReflectionClass(AbstractFragmentController::class);
             $attributes = $class->getProperty('options')->getValue($this->container->get($config->getController()));
+            $controller = $attributes['debugController'] ?? $config->getController();
 
             unset($attributes['debugController']);
 
             $rows[] = [
                 $identifier,
-                \is_string($controller) ? $controller : $controller::class,
+                $controller,
                 $config->getRenderer(),
                 $this->generateArray($config->getOptions()),
                 $this->generateArray($attributes),
