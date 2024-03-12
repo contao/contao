@@ -338,11 +338,6 @@ class TemplateTest extends TestCase
      */
     public function testCompileReplacesLiteralInsertTags(string $buffer, string $expectedOutput): void
     {
-        $page = new \stdClass();
-        $page->minifyMarkup = false;
-
-        $GLOBALS['objPage'] = $page;
-
         $template = new class($buffer) extends FrontendTemplate {
             public function __construct(private readonly string|null $testBuffer)
             {

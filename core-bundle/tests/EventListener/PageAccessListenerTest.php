@@ -49,34 +49,6 @@ class PageAccessListenerTest extends TestCase
         $this->assertFalse($request->attributes->has('pageModel'));
     }
 
-    public function testSetsPageModelFromGlobalWithIdInRequest(): void
-    {
-        $security = $this->createMock(Security::class);
-        $security
-            ->expects($this->never())
-            ->method('isGranted')
-        ;
-
-        $request = new Request();
-        $request->attributes->set('pageModel', 42);
-
-        $event = $this->createMock(RequestEvent::class);
-        $event
-            ->expects($this->once())
-            ->method('getRequest')
-            ->willReturn($request)
-        ;
-
-        $GLOBALS['objPage'] = $this->mockClassWithProperties(PageModel::class, ['id' => 42]);
-
-        $listener = new PageAccessListener($this->mockFramework(), $security);
-        $listener($event);
-
-        $this->assertSame($GLOBALS['objPage'], $request->attributes->get('pageModel'));
-
-        unset($GLOBALS['objPage']);
-    }
-
     public function testSetsPageModelFromModelWithIdInRequest(): void
     {
         $security = $this->createMock(Security::class);
@@ -101,37 +73,6 @@ class PageAccessListenerTest extends TestCase
         $listener($event);
 
         $this->assertSame($pageModel, $request->attributes->get('pageModel'));
-    }
-
-    public function testSetsPageModelFromGlobalWithModelInRequest(): void
-    {
-        $security = $this->createMock(Security::class);
-        $security
-            ->expects($this->never())
-            ->method('isGranted')
-        ;
-
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['id' => 42]);
-
-        $request = new Request();
-        $request->attributes->set('pageModel', $pageModel);
-
-        $event = $this->createMock(RequestEvent::class);
-        $event
-            ->expects($this->once())
-            ->method('getRequest')
-            ->willReturn($request)
-        ;
-
-        $GLOBALS['objPage'] = $this->mockClassWithProperties(PageModel::class, ['id' => 42]);
-
-        $listener = new PageAccessListener($this->mockFramework(), $security);
-        $listener($event);
-
-        $this->assertNotSame($pageModel, $request->attributes->get('pageModel'));
-        $this->assertSame($GLOBALS['objPage'], $request->attributes->get('pageModel'));
-
-        unset($GLOBALS['objPage']);
     }
 
     public function testSetsPageModelFromModelInRequest(): void

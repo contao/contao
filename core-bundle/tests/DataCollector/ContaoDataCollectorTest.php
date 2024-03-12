@@ -16,6 +16,7 @@ use Contao\ContentImage;
 use Contao\ContentText;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\DataCollector\ContaoDataCollector;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\LayoutModel;
@@ -44,7 +45,7 @@ class ContaoDataCollectorTest extends TestCase
             'additional_data' => 'data',
         ];
 
-        $collector = new ContaoDataCollector($this->createMock(TokenChecker::class));
+        $collector = $this->getContaoDataCollector();
         $collector->collect(new Request(), new Response());
 
         $this->assertSame(['ContentText' => ContentText::class], $collector->getClassesAliased());
@@ -87,9 +88,13 @@ class ContaoDataCollectorTest extends TestCase
         $page->id = 2;
         $page->layoutId = 2;
 
-        $GLOBALS['objPage'] = $page;
+        $pageFinder = $this->createMock(PageFinder::class);
+        $pageFinder
+            ->method('getCurrentPage')
+            ->willReturn($page)
+        ;
 
-        $collector = new ContaoDataCollector($this->createMock(TokenChecker::class));
+        $collector = $this->getContaoDataCollector(pageFinder: $pageFinder);
         $collector->setFramework($framework);
         $collector->collect(new Request(), new Response());
 
@@ -109,8 +114,6 @@ class ContaoDataCollectorTest extends TestCase
         $collector->reset();
 
         $this->assertSame([], $collector->getSummary());
-
-        unset($GLOBALS['objPage']);
     }
 
     public function testSetsTheFrontendPreviewFromTokenChecker(): void
@@ -127,7 +130,11 @@ class ContaoDataCollectorTest extends TestCase
         $page->id = 2;
         $page->layoutId = 2;
 
-        $GLOBALS['objPage'] = $page;
+        $pageFinder = $this->createMock(PageFinder::class);
+        $pageFinder
+            ->method('getCurrentPage')
+            ->willReturn($page)
+        ;
 
         $tokenChecker = $this->createMock(TokenChecker::class);
         $tokenChecker
@@ -136,7 +143,7 @@ class ContaoDataCollectorTest extends TestCase
             ->willReturn(true)
         ;
 
-        $collector = new ContaoDataCollector($tokenChecker);
+        $collector = $this->getContaoDataCollector($tokenChecker, $pageFinder);
         $collector->setFramework($framework);
         $collector->collect(new Request(), new Response());
 
@@ -152,15 +159,21 @@ class ContaoDataCollectorTest extends TestCase
             ],
             $collector->getSummary(),
         );
-
-        unset($GLOBALS['objPage']);
     }
 
     public function testReturnsAnEmptyArrayIfTheKeyIsUnknown(): void
     {
-        $collector = new ContaoDataCollector($this->createMock(TokenChecker::class));
+        $collector = $this->getContaoDataCollector();
         $method = new \ReflectionMethod($collector, 'getData');
 
         $this->assertSame([], $method->invokeArgs($collector, ['foo']));
+    }
+
+    private function getContaoDataCollector(TokenChecker|null $tokenChecker = null, PageFinder|null $pageFinder = null): ContaoDataCollector
+    {
+        return new ContaoDataCollector(
+            $tokenChecker ?? $this->createMock(TokenChecker::class),
+            $pageFinder ?? $this->createMock(PageFinder::class),
+        );
     }
 }
