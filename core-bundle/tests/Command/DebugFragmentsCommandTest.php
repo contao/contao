@@ -64,11 +64,7 @@ class DebugFragmentsCommandTest extends TestCase
             $container->set($config->getController(), $instance);
         }
 
-
-        $command = new DebugFragmentsCommand(
-            $fragmentsRegistry,
-            $container,
-        );
+        $command = new DebugFragmentsCommand($fragmentsRegistry, $container);
 
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);

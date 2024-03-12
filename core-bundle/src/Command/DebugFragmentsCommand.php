@@ -29,7 +29,7 @@ class DebugFragmentsCommand extends Command
 {
     public function __construct(
         private readonly FragmentRegistry $registry,
-        private readonly ContainerInterface $container
+        private readonly ContainerInterface $container,
     ) {
         parent::__construct();
     }
@@ -51,7 +51,7 @@ class DebugFragmentsCommand extends Command
 
             $rows[] = [
                 $identifier,
-                is_string($controller) ? $controller : get_class($controller),
+                \is_string($controller) ? $controller : $controller::class,
                 $config->getRenderer(),
                 $this->generateArray($config->getOptions()),
                 $this->generateArray($attributes),
