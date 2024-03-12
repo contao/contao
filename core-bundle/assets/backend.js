@@ -32,5 +32,8 @@ document.documentElement.addEventListener('turbo:before-prefetch', e => {
 
 // Make mootools scripts reinitialize themselves
 document.documentElement.addEventListener('turbo:render', () => {
-    window.fireEvent('domready');
+    if (!document.body.mooDomreadyFired) {
+        document.body.mooDomreadyFired = true;
+        window.fireEvent('domready');
+    }
 });
