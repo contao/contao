@@ -392,6 +392,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			);
 
 			$objSession->set('CLIPBOARD', $arrClipboard);
+
+			$this->redirect($this->getReferer());
 		}
 
 		// Custom filter
