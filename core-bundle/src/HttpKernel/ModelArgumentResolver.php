@@ -73,8 +73,6 @@ class ModelArgumentResolver implements ValueResolverInterface
             return $value;
         }
 
-        // Special handling for pageModel that could be globally registered
-
         /** @var Adapter<Model> $model */
         $model = $this->framework->getAdapter($type);
 
