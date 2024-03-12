@@ -163,7 +163,7 @@ class DefaultOperationsListener
                 'href' => 'act=toggle&amp;field='.$toggleField,
                 'icon' => 'visible.svg',
                 'showInHeader' => (bool) $ctable,
-                'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table),
+                'button_callback' => $this->toggleCallback($table, $toggleField),
             ];
         }
 
@@ -219,6 +219,19 @@ class DefaultOperationsListener
 
             if ($childCount < 1) {
                 $operation->disable();
+            }
+        };
+    }
+
+    private function toggleCallback(string $table, string $toggleField): \Closure
+    {
+        return function (DataContainerOperation $operation) use ($toggleField, $table): void {
+            $new = [$toggleField => !($operation['record'][$toggleField] ?? false)];
+
+            if (!$this->isGranted(UpdateAction::class, $table, $operation, $new)) {
+                // Do not use DataContainerOperation::disable() because it would not show the
+                // actual state
+                unset($operation['route'], $operation['href']);
             }
         };
     }

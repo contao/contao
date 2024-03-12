@@ -104,11 +104,10 @@ services:
 
     contao.command.supervise_workers:
         class: Contao\CoreBundle\Command\SuperviseWorkersCommand
-        factory: [null, create]
         arguments:
             - '@messenger.receiver_locator'
             - '@contao.process_util'
-            - '%kernel.cache_dir%/worker-supervisor'
+            - ~
             - ~
 
     contao.command.symlinks:

@@ -26,6 +26,8 @@ use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface
  */
 class PageTypeAccessVoter extends AbstractDataContainerVoter
 {
+    use TypeAccessTrait;
+
     private const FIRST_LEVEL_TYPES = ['error_401', 'error_403', 'error_404', 'error_503'];
 
     public function __construct(
@@ -52,29 +54,7 @@ class PageTypeAccessVoter extends AbstractDataContainerVoter
             return true;
         }
 
-        $types = [];
-
-        if (!$action instanceof CreateAction && isset($action->getCurrent()['type'])) {
-            $types[] = $action->getCurrent()['type'];
-        }
-
-        if (!$action instanceof DeleteAction && isset($action->getNew()['type'])) {
-            $types[] = $action->getNew()['type'];
-        }
-
-        if ([] === $types) {
-            return true;
-        }
-
-        // For the update action, the user needs access to both the current and the new
-        // page type, so if one is denied, return false.
-        foreach ($types as $type) {
-            if (!$this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], $type)) {
-                return false;
-            }
-        }
-
-        return true;
+        return $this->hasAccessToType($token, ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $action);
     }
 
     private function validateFirstLevelType(CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool

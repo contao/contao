@@ -33,12 +33,6 @@ final class ContaoCorePermissions
     public const USER_CAN_DELETE_PAGE = 'contao_user.can_delete_page';
 
     /**
-     * Access is granted if the current user can delete the given fron end module.
-     * Subject must be a module ID, a FrontendModule or a tl_module record as array.
-     */
-    public const USER_CAN_DELETE_FRONTEND_MODULE = 'contao_user.can_delete_frontend_module';
-
-    /**
      * Access is granted if the current user can edit articles of the given page.
      * Subject must be a page ID, a PageModel or a tl_page record as array.
      */
