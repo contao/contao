@@ -1,0 +1,72 @@
+{% trans_default_domain "contao_default" %}
+<!DOCTYPE html>
+<html lang="{{ chrome.language }}">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ chrome.title|default(app.request.host) }}</title>
+
+    <meta name="generator" content="Contao Open Source CMS">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+    <meta name="referrer" content="origin">
+
+    <link rel="stylesheet" href="{{ chrome.combined_stylesheet_file|raw }}">
+    {{ chrome.stylesheets|default|raw }}
+
+    <script>{{ chrome.locale_string|raw }}</script>
+    <script src="{{ chrome.combined_javascript_file|raw }}"></script>
+    <script src="{{ asset('backend.js', 'contao_core') }}"></script>
+    <script>{{ chrome.date_string|raw }}</script>
+    {{ chrome.javascripts|default|raw }}
+</head>
+<body{{ attrs(chrome.attributes|default).set('id', 'top').addClass('be_main') }}>
+
+<header id="header">
+    <div class="inner">
+        <h1>
+            <a href="{{ path('contao_backend') }}" accesskey="h" id="home" title="{{ 'MSC.home'|trans }}">
+                <span class="app-title">Contao</span>
+                {% if chrome.badgeTitle %}
+                    <span class="badge-title">{{ chrome.badgeTitle }}</span>
+                {% endif %}
+            </a>
+        </h1>
+        {{ include("@ContaoCore/Backend/be_header_menu.html.twig") }}
+    </div>
+</header>
+
+<div id="container">
+    <aside id="left">
+        {{ include("@ContaoCore/Backend/be_menu.html.twig") }}
+        <div class="version">
+            {{ chrome.version }}
+            <br>
+            {{ 'MSC.learnMore'|trans(['<a href="https://contao.org" target="_blank" rel="noreferrer noopener">contao.org</a>'])|raw }}
+        </div>
+    </aside>
+
+    <main id="main" aria-labelledby="main_headline">
+        <h1 id="main_headline">{{ headline|default(app.request.attributes.get('_controller')) }}</h1>
+        <div class="content">
+            {% if chrome.error|default %}
+                <p class="tl_gerror">{{ chrome.error|raw }}</p>
+            {% endif %}
+
+            {% block main_inside %}
+                <p class="tl_new">This page was rendered by your <b>{{ app.request.attributes.get('_controller') }}</b>
+                    via the <b>{{ app.request.attributes.get('_route') }}</b> route. You can replace this text with your
+                    content while keeping the rest of the backend chrome by adjusting the <b>main_inside</b> block in
+                    your
+                    controller template.
+                </p>
+            {% endblock %}
+        </div>
+</div>
+</main>
+</div>
+
+{{ chrome.mootools|default|raw }}
+
+<script>Backend.initScrollOffset()</script>
+
+</body>
+</html>
