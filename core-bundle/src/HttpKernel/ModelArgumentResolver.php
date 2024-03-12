@@ -74,13 +74,6 @@ class ModelArgumentResolver implements ValueResolverInterface
         }
 
         // Special handling for pageModel that could be globally registered
-        if (is_a($type, PageModel::class, true)) {
-            $pageModel = $this->pageFinder->getCurrentPage();
-
-            if ($pageModel && $pageModel->id === (int) $value) {
-                return $pageModel;
-            }
-        }
 
         /** @var Adapter<Model> $model */
         $model = $this->framework->getAdapter($type);
