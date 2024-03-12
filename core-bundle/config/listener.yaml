@@ -215,6 +215,11 @@ services:
             - '@request_stack'
             - '@contao.twig.filesystem_loader'
 
+    contao.listener.data_container.theme_operations:
+        class: Contao\CoreBundle\EventListener\DataContainer\ThemeOperationsListener
+        arguments:
+            - '@security.helper'
+
     contao.listener.data_container.theme_templates:
         class: Contao\CoreBundle\EventListener\DataContainer\ThemeTemplatesListener
         arguments:
