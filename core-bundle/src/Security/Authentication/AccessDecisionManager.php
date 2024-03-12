@@ -21,6 +21,11 @@ use Symfony\Component\Security\Http\FirewallMapInterface;
 
 class AccessDecisionManager implements AccessDecisionManagerInterface
 {
+    /**
+     * Temporary workaround for symfony/symfony#54225.
+     *
+     * @phpstan-ignore-next-line
+     */
     private iterable $voters;
 
     /**
