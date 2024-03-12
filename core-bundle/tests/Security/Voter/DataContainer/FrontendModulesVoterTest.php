@@ -27,9 +27,7 @@ class FrontendModulesVoterTest extends TestCase
 {
     public function testVoter(): void
     {
-        $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
-
-        $voter = new FrontendModuleVoter($accessDecisionManager);
+        $voter = new FrontendModuleVoter($this->createMock(AccessDecisionManagerInterface::class));
 
         $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_module'));
         $this->assertTrue($voter->supportsType(CreateAction::class));
