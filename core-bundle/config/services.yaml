@@ -163,6 +163,16 @@ services:
         tags:
             - { name: data_collector, template: '@ContaoCore/Collector/contao.html.twig', id: contao }
 
+
+    contao.data_container.dca_url_analyzer:
+        class: Contao\CoreBundle\DataContainer\DcaUrlAnalyzer
+        public: true
+        arguments:
+            - '@contao.framework'
+            - '@request_stack'
+            - '@security.helper'
+            - '@router'
+
     contao.doctrine.backup.dumper:
         class: Contao\CoreBundle\Doctrine\Backup\Dumper
 
