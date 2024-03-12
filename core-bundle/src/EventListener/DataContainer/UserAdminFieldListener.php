@@ -33,6 +33,7 @@ class UserAdminFieldListener
 
         $user = $this->security->getUser();
 
+        // Prevent the admin from downgrading their own account
         if ($user instanceof BackendUser && (int) $user->id === (int) $dc->id) {
             return $this->unsetAdminField($palette);
         }

@@ -52,19 +52,16 @@ class UserAccessVoter extends AbstractDataContainerVoter implements ResetInterfa
     protected function hasAccess(TokenInterface $token, CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
     {
         $user = $token->getUser();
+
         $isCurrentUser = $user instanceof BackendUser
             && !$action instanceof CreateAction
             && (int) $user->id === (int) $action->getCurrentId();
 
-        // Current user can change its profile regardless of user module access, but is
-        // never allowed to delete or disable itself or change its admin state
+        // The current user can change their profile regardless of the module access, but they
+        // are never allowed to delete or disable themselves or change their admin state.
         if ($isCurrentUser) {
             return $action instanceof ReadAction
-                || (
-                    $action instanceof UpdateAction
-                    && !isset($action->getNew()['disable'])
-                    && !isset($action->getNew()['admin'])
-                );
+                || ($action instanceof UpdateAction && !isset($action->getNew()['disable']) && !isset($action->getNew()['admin']));
         }
 
         if (!$this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'user')) {
@@ -79,9 +76,9 @@ class UserAccessVoter extends AbstractDataContainerVoter implements ResetInterfa
             return true;
         }
 
-        // Regular user is not allowed to create admin or update admin field
+        // Regular users are not allowed to create admins or update admin fields
         if (
-            ($action instanceof CreateAction && (1 === (int) ($action->getNew()['admin'] ?? 0)))
+            ($action instanceof CreateAction && 1 === (int) ($action->getNew()['admin'] ?? 0))
             || ($action instanceof UpdateAction && isset($action->getNew()['admin']))
         ) {
             return false;
@@ -98,7 +95,7 @@ class UserAccessVoter extends AbstractDataContainerVoter implements ResetInterfa
     private function getAdminIds(): array
     {
         if (null === $this->adminIds) {
-            $this->adminIds = $this->connection->fetchFirstColumn('SELECT id FROM tl_user WHERE `admin`=1');
+            $this->adminIds = $this->connection->fetchFirstColumn('SELECT id FROM tl_user WHERE `admin` = 1');
             $this->adminIds = array_map('intval', $this->adminIds);
         }
 

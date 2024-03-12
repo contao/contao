@@ -225,7 +225,7 @@ class DefaultOperationsListener
 
     private function toggleCallback(string $table, string $toggleField): \Closure
     {
-        return function (DataContainerOperation $operation) use ($table, $toggleField): void {
+        return function (DataContainerOperation $operation) use ($toggleField, $table): void {
             $new = [$toggleField => !($operation['record'][$toggleField] ?? false)];
 
             if (!$this->isGranted(UpdateAction::class, $table, $operation, $new)) {

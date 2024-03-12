@@ -262,7 +262,7 @@ class UserAccessVoterTest extends TestCase
             $connection
                 ->expects($this->once())
                 ->method('fetchFirstColumn')
-                ->with('SELECT id FROM tl_user WHERE `admin`=1')
+                ->with('SELECT id FROM tl_user WHERE `admin` = 1')
                 ->willReturn($adminIds)
             ;
         } else {
