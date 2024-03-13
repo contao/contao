@@ -159,10 +159,21 @@ class Image
 		$search = array('{alt}', '{attributes}');
 		$replace = array(StringUtil::specialchars($alt), $attributes ? ' ' . $attributes : '');
 
+		$darkAttributes = new HtmlAttributes($attributes);
+
+		foreach (array('data-icon', 'data-icon-disabled') as $icon)
+		{
+			if (isset($darkAttributes[$icon]))
+			{
+				$pathinfo = pathinfo($darkAttributes[$icon]);
+				$darkAttributes[$icon] = $pathinfo['filename'] . '--dark.' . $pathinfo['extension'];
+			}
+		}
+
 		if (str_contains($template, '{darkAttributes}'))
 		{
 			$search[] = '{darkAttributes}';
-			$replace[] = (new HtmlAttributes($attributes))->mergeWith(array('class' => 'color-scheme--dark', 'loading' => 'lazy'))->toString();
+			$replace[] = $darkAttributes->mergeWith(array('class' => 'color-scheme--dark', 'loading' => 'lazy'))->toString();
 		}
 
 		if (str_contains($template, '{lightAttributes}'))
