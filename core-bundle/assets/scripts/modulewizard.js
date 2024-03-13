@@ -10,11 +10,6 @@
             return;
         }
 
-        // Check if this row has all necessary elements
-        if (9 !== row.querySelectorAll('select, button, a.module_link, img.module_image').length) {
-            return;
-        }
-
         initializedRows.set(row, true);
 
         const tbody = row.closest('tbody');
