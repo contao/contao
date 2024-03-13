@@ -10,6 +10,17 @@
             return;
         }
 
+        // Check if this row has all necessary elements
+        if (!row.querySelector('select')
+            || !row.querySelector('a.module_link')
+            || !row.querySelector('img.module_image')
+            || !row.querySelector('button[data-command="copy"]')
+            || !row.querySelector('button[data-command="delete"]')
+            || !row.querySelector('button.drag-handle')
+        ) {
+            return;
+        }
+
         initializedRows.set(row, true);
 
         const tbody = row.closest('tbody');
