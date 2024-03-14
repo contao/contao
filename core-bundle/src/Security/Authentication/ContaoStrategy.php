@@ -15,41 +15,39 @@ namespace Contao\CoreBundle\Security\Authentication;
 use Symfony\Bundle\SecurityBundle\Security\FirewallConfig;
 use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
+use Symfony\Component\Security\Core\Authorization\Strategy\AccessDecisionStrategyInterface;
 use Symfony\Component\Security\Http\FirewallMapInterface;
 
-class AccessDecisionManager implements AccessDecisionManagerInterface
+class ContaoStrategy implements AccessDecisionStrategyInterface, \Stringable
 {
-    /**
-     * Temporary workaround for symfony/symfony#54225.
-     *
-     * @phpstan-ignore-next-line
-     */
-    private iterable $voters;
-
-    /**
-     * @internal
-     */
     public function __construct(
-        private readonly AccessDecisionManagerInterface $inner,
-        private readonly AccessDecisionManagerInterface $contaoAccessDecisionManager,
+        private readonly AccessDecisionStrategyInterface $originalStrategy,
+        private readonly AccessDecisionStrategyInterface $priorityStrategy,
         private readonly RequestStack $requestStack,
         private readonly FirewallMapInterface $firewallMap,
     ) {
-        if (property_exists($inner, 'voters')) {
-            $reflection = new \ReflectionProperty($inner::class, 'voters');
-            $this->voters = $reflection->getValue($inner);
-        }
     }
 
-    public function decide(TokenInterface $token, array $attributes, $object = null): bool
+    public function __toString(): string
     {
-        if ($this->isContaoContext()) {
-            return $this->contaoAccessDecisionManager->decide($token, $attributes, $object);
+        if (!$this->isContaoContext()) {
+            if (method_exists($this->originalStrategy, '__toString')) {
+                return (string) $this->originalStrategy;
+            }
+
+            return get_debug_type($this->originalStrategy);
         }
 
-        return $this->inner->decide($token, $attributes, $object);
+        return (string) $this->priorityStrategy;
+    }
+
+    public function decide(\Traversable $results): bool
+    {
+        if ($this->isContaoContext()) {
+            return $this->priorityStrategy->decide($results);
+        }
+
+        return $this->originalStrategy->decide($results);
     }
 
     private function isContaoContext(): bool
