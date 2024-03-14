@@ -65,7 +65,7 @@ class AccessDecisionStrategyPassTest extends TestCase
                             && PriorityStrategy::class === $definition->getArgument(1)->getClass()
                             && 'request_stack' === (string) $definition->getArgument(2)
                             && 'security.firewall.map' === (string) $definition->getArgument(3);
-                    }
+                    },
                 ),
             )
         ;
