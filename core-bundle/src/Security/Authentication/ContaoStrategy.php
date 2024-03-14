@@ -21,7 +21,7 @@ use Symfony\Component\Security\Http\FirewallMapInterface;
 class ContaoStrategy implements AccessDecisionStrategyInterface, \Stringable
 {
     public function __construct(
-        private readonly AccessDecisionStrategyInterface $originalStrategy,
+        private readonly AccessDecisionStrategyInterface $defaultStrategy,
         private readonly AccessDecisionStrategyInterface $contaoStrategy,
         private readonly RequestStack $requestStack,
         private readonly FirewallMapInterface $firewallMap,
@@ -30,7 +30,7 @@ class ContaoStrategy implements AccessDecisionStrategyInterface, \Stringable
 
     public function __toString(): string
     {
-        $strategy = $this->isContaoContext() ? $this->contaoStrategy : $this->originalStrategy;
+        $strategy = $this->isContaoContext() ? $this->contaoStrategy : $this->defaultStrategy;
 
         if (method_exists($strategy, '__toString')) {
             return (string) $strategy;
@@ -45,7 +45,7 @@ class ContaoStrategy implements AccessDecisionStrategyInterface, \Stringable
             return $this->contaoStrategy->decide($results);
         }
 
-        return $this->originalStrategy->decide($results);
+        return $this->defaultStrategy->decide($results);
     }
 
     private function isContaoContext(): bool
