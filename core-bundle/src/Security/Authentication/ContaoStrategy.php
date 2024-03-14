@@ -22,7 +22,7 @@ class ContaoStrategy implements AccessDecisionStrategyInterface, \Stringable
 {
     public function __construct(
         private readonly AccessDecisionStrategyInterface $originalStrategy,
-        private readonly AccessDecisionStrategyInterface $priorityStrategy,
+        private readonly AccessDecisionStrategyInterface $contaoStrategy,
         private readonly RequestStack $requestStack,
         private readonly FirewallMapInterface $firewallMap,
     ) {
@@ -30,21 +30,19 @@ class ContaoStrategy implements AccessDecisionStrategyInterface, \Stringable
 
     public function __toString(): string
     {
-        if (!$this->isContaoContext()) {
-            if (method_exists($this->originalStrategy, '__toString')) {
-                return (string) $this->originalStrategy;
-            }
+        $strategy = $this->isContaoContext() ? $this->contaoStrategy : $this->originalStrategy;
 
-            return get_debug_type($this->originalStrategy);
+        if (method_exists($strategy, '__toString')) {
+            return (string) $strategy;
         }
 
-        return (string) $this->priorityStrategy;
+        return get_debug_type($strategy);
     }
 
     public function decide(\Traversable $results): bool
     {
         if ($this->isContaoContext()) {
-            return $this->priorityStrategy->decide($results);
+            return $this->contaoStrategy->decide($results);
         }
 
         return $this->originalStrategy->decide($results);
