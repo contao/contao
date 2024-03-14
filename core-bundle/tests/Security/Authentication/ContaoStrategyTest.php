@@ -24,7 +24,7 @@ use Symfony\Component\Security\Http\FirewallMapInterface;
 
 class ContaoStrategyTest extends TestCase
 {
-    public function testUsesOriginalDecisionManagerOnWrongFirewallMap(): void
+    public function testUsesDefaultDecisionStrageyOnWrongFirewallMap(): void
     {
         $accessDecisionManager = new ContaoStrategy(
             $this->mockAccessDecisionStrategy(true),
@@ -36,7 +36,7 @@ class ContaoStrategyTest extends TestCase
         $accessDecisionManager->decide($this->createMock(\Traversable::class));
     }
 
-    public function testUsesOriginalDecisionManagerIfNoRequestAvailable(): void
+    public function testUsesDefaultDecisionStrategyIfNoRequestAvailable(): void
     {
         $accessDecisionManager = new ContaoStrategy(
             $this->mockAccessDecisionStrategy(true),
@@ -48,7 +48,7 @@ class ContaoStrategyTest extends TestCase
         $accessDecisionManager->decide($this->createMock(\Traversable::class));
     }
 
-    public function testUsesOriginalDecisionManagerIfFirewallMapHasNoConfig(): void
+    public function testUsesDefaultDecisionStrategyIfFirewallMapHasNoConfig(): void
     {
         $requestStack = new RequestStack();
         $requestStack->push(new Request());
