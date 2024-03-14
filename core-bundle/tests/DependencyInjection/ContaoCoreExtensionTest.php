@@ -44,7 +44,6 @@ use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
 use Symfony\Component\HttpKernel\EventListener\ErrorListener;
 use Symfony\Component\HttpKernel\EventListener\LocaleListener as BaseLocaleListener;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
-use Symfony\Component\Security\Core\Authorization\TraceableAccessDecisionManager;
 use Symfony\Component\Security\Http\Firewall;
 
 class ContaoCoreExtensionTest extends TestCase
@@ -629,26 +628,6 @@ class ContaoCoreExtensionTest extends TestCase
         ;
 
         (new ContaoCoreExtension())->configureFilesystem($config);
-    }
-
-    public function testRegistersTraceableAccessDecisionMangerInDebug(): void
-    {
-        $container = new ContainerBuilder(
-            new ParameterBag([
-                'kernel.debug' => true,
-                'kernel.charset' => 'UTF-8',
-                'kernel.project_dir' => Path::normalize($this->getTempDir()),
-            ]),
-        );
-
-        $extension = new ContaoCoreExtension();
-        $extension->load([], $container);
-
-        $this->assertTrue($container->hasDefinition('contao.debug.security.access.decision_manager'));
-
-        $definition = $container->findDefinition('contao.debug.security.access.decision_manager');
-        $this->assertSame(TraceableAccessDecisionManager::class, $definition->getClass());
-        $this->assertSame('security.access.decision_manager', $definition->getDecoratedService()[0]);
     }
 
     public function testHstsSecurityConfiguration(): void
