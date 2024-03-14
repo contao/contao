@@ -59,7 +59,7 @@ class AccessDecisionStrategyPassTest extends TestCase
             ->with(
                 1,
                 $this->callback(
-                    static fn(Definition $definition) => $definition->getArgument(0) === $strategy
+                    static fn (Definition $definition) => $definition->getArgument(0) === $strategy
                         && $definition->getArgument(1) instanceof Definition
                         && PriorityStrategy::class === $definition->getArgument(1)->getClass()
                         && 'request_stack' === (string) $definition->getArgument(2)
