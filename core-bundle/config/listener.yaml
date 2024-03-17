@@ -291,11 +291,6 @@ services:
         arguments:
             - '@translator'
 
-    contao.listener.interest_cohort:
-        class: Contao\CoreBundle\EventListener\InterestCohortListener
-        arguments:
-            - '@contao.routing.scope_matcher'
-
     contao.listener.json_ld_schema:
         class: Contao\CoreBundle\EventListener\ContaoJsonLdSchemaListener
 
