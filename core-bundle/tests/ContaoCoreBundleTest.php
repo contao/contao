@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests;
 
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\DependencyInjection\Compiler\AccessDecisionStrategyPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAssetsPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAvailableTransportsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddCronJobsPass;
@@ -76,6 +77,7 @@ class ContaoCoreBundleTest extends TestCase
             LoggerChannelPass::class,
             ConfigureFilesystemPass::class,
             AddInsertTagsPass::class,
+            AccessDecisionStrategyPass::class,
         ];
 
         $security = $this->createMock(SecurityExtension::class);

@@ -15,30 +15,37 @@ namespace Contao\CoreBundle\Security\Authentication;
 use Symfony\Bundle\SecurityBundle\Security\FirewallConfig;
 use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
+use Symfony\Component\Security\Core\Authorization\Strategy\AccessDecisionStrategyInterface;
 use Symfony\Component\Security\Http\FirewallMapInterface;
 
-class AccessDecisionManager implements AccessDecisionManagerInterface
+class ContaoStrategy implements AccessDecisionStrategyInterface, \Stringable
 {
-    /**
-     * @internal
-     */
     public function __construct(
-        private readonly AccessDecisionManagerInterface $inner,
-        private readonly AccessDecisionManagerInterface $contaoAccessDecisionManager,
+        private readonly AccessDecisionStrategyInterface $defaultStrategy,
+        private readonly AccessDecisionStrategyInterface $contaoStrategy,
         private readonly RequestStack $requestStack,
         private readonly FirewallMapInterface $firewallMap,
     ) {
     }
 
-    public function decide(TokenInterface $token, array $attributes, $object = null): bool
+    public function __toString(): string
     {
-        if ($this->isContaoContext()) {
-            return $this->contaoAccessDecisionManager->decide($token, $attributes, $object);
+        $strategy = $this->isContaoContext() ? $this->contaoStrategy : $this->defaultStrategy;
+
+        if (method_exists($strategy, '__toString')) {
+            return (string) $strategy;
         }
 
-        return $this->inner->decide($token, $attributes, $object);
+        return get_debug_type($strategy);
+    }
+
+    public function decide(\Traversable $results): bool
+    {
+        if ($this->isContaoContext()) {
+            return $this->contaoStrategy->decide($results);
+        }
+
+        return $this->defaultStrategy->decide($results);
     }
 
     private function isContaoContext(): bool

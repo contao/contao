@@ -386,7 +386,7 @@ class tl_article extends Backend
 				// Find all sections with an article module (see #6094)
 				foreach ($arrModules as $arrModule)
 				{
-					if ($arrModule['mod'] == 0 && $arrModule['enable'])
+					if ($arrModule['mod'] == 0 && ($arrModule['enable'] ?? null))
 					{
 						$arrSections[] = $arrModule['col'];
 					}
