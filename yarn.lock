@@ -1386,6 +1386,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@hotwired/turbo@npm:^8.0.4":
+  version: 8.0.4
+  resolution: "@hotwired/turbo@npm:8.0.4"
+  checksum: 3e7174d550adf3b9a0a4c45ff5d1b71d47c20de6ae01f646fbbaf8ed447677bd1a5fb6dbd46e95b14645a663fe58a6187c1c6d2a688b0981b5cf437379c5e00a
+  languageName: node
+  linkType: hard
+
 "@isaacs/cliui@npm:^8.0.2":
   version: 8.0.2
   resolution: "@isaacs/cliui@npm:8.0.2"
@@ -9034,6 +9041,7 @@ __metadata:
     "@babel/preset-env": "npm:^7.23.6"
     "@hotwired/stimulus": "npm:^3.2.2"
     "@hotwired/stimulus-webpack-helpers": "npm:^1.0.1"
+    "@hotwired/turbo": "npm:^8.0.4"
     "@symfony/webpack-encore": "npm:^4.5.0"
     css-loader: "npm:^6.8.1"
     cypress: "npm:^13.6.2"

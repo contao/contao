@@ -145,7 +145,16 @@ class BackendMain extends Backend
 			$this->Template->title = $this->Template->headline;
 		}
 
-		return $this->output();
+		// Set the status code to 422 if a widget did not validate, so that
+		// Turbo can handle form errors.
+		$response = $this->output();
+
+		if (System::getContainer()->get('request_stack')?->getMainRequest()->attributes->has('_contao_widget_error'))
+		{
+			$response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
+		}
+
+		return $response;
 	}
 
 	/**

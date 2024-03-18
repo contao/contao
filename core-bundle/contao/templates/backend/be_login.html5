@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html lang="<?= $this->language ?>">
+<html lang="<?= $this->language ?>" data-turbo="false">
 <head>
+  <meta name="turbo-visit-control" content="reload">
 
   <?php $this->block('head'); ?>
     <meta charset="<?= $this->charset ?>">
