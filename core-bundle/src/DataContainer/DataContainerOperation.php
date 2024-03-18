@@ -35,7 +35,7 @@ class DataContainerOperation implements \ArrayAccess
         private readonly array $record,
         private readonly DataContainer $dataContainer,
     ) {
-        $id = StringUtil::specialchars(rawurldecode((string) $record['id']));
+        $id = StringUtil::specialchars(rawurldecode((string) ($record['id'] ?? '')));
 
         // Dereference pointer to $GLOBALS['TL_LANG']
         $operation = StringUtil::resolveReferences($operation);

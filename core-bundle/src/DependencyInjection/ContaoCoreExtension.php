@@ -212,10 +212,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
                 },
             );
         }
-
-        if ($container->hasParameter('kernel.debug') && $container->getParameter('kernel.debug')) {
-            $loader->load('services_debug.yaml');
-        }
     }
 
     public function configureFilesystem(FilesystemConfiguration $config): void

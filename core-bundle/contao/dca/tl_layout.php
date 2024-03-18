@@ -11,12 +11,9 @@
 use Contao\ArrayUtil;
 use Contao\Backend;
 use Contao\Controller;
-use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\StringUtil;
-use Contao\System;
 
 $GLOBALS['TL_DCA']['tl_layout'] = array
 (
@@ -29,7 +26,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		'markAsCopy'                  => 'name',
 		'onload_callback' => array
 		(
-			array('tl_layout', 'checkPermission'),
 			array('tl_layout', 'addCustomLayoutSectionReferences')
 		),
 		'sql' => array
@@ -349,19 +345,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
  */
 class tl_layout extends Backend
 {
-	/**
-	 * Check permissions to edit the table
-	 *
-	 * @throws AccessDeniedException
-	 */
-	public function checkPermission()
-	{
-		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_LAYOUTS))
-		{
-			throw new AccessDeniedException('Not enough permissions to access the page layout module.');
-		}
-	}
-
 	/**
 	 * List a page layout
 	 *
