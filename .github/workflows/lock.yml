@@ -22,4 +22,5 @@ jobs:
               with:
                   process-only: issues
                   issue-inactive-days: 30
+                  log-output: true
                   github-token: ${{ github.token }}
