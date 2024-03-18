@@ -1,6 +1,7 @@
 name: Isolated tests
 
 on:
+    workflow_dispatch: ~
     schedule:
         - cron: 0 13 * * MON,THU
 
