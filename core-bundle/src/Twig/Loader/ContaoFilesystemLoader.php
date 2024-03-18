@@ -332,28 +332,33 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
      */
     private function buildInheritanceChains(): array
     {
-        /** @var list<array{string, string}> $sources */
+        /** @var list<array{string, string, string}> $sources */
         $sources = [];
 
         foreach ($this->templateLocator->findThemeDirectories() as $slug => $path) {
-            $sources[] = [$path, "Contao_Theme_$slug"];
+            $sources[] = [$path, "Contao_Theme_$slug", ''];
+
+            // Register theme templates in the global namespace too for backwards compatibility
+            $sources[] = [$path, 'Contao_Global', Path::makeRelative($path, Path::join($this->projectDir, 'templates')).'/'];
         }
 
-        $sources[] = [Path::join($this->projectDir, 'templates'), 'Contao_Global'];
+        $sources[] = [Path::join($this->projectDir, 'templates'), 'Contao_Global', ''];
 
         foreach ($this->templateLocator->findResourcesPaths() as $name => $resourcesPaths) {
             foreach ($resourcesPaths as $path) {
-                $sources[] = [$path, "Contao_$name"];
+                $sources[] = [$path, "Contao_$name", ''];
             }
         }
 
         // Lookup templates and build hierarchy
         $templatesByNamespace = [];
 
-        foreach ($sources as [$searchPath, $namespace]) {
+        foreach ($sources as [$searchPath, $namespace, $shortNamePrefix]) {
             $templates = $this->templateLocator->findTemplates($searchPath);
 
             foreach ($templates as $shortName => $templatePath) {
+                $shortName = $shortNamePrefix.$shortName;
+
                 if (null !== ($existingPath = $templatesByNamespace[$namespace][$shortName] ?? null)) {
                     $basePath = Path::getLongestCommonBasePath($templatePath, $existingPath);
 
