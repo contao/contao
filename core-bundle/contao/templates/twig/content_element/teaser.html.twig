@@ -4,7 +4,7 @@
 
 {% block content %}
     {% block headline %}
-        {% include "@Contao/component/_headline.html.twig" with {headline: {unit: 'h1', text: article.title}} %}
+        {% include "@Contao/component/_headline.html.twig" with {headline: {tag_name: 'h1', text: article.title}} %}
     {% endblock %}
 
     {% block teaser %}
