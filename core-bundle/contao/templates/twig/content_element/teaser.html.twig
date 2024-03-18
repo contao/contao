@@ -2,11 +2,11 @@
 {% extends "@Contao/content_element/_base.html.twig" %}
 {% use "@Contao/component/_read_more.html.twig" %}
 
-{% block headline %}
-    {% include "@Contao/component/_headline.html.twig" with {headline: {unit: 'h1', value: article.title}} %}
-{% endblock %}
-
 {% block content %}
+    {% block headline %}
+        {% include "@Contao/component/_headline.html.twig" with {headline: {unit: 'h1', text: article.title}} %}
+    {% endblock %}
+
     {% block teaser %}
         {{ article.teaser|default|insert_tag|raw }}
     {% endblock %}
