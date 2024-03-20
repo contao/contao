@@ -94,11 +94,11 @@ class BackendHelp extends Backend
 
 					if (\is_array($arrData['reference'][$key]))
 					{
-						$rows[] = array('headspan', $arrData['reference'][$key][0]);
+						$rows[] = array('headspan', $arrData['reference'][$key][0] ?? $key);
 					}
 					else
 					{
-						$rows[] = array('headspan', $arrData['reference'][$key]);
+						$rows[] = array('headspan', $arrData['reference'][$key] ?? $key);
 					}
 
 					foreach ($option as $opt)
