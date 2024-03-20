@@ -38,8 +38,7 @@ class DebugFragmentsCommand extends Command
     {
         $rows = [];
         $fragments = $this->registry->all();
-        $identifiers = array_keys($fragments);
-        natsort($identifiers);
+        ksort($fragments, SORT_NATURAL);
 
         foreach ($identifiers as $identifier) {
             $config = $fragments[$identifier];
