@@ -148,7 +148,7 @@ final class ContextFactory
             }
 
             /**
-             * Called when evaluating "{{ var.invoke(…) }}" in a Twig template.
+             * Called when evaluating "{{ var.invoke() }}" in a Twig template.
              * We do not cast to string here, so that other types (like arrays)
              * are supported as well.
              *
