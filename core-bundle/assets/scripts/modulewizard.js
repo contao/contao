@@ -11,7 +11,13 @@
         }
 
         // Check if this row has all necessary elements
-        if (9 !== row.querySelectorAll('select, button, a.module_link, img.module_image').length) {
+        if (!row.querySelector('select')
+            || !row.querySelector('a.module_link')
+            || !row.querySelector('img.module_image')
+            || !row.querySelector('button[data-command="copy"]')
+            || !row.querySelector('button[data-command="delete"]')
+            || !row.querySelector('button.drag-handle')
+        ) {
             return;
         }
 
