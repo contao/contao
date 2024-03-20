@@ -118,6 +118,7 @@ class DbafsTest extends FunctionalTestCase
         $this->assertTrue($this->filesystem->has('foo'));
 
         $contents = $this->filesystem->listContents('')->toArray();
+
         $this->assertCount(1, $contents);
         $this->assertSame('foo', $contents[0]->getPath());
     }
