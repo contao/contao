@@ -183,6 +183,7 @@ class TemplateLocatorTest extends TestCase
 
         $expectedTemplates = [
             'content_element/foo.html.twig' => Path::join($projectDir, 'templates/content_element/foo.html.twig'),
+            'my/theme/content_element/bar.html.twig' => Path::join($projectDir, 'templates/my/theme/content_element/bar.html.twig'),
         ];
 
         $expectedThemeTemplates = [
