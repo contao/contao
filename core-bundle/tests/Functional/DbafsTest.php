@@ -108,7 +108,7 @@ class DbafsTest extends FunctionalTestCase
 
     public function testCreateAndAccessFile(): void
     {
-        // Make the DBAFS cache, that 'foo' does not exist
+        // Ensure that "foo" is marked as non-existent resource in the DBFAS cache
         $this->assertFalse($this->filesystem->fileExists('foo'));
 
         // Creating a file should update the cache
