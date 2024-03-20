@@ -40,8 +40,7 @@ class DebugFragmentsCommand extends Command
         $fragments = $this->registry->all();
         ksort($fragments, SORT_NATURAL);
 
-        foreach ($identifiers as $identifier) {
-            $config = $fragments[$identifier];
+        foreach ($fragments as $identifier => $config) {
             $class = new \ReflectionClass(AbstractFragmentController::class);
             $attributes = $class->getProperty('options')->getValue($this->container->get($config->getController()));
             $controller = $attributes['debugController'] ?? $config->getController();
