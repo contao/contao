@@ -243,7 +243,7 @@ class ModuleRegistration extends Module
 				}
 
 				// Convert arrays (see #4980)
-				if (($arrData['eval']['multiple'] ?? null) && isset($arrData['eval']['csv']))
+				if (($arrData['eval']['multiple'] ?? null) && isset($arrData['eval']['csv']) && \is_array($varValue))
 				{
 					$varValue = implode($arrData['eval']['csv'], $varValue);
 				}
