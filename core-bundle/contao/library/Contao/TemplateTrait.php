@@ -190,12 +190,12 @@ trait TemplateTrait
 	}
 
 	/**
-	 * @deprecated Deprecated since Contao 5.4, to be removed in Contao 6;
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
 	 *             use cspUnsafeInlineStyle() instead.
 	 */
 	public function cspInlineStyle(string $style, string $algorithm = 'sha384'): string
 	{
-		trigger_deprecation('contao/core-bundle', '5.4', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use "cspUnsafeInlineStyle()" instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use "cspUnsafeInlineStyle()" instead.', __METHOD__);
 
 		return $this->cspUnsafeInlineStyle($style, $algorithm);
 	}
@@ -253,7 +253,7 @@ trait TemplateTrait
 			$csp->addHash('style-src', $style);
 		}
 
-		$csp->addSource('style-src', 'unsafe-hashes');
+		$csp->addSource('style-src', "'unsafe-hashes'");
 
 		return $html;
 	}

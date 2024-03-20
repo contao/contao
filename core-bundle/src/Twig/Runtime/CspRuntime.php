@@ -88,7 +88,7 @@ final class CspRuntime implements RuntimeExtensionInterface
             $csp->addHash('style-src', $style);
         }
 
-        $csp->addSource('style-src', 'unsafe-hashes');
+        $csp->addSource('style-src', "'unsafe-hashes'");
 
         return $htmlOrAttributes;
     }
