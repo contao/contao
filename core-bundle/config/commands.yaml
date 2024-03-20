@@ -55,6 +55,9 @@ services:
 
     contao.command.debug_fragments:
         class: Contao\CoreBundle\Command\DebugFragmentsCommand
+        arguments:
+            - '@contao.fragment.registry'
+            - '@service_container'
 
     contao.command.debug_pages:
         class: Contao\CoreBundle\Command\DebugPagesCommand
