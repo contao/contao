@@ -17,8 +17,6 @@
         all directly in the context. Grouping under an object has precedence.
 #}
 
-{% trans_default_domain "contao_default" %}
-
 {% block rich_text_component %}
     {% set rich_text = rich_text|default(_context) %}
 
