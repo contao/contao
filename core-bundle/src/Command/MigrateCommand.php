@@ -372,7 +372,7 @@ class MigrateCommand extends Command
                         'isSuccessful' => false,
                     ]);
                 } else {
-                    $this->io->error('The migrations were stopped after 19 iterations as a precaution. There is a high chance of an infinite loop of migrations. If this is not the case, please re-run the command. To troubleshoot this error, check the `shouldRun()` method of the migration(s) listed above.');
+                    $this->io->error('The migrations were stopped after 19 iterations as a precaution. There is a high chance of an infinite loop of migrations. If this is not the case, please re-run the command. To troubleshoot this error, check the shouldRun() method of the migration(s) listed above.');
                 }
 
                 return false;
