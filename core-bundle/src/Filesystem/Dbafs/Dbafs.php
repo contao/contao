@@ -216,6 +216,12 @@ class Dbafs implements DbafsInterface, ResetInterface
         $this->applyChangeSet($changeSet, $allUuidsByPath);
 
         // Update previously cached items
+        foreach ($changeSet->getItemsToCreate() as $itemToCreate) {
+            if (\array_key_exists($path = $itemToCreate->getPath(), $this->records)) {
+                unset($this->records[$path]);
+            }
+        }
+
         foreach ($changeSet->getItemsToUpdate() as $itemToUpdate) {
             $path = $itemToUpdate->getExistingPath();
 
