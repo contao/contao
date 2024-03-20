@@ -131,9 +131,11 @@
       </trans-unit>
       <trans-unit id="33" resname="update_tables_explain">
         <source>Here you can update the database schema.</source>
+        <target>Овде можете ажурирати шему базе података.</target>
       </trans-unit>
       <trans-unit id="34" resname="update_tables_confirm">
         <source>The database is up-to-date.</source>
+        <target>База података је ажурна.</target>
       </trans-unit>
       <trans-unit id="35" resname="update_save">
         <source>Update database</source>
@@ -173,6 +175,7 @@
       </trans-unit>
       <trans-unit id="44" resname="template_import_explain">
         <source>Here you can import a &lt;code&gt;.sql&lt;/code&gt; file from the &lt;code&gt;templates&lt;/code&gt; directory. Any existing data will be deleted! If you only want to import a theme, please use the theme manager in the Contao back end instead.</source>
+        <target>Овде можете учитати &lt;code&gt;.sql&lt;/code&gt; фајл из директоријума &lt;code&gt;шаблона&lt;/code&gt;. Сви постојећи подаци биће обрисани! Ако само желите да увезете тему, користите менаџер тема у Contao Бек Енду.</target>
       </trans-unit>
       <trans-unit id="45" resname="import_exception">
         <source>The import failed! Is the database up to date and is the template file compatible with your Contao version?</source>

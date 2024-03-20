@@ -19,9 +19,11 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.restrictToUrl.0">
         <source>Restrict access to specified URL</source>
+        <target>Ограничи приступ за одређени URL</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.restrictToUrl.1">
         <source>Allow access only to the specified URL instead of the entire website.</source>
+        <target>Дозволи приступ само одређеном URL уместо приступа целом сајту.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.createdAt.0">
         <source>Created at</source>
@@ -89,15 +91,19 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.hintNew">
         <source>To add a preview link, use the &quot;Share URL&quot; button in the front end preview toolbar.</source>
+        <target>Да бисте додали линк за преглед, користите дугме &quot;Подели URL&quot; у Фронт Енду или траци за алаткама.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.hintSave">
         <source>Please save this record to generate the preview link.</source>
+        <target>Сачувајте овај запис ради генерисања линка за преглед.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.hintEdit">
         <source>Preview link: &lt;a href=&quot;%s&quot; data-to-clipboard=&quot;%s&quot;&gt;%s&lt;/a&gt;</source>
+        <target>Линк за преглед: &lt;a href=&quot;%s&quot; data-to-clipboard=&quot;%s&quot;&gt;%s&lt;/a&gt;</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.hintExpired">
         <source>This preview link has expired and can no longer be shared.</source>
+        <target>Овај линк за преглед је истекао и више не може да се дели.</target>
       </trans-unit>
     </body>
   </file>

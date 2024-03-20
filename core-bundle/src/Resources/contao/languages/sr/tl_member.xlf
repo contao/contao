@@ -63,6 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_member.city.1">
         <source>Please enter the name of the city.</source>
+        <target>Унесите назив града.</target>
       </trans-unit>
       <trans-unit id="tl_member.state.0">
         <source>State</source>
@@ -70,6 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_member.state.1">
         <source>Please enter the name of the state.</source>
+        <target>Унесите назив државе.</target>
       </trans-unit>
       <trans-unit id="tl_member.country.0">
         <source>Country</source>
@@ -241,6 +243,7 @@
       </trans-unit>
       <trans-unit id="tl_member.captchaDetails">
         <source>Verification</source>
+        <target>Провера</target>
       </trans-unit>
       <trans-unit id="tl_member.new.0">
         <source>New</source>
