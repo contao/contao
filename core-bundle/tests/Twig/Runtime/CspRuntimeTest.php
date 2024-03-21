@@ -143,6 +143,7 @@ class CspRuntimeTest extends TestCase
 
         $response = new Response();
         $cspHandler->applyHeaders($response);
+
         $this->assertSame(
             "style-src 'self' 'unsafe-hashes' 'unsafe-inline' 'sha256-w6uP8Tcg6K2QR905Rms8iXTlksL6OD1KOWBxTK7wxPI=' 'sha256-8f935d27GvUutRyY9yWScUMiFUk4WTdZURISiYfPOeQ='",
             $response->headers->get('Content-Security-Policy'),
@@ -189,6 +190,7 @@ class CspRuntimeTest extends TestCase
 
         $response = new Response();
         $cspHandler->applyHeaders($response);
+
         $this->assertSame(
             "style-src 'self' 'unsafe-hashes' 'unsafe-inline' 'sha256-G9KEe21cICJs7ADRF9jwf63CdC5OJI1mO2LVlv63cUY=' 'sha256-8f935d27GvUutRyY9yWScUMiFUk4WTdZURISiYfPOeQ='",
             $response->headers->get('Content-Security-Policy'),

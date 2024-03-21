@@ -32,9 +32,10 @@ final class CspRuntime implements RuntimeExtensionInterface
     }
 
     /**
-     * Attention: only pass trusted styles to this filter!
+     * Adds a CSP hash for a given inline style or attributes object and also adds the
+     * 'unsafe-hashes' source to the directive automatically.
      *
-     * Adds a CSP hash for a given inline style or attributes object and also adds the 'unsafe-hashes' source to the directive automatically.
+     * ATTENTION: Only pass trusted styles to this filter!
      */
     public function unsafeInlineStyle(HtmlAttributes|string $styleAttribute): HtmlAttributes|string
     {
@@ -62,7 +63,9 @@ final class CspRuntime implements RuntimeExtensionInterface
     }
 
     /**
-     * Extracts all inline CSS style attributes of a given HTML string or attributes object and automatically adds CSP hashes for those to the current response context. The list of allowed styles can be configured in contao.csp.allowed_inline_styles.
+     * Extracts all inline CSS style attributes of a given HTML string or attributes object
+     * and automatically adds CSP hashes for those to the current response context. The list
+     * of allowed styles can be configured in contao.csp.allowed_inline_styles.
      */
     public function inlineStyles(HtmlAttributes|string $htmlOrAttributes): HtmlAttributes|string
     {

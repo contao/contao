@@ -201,9 +201,9 @@ trait TemplateTrait
 	}
 
 	/**
-	 * Attention: only pass trusted styles to this method!
-	 *
 	 * Adds a CSP hash for a given inline style and also adds the 'unsafe-hashes' source to the directive automatically.
+	 *
+	 * ATTENTION: Only pass trusted styles to this method!
 	 */
 	public function cspUnsafeInlineStyle(string $style, string $algorithm = 'sha384'): string
 	{
