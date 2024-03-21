@@ -174,8 +174,7 @@
         <target>Поделиться в Facebook</target>
       </trans-unit>
       <trans-unit id="tl_article.twitter">
-        <source>Share on Twitter</source>
-        <target>Добавить в Twitter</target>
+        <source>Share on X (formerly Twitter)</source>
       </trans-unit>
       <trans-unit id="tl_article.new.0">
         <source>New</source>
