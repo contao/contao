@@ -134,7 +134,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      */
     public function setIfExists(string $name, \Stringable|bool|int|string|null $value): self
     {
-        if (!empty($value)) {
+        if ($this->test($value)) {
             $this->set($name, $value);
         }
 
