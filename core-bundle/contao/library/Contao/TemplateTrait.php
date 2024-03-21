@@ -190,9 +190,22 @@ trait TemplateTrait
 	}
 
 	/**
-	 * Adds a CSP hash for a given inline style and also adds the 'unsafe-hashes' source to the directive automatically.
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 *             use cspUnsafeInlineStyle() instead.
 	 */
 	public function cspInlineStyle(string $style, string $algorithm = 'sha384'): string
+	{
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use "cspUnsafeInlineStyle()" instead.', __METHOD__);
+
+		return $this->cspUnsafeInlineStyle($style, $algorithm);
+	}
+
+	/**
+	 * Adds a CSP hash for a given inline style and also adds the 'unsafe-hashes' source to the directive automatically.
+	 *
+	 * ATTENTION: Only pass trusted styles to this method!
+	 */
+	public function cspUnsafeInlineStyle(string $style, string $algorithm = 'sha384'): string
 	{
 		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
@@ -210,7 +223,7 @@ trait TemplateTrait
 
 	/**
 	 * Extracts all inline CSS style attributes of a given HTML string and automatically adds CSP hashes for those
-	 * to the current response context.
+	 * to the current response context. The list of allowed styles can be configured in contao.csp.allowed_inline_styles.
 	 */
 	public function cspInlineStyles(string|null $html): string|null
 	{
@@ -240,7 +253,7 @@ trait TemplateTrait
 			$csp->addHash('style-src', $style);
 		}
 
-		$csp->addSource('style-src', 'unsafe-hashes');
+		$csp->addSource('style-src', "'unsafe-hashes'");
 
 		return $html;
 	}
