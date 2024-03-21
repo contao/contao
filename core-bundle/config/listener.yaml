@@ -215,6 +215,11 @@ services:
             - '@request_stack'
             - '@contao.twig.filesystem_loader'
 
+    contao.listener.data_container.theme_operations:
+        class: Contao\CoreBundle\EventListener\DataContainer\ThemeOperationsListener
+        arguments:
+            - '@security.helper'
+
     contao.listener.data_container.theme_templates:
         class: Contao\CoreBundle\EventListener\DataContainer\ThemeTemplatesListener
         arguments:
@@ -238,6 +243,11 @@ services:
 
     contao.listener.data_container.undo_operation:
         class: Contao\CoreBundle\EventListener\DataContainer\Undo\UndoOperationListener
+        arguments:
+            - '@security.helper'
+
+    contao.listener.data_container.user_admin_field:
+        class: Contao\CoreBundle\EventListener\DataContainer\UserAdminFieldListener
         arguments:
             - '@security.helper'
 

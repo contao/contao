@@ -661,6 +661,8 @@ services:
         arguments:
             - '@contao.insert_tag.parser'
             - '@url_helper'
+            - '@request_stack'
+            - '@router.request_context'
 
     contao.routing.content_url_generator:
         class: Contao\CoreBundle\Routing\ContentUrlGenerator
@@ -840,21 +842,6 @@ services:
     contao.search.delegating_indexer:
         class: Contao\CoreBundle\Search\Indexer\DelegatingIndexer
 
-    contao.security.access_decision_manager:
-        decorates: security.access.decision_manager
-        class: Contao\CoreBundle\Security\Authentication\AccessDecisionManager
-        arguments:
-            - '@.inner'
-            - '@contao.security.access_decision_manager.priority'
-            - '@request_stack'
-            - '@security.firewall.map'
-
-    contao.security.access_decision_manager.priority:
-        class: Symfony\Component\Security\Core\Authorization\AccessDecisionManager
-        arguments:
-            - !tagged_iterator security.voter
-            - '@contao.security.priority_strategy'
-
     contao.security.access_denied_handler:
         class: Contao\CoreBundle\Security\Authentication\AccessDeniedHandler
         arguments:
@@ -916,10 +903,10 @@ services:
         arguments:
             - '@security.access.decision_manager'
 
-    contao.security.data_container.frontend_modules_voter:
-        class: Contao\CoreBundle\Security\Voter\DataContainer\FrontendModulesVoter
+    contao.security.data_container.frontend_module_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\FrontendModuleVoter
         arguments:
-            - '@security.helper'
+            - '@security.access.decision_manager'
 
     contao.security.data_container.image_size_access_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\ImageSizeAccessVoter
@@ -928,6 +915,11 @@ services:
 
     contao.security.data_container.image_size_item_access_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\ImageSizeItemAccessVoter
+        arguments:
+            - '@security.access.decision_manager'
+
+    contao.security.data_container.layout_access_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\LayoutAccessVoter
         arguments:
             - '@security.access.decision_manager'
 
@@ -954,6 +946,12 @@ services:
         class: Contao\CoreBundle\Security\Voter\DataContainer\UndoVoter
         arguments:
             - '@security.access.decision_manager'
+
+    contao.security.data_container.user_access_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\UserAccessVoter
+        arguments:
+            - '@security.access.decision_manager'
+            - '@database_connection'
 
     contao.security.default_data_container_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\DefaultDataContainerVoter
@@ -996,9 +994,6 @@ services:
 
     contao.security.member_group_voter:
         class: Contao\CoreBundle\Security\Voter\MemberGroupVoter
-
-    contao.security.priority_strategy:
-        class: Symfony\Component\Security\Core\Authorization\Strategy\PriorityStrategy
 
     contao.security.token_checker:
         class: Contao\CoreBundle\Security\Authentication\Token\TokenChecker

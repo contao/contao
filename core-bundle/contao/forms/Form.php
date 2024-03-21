@@ -532,7 +532,7 @@ class Form extends Hybrid
 				foreach ($arrFiles as $file)
 				{
 					// Add a link to the uploaded file
-					if (isset($file['uploaded']))
+					if ($file['uploaded'] ?? null)
 					{
 						$uploaded .= "\n" . Environment::get('base') . StringUtil::stripRootDir(\dirname($file['tmp_name'])) . '/' . rawurlencode($file['name']);
 						continue;

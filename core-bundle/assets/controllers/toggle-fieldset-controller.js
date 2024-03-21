@@ -112,6 +112,10 @@ export default class extends Controller {
     }
 
     storeState (state) {
+        if (!this.hasIdValue || !this.hasTableValue) {
+            return;
+        }
+
         fetch(window.location.href, {
             method: 'POST',
             headers: {

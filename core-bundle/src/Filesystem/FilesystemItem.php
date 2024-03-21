@@ -125,7 +125,7 @@ class FilesystemItem implements \Stringable
             return false;
         }
 
-        return str_starts_with($this->getMimeType(), 'video/');
+        return str_starts_with($this->getMimeType(''), 'video/');
     }
 
     public function isAudio(): bool
@@ -134,7 +134,7 @@ class FilesystemItem implements \Stringable
             return false;
         }
 
-        return str_starts_with($this->getMimeType(), 'audio/');
+        return str_starts_with($this->getMimeType(''), 'audio/');
     }
 
     public function isImage(): bool
@@ -143,7 +143,7 @@ class FilesystemItem implements \Stringable
             return false;
         }
 
-        return str_starts_with($this->getMimeType(), 'image/');
+        return str_starts_with($this->getMimeType(''), 'image/');
     }
 
     public function isPdf(): bool
@@ -152,7 +152,7 @@ class FilesystemItem implements \Stringable
             return false;
         }
 
-        return 'application/pdf' === $this->getMimeType();
+        return 'application/pdf' === $this->getMimeType('');
     }
 
     public function isSpreadsheet(): bool
@@ -162,7 +162,7 @@ class FilesystemItem implements \Stringable
         }
 
         return \in_array(
-            $this->getMimeType(),
+            $this->getMimeType(''),
             [
                 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                 'application/vnd.ms-excel',
@@ -246,12 +246,12 @@ class FilesystemItem implements \Stringable
             default => 'MediaObject',
         };
 
-        $jsonLd = [
+        $jsonLd = array_filter([
             '@type' => $type,
             'identifier' => $fileIdentifier,
             'contentUrl' => $this->getPath(),
-            'encodingFormat' => $this->getMimeType(),
-        ];
+            'encodingFormat' => $this->getMimeType(''),
+        ]);
 
         if ($this->getMetaData()) {
             $jsonLd = [...$this->getMetaData()->getSchemaOrgData($type), ...$jsonLd];

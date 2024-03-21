@@ -1401,8 +1401,18 @@ class tl_content extends Backend
 			return '';
 		}
 
-		$title = sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'], $dc->value);
-		$href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$dc->value, 'popup'=>'1', 'nb'=>'1'));
+		// DataContainer::getCurrentRecord() will check permission on the record
+		try
+		{
+			$module = $dc->getCurrentRecord($dc->value, 'tl_module');
+		}
+		catch (AccessDeniedException)
+		{
+			return '';
+		}
+
+		$title = sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'], $module['id']);
+		$href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$module['id'], 'popup'=>'1', 'nb'=>'1'));
 
 		return ' <a href="' . StringUtil::specialcharsUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $title)) . '\',\'url\':this.href});return false">' . Image::getHtml('alias.svg', $title) . '</a>';
 	}

@@ -55,6 +55,9 @@ services:
 
     contao.command.debug_fragments:
         class: Contao\CoreBundle\Command\DebugFragmentsCommand
+        arguments:
+            - '@contao.fragment.registry'
+            - '@service_container'
 
     contao.command.debug_pages:
         class: Contao\CoreBundle\Command\DebugPagesCommand
@@ -104,11 +107,10 @@ services:
 
     contao.command.supervise_workers:
         class: Contao\CoreBundle\Command\SuperviseWorkersCommand
-        factory: [null, create]
         arguments:
             - '@messenger.receiver_locator'
             - '@contao.process_util'
-            - '%kernel.cache_dir%/worker-supervisor'
+            - ~
             - ~
 
     contao.command.symlinks:

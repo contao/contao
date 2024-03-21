@@ -27,8 +27,8 @@ class UnwrapTwigExceptionListener
     /**
      * If an exception is encountered while rendering a Twig template, Twig
      * will wrap the exception in a Twig\Error\RuntimeError. In case of our
-     * response exceptions, we need them to bubble, though. Therefore, we
-     * unwrap them again, here.
+     * response exceptions, we need them to bubble though. Therefore, we
+     * unwrap them again here.
      */
     public function __invoke(ExceptionEvent $event): void
     {

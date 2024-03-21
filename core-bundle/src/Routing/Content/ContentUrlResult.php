@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Routing\Content;
 
 use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
 use Contao\PageModel;
-use Nyholm\Psr7\Uri;
 
 final class ContentUrlResult
 {
@@ -22,7 +21,7 @@ final class ContentUrlResult
 
     public function __construct(public readonly object|string $content)
     {
-        if (\is_string($content) && !(new Uri($content))->getScheme()) {
+        if (\is_string($content) && !parse_url($content, PHP_URL_SCHEME)) {
             throw new \InvalidArgumentException('The content must not be a relative URL.');
         }
     }
