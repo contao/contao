@@ -720,6 +720,7 @@ class ContaoCoreExtensionTest extends TestCase
     {
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
+
         $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
 
         $this->assertArrayHasKey(AsContentElement::class, $autoConfiguredAttributes);
@@ -747,9 +748,11 @@ class ContaoCoreExtensionTest extends TestCase
             $definition,
             new AsContentElement(...[
                 'type' => 'content_element/text',
+                'category' => 'miscellaneous',
                 'template' => 'a_template',
                 'method' => 'aMethod',
                 'renderer' => 'inline',
+                'nestedFragments' => false,
                 'foo' => 'bar',
                 'baz' => 42,
             ]),
