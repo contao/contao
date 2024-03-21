@@ -47,6 +47,7 @@ use PhpCsFixer\Fixer\Strict\StrictParamFixer;
 use PhpCsFixer\Fixer\StringNotation\SingleQuoteFixer;
 use PhpCsFixer\Fixer\Whitespace\MethodChainingIndentationFixer;
 use PhpCsFixer\Fixer\Whitespace\NoExtraBlankLinesFixer;
+use PhpCsFixer\Fixer\Whitespace\StatementIndentationFixer;
 use SlevomatCodingStandard\Sniffs\PHP\UselessParenthesesSniff;
 use SlevomatCodingStandard\Sniffs\TypeHints\DisallowArrayTypeHintSyntaxSniff;
 use SlevomatCodingStandard\Sniffs\Variables\UnusedVariableSniff;
@@ -84,6 +85,11 @@ return ECSConfig::configure()
         PsrAutoloadingFixer::class,
         ReturnAssignmentFixer::class,
         SingleQuoteFixer::class,
+        StatementIndentationFixer::class => [
+            'core-bundle/contao/library/Contao/Config.php',
+            'core-bundle/contao/library/Contao/Image.php',
+            'core-bundle/contao/library/Contao/Template.php',
+        ],
         StrictComparisonFixer::class,
         StrictParamFixer::class,
         TrailingCommaInMultilineFixer::class,

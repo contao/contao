@@ -29,18 +29,11 @@ class UnwrapTwigExceptionListenerTest extends TestCase
      */
     public function testUnwrapsException(\Exception $exception): void
     {
-        $wrappedException = new RuntimeError(
-            'An exception has been thrown during rendering of a template.',
-            -1,
-            null,
-            $exception,
-        );
-
         $event = new ExceptionEvent(
             $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MAIN_REQUEST,
-            $wrappedException,
+            new RuntimeError('An exception has been thrown during rendering of a template.', -1, null, $exception),
         );
 
         (new UnwrapTwigExceptionListener())($event);
@@ -60,7 +53,7 @@ class UnwrapTwigExceptionListenerTest extends TestCase
     }
 
     /**
-     * @dataProvider provideThrowablesToIgnore
+     * @dataProvider provideThrowableToIgnore
      */
     public function testIgnoresOtherExceptions(\Throwable $throwable): void
     {
@@ -76,19 +69,14 @@ class UnwrapTwigExceptionListenerTest extends TestCase
         $this->assertSame($throwable, $event->getThrowable(), 'throwable should be left untouched');
     }
 
-    public function provideThrowablesToIgnore(): \Generator
+    public function provideThrowableToIgnore(): \Generator
     {
         $exception = new \LogicException('Something went wrong.');
 
         yield 'arbitrary exception' => [$exception];
 
         yield 'Twig RuntimeError with arbitrary exception' => [
-            new RuntimeError(
-                'An exception has been thrown during rendering of a template.',
-                -1,
-                null,
-                $exception,
-            ),
+            new RuntimeError('An exception has been thrown during rendering of a template.', -1, null, $exception),
         ];
     }
 }
