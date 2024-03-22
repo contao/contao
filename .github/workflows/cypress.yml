@@ -41,6 +41,8 @@ jobs:
 
             - name: Checkout
               uses: actions/checkout@v3
+              with:
+                  ref: ${{ matrix.contao }}
 
             - name: Install the dependencies
               run: |
