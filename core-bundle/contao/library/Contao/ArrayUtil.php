@@ -149,4 +149,31 @@ class ArrayUtil
 	{
 		return array_map(static fn ($item) => \is_array($item) ? self::mapRecursive($fn, $item) : $fn($item), $arr);
 	}
+
+	public static function implodeRecursive(mixed $var, bool $binary = false)
+	{
+		if (!\is_array($var))
+		{
+			return $binary && Validator::isBinaryUuid($var) ? StringUtil::binToUuid($var) : $var;
+		}
+
+		if (!\is_array(current($var)))
+		{
+			if ($binary)
+			{
+				$var = array_map(static function ($v) { return Validator::isBinaryUuid($v) ? StringUtil::binToUuid($v) : $v; }, $var);
+			}
+
+			return implode(', ', $var);
+		}
+
+		$buffer = '';
+
+		foreach ($var as $k=>$v)
+		{
+			$buffer .= $k . ": " . self::implodeRecursive($v) . "\n";
+		}
+
+		return trim($buffer);
+	}
 }

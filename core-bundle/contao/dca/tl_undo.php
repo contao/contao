@@ -8,6 +8,7 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\ArrayUtil;
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Controller;
@@ -181,7 +182,7 @@ class tl_undo extends Backend
 						}
 						else
 						{
-							$v = implode(', ', $array);
+							$v = ArrayUtil::implodeRecursive($array);
 						}
 					}
 
