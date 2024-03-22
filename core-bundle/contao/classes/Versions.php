@@ -507,12 +507,12 @@ class Versions extends Controller
 								// Convert serialized arrays into strings
 								if (!\is_array($to[$k]) && \is_array($tmp = StringUtil::deserialize($to[$k])))
 								{
-									$to[$k] = $this->implodeRecursive($tmp, $blnIsBinary);
+									$to[$k] = ArrayUtil::implodeRecursive($tmp, $blnIsBinary);
 								}
 
 								if (!\is_array($from[$k]) && \is_array($tmp = StringUtil::deserialize($from[$k])))
 								{
-									$from[$k] = $this->implodeRecursive($tmp, $blnIsBinary);
+									$from[$k] = ArrayUtil::implodeRecursive($tmp, $blnIsBinary);
 								}
 							}
 						}
@@ -845,31 +845,14 @@ class Versions extends Controller
 	 * @param boolean $binary
 	 *
 	 * @return string
+	 *
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 *             use ArrayUtil::implodeRecursive() instead
 	 */
 	protected function implodeRecursive($var, $binary=false)
 	{
-		if (!\is_array($var))
-		{
-			return $binary && Validator::isBinaryUuid($var) ? StringUtil::binToUuid($var) : $var;
-		}
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use %s::implodeRecursive() instead.', __METHOD__, ArrayUtil::class);
 
-		if (!\is_array(current($var)))
-		{
-			if ($binary)
-			{
-				$var = array_map(static function ($v) { return Validator::isBinaryUuid($v) ? StringUtil::binToUuid($v) : $v; }, $var);
-			}
-
-			return implode(', ', $var);
-		}
-
-		$buffer = '';
-
-		foreach ($var as $k=>$v)
-		{
-			$buffer .= $k . ": " . $this->implodeRecursive($v) . "\n";
-		}
-
-		return trim($buffer);
+		return ArrayUtil::implodeRecursive($var, $binary);
 	}
 }
