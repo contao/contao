@@ -16,8 +16,10 @@ use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
+use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
+use Symfony\Component\Cache\Adapter\NullAdapter;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
 use Twig\Lexer;
@@ -51,6 +53,7 @@ class AddTokenParserTest extends TestCase
                 $this->createMock(ContaoFilesystemLoader::class),
                 $this->createMock(ContaoCsrfTokenManager::class),
                 $this->createMock(ContaoVariable::class),
+                new InspectorNodeVisitor(new NullAdapter()),
             ),
         );
 

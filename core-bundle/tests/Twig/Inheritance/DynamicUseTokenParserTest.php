@@ -20,6 +20,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inheritance\DynamicUseTokenParser;
+use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
@@ -65,6 +66,7 @@ class DynamicUseTokenParserTest extends TestCase
                 $filesystemLoader,
                 $this->createMock(ContaoCsrfTokenManager::class),
                 $this->createMock(ContaoVariable::class),
+                new InspectorNodeVisitor(new NullAdapter()),
             ),
         );
 
