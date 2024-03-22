@@ -405,7 +405,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         preg_match_all($attributeRegex, $attributesString, $matches, PREG_SET_ORDER | PREG_UNMATCHED_AS_NULL);
 
         foreach ($matches as [1 => $name, 2 => $value]) {
-            yield strtolower($name) => html_entity_decode($value ?? '', ENT_QUOTES);
+            yield strtolower($name) => html_entity_decode($value ?? '', ENT_QUOTES | ENT_HTML5);
         }
     }
 
@@ -415,7 +415,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             throw new \RuntimeException(sprintf('The value of property "%s" is not a valid UTF-8 string.', $name));
         }
 
-        $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, null, $this->doubleEncoding);
+        $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, null, $this->doubleEncoding);
 
         return str_replace(['{{', '}}'], ['&#123;&#123;', '&#125;&#125;'], $value);
     }

@@ -89,8 +89,8 @@ class HtmlAttributesTest extends TestCase
         ];
 
         yield 'decode values' => [
-            'foo=&quot; bar="b&auml;z"',
-            ['foo' => '"', 'bar' => 'bäz'],
+            'foo=&quot; bar="b&auml;z" baz=&ZeroWidthSpace;',
+            ['foo' => '"', 'bar' => 'bäz', 'baz' => "\u{200B}"],
         ];
 
         yield 'no attributes' => [
@@ -532,10 +532,11 @@ class HtmlAttributesTest extends TestCase
             'b' => '{{b}}',
             'c' => 'foo&bar',
             'd' => 'foo&amp;bar',
+            'e' => '&ZeroWidthSpace;',
             'property-without-value' => null,
         ]);
 
-        $expectedString = 'a="A B C" b="&#123;&#123;b&#125;&#125;" c="foo&amp;bar" d="foo&amp;bar" property-without-value';
+        $expectedString = 'a="A B C" b="&#123;&#123;b&#125;&#125;" c="foo&amp;bar" d="foo&amp;bar" e="&ZeroWidthSpace;" property-without-value';
 
         $this->assertSame(" $expectedString", (string) $attributes);
         $this->assertSame(" $expectedString", $attributes->toString());
@@ -543,7 +544,7 @@ class HtmlAttributesTest extends TestCase
 
         // With double encoding
         $this->assertSame($attributes, $attributes->setDoubleEncoding(true));
-        $expectedString = 'a="A B C" b="&#123;&#123;b&#125;&#125;" c="foo&amp;bar" d="foo&amp;amp;bar" property-without-value';
+        $expectedString = 'a="A B C" b="&#123;&#123;b&#125;&#125;" c="foo&amp;bar" d="foo&amp;amp;bar" e="&amp;ZeroWidthSpace;" property-without-value';
 
         $this->assertSame(" $expectedString", (string) $attributes);
         $this->assertSame(" $expectedString", $attributes->toString());
