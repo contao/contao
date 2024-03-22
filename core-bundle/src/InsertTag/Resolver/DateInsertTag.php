@@ -17,6 +17,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\Date;
 
 #[AsInsertTag('date', asFragment: true)]
@@ -28,8 +29,10 @@ class DateInsertTag implements InsertTagResolverNestedResolvedInterface
         'Y' => ['Y', 'y'],
     ];
 
-    public function __construct(private readonly ContaoFramework $framework)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly PageFinder $pageFinder,
+    ) {
     }
 
     public function __invoke(ResolvedInsertTag $insertTag): InsertTagResult
@@ -37,13 +40,14 @@ class DateInsertTag implements InsertTagResolverNestedResolvedInterface
         $this->framework->initialize();
 
         $date = $this->framework->getAdapter(Date::class);
-        $format = $insertTag->getParameters()->get(0) ?? $GLOBALS['objPage']->dateFormat ?? $GLOBALS['TL_CONFIG']['dateFormat'] ?? '';
+        $pageModel = $this->pageFinder->getCurrentPage();
+        $format = $insertTag->getParameters()->get(0) ?? $pageModel->dateFormat ?? $GLOBALS['TL_CONFIG']['dateFormat'] ?? '';
         $result = new InsertTagResult($date->parse($format), OutputType::text);
 
         // Add caching headers for supported formats
         $result = $result->withExpiresAt($this->getExpireAtFromFormat($format));
 
-        if ($result->getExpiresAt() && ($rootId = $GLOBALS['objPage']->rootId ?? null)) {
+        if ($result->getExpiresAt() && ($rootId = $pageModel->rootId ?? null)) {
             $result = $result->withCacheTags(["contao.db.tl_page.$rootId"]);
         }
 

@@ -159,6 +159,7 @@ services:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
         arguments:
             - '@contao.security.token_checker'
+            - '@contao.routing.page_finder'
         tags:
             - { name: data_collector, template: '@ContaoCore/Collector/contao.html.twig', id: contao }
 
@@ -448,6 +449,7 @@ services:
         class: Contao\CoreBundle\InsertTag\Resolver\DateInsertTag
         arguments:
             - '@contao.framework'
+            - '@contao.routing.page_finder'
 
     contao.insert_tag.resolver.form:
         class: Contao\CoreBundle\InsertTag\Resolver\FormInsertTag
