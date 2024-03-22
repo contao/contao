@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Csrf;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
@@ -104,7 +105,7 @@ class ContaoCsrfTokenManager extends CsrfTokenManager implements ResetInterface
                 0 === $request->cookies->count()
                 || [$tokenCookieName] === $request->cookies->keys()
             )
-            && !($request->hasSession() && $request->getSession()->isStarted());
+            && $this->isSessionEmpty($request);
     }
 
     public function getDefaultTokenValue(): string
@@ -120,5 +121,25 @@ class ContaoCsrfTokenManager extends CsrfTokenManager implements ResetInterface
     {
         $this->usedTokenValues = [];
         $this->tokenCache = [];
+    }
+
+    private function isSessionEmpty(Request $request): bool
+    {
+        if (!$request->hasSession()) {
+            return true;
+        }
+
+        $session = $request->getSession();
+
+        if (!$session->isStarted()) {
+            return true;
+        }
+
+        if ($session instanceof Session) {
+            // Marked @internal but no other way to check all attribute bags
+            return $session->isEmpty();
+        }
+
+        return [] === $session->all();
     }
 }
