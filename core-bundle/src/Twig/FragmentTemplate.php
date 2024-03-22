@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig;
 
 use Contao\CoreBundle\Asset\ContaoContext;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\Model;
 use Contao\Template;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -467,6 +468,62 @@ final class FragmentTemplate extends Template
      * @internal
      */
     public function addSchemaOrg(array $jsonLd): never
+    {
+        self::throwOnAccess();
+    }
+
+    /**
+     * @internal
+     */
+    public function attr(HtmlAttributes|iterable|string|null $attributes = null): never
+    {
+        self::throwOnAccess();
+    }
+
+    /**
+     * @internal
+     */
+    public function nonce(string $directive): never
+    {
+        self::throwOnAccess();
+    }
+
+    /**
+     * @internal
+     */
+    public function addCspSource(array|string $directives, string $source): never
+    {
+        self::throwOnAccess();
+    }
+
+    /**
+     * @internal
+     */
+    public function addCspHash(string $directive, string $script, string $algorithm = 'sha384'): never
+    {
+        self::throwOnAccess();
+    }
+
+    /**
+     * @internal
+     */
+    public function cspInlineStyle(string $style, string $algorithm = 'sha384'): never
+    {
+        self::throwOnAccess();
+    }
+
+    /**
+     * @internal
+     */
+    public function cspUnsafeInlineStyle(string $style, string $algorithm = 'sha384'): never
+    {
+        self::throwOnAccess();
+    }
+
+    /**
+     * @internal
+     */
+    public function cspInlineStyles(string|null $html): never
     {
         self::throwOnAccess();
     }

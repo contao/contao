@@ -131,6 +131,7 @@ class ContaoExtensionTest extends TestCase
             'highlight_auto',
             'format_bytes',
             'sanitize_html',
+            'csp_unsafe_inline_style',
             'csp_inline_styles',
             'encode_email',
         ];

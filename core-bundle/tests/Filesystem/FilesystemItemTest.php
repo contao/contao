@@ -97,7 +97,7 @@ class FilesystemItemTest extends TestCase
     /**
      * @dataProvider provideSchemaOrgData
      */
-    public function testGettingSchemaOrgData(string $path, string $mimeType, array $expectedSchema): void
+    public function testGettingSchemaOrgData(string $path, string|null $mimeType, array $expectedSchema): void
     {
         $fileItem = new FilesystemItem(
             true,
@@ -386,6 +386,17 @@ class FilesystemItemTest extends TestCase
                 '@type' => 'MediaObject',
                 'contentUrl' => 'foo/bar.sql',
                 'encodingFormat' => 'application/sql',
+                'identifier' => '#/schema/file/2fcae369-c955-4b43-bcf9-d069f9d25542',
+                'name' => 'My title!',
+            ],
+        ];
+
+        yield 'Test a file with unknown mime type' => [
+            'foo/bar.whatisthis',
+            null,
+            [
+                '@type' => 'MediaObject',
+                'contentUrl' => 'foo/bar.whatisthis',
                 'identifier' => '#/schema/file/2fcae369-c955-4b43-bcf9-d069f9d25542',
                 'name' => 'My title!',
             ],
