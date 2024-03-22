@@ -474,14 +474,30 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
 
         foreach ($matches as [0 => $declaration]) {
             if (preg_match($propertyRegex, $declaration, $match)) {
-                if (!str_starts_with($match[1], '--')) {
-                    $match[1] = strtolower($match[1]);
-                }
-                $result[$match[1]][] = $declaration;
+                $result[$this->decodeStyleProperty($match[1])][] = $declaration;
             }
         }
 
         return $result;
+    }
+
+    private function decodeStyleProperty(string $property): string
+    {
+        // Decode an escaped code point according to
+        // https://www.w3.org/TR/css-syntax-3/#consume-escaped-code-point
+        $property = preg_replace_callback(
+            '/\\\(?:([0-9a-f]{1,6}+\s?+)|([^\n]))/i',
+            static fn ($match) => $match[2] ?? \IntlChar::chr(hexdec($match[1])),
+            $property,
+        );
+
+        // Property names are case-insensitive except custom properties according to
+        // https://www.w3.org/TR/css-syntax-3/#style-rule
+        if (!str_starts_with($property, '--')) {
+            $property = strtolower($property);
+        }
+
+        return $property;
     }
 
     /**

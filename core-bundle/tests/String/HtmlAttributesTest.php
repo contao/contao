@@ -239,6 +239,7 @@ class HtmlAttributesTest extends TestCase
         $attributesB = new HtmlAttributes([
             'bar-bar' => 42,
             'foo-foo' => 'foo',
+            'style' => 'c\6F lor: green; c\olor: darkgreen',
         ]);
 
         $attributesC = 'BAZ123 = "" class="class2" style=background:red';
