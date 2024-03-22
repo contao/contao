@@ -2503,6 +2503,7 @@
       </trans-unit>
       <trans-unit id="MSC.twitterShare">
         <source>Share on X (formerly Twitter)</source>
+        <target>Поделиться в X (ранее Twitter)</target>
       </trans-unit>
       <trans-unit id="MSC.pleaseWait">
         <source>Please wait</source>

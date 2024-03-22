@@ -2,6 +2,13 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.3] (2024-03-22)
+
+**Fixed issues:**
+
+- [#7045] Fix a bug in `setIfExists()` with Stringable objects ([ausi])
+- [#7044] Fix double encoding/decoding in the `HtmlAttributes` class ([ausi])
+
 ## [5.3.2] (2024-03-21)
 
 **New features:**
@@ -247,6 +254,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.3]: https://github.com/contao/contao/releases/tag/5.3.3
 [5.3.2]: https://github.com/contao/contao/releases/tag/5.3.2
 [5.3.1]: https://github.com/contao/contao/releases/tag/5.3.1
 [5.3.0]: https://github.com/contao/contao/releases/tag/5.3.0
@@ -457,3 +465,5 @@ This project adheres to [Semantic Versioning].
 [#7032]: https://github.com/contao/contao/pull/7032
 [#7037]: https://github.com/contao/contao/pull/7037
 [#7039]: https://github.com/contao/contao/pull/7039
+[#7044]: https://github.com/contao/contao/pull/7044
+[#7045]: https://github.com/contao/contao/pull/7045
