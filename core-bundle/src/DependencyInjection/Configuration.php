@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\DependencyInjection;
 use Contao\Config;
 use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
 use Contao\CoreBundle\Doctrine\Backup\RetentionPolicy;
+use Contao\CoreBundle\Pow\Altcha\Config\AlgorithmConfig;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Image\Metadata\ExifFormat;
 use Contao\Image\Metadata\IptcFormat;
@@ -116,6 +117,7 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addSanitizerNode())
                 ->append($this->addCronNode())
                 ->append($this->addCspNode())
+                ->append($this->addPowAltchaNode())
             ->end()
         ;
 
@@ -869,6 +871,33 @@ class Configuration implements ConfigurationInterface
                 ->integerNode('max_header_size')
                     ->info('Do not increase this value beyond the allowed response header size of your web server, as this will result in a 500 server error.')
                     ->defaultValue(3072)
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addPowAltchaNode(): NodeDefinition
+    {
+        return (new TreeBuilder('pow_altcha'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->enumNode('algorithm')
+                    ->info('Choose an algorithm which is required for generating the challenges. Select between "SHA-256", "SHA-384" or "SHA-512".')
+                    ->values([...AlgorithmConfig::ALGORITHM_ALL])
+                    ->defaultValue(AlgorithmConfig::ALGORITHM_SHA_256)
+                ->end()
+                ->integerNode('range_min')
+                    ->info('The complexity can be adjusted by modifying the minimum and maximum values of the randomly generated secret number on the server side. A higher value increases complexity/security but may significantly increase the computational load on client devices, potentially impacting user experience.')
+                    ->defaultValue(10000)
+                ->end()
+                ->integerNode('range_max')
+                    ->info('The complexity can be adjusted by modifying the minimum and maximum values of the randomly generated secret number on the server side. A higher value increases complexity/security but may significantly increase the computational load on client devices, potentially impacting user experience.')
+                    ->defaultValue(100000)
+                ->end()
+                ->integerNode('challenge_expiry')
+                    ->info('Here yo can define how long (seconds) a challenge will be valid.')
+                    ->defaultValue(3600)
                 ->end()
             ->end()
         ;

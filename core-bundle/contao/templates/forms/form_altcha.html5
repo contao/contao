@@ -1,0 +1,20 @@
+<?php $GLOBALS['TL_HEAD'][] = '<script async defer src="bundles/contaocore/altcha/js/altcha.js" type="module"></script>'; ?>
+
+<?php $this->extend('form_row'); ?>
+
+<?php $this->block('label'); ?>
+  <?php if ($this->label): ?>
+    <label for="ctrl_<?= $this->id ?>"<?php if ($this->class): ?> class="<?= $this->class ?>"<?php endif; ?>>
+      <span class="invisible"><?= $this->mandatoryField ?> </span><?= $this->label ?><span class="mandatory">*</span>
+    </label>
+  <?php endif; ?>
+<?php $this->endblock(); ?>
+
+<?php $this->block('field'); ?>
+    <?php if ($this->hasErrors()): ?>
+      <p class="error"><?= $this->getErrorAsString() ?></p>
+    <?php endif; ?>
+
+    <altcha-widget <?= $this->strAltchaAttributes ?>></altcha-widget>
+
+<?php $this->endblock(); ?>
