@@ -429,7 +429,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         // https://www.w3.org/TR/css-syntax-3/#declaration-list-diagram
         $declarationRegex = '/
             (?:
-                \.                                # Escape
+                \\\.                              # Escape
                 |"(?:\\\.|[^"\n])*+(?:"|\n|$)     # String token double quotes
                 |\'(?:\\\.|[^\'\n])*+(?:\'|\n|$)  # String token single quotes
                 |\{(?:(?R)|[^}])*+(?:}|$)         # {}-block
@@ -448,7 +448,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
                 \/\*                                # Comment start
                 (?:(?!\*\/).)*+                     # Anything but comment end
                 (?:\*\/|$(*SKIP)(*FAIL))            # Comment end
-                |[ \n\r\t\v\f\x00]                  # Or whitespace
+                |\s                                 # Or whitespace
             )*+
             (                                       # Match property name
                 (?!\d)                              # Must not start with a digit
@@ -463,7 +463,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
                 \/\*                                # Comment start
                 (?:(?!\*\/).)*+                     # Anything but comment end
                 (?:\*\/|$(*SKIP)(*FAIL))            # Comment end
-                |[ \n\r\t\v\f\x00]                  # Or whitespace
+                |\s                                 # Or whitespace
             )*+
             :                                       # Colon
         /ixs';
@@ -474,7 +474,10 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
 
         foreach ($matches as [0 => $declaration]) {
             if (preg_match($propertyRegex, $declaration, $match)) {
-                $result[$this->decodeStyleProperty($match[1])][] = $declaration;
+                // Spacing according to https://www.w3.org/TR/cssom-1/#serialize-a-css-declaration
+                $property = trim(substr($match[0], 0, -1), " \n\r\t\v\f");
+                $value = trim(substr($declaration, \strlen($match[0])), " \n\r\t\v\f");
+                $result[$this->decodeStyleProperty($match[1])][] = "$property: $value;";
             }
         }
 
@@ -501,10 +504,12 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     }
 
     /**
+     * Serialize styles according to https://www.w3.org/TR/cssom-1/#serialize-a-css-declaration-block.
+     *
      * @param array<string, list<string>> $styles
      */
     private function serializeStyles(array $styles): string
     {
-        return implode(';', array_merge(...array_values($styles)));
+        return implode(' ', array_merge(...array_values($styles)));
     }
 }
