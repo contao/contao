@@ -24,6 +24,7 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		'dataContainer'               => DC_Table::class,
 		'closed'                      => true,
 		'notEditable'                 => true,
+		'notCopyable'                 => true,
 		'sql' => array
 		(
 			'keys' => array

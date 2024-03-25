@@ -55,6 +55,12 @@ class ContentCompositionVoter implements VoterInterface, CacheableVoterInterface
             return self::ACCESS_ABSTAIN;
         }
 
+        // If the record has an ID, it is most likely an undo operation, which should
+        // allowed if there were articles on a page without content composition.
+        if ($subject instanceof CreateAction && $subject->getNewId()) {
+            return self::ACCESS_ABSTAIN;
+        }
+
         if (!$this->supportsContentComposition((int) $subject->getNewPid())) {
             return self::ACCESS_DENIED;
         }
