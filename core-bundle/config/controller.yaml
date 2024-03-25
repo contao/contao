@@ -197,6 +197,10 @@ services:
         tags:
             - { name: monolog.logger, channel: contao.error }
 
+    Contao\CoreBundle\Controller\PowAltchaController:
+        arguments:
+            - '@contao.pow.altcha.altcha'
+
     Contao\CoreBundle\Controller\PreviewLinkController:
         arguments:
             - '@contao.security.frontend_preview_authenticator'
