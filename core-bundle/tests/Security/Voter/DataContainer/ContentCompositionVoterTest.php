@@ -43,6 +43,31 @@ class ContentCompositionVoterTest extends TestCase
         $this->assertFalse($voter->supportsType(DeleteAction::class));
     }
 
+    public function testAbstainsIfNewRecordHasId(): void
+    {
+        $token = $this->createMock(TokenInterface::class);
+        $subject = new CreateAction('tl_article', ['id' => 42]);
+
+        $pageAdapter = $this->mockAdapter(['findById']);
+        $pageAdapter
+            ->expects($this->never())
+            ->method('findById')
+        ;
+
+        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
+
+        $pageRegistry = $this->createMock(PageRegistry::class);
+        $pageRegistry
+            ->expects($this->never())
+            ->method('supportsContentComposition')
+        ;
+
+        $voter = new ContentCompositionVoter($framework, $pageRegistry);
+        $result = $voter->vote($token, $subject, [ContaoCorePermissions::DC_PREFIX.'tl_article']);
+
+        $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $result);
+    }
+
     public function testDeniesAccessIfPageModelIsNotFound(): void
     {
         $token = $this->createMock(TokenInterface::class);
