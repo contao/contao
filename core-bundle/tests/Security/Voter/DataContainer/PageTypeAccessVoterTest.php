@@ -137,7 +137,7 @@ class PageTypeAccessVoterTest extends TestCase
     /**
      * @dataProvider errorPagesAreOnlyAllowedInRootPageProvider
      */
-    public function testErrorPagesAreOnlyAllowedInRootPage(CreateAction|UpdateAction $subject, array $queryResult, int $expected): void
+    public function testErrorPagesAreOnlyAllowedInRootPage(CreateAction|UpdateAction $subject, array|null $rootIds, array|null $rootTypes, int $expected): void
     {
         $token = $this->createMock(TokenInterface::class);
 
@@ -149,10 +149,15 @@ class PageTypeAccessVoterTest extends TestCase
 
         $connection = $this->createMock(Connection::class);
         $connection
-            ->expects($this->exactly(\count($queryResult)))
-            ->method('fetchOne')
-            ->withConsecutive(...array_map(fn ($p) => [$this->anything(), (array) $p], array_column($queryResult, 0)))
-            ->willReturnOnConsecutiveCalls(...array_column($queryResult, 1))
+            ->expects(null === $rootIds ? $this->never() : $this->once())
+            ->method('fetchFirstColumn')
+            ->willReturn($rootIds ?? [])
+        ;
+
+        $connection
+            ->expects(null === $rootTypes ? $this->never() : $this->once())
+            ->method('fetchAllNumeric')
+            ->willReturn($rootTypes ?? [])
         ;
 
         $voter = new PageTypeAccessVoter($decisionManager, $connection);
@@ -167,116 +172,107 @@ class PageTypeAccessVoterTest extends TestCase
 
         yield 'Abstain if new type is not an error page' => [
             new CreateAction('tl_page', ['pid' => 42, 'type' => 'regular']),
-            [],
+            null,
+            null,
             VoterInterface::ACCESS_ABSTAIN,
         ];
 
         yield 'Abstain if current type is not an error page' => [
             new UpdateAction('tl_page', ['pid' => 42, 'type' => 'regular']),
-            [],
+            null,
+            null,
             VoterInterface::ACCESS_ABSTAIN,
         ];
 
         yield 'Abstain if current and new type is not an error page' => [
             new UpdateAction('tl_page', ['pid' => 42, 'type' => 'regular'], ['type' => 'forward']),
-            [],
+            null,
+            null,
             VoterInterface::ACCESS_ABSTAIN,
         ];
 
         foreach ($errorTypes as $type) {
             yield "Allow to create $type page if no $type exists in root page" => [
                 new CreateAction('tl_page', ['pid' => 42, 'sorting' => 128, 'type' => $type]),
-                [
-                    [42, 'root'],
-                    [[$type, 42], false],
-                ],
+                [42],
+                [],
                 VoterInterface::ACCESS_ABSTAIN,
             ];
 
             yield "Deny to create $type page if $type exists in root page" => [
                 new CreateAction('tl_page', ['pid' => 42, 'sorting' => 128, 'type' => $type]),
-                [
-                    [42, 'root'],
-                    [[$type, 42], 21],
-                ],
+                [42],
+                [[42, $type]],
                 VoterInterface::ACCESS_DENIED,
             ];
 
             yield "Deny to create $type page if parent is not root page" => [
                 new CreateAction('tl_page', ['pid' => 42, 'sorting' => 128, 'type' => $type]),
-                [[42, 'regular']],
-                VoterInterface::ACCESS_DENIED,
-            ];
-
-            yield "Deny to create $type page if parent is not found" => [
-                new CreateAction('tl_page', ['pid' => 42, 'sorting' => 128, 'type' => $type]),
-                [[42, false]],
+                [],
+                null,
                 VoterInterface::ACCESS_DENIED,
             ];
 
             yield "Deny to create $type page if pid is not set" => [
                 new CreateAction('tl_page', ['type' => $type, 'foo' => 'bar']),
-                [],
+                null,
+                null,
                 VoterInterface::ACCESS_DENIED,
             ];
 
             yield "Allow to change page type if no $type exists in root page" => [
                 new UpdateAction('tl_page', ['pid' => 42, 'type' => 'regular'], ['type' => $type]),
-                [
-                    [42, 'root'],
-                    [[$type, 42], false],
-                ],
+                [42],
+                [],
                 VoterInterface::ACCESS_ABSTAIN,
             ];
 
             yield "Deny to change page type if $type exists in root page" => [
                 new UpdateAction('tl_page', ['pid' => 42, 'type' => 'regular'], ['type' => $type]),
-                [
-                    [42, 'root'],
-                    [[$type, 42], 21],
-                ],
+                [42],
+                [[42, $type]],
                 VoterInterface::ACCESS_DENIED,
             ];
 
             yield "Deny to change page type if $type parent is not a root page" => [
                 new UpdateAction('tl_page', ['pid' => 42, 'type' => 'regular'], ['type' => $type]),
-                [[42, 'regular']],
+                [],
+                null,
                 VoterInterface::ACCESS_DENIED,
             ];
 
             yield "Deny to change page type if new parent of $type is not a root page" => [
                 new UpdateAction('tl_page', ['pid' => 21, 'type' => 'regular'], ['pid' => 42, 'type' => $type]),
-                [[42, 'regular']],
+                [21 => 'root'],
+                null,
                 VoterInterface::ACCESS_DENIED,
             ];
 
             yield "Change page type ignores current $type type" => [
                 new UpdateAction('tl_page', ['pid' => 21, 'type' => $type], ['type' => 'regular']),
-                [],
+                null,
+                null,
                 VoterInterface::ACCESS_ABSTAIN,
             ];
 
             yield "Abstain if parent page of $type is not changed" => [
                 new UpdateAction('tl_page', ['pid' => 42, 'type' => $type, 'foo' => 'bar']),
-                [],
+                null,
+                null,
                 VoterInterface::ACCESS_ABSTAIN,
             ];
 
             yield "Deny if only parent ID of $type is changed" => [
                 new UpdateAction('tl_page', ['pid' => 42, 'type' => $type], ['pid' => 21]),
-                [
-                    [21, 'root'],
-                    [[$type, 21], 1],
-                ],
+                [21],
+                [[21, $type]],
                 VoterInterface::ACCESS_DENIED,
             ];
 
             yield "Deny if only sorting of $type is changed" => [
                 new UpdateAction('tl_page', ['pid' => 42, 'type' => $type], ['sorting' => 256]),
-                [
-                    [42, 'root'],
-                    [[$type, 42], 1],
-                ],
+                [42],
+                [[42, $type]],
                 VoterInterface::ACCESS_DENIED,
             ];
         }
