@@ -44,7 +44,9 @@ jobs:
                   restore-keys: ${{ runner.os }}-composer-
 
             - name: Install the dependencies
-              run: composer install --no-interaction --no-progress
+              run: |
+                  composer install --no-interaction --no-progress
+                  composer bin phpunit install --no-interaction --no-progress
 
             - name: Run the unit tests
-              run: vendor/bin/phpunit.bat --colors=always
+              run: vendor-bin/phpunit/vendor/bin/phpunit.bat --colors=always

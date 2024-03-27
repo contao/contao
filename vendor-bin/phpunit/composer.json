@@ -1,0 +1,6 @@
+{
+    "require": {
+        "phpunit/phpunit": "^9.5.19",
+        "symfony/phpunit-bridge": "^6.4"
+    }
+}

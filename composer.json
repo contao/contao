@@ -202,6 +202,9 @@
         "thecodingmachine/safe": "<1.2",
         "zendframework/zend-code": "<3.3.1"
     },
+    "provide": {
+        "phpunit/phpunit": "9.5"
+    },
     "autoload": {
         "psr-4": {
             "Contao\\CalendarBundle\\": "calendar-bundle/src/",
@@ -319,12 +322,12 @@
         "ecs-default": "@php vendor-bin/ecs/vendor/bin/ecs check */bin */src */tests vendor-bin/*/bin vendor-bin/*/config vendor-bin/*/src -c vendor-bin/ecs/config/default.php --fix --ansi",
         "ecs-legacy": "@php vendor-bin/ecs/vendor/bin/ecs check *-bundle/contao -c vendor-bin/ecs/config/legacy.php --fix --ansi",
         "ecs-template": "@php vendor-bin/ecs/vendor/bin/ecs check *-bundle/contao/templates -c vendor-bin/ecs/config/template.php --fix --ansi",
-        "functional-tests": "@php vendor/bin/phpunit --testsuite=functional --colors=always",
+        "functional-tests": "@php vendor-bin/phpunit/vendor/bin/phpunit --testsuite=functional --colors=always",
         "monorepo-tools": "@php vendor-bin/monorepo-tools/vendor/bin/monorepo-tools composer-json --validate --ansi",
         "phpstan": "@php vendor-bin/phpstan/vendor/bin/phpstan analyze -c vendor-bin/phpstan/config/contao.neon --ansi",
         "rector": "@php vendor-bin/rector/vendor/bin/rector -c vendor-bin/rector/config/rector.php --ansi",
         "require-checker": "@php vendor-bin/require-checker/vendor/bin/composer-require-checker check --config-file=vendor-bin/require-checker/config/config.json composer.json",
         "service-linter": "@php vendor-bin/service-linter/bin/lint-service-ids --ansi",
-        "unit-tests": "@php vendor/bin/phpunit --colors=always"
+        "unit-tests": "@php vendor-bin/phpunit/vendor/bin/phpunit --colors=always"
     }
 }
