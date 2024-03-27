@@ -3,8 +3,8 @@
 /vendor/
 
 # Composer bin
-/tools/*/vendor
-/tools/monorepo-tools/composer.lock
+/vendor-bin/*/vendor
+/vendor-bin/monorepo-tools/composer.lock
 
 # Cypress
 /cypress/screenshots/

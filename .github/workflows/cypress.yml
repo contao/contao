@@ -65,5 +65,5 @@ jobs:
               if: ${{ failure() && steps.cypress.conclusion == 'failure' }}
               with:
                   name: Cypress videos
-                  path: tools/cypress/videos
+                  path: cypress/videos
                   retention-days: 14
