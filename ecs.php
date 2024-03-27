@@ -17,7 +17,7 @@ use Symplify\EasyCodingStandard\Config\ECSConfig;
 use Symplify\EasyCodingStandard\ValueObject\Option;
 
 return ECSConfig::configure()
-    ->withSets([__DIR__.'/../vendor/contao/easy-coding-standard/config/contao.php'])
+    ->withSets([__DIR__.'/vendor-bin/ecs/vendor/contao/easy-coding-standard/config/contao.php'])
     ->withSkip([
         '*-bundle/contao/*',
         MethodChainingIndentationFixer::class => [

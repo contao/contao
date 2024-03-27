@@ -26,7 +26,7 @@ jobs:
                   composer bin rector install --no-interaction --no-progress
 
             - name: Run Rector
-              run: vendor-bin/rector/vendor/bin/rector --config vendor-bin/rector/config/rector.php --dry-run --no-progress-bar --ansi
+              run: vendor-bin/rector/vendor/bin/rector --dry-run --no-progress-bar --ansi
 
     ecs:
         name: ECS
@@ -48,7 +48,7 @@ jobs:
                   composer bin ecs install --no-interaction --no-progress
 
             - name: Run ECS
-              run: vendor-bin/ecs/vendor/bin/ecs check */bin */src */tests vendor-bin/*/bin vendor-bin/*/config vendor-bin/*/src --config vendor-bin/ecs/config/default.php --no-progress-bar --ansi
+              run: vendor-bin/ecs/vendor/bin/ecs check */bin */src */tests vendor-bin/*/bin vendor-bin/*/config vendor-bin/*/src --no-progress-bar --ansi
 
     ecs-legacy:
         name: ECS legacy
@@ -94,7 +94,7 @@ jobs:
                   composer bin phpstan install --no-interaction --no-progress
 
             - name: Run PHPStan
-              run: vendor-bin/phpstan/vendor/bin/phpstan analyse -c vendor-bin/phpstan/config/contao.neon --no-progress
+              run: vendor-bin/phpstan/vendor/bin/phpstan analyze --no-progress
 
     yamllint:
         name: YAMLlint
