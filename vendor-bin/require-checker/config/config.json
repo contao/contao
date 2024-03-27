@@ -23,6 +23,12 @@
         "Contao\\ManagerPlugin\\Routing\\RoutingPluginInterface",
         "Contao\\NewsletterChannelModel",
         "Michelf\\MarkdownExtra",
+        "PHPUnit\\Framework\\Constraint\\StringMatchesFormatDescription",
+        "PHPUnit\\Framework\\ExpectationFailedException",
+        "PHPUnit\\Framework\\MockObject\\MockObject",
+        "PHPUnit\\Framework\\TestCase",
+        "PHPUnit\\Runner\\AfterLastTestHook",
+        "PHPUnit\\Runner\\BeforeFirstTestHook",
         "ProxyManager\\Configuration",
         "Symfony\\Bundle\\MonologBundle\\MonologBundle",
         "Symfony\\Bundle\\WebProfilerBundle\\EventListener\\WebDebugToolbarListener"
