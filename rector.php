@@ -17,14 +17,14 @@ use Rector\Php81\Rector\Array_\FirstClassCallableRector;
 use Rector\Php81\Rector\FuncCall\NullToStrictStringFuncCallArgRector;
 
 return RectorConfig::configure()
-    ->withSets([__DIR__.'/../vendor/contao/rector/config/contao.php'])
+    ->withSets([__DIR__.'/vendor-bin/rector/vendor/contao/rector/config/contao.php'])
     ->withPaths([
-        __DIR__.'/../../../*/bin',
-        __DIR__.'/../../../*/src',
-        __DIR__.'/../../../*/tests',
-        __DIR__.'/../../../vendor-bin/*/bin',
-        __DIR__.'/../../../vendor-bin/*/config',
-        __DIR__.'/../../../vendor-bin/*/src',
+        __DIR__.'/*/bin',
+        __DIR__.'/*/src',
+        __DIR__.'/*/tests',
+        __DIR__.'/vendor-bin/*/bin',
+        __DIR__.'/vendor-bin/*/config',
+        __DIR__.'/vendor-bin/*/src',
     ])
     ->withSkip([
         ClassPropertyAssignToConstructorPromotionRector::class => [
