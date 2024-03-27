@@ -321,7 +321,7 @@
         "ecs-legacy": "@php tools/ecs/vendor/bin/ecs check *-bundle/contao -c tools/ecs/config/legacy.php --fix --ansi",
         "ecs-template": "@php tools/ecs/vendor/bin/ecs check *-bundle/contao/templates -c tools/ecs/config/template.php --fix --ansi",
         "functional-tests": "@php vendor/bin/phpunit --testsuite=functional --colors=always",
-        "monorepo-tools": "@php tools/monorepo/vendor/bin/monorepo-tools composer-json --validate --ansi",
+        "monorepo-tools": "@php tools/monorepo-tools/vendor/bin/monorepo-tools composer-json --validate --ansi",
         "phpstan": "@php tools/phpstan/vendor/bin/phpstan analyze -c tools/phpstan/config/contao.neon --ansi",
         "rector": "@php tools/rector/vendor/bin/rector -c tools/rector/config/rector.php --ansi",
         "require-checker": "@php tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config/config.json composer.json",

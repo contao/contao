@@ -345,4 +345,4 @@ jobs:
                   composer bin monorepo install --no-interaction --no-progress
 
             - name: Validate the composer.json files
-              run: tools/monorepo/vendor/bin/monorepo-tools composer-json --validate --ansi
+              run: tools/monorepo-tools/vendor/bin/monorepo-tools composer-json --validate --ansi

@@ -4,7 +4,7 @@
 
 # Composer bin
 /tools/*/vendor
-/tools/monorepo/composer.lock
+/tools/monorepo-tools/composer.lock
 
 # Cypress
 /cypress/screenshots/
