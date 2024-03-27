@@ -3,7 +3,9 @@
         "phpstan/phpstan": "^1.0",
         "phpstan/phpstan-phpunit": "^1.0",
         "phpstan/phpstan-symfony": "^1.0",
+        "phpunit/phpunit": "^9.5.19",
         "slam/phpstan-extensions": "^6.0",
+        "symfony/phpunit-bridge": "^6.4",
         "thecodingmachine/phpstan-strict-rules": "^1.0"
     },
     "autoload": {

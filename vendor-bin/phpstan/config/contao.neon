@@ -18,9 +18,6 @@ parameters:
         detectDeadTypeInMultiCatch: false
         disableCheckMissingIterableValueType: false
 
-    bootstrapFiles:
-        - ../../phpunit/vendor/autoload.php
-
     paths:
         - %currentWorkingDirectory%/calendar-bundle/src
         - %currentWorkingDirectory%/calendar-bundle/tests
