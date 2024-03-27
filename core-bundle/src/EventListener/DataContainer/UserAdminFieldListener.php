@@ -28,24 +28,22 @@ class UserAdminFieldListener
     public function __invoke(string $palette, DataContainer $dc): string
     {
         if (!$this->security->isGranted('ROLE_ADMIN')) {
-            return $this->unsetAdminField($palette);
+            return PaletteManipulator::create()
+                ->removeField('admin')
+                ->applyToString($palette)
+            ;
         }
 
         $user = $this->security->getUser();
 
         // Prevent the admin from downgrading their own account
         if ($user instanceof BackendUser && (int) $user->id === (int) $dc->id) {
-            return $this->unsetAdminField($palette);
+            return PaletteManipulator::create()
+                ->removeField(['admin', 'disable', 'start', 'stop'])
+                ->applyToString($palette)
+            ;
         }
 
         return $palette;
-    }
-
-    private function unsetAdminField(string $palette): string
-    {
-        return PaletteManipulator::create()
-            ->removeField('admin')
-            ->applyToString($palette)
-        ;
     }
 }

@@ -43,7 +43,7 @@ class UserAdminFieldListenerTest extends TestCase
         $this->assertSame('foo,bar;disable', $palette);
     }
 
-    public function testUnsetsAdminFieldForAdminWhenEditingOwnRecord(): void
+    public function testUnsetsFieldsForAdminWhenEditingOwnRecord(): void
     {
         $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 42]);
 
@@ -64,9 +64,9 @@ class UserAdminFieldListenerTest extends TestCase
         $dataContainer = $this->mockClassWithProperties(DataContainer::class, ['id' => 42]);
 
         $listener = new UserAdminFieldListener($security);
-        $palette = $listener('foo,bar;{admin_legend},admin;disable', $dataContainer);
+        $palette = $listener('foo,bar;{admin_legend},admin;disable,start,stop', $dataContainer);
 
-        $this->assertSame('foo,bar;disable', $palette);
+        $this->assertSame('foo,bar', $palette);
     }
 
     public function testKeepsAdminFieldForAdminWhenEditingOtherRecords(): void
@@ -90,8 +90,8 @@ class UserAdminFieldListenerTest extends TestCase
         $dataContainer = $this->mockClassWithProperties(DataContainer::class, ['id' => 1]);
 
         $listener = new UserAdminFieldListener($security);
-        $palette = $listener('foo,bar;{admin_legend},admin;disable', $dataContainer);
+        $palette = $listener('foo,bar;{admin_legend},admin;disable,start,stop', $dataContainer);
 
-        $this->assertSame('foo,bar;{admin_legend},admin;disable', $palette);
+        $this->assertSame('foo,bar;{admin_legend},admin;disable,start,stop', $palette);
     }
 }
