@@ -342,7 +342,7 @@ jobs:
             - name: Install the dependencies
               run: |
                   composer install --no-interaction --no-progress
-                  composer bin monorepo install --no-interaction --no-progress
+                  composer bin monorepo-tools install --no-interaction --no-progress
 
             - name: Validate the composer.json files
               run: vendor-bin/monorepo-tools/vendor/bin/monorepo-tools composer-json --validate --ansi
