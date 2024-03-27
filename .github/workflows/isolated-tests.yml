@@ -31,4 +31,4 @@ jobs:
               run: vendor/bin/phpunit --extensions Contao\\CoreBundle\\Tests\\PhpunitExtension\\GlobalStateWatcher --colors=always
 
             - name: Run the unit tests isolated
-              run: tools/isolated-tests/bin/run-tests-isolated --ansi
+              run: vendor-bin/isolated-tests/bin/run-tests-isolated --ansi

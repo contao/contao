@@ -22,9 +22,9 @@ return RectorConfig::configure()
         __DIR__.'/../../../*/bin',
         __DIR__.'/../../../*/src',
         __DIR__.'/../../../*/tests',
-        __DIR__.'/../../../tools/*/bin',
-        __DIR__.'/../../../tools/*/config',
-        __DIR__.'/../../../tools/*/src',
+        __DIR__.'/../../../vendor-bin/*/bin',
+        __DIR__.'/../../../vendor-bin/*/config',
+        __DIR__.'/../../../vendor-bin/*/src',
     ])
     ->withSkip([
         ClassPropertyAssignToConstructorPromotionRector::class => [
