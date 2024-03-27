@@ -305,19 +305,19 @@
     "scripts": {
         "all": [
             "@rector",
-            "@cs-fixer",
+            "@ecs",
             "@service-linter",
             "@monorepo-tools",
             "@unit-tests",
             "@functional-tests",
             "@phpstan"
         ],
-        "cs-fixer": [
-            "@ecs",
+        "ecs": [
+            "@ecs-default",
             "@ecs-legacy",
             "@ecs-template"
         ],
-        "ecs": "@php tools/ecs/vendor/bin/ecs check */bin */src */tests tools/*/bin tools/*/config tools/*/src -c tools/ecs/config/default.php --fix --ansi",
+        "ecs-default": "@php tools/ecs/vendor/bin/ecs check */bin */src */tests tools/*/bin tools/*/config tools/*/src -c tools/ecs/config/default.php --fix --ansi",
         "ecs-legacy": "@php tools/ecs/vendor/bin/ecs check *-bundle/contao -c tools/ecs/config/legacy.php --fix --ansi",
         "ecs-template": "@php tools/ecs/vendor/bin/ecs check *-bundle/contao/templates -c tools/ecs/config/template.php --fix --ansi",
         "functional-tests": "@php vendor/bin/phpunit --testsuite=functional --colors=always",
