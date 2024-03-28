@@ -1,4 +1,5 @@
 {% extends "@Contao/content_element/_base.html.twig" %}
+{% use "@Contao/component/_stylesheet.html.twig" %}
 {% use "@Contao/component/_table.html.twig" %}
 
 {% block content %}
@@ -12,3 +13,13 @@
 {%- block table_cell_content %}
     {{- cell|trim|replace({'\n': '<br>\n'})|insert_tag|raw -}}
 {% endblock -%}
+
+{% block style %}
+    {% if sorting %}
+        {% set tablesort_css_file = asset('css/tablesort.min.css', 'contao-components/tristen-tablesort') %}
+
+        {% add "tablesort_css" to head %}
+            {% with {file: tablesort_css_file} %}{{ block('stylesheet_component') }}{% endwith %}
+        {% endadd %}
+    {% endif %}
+{% endblock %}
