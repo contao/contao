@@ -36,7 +36,7 @@ class FileExtensionMigration extends AbstractMigration
             return false;
         }
 
-        return false !== $this->connection->fetchOne("SELECT * FROM tl_files WHERE extension REGEXP '[[:upper:]]' LIMIT 1");
+        return false !== $this->connection->fetchOne("SELECT * FROM tl_files WHERE extension REGEXP BINARY '[[:upper:]]' LIMIT 1");
     }
 
     public function run(): MigrationResult
