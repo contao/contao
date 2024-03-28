@@ -626,6 +626,11 @@ services:
         arguments:
             - '%contao.console_path%'
 
+    contao.repository.access_token:
+        class: Contao\CoreBundle\Repository\AccessTokenRepository
+        arguments:
+            - '@doctrine'
+
     contao.repository.cron_job:
         class: Contao\CoreBundle\Repository\CronJobRepository
         arguments:
@@ -848,6 +853,21 @@ services:
             - '@contao.routing.page_finder'
             - '@contao.routing.page_registry'
             - '@http_kernel'
+
+    contao.security.access_token.authentication_success_handler:
+        class: Contao\CoreBundle\Security\Authentication\AccessToken\AuthenticationSuccessHandler
+        arguments:
+            - '@security.token_storage'
+            - '@request_stack'
+
+    contao.security.access_token_handler:
+        class: Contao\CoreBundle\Security\AccessTokenHandler
+        public: true
+        arguments:
+            - '@contao.repository.access_token'
+            - '@database_connection'
+            - '@http_client'
+            - '%kernel.secret%'
 
     contao.security.authentication_failure_handler:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler
