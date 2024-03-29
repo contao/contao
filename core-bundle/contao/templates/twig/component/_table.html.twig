@@ -48,6 +48,7 @@
 #}
 
 {% trans_default_domain "contao_default" %}
+{% use "@Contao/component/_stylesheet.html.twig" %}
 
 {% block table_component %}
     {% set table = table|default(_context) %}
@@ -188,6 +189,16 @@
                         document.head.appendChild(script);
                     }
                 </script>
+            {% endadd %}
+        {% endif %}
+    {% endblock %}
+
+    {% block style %}
+        {% if sorting %}
+            {% set tablesort_css_file = asset('css/tablesort.min.css', 'contao-components/tristen-tablesort') %}
+
+            {% add "tablesort_css" to head %}
+                {% with {file: tablesort_css_file} %}{{ block('stylesheet_component') }}{% endwith %}
             {% endadd %}
         {% endif %}
     {% endblock %}
