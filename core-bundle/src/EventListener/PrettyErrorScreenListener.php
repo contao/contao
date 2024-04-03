@@ -152,8 +152,9 @@ class PrettyErrorScreenListener
 
             if (!$pageModel instanceof PageModel) {
                 try {
-                    $pageModel = Frontend::getRootPageFromUrl();
-                } catch (NoRootPageFoundException) {
+                    $frontendAdapter = $this->framework->getAdapter(Frontend::class);
+                    $pageModel = $frontendAdapter->getRootPageFromUrl();
+                } catch (NoRootPageFoundException $exception) {
                     return;
                 }
             }

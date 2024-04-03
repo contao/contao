@@ -19,12 +19,15 @@ use Contao\CoreBundle\Exception\InsecureInstallationException;
 use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\InternalServerErrorHttpException;
+use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Exception\ServiceUnavailableException;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\Frontend;
 use Contao\PageModel;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
@@ -466,5 +469,20 @@ class PrettyErrorScreenListenerTest extends TestCase
         ;
 
         return $page;
+    }
+
+    protected function mockContaoFramework(array $adapters = []): ContaoFramework
+    {
+        if (!isset($adapters[Frontend::class])) {
+            $frontendAdapter = $this->mockAdapter(['getRootPageFromUrl']);
+            $frontendAdapter
+                ->method('getRootPageFromUrl')
+                ->willThrowException(new NoRootPageFoundException())
+            ;
+
+            $adapters[Frontend::class] = $frontendAdapter;
+        }
+
+        return parent::mockContaoFramework($adapters);
     }
 }
