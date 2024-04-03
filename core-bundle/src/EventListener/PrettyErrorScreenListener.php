@@ -14,11 +14,13 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\Config;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
+use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Exception\RouteParametersException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Util\LocaleUtil;
+use Contao\Frontend;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Symfony\Component\HttpFoundation\AcceptHeader;
@@ -149,7 +151,11 @@ class PrettyErrorScreenListener
             $pageModel = $request->attributes->get('pageModel');
 
             if (!$pageModel instanceof PageModel) {
-                return;
+                try {
+                    $pageModel = Frontend::getRootPageFromUrl();
+                } catch (NoRootPageFoundException) {
+                    return;
+                }
             }
 
             $pageAdapter = $this->framework->getAdapter(PageModel::class);
