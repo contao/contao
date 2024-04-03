@@ -400,6 +400,21 @@ class PrettyErrorScreenListenerTest extends TestCase
         $this->assertSame(500, $event->getResponse()->getStatusCode());
     }
 
+    protected function mockContaoFramework(array $adapters = []): ContaoFramework
+    {
+        if (!isset($adapters[Frontend::class])) {
+            $frontendAdapter = $this->mockAdapter(['getRootPageFromUrl']);
+            $frontendAdapter
+                ->method('getRootPageFromUrl')
+                ->willThrowException(new NoRootPageFoundException())
+            ;
+
+            $adapters[Frontend::class] = $frontendAdapter;
+        }
+
+        return parent::mockContaoFramework($adapters);
+    }
+
     private function getListener(bool $isBackendUser = false, bool $expectLogging = false, Environment $twig = null, PageModel $errorPage = null, HttpKernelInterface $httpKernel = null): PrettyErrorScreenListener
     {
         $twig ??= $this->createMock(Environment::class);
@@ -469,20 +484,5 @@ class PrettyErrorScreenListenerTest extends TestCase
         ;
 
         return $page;
-    }
-
-    protected function mockContaoFramework(array $adapters = []): ContaoFramework
-    {
-        if (!isset($adapters[Frontend::class])) {
-            $frontendAdapter = $this->mockAdapter(['getRootPageFromUrl']);
-            $frontendAdapter
-                ->method('getRootPageFromUrl')
-                ->willThrowException(new NoRootPageFoundException())
-            ;
-
-            $adapters[Frontend::class] = $frontendAdapter;
-        }
-
-        return parent::mockContaoFramework($adapters);
     }
 }
