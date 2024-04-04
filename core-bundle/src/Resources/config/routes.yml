@@ -23,8 +23,8 @@ contao_backend_fallback:
         template: '@ContaoCore\Error\backend.html.twig'
         context:
             template: '@ContaoCore\Error\backend.html.twig'
-            exception: 'Not Found'
-            statusName: 'Not Found'
+            exception: Not Found
+            statusName: Not Found
         statusCode: 404
     requirements:
         parameters: .*
