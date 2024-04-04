@@ -60,7 +60,7 @@ class ContaoSetupCommand extends Command
 
     protected function configure(): void
     {
-        $this->setHidden(true);
+        $this->setHidden(true)->addOption('no-cache', null, InputOption::VALUE_NONE, 'Should the cache be cleared?');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -99,14 +99,20 @@ class ContaoSetupCommand extends Command
         }
 
         $commands = [
-            ['skeleton:install', $this->webDir, '--env=prod'],
+            ['contao:install-web-dir', $this->webDir, '--env=prod'],
             ['assets:install', $this->webDir, '--symlink', '--relative', '--env=prod'],
             ['contao:install', $this->webDir, '--env=prod'],
             ['contao:symlinks', $this->webDir, '--env=prod'],
-            ['cache:clear', '--no-warmup', '--env=prod'],
-            ['cache:clear', '--no-warmup', '--env=dev'],
-            ['cache:warmup', '--env=prod'],
+
         ];
+
+        if (false === $input->getOption('no-cache')) {
+            $commands = array_merge($commands, [
+                ['cache:clear', '--no-warmup', '--env=prod'],
+                ['cache:clear', '--no-warmup', '--env=dev'],
+                ['cache:warmup', '--env=prod']
+            ]);
+        }
 
         $commandFlags = array_filter([
             $output->isDecorated() ? '--ansi' : '--no-ansi',
