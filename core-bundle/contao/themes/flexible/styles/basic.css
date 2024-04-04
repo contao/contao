@@ -790,35 +790,6 @@ a.tl_submit {
 	padding-top: 1px;
 }
 
-/* Floats */
-/*.clr {
-	clear: both;
-	width: calc(100% - 30px);
-}
-
-.clr:not(.widget) {
-	width: 100%;
-}
-
-.clr:before {
-	content: "";
-	display: table;
-}
-
-.w25, .w33, .w50, .w66, .w75 {
-	width: calc(50% - 30px);
-	float: left;
-	min-height: 80px;
-}
-
-.nogrid .w25, .nogrid .w33, .nogrid .w50, .nogrid .w66, .nogrid .w75 {
-	float: none;
-}
-
-.long {
-	width: calc(100% - 30px); !* see #6320 *!
-}*/
-
 .wizard > a {
 	position: relative;
 	top: -2px;
@@ -956,22 +927,6 @@ a.tl_submit {
 
 /* Large screens */
 @media (min-width: 1280px) {
-	/*.w25 {
-		width: calc(25% - 30px);
-	}
-
-	.w33 {
-		width: calc(33.3333% - 30px);
-	}
-
-	.w66 {
-		width: calc(66.6666% - 30px);
-	}
-
-	.w75 {
-		width: calc(75% - 30px);
-	}*/
-
 	#sbtog {
 		display: none;
 	}
@@ -992,7 +947,7 @@ a.tl_submit {
 }
 
 /* Split button */
-@media (max-width: 1279px) {
+@media (max-width: 1279.98px) {
 	.split-button {
 		display: inline-flex;
 	}
@@ -1077,17 +1032,18 @@ a.tl_submit {
 	.split-button > button[type="button"]:focus {
 		outline: none;
 	}
-}
 
-/* Smaller viewports */
-@media (max-width:1279.98px) {
-	.widget-group > .w33 {
+	.widget-group > .w25,
+	.widget-group > .w33,
+	.widget-group > .w50,
+	.widget-group > .w66,
+	.widget-group > .w75 {
 		grid-column: auto / span 6;
 	}
 }
 
 /* Handheld */
-@media (max-width: 767px) {
+@media (max-width: 767.98px) {
 
 	.widget-group > .w25,
 	.widget-group > .w33,
@@ -1097,10 +1053,10 @@ a.tl_submit {
 		grid-column: 1 / 13;
 	}
 
-	/*.w25, .w33, .w50, .w66, .w75 {
-		float: none;
-		width: calc(100% - 30px);
-	}*/
+	*:not(.widget-group) > .w50 {
+		float:none;
+		width:calc(100% - 30px);
+	}
 
 	.m12 {
 		padding-top: 0;
@@ -1122,7 +1078,6 @@ a.tl_submit {
 }
 
 /* BC */
-/*
 *:not(.widget-group) > .clr {
 	clear:both;
 	width:calc(100% - 30px);
@@ -1140,16 +1095,8 @@ a.tl_submit {
 	min-height:80px;
 }
 *:not(.widget-group) > .long {
-	width:calc(100% - 30px); !* see #6320 *!
+	width:calc(100% - 30px); /* see #6320 */
 }
 *:not(.widget-group) > .m12 {
 	margin: 0 15px;
 }
-
-@media (max-width:767px) {
-	*:not(.widget-group) > .w50 {
-		float:none;
-		width:calc(100% - 30px);
-	}
-}
-*/
