@@ -28,7 +28,7 @@ jobs:
                   composer bin isolated-tests install --no-interaction --no-progress
 
             - name: Run the unit tests
-              run: vendor/bin/phpunit --extensions Contao\\CoreBundle\\Tests\\PhpunitExtension\\GlobalStateWatcher --colors=always
+              run: vendor/bin/phpunit --extensions Contao\\CoreBundle\\Tests\\PhpunitExtension\\GlobalStateWatcher
 
             - name: Run the unit tests isolated
-              run: vendor-bin/isolated-tests/bin/run-tests-isolated --ansi
+              run: vendor-bin/isolated-tests/bin/run-tests-isolated

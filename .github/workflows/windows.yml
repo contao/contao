@@ -47,4 +47,4 @@ jobs:
               run: composer install --no-interaction --no-progress
 
             - name: Run the unit tests
-              run: vendor/bin/phpunit.bat --colors=always
+              run: vendor/bin/phpunit.bat
