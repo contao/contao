@@ -58,7 +58,6 @@ class ModuleQuicknav extends Module
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$host = null;
@@ -99,7 +98,6 @@ class ModuleQuicknav extends Module
 	 */
 	protected function getQuicknavPages($pid, $level=1, $host=null)
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$arrPages = array();

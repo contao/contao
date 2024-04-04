@@ -123,8 +123,8 @@ class PreviewFactory
                         $previews = iterator_to_array($previews, false);
                     }
 
-                    // We reached the last page if the number of returned
-                    // previews was less than the number of pages requested
+                    // We reached the last page if the number of returned previews was less than the
+                    // number of pages requested
                     if ($previews && \count($previews) <= $lastPage - $firstPage) {
                         $lastPreview = $previews[array_key_last($previews)];
                         $fileExtension = pathinfo($lastPreview, PATHINFO_EXTENSION);
@@ -294,7 +294,7 @@ class PreviewFactory
         }
 
         if (is_numeric($size[2])) {
-            $imageSize = $this->framework->getAdapter(ImageSizeModel::class)->findByPk($size[2]);
+            $imageSize = $this->framework->getAdapter(ImageSizeModel::class)->findById($size[2]);
 
             if (!$imageSize) {
                 return 0;

@@ -37,8 +37,8 @@ class PageTrailCacheTagsListenerTest extends TestCase
         $listener = new PageTrailCacheTagsListener($this->createScopeMatcher(true), null);
         $listener($event);
 
-        // Increase the assertion count. If the test would fail, we'd get a
-        // "Call to a member function addTags() on null" PHP error.
+        // Increase the assertion count. If the test would fail, we'd get a "Call to a
+        // member function addTags() on null" PHP error.
         $this->addToAssertionCount(1);
     }
 

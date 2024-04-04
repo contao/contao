@@ -18,6 +18,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
+use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandlerFactory;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
@@ -60,7 +61,7 @@ class CoreResponseContextFactoryTest extends TestCase
             new HtmlDecoder($this->createMock(InsertTagParser::class)),
             $this->createMock(RequestStack::class),
             $this->createMock(InsertTagParser::class),
-            $this->createMock(CspParser::class),
+            $this->createMock(CspHandlerFactory::class),
             $this->createMock(UrlGeneratorInterface::class),
         );
 
@@ -84,7 +85,7 @@ class CoreResponseContextFactoryTest extends TestCase
             new HtmlDecoder($this->createMock(InsertTagParser::class)),
             $this->createMock(RequestStack::class),
             $this->createMock(InsertTagParser::class),
-            $this->createMock(CspParser::class),
+            $this->createMock(CspHandlerFactory::class),
             $this->createMock(UrlGeneratorInterface::class),
         );
 
@@ -94,8 +95,9 @@ class CoreResponseContextFactoryTest extends TestCase
         $this->assertTrue($responseContext->has(JsonLdManager::class));
         $this->assertFalse($responseContext->isInitialized(JsonLdManager::class));
 
-        /** @var JsonLdManager $jsonLdManager */
         $jsonLdManager = $responseContext->get(JsonLdManager::class);
+
+        $this->assertInstanceOf(JsonLdManager::class, $jsonLdManager);
 
         $this->assertSame(
             [
@@ -130,7 +132,7 @@ class CoreResponseContextFactoryTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push(Request::create('https://example.com/'));
 
-        $cspParser = new CspParser(new PolicyManager());
+        $cpHandlerFactory = new CspHandlerFactory(new CspParser(new PolicyManager()));
 
         $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
         $urlGenerator
@@ -161,7 +163,7 @@ class CoreResponseContextFactoryTest extends TestCase
             new HtmlDecoder($insertTagsParser),
             $requestStack,
             $insertTagsParser,
-            $cspParser,
+            $cpHandlerFactory,
             $urlGenerator,
         );
 
@@ -176,8 +178,9 @@ class CoreResponseContextFactoryTest extends TestCase
         $this->assertTrue($responseContext->has(JsonLdManager::class));
         $this->assertTrue($responseContext->isInitialized(JsonLdManager::class));
 
-        /** @var JsonLdManager $jsonLdManager */
         $jsonLdManager = $responseContext->get(JsonLdManager::class);
+
+        $this->assertInstanceOf(JsonLdManager::class, $jsonLdManager);
 
         $this->assertSame(
             [
@@ -235,7 +238,7 @@ class CoreResponseContextFactoryTest extends TestCase
             new HtmlDecoder($insertTagsParser),
             $requestStack,
             $insertTagsParser,
-            $this->createMock(CspParser::class),
+            $this->createMock(CspHandlerFactory::class),
             $this->createMock(UrlGeneratorInterface::class),
         );
 
@@ -281,17 +284,20 @@ class CoreResponseContextFactoryTest extends TestCase
             new HtmlDecoder($insertTagsParser),
             $this->createMock(RequestStack::class),
             $insertTagsParser,
-            $this->createMock(CspParser::class),
+            $this->createMock(CspHandlerFactory::class),
             $this->createMock(UrlGeneratorInterface::class),
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
+        $htmlBag = $responseContext->get(HtmlHeadBag::class);
 
-        $this->assertSame('We went from Alpha > Omega', $responseContext->get(HtmlHeadBag::class)->getTitle());
-        $this->assertSame('My description contains HTML.', $responseContext->get(HtmlHeadBag::class)->getMetaDescription());
+        $this->assertInstanceOf(HtmlHeadBag::class, $htmlBag);
+        $this->assertSame('We went from Alpha > Omega', $htmlBag->getTitle());
+        $this->assertSame('My description contains HTML.', $htmlBag->getMetaDescription());
 
-        /** @var JsonLdManager $jsonLdManager */
         $jsonLdManager = $responseContext->get(JsonLdManager::class);
+
+        $this->assertInstanceOf(JsonLdManager::class, $jsonLdManager);
 
         $this->assertSame(
             [

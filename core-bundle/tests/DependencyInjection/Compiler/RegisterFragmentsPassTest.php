@@ -303,20 +303,21 @@ class RegisterFragmentsPassTest extends TestCase
 
         $container = $this->getContainerWithFragmentServices();
         $container->setDefinition('app.fragments.content_controller', $contentController);
-        $container->setDefinition('contao.listener.element_template_options', $templateOptionsListener = new Definition());
+        $container->setDefinition('contao.listener.data_container.template_options', $templateOptionsListener = new Definition());
 
         (new ResolveClassPass())->process($container);
 
         $pass = new RegisterFragmentsPass(
             ContentElementReference::TAG_NAME,
-            templateOptionsListener: 'contao.listener.element_template_options',
+            templateOptionsListener: 'contao.listener.data_container.template_options',
+            dca: 'tl_content',
         );
 
         $pass->process($container);
 
         $this->assertCount(1, $calls = $templateOptionsListener->getMethodCalls());
         $this->assertSame('setDefaultIdentifiersByType', $calls[0][0]);
-        $this->assertSame([$expectedCustomTemplates], $calls[0][1]);
+        $this->assertSame(['tl_content', $expectedCustomTemplates], $calls[0][1]);
     }
 
     public function provideTemplateNames(): \Generator

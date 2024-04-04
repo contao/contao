@@ -59,8 +59,10 @@ class FilesystemConfiguration
         $definition->setFactory(new Reference('contao.filesystem.virtual_factory'));
         $definition->addTag('contao.virtual_filesystem', ['name' => $name, 'prefix' => $prefix]);
 
+        $aliasName = lcfirst(Container::camelize($name));
+
         $this->container->setDefinition($id = "contao.filesystem.virtual.$name", $definition);
-        $this->container->registerAliasForArgument($id, VirtualFilesystemInterface::class, "{$name}Storage");
+        $this->container->registerAliasForArgument($id, VirtualFilesystemInterface::class, "{$aliasName}Storage");
 
         return $definition;
     }
@@ -193,8 +195,8 @@ class FilesystemConfiguration
 
         $this->container->setDefinition("contao.filesystem.dbafs.$virtualFilesystemName", $definition);
 
-        // Register the DBAFS in the DbafsManager using the same prefix as the
-        // associated virtual filesystem
+        // Register the DBAFS in the DbafsManager using the same prefix as the associated
+        // virtual filesystem
         $this->registerDbafs($definition, $prefix);
 
         return $definition;

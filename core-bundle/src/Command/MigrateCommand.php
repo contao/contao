@@ -219,6 +219,8 @@ class MigrateCommand extends Command
 
     private function executeMigrations(bool &$dryRun, bool $asJson, string|null $specifiedHash = null): bool
     {
+        $loopControl = 19;
+
         while (true) {
             $first = true;
             $migrationLabels = [];
@@ -285,13 +287,25 @@ class MigrateCommand extends Command
             }
 
             if (null !== $specifiedHash) {
-                // Do not run the schema update after migrations got executed
-                // if a hash was specified, because that hash could never match
-                // both, migrations and schema updates
+                // Do not run the schema update after migrations got executed if a hash was specified,
+                // because that hash could never match both, migrations and schema updates
                 $dryRun = true;
 
                 // Do not run the update recursive if a hash was specified
                 break;
+            }
+
+            if ($loopControl-- < 1) {
+                if ($asJson) {
+                    $this->writeNdjson('error', [
+                        'message' => 'The migrations were stopped after 19 iterations as a precaution. There is a high chance of an infinite loop of migrations.',
+                        'isSuccessful' => false,
+                    ]);
+                } else {
+                    $this->io->error('The migrations were stopped after 19 iterations as a precaution. There is a high chance of an infinite loop of migrations. If this is not the case, please re-run the command. To troubleshoot this error, check the shouldRun() method of the migration(s) listed above.');
+                }
+
+                return false;
             }
         }
 
@@ -539,9 +553,9 @@ class MigrateCommand extends Command
                 return $errors;
             }
 
-            // As there is no reliable way to get the vendor (see #84), we are
-            // guessing based on the version number. The check will not be run
-            // as of MySQL 8 and MariaDB 10.3, so this should be safe.
+            // As there is no reliable way to get the vendor (see #84), we are guessing based
+            // on the version number. The check will not be run as of MySQL 8 and MariaDB
+            // 10.3, so this should be safe.
             $vok = version_compare($version, '10', '>=') ? '10.2.2' : '5.7.7';
 
             // Large prefixes are always enabled as of MySQL 5.7.7 and MariaDB 10.2.2
@@ -658,7 +672,8 @@ class MigrateCommand extends Command
 
     private function validateDatabaseVersion(bool $asJson): bool
     {
-        // TODO: Find a replacement for getWrappedConnection() once doctrine/dbal 4.0 is released
+        // TODO: Find a replacement for getWrappedConnection() once doctrine/dbal
+        // 4.0 is released
         $driverConnection = $this->connection->getWrappedConnection();
 
         if (!$driverConnection instanceof ServerInfoAwareConnection) {

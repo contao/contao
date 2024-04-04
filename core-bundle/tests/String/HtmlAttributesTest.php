@@ -89,8 +89,8 @@ class HtmlAttributesTest extends TestCase
         ];
 
         yield 'decode values' => [
-            'foo=&quot; bar="b&auml;z"',
-            ['foo' => '"', 'bar' => 'bäz'],
+            'foo=&quot; bar="b&auml;z" baz=&ZeroWidthSpace;',
+            ['foo' => '"', 'bar' => 'bäz', 'baz' => "\u{200B}"],
         ];
 
         yield 'no attributes' => [
@@ -310,16 +310,19 @@ class HtmlAttributesTest extends TestCase
         $attributes->setIfExists('b', false);
         $attributes->setIfExists('c', 0);
         $attributes->setIfExists('d', '');
+        $attributes->setIfExists('s', $this->toStringable(''));
 
         // Set values that should be used
         $attributes->setIfExists('e', ' ');
         $attributes->setIfExists('f', 'abc');
+        $attributes->setIfExists('g', $this->toStringable(' '));
 
-        $this->assertSame(['bar' => '42', 'e' => ' ', 'f' => 'abc'], iterator_to_array($attributes));
+        $this->assertSame(['bar' => '42', 'e' => ' ', 'f' => 'abc', 'g' => ' '], iterator_to_array($attributes));
 
         // Unset properties by setting them to false
         $attributes->set('bar', false);
         $attributes->setIfExists('f', false); // should not alter the list
+        $attributes->mergeWith(['g' => false]);
 
         $this->assertSame(['e' => ' ', 'f' => 'abc'], iterator_to_array($attributes));
 
@@ -339,12 +342,7 @@ class HtmlAttributesTest extends TestCase
             '1',
             ['test'],
             new \stdClass(),
-            new class() implements \Stringable {
-                public function __toString(): string
-                {
-                    return 'foo';
-                }
-            },
+            $this->toStringable('foo'),
         ];
 
         $falsyValues = [
@@ -353,12 +351,7 @@ class HtmlAttributesTest extends TestCase
             0,
             '',
             [],
-            new class() implements \Stringable {
-                public function __toString(): string
-                {
-                    return '';
-                }
-            },
+            $this->toStringable(''),
         ];
 
         // Test truthy values fulfil the condition
@@ -532,10 +525,11 @@ class HtmlAttributesTest extends TestCase
             'b' => '{{b}}',
             'c' => 'foo&bar',
             'd' => 'foo&amp;bar',
+            'e' => '&ZeroWidthSpace;',
             'property-without-value' => null,
         ]);
 
-        $expectedString = 'a="A B C" b="&#123;&#123;b&#125;&#125;" c="foo&amp;bar" d="foo&amp;bar" property-without-value';
+        $expectedString = 'a="A B C" b="&#123;&#123;b&#125;&#125;" c="foo&amp;bar" d="foo&amp;bar" e="&ZeroWidthSpace;" property-without-value';
 
         $this->assertSame(" $expectedString", (string) $attributes);
         $this->assertSame(" $expectedString", $attributes->toString());
@@ -543,7 +537,7 @@ class HtmlAttributesTest extends TestCase
 
         // With double encoding
         $this->assertSame($attributes, $attributes->setDoubleEncoding(true));
-        $expectedString = 'a="A B C" b="&#123;&#123;b&#125;&#125;" c="foo&amp;bar" d="foo&amp;amp;bar" property-without-value';
+        $expectedString = 'a="A B C" b="&#123;&#123;b&#125;&#125;" c="foo&amp;bar" d="foo&amp;amp;bar" e="&amp;ZeroWidthSpace;" property-without-value';
 
         $this->assertSame(" $expectedString", (string) $attributes);
         $this->assertSame(" $expectedString", $attributes->toString());
@@ -609,5 +603,19 @@ class HtmlAttributesTest extends TestCase
         $attributes = new HtmlAttributes(['foo' => 'bar', 'baz' => 42]);
 
         $this->assertSame('{"foo":"bar","baz":"42"}', json_encode($attributes, JSON_THROW_ON_ERROR));
+    }
+
+    private function toStringable(string $string): \Stringable
+    {
+        return new class($string) implements \Stringable {
+            public function __construct(private readonly string $string)
+            {
+            }
+
+            public function __toString(): string
+            {
+                return $this->string;
+            }
+        };
     }
 }

@@ -135,7 +135,7 @@ class PictureFactory implements PictureFactoryInterface
     /**
      * Creates a picture configuration.
      *
-     * @phpstan-return array{0:PictureConfiguration, 1:array<string, string>, 2:ResizeOptions}
+     * @return array{0: PictureConfiguration, 1: array<string, string>, 2: ResizeOptions}
      */
     private function createConfig(array|int|string|null $size): array
     {
@@ -153,7 +153,7 @@ class PictureFactory implements PictureFactoryInterface
             // Database record
             if (is_numeric($size[2])) {
                 $imageSizeModel = $this->framework->getAdapter(ImageSizeModel::class);
-                $imageSizes = $imageSizeModel->findByPk($size[2]);
+                $imageSizes = $imageSizeModel->findById($size[2]);
 
                 $config->setSize($this->createConfigItem($imageSizes?->row()));
 
@@ -336,33 +336,33 @@ class PictureFactory implements PictureFactoryInterface
         $resizeConfig = new ResizeConfiguration();
 
         if (null !== $imageSize) {
-            if (isset($imageSize['width'])) {
+            if (!empty($imageSize['width'])) {
                 $resizeConfig->setWidth((int) $imageSize['width']);
             }
 
-            if (isset($imageSize['height'])) {
+            if (!empty($imageSize['height'])) {
                 $resizeConfig->setHeight((int) $imageSize['height']);
             }
 
-            if (isset($imageSize['zoom'])) {
+            if (!empty($imageSize['zoom'])) {
                 $resizeConfig->setZoomLevel((int) $imageSize['zoom']);
             }
 
-            if (isset($imageSize['resizeMode'])) {
+            if (!empty($imageSize['resizeMode'])) {
                 $resizeConfig->setMode((string) $imageSize['resizeMode']);
             }
 
             $configItem->setResizeConfig($resizeConfig);
 
-            if (isset($imageSize['sizes'])) {
+            if (!empty($imageSize['sizes'])) {
                 $configItem->setSizes((string) $imageSize['sizes']);
             }
 
-            if (isset($imageSize['densities'])) {
+            if (!empty($imageSize['densities'])) {
                 $configItem->setDensities((string) $imageSize['densities']);
             }
 
-            if (isset($imageSize['media'])) {
+            if (!empty($imageSize['media'])) {
                 $configItem->setMedia((string) $imageSize['media']);
             }
         }

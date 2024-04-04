@@ -44,7 +44,8 @@ class DefaultGlobalOperationsListener
 
         $operations = [];
 
-        // If none of the defined operations are name-only, we append the operations to the defaults.
+        // If none of the defined operations are name-only, we append the operations to
+        // the defaults.
         if (!array_filter($dca, static fn ($v, $k) => isset($defaults[$k]) || (\is_string($v) && isset($defaults[$v])), ARRAY_FILTER_USE_BOTH)) {
             $operations = $defaults;
         }

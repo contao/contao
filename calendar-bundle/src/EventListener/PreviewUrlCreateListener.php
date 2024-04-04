@@ -15,12 +15,14 @@ namespace Contao\CalendarBundle\EventListener;
 use Contao\CalendarEventsModel;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @internal
  */
+#[AsEventListener]
 class PreviewUrlCreateListener
 {
     public function __construct(
@@ -66,6 +68,6 @@ class PreviewUrlCreateListener
 
     private function getEventModel(int|string $id): CalendarEventsModel|null
     {
-        return $this->framework->getAdapter(CalendarEventsModel::class)->findByPk($id);
+        return $this->framework->getAdapter(CalendarEventsModel::class)->findById($id);
     }
 }

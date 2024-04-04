@@ -1,6 +1,7 @@
 name: Cypress
 
 on:
+    workflow_dispatch: ~
     schedule:
         - cron: 0 13 * * 1-5
 
@@ -13,12 +14,12 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                contao: [5.2, 5.x]
+                contao: [5.3, 5.x]
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.2
+                  php-version: 8.3 # highest version supported by all Contao versions in the matrix
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
 
@@ -40,6 +41,8 @@ jobs:
 
             - name: Checkout
               uses: actions/checkout@v3
+              with:
+                  ref: ${{ matrix.contao }}
 
             - name: Install the dependencies
               run: |
@@ -62,5 +65,5 @@ jobs:
               if: ${{ failure() && steps.cypress.conclusion == 'failure' }}
               with:
                   name: Cypress videos
-                  path: tools/cypress/videos
+                  path: cypress/videos
                   retention-days: 14

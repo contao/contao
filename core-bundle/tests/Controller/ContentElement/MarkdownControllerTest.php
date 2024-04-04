@@ -125,7 +125,7 @@ class MarkdownControllerTest extends ContentElementTestCase
             ->willReturn($tempTestFile)
         ;
 
-        $filesAdapter = $this->mockConfiguredAdapter(['findByPk' => $filesModel]);
+        $filesAdapter = $this->mockConfiguredAdapter(['findById' => $filesModel]);
         $container = $this->mockContainer('<h1>Headline</h1>'."\n", [FilesModel::class => $filesAdapter]);
 
         $contentModel = $this->mockClassWithProperties(ContentModel::class);

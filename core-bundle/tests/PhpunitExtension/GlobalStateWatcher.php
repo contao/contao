@@ -21,6 +21,7 @@ use PHPUnit\Runner\BeforeTestHook;
 use SebastianBergmann\Diff\Differ;
 use SebastianBergmann\Diff\Output\StrictUnifiedDiffOutputBuilder;
 use Symfony\Component\Config\Resource\ComposerResource;
+use Symfony\Component\Console\Terminal;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ParameterBag\EnvPlaceholderParameterBag;
 use Symfony\Component\HttpClient\Internal\CurlClientState;
@@ -178,6 +179,7 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
                 'Symfony\Component\VarDumper\\',
                 'Symfony\Component\Yaml\\',
                 'Webmozart\PathUtil\\',
+                Terminal::class,
             ] as $ignorePrefix) {
                 if (0 === strncmp("$ignorePrefix\\", $class, \strlen($ignorePrefix))) {
                     continue 2;

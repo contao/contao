@@ -103,7 +103,6 @@ class ModuleArticle extends Module
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$id = 'article-' . $this->id;
@@ -160,7 +159,6 @@ class ModuleArticle extends Module
 			{
 				$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 
-				/** @var HtmlHeadBag $htmlHeadBag */
 				$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
 				$htmlHeadBag->setTitle($htmlDecoder->inputEncodedToPlainText($this->title));
 

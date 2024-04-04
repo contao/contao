@@ -88,8 +88,8 @@ class MarkdownController extends AbstractContentElementController
         $environment->addExtension(new CommonMarkExtension($this->container->get('contao.insert_tag.parser')));
         $environment->addExtension(new CommonMarkCoreExtension());
 
-        // Support GitHub flavoured Markdown (using the individual extensions because we don't want the
-        // DisallowedRawHtmlExtension which is included by default)
+        // Support GitHub flavoured Markdown (using the individual extensions because we
+        // don't want the DisallowedRawHtmlExtension which is included by default)
         $environment->addExtension(new AutolinkExtension());
         $environment->addExtension(new StrikethroughExtension());
         $environment->addExtension(new TableExtension());
@@ -108,7 +108,7 @@ class MarkdownController extends AbstractContentElementController
         }
 
         $filesAdapter = $this->getContaoAdapter(FilesModel::class);
-        $filesModel = $filesAdapter->findByPk($file);
+        $filesModel = $filesAdapter->findById($file);
 
         if (!$filesModel instanceof FilesModel) {
             return '';

@@ -475,9 +475,14 @@ class PageModel extends Model
 	 * @param array   $arrOptions An optional options array
 	 *
 	 * @return PageModel|null The model or null if there is no 401 page
+	 *
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 *             use the contao.routing.page_finder service instead.
 	 */
 	public static function find401ByPid($intPid, array $arrOptions=array())
 	{
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the "contao.routing.page_finder" service instead.', __METHOD__);
+
 		$t = static::$strTable;
 		$arrColumns = array("$t.pid=? AND $t.type='error_401'");
 
@@ -502,9 +507,14 @@ class PageModel extends Model
 	 * @param array   $arrOptions An optional options array
 	 *
 	 * @return PageModel|null The model or null if there is no 403 page
+	 *
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 *             use the contao.routing.page_finder service instead.
 	 */
 	public static function find403ByPid($intPid, array $arrOptions=array())
 	{
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the "contao.routing.page_finder" service instead.', __METHOD__);
+
 		$t = static::$strTable;
 		$arrColumns = array("$t.pid=? AND $t.type='error_403'");
 
@@ -529,9 +539,14 @@ class PageModel extends Model
 	 * @param array   $arrOptions An optional options array
 	 *
 	 * @return PageModel|null The model or null if there is no 404 page
+	 *
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 *             use the contao.routing.page_finder service instead.
 	 */
 	public static function find404ByPid($intPid, array $arrOptions=array())
 	{
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the "contao.routing.page_finder" service instead.', __METHOD__);
+
 		$t = static::$strTable;
 		$arrColumns = array("$t.pid=? AND $t.type='error_404'");
 
@@ -712,10 +727,9 @@ class PageModel extends Model
 		// Try to load from the registry (see #8544)
 		if (empty($arrOptions))
 		{
-			/** @var PageModel|null $objModel */
 			$objModel = Registry::getInstance()->fetch(static::$strTable, $strHost, 'contao.dns-fallback');
 
-			if ($objModel !== null)
+			if ($objModel instanceof self)
 			{
 				return $objModel;
 			}
@@ -780,7 +794,7 @@ class PageModel extends Model
 	{
 		$arrModels = array();
 
-		while ($intId > 0 && ($objPage = static::findByPk($intId)) !== null)
+		while ($intId > 0 && ($objPage = static::findById($intId)) !== null)
 		{
 			$intId = $objPage->pid;
 			$arrModels[] = $objPage;
@@ -821,10 +835,9 @@ class PageModel extends Model
 			return null;
 		}
 
-		$objRegistry = Registry::getInstance();
+		$objPage = Registry::getInstance()->fetch('tl_page', $objResult->id);
 
-		/** @var PageModel|Model $objPage */
-		if ($objPage = $objRegistry->fetch('tl_page', $objResult->id))
+		if ($objPage instanceof self)
 		{
 			return $objPage;
 		}
@@ -841,7 +854,7 @@ class PageModel extends Model
 	 */
 	public static function findWithDetails($intId)
 	{
-		return static::findByPk($intId)?->loadDetails();
+		return static::findById($intId)?->loadDetails();
 	}
 
 	/**

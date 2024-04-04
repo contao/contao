@@ -14,7 +14,6 @@ use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Knp\Bundle\TimeBundle\DateTimeFormatter;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 /**
  * Main back end controller.
@@ -114,7 +113,6 @@ class BackendMain extends Backend
 		// Toggle nodes
 		if (Input::get('mtg'))
 		{
-			/** @var AttributeBagInterface $objSessionBag */
 			$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 			$session = $objSessionBag->all();
 			$session['backend_modules'][Input::get('mtg')] = (isset($session['backend_modules'][Input::get('mtg')]) && $session['backend_modules'][Input::get('mtg')] == 0) ? 1 : 0;
@@ -199,7 +197,14 @@ class BackendMain extends Backend
 	{
 		$this->Template->setData($this->compileTemplateData($this->Template->getData()));
 
-		return $this->Template->getResponse();
+		$response = $this->Template->getResponse();
+
+		if (Input::get('popup') !== null)
+		{
+			$response->headers->set('Content-Security-Policy', "frame-ancestors 'self'", false);
+		}
+
+		return $response;
 	}
 
 	/**

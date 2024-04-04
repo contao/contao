@@ -58,7 +58,7 @@ class TextControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<HTML
-            <div class="$classes content-text">
+            <div class="content-text $classes">
                 <figure>
                     <img src="files/image1.jpg" alt>
                 </figure>

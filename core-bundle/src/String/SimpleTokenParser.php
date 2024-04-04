@@ -100,7 +100,7 @@ class SimpleTokenParser implements LoggerAwareInterface
     {
         // Replace tokens
         return preg_replace_callback(
-            '/##([^=!<>\s]+?)##/',
+            '/##([^#=!<>\s][^=!<>\s]*?)##/',
             function (array $matches) use ($data) {
                 if (!\array_key_exists($matches[1], $data)) {
                     $this->logger?->log(LogLevel::INFO, sprintf('Tried to parse unknown simple token "%s".', $matches[1]));
@@ -160,7 +160,8 @@ class SimpleTokenParser implements LoggerAwareInterface
 
             $value = $tokens[$i]->value;
 
-            // Skip constant nodes (see Symfony/Component/ExpressionLanguage/Parser#parsePrimaryExpression()
+            // Skip constant nodes
+            /** @see Symfony/Component/ExpressionLanguage/Parser#parsePrimaryExpression() */
             if (\in_array($value, ['true', 'TRUE', 'false', 'FALSE', 'null'], true)) {
                 continue;
             }

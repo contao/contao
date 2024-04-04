@@ -53,7 +53,8 @@ class ContentUrlGenerator implements ResetInterface, RequestContextAwareInterfac
         try {
             $cacheKey = sha1(serialize($content)."\0".serialize($parameters)."\0".$referenceType);
         } catch (\Throwable) {
-            // If $content or $parameters is not serializable, e.g. contains closures, simply skip the cache.
+            // If $content or $parameters is not serializable, e.g. contains closures, simply
+            // skip the cache.
             $cacheKey = null;
         }
 

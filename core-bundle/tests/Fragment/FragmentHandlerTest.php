@@ -19,6 +19,7 @@ use Contao\CoreBundle\Fragment\FragmentPreHandlerInterface;
 use Contao\CoreBundle\Fragment\FragmentRegistry;
 use Contao\CoreBundle\Fragment\Reference\FragmentReference;
 use Contao\CoreBundle\Fragment\UnknownFragmentException;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Contao\System;
@@ -152,12 +153,15 @@ class FragmentHandlerTest extends TestCase
 
         $renderers = $this->mockServiceLocatorWithRenderer('inline', [$callback]);
 
-        $GLOBALS['objPage'] = $this->mockClassWithProperties(PageModel::class, ['id' => 42]);
+        $pageFinder = $this->createMock(PageFinder::class);
+        $pageFinder
+            ->expects($this->once())
+            ->method('getCurrentPage')
+            ->willReturn($this->mockClassWithProperties(PageModel::class, ['id' => 42]))
+        ;
 
-        $fragmentHandler = $this->getFragmentHandler($fragmentRegistry, $renderers);
+        $fragmentHandler = $this->getFragmentHandler($fragmentRegistry, $renderers, pageFinder: $pageFinder);
         $fragmentHandler->render($uri);
-
-        unset($GLOBALS['objPage']);
     }
 
     public function testDoesNotOverrideAGivenPageId(): void
@@ -173,12 +177,14 @@ class FragmentHandlerTest extends TestCase
 
         $renderers = $this->mockServiceLocatorWithRenderer('inline', [$callback]);
 
-        $GLOBALS['objPage'] = $this->mockClassWithProperties(PageModel::class, ['id' => 42]);
+        $pageFinder = $this->createMock(PageFinder::class);
+        $pageFinder
+            ->expects($this->never())
+            ->method('getCurrentPage')
+        ;
 
-        $fragmentHandler = $this->getFragmentHandler($fragmentRegistry, $renderers);
+        $fragmentHandler = $this->getFragmentHandler($fragmentRegistry, $renderers, pageFinder: $pageFinder);
         $fragmentHandler->render($uri);
-
-        unset($GLOBALS['objPage']);
     }
 
     public function testExecutesThePreHandlers(): void
@@ -245,18 +251,19 @@ class FragmentHandlerTest extends TestCase
      * @param ServiceLocator<mixed>|null $renderers
      * @param ServiceLocator<mixed>|null $preHandlers
      */
-    private function getFragmentHandler(FragmentRegistry|null $registry = null, ServiceLocator|null $renderers = null, ServiceLocator|null $preHandlers = null, Request|null $request = null, BaseFragmentHandler|null $fragmentHandler = null): FragmentHandler
+    private function getFragmentHandler(FragmentRegistry|null $registry = null, ServiceLocator|null $renderers = null, ServiceLocator|null $preHandlers = null, Request|null $request = null, BaseFragmentHandler|null $fragmentHandler = null, PageFinder|null $pageFinder = null): FragmentHandler
     {
         $registry ??= new FragmentRegistry();
         $renderers ??= new ServiceLocator([]);
         $preHandlers ??= new ServiceLocator([]);
         $request ??= new Request();
         $fragmentHandler ??= $this->createMock(BaseFragmentHandler::class);
+        $pageFinder ??= $this->createMock(PageFinder::class);
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        return new FragmentHandler($renderers, $fragmentHandler, $requestStack, $registry, $preHandlers, true);
+        return new FragmentHandler($renderers, $fragmentHandler, $requestStack, $registry, $preHandlers, $pageFinder, true);
     }
 
     /**

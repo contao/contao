@@ -16,12 +16,14 @@ use Contao\CalendarEventsModel;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @internal
  */
+#[AsEventListener]
 class PreviewUrlConvertListener
 {
     public function __construct(
@@ -52,6 +54,6 @@ class PreviewUrlConvertListener
             return null;
         }
 
-        return $this->framework->getAdapter(CalendarEventsModel::class)->findByPk($request->query->get('calendar'));
+        return $this->framework->getAdapter(CalendarEventsModel::class)->findById($request->query->get('calendar'));
     }
 }

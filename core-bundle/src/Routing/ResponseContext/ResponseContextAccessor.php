@@ -62,7 +62,6 @@ class ResponseContextAccessor
         }
 
         if ($responseContext->has(CspHandler::class)) {
-            /** @var CspHandler $csp */
             $csp = $responseContext->get(CspHandler::class);
             $csp->applyHeaders($response, $this->requestStack->getCurrentRequest());
         }

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\NewsBundle\EventListener;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\LayoutModel;
@@ -24,6 +25,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 /**
  * @internal
  */
+#[AsHook('generatePage')]
 class GeneratePageListener
 {
     public function __construct(

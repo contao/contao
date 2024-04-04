@@ -142,7 +142,7 @@ class BackendAccessVoter extends Voter implements ResetInterface
         }
 
         if (!\is_array($subject)) {
-            $page = $this->framework->getAdapter(PageModel::class)->findByPk($subject);
+            $page = $this->framework->getAdapter(PageModel::class)->findById($subject);
 
             if (!$page instanceof PageModel) {
                 return false;

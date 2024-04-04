@@ -121,7 +121,6 @@ trait TemplateTrait
 			return;
 		}
 
-		/** @var JsonLdManager $jsonLdManager */
 		$jsonLdManager = $responseContext->get(JsonLdManager::class);
 		$type = $jsonLdManager->createSchemaOrgTypeFromArray($jsonLd);
 
@@ -142,7 +141,7 @@ trait TemplateTrait
 	/**
 	 * Returns a nonce for the given CSP directive.
 	 */
-	public function nonce(string $directive): ?string
+	public function nonce(string $directive): string|null
 	{
 		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
@@ -151,16 +150,13 @@ trait TemplateTrait
 			return null;
 		}
 
-		/** @var CspHandler $csp */
-		$csp = $responseContext->get(CspHandler::class);
-
-		return $csp->getNonce($directive);
+		return $responseContext->get(CspHandler::class)->getNonce($directive);
 	}
 
 	/**
 	 * Adds a source to the given CSP directive.
 	 */
-	public function addCspSource(string $directive, string $source): void
+	public function addCspSource(string|array $directives, string $source): void
 	{
 		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
@@ -169,9 +165,12 @@ trait TemplateTrait
 			return;
 		}
 
-		/** @var CspHandler $csp */
 		$csp = $responseContext->get(CspHandler::class);
-		$csp->addSource($directive, $source);
+
+		foreach ((array) $directives as $directive)
+		{
+			$csp->addSource($directive, $source);
+		}
 	}
 
 	/**
@@ -186,9 +185,77 @@ trait TemplateTrait
 			return;
 		}
 
-		/** @var CspHandler $csp */
 		$csp = $responseContext->get(CspHandler::class);
 		$csp->addHash($directive, $script, $algorithm);
+	}
+
+	/**
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 *             use cspUnsafeInlineStyle() instead.
+	 */
+	public function cspInlineStyle(string $style, string $algorithm = 'sha384'): string
+	{
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use "cspUnsafeInlineStyle()" instead.', __METHOD__);
+
+		return $this->cspUnsafeInlineStyle($style, $algorithm);
+	}
+
+	/**
+	 * Adds a CSP hash for a given inline style and also adds the 'unsafe-hashes' source to the directive automatically.
+	 *
+	 * ATTENTION: Only pass trusted styles to this method!
+	 */
+	public function cspUnsafeInlineStyle(string $style, string $algorithm = 'sha384'): string
+	{
+		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
+
+		if ($responseContext?->has(CspHandler::class))
+		{
+			$csp = $responseContext->get(CspHandler::class);
+			$csp
+				->addHash('style-src', $style, $algorithm)
+				->addSource('style-src', "'unsafe-hashes'")
+			;
+		}
+
+		return $style;
+	}
+
+	/**
+	 * Extracts all inline CSS style attributes of a given HTML string and automatically adds CSP hashes for those
+	 * to the current response context. The list of allowed styles can be configured in contao.csp.allowed_inline_styles.
+	 */
+	public function cspInlineStyles(string|null $html): string|null
+	{
+		if (!$html)
+		{
+			return $html;
+		}
+
+		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
+
+		if (!$responseContext?->has(CspHandler::class))
+		{
+			return $html;
+		}
+
+		$styleProcessor = System::getContainer()->get('contao.csp.wysiwyg_style_processor');
+
+		if (!$styles = $styleProcessor->extractStyles($html))
+		{
+			return $html;
+		}
+
+		$csp = $responseContext->get(CspHandler::class);
+
+		foreach ($styles as $style)
+		{
+			$csp->addHash('style-src', $style);
+		}
+
+		$csp->addSource('style-src', "'unsafe-hashes'");
+
+		return $html;
 	}
 
 	/**

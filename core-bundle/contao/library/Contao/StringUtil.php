@@ -228,7 +228,7 @@ class StringUtil
 	 */
 	public static function convertBasicEntities($strBuffer)
 	{
-		return str_replace(array('&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;'), array('[&]', '[lt]', '[gt]', '[nbsp]', '[-]'), $strBuffer);
+		return str_replace(array('&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;', '&ZeroWidthSpace;'), array('[&]', '[lt]', '[gt]', '[nbsp]', '[-]', '[zwsp]'), $strBuffer);
 	}
 
 	/**
@@ -240,7 +240,7 @@ class StringUtil
 	 */
 	public static function restoreBasicEntities($strBuffer)
 	{
-		return str_replace(array('[&]', '[&amp;]', '[lt]', '[gt]', '[nbsp]', '[-]'), array('&amp;', '&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;'), $strBuffer);
+		return str_replace(array('[&]', '[&amp;]', '[lt]', '[gt]', '[nbsp]', '[-]', '[zwsp]'), array('&amp;', '&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;', '&ZeroWidthSpace;'), $strBuffer);
 	}
 
 	/**
@@ -820,7 +820,7 @@ class StringUtil
 			$strString = static::stripInsertTags($strString);
 		}
 
-		return htmlspecialchars((string) $strString, ENT_QUOTES, 'UTF-8', $blnDoubleEncode);
+		return htmlspecialchars((string) $strString, ENT_QUOTES | ENT_HTML5, 'UTF-8', $blnDoubleEncode);
 	}
 
 	/**

@@ -54,7 +54,8 @@ class BackendController extends AbstractController
             if ($request->query->has('redirect')) {
                 $uriSigner = $this->container->get('uri_signer');
 
-                // We cannot use $request->getUri() here as we want to work with the original URI (no query string reordering)
+                // We cannot use $request->getUri() here as we want to work with the original URI
+                // (no query string reordering)
                 if ($uriSigner->check($request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo().(null !== ($qs = $request->server->get('QUERY_STRING')) ? '?'.$qs : ''))) {
                     return new RedirectResponse($request->query->get('redirect'));
                 }

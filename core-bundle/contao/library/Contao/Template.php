@@ -60,7 +60,7 @@ use Symfony\Component\VarDumper\VarDumper;
  * @property array        $trustedDevices
  * @property string       $currentDevice
  *
- * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0;
+ * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6;
  *             use Twig templates instead
  */
 abstract class Template extends Controller
@@ -459,7 +459,6 @@ abstract class Template extends Controller
 
 		if ($responseContext?->has(CspHandler::class))
 		{
-			/** @var CspHandler $csp */
 			$csp = $responseContext->get(CspHandler::class);
 			$nonce = $csp->getNonce('style-src');
 		}
@@ -526,7 +525,6 @@ abstract class Template extends Controller
 
 		if ($responseContext?->has(CspHandler::class))
 		{
-			/** @var CspHandler $csp */
 			$csp = $responseContext->get(CspHandler::class);
 			$nonce = $csp->getNonce('script-src');
 		}

@@ -19,6 +19,7 @@ use Contao\Controller;
 use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
+use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\File\MetadataBag;
@@ -30,6 +31,7 @@ use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
@@ -37,6 +39,7 @@ use Contao\CoreBundle\Tests\Image\Studio\FigureBuilderStub;
 use Contao\CoreBundle\Tests\Image\Studio\ImageResultStub;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
+use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
@@ -48,11 +51,13 @@ use Contao\CoreBundle\Twig\Runtime\FragmentRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
+use Contao\CoreBundle\Twig\Runtime\StringRuntime;
 use Contao\DcaExtractor;
 use Contao\DcaLoader;
 use Contao\Input;
 use Contao\InsertTags;
 use Contao\PageModel;
+use Contao\StringUtil;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Highlight\Highlighter;
@@ -79,6 +84,8 @@ class ContentElementTestCase extends TestCase
     final public const FILE_IMAGE2 = '7ebca224-553f-4f36-b853-e6f3af3eff42';
 
     final public const FILE_IMAGE3 = '3045209c-b73d-4a69-b30b-cda8c8008099';
+
+    final public const FILE_IMAGE_MISSING = '33389f37-b15c-4990-910d-49fd93adcf93';
 
     final public const FILE_VIDEO_MP4 = 'e802b519-8e08-4075-913c-7603ec6f2376';
 
@@ -108,7 +115,7 @@ class ContentElementTestCase extends TestCase
     /**
      * @param array<string, mixed> $modelData
      *
-     * @param-out array<string, array<int|string, string>> $responseContextData
+     * @param-out array $responseContextData
      */
     protected function renderWithModelData(AbstractContentElementController $controller, array $modelData, string|null $template = null, bool $asEditorView = false, array|null &$responseContextData = null, ContainerBuilder|null $adjustedContainer = null, array $nestedFragments = []): Response
     {
@@ -207,7 +214,7 @@ class ContentElementTestCase extends TestCase
 
     protected function normalizeWhiteSpaces(string $string): string
     {
-        // see https://stackoverflow.com/questions/5312349/minifying-final-html-output-using-regular-expressions-with-codeigniter
+        // https://stackoverflow.com/questions/5312349/minifying-final-html-output-using-regular-expressions-with-codeigniter
         $minifyRegex = '(                         # Collapse ws everywhere but in blacklisted elements
             (?>                                   # Match all whitespans other than single space
                 [^\S ]\s*                         # Either one [\t\r\n\f\v] and zero or more ws,
@@ -253,18 +260,14 @@ class ContentElementTestCase extends TestCase
             $this->createMock(Connection::class),
         );
 
-        $loader = new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $themeNamespace);
-
-        foreach ($templateLocator->findResourcesPaths() as $name => $resourcesPaths) {
-            foreach ($resourcesPaths as $path) {
-                $loader->addPath($path);
-                $loader->addPath($path, "Contao_$name", true);
-            }
-        }
-
-        $loader->buildInheritanceChains();
-
-        return $loader;
+        return new ContaoFilesystemLoader(
+            new NullAdapter(),
+            $templateLocator,
+            $themeNamespace,
+            $this->createMock(ContaoFramework::class),
+            $this->createMock(PageFinder::class),
+            $resourceBasePath,
+        );
     }
 
     protected function getEnvironment(ContaoFilesystemLoader $contaoFilesystemLoader, ContaoFramework $framework): Environment
@@ -297,6 +300,7 @@ class ContentElementTestCase extends TestCase
                 $environment,
                 $contaoFilesystemLoader,
                 $this->createMock(ContaoCsrfTokenManager::class),
+                $this->createMock(ContaoVariable::class),
             ),
         );
 
@@ -311,7 +315,8 @@ class ContentElementTestCase extends TestCase
                 HighlighterRuntime::class => static fn () => new HighlighterRuntime(),
                 SchemaOrgRuntime::class => static fn () => new SchemaOrgRuntime($responseContextAccessor),
                 FormatterRuntime::class => static fn () => new FormatterRuntime($framework),
-                CspRuntime::class => static fn () => new CspRuntime($responseContextAccessor),
+                CspRuntime::class => static fn () => new CspRuntime($responseContextAccessor, new WysiwygStyleProcessor([])),
+                StringRuntime::class => static fn () => new StringRuntime($framework),
             ]),
         );
 
@@ -348,6 +353,7 @@ class ContentElementTestCase extends TestCase
                         ),
                         self::FILE_IMAGE2 => new FilesystemItem(true, 'image2.jpg', null, null, 'image/jpeg'),
                         self::FILE_IMAGE3 => new FilesystemItem(true, 'image3.jpg', null, null, 'image/jpeg'),
+                        self::FILE_IMAGE_MISSING => new FilesystemItem(true, 'image_missing.jpg', null, null, 'image/jpeg'),
                         self::FILE_VIDEO_MP4 => new FilesystemItem(true, 'video.mp4', null, null, 'video/mp4'),
                         self::FILE_VIDEO_OGV => new FilesystemItem(true, 'video.ogv', null, null, 'video/ogg'),
                     ];
@@ -509,12 +515,19 @@ class ContentElementTestCase extends TestCase
             ->willReturnOnConsecutiveCalls(...array_map(static fn ($el) => $el->getContentModel()->type, $nestedFragments))
         ;
 
+        $stringUtil = $this->mockAdapter(['encodeEmail']);
+        $stringUtil
+            ->method('encodeEmail')
+            ->willReturnArgument(0)
+        ;
+
         return $this->mockContaoFramework([
             Config::class => $configAdapter,
             Input::class => $inputAdapter,
             PageModel::class => $pageAdapter,
             ArticleModel::class => $articleAdapter,
             Controller::class => $controllerAdapter,
+            StringUtil::class => $stringUtil,
         ]);
     }
 }

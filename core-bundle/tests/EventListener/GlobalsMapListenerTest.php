@@ -49,7 +49,7 @@ class GlobalsMapListenerTest extends TestCase
         yield 'add to existing group' => [
             ['texts' => ['text' => 'LegacyText']],
             ['texts' => ['headline' => 'HeadlineFragment']],
-            ['texts' => ['headline' => 'HeadlineFragment', 'text' => 'LegacyText']],
+            ['texts' => ['text' => 'LegacyText', 'headline' => 'HeadlineFragment']],
         ];
 
         yield 'prefer existing entries' => [

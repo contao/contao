@@ -494,7 +494,7 @@ class Input
 	 *
 	 * @return mixed The clean name or array of names
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
 	 */
 	public static function cleanKey($varValue)
 	{
@@ -639,7 +639,7 @@ class Input
 		// Match every single starting and closing tag or special characters outside of tags
 		return preg_replace_callback(
 			'@</?([^\s<>/]*)([^<>]*)>?|-->|[>"\'=]+@',
-			static function ($matches) use ($strAllowedTags, $arrAllowedAttributes, &$blnCommentOpen, &$strOpenRawtext) {
+			static function ($matches) use (&$strOpenRawtext, &$blnCommentOpen, $strAllowedTags, $arrAllowedAttributes) {
 				$strTagName = strtolower($matches[1] ?? '');
 
 				if ($strOpenRawtext === $strTagName && '/' === $matches[0][1])
@@ -700,7 +700,7 @@ class Input
 				// Only keep allowed attributes
 				$arrAttributes = array_filter(
 					$arrAttributes,
-					static function ($strAttribute) use ($strTagName, $arrAllowedAttributes) {
+					static function ($strAttribute) use ($arrAllowedAttributes, $strTagName) {
 						// Skip if all attributes are allowed
 						if (\in_array('*', $arrAllowedAttributes[$strTagName] ?? array(), true))
 						{
@@ -809,7 +809,7 @@ class Input
 	 *
 	 * @return mixed The cleaned string or array
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
 	 */
 	public static function xssClean($varValue, $blnStrictMode=false)
 	{
@@ -928,7 +928,7 @@ class Input
 	 *
 	 * @return mixed The decoded string or array
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
 	 */
 	public static function decodeEntities($varValue)
 	{
@@ -964,7 +964,7 @@ class Input
 	 *
 	 * @return mixed The string or array with the converted entities
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
 	 */
 	public static function preserveBasicEntities($varValue)
 	{
@@ -1003,7 +1003,7 @@ class Input
 	 *
 	 * @return mixed The encoded string or array
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
 	 */
 	public static function encodeSpecialChars($varValue)
 	{

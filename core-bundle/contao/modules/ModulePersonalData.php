@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ResponseException;
 
 /**
@@ -49,10 +50,26 @@ class ModulePersonalData extends Module
 
 		$this->editable = StringUtil::deserialize($this->editable);
 
-		// Return if there are no editable fields or if there is no logged-in user
-		if (empty($this->editable) || !\is_array($this->editable) || !$container->get('contao.security.token_checker')->hasFrontendUser())
+		// Return if there are no editable fields
+		if (empty($this->editable) || !\is_array($this->editable))
 		{
 			return '';
+		}
+
+		$security = $container->get('security.helper');
+
+		// Return if there is no logged-in user
+		if (!$security->getUser() instanceof FrontendUser)
+		{
+			return '';
+		}
+
+		// Always require full authentication if the module allows to set a new password
+		$reqFullAuth = $this->reqFullAuth || \in_array('password', $this->editable, true);
+
+		if ($reqFullAuth && !$security->isGranted('IS_AUTHENTICATED_FULLY'))
+		{
+			throw new AccessDeniedException('Full authentication is required to edit the personal data.');
 		}
 
 		if ($this->memberTpl)
@@ -105,7 +122,7 @@ class ModulePersonalData extends Module
 
 		$blnModified = false;
 		$user = FrontendUser::getInstance();
-		$objMember = MemberModel::findByPk($user->id);
+		$objMember = MemberModel::findById($user->id);
 		$strTable = $objMember->getTable();
 		$strFormId = 'tl_member_' . $this->id;
 		$session = System::getContainer()->get('request_stack')->getSession();
@@ -139,6 +156,7 @@ class ModulePersonalData extends Module
 				$arrData['inputType'] = 'upload';
 			}
 
+			/** @var class-string<Widget> $strClass */
 			$strClass = $GLOBALS['TL_FFL'][$arrData['inputType'] ?? null] ?? null;
 
 			// Continue if the class does not exist
@@ -191,7 +209,6 @@ class ModulePersonalData extends Module
 				}
 			}
 
-			/** @var Widget $objWidget */
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrData, $field, $varValue, $field, $strTable, $this));
 
 			// Append the module ID to prevent duplicate IDs (see #1493)
@@ -356,7 +373,7 @@ class ModulePersonalData extends Module
 			}
 
 			// Check whether there is a jumpTo page
-			if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
+			if ($objJumpTo = PageModel::findById($this->objModel->jumpTo))
 			{
 				$this->jumpToOrReload($objJumpTo->row());
 			}

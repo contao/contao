@@ -28,7 +28,6 @@ class PageError404 extends Frontend
 	 */
 	public function getResponse($page=null)
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$obj404 = $this->prepare($page);

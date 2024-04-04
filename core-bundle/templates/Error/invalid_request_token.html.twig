@@ -7,6 +7,7 @@
     <p>{{ 'XPT.invalidToken'|trans }}</p>
 {% endblock %}
 {% block howToFix %}
+    <p><a href="javascript:window.location.href=window.location.href" class="button">{{ 'XPT.tokenReload'|trans }}</a></p>
     <p>{{ 'XPT.tokenRetry'|trans|raw }}</p>
 {% endblock %}
 {% block explain %}

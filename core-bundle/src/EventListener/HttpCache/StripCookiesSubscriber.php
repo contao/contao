@@ -17,9 +17,6 @@ use FOS\HttpCache\SymfonyCache\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @internal
- */
 class StripCookiesSubscriber implements EventSubscriberInterface
 {
     private const DENY_LIST = [
@@ -29,17 +26,20 @@ class StripCookiesSubscriber implements EventSubscriberInterface
         // Modals are always for JS only
         '(.*)?modal(.*)?',
 
-        // Google Analytics (https://developers.google.com/analytics/devguides/collection/analyticsjs/cookie-usage)
+        // Google Analytics
+        // https://developers.google.com/analytics/devguides/collection/analyticsjs/cookie-usage
         '_ga.*',
         '_gid',
         '_dc_gtm_.+',
         'AMP_TOKEN',
         '__utm.+',
 
-        // Google Conversion Linker (https://support.google.com/tagmanager/answer/7549390)
+        // Google Conversion Linker
+        // https://support.google.com/tagmanager/answer/7549390
         '_gcl.*',
 
-        // Matomo (https://matomo.org/faq/general/faq_146/)
+        // Matomo
+        // https://matomo.org/faq/general/faq_146/
         '_pk_id.*',
         '_pk_ref.*',
         '_pk_ses.*',
@@ -69,6 +69,9 @@ class StripCookiesSubscriber implements EventSubscriberInterface
 
         // Cookiebot Cookie Consent
         'CookieConsent',
+
+        // Cypress
+        '__cypress_initial',
     ];
 
     private array $removeFromDenyList = [];

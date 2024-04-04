@@ -189,7 +189,7 @@ services:
 
     Contao\CoreBundle\Controller\Page\RedirectPageController:
         arguments:
-            - '@contao.insert_tag.parser'
+            - '@contao.routing.content_url_generator'
 
     Contao\CoreBundle\Controller\Page\RootPageController:
         arguments:

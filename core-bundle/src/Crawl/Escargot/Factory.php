@@ -121,11 +121,9 @@ class Factory
         $this->framework->initialize();
 
         $collection = new BaseUriCollection();
-
         $pageModel = $this->framework->getAdapter(PageModel::class);
-        $rootPages = $pageModel->findPublishedRootPages();
 
-        if (null === $rootPages) {
+        if (!$rootPages = $pageModel->findPublishedRootPages()) {
             return $collection;
         }
 

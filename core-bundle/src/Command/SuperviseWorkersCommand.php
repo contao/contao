@@ -42,11 +42,6 @@ class SuperviseWorkersCommand extends Command
         parent::__construct();
     }
 
-    public static function create(ContainerInterface $messengerTransportLocator, ProcessUtil $processUtil, string $storageDirectory, array $workers): self
-    {
-        return new self($messengerTransportLocator, $processUtil, new Supervisor($storageDirectory), $workers);
-    }
-
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
@@ -84,13 +79,11 @@ class SuperviseWorkersCommand extends Command
         return new BasicCommand(
             $identifier,
             $desiredWorkers,
-            function () use ($worker) {
-                return $this->processUtil->createSymfonyConsoleProcess(
-                    'messenger:consume',
-                    ...$worker['options'],
-                    ...$worker['transports'],
-                );
-            },
+            fn () => $this->processUtil->createSymfonyConsoleProcess(
+                'messenger:consume',
+                ...$worker['options'],
+                ...$worker['transports'],
+            ),
         );
     }
 

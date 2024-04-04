@@ -249,7 +249,8 @@ class VirtualFilesystemTest extends TestCase
         ;
 
         $mountManager
-            // Called once each for directoryExists() and once each for has() if resource does not exist
+            // Called once each for directoryExists() and once each for has() if resource
+            // does not exist
             ->expects($this->exactly($resourceExists ? 2 : 4))
             ->method('directoryExists')
             ->with('prefix/path')
@@ -930,9 +931,8 @@ class VirtualFilesystemTest extends TestCase
 
     public function testFailsWithNonUtf8Paths(): void
     {
-        // Set a compatible codepage under Windows, so that dirname() calls
-        // used in the InMemoryFilesystemAdapter implementation do not alter
-        // our non-UTF-8 test paths.
+        // Set a compatible codepage under Windows, so that dirname() calls used in the
+        // InMemoryFilesystemAdapter implementation do not alter our non-UTF-8 test paths.
         if (\function_exists('sapi_windows_cp_set')) {
             sapi_windows_cp_set(1252);
         }

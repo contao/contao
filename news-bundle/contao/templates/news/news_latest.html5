@@ -12,7 +12,7 @@
   <h2><?= $this->linkHeadline ?></h2>
 
   <div class="ce_text block">
-    <?= $this->teaser ?>
+    <?= $this->cspInlineStyles($this->teaser) ?>
   </div>
 
   <?php if ($this->hasText || $this->hasTeaser): ?>

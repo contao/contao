@@ -18,7 +18,7 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Util\UrlUtil;
 use Contao\Database\Result;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\Glob;
@@ -64,7 +64,6 @@ abstract class Controller extends System
 		// Check for a theme folder
 		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request))
 		{
-			/** @var PageModel|null $objPage */
 			global $objPage;
 
 			if ($objPage->templateGroup ?? null)
@@ -122,7 +121,6 @@ abstract class Controller extends System
 		$arrMapper['mod'][] = 'article';
 		$arrMapper['mod'][] = 'message';
 
-		/** @var TemplateHierarchyInterface $templateHierarchy */
 		$templateHierarchy = System::getContainer()->get('contao.twig.filesystem_loader');
 		$identifierPattern = sprintf('/^%s%s/', preg_quote($strPrefix, '/'), !str_ends_with($strPrefix, '_') ? '($|_)' : '');
 
@@ -296,7 +294,6 @@ abstract class Controller extends System
 			return '';
 		}
 
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Articles
@@ -374,7 +371,7 @@ abstract class Controller extends System
 		}
 		else
 		{
-			$objRow = ModuleModel::findByPk($intId);
+			$objRow = ModuleModel::findById($intId);
 
 			if ($objRow === null)
 			{
@@ -388,6 +385,7 @@ abstract class Controller extends System
 			return '';
 		}
 
+		/** @var class-string<Module> $strClass */
 		$strClass = Module::findClass($objRow->type);
 
 		// Return if the class does not exist
@@ -408,7 +406,6 @@ abstract class Controller extends System
 
 		$objRow->typePrefix = 'mod_';
 
-		/** @var Module $objModule */
 		$objModule = new $strClass($objRow, $strColumn);
 		$strBuffer = $objModule->generate();
 
@@ -447,7 +444,6 @@ abstract class Controller extends System
 	 */
 	public static function getArticle($varId, $blnMultiMode=false, $blnIsInsertTag=false, $strColumn='main')
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		if (\is_object($varId))
@@ -547,7 +543,7 @@ abstract class Controller extends System
 				return '';
 			}
 
-			$objRow = ContentModel::findByPk($intId);
+			$objRow = ContentModel::findById($intId);
 
 			if ($objRow === null)
 			{
@@ -561,6 +557,7 @@ abstract class Controller extends System
 			return '';
 		}
 
+		/** @var class-string<ContentElement> $strClass */
 		$strClass = ContentElement::findClass($objRow->type);
 
 		// Return if the class does not exist
@@ -597,7 +594,6 @@ abstract class Controller extends System
 		}
 		else
 		{
-			/** @var ContentElement $objElement */
 			$objElement = new $strClass($objRow, $strColumn);
 		}
 
@@ -656,6 +652,7 @@ abstract class Controller extends System
 			}
 		}
 
+		/** @var class-string<Form> $strClass */
 		$strClass = $blnModule ? Module::findClass('form') : ContentElement::findClass('form');
 
 		if (!class_exists($strClass))
@@ -668,7 +665,6 @@ abstract class Controller extends System
 		$objRow->typePrefix = $blnModule ? 'mod_' : 'ce_';
 		$objRow->form = $objRow->id;
 
-		/** @var Form $objElement */
 		$objElement = new $strClass($objRow, $strColumn);
 		$strBuffer = $objElement->generate();
 
@@ -818,10 +814,9 @@ abstract class Controller extends System
 			$strScripts .= implode('', array_unique($GLOBALS['TL_BODY']));
 		}
 
-		/** @var PageModel|null $objPage */
 		global $objPage;
 
-		$objLayout = ($objPage !== null) ? LayoutModel::findByPk($objPage->layoutId) : null;
+		$objLayout = ($objPage !== null) ? LayoutModel::findById($objPage->layoutId) : null;
 		$blnCombineScripts = $objLayout !== null && $objLayout->combineScripts;
 
 		$arrReplace["[[TL_BODY_$nonce]]"] = $strScripts;
@@ -1130,7 +1125,7 @@ abstract class Controller extends System
 
 			if (!preg_match('@^(?:[a-z0-9]+:|#|{{)@i', $strUrl))
 			{
-				$strUrl = $strBase . (($strUrl != '/') ? $strUrl : '');
+				$strUrl = UrlUtil::makeAbsolute($strUrl, $strBase);
 			}
 
 			$strContent .= $strAttribute . '="' . $strUrl . '"';
@@ -1222,8 +1217,8 @@ abstract class Controller extends System
 	 *
 	 * @return string The URL of the target page
 	 *
-	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6.0.
-	 *             Use the contao_backend_preview route instead.
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 *             use the contao_backend_preview route instead.
 	 */
 	protected function redirectToFrontendPage($intPage, $strArticle=null, $blnReturn=false)
 	{
@@ -1270,55 +1265,41 @@ abstract class Controller extends System
 	 */
 	protected function getParentEntries($strTable, $intId)
 	{
-		// No parent table
-		if (empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']))
-		{
-			return '';
-		}
+		$getParentEntry = function ($table, $id) {
+			$this->loadDataContainer($table);
 
-		$db = Database::getInstance();
-		$arrParent = array();
-		$strParentTable = $strTable;
-		$intLastId = null;
-		$strLastParentTable = null;
+			$columns = 'pid';
+			$ptable = $GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null;
 
-		do
-		{
-			// Get the pid
-			$objParent = $db
-				->prepare("SELECT pid FROM " . $strParentTable . " WHERE id=?")
+			if ($GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? null)
+			{
+				$columns .= ', ptable';
+			}
+			elseif (!$ptable)
+			{
+				return null;
+			}
+
+			$objParent = Database::getInstance()
+				->prepare("SELECT $columns FROM $table WHERE id=?")
 				->limit(1)
-				->execute($intId);
+				->execute($id);
 
 			if ($objParent->numRows < 1)
 			{
-				break;
+				return null;
 			}
 
-			// Store the parent table information
-			$strParentTable = $GLOBALS['TL_DCA'][$strParentTable]['config']['ptable'];
-			$intId = $objParent->pid;
+			return array($objParent->ptable ?? $ptable, $objParent->pid);
+		};
 
-			// If both the parent table and the ID remain the same, we found the
-			// topmost record (usually the case with nested content elements).
-			if ($strParentTable == $strLastParentTable && $intId == $intLastId)
-			{
-				break;
-			}
+		$arrParent = array();
 
-			// Add the log entry
-			$arrParent[] = $strParentTable . '.id=' . $intId;
-
-			// Load the data container of the parent table
-			if ($strParentTable != $strLastParentTable)
-			{
-				$this->loadDataContainer($strParentTable);
-			}
-
-			$intLastId = $intId;
-			$strLastParentTable = $strParentTable;
+		while ($parentEntry = $getParentEntry($strTable, $intId))
+		{
+			list($strTable, $intId) = $parentEntry;
+			$arrParent[] = "$strTable.id=$intId";
 		}
-		while ($intId && !empty($GLOBALS['TL_DCA'][$strParentTable]['config']['ptable']));
 
 		if (empty($arrParent))
 		{
@@ -1426,7 +1407,6 @@ abstract class Controller extends System
 			$objFiles->reset();
 		}
 
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$arrEnclosures = array();

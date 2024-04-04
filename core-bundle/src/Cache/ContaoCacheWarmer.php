@@ -83,7 +83,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         foreach (['autoload.php', 'config.php'] as $file) {
             $files = $this->findConfigFiles($file);
 
-            if (!empty($files)) {
+            if ([] !== $files) {
                 $dumper->dump($files, Path::join('config', $file), ['type' => 'namespaced']);
             }
         }
@@ -152,6 +152,10 @@ class ContaoCacheWarmer implements CacheWarmerInterface
 
             if ($catalogue instanceof MessageCatalogue) {
                 foreach (array_unique($catalogue->getDomains()) as $domain) {
+                    if (!str_starts_with($domain, 'contao_')) {
+                        continue;
+                    }
+
                     $php = $catalogue->getGlobalsString($domain);
 
                     if (!$php) {
@@ -166,6 +170,10 @@ class ContaoCacheWarmer implements CacheWarmerInterface
                     } else {
                         $this->filesystem->dumpFile($path, "<?php\n\n".$php);
                     }
+
+                    // Add Contao translations that only exist as Symfony translations for the
+                    // available language file cache (see #6741)
+                    $processed[$language][$name] = true;
                 }
             }
         }
@@ -250,9 +258,9 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     }
 
     /**
-     * @return array<string>|string
+     * @return array<string>
      */
-    private function findConfigFiles(string $name): array|string
+    private function findConfigFiles(string $name): array
     {
         try {
             return $this->locator->locate(Path::join('config', $name), null, false);

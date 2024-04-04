@@ -41,9 +41,9 @@ abstract class AbstractBackupCommand extends Command
     /**
      * @template T of AbstractConfig
      *
-     * @phpstan-param T $config
+     * @param T $config
      *
-     * @phpstan-return T
+     * @return T
      */
     protected function handleCommonConfig(InputInterface $input, AbstractConfig $config): AbstractConfig
     {

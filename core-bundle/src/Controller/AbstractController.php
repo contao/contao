@@ -53,7 +53,7 @@ abstract class AbstractController extends SymfonyAbstractController
      *
      * @param class-string<T> $class
      *
-     * @return T
+     * @return Adapter&T
      *
      * @phpstan-return Adapter<T>
      */
@@ -84,7 +84,8 @@ abstract class AbstractController extends SymfonyAbstractController
      */
     protected function setCacheHeaders(Response $response, PageModel $pageModel): Response
     {
-        // Do not cache the response if caching was not configured at all or disabled explicitly
+        // Do not cache the response if caching was not configured at all or
+        // disabled explicitly
         if ($pageModel->cache < 1 && $pageModel->clientCache < 1) {
             $response->headers->set('Cache-Control', 'no-cache, no-store');
 

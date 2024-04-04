@@ -16,7 +16,6 @@ use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\StringUtil;
 use Contao\System;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 (
@@ -214,7 +213,6 @@ class tl_newsletter_channel extends Backend
 
 		$db = Database::getInstance();
 
-		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 		$arrNew = $objSessionBag->get('new_records');
 

@@ -86,8 +86,7 @@ class RobotsTxtListenerTest extends TestCase
             <<<'EOF'
                 user-agent:*
                 allow:/
-                EOF
-            ,
+                EOF,
             null,
             <<<'EOF'
                 user-agent:*
@@ -103,8 +102,7 @@ class RobotsTxtListenerTest extends TestCase
             <<<'EOF'
                 user-agent:googlebot
                 allow:/
-                EOF
-            ,
+                EOF,
             null,
             <<<'EOF'
                 user-agent:googlebot
@@ -138,8 +136,7 @@ class RobotsTxtListenerTest extends TestCase
             <<<'EOF'
                 user-agent:googlebot
                 allow:/
-                EOF
-            ,
+                EOF,
             true,
             <<<'EOF'
                 user-agent:googlebot

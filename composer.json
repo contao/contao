@@ -77,14 +77,14 @@
         "knplabs/knp-menu": "^3.1",
         "knplabs/knp-menu-bundle": "^3.0",
         "knplabs/knp-time-bundle": "^1.11 || ^2.0",
-        "lcobucci/jwt": "^4.0",
+        "lcobucci/jwt": "^4.0 || ^5.0",
         "league/commonmark": "^2.2",
         "league/flysystem": "^3.0",
         "league/flysystem-bundle": "^3.0",
         "matthiasmullie/minify": "^1.3",
         "monolog/monolog": "^3.0",
         "nelmio/cors-bundle": "^2.0.1",
-        "nelmio/security-bundle": "^2.12 || ^3.0",
+        "nelmio/security-bundle": "^3.0",
         "nikic/php-parser": "^4.9",
         "nyholm/psr7": "^1.2",
         "paragonie/constant_time_encoding": "^2.2",
@@ -162,7 +162,7 @@
         "terminal42/escargot": "^1.6",
         "terminal42/service-annotation-bundle": "^1.1",
         "tijsverkoyen/css-to-inline-styles": "^2.0",
-        "toflar/cronjob-supervisor": "^1.0",
+        "toflar/cronjob-supervisor": "^2.0",
         "toflar/psr6-symfony-http-cache-store": "^4.0",
         "twig/extra-bundle": "^3.0",
         "twig/string-extra": "^3.0",
@@ -287,7 +287,7 @@
     "extra": {
         "bamarni-bin": {
             "bin-links": false,
-            "target-directory": "tools"
+            "forward-command": false
         },
         "contao-manager-plugin": {
             "contao/calendar-bundle": "Contao\\CalendarBundle\\ContaoManager\\Plugin",
@@ -304,27 +304,27 @@
     "scripts": {
         "all": [
             "@rector",
-            "@cs-fixer",
+            "@ecs",
             "@service-linter",
             "@monorepo-tools",
             "@unit-tests",
             "@functional-tests",
             "@phpstan"
         ],
-        "cs-fixer": [
-            "@ecs",
+        "ecs": [
+            "@ecs-default",
             "@ecs-legacy",
             "@ecs-template"
         ],
-        "ecs": "@php tools/ecs/vendor/bin/ecs check */bin */src */tests tools/*/bin tools/*/config tools/*/src -c tools/ecs/config/default.php --fix --ansi",
-        "ecs-legacy": "@php tools/ecs/vendor/bin/ecs check *-bundle/contao -c tools/ecs/config/legacy.php --fix --ansi",
-        "ecs-template": "@php tools/ecs/vendor/bin/ecs check *-bundle/contao/templates -c tools/ecs/config/template.php --fix --ansi",
+        "ecs-default": "@php vendor-bin/ecs/vendor/bin/ecs check */bin */src */tests vendor-bin/*/bin vendor-bin/*/config vendor-bin/*/src -c vendor-bin/ecs/config/default.php --fix --ansi",
+        "ecs-legacy": "@php vendor-bin/ecs/vendor/bin/ecs check *-bundle/contao -c vendor-bin/ecs/config/legacy.php --fix --ansi",
+        "ecs-template": "@php vendor-bin/ecs/vendor/bin/ecs check *-bundle/contao/templates -c vendor-bin/ecs/config/template.php --fix --ansi",
         "functional-tests": "@php vendor/bin/phpunit --testsuite=functional --colors=always",
-        "monorepo-tools": "@php tools/monorepo/vendor/bin/monorepo-tools composer-json --validate --ansi",
-        "phpstan": "@php tools/phpstan/vendor/bin/phpstan analyze -c tools/phpstan/config/contao.neon --ansi",
-        "rector": "@php tools/rector/vendor/bin/rector -c tools/rector/config/rector.php --ansi",
-        "require-checker": "@php tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config/config.json composer.json",
-        "service-linter": "@php tools/service-linter/bin/lint-service-ids --ansi",
+        "monorepo-tools": "@php vendor-bin/monorepo-tools/vendor/bin/monorepo-tools composer-json --validate --ansi",
+        "phpstan": "@php vendor-bin/phpstan/vendor/bin/phpstan analyze -c vendor-bin/phpstan/config/contao.neon --ansi",
+        "rector": "@php vendor-bin/rector/vendor/bin/rector -c vendor-bin/rector/config/rector.php --ansi",
+        "require-checker": "@php vendor-bin/require-checker/vendor/bin/composer-require-checker check --config-file=vendor-bin/require-checker/config/config.json composer.json",
+        "service-linter": "@php vendor-bin/service-linter/bin/lint-service-ids --ansi",
         "unit-tests": "@php vendor/bin/phpunit --colors=always"
     }
 }

@@ -77,7 +77,6 @@ class ModuleEventReader extends Events
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$this->Template->event = '';
@@ -113,7 +112,6 @@ class ModuleEventReader extends Events
 
 		if ($responseContext?->has(HtmlHeadBag::class))
 		{
-			/** @var HtmlHeadBag $htmlHeadBag */
 			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
 			$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 
@@ -249,7 +247,7 @@ class ModuleEventReader extends Events
 		$objTemplate->recurring = $recurring;
 		$objTemplate->until = $until;
 		$objTemplate->locationLabel = $GLOBALS['TL_LANG']['MSC']['location'];
-		$objTemplate->calendar = $objEvent->getRelated('pid');
+		$objTemplate->calendar = CalendarModel::findById($objEvent->pid);
 		$objTemplate->count = 0; // see #74
 		$objTemplate->details = '';
 		$objTemplate->hasTeaser = false;
@@ -334,7 +332,7 @@ class ModuleEventReader extends Events
 		}
 
 		// Add a function to retrieve upcoming dates (see #175)
-		$objTemplate->getUpcomingDates = function ($recurrences) use ($objEvent, $objPage, $intStartTime, $intEndTime, $arrRange, $span) {
+		$objTemplate->getUpcomingDates = function ($recurrences) use ($objEvent, $arrRange, $intStartTime, $intEndTime, $objPage, $span) {
 			if (!$objEvent->recurring || !isset($arrRange['unit'], $arrRange['value']))
 			{
 				return array();
@@ -371,7 +369,7 @@ class ModuleEventReader extends Events
 		};
 
 		// Add a function to retrieve past dates (see #175)
-		$objTemplate->getPastDates = function ($recurrences) use ($objEvent, $objPage, $intStartTime, $intEndTime, $arrRange, $span) {
+		$objTemplate->getPastDates = function ($recurrences) use ($objEvent, $arrRange, $intStartTime, $intEndTime, $objPage, $span) {
 			if (!$objEvent->recurring || !isset($arrRange['unit'], $arrRange['value']))
 			{
 				return array();
@@ -408,7 +406,7 @@ class ModuleEventReader extends Events
 		};
 
 		// schema.org information
-		$objTemplate->getSchemaOrgData = static function () use ($objTemplate, $objEvent): array {
+		$objTemplate->getSchemaOrgData = static function () use ($objEvent, $objTemplate): array {
 			$jsonLd = Events::getSchemaOrgData($objEvent);
 
 			if ($objTemplate->addImage && $objTemplate->figure)
@@ -438,8 +436,11 @@ class ModuleEventReader extends Events
 			return;
 		}
 
-		/** @var CalendarModel $objCalendar */
-		$objCalendar = $objEvent->getRelated('pid');
+		if (!$objCalendar = CalendarModel::findById($objEvent->pid))
+		{
+			return;
+		}
+
 		$this->Template->allowComments = $objCalendar->allowComments;
 
 		// Comments are not allowed
@@ -460,8 +461,7 @@ class ModuleEventReader extends Events
 			$arrNotifies[] = $GLOBALS['TL_ADMIN_EMAIL'];
 		}
 
-		/** @var UserModel $objAuthor */
-		if ($objCalendar->notify != 'notify_admin' && ($objAuthor = $objEvent->getRelated('author')) instanceof UserModel && $objAuthor->email)
+		if ($objCalendar->notify != 'notify_admin' && ($objAuthor = UserModel::findById($objEvent->author)) && $objAuthor->email)
 		{
 			$arrNotifies[] = $objAuthor->email;
 		}

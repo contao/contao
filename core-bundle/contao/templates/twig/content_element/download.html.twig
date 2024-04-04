@@ -2,7 +2,10 @@
 {% use "@Contao/component/_download.html.twig" %}
 
 {% if downloads %}
-    {% set attributes = attrs(attributes|default).addClass(['download-element', "ext-#{(downloads|first).file.extension(true)}"]) %}
+    {% set attributes = attrs()
+        .addClass(['download-element', "ext-#{(downloads|first).file.extension(true)}"])
+        .mergeWith(attributes|default)
+    %}
 {% endif %}
 
 {% block content %}

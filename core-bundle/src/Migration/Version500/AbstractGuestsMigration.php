@@ -78,7 +78,6 @@ abstract class AbstractGuestsMigration extends AbstractMigration
                 SELECT id, `groups`
                 FROM $table
                 WHERE `guests`='1' AND (`groups` IS NULL OR `groups` NOT LIKE '%\"-1\"%')
-                LIMIT 1
             ");
 
             foreach ($values as $id => $value) {

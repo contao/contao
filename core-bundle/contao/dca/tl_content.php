@@ -101,6 +101,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			(
 				'href'                => 'act=toggle&amp;field=invisible',
 				'icon'                => 'visible.svg',
+				'showInHeader'        => true,
 				'button_callback'     => array('tl_content', 'toggleIcon')
 			),
 			'show'
@@ -205,9 +206,10 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'sectionHeadline' => array
 		(
 			'search'                  => true,
-			'inputType'               => 'text',
+			'inputType'               => 'inputUnit',
+			'options'                 => array('h1', 'h2', 'h3', 'h4', 'h5', 'h6'),
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => "varchar(255) NOT NULL default 'a:2:{s:5:\"value\";s:0:\"\";s:4:\"unit\";s:2:\"h2\";}'"
 		),
 		'text' => array
 		(
@@ -738,6 +740,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'form' => array
 		(
 			'inputType'               => 'select',
+			'foreignKey'              => 'tl_form.title',
 			'options_callback'        => array('tl_content', 'getForms'),
 			'eval'                    => array('mandatory'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50 wizard'),
 			'wizard' => array
@@ -749,6 +752,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'module' => array
 		(
 			'inputType'               => 'select',
+			'foreignKey'              => 'tl_module.name',
 			'eval'                    => array('mandatory'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50 wizard'),
 			'wizard' => array
 			(
@@ -1033,7 +1037,7 @@ class tl_content extends Backend
 	 */
 	public function adjustDcaByType($dc)
 	{
-		$objCte = ContentModel::findByPk($dc->id);
+		$objCte = ContentModel::findById($dc->id);
 
 		if ($objCte === null)
 		{
@@ -1170,7 +1174,7 @@ class tl_content extends Backend
 			return;
 		}
 
-		$objCte = ContentModel::findByPk($dc->id);
+		$objCte = ContentModel::findById($dc->id);
 
 		if ($objCte === null)
 		{
@@ -1397,8 +1401,18 @@ class tl_content extends Backend
 			return '';
 		}
 
-		$title = sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'], $dc->value);
-		$href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$dc->value, 'popup'=>'1', 'nb'=>'1'));
+		// DataContainer::getCurrentRecord() will check permission on the record
+		try
+		{
+			$module = $dc->getCurrentRecord($dc->value, 'tl_module');
+		}
+		catch (AccessDeniedException)
+		{
+			return '';
+		}
+
+		$title = sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'], $module['id']);
+		$href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$module['id'], 'popup'=>'1', 'nb'=>'1'));
 
 		return ' <a href="' . StringUtil::specialcharsUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $title)) . '\',\'url\':this.href});return false">' . Image::getHtml('alias.svg', $title) . '</a>';
 	}

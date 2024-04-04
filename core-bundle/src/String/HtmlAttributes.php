@@ -58,7 +58,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         }
 
         // Merge values if possible, set them otherwise
-        $mergeSet = function (string $name, string|int|bool|\Stringable|null $value): void {
+        $mergeSet = function (string $name, \Stringable|bool|int|string|null $value): void {
             if ('class' === $name) {
                 $this->addClass($value);
             } elseif ('style' === $name) {
@@ -102,10 +102,10 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
 
         $name = strtolower($name);
 
-        // Even though the HTML 5 parser supports attribute names starting with
-        // an equal sign, we have to disallow that in order to support
-        // serializing boolean attributes. Otherwise, serializing and parsing
-        // back something like `hidden="" =attr="value"` would fail the roundtrip.
+        // Even though the HTML 5 parser supports attribute names starting with an equal
+        // sign, we have to disallow that in order to support serializing boolean
+        // attributes. Otherwise, serializing and parsing back something like `hidden=""
+        // =attr="value"` would fail the roundtrip.
         if (1 !== preg_match('(^[^>\s/=]+$)', $name) || 1 !== preg_match('//u', $name)) {
             throw new \InvalidArgumentException(sprintf('An HTML attribute name must be valid UTF-8 and not contain the characters >, /, = or whitespace, got "%s".', $name));
         }
@@ -134,7 +134,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      */
     public function setIfExists(string $name, \Stringable|bool|int|string|null $value): self
     {
-        if (!empty($value)) {
+        if ($this->test($value)) {
             $this->set($name, $value);
         }
 
@@ -385,7 +385,8 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      */
     private function parseString(string $attributesString): \Generator
     {
-        // Regular expression to match attributes according to https://html.spec.whatwg.org/#before-attribute-name-state
+        // Regular expression to match attributes according to
+        // https://html.spec.whatwg.org/#before-attribute-name-state
         $attributeRegex = '(
             [\s/]*+                                    # Optional white space including slash
             ([^>\s/][^>\s/=]*+)                        # Attribute name
@@ -404,7 +405,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         preg_match_all($attributeRegex, $attributesString, $matches, PREG_SET_ORDER | PREG_UNMATCHED_AS_NULL);
 
         foreach ($matches as [1 => $name, 2 => $value]) {
-            yield strtolower($name) => html_entity_decode($value ?? '', ENT_QUOTES);
+            yield strtolower($name) => html_entity_decode($value ?? '', ENT_QUOTES | ENT_HTML5);
         }
     }
 
@@ -414,14 +415,15 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             throw new \RuntimeException(sprintf('The value of property "%s" is not a valid UTF-8 string.', $name));
         }
 
-        $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, null, $this->doubleEncoding);
+        $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, null, $this->doubleEncoding);
 
         return str_replace(['{{', '}}'], ['&#123;&#123;', '&#125;&#125;'], $value);
     }
 
     private function parseStyles(string $styles): array
     {
-        // Regular expression to match declarations according to https://www.w3.org/TR/css-syntax-3/#declaration-list-diagram
+        // Regular expression to match declarations according to
+        // https://www.w3.org/TR/css-syntax-3/#declaration-list-diagram
         $declarationRegex = '/
             (?:
                 \.                                # Escape
@@ -434,7 +436,8 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             )++
         /ixs';
 
-        // Regular expression to match an <ident-token> according to https://www.w3.org/TR/css-syntax-3/#ident-token-diagram
+        // Regular expression to match an <ident-token> according to
+        // https://www.w3.org/TR/css-syntax-3/#ident-token-diagram
         $propertyRegex = '/
             ^
             (?!\d)                              # Must not start with a digit

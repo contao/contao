@@ -39,8 +39,8 @@ class DcaLoaderTest extends TestCase
 
     public function testThrowsTheSameExceptionWhenLoadingTwice(): void
     {
-        // Loading this file twice would cause a "Cannot declare class …,
-        // because the name is already in use" error
+        // Loading this file twice would cause a "Cannot declare class …, because the
+        // name is already in use" error
         (new Filesystem())->dumpFile(
             $this->getTempDir().'/var/cache/contao/dca/tl_foo.php',
             sprintf(

@@ -193,7 +193,7 @@ class FigureBuilder
     {
         $this->lastException = null;
 
-        if (!$filesModel = $this->getFilesModelAdapter()->findByPk($id)) {
+        if (!$filesModel = $this->getFilesModelAdapter()->findById($id)) {
             $this->lastException = new InvalidResourceException(sprintf('DBAFS item with ID "%s" could not be found.', $id));
 
             return $this;
@@ -339,9 +339,8 @@ class FigureBuilder
             return $this;
         }
 
-        // TODO: After stream support is added to contao/image, remove this
-        // workaround and type restriction and directly pass on the stream to
-        // the resizer.
+        // TODO: After stream support is added to contao/image, remove this workaround
+        // and type restriction and directly pass on the stream to the resizer.
         $metadata = stream_get_meta_data($stream);
         $uri = $metadata['uri'];
 
@@ -461,7 +460,7 @@ class FigureBuilder
 
         foreach ($attributes as $key => $value) {
             if (!\is_string($key) || !\is_string($value)) {
-                throw new \InvalidArgumentException('Link attributes must be an array of type <string, string>.');
+                throw new \InvalidArgumentException(sprintf('Link attributes must be an array of type <string, string>, <%s, %s> given.', get_debug_type($key), get_debug_type($value)));
             }
         }
 
@@ -694,8 +693,8 @@ class FigureBuilder
             ;
         }
 
-        // If no metadata can be obtained from the model, we create a container
-        // from the default meta fields with empty values instead
+        // If no metadata can be obtained from the model, we create a container from the
+        // default meta fields with empty values instead
         $metaFields = $this->getFilesModelAdapter()->getMetaFields();
 
         $data = [
@@ -768,7 +767,8 @@ class FigureBuilder
             return [$filePath, null];
         };
 
-        // Use explicitly set href (1) or lightbox resource (2), fall back to using metadata (3) or use the base resource (4) if empty
+        // Use explicitly set href (1) or lightbox resource (2), fall back to using
+        // metadata (3) or use the base resource (4) if empty
         $lightboxResourceOrUrl = $this->additionalLinkAttributes['href'] ?? $this->lightboxResourceOrUrl ?? $getMetadataUrl() ?? $this->filePath;
 
         [$filePathOrImage, $url] = $getResourceOrUrl($lightboxResourceOrUrl);
@@ -790,9 +790,7 @@ class FigureBuilder
     }
 
     /**
-     * @return FilesModel
-     *
-     * @phpstan-return Adapter<FilesModel>
+     * @return Adapter<FilesModel>
      */
     private function getFilesModelAdapter(): Adapter
     {
@@ -803,9 +801,7 @@ class FigureBuilder
     }
 
     /**
-     * @return Validator
-     *
-     * @phpstan-return Adapter<Validator>
+     * @return Adapter<Validator>
      */
     private function getValidatorAdapter(): Adapter
     {
@@ -822,7 +818,7 @@ class FigureBuilder
      */
     private function getFallbackLocaleList(): array
     {
-        $page = $GLOBALS['objPage'] ?? null;
+        $page = $this->locator->get('contao.routing.page_finder')->getCurrentPage();
 
         if (!$page instanceof PageModel) {
             return [];

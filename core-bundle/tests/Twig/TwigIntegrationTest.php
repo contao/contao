@@ -18,8 +18,9 @@ use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\FormText;
@@ -76,8 +77,9 @@ class TwigIntegrationTest extends TestCase
         $environment->addExtension(
             new ContaoExtension(
                 $environment,
-                $this->createMock(TemplateHierarchyInterface::class),
+                $this->createMock(ContaoFilesystemLoader::class),
                 $this->createMock(ContaoCsrfTokenManager::class),
+                $this->createMock(ContaoVariable::class),
             ),
         );
 
@@ -119,8 +121,9 @@ class TwigIntegrationTest extends TestCase
         $environment->addExtension(
             new ContaoExtension(
                 $environment,
-                $this->createMock(TemplateHierarchyInterface::class),
+                $this->createMock(ContaoFilesystemLoader::class),
                 $this->createMock(ContaoCsrfTokenManager::class),
+                $this->createMock(ContaoVariable::class),
             ),
         );
 
@@ -169,8 +172,9 @@ class TwigIntegrationTest extends TestCase
         $environment->addExtension(
             new ContaoExtension(
                 $environment,
-                $this->createMock(TemplateHierarchyInterface::class),
+                $this->createMock(ContaoFilesystemLoader::class),
                 $this->createMock(ContaoCsrfTokenManager::class),
+                $this->createMock(ContaoVariable::class),
             ),
         );
 
@@ -191,8 +195,8 @@ class TwigIntegrationTest extends TestCase
             {{ unsafe|insert_tag_raw }}
             TEMPLATE;
 
-        // With 'preserve_safety' set, we expect the unescaped versions in the first
-        // two lines, while the unsafe parameter is still escaped (last line):
+        // With 'preserve_safety' set, we expect the unescaped versions in the first two
+        // lines, while the unsafe parameter is still escaped (last line):
         $expectedOutput = <<<'TEMPLATE'
             <i>foo</i><br>
             <i>foo</i><br>
@@ -222,8 +226,9 @@ class TwigIntegrationTest extends TestCase
         $environment->addExtension(
             new ContaoExtension(
                 $environment,
-                $this->createMock(TemplateHierarchyInterface::class),
+                $this->createMock(ContaoFilesystemLoader::class),
                 $this->createMock(ContaoCsrfTokenManager::class),
+                $this->createMock(ContaoVariable::class),
             ),
         );
 

@@ -166,11 +166,12 @@ class InsertTagParser implements ResetInterface
     }
 
     /**
-     * @deprecated Deprecated since Contao 5.1 to be removed in Contao 6. Use renderTag() instead.
+     * @deprecated Deprecated since Contao 5.1, to be removed in Contao 6;
+     *             use renderTag() instead.
      */
     public function render(string $input): string
     {
-        trigger_deprecation('contao/core-bundle', '5.1', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use "%s::renderTag()" instead.', __METHOD__, __CLASS__);
+        trigger_deprecation('contao/core-bundle', '5.1', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use "%s::renderTag()" instead.', __METHOD__, self::class);
 
         return $this->renderTag($input)->getValue();
     }
@@ -360,8 +361,8 @@ class InsertTagParser implements ResetInterface
                 $wrapStart = null;
                 $wrapContent = [];
 
-                // Reprocess non-empty end tags to enable chaining block insert tags
-                // E.g. `{{iflng::de}}…{{iflng::en}}…{{iflng}}`
+                // Reprocess non-empty end tags to enable chaining block insert tags, e.g.
+                // `{{iflng::de}}…{{iflng::en}}…{{iflng}}`
                 if (!$item->getParameters()->all()) {
                     continue;
                 }

@@ -65,8 +65,19 @@ services:
         arguments:
             - '@database_connection'
 
+    contao.migration.version_503.file_extension:
+        class: Contao\CoreBundle\Migration\Version503\FileExtensionMigration
+        arguments:
+            - '@database_connection'
+
     contao.migration.version_503.frontend_modules:
         class: Contao\CoreBundle\Migration\Version503\FrontendModulesMigration
         arguments:
             - '@database_connection'
             - '@contao.framework'
+
+    contao.migration.version_503.remember_me:
+        class: Contao\CoreBundle\Migration\Version503\RememberMeMigration
+        arguments:
+            - '@database_connection'
+            - !tagged_iterator security.remember_me_handler

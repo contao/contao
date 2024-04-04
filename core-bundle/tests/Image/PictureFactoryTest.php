@@ -163,7 +163,7 @@ class PictureFactoryTest extends TestCase
             ->willReturn($imageSizeProperties)
         ;
 
-        $imageSizeAdapter = $this->mockConfiguredAdapter(['findByPk' => $imageSizeModel]);
+        $imageSizeAdapter = $this->mockConfiguredAdapter(['findById' => $imageSizeModel]);
 
         $imageSizeItemProperties = [
             'width' => 50,
@@ -246,7 +246,7 @@ class PictureFactoryTest extends TestCase
             ->willReturn($imageSizeProperties)
         ;
 
-        $imageSizeAdapter = $this->mockConfiguredAdapter(['findByPk' => $imageSizeModel]);
+        $imageSizeAdapter = $this->mockConfiguredAdapter(['findById' => $imageSizeModel]);
         $imageSizeItemAdapter = $this->mockConfiguredAdapter(['findVisibleByPid' => null]);
 
         $adapters = [
@@ -766,8 +766,8 @@ class PictureFactoryTest extends TestCase
     {
         $imageMock = $this->createMock(ImageInterface::class);
         $pictureConfig = $this->createMock(PictureConfiguration::class);
-        $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
 
+        $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
         $pictureGenerator
             ->expects($this->once())
             ->method('generate')

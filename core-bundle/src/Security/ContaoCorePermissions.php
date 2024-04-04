@@ -33,12 +33,6 @@ final class ContaoCorePermissions
     public const USER_CAN_DELETE_PAGE = 'contao_user.can_delete_page';
 
     /**
-     * Access is granted if the current user can delete the given fron end module.
-     * Subject must be a module ID, a FrontendModule or a tl_module record as array.
-     */
-    public const USER_CAN_DELETE_FRONTEND_MODULE = 'contao_user.can_delete_frontend_module';
-
-    /**
      * Access is granted if the current user can edit articles of the given page.
      * Subject must be a page ID, a PageModel or a tl_page record as array.
      */
@@ -184,7 +178,8 @@ final class ContaoCorePermissions
     public const USER_CAN_ACCESS_IMAGE_SIZE = 'contao_user.imageSizes';
 
     /**
-     * @deprecated use USER_CAN_EDIT_FORM instead
+     * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+     *             use USER_CAN_EDIT_FORM instead
      */
     public const USER_CAN_ACCESS_FORM = 'contao_user.forms';
 

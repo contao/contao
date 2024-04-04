@@ -61,20 +61,18 @@ abstract class FunctionalTestCase extends WebTestCase
             // Ignore
         }
 
-        $getAlterCount = static function () use ($connection): int {
-            return (int) $connection->fetchOne("
-                SELECT SUM(total)
-                FROM sys.host_summary_by_statement_type
-                WHERE statement IN (
-                    'create_view',
-                    'drop_index',
-                    'create_index',
-                    'drop_table',
-                    'alter_table',
-                    'create_table'
-                )
-            ");
-        };
+        $getAlterCount = static fn (): int => (int) $connection->fetchOne("
+            SELECT SUM(total)
+            FROM sys.host_summary_by_statement_type
+            WHERE statement IN (
+                'create_view',
+                'drop_index',
+                'create_index',
+                'drop_table',
+                'alter_table',
+                'create_table'
+            )
+        ");
 
         if (!isset(self::$supportsAlterCount)) {
             self::$supportsAlterCount = true;
