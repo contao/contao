@@ -21,7 +21,7 @@ use Symfony\Contracts\Service\ResetInterface;
 /**
  * @internal
  */
-class ArticleContentVoter extends AbstractDynamicPtableVoter implements ResetInterface
+class ArticleContentVoter extends AbstractDynamicPtableVoter
 {
     private array $pageIds = [];
 
@@ -32,8 +32,10 @@ class ArticleContentVoter extends AbstractDynamicPtableVoter implements ResetInt
         parent::__construct($connection);
     }
 
-    public function reset()
+    public function reset(): void
     {
+        parent::reset();
+
         $this->pageIds = [];
     }
 

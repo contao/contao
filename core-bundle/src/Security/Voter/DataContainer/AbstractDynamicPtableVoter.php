@@ -18,11 +18,19 @@ use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Contracts\Service\ResetInterface;
 
-abstract class AbstractDynamicPtableVoter extends AbstractDataContainerVoter
+abstract class AbstractDynamicPtableVoter extends AbstractDataContainerVoter implements ResetInterface
 {
+    private array $parents = [];
+
     public function __construct(private readonly Connection $connection)
     {
+    }
+
+    public function reset(): void
+    {
+        $this->parents = [];
     }
 
     protected function hasAccess(TokenInterface $token, UpdateAction|CreateAction|ReadAction|DeleteAction $action): bool
@@ -56,36 +64,32 @@ abstract class AbstractDynamicPtableVoter extends AbstractDataContainerVoter
             return true;
         }
 
-        if ($record['ptable'] !== $this->getTable()) {
-            [$id, $table] = [$record['pid'], $record['ptable']];
-        } else {
-            [$id, $table] = $this->getParentTableAndId((int) $record['pid'], $record['ptable']);
+        if ($record['ptable'] === $this->getTable()) {
+            $record = $this->getParentTableAndId((int) $record['pid']);
         }
 
-        return $this->hasAccessToRecord($token, $table, $id);
-
-        //SELECT @pid:=pid, @ptable:=ptable FROM tl_content WHERE id=$id;
-        //SET @query = CONCAT("SELECT *, '", @ptable, "' AS __parent_table FROM ", @ptable, ' WHERE id=?;');
-        //PREPARE stmt FROM @query;
-        //EXECUTE stmt USING @pid;
-        //DEALLOCATE PREPARE stmt;
+        return $this->hasAccessToRecord($token, $record['ptable'], $record['pid']);
     }
 
-    public function getParentTableAndId(int $id, string $table): array
+    public function getParentTableAndId(int $id): array
     {
+        if (isset($this->parents[$id])) {
+            return $this->parents[$id];
+        }
+
+        $table = $this->getTable();
+
         // Limit to a nesting level of 10
         $records = $this->connection->fetchAllAssociative(
             "SELECT id, @pid:=pid AS pid, ptable FROM $table WHERE id=?" . str_repeat(" UNION SELECT id, @pid:=pid AS pid, ptable FROM $table WHERE id=@pid", 9),
             [$id]
         );
 
-        // Trigger recursion in case our query returned exactly 10 IDs in which case we might have higher parent records
+        // Trigger recursion in case our query returned exactly 10 records in which case we might have higher parent records
         if (10 === \count($records)) {
-            $records = array_merge($records, $this->getParentTableAndId((int) end($records)['pid'], $table));
+            $records = array_merge($records, $this->getParentTableAndId((int) end($records)['pid']));
         }
 
-        $top = end($records);
-
-        return [$top['pid'], $top['ptable']];
+        return $this->parents[$id] = end($records);
     }
 }
