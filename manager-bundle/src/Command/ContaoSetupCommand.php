@@ -60,7 +60,7 @@ class ContaoSetupCommand extends Command
 
     protected function configure(): void
     {
-        $this->setHidden(true)->addOption('no-cache', null, InputOption::VALUE_NONE, 'Should the cache be cleared?');
+        $this->setHidden(true)->addOption('no-cache', null, InputOption::VALUE_NONE, 'Do not clear and warmup the cache');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
