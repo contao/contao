@@ -80,6 +80,17 @@ class PageTypeAccessVoter extends AbstractDataContainerVoter
         $type = $action->getNew()['type'] ?? ($action instanceof UpdateAction ? $action->getCurrent()['type'] : null);
         $pid = (int) ($action->getNewPid() ?? ($action instanceof UpdateAction ? $action->getCurrentPid() : null));
 
+        // Allow copy operation if no such page type exists in any root page
+        if (
+            $action instanceof CreateAction
+            && \in_array($type, self::FIRST_LEVEL_TYPES, true)
+            && \array_key_exists('sorting', $action->getNew())
+            && null === $action->getNew()['sorting']
+            && !$this->hasPageTypeInRoot($type, null)
+        ) {
+            return true;
+        }
+
         if (
             (null !== $action->getNewPid() || null !== ($action->getNew()['sorting'] ?? null))
             && (!$action instanceof UpdateAction || \in_array($type, self::FIRST_LEVEL_TYPES, true))
@@ -115,8 +126,12 @@ class PageTypeAccessVoter extends AbstractDataContainerVoter
         return 'root' === $this->connection->fetchOne('SELECT type FROM tl_page WHERE id=?', [$pageId]);
     }
 
-    private function hasPageTypeInRoot(string $type, int $rootId): bool
+    private function hasPageTypeInRoot(string $type, int|null $rootId): bool
     {
+        if (null === $rootId) {
+            return !$this->connection->fetchOne("SELECT r.id, t.id FROM tl_page r LEFT JOIN tl_page t ON t.pid=r.id AND t.type=? WHERE r.type='root' AND t.id IS NULL", [$type]);
+        }
+
         return (bool) $this->connection->fetchOne('SELECT id FROM tl_page WHERE type=? AND pid=?', [$type, $rootId]);
     }
 }
