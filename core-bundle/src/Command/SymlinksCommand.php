@@ -87,8 +87,7 @@ class SymlinksCommand extends Command
         $this->symlinkModules();
         $this->symlinkThemes();
 
-        // Symlink the assets and themes directory
-        $this->symlink('assets', Path::join($this->webDir, 'assets'));
+        // Symlink the themes directory
         $this->symlink('system/themes', Path::join($this->webDir, 'system/themes'));
 
         // Symlinks the logs directory

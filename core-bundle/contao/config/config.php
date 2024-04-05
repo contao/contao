@@ -110,6 +110,7 @@ use Contao\TrblField;
 use Contao\Upload;
 use Contao\UserGroupModel;
 use Contao\UserModel;
+use Symfony\Component\Filesystem\Path;
 
 // Back end modules
 $GLOBALS['BE_MOD'] = array
@@ -403,7 +404,11 @@ $GLOBALS['TL_PURGE'] = array
 		'scripts' => array
 		(
 			'callback' => array(Automator::class, 'purgeScriptCache'),
-			'affected' => array('assets/js', 'assets/css')
+			'affected' => array
+			(
+				Path::join(StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir')), 'assets/js'),
+				Path::join(StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir')), 'assets/css')
+			)
 		),
 		'temp' => array
 		(

@@ -81,7 +81,7 @@ class Image
 			return $src;
 		}
 
-		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+		$webDir = System::getContainer()->getParameter('contao.web_dir');
 
 		if (str_starts_with($src, 'icon'))
 		{
@@ -93,7 +93,7 @@ class Image
 			$filename = pathinfo($src, PATHINFO_FILENAME);
 
 			// Prefer SVG icons
-			if (file_exists($projectDir . '/assets/contao/images/' . $filename . '.svg'))
+			if (file_exists($webDir . '/assets/contao/images/' . $filename . '.svg'))
 			{
 				return 'assets/contao/images/' . $filename . '.svg';
 			}
@@ -114,7 +114,7 @@ class Image
 		}
 
 		// Prefer SVG icons
-		if (file_exists($projectDir . '/system/themes/' . $theme . '/icons/' . $filename . '.svg'))
+		if (file_exists($webDir . '/system/themes/' . $theme . '/icons/' . $filename . '.svg'))
 		{
 			return 'system/themes/' . $theme . '/icons/' . $filename . '.svg';
 		}

@@ -28,10 +28,6 @@ use Symfony\Component\Filesystem\Path;
 
 class Configuration implements ConfigurationInterface
 {
-    public function __construct(private readonly string $projectDir)
-    {
-    }
-
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('contao');
@@ -339,9 +335,9 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->scalarNode('target_dir')
                     ->info('The target directory for the cached images processed by Contao.')
-                    ->example('%kernel.project_dir%/assets/images')
+                    ->example('%contao.web_dir%/assets/images')
                     ->cannotBeEmpty()
-                    ->defaultValue(Path::join($this->projectDir, 'assets/images'))
+                    ->defaultValue('%contao.web_dir%/assets/images')
                     ->validate()
                         ->always(static fn (string $value): string => Path::canonicalize($value))
                     ->end()
@@ -359,9 +355,9 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('target_dir')
                             ->info('The target directory for the cached previews.')
-                            ->example('%kernel.project_dir%/assets/previews')
+                            ->example('%contao.web_dir%/assets/previews')
                             ->cannotBeEmpty()
-                            ->defaultValue(Path::join($this->projectDir, 'assets/previews'))
+                            ->defaultValue('%contao.web_dir%/assets/previews')
                             ->validate()
                                 ->always(static fn (string $value): string => Path::canonicalize($value))
                             ->end()

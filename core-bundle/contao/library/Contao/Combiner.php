@@ -67,13 +67,7 @@ class Combiner extends System
 	protected $arrFiles = array();
 
 	/**
-	 * Root dir
-	 * @var string
-	 */
-	protected $strRootDir;
-
-	/**
-	 * Web dir relative to $this->strRootDir
+	 * Web dir
 	 * @var string
 	 */
 	protected $strWebDir;
@@ -83,10 +77,7 @@ class Combiner extends System
 	 */
 	public function __construct()
 	{
-		$container = System::getContainer();
-
-		$this->strRootDir = $container->getParameter('kernel.project_dir');
-		$this->strWebDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
+		$this->strWebDir = System::getContainer()->getParameter('contao.web_dir');
 	}
 
 	/**
@@ -122,17 +113,9 @@ class Combiner extends System
 		}
 
 		// Check the source file
-		if (!file_exists($this->strRootDir . '/' . $strFile))
+		if (!file_exists($this->strWebDir . '/' . $strFile))
 		{
-			// Handle public bundle resources in the contao.web_dir folder
-			if (file_exists($this->strRootDir . '/' . $this->strWebDir . '/' . $strFile))
-			{
-				$strFile = $this->strWebDir . '/' . $strFile;
-			}
-			else
-			{
-				return;
-			}
+			return;
 		}
 
 		// Prevent duplicates
@@ -144,7 +127,7 @@ class Combiner extends System
 		// Default version
 		if ($strVersion === null)
 		{
-			$strVersion = filemtime($this->strRootDir . '/' . $strFile);
+			$strVersion = filemtime($this->strWebDir . '/' . $strFile);
 		}
 
 		// Store the file
@@ -210,10 +193,10 @@ class Combiner extends System
 			{
 				$strPath = 'assets/' . $strTarget . '/' . str_replace('/', '_', $arrFile['name']) . $this->strMode;
 
-				if ($blnDebug || !file_exists($this->strRootDir . '/' . $strPath))
+				if ($blnDebug || !file_exists($this->strWebDir . '/' . $strPath))
 				{
-					$objFile = new File($strPath);
-					$objFile->write($this->handleScssLess(file_get_contents($this->strRootDir . '/' . $arrFile['name']), $arrFile));
+					$objFile = new File(StringUtil::stripRootDir($this->strWebDir . '/' . $strPath));
+					$objFile->write($this->handleScssLess(file_get_contents($this->strWebDir . '/' . $arrFile['name']), $arrFile));
 					$objFile->close();
 				}
 
@@ -222,12 +205,6 @@ class Combiner extends System
 			else
 			{
 				$name = $arrFile['name'];
-
-				// Strip the contao.web_dir directory prefix (see #328)
-				if (strncmp($name, $this->strWebDir . '/', \strlen($this->strWebDir) + 1) === 0)
-				{
-					$name = substr($name, \strlen($this->strWebDir) + 1);
-				}
 
 				// Add the media query (see #7070)
 				if ($this->strMode == self::CSS && $arrFile['media'] && $arrFile['media'] != 'all' && !$this->hasMediaTag($arrFile['name']))
@@ -319,18 +296,18 @@ class Combiner extends System
 		$strKey = StringUtil::substr(implode(',', $arrPrefix), 64, '...') . '-' . substr(md5($this->strKey), 0, 8);
 
 		// Load the existing file
-		if (file_exists($this->strRootDir . '/assets/' . $strTarget . '/' . $strKey . $this->strMode))
+		if (file_exists($this->strWebDir . '/assets/' . $strTarget . '/' . $strKey . $this->strMode))
 		{
 			return $strUrl . 'assets/' . $strTarget . '/' . $strKey . $this->strMode;
 		}
 
 		// Create the file
-		$objFile = new File('assets/' . $strTarget . '/' . $strKey . $this->strMode);
+		$objFile = new File(StringUtil::stripRootDir($this->strWebDir . '/assets/' . $strTarget . '/' . $strKey . $this->strMode));
 		$objFile->truncate();
 
 		foreach ($this->arrFiles as $arrFile)
 		{
-			$content = file_get_contents($this->strRootDir . '/' . $arrFile['name']);
+			$content = file_get_contents($this->strWebDir . '/' . $arrFile['name']);
 
 			// Remove UTF-8 BOM
 			if (str_starts_with($content, "\xEF\xBB\xBF"))
@@ -401,7 +378,7 @@ class Combiner extends System
 		if ($arrFile['extension'] == self::SCSS)
 		{
 			$objCompiler = new Compiler();
-			$objCompiler->setImportPaths($this->strRootDir . '/' . \dirname($arrFile['name']));
+			$objCompiler->setImportPaths($this->strWebDir . '/' . \dirname($arrFile['name']));
 			$objCompiler->setOutputStyle($blnDebug ? OutputStyle::EXPANDED : OutputStyle::COMPRESSED);
 
 			if ($blnDebug)
@@ -409,7 +386,7 @@ class Combiner extends System
 				$objCompiler->setSourceMap(Compiler::SOURCE_MAP_INLINE);
 			}
 
-			return $this->fixPaths($objCompiler->compileString($content, $this->strRootDir . '/' . $arrFile['name'])->getCss(), $arrFile);
+			return $this->fixPaths($objCompiler->compileString($content, $this->strWebDir . '/' . $arrFile['name'])->getCss(), $arrFile);
 		}
 
 		$strPath = \dirname($arrFile['name']);
@@ -418,7 +395,7 @@ class Combiner extends System
 		(
 			'strictMath' => true,
 			'compress' => !$blnDebug,
-			'import_dirs' => array($this->strRootDir . '/' . $strPath => $strPath)
+			'import_dirs' => array($this->strWebDir . '/' . $strPath => $strPath)
 		);
 
 		$objParser = new \Less_Parser();
@@ -439,13 +416,6 @@ class Combiner extends System
 	protected function fixPaths($content, $arrFile)
 	{
 		$strName = $arrFile['name'];
-
-		// Strip the contao.web_dir directory prefix
-		if (str_starts_with($strName, $this->strWebDir . '/'))
-		{
-			$strName = substr($strName, \strlen($this->strWebDir) + 1);
-		}
-
 		$strDirname = \dirname($strName);
 		$strGlue = ($strDirname != '.') ? $strDirname . '/' : '';
 
@@ -521,7 +491,7 @@ class Combiner extends System
 	protected function hasMediaTag($strFile)
 	{
 		$return = false;
-		$fh = fopen($this->strRootDir . '/' . $strFile, 'r');
+		$fh = fopen($this->strWebDir . '/' . $strFile, 'r');
 
 		while (($line = fgets($fh)) !== false)
 		{
