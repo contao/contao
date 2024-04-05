@@ -790,7 +790,7 @@ class tl_content extends Backend
 			foreach (array_keys($v) as $kk)
 			{
 				// Check if an element of this type can be created in the current context (e.g. nested fragments)
-				if ($security->isGranted(ContaoCorePermissions::DC_PREFIX.'tl_content', new CreateAction('tl_content', ['ptable' => $dc->parentTable, 'pid' => $dc->currentPid, 'type' => $kk])))
+				if ($security->isGranted(ContaoCorePermissions::DC_PREFIX . 'tl_content', new CreateAction('tl_content', array('ptable' => $dc->parentTable, 'pid' => $dc->currentPid, 'type' => $kk))))
 				{
 					$groups[$k][] = $kk;
 				}

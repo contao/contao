@@ -9,11 +9,7 @@
  */
 
 use Contao\Backend;
-use Contao\BackendUser;
 use Contao\Calendar;
-use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\Database;
-use Contao\DataContainer;
 use Contao\Input;
 use Contao\System;
 

@@ -30,11 +30,10 @@ class ContentElementNestingVoter extends AbstractDataContainerVoter implements R
     ) {
     }
 
-    public function reset()
+    public function reset(): void
     {
         $this->types = [];
     }
-
 
     protected function getTable(): string
     {
@@ -70,24 +69,19 @@ class ContentElementNestingVoter extends AbstractDataContainerVoter implements R
             return false;
         }
 
-        // Also check access to element if it is moved inside the same ptable to a new parent ID
-        if (
-            $action instanceof UpdateAction
-            && !isset($action->getNew()['ptable'])
-            && 'tl_content' === ($action->getCurrent()['ptable'] ?? null)
-            && ($pid = (int) $action->getNewPid()) > 0
-            && !$this->canNestInParent($pid, $type)
-        ) {
-            return false;
-        }
-
-        return true;
+        // Also check access to element if it is moved inside the same ptable to a new
+        // parent ID
+        return !($action instanceof UpdateAction
+        && !isset($action->getNew()['ptable'])
+        && 'tl_content' === ($action->getCurrent()['ptable'] ?? null)
+        && ($pid = (int) $action->getNewPid()) > 0
+        && !$this->canNestInParent($pid, $type));
     }
 
     private function canNestInParent(int $pid, string $type): bool
     {
         if (isset($this->types[$pid])) {
-            if (is_bool($this->types[$pid])) {
+            if (\is_bool($this->types[$pid])) {
                 return $this->types[$pid];
             }
 
@@ -103,7 +97,7 @@ class ContentElementNestingVoter extends AbstractDataContainerVoter implements R
             return $this->types[$pid] = false;
         }
 
-        $this->types[$pid] = $this->compositor->getAllowedTypes('contao.content_element.' . $parentType);
+        $this->types[$pid] = $this->compositor->getAllowedTypes('contao.content_element.'.$parentType);
 
         if ([] === $this->types[$pid]) {
             return $this->types[$pid] = true;

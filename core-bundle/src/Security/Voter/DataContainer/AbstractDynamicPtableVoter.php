@@ -33,7 +33,30 @@ abstract class AbstractDynamicPtableVoter extends AbstractDataContainerVoter imp
         $this->parents = [];
     }
 
-    protected function hasAccess(TokenInterface $token, UpdateAction|CreateAction|ReadAction|DeleteAction $action): bool
+    public function getParentTableAndId(int $id): array
+    {
+        if (isset($this->parents[$id])) {
+            return $this->parents[$id];
+        }
+
+        $table = $this->getTable();
+
+        // Limit to a nesting level of 10
+        $records = $this->connection->fetchAllAssociative(
+            "SELECT id, @pid:=pid AS pid, ptable FROM $table WHERE id=?".str_repeat(" UNION SELECT id, @pid:=pid AS pid, ptable FROM $table WHERE id=@pid", 9),
+            [$id],
+        );
+
+        // Trigger recursion in case our query returned exactly 10 records in which case
+        // we might have higher parent records
+        if (10 === \count($records)) {
+            $records = array_merge($records, $this->getParentTableAndId((int) end($records)['pid']));
+        }
+
+        return $this->parents[$id] = end($records);
+    }
+
+    protected function hasAccess(TokenInterface $token, CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
     {
         if (
             !$action instanceof CreateAction
@@ -51,7 +74,7 @@ abstract class AbstractDynamicPtableVoter extends AbstractDataContainerVoter imp
             return true;
         }
 
-        $record = array_replace(($action instanceof CreateAction ? [] : $action->getCurrent()), $action->getNew());
+        $record = array_replace($action instanceof CreateAction ? [] : $action->getCurrent(), $action->getNew());
 
         return $this->hasAccessToParent($token, $record);
     }
@@ -69,27 +92,5 @@ abstract class AbstractDynamicPtableVoter extends AbstractDataContainerVoter imp
         }
 
         return $this->hasAccessToRecord($token, $record['ptable'], $record['pid']);
-    }
-
-    public function getParentTableAndId(int $id): array
-    {
-        if (isset($this->parents[$id])) {
-            return $this->parents[$id];
-        }
-
-        $table = $this->getTable();
-
-        // Limit to a nesting level of 10
-        $records = $this->connection->fetchAllAssociative(
-            "SELECT id, @pid:=pid AS pid, ptable FROM $table WHERE id=?" . str_repeat(" UNION SELECT id, @pid:=pid AS pid, ptable FROM $table WHERE id=@pid", 9),
-            [$id]
-        );
-
-        // Trigger recursion in case our query returned exactly 10 records in which case we might have higher parent records
-        if (10 === \count($records)) {
-            $records = array_merge($records, $this->getParentTableAndId((int) end($records)['pid']));
-        }
-
-        return $this->parents[$id] = end($records);
     }
 }
