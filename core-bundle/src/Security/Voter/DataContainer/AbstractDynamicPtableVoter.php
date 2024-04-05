@@ -33,29 +33,6 @@ abstract class AbstractDynamicPtableVoter extends AbstractDataContainerVoter imp
         $this->parents = [];
     }
 
-    public function getParentTableAndId(int $id): array
-    {
-        if (isset($this->parents[$id])) {
-            return $this->parents[$id];
-        }
-
-        $table = $this->getTable();
-
-        // Limit to a nesting level of 10
-        $records = $this->connection->fetchAllAssociative(
-            "SELECT id, @pid:=pid AS pid, ptable FROM $table WHERE id=?".str_repeat(" UNION SELECT id, @pid:=pid AS pid, ptable FROM $table WHERE id=@pid", 9),
-            [$id],
-        );
-
-        // Trigger recursion in case our query returned exactly 10 records in which case
-        // we might have higher parent records
-        if (10 === \count($records)) {
-            $records = array_merge($records, $this->getParentTableAndId((int) end($records)['pid']));
-        }
-
-        return $this->parents[$id] = end($records);
-    }
-
     protected function hasAccess(TokenInterface $token, CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
     {
         if (
@@ -92,5 +69,28 @@ abstract class AbstractDynamicPtableVoter extends AbstractDataContainerVoter imp
         }
 
         return $this->hasAccessToRecord($token, $record['ptable'], $record['pid']);
+    }
+
+    private function getParentTableAndId(int $id): array
+    {
+        if (isset($this->parents[$id])) {
+            return $this->parents[$id];
+        }
+
+        $table = $this->getTable();
+
+        // Limit to a nesting level of 10
+        $records = $this->connection->fetchAllAssociative(
+            "SELECT id, @pid:=pid AS pid, ptable FROM $table WHERE id=?".str_repeat(" UNION SELECT id, @pid:=pid AS pid, ptable FROM $table WHERE id=@pid", 9),
+            [$id],
+        );
+
+        // Trigger recursion in case our query returned exactly 10 records in which case
+        // we might have higher parent records
+        if (10 === \count($records)) {
+            $records = array_merge($records, $this->getParentTableAndId((int) end($records)['pid']));
+        }
+
+        return $this->parents[$id] = end($records);
     }
 }
