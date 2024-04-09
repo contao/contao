@@ -178,6 +178,8 @@ class ModuleChangePassword extends Module
 			$objMember->password = $objNewPassword->value;
 			$objMember->save();
 
+			System::getContainer()->get('contao.repository.remember_me')->deleteByUsername($objMember->username);
+
 			// Create a new version
 			if ($GLOBALS['TL_DCA'][$strTable]['config']['enableVersioning'] ?? null)
 			{

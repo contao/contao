@@ -23,6 +23,7 @@ use SebastianBergmann\Diff\Output\StrictUnifiedDiffOutputBuilder;
 use Symfony\Component\Config\Resource\ComposerResource;
 use Symfony\Component\DependencyInjection\ParameterBag\EnvPlaceholderParameterBag;
 use Symfony\Component\HttpClient\Internal\CurlClientState;
+use Symfony\Component\HttpClient\Response\MockResponse;
 use Symfony\Component\Mime\Address;
 
 final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
@@ -162,6 +163,7 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
                 'Symfony\Component\Filesystem\\',
                 CurlClientState::class,
                 Address::class,
+                MockResponse::class,
                 'Symfony\Component\String\\',
                 'Symfony\Component\VarDumper\\',
                 'Symfony\Component\Yaml\\',
