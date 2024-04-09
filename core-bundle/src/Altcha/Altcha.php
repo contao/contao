@@ -39,8 +39,8 @@ class Altcha
      */
     public function createChallenge(string|null $salt = null, int|null $number = null): AltchaChallenge
     {
-        $salt = $salt ?? bin2hex(random_bytes(12));
-        $number = $number ?? random_int($this->altchaRangeMin, $this->altchaRangeMax);
+        $salt ??= bin2hex(random_bytes(12));
+        $number ??= random_int($this->altchaRangeMin, $this->altchaRangeMax);
         $algorithms = array_column(AlgorithmConfig::cases(), 'value');
 
         if (!\in_array($this->altchaAlgorithm, $algorithms, true)) {
@@ -71,7 +71,7 @@ class Altcha
 
     public function validate(string $payload): bool
     {
-        $json = json_decode(base64_decode($payload, true), true);
+        $json = json_decode(base64_decode($payload, true), true, 512, JSON_THROW_ON_ERROR);
 
         if (null === $json) {
             return false;

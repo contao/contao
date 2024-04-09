@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Controller;
 
 use Contao\CoreBundle\Altcha\Altcha;
 use Contao\CoreBundle\Altcha\Exception\InvalidAlgorithmException;
-use Doctrine\DBAL\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;

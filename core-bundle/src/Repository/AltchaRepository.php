@@ -45,11 +45,11 @@ class AltchaRepository extends ServiceEntityRepository
             "DELETE FROM $table WHERE solved = :solved OR expires < :expires",
             [
                 'solved' => true,
-                'expires' => new \DateTime('now'),
+                'expires' => new \DateTimeImmutable('now'),
             ],
             [
                 'solved' => true,
-                'expires' => Types::DATE_MUTABLE,
+                'expires' => Types::DATETIME_IMMUTABLE,
             ],
         );
     }
