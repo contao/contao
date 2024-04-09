@@ -119,4 +119,16 @@ class RememberMeRepository extends ServiceEntityRepository
 
         $this->_em->flush();
     }
+
+    public function deleteByUsername(string $username): void
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $qb
+            ->delete($this->_entityName, 'rm')
+            ->where('rm.username = :username')
+            ->setParameter('username', $username)
+        ;
+
+        $qb->getQuery()->execute();
+    }
 }

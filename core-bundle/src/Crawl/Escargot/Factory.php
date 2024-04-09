@@ -17,7 +17,10 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use Nyholm\Psr7\Uri;
+use Psr\Http\Message\UriInterface;
 use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\HttpClient\ScopingHttpClient;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Terminal42\Escargot\BaseUriCollection;
@@ -36,6 +39,7 @@ class Factory
 
     private Connection $connection;
     private ContaoFramework $framework;
+    private RequestStack $requestStack;
     private array $defaultHttpClientOptions;
 
     /**
@@ -48,12 +52,19 @@ class Factory
      */
     private array $subscribers = [];
 
-    public function __construct(Connection $connection, ContaoFramework $framework, array $additionalUris = [], array $defaultHttpClientOptions = [])
+    /**
+     * @var \Closure(array<string, mixed>): HttpClientInterface|null
+     */
+    private ?\Closure $httpClientFactory;
+
+    public function __construct(Connection $connection, ContaoFramework $framework, RequestStack $requestStack, array $additionalUris = [], array $defaultHttpClientOptions = [], \Closure $httpClientFactory = null)
     {
         $this->connection = $connection;
         $this->framework = $framework;
+        $this->requestStack = $requestStack;
         $this->additionalUris = $additionalUris;
         $this->defaultHttpClientOptions = $defaultHttpClientOptions;
+        $this->httpClientFactory = $httpClientFactory ?? static fn (array $defaultOptions) => HttpClient::create($defaultOptions);
     }
 
     public function addSubscriber(EscargotSubscriberInterface $subscriber): self
@@ -163,18 +174,77 @@ class Factory
 
     private function createHttpClient(array $options = []): HttpClientInterface
     {
-        return HttpClient::create(
-            array_merge_recursive(
-                [
-                    'headers' => [
-                        'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                        'user-agent' => self::USER_AGENT,
-                    ],
-                    'max_duration' => 10, // Ignore requests that take longer than 10 seconds
+        $options = array_merge_recursive(
+            [
+                'headers' => [
+                    'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                    'user-agent' => self::USER_AGENT,
                 ],
-                array_merge_recursive($this->getDefaultHttpClientOptions(), $options)
-            )
+                'max_duration' => 10, // Ignore requests that take longer than 10 seconds
+            ],
+            array_merge_recursive($this->getDefaultHttpClientOptions(), $options)
         );
+
+        // Make sure confidential headers force a scoped client so external domains do not leak data
+        $cleanOptions = $this->cleanOptionsFromConfidentialData($options);
+
+        if ($options === $cleanOptions) {
+            return ($this->httpClientFactory)($options);
+        }
+
+        $scopedOptionsByRegex = [];
+
+        // All options including the confidential headers for our root page collection
+        foreach ($this->getRootPageUriCollection()->all() as $rootPageUri) {
+            $scopedOptionsByRegex[preg_quote($this->getOriginFromUri($rootPageUri))] = $options;
+        }
+
+        // Closing the session is necessary here as otherwise we might run into our own session lock
+        $request = $this->requestStack->getMainRequest();
+
+        if ($request && $request->hasSession()) {
+            $request->getSession()->save();
+        }
+
+        return new ScopingHttpClient(($this->httpClientFactory)($cleanOptions), $scopedOptionsByRegex);
+    }
+
+    private function getOriginFromUri(UriInterface $uri): string
+    {
+        $origin = $uri->getScheme().'://'.$uri->getHost();
+
+        if ($uri->getPort()) {
+            $origin .= ':'.$uri->getPort();
+        }
+
+        return $origin.'/';
+    }
+
+    private function cleanOptionsFromConfidentialData(array $options): array
+    {
+        $cleanOptions = [];
+
+        foreach ($options as $k => $v) {
+            if ('headers' === $k) {
+                foreach ($v as $header => $value) {
+                    if (\in_array(strtolower($header), ['authorization', 'cookie'], true)) {
+                        continue;
+                    }
+
+                    $cleanOptions['headers'][$header] = $value;
+                }
+
+                continue;
+            }
+
+            if ('basic_auth' === $k || 'bearer_auth' === $k) {
+                continue;
+            }
+
+            $cleanOptions[$k] = $v;
+        }
+
+        return $cleanOptions;
     }
 
     private function registerDefaultSubscribers(Escargot $escargot): void

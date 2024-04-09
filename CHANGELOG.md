@@ -2,6 +2,16 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.40] (2024-04-09)
+
+**Security fixes:**
+
+- [CVE-2024-28235]: Session cookie disclosure in the crawler
+- [CVE-2024-28190]: Cross site scripting in the file manager
+- [CVE-2024-28191]: Insert tag injection via the form generator
+- [CVE-2024-30262]: Remember-me tokens are not cleared after a password change
+- [CVE-2024-28234]: Insufficient BBCode sanitization
+
 ## [4.13.39] (2024-03-20)
 
 **Fixed issues:**
@@ -946,6 +956,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.40]: https://github.com/contao/contao/releases/tag/4.13.40
 [4.13.39]: https://github.com/contao/contao/releases/tag/4.13.39
 [4.13.38]: https://github.com/contao/contao/releases/tag/4.13.38
 [4.13.37]: https://github.com/contao/contao/releases/tag/4.13.37
@@ -989,6 +1000,11 @@ This project adheres to [Semantic Versioning].
 [4.13.0-RC3]: https://github.com/contao/contao/releases/tag/4.13.0-RC3
 [4.13.0-RC2]: https://github.com/contao/contao/releases/tag/4.13.0-RC2
 [4.13.0-RC1]: https://github.com/contao/contao/releases/tag/4.13.0-RC1
+[CVE-2024-28235]: https://github.com/contao/contao/security/advisories/GHSA-9jh5-qf84-x6pr
+[CVE-2024-28190]: https://github.com/contao/contao/security/advisories/GHSA-v24p-7p4j-qvvf
+[CVE-2024-28191]: https://github.com/contao/contao/security/advisories/GHSA-747v-52c4-8vj8
+[CVE-2024-30262]: https://github.com/contao/contao/security/advisories/GHSA-r4r6-j2j3-7pp5
+[CVE-2024-28234]: https://github.com/contao/contao/security/advisories/GHSA-j55w-hjpj-825g
 [CVE-2023-36806]: https://github.com/contao/contao/security/advisories/GHSA-4gpr-p634-922x
 [CVE-2023-29200]: https://github.com/contao/contao/security/advisories/GHSA-fp7q-xhhw-6rj3
 [CVE-2022-24899]: https://github.com/contao/contao/security/advisories/GHSA-m8x6-6r63-qvj2
