@@ -67,7 +67,6 @@ class RegisterFragmentsPass implements CompilerPassInterface
         $templates = [];
         $registry = $container->findDefinition('contao.fragment.registry');
         $compositor = $container->findDefinition('contao.fragment.compositor');
-        $command = $container->hasDefinition('contao.command.debug_fragments') ? $container->findDefinition('contao.command.debug_fragments') : null;
 
         foreach ($this->findAndSortTaggedServices($tag, $container) as $reference) {
             // If a controller has multiple methods for different fragment types (e.g. a
@@ -110,7 +109,6 @@ class RegisterFragmentsPass implements CompilerPassInterface
                 }
 
                 $registry->addMethodCall('add', [$identifier, $config]);
-                $command?->addMethodCall('add', [$identifier, $config, $attributes]);
 
                 if (isset($attributes['nestedFragments'])) {
                     $compositor->addMethodCall('add', [$identifier, $attributes['nestedFragments']]);

@@ -2485,8 +2485,7 @@
         <target>Sdílet přes Facebook</target>
       </trans-unit>
       <trans-unit id="MSC.twitterShare">
-        <source>Share on Twitter</source>
-        <target>Sdílet přes Twitter</target>
+        <source>Share on X (formerly Twitter)</source>
       </trans-unit>
       <trans-unit id="MSC.pleaseWait">
         <source>Please wait</source>

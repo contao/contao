@@ -212,10 +212,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
                 },
             );
         }
-
-        if ($container->hasParameter('kernel.debug') && $container->getParameter('kernel.debug')) {
-            $loader->load('services_debug.yaml');
-        }
     }
 
     public function configureFilesystem(FilesystemConfiguration $config): void
@@ -326,8 +322,8 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         }
 
         $factory = $container->getDefinition('contao.crawl.escargot.factory');
-        $factory->setArgument(3, $config['crawl']['additional_uris']);
-        $factory->setArgument(4, $config['crawl']['default_http_client_options']);
+        $factory->setArgument(4, $config['crawl']['additional_uris']);
+        $factory->setArgument(5, $config['crawl']['default_http_client_options']);
     }
 
     /**

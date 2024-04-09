@@ -120,18 +120,10 @@ class TemplateLocator
             return [];
         }
 
-        $isThemePath = $this->isThemePath($path);
-
         $finder = (new Finder())
             ->files()
             ->in($path)
             ->name('/(\.twig|\.html5)$/')
-            ->filter(
-                // Never list templates from theme directories unless $path is a theme path. This
-                // ensures that you can still have theme directories inside any directory that is
-                // a namespace root.
-                fn (\SplFileInfo $info): bool => $isThemePath || !$this->isThemePath($info->getPath()),
-            )
             ->sortByName()
         ;
 
@@ -207,16 +199,5 @@ class TemplateLocator
 
         // Require a marker file everywhere else
         return $this->filesystem->exists(Path::join($path, self::FILE_MARKER_NAMESPACE_ROOT));
-    }
-
-    private function isThemePath(string $path): bool
-    {
-        foreach ($this->themeDirectories ?? $this->findThemeDirectories() as $themeBasePath) {
-            if ($themeBasePath === $path || Path::isBasePath($themeBasePath, $path)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

@@ -2498,8 +2498,7 @@
         <target>Delen op Facebook</target>
       </trans-unit>
       <trans-unit id="MSC.twitterShare">
-        <source>Share on Twitter</source>
-        <target>Delen op Twitter</target>
+        <source>Share on X (formerly Twitter)</source>
       </trans-unit>
       <trans-unit id="MSC.pleaseWait">
         <source>Please wait</source>

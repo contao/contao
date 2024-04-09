@@ -11,7 +11,6 @@
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Controller;
-use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
 use Contao\DataContainer;
@@ -30,7 +29,6 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'markAsCopy'                  => 'name',
 		'onload_callback' => array
 		(
-			array('tl_module', 'checkPermission'),
 			array('tl_module', 'addCustomLayoutSectionReferences')
 		),
 		'sql' => array
@@ -565,19 +563,6 @@ $GLOBALS['TL_DCA']['tl_module'] = array
  */
 class tl_module extends Backend
 {
-	/**
-	 * Check permissions to edit the table
-	 *
-	 * @throws AccessDeniedException
-	 */
-	public function checkPermission()
-	{
-		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULES))
-		{
-			throw new AccessDeniedException('Not enough permissions to access the front end modules module.');
-		}
-	}
-
 	/**
 	 * Return all front end modules as array
 	 *

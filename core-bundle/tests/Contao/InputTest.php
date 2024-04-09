@@ -168,8 +168,8 @@ class InputTest extends TestCase
      */
     public function testEncodesInsertTags(): void
     {
-        $source = '{{ foo }}';
-        $encoded = '&#123;&#123; foo &#125;&#125;';
+        $source = ' {{ foo }} { bar } ';
+        $encoded = ' &#123;&#123; foo &#125;&#125; { bar &#125; ';
 
         $_GET = $_POST = $_COOKIE = [
             'key' => $source,
@@ -327,14 +327,14 @@ class InputTest extends TestCase
      *
      * @group legacy
      */
-    public function testEncodeNoneMode(string $source, string $expected, string|null $expectedEncoded = null): void
+    public function testEncodeNoneMode(string $source, string $expected, string|null $expectedEncoded = null, string|null $expectedEncodedDouble = null): void
     {
         $expectedEncoded ??= $expected;
 
         $this->assertSame($expected, Input::encodeInput($source, InputEncodingMode::encodeNone, false));
         $this->assertSame($expectedEncoded, Input::encodeInput($source, InputEncodingMode::encodeNone));
         $this->assertSame($expected.$expected, Input::encodeInput($source.$source, InputEncodingMode::encodeNone, false));
-        $this->assertSame($expectedEncoded.$expectedEncoded, Input::encodeInput($source.$source, InputEncodingMode::encodeNone));
+        $this->assertSame($expectedEncodedDouble ?? $expectedEncoded.$expectedEncoded, Input::encodeInput($source.$source, InputEncodingMode::encodeNone));
 
         System::getContainer()->set('request_stack', $stack = new RequestStack());
         $stack->push(new Request([], ['key' => $source]));
@@ -355,10 +355,12 @@ class InputTest extends TestCase
         yield ['foo', 'foo'];
         yield ['\X \0 \X', '\X &#92;0 \X'];
         yield ["a\rb\r\nc\n\rd\ne", "a\nb\nc\n\nd\ne"];
-        yield ['{}', '{}'];
+        yield ['{}', '{}', '&#123;&#125;', '&#123;}{&#125;'];
         yield ['{{}}', '{{}}', '&#123;&#123;&#125;&#125;'];
-        yield ['{{{}}}', '{{{}}}', '&#123;&#123;{&#125;&#125;}'];
+        yield ['{{{}}}', '{{{}}}', '&#123;&#123;{&#125;&#125;&#125;', '&#123;&#123;{&#125;&#125;}&#123;&#123;{&#125;&#125;&#125;'];
         yield ['{{{{}}}}', '{{{{}}}}', '&#123;&#123;&#123;&#123;&#125;&#125;&#125;&#125;'];
+        yield ['{ start {and} end }', '{ start {and} end }', '&#123; start {and} end &#125;', '&#123; start {and} end }{ start {and} end &#125;'];
+        yield ["\n\t { foo }\n\t ", "\n\t { foo }\n\t ", "\n\t &#123; foo &#125;\n\t ", "\n\t &#123; foo }\n\t \n\t { foo &#125;\n\t "];
         yield ["\0", "\u{FFFD}"];
         yield ["\x80", "\u{FFFD}"];
         yield ["\xFF", "\u{FFFD}"];

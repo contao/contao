@@ -161,8 +161,19 @@ class Image
 
 		if (str_contains($template, '{darkAttributes}'))
 		{
+			$darkAttributes = new HtmlAttributes($attributes);
+
+			foreach (array('data-icon', 'data-icon-disabled') as $icon)
+			{
+				if (isset($darkAttributes[$icon]))
+				{
+					$pathinfo = pathinfo($darkAttributes[$icon]);
+					$darkAttributes[$icon] = $pathinfo['filename'] . '--dark.' . $pathinfo['extension'];
+				}
+			}
+
 			$search[] = '{darkAttributes}';
-			$replace[] = (new HtmlAttributes($attributes))->mergeWith(array('class' => 'color-scheme--dark', 'loading' => 'lazy'))->toString();
+			$replace[] = $darkAttributes->mergeWith(array('class' => 'color-scheme--dark', 'loading' => 'lazy'))->toString();
 		}
 
 		if (str_contains($template, '{lightAttributes}'))

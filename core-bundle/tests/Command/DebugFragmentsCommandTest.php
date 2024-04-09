@@ -16,10 +16,14 @@ use Contao\CoreBundle\Command\DebugFragmentsCommand;
 use Contao\CoreBundle\Controller\FrontendModule\TwoFactorController;
 use Contao\CoreBundle\Fixtures\Controller\FrontendModule\TestController;
 use Contao\CoreBundle\Fragment\FragmentConfig;
+use Contao\CoreBundle\Fragment\FragmentOptionsAwareInterface;
+use Contao\CoreBundle\Fragment\FragmentRegistry;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class DebugFragmentsCommandTest extends TestCase
 {
@@ -32,7 +36,10 @@ class DebugFragmentsCommandTest extends TestCase
 
     public function testNameAndArguments(): void
     {
-        $command = new DebugFragmentsCommand();
+        $command = new DebugFragmentsCommand(
+            $this->createMock(FragmentRegistry::class),
+            $this->createMock(ContainerInterface::class),
+        );
 
         $this->assertSame('debug:fragments', $command->getName());
         $this->assertSame(0, $command->getDefinition()->getArgumentCount());
@@ -44,11 +51,20 @@ class DebugFragmentsCommandTest extends TestCase
      */
     public function testCommandOutput(array $fragments, string $expectedOutput): void
     {
-        $command = new DebugFragmentsCommand();
+        $fragmentsRegistry = new FragmentRegistry();
+        $container = new ContainerBuilder();
 
-        foreach ($fragments as $fragment) {
-            $command->add($fragment[0], $fragment[1], $fragment[2]);
+        foreach ($fragments as [$id, $config, $options]) {
+            $fragmentsRegistry->add($id, $config);
+
+            /** @var FragmentOptionsAwareInterface $instance */
+            $instance = (new \ReflectionClass($config->getController()))->newInstanceWithoutConstructor();
+            $instance->setFragmentOptions($options);
+
+            $container->set($config->getController(), $instance);
         }
+
+        $command = new DebugFragmentsCommand($fragmentsRegistry, $container);
 
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
