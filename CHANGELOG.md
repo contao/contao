@@ -272,6 +272,10 @@ This project adheres to [Semantic Versioning].
 [5.3.0-RC3]: https://github.com/contao/contao/releases/tag/5.3.0-RC3
 [5.3.0-RC2]: https://github.com/contao/contao/releases/tag/5.3.0-RC2
 [5.3.0-RC1]: https://github.com/contao/contao/releases/tag/5.3.0-RC1
+[CVE-2024-28235]: https://github.com/contao/contao/security/advisories/GHSA-9jh5-qf84-x6pr
+[CVE-2024-28190]: https://github.com/contao/contao/security/advisories/GHSA-v24p-7p4j-qvvf
+[CVE-2024-28191]: https://github.com/contao/contao/security/advisories/GHSA-747v-52c4-8vj8
+[CVE-2024-28234]: https://github.com/contao/contao/security/advisories/GHSA-j55w-hjpj-825g
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
 [bezin]: https://github.com/bezin
