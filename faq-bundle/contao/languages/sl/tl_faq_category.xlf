@@ -25,6 +25,70 @@
         <source>Please choose the FAQ reader page to which visitors will be redirected when clicking a FAQ.</source>
         <target>Izberite stran na katero bodo preusmerjeni obiskovalci ob kliku na vprašanje.</target>
       </trans-unit>
+      <trans-unit id="tl_faq_category.allowComments.0">
+        <source>Enable comments</source>
+        <target>Omogoči komentiranje</target>
+      </trans-unit>
+      <trans-unit id="tl_faq_category.allowComments.1">
+        <source>Allow visitors to comment FAQs.</source>
+        <target>Dovoli obiskovalcem komentiranje FAQ-ov.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq_category.notify.0">
+        <source>Notify</source>
+        <target>Obveščanje</target>
+      </trans-unit>
+      <trans-unit id="tl_faq_category.notify.1">
+        <source>Please choose who to notify when comments are added.</source>
+        <target>Prosimo izberite koga obvestiti ko je dodan nov komentar.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq_category.sortOrder.0">
+        <source>Sort order</source>
+        <target>Vrstni red</target>
+      </trans-unit>
+      <trans-unit id="tl_faq_category.sortOrder.1">
+        <source>By default, comments are sorted ascending, starting with the oldest one.</source>
+        <target>Privzeto so komentarji razvrščeni naraščujoče z najstarejšim naprej.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq_category.perPage.0">
+        <source>Comments per page</source>
+        <target>Komentarjev na stran</target>
+      </trans-unit>
+      <trans-unit id="tl_faq_category.perPage.1">
+        <source>Number of comments per page. Set to 0 to disable pagination.</source>
+        <target>Število komentarjev na stran. Nastavite na 0 če ne želite številčenja(paginacije).</target>
+      </trans-unit>
+      <trans-unit id="tl_faq_category.moderate.0">
+        <source>Moderate comments</source>
+        <target>Moderiraj komentarje</target>
+      </trans-unit>
+      <trans-unit id="tl_faq_category.moderate.1">
+        <source>Approve comments before they are published on the website.</source>
+        <target>Odobrite komentarje preden so objavljeni na strani.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq_category.bbcode.0">
+        <source>Allow BBCode</source>
+        <target>Dovoli BB kodo</target>
+      </trans-unit>
+      <trans-unit id="tl_faq_category.bbcode.1">
+        <source>Allow visitors to format their comments with BBCode.</source>
+        <target>Dovoli obiskovalcem oblikovanje komentarjev z BB kodo.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq_category.requireLogin.0">
+        <source>Require login to comment</source>
+        <target>Zahtevaj prijavo za komentiranje</target>
+      </trans-unit>
+      <trans-unit id="tl_faq_category.requireLogin.1">
+        <source>Allow only authenticated members to create comments.</source>
+        <target>Komentiranje dovoli samo prijavljenim uporabnikom.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq_category.disableCaptcha.0">
+        <source>Disable spam protection</source>
+        <target>Onemogoči zaščito pred neželeno pošto</target>
+      </trans-unit>
+      <trans-unit id="tl_faq_category.disableCaptcha.1">
+        <source>Use this option only if you have limited comments to authenticated users.</source>
+        <target>Uporabite to možnost samo če ste omejili komentiranje na prijavljene uporabnike.</target>
+      </trans-unit>
       <trans-unit id="tl_faq_category.tstamp.0">
         <source>Revision date</source>
         <target>Datum revizije</target>
@@ -36,6 +100,22 @@
       <trans-unit id="tl_faq_category.title_legend">
         <source>Title and redirect</source>
         <target>Naslov in preusmeritev</target>
+      </trans-unit>
+      <trans-unit id="tl_faq_category.comments_legend">
+        <source>Comments</source>
+        <target>Komentarji</target>
+      </trans-unit>
+      <trans-unit id="tl_faq_category.notify_admin">
+        <source>System administrator</source>
+        <target>Administrator sistema</target>
+      </trans-unit>
+      <trans-unit id="tl_faq_category.notify_author">
+        <source>Author of the FAQ</source>
+        <target>FAQ avtor</target>
+      </trans-unit>
+      <trans-unit id="tl_faq_category.notify_both">
+        <source>Author and system administrator</source>
+        <target>Avtor in administrator sistema</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.new.0">
         <source>New</source>

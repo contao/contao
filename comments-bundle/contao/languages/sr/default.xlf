@@ -5,10 +5,6 @@
         <source>Comments</source>
         <target>Коментари</target>
       </trans-unit>
-      <trans-unit id="MSC.commentCount">
-        <source>(comments: %s)</source>
-        <target>(коментари: %s)</target>
-      </trans-unit>
       <trans-unit id="MSC.com_name">
         <source>Name</source>
         <target>Име</target>

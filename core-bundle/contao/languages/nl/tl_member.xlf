@@ -241,9 +241,6 @@
         <source>Login details</source>
         <target>Login gegevens</target>
       </trans-unit>
-      <trans-unit id="tl_member.captchaDetails">
-        <source>Verification</source>
-      </trans-unit>
       <trans-unit id="tl_member.new.0">
         <source>New</source>
         <target>Nieuw</target>

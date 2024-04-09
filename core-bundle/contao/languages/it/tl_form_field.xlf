@@ -451,15 +451,12 @@
       </trans-unit>
       <trans-unit id="tl_form_field.toggle.0">
         <source>Hide/unhide form field</source>
-        <target>Nascondi/mostra campo del modulo</target>
       </trans-unit>
       <trans-unit id="tl_form_field.toggle.1">
         <source>Hide form field ID %s</source>
-        <target>Nascondi campo modulo ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.toggle.2">
         <source>Unhide form field ID %s</source>
-        <target>Mostra il campo del modulo ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.0">
         <source>Paste at the top</source>

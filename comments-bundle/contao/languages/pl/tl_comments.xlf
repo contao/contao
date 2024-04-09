@@ -183,11 +183,9 @@
       </trans-unit>
       <trans-unit id="tl_comments.toggle.1">
         <source>Unpublish comment ID %s</source>
-        <target>Ukryj komentarz ID %s</target>
       </trans-unit>
       <trans-unit id="tl_comments.toggle.2">
         <source>Publish comment ID %s</source>
-        <target>Opublikuj komentarz ID %s</target>
       </trans-unit>
     </body>
   </file>

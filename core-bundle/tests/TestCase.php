@@ -17,6 +17,7 @@ use Contao\CoreBundle\Routing\Matcher\FrontendMatcher;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\TestCase\ContaoTestCase;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
@@ -33,7 +34,7 @@ abstract class TestCase extends ContaoTestCase
      */
     protected function mockScopeMatcher(): ScopeMatcher
     {
-        return new ScopeMatcher(new BackendMatcher(), new FrontendMatcher());
+        return new ScopeMatcher(new BackendMatcher(), new FrontendMatcher(), $this->createMock(RequestStack::class));
     }
 
     /**
