@@ -506,6 +506,7 @@ class HtmlAttributesTest extends TestCase
         );
 
         $attributes->addStyle('--COLOR:RED');
+
         $this->assertSame(
             'COLOR: RED; --color: red; --COLOR: RED;',
             $attributes['style'],

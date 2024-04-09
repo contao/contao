@@ -504,12 +504,12 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     }
 
     /**
-     * Serialize styles according to https://www.w3.org/TR/cssom-1/#serialize-a-css-declaration-block.
-     *
      * @param array<string, list<string>> $styles
      */
     private function serializeStyles(array $styles): string
     {
+        // Serialize styles according to
+        // https://www.w3.org/TR/cssom-1/#serialize-a-css-declaration-block
         return implode(' ', array_merge(...array_values($styles)));
     }
 }
