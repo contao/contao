@@ -1320,12 +1320,16 @@ label.tl_change_selected {
 }
 ul.sgallery {
 	overflow:hidden;
+	display:grid;
+	grid-template-columns:repeat(auto-fill,100px);
+	grid-auto-rows:75px;
+	gap:4px;
+	padding:2px 0;
 }
 ul.sgallery li {
 	min-width:100px;
 	min-height:75px;
-	float:left;
-	margin:2px 4px 2px 0;
+	margin:0;
 	padding:0;
 	background:#eee;
 	display:-webkit-flex;
