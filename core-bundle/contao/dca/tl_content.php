@@ -37,6 +37,10 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'ctable'                      => array('tl_content'),
 		'dynamicPtable'               => true,
 		'markAsCopy'                  => 'headline',
+		'oncreate_callback'           => array
+		(
+			array('tl_content', 'setAllowedType')
+		),
 		'onload_callback'             => array
 		(
 			array('tl_content', 'adjustDcaByType'),
@@ -1718,5 +1722,35 @@ class tl_content extends Backend
 		$titleDisabled = (is_array($GLOBALS['TL_DCA']['tl_content']['list']['operations']['toggle']['label']) && isset($GLOBALS['TL_DCA']['tl_content']['list']['operations']['toggle']['label'][2])) ? sprintf($GLOBALS['TL_DCA']['tl_content']['list']['operations']['toggle']['label'][2], $row['id']) : $title;
 
 		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars(!$row['invisible'] ? $title : $titleDisabled) . '" data-title="' . StringUtil::specialchars($title) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" data-action="contao--scroll-offset#store" onclick="return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
+	}
+
+	/**
+	 * Switch to first allowed type if default type is not allowed
+	 *
+	 * @param string  $strTable
+	 * @param integer $insertID
+	 * @param array   $values
+	 * @param object  $dc
+	 *
+	 * @return void
+	 */
+	public function setAllowedType($strTable, $insertID, $values, $dc)
+	{
+		if ($dc->parentTable == 'tl_content')
+		{
+			$compositor = System::getContainer()->get('contao.fragment.compositor');
+
+			if ($compositor->supportsNesting('contao.content_element.' . $dc->getCurrentRecord()["type"]))
+			{
+				$allowedTypes = $compositor->getAllowedTypes('contao.content_element.' . $dc->getCurrentRecord()["type"]);
+				$objCte = ContentModel::findById($insertID);
+
+				if ($allowedTypes && !in_array($objCte->type, $allowedTypes))
+				{
+					$objCte->type = $allowedTypes[0];
+					$objCte->save();
+				}
+			}
+		}
 	}
 }
