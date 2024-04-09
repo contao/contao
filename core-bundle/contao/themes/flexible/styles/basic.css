@@ -356,19 +356,19 @@ fieldset > .widget-group {
 	grid-template-columns: repeat(12, minmax(0, 1fr));
 }
 .widget-group > * {
-	grid-column: 1 / 13;
+	grid-column-end: span 12;
 }
 .widget-group > .m12 {
 	margin: 0;
 }
 .widget-group > .w50 {
-	grid-column: auto / span 6;
+	grid-column-end: span 6;
 }
 .widget-group > .w33 {
-	grid-column: auto / span 4;
+	grid-column-end: span 4;
 }
 .widget-group > .w25 {
-	grid-column: auto / span 3;
+	grid-column-end: span 3;
 }
 
 .widget {
@@ -1035,7 +1035,7 @@ a.tl_submit {
 	.widget-group > .w50,
 	.widget-group > .w66,
 	.widget-group > .w75 {
-		grid-column: auto / span 6;
+		grid-column-end: span 6;
 	}
 }
 
@@ -1051,7 +1051,7 @@ a.tl_submit {
 	.widget-group > .w50,
 	.widget-group > .w66,
 	.widget-group > .w75 {
-		grid-column: 1 / 13;
+		grid-column-end: span 12;
 	}
 
 	*:not(.widget-group) > .w50 {
