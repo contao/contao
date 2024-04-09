@@ -111,7 +111,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_BOTH,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'feEditable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'lastname' => array
@@ -120,13 +120,13 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_BOTH,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'feEditable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'dateOfBirth' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'date', 'datepicker'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w25 wizard'),
+			'eval'                    => array('rgxp'=>'date', 'datepicker'=>true, 'feEditable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w25 wizard'),
 			'sql'                     => "varchar(11) NOT NULL default ''"
 		),
 		'gender' => array
@@ -134,7 +134,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'inputType'               => 'select',
 			'options'                 => array('male', 'female', 'other'),
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'eval'                    => array('includeBlankOption'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w25'),
+			'eval'                    => array('includeBlankOption'=>true, 'feEditable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w25'),
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'company' => array
@@ -143,21 +143,21 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'address', 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>255, 'feEditable'=>true, 'feGroup'=>'address', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'street' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'address', 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>255, 'feEditable'=>true, 'feGroup'=>'address', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'postal' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>32, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'address', 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>32, 'feEditable'=>true, 'feGroup'=>'address', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'city' => array
@@ -166,14 +166,14 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'search'                  => true,
 			'sorting'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'address', 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>255, 'feEditable'=>true, 'feGroup'=>'address', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'state' => array
 		(
 			'sorting'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>64, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'address', 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>64, 'feEditable'=>true, 'feGroup'=>'address', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'country' => array
@@ -181,7 +181,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'filter'                  => true,
 			'sorting'                 => true,
 			'inputType'               => 'select',
-			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'address', 'tl_class'=>'w50'),
+			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'feEditable'=>true, 'feGroup'=>'address', 'tl_class'=>'w50'),
 			'options_callback'        => static fn () => System::getContainer()->get('contao.intl.countries')->getCountries(),
 			'sql'                     => "varchar(2) NOT NULL default ''"
 		),
@@ -189,42 +189,42 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>64, 'rgxp'=>'phone', 'decodeEntities'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'contact', 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>64, 'rgxp'=>'phone', 'decodeEntities'=>true, 'feEditable'=>true, 'feGroup'=>'contact', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'mobile' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>64, 'rgxp'=>'phone', 'decodeEntities'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'contact', 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>64, 'rgxp'=>'phone', 'decodeEntities'=>true, 'feEditable'=>true, 'feGroup'=>'contact', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'fax' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>64, 'rgxp'=>'phone', 'decodeEntities'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'contact', 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>64, 'rgxp'=>'phone', 'decodeEntities'=>true, 'feEditable'=>true, 'feGroup'=>'contact', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'email' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'rgxp'=>'email', 'unique'=>true, 'decodeEntities'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'contact', 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'rgxp'=>'email', 'unique'=>true, 'decodeEntities'=>true, 'feEditable'=>true, 'feGroup'=>'contact', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'website' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>HttpUrlListener::RGXP_NAME, 'maxlength'=>255, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'contact', 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>HttpUrlListener::RGXP_NAME, 'maxlength'=>255, 'feEditable'=>true, 'feGroup'=>'contact', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'language' => array
 		(
 			'filter'                  => true,
 			'inputType'               => 'select',
-			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50'),
+			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'feEditable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50'),
 			'options_callback'        => static fn () => System::getContainer()->get('contao.intl.locales')->getLocales(),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -250,7 +250,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'unique'=>true, 'rgxp'=>'extnd', 'nospace'=>true, 'maxlength'=>64, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'login', 'tl_class'=>'w50', 'autocapitalize'=>'off', 'autocomplete'=>'username'),
+			'eval'                    => array('mandatory'=>true, 'unique'=>true, 'rgxp'=>'extnd', 'nospace'=>true, 'maxlength'=>64, 'feEditable'=>true, 'feGroup'=>'login', 'tl_class'=>'w50', 'autocapitalize'=>'off', 'autocomplete'=>'username'),
 			'sql'                     => 'varchar(64) BINARY NULL'
 		),
 		'password' => array

@@ -2715,7 +2715,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$folderAlt = $protected ? $GLOBALS['TL_LANG']['MSC']['folderCP'] : $GLOBALS['TL_LANG']['MSC']['folderC'];
 
 			// Add the current folder
-			$strFolderNameEncoded = StringUtil::convertEncoding(StringUtil::specialchars(basename($currentFolder)), System::getContainer()->getParameter('kernel.charset'));
+			$strFolderNameEncoded = StringUtil::convertEncoding(StringUtil::specialchars(basename($currentFolder), false, true), System::getContainer()->getParameter('kernel.charset'));
 			$strFolderLabel = '<strong>' . $strFolderNameEncoded . '</strong>';
 
 			if ($this->isMounted($currentFolder))
@@ -2837,7 +2837,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				}
 			}
 
-			$strFileNameEncoded = StringUtil::convertEncoding(StringUtil::specialchars(basename($currentFile)), System::getContainer()->getParameter('kernel.charset'));
+			$strFileNameEncoded = StringUtil::convertEncoding(StringUtil::specialchars(basename($currentFile), false, true), System::getContainer()->getParameter('kernel.charset'));
 			$iconAlt = sprintf($GLOBALS['TL_LANG']['MSC']['typeOfFile'], strtoupper($objFile->extension));
 
 			// No popup links for protected files and templates (see #700)
