@@ -151,6 +151,7 @@ class PrettyErrorScreenListener
             $pageModel = $request->attributes->get('pageModel');
 
             if (!$pageModel instanceof PageModel) {
+                // The try/catch must not be merged upstream to Contao 5!
                 try {
                     $frontendAdapter = $this->framework->getAdapter(Frontend::class);
                     $pageModel = $frontendAdapter->getRootPageFromUrl();
