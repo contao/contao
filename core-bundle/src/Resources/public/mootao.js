@@ -179,6 +179,11 @@ Tips.Contao = new Class(
 		this.tip.setStyles(obj);
 	},
 
+	fill: function(element, contents){
+		if (typeof contents == 'string') element.set(element.hasClass('tip-text') ? 'html' : 'text', contents);
+		else element.adopt(contents);
+	},
+
 	hide: function(element) {
 		if (!this.tip) document.id(this);
 		this.fireEvent('hide', [this.tip, element]);

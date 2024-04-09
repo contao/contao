@@ -233,7 +233,7 @@ class ModulePersonalData extends Module
 				}
 
 				// Convert arrays (see #4980)
-				if (($arrData['eval']['multiple'] ?? null) && isset($arrData['eval']['csv']))
+				if (($arrData['eval']['multiple'] ?? null) && isset($arrData['eval']['csv']) && \is_array($varValue))
 				{
 					$varValue = implode($arrData['eval']['csv'], $varValue);
 				}
@@ -303,6 +303,11 @@ class ModulePersonalData extends Module
 						// Set the new field in the member model
 						$blnModified = true;
 						$objMember->$field = $varValue;
+
+						if ($objWidget instanceof FormPassword)
+						{
+							System::getContainer()->get('contao.repository.remember_me')->deleteByUsername($objMember->username);
+						}
 					}
 				}
 			}
