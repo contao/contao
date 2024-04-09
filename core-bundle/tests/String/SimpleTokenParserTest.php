@@ -145,16 +145,34 @@ class SimpleTokenParserTest extends TestCase
             'This is my ',
         ];
 
+        yield 'Test regular curly braces do not get encoded' => [
+            '##token##',
+            ['token' => 'foo { bar } baz'],
+            'foo { bar } baz',
+        ];
+
         yield 'Test if-tags insertion not evaluated' => [
             '##token##',
             ['token' => '{if token=="foo"}'],
-            '{if token=="foo"}',
+            '&#123;if token=="foo"&#125;',
+        ];
+
+        yield 'Test insert tags insertion not possible' => [
+            '##token##',
+            ['token' => '{{date}}'],
+            '&#123;&#123;date&#125;&#125;',
         ];
 
         yield 'Test if-tags insertion not evaluated with multiple tokens' => [
             '##token1####token2####token3##',
             ['token1' => '{', 'token2' => 'if', 'token3' => ' token=="foo"}'],
-            '{if token=="foo"}',
+            '&#123;if token=="foo"&#125;',
+        ];
+
+        yield 'Test insert tags insertion not possible with multiple tokens' => [
+            '##token1####token2####token3##',
+            ['token1' => '{', 'token2' => '{date}', 'token3' => '}'],
+            '&#123;&#123;date&#125;&#125;',
         ];
 
         yield 'Test escaping works correctly' => [

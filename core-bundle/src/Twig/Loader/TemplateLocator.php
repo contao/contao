@@ -200,6 +200,12 @@ class TemplateLocator
 
     private function isNamespaceRoot(string $path): bool
     {
+        // Implicitly treat the global template directory as namespace root
+        if (Path::join($this->projectDir, 'templates') === $path) {
+            return true;
+        }
+
+        // Require a marker file everywhere else
         return $this->filesystem->exists(Path::join($path, self::FILE_MARKER_NAMESPACE_ROOT));
     }
 }
