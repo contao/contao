@@ -287,6 +287,7 @@
     "extra": {
         "bamarni-bin": {
             "bin-links": false,
+            "target-directory": "tools",
             "forward-command": false
         },
         "contao-manager-plugin": {
@@ -304,27 +305,27 @@
     "scripts": {
         "all": [
             "@rector",
-            "@ecs",
+            "@cs-fixer",
             "@service-linter",
             "@monorepo-tools",
             "@unit-tests",
             "@functional-tests",
             "@phpstan"
         ],
-        "ecs": [
-            "@ecs-default",
+        "cs-fixer": [
+            "@ecs",
             "@ecs-legacy",
             "@ecs-template"
         ],
-        "ecs-default": "@php vendor-bin/ecs/vendor/bin/ecs check */bin */src */tests vendor-bin/*/bin vendor-bin/*/config vendor-bin/*/src -c vendor-bin/ecs/config/default.php --fix --ansi",
-        "ecs-legacy": "@php vendor-bin/ecs/vendor/bin/ecs check *-bundle/contao -c vendor-bin/ecs/config/legacy.php --fix --ansi",
-        "ecs-template": "@php vendor-bin/ecs/vendor/bin/ecs check *-bundle/contao/templates -c vendor-bin/ecs/config/template.php --fix --ansi",
+        "ecs": "@php tools/ecs/vendor/bin/ecs check */bin */src */tests tools/*/bin tools/*/config tools/*/src -c tools/ecs/config/default.php --fix --ansi",
+        "ecs-legacy": "@php tools/ecs/vendor/bin/ecs check *-bundle/contao -c tools/ecs/config/legacy.php --fix --ansi",
+        "ecs-template": "@php tools/ecs/vendor/bin/ecs check *-bundle/contao/templates -c tools/ecs/config/template.php --fix --ansi",
         "functional-tests": "@php vendor/bin/phpunit --testsuite=functional --colors=always",
-        "monorepo-tools": "@php vendor-bin/monorepo-tools/vendor/bin/monorepo-tools composer-json --validate --ansi",
-        "phpstan": "@php vendor-bin/phpstan/vendor/bin/phpstan analyze -c vendor-bin/phpstan/config/contao.neon --ansi",
-        "rector": "@php vendor-bin/rector/vendor/bin/rector -c vendor-bin/rector/config/rector.php --ansi",
-        "require-checker": "@php vendor-bin/require-checker/vendor/bin/composer-require-checker check --config-file=vendor-bin/require-checker/config/config.json composer.json",
-        "service-linter": "@php vendor-bin/service-linter/bin/lint-service-ids --ansi",
+        "monorepo-tools": "@php tools/monorepo/vendor/bin/monorepo-tools composer-json --validate --ansi",
+        "phpstan": "@php tools/phpstan/vendor/bin/phpstan analyze -c tools/phpstan/config/contao.neon --ansi",
+        "rector": "@php tools/rector/vendor/bin/rector -c tools/rector/config/rector.php --ansi",
+        "require-checker": "@php tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config/config.json composer.json",
+        "service-linter": "@php tools/service-linter/bin/lint-service-ids --ansi",
         "unit-tests": "@php vendor/bin/phpunit --colors=always"
     }
 }

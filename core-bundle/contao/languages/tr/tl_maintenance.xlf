@@ -141,6 +141,14 @@
         <source>The crawler crawls all URLs it finds. Here you can decide what to do with these results.</source>
         <target>Toplayıcı bulduğu tüm adresleri derler. Buradan bu sonuçlarla ne yapılacağını belirtebilirsiniz.</target>
       </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDepth.0">
+        <source>Maximum depth</source>
+        <target>En fazla derinlik</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDepth.1">
+        <source>The maximum depth to crawl.</source>
+        <target>En fazla tarama derinliği.</target>
+      </trans-unit>
       <trans-unit id="tl_maintenance.crawlMember.0">
         <source>Front end member</source>
         <target>Ön yüz üyesi</target>
@@ -148,6 +156,10 @@
       <trans-unit id="tl_maintenance.crawlMember.1">
         <source>Automatically log in a front end member to index protected pages.</source>
         <target>Korunmuş sayfaları dizine eklemek için otomatik olarak bir ön yüz kullanıcısı oturumu açılsın.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlHint">
+        <source>Your website is currently crawled with %d concurrent requests. If your server can handle more than %1$d concurrent requests, ask your system administrator to increase the &lt;code&gt;%s&lt;/code&gt; setting in the system configuration to speed up the crawling process. Refer to the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao manual&lt;/a&gt; for more information.</source>
+        <target>Siteniz şu anda %d eşzamanlı istekle taranıyor. Sunucunuz %1$d taneden fazla eşzamanlı isteği işleyebiliyorsa, tarama sürecini hızlandırmak için sistem yöneticinizden sistem yapılandırmasındaki &lt;code&gt;%s&lt;/code&gt; ayarının değerini artırmasını isteyin. Ayrıntılı bilgi almak için &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao rehberine&lt;/a&gt; bakabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlWaitToBeFinished">
         <source>The crawler is currently working. Please wait for it to finish to see the results.</source>

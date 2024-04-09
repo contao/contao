@@ -272,7 +272,6 @@ services:
             - '@request_stack'
             - '@contao.fragment.registry'
             - '@contao.fragment.pre_handlers'
-            - '@contao.routing.page_finder'
             - '%kernel.debug%'
 
     contao.fragment.pre_handlers:
@@ -412,7 +411,6 @@ services:
               contao.image.factory: '@contao.image.factory'
               contao.image.resizer: '@contao.image.resizer'
               contao.assets.files_context: '@contao.assets.files_context'
-              contao.routing.page_finder: '@contao.routing.page_finder'
               contao.framework: '@contao.framework'
               event_dispatcher: '@event_dispatcher'
             - '%kernel.project_dir%'
@@ -753,7 +751,6 @@ services:
         arguments:
             - '@contao.framework'
             - '@router'
-            - '@request_stack'
 
     contao.routing.page_registry:
         class: Contao\CoreBundle\Routing\Page\PageRegistry
@@ -828,7 +825,6 @@ services:
         arguments:
             - '@contao.routing.backend_matcher'
             - '@contao.routing.frontend_matcher'
-            - '@request_stack'
 
     contao.routing.url_matcher:
         class: Contao\CoreBundle\Routing\Matcher\UrlMatcher
@@ -1157,7 +1153,6 @@ services:
             - '@contao.twig.loader.template_locator'
             - '@contao.twig.loader.theme_namespace'
             - '@contao.framework'
-            - '@contao.routing.page_finder'
             - '%kernel.project_dir%'
         tags:
             - { name: twig.loader, priority: 2 }

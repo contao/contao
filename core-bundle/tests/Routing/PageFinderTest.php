@@ -17,53 +17,11 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 
 class PageFinderTest extends TestCase
 {
-    public function testGetCurrentPageFromRequest(): void
-    {
-        $requestStack = $this->createMock(RequestStack::class);
-        $requestStack
-            ->expects($this->never())
-            ->method('getCurrentRequest')
-        ;
-
-        $pageFinder = new PageFinder(
-            $this->mockContaoFramework(),
-            $this->createMock(RequestMatcherInterface::class),
-            $requestStack,
-        );
-
-        $pageModel = $this->createMock(PageModel::class);
-
-        $request = Request::create('https://localhost');
-        $request->attributes->set('pageModel', $pageModel);
-
-        $this->assertSame($pageModel, $pageFinder->getCurrentPage($request));
-    }
-
-    public function testGetCurrentPageFromRequestStack(): void
-    {
-        $pageModel = $this->createMock(PageModel::class);
-
-        $request = Request::create('https://localhost');
-        $request->attributes->set('pageModel', $pageModel);
-
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $pageFinder = new PageFinder(
-            $this->mockContaoFramework(),
-            $this->createMock(RequestMatcherInterface::class),
-            $requestStack,
-        );
-
-        $this->assertSame($pageModel, $pageFinder->getCurrentPage());
-    }
-
     public function testFindRootPageForHostReturnsNullIfRoutingHasNoPageModel(): void
     {
         $framework = $this->mockContaoFramework();
@@ -72,7 +30,7 @@ class PageFinderTest extends TestCase
             ->method('initialize')
         ;
 
-        $pageFinder = new PageFinder($framework, $this->mockRequestMatcher(null), new RequestStack());
+        $pageFinder = new PageFinder($framework, $this->mockRequestMatcher(null));
         $result = $pageFinder->findRootPageForHostAndLanguage('www.example.org');
 
         $this->assertNull($result);
@@ -92,7 +50,7 @@ class PageFinderTest extends TestCase
             ->willThrowException($this->createMock(ExceptionInterface::class))
         ;
 
-        $pageFinder = new PageFinder($framework, $requestMatcher, new RequestStack());
+        $pageFinder = new PageFinder($framework, $requestMatcher);
         $result = $pageFinder->findRootPageForHostAndLanguage('www.example.org');
 
         $this->assertNull($result);
@@ -108,7 +66,7 @@ class PageFinderTest extends TestCase
             ->method('initialize')
         ;
 
-        $pageFinder = new PageFinder($framework, $this->mockRequestMatcher($pageModel), new RequestStack());
+        $pageFinder = new PageFinder($framework, $this->mockRequestMatcher($pageModel));
         $result = $pageFinder->findRootPageForHostAndLanguage('www.example.org');
 
         $this->assertSame($pageModel, $result);
@@ -139,7 +97,7 @@ class PageFinderTest extends TestCase
             ->method('initialize')
         ;
 
-        $pageFinder = new PageFinder($framework, $this->mockRequestMatcher($regularPage), new RequestStack());
+        $pageFinder = new PageFinder($framework, $this->mockRequestMatcher($regularPage));
         $result = $pageFinder->findRootPageForHostAndLanguage('www.example.org');
 
         $this->assertSame($rootPage, $result);
@@ -164,7 +122,7 @@ class PageFinderTest extends TestCase
             ->willReturn(['pageModel' => $pageModel])
         ;
 
-        $pageFinder = new PageFinder($framework, $requestMatcher, new RequestStack());
+        $pageFinder = new PageFinder($framework, $requestMatcher);
         $result = $pageFinder->findRootPageForRequest($request);
 
         $this->assertSame($pageModel, $result);
@@ -198,7 +156,7 @@ class PageFinderTest extends TestCase
         $request = new Request();
         $request->attributes->set('pageModel', $regularPage);
 
-        $pageFinder = new PageFinder($framework, $this->mockRequestMatcher(false), new RequestStack());
+        $pageFinder = new PageFinder($framework, $this->mockRequestMatcher(false));
         $result = $pageFinder->findRootPageForRequest($request);
 
         $this->assertSame($rootPage, $result);
@@ -214,7 +172,7 @@ class PageFinderTest extends TestCase
             ->method('initialize')
         ;
 
-        $pageFinder = new PageFinder($framework, $this->mockRequestMatcher($pageModel, 'http://localhost'), new RequestStack());
+        $pageFinder = new PageFinder($framework, $this->mockRequestMatcher($pageModel, 'http://localhost'));
         $result = $pageFinder->findRootPageForHostAndLanguage('');
 
         $this->assertSame($pageModel, $result);

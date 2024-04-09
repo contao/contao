@@ -51,6 +51,7 @@
       </trans-unit>
       <trans-unit id="MSC.nl_overview">
         <source>Back to the newsletter overview</source>
+        <target>Назад на преглед билтена</target>
       </trans-unit>
     </body>
   </file>

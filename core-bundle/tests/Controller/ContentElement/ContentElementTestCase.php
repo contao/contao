@@ -31,7 +31,6 @@ use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
-use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
@@ -260,14 +259,7 @@ class ContentElementTestCase extends TestCase
             $this->createMock(Connection::class),
         );
 
-        return new ContaoFilesystemLoader(
-            new NullAdapter(),
-            $templateLocator,
-            $themeNamespace,
-            $this->createMock(ContaoFramework::class),
-            $this->createMock(PageFinder::class),
-            $resourceBasePath,
-        );
+        return new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $themeNamespace, $this->createMock(ContaoFramework::class), $resourceBasePath);
     }
 
     protected function getEnvironment(ContaoFilesystemLoader $contaoFilesystemLoader, ContaoFramework $framework): Environment

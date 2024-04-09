@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_page.alias.1">
         <source>The page alias is a unique reference to the page which can be called instead of its numeric ID.</source>
-        <target>Sidalias är ett unik referensnamn som kan användas istället för sidans numeriska ID-nummer när man refererar till sidan.&lt;br /&gt;Detta är speciellt användbart om Contao använder statiska URLer.</target>
+        <target>Sidaliaset är en unik referens till sidan som kan användas istället för dess numeriska ID.</target>
       </trans-unit>
       <trans-unit id="tl_page.requireItem.0">
         <source>Require an item</source>
@@ -99,9 +99,11 @@
       </trans-unit>
       <trans-unit id="tl_page.alwaysForward.0">
         <source>Always redirect</source>
+        <target>Omdirigera alltid</target>
       </trans-unit>
       <trans-unit id="tl_page.alwaysForward.1">
         <source>Redirect to the target page even if there are query or path parameters.</source>
+        <target>Omdirigera till målsidan även om det finns fråge- eller sökvägsparametrar.</target>
       </trans-unit>
       <trans-unit id="tl_page.jumpTo.0">
         <source>Redirect page</source>
@@ -471,6 +473,30 @@
         <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
         <target>Välj den sida till vilken medlemmarna kommer att omdirigeras för att ställa in tvåfaktorautentisering.</target>
       </trans-unit>
+      <trans-unit id="tl_page.enableCsp.0">
+        <source>Enable CSP</source>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCsp.1">
+        <source>Enable Content Security Policy for this website.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.csp.0">
+        <source>Content Security Policy</source>
+      </trans-unit>
+      <trans-unit id="tl_page.csp.1">
+        <source>Here you can enter custom Content Security Policy directives.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportOnly.0">
+        <source>Reporting only</source>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportOnly.1">
+        <source>Only report policy violations without enforcing them.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportLog.0">
+        <source>Enable report logging</source>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportLog.1">
+        <source>Log CSP violations to the Contao system log.</source>
+      </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
         <target>Namn och typ</target>
@@ -551,6 +577,9 @@
         <source>Two-factor authentication</source>
         <target>Tvåfaktorautentisering</target>
       </trans-unit>
+      <trans-unit id="tl_page.csp_legend">
+        <source>Content Security Policy</source>
+      </trans-unit>
       <trans-unit id="tl_page.permanent">
         <source>301 Permanent redirect</source>
         <target>301 Permanent omdirigering</target>
@@ -599,7 +628,7 @@
         <source>Duplicate page ID %s</source>
         <target>Kopiera sidan med ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.copyChilds">
+      <trans-unit id="tl_page.copyChildren">
         <source>Duplicate page ID %s with its subpages</source>
         <target>Kopiera sidan med ID %s tillsammans med ev. undersidor</target>
       </trans-unit>

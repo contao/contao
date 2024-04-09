@@ -65,6 +65,14 @@
         <source>Here you can add a custom meta description to overwrite the default page description.</source>
         <target>独自のメタデスクリプションを追加して、ページの説明の初期値を上書きできます。</target>
       </trans-unit>
+      <trans-unit id="tl_news.canonicalLink.0">
+        <source>Canonical URL</source>
+        <target>基準のURL</target>
+      </trans-unit>
+      <trans-unit id="tl_news.canonicalLink.1">
+        <source>Here you can set a custom canonical URL like https://example.com/.</source>
+        <target>https://example.com/ の様な独自の標準のURLを設定できます。</target>
+      </trans-unit>
       <trans-unit id="tl_news.subheadline.0">
         <source>Subheadline</source>
         <target>小見出し</target>
@@ -184,14 +192,6 @@
       <trans-unit id="tl_news.cssClass.1">
         <source>Here you can enter one or more classes.</source>
         <target>1つ以上のclassを入力できます。</target>
-      </trans-unit>
-      <trans-unit id="tl_news.noComments.0">
-        <source>Disable comments</source>
-        <target>コメントを不使用</target>
-      </trans-unit>
-      <trans-unit id="tl_news.noComments.1">
-        <source>Do not allow comments for this particular news item.</source>
-        <target>この特定のニュース項目にコメントを許可しません。</target>
       </trans-unit>
       <trans-unit id="tl_news.featured.0">
         <source>Feature item</source>

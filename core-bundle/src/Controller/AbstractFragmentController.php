@@ -16,7 +16,6 @@ use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController
 use Contao\CoreBundle\Controller\FrontendModule\AbstractFrontendModuleController;
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Fragment\FragmentOptionsAwareInterface;
-use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
@@ -50,7 +49,6 @@ abstract class AbstractFragmentController extends AbstractController implements 
         $services = parent::getSubscribedServices();
 
         $services['request_stack'] = RequestStack::class;
-        $services['contao.routing.page_finder'] = PageFinder::class;
         $services['contao.routing.scope_matcher'] = ScopeMatcher::class;
         $services['contao.twig.filesystem_loader'] = ContaoFilesystemLoader::class;
         $services['contao.twig.interop.context_factory'] = ContextFactory::class;
@@ -60,7 +58,17 @@ abstract class AbstractFragmentController extends AbstractController implements 
 
     protected function getPageModel(): PageModel|null
     {
-        return $this->container->get('contao.routing.page_finder')->getCurrentPage();
+        if (!$request = $this->container->get('request_stack')->getCurrentRequest()) {
+            return null;
+        }
+
+        $pageModel = $request->attributes->get('pageModel');
+
+        if ($pageModel instanceof PageModel) {
+            return $pageModel;
+        }
+
+        return null;
     }
 
     /**

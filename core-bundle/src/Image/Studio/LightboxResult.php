@@ -96,7 +96,7 @@ class LightboxResult
      */
     private function getDefaultLightboxSizeConfiguration(): array|null
     {
-        $page = $this->locator->get('contao.routing.page_finder')->getCurrentPage();
+        $page = $GLOBALS['objPage'] ?? null;
 
         if (!$page instanceof PageModel || null === $page->layout) {
             return null;

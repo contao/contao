@@ -15,14 +15,12 @@ namespace Contao\CoreBundle\Tests\Twig\Inheritance;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
-use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
-use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Filesystem\Path;
@@ -46,23 +44,21 @@ class InheritanceTest extends TestCase
 
     public function testInheritsMultipleTimesWithTheme(): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class);
+        $environment = $this->getDemoEnvironment();
+
+        $page = new \stdClass();
         $page->templateGroup = 'templates/my/theme';
 
-        $pageFinder = $this->createMock(PageFinder::class);
-        $pageFinder
-            ->expects($this->once())
-            ->method('getCurrentPage')
-            ->willReturn($page)
-        ;
+        $GLOBALS['objPage'] = $page;
 
-        $environment = $this->getDemoEnvironment(pageFinder: $pageFinder);
         $html = $environment->render('@Contao/text.html.twig', ['content' => 'This &amp; that']);
 
         // Theme > Global > App > BarBundle > FooBundle > CoreBundle
         $expected = '<theme><global><app><bar><foo>Content: This &amp; that</foo></bar></app></global></theme>';
 
         $this->assertSame($expected, $html);
+
+        unset($GLOBALS['objPage']);
     }
 
     public function testThrowsIfTemplatesAreAmbiguous(): void
@@ -87,7 +83,7 @@ class InheritanceTest extends TestCase
         $this->getDemoEnvironment(['InvalidBundle2' => ['path' => $bundlePath]]);
     }
 
-    private function getDemoEnvironment(array|null $bundlesMetadata = null, PageFinder|null $pageFinder = null): Environment
+    private function getDemoEnvironment(array|null $bundlesMetadata = null): Environment
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
 
@@ -109,16 +105,9 @@ class InheritanceTest extends TestCase
         ;
 
         $themeNamespace = new ThemeNamespace();
-        $templateLocator = new TemplateLocator($projectDir, $bundles, $bundlesMetadata, $themeNamespace, $connection);
 
-        $loader = new ContaoFilesystemLoader(
-            new NullAdapter(),
-            $templateLocator,
-            $themeNamespace,
-            $this->createMock(ContaoFramework::class),
-            $pageFinder ?? $this->createMock(PageFinder::class),
-            $projectDir,
-        );
+        $templateLocator = new TemplateLocator($projectDir, $bundles, $bundlesMetadata, $themeNamespace, $connection);
+        $loader = new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $themeNamespace, $this->createMock(ContaoFramework::class), $projectDir);
 
         $environment = new Environment($loader);
         $environment->addExtension(

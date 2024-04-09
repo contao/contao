@@ -129,6 +129,14 @@
         <source>Please choose the page to which visitors will be redirected when clicking a link or submitting a form.</source>
         <target>Bitte wählen Sie die Seite aus, zu der Besucher beim Anklicken eines Links oder Abschicken eines Formulars weitergeleitet werden.</target>
       </trans-unit>
+      <trans-unit id="tl_module.pwResetPage.0">
+        <source>Reset password page</source>
+        <target>Passwort-Reset-Seite</target>
+      </trans-unit>
+      <trans-unit id="tl_module.pwResetPage.1">
+        <source>Here you can choose a page to which visitors will be redirected when clicking the &lt;em&gt;Forgot your password?&lt;/em&gt; link.</source>
+        <target>Hier können Sie eine Seite auswählen, zu der Besucher weitergeleitet werden, wenn sie den &lt;em&gt;Passwort vergessen?&lt;/em&gt;-Link anklicken.</target>
+      </trans-unit>
       <trans-unit id="tl_module.overviewPage.0">
         <source>Overview page</source>
         <target>Übersichtsseite</target>
@@ -168,6 +176,14 @@
       <trans-unit id="tl_module.editable.1">
         <source>Show these fields in the front end form.</source>
         <target>Diese Felder im Frontend-Formular anzeigen.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reqFullAuth.0">
+        <source>Require full authentication</source>
+        <target>Vollständige Authentifizierung erforderlich</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reqFullAuth.1">
+        <source>Users with only a &quot;remember me&quot; cookie must verify their identity in order to access the module.</source>
+        <target>Nutzer, die nur ein &quot;Remember me&quot;-Cookie haben, müssen ihre Identität bestätigen, um auf das Modul zugreifen zu können.</target>
       </trans-unit>
       <trans-unit id="tl_module.memberTpl.0">
         <source>Form template</source>

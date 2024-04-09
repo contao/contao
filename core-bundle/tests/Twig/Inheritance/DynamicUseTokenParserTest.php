@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\Twig\Inheritance;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
-use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
@@ -49,14 +48,7 @@ class DynamicUseTokenParserTest extends TestCase
             $this->createMock(Connection::class),
         );
 
-        $filesystemLoader = new ContaoFilesystemLoader(
-            new NullAdapter(),
-            $templateLocator,
-            $themeNamespace,
-            $this->createMock(ContaoFramework::class),
-            $this->createMock(PageFinder::class),
-            $projectDir,
-        );
+        $filesystemLoader = new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $themeNamespace, $this->createMock(ContaoFramework::class), $projectDir);
 
         $environment = new Environment($filesystemLoader);
         $environment->addExtension(

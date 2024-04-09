@@ -46,8 +46,8 @@
         <target>ソースファイル</target>
       </trans-unit>
       <trans-unit id="tl_theme.source.1">
-        <source>Here you can upload one or more .cto or .sql files to be imported.</source>
-        <target>インポートする拡張子が.ctoまたは.sqlのファイルをアップロードできます。</target>
+        <source>Here you can upload one or more .cto, .zip or .sql files to be imported.</source>
+        <target>インポートしたい拡張子が.cto、.zip、.sqlのファイルをアップロードできます。</target>
       </trans-unit>
       <trans-unit id="tl_theme.tstamp.0">
         <source>Revision date</source>

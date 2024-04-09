@@ -241,6 +241,10 @@
         <source>Login details</source>
         <target>Oturum açma bilgileri</target>
       </trans-unit>
+      <trans-unit id="tl_member.captchaDetails">
+        <source>Verification</source>
+        <target>Doğrulama</target>
+      </trans-unit>
       <trans-unit id="tl_member.new.0">
         <source>New</source>
         <target>Yeni</target>

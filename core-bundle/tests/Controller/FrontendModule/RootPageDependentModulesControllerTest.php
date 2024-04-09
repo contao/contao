@@ -16,7 +16,6 @@ use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Controller\FrontendModule\RootPageDependentModulesController;
-use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\ModuleModel;
 use Contao\PageModel;
@@ -27,7 +26,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 
 class RootPageDependentModulesControllerTest extends TestCase
 {
@@ -136,17 +134,10 @@ class RootPageDependentModulesControllerTest extends TestCase
 
         $framework = $this->mockContaoFramework([Controller::class => $controllerAdapter, ModuleModel::class => $moduleAdapter]);
 
-        $pageFinder = new PageFinder(
-            $framework,
-            $this->createMock(RequestMatcherInterface::class),
-            $requestStack ?? new RequestStack(),
-        );
-
         $this->container->set('contao.framework', $framework);
-        $this->container->set('contao.routing.page_finder', $pageFinder);
         $this->container->set('contao.routing.scope_matcher', $this->mockScopeMatcher());
 
-        if ($requestStack) {
+        if ($requestStack instanceof RequestStack) {
             $this->container->set('request_stack', $requestStack);
         }
 

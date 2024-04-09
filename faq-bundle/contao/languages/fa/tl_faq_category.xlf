@@ -25,70 +25,6 @@
         <source>Please choose the FAQ reader page to which visitors will be redirected when clicking a FAQ.</source>
         <target>لطفا برگه ای را که می خواهید بازدیدکنندگان بعد از کلیک بر روی یک سوال به آنجا بازگردانی شوند را انتخاب نمایید.</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.allowComments.0">
-        <source>Enable comments</source>
-        <target>فعال کردن دیدگاه‌ها</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.allowComments.1">
-        <source>Allow visitors to comment FAQs.</source>
-        <target>به بازدیدکنندگان برای دیدگاه دادن در پرسش و پاسخ‌ها را می‌دهد.</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.notify.0">
-        <source>Notify</source>
-        <target>آگاهی دادن</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.notify.1">
-        <source>Please choose who to notify when comments are added.</source>
-        <target>لطفا کسی را که وقتی دیدگاه‌ها اضافه شد آگاه شود را انتخاب نمایید.</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.sortOrder.0">
-        <source>Sort order</source>
-        <target>ترتیب مرتب‌سازی</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.sortOrder.1">
-        <source>By default, comments are sorted ascending, starting with the oldest one.</source>
-        <target>به صورت پیش‌فرض، دیدگاه‌ها به صورت صعودی از قدیمی‌ترین مرتب می شوند.</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.perPage.0">
-        <source>Comments per page</source>
-        <target>دیدگاه‌ها در هر برگه</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.perPage.1">
-        <source>Number of comments per page. Set to 0 to disable pagination.</source>
-        <target>تعداد دیدگاه‌ها در هر برگه. برای غیرفعال کردن برگه‌بندی عدد 0 را وارد نمایید.</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.moderate.0">
-        <source>Moderate comments</source>
-        <target>بررسی دیدگاه‌ها</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.moderate.1">
-        <source>Approve comments before they are published on the website.</source>
-        <target>تایید دیدگاه‌ها قبل از انتشار در وب‌سایت.</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.bbcode.0">
-        <source>Allow BBCode</source>
-        <target>اجازه BBCode</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.bbcode.1">
-        <source>Allow visitors to format their comments with BBCode.</source>
-        <target>اجازه دادن به کاربران برای دیدگاه دادن با BBCode.</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.requireLogin.0">
-        <source>Require login to comment</source>
-        <target>برای دیدگاه نیاز به ورود است</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.requireLogin.1">
-        <source>Allow only authenticated members to create comments.</source>
-        <target>اجازه دادن فقط به اعضاء معتبر به ایحاد دیدگاه‌ها.</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.disableCaptcha.0">
-        <source>Disable spam protection</source>
-        <target>غیرفعال کردن حفاظت اسپم</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.disableCaptcha.1">
-        <source>Use this option only if you have limited comments to authenticated users.</source>
-        <target>از این گزینه فقط برای محدود کردن دیدگاه‌ها به کاربران تایید شده استفاده نمایید.</target>
-      </trans-unit>
       <trans-unit id="tl_faq_category.tstamp.0">
         <source>Revision date</source>
         <target>تاریخ بازنگری</target>
@@ -100,22 +36,6 @@
       <trans-unit id="tl_faq_category.title_legend">
         <source>Title and redirect</source>
         <target>عنوان و بازگردانی</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.comments_legend">
-        <source>Comments</source>
-        <target>دیدگاه‌ها</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.notify_admin">
-        <source>System administrator</source>
-        <target>مدیر سامانه</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.notify_author">
-        <source>Author of the FAQ</source>
-        <target>نویسنده پرسش و پاسخ</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.notify_both">
-        <source>Author and system administrator</source>
-        <target>نویسنده و مدیر سامانه</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.new.0">
         <source>New</source>

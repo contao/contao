@@ -818,7 +818,7 @@ class FigureBuilder
      */
     private function getFallbackLocaleList(): array
     {
-        $page = $this->locator->get('contao.routing.page_finder')->getCurrentPage();
+        $page = $GLOBALS['objPage'] ?? null;
 
         if (!$page instanceof PageModel) {
             return [];
