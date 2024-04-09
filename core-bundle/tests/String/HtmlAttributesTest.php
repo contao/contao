@@ -105,67 +105,92 @@ class HtmlAttributesTest extends TestCase
 
         yield 'complex styles' => [
             'style=" content:&quot; foo : bar ; baz ( &quot;; foo : url(https://example.com/foo;bar) ; " STYLE=color:red',
-            ['style' => 'content:" foo : bar ; baz ( ";foo:url(https://example.com/foo;bar);color:red'],
+            ['style' => 'content: " foo : bar ; baz ( "; foo: url(https://example.com/foo;bar); color: red;'],
         ];
 
         yield 'double styles' => [
             'style="color: fallback; color: cutting-edge(foo);"',
-            ['style' => 'color:fallback;color:cutting-edge(foo)'],
+            ['style' => 'color: fallback; color: cutting-edge(foo);'],
         ];
 
         yield 'inline svg single quotes' => [
             'style="background: url(\'data:image/svg+xml;utf8,<svg/>\');"',
-            ['style' => "background:url('data:image/svg+xml;utf8,<svg/>')"],
+            ['style' => "background: url('data:image/svg+xml;utf8,<svg/>');"],
         ];
 
         yield 'inline svg double quotes' => [
             'style="background: url(&quot;data:image/svg+xml;utf8,<svg/>&quot;);"',
-            ['style' => 'background:url("data:image/svg+xml;utf8,<svg/>")'],
+            ['style' => 'background: url("data:image/svg+xml;utf8,<svg/>");'],
         ];
 
         yield 'inline svg no quotes' => [
             'style="background: url(data:image/svg+xml;utf8,<svg/>);"',
-            ['style' => 'background:url(data:image/svg+xml;utf8,<svg/>)'],
+            ['style' => 'background: url(data:image/svg+xml;utf8,<svg/>);'],
         ];
 
         yield 'escaped name' => [
             'style="c\6F lor: red;"',
-            ['style' => 'c\6F lor:red'],
+            ['style' => 'c\6F lor: red;'],
+        ];
+
+        yield 'escaped name colon' => [
+            'style="--foo-16\:9: bar"',
+            ['style' => '--foo-16\:9: bar;'],
+        ];
+
+        yield 'escaped name semicolon' => [
+            'style="--foo\;bar: baz"',
+            ['style' => '--foo\;bar: baz;'],
         ];
 
         yield 'escaped value' => [
             'style="color: r\&quot;ed"',
-            ['style' => 'color:r\"ed'],
+            ['style' => 'color: r\"ed;'],
         ];
 
         yield 'escaped string' => [
             "style=\"color: 'r\\'ed'\"",
-            ['style' => "color:'r\\'ed'"],
+            ['style' => "color: 'r\\'ed';"],
         ];
 
         yield 'escaped string hacking' => [
             "style=\"color: 'r\\'; eval : foo '\"",
-            ['style' => "color:'r\\'; eval : foo '"],
+            ['style' => "color: 'r\\'; eval : foo ';"],
         ];
 
         yield 'escaped string hacking double quotes' => [
             "style='color: \"r\\\"; eval : foo \"'",
-            ['style' => 'color:"r\\"; eval : foo "'],
+            ['style' => 'color: "r\\"; eval : foo ";'],
         ];
 
         yield 'newline' => [
             "style=\"content:'new\\\nline'\"",
-            ['style' => "content:'new\\\nline'"],
+            ['style' => "content: 'new\\\nline';"],
         ];
 
         yield 'invalid block' => [
             'style="{ foo: red } bar: green; baz: blue"',
-            ['style' => 'baz:blue'],
+            ['style' => 'baz: blue;'],
         ];
 
         yield 'completely invalid' => [
             'style="{ foo: red; bar: green; baz: blue"',
             [],
+        ];
+
+        yield 'leading comment' => [
+            'style="/* Farbe: */ color: red"',
+            ['style' => '/* Farbe: */ color: red;'],
+        ];
+
+        yield 'trailing comment' => [
+            'style="color: red /* Rot; */"',
+            ['style' => 'color: red /* Rot; */;'],
+        ];
+
+        yield 'excessive comments in property and value' => [
+            'style="; /* ; Farbe << */ color /* >> */ : /* Rot */ red /* foo: bar */ "',
+            ['style' => '/* ; Farbe << */ color /* >> */: /* Rot */ red /* foo: bar */;'],
         ];
     }
 
@@ -213,12 +238,13 @@ class HtmlAttributesTest extends TestCase
         $attributesA = new HtmlAttributes([
             'foO_bAr' => 'bar',
             'class' => 'class1',
-            'style' => 'color: red',
+            'style' => 'COLOR: RED',
         ]);
 
         $attributesB = new HtmlAttributes([
             'bar-bar' => 42,
             'foo-foo' => 'foo',
+            'style' => 'c\6F lor: green; c\olor: darkgreen',
         ]);
 
         $attributesC = 'BAZ123 = "" class="class2" style=background:red';
@@ -233,7 +259,7 @@ class HtmlAttributesTest extends TestCase
         $expectedProperties = [
             'foo_bar' => 'bar',
             'class' => 'class1 class2 class3',
-            'style' => 'color:blue;background:red',
+            'style' => 'color: blue; background: red;',
             'bar-bar' => '42',
             'baz123' => '',
             'other' => '',
@@ -446,7 +472,7 @@ class HtmlAttributesTest extends TestCase
         // Whitespaces should get normalized by default
         $attributes = new HtmlAttributes(['style' => " \ffoo:  bar;\tother1\n:other2\r  ;"]);
 
-        $this->assertSame('foo:bar;other1:other2', $attributes['style']);
+        $this->assertSame('foo: bar; other1: other2;', $attributes['style']);
 
         // And remove classes
         $attributes->addStyle('baz: 1');
@@ -456,7 +482,62 @@ class HtmlAttributesTest extends TestCase
         $attributes->removeStyle('thing: x; other1: red;');
         $attributes->removeStyle(['foo3 : x', ' foo4 ']);
 
-        $this->assertSame('foo:red;baz:1;foobar:red;foo2:bar', $attributes['style']);
+        $this->assertSame('foo: red; baz: 1; foobar: red; foo2: bar;', $attributes['style']);
+
+        $attributes->removeStyle('/**/ foo /**/');
+        $attributes->removeStyle(['/**/ foo2 /**/ : x']);
+        $attributes->removeStyle('/* baz */ foobar');
+
+        $this->assertSame('baz: 1;', $attributes['style']);
+    }
+
+    public function testAddAndRemoveCaseSensitiveStyles(): void
+    {
+        $attributes = new HtmlAttributes(['style' => 'color:red;--color:red']);
+
+        $this->assertSame('color: red; --color: red;', $attributes['style']);
+
+        $attributes->addStyle('COLOR:RED');
+
+        $this->assertSame(
+            'COLOR: RED; --color: red;',
+            $attributes['style'],
+            'Case-insensitive property should get overwritten',
+        );
+
+        $attributes->addStyle('--COLOR:RED');
+
+        $this->assertSame(
+            'COLOR: RED; --color: red; --COLOR: RED;',
+            $attributes['style'],
+            'Case-sensitive property should get appended',
+        );
+
+        $attributes->removeStyle('color');
+        $this->assertSame('--color: red; --COLOR: RED;', $attributes['style']);
+
+        $attributes->removeStyle('--COLOR');
+        $this->assertSame('--color: red;', $attributes['style']);
+
+        $attributes->removeStyle('--color');
+        $this->assertFalse($attributes->offsetExists('style'));
+    }
+
+    public function testAddAndRemoveDoubleStyles(): void
+    {
+        $attributes = new HtmlAttributes();
+
+        $attributes->addStyle('baz: 1; baz: 2');
+        $this->assertSame('baz: 1; baz: 2;', $attributes['style']);
+
+        $attributes->addStyle('baz: 3; color: red; baz: 4');
+        $this->assertSame('baz: 3; baz: 4; color: red;', $attributes['style']);
+
+        $attributes->removeStyle('baz');
+        $this->assertSame('color: red;', $attributes['style']);
+
+        $attributes->removeStyle('color: a; color: b; color: c');
+        $this->assertFalse($attributes->offsetExists('style'));
     }
 
     public function testAddAndRemoveConditionalStyles(): void
@@ -475,14 +556,14 @@ class HtmlAttributesTest extends TestCase
         $attributes->addStyle('c: foo', condition: 'true');
         $attributes->addStyle('d: foo', condition: '1');
 
-        $this->assertSame(['style' => 'a:foo;b:foo;c:foo;d:foo'], iterator_to_array($attributes));
+        $this->assertSame(['style' => 'a: foo; b: foo; c: foo; d: foo;'], iterator_to_array($attributes));
 
         $attributes->removeStyle('a: foo', null);
         $attributes->removeStyle('b: foo', false);
         $attributes->removeStyle('c', 0);
         $attributes->removeStyle('d: foo', '');
 
-        $this->assertSame(['style' => 'a:foo;b:foo;c:foo;d:foo'], iterator_to_array($attributes));
+        $this->assertSame(['style' => 'a: foo; b: foo; c: foo; d: foo;'], iterator_to_array($attributes));
 
         $attributes->removeStyle('a: foo', condition: true);
         $attributes->removeStyle('b', condition: 1);
@@ -515,7 +596,7 @@ class HtmlAttributesTest extends TestCase
             ->setIfExists('data-foo', null)
         ;
 
-        $this->assertSame(' class="block headline" style="color:red"', (string) $attributes);
+        $this->assertSame(' class="block headline" style="color: red;"', (string) $attributes);
     }
 
     public function testEscapesAttributesWhenRenderingAsString(): void
