@@ -12,7 +12,7 @@
 
         // Check if this row has all necessary elements.
         // This is to prevent the mutation observer from initializing the incomplete widget.
-        if (row.querySelectorAll('select, a.module_link, img.module_image, button[data-command="copy"], button[data-command="delete"], button.drag-handle').length < 9) {
+        if (!row.querySelector('button.drag-handle')) {
             return;
         }
 
