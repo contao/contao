@@ -10,14 +10,9 @@
             return;
         }
 
-        // Check if this row has all necessary elements
-        if (!row.querySelector('select')
-            || !row.querySelector('a.module_link')
-            || !row.querySelector('img.module_image')
-            || !row.querySelector('button[data-command="copy"]')
-            || !row.querySelector('button[data-command="delete"]')
-            || !row.querySelector('button.drag-handle')
-        ) {
+        // Check if this row has all necessary elements.
+        // This is to prevent the mutation observer from initializing the incomplete widget.
+        if (row.querySelectorAll('select, a.module_link, img.module_image, button[data-command="copy"], button[data-command="delete"], button.drag-handle').length < 9) {
             return;
         }
 
