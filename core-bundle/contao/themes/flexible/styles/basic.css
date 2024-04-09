@@ -370,9 +370,6 @@ fieldset > .widget-group {
 .widget-group > .w25 {
 	grid-column: auto / span 3;
 }
-.widget-group > .clr {
-	grid-column-start: 1 !important;
-}
 
 .widget {
 	font-size: 0;
@@ -1045,6 +1042,10 @@ a.tl_submit {
 /* Handheld */
 @media (max-width: 767.98px) {
 
+	.widget-group {
+		grid-column-gap: 0;
+	}
+
 	.widget-group > .w25,
 	.widget-group > .w33,
 	.widget-group > .w50,
@@ -1099,4 +1100,8 @@ a.tl_submit {
 }
 *:not(.widget-group) > .m12 {
 	margin: 0 15px;
+}
+
+.widget-group > .clr {
+	grid-column-start: 1;
 }
