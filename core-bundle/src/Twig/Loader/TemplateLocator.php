@@ -200,7 +200,7 @@ class TemplateLocator
 
     private function isNamespaceRoot(string $path): bool
     {
-        // Implicitly treat the global template directory as namespace roots
+        // Implicitly treat the global template directory as namespace root
         if (Path::join($this->projectDir, 'templates') === $path) {
             return true;
         }
