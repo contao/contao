@@ -420,18 +420,22 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         return str_replace(['{{', '}}'], ['&#123;&#123;', '&#125;&#125;'], $value);
     }
 
+    /**
+     * @return array<string, list<string>>
+     */
     private function parseStyles(string $styles): array
     {
         // Regular expression to match declarations according to
         // https://www.w3.org/TR/css-syntax-3/#declaration-list-diagram
         $declarationRegex = '/
             (?:
-                \.                                # Escape
+                \\\.                              # Escape
                 |"(?:\\\.|[^"\n])*+(?:"|\n|$)     # String token double quotes
                 |\'(?:\\\.|[^\'\n])*+(?:\'|\n|$)  # String token single quotes
                 |\{(?:(?R)|[^}])*+(?:}|$)         # {}-block
                 |\[(?:(?R)|[^]])*+(?:]|$)         # []-block
                 |\((?:(?R)|[^)])*+(?:\)|$)        # ()-block
+                |\/\*(?:(?!\*\/).)*+(?:\*\/|$)    # Comment block
                 |[^;{}\[\]()"\']                  # Anything else
             )++
         /ixs';
@@ -440,14 +444,28 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         // https://www.w3.org/TR/css-syntax-3/#ident-token-diagram
         $propertyRegex = '/
             ^
-            (?!\d)                              # Must not start with a digit
-            (?!-\d)                             # Must not start with a dash followed by a digit
-            -?+                                 # Optional leading dash
             (?:
-                [a-z0-9\x80-\xFF_-]
-                |\\\(?:[0-9a-f]{1,6}\s?|[^\n])  # Escape
-            )++
-            $
+                \/\*                                # Comment start
+                (?:(?!\*\/).)*+                     # Anything but comment end
+                (?:\*\/|$(*SKIP)(*FAIL))            # Comment end
+                |\s                                 # Or whitespace
+            )*+
+            (                                       # Match property name
+                (?!\d)                              # Must not start with a digit
+                (?!-\d)                             # Must not start with a dash followed by a digit
+                -?+                                 # Optional leading dash
+                (?:
+                    [a-z0-9\x80-\xFF_-]
+                    |\\\(?:[0-9a-f]{1,6}\s?|[^\n])  # Escape
+                )++
+            )
+            (?:
+                \/\*                                # Comment start
+                (?:(?!\*\/).)*+                     # Anything but comment end
+                (?:\*\/|$(*SKIP)(*FAIL))            # Comment end
+                |\s                                 # Or whitespace
+            )*+
+            :                                       # Colon
         /ixs';
 
         preg_match_all($declarationRegex, $styles, $matches, PREG_SET_ORDER | PREG_UNMATCHED_AS_NULL);
@@ -455,27 +473,43 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         $result = [];
 
         foreach ($matches as [0 => $declaration]) {
-            [$property, $value] = explode(':', $declaration, 2) + [null, null];
-            $property = trim($property, " \n\r\t\v\f\x00");
-
-            if (null !== $value && preg_match($propertyRegex, $property)) {
-                $result[$property][] = trim($value);
+            if (preg_match($propertyRegex, $declaration, $match)) {
+                // Spacing according to https://www.w3.org/TR/cssom-1/#serialize-a-css-declaration
+                $property = trim(substr($match[0], 0, -1), " \n\r\t\v\f");
+                $value = trim(substr($declaration, \strlen($match[0])), " \n\r\t\v\f");
+                $result[$this->decodeStyleProperty($match[1])][] = "$property: $value;";
             }
         }
 
         return $result;
     }
 
-    private function serializeStyles(array $styles): string
+    private function decodeStyleProperty(string $property): string
     {
-        $serialized = [];
+        // Decode an escaped code point according to
+        // https://www.w3.org/TR/css-syntax-3/#consume-escaped-code-point
+        $property = preg_replace_callback(
+            '/\\\(?:([0-9a-f]{1,6}+\s?+)|([^\n]))/i',
+            static fn ($match) => $match[2] ?? \IntlChar::chr(hexdec($match[1])),
+            $property,
+        );
 
-        foreach ($styles as $prop => $values) {
-            foreach ($values as $value) {
-                $serialized[] = "$prop:$value";
-            }
+        // Property names are case-insensitive except custom properties according to
+        // https://www.w3.org/TR/css-syntax-3/#style-rule
+        if (!str_starts_with($property, '--')) {
+            $property = strtolower($property);
         }
 
-        return implode(';', $serialized);
+        return $property;
+    }
+
+    /**
+     * @param array<string, list<string>> $styles
+     */
+    private function serializeStyles(array $styles): string
+    {
+        // Serialize styles according to
+        // https://www.w3.org/TR/cssom-1/#serialize-a-css-declaration-block
+        return implode(' ', array_merge(...array_values($styles)));
     }
 }
