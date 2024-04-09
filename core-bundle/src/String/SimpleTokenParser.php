@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\String;
 
+use Contao\Input;
 use Contao\StringUtil;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -128,7 +129,7 @@ class SimpleTokenParser implements LoggerAwareInterface
                     return '##'.$matches[1].'##';
                 }
 
-                return $data[$matches[1]];
+                return Input::encodeInsertTags($data[$matches[1]]);
             },
             $subject
         );
