@@ -22,7 +22,8 @@
             } else {
                 text = el.getAttribute('title');
                 el.setAttribute('data-original-title', text);
-                el.removeAttribute('title')
+                el.removeAttribute('title');
+                text = text?.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
             }
 
             if (!text) {

@@ -25,6 +25,7 @@ use Symfony\Component\Console\Terminal;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ParameterBag\EnvPlaceholderParameterBag;
 use Symfony\Component\HttpClient\Internal\CurlClientState;
+use Symfony\Component\HttpClient\Response\MockResponse;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\MimeTypes;
 
@@ -175,6 +176,7 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
                 CurlClientState::class,
                 Address::class,
                 MimeTypes::class,
+                MockResponse::class,
                 'Symfony\Component\String\\',
                 'Symfony\Component\VarDumper\\',
                 'Symfony\Component\Yaml\\',
