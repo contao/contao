@@ -141,10 +141,10 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('contao.intl.countries', $config['intl']['countries']);
         $container->setParameter('contao.insert_tags.allowed_tags', $config['insert_tags']['allowed_tags']);
         $container->setParameter('contao.sanitizer.allowed_url_protocols', $config['sanitizer']['allowed_url_protocols']);
-        $container->setParameter('contao.pow_altcha.algorithm', $config['pow_altcha']['algorithm']);
-        $container->setParameter('contao.pow_altcha.range_min', $config['pow_altcha']['range_min']);
-        $container->setParameter('contao.pow_altcha.range_max', $config['pow_altcha']['range_max']);
-        $container->setParameter('contao.pow_altcha.challenge_expiry', $config['pow_altcha']['challenge_expiry']);
+        $container->setParameter('contao.altcha.algorithm', $config['altcha']['algorithm']);
+        $container->setParameter('contao.altcha.range_min', $config['altcha']['range_min']);
+        $container->setParameter('contao.altcha.range_max', $config['altcha']['range_max']);
+        $container->setParameter('contao.altcha.challenge_expiry', $config['altcha']['challenge_expiry']);
 
         $this->handleMessengerConfig($config, $container);
         $this->handleSearchConfig($config, $container);

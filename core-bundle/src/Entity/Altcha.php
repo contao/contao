@@ -18,9 +18,9 @@ use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
 
-#[Table(name: 'tl_pow_altcha')]
+#[Table(name: 'tl_altcha')]
 #[Entity]
-class PowAltcha
+class Altcha
 {
     #[Id]
     #[Column(type: 'integer')]

@@ -95,7 +95,7 @@ services:
     contao.cron.purge_expired_altcha_challenges:
         class: Contao\CoreBundle\Cron\PurgeExpiredAltchaChallengesCron
         arguments:
-            - '@database_connection'
+            - '@contao.repository.altcha'
 
     contao.cron.purge_expired_data:
         class: Contao\CoreBundle\Cron\PurgeExpiredDataCron
@@ -626,27 +626,27 @@ services:
             - '@translator'
             - '@database_connection'
 
-    contao.pow.altcha.altcha:
-        class: Contao\CoreBundle\Pow\Altcha\Altcha
-        arguments:
-            - '@doctrine.orm.entity_manager'
-            - '@database_connection'
-            - '%kernel.secret%'
-            - '%contao.pow_altcha.algorithm%'
-            - '%contao.pow_altcha.range_min%'
-            - '%contao.pow_altcha.range_max%'
-            - '%contao.pow_altcha.challenge_expiry%'
-
-    contao.pow.altcha.validator.altcha_validator:
-        class: Contao\CoreBundle\Pow\Altcha\Validator\AltchaValidator
+    contao.altcha.altcha:
+        class: Contao\CoreBundle\Altcha\Altcha
         public: true
         arguments:
-            - '@contao.pow.altcha.altcha'
+            - '@contao.repository.altcha'
+            - '@doctrine.orm.entity_manager'
+            - '%kernel.secret%'
+            - '%contao.altcha.algorithm%'
+            - '%contao.altcha.range_min%'
+            - '%contao.altcha.range_max%'
+            - '%contao.altcha.challenge_expiry%'
 
     contao.process_util:
         class: Contao\CoreBundle\Util\ProcessUtil
         arguments:
             - '%contao.console_path%'
+
+    contao.repository.altcha:
+        class: Contao\CoreBundle\Repository\AltchaRepository
+        arguments:
+            - '@doctrine'
 
     contao.repository.cron_job:
         class: Contao\CoreBundle\Repository\CronJobRepository

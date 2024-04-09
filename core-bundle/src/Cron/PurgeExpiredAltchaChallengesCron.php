@@ -13,29 +13,18 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Cron;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Types\Types;
+use Contao\CoreBundle\Repository\AltchaRepository;
 
 #[AsCronJob('hourly')]
 class PurgeExpiredAltchaChallengesCron
 {
     public function __construct(
-        private readonly Connection $connection,
+        private readonly AltchaRepository $repository,
     ) {
     }
 
     public function __invoke(): void
     {
-        $this->connection->executeStatement(
-            'DELETE FROM tl_pow_altcha WHERE solved = :solved OR expires < :expires',
-            [
-                'solved' => true,
-                'expires' => new \DateTime('now'),
-            ],
-            [
-                'solved' => true,
-                'expires' => Types::DATE_MUTABLE,
-            ],
-        );
+        $this->repository->purgeExpiredChallenges();
     }
 }

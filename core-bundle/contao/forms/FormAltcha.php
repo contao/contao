@@ -10,8 +10,8 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Controller\PowAltchaController;
-use Contao\CoreBundle\Pow\Altcha\Validator\AltchaValidator;
+use Contao\CoreBundle\Altcha\Altcha;
+use Contao\CoreBundle\Controller\AltchaController;
 use Symfony\Component\Routing\RouterInterface;
 
 class FormAltcha extends Widget
@@ -160,7 +160,7 @@ class FormAltcha extends Widget
 		/** @var RouterInterface $router */
 		$router = $this->getContainer()->get('router');
 
-		$challengeUrl = sprintf('challengeurl="%s"', $router->generate(PowAltchaController::class));
+		$challengeUrl = sprintf('challengeurl="%s"', $router->generate(AltchaController::class));
 
 		$attributes = array();
 		$attributes[] = $challengeUrl;
@@ -200,10 +200,10 @@ class FormAltcha extends Widget
 	 */
 	protected function validator($varInput): mixed
 	{
-		/** @var AltchaValidator $altchaValidator */
-		$altchaValidator = $this->getContainer()->get('contao.pow.altcha.validator.altcha_validator');
+		/** @var Altcha $altcha */
+		$altcha = $this->getContainer()->get('contao.altcha.altcha');
 
-		if (!$varInput || !$altchaValidator->validate($varInput))
+		if (!$varInput || !$altcha->validate($varInput))
 		{
 			$this->addError($GLOBALS['TL_LANG']['ERR']['altchaVerificationFailed']);
 		}

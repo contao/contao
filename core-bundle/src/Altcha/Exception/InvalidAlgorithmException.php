@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Pow\Altcha\Exception;
+namespace Contao\CoreBundle\Altcha\Exception;
 
 class InvalidAlgorithmException extends \Exception
 {

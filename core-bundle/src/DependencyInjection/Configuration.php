@@ -13,9 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DependencyInjection;
 
 use Contao\Config;
+use Contao\CoreBundle\Altcha\Config\AlgorithmConfig;
 use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
 use Contao\CoreBundle\Doctrine\Backup\RetentionPolicy;
-use Contao\CoreBundle\Pow\Altcha\Config\AlgorithmConfig;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Image\Metadata\ExifFormat;
 use Contao\Image\Metadata\IptcFormat;
@@ -117,7 +117,7 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addSanitizerNode())
                 ->append($this->addCronNode())
                 ->append($this->addCspNode())
-                ->append($this->addPowAltchaNode())
+                ->append($this->addAltchaNode())
             ->end()
         ;
 
@@ -876,16 +876,16 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    private function addPowAltchaNode(): NodeDefinition
+    private function addAltchaNode(): NodeDefinition
     {
-        return (new TreeBuilder('pow_altcha'))
+        return (new TreeBuilder('altcha'))
             ->getRootNode()
             ->addDefaultsIfNotSet()
             ->children()
                 ->enumNode('algorithm')
                     ->info('Choose an algorithm which is required for generating the challenges. Select between "SHA-256", "SHA-384" or "SHA-512".')
-                    ->values([...AlgorithmConfig::ALGORITHM_ALL])
-                    ->defaultValue(AlgorithmConfig::ALGORITHM_SHA_256)
+                    ->values([...array_column(AlgorithmConfig::cases(), 'value')])
+                    ->defaultValue(AlgorithmConfig::ALGORITHM_SHA_256->value)
                 ->end()
                 ->integerNode('range_min')
                     ->info('The complexity can be adjusted by modifying the minimum and maximum values of the randomly generated secret number on the server side. A higher value increases complexity/security but may significantly increase the computational load on client devices, potentially impacting user experience.')
