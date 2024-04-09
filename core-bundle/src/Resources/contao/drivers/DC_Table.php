@@ -3358,7 +3358,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	public function getPalette()
 	{
 		$palette = 'default';
-		$strPalette = $GLOBALS['TL_DCA'][$this->strTable]['palettes'][$palette];
+		$strPalette = $GLOBALS['TL_DCA'][$this->strTable]['palettes'][$palette] ?? '';
 
 		// Check whether there are selector fields
 		if (!empty($GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__']))
