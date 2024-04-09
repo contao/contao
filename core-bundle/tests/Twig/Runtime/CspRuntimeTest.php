@@ -145,7 +145,7 @@ class CspRuntimeTest extends TestCase
         $cspHandler->applyHeaders($response);
 
         $this->assertSame(
-            "style-src 'self' 'unsafe-hashes' 'unsafe-inline' 'sha256-w6uP8Tcg6K2QR905Rms8iXTlksL6OD1KOWBxTK7wxPI=' 'sha256-8f935d27GvUutRyY9yWScUMiFUk4WTdZURISiYfPOeQ='",
+            "style-src 'self' 'unsafe-hashes' 'unsafe-inline' 'sha256-w6uP8Tcg6K2QR905Rms8iXTlksL6OD1KOWBxTK7wxPI=' 'sha256-ZBTj5RHLnrF+IxdRZM2RuLfjTJQXNSi7fLQHr09onfY='",
             $response->headers->get('Content-Security-Policy'),
         );
     }
@@ -180,8 +180,8 @@ class CspRuntimeTest extends TestCase
         $wysiwygProcessor
             ->expects($this->once())
             ->method('extractStyles')
-            ->with('<div style="color:red"></div>')
-            ->willReturn(['color:red'])
+            ->with('<div style="color: red;"></div>')
+            ->willReturn(['color: red;'])
         ;
 
         $attrs = new HtmlAttributes('style="color:red"');
@@ -192,7 +192,7 @@ class CspRuntimeTest extends TestCase
         $cspHandler->applyHeaders($response);
 
         $this->assertSame(
-            "style-src 'self' 'unsafe-hashes' 'unsafe-inline' 'sha256-G9KEe21cICJs7ADRF9jwf63CdC5OJI1mO2LVlv63cUY=' 'sha256-8f935d27GvUutRyY9yWScUMiFUk4WTdZURISiYfPOeQ='",
+            "style-src 'self' 'unsafe-hashes' 'unsafe-inline' 'sha256-G9KEe21cICJs7ADRF9jwf63CdC5OJI1mO2LVlv63cUY=' 'sha256-ZBTj5RHLnrF+IxdRZM2RuLfjTJQXNSi7fLQHr09onfY='",
             $response->headers->get('Content-Security-Policy'),
         );
     }
