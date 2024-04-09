@@ -353,7 +353,7 @@ fieldset > .widget-group {
 .widget-group {
 	display: grid;
 	grid-column-gap: 30px;
-	grid-template-columns: repeat(12, 1fr);
+	grid-template-columns: repeat(12, minmax(0, 1fr));
 }
 .widget-group > * {
 	grid-column: 1 / 13;
