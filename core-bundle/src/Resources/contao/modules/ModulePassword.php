@@ -259,6 +259,8 @@ class ModulePassword extends Module
 				$objMember->password = $objWidget->value;
 				$objMember->save();
 
+				System::getContainer()->get('contao.repository.remember_me')->deleteByUsername($objMember->username);
+
 				$optInToken->confirm();
 
 				// Create a new version

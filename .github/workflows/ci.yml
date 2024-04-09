@@ -26,7 +26,7 @@ jobs:
                   composer bin ecs install --no-interaction --no-progress
 
             - name: Run ECS
-              run: tools/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests tools/*/src --config tools/ecs/config/default.php --no-progress-bar --ansi
+              run: tools/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests tools/*/src --config tools/ecs/config/default.php --no-progress-bar
 
     ecs-legacy:
         name: ECS legacy
@@ -49,8 +49,8 @@ jobs:
 
             - name: Run ECS
               run: |
-                  tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao --config tools/ecs/config/legacy.php --no-progress-bar --ansi
-                  tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config tools/ecs/config/template.php --no-progress-bar --ansi
+                  tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao --config tools/ecs/config/legacy.php --no-progress-bar
+                  tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config tools/ecs/config/template.php --no-progress-bar
 
     phpstan:
         name: PHPStan
@@ -108,7 +108,7 @@ jobs:
                   composer bin service-linter install --no-interaction --no-progress
 
             - name: Run the service linter
-              run: tools/service-linter/bin/lint-service-ids --ansi
+              run: tools/service-linter/bin/lint-service-ids
 
     require-checker:
         name: Require checker
@@ -133,10 +133,10 @@ jobs:
                   composer bin require-checker install --no-interaction --no-progress
 
             - name: Check for unknown symbols (contao/contao)
-              run: tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config.json composer.json --ansi
+              run: tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config.json composer.json
 
             - name: Check for unknown symbols (contao/core-bundle)
-              run: tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config.json core-bundle/composer.json --ansi
+              run: tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config.json core-bundle/composer.json
 
     tests:
         name: PHP ${{ matrix.php }}
@@ -165,20 +165,20 @@ jobs:
               run: composer install --no-interaction --no-progress
 
             - name: Run the unit tests
-              run: vendor/bin/phpunit --colors=always
+              run: vendor/bin/phpunit
 
             - name: Run the functional tests with PDO MySQL
-              run: vendor/bin/phpunit --testsuite=functional --colors=always
+              run: vendor/bin/phpunit --testsuite=functional
               env:
                   DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
 
             - name: Run the functional tests with MySQLi
-              run: vendor/bin/phpunit --testsuite=functional --colors=always
+              run: vendor/bin/phpunit --testsuite=functional
               env:
                   DATABASE_URL: mysqli://root:root@127.0.0.1:3306/contao_test
 
     reverse:
-        name: PHP 8.1 reverse order
+        name: Reverse order
         runs-on: ubuntu-latest
         steps:
             - name: Setup PHP
@@ -195,7 +195,7 @@ jobs:
               run: composer install --no-interaction --no-progress
 
             - name: Run the unit tests in reverse order
-              run: vendor/bin/phpunit --order-by=reverse --extensions Contao\\CoreBundle\\Tests\\PhpunitExtension\\GlobalStateWatcher --colors=always
+              run: vendor/bin/phpunit --order-by=reverse --extensions Contao\\CoreBundle\\Tests\\PhpunitExtension\\GlobalStateWatcher
 
     nightly:
         name: PHP 8.3
@@ -221,10 +221,10 @@ jobs:
               run: composer install --ignore-platform-req=php --no-interaction --no-progress
 
             - name: Run the unit tests
-              run: vendor/bin/phpunit --colors=always
+              run: vendor/bin/phpunit
 
             - name: Run the functional tests
-              run: vendor/bin/phpunit --testsuite=functional --colors=always
+              run: vendor/bin/phpunit --testsuite=functional
               env:
                   DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
 
@@ -251,15 +251,15 @@ jobs:
               run: composer update --prefer-lowest --prefer-stable --no-interaction --no-progress
 
             - name: Run the unit tests
-              run: vendor/bin/phpunit --colors=always
+              run: vendor/bin/phpunit
 
             - name: Run the functional tests with PDO MySQL
-              run: vendor/bin/phpunit --testsuite=functional --colors=always
+              run: vendor/bin/phpunit --testsuite=functional
               env:
                   DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
 
             - name: Run the functional tests with MySQLi
-              run: vendor/bin/phpunit --testsuite=functional --colors=always
+              run: vendor/bin/phpunit --testsuite=functional
               env:
                   DATABASE_URL: mysqli://root:root@127.0.0.1:3306/contao_test
 
@@ -303,7 +303,7 @@ jobs:
                           file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
                       '
                       COMPOSER_ROOT_VERSION=dev-${{ env.GITHUB_SHA }} composer install --no-interaction --no-progress
-                      vendor/bin/phpunit --colors=always
+                      vendor/bin/phpunit
                       cd ..
                   done
 
@@ -327,4 +327,4 @@ jobs:
                   composer bin monorepo install --no-interaction --no-progress
 
             - name: Validate the composer.json files
-              run: tools/monorepo/vendor/bin/monorepo-tools composer-json --validate --ansi
+              run: tools/monorepo/vendor/bin/monorepo-tools composer-json --validate
