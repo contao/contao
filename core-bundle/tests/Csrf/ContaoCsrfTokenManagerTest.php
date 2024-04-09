@@ -95,7 +95,6 @@ class ContaoCsrfTokenManagerTest extends TestCase
         $this->assertFalse($tokenManager->canSkipTokenValidation($request, 'csrf_contao_csrf_token'));
 
         $foreignSession = $this->createMock(SessionInterface::class);
-
         $foreignSession
             ->expects($this->once())
             ->method('isStarted')
