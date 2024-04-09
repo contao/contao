@@ -2,6 +2,16 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.40] (2024-04-09)
+
+**Security fixes:**
+
+- [CVE-2024-28235]: Session cookie disclosure in the crawler
+- [CVE-2024-28190]: Cross site scripting in the file manager
+- [CVE-2024-28191]: Insert tag injection via the form generator
+- [CVE-2024-30262]: Remember-me tokens are not cleared after a password change
+- [CVE-2024-28234]: Insufficient BBCode sanitization
+
 ## [4.13.39] (2024-03-20)
 
 **Fixed issues:**
@@ -946,6 +956,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.40]: https://github.com/contao/contao/releases/tag/4.13.40
 [4.13.39]: https://github.com/contao/contao/releases/tag/4.13.39
 [4.13.38]: https://github.com/contao/contao/releases/tag/4.13.38
 [4.13.37]: https://github.com/contao/contao/releases/tag/4.13.37
