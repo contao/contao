@@ -125,12 +125,9 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 			}
 			else
 			{
+				// TODO: we need a way to authenticate with a token instead of our own cookie
 				$session = System::getContainer()->get('session');
 				$clientOptions = array('headers' => array('Cookie' => sprintf('%s=%s', $session->getName(), $session->getId())));
-
-				// Closing the session is necessary here as otherwise we run into our own session lock
-				// TODO: we need a way to authenticate with a token instead of our own cookie
-				$session->save();
 			}
 		}
 		else

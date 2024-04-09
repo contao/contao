@@ -82,6 +82,7 @@ services:
         arguments:
             - '@database_connection'
             - '@contao.framework'
+            - '@request_stack'
 
     contao.crawl.escargot.search_index_subscriber:
         class: Contao\CoreBundle\Crawl\Escargot\Subscriber\SearchIndexSubscriber
@@ -527,6 +528,7 @@ services:
 
     contao.repository.remember_me:
         class: Contao\CoreBundle\Repository\RememberMeRepository
+        public: true
         arguments:
             - '@doctrine'
 
