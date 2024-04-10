@@ -59,6 +59,7 @@
         "symfony/process": "^6.4",
         "symfony/routing": "^6.4",
         "symfony/security-bundle": "^6.4",
+        "symfony/stopwatch": "^6.4",
         "symfony/twig-bundle": "^6.4",
         "symfony/web-profiler-bundle": "^6.4",
         "symfony/yaml": "^6.4",

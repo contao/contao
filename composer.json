@@ -175,8 +175,8 @@
         "bamarni/composer-bin-plugin": "^1.4",
         "composer/composer": "^2.0",
         "doctrine/annotations": "^2.0",
-        "league/flysystem-local": "^3.7",
-        "league/flysystem-memory": "^3.7",
+        "league/flysystem-local": "^3.0",
+        "league/flysystem-memory": "^3.0",
         "sebastian/diff": "^4.0",
         "symfony/browser-kit": "^6.4",
         "symfony/phpunit-bridge": "^6.4"
