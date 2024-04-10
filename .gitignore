@@ -4,7 +4,6 @@
 
 # Composer bin
 /vendor-bin/*/vendor
-/vendor-bin/monorepo-tools/composer.lock
 
 # Cypress
 /cypress/screenshots/
@@ -28,6 +27,3 @@
 # PhpUnit
 /.phpunit.result.cache
 /phpunit.xml
-
-# CS fixer
-/.php_cs.cache

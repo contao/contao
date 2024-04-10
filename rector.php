@@ -10,6 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
+use Contao\Rector\Set\SetList;
 use Rector\CodeQuality\Rector\If_\SimplifyIfReturnBoolRector;
 use Rector\Config\RectorConfig;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
@@ -17,14 +18,31 @@ use Rector\Php81\Rector\Array_\FirstClassCallableRector;
 use Rector\Php81\Rector\FuncCall\NullToStrictStringFuncCallArgRector;
 
 return RectorConfig::configure()
-    ->withSets([__DIR__.'/../vendor/contao/rector/config/contao.php'])
+    ->withSets([SetList::CONTAO])
     ->withPaths([
-        __DIR__.'/../../../*/bin',
-        __DIR__.'/../../../*/src',
-        __DIR__.'/../../../*/tests',
-        __DIR__.'/../../../vendor-bin/*/bin',
-        __DIR__.'/../../../vendor-bin/*/config',
-        __DIR__.'/../../../vendor-bin/*/src',
+        __DIR__.'/calendar-bundle/src',
+        __DIR__.'/calendar-bundle/tests',
+        __DIR__.'/comments-bundle/src',
+        __DIR__.'/comments-bundle/tests',
+        __DIR__.'/core-bundle/src',
+        __DIR__.'/core-bundle/tests',
+        __DIR__.'/faq-bundle/src',
+        __DIR__.'/faq-bundle/tests',
+        __DIR__.'/listing-bundle/src',
+        __DIR__.'/maker-bundle/src',
+        __DIR__.'/maker-bundle/tests',
+        __DIR__.'/manager-bundle/bin',
+        __DIR__.'/manager-bundle/src',
+        __DIR__.'/manager-bundle/tests',
+        __DIR__.'/news-bundle/src',
+        __DIR__.'/news-bundle/tests',
+        __DIR__.'/newsletter-bundle/src',
+        __DIR__.'/newsletter-bundle/tests',
+        __DIR__.'/test-case/src',
+        __DIR__.'/vendor-bin/ecs/config',
+        __DIR__.'/vendor-bin/isolated-tests/src',
+        __DIR__.'/vendor-bin/phpstan/src',
+        __DIR__.'/vendor-bin/service-linter/src',
     ])
     ->withSkip([
         ClassPropertyAssignToConstructorPromotionRector::class => [
@@ -40,6 +58,7 @@ return RectorConfig::configure()
             'core-bundle/src/EventListener/CommandSchedulerListener.php',
         ],
     ])
+    ->withRootFiles()
     ->withParallel()
     ->withCache(sys_get_temp_dir().'/rector_cache')
 ;

@@ -48,7 +48,7 @@ jobs:
                   composer bin ecs install --no-interaction --no-progress
 
             - name: Run ECS
-              run: vendor-bin/ecs/vendor/bin/ecs check */bin */src */tests vendor-bin/*/bin vendor-bin/*/config vendor-bin/*/src --config vendor-bin/ecs/config/default.php --no-progress-bar
+              run: vendor-bin/ecs/vendor/bin/ecs --no-progress-bar
 
     ecs-legacy:
         name: ECS legacy
@@ -71,8 +71,8 @@ jobs:
 
             - name: Run ECS
               run: |
-                  vendor-bin/ecs/vendor/bin/ecs check *-bundle/contao --config vendor-bin/ecs/config/legacy.php --no-progress-bar
-                  vendor-bin/ecs/vendor/bin/ecs check *-bundle/contao/templates --config vendor-bin/ecs/config/template.php --no-progress-bar
+                  vendor-bin/ecs/vendor/bin/ecs --config vendor-bin/ecs/config/legacy.php --no-progress-bar
+                  vendor-bin/ecs/vendor/bin/ecs --config vendor-bin/ecs/config/template.php --no-progress-bar
 
     phpstan:
         name: PHPStan
@@ -345,4 +345,4 @@ jobs:
                   composer bin monorepo install --no-interaction --no-progress
 
             - name: Validate the composer.json files
-              run: vendor-bin/monorepo/vendor/bin/monorepo-tools composer-json --validate
+              run: vendor-bin/monorepo-tools/vendor/bin/monorepo-tools composer-json --validate

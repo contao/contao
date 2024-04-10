@@ -316,14 +316,13 @@
             "@ecs-legacy",
             "@ecs-template"
         ],
-        "ecs-default": "@php vendor-bin/ecs/vendor/bin/ecs check */bin */src */tests vendor-bin/*/bin vendor-bin/*/config vendor-bin/*/src -c vendor-bin/ecs/config/default.php --fix",
-        "ecs-legacy": "@php vendor-bin/ecs/vendor/bin/ecs check *-bundle/contao -c vendor-bin/ecs/config/legacy.php --fix",
-        "ecs-template": "@php vendor-bin/ecs/vendor/bin/ecs check *-bundle/contao/templates -c vendor-bin/ecs/config/template.php --fix",
+        "ecs-default": "@php vendor-bin/ecs/vendor/bin/ecs --fix",
+        "ecs-legacy": "@php vendor-bin/ecs/vendor/bin/ecs --config=vendor-bin/ecs/config/legacy.php --fix",
+        "ecs-template": "@php vendor-bin/ecs/vendor/bin/ecs --config=vendor-bin/ecs/config/template.php --fix",
         "functional-tests": "@php vendor/bin/phpunit --testsuite=functional",
-        "monorepo-tools": "@php vendor-bin/monorepo/vendor/bin/monorepo-tools composer-json --validate",
-        "phpstan": "@php vendor-bin/phpstan/vendor/bin/phpstan analyze -c vendor-bin/phpstan/config/contao.neon",
-        "rector": "@php vendor-bin/rector/vendor/bin/rector -c vendor-bin/rector/config/rector.php",
-        "require-checker": "@php vendor-bin/require-checker/vendor/bin/composer-require-checker check --config-file=vendor-bin/require-checker/config/config.json composer.json",
+        "monorepo-tools": "@php vendor-bin/monorepo-tools/vendor/bin/monorepo-tools composer-json --validate",
+        "phpstan": "@php vendor-bin/phpstan/vendor/bin/phpstan analyze",
+        "rector": "@php vendor-bin/rector/vendor/bin/rector",
         "service-linter": "@php vendor-bin/service-linter/bin/lint-service-ids",
         "unit-tests": "@php vendor/bin/phpunit"
     }
