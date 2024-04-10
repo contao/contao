@@ -140,6 +140,7 @@
         "symfony/security-csrf": "^6.4",
         "symfony/security-http": "^6.4",
         "symfony/service-contracts": "^3.0",
+        "symfony/stopwatch": "^6.4",
         "symfony/string": "^6.4",
         "symfony/translation": "^6.4",
         "symfony/translation-contracts": "^3.0",
