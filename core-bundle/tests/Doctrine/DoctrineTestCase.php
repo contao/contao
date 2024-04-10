@@ -108,8 +108,8 @@ abstract class DoctrineTestCase extends TestCase
     }
 
     /**
-     * Returns an EntityManager configured to load the annotated entities in
-     * the tests/Fixture/Entity directory.
+     * Returns an EntityManager configured to load the annotated entities in the
+     * tests/Fixture/Entity directory.
      */
     protected function getTestEntityManager(): EntityManager
     {

@@ -53,8 +53,8 @@ final class ContextFactory
     }
 
     /**
-     * Creates a Twig template context from an arbitrary object. This will also
-     * make protected methods/properties/constants accessible.
+     * Creates a Twig template context from an arbitrary object. This will also make
+     * protected methods/properties/constants accessible.
      */
     public function fromClass(object $object): array
     {
@@ -151,9 +151,8 @@ final class ContextFactory
             }
 
             /**
-             * Called when evaluating "{{ var.invoke() }}" in a Twig template.
-             * We do not cast to string here, so that other types (like arrays)
-             * are supported as well.
+             * Called when evaluating "{{ var.invoke() }}" in a Twig template. We do not cast
+             * to string here, so that other types (like arrays) are supported as well.
              */
             public function invoke(mixed ...$args): mixed
             {

@@ -1,10 +1,10 @@
 includes:
-    - ../vendor/phpstan/phpstan/conf/bleedingEdge.neon
-    - ../vendor/phpstan/phpstan-phpunit/extension.neon
-    - ../vendor/phpstan/phpstan-phpunit/rules.neon
-    - ../vendor/phpstan/phpstan-symfony/extension.neon
-    - ../vendor/phpstan/phpstan-symfony/rules.neon
-    - ../vendor/slam/phpstan-extensions/conf/symfony-rules.neon
+    - vendor-bin/phpstan/vendor/phpstan/phpstan/conf/bleedingEdge.neon
+    - vendor-bin/phpstan/vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor-bin/phpstan/vendor/phpstan/phpstan-phpunit/rules.neon
+    - vendor-bin/phpstan/vendor/phpstan/phpstan-symfony/extension.neon
+    - vendor-bin/phpstan/vendor/phpstan/phpstan-symfony/rules.neon
+    - vendor-bin/phpstan/vendor/slam/phpstan-extensions/conf/symfony-rules.neon
 
 rules:
     - TheCodingMachine\PHPStan\Rules\Exceptions\DoNotThrowExceptionBaseClassRule

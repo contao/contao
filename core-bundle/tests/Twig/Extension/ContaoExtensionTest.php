@@ -370,10 +370,10 @@ class ContaoExtensionTest extends TestCase
     }
 
     /**
-     * We need to adjust some of Twig's core functions (e.g. the escape filter)
-     * but still delegate to the original implementation for maximum compatibility.
-     * This test makes sure the function's signatures remains the same and changes
-     * to the original codebase do not stay unnoticed.
+     * We need to adjust some of Twig's core functions (e.g. the escape filter) but
+     * still delegate to the original implementation for maximum compatibility. This
+     * test makes sure the function's signatures remains the same and changes to the
+     * original codebase do not stay unnoticed.
      *
      * @dataProvider provideTwigFunctionSignatures
      */

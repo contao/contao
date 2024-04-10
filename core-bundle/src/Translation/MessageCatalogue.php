@@ -158,7 +158,8 @@ final class MessageCatalogue implements MessageCatalogueInterface
     }
 
     /**
-     * Returns the $GLOBALS['TL_LANG'] PHP string representation for all translations of a given domain.
+     * Returns the $GLOBALS['TL_LANG'] PHP string representation for all translations
+     * of a given domain.
      */
     public function getGlobalsString(string $domain): string
     {

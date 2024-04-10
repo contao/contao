@@ -237,7 +237,8 @@ class DefaultOperationsListener
     }
 
     /**
-     * Finds the one and only toggle field in a DCA. Returns null if multiple fields can be toggled.
+     * Finds the one and only toggle field in a DCA. Returns null if multiple fields
+     * can be toggled.
      */
     private function getToggleField(string $table): string|null
     {

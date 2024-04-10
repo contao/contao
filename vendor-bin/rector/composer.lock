@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "94f9921d24a41c45381dd416dc240a0f",
+    "content-hash": "90552923cb58b934f68ceee35bf4a558",
     "packages": [
         {
             "name": "contao/rector",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/contao/rector.git",
-                "reference": "a5cb917f6f666e0c72cf273bf54187c0ba6864fe"
+                "reference": "9d7008206abaef006c4d56bb3092370361382388"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contao/rector/zipball/a5cb917f6f666e0c72cf273bf54187c0ba6864fe",
-                "reference": "a5cb917f6f666e0c72cf273bf54187c0ba6864fe",
+                "url": "https://api.github.com/repos/contao/rector/zipball/9d7008206abaef006c4d56bb3092370361382388",
+                "reference": "9d7008206abaef006c4d56bb3092370361382388",
                 "shasum": ""
             },
             "require": {
@@ -46,7 +46,7 @@
             "description": "Rector configurations for Contao",
             "support": {
                 "issues": "https://github.com/contao/rector/issues",
-                "source": "https://github.com/contao/rector/tree/1.1.0"
+                "source": "https://github.com/contao/rector/tree/1.2.0"
             },
             "funding": [
                 {
@@ -54,20 +54,20 @@
                     "type": "custom"
                 }
             ],
-            "time": "2024-02-23T16:41:43+00:00"
+            "time": "2024-04-04T10:28:57+00:00"
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.64",
+            "version": "1.10.66",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "fb9f270daffedcb5ff46275dcafe92538b1bc4bb"
+                "reference": "94779c987e4ebd620025d9e5fdd23323903950bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/fb9f270daffedcb5ff46275dcafe92538b1bc4bb",
-                "reference": "fb9f270daffedcb5ff46275dcafe92538b1bc4bb",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/94779c987e4ebd620025d9e5fdd23323903950bd",
+                "reference": "94779c987e4ebd620025d9e5fdd23323903950bd",
                 "shasum": ""
             },
             "require": {
@@ -116,20 +116,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-03-21T09:57:47+00:00"
+            "time": "2024-03-28T16:17:31+00:00"
         },
         {
             "name": "rector/rector",
-            "version": "1.0.3",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "c59507a9090b465d65e1aceed91e5b81986e375b"
+                "reference": "6e04d0eb087aef707fa0c5686d33d6ff61f4a555"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/c59507a9090b465d65e1aceed91e5b81986e375b",
-                "reference": "c59507a9090b465d65e1aceed91e5b81986e375b",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/6e04d0eb087aef707fa0c5686d33d6ff61f4a555",
+                "reference": "6e04d0eb087aef707fa0c5686d33d6ff61f4a555",
                 "shasum": ""
             },
             "require": {
@@ -141,6 +141,9 @@
                 "rector/rector-downgrade-php": "*",
                 "rector/rector-phpunit": "*",
                 "rector/rector-symfony": "*"
+            },
+            "suggest": {
+                "ext-dom": "To manipulate phpunit.xml via the custom-rule command"
             },
             "bin": [
                 "bin/rector"
@@ -164,7 +167,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/1.0.3"
+                "source": "https://github.com/rectorphp/rector/tree/1.0.4"
             },
             "funding": [
                 {
@@ -172,7 +175,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-03-14T15:04:18+00:00"
+            "time": "2024-04-05T09:01:07+00:00"
         }
     ],
     "packages-dev": [],

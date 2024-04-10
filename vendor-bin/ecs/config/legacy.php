@@ -14,6 +14,7 @@ use Contao\EasyCodingStandard\Fixer\ChainedMethodBlockFixer;
 use Contao\EasyCodingStandard\Fixer\CommentLengthFixer;
 use Contao\EasyCodingStandard\Fixer\MultiLineLambdaFunctionArgumentsFixer;
 use Contao\EasyCodingStandard\Fixer\TypeHintOrderFixer;
+use Contao\EasyCodingStandard\Set\SetList;
 use Contao\EasyCodingStandard\Sniffs\UseSprintfInExceptionsSniff;
 use PhpCsFixer\Fixer\Alias\ModernizeStrposFixer;
 use PhpCsFixer\Fixer\ArrayNotation\ArraySyntaxFixer;
@@ -57,7 +58,17 @@ use Symplify\EasyCodingStandard\Config\ECSConfig;
 use Symplify\EasyCodingStandard\ValueObject\Option;
 
 return ECSConfig::configure()
-    ->withSets([__DIR__.'/../vendor/contao/easy-coding-standard/config/contao.php'])
+    ->withSets([SetList::CONTAO])
+    ->withPaths([
+        __DIR__.'/../../../calendar-bundle/contao',
+        __DIR__.'/../../../comments-bundle/contao',
+        __DIR__.'/../../../core-bundle/contao',
+        __DIR__.'/../../../faq-bundle/contao',
+        __DIR__.'/../../../listing-bundle/contao',
+        __DIR__.'/../../../manager-bundle/contao',
+        __DIR__.'/../../../news-bundle/contao',
+        __DIR__.'/../../../newsletter-bundle/contao',
+    ])
     ->withSkip([
         '*/languages/*',
         '*/templates/*',
