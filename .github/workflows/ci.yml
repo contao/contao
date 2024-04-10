@@ -132,8 +132,8 @@ jobs:
             - name: Run the service linter
               run: vendor-bin/service-linter/bin/lint-service-ids
 
-    require-checker:
-        name: Require checker
+    analyzer:
+        name: Dependency analyzer
         runs-on: ubuntu-latest
         steps:
             - name: Setup PHP
@@ -152,13 +152,13 @@ jobs:
               run: |
                   composer install --no-interaction --no-progress
                   composer -dcore-bundle install --no-interaction --no-progress
-                  composer bin require-checker install --no-interaction --no-progress
+                  composer bin analyzer install --no-interaction --no-progress
 
             - name: Check for unknown symbols (contao/contao)
-              run: vendor-bin/require-checker/vendor/bin/composer-require-checker check --config-file=vendor-bin/require-checker/config/config.json composer.json
+              run: vendor-bin/analyzer/vendor/bin/composer-dependency-analyser
 
             - name: Check for unknown symbols (contao/core-bundle)
-              run: vendor-bin/require-checker/vendor/bin/composer-require-checker check --config-file=vendor-bin/require-checker/config/config.json core-bundle/composer.json
+              run: vendor-bin/analyzer/vendor/bin/composer-dependency-analyser --composer-json=core-bundle/composer.json
 
     tests:
         name: PHP ${{ matrix.php }}
