@@ -359,7 +359,8 @@ fieldset > .widget-group {
 	margin: 0;
 }
 
-.widget-group > .clr {
+.widget-group > .clr,
+.widget-group > .subpal {
 	grid-column-start: 1;
 }
 
@@ -951,12 +952,8 @@ a.tl_submit {
 		--widget-gap-cols: 30px;
 	}
 
-	.widget-group > * {
+	.w16, .w25, .w33, .w50, .w75 {
 		--widget-cols: 6;
-	}
-
-	.w100 {
-		--widget-cols: var(--widget-col-amount);
 	}
 
 	/* BC */
@@ -984,8 +981,8 @@ a.tl_submit {
 	}
 
 	.tl_checkbox_container .tl_checkbox {
-		margin-top: revert;
-		margin-bottom: revert;
+		margin-top: 0;
+		margin-bottom: 0;
 	}
 }
 
