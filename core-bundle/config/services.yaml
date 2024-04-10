@@ -633,10 +633,10 @@ services:
             - '@contao.repository.altcha'
             - '@doctrine.orm.entity_manager'
             - '%kernel.secret%'
-            - '%contao.altcha.algorithm%'
-            - '%contao.altcha.range_min%'
-            - '%contao.altcha.range_max%'
-            - '%contao.altcha.challenge_expiry%'
+            - ~
+            - ~
+            - ~
+            - ~
 
     contao.process_util:
         class: Contao\CoreBundle\Util\ProcessUtil

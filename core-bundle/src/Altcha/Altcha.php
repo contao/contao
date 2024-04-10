@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Altcha;
 
-use Contao\CoreBundle\Altcha\Config\AlgorithmConfig;
+use Contao\CoreBundle\Altcha\Config\Algorithm;
 use Contao\CoreBundle\Altcha\Exception\InvalidAlgorithmException;
 use Contao\CoreBundle\Entity\Altcha as AltchaEntity;
 use Contao\CoreBundle\Repository\AltchaRepository;
@@ -41,7 +41,7 @@ class Altcha
     {
         $salt ??= bin2hex(random_bytes(12));
         $number ??= random_int($this->altchaRangeMin, $this->altchaRangeMax);
-        $algorithms = array_column(AlgorithmConfig::cases(), 'value');
+        $algorithms = Algorithm::values();
 
         if (!\in_array($this->altchaAlgorithm, $algorithms, true)) {
             $strError = 'Invalid algorithm selected. It has to be set to one of these "%s".';

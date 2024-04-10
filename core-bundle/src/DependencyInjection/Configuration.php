@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DependencyInjection;
 
 use Contao\Config;
-use Contao\CoreBundle\Altcha\Config\AlgorithmConfig;
+use Contao\CoreBundle\Altcha\Config\Algorithm;
 use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
 use Contao\CoreBundle\Doctrine\Backup\RetentionPolicy;
 use Contao\CoreBundle\Util\LocaleUtil;
@@ -884,8 +884,8 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->enumNode('algorithm')
                     ->info('Choose an algorithm which is required for generating the challenges. Select between "SHA-256", "SHA-384" or "SHA-512".')
-                    ->values([...array_column(AlgorithmConfig::cases(), 'value')])
-                    ->defaultValue(AlgorithmConfig::ALGORITHM_SHA_256->value)
+                    ->values(Algorithm::values())
+                    ->defaultValue(Algorithm::sha256->value)
                 ->end()
                 ->integerNode('range_min')
                     ->info('The complexity can be adjusted by modifying the minimum and maximum values of the randomly generated secret number on the server side. A higher value increases complexity/security but may significantly increase the computational load on client devices, potentially impacting user experience.')
