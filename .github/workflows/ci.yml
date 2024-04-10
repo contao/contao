@@ -132,8 +132,8 @@ jobs:
             - name: Run the service linter
               run: vendor-bin/service-linter/bin/lint-service-ids
 
-    analyzer:
-        name: Dependency analyzer
+    depcheck:
+        name: Depcheck
         runs-on: ubuntu-latest
         steps:
             - name: Setup PHP
@@ -152,13 +152,13 @@ jobs:
               run: |
                   composer install --no-interaction --no-progress
                   composer -dcore-bundle install --no-interaction --no-progress
-                  composer bin analyzer install --no-interaction --no-progress
+                  composer bin depcheck install --no-interaction --no-progress
 
             - name: Check for unknown symbols (contao/contao)
-              run: vendor-bin/analyzer/vendor/bin/composer-dependency-analyser
+              run: vendor-bin/depcheck/vendor/bin/composer-dependency-analyser
 
             - name: Check for unknown symbols (contao/core-bundle)
-              run: vendor-bin/analyzer/vendor/bin/composer-dependency-analyser --composer-json=core-bundle/composer.json
+              run: vendor-bin/depcheck/vendor/bin/composer-dependency-analyser --composer-json=core-bundle/composer.json
 
     tests:
         name: PHP ${{ matrix.php }}

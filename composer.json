@@ -313,14 +313,14 @@
             "@unit-tests",
             "@functional-tests",
             "@phpstan",
-            "@analyzer"
+            "@dep-checker"
         ],
         "ecs": [
             "@ecs-default",
             "@ecs-legacy",
             "@ecs-template"
         ],
-        "analyzer": "@php vendor-bin/analyzer/vendor/bin/composer-dependency-analyser",
+        "depcheck": "@php vendor-bin/depcheck/vendor/bin/composer-dependency-analyser",
         "ecs-default": "@php vendor-bin/ecs/vendor/bin/ecs check --fix",
         "ecs-legacy": "@php vendor-bin/ecs/vendor/bin/ecs check --config=vendor-bin/ecs/config/legacy.php --fix",
         "ecs-template": "@php vendor-bin/ecs/vendor/bin/ecs check --config=vendor-bin/ecs/config/template.php --fix",
