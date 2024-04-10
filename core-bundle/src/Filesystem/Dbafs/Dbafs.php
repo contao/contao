@@ -242,8 +242,8 @@ class Dbafs implements DbafsInterface, ResetInterface
     }
 
     /**
-     * Computes the current change set. @See DbafsInterface::sync() for more
-     * details on the $paths parameter.
+     * Computes the current change set. @See DbafsInterface::sync() for more details
+     * on the $paths parameter.
      */
     public function computeChangeSet(string ...$paths): ChangeSet
     {
@@ -520,8 +520,8 @@ class Dbafs implements DbafsInterface, ResetInterface
     }
 
     /**
-     * Updates the database from a given change set. We're using chunked inserts
-     * for better performance.
+     * Updates the database from a given change set. We're using chunked inserts for
+     * better performance.
      *
      * @param array<string|int, string> $allUuidsByPath
      */
@@ -706,8 +706,8 @@ class Dbafs implements DbafsInterface, ResetInterface
     }
 
     /**
-     * Traverses the filesystem and returns file and directory paths that can
-     * be synchronized.
+     * Traverses the filesystem and returns file and directory paths that can be
+     * synchronized.
      *
      * Items will always be listed before the directories they reside in (most
      * specific path first).
@@ -814,12 +814,11 @@ class Dbafs implements DbafsInterface, ResetInterface
     /**
      * Returns true if a path is inside any of the given base paths.
      *
-     * All provided paths are expected to be normalized and may contain a
-     * double slash (//) as suffix.
+     * All provided paths are expected to be normalized and may contain a double slash
+     * (//) as suffix.
      *
-     * If $considerShallowDirectories is set to false, paths that are directly
-     * inside shallow directories (e.g. "foo/bar" in "foo") do NOT yield a
-     * truthy result.
+     * If $considerShallowDirectories is set to false, paths that are directly inside
+     * shallow directories (e.g. "foo/bar" in "foo") do NOT yield a truthy result.
      *
      * @param array<string> $basePaths
      */
@@ -857,10 +856,10 @@ class Dbafs implements DbafsInterface, ResetInterface
     }
 
     /**
-     * Returns a normalized list of paths with redundant paths stripped as well
-     * as a list of all parent paths that are not covered by the arguments. To
-     * denote directories of which only the direct children should be read, we
-     * append a double slash (//) as an internal marker.
+     * Returns a normalized list of paths with redundant paths stripped as well as a
+     * list of all parent paths that are not covered by the arguments. To denote
+     * directories of which only the direct children should be read, we append a
+     * double slash (//) as an internal marker.
      *
      * @see DbafsTest::testNormalizesSearchPaths()
      *

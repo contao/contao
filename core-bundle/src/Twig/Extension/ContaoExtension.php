@@ -107,9 +107,9 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
     /**
      * Adds a Contao escaper rule.
      *
-     * If a template name matches any of the defined rules, it will be processed
-     * with the "contao_html" escaper strategy. Make sure your rule will only
-     * match templates with input encoded contexts!
+     * If a template name matches any of the defined rules, it will be processed with
+     * the "contao_html" escaper strategy. Make sure your rule will only match
+     * templates with input encoded contexts!
      */
     public function addContaoEscaperRule(string $regularExpression): void
     {
@@ -157,7 +157,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             // template hierarchy
             new TwigFunction(
                 'include',
-                function (Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = false, $sandboxed = false /* we need named arguments here */) use ($includeFunctionCallable) {
+                function (Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = false, $sandboxed = false) use ($includeFunctionCallable) {
                     $args = \func_get_args();
                     $args[2] = DynamicIncludeTokenParser::adjustTemplateName($template, $this->filesystemLoader);
 

@@ -26,16 +26,16 @@ final class BbCode
      *
      * Supports the following tags:
      *
-     * * [b][/b] bold
-     * * [i][/i] italic
-     * * [u][/u] underline
-     * * [code][/code]
-     * * [quote][/quote]
-     * * [quote=author][/quote]
-     * * [url][/url]
-     * * [url=https://…][/url]
-     * * [email][/email]
-     * * [email=name@example.com][/email]
+     * - [b][/b] bold
+     * - [i][/i] italic
+     * - [u][/u] underline
+     * - [code][/code]
+     * - [quote][/quote]
+     * - [quote=author][/quote]
+     * - [url][/url]
+     * - [url=https://…][/url]
+     * - [email][/email]
+     * - [email=name@example.com][/email]
      */
     public function toHtml(string $bbCode): string
     {
@@ -43,9 +43,8 @@ final class BbCode
     }
 
     /**
-     * Find BBCode tokens and annotate them with their position/tag/type and
-     * attribute. We're only matching tokens in the form '[tag]', '[/tag]' and
-     * '[tag=attr]'.
+     * Find BBCode tokens and annotate them with their position/tag/type and attribute.
+     * We're only matching tokens in the form '[tag]', '[/tag]' and '[tag=attr]'.
      */
     private function tokenize(string $input): array
     {
@@ -69,8 +68,7 @@ final class BbCode
     }
 
     /**
-     * Parses tokens into a node tree. Input before/after tokens is treated as
-     * text.
+     * Parses tokens into a node tree. Input before/after tokens is treated as text.
      */
     private function parse(array $tokens, string $input): Node
     {

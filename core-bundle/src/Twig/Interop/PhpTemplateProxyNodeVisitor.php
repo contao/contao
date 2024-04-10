@@ -48,10 +48,10 @@ final class PhpTemplateProxyNodeVisitor extends AbstractNodeVisitor
     }
 
     /**
-     * We are replacing the module body with a PhpTemplateProxyNode that will
-     * delegate rendering to the Contao framework on the fly. To support blocks
-     * we're also injecting a BlockNode for each block in the original source
-     * that will return the default Contao block placeholder when called.
+     * We are replacing the module body with a PhpTemplateProxyNode that will delegate
+     * rendering to the Contao framework on the fly. To support blocks we're also
+     * injecting a BlockNode for each block in the original source that will return
+     * the default Contao block placeholder when called.
      */
     private function configurePhpTemplateProxy(ModuleNode $node): void
     {
