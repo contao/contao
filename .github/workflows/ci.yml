@@ -26,7 +26,7 @@ jobs:
                   composer bin rector install --no-interaction --no-progress
 
             - name: Run Rector
-              run: vendor-bin/rector/vendor/bin/rector --config vendor-bin/rector/config/rector.php --dry-run --no-progress-bar
+              run: vendor-bin/rector/vendor/bin/rector --dry-run --no-progress-bar
 
     ecs:
         name: ECS
@@ -48,7 +48,7 @@ jobs:
                   composer bin ecs install --no-interaction --no-progress
 
             - name: Run ECS
-              run: vendor-bin/ecs/vendor/bin/ecs --no-progress-bar
+              run: vendor-bin/ecs/vendor/bin/ecs check --no-progress-bar
 
     ecs-legacy:
         name: ECS legacy
@@ -71,8 +71,8 @@ jobs:
 
             - name: Run ECS
               run: |
-                  vendor-bin/ecs/vendor/bin/ecs --config vendor-bin/ecs/config/legacy.php --no-progress-bar
-                  vendor-bin/ecs/vendor/bin/ecs --config vendor-bin/ecs/config/template.php --no-progress-bar
+                  vendor-bin/ecs/vendor/bin/ecs check --config vendor-bin/ecs/config/legacy.php --no-progress-bar
+                  vendor-bin/ecs/vendor/bin/ecs check --config vendor-bin/ecs/config/template.php --no-progress-bar
 
     phpstan:
         name: PHPStan
@@ -94,7 +94,7 @@ jobs:
                   composer bin phpstan install --no-interaction --no-progress
 
             - name: Run PHPStan
-              run: vendor-bin/phpstan/vendor/bin/phpstan analyse -c vendor-bin/phpstan/config/contao.neon --no-progress
+              run: vendor-bin/phpstan/vendor/bin/phpstan analyse --no-progress
 
     yamllint:
         name: YAMLlint
@@ -342,7 +342,7 @@ jobs:
             - name: Install the dependencies
               run: |
                   composer install --no-interaction --no-progress
-                  composer bin monorepo install --no-interaction --no-progress
+                  composer bin monorepo-tools install --no-interaction --no-progress
 
             - name: Validate the composer.json files
               run: vendor-bin/monorepo-tools/vendor/bin/monorepo-tools composer-json --validate
