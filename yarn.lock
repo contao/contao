@@ -3586,7 +3586,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"css-tree@npm:^2.2.1":
+"css-tree@npm:^2.2.1, css-tree@npm:^2.3.1":
   version: 2.3.1
   resolution: "css-tree@npm:2.3.1"
   dependencies:
@@ -4567,6 +4567,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"file-loader@npm:^6.0.0":
+  version: 6.2.0
+  resolution: "file-loader@npm:6.2.0"
+  dependencies:
+    loader-utils: "npm:^2.0.0"
+    schema-utils: "npm:^3.0.0"
+  peerDependencies:
+    webpack: ^4.0.0 || ^5.0.0
+  checksum: e176a57c2037ab0f78e5755dbf293a6b7f0f8392350a120bd03cc2ce2525bea017458ba28fea14ca535ff1848055e86d1a3a216bdb2561ef33395b27260a1dd3
+  languageName: node
+  linkType: hard
+
 "fill-range@npm:^7.0.1":
   version: 7.0.1
   resolution: "fill-range@npm:7.0.1"
@@ -5396,6 +5408,27 @@ __metadata:
   version: 1.2.1
   resolution: "ieee754@npm:1.2.1"
   checksum: b0782ef5e0935b9f12883a2e2aa37baa75da6e66ce6515c168697b42160807d9330de9a32ec1ed73149aea02e0d822e572bca6f1e22bdcbd2149e13b050b17bb
+  languageName: node
+  linkType: hard
+
+"image-minimizer-webpack-plugin@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "image-minimizer-webpack-plugin@npm:4.0.0"
+  dependencies:
+    schema-utils: "npm:^4.2.0"
+    serialize-javascript: "npm:^6.0.2"
+  peerDependencies:
+    webpack: ^5.1.0
+  peerDependenciesMeta:
+    "@squoosh/lib":
+      optional: true
+    imagemin:
+      optional: true
+    sharp:
+      optional: true
+    svgo:
+      optional: true
+  checksum: ef61f47fbc3ca541d6a1387ee192e6256905a116ebe9edb353903f93ceeb13f93627465158b96c3540b4f0173b58e27ea4f24bd4ac5dd12d56947c170ec53539
   languageName: node
   linkType: hard
 
@@ -8003,9 +8036,12 @@ __metadata:
     "@symfony/webpack-encore": "npm:^4.6.1"
     css-loader: "npm:^7.1.0"
     cypress: "npm:^13.7.2"
+    file-loader: "npm:^6.0.0"
     gulp: "npm:^5.0.0"
     gulp-svgo: "npm:^2.2.1"
+    image-minimizer-webpack-plugin: "npm:^4.0.0"
     pump: "npm:^3.0.0"
+    svgo: "npm:^3.2.0"
     webpack: "npm:^5.91.0"
     webpack-cli: "npm:^5.1.4"
   languageName: unknown
@@ -8071,7 +8107,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"schema-utils@npm:^3.1.1, schema-utils@npm:^3.2.0":
+"schema-utils@npm:^3.0.0, schema-utils@npm:^3.1.1, schema-utils@npm:^3.2.0":
   version: 3.3.0
   resolution: "schema-utils@npm:3.3.0"
   dependencies:
@@ -8082,7 +8118,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"schema-utils@npm:^4.0.0, schema-utils@npm:^4.0.1":
+"schema-utils@npm:^4.0.0, schema-utils@npm:^4.0.1, schema-utils@npm:^4.2.0":
   version: 4.2.0
   resolution: "schema-utils@npm:4.2.0"
   dependencies:
@@ -8177,6 +8213,15 @@ __metadata:
   dependencies:
     randombytes: "npm:^2.1.0"
   checksum: 1af427f4fee3fee051f54ffe15f77068cff78a3c96d20f5c1178d20630d3ab122d8350e639d5e13cde8111ef9db9439b871305ffb185e24be0a2149cec230988
+  languageName: node
+  linkType: hard
+
+"serialize-javascript@npm:^6.0.2":
+  version: 6.0.2
+  resolution: "serialize-javascript@npm:6.0.2"
+  dependencies:
+    randombytes: "npm:^2.1.0"
+  checksum: 2dd09ef4b65a1289ba24a788b1423a035581bef60817bea1f01eda8e3bda623f86357665fe7ac1b50f6d4f583f97db9615b3f07b2a2e8cbcb75033965f771dd2
   languageName: node
   linkType: hard
 
@@ -8700,6 +8745,23 @@ __metadata:
   bin:
     svgo: bin/svgo
   checksum: d682d416dd68cdcbab5e1e77b93d621325480e97dfe87777e845ea9a0ce05d03fc837ce17080af67e787f6b24430b805ff79f4591dda30a0ab4060b6a3ac2adf
+  languageName: node
+  linkType: hard
+
+"svgo@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "svgo@npm:3.2.0"
+  dependencies:
+    "@trysound/sax": "npm:0.2.0"
+    commander: "npm:^7.2.0"
+    css-select: "npm:^5.1.0"
+    css-tree: "npm:^2.3.1"
+    css-what: "npm:^6.1.0"
+    csso: "npm:^5.0.5"
+    picocolors: "npm:^1.0.0"
+  bin:
+    svgo: ./bin/svgo
+  checksum: 28fa9061ccbcf2e3616d48d1feb613aaa05f8f290a329beb0e585914f1864385152934a7d4d683a4609fafbae3d51666633437c359c5c5ef74fb58ad09092a7c
   languageName: node
   linkType: hard
 
