@@ -2178,10 +2178,10 @@
         <source>I'm human</source>
       </trans-unit>
       <trans-unit id="MSC.altchaVerifying">
-        <source>Verifying...</source>
+        <source>Verifying …</source>
       </trans-unit>
       <trans-unit id="MSC.altchaWaitAlert">
-        <source>Verifying... please wait.</source>
+        <source>Verifying … please wait.</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
