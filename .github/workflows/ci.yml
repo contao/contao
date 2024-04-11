@@ -155,10 +155,10 @@ jobs:
                   composer bin depcheck install --no-interaction --no-progress
 
             - name: Check for unknown symbols (contao/contao)
-              run: vendor-bin/depcheck/vendor/bin/composer-dependency-analyser
+              run: vendor-bin/depcheck/vendor/bin/composer-dependency-analyser --config=depcheck.php
 
             - name: Check for unknown symbols (contao/core-bundle)
-              run: vendor-bin/depcheck/vendor/bin/composer-dependency-analyser --composer-json=core-bundle/composer.json
+              run: vendor-bin/depcheck/vendor/bin/composer-dependency-analyser --config=depcheck.php --composer-json=core-bundle/composer.json
 
     tests:
         name: PHP ${{ matrix.php }}
