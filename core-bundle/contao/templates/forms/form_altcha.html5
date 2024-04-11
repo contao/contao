@@ -1,4 +1,4 @@
-<?php $GLOBALS['TL_HEAD'][] = '<script async defer src="bundles/contaocore/altcha/js/altcha.js" type="module"></script>'; ?>
+<?php $GLOBALS['TL_HEAD'][] = '<script async defer src="' . $this->asset('js/altcha.min.js', 'contao-components/altcha') . '" type="module"></script>'; ?>
 
 <?php $this->extend('form_row'); ?>
 
