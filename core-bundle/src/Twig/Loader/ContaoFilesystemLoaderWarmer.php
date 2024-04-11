@@ -48,8 +48,8 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
     }
 
     /**
-     * Writes an "ide-twig.json" file with path mapping information that
-     * enables IDE auto-completion for all our dynamic namespaces.
+     * Writes an "ide-twig.json" file with path mapping information that enables IDE
+     * auto-completion for all our dynamic namespaces.
      */
     private function writeIdeAutoCompletionMapping(string $cacheDir): void
     {

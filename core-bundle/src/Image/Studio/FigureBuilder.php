@@ -35,11 +35,10 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Uid\Uuid;
 
 /**
- * Use the FigureBuilder class to create Figure result objects. The class
- * has a fluent interface to configure the desired output. When you are ready,
- * call build() to get a Figure. If you need another instance with similar
- * settings, you can alter values and call build() again - it will not affect
- * your first instance.
+ * Use the FigureBuilder class to create Figure result objects. The class has a fluent
+ * interface to configure the desired output. When you are ready, call build() to get a
+ * Figure. If you need another instance with similar settings, you can alter values and
+ * call build() again - it will not affect your first instance.
  */
 class FigureBuilder
 {
@@ -368,8 +367,8 @@ class FigureBuilder
     /**
      * Sets resize options.
      *
-     * By default, or if the argument is set to null, resize options are derived
-     * from predefined image sizes.
+     * By default, or if the argument is set to null, resize options are derived from
+     * predefined image sizes.
      */
     public function setResizeOptions(ResizeOptions|null $resizeOptions): self
     {
@@ -381,8 +380,8 @@ class FigureBuilder
     /**
      * Sets custom metadata.
      *
-     * By default, or if the argument is set to null, metadata is trying to be
-     * pulled from the FilesModel.
+     * By default, or if the argument is set to null, metadata is trying to be pulled
+     * from the FilesModel.
      */
     public function setMetadata(Metadata|null $metadata): self
     {
@@ -416,8 +415,8 @@ class FigureBuilder
     /**
      * Sets a custom locale.
      *
-     * By default, or if the argument is set to null, the locale is determined
-     * from the request context and/or system settings.
+     * By default, or if the argument is set to null, the locale is determined from
+     * the request context and/or system settings.
      */
     public function setLocale(string|null $locale): self
     {
@@ -446,9 +445,8 @@ class FigureBuilder
     /**
      * Sets all custom link attributes as an associative array.
      *
-     * This will overwrite previously set attributes. If you want to explicitly
-     * remove an auto-generated value from the results, set the respective
-     * attribute to null.
+     * This will overwrite previously set attributes. If you want to explicitly remove
+     * an auto-generated value from the results, set the respective attribute to null.
      */
     public function setLinkAttributes(HtmlAttributes|array $attributes): self
     {
@@ -485,9 +483,9 @@ class FigureBuilder
      * Sets a custom lightbox resource (file path or ImageInterface) or URL.
      *
      * By default, or if the argument is set to null, the image/target will be
-     * automatically determined from the metadata or base resource. For this
-     * setting to take effect, make sure you have enabled the creation of a
-     * lightbox by calling enableLightbox().
+     * automatically determined from the metadata or base resource. For this setting
+     * to take effect, make sure you have enabled the creation of a lightbox by
+     * calling enableLightbox().
      */
     public function setLightboxResourceOrUrl(ImageInterface|string|null $resourceOrUrl): self
     {
@@ -499,8 +497,8 @@ class FigureBuilder
     /**
      * Sets a size configuration that will be applied to the lightbox image.
      *
-     * For this setting to take effect, make sure you have enabled the creation
-     * of a lightbox by calling enableLightbox().
+     * For this setting to take effect, make sure you have enabled the creation of a
+     * lightbox by calling enableLightbox().
      *
      * @param int|string|array|PictureConfiguration|null $size A picture size configuration or reference
      */
@@ -514,8 +512,8 @@ class FigureBuilder
     /**
      * Sets resize options for the lightbox image.
      *
-     * By default, or if the argument is set to null, resize options are derived
-     * from predefined image sizes.
+     * By default, or if the argument is set to null, resize options are derived from
+     * predefined image sizes.
      */
     public function setLightboxResizeOptions(ResizeOptions|null $resizeOptions): self
     {
@@ -527,9 +525,9 @@ class FigureBuilder
     /**
      * Sets a custom lightbox group ID.
      *
-     * By default, or if the argument is set to null, the ID will be empty. For
-     * this setting to take effect, make sure you have enabled the creation of
-     * a lightbox by calling enableLightbox().
+     * By default, or if the argument is set to null, the ID will be empty. For this
+     * setting to take effect, make sure you have enabled the creation of a lightbox
+     * by calling enableLightbox().
      */
     public function setLightboxGroupIdentifier(string|null $identifier): self
     {
@@ -539,8 +537,8 @@ class FigureBuilder
     }
 
     /**
-     * Enables the creation of a lightbox image (if possible) and/or
-     * outputting the respective link attributes.
+     * Enables the creation of a lightbox image (if possible) and/or outputting the
+     * respective link attributes.
      *
      * This setting is disabled by default.
      */
@@ -571,8 +569,8 @@ class FigureBuilder
     }
 
     /**
-     * Creates a result object with the current settings, throws an exception
-     * if the currently defined resource is invalid.
+     * Creates a result object with the current settings, throws an exception if the
+     * currently defined resource is invalid.
      *
      * @throws InvalidResourceException
      */

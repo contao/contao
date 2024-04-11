@@ -21,7 +21,7 @@ require __DIR__.'/../vendor/autoload.php';
 use Contao\Tools\ServiceLinter\LintServiceIdsCommand;
 use Symfony\Component\Console\Application;
 
-$command = new LintServiceIdsCommand(getcwd());
+$command = new LintServiceIdsCommand(dirname(__DIR__, 3));
 
 $application = new Application();
 $application->add($command);

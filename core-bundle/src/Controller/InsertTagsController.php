@@ -23,9 +23,9 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 /**
  * @internal Do not use this controller in your code
  *
- * It is supposed to be used within ESI requests that are protected by the
- * Symfony fragment URI signer. If you use it directly, make sure to add a
- * permission check, because insert tags can contain arbitrary data!
+ * It is supposed to be used within ESI requests that are protected by the Symfony
+ * fragment URI signer. If you use it directly, make sure to add a permission
+ * check, because insert tags can contain arbitrary data!
  */
 class InsertTagsController
 {

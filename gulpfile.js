@@ -11,6 +11,7 @@ gulp.task('minify-theme-icons', function(cb) {
             svgo({
                 multipass: true,
                 plugins: [{
+                    sortAttrs: true,
                     inlineStyles: {
                         onlyMatchedOnce: false
                     }

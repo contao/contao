@@ -29,11 +29,11 @@ jobs:
               run: composer install --no-interaction --no-progress
 
             - name: Generate the coverage report
-              run: php -d pcov.enabled=1 vendor/bin/phpunit --testsuite=coverage --coverage-clover=clover.xml --colors=always
+              run: php -d pcov.enabled=1 vendor/bin/phpunit --testsuite=coverage --coverage-clover=clover.xml
 
             - name: Upload the coverage report
               uses: codecov/codecov-action@v3
               with:
                   files: ./clover.xml
                   fail_ci_if_error: true
-                  token: 6ec51b7a-f2e6-4310-a60c-d2ee69ecd8ba
+                  token: c9fc8445-628e-41c3-886a-a37ebd3c4807

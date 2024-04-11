@@ -386,8 +386,8 @@ class PictureFactory implements PictureFactoryInterface
     }
 
     /**
-     * Returns true if the aspect ratios of all sources of the picture are
-     * nearly the same and differ less than the ASPECT_RATIO_THRESHOLD.
+     * Returns true if the aspect ratios of all sources of the picture are nearly the
+     * same and differ less than the ASPECT_RATIO_THRESHOLD.
      */
     private function hasSingleAspectRatio(PictureInterface $picture): bool
     {
