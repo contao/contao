@@ -325,8 +325,8 @@ jobs:
                       cd ..
                   done
 
-    dependencies:
-        name: Dependencies
+    monorepo-check:
+        name: Monorepo check
         runs-on: ubuntu-latest
         steps:
             - name: Setup PHP
