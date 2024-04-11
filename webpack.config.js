@@ -60,6 +60,9 @@ Encore
                                 inlineStyles: {
                                     onlyMatchedOnce: false,
                                 },
+                                convertPathData: {
+                                    noSpaceAfterFlags: true,
+                                },
                             },
                         },
                     }],
