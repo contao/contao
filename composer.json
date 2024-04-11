@@ -313,7 +313,7 @@
             "@unit-tests",
             "@functional-tests",
             "@phpstan",
-            "@dep-checker"
+            "@depcheck"
         ],
         "ecs": [
             "@ecs-default",
