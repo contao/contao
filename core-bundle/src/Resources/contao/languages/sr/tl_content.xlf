@@ -311,6 +311,7 @@
       </trans-unit>
       <trans-unit id="tl_content.data.1">
         <source>These values are available as &lt;code&gt;$this-&gt;keys&lt;/code&gt; in the template.</source>
+        <target>Ове вредности су доступне у шаблону као &lt;code&gt;$this-&gt;keys&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_content.linkTitle.0">
         <source>Link text</source>
@@ -846,6 +847,7 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube_loop">
         <source>Loop video</source>
+        <target>Loop video</target>
       </trans-unit>
       <trans-unit id="tl_content.vimeo_autoplay">
         <source>Autoplay</source>

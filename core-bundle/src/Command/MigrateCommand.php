@@ -250,6 +250,8 @@ class MigrateCommand extends Command
 
     private function executeMigrations(bool &$dryRun, bool $asJson, string $specifiedHash = null): bool
     {
+        $loopControl = 19;
+
         while (true) {
             $first = true;
             $migrationLabels = [];
@@ -361,6 +363,19 @@ class MigrateCommand extends Command
 
                 // Do not run the update recursive if a hash was specified
                 break;
+            }
+
+            if ($loopControl-- < 1) {
+                if ($asJson) {
+                    $this->writeNdjson('error', [
+                        'message' => 'The migrations were stopped after 19 iterations as a precaution. There is a high chance of an infinite loop of migrations.',
+                        'isSuccessful' => false,
+                    ]);
+                } else {
+                    $this->io->error('The migrations were stopped after 19 iterations as a precaution. There is a high chance of an infinite loop of migrations. If this is not the case, please re-run the command. To troubleshoot this error, check the shouldRun() method of the migration(s) listed above.');
+                }
+
+                return false;
             }
         }
 

@@ -2,6 +2,26 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.40] (2024-04-09)
+
+**Security fixes:**
+
+- [CVE-2024-28235]: Session cookie disclosure in the crawler
+- [CVE-2024-28190]: Cross site scripting in the file manager
+- [CVE-2024-28191]: Insert tag injection via the form generator
+- [CVE-2024-30262]: Remember-me tokens are not cleared after a password change
+- [CVE-2024-28234]: Insufficient BBCode sanitization
+
+## [4.13.39] (2024-03-20)
+
+**Fixed issues:**
+
+- [#7029] Update the DBAFS cache when creating files ([m-vo])
+- [#6957] Prevent infinite loops of migrations ([richardhj])
+- [#6771] Backport the `UnwrapTwigExceptionListener` ([bytehead])
+- [#6986] Ignore empty image size items ([ausi])
+- [#6926] Set the X-Frame-Options header for popups ([richardhj])
+
 ## [4.13.38] (2024-03-07)
 
 **Fixed issues:**
@@ -936,6 +956,8 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.40]: https://github.com/contao/contao/releases/tag/4.13.40
+[4.13.39]: https://github.com/contao/contao/releases/tag/4.13.39
 [4.13.38]: https://github.com/contao/contao/releases/tag/4.13.38
 [4.13.37]: https://github.com/contao/contao/releases/tag/4.13.37
 [4.13.36]: https://github.com/contao/contao/releases/tag/4.13.36
@@ -978,6 +1000,11 @@ This project adheres to [Semantic Versioning].
 [4.13.0-RC3]: https://github.com/contao/contao/releases/tag/4.13.0-RC3
 [4.13.0-RC2]: https://github.com/contao/contao/releases/tag/4.13.0-RC2
 [4.13.0-RC1]: https://github.com/contao/contao/releases/tag/4.13.0-RC1
+[CVE-2024-28235]: https://github.com/contao/contao/security/advisories/GHSA-9jh5-qf84-x6pr
+[CVE-2024-28190]: https://github.com/contao/contao/security/advisories/GHSA-v24p-7p4j-qvvf
+[CVE-2024-28191]: https://github.com/contao/contao/security/advisories/GHSA-747v-52c4-8vj8
+[CVE-2024-30262]: https://github.com/contao/contao/security/advisories/GHSA-r4r6-j2j3-7pp5
+[CVE-2024-28234]: https://github.com/contao/contao/security/advisories/GHSA-j55w-hjpj-825g
 [CVE-2023-36806]: https://github.com/contao/contao/security/advisories/GHSA-4gpr-p634-922x
 [CVE-2023-29200]: https://github.com/contao/contao/security/advisories/GHSA-fp7q-xhhw-6rj3
 [CVE-2022-24899]: https://github.com/contao/contao/security/advisories/GHSA-m8x6-6r63-qvj2
@@ -1697,6 +1724,7 @@ This project adheres to [Semantic Versioning].
 [#6724]: https://github.com/contao/contao/pull/6724
 [#6762]: https://github.com/contao/contao/pull/6762
 [#6764]: https://github.com/contao/contao/pull/6764
+[#6771]: https://github.com/contao/contao/pull/6771
 [#6777]: https://github.com/contao/contao/pull/6777
 [#6778]: https://github.com/contao/contao/pull/6778
 [#6798]: https://github.com/contao/contao/pull/6798
@@ -1714,9 +1742,13 @@ This project adheres to [Semantic Versioning].
 [#6905]: https://github.com/contao/contao/pull/6905
 [#6906]: https://github.com/contao/contao/pull/6906
 [#6909]: https://github.com/contao/contao/pull/6909
+[#6926]: https://github.com/contao/contao/pull/6926
 [#6940]: https://github.com/contao/contao/pull/6940
 [#6947]: https://github.com/contao/contao/pull/6947
 [#6949]: https://github.com/contao/contao/pull/6949
+[#6957]: https://github.com/contao/contao/pull/6957
 [#6959]: https://github.com/contao/contao/pull/6959
 [#6965]: https://github.com/contao/contao/pull/6965
 [#6966]: https://github.com/contao/contao/pull/6966
+[#6986]: https://github.com/contao/contao/pull/6986
+[#7029]: https://github.com/contao/contao/pull/7029

@@ -106,6 +106,23 @@ class DbafsTest extends FunctionalTestCase
         $this->assertCount(0, $contents);
     }
 
+    public function testCreateAndAccessFile(): void
+    {
+        // Ensure that "foo" is marked as non-existent resource in the DBFAS cache
+        $this->assertFalse($this->filesystem->fileExists('foo'));
+
+        // Creating a file should update the cache
+        $this->filesystem->write('foo', 'bar');
+
+        $this->assertTrue($this->filesystem->fileExists('foo'));
+        $this->assertTrue($this->filesystem->has('foo'));
+
+        $contents = $this->filesystem->listContents('')->toArray();
+
+        $this->assertCount(1, $contents);
+        $this->assertSame('foo', $contents[0]->getPath());
+    }
+
     private function assertFile1MovedAndFile3Created(ChangeSet $changeSet): void
     {
         // Items to create
