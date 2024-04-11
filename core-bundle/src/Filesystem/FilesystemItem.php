@@ -141,6 +141,11 @@ class FilesystemItem
         return $this->path;
     }
 
+    public function getName(): string
+    {
+        return basename($this->path);
+    }
+
     public function getLastModified(): ?int
     {
         $this->resolveIfClosure($this->lastModified);
