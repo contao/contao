@@ -558,7 +558,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         }
     }
 
-    private function handleAltcha(array$config, ContainerBuilder $container): void
+    private function handleAltcha(array $config, ContainerBuilder $container): void
     {
         if (!$container->hasDefinition('contao.altcha.altcha')) {
             return;
