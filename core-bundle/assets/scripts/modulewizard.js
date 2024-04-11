@@ -10,8 +10,9 @@
             return;
         }
 
-        // Check if this row has all necessary elements
-        if (9 !== row.querySelectorAll('select, button, a.module_link, img.module_image').length) {
+        // Check if the row has all necessary elements to prevent the mutation observer
+        // from initializing the incomplete widget.
+        if (!row.querySelector('button.drag-handle')) {
             return;
         }
 

@@ -37,7 +37,8 @@ class ImagesController
     }
 
     /**
-     * The route is registered dynamically in the Contao\CoreBundle\Routing\ImagesLoader class.
+     * The route is registered dynamically in the
+     * Contao\CoreBundle\Routing\ImagesLoader class.
      */
     public function __invoke(string $path): Response
     {

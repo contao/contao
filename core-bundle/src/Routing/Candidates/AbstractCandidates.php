@@ -20,9 +20,9 @@ class AbstractCandidates implements CandidatesInterface
     /**
      * A limit to apply to the number of candidates generated.
      *
-     * This is to prevent abusive requests with a lot of "/". The limit is per
-     * batch, that is if a locale matches you could get as many as 2 * $limit
-     * candidates if the URL has that many slashes.
+     * This is to prevent abusive requests with a lot of "/". The limit is per batch,
+     * that is if a locale matches you could get as many as 2 * $limit candidates if
+     * the URL has that many slashes.
      */
     private const LIMIT = 20;
 
@@ -42,8 +42,8 @@ class AbstractCandidates implements CandidatesInterface
     }
 
     /**
-     * Generates possible page aliases from the request path by removing
-     * prefixes, suffixes and parameters.
+     * Generates possible page aliases from the request path by removing prefixes,
+     * suffixes and parameters.
      *
      * Example 1:
      *   Path: /en/alias/foo/bar.html

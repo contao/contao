@@ -85,8 +85,8 @@ class LintServiceIdsCommand extends Command
     ];
 
     /**
-     * Classes that are not meant to be a single service and can therefore not
-     * derive the service ID from the class name.
+     * Classes that are not meant to be a single service and can therefore not derive
+     * the service ID from the class name.
      *
      * @var array<string>
      */

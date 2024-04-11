@@ -55,7 +55,8 @@ class PaletteManipulator
     }
 
     /**
-     * If $position is PREPEND or APPEND, pass a legend as parent; otherwise pass a field name.
+     * If $position is PREPEND or APPEND, pass a legend as parent; otherwise pass a
+     * field name.
      *
      * @throws PalettePositionException
      */
@@ -355,7 +356,8 @@ class PaletteManipulator
     }
 
     /**
-     * Having the same field in multiple legends is not supported by Contao, so we don't handle that case.
+     * Having the same field in multiple legends is not supported by Contao, so we
+     * don't handle that case.
      */
     private function findLegendForField(array $config, string $field): int|string|false
     {

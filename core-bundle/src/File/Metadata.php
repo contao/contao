@@ -46,8 +46,8 @@ class Metadata
     }
 
     /**
-     * Returns a new metadata representation that also contains the given
-     * values. Existing keys will be overwritten.
+     * Returns a new metadata representation that also contains the given values.
+     * Existing keys will be overwritten.
      *
      * @param array<string, mixed> $values
      */
