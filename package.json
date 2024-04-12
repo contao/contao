@@ -6,7 +6,7 @@
         "@hotwired/stimulus-webpack-helpers": "^1.0.1",
         "@symfony/webpack-encore": "^4.6.1",
         "css-loader": "^7.1.1",
-        "cypress": "^13.7.2",
+        "cypress": "^13.7.3",
         "file-loader": "^6.2.0",
         "image-minimizer-webpack-plugin": "^4.0.0",
         "svgo": "^3.2.0",
