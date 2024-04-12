@@ -5,13 +5,6 @@
 # Composer bin
 /vendor-bin/*/vendor
 
-# Cypress
-/cypress/screenshots/
-/cypress/videos/
-/cypress/webspace/*
-!/cypress/webspace/.env
-!/cypress/webspace/composer.json
-
 # Monorepo Tools
 /.monorepo-split-cache/
 
