@@ -12,22 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\PhpunitExtension;
 
-use Composer\InstalledVersions;
-use Contao\CoreBundle\Util\LocaleUtil;
-use Doctrine\Deprecations\Deprecation;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Runner\AfterTestHook;
 use PHPUnit\Runner\BeforeTestHook;
 use SebastianBergmann\Diff\Differ;
 use SebastianBergmann\Diff\Output\StrictUnifiedDiffOutputBuilder;
-use Symfony\Component\Config\Resource\ComposerResource;
-use Symfony\Component\Console\Terminal;
-use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\DependencyInjection\ParameterBag\EnvPlaceholderParameterBag;
-use Symfony\Component\HttpClient\Internal\CurlClientState;
-use Symfony\Component\HttpClient\Response\MockResponse;
-use Symfony\Component\Mime\Address;
-use Symfony\Component\Mime\MimeTypes;
 
 final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
 {
@@ -154,11 +143,13 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
         $data = [];
 
         foreach (get_declared_classes() as $class) {
+            /** @noinspection ClassnameLiteralInspection */
             foreach ([
-                InstalledVersions::class,
-                LocaleUtil::class,
+                'Composer\InstalledVersions',
+                'Contao\CoreBundle\Util\LocaleUtil',
                 'Contao\TestCase\\',
-                Deprecation::class,
+                'DASPRiD\Enum\AbstractEnum',
+                'Doctrine\Deprecations\\Deprecation',
                 'Doctrine\Instantiator\\',
                 'Imagine\\',
                 'Mock_',
@@ -167,23 +158,22 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
                 'SebastianBergmann\\',
                 'Symfony\Bridge\PhpUnit\\',
                 'Symfony\Component\Cache\Adapter\\',
-                ComposerResource::class,
+                'Symfony\Component\Config\Resource\ComposerResource',
                 'Symfony\Component\Console\Helper\\',
-                Container::class,
-                EnvPlaceholderParameterBag::class,
+                'Symfony\Component\Console\Terminal',
+                'Symfony\Component\DependencyInjection\Container',
+                'Symfony\Component\DependencyInjection\ParameterBag\EnvPlaceholderParameterBag',
                 'Symfony\Component\ErrorHandler\\',
                 'Symfony\Component\Filesystem\\',
-                CurlClientState::class,
-                Address::class,
-                MimeTypes::class,
-                MockResponse::class,
+                'Symfony\Component\HttpClient\Response\MockResponse',
+                'Symfony\Component\Mime\Address',
+                'Symfony\Component\Mime\MimeTypes\\',
                 'Symfony\Component\String\\',
                 'Symfony\Component\VarDumper\\',
                 'Symfony\Component\Yaml\\',
                 'Webmozart\PathUtil\\',
-                Terminal::class,
             ] as $ignorePrefix) {
-                if (0 === strncmp("$ignorePrefix\\", $class, \strlen($ignorePrefix))) {
+                if (0 === strncmp($ignorePrefix, $class, \strlen($ignorePrefix))) {
                     continue 2;
                 }
             }
