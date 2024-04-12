@@ -17,6 +17,9 @@
 !/.yarn/sdks
 !/.yarn/versions
 
+# Cypress
+/cypress/
+
 # PhpUnit
 /.phpunit.result.cache
 /phpunit.xml
