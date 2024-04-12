@@ -36,6 +36,10 @@ class StringResolver implements ContentUrlResolverInterface
 
         $url = $this->insertTagParser->replaceInline($content->value);
 
+        if ($url === '') {
+            return null;
+        }
+
         if (!parse_url($url, PHP_URL_SCHEME)) {
             $url = $this->urlHelper->getAbsoluteUrl($url);
         }
