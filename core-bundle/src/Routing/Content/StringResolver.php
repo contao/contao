@@ -37,7 +37,7 @@ class StringResolver implements ContentUrlResolverInterface
 
         $url = $this->insertTagParser->replaceInline($content->value);
 
-        if ($url === '') {
+        if ('' === $url) {
             throw new ForwardPageNotFoundException();
         }
 
