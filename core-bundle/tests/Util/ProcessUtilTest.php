@@ -62,7 +62,7 @@ class ProcessUtilTest extends TestCase
         $this->assertSame(!$successful, Is::rejected($promise));
     }
 
-    public function promiseTestProvider(): \Generator
+    public static function promiseTestProvider(): iterable
     {
         yield 'Successful, autostart promise' => [true, true];
         yield 'Successful, non-autostart promise' => [true, false];

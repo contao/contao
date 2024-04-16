@@ -44,7 +44,7 @@ class TranslationListenerTest extends TestCase
         $this->assertSame($result, $listener->onReplaceInsertTags($insertTag));
     }
 
-    public function insertTagsProvider(): \Generator
+    public static function insertTagsProvider(): iterable
     {
         yield ['foo', 'bar'];
         yield ['foo', 'baz', 'bar'];

@@ -360,7 +360,7 @@ class ContaoExtensionTest extends TestCase
         $this->fail(sprintf('No escaper rule matched template "%s".', $templateName));
     }
 
-    public function provideTemplateNames(): \Generator
+    public static function provideTemplateNames(): iterable
     {
         yield '@Contao namespace' => ['@Contao/foo.html.twig'];
         yield '@Contao namespace with folder' => ['@Contao/foo/bar.html.twig'];
@@ -392,7 +392,7 @@ class ContaoExtensionTest extends TestCase
         $this->assertSame($parameters, $expectedParameters);
     }
 
-    public function provideTwigFunctionSignatures(): \Generator
+    public static function provideTwigFunctionSignatures(): iterable
     {
         yield [
             'twig_escape_filter',

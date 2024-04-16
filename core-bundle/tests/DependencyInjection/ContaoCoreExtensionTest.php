@@ -531,7 +531,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(Path::join($this->getTempDir(), $expectedWebDir), $container->getParameter('contao.web_dir'));
     }
 
-    public function provideComposerJsonContent(): \Generator
+    public static function provideComposerJsonContent(): iterable
     {
         yield 'extra.public-dir key not present' => [
             [],
@@ -989,7 +989,7 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
-    public function provideAttributesForMethods(): \Generator
+    public static function provideAttributesForMethods(): iterable
     {
         yield 'cronjob' => [AsCronJob::class];
         yield 'hook' => [AsHook::class];

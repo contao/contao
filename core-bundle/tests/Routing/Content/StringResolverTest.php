@@ -93,7 +93,7 @@ class StringResolverTest extends TestCase
         $this->assertSame($expected, $result->getTargetUrl());
     }
 
-    public function stringUrlProvider(): \Generator
+    public static function stringUrlProvider(): iterable
     {
         yield 'Returns an absolute URL' => [
             new StringUrl('https://example.com/foo/bar'),

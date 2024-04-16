@@ -63,7 +63,7 @@ class ContaoCacheTest extends ContaoTestCase
         unset($_SERVER['COOKIE_ALLOW_LIST']);
     }
 
-    public function cookieAllowListProvider(): \Generator
+    public static function cookieAllowListProvider(): iterable
     {
         yield [
             '',

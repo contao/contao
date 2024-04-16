@@ -81,7 +81,7 @@ class HtmlDecoderTest extends TestCase
         $this->assertSame($expected, $htmlDecoder->inputEncodedToPlainText($inputEncoded));
     }
 
-    public function getInputEncodedToPlainText(): \Generator
+    public static function getInputEncodedToPlainText(): iterable
     {
         yield ['foobar', 'foobar'];
         yield ['foo{{email::test@example.com}}bar', 'footest@example.combar'];
@@ -118,7 +118,7 @@ class HtmlDecoderTest extends TestCase
         $this->assertSame($expected, $htmlDecoder->htmlToPlainText($inputXssStripped, $removeInsertTags));
     }
 
-    public function getHtmlToPlainText(): \Generator
+    public function getHtmlToPlainText(): iterable
     {
         yield from $this->getInputEncodedToPlainText();
 

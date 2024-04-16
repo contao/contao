@@ -220,7 +220,7 @@ class InsertTagParserTest extends TestCase
         $this->assertSame($expected, $parser->replaceInline($source));
     }
 
-    public function getLegacyReplaceInsertTagsHooks(): \Generator
+    public function getLegacyReplaceInsertTagsHooks(): iterable
     {
         yield [
             'foo {{tag}} bar',
@@ -319,7 +319,7 @@ class InsertTagParserTest extends TestCase
         $this->assertSame($expected, $parser->replaceInline($source));
     }
 
-    public function getLegacyInsertTagFlagsHooks(): \Generator
+    public function getLegacyInsertTagFlagsHooks(): iterable
     {
         yield [
             'foo{{br|flag}}bar',

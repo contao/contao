@@ -77,7 +77,7 @@ class CrawlCsvLogHandlerTest extends TestCase
         $this->assertSame('Time,Source,URI,"Found on URI","Found on level",Tags,Message'."\n".$formattedDt.',source,https://contao.org/,,0,,foobar'."\n", $content);
     }
 
-    public function writesCsvStreamProvider(): \Generator
+    public static function writesCsvStreamProvider(): iterable
     {
         $dt = new \DateTimeImmutable();
         $formattedDt = '"'.$dt->format(CrawlCsvLogHandler::DATETIME_FORMAT).'"';

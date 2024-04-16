@@ -53,7 +53,7 @@ class LanguageFilterTest extends TestCase
         $filter->filter($collection, $request);
     }
 
-    public function getRoutesAndLanguages(): \Generator
+    public function getRoutesAndLanguages(): iterable
     {
         yield 'Removes a fallback page route if the accepted language does not match' => [
             'tl_page.2.fallback',

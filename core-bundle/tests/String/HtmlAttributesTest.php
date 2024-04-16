@@ -31,7 +31,7 @@ class HtmlAttributesTest extends TestCase
         $this->assertSame($expectedAttributes, iterator_to_array($attributes));
     }
 
-    public function provideAttributeStrings(): \Generator
+    public static function provideAttributeStrings(): iterable
     {
         yield 'basic' => [
             'foo="bar" baz="42"',
@@ -304,7 +304,7 @@ class HtmlAttributesTest extends TestCase
         $attributes->set($name, 'bar');
     }
 
-    public function provideInvalidAttributeNames(): \Generator
+    public static function provideInvalidAttributeNames(): iterable
     {
         yield 'invalid non-utf8 character' => ["f\xC2"];
         yield 'empty string' => [''];

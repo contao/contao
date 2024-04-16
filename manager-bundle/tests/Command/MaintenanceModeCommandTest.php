@@ -173,7 +173,7 @@ class MaintenanceModeCommandTest extends ContaoTestCase
         $this->assertSame(['enabled' => false, 'maintenanceFilePath' => '/path/to/var/maintenance.html'], $json);
     }
 
-    public function enableProvider(): \Generator
+    public static function enableProvider(): iterable
     {
         yield 'Test defaults' => [
             '@ContaoCore/Error/service_unavailable.html.twig',

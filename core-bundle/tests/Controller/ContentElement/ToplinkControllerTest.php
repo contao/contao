@@ -53,7 +53,7 @@ class ToplinkControllerTest extends ContentElementTestCase
         );
     }
 
-    public function provideLinkText(): \Generator
+    public static function provideLinkText(): iterable
     {
         yield 'no value' => [
             '',
