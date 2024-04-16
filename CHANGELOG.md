@@ -2,6 +2,22 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.5] (2024-04-16)
+
+**Fixed issues:**
+
+- [#7113] Fix the order of the media block in the text element markup ([ausi])
+- [#7107] Use Encore to minify the SVG icons ([leofeyer])
+- [#7071] Add the missing styles to the new table element ([zoglo])
+- [#7106] Enable the `sortAttrs` option in the SVGO configuration ([leofeyer])
+- [#7017] Fix the elements check in the `modulewizard.js` script ([qzminski])
+- [#7073] Use `display: grid` in the image gallery preview ([zoglo])
+- [#7074] Initialize Handorgel on the element ([zoglo])
+- [#7081] Add the missing `WysiwygStyleProcessor ` autowiring alias ([Toflar])
+- [#7064] Also unset the `disable`, `start` and `stop` fields when an admin edits themselves ([aschempp])
+- [#7057] Cache SQL queries in the page type voter ([aschempp])
+- [#7046] Fix some edge cases when parsing HTML style attributes ([ausi])
+
 ## [5.3.4] (2024-04-09)
 
 **Security fixes:**
@@ -263,6 +279,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.5]: https://github.com/contao/contao/releases/tag/5.3.5
 [5.3.4]: https://github.com/contao/contao/releases/tag/5.3.4
 [5.3.3]: https://github.com/contao/contao/releases/tag/5.3.3
 [5.3.2]: https://github.com/contao/contao/releases/tag/5.3.2
@@ -471,6 +488,7 @@ This project adheres to [Semantic Versioning].
 [#7007]: https://github.com/contao/contao/pull/7007
 [#7008]: https://github.com/contao/contao/pull/7008
 [#7016]: https://github.com/contao/contao/pull/7016
+[#7017]: https://github.com/contao/contao/pull/7017
 [#7021]: https://github.com/contao/contao/pull/7021
 [#7026]: https://github.com/contao/contao/pull/7026
 [#7027]: https://github.com/contao/contao/pull/7027
@@ -481,3 +499,13 @@ This project adheres to [Semantic Versioning].
 [#7039]: https://github.com/contao/contao/pull/7039
 [#7044]: https://github.com/contao/contao/pull/7044
 [#7045]: https://github.com/contao/contao/pull/7045
+[#7046]: https://github.com/contao/contao/pull/7046
+[#7057]: https://github.com/contao/contao/pull/7057
+[#7064]: https://github.com/contao/contao/pull/7064
+[#7071]: https://github.com/contao/contao/pull/7071
+[#7073]: https://github.com/contao/contao/pull/7073
+[#7074]: https://github.com/contao/contao/pull/7074
+[#7081]: https://github.com/contao/contao/pull/7081
+[#7106]: https://github.com/contao/contao/pull/7106
+[#7107]: https://github.com/contao/contao/pull/7107
+[#7113]: https://github.com/contao/contao/pull/7113
