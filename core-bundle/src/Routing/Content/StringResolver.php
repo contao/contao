@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\Content;
 
+use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -37,7 +38,7 @@ class StringResolver implements ContentUrlResolverInterface
         $url = $this->insertTagParser->replaceInline($content->value);
 
         if ($url === '') {
-            return null;
+            throw new ForwardPageNotFoundException();
         }
 
         if (!parse_url($url, PHP_URL_SCHEME)) {
