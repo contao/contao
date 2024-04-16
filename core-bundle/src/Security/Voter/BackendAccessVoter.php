@@ -135,7 +135,7 @@ class BackendAccessVoter extends Voter implements ResetInterface
                 $matches = array_intersect_key($this->pagemountsCache[$user->id], $subject);
             }
 
-            return \count(array_filter($matches)) > 0;
+            return array_filter($matches) !== [];
         }
 
         return false;
