@@ -121,20 +121,21 @@ class BackendAccessVoter extends Voter implements ResetInterface
 
         // Additionally check the child pages of the mounted pages
         if ('pagemounts' === $field) {
-            if (!isset($this->pagemountsCache[$user->id]) || !array_intersect($subject, array_keys($this->pagemountsCache[$user->id]))) {
-                $this->pagemountsCache[$user->id] = [];
-                $database = $this->framework->createInstance(Database::class);
-                $pages = $database->query('SELECT id FROM tl_page')->fetchEach('id');
-                $allowedPages = $database->getChildRecords($user->pagemounts, 'tl_page');
+            $subject = array_flip($subject);
+            $matches = array_intersect_key($this->pagemountsCache[$user->id] ?? [], $subject);
 
-                foreach ($pages as $page) {
-                    $this->pagemountsCache[$user->id][$page] = \in_array($page, $allowedPages, true);
-                }
+            if (\count($matches) !== \count($subject)) {
+                $database = $this->framework->createInstance(Database::class);
+
+                $this->pagemountsCache[$user->id] = array_replace(
+                    array_fill_keys($database->query('SELECT id FROM tl_page')->fetchEach('id'), false),
+                    array_fill_keys($database->getChildRecords($user->pagemounts, 'tl_page'), true),
+                );
+
+                $matches = array_intersect_key($this->pagemountsCache[$user->id], $subject);
             }
 
-            $allowedPages = array_keys(array_filter($this->pagemountsCache[$user->id], static fn ($x) => false !== $x));
-
-            return !empty($this->pagemountsCache[$user->id]) && array_intersect($subject, $allowedPages);
+            return \count(array_filter($matches)) > 0;
         }
 
         return false;
