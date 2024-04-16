@@ -40,7 +40,7 @@ class LightboxResultTest extends TestCase
         new LightboxResult($locator, $resource, $url);
     }
 
-    public function provideInvalidConfigurations(): \Generator
+    public static function provideInvalidConfigurations(): iterable
     {
         yield 'both empty' => [null, null];
 

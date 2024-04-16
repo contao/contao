@@ -170,7 +170,7 @@ class EnumOptionsListenerTest extends TestCase
     /**
      * @return array<int, array<int, class-string<\BackedEnum>>>
      */
-    public function backedEnumProvider(): array
+    public static function backedEnumProvider(): iterable
     {
         return [
             [StringBackedEnum::class],
@@ -178,7 +178,7 @@ class EnumOptionsListenerTest extends TestCase
         ];
     }
 
-    public function translatableDcaConfigurationProvider(): array
+    public static function translatableDcaConfigurationProvider(): iterable
     {
         return [
             'without options' => [

@@ -520,7 +520,7 @@ class FigureBuilderTest extends TestCase
         $figureBuilder->build();
     }
 
-    public function provideMixedIdentifiers(): \Generator
+    public function provideMixedIdentifiers(): iterable
     {
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
 
@@ -777,7 +777,7 @@ class FigureBuilderTest extends TestCase
         unset($GLOBALS['TL_DCA']);
     }
 
-    public function provideMetadataAutoFetchCases(): \Generator
+    public static function provideMetadataAutoFetchCases(): iterable
     {
         yield 'complete metadata available in defined locale' => [
             serialize([
@@ -972,7 +972,7 @@ class FigureBuilderTest extends TestCase
         unset($GLOBALS['TL_DCA']);
     }
 
-    public function provideUuidMetadataAutoFetchCases(): \Generator
+    public function provideUuidMetadataAutoFetchCases(): iterable
     {
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
 
@@ -1096,7 +1096,7 @@ class FigureBuilderTest extends TestCase
         $figureBuilder->setLinkAttributes($attributes);
     }
 
-    public function provideInvalidLinkAttributes(): \Generator
+    public static function provideInvalidLinkAttributes(): iterable
     {
         yield 'non-string keys' => [['foo', 'bar']];
 
@@ -1170,7 +1170,7 @@ class FigureBuilderTest extends TestCase
         $this->assertSame($hasLightbox, $figure->hasLightbox());
     }
 
-    public function provideLightboxResourcesOrUrls(): \Generator
+    public function provideLightboxResourcesOrUrls(): iterable
     {
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
 
@@ -1256,7 +1256,7 @@ class FigureBuilderTest extends TestCase
         $this->assertTrue($figure->hasLightbox());
     }
 
-    public function provideLightboxFallbackResources(): \Generator
+    public function provideLightboxFallbackResources(): iterable
     {
         [$absoluteFilePath] = $this->getTestFilePaths();
 

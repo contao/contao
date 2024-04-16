@@ -35,7 +35,7 @@ class SimpleTokenParserTest extends TestCase
         $this->assertSame($expected, $this->getParser()->parse($string, $tokens, false));
     }
 
-    public function parseSimpleTokensProvider(): \Generator
+    public static function parseSimpleTokensProvider(): iterable
     {
         yield 'Test regular token replacement' => [
             'This is my ##email##',
@@ -333,7 +333,7 @@ class SimpleTokenParserTest extends TestCase
         );
     }
 
-    public function parsesSimpleTokensWithShorthandIfProvider(): \Generator
+    public static function parsesSimpleTokensWithShorthandIfProvider(): iterable
     {
         yield 'Test true matches' => [true, true];
         yield 'Test 1 matches' => [1, true];
@@ -370,7 +370,7 @@ class SimpleTokenParserTest extends TestCase
         );
     }
 
-    public function handlesUnknownTokensProvider(): \Generator
+    public static function handlesUnknownTokensProvider(): iterable
     {
         yield 'Test single unknown token (left side of comparison)' => [
             'foo == 1',
@@ -448,7 +448,7 @@ class SimpleTokenParserTest extends TestCase
         $this->assertSame($expected, $this->getParser()->parse($string, $tokens, false));
     }
 
-    public function parseSimpleTokensCorrectNewlines(): \Generator
+    public static function parseSimpleTokensCorrectNewlines(): iterable
     {
         yield 'Test newlines are kept end of token' => [
             "This is my ##token##\n",
@@ -495,7 +495,7 @@ class SimpleTokenParserTest extends TestCase
         $this->assertSame($string, $this->getParser()->parse($string, []));
     }
 
-    public function parseSimpleTokensDoesntExecutePhp(): \Generator
+    public static function parseSimpleTokensDoesntExecutePhp(): iterable
     {
         yield '(<?php)' => ['This <?php var_dump() ?> is a test.'];
         yield '(<?=)' => ['This <?= $var ?> is a test.'];
@@ -513,7 +513,7 @@ class SimpleTokenParserTest extends TestCase
         $this->assertSame($tokens['foo'], $this->getParser()->parse('##foo##', $tokens));
     }
 
-    public function parseSimpleTokensDoesntExecutePhpInToken(): \Generator
+    public static function parseSimpleTokensDoesntExecutePhpInToken(): iterable
     {
         yield '(<?php)' => [['foo' => 'This <?php var_dump() ?> is a test.']];
         yield '(<?=)' => [['foo' => 'This <?= $var ?> is a test.']];
@@ -555,7 +555,7 @@ class SimpleTokenParserTest extends TestCase
         $this->getParser()->parse($string, ['foo' => 'bar']);
     }
 
-    public function parseSimpleTokensInvalidComparison(): \Generator
+    public static function parseSimpleTokensInvalidComparison(): iterable
     {
         yield 'Not closed string (")' => ['{if foo=="bar}{endif}'];
         yield "Not closed string (')" => ["{if foo=='bar}{endif}"];

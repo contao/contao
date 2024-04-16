@@ -81,7 +81,7 @@ class TokenCheckerTest extends TestCase
         }
     }
 
-    public function getUserInTokenStorageData(): \Generator
+    public static function getUserInTokenStorageData(): iterable
     {
         yield [FrontendUser::class, 'contao_frontend', []];
         yield [FrontendUser::class, 'contao_frontend', ['ROLE_MEMBER']];
@@ -128,7 +128,7 @@ class TokenCheckerTest extends TestCase
         }
     }
 
-    public function getUserInSessionData(): \Generator
+    public static function getUserInSessionData(): iterable
     {
         yield [BackendUser::class, 'contao_backend', ['ROLE_USER']];
         yield [FrontendUser::class, 'contao_frontend', ['ROLE_MEMBER']];
@@ -215,7 +215,7 @@ class TokenCheckerTest extends TestCase
         $this->assertSame($expect, $tokenChecker->canAccessPreview());
     }
 
-    public function getPreviewAllowedData(): \Generator
+    public static function getPreviewAllowedData(): iterable
     {
         yield 'Valid preview' => [
             ['showUnpublished' => true, 'previewLinkId' => 1],
@@ -337,7 +337,7 @@ class TokenCheckerTest extends TestCase
         $this->assertSame($expect, $tokenChecker->isPreviewMode());
     }
 
-    public function getPreviewModeData(): \Generator
+    public static function getPreviewModeData(): iterable
     {
         yield [false, false];
         yield [true, true];
@@ -536,7 +536,7 @@ class TokenCheckerTest extends TestCase
         $this->assertSame($expected, $tokenChecker->hasFrontendGuest());
     }
 
-    public function getFrontendGuestData(): \Generator
+    public static function getFrontendGuestData(): iterable
     {
         yield [false, false, false];
         yield [false, false, true];

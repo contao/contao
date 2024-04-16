@@ -65,7 +65,7 @@ class BackendRebuildCacheMessageListenerTest extends TestCase
         $listener($event);
     }
 
-    public function provideRequestAndDirty(): \Generator
+    public static function provideRequestAndDirty(): iterable
     {
         yield [false, true];
         yield [true, false];

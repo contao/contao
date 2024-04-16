@@ -76,7 +76,7 @@ class SuperviseWorkersCommandTest extends TestCase
         $this->assertSame($expectedCommands, $this->convertCommands($commands));
     }
 
-    public function autoscalingProvider(): \Generator
+    public static function autoscalingProvider(): iterable
     {
         yield 'Test minimum workers if no message count (minimum to 1)' => [
             0, // queue empty

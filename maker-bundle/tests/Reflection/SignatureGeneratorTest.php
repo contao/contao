@@ -33,7 +33,7 @@ class SignatureGeneratorTest extends TestCase
         $this->assertSame($signature, $generator->generate($method, '__invoke'));
     }
 
-    public function methodProvider(): \Generator
+    public static function methodProvider(): iterable
     {
         yield [
             'public function __invoke(array $events, array $calendars, int $timeStart, int $timeEnd, Module $module): array',

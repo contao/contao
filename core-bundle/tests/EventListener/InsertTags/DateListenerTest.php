@@ -75,7 +75,7 @@ class DateListenerTest extends TestCase
         $this->assertSame('26.05.2020 00:00', $listener('convert_date::2020-05-26::Y-m-d::datim'));
     }
 
-    public function getConvertedInsertTags(): \Generator
+    public static function getConvertedInsertTags(): iterable
     {
         yield ['format_date::2020-05-26::d.m.Y', '26.05.2020'];
         yield ['format_date::'.strtotime('2020-05-26T00:00:00+00:00').'::c', '2020-05-26T00:00:00+00:00'];

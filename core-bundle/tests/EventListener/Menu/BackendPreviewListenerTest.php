@@ -104,7 +104,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
         );
     }
 
-    public function getPreviewData(): \Generator
+    public static function getPreviewData(): iterable
     {
         yield ['', 0];
         yield ['page', 42];
