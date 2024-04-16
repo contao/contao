@@ -95,7 +95,7 @@ class DebugContaoTwigCommandTest extends TestCase
         $this->assertSame(0, $tester->getStatusCode());
     }
 
-    public function provideInput(): \Generator
+    public static function provideInput(): iterable
     {
         yield 'no filter' => [
             [],
@@ -264,7 +264,7 @@ class DebugContaoTwigCommandTest extends TestCase
         $this->assertSame(0, $tester->getStatusCode());
     }
 
-    public function provideThemeOptions(): \Generator
+    public static function provideThemeOptions(): iterable
     {
         yield 'no theme' => [
             [],

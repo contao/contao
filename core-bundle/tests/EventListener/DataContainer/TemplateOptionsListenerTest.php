@@ -150,7 +150,7 @@ class TemplateOptionsListenerTest extends TestCase
         $this->assertSame($expectedOptions, $callback($this->mockDataContainer('tl_content')));
     }
 
-    public function provideOverrideAllScenarios(): \Generator
+    public static function provideOverrideAllScenarios(): iterable
     {
         yield 'selected items share a common type' => [
             'foo_element_type',

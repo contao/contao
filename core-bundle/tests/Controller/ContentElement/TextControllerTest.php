@@ -81,7 +81,7 @@ class TextControllerTest extends ContentElementTestCase
         $this->assertSameHtml($expectedOutput, $response->getContent());
     }
 
-    public function provideMediaPositions(): \Generator
+    public static function provideMediaPositions(): iterable
     {
         yield 'above' => ['above', 'media media--above'];
         yield 'left' => ['left', 'media media--left'];

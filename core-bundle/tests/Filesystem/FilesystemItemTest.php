@@ -134,7 +134,7 @@ class FilesystemItemTest extends TestCase
         $item->$property();
     }
 
-    public function provideProperties(): \Generator
+    public static function provideProperties(): iterable
     {
         yield 'file size' => [
             'getFileSize',
@@ -317,7 +317,7 @@ class FilesystemItemTest extends TestCase
         $this->assertSame('image/png', $item->getMimeType());
     }
 
-    public function provideSchemaOrgData(): \Generator
+    public static function provideSchemaOrgData(): iterable
     {
         yield 'Test an image' => [
             'foo/bar.png',

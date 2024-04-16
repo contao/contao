@@ -41,7 +41,7 @@ class CachingTraversableTest extends TestCase
         $this->assertGeneratedItems(4, $generatorLog);
     }
 
-    public function provideItems(): \Generator
+    public static function provideItems(): iterable
     {
         yield 'integer keys' => [[
             [0, 'A'],

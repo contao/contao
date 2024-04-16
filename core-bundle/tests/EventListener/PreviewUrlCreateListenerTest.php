@@ -125,13 +125,13 @@ class PreviewUrlCreateListenerTest extends TestCase
         $this->assertNull($event->getQuery());
     }
 
-    public function getValidDoParameters(): \Generator
+    public static function getValidDoParameters(): iterable
     {
         yield ['page'];
         yield ['article'];
     }
 
-    public function getInvalidDoParameters(): \Generator
+    public static function getInvalidDoParameters(): iterable
     {
         yield [''];
         yield ['news'];

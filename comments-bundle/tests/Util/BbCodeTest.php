@@ -30,7 +30,7 @@ class BbCodeTest extends TestCase
         unset($GLOBALS['TL_LANG']);
     }
 
-    public function provideBbCode(): Generator
+    public static function provideBbCode(): iterable
     {
         yield 'transforms b,i and u tags' => [
             'This should be [b]strong,[/b] [i]italic[/i] and [u]underlined[/u].',

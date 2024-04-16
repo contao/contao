@@ -64,7 +64,7 @@ class AddTokenParserTest extends TestCase
         unset($GLOBALS['TL_HEAD'], $GLOBALS['TL_BODY']);
     }
 
-    public function provideSources(): \Generator
+    public static function provideSources(): iterable
     {
         yield 'add to head' => [
             '{% add to head %}head content{% endadd %}',
@@ -136,7 +136,7 @@ class AddTokenParserTest extends TestCase
         $parser->parse($tokenStream);
     }
 
-    public function provideInvalidSources(): \Generator
+    public static function provideInvalidSources(): iterable
     {
         yield 'invalid target' => [
             '{% add to stomach %}apple{% endadd %}',

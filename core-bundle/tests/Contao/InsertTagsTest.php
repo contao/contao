@@ -146,7 +146,7 @@ class InsertTagsTest extends TestCase
         $this->assertSame($expected, $output);
     }
 
-    public function insertTagsProvider(): \Generator
+    public static function insertTagsProvider(): iterable
     {
         yield 'Simple' => [
             'foo{{plain::bar}}baz',
@@ -345,7 +345,7 @@ class InsertTagsTest extends TestCase
         $this->assertSame($expectedArguments, $usedArguments);
     }
 
-    public function provideFigureInsertTags(): \Generator
+    public static function provideFigureInsertTags(): iterable
     {
         $defaultTemplate = '@ContaoCore/Image/Studio/figure.html.twig';
 
@@ -452,7 +452,7 @@ class InsertTagsTest extends TestCase
         $this->assertSame('', $output);
     }
 
-    public function provideInvalidFigureInsertTags(): \Generator
+    public static function provideInvalidFigureInsertTags(): iterable
     {
         yield 'missing resource' => [
             '{{figure}}', false,
@@ -501,7 +501,7 @@ class InsertTagsTest extends TestCase
         $this->assertSame($expected, $output);
     }
 
-    public function allowedInsertTagsProvider(): \Generator
+    public static function allowedInsertTagsProvider(): iterable
     {
         yield 'All allowed' => [
             'foo{{plain1::1}}bar{{plain2::2}}baz',
@@ -571,7 +571,7 @@ class InsertTagsTest extends TestCase
         $this->assertSame($expected, $output);
     }
 
-    public function encodeHtmlAttributesProvider(): \Generator
+    public static function encodeHtmlAttributesProvider(): iterable
     {
         yield 'Simple tag' => [
             'bar{{plain::foo}}baz',
@@ -847,7 +847,7 @@ class InsertTagsTest extends TestCase
         $this->assertSame($expected.$expected, $insertTagParser->replace($source.$source));
     }
 
-    public function languageInsertTagsProvider(): \Generator
+    public static function languageInsertTagsProvider(): iterable
     {
         yield [
             'no insert tag',

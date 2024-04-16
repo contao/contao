@@ -109,7 +109,7 @@ class EntityCacheTagsTest extends DoctrineTestCase
         $this->assertSame($expectedTags, $entityCacheTags->getTagsFor($argument));
     }
 
-    public function getArguments(): \Generator
+    public function getArguments(): iterable
     {
         yield 'single tag' => [
             'foo',

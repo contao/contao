@@ -135,7 +135,7 @@ class DnsMigrationTest extends TestCase
         $migration->shouldRun();
     }
 
-    public function getShouldRunMappings(): \Generator
+    public static function getShouldRunMappings(): iterable
     {
         yield [
             ['example.com' => 'example.local'],
@@ -220,7 +220,7 @@ class DnsMigrationTest extends TestCase
         $migration->run();
     }
 
-    public function getRunMappings(): \Generator
+    public static function getRunMappings(): iterable
     {
         yield [
             ['example.com' => 'example.local'],

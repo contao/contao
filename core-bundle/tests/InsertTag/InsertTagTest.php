@@ -49,7 +49,7 @@ class InsertTagTest extends TestCase
         $this->assertSame($expected, $insertTag->serialize());
     }
 
-    public function getSerialize(): \Generator
+    public static function getSerialize(): iterable
     {
         yield [
             '{{foo}}',

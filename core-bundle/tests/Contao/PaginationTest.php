@@ -86,7 +86,7 @@ class PaginationTest extends TestCase
         }
     }
 
-    public function paginationDataProvider(): \Generator
+    public static function paginationDataProvider(): iterable
     {
         yield 'lower than limit' => [[
             'total' => 7,

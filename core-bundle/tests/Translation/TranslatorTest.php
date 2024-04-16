@@ -74,7 +74,7 @@ class TranslatorTest extends TestCase
         $this->assertSame('en', $translator->getLocale());
     }
 
-    public function decoratedTranslatorDomainProvider(): \Generator
+    public static function decoratedTranslatorDomainProvider(): iterable
     {
         yield ['domain'];
         yield ['ContaoCoreBundle'];

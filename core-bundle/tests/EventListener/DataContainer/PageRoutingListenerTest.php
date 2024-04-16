@@ -69,7 +69,7 @@ class PageRoutingListenerTest extends TestCase
         $listener->generateRoutePath($dc);
     }
 
-    public function routePathProvider(): \Generator
+    public static function routePathProvider(): iterable
     {
         yield 'Path without parameters' => [
             'foobar',
