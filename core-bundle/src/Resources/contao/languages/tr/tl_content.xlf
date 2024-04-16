@@ -771,11 +771,11 @@
       </trans-unit>
       <trans-unit id="tl_content.includeTemplate">
         <source>The &lt;em&gt;%s&lt;/em&gt; template needs to be included in the page layout.</source>
-        <target>&lt;em&gt;%s&lt;/em&gt; kalıbının sayfa düzenine katılması gereklidir.</target>
+        <target>&lt;em&gt;%s&lt;/em&gt; kalıbının sayfa yerleşimine katılması gereklidir.</target>
       </trans-unit>
       <trans-unit id="tl_content.includeTemplates">
         <source>The &lt;em&gt;%s&lt;/em&gt; or &lt;em&gt;%s&lt;/em&gt; template needs to be included in the page layout.</source>
-        <target>&lt;em&gt;%s&lt;/em&gt; ya da &lt;em&gt;%s&lt;/em&gt; kalıbının sayfa düzenine katılması gereklidir.</target>
+        <target>&lt;em&gt;%s&lt;/em&gt; ya da &lt;em&gt;%s&lt;/em&gt; kalıbının sayfa yerleşimine katılması gereklidir.</target>
       </trans-unit>
       <trans-unit id="tl_content.player_autoplay">
         <source>Autoplay</source>
