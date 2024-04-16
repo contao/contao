@@ -46,8 +46,6 @@ class StringResolverTest extends TestCase
 
     public function testThrowsExceptionIfInsertTagIsEmpty(): void
     {
-        $this->expectException(ForwardPageNotFoundException::class);
-
         $content = new StringUrl('{{link_url::42}}');
 
         $insertTagParser = $this->createMock(InsertTagParser::class);
@@ -63,6 +61,9 @@ class StringResolverTest extends TestCase
         $urlHelper = new UrlHelper($requestStack, $requestContext);
 
         $resolver = new StringResolver($insertTagParser, $urlHelper, $requestStack, $requestContext);
+
+        $this->expectException(ForwardPageNotFoundException::class);
+
         $resolver->resolve($content);
     }
 
