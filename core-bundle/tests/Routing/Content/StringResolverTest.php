@@ -44,7 +44,7 @@ class StringResolverTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function testAbstainsIfInsertTagIsEmpty(): void
+    public function testThrowsExceptionIfInsertTagIsEmpty(): void
     {
         $this->expectException(ForwardPageNotFoundException::class);
 
