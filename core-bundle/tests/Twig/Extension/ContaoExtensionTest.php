@@ -395,12 +395,7 @@ class ContaoExtensionTest extends TestCase
             $escapeIsSafe = new \ReflectionMethod(EscaperExtension::class.'::escapeFilterIsSafe');
         }
 
-        yield [
-            $escapeIsSafe,
-            [
-                [Node::class, 'filterArgs'],
-            ],
-        ];
+        yield [$escapeIsSafe, [[Node::class, 'filterArgs']]];
     }
 
     /**
