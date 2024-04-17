@@ -56,6 +56,7 @@ class AddNodeTest extends TestCase
 
             SOURCE;
 
+        // Backwards compatibility
         if (class_exists(YieldReady::class)) {
             $expectedSource = str_replace('echo', 'yield', $expectedSource);
         }
