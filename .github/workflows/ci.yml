@@ -123,11 +123,13 @@ jobs:
 
             - name: Checkout
               uses: actions/checkout@v3
+              with:
+                  fetch-depth: 0
 
             - name: Install the dependencies
               run: |
                   composer install --no-interaction --no-progress
-                  COMPOSER_ROOT_VERSION=dev-${{ env.GITHUB_SHA }} composer -dcore-bundle install --no-interaction --no-progress
+                  COMPOSER_ROOT_VERSION=dev-${{ github.event.pull_request.head.sha }} composer -dcore-bundle install --no-interaction --no-progress
                   composer bin require-checker install --no-interaction --no-progress
 
             - name: Check for unknown symbols (contao/contao)
@@ -300,7 +302,7 @@ jobs:
                           }
                           file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
                       '
-                      COMPOSER_ROOT_VERSION=dev-${{ env.GITHUB_SHA }} composer install --no-interaction --no-progress
+                      COMPOSER_ROOT_VERSION=dev-${{ github.event.pull_request.head.sha }} composer install --no-interaction --no-progress
                       vendor/bin/phpunit
                       cd ..
                   done
