@@ -129,7 +129,15 @@ jobs:
             - name: Install the dependencies
               run: |
                   composer install --no-interaction --no-progress
-                  COMPOSER_ROOT_VERSION=dev-${{ github.event.pull_request.head.sha }} composer -dcore-bundle install --no-interaction --no-progress
+                  php -r '
+                      $data = json_decode(file_get_contents(__DIR__."/core-bundle/composer.json"), true);
+                      $data["repositories"][0]["type"] = "path";
+                      $data["repositories"][0]["url"] = "../installation-bundle";
+                      $data["repositories"][1]["type"] = "path";
+                      $data["repositories"][1]["url"] = "../test-case";
+                      file_put_contents(__DIR__."/core-bundle/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
+                  '
+                  composer -dcore-bundle install --no-interaction --no-progress
                   composer bin require-checker install --no-interaction --no-progress
 
             - name: Check for unknown symbols (contao/contao)
@@ -302,7 +310,7 @@ jobs:
                           }
                           file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
                       '
-                      COMPOSER_ROOT_VERSION=dev-${{ github.event.pull_request.head.sha }} composer install --no-interaction --no-progress
+                      composer install --no-interaction --no-progress
                       vendor/bin/phpunit
                       cd ..
                   done
