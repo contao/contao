@@ -397,7 +397,7 @@ class ContaoExtensionTest extends TestCase
 
         // Forward compatibility with twig/twig 4
         if (method_exists(EscaperExtension::class, 'escape')) {
-            $escape = new \ReflectionMethod(EscaperExtension::class.'::escape');
+            $escape = new \ReflectionMethod(EscaperExtension::class, 'escape');
         } else {
             $escape = new \ReflectionFunction('twig_escape_filter');
         }
@@ -417,7 +417,7 @@ class ContaoExtensionTest extends TestCase
         if (\function_exists('twig_escape_filter_is_safe')) {
             $escapeIsSafe = new \ReflectionFunction('twig_escape_filter_is_safe');
         } else {
-            $escapeIsSafe = new \ReflectionMethod(EscaperExtension::class.'::escapeFilterIsSafe');
+            $escapeIsSafe = new \ReflectionMethod(EscaperExtension::class, 'escapeFilterIsSafe');
         }
 
         yield [$escapeIsSafe, [[Node::class, 'filterArgs']]];
