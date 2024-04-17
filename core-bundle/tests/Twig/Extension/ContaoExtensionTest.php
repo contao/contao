@@ -389,13 +389,13 @@ class ContaoExtensionTest extends TestCase
 
         // Backwards compatibility with twig/twig <3.9
         if (\function_exists('twig_escape_filter_is_safe')) {
-            $escapeisSafe = new \ReflectionFunction('twig_escape_filter_is_safe');
+            $escapeIsSafe = new \ReflectionFunction('twig_escape_filter_is_safe');
         } else {
-            $escapeisSafe = new \ReflectionMethod(EscaperExtension::class.'::escapeFilterIsSafe');
+            $escapeIsSafe = new \ReflectionMethod(EscaperExtension::class.'::escapeFilterIsSafe');
         }
 
         yield [
-            $escapeisSafe,
+            $escapeIsSafe,
             [
                 [Node::class, 'filterArgs'],
             ],
