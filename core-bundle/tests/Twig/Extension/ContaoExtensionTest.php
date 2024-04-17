@@ -377,7 +377,7 @@ class ContaoExtensionTest extends TestCase
      *
      * @dataProvider provideTwigFunctionSignatures
      */
-    public function testContaoUsesCorrectTwigFunctionSignatures(string $function, array $expectedParameters): void
+    public function testContaoUsesCorrectTwigFunctionSignatures(\ReflectionFunction|\ReflectionMethod $reflector, array $expectedParameters): void
     {
         // Make sure the functions outside the class scope are loaded
         new \ReflectionClass(EscaperExtension::class);
@@ -387,15 +387,22 @@ class ContaoExtensionTest extends TestCase
                 ($type = $parameter->getType()) instanceof \ReflectionNamedType ? $type->getName() : null,
                 $parameter->getName(),
             ],
-            (new \ReflectionFunction($function))->getParameters(),
+            $reflector->getParameters(),
         );
         $this->assertSame($parameters, $expectedParameters);
     }
 
     public static function provideTwigFunctionSignatures(): iterable
     {
+        // Backwards compatibility with twig/twig <3.9
+        if (\function_exists('twig_escape_filter')) {
+            $escape = new \ReflectionFunction('twig_escape_filter');
+        } else {
+            $escape = new \ReflectionMethod(EscaperExtension::class.'::escape');
+        }
+
         yield [
-            'twig_escape_filter',
+            $escape,
             [
                 [Environment::class, 'env'],
                 [null, 'string'],
@@ -405,8 +412,15 @@ class ContaoExtensionTest extends TestCase
             ],
         ];
 
+        // Backwards compatibility with twig/twig <3.9
+        if (\function_exists('twig_escape_filter_is_safe')) {
+            $escapeIsSafe = new \ReflectionFunction('twig_escape_filter_is_safe');
+        } else {
+            $escapeIsSafe = new \ReflectionMethod(EscaperExtension::class.'::escapeFilterIsSafe');
+        }
+
         yield [
-            'twig_escape_filter_is_safe',
+            $escapeIsSafe,
             [
                 [Node::class, 'filterArgs'],
             ],

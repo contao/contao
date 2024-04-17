@@ -241,15 +241,27 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 $parts = [];
 
                 foreach ($string as [$type, $chunk]) {
-                    $parts[] = ChunkedText::TYPE_RAW === $type
-                        ? $chunk
-                        : twig_escape_filter($env, $chunk, $strategy, $charset);
+                    if (ChunkedText::TYPE_RAW === $type) {
+                        $parts[] = $chunk;
+                    } else {
+                        // Backwards compatibility with twig/twig <3.9
+                        if (\function_exists('twig_escape_filter')) {
+                            $parts[] = twig_escape_filter($env, $chunk, $strategy, $charset);
+                        } else {
+                            $parts[] = EscaperExtension::escape($env, $chunk, $strategy, $charset);
+                        }
+                    }
                 }
 
                 return implode('', $parts);
             }
 
-            return twig_escape_filter($env, $string, $strategy, $charset, $autoescape);
+            // Backwards compatibility with twig/twig <3.9
+            if (\function_exists('twig_escape_filter')) {
+                return twig_escape_filter($env, $string, $strategy, $charset, $autoescape);
+            }
+
+            return EscaperExtension::escape($env, $string, $strategy, $charset, $autoescape);
         };
 
         $twigEscaperFilterIsSafe = static function (Node $filterArgs): array {
@@ -263,7 +275,12 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 return [$value, substr($value, 7)];
             }
 
-            return twig_escape_filter_is_safe($filterArgs);
+            // Backwards compatibility with twig/twig <3.9
+            if (\function_exists('twig_escape_filter_is_safe')) {
+                return twig_escape_filter_is_safe($filterArgs);
+            }
+
+            return EscaperExtension::escapeFilterIsSafe($filterArgs);
         };
 
         return [
