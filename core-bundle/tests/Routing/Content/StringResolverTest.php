@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Routing\Content;
 
 use Contao\ArticleModel;
+use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\Content\StringResolver;
 use Contao\CoreBundle\Routing\Content\StringUrl;
@@ -41,6 +42,29 @@ class StringResolverTest extends TestCase
         $result = $resolver->resolve($content);
 
         $this->assertNull($result);
+    }
+
+    public function testThrowsExceptionIfInsertTagIsEmpty(): void
+    {
+        $content = new StringUrl('{{link_url::42}}');
+
+        $insertTagParser = $this->createMock(InsertTagParser::class);
+        $insertTagParser
+            ->expects($this->once())
+            ->method('replaceInline')
+            ->with($content->value)
+            ->willReturn('')
+        ;
+
+        $requestStack = new RequestStack();
+        $requestContext = new RequestContext();
+        $urlHelper = new UrlHelper($requestStack, $requestContext);
+
+        $resolver = new StringResolver($insertTagParser, $urlHelper, $requestStack, $requestContext);
+
+        $this->expectException(ForwardPageNotFoundException::class);
+
+        $resolver->resolve($content);
     }
 
     /**
