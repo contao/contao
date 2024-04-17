@@ -123,13 +123,11 @@ jobs:
 
             - name: Checkout
               uses: actions/checkout@v3
-              with:
-                  fetch-depth: 0
 
             - name: Install the dependencies
               run: |
                   composer install --no-interaction --no-progress
-                  composer -dcore-bundle install --no-interaction --no-progress
+                  COMPOSER_ROOT_VERSION=dev-${{ env.GITHUB_SHA }} composer -dcore-bundle install --no-interaction --no-progress
                   composer bin require-checker install --no-interaction --no-progress
 
             - name: Check for unknown symbols (contao/contao)
