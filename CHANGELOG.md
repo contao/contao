@@ -2,6 +2,13 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.6] (2024-04-17)
+
+**Fixed issues:**
+
+- [#7122] Ensure compatibility with Twig 3.9 ([leofeyer])
+- [#7112] Handle empty strings in the `StringResolver` class ([qzminski])
+
 ## [5.3.5] (2024-04-16)
 
 **Fixed issues:**
@@ -279,6 +286,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.6]: https://github.com/contao/contao/releases/tag/5.3.6
 [5.3.5]: https://github.com/contao/contao/releases/tag/5.3.5
 [5.3.4]: https://github.com/contao/contao/releases/tag/5.3.4
 [5.3.3]: https://github.com/contao/contao/releases/tag/5.3.3
@@ -508,4 +516,6 @@ This project adheres to [Semantic Versioning].
 [#7081]: https://github.com/contao/contao/pull/7081
 [#7106]: https://github.com/contao/contao/pull/7106
 [#7107]: https://github.com/contao/contao/pull/7107
+[#7112]: https://github.com/contao/contao/pull/7112
 [#7113]: https://github.com/contao/contao/pull/7113
+[#7122]: https://github.com/contao/contao/pull/7122

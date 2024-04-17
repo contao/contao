@@ -56,10 +56,10 @@ class AddTokenParserTest extends TestCase
 
         $environment->addTokenParser(new AddTokenParser(ContaoExtension::class));
         $environment->setLoader(new ArrayLoader(['template.html.twig' => $code]));
-        $environment->render('template.html.twig');
+        $this->assertSame('', $environment->render('template.html.twig'));
 
-        $this->assertSame($GLOBALS['TL_HEAD'] ?? [], $expectedHeadContent);
-        $this->assertSame($GLOBALS['TL_BODY'] ?? [], $expectedBodyContent);
+        $this->assertSame($expectedHeadContent, $GLOBALS['TL_HEAD'] ?? []);
+        $this->assertSame($expectedBodyContent, $GLOBALS['TL_BODY'] ?? []);
 
         unset($GLOBALS['TL_HEAD'], $GLOBALS['TL_BODY']);
     }
