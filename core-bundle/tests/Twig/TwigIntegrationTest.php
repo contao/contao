@@ -65,7 +65,7 @@ class TwigIntegrationTest extends TestCase
 
         unset($GLOBALS['TL_LANG'], $GLOBALS['TL_FFL'], $GLOBALS['TL_MIME']);
 
-        $this->resetStaticProperties([System::class, Config::class]);
+        $this->resetStaticProperties([ContaoFramework::class, System::class, Config::class]);
 
         parent::tearDown();
     }
