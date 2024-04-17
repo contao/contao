@@ -171,11 +171,11 @@ final class ContaoExtension extends AbstractExtension
                     if (ChunkedText::TYPE_RAW === $type) {
                         $parts[] = $chunk;
                     } else {
-                        // Backwards compatibility with twig/twig <3.9
-                        if (\function_exists('twig_escape_filter')) {
-                            $parts[] = twig_escape_filter($env, $chunk, $strategy, $charset);
-                        } else {
+                        // Forward compatibility with twig/twig 4
+                        if (method_exists(EscaperExtension::class, 'escape')) {
                             $parts[] = EscaperExtension::escape($env, $chunk, $strategy, $charset);
+                        } else {
+                            $parts[] = twig_escape_filter($env, $chunk, $strategy, $charset);
                         }
                     }
                 }
@@ -183,12 +183,12 @@ final class ContaoExtension extends AbstractExtension
                 return implode('', $parts);
             }
 
-            // Backwards compatibility with twig/twig <3.9
-            if (\function_exists('twig_escape_filter')) {
-                return twig_escape_filter($env, $string, $strategy, $charset, $autoescape);
+            // Forward compatibility with twig/twig 4
+            if (method_exists(EscaperExtension::class, 'escape')) {
+                return EscaperExtension::escape($env, $string, $strategy, $charset, $autoescape);
             }
 
-            return EscaperExtension::escape($env, $string, $strategy, $charset, $autoescape);
+            return twig_escape_filter($env, $string, $strategy, $charset, $autoescape);
         };
 
         $twigEscaperFilterIsSafe = static function (Node $filterArgs): array {

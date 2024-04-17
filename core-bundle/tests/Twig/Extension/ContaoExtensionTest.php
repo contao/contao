@@ -354,9 +354,6 @@ class ContaoExtensionTest extends TestCase
      */
     public function testContaoUsesCorrectTwigFunctionSignatures($reflector, array $expectedParameters): void
     {
-        // Make sure the functions outside the class scope are loaded
-        new \ReflectionClass(EscaperExtension::class);
-
         $parameters = array_map(
             static fn (\ReflectionParameter $parameter): array => [
                 ($type = $parameter->getType()) instanceof \ReflectionNamedType ? $type->getName() : null,
@@ -364,16 +361,20 @@ class ContaoExtensionTest extends TestCase
             ],
             $reflector->getParameters()
         );
+
         $this->assertSame($parameters, $expectedParameters);
     }
 
     public function provideTwigFunctionSignatures(): \Generator
     {
-        // Backwards compatibility with twig/twig <3.9
-        if (\function_exists('twig_escape_filter')) {
-            $escape = new \ReflectionFunction('twig_escape_filter');
-        } else {
+        // Make sure the functions outside the class scope are loaded
+        new \ReflectionClass(EscaperExtension::class);
+
+        // Forward compatibility with twig/twig 4
+        if (method_exists(EscaperExtension::class, 'escape')) {
             $escape = new \ReflectionMethod(EscaperExtension::class.'::escape');
+        } else {
+            $escape = new \ReflectionFunction('twig_escape_filter');
         }
 
         yield [
