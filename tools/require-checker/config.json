@@ -7,6 +7,7 @@
         "mysqli_sql_exception",
         "opcache_invalidate",
         "opcache_reset",
+        "twig_escape_filter_is_safe",
         "xdebug_info",
         "Gmagick",
         "Imagick",
