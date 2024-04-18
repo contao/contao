@@ -277,7 +277,7 @@ class Statement
 				return serialize($varParam);
 			},
 			array_keys($arrParams),
-			array_values($arrParams)
+			$arrParams
 		);
 
 		$this->arrLastUsedParams = $arrParams;
