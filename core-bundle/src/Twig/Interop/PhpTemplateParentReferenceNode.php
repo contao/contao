@@ -26,7 +26,7 @@ final class PhpTemplateParentReferenceNode extends Node implements NodeOutputInt
 {
     public function compile(Compiler $compiler): void
     {
-        // echo sprintf('[[TL_PARENT_%s]]', \[…]\ContaoFramework::getNonce());'
+        /** @see PhpTemplateParentReferenceNodeTest::testCompilesParentReferenceCode() */
         $compiler
             ->write(class_exists(YieldReady::class) ? 'yield' : 'echo') // Backwards compatibility
             ->write(' sprintf(\'[[TL_PARENT_%s]]\', \\')
