@@ -258,13 +258,16 @@ class Statement
 			throw new \Exception('Empty query string');
 		}
 
-		$arrTypes += array_fill(0, \count($arrParams), null);
+		if (empty($arrTypes)) {
+			$arrTypes = array_fill(0, \count($arrParams), ParameterType::STRING);
+		}
+
 		$arrParams = array_map(
 			static function ($key, $varParam) use (&$arrTypes)
 			{
 				// Automatically set type to boolean when no type is defined, otherwise
 				// PDO will convert "false" to an empty string (see https://bugs.php.net/bug.php?id=57157)
-				if (null === $arrTypes[$key] && \is_bool($varParam))
+				if (null === ($arrTypes[$key] ?? null) && \is_bool($varParam))
 				{
 					$arrTypes[$key] = ParameterType::BOOLEAN;
 				}
