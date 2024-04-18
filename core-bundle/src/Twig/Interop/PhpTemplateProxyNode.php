@@ -34,22 +34,7 @@ final class PhpTemplateProxyNode extends Node
      */
     public function compile(Compiler $compiler): void
     {
-        // yield $this->extensions["Contao\\…\\ContaoExtension"]->renderLegacyTemplate(
-        //     $this->getTemplateName(),
-        //     array_map(
-        //         function(callable $block) use ($context): string {
-        //             if ($this->env->isDebug()) { ob_start(); } else { ob_start(static function () { return ''; }); }
-        //             try {
-        //                 $content = '';
-        //                 foreach ($block($context) ?? [''] as $chunk) {
-        //                     $content .= ob_get_contents() . $chunk;
-        //                     ob_clean();
-        //                 }
-        //                 return $content . ob_get_contents();
-        //             } finally { ob_end_clean(); }
-        //         }, $blocks
-        //     ), $context
-        // );
+        /** @see PhpTemplateProxyNodeTest::testCompilesProxyCode() */
         $compiler
             ->write(class_exists(YieldReady::class) ? 'yield' : 'echo') // Backwards compatibility
             ->write(' $this->extensions[')

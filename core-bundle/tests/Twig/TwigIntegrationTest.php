@@ -129,14 +129,9 @@ class TwigIntegrationTest extends TestCase
         );
 
         $filesystemLoader = new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $themeNamespace, $this->getTempDir());
-        $environment = new Environment($filesystemLoader);
 
-        $environment->addExtension(
-            new ContaoExtension(
-                $environment,
-                $filesystemLoader,
-            ),
-        );
+        $environment = new Environment($filesystemLoader);
+        $environment->addExtension(new ContaoExtension($environment, $filesystemLoader));
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('twig', $environment);
