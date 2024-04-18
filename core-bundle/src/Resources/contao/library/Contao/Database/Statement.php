@@ -14,6 +14,7 @@ use Contao\Database;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Result as DoctrineResult;
 use Doctrine\DBAL\Exception\DriverException;
+use Doctrine\DBAL\ParameterType;
 
 /**
  * Create and execute queries
@@ -257,14 +258,15 @@ class Statement
 			throw new \Exception('Empty query string');
 		}
 
+		$arrTypes += array_fill(0, count($arrParams), null);
 		$arrParams = array_map(
-			static function ($varParam)
+			static function ($key, $varParam) use (&$arrTypes)
 			{
-				// Automatically cast boolean to integer when no types are defined, otherwise
+				// Automatically set type to boolean when no type is defined, otherwise
 				// PDO will convert "false" to an empty string (see https://bugs.php.net/bug.php?id=57157)
-				if (empty($arrTypes) && \is_bool($varParam))
+				if (null === $arrTypes[$key] && \is_bool($varParam))
 				{
-					return (int) $varParam;
+					$arrTypes[$key] = ParameterType::BOOLEAN;
 				}
 
 				if (\is_string($varParam) || \is_bool($varParam) || \is_float($varParam) || \is_int($varParam) || $varParam === null)
@@ -274,7 +276,8 @@ class Statement
 
 				return serialize($varParam);
 			},
-			$arrParams
+			array_keys($arrParams),
+			array_values($arrParams)
 		);
 
 		$this->arrLastUsedParams = $arrParams;
