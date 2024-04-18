@@ -265,9 +265,9 @@ class Statement
 		$arrParams = array_map(
 			static function ($key, $varParam) use (&$arrTypes)
 			{
-				// Automatically set type to boolean when no type is defined, otherwise
-				// PDO will convert "false" to an empty string (see https://bugs.php.net/bug.php?id=57157)
-				if (null === ($arrTypes[$key] ?? null) && \is_bool($varParam))
+				// Automatically set type to boolean when no type or string type is defined,
+				// otherwise "false" will be converted to an empty string.
+				if (ParameterType::STRING === ($arrTypes[$key] ?? null) && \is_bool($varParam))
 				{
 					$arrTypes[$key] = ParameterType::BOOLEAN;
 				}
