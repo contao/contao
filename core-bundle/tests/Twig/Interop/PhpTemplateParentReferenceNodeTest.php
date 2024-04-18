@@ -31,7 +31,7 @@ class PhpTemplateParentReferenceNodeTest extends TestCase
 
             SOURCE;
 
-        // Backwards compatibility
+        // Forward compatibility with twig/twig >=3.9.0
         if (class_exists(YieldReady::class)) {
             $expectedSource = str_replace('echo', 'yield', $expectedSource);
         }

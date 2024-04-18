@@ -124,6 +124,7 @@ class TwigIntegrationTest extends TestCase
                     echo ',test7';
                 EOF,
         );
+
         TemplateLoader::addFile('legacy_template', 'templates');
 
         (new Filesystem())->dumpFile(
