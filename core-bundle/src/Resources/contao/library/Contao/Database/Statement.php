@@ -258,7 +258,7 @@ class Statement
 			throw new \Exception('Empty query string');
 		}
 
-		$arrTypes += array_fill(0, count($arrParams), null);
+		$arrTypes += array_fill(0, \count($arrParams), null);
 		$arrParams = array_map(
 			static function ($key, $varParam) use (&$arrTypes)
 			{
