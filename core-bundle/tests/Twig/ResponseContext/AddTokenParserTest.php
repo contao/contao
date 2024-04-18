@@ -56,15 +56,15 @@ class AddTokenParserTest extends TestCase
 
         $environment->addTokenParser(new AddTokenParser(ContaoExtension::class));
         $environment->setLoader(new ArrayLoader(['template.html.twig' => $code]));
-        $environment->render('template.html.twig');
+        $this->assertSame('', $environment->render('template.html.twig'));
 
-        $this->assertSame($GLOBALS['TL_HEAD'] ?? [], $expectedHeadContent);
-        $this->assertSame($GLOBALS['TL_BODY'] ?? [], $expectedBodyContent);
+        $this->assertSame($expectedHeadContent, $GLOBALS['TL_HEAD'] ?? []);
+        $this->assertSame($expectedBodyContent, $GLOBALS['TL_BODY'] ?? []);
 
         unset($GLOBALS['TL_HEAD'], $GLOBALS['TL_BODY']);
     }
 
-    public function provideSources(): \Generator
+    public static function provideSources(): iterable
     {
         yield 'add to head' => [
             '{% add to head %}head content{% endadd %}',
@@ -136,7 +136,7 @@ class AddTokenParserTest extends TestCase
         $parser->parse($tokenStream);
     }
 
-    public function provideInvalidSources(): \Generator
+    public static function provideInvalidSources(): iterable
     {
         yield 'invalid target' => [
             '{% add to stomach %}apple{% endadd %}',

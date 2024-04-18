@@ -44,7 +44,7 @@ class LogoutPageRedirectListenerTest extends TestCase
         }
     }
 
-    public function listenerProvider(): \Generator
+    public static function listenerProvider(): iterable
     {
         yield 'Keeps true mandatory value for logout pages' => [
             [],

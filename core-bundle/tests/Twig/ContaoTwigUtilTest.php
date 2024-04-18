@@ -28,7 +28,7 @@ class ContaoTwigUtilTest extends TestCase
         $this->assertSame($expectedShortName, $shortName, 'short name');
     }
 
-    public function provideContaoNames(): \Generator
+    public static function provideContaoNames(): iterable
     {
         yield 'base namespace' => [
             '@Contao/foo.html.twig',
@@ -75,7 +75,7 @@ class ContaoTwigUtilTest extends TestCase
         $this->assertNull(ContaoTwigUtil::parseContaoName($name));
     }
 
-    public function provideInvalidNamespaces(): \Generator
+    public static function provideInvalidNamespaces(): iterable
     {
         yield 'not a Contao namespace' => ['@Foobar/foo.html.twig'];
         yield 'invalid characters' => ['@Contao_:Foo'];
@@ -91,7 +91,7 @@ class ContaoTwigUtilTest extends TestCase
         $this->assertSame($expectedIdentifier, ContaoTwigUtil::getIdentifier($name));
     }
 
-    public function provideNames(): \Generator
+    public static function provideNames(): iterable
     {
         yield 'html5 template' => [
             'bar.html5',
@@ -137,7 +137,7 @@ class ContaoTwigUtilTest extends TestCase
         $this->assertSame($isLegacyTemplate, ContaoTwigUtil::isLegacyTemplate($name));
     }
 
-    public function provideLegacyTemplateNames(): \Generator
+    public static function provideLegacyTemplateNames(): iterable
     {
         yield 'base namespace' => [
             '@Contao/bar.html5',
@@ -193,7 +193,7 @@ class ContaoTwigUtilTest extends TestCase
         $this->assertSame($extension, ContaoTwigUtil::getExtension($path));
     }
 
-    public function providePaths(): \Generator
+    public static function providePaths(): iterable
     {
         yield 'with .twig suffix' => ['foo/bar.baz.html.twig', 'html.twig'];
 

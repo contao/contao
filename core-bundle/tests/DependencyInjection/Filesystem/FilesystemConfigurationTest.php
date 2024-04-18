@@ -57,7 +57,7 @@ class FilesystemConfigurationTest extends TestCase
         $this->assertSame([['name' => 'foo', 'prefix' => 'some/prefix']], $definition->getTag('contao.virtual_filesystem'));
     }
 
-    public function provideReadOnlyValues(): \Generator
+    public static function provideReadOnlyValues(): iterable
     {
         yield 'protected' => [true];
         yield 'accessible' => [false];
@@ -146,7 +146,7 @@ class FilesystemConfigurationTest extends TestCase
         $this->assertTrue($container->hasAlias($expectedId));
     }
 
-    public function provideMountPaths(): \Generator
+    public static function provideMountPaths(): iterable
     {
         yield 'single folder' => [
             'files',
@@ -187,7 +187,7 @@ class FilesystemConfigurationTest extends TestCase
         $this->assertTrue($container->hasDefinition('contao.filesystem.adapter.my_adapter'));
     }
 
-    public function provideFilesystemPaths(): \Generator
+    public static function provideFilesystemPaths(): iterable
     {
         yield 'absolute path' => [
             '/my/site/files',
@@ -259,7 +259,7 @@ class FilesystemConfigurationTest extends TestCase
         );
     }
 
-    public function provideUseLastModifiedValues(): \Generator
+    public static function provideUseLastModifiedValues(): iterable
     {
         yield 'use last modified' => [true];
         yield 'do not use last modified' => [false];

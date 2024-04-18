@@ -43,7 +43,7 @@ class ContaoEscaperTest extends TestCase
         $this->assertSame($expectedOutput, $this->invokeEscapeHtml($input, 'utf-8'), 'utf-8');
     }
 
-    public function provideHtmlInput(): \Generator
+    public static function provideHtmlInput(): iterable
     {
         yield 'simple string' => [
             'foo',
@@ -104,7 +104,7 @@ class ContaoEscaperTest extends TestCase
         return 'baz';
     }
 
-    public function provideHtmlAttributeInput(): \Generator
+    public static function provideHtmlAttributeInput(): iterable
     {
         yield 'simple string' => [
             'foo',

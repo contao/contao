@@ -72,7 +72,7 @@ class ConfigurationTest extends TestCase
         $this->assertSame('C:/Temp/contao', $configuration['image']['target_dir']);
     }
 
-    public function getPaths(): \Generator
+    public static function getPaths(): iterable
     {
         yield ['/tmp/contao', 'C:\Temp\contao'];
         yield ['/tmp/foo/../contao', 'C:\Temp\foo\..\contao'];
@@ -100,7 +100,7 @@ class ConfigurationTest extends TestCase
         (new Processor())->processConfiguration($this->configuration, $params);
     }
 
-    public function getInvalidUploadPaths(): \Generator
+    public static function getInvalidUploadPaths(): iterable
     {
         yield [''];
         yield ['app'];
@@ -157,7 +157,7 @@ class ConfigurationTest extends TestCase
         (new Processor())->processConfiguration($this->configuration, $params);
     }
 
-    public function getReservedImageSizeNames(): \Generator
+    public static function getReservedImageSizeNames(): iterable
     {
         yield [ResizeConfiguration::MODE_BOX];
         yield [ResizeConfiguration::MODE_PROPORTIONAL];
@@ -383,7 +383,7 @@ class ConfigurationTest extends TestCase
         (new Processor())->processConfiguration($this->configuration, $params);
     }
 
-    public function invalidAllowedInlineStylesRegexProvider(): \Generator
+    public static function invalidAllowedInlineStylesRegexProvider(): iterable
     {
         yield [
             'te(st',
@@ -422,7 +422,7 @@ class ConfigurationTest extends TestCase
         (new Processor())->processConfiguration($this->configuration, $params);
     }
 
-    public function cronConfigurationProvider(): \Generator
+    public static function cronConfigurationProvider(): iterable
     {
         yield 'Default value' => [
             [], 'auto',

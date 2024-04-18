@@ -247,7 +247,7 @@ class CoreResponseContextFactoryTest extends TestCase
         $this->assertSame($expected, $responseContext->get(HtmlHeadBag::class)->getCanonicalUriForRequest(new Request()));
     }
 
-    public function getContaoWebpageResponseContextCanonicalUrls(): \Generator
+    public static function getContaoWebpageResponseContextCanonicalUrls(): iterable
     {
         yield ['//example.de/foobar.html', 'https://example.de/foobar.html'];
         yield ['/de/foobar.html', 'https://example.com/de/foobar.html'];

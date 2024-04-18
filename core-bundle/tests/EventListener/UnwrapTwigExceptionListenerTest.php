@@ -41,7 +41,7 @@ class UnwrapTwigExceptionListenerTest extends TestCase
         $this->assertSame($exception, $event->getThrowable(), 'exception should be unwrapped');
     }
 
-    public function provideExceptionsToUnwrap(): \Generator
+    public static function provideExceptionsToUnwrap(): iterable
     {
         yield 'NoContentResponseException' => [
             new NoContentResponseException(),
@@ -69,7 +69,7 @@ class UnwrapTwigExceptionListenerTest extends TestCase
         $this->assertSame($throwable, $event->getThrowable(), 'throwable should be left untouched');
     }
 
-    public function provideThrowableToIgnore(): \Generator
+    public static function provideThrowableToIgnore(): iterable
     {
         $exception = new \LogicException('Something went wrong.');
 

@@ -29,7 +29,7 @@ class ImportExtractorTest extends TestCase
         $this->assertSame($uses, (new ImportExtractor())->extract($method));
     }
 
-    public function methodProvider(): \Generator
+    public static function methodProvider(): iterable
     {
         yield 'empty return type and parameter list' => [
             [],

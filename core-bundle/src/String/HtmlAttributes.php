@@ -34,9 +34,9 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     }
 
     /**
-     * Outputs the attributes as a string that is safe to be placed inside HTML
-     * tags. The output will contain a leading space if there is at least one
-     * property set, e.g. ' foo="bar" bar="42"'.
+     * Outputs the attributes as a string that is safe to be placed inside HTML tags.
+     * The output will contain a leading space if there is at least one property set,
+     * e.g. ' foo="bar" bar="42"'.
      */
     public function __toString(): string
     {
@@ -44,8 +44,8 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     }
 
     /**
-     * Merges these instance's attributes with those of another
-     * instance/string/array of attributes.
+     * Merges these instance's attributes with those of another instance/string/array
+     * of attributes.
      *
      * If a falsy $condition is specified, the method is a no-op.
      *
@@ -89,8 +89,8 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
 
     /**
      * Sets a property and validates the name. If the given $value is false the
-     * property will be unset instead. All values will be coerced to strings,
-     * whereby null and true will result in an empty string.
+     * property will be unset instead. All values will be coerced to strings, whereby
+     * null and true will result in an empty string.
      *
      * If a falsy $condition is specified, the method is a no-op.
      */
@@ -219,9 +219,10 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     }
 
     /**
-     * Adds a single style ("color: red")
-     * or multiple styles from a style string ("color: red; background: blue")
-     * or a style array (['color' => 'red', 'background' => 'blue']).
+     * Adds
+     * - a single style ("color: red")
+     * - or multiple styles from a style string ("color: red; background: blue")
+     * - or a style array (['color' => 'red', 'background' => 'blue']).
      *
      * If a falsy $condition is specified, the method is a no-op.
      *
@@ -255,10 +256,11 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     }
 
     /**
-     * Removes a single style ("color")
-     * or multiple styles from a style string ("color: red; background: blue")
-     * or a style list (['color', 'background'])
-     * or a style array (['color' => 'red', 'background' => 'blue']).
+     * Removes
+     * - a single style ("color")
+     * - or multiple styles from a style string ("color: red; background: blue")
+     * - or a style list (['color', 'background'])
+     * - or a style array (['color' => 'red', 'background' => 'blue']).
      *
      * If a falsy $condition is specified, the method is a no-op.
      *
@@ -304,9 +306,9 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     }
 
     /**
-     * Outputs the attributes as a string that is safe to be placed inside HTML
-     * tags. The output will contain a leading space if $leadingSpace is set to
-     * true and there is at least one property set, e.g. ' foo="bar" bar="42"'.
+     * Outputs the attributes as a string that is safe to be placed inside HTML tags.
+     * The output will contain a leading space if $leadingSpace is set to true and
+     * there is at least one property set, e.g. ' foo="bar" bar="42"'.
      */
     public function toString(bool $leadingSpace = true): string
     {

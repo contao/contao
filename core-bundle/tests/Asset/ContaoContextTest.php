@@ -105,7 +105,7 @@ class ContaoContextTest extends TestCase
         $this->assertSame($expected, $context->getBasePath());
     }
 
-    public function getBasePaths(): \Generator
+    public static function getBasePaths(): iterable
     {
         yield ['example.com', true, '', 'https://example.com'];
         yield ['example.com', false, '', 'http://example.com'];

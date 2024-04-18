@@ -167,7 +167,8 @@ class BackendAccessVoter extends Voter implements ResetInterface
     }
 
     /**
-     * Checks if the user has access to any field of a table (against tl_user(_group).alexf).
+     * Checks if the user has access to any field of a table (against
+     * tl_user(_group).alexf).
      */
     private function canEditFieldsOf(mixed $table, BackendUser $user): bool
     {

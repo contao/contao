@@ -281,7 +281,7 @@ class ImageResultTest extends TestCase
         $this->assertEmpty($expectedDeferredImages, 'test all images were processed');
     }
 
-    public function provideDeferredImages(): \Generator
+    public function provideDeferredImages(): iterable
     {
         $imagine = $this->createMock(ImagineInterface::class);
         $dimensions = $this->createMock(ImageDimensions::class);

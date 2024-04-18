@@ -26,7 +26,7 @@ jobs:
                   composer bin rector install --no-interaction --no-progress
 
             - name: Run Rector
-              run: tools/rector/vendor/bin/rector --config tools/rector/config/rector.php --dry-run --no-progress-bar
+              run: vendor-bin/rector/vendor/bin/rector --dry-run --no-progress-bar
 
     ecs:
         name: ECS
@@ -48,7 +48,7 @@ jobs:
                   composer bin ecs install --no-interaction --no-progress
 
             - name: Run ECS
-              run: tools/ecs/vendor/bin/ecs check */bin */src */tests tools/*/bin tools/*/config tools/*/src --config tools/ecs/config/default.php --no-progress-bar
+              run: vendor-bin/ecs/vendor/bin/ecs check --no-progress-bar
 
     ecs-legacy:
         name: ECS legacy
@@ -71,8 +71,8 @@ jobs:
 
             - name: Run ECS
               run: |
-                  tools/ecs/vendor/bin/ecs check *-bundle/contao --config tools/ecs/config/legacy.php --no-progress-bar
-                  tools/ecs/vendor/bin/ecs check *-bundle/contao/templates --config tools/ecs/config/template.php --no-progress-bar
+                  vendor-bin/ecs/vendor/bin/ecs check --config vendor-bin/ecs/config/legacy.php --no-progress-bar
+                  vendor-bin/ecs/vendor/bin/ecs check --config vendor-bin/ecs/config/template.php --no-progress-bar
 
     phpstan:
         name: PHPStan
@@ -94,7 +94,7 @@ jobs:
                   composer bin phpstan install --no-interaction --no-progress
 
             - name: Run PHPStan
-              run: tools/phpstan/vendor/bin/phpstan analyse -c tools/phpstan/config/contao.neon --no-progress
+              run: vendor-bin/phpstan/vendor/bin/phpstan analyse --no-progress
 
     yamllint:
         name: YAMLlint
@@ -130,10 +130,10 @@ jobs:
                   composer bin service-linter install --no-interaction --no-progress
 
             - name: Run the service linter
-              run: tools/service-linter/bin/lint-service-ids
+              run: vendor-bin/service-linter/bin/lint-service-ids
 
-    require-checker:
-        name: Require checker
+    depcheck:
+        name: Depcheck
         runs-on: ubuntu-latest
         steps:
             - name: Setup PHP
@@ -152,13 +152,13 @@ jobs:
               run: |
                   composer install --no-interaction --no-progress
                   composer -dcore-bundle install --no-interaction --no-progress
-                  composer bin require-checker install --no-interaction --no-progress
+                  composer bin depcheck install --no-interaction --no-progress
 
             - name: Check for unknown symbols (contao/contao)
-              run: tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config/config.json composer.json
+              run: vendor-bin/depcheck/vendor/bin/composer-dependency-analyser --config=depcheck.php
 
             - name: Check for unknown symbols (contao/core-bundle)
-              run: tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config/config.json core-bundle/composer.json
+              run: vendor-bin/depcheck/vendor/bin/composer-dependency-analyser --config=depcheck.php --composer-json=core-bundle/composer.json
 
     tests:
         name: PHP ${{ matrix.php }}
@@ -320,13 +320,13 @@ jobs:
                           }
                           file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
                       '
-                      COMPOSER_ROOT_VERSION=dev-${{ env.GITHUB_SHA }} composer install --no-interaction --no-progress
+                      composer install --no-interaction --no-progress
                       vendor/bin/phpunit
                       cd ..
                   done
 
-    dependencies:
-        name: Dependencies
+    monorepo-check:
+        name: Monorepo check
         runs-on: ubuntu-latest
         steps:
             - name: Setup PHP
@@ -342,7 +342,7 @@ jobs:
             - name: Install the dependencies
               run: |
                   composer install --no-interaction --no-progress
-                  composer bin monorepo install --no-interaction --no-progress
+                  composer bin monorepo-tools install --no-interaction --no-progress
 
             - name: Validate the composer.json files
-              run: tools/monorepo/vendor/bin/monorepo-tools composer-json --validate
+              run: vendor-bin/monorepo-tools/vendor/bin/monorepo-tools composer-json --validate

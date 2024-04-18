@@ -108,7 +108,8 @@ class TableControllerTest extends ContentElementTestCase
 
         $additionalHeadCode = $responseContextData[DocumentLocation::head->value];
 
-        $this->assertCount(1, $additionalHeadCode);
+        $this->assertCount(2, $additionalHeadCode);
+        $this->assertArrayHasKey('tablesort_css', $responseContextData['head']);
 
         $this->assertMatchesRegularExpression(
             '/<script>[^<]+tablesort.min.js[^<]+<\/script>/',

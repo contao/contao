@@ -66,7 +66,7 @@ class FilesystemUtilTest extends TestCase
         $this->assertSame($expectedPaths, $paths);
     }
 
-    public function provideResources(): \Generator
+    public static function provideResources(): iterable
     {
         $file1 = new Uuid('d22b1ea8-dcab-4162-b690-30cb9206f694');
         $file2 = new Uuid('b1817d6d-188a-4c99-9204-b1e33733d5a9');
@@ -141,7 +141,7 @@ class FilesystemUtilTest extends TestCase
         FilesystemUtil::assertIsResource($argument);
     }
 
-    public function provideInvalidArguments(): \Generator
+    public static function provideInvalidArguments(): iterable
     {
         yield 'no resource' => [
             new \stdClass(),
