@@ -258,7 +258,8 @@ class Statement
 			throw new \Exception('Empty query string');
 		}
 
-		if (empty($arrTypes)) {
+		if (empty($arrTypes))
+		{
 			$arrTypes = array_fill(0, \count($arrParams), ParameterType::STRING);
 		}
 
