@@ -10,8 +10,9 @@
             return;
         }
 
-        // Check if this row has all necessary elements
-        if (7 !== row.querySelectorAll('input, select, button').length) {
+        // Check if the row has all necessary elements to prevent the mutation observer
+        // from initializing the incomplete widget.
+        if (!row.querySelector('button.drag-handle')) {
             return;
         }
 

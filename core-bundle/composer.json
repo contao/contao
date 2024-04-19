@@ -179,6 +179,7 @@
         "doctrine/cache": "<1.10",
         "terminal42/contao-ce-access": "<3.0",
         "thecodingmachine/safe": "<1.2",
+        "twig/intl-extra": "3.9.0",
         "twig/twig": "3.9.0"
     },
     "autoload": {
