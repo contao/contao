@@ -258,27 +258,22 @@ class Statement
 			throw new \Exception('Empty query string');
 		}
 
-
-		$arrParams = array_map(
-			static function ($key, $varParam) use (&$arrTypes)
+		foreach ($arrParams as $key => $varParam)
+		{
+			// Automatically set type to boolean when no type is defined,
+			// otherwise "false" will be converted to an empty string.
+			if (null === ($arrTypes[$key] ?? null))
 			{
-				// Automatically set type to boolean when no type is defined,
-				// otherwise "false" will be converted to an empty string.
-				if (null === ($arrTypes[$key] ?? null))
-				{
-					$arrTypes[$key] = \is_bool($varParam) ? ParameterType::BOOLEAN : ParameterType::STRING;
-				}
+				$arrTypes[$key] = \is_bool($varParam) ? ParameterType::BOOLEAN : ParameterType::STRING;
+			}
 
-				if (\is_string($varParam) || \is_bool($varParam) || \is_float($varParam) || \is_int($varParam) || $varParam === null)
-				{
-					return $varParam;
-				}
+			if (\is_string($varParam) || \is_bool($varParam) || \is_float($varParam) || \is_int($varParam) || $varParam === null)
+			{
+				continue;
+			}
 
-				return serialize($varParam);
-			},
-			array_keys($arrParams),
-			$arrParams
-		);
+			$arrParams[$key] = serialize($varParam);
+		}
 
 		$this->arrLastUsedParams = $arrParams;
 
