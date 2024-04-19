@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.43] (2024-04-19)
+
+**Fixed issues:**
+
+- [#7131] Make the `PhpTemplateProxyNode` class compatible with Twig 3.9 ([ausi])
+
 ## [4.13.42] (2024-04-17)
 
 **Fixed issues:**
@@ -976,6 +982,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.43]: https://github.com/contao/contao/releases/tag/4.13.43
 [4.13.42]: https://github.com/contao/contao/releases/tag/4.13.42
 [4.13.41]: https://github.com/contao/contao/releases/tag/4.13.41
 [4.13.40]: https://github.com/contao/contao/releases/tag/4.13.40
@@ -1786,3 +1793,4 @@ This project adheres to [Semantic Versioning].
 [#7092]: https://github.com/contao/contao/pull/7092
 [#7109]: https://github.com/contao/contao/pull/7109
 [#7123]: https://github.com/contao/contao/pull/7123
+[#7131]: https://github.com/contao/contao/pull/7131
