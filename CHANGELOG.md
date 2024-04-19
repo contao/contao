@@ -2,6 +2,15 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.7] (2024-04-19)
+
+**Fixed issues:**
+
+- [#7089] Make the member group voter cacheable ([aschempp])
+- [#7129] Make the `PhpTemplateProxyNode` class compatible with Twig 3.9 ([ausi])
+- [#7130] Fix the elements check in the `sectionwizard.js` script ([qzminski])
+- [#7127] Use `PhpSubprocess` instead of `Process` in the `ProcessUtil` class ([Toflar])
+
 ## [5.3.6] (2024-04-17)
 
 **Fixed issues:**
@@ -286,6 +295,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.7]: https://github.com/contao/contao/releases/tag/5.3.7
 [5.3.6]: https://github.com/contao/contao/releases/tag/5.3.6
 [5.3.5]: https://github.com/contao/contao/releases/tag/5.3.5
 [5.3.4]: https://github.com/contao/contao/releases/tag/5.3.4
@@ -514,8 +524,12 @@ This project adheres to [Semantic Versioning].
 [#7073]: https://github.com/contao/contao/pull/7073
 [#7074]: https://github.com/contao/contao/pull/7074
 [#7081]: https://github.com/contao/contao/pull/7081
+[#7089]: https://github.com/contao/contao/pull/7089
 [#7106]: https://github.com/contao/contao/pull/7106
 [#7107]: https://github.com/contao/contao/pull/7107
 [#7112]: https://github.com/contao/contao/pull/7112
 [#7113]: https://github.com/contao/contao/pull/7113
 [#7122]: https://github.com/contao/contao/pull/7122
+[#7127]: https://github.com/contao/contao/pull/7127
+[#7129]: https://github.com/contao/contao/pull/7129
+[#7130]: https://github.com/contao/contao/pull/7130
