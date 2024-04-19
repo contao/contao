@@ -258,19 +258,15 @@ class Statement
 			throw new \Exception('Empty query string');
 		}
 
-		if (empty($arrTypes))
-		{
-			$arrTypes = array_fill(0, \count($arrParams), ParameterType::STRING);
-		}
 
 		$arrParams = array_map(
 			static function ($key, $varParam) use (&$arrTypes)
 			{
-				// Automatically set type to boolean when no type or string type is defined,
+				// Automatically set type to boolean when no type is defined,
 				// otherwise "false" will be converted to an empty string.
-				if (ParameterType::STRING === ($arrTypes[$key] ?? null) && \is_bool($varParam))
+				if (null === ($arrTypes[$key] ?? null))
 				{
-					$arrTypes[$key] = ParameterType::BOOLEAN;
+					$arrTypes[$key] = \is_bool($varParam) ? ParameterType::BOOLEAN : ParameterType::STRING;
 				}
 
 				if (\is_string($varParam) || \is_bool($varParam) || \is_float($varParam) || \is_int($varParam) || $varParam === null)
