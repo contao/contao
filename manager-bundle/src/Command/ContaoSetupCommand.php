@@ -16,6 +16,7 @@ use Contao\ManagerBundle\Dotenv\DotenvDumper;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
@@ -103,7 +104,6 @@ class ContaoSetupCommand extends Command
             ['assets:install', $this->webDir, '--symlink', '--relative', '--env=prod'],
             ['contao:install', $this->webDir, '--env=prod'],
             ['contao:symlinks', $this->webDir, '--env=prod'],
-
         ];
 
         if (false === $input->getOption('no-cache')) {
