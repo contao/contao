@@ -115,8 +115,8 @@ class DateListener
     }
 
     /**
-     * Returns the configured date format for either "date", "datim" or "time"
-     * from either the current page's or the system's settings.
+     * Returns the configured date format for either "date", "datim" or "time" from
+     * either the current page's or the system's settings.
      */
     private function getDateFormat(string $dateFormat): string
     {

@@ -194,7 +194,7 @@ class BackendFavoritesListenerTest extends TestCase
         $this->assertSame('content', $children[1]->getName());
     }
 
-    public function getCollapsedStatus(): \Generator
+    public static function getCollapsedStatus(): iterable
     {
         yield [false];
         yield [true];

@@ -79,7 +79,7 @@ class TemplateLocatorTest extends TestCase
         $this->assertEmpty($locator->findThemeDirectories());
     }
 
-    public function provideDatabaseExceptions(): \Generator
+    public function provideDatabaseExceptions(): iterable
     {
         yield 'table not found' => [
             new TableNotFoundException($this->createMock(LegacyDriverException::class), null),

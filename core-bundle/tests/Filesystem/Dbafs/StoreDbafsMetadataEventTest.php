@@ -66,7 +66,7 @@ class StoreDbafsMetadataEventTest extends TestCase
         new RetrieveDbafsMetadataEvent('tl_foo', $row);
     }
 
-    public function provideRowData(): \Generator
+    public static function provideRowData(): iterable
     {
         yield 'path missing' => [
             ['foo' => 'bar', 'uuid' => '12345'],

@@ -159,7 +159,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $this->assertSame(Response::HTTP_NO_CONTENT, $response->getStatusCode());
     }
 
-    public function getAuthenticationScenarios(): \Generator
+    public static function getAuthenticationScenarios(): iterable
     {
         yield [null, 'authenticateFrontendGuest'];
         yield ['', 'authenticateFrontendGuest'];

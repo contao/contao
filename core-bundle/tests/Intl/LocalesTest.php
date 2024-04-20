@@ -284,7 +284,7 @@ class LocalesTest extends TestCase
         }
     }
 
-    public function getLocalesConfig(): \Generator
+    public static function getLocalesConfig(): iterable
     {
         yield [
             ['en', 'de'],

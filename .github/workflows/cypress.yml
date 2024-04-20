@@ -32,6 +32,7 @@ jobs:
               uses: actions/setup-node@v3
               with:
                   node-version: ${{ env.NODE_VERSION }}
+            - run: corepack enable
 
             - name: Install Symfony CLI
               run: |
@@ -45,20 +46,13 @@ jobs:
                   ref: ${{ matrix.contao }}
 
             - name: Install the dependencies
-              run: |
-                  npm update
-                  rm -rf cypress/webspace/vendor/contao/manager-bundle
-                  composer install --working-dir=cypress/webspace --no-interaction --no-progress
+              run: yarn add contao-e2e-tests --dev
 
             - name: Run the Cypress tests
               id: cypress
-              run: |
-                  symfony server:start --port=8765 --dir=cypress/webspace --daemon
-                  npx cypress run --config-file cypress.config.js
-                  symfony server:stop --dir=cypress/webspace
+              run: yarn contao-e2e-tests
               env:
                   DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
-                  TERM: xterm-256color
 
             - name: Upload videos
               uses: actions/upload-artifact@v2

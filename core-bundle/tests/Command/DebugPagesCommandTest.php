@@ -115,7 +115,7 @@ class DebugPagesCommandTest extends TestCase
         unset($GLOBALS['TL_PTY']);
     }
 
-    public function commandOutputProvider(): \Generator
+    public static function commandOutputProvider(): iterable
     {
         yield 'Regular pages list' => [
             [

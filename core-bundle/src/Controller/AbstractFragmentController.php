@@ -65,14 +65,14 @@ abstract class AbstractFragmentController extends AbstractController implements 
 
     /**
      * Creates a FragmentTemplate container object by template name or from the
-     * "customTpl" field of the model and registers the effective template as
-     * default view when using render().
+     * "customTpl" field of the model and registers the effective template as default
+     * view when using render().
      *
-     * Calling getResponse() on the returned object will internally call
-     * render() with the set parameters and return the response.
+     * Calling getResponse() on the returned object will internally call render() with
+     * the set parameters and return the response.
      *
-     * Note: The $fallbackTemplateName argument will be removed in Contao 6;
-     * always set a template via the fragment options, instead.
+     * Note: The $fallbackTemplateName argument will be removed in Contao 6; always
+     * set a template via the fragment options, instead.
      */
     protected function createTemplate(Model $model, string|null $fallbackTemplateName = null): FragmentTemplate
     {
@@ -220,13 +220,13 @@ abstract class AbstractFragmentController extends AbstractController implements 
     }
 
     /**
-     * Renders a template. If $view is set to null, the default template of
-     * this fragment will be rendered.
+     * Renders a template. If $view is set to null, the default template of this
+     * fragment will be rendered.
      *
-     * By default, the returned response will have the appropriate headers set,
-     * that allow our SubrequestCacheSubscriber to merge it with others of the
-     * same page. Pass a prebuilt Response if you want to have full control -
-     * no headers will be set then.
+     * By default, the returned response will have the appropriate headers set, that
+     * allow our SubrequestCacheSubscriber to merge it with others of the same page.
+     * Pass a prebuilt Response if you want to have full control - no headers will be
+     * set then.
      */
     protected function render(string|null $view = null, array $parameters = [], Response|null $response = null): Response
     {
@@ -249,7 +249,8 @@ abstract class AbstractFragmentController extends AbstractController implements 
     }
 
     /**
-     * Marks the response to affect the caching of the current page but removes any default cache header.
+     * Marks the response to affect the caching of the current page but removes any
+     * default cache header.
      */
     protected function markResponseForInternalCaching(Response $response): void
     {

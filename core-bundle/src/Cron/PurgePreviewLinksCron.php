@@ -16,8 +16,9 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
 use Doctrine\DBAL\Connection;
 
 /**
- * Deletes preview links that are older than 31 days, since the maximum expiration is 30 days.
- * We don't purge right after expiration date since days can be changed to increase the lifetime.
+ * Deletes preview links that are older than 31 days, since the maximum expiration
+ * is 30 days. We don't purge right after expiration date since days can be
+ * changed to increase the lifetime.
  *
  * @internal
  */

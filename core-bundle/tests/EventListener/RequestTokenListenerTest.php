@@ -20,7 +20,8 @@ use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator;
 use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
@@ -54,11 +55,8 @@ class RequestTokenListenerTest extends TestCase
 
     public function testValidatesTheRequestTokenUponRunningSession(): void
     {
-        $session = $this->createMock(SessionInterface::class);
-        $session
-            ->method('isStarted')
-            ->willReturn(true)
-        ;
+        $session = new Session(new MockArraySessionStorage());
+        $session->set('foobar', 'foobaz');
 
         $request = Request::create('/account.html');
         $request->setMethod('POST');

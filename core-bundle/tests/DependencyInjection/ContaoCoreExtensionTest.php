@@ -277,8 +277,8 @@ class ContaoCoreExtensionTest extends TestCase
 
         $definition = $container->getDefinition('contao.crawl.escargot.factory');
 
-        $this->assertSame(['https://example.com'], $definition->getArgument(3));
-        $this->assertSame(['proxy' => 'http://localhost:7080', 'headers' => ['Foo' => 'Bar']], $definition->getArgument(4));
+        $this->assertSame(['https://example.com'], $definition->getArgument(4));
+        $this->assertSame(['proxy' => 'http://localhost:7080', 'headers' => ['Foo' => 'Bar']], $definition->getArgument(5));
     }
 
     public function testConfiguresTheBackupManagerCorrectly(): void
@@ -531,7 +531,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(Path::join($this->getTempDir(), $expectedWebDir), $container->getParameter('contao.web_dir'));
     }
 
-    public function provideComposerJsonContent(): \Generator
+    public static function provideComposerJsonContent(): iterable
     {
         yield 'extra.public-dir key not present' => [
             [],
@@ -989,7 +989,7 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
-    public function provideAttributesForMethods(): \Generator
+    public static function provideAttributesForMethods(): iterable
     {
         yield 'cronjob' => [AsCronJob::class];
         yield 'hook' => [AsHook::class];
