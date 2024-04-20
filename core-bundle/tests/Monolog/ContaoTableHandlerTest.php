@@ -35,7 +35,6 @@ class ContaoTableHandlerTest extends TestCase
 
         $handler = new ContaoTableHandler(static fn () => $connection);
 
-        var_dump($handler);
         $this->assertFalse($handler->handle($record));
     }
 
