@@ -17,6 +17,7 @@ use ShipMonk\ComposerDependencyAnalyser\Config\ErrorType;
 return (new Configuration())
     ->ignoreUnknownClasses([
         AppBundle::class,
+        'Imagick',
         'Gmagick',
         'Swift_Attachment',
         'Swift_EmbeddedFile',
