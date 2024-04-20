@@ -342,7 +342,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             ),
             new TwigFilter(
                 'deserialize',
-                static fn (mixed $value) => StringUtil::deserialize($value),
+                static fn (mixed $value) => StringUtil::deserialize($value, true),
             ),
         ];
     }
