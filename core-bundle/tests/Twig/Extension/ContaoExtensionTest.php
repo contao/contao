@@ -134,6 +134,7 @@ class ContaoExtensionTest extends TestCase
             'csp_unsafe_inline_style',
             'csp_inline_styles',
             'encode_email',
+            'deserialize',
         ];
 
         $this->assertCount(\count($expectedFilters), $filters);
