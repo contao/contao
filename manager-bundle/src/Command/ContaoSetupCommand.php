@@ -107,11 +107,7 @@ class ContaoSetupCommand extends Command
         ];
 
         if (false === $input->getOption('no-cache')) {
-            $commands = array_merge($commands, [
-                ['cache:clear', '--no-warmup', '--env=prod'],
-                ['cache:clear', '--no-warmup', '--env=dev'],
-                ['cache:warmup', '--env=prod']
-            ]);
+            $commands = [...$commands, ['cache:clear', '--no-warmup', '--env=prod'], ['cache:clear', '--no-warmup', '--env=dev'], ['cache:warmup', '--env=prod']];
         }
 
         $commandFlags = array_filter([
