@@ -54,7 +54,6 @@ class ContaoTableProcessor implements ProcessorInterface
         $this->updatePageId($context, $request);
 
         $record->extra['contao'] = $context;
-        unset($record->context['contao']);
 
         return $record;
     }

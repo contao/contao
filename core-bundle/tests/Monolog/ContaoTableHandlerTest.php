@@ -16,21 +16,15 @@ use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Monolog\ContaoTableHandler;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
+use Monolog\Level;
 use Monolog\Logger;
+use Monolog\LogRecord;
 
 class ContaoTableHandlerTest extends TestCase
 {
     public function testHandlesContaoRecords(): void
     {
-        $record = [
-            'level' => Logger::DEBUG,
-            'level_name' => 'DEBUG',
-            'channel' => 'test',
-            'extra' => ['contao' => new ContaoContext('foobar')],
-            'context' => [],
-            'datetime' => new \DateTimeImmutable(),
-            'message' => 'foobar',
-        ];
+        $record = new LogRecord(new \DateTimeImmutable(), 'test', Level::Debug, 'foobar', ['contao' => new ContaoContext('foobar')], []);
 
         $connection = $this->createMock(Connection::class);
         $connection
@@ -41,20 +35,13 @@ class ContaoTableHandlerTest extends TestCase
 
         $handler = new ContaoTableHandler(static fn () => $connection);
 
+        var_dump($handler);
         $this->assertFalse($handler->handle($record));
     }
 
     public function testDoesNotHandleARecordIfTheLogLevelDoesNotMatch(): void
     {
-        $record = [
-            'level' => Logger::DEBUG,
-            'level_name' => 'DEBUG',
-            'channel' => 'test',
-            'extra' => [],
-            'context' => [],
-            'datetime' => new \DateTimeImmutable(),
-            'message' => 'foobar',
-        ];
+        $record = new LogRecord(new \DateTimeImmutable(), 'test', Level::Debug, 'foobar', [], []);
 
         $connection = $this->createMock(Connection::class);
         $connection
@@ -70,15 +57,7 @@ class ContaoTableHandlerTest extends TestCase
 
     public function testDoesNotHandleARecordWithoutContaoContext(): void
     {
-        $record = [
-            'level' => Logger::DEBUG,
-            'level_name' => 'DEBUG',
-            'channel' => 'test',
-            'extra' => ['contao' => null],
-            'context' => [],
-            'datetime' => new \DateTimeImmutable(),
-            'message' => 'foobar',
-        ];
+        $record = new LogRecord(new \DateTimeImmutable(), 'test', Level::Debug, 'foobar', ['contao' => null], []);
 
         $connection = $this->createMock(Connection::class);
         $connection

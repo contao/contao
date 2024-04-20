@@ -13,7 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Crawl\Monolog;
 
 use Contao\CoreBundle\Crawl\Monolog\CrawlCsvLogHandler;
-use Monolog\Logger;
+use Monolog\Level;
+use Monolog\LogRecord;
 use Nyholm\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
 use Terminal42\Escargot\CrawlUri;
@@ -31,8 +32,9 @@ class CrawlCsvLogHandlerTest extends TestCase
             fwrite($stream, $existingCsvContent);
         }
 
+        $record = new LogRecord($dt, 'test', Level::Debug, $message, $context, []);
         $handler = new CrawlCsvLogHandler($stream);
-        $handler->handle(['level' => Logger::DEBUG, 'level_name' => 'DEBUG', 'channel' => 'test', 'message' => $message, 'extra' => [], 'context' => $context, 'datetime' => $dt]);
+        $handler->handle($record);
 
         rewind($stream);
         $content = stream_get_contents($stream);
@@ -45,18 +47,15 @@ class CrawlCsvLogHandlerTest extends TestCase
         $dt = new \DateTimeImmutable();
         $formattedDt = '"'.$dt->format(CrawlCsvLogHandler::DATETIME_FORMAT).'"';
 
-        $record = [
-            'level' => Logger::DEBUG,
-            'level_name' => 'DEBUG',
-            'message' => 'foobar',
-            'channel' => 'test',
-            'extra' => [],
-            'datetime' => $dt,
-            'context' => [
-                'source' => 'source',
-                'crawlUri' => new CrawlUri(new Uri('https://contao.org'), 0),
-            ],
-        ];
+        $record = new LogRecord(
+            $dt,
+            'test',
+            Level::Debug,
+            'foobar', [
+                    'source' => 'source',
+                    'crawlUri' => new CrawlUri(new Uri('https://contao.org'), 0),
+            ], [],
+        );
 
         $stream = fopen('php://memory', 'r+');
         $handler = new CrawlCsvLogHandler($stream);
