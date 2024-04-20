@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Monolog;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\PageModel;
 use Monolog\Level;
-use Monolog\Logger;
 use Monolog\LogRecord;
 use Monolog\Processor\ProcessorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -54,8 +53,8 @@ class ContaoTableProcessor implements ProcessorInterface
         $this->updateUri($context, $request);
         $this->updatePageId($context, $request);
 
-        $record['extra']['contao'] = $context;
-        unset($record['context']['contao']);
+        $record->extra['contao'] = $context;
+        unset($record->context['contao']);
 
         return $record;
     }
