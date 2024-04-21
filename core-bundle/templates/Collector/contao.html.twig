@@ -37,7 +37,7 @@
             </div>
         </div>
     {% endset %}
-    {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', { link: true, name: 'contao', additional_classes: (((collector.summary.preview) ? 'sf-toolbar-status-yellow ' : '') ~ 'sf-toolbar-block-right') }) }}
+    {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', {link: true, name: 'contao', additional_classes: (((collector.summary.preview) ? 'sf-toolbar-status-yellow ' : '') ~ 'sf-toolbar-block-right')}) }}
 {% endblock %}
 
 {% block menu %}
