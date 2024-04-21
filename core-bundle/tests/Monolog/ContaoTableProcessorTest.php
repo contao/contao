@@ -43,11 +43,11 @@ class ContaoTableProcessorTest extends TestCase
     /**
      * @dataProvider actionLevelProvider
      *
-     * @phpstan-param 'ALERT'|'CRITICAL'|'DEBUG'|'EMERGENCY'|'ERROR'|'INFO'|'NOTICE'|'WARNING' $logLevelName
+     * @phpstan-param Level::Alert|Level::Critical|Level::Debug|Level::Emergency|Level::Error|Level::Info|Level::Notice|Level::Warning $logLevel
      */
-    public function testReturnsDifferentActionsForDifferentErrorLevels(Level $logLevel, string $expectedAction, string $contaoAction): void
+    public function testReturnsDifferentActionsForDifferentErrorLevels(Level $logLevel, string $expectedAction): void
     {
-        $record = new LogRecord(new \DateTimeImmutable(), '', $logLevel, '', ['contao' => new ContaoContext(__METHOD__, $contaoAction)], []);
+        $record = new LogRecord(new \DateTimeImmutable(), '', $logLevel, '', ['contao' => new ContaoContext(__METHOD__)], []);
 
         $processor = $this->getContaoTableProcessor();
         $record = $processor($record);
@@ -61,7 +61,7 @@ class ContaoTableProcessorTest extends TestCase
     /**
      * @dataProvider actionLevelProvider
      *
-     * @phpstan-param 'ALERT'|'CRITICAL'|'DEBUG'|'EMERGENCY'|'ERROR'|'INFO'|'NOTICE'|'WARNING' $logLevelName
+     * @phpstan-param Level::Alert|Level::Critical|Level::Debug|Level::Emergency|Level::Error|Level::Info|Level::Notice|Level::Warning $logLevel
      */
     public function testDoesNotChangeAnExistingAction(Level $logLevel): void
     {
@@ -78,14 +78,14 @@ class ContaoTableProcessorTest extends TestCase
 
     public static function actionLevelProvider(): iterable
     {
-        yield [Level::Debug, 'GENERAL', ContaoContext::GENERAL];
-        yield [Level::Info, 'GENERAL', ContaoContext::GENERAL];
-        yield [Level::Notice, 'GENERAL', ContaoContext::GENERAL];
-        yield [Level::Warning, 'GENERAL', ContaoContext::GENERAL];
-        yield [Level::Error, 'ERROR', ContaoContext::ERROR];
-        yield [Level::Critical, 'ERROR', ContaoContext::ERROR];
-        yield [Level::Alert, 'ERROR', ContaoContext::ERROR];
-        yield [Level::Emergency, 'ERROR', ContaoContext::ERROR];
+        yield [Level::Debug, ContaoContext::GENERAL];
+        yield [Level::Info, ContaoContext::GENERAL];
+        yield [Level::Notice, ContaoContext::GENERAL];
+        yield [Level::Warning, ContaoContext::GENERAL];
+        yield [Level::Error, ContaoContext::ERROR];
+        yield [Level::Critical, ContaoContext::ERROR];
+        yield [Level::Alert, ContaoContext::ERROR];
+        yield [Level::Emergency, ContaoContext::ERROR];
     }
 
     public function testAddsTheUserAgent(): void

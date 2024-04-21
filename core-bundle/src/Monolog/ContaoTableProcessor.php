@@ -64,7 +64,7 @@ class ContaoTableProcessor implements ProcessorInterface
             return;
         }
 
-        if ($level >= Level::Error) {
+        if ($level->isHigherThan(Level::Warning)) {
             $context->setAction(ContaoContext::ERROR);
         } else {
             $context->setAction(ContaoContext::GENERAL);
