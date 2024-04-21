@@ -51,10 +51,12 @@ class CrawlCsvLogHandlerTest extends TestCase
             $dt,
             'test',
             Level::Debug,
-            'foobar', [
-                    'source' => 'source',
-                    'crawlUri' => new CrawlUri(new Uri('https://contao.org'), 0),
-            ], [],
+            'foobar',
+            [
+                'source' => 'source',
+                'crawlUri' => new CrawlUri(new Uri('https://contao.org'), 0),
+            ],
+            [],
         );
 
         $stream = fopen('php://memory', 'r+');
