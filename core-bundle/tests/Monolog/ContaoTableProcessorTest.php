@@ -26,9 +26,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
-/**
- * @phpstan-import-type Record from Logger
- */
 class ContaoTableProcessorTest extends TestCase
 {
     public function testCanBeInvoked(): void
