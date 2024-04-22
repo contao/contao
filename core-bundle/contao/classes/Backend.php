@@ -417,9 +417,7 @@ abstract class Backend extends Controller
 				}
 
 				$db = Database::getInstance();
-				/** @var \Symfony\Component\HttpFoundation\Request */
 				$request = $container->get('request_stack')->getCurrentRequest();
-				$request->getSession()->getId()
 
 				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)) && is_a($GLOBALS['TL_DCA'][$ptable]['config']['dataContainer'] ?? null, DC_Table::class, true))
 				{
