@@ -340,8 +340,6 @@ class TwigIntegrationTest extends TestCase
         ]);
 
         $this->assertSame($expectedOutput, $output);
-
-        $this->resetStaticProperties([Highlighter::class]);
     }
 
     public static function provideDeserializeFilterValues(): iterable
