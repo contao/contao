@@ -168,6 +168,7 @@ class TemplateLoaderTest extends TestCase
     {
         (new Filesystem())->touch([
             Path::join($this->getTempDir(), 'templates/mod_article_custom.html5'),
+            Path::join($this->getTempDir(), 'templates/mod_article_foo-bar.html5'),
             Path::join($this->getTempDir(), 'templates/mod_article_list_custom.html5'),
         ]);
 
@@ -182,6 +183,7 @@ class TemplateLoaderTest extends TestCase
                 'mod_article_bar' => 'mod_article_bar',
                 'mod_article_custom' => 'mod_article_custom (global)',
                 'mod_article_foo' => 'mod_article_foo',
+                'mod_article_foo-bar' => 'mod_article_foo-bar (global)',
             ],
             Controller::getTemplateGroup('mod_article'),
         );
@@ -191,6 +193,7 @@ class TemplateLoaderTest extends TestCase
                 'mod_article_bar' => 'mod_article_bar',
                 'mod_article_custom' => 'mod_article_custom (global)',
                 'mod_article_foo' => 'mod_article_foo',
+                'mod_article_foo-bar' => 'mod_article_foo-bar (global)',
             ],
             Controller::getTemplateGroup('mod_article_'),
         );
