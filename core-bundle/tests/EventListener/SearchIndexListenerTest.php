@@ -69,7 +69,7 @@ class SearchIndexListenerTest extends TestCase
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
             false,
-            'backend'
+            'backend',
         ];
 
         yield 'Should index because the response was successful and contains ld+json information' => [
