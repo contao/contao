@@ -177,7 +177,7 @@ class InsertTagsListenerTest extends ContaoTestCase
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
             ->method('generate')
-            ->willThrowException(new ForwardPageNotFoundException());
+            ->willThrowException(new ForwardPageNotFoundException())
         ;
 
         $logger = $this->createMock(LoggerInterface::class);
