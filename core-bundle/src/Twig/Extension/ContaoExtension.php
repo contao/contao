@@ -42,6 +42,7 @@ use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
 use Contao\CoreBundle\Twig\Runtime\StringRuntime;
 use Contao\CoreBundle\Twig\Runtime\UrlRuntime;
 use Contao\FrontendTemplateTrait;
+use Contao\StringUtil;
 use Contao\Template;
 use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
@@ -338,6 +339,10 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 'encode_email',
                 [StringRuntime::class, 'encodeEmail'],
                 ['preserves_safety' => ['contao_html', 'html']],
+            ),
+            new TwigFilter(
+                'deserialize',
+                static fn (mixed $value) => StringUtil::deserialize($value, true),
             ),
         ];
     }
