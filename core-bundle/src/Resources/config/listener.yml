@@ -472,6 +472,7 @@ services:
     contao.listener.search_index:
         class: Contao\CoreBundle\EventListener\SearchIndexListener
         arguments:
+            - '@contao.routing.scope_matcher'
             - '@contao.search.indexer'
             - '%fragment.path%'
         tags:

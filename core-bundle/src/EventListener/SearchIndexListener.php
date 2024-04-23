@@ -13,6 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Crawl\Escargot\Factory;
+use Contao\CoreBundle\Messenger\Message\SearchIndexMessage;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Search\Document;
 use Contao\CoreBundle\Search\Indexer\IndexerException;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
@@ -28,12 +30,14 @@ class SearchIndexListener
     public const FEATURE_INDEX = 0b01;
     public const FEATURE_DELETE = 0b10;
 
+    private ScopeMatcher $scopeMatcher;
     private IndexerInterface $indexer;
     private string $fragmentPath;
     private int $enabledFeatures;
 
-    public function __construct(IndexerInterface $indexer, string $fragmentPath = '_fragment', int $enabledFeatures = self::FEATURE_INDEX | self::FEATURE_DELETE)
+    public function __construct(ScopeMatcher $scopeMatcher, IndexerInterface $indexer, string $fragmentPath = '_fragment', int $enabledFeatures = self::FEATURE_INDEX | self::FEATURE_DELETE)
     {
+        $this->scopeMatcher = $scopeMatcher;
         $this->indexer = $indexer;
         $this->fragmentPath = $fragmentPath;
         $this->enabledFeatures = $enabledFeatures;
@@ -44,6 +48,10 @@ class SearchIndexListener
      */
     public function __invoke(TerminateEvent $event): void
     {
+        if (!$this->scopeMatcher->isFrontendMainRequest($event)) {
+            return;
+        }
+
         $response = $event->getResponse();
 
         if ($response->isRedirection()) {

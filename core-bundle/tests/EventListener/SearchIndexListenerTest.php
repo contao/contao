@@ -14,11 +14,13 @@ namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\Crawl\Escargot\Factory;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Search\Document;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -28,7 +30,7 @@ class SearchIndexListenerTest extends TestCase
     /**
      * @dataProvider getRequestResponse
      */
-    public function testIndexesOrDeletesTheDocument(Request $request, Response $response, int $features, bool $index, bool $delete): void
+    public function testIndexesOrDeletesTheDocument(Request $request, Response $response, int $features, bool $index, bool $delete, string $scope = 'frontend'): void
     {
         $indexer = $this->createMock(IndexerInterface::class);
         $indexer
@@ -44,13 +46,25 @@ class SearchIndexListenerTest extends TestCase
         ;
 
         $event = new TerminateEvent($this->createMock(HttpKernelInterface::class), $request, $response);
+        $backendMatcher = new RequestMatcher(attributes: ['_scope' => 'backend']);
+        $frontendMatcher = new RequestMatcher(attributes: ['_scope' => 'frontend']);
+        $scopeMatcher = new ScopeMatcher($backendMatcher, $frontendMatcher);
 
-        $listener = new SearchIndexListener($indexer, '_fragment', $features);
+        $listener = new SearchIndexListener($scopeMatcher, $indexer, '_fragment', $features);
         $listener($event);
     }
 
     public function getRequestResponse(): \Generator
     {
+        yield 'Should be skipped because it is not a front end scope request' => [
+            Request::create('/foobar'),
+            new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>'),
+            SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
+            false,
+            false,
+            'backend',
+        ];
+
         yield 'Should index because the response was successful and contains ld+json information' => [
             Request::create('/foobar'),
             new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>'),
