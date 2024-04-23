@@ -54,7 +54,6 @@ class SearchIndexListenerTest extends TestCase
         ;
 
         $event = new TerminateEvent($this->createMock(HttpKernelInterface::class), $request, $response);
-
         $scopeMatcher = new ScopeMatcher(new BackendMatcher(), new FrontendMatcher());
 
         $listener = new SearchIndexListener($scopeMatcher, $messenger, '_fragment', $features);
@@ -63,7 +62,7 @@ class SearchIndexListenerTest extends TestCase
 
     public static function getRequestResponse(): iterable
     {
-        yield 'Should be skipped because it is not a frontend scope request' => [
+        yield 'Should be skipped because it is not a front end scope request' => [
             Request::create('/foobar'),
             new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>'),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
