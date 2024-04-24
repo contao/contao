@@ -394,15 +394,21 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
         // TODO: This should make use of the response context in the future.
         if (DocumentLocation::head === $location) {
             if (null !== $identifier) {
-                $GLOBALS['TL_TWIG_CSS'][$identifier] = $content;
+                $GLOBALS['TL_HEAD'][$identifier] = $content;
             } else {
-                $GLOBALS['TL_TWIG_CSS'][] = $content;
+                $GLOBALS['TL_HEAD'][] = $content;
             }
         } elseif (DocumentLocation::endOfBody === $location) {
             if (null !== $identifier) {
                 $GLOBALS['TL_BODY'][$identifier] = $content;
             } else {
                 $GLOBALS['TL_BODY'][] = $content;
+            }
+        } elseif (DocumentLocation::stylesheets === $location) {
+            if (null !== $identifier) {
+                $GLOBALS['TL_STYLE_SHEETS'][$identifier] = $content;
+            } else {
+                $GLOBALS['TL_STYLE_SHEETS'][] = $content;
             }
         }
     }
