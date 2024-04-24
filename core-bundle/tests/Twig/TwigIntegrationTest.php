@@ -310,4 +310,112 @@ class TwigIntegrationTest extends TestCase
 
         $this->assertSame($expectedOutput, $output);
     }
+
+    /**
+     * @dataProvider provideDeserializeFilterValues
+     */
+    public function testDeserializeFilter(mixed $values, string $expectedOutput): void
+    {
+        $templateContent = <<<'TEMPLATE'
+            <ul>
+                {%- for key, value in values|deserialize ~%}
+                <li>{{ key }}: {{ value }}</li>
+                {%- endfor ~%}
+            </ul>
+            TEMPLATE;
+
+        $environment = new Environment(new ArrayLoader(['test.html.twig' => $templateContent]));
+
+        $environment->addExtension(
+            new ContaoExtension(
+                $environment,
+                $this->createMock(ContaoFilesystemLoader::class),
+                $this->createMock(ContaoCsrfTokenManager::class),
+                $this->createMock(ContaoVariable::class),
+            ),
+        );
+
+        $output = $environment->render('test.html.twig', [
+            'values' => $values,
+        ]);
+
+        $this->assertSame($expectedOutput, $output);
+    }
+
+    public static function provideDeserializeFilterValues(): iterable
+    {
+        yield [
+            serialize(['key1' => 'value1', 'key2' => 2]),
+            <<<'HTML'
+                <ul>
+                    <li>key1: value1</li>
+                    <li>key2: 2</li>
+                </ul>
+                HTML,
+        ];
+
+        yield [
+            serialize(['value1', 2]),
+            <<<'HTML'
+                <ul>
+                    <li>0: value1</li>
+                    <li>1: 2</li>
+                </ul>
+                HTML,
+        ];
+
+        yield [
+            ['key1' => 'value1', 'key2' => 2],
+            <<<'HTML'
+                <ul>
+                    <li>key1: value1</li>
+                    <li>key2: 2</li>
+                </ul>
+                HTML,
+        ];
+
+        yield [
+            ['value1', 2],
+            <<<'HTML'
+                <ul>
+                    <li>0: value1</li>
+                    <li>1: 2</li>
+                </ul>
+                HTML,
+        ];
+
+        yield [
+            'string',
+            <<<'HTML'
+                <ul>
+                    <li>0: string</li>
+                </ul>
+                HTML,
+        ];
+
+        yield [
+            123,
+            <<<'HTML'
+                <ul>
+                    <li>0: 123</li>
+                </ul>
+                HTML,
+        ];
+
+        yield [
+            '',
+            <<<'HTML'
+                <ul>
+                </ul>
+                HTML,
+        ];
+
+        yield [
+            null,
+            <<<'HTML'
+                <ul>
+                </ul>
+                HTML,
+        ];
+    }
 }

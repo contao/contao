@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\NewsBundle\EventListener;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
+use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\NewsModel;
@@ -72,21 +73,30 @@ class InsertTagsListener
         return match ($insertTag) {
             'news' => sprintf(
                 '<a href="%s" title="%s"%s>%s</a>',
-                $this->urlGenerator->generate($model, [], \in_array('absolute', $arguments, true) ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH),
+                $this->generateNewsUrl($model, $arguments),
                 StringUtil::specialcharsAttribute($model->headline),
                 \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : '',
                 $model->headline,
             ),
             'news_open' => sprintf(
                 '<a href="%s" title="%s"%s>',
-                $this->urlGenerator->generate($model, [], \in_array('absolute', $arguments, true) ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH),
+                $this->generateNewsUrl($model, $arguments),
                 StringUtil::specialcharsAttribute($model->headline),
                 \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : '',
             ),
-            'news_url' => $this->urlGenerator->generate($model, [], \in_array('absolute', $arguments, true) ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH),
+            'news_url' => $this->generateNewsUrl($model, $arguments),
             'news_title' => StringUtil::specialcharsAttribute($model->headline),
             'news_teaser' => $model->teaser,
             default => '',
         };
+    }
+
+    private function generateNewsUrl(NewsModel $model, array $arguments): string
+    {
+        try {
+            return $this->urlGenerator->generate($model, [], \in_array('absolute', $arguments, true) ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH);
+        } catch (ForwardPageNotFoundException) {
+            return '';
+        }
     }
 }

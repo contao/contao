@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\NewsBundle\Tests\EventListener;
 
+use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\NewsBundle\EventListener\InsertTagsListener;
 use Contao\NewsModel;
@@ -163,5 +164,25 @@ class InsertTagsListenerTest extends ContaoTestCase
         $listener = new InsertTagsListener($this->mockContaoFramework($adapters), $urlGenerator, $logger);
 
         $this->assertSame('', $listener('news_url::3', false, null, []));
+    }
+
+    public function testReturnsAnEmptyUrlIfTheUrlGeneratorThrowsException(): void
+    {
+        $newsModel = $this->mockClassWithProperties(NewsModel::class);
+
+        $adapters = [
+            NewsModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $newsModel]),
+        ];
+
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->method('generate')
+            ->willThrowException(new ForwardPageNotFoundException())
+        ;
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $listener = new InsertTagsListener($this->mockContaoFramework($adapters), $urlGenerator, $logger);
+
+        $this->assertSame('', $listener('news_url::4', false, null, []));
     }
 }
