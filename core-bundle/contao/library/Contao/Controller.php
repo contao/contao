@@ -851,6 +851,15 @@ abstract class Controller extends System
 			}
 		}
 
+		// Add the Twig style sheets
+		if (!empty($GLOBALS['TL_TWIG_CSS']) && \is_array($GLOBALS['TL_TWIG_CSS']))
+		{
+			foreach (array_unique($GLOBALS['TL_TWIG_CSS']) as $head)
+			{
+				$strScripts .= $head;
+			}
+		}
+
 		// Add the user style sheets
 		if (!empty($GLOBALS['TL_USER_CSS']) && \is_array($GLOBALS['TL_USER_CSS']))
 		{
