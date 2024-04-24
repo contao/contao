@@ -854,9 +854,9 @@ abstract class Controller extends System
 		// Add the component style sheets
 		if (!empty($GLOBALS['TL_STYLE_SHEETS']) && \is_array($GLOBALS['TL_STYLE_SHEETS']))
 		{
-			foreach (array_unique($GLOBALS['TL_STYLE_SHEETS']) as $head)
+			foreach (array_unique($GLOBALS['TL_STYLE_SHEETS']) as $stylesheet)
 			{
-				$strScripts .= $head;
+				$strScripts .= $stylesheet;
 			}
 		}
 
