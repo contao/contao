@@ -32,6 +32,8 @@ class SearchIndexListenerTest extends TestCase
      */
     public function testIndexesOrDeletesTheDocument(Request $request, Response $response, int $features, bool $index, bool $delete, string $scope = 'frontend'): void
     {
+        $request->attributes->set('_scope', $scope);
+
         $indexer = $this->createMock(IndexerInterface::class);
         $indexer
             ->expects($index ? $this->once() : $this->never())
