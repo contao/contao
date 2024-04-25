@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.alias.1">
         <source>The event alias is a unique reference to the event which can be called instead of its numeric ID.</source>
-        <target>Алиас дешавања је јединствена референца на дешавање која се може користити уместо нумеричког ИД броја.</target>
+        <target>Алиас дешавања је јединствена референца на дешавање која се може користити уместо нумеричког ID броја.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.author.0">
         <source>Author</source>
@@ -79,7 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.robots.1">
         <source>Here you can overwrite how search engines handle the event.</source>
-        <target>Овде можете прегазити правила која користе претраживачи приликом обраде догађаја.</target>
+        <target>Овде можете прегазити правила која користе претраживачи приликом обраде дешавања.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.description.0">
         <source>Meta description</source>
@@ -135,7 +135,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.recurring.1">
         <source>Create a recurring event.</source>
-        <target>Креирање понављајућег дешавања.</target>
+        <target>Направи понављајуће дешавање.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.repeatEach.0">
         <source>Interval</source>

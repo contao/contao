@@ -14,6 +14,7 @@ use Contao\Database;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Result as DoctrineResult;
 use Doctrine\DBAL\Exception\DriverException;
+use Doctrine\DBAL\ParameterType;
 
 /**
  * Create and execute queries
@@ -257,18 +258,22 @@ class Statement
 			throw new \Exception('Empty query string');
 		}
 
-		$arrParams = array_map(
-			static function ($varParam)
+		foreach ($arrParams as $key => $varParam)
+		{
+			// Automatically set type to boolean when no type is defined,
+			// otherwise "false" will be converted to an empty string.
+			if (null === ($arrTypes[$key] ?? null))
 			{
-				if (\is_string($varParam) || \is_bool($varParam) || \is_float($varParam) || \is_int($varParam) || $varParam === null)
-				{
-					return $varParam;
-				}
+				$arrTypes[$key] = \is_bool($varParam) ? ParameterType::BOOLEAN : ParameterType::STRING;
+			}
 
-				return serialize($varParam);
-			},
-			$arrParams
-		);
+			if (\is_string($varParam) || \is_bool($varParam) || \is_float($varParam) || \is_int($varParam) || $varParam === null)
+			{
+				continue;
+			}
+
+			$arrParams[$key] = serialize($varParam);
+		}
 
 		$this->arrLastUsedParams = $arrParams;
 

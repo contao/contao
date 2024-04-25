@@ -39,11 +39,11 @@
       </trans-unit>
       <trans-unit id="MSC.cal_repeat">
         <source>This event is repeated %s%s. The next event will take place on &lt;time datetime=&quot;%s&quot;&gt;%s&lt;/time&gt;.</source>
-        <target>Ово дешавање се понавља %s%s. Следећи пут ће се одржати &lt;time datetime=&quot;%s&quot; itemprop=&quot;startDate&quot;&gt;%s&lt;/time&gt;.</target>
+        <target>Ово дешавање се понавља %s%s. Следећи пут ће се одржати &lt;time datetime=&quot;%s&quot;&gt;%s&lt;/time&gt;.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_repeat_ended">
         <source>This event was repeated %s%s.</source>
-        <target>Ово дешавање се понавља%s%s.</target>
+        <target>Ово дешавање се понавља %s%s.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_until">
         <source>until %s</source>
@@ -51,7 +51,7 @@
       </trans-unit>
       <trans-unit id="MSC.cal_single_days">
         <source>every day</source>
-        <target>сваки дан</target>
+        <target>сваког дана</target>
       </trans-unit>
       <trans-unit id="MSC.cal_multiple_days">
         <source>every %s days</source>
@@ -71,7 +71,7 @@
       </trans-unit>
       <trans-unit id="MSC.cal_multiple_months">
         <source>every %s months</source>
-        <target>свака %s месеца</target>
+        <target>сваких %s месеца</target>
       </trans-unit>
       <trans-unit id="MSC.cal_single_years">
         <source>every year</source>

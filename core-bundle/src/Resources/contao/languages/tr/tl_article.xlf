@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_article.inColumn.1">
         <source>Please choose the layout section you want the article to be displayed in.</source>
-        <target>Makalenin görüntülenmesini istediğiniz düzen bölümünü seçin.</target>
+        <target>Makalenin görüntülenmesini istediğiniz yerleşim bölümünü seçin.</target>
       </trans-unit>
       <trans-unit id="tl_article.keywords.0">
         <source>Meta keywords</source>

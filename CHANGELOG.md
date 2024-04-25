@@ -2,6 +2,32 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.43] (2024-04-19)
+
+**Fixed issues:**
+
+- [#7131] Make the `PhpTemplateProxyNode` class compatible with Twig 3.9 ([ausi])
+
+## [4.13.42] (2024-04-17)
+
+**Fixed issues:**
+
+- [#7123] Ensure compatibility with Twig 3.9 ([leofeyer])
+
+## [4.13.41] (2024-04-16)
+
+**Fixed issues:**
+
+- [#7076] Fix the markup of the trusted device checkbox in the login template ([aschempp])
+- [#7109] Add the missing `FilesystemItem::getName()` method ([Toflar])
+- [#7072] Use `display: grid` in the image gallery preview ([zoglo])
+- [#7092] Remove the `feViewable` configuration ([fritzmg])
+- [#7078] Fix a PHP 8 error if there is no default palette ([aschempp])
+- [#7069] Correctly run the file extension migration on Windows ([lukasbableck])
+- [#7052] Skip token validation if the session is empty and new ([ausi])
+- [#7033] Register theme templates in the global namespace, too ([ausi])
+- [#7036] Handle CSV fields in the registration and personal data module ([qzminski])
+
 ## [4.13.40] (2024-04-09)
 
 **Security fixes:**
@@ -956,6 +982,9 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.43]: https://github.com/contao/contao/releases/tag/4.13.43
+[4.13.42]: https://github.com/contao/contao/releases/tag/4.13.42
+[4.13.41]: https://github.com/contao/contao/releases/tag/4.13.41
 [4.13.40]: https://github.com/contao/contao/releases/tag/4.13.40
 [4.13.39]: https://github.com/contao/contao/releases/tag/4.13.39
 [4.13.38]: https://github.com/contao/contao/releases/tag/4.13.38
@@ -1032,6 +1061,7 @@ This project adheres to [Semantic Versioning].
 [janborg]: https://github.com/janborg
 [JanoschOltmanns]: https://github.com/JanoschOltmanns
 [leofeyer]: https://github.com/leofeyer
+[lukasbableck]: https://github.com/lukasbableck
 [m-vo]: https://github.com/m-vo
 [MarkejN]: https://github.com/MarkejN
 [MDevster]: https://github.com/MDevster
@@ -1047,6 +1077,7 @@ This project adheres to [Semantic Versioning].
 [Toflar]: https://github.com/Toflar
 [Wusch]: https://github.com/Wusch
 [xprojects-de]: https://github.com/xprojects-de
+[zoglo]: https://github.com/zoglo
 [zonky2]: https://github.com/zonky2
 [#2892]: https://github.com/contao/contao/pull/2892
 [#2959]: https://github.com/contao/contao/pull/2959
@@ -1752,3 +1783,14 @@ This project adheres to [Semantic Versioning].
 [#6966]: https://github.com/contao/contao/pull/6966
 [#6986]: https://github.com/contao/contao/pull/6986
 [#7029]: https://github.com/contao/contao/pull/7029
+[#7033]: https://github.com/contao/contao/pull/7033
+[#7036]: https://github.com/contao/contao/pull/7036
+[#7052]: https://github.com/contao/contao/pull/7052
+[#7069]: https://github.com/contao/contao/pull/7069
+[#7072]: https://github.com/contao/contao/pull/7072
+[#7076]: https://github.com/contao/contao/pull/7076
+[#7078]: https://github.com/contao/contao/pull/7078
+[#7092]: https://github.com/contao/contao/pull/7092
+[#7109]: https://github.com/contao/contao/pull/7109
+[#7123]: https://github.com/contao/contao/pull/7123
+[#7131]: https://github.com/contao/contao/pull/7131

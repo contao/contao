@@ -323,11 +323,11 @@
       </trans-unit>
       <trans-unit id="ERR.duplicateSectionTitle">
         <source>Duplicate layout section title &quot;%s&quot;!</source>
-        <target>&quot;%s&quot; düzen bölümü başlığı zaten var!</target>
+        <target>&quot;%s&quot; yerleşim bölümü başlığı zaten var!</target>
       </trans-unit>
       <trans-unit id="ERR.duplicateSectionId">
         <source>Duplicate layout section ID &quot;%s&quot;!</source>
-        <target>&quot;%s&quot; kimlikli düzen bölümü zaten var!</target>
+        <target>&quot;%s&quot; kimlikli yerleşim bölümü zaten var!</target>
       </trans-unit>
       <trans-unit id="ERR.moduleWithoutColumn">
         <source>Please assign all modules to a column!</source>
@@ -1307,7 +1307,7 @@
       </trans-unit>
       <trans-unit id="MSC.mw_column">
         <source>Layout section</source>
-        <target>Düzen bölümü</target>
+        <target>Yerleşim bölümü</target>
       </trans-unit>
       <trans-unit id="MSC.mw_enable">
         <source>Enable/disable the module</source>
@@ -2707,7 +2707,7 @@
       </trans-unit>
       <trans-unit id="MSC.internalCssEditor">
         <source>The internal CSS editor has been deprecated and will be removed in Contao 5.0! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
-        <target>İç CSS düzenleyicisi kullanımdan kaldırıldı ve Contao 5.0 sürümünde tamamen kaldırılacak! Lütfen var olan biçem sayfalarınızı dışa aktarmayı ve bunları sayfa düzenine dış biçem sayfaları olarak yeniden eklemeyi düşünün.</target>
+        <target>İç CSS düzenleyicisi kullanımdan kaldırıldı ve Contao 5.0 sürümünde tamamen kaldırılacak! Lütfen var olan biçem sayfalarınızı dışa aktarmayı ve bunları sayfa yerleşimine dış biçem sayfaları olarak yeniden eklemeyi düşünün.</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>

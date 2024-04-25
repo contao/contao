@@ -348,27 +348,37 @@ class ContaoExtensionTest extends TestCase
      * This test makes sure the function's signatures remains the same and changes
      * to the original codebase do not stay unnoticed.
      *
+     * @param \ReflectionFunction|\ReflectionMethod $reflector
+     *
      * @dataProvider provideTwigFunctionSignatures
      */
-    public function testContaoUsesCorrectTwigFunctionSignatures(string $function, array $expectedParameters): void
+    public function testContaoUsesCorrectTwigFunctionSignatures($reflector, array $expectedParameters): void
     {
-        // Make sure the functions outside the class scope are loaded
-        new \ReflectionClass(EscaperExtension::class);
-
         $parameters = array_map(
             static fn (\ReflectionParameter $parameter): array => [
                 ($type = $parameter->getType()) instanceof \ReflectionNamedType ? $type->getName() : null,
                 $parameter->getName(),
             ],
-            (new \ReflectionFunction($function))->getParameters()
+            $reflector->getParameters()
         );
+
         $this->assertSame($parameters, $expectedParameters);
     }
 
     public function provideTwigFunctionSignatures(): \Generator
     {
+        // Make sure the functions outside the class scope are loaded
+        new \ReflectionClass(EscaperExtension::class);
+
+        // Forward compatibility with twig/twig 4
+        if (method_exists(EscaperExtension::class, 'escape')) {
+            $escape = new \ReflectionMethod(EscaperExtension::class.'::escape');
+        } else {
+            $escape = new \ReflectionFunction('twig_escape_filter');
+        }
+
         yield [
-            'twig_escape_filter',
+            $escape,
             [
                 [Environment::class, 'env'],
                 [null, 'string'],
@@ -378,12 +388,14 @@ class ContaoExtensionTest extends TestCase
             ],
         ];
 
-        yield [
-            'twig_escape_filter_is_safe',
-            [
-                [Node::class, 'filterArgs'],
-            ],
-        ];
+        // Backwards compatibility with twig/twig <3.9
+        if (\function_exists('twig_escape_filter_is_safe')) {
+            $escapeIsSafe = new \ReflectionFunction('twig_escape_filter_is_safe');
+        } else {
+            $escapeIsSafe = new \ReflectionMethod(EscaperExtension::class.'::escapeFilterIsSafe');
+        }
+
+        yield [$escapeIsSafe, [[Node::class, 'filterArgs']]];
     }
 
     /**

@@ -259,11 +259,11 @@
       </trans-unit>
       <trans-unit id="tl_module.searchType.0">
         <source>Search form layout</source>
-        <target>Arama formu düzeni</target>
+        <target>Arama formu yerleşimi</target>
       </trans-unit>
       <trans-unit id="tl_module.searchType.1">
         <source>Here you can select the search form layout.</source>
-        <target>Buradan arama formu düzenini seçebilirsiniz.</target>
+        <target>Buradan arama formu yerleşimini seçebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_module.searchTpl.0">
         <source>Search results template</source>
@@ -275,11 +275,11 @@
       </trans-unit>
       <trans-unit id="tl_module.inColumn.0">
         <source>Layout section</source>
-        <target>Düzen bölümü</target>
+        <target>Yerleşim bölümü</target>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.1">
         <source>Please choose the layout section whose articles you want to list.</source>
-        <target>Makalenin listelenmesini istediğiniz düzen bölümünü seçin.</target>
+        <target>Makalenin görüntülenmesini istediğiniz yerleşim bölümünü seçin.</target>
       </trans-unit>
       <trans-unit id="tl_module.skipFirst.0">
         <source>Skip items</source>
