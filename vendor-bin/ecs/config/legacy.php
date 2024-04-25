@@ -13,7 +13,6 @@ declare(strict_types=1);
 use Contao\EasyCodingStandard\Fixer\ChainedMethodBlockFixer;
 use Contao\EasyCodingStandard\Fixer\CommentLengthFixer;
 use Contao\EasyCodingStandard\Fixer\MultiLineLambdaFunctionArgumentsFixer;
-use Contao\EasyCodingStandard\Fixer\TypeHintOrderFixer;
 use Contao\EasyCodingStandard\Set\SetList;
 use Contao\EasyCodingStandard\Sniffs\UseSprintfInExceptionsSniff;
 use PhpCsFixer\Fixer\Alias\ModernizeStrposFixer;
@@ -102,7 +101,6 @@ return ECSConfig::configure()
         StrictComparisonFixer::class,
         StrictParamFixer::class,
         TrailingCommaInMultilineFixer::class,
-        TypeHintOrderFixer::class,
         UnusedVariableSniff::class,
         UseArrowFunctionsFixer::class,
         UselessParenthesesSniff::class,
