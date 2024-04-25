@@ -27,7 +27,6 @@ use PhpCsFixer\Fixer\ControlStructure\ControlStructureContinuationPositionFixer;
 use PhpCsFixer\Fixer\ControlStructure\TrailingCommaInMultilineFixer;
 use PhpCsFixer\Fixer\ControlStructure\YodaStyleFixer;
 use PhpCsFixer\Fixer\FunctionNotation\NoSpacesAfterFunctionNameFixer;
-use PhpCsFixer\Fixer\FunctionNotation\NullableTypeDeclarationForDefaultNullValueFixer;
 use PhpCsFixer\Fixer\FunctionNotation\UseArrowFunctionsFixer;
 use PhpCsFixer\Fixer\FunctionNotation\VoidReturnFixer;
 use PhpCsFixer\Fixer\LanguageConstruct\GetClassToClassKeywordFixer;
@@ -87,7 +86,6 @@ return ECSConfig::configure()
         MultilineWhitespaceBeforeSemicolonsFixer::class,
         NoSpacesAfterFunctionNameFixer::class,
         NoSuperfluousPhpdocTagsFixer::class,
-        NullableTypeDeclarationForDefaultNullValueFixer::class,
         OrderedClassElementsFixer::class,
         PhpdocOrderFixer::class,
         PhpdocScalarFixer::class,

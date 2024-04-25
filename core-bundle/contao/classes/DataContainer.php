@@ -1648,7 +1648,7 @@ abstract class DataContainer extends Backend
 	 *
 	 * @return string|array<string>
 	 */
-	public function generateRecordLabel(array $row, string $table = null, bool $protected = false, bool $isVisibleRootTrailPage = false)
+	public function generateRecordLabel(array $row, ?string $table = null, bool $protected = false, bool $isVisibleRootTrailPage = false)
 	{
 		$table = $table ?? $this->strTable;
 		$labelConfig = &$GLOBALS['TL_DCA'][$table]['list']['label'];
@@ -1855,7 +1855,7 @@ abstract class DataContainer extends Backend
 	 * @throws AccessDeniedException     if the current user has no read permission
 	 * @return array<string, mixed>|null
 	 */
-	public function getCurrentRecord(string|int $id = null, string $table = null): array|null
+	public function getCurrentRecord(string|int|null $id = null, ?string $table = null): array|null
 	{
 		$id = $id ?: $this->intId;
 		$table = $table ?: $this->strTable;
@@ -1894,7 +1894,7 @@ abstract class DataContainer extends Backend
 		return self::$arrCurrentRecordCache[$key];
 	}
 
-	public static function clearCurrentRecordCache(string|int $id = null, string $table = null): void
+	public static function clearCurrentRecordCache(string|int|null $id = null, ?string $table = null): void
 	{
 		if (null === $table)
 		{

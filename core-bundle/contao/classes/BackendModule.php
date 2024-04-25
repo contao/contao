@@ -40,7 +40,7 @@ abstract class BackendModule extends Backend
 	 *
 	 * @param DataContainer $dc
 	 */
-	public function __construct(DataContainer $dc=null)
+	public function __construct(?DataContainer $dc=null)
 	{
 		parent::__construct();
 		$this->objDc = $dc;
