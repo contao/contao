@@ -30,7 +30,6 @@ class BackendNoindexListenerTest extends TestCase
         $request->attributes->set('_scope', 'backend');
 
         $response = new Response();
-
         $kernel = $this->createMock(KernelInterface::class);
         $event = new ResponseEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST, $response);
 
@@ -43,9 +42,7 @@ class BackendNoindexListenerTest extends TestCase
     public function testDoesNotAddNoindexIfNotBackendResponse(): void
     {
         $request = Request::create('/foobar');
-
         $response = new Response();
-
         $kernel = $this->createMock(KernelInterface::class);
         $event = new ResponseEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST, $response);
 
