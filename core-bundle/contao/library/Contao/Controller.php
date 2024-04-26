@@ -822,6 +822,12 @@ abstract class Controller extends System
 		$arrReplace["[[TL_BODY_$nonce]]"] = $strScripts;
 		$strScripts = '';
 
+		// Add the component style sheets
+		if (!empty($GLOBALS['TL_STYLE_SHEETS']) && \is_array($GLOBALS['TL_STYLE_SHEETS']))
+		{
+			$strScripts .= implode('', array_unique($GLOBALS['TL_STYLE_SHEETS']));
+		}
+
 		$objCombiner = new Combiner();
 
 		// Add the CSS framework style sheets
@@ -848,15 +854,6 @@ abstract class Controller extends System
 				{
 					$strScripts .= Template::generateStyleTag(static::addAssetsUrlTo($stylesheet), $options->media, $options->mtime);
 				}
-			}
-		}
-
-		// Add the component style sheets
-		if (!empty($GLOBALS['TL_STYLE_SHEETS']) && \is_array($GLOBALS['TL_STYLE_SHEETS']))
-		{
-			foreach (array_unique($GLOBALS['TL_STYLE_SHEETS']) as $stylesheet)
-			{
-				$strScripts .= $stylesheet;
 			}
 		}
 
