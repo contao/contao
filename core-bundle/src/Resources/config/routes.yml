@@ -23,6 +23,7 @@ contao_backend_fallback:
         template: '@ContaoCore\Error\backend.html.twig'
         context:
             template: '@ContaoCore\Error\backend.html.twig'
+            language: en
             statusName: Page Not Found
             exception: The requested page does not exist.
         statusCode: 404
