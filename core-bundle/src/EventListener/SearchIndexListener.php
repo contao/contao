@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Crawl\Escargot\Factory;
 use Contao\CoreBundle\Messenger\Message\SearchIndexMessage;
-use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Search\Document;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,7 +32,6 @@ class SearchIndexListener
     final public const FEATURE_DELETE = 0b10;
 
     public function __construct(
-        private readonly ScopeMatcher $scopeMatcher,
         private readonly MessageBusInterface $messageBus,
         private readonly string $fragmentPath = '_fragment',
         private readonly int $enabledFeatures = self::FEATURE_INDEX | self::FEATURE_DELETE,
@@ -45,10 +43,6 @@ class SearchIndexListener
      */
     public function __invoke(TerminateEvent $event): void
     {
-        if (!$this->scopeMatcher->isFrontendMainRequest($event)) {
-            return;
-        }
-
         $response = $event->getResponse();
 
         if ($response->isRedirection()) {

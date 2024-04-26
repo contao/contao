@@ -444,7 +444,6 @@ services:
     contao.listener.search_index:
         class: Contao\CoreBundle\EventListener\SearchIndexListener
         arguments:
-            - '@contao.routing.scope_matcher'
             - '@messenger.bus.default'
             - '%fragment.path%'
 
