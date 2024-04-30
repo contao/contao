@@ -53,11 +53,11 @@ class DataContainerCallbackPass implements CompilerPassInterface
             }
 
             $definition = $container->findDefinition($serviceId);
+            $definition->setPublic(true);
 
             while (!$definition->getClass() && $definition instanceof ChildDefinition) {
                 $definition = $container->findDefinition($definition->getParent());
             }
-            $definition->setPublic(true);
 
             foreach ($tags as $attributes) {
                 $this->addCallback($callbacks, $serviceId, $definition->getClass(), $attributes);
