@@ -50,6 +50,11 @@ class TestListener
     {
     }
 
+    public function onOptions(): array
+    {
+        return [];
+    }
+
     public function onLoadSecond(): void
     {
     }

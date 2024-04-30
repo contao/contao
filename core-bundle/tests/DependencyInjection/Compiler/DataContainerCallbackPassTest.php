@@ -18,6 +18,7 @@ use Contao\CoreBundle\Fixtures\EventListener\InvokableListener;
 use Contao\CoreBundle\Fixtures\EventListener\TestListener;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Exception\InvalidDefinitionException;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
@@ -53,6 +54,51 @@ class DataContainerCallbackPassTest extends TestCase
             ],
             $this->getCallbacksFromDefinition($container)[0]
         );
+    }
+
+    public function testResolvesChildDefinitions(): void
+    {
+        $definition = new Definition(TestListener::class);
+        $definition->addTag('contao.callback', [
+            'table' => 'tl_module',
+            'target' => 'fields.imageSize.options',
+            'method' => 'onOptions',
+        ]);
+
+        $childDefinition = new ChildDefinition('test.parent.listener');
+        $childDefinition->addTag('contao.callback', [
+            'table' => 'tl_module',
+            'target' => 'fields.otherField.options',
+            'method' => 'onOptions',
+        ]);
+
+        $container = $this->getContainerBuilder();
+        $container->setDefinition('test.parent.listener', $definition);
+        $container->setDefinition('test.child.listener', $childDefinition);
+
+        $pass = new DataContainerCallbackPass();
+        $pass->process($container);
+
+        $this->assertSame(
+            [
+                'tl_module' => [
+                    'fields.imageSize.options_callback' => [
+                        [
+                            ['test.parent.listener', 'onOptions'],
+                        ],
+                    ],
+                    'fields.otherField.options_callback' => [
+                        [
+                            ['test.child.listener', 'onOptions'],
+                        ],
+                    ],
+                ],
+            ],
+            $this->getCallbacksFromDefinition($container)[0]
+        );
+
+        $this->assertTrue($container->findDefinition('test.parent.listener')->isPublic());
+        $this->assertTrue($container->findDefinition('test.child.listener')->isPublic());
     }
 
     public function testMakesHookListenersPublic(): void
