@@ -99,7 +99,6 @@ class DataContainerCallbackPassTest extends TestCase
 
         $this->assertTrue($container->findDefinition('test.parent.listener')->isPublic());
         $this->assertTrue($container->findDefinition('test.child.listener')->isPublic());
-
     }
 
     public function testMakesHookListenersPublic(): void
