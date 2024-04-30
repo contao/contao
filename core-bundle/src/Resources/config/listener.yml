@@ -11,6 +11,13 @@ services:
             # The priority must be lower than the one of the firewall listener (defaults to 8)
             - { name: kernel.event_listener, priority: 7 }
 
+    contao.listener.backend_noindex:
+        class: Contao\CoreBundle\EventListener\BackendNoindexListener
+        arguments:
+            - '@contao.routing.scope_matcher'
+        tags:
+            - { name: kernel.event_listener }
+
     contao.listener.backend_preview_redirect:
         class: Contao\CoreBundle\EventListener\BackendPreviewRedirectListener
         arguments:
