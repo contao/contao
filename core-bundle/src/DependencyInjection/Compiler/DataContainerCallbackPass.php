@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\Config\Definition\Exception\InvalidDefinitionException;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -52,6 +53,10 @@ class DataContainerCallbackPass implements CompilerPassInterface
             }
 
             $definition = $container->findDefinition($serviceId);
+
+            while (!$definition->getClass() && $definition instanceof ChildDefinition) {
+                $definition = $container->findDefinition($definition->getParent());
+            }
             $definition->setPublic(true);
 
             foreach ($tags as $attributes) {
