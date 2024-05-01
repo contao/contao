@@ -962,7 +962,7 @@ abstract class Controller extends System
 			{
 				if ($blnCombineScripts)
 				{
-					$strScripts = Template::generateScriptTag($objCombinerDefer->getCombinedFile(), true) . $strScripts;
+					$strScripts = Template::generateScriptTag($objCombinerDefer->getCombinedFile(), defer: true) . $strScripts;
 				}
 				else
 				{
