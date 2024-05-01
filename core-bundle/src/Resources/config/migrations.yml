@@ -119,6 +119,13 @@ services:
         arguments:
             - '@database_connection'
 
+    contao.migration.version_413.boolean_fields:
+        class: Contao\CoreBundle\Migration\Version413\BooleanFieldsMigration
+        arguments:
+            - '@database_connection'
+            - '@contao.framework'
+            - '@contao.resource_finder'
+
     contao.migration.version_413.file_extension:
         class: Contao\CoreBundle\Migration\Version413\FileExtensionMigration
         arguments:
