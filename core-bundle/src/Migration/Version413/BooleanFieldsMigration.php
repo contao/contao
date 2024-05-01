@@ -23,7 +23,7 @@ use Doctrine\DBAL\Types\Types;
 
 /**
  * Converts empty string values of boolean fields to zeros.
- * 
+ *
  * @internal
  */
 class BooleanFieldsMigration extends AbstractMigration
