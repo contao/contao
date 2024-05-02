@@ -182,7 +182,7 @@ class tl_undo extends Backend
 						}
 						else
 						{
-							if (array_filter($array, static fn ($val) => \is_array($val)))
+							if (array_filter($array, static fn ($val) => is_array($val)))
 							{
 								$v = Yaml::dump($array, 1);
 							}
