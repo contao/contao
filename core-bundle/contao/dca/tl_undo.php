@@ -182,7 +182,14 @@ class tl_undo extends Backend
 						}
 						else
 						{
-							$v = ArrayUtil::implodeRecursive($array);
+							if (array_filter($array, static fn ($val) => \is_array($val)))
+							{
+								$v = Yaml::dump($array, 1);
+							}
+							else
+							{
+								$v = substr(Yaml::dump($array, 0), 1, -1);
+							}
 						}
 					}
 
