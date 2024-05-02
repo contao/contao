@@ -199,7 +199,7 @@ class PreviewFactoryTest extends TestCase
         }
     }
 
-    public function getImageSizes(): \Generator
+    public static function getImageSizes(): iterable
     {
         yield [null, 0];
         yield [[], 0];

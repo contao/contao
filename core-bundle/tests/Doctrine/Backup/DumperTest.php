@@ -65,7 +65,7 @@ class DumperTest extends ContaoTestCase
         iterator_to_array($dumper->dump($connection, $config), false);
     }
 
-    public function successfulDumpProvider(): \Generator
+    public static function successfulDumpProvider(): iterable
     {
         yield 'Empty table without data' => [
             [new Table('tl_page', [new Column('foobar', Type::getType(Types::STRING))])],

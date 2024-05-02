@@ -22,15 +22,15 @@ use Twig\Loader\LoaderInterface;
 use Twig\Source;
 
 /**
- * The ContaoFilesystemLoader loads templates from the Contao-specific template
- * directories inside of bundles (<bundle>/contao/templates), the app's global
- * template directory (<root>/templates) and registered theme directories
- * (<root>/templates/<theme>).
+ * The ContaoFilesystemLoader loads templates from the Contao-specific
+ * template directories inside of bundles (<bundle>/contao/templates), the
+ * app's global template directory (<root>/templates) and registered theme
+ * directories (<root>/templates/<theme>).
  *
- * Contrary to Twig's default loader, we keep track of template files instead
- * of directories. This allows us to group multiple representations of the same
- * template (identifier) from different namespaces in a single data structure:
- * the Contao template hierarchy.
+ * Contrary to Twig's default loader, we keep track of template files instead of
+ * directories. This allows us to group multiple representations of the same
+ * template (identifier) from different namespaces in a single data structure: the
+ * Contao template hierarchy.
  *
  * @experimental
  */
@@ -60,11 +60,11 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
     }
 
     /**
-     * Gets the cache key to use for the environment's template cache for a
-     * given template name.
+     * Gets the cache key to use for the environment's template cache for a given
+     * template name.
      *
-     * If we are currently in a theme context and a theme specific variant of
-     * the template exists, its cache key will be returned instead.
+     * If we are currently in a theme context and a theme specific variant of the
+     * template exists, its cache key will be returned instead.
      *
      * @param string $name The name of the template to load
      *
@@ -87,8 +87,8 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
     /**
      * Returns the source context for a given template logical name.
      *
-     * If we're currently in a theme context and a theme specific variant of
-     * the template exists, its source context will be returned instead.
+     * If we're currently in a theme context and a theme specific variant of the
+     * template exists, its source context will be returned instead.
      *
      * @param string $name The template logical name
      */
@@ -135,8 +135,8 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
     /**
      * Check if we have the source code of a template, given its name.
      *
-     * If we are currently in a theme context and a theme specific variant of
-     * the template exists, its availability will be checked as well.
+     * If we are currently in a theme context and a theme specific variant of the
+     * template exists, its availability will be checked as well.
      *
      * @param string $name The name of the template to check if we can load
      *
@@ -156,11 +156,10 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
     }
 
     /**
-     * Returns true if the template or any variant of it in the hierarchy is
-     * still fresh.
+     * Returns true if the template or any variant of it in the hierarchy is still fresh.
      *
-     * If we are currently in a theme context and a theme specific variant of
-     * the template exists, its state will be checked as well.
+     * If we are currently in a theme context and a theme specific variant of the
+     * template exists, its state will be checked as well.
      *
      * @param string $name The template name
      * @param int    $time Timestamp of the last modification time of the
@@ -245,13 +244,12 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
     }
 
     /**
-     * Returns an array [<template identifier> => <path mappings>] where path
-     * mappings are arrays [<absolute path> => <template logical name>] in the
-     * order they should appear in the inheritance chain for the respective
-     * template identifier.
+     * Returns an array [<template identifier> => <path mappings>] where path mappings
+     * are arrays [<absolute path> => <template logical name>] in the order they
+     * should appear in the inheritance chain for the respective template identifier.
      *
-     * If a $themeSlug is given the result will additionally include templates
-     * of that theme if there are any.
+     * If a $themeSlug is given the result will additionally include templates of that
+     * theme if there are any.
      *
      * For example:
      *   [
@@ -390,8 +388,8 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
     }
 
     /**
-     * Resolves the path of a given template name from the hierarchy or returns
-     * null if no matching element was found.
+     * Resolves the path of a given template name from the hierarchy or returns null
+     * if no matching element was found.
      */
     private function findTemplate(string $name): string|null
     {
@@ -432,8 +430,8 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
     }
 
     /**
-     * Returns the template name of a theme specific variant of the given name
-     * or null if not applicable.
+     * Returns the template name of a theme specific variant of the given name or null
+     * if not applicable.
      */
     private function getThemeTemplateName(string $name): string|null
     {

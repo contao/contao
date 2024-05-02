@@ -17,24 +17,24 @@ use Twig\Node\DeprecatedNode;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
 use Twig\Node\PrintNode;
-use Twig\NodeVisitor\AbstractNodeVisitor;
+use Twig\NodeVisitor\NodeVisitorInterface;
 
 /**
  * @internal
  */
-class DeprecationsNodeVisitor extends AbstractNodeVisitor
+class DeprecationsNodeVisitor implements NodeVisitorInterface
 {
     public function getPriority(): int
     {
         return 10;
     }
 
-    protected function doEnterNode(Node $node, Environment $env): Node
+    public function enterNode(Node $node, Environment $env): Node
     {
         return $node;
     }
 
-    protected function doLeaveNode(Node $node, Environment $env): Node
+    public function leaveNode(Node $node, Environment $env): Node
     {
         return $this->handleDeprecatedInsertTagUsage($node);
     }

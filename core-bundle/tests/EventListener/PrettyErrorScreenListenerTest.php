@@ -134,7 +134,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $this->assertSame($type, $event->getResponse()->getStatusCode());
     }
 
-    public function getErrorTypes(): \Generator
+    public static function getErrorTypes(): iterable
     {
         yield [503, new ServiceUnavailableHttpException()];
         yield [404, new NotFoundHttpException('', new PageNotFoundException())];

@@ -32,7 +32,7 @@ class GlobalsMapListenerTest extends TestCase
         unset($GLOBALS['TL_CTE']);
     }
 
-    public function getValuesData(): \Generator
+    public static function getValuesData(): iterable
     {
         yield 'add single' => [
             [],

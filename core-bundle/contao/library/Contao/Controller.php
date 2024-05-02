@@ -962,7 +962,7 @@ abstract class Controller extends System
 			{
 				if ($blnCombineScripts)
 				{
-					$strScripts = Template::generateScriptTag($objCombinerDefer->getCombinedFile(), true) . $strScripts;
+					$strScripts = Template::generateScriptTag($objCombinerDefer->getCombinedFile(), defer: true) . $strScripts;
 				}
 				else
 				{
@@ -1477,7 +1477,7 @@ abstract class Controller extends System
 	 *
 	 * @return string The script path with the static URL
 	 */
-	public static function addStaticUrlTo($script, ContaoContext $context = null)
+	public static function addStaticUrlTo($script, ContaoContext|null $context = null)
 	{
 		// Absolute URLs
 		if (preg_match('@^https?://@', $script))

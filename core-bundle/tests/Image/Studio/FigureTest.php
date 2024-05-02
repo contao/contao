@@ -156,7 +156,7 @@ class FigureTest extends TestCase
         $this->assertSame($expectedHref, $figure->getLinkAttributes(true)['href'] ?? null);
     }
 
-    public function provideLinkAttributesAndPreconditions(): \Generator
+    public function provideLinkAttributesAndPreconditions(): iterable
     {
         $lightbox = $this->createMock(LightboxResult::class);
         $lightbox
@@ -346,7 +346,7 @@ class FigureTest extends TestCase
         $assert($data);
     }
 
-    public function provideLegacyTemplateDataScenarios(): \Generator
+    public function provideLegacyTemplateDataScenarios(): iterable
     {
         yield 'basic image data' => [
             [null, null, null, null],

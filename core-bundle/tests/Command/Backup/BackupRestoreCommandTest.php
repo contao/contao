@@ -67,7 +67,7 @@ class BackupRestoreCommandTest extends TestCase
         $this->assertSame(1, $code);
     }
 
-    public function unsuccessfulCommandRunProvider(): \Generator
+    public static function unsuccessfulCommandRunProvider(): iterable
     {
         yield 'Text format' => [
             [],
@@ -80,7 +80,7 @@ class BackupRestoreCommandTest extends TestCase
         ];
     }
 
-    public function successfulCommandRunProvider(): \Generator
+    public function successfulCommandRunProvider(): iterable
     {
         yield 'Default arguments' => [
             [],

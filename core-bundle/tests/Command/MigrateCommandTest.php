@@ -588,7 +588,7 @@ class MigrateCommandTest extends TestCase
         }
     }
 
-    public function provideBadConfigurations(): \Generator
+    public static function provideBadConfigurations(): iterable
     {
         yield 'database version too old' => [
             [
@@ -746,13 +746,13 @@ class MigrateCommandTest extends TestCase
         $this->assertStringContainsString(sprintf('%s: "SET SESSION sql_mode=', $expectedOptionKey), $json['message']);
     }
 
-    public function getOutputFormats(): \Generator
+    public static function getOutputFormats(): iterable
     {
         yield ['txt'];
         yield ['ndjson'];
     }
 
-    public function getOutputFormatsAndBackup(): \Generator
+    public static function getOutputFormatsAndBackup(): iterable
     {
         yield 'txt and backups enabled' => ['txt', true];
         yield 'txt and backups disabled' => ['txt', false];
@@ -760,7 +760,7 @@ class MigrateCommandTest extends TestCase
         yield 'ndjson and backups disabled' => ['ndjson', false];
     }
 
-    public function provideInvalidSqlModes(): \Generator
+    public static function provideInvalidSqlModes(): iterable
     {
         yield 'empty sql_mode, pdo driver' => [
             '', new PdoDriver(), 1002,

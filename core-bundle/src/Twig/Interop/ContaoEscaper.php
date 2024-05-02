@@ -18,8 +18,8 @@ use Twig\Error\RuntimeError;
 
 /**
  * The ContaoEscaper mimics Twig's default escape filters but prevents double
- * encoding. It must therefore ONLY be applied to templates with already
- * encoded context (input encoding)!
+ * encoding. It must therefore ONLY be applied to templates with already encoded
+ * context (input encoding)!
  *
  * This strategy will get dropped once we move to output encoding.
  *
@@ -45,8 +45,8 @@ final class ContaoEscaper
     }
 
     /**
-     * This implementation is a clone of Twig's html_attr escape strategy but
-     * replaces insert tags and decodes entities beforehand.
+     * This implementation is a clone of Twig's html_attr escape strategy but replaces
+     * insert tags and decodes entities beforehand.
      *
      * @see twig_escape_filter
      */

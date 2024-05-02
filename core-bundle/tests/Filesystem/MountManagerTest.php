@@ -106,7 +106,7 @@ class MountManagerTest extends TestCase
         $this->assertSame($return, $manager->$method('some/place', ...$arguments));
     }
 
-    public function provideCalls(): \Generator
+    public static function provideCalls(): iterable
     {
         yield 'fileExists' => [
             [
@@ -312,7 +312,7 @@ class MountManagerTest extends TestCase
         }
     }
 
-    public function provideCallsForFlysystemExceptions(): \Generator
+    public function provideCallsForFlysystemExceptions(): iterable
     {
         yield from $this->provideCalls();
 
@@ -405,7 +405,7 @@ class MountManagerTest extends TestCase
         $this->assertSame($expectedListing, $listing);
     }
 
-    public function provideListings(): \Generator
+    public static function provideListings(): iterable
     {
         yield 'root, shallow' => [
             '', false,

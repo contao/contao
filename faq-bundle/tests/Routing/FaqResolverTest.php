@@ -57,7 +57,7 @@ class FaqResolverTest extends ContaoTestCase
         $this->assertSame($expected, $resolver->getParametersForContent($content, $pageModel));
     }
 
-    public function getParametersForContentProvider(): \Generator
+    public function getParametersForContentProvider(): iterable
     {
         yield 'Uses the FAQ alias' => [
             $this->mockClassWithProperties(FaqModel::class, ['id' => 42, 'alias' => 'foobar']),

@@ -138,7 +138,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $this->assertSame($expected, $provider->getDcaAttributes($config));
     }
 
-    public function dcaAttributesProvider(): \Generator
+    public static function dcaAttributesProvider(): iterable
     {
         yield 'default fieldtype radio' => [
             [],
@@ -237,7 +237,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider->createMenuItem($config);
     }
 
-    public function menuItemsProvider(): \Generator
+    public static function menuItemsProvider(): iterable
     {
         yield 'one module without current' => [['article'], ''];
         yield 'one module with current' => [['article'], 'article'];

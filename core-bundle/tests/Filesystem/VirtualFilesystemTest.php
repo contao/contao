@@ -127,7 +127,7 @@ class VirtualFilesystemTest extends TestCase
         $filesystem->read($this->defaultUuid);
     }
 
-    public function provideInvalidPaths(): \Generator
+    public static function provideInvalidPaths(): iterable
     {
         yield 'relative path up' => [
             '../other/resource',
@@ -174,7 +174,7 @@ class VirtualFilesystemTest extends TestCase
         $this->assertSame($resourceExists, $filesystem->has($uuid));
     }
 
-    public function provideResourceExistsResults(): \Generator
+    public static function provideResourceExistsResults(): iterable
     {
         yield 'resource found' => [true];
         yield 'resource not found' => [false];
@@ -228,7 +228,7 @@ class VirtualFilesystemTest extends TestCase
         $filesystem->directoryExists(Uuid::v1(), $invalidAccessFlags);
     }
 
-    public function provideInvalidAccessFlags(): \Generator
+    public static function provideInvalidAccessFlags(): iterable
     {
         yield 'bypass DBAFS' => [VirtualFilesystemInterface::BYPASS_DBAFS];
         yield 'bypass DBAFS, but still sync' => [VirtualFilesystemInterface::FORCE_SYNC | VirtualFilesystemInterface::BYPASS_DBAFS];
@@ -611,7 +611,7 @@ class VirtualFilesystemTest extends TestCase
         $this->assertSame($expected, $listing);
     }
 
-    public function provideMountManagerListings(): \Generator
+    public static function provideMountManagerListings(): iterable
     {
         yield 'shallow' => [
             false,
@@ -693,7 +693,7 @@ class VirtualFilesystemTest extends TestCase
         $this->assertSame($expected, $listing);
     }
 
-    public function provideDbafsManagerListings(): \Generator
+    public static function provideDbafsManagerListings(): iterable
     {
         yield 'shallow' => [
             false,
@@ -829,7 +829,7 @@ class VirtualFilesystemTest extends TestCase
         $this->assertSame($expected, $filesystem->getExtraMetadata($this->defaultUuid, $accessFlags));
     }
 
-    public function provideAccessFlags(): \Generator
+    public static function provideAccessFlags(): iterable
     {
         yield 'use DBAFS' => [
             VirtualFilesystemInterface::NONE, false, true,
@@ -894,7 +894,7 @@ class VirtualFilesystemTest extends TestCase
         $readOnlyFilesystem->$method(...$arguments);
     }
 
-    public function provideReadOnlyMethods(): \Generator
+    public static function provideReadOnlyMethods(): iterable
     {
         yield 'write' => [
             'write', 'foo/bar', 'content',

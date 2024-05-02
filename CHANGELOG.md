@@ -2,6 +2,54 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.7] (2024-04-19)
+
+**Fixed issues:**
+
+- [#7089] Make the member group voter cacheable ([aschempp])
+- [#7129] Make the `PhpTemplateProxyNode` class compatible with Twig 3.9 ([ausi])
+- [#7130] Fix the elements check in the `sectionwizard.js` script ([qzminski])
+- [#7127] Use `PhpSubprocess` instead of `Process` in the `ProcessUtil` class ([Toflar])
+
+## [5.3.6] (2024-04-17)
+
+**Fixed issues:**
+
+- [#7122] Ensure compatibility with Twig 3.9 ([leofeyer])
+- [#7112] Handle empty strings in the `StringResolver` class ([qzminski])
+
+## [5.3.5] (2024-04-16)
+
+**Fixed issues:**
+
+- [#7113] Fix the order of the media block in the text element markup ([ausi])
+- [#7107] Use Encore to minify the SVG icons ([leofeyer])
+- [#7071] Add the missing styles to the new table element ([zoglo])
+- [#7106] Enable the `sortAttrs` option in the SVGO configuration ([leofeyer])
+- [#7017] Fix the elements check in the `modulewizard.js` script ([qzminski])
+- [#7073] Use `display: grid` in the image gallery preview ([zoglo])
+- [#7074] Initialize Handorgel on the element ([zoglo])
+- [#7081] Add the missing `WysiwygStyleProcessor ` autowiring alias ([Toflar])
+- [#7064] Also unset the `disable`, `start` and `stop` fields when an admin edits themselves ([aschempp])
+- [#7057] Cache SQL queries in the page type voter ([aschempp])
+- [#7046] Fix some edge cases when parsing HTML style attributes ([ausi])
+
+## [5.3.4] (2024-04-09)
+
+**Security fixes:**
+
+- [CVE-2024-28235]: Session cookie disclosure in the crawler
+- [CVE-2024-28190]: Cross site scripting in the file manager
+- [CVE-2024-28191]: Insert tag injection via the form generator
+- [CVE-2024-28234]: Insufficient BBCode sanitization
+
+## [5.3.3] (2024-03-22)
+
+**Fixed issues:**
+
+- [#7045] Fix a bug in `setIfExists()` with Stringable objects ([ausi])
+- [#7044] Fix double encoding/decoding in the `HtmlAttributes` class ([ausi])
+
 ## [5.3.2] (2024-03-21)
 
 **New features:**
@@ -247,6 +295,11 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.7]: https://github.com/contao/contao/releases/tag/5.3.7
+[5.3.6]: https://github.com/contao/contao/releases/tag/5.3.6
+[5.3.5]: https://github.com/contao/contao/releases/tag/5.3.5
+[5.3.4]: https://github.com/contao/contao/releases/tag/5.3.4
+[5.3.3]: https://github.com/contao/contao/releases/tag/5.3.3
 [5.3.2]: https://github.com/contao/contao/releases/tag/5.3.2
 [5.3.1]: https://github.com/contao/contao/releases/tag/5.3.1
 [5.3.0]: https://github.com/contao/contao/releases/tag/5.3.0
@@ -254,6 +307,10 @@ This project adheres to [Semantic Versioning].
 [5.3.0-RC3]: https://github.com/contao/contao/releases/tag/5.3.0-RC3
 [5.3.0-RC2]: https://github.com/contao/contao/releases/tag/5.3.0-RC2
 [5.3.0-RC1]: https://github.com/contao/contao/releases/tag/5.3.0-RC1
+[CVE-2024-28235]: https://github.com/contao/contao/security/advisories/GHSA-9jh5-qf84-x6pr
+[CVE-2024-28190]: https://github.com/contao/contao/security/advisories/GHSA-v24p-7p4j-qvvf
+[CVE-2024-28191]: https://github.com/contao/contao/security/advisories/GHSA-747v-52c4-8vj8
+[CVE-2024-28234]: https://github.com/contao/contao/security/advisories/GHSA-j55w-hjpj-825g
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
 [bezin]: https://github.com/bezin
@@ -449,6 +506,7 @@ This project adheres to [Semantic Versioning].
 [#7007]: https://github.com/contao/contao/pull/7007
 [#7008]: https://github.com/contao/contao/pull/7008
 [#7016]: https://github.com/contao/contao/pull/7016
+[#7017]: https://github.com/contao/contao/pull/7017
 [#7021]: https://github.com/contao/contao/pull/7021
 [#7026]: https://github.com/contao/contao/pull/7026
 [#7027]: https://github.com/contao/contao/pull/7027
@@ -457,3 +515,21 @@ This project adheres to [Semantic Versioning].
 [#7032]: https://github.com/contao/contao/pull/7032
 [#7037]: https://github.com/contao/contao/pull/7037
 [#7039]: https://github.com/contao/contao/pull/7039
+[#7044]: https://github.com/contao/contao/pull/7044
+[#7045]: https://github.com/contao/contao/pull/7045
+[#7046]: https://github.com/contao/contao/pull/7046
+[#7057]: https://github.com/contao/contao/pull/7057
+[#7064]: https://github.com/contao/contao/pull/7064
+[#7071]: https://github.com/contao/contao/pull/7071
+[#7073]: https://github.com/contao/contao/pull/7073
+[#7074]: https://github.com/contao/contao/pull/7074
+[#7081]: https://github.com/contao/contao/pull/7081
+[#7089]: https://github.com/contao/contao/pull/7089
+[#7106]: https://github.com/contao/contao/pull/7106
+[#7107]: https://github.com/contao/contao/pull/7107
+[#7112]: https://github.com/contao/contao/pull/7112
+[#7113]: https://github.com/contao/contao/pull/7113
+[#7122]: https://github.com/contao/contao/pull/7122
+[#7127]: https://github.com/contao/contao/pull/7127
+[#7129]: https://github.com/contao/contao/pull/7129
+[#7130]: https://github.com/contao/contao/pull/7130

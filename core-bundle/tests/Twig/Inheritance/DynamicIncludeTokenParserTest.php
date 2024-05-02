@@ -69,7 +69,7 @@ class DynamicIncludeTokenParserTest extends TestCase
         }
     }
 
-    public function provideSources(): \Generator
+    public static function provideSources(): iterable
     {
         yield 'regular include' => [
             "{% include '@Foo/bar.html.twig' %}",
@@ -149,7 +149,7 @@ class DynamicIncludeTokenParserTest extends TestCase
         $this->assertSame($ignoreMissing, $includeNode->getAttribute('ignore_missing'));
     }
 
-    public function provideTokens(): \Generator
+    public static function provideTokens(): iterable
     {
         yield 'with data' => [
             "{% include 'bar.html.twig' with {a: 1} %}",

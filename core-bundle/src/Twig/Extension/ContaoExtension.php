@@ -42,6 +42,7 @@ use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
 use Contao\CoreBundle\Twig\Runtime\StringRuntime;
 use Contao\CoreBundle\Twig\Runtime\UrlRuntime;
 use Contao\FrontendTemplateTrait;
+use Contao\StringUtil;
 use Contao\Template;
 use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
@@ -107,9 +108,9 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
     /**
      * Adds a Contao escaper rule.
      *
-     * If a template name matches any of the defined rules, it will be processed
-     * with the "contao_html" escaper strategy. Make sure your rule will only
-     * match templates with input encoded contexts!
+     * If a template name matches any of the defined rules, it will be processed with
+     * the "contao_html" escaper strategy. Make sure your rule will only match
+     * templates with input encoded contexts!
      */
     public function addContaoEscaperRule(string $regularExpression): void
     {
@@ -157,7 +158,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             // template hierarchy
             new TwigFunction(
                 'include',
-                function (Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = false, $sandboxed = false /* we need named arguments here */) use ($includeFunctionCallable) {
+                function (Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = false, $sandboxed = false) use ($includeFunctionCallable) {
                     $args = \func_get_args();
                     $args[2] = DynamicIncludeTokenParser::adjustTemplateName($template, $this->filesystemLoader);
 
@@ -241,12 +242,24 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 $parts = [];
 
                 foreach ($string as [$type, $chunk]) {
-                    $parts[] = ChunkedText::TYPE_RAW === $type
-                        ? $chunk
-                        : twig_escape_filter($env, $chunk, $strategy, $charset);
+                    if (ChunkedText::TYPE_RAW === $type) {
+                        $parts[] = $chunk;
+                    } else {
+                        // Forward compatibility with twig/twig 4
+                        if (method_exists(EscaperExtension::class, 'escape')) {
+                            $parts[] = EscaperExtension::escape($env, $chunk, $strategy, $charset);
+                        } else {
+                            $parts[] = twig_escape_filter($env, $chunk, $strategy, $charset);
+                        }
+                    }
                 }
 
                 return implode('', $parts);
+            }
+
+            // Forward compatibility with twig/twig 4
+            if (method_exists(EscaperExtension::class, 'escape')) {
+                return EscaperExtension::escape($env, $string, $strategy, $charset, $autoescape);
             }
 
             return twig_escape_filter($env, $string, $strategy, $charset, $autoescape);
@@ -263,7 +276,12 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 return [$value, substr($value, 7)];
             }
 
-            return twig_escape_filter_is_safe($filterArgs);
+            // Backwards compatibility with twig/twig <3.9
+            if (\function_exists('twig_escape_filter_is_safe')) {
+                return twig_escape_filter_is_safe($filterArgs);
+            }
+
+            return EscaperExtension::escapeFilterIsSafe($filterArgs);
         };
 
         return [
@@ -321,6 +339,10 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 'encode_email',
                 [StringRuntime::class, 'encodeEmail'],
                 ['preserves_safety' => ['contao_html', 'html']],
+            ),
+            new TwigFilter(
+                'deserialize',
+                static fn (mixed $value): array => StringUtil::deserialize($value, true),
             ),
         ];
     }

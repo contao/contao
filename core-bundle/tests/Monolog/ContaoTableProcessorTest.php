@@ -100,7 +100,7 @@ class ContaoTableProcessorTest extends TestCase
         $this->assertSame(ContaoContext::CRON, $context->getAction());
     }
 
-    public function actionLevelProvider(): \Generator
+    public static function actionLevelProvider(): iterable
     {
         yield [Logger::DEBUG, 'DEBUG', ContaoContext::GENERAL];
         yield [Logger::INFO, 'INFO', ContaoContext::GENERAL];
@@ -285,7 +285,7 @@ class ContaoTableProcessorTest extends TestCase
         $this->assertSame($expectedSource, $context->getSource());
     }
 
-    public function sourceProvider(): \Generator
+    public static function sourceProvider(): iterable
     {
         yield [null, 'FE', 'FE'];
         yield [null, 'BE', 'BE'];
@@ -329,7 +329,7 @@ class ContaoTableProcessorTest extends TestCase
         $this->assertSame($uri, $context->getUri());
     }
 
-    public function requestProvider(): \Generator
+    public static function requestProvider(): iterable
     {
         yield 'regular URL' => [
             Request::create('https://www.contao.org/foo?bar=baz'),
@@ -375,7 +375,7 @@ class ContaoTableProcessorTest extends TestCase
         $this->assertSame($pageId, $context->getPageId());
     }
 
-    public function requestWithPageIdProvider(): \Generator
+    public function requestWithPageIdProvider(): iterable
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class, ['id' => 13]);
 
