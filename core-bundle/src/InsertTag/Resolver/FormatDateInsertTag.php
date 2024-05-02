@@ -68,7 +68,6 @@ class FormatDateInsertTag
     public function replaceFormatDate(ResolvedInsertTag $insertTag): InsertTagResult
     {
         $timeParam = $insertTag->getParameters()->get(0);
-
         $timestamp = is_numeric($timeParam) ? (int) $timeParam : strtotime($timeParam ?? '');
 
         if (false === $timestamp) {
