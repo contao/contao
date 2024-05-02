@@ -8,7 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-use Contao\ArrayUtil;
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Controller;
@@ -16,6 +15,7 @@ use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\StringUtil;
 use Contao\System;
+use Symfony\Component\Yaml\Yaml;
 
 $GLOBALS['TL_DCA']['tl_undo'] = array
 (

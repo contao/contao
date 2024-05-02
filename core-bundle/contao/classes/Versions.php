@@ -16,6 +16,7 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Doctrine\DBAL\Types\BinaryType;
 use Doctrine\DBAL\Types\BlobType;
 use Doctrine\DBAL\Types\Types;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Provide methods to handle versioning.
@@ -507,12 +508,12 @@ class Versions extends Controller
 								// Convert serialized arrays into strings
 								if (!\is_array($to[$k]) && \is_array($tmp = StringUtil::deserialize($to[$k])))
 								{
-									$to[$k] = ArrayUtil::implodeRecursive($tmp, $blnIsBinary);
+									$to[$k] = $this->implodeRecursive($tmp, $blnIsBinary);
 								}
 
 								if (!\is_array($from[$k]) && \is_array($tmp = StringUtil::deserialize($from[$k])))
 								{
-									$from[$k] = ArrayUtil::implodeRecursive($tmp, $blnIsBinary);
+									$from[$k] = $this->implodeRecursive($tmp, $blnIsBinary);
 								}
 							}
 						}
@@ -845,14 +846,29 @@ class Versions extends Controller
 	 * @param boolean $binary
 	 *
 	 * @return string
-	 *
-	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
-	 *             use ArrayUtil::implodeRecursive() instead
 	 */
 	protected function implodeRecursive($var, $binary=false)
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use %s::implodeRecursive() instead.', __METHOD__, ArrayUtil::class);
+		if (!\is_array($var))
+		{
+			return $binary && Validator::isBinaryUuid($var) ? StringUtil::binToUuid($var) : $var;
+		}
 
-		return ArrayUtil::implodeRecursive($var, $binary);
+		if (!\is_array(current($var)))
+		{
+			if ($binary)
+			{
+				$var = array_map(static function ($v) { return Validator::isBinaryUuid($v) ? StringUtil::binToUuid($v) : $v; }, $var);
+			}
+
+			return implode(', ', $var);
+		}
+
+		if (array_filter($var, static fn ($val) => \is_array($val)))
+		{
+			return Yaml::dump($var, 1);
+		}
+
+		return substr(Yaml::dump($var, 0), 1, -1);
 	}
 }
