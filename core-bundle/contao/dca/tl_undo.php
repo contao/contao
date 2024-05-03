@@ -15,6 +15,7 @@ use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\StringUtil;
 use Contao\System;
+use Symfony\Component\Yaml\Yaml;
 
 $GLOBALS['TL_DCA']['tl_undo'] = array
 (
@@ -181,7 +182,14 @@ class tl_undo extends Backend
 						}
 						else
 						{
-							$v = implode(', ', $array);
+							if (array_filter($array, static fn ($val) => is_array($val)))
+							{
+								$v = Yaml::dump($array, 1);
+							}
+							else
+							{
+								$v = substr(Yaml::dump($array, 0), 1, -1);
+							}
 						}
 					}
 

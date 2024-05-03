@@ -16,6 +16,7 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Doctrine\DBAL\Types\BinaryType;
 use Doctrine\DBAL\Types\BlobType;
 use Doctrine\DBAL\Types\Types;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Provide methods to handle versioning.
@@ -863,13 +864,11 @@ class Versions extends Controller
 			return implode(', ', $var);
 		}
 
-		$buffer = '';
-
-		foreach ($var as $k=>$v)
+		if (array_filter($var, static fn ($val) => \is_array($val)))
 		{
-			$buffer .= $k . ": " . $this->implodeRecursive($v) . "\n";
+			return Yaml::dump($var, 1);
 		}
 
-		return trim($buffer);
+		return substr(Yaml::dump($var, 0), 1, -1);
 	}
 }
