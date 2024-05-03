@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
+use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -49,6 +50,7 @@ class InsertTagsController
             $response->setPublic();
             $response->setExpires(new \DateTimeImmutable(date('Y').'-12-31 23:59:59'));
             $response->headers->removeCacheControlDirective('no-store');
+            $response->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, '1');
         }
 
         return $response;
