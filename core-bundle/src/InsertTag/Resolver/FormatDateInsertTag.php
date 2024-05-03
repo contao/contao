@@ -10,11 +10,13 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\EventListener\InsertTags;
+namespace Contao\CoreBundle\InsertTag\Resolver;
 
 use Contao\Config;
-use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTag;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\InsertTag\InsertTagResult;
+use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\Date;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -53,11 +55,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
  *   Result:
  *
  *     Tuesday, 26. May 2020, 12:30:35
- *
- * @internal
  */
-#[AsHook('replaceInsertTags')]
-class DateListener
+class FormatDateInsertTag
 {
     public function __construct(
         private readonly ContaoFramework $framework,
@@ -65,53 +64,43 @@ class DateListener
     ) {
     }
 
-    public function __invoke(string $insertTag): bool|string
+    #[AsInsertTag('format_date')]
+    public function replaceFormatDate(ResolvedInsertTag $insertTag): InsertTagResult
     {
-        $tag = explode('::', $insertTag);
-
-        if ('format_date' === $tag[0]) {
-            return $this->replaceFormatDate($tag);
-        }
-
-        if ('convert_date' === $tag[0]) {
-            return $this->replaceConvertDate($tag);
-        }
-
-        return false;
-    }
-
-    private function replaceFormatDate(array $tag): bool|string
-    {
-        if (empty($tag[1])) {
-            return false;
-        }
-
-        $timestamp = is_numeric($tag[1]) ? (int) $tag[1] : strtotime($tag[1]);
+        $timeParam = $insertTag->getParameters()->get(0);
+        $timestamp = is_numeric($timeParam) ? (int) $timeParam : strtotime($timeParam ?? '');
 
         if (false === $timestamp) {
-            return $tag[1];
+            return new InsertTagResult($timeParam ?? '');
         }
 
         $date = $this->framework->getAdapter(Date::class);
 
-        return $date->parse($this->getDateFormat($tag[2] ?? 'datim'), $timestamp);
+        return new InsertTagResult(
+            $date->parse($this->getDateFormat($insertTag->getParameters()->get(1) ?? 'datim'), $timestamp),
+        );
     }
 
-    private function replaceConvertDate(array $tag): bool|string
+    #[AsInsertTag('convert_date')]
+    public function replaceConvertDate(ResolvedInsertTag $insertTag): InsertTagResult
     {
-        if (4 !== \count($tag)) {
-            return false;
+        $params = $insertTag->getParameters();
+
+        if (3 !== \count($params->all())) {
+            return new InsertTagResult('');
         }
 
-        $parsedDate = \DateTime::createFromFormat('!'.$this->getDateFormat($tag[2]), $tag[1]);
+        $parsedDate = \DateTime::createFromFormat('!'.$this->getDateFormat($params->get(1)), $params->get(0));
 
         if (false === $parsedDate) {
-            return $tag[1];
+            return new InsertTagResult($params->get(0));
         }
 
         $date = $this->framework->getAdapter(Date::class);
 
-        return $date->parse($this->getDateFormat($tag[3]), $parsedDate->getTimestamp());
+        return new InsertTagResult(
+            $date->parse($this->getDateFormat($params->get(2)), $parsedDate->getTimestamp()),
+        );
     }
 
     /**

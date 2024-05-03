@@ -290,22 +290,6 @@ services:
             - '%kernel.secret%'
             - '%contao.web_dir%'
 
-    contao.listener.insert_tags.asset:
-        class: Contao\CoreBundle\EventListener\InsertTags\AssetListener
-        arguments:
-            - '@assets.packages'
-
-    contao.listener.insert_tags.date:
-        class: Contao\CoreBundle\EventListener\InsertTags\DateListener
-        arguments:
-            - '@contao.framework'
-            - '@request_stack'
-
-    contao.listener.insert_tags.translation:
-        class: Contao\CoreBundle\EventListener\InsertTags\TranslationListener
-        arguments:
-            - '@translator'
-
     contao.listener.interest_cohort:
         class: Contao\CoreBundle\EventListener\InterestCohortListener
         arguments:

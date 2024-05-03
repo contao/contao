@@ -10,20 +10,27 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\EventListener\InsertTags;
+namespace Contao\CoreBundle\Tests\InsertTag\Resolver;
 
 use Contao\Config;
-use Contao\CoreBundle\EventListener\InsertTags\DateListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\InsertTag\OutputType;
+use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
+use Contao\CoreBundle\InsertTag\ResolvedParameters;
+use Contao\CoreBundle\InsertTag\Resolver\FormatDateInsertTag;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Date;
+use Contao\InsertTags;
 use Contao\PageModel;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\DocParser;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 
-class DateListenerTest extends TestCase
+class FormatDateInsertTagTest extends TestCase
 {
     protected function tearDown(): void
     {
@@ -37,9 +44,27 @@ class DateListenerTest extends TestCase
      */
     public function testReplacedInsertTag(string $insertTag, string|false $expected): void
     {
-        $listener = new DateListener($this->getFramework(), new RequestStack());
+        $listener = new FormatDateInsertTag($this->getFramework(), new RequestStack());
 
-        $this->assertSame($expected, $listener($insertTag));
+        $parser = new InsertTagParser(
+            $this->createMock(ContaoFramework::class),
+            $this->createMock(LoggerInterface::class),
+            $this->createMock(FragmentHandler::class),
+            $this->createMock(RequestStack::class),
+            (new \ReflectionClass(InsertTags::class))->newInstanceWithoutConstructor(),
+        );
+
+        /** @var ResolvedInsertTag $tag */
+        $tag = $parser->parseTag($insertTag);
+
+        $result = match ($tag->getName()) {
+            'format_date' => $listener->replaceFormatDate($tag),
+            'convert_date' => $listener->replaceConvertDate($tag),
+            default => throw new \LogicException(),
+        };
+
+        $this->assertSame($expected, $result->getValue());
+        $this->assertSame(OutputType::text, $result->getOutputType());
     }
 
     public function testUsesConfigFormat(): void
@@ -53,10 +78,13 @@ class DateListenerTest extends TestCase
         ;
 
         $framework = $this->getFramework([Config::class => $configAdapter]);
-        $listener = new DateListener($framework, new RequestStack());
+        $listener = new FormatDateInsertTag($framework, new RequestStack());
 
-        $this->assertSame('26.05.2020 00:00', $listener('format_date::2020-05-26'));
-        $this->assertSame('26.05.2020 00:00', $listener('convert_date::2020-05-26::Y-m-d::datim'));
+        $tag = new ResolvedInsertTag('format_date', new ResolvedParameters(['2020-05-26']), []);
+        $this->assertSame('26.05.2020 00:00', $listener->replaceFormatDate($tag)->getValue());
+
+        $tag = new ResolvedInsertTag('convert_date', new ResolvedParameters(['2020-05-26', 'Y-m-d', 'datim']), []);
+        $this->assertSame('26.05.2020 00:00', $listener->replaceConvertDate($tag)->getValue());
     }
 
     public function testUsesPageFormat(): void
@@ -69,10 +97,13 @@ class DateListenerTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $listener = new DateListener($this->getFramework(), $requestStack);
+        $listener = new FormatDateInsertTag($this->getFramework(), $requestStack);
 
-        $this->assertSame('26.05.2020 00:00', $listener('format_date::2020-05-26'));
-        $this->assertSame('26.05.2020 00:00', $listener('convert_date::2020-05-26::Y-m-d::datim'));
+        $tag = new ResolvedInsertTag('format_date', new ResolvedParameters(['2020-05-26']), []);
+        $this->assertSame('26.05.2020 00:00', $listener->replaceFormatDate($tag)->getValue());
+
+        $tag = new ResolvedInsertTag('convert_date', new ResolvedParameters(['2020-05-26', 'Y-m-d', 'datim']), []);
+        $this->assertSame('26.05.2020 00:00', $listener->replaceConvertDate($tag)->getValue());
     }
 
     public static function getConvertedInsertTags(): iterable
@@ -85,10 +116,10 @@ class DateListenerTest extends TestCase
         yield ['convert_date::foobar::d.m.Y::datim', 'foobar'];
         yield ['convert_date::2020-05-26::foobar::datim', '2020-05-26'];
 
-        yield ['format_date', false];
-        yield ['convert_date', false];
-        yield ['convert_date::2020-05-26', false];
-        yield ['convert_date::2020-05-26::Y-m-d', false];
+        yield ['format_date', ''];
+        yield ['convert_date', ''];
+        yield ['convert_date::2020-05-26', ''];
+        yield ['convert_date::2020-05-26::Y-m-d', ''];
     }
 
     private function getFramework(array $adapters = []): ContaoFramework
