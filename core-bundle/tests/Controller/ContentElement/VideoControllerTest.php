@@ -107,6 +107,8 @@ class VideoControllerTest extends ContentElementTestCase
         $additionalBodyCode = $responseContextData[DocumentLocation::endOfBody->value];
 
         $this->assertCount(1, $additionalBodyCode);
+        $this->assertArrayHasKey('splash_screen_script', $additionalBodyCode);
+
         $this->assertMatchesRegularExpression(
             '/<script>[^<]+button\.insertAdjacentHTML[^<]+<\/script>/',
             $additionalBodyCode['splash_screen_script'],

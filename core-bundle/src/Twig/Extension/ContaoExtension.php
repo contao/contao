@@ -398,15 +398,17 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             } else {
                 $GLOBALS['TL_HEAD'][] = $content;
             }
-
-            return;
-        }
-
-        if (DocumentLocation::endOfBody === $location) {
+        } elseif (DocumentLocation::endOfBody === $location) {
             if (null !== $identifier) {
                 $GLOBALS['TL_BODY'][$identifier] = $content;
             } else {
                 $GLOBALS['TL_BODY'][] = $content;
+            }
+        } elseif (DocumentLocation::stylesheets === $location) {
+            if (null !== $identifier) {
+                $GLOBALS['TL_STYLE_SHEETS'][$identifier] = $content;
+            } else {
+                $GLOBALS['TL_STYLE_SHEETS'][] = $content;
             }
         }
     }

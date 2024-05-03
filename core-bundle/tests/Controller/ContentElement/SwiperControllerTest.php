@@ -66,7 +66,7 @@ class SwiperControllerTest extends ContentElementTestCase
             HTML;
 
         $this->assertSameHtml($expectedOutput, $response->getContent());
-        $this->assertArrayHasKey('swiper_css', $responseContextData['head']);
+        $this->assertArrayHasKey('swiper_css', $responseContextData['stylesheets']);
         $this->assertArrayHasKey('swiper_js', $responseContextData['body']);
     }
 }
