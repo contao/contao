@@ -417,6 +417,8 @@ class InsertTagParser implements ResetInterface
             $tag = $this->unresolveTag($tag);
         }
 
+        $tag = $this->applyDefaultsToTag($tag);
+
         $result = $subscription->service->{$subscription->method}($tag);
 
         foreach ($tag->getFlags() as $flag) {
@@ -447,20 +449,16 @@ class InsertTagParser implements ResetInterface
 
     private function getFragmentForTag(InsertTag $tag): InsertTagResult
     {
+        $tag = $this->applyDefaultsToTag($tag);
+
         $attributes = ['insertTag' => $tag->serialize()];
 
         if ($scope = $this->requestStack->getCurrentRequest()?->attributes->get('_scope')) {
             $attributes['_scope'] = $scope;
         }
 
-        $query = [
-            'clientCache' => $GLOBALS['objPage']->clientCache ?? 0,
-            'pageId' => $GLOBALS['objPage']->id ?? null,
-            'request' => $this->requestStack->getCurrentRequest()?->getRequestUri(),
-        ];
-
         $esiTag = $this->fragmentHandler->render(
-            new ControllerReference(InsertTagsController::class.'::renderAction', $attributes, $query),
+            new ControllerReference(InsertTagsController::class.'::renderAction', $attributes),
             'esi',
             ['ignore_errors' => false], // see #48
         );
@@ -632,5 +630,18 @@ class InsertTagParser implements ResetInterface
         $this->logger->error('Unknown insert tag flag "'.$flag->getName().'" in '.$tag->serialize().' on page '.$this->framework->getAdapter(Environment::class)->get('uri'));
 
         return $result;
+    }
+
+    private function applyDefaultsToTag(InsertTag $tag): InsertTag
+    {
+        if (!$subscription = $this->subscriptions[$tag->getName()] ?? null) {
+            return $tag;
+        }
+
+        if ($subscription->service instanceof DefaultParametersInterface) {
+            return $subscription->service->applyDefaults($tag);
+        }
+
+        return $tag;
     }
 }

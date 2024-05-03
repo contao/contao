@@ -38,7 +38,7 @@ final class InsertTagRuntime implements RuntimeExtensionInterface
             return $text;
         }
 
-        return $this->insertTagParser->replaceInline($text);
+        return $this->insertTagParser->replace($text);
     }
 
     public function replaceInsertTagsChunkedRaw(array $context, string $text, bool|null $bypass = null): ChunkedText

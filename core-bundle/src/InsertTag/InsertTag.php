@@ -37,6 +37,11 @@ abstract class InsertTag
         return $this->parameters;
     }
 
+    public function withParameters(InsertTagParameters $parameters): static
+    {
+        return new static($this->getName(), $parameters, $this->getFlags());
+    }
+
     /**
      * @return list<InsertTagFlag>
      */
