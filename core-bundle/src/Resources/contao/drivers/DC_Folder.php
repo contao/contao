@@ -3103,12 +3103,28 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				throw new \RuntimeException('Invalid path ' . $strPath);
 			}
 
+			// Unset all file mounts outside the path
+			foreach ($this->arrFilemounts as $i => $strFolder)
+			{
+				if (!Path::isBasePath($strPath, $strFolder))
+				{
+					unset($this->arrFilemounts[$i]);
+				}
+			}
+
+			// If there are no valid file mounts left from the breadcrumb menu,
+			// fall back to the path (see #856 and #6412)
+			if (empty($this->arrFilemounts))
+			{
+				$this->arrFilemounts = array($strPath);
+			}
+
 			$strNode = System::getContainer()->get('session')->getBag('contao_backend')->get('tl_files_node');
 
-			// If the files node is not within the current path, remove it (see #856)
-			if ($strNode && ($i = array_search($strNode, $this->arrFilemounts)) !== false && strncmp($strNode . '/', $strPath . '/', \strlen($strPath) + 1) !== 0)
+			// Hide the breadcrumb if the files node is not mounted
+			if ($strNode && !\in_array($strNode, $this->arrFilemounts))
 			{
-				unset($this->arrFilemounts[$i], $GLOBALS['TL_DCA']['tl_files']['list']['sorting']['breadcrumb']);
+				unset($GLOBALS['TL_DCA']['tl_files']['list']['sorting']['breadcrumb']);
 			}
 
 			// Allow only those roots that are allowed in root nodes
@@ -3118,7 +3134,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 				foreach ($this->arrFilemounts as $strFolder)
 				{
-					if (0 === strpos($strPath, $strFolder))
+					if (Path::isBasePath($strPath, $strFolder))
 					{
 						$blnValid = true;
 						break;
@@ -3127,11 +3143,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 				if (!$blnValid)
 				{
-					$strPath = '';
+					$this->arrFilemounts = array();
 				}
 			}
-
-			$this->arrFilemounts = array($strPath);
 		}
 
 		if (isset($attributes['extensions']))
