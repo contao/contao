@@ -31,7 +31,7 @@ class CteAllowedTypeListener
     }
 
     /**
-     * Switch to first allowed type if default type is not allowed
+     * Switch to first allowed type if default type is not allowed.
      */
     #[AsCallback(table: 'tl_content', target: 'config.oncreate')]
     public function setAllowedType(string $strTable, int $insertID, array $values, DataContainer $dc): void
