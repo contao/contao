@@ -5,8 +5,10 @@ on:
 
 permissions: read-all
 
-env:
-    TERM: xterm-256color
+defaults:
+    run:
+        # Simulate an interactive terminal with color support
+        shell: script -q -e -c "export TERM=xterm; bash {0}"
 
 jobs:
     rector:
@@ -106,12 +108,14 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v3
 
-            - name: Run YAMLlint
+            - name: Install YAMLlint
               run: |
-                  python3 -m pip install --upgrade pip
-                  python3 -m pip install --upgrade setuptools wheel
-                  python3 -m pip install --upgrade yamllint
-                  /home/runner/.local/bin/yamllint .
+                  python3 -m pip install --upgrade pip --progress-bar off
+                  python3 -m pip install --upgrade setuptools wheel --progress-bar off
+                  python3 -m pip install --upgrade yamllint --progress-bar off
+
+            - name: Run YAMLlint
+              run: /home/runner/.local/bin/yamllint .
 
     service-linter:
         name: Service linter
