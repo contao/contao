@@ -89,6 +89,12 @@ services:
             - '@database_connection'
             - '@contao.framework'
 
+    contao.listener.data_container.cte_allowed_type:
+        class: Contao\CoreBundle\EventListener\DataContainer\CteAllowedTypeListener
+        arguments:
+            - '@contao.fragment.compositor'
+            - Contao\BackendUser
+
     contao.listener.data_container.default_global_operations:
         class: Contao\CoreBundle\EventListener\DataContainer\DefaultGlobalOperationsListener
 

@@ -1069,8 +1069,10 @@ class tl_content extends Backend
 
 	/**
 	 * Filter the content elements
+	 *
+	 * @param DataContainer $dc
 	 */
-	public function filterContentElements()
+	public function filterContentElements(DataContainer $dc)
 	{
 		$user = BackendUser::getInstance();
 
@@ -1150,6 +1152,26 @@ class tl_content extends Backend
 				}
 
 				$objSession->replace($session);
+			}
+		}
+
+		// Prevent creating nested elements without permission
+		if (!$user->isAdmin && $dc->parentTable == 'tl_content')
+		{
+			$parent = $db
+				->prepare("SELECT * FROM tl_content WHERE id=?")
+				->execute($dc->getCurrentRecord()['pid']);
+
+			$compositor = System::getContainer()->get('contao.fragment.compositor');
+
+			if ($compositor->supportsNesting('contao.content_element.' . $parent->type))
+			{
+				$allowedTypes = $compositor->getAllowedTypes('contao.content_element.' . $parent->type);
+
+				if (empty(array_intersect($user->elements, $allowedTypes)))
+				{
+					$GLOBALS['TL_DCA']['tl_content']['config']['closed'] = true;
+				}
 			}
 		}
 	}
