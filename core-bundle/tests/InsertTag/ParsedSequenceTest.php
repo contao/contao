@@ -33,7 +33,6 @@ class ParsedSequenceTest extends TestCase
         $this->assertSame($result, $sequence->get(2));
 
         $this->assertSame(['string', $insertTag, $result], iterator_to_array($sequence));
-
         $this->assertSame('string{{tag}}result', $sequence->serialize());
     }
 
