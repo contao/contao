@@ -5,6 +5,9 @@ on:
 
 permissions: read-all
 
+env:
+    TERM: xterm-256color
+
 jobs:
     rector:
         name: Rector
