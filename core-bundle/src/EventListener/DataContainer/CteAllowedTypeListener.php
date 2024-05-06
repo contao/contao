@@ -12,12 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
+use Contao\BackendUser;
 use Contao\ContentModel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Fragment\FragmentCompositor;
 use Contao\DataContainer;
-use Symfony\Component\Security\Core\Security;
 
 /**
  * @internal
@@ -25,8 +25,7 @@ use Symfony\Component\Security\Core\Security;
 class CteAllowedTypeListener
 {
     public function __construct(
-        private readonly FragmentCompositor $compositor,
-        private readonly Security $security,
+        private readonly FragmentCompositor $compositor
     ) {
     }
 
@@ -44,7 +43,7 @@ class CteAllowedTypeListener
             return;
         }
 
-        $user = $this->security->getUser();
+        $user = BackendUser::getInstance();
 
         if ($user->isAdmin) {
             if (!\in_array($objCte->type, $allowedTypes, true)) {
