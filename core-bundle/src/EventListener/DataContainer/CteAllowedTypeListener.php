@@ -25,7 +25,7 @@ use Contao\DataContainer;
 class CteAllowedTypeListener
 {
     public function __construct(
-        private readonly FragmentCompositor $compositor
+        private readonly FragmentCompositor $compositor,
     ) {
     }
 
