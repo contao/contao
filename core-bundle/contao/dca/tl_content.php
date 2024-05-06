@@ -1168,7 +1168,7 @@ class tl_content extends Backend
 			{
 				$allowedTypes = $compositor->getAllowedTypes('contao.content_element.' . $parent->type);
 
-				if (empty(array_intersect($user->elements, $allowedTypes)))
+				if ([] === $allowedTypes && [] === array_intersect($user->elements, $allowedTypes))
 				{
 					$GLOBALS['TL_DCA']['tl_content']['config']['closed'] = true;
 				}
