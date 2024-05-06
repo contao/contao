@@ -1820,10 +1820,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			if ($objDelete->numRows && !($GLOBALS['TL_DCA'][$v]['config']['doNotDeleteRecords'] ?? null))
 			{
-				foreach ($objDelete->fetchEach('id') as $id)
+				foreach ($objDelete->fetchEach('id') as $childId)
 				{
-					$delete[$v][] = $id;
-					$this->deleteChildren($v, $id, $delete);
+					$delete[$v][] = $childId;
+					$this->deleteChildren($v, $childId, $delete);
 				}
 			}
 		}
