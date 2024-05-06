@@ -1870,8 +1870,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Unset fields that no longer exist in the database
 				$row = array_intersect_key($row, $arrFields[$table]);
 
-				$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $table, new CreateAction($table, $row));
-
 				// Re-insert the data
 				$objInsertStmt = $db
 					->prepare("INSERT INTO " . $table . " %s")
