@@ -1,289 +1,288 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="contao/languages/en/tl_member.php" source-language="en" target-language="it">
+  <file datatype="php" original="contao/languages/en/tl_member.php" source-language="en" target-language="sl">
     <body>
       <trans-unit id="tl_member.firstname.0">
         <source>First name</source>
-        <target>Nome</target>
+        <target>Ime</target>
       </trans-unit>
       <trans-unit id="tl_member.firstname.1">
         <source>Please enter the first name.</source>
-        <target>Inserisci il nome.</target>
+        <target>Vnesite ime.</target>
       </trans-unit>
       <trans-unit id="tl_member.lastname.0">
         <source>Last name</source>
-        <target>Cognome</target>
+        <target>Priimek</target>
       </trans-unit>
       <trans-unit id="tl_member.lastname.1">
         <source>Please enter the last name.</source>
-        <target>Inserisci il cognome.</target>
+        <target>Vnesite priimek.</target>
       </trans-unit>
       <trans-unit id="tl_member.dateOfBirth.0">
         <source>Date of birth</source>
-        <target>Data di nascita</target>
+        <target>Datum rojstva</target>
       </trans-unit>
       <trans-unit id="tl_member.dateOfBirth.1">
         <source>Please enter the date of birth.</source>
-        <target>Inserisci la data di nascita.</target>
+        <target>Vnesite datum rojstva.</target>
       </trans-unit>
       <trans-unit id="tl_member.gender.0">
         <source>Gender</source>
-        <target>Sesso</target>
+        <target>Spol</target>
       </trans-unit>
       <trans-unit id="tl_member.gender.1">
         <source>Please choose the gender.</source>
-        <target>Inserisci il sesso.</target>
+        <target>Izberite spol.</target>
       </trans-unit>
       <trans-unit id="tl_member.company.0">
         <source>Company</source>
-        <target>Azienda</target>
+        <target>Podjetje</target>
       </trans-unit>
       <trans-unit id="tl_member.company.1">
         <source>Here you can enter a company name.</source>
-        <target>Puoi inserire il nome della tua azienda qui.</target>
+        <target>Vnesite podjetje.</target>
       </trans-unit>
       <trans-unit id="tl_member.street.0">
         <source>Street</source>
-        <target>Via</target>
+        <target>Ulica</target>
       </trans-unit>
       <trans-unit id="tl_member.street.1">
         <source>Please enter the street name and number.</source>
-        <target>Inserisci il nome della via e il numero civico.</target>
+        <target>Vnesite ulico in hišno številko.</target>
       </trans-unit>
       <trans-unit id="tl_member.postal.0">
         <source>Postal code</source>
-        <target>Codice postale</target>
+        <target>Poštna številka</target>
       </trans-unit>
       <trans-unit id="tl_member.postal.1">
         <source>Please enter the postal code.</source>
-        <target>Inserisci il codice postale.</target>
+        <target>Vnesite poštno številko.</target>
       </trans-unit>
       <trans-unit id="tl_member.city.0">
         <source>City</source>
-        <target>Città</target>
+        <target>Mesto</target>
       </trans-unit>
       <trans-unit id="tl_member.city.1">
         <source>Please enter the name of the city.</source>
-        <target>Inserisci il nome della città.</target>
+        <target>Prosim vnesite naziv mesta.</target>
       </trans-unit>
       <trans-unit id="tl_member.state.0">
         <source>State</source>
-        <target>Stato</target>
+        <target>Mesto</target>
       </trans-unit>
       <trans-unit id="tl_member.state.1">
         <source>Please enter the name of the state.</source>
-        <target>Inserisci il nome dello stato.</target>
+        <target>Prosimo vnesite naziv države.</target>
       </trans-unit>
       <trans-unit id="tl_member.country.0">
         <source>Country</source>
-        <target>Paese</target>
+        <target>Država</target>
       </trans-unit>
       <trans-unit id="tl_member.country.1">
         <source>Please select the country.</source>
-        <target>Seleziona il paese.</target>
+        <target>Izberite državo.</target>
       </trans-unit>
       <trans-unit id="tl_member.phone.0">
         <source>Phone number</source>
-        <target>Numero telefono</target>
+        <target>Telefonska številka</target>
       </trans-unit>
       <trans-unit id="tl_member.phone.1">
         <source>Please enter the phone number.</source>
-        <target>Inserisci il numero di telefono.</target>
+        <target>Vnesite telefonsko številko.</target>
       </trans-unit>
       <trans-unit id="tl_member.mobile.0">
         <source>Cell phone number</source>
-        <target>Numero cellulare</target>
+        <target>Mobilni telefon</target>
       </trans-unit>
       <trans-unit id="tl_member.mobile.1">
         <source>Please enter the cell phone number.</source>
-        <target>Inserisci il numero di telefono cellulare.</target>
+        <target>Vnesite številko mobilnega telefona.</target>
       </trans-unit>
       <trans-unit id="tl_member.fax.0">
         <source>Fax number</source>
-        <target>Fax</target>
+        <target>Faks</target>
       </trans-unit>
       <trans-unit id="tl_member.fax.1">
         <source>Please enter the fax number.</source>
-        <target>Inserisci il numero di fax.</target>
+        <target>Vnesite številko faksa.</target>
       </trans-unit>
       <trans-unit id="tl_member.email.0">
         <source>E-mail address</source>
-        <target>Indirizzo email</target>
+        <target>Naslov elektronske pošte</target>
       </trans-unit>
       <trans-unit id="tl_member.email.1">
         <source>Please enter a valid e-mail address.</source>
-        <target>Inserisci un indirizzo email valido.</target>
+        <target>Prosimo, vnesite veljaven e-naslov.</target>
       </trans-unit>
       <trans-unit id="tl_member.website.0">
         <source>Website</source>
-        <target>Sito Web</target>
+        <target>Spletna stran</target>
       </trans-unit>
       <trans-unit id="tl_member.website.1">
         <source>Here you can enter a web address.</source>
-        <target>Inserisci l'URL di un sito web.</target>
+        <target>Tukaj lahko vnesete naslov vaše spletne strani.</target>
       </trans-unit>
       <trans-unit id="tl_member.language.0">
         <source>Language</source>
-        <target>Lingua</target>
+        <target>Jezik</target>
       </trans-unit>
       <trans-unit id="tl_member.language.1">
         <source>Please select the language.</source>
-        <target>Scegli la lingua</target>
+        <target>Izberite jezik.</target>
       </trans-unit>
       <trans-unit id="tl_member.groups.0">
         <source>Member groups</source>
-        <target>Gruppi membri</target>
+        <target>Skupine članov</target>
       </trans-unit>
       <trans-unit id="tl_member.groups.1">
         <source>Here you can assign the member to one or more groups.</source>
-        <target>Assegna l'utente ad uno o più gruppi.</target>
+        <target>Tu lahko uporabnika vključite v eno ali več skupin.</target>
       </trans-unit>
       <trans-unit id="tl_member.login.0">
         <source>Allow login</source>
-        <target>Permetti login</target>
+        <target>Dovoli prijavo</target>
       </trans-unit>
       <trans-unit id="tl_member.login.1">
         <source>Allow the member to log into the front end.</source>
-        <target>Consenti ai membri di effettuare il login.</target>
+        <target>Dovoli uporabniku, da se prijavi v ospredje (front end).</target>
       </trans-unit>
       <trans-unit id="tl_member.username.0">
         <source>Username</source>
-        <target>Nome utente</target>
+        <target>Uporabniško ime</target>
       </trans-unit>
       <trans-unit id="tl_member.username.1">
         <source>Please enter a unique username.</source>
-        <target>Inserire un nome utente univoco.</target>
+        <target>Prosimo, vnesite edinstveno uporabniško ime.</target>
       </trans-unit>
       <trans-unit id="tl_member.assignDir.0">
         <source>Set home directory</source>
-        <target>Assegna cartella home</target>
+        <target>Določi mapo</target>
       </trans-unit>
       <trans-unit id="tl_member.assignDir.1">
         <source>Define a home directory for the member.</source>
-        <target>Seleziona questa opzione per assegnare una cartella home.</target>
+        <target>Določi uporabnikovo domačo mapo.</target>
       </trans-unit>
       <trans-unit id="tl_member.homeDir.0">
         <source>Home directory</source>
-        <target>Cartella personale</target>
+        <target>Osebni direktorij</target>
       </trans-unit>
       <trans-unit id="tl_member.homeDir.1">
         <source>Please select a folder from the files directory.</source>
-        <target>Seleziona la cartella home dell'utente.</target>
+        <target>Določi domačo mapo iz datotečnega imenika</target>
       </trans-unit>
       <trans-unit id="tl_member.disable.0">
         <source>Deactivate</source>
-        <target>Disattiva</target>
+        <target>Onemogoči</target>
       </trans-unit>
       <trans-unit id="tl_member.disable.1">
         <source>Temporarily disable the account.</source>
-        <target>Se scegliete questa opzione, l'utente corrente verrà disabilitato. L'utente non potrà più accedere al sistema.</target>
+        <target>Začasno onemogoči račun.</target>
       </trans-unit>
       <trans-unit id="tl_member.start.0">
         <source>Activate on</source>
-        <target>Attiva dal</target>
+        <target>Omogoči na</target>
       </trans-unit>
       <trans-unit id="tl_member.start.1">
         <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
-        <target>Se desideri impedire che l'account sia attivo prima di una determinata data/ora, puoi inserirlo qui. Altrimenti lascia il campo vuoto.</target>
+        <target>Če želite omogočiti račun z določenim dnem oz. uro, ga oz. jo vnesite tu. Drugače pustite vnosno polje prazno.</target>
       </trans-unit>
       <trans-unit id="tl_member.stop.0">
         <source>Deactivate on</source>
-        <target>Disattiva dal</target>
+        <target>Onemogoči na</target>
       </trans-unit>
       <trans-unit id="tl_member.stop.1">
         <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
-        <target>Se vuoi impedire che l'account sia attivo dopo una certa data/ora, puoi inserirlo qui. Altrimenti lascia il campo vuoto.</target>
+        <target>Če želite onemogočiti račun z določenim dnem oz. uro, ga oz. jo vnesite tu. Drugače pustite polje prazno.</target>
       </trans-unit>
       <trans-unit id="tl_member.useTwoFactor">
         <source>Use two-factor authentication</source>
-        <target>Utilizzare l'autenticazione a due fattori</target>
+        <target>Uporabi dvostopenjsko prijavo</target>
       </trans-unit>
       <trans-unit id="tl_member.personal_legend">
         <source>Personal data</source>
-        <target>Dati personali</target>
+        <target>Osebni podatki</target>
       </trans-unit>
       <trans-unit id="tl_member.address_legend">
         <source>Address details</source>
-        <target>Dettagli indirizzo</target>
+        <target>Naslov</target>
       </trans-unit>
       <trans-unit id="tl_member.contact_legend">
         <source>Contact details</source>
-        <target>Dettagli contatto</target>
+        <target>Kontaktni podatki</target>
       </trans-unit>
       <trans-unit id="tl_member.groups_legend">
         <source>Member groups</source>
-        <target>Gruppi membri</target>
+        <target>Skupine članov</target>
       </trans-unit>
       <trans-unit id="tl_member.login_legend">
         <source>Login details</source>
-        <target>Dettagli accesso</target>
+        <target>Prijavni podatki</target>
       </trans-unit>
       <trans-unit id="tl_member.homedir_legend">
         <source>Home directory</source>
-        <target>Cartella personale</target>
+        <target>Osebni direktorij</target>
       </trans-unit>
       <trans-unit id="tl_member.account_legend">
         <source>Account settings</source>
-        <target>Impostazioni utente</target>
+        <target>Nastavitve računa</target>
       </trans-unit>
       <trans-unit id="tl_member.personalDetails">
         <source>Personal details</source>
-        <target>Dettagli personali</target>
+        <target>Osebni podatki</target>
       </trans-unit>
       <trans-unit id="tl_member.addressDetails">
         <source>Address details</source>
-        <target>Dettagli indirizzo</target>
+        <target>Naslov</target>
       </trans-unit>
       <trans-unit id="tl_member.contactDetails">
         <source>Contact details</source>
-        <target>Dettagli contatto</target>
+        <target>Kontaktni podatki</target>
       </trans-unit>
       <trans-unit id="tl_member.loginDetails">
         <source>Login details</source>
-        <target>Dettagli accesso</target>
+        <target>Prijavni podatki</target>
       </trans-unit>
       <trans-unit id="tl_member.captchaDetails">
         <source>Verification</source>
-        <target>Verifica</target>
       </trans-unit>
       <trans-unit id="tl_member.new.0">
         <source>New</source>
-        <target>Nuovo</target>
+        <target>Nov</target>
       </trans-unit>
       <trans-unit id="tl_member.new.1">
         <source>Create a new member</source>
-        <target>Crea un nuovo membro</target>
+        <target>Ustvari novega člana</target>
       </trans-unit>
       <trans-unit id="tl_member.show">
         <source>Show the details of member ID %s</source>
-        <target>Mostra i dettagli per il membro ID %s</target>
+        <target>Prikaži podrobnosti člana ID %s</target>
       </trans-unit>
       <trans-unit id="tl_member.edit">
         <source>Edit member ID %s</source>
-        <target>Modifica il membro ID %s</target>
+        <target>Uredi člana ID %s</target>
       </trans-unit>
       <trans-unit id="tl_member.copy">
         <source>Duplicate member ID %s</source>
-        <target>Duplica il membro ID %s</target>
+        <target>Kopiraj člana ID %s</target>
       </trans-unit>
       <trans-unit id="tl_member.delete">
         <source>Delete member ID %s</source>
-        <target>Cancella il membro ID %s</target>
+        <target>Izbriši člana ID %s</target>
       </trans-unit>
       <trans-unit id="tl_member.toggle.0">
         <source>Activate/deactivate member</source>
-        <target>Attiva/disattiva membro</target>
+        <target>Omogoči/onemogoči člana</target>
       </trans-unit>
       <trans-unit id="tl_member.toggle.1">
         <source>Deactivate member ID %s</source>
-        <target>Disattiva membro ID %s</target>
+        <target>Onemogoči člana z ID %s</target>
       </trans-unit>
       <trans-unit id="tl_member.toggle.2">
         <source>Activate member ID %s</source>
-        <target>Attiva membro ID %s</target>
+        <target>Omogoči člana z ID %s</target>
       </trans-unit>
       <trans-unit id="tl_member.su">
         <source>Preview the front end as member ID %s</source>
-        <target>Anteprima del frontend come menbro ID %s</target>
+        <target>Naredite predogled kot uporabnik ID %s</target>
       </trans-unit>
     </body>
   </file>

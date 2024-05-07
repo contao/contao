@@ -1,205 +1,204 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="contao/languages/en/tl_settings.php" source-language="en" target-language="ja">
+  <file datatype="php" original="contao/languages/en/tl_settings.php" source-language="en" target-language="sl">
     <body>
       <trans-unit id="tl_settings.adminEmail.0">
         <source>E-mail address of the system administrator</source>
-        <target>システム管理者の電子メールアドレス</target>
+        <target>Administratorjev naslov elektronske pošte</target>
       </trans-unit>
       <trans-unit id="tl_settings.adminEmail.1">
         <source>This e-mail address will be used to send and receive system messages.</source>
-        <target>この電子メールアドレスはシステムメッセージの送信と受信に使用します。</target>
+        <target>Ta naslov elektronske pošte bo uporabljen za pošiljanje in prejemanje sistemskih sporočil.</target>
       </trans-unit>
       <trans-unit id="tl_settings.dateFormat.0">
         <source>Date format</source>
-        <target>日付の書式</target>
+        <target>Oblika zapisa datuma</target>
       </trans-unit>
       <trans-unit id="tl_settings.dateFormat.1">
         <source>The date format string will be parsed with the PHP date() function.</source>
-        <target>日付の書式はPHPのdate()関数で解析します。</target>
+        <target>Oblika zapisa datuma bo razčlenjena s pomočjo funkcije PHP date().</target>
       </trans-unit>
       <trans-unit id="tl_settings.timeFormat.0">
         <source>Time format</source>
-        <target>時刻の書式</target>
+        <target>Oblika zapisa časa</target>
       </trans-unit>
       <trans-unit id="tl_settings.timeFormat.1">
         <source>The time format string will be parsed with the PHP date() function.</source>
-        <target>時刻の書式はPHPのdate()関数で解析します。</target>
+        <target>Oblika zapisa časa bo razčlenjena s pomočjo funkcije PHP date().</target>
       </trans-unit>
       <trans-unit id="tl_settings.datimFormat.0">
         <source>Date and time format</source>
-        <target>日付と時刻の書式</target>
+        <target>Oblika zapisa datuma in časa</target>
       </trans-unit>
       <trans-unit id="tl_settings.datimFormat.1">
         <source>The date and time format string will be parsed with the PHP date() function.</source>
-        <target>日付と時刻の書式はPHPのdate()関数で解析します。</target>
+        <target>Oblika zapisa datuma in časa bo razčlenjena s pomočjo funkcije PHP date().</target>
       </trans-unit>
       <trans-unit id="tl_settings.timeZone.0">
         <source>Time zone</source>
-        <target>タイムゾーン</target>
+        <target>Časovni pas</target>
       </trans-unit>
       <trans-unit id="tl_settings.timeZone.1">
         <source>Please select the server time zone.</source>
-        <target>サーバーのタイムゾーンを選択してください。</target>
+        <target>Prosimo, izberite časovni pas strežnika.</target>
       </trans-unit>
       <trans-unit id="tl_settings.resultsPerPage.0">
         <source>Items per page</source>
-        <target>1ページの項目</target>
+        <target>Elementov na stran</target>
       </trans-unit>
       <trans-unit id="tl_settings.resultsPerPage.1">
         <source>Here you can define the number of items per page in the back end.</source>
-        <target>バックエンドで1ページの項目数を指定します。</target>
+        <target>Tu lahko določite število elementov na stran v skrbništvu.</target>
       </trans-unit>
       <trans-unit id="tl_settings.maxResultsPerPage.0">
         <source>Maximum items per page</source>
-        <target>1ページの項目数の最大値</target>
+        <target>Največje število elementov na stran</target>
       </trans-unit>
       <trans-unit id="tl_settings.maxResultsPerPage.1">
         <source>This overall limit takes effect if a user chooses the &quot;show all records&quot; option.</source>
-        <target>「すべての項目を表示」のオプションを選択した場合の、項目の最大数となります。</target>
+        <target>Ta splošna omejitev bo upoštevana, če uporabnik izbere možnost &quot;prikaži vse zapise&quot;.</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedTags.0">
         <source>Allowed HTML tags</source>
-        <target>許可するHTMLタグ</target>
+        <target>Dovoljene HTML oznake</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedTags.1">
         <source>Here you can enter a list of allowed HTML tags that will not be stripped.</source>
-        <target>削除しないで許可するHTMLのタグのリストを指定します。</target>
+        <target>Tu lahko vnesete dovoljene HTML oznake, ki ne bodo odstranjene.</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedAttributes.0">
         <source>Allowed HTML attributes</source>
-        <target>許可するHTMLの属性</target>
+        <target>Dovoljeni atributi HTML</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedAttributes.1">
         <source>List of allowed HTML attributes that will not be stripped. The tag or attribute name &lt;code&gt;*&lt;/code&gt; stands for all tags or attributes. Wildcards can be used for attributes with dashes like &lt;code&gt;data-*&lt;/code&gt;.</source>
-        <target>除去しないで許可するHTMLの属性の一覧です。タグや属性の&lt;code&gt;*&lt;/code&gt;という名前はすべてのタグや属性を表します。&lt;code&gt;data-*&lt;/code&gt;の様にとダッシュ記号のある属性ではワイルドカードを使用できます。</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedAttributesWarning">
         <source>Allowing &lt;code&gt;*&lt;/code&gt; attributes can be exploited for XSS attacks. Only do this if all backend users are trusted!</source>
-        <target>&lt;code&gt;*&lt;/code&gt; 属性の許可はXSSの攻撃に利用されます。すべてのバックエンドユーザーが信頼できる場合だけ許可してください!</target>
+        <target>Če omogočite &lt;code&gt;*&lt;/code&gt;atribute, se to lahko izkoristi za napade XSS. To storite le, če zaupate vsem skrbnikom in urednikom vsebin.</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedDownload.0">
         <source>Download file types</source>
-        <target>ダウンロードのファイル形式</target>
+        <target>Tipi datotek za prenos</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedDownload.1">
         <source>Here you can enter a comma separated list of downloadable file types.</source>
-        <target>ダウンロードできるファイル形式をコンマで区切ったリストで入力します。</target>
+        <target>Tu lahko naštejete (ločite z vejico) tipe datotek, ki jih bo mogoče prenesti.</target>
       </trans-unit>
       <trans-unit id="tl_settings.uploadTypes.0">
         <source>Upload file types</source>
-        <target>アップロードのファイル形式</target>
+        <target>Tipi datotek za nalaganje</target>
       </trans-unit>
       <trans-unit id="tl_settings.uploadTypes.1">
         <source>Here you can enter a comma separated list of uploadable file types.</source>
-        <target>アップロードできるファイル形式をコンマで区切ったリストで入力します。</target>
+        <target>Tu lahko naštejete (ločite z vejico) tipe datotek, ki jih bo mogoče naložiti.</target>
       </trans-unit>
       <trans-unit id="tl_settings.maxFileSize.0">
         <source>Maximum upload file size</source>
-        <target>アップロードできるファイルの最大サイズ</target>
+        <target>Največja velikost datoteke za nalaganje</target>
       </trans-unit>
       <trans-unit id="tl_settings.maxFileSize.1">
         <source>Here you can enter the maximum upload file size in bytes (1 MB = 1000 kB = 1000000 byte).</source>
-        <target>アップロードできるファイルの大きさの最大値をバイトで入力します。(1 MB = 1000 kB = 1000000 byte)</target>
+        <target>Tu lahko določite največjo velikost datoteke za nalaganje v bajtih (1 MB = 1000 kB = 1000000 byte).</target>
       </trans-unit>
       <trans-unit id="tl_settings.imageWidth.0">
         <source>Maximum image width</source>
-        <target>画像の最大の幅</target>
+        <target>Največja širina slike</target>
       </trans-unit>
       <trans-unit id="tl_settings.imageWidth.1">
         <source>Here you can enter the maximum width for image uploads in pixels.</source>
-        <target>アップロードできる画像の最大の幅をピクセルで入力します。</target>
+        <target>Tu lahko določite največjo dovoljeno širino slik za nalaganje v pikslih.</target>
       </trans-unit>
       <trans-unit id="tl_settings.imageHeight.0">
         <source>Maximum image height</source>
-        <target>画像の最大の高さ</target>
+        <target>Največja višina slike</target>
       </trans-unit>
       <trans-unit id="tl_settings.imageHeight.1">
         <source>Here you can enter the maximum height for image uploads in pixels.</source>
-        <target>アップロードできる画像の最大の高さをピクセルで入力します。</target>
+        <target>Tu lahko določite največjo dovoljeno višino slik za nalaganje v pikslih.</target>
       </trans-unit>
       <trans-unit id="tl_settings.undoPeriod.0">
         <source>Storage time for undo steps</source>
-        <target>復元の項目の保管期間</target>
+        <target>Čas shranjevanja razveljavitvenih korakov</target>
       </trans-unit>
       <trans-unit id="tl_settings.undoPeriod.1">
         <source>Here you can enter the storage time for undo steps in seconds (24 hours = 86400 seconds).</source>
-        <target>復元の項目の保管期間を秒数で入力します。(初期設定: 24時間 = 86400秒)</target>
+        <target>Tu lahko določite čas shranjevanja razveljavitvenih korakov v sekundah (24 ur= 86400 sekund).</target>
       </trans-unit>
       <trans-unit id="tl_settings.versionPeriod.0">
         <source>Storage time for versions</source>
-        <target>バージョンの保管期間</target>
+        <target>Čas shranjevanja različic</target>
       </trans-unit>
       <trans-unit id="tl_settings.versionPeriod.1">
         <source>Here you can enter the storage time for different versions of a record in seconds (90 days = 7776000 seconds).</source>
-        <target>レコードの異なるバージョンの保管期間を秒数で入力します。(初期設定: 90日 = 7776000秒)</target>
+        <target>Tu lahko določite čas shranjevanja preteklih različic v sekundah (90 dni= 7776000 sekund).</target>
       </trans-unit>
       <trans-unit id="tl_settings.logPeriod.0">
         <source>Storage time for log entries</source>
-        <target>ログの項目の保管期間</target>
+        <target>Čas shranjevanja dnevnika vnosov</target>
       </trans-unit>
       <trans-unit id="tl_settings.logPeriod.1">
         <source>Here you can enter the storage time for log entries in seconds (14 days = 1209600 seconds).</source>
-        <target>ログの項目の保管期間を秒数で入力します。(初期設定: 14日 = 1209600秒)</target>
+        <target>Tu lahko določite čas shranjevanja dnevnika vnosov v sekundah (14 dni= 1209600 sekund).</target>
       </trans-unit>
       <trans-unit id="tl_settings.defaultUser.0">
         <source>Default page owner</source>
-        <target>ページの所有者の初期設定</target>
+        <target>Privzeti lastnik strani</target>
       </trans-unit>
       <trans-unit id="tl_settings.defaultUser.1">
         <source>Here you can select a user as the default owner of a page.</source>
-        <target>ページを所有する初期設定とするユーザーを選択できます。</target>
+        <target>Tu lahko določite uporabnika kot privzetega lastnika strani.</target>
       </trans-unit>
       <trans-unit id="tl_settings.defaultGroup.0">
         <source>Default page group</source>
-        <target>ページのグループの初期設定</target>
+        <target>Privzeta skupina strani</target>
       </trans-unit>
       <trans-unit id="tl_settings.defaultGroup.1">
         <source>Here you can select a user group as the default owner of a page.</source>
-        <target>ページを所有する初期設定とするユーザーグループを選択できます。</target>
+        <target>Tu lahko določite skupino uporabnikov kot privzetega lastnika strani.</target>
       </trans-unit>
       <trans-unit id="tl_settings.defaultChmod.0">
         <source>Default access rights</source>
-        <target>アクセス権の初期設定</target>
+        <target>Privzete pravice dostopa</target>
       </trans-unit>
       <trans-unit id="tl_settings.defaultChmod.1">
         <source>Please assign the default access rights for pages and articles.</source>
-        <target>ページとアーティクルに初期設定とするアクセス権を割り当ててください。</target>
+        <target>Tu lahko določite privzete pravice dostopa strani in člankov.</target>
       </trans-unit>
       <trans-unit id="tl_settings.date_legend">
         <source>Date and time</source>
-        <target>日付と時刻</target>
+        <target>Datum in čas</target>
       </trans-unit>
       <trans-unit id="tl_settings.global_legend">
         <source>Global configuration</source>
-        <target>全体的な構成</target>
+        <target>Splošne nastavitve</target>
       </trans-unit>
       <trans-unit id="tl_settings.backend_legend">
         <source>Back end configuration</source>
-        <target>バックエンドの構成</target>
+        <target>Nastavitev skrbništva</target>
       </trans-unit>
       <trans-unit id="tl_settings.security_legend">
         <source>Security settings</source>
-        <target>セキュリティの設定</target>
+        <target>Varnostne nastavitve</target>
       </trans-unit>
       <trans-unit id="tl_settings.files_legend">
         <source>Files and images</source>
-        <target>ファイルと画像</target>
+        <target>Datoteke in slike</target>
       </trans-unit>
       <trans-unit id="tl_settings.uploads_legend">
         <source>Upload settings</source>
-        <target>アップロードの設定</target>
+        <target>Nastavitve nalaganja</target>
       </trans-unit>
       <trans-unit id="tl_settings.timeout_legend">
         <source>Timeout values</source>
-        <target>タイムアウトの値</target>
+        <target>Določitev časovnih vrednosti</target>
       </trans-unit>
       <trans-unit id="tl_settings.chmod_legend">
         <source>Default access rights</source>
-        <target>アクセス権の初期設定</target>
+        <target>Privzete pravice dostopa</target>
       </trans-unit>
       <trans-unit id="tl_settings.configuredInApp">
         <source>This setting has been defined in the app configuration and cannot be changed here anymore.</source>
-        <target>この設定はapp構成で定義されて、ここでは変更できなくなりました。</target>
+        <target>Ta nastavitev je bila nastavljena v konfiguraciji spletnega mesta in je tu ni mogoče spreminjati.</target>
       </trans-unit>
     </body>
   </file>
