@@ -1163,7 +1163,7 @@ class tl_content extends Backend
 		if ($compositor->supportsNesting('contao.content_element.' . $objCes->type))
 		{
 			$allowedTypes = $compositor->getAllowedTypes('contao.content_element.' . $objCes->type);
-			if ([] !== $allowedTypes && [] === array_intersect($user->elements, $allowedTypes))
+			if (array() !== $allowedTypes && array() === array_intersect($user->elements, $allowedTypes))
 			{
 				$GLOBALS['TL_DCA']['tl_content']['config']['closed'] = true;
 			}
