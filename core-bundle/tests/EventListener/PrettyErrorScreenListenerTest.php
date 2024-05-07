@@ -456,7 +456,7 @@ class PrettyErrorScreenListenerTest extends TestCase
     {
         $twig ??= $this->createMock(Environment::class);
         $httpKernel ??= $this->createMock(HttpKernelInterface::class);
-        $requestMatcher ??= $this->createMock(RequestMatcherInterface::class);
+        $requestMatcher = $this->createMock(RequestMatcherInterface::class);
 
         $pageRegistry = $this->createMock(PageRegistry::class);
         $pageAdapter = $this->mockAdapter(['findFirstPublishedByTypeAndPid']);
