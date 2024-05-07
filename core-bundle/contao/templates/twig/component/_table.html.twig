@@ -149,7 +149,7 @@
 
     {% block table_script %}
         {% if sorting %}
-            {% add "tablesort_script" to head %}
+            {% add "tablesort_script" to body %}
                 {% set script_attributes = attrs()
                     .setIfExists('nonce', csp_nonce('script-src'))
                     .mergeWith(script_attributes|default)
@@ -197,7 +197,7 @@
         {% if sorting %}
             {% set tablesort_css_file = asset('css/tablesort.min.css', 'contao-components/tristen-tablesort') %}
 
-            {% add "tablesort_css" to head %}
+            {% add "tablesort_css" to stylesheets %}
                 {% with {file: tablesort_css_file} %}{{ block('stylesheet_component') }}{% endwith %}
             {% endadd %}
         {% endif %}

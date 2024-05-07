@@ -42,6 +42,7 @@ use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
 use Contao\CoreBundle\Twig\Runtime\StringRuntime;
 use Contao\CoreBundle\Twig\Runtime\UrlRuntime;
 use Contao\FrontendTemplateTrait;
+use Contao\StringUtil;
 use Contao\Template;
 use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
@@ -339,6 +340,10 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 [StringRuntime::class, 'encodeEmail'],
                 ['preserves_safety' => ['contao_html', 'html']],
             ),
+            new TwigFilter(
+                'deserialize',
+                static fn (mixed $value): array => StringUtil::deserialize($value, true),
+            ),
         ];
     }
 
@@ -393,15 +398,17 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             } else {
                 $GLOBALS['TL_HEAD'][] = $content;
             }
-
-            return;
-        }
-
-        if (DocumentLocation::endOfBody === $location) {
+        } elseif (DocumentLocation::endOfBody === $location) {
             if (null !== $identifier) {
                 $GLOBALS['TL_BODY'][$identifier] = $content;
             } else {
                 $GLOBALS['TL_BODY'][] = $content;
+            }
+        } elseif (DocumentLocation::stylesheets === $location) {
+            if (null !== $identifier) {
+                $GLOBALS['TL_STYLE_SHEETS'][$identifier] = $content;
+            } else {
+                $GLOBALS['TL_STYLE_SHEETS'][] = $content;
             }
         }
     }

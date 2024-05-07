@@ -41,7 +41,7 @@ class AddTokenParserTest extends TestCase
      * @param list<string>|array<string, string> $expectedHeadContent
      * @param list<string>|array<string, string> $expectedBodyContent
      */
-    public function testAddsContent(string $code, array $expectedHeadContent, array $expectedBodyContent): void
+    public function testAddsContent(string $code, array $expectedHeadContent, array $expectedStyleSheetContent, array $expectedBodyContent): void
     {
         $environment = new Environment($this->createMock(LoaderInterface::class));
 
@@ -59,9 +59,10 @@ class AddTokenParserTest extends TestCase
         $this->assertSame('', $environment->render('template.html.twig'));
 
         $this->assertSame($expectedHeadContent, $GLOBALS['TL_HEAD'] ?? []);
+        $this->assertSame($expectedStyleSheetContent, $GLOBALS['TL_STYLE_SHEETS'] ?? []);
         $this->assertSame($expectedBodyContent, $GLOBALS['TL_BODY'] ?? []);
 
-        unset($GLOBALS['TL_HEAD'], $GLOBALS['TL_BODY']);
+        unset($GLOBALS['TL_HEAD'], $GLOBALS['TL_STYLE_SHEETS'], $GLOBALS['TL_BODY']);
     }
 
     public static function provideSources(): iterable
@@ -70,20 +71,32 @@ class AddTokenParserTest extends TestCase
             '{% add to head %}head content{% endadd %}',
             ['head content'],
             [],
+            [],
+        ];
+
+        yield 'add to stylesheets' => [
+            '{% add to stylesheets %}stylesheets content{% endadd %}',
+            [],
+            ['stylesheets content'],
+            [],
         ];
 
         yield 'add to body' => [
             '{% add to body %}body content{% endadd %}',
+            [],
             [],
             ['body content'],
         ];
 
         yield 'add multiple' => [
             "{% add to head %}head content{% endadd %}\n".
+            "{% add to stylesheets %}stylesheets content{% endadd %}\n".
             "{% add to body %}body content{% endadd %}\n".
             "{% add to head %}head content{% endadd %}\n".
+            "{% add to stylesheets %}stylesheets content{% endadd %}\n".
             '{% add to body %}body content{% endadd %}',
             ['head content', 'head content'],
+            ['stylesheets content', 'stylesheets content'],
             ['body content', 'body content'],
         ];
 
@@ -92,27 +105,41 @@ class AddTokenParserTest extends TestCase
             "{% add 'foo' to head %}overwritten head content{% endadd %}",
             ['foo' => 'overwritten head content'],
             [],
+            [],
+        ];
+
+        yield 'add named to stylesheets' => [
+            "{% add 'foo' to stylesheets %}stylesheets content{% endadd %}\n".
+            "{% add 'foo' to stylesheets %}overwritten stylesheets content{% endadd %}",
+            [],
+            ['foo' => 'overwritten stylesheets content'],
+            [],
         ];
 
         yield 'add named to body' => [
             "{% add 'foo' to body %}body content{% endadd %}\n".
             "{% add 'foo' to body %}overwritten body content{% endadd %}",
             [],
+            [],
             ['foo' => 'overwritten body content'],
         ];
 
         yield 'add multiple named' => [
             "{% add 'foo' to head %}head content{% endadd %}\n".
+            "{% add 'foo' to stylesheets %}stylesheets content{% endadd %}\n".
             "{% add 'foo' to body %}body content{% endadd %}\n".
             "{% add 'foo' to head %}head content{% endadd %}\n".
+            "{% add 'foo' to stylesheets %}stylesheets content{% endadd %}\n".
             "{% add 'foo' to body %}body content{% endadd %}",
             ['foo' => 'head content'],
+            ['foo' => 'stylesheets content'],
             ['foo' => 'body content'],
         ];
 
         yield 'add with complex content' => [
             "{% set var = 'bar' %}\n".
             '{% add to body %}foo {{ var }}{% endadd %}',
+            [],
             [],
             ['foo bar'],
         ];
@@ -140,7 +167,7 @@ class AddTokenParserTest extends TestCase
     {
         yield 'invalid target' => [
             '{% add to stomach %}apple{% endadd %}',
-            'The parameter "stomach" is not a valid location for the "add" tag, use "head" or "body" instead in "template.html.twig"',
+            'The parameter "stomach" is not a valid location for the "add" tag, use "head" or "stylesheets" or "body" instead in "template.html.twig"',
         ];
 
         yield 'malformed target' => [

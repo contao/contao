@@ -10,16 +10,20 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CalendarBundle\Tests\EventListener;
+namespace Contao\CalendarBundle\Tests\InsertTag;
 
-use Contao\CalendarBundle\EventListener\InsertTagsListener;
+use Contao\CalendarBundle\InsertTag\EventInsertTag;
 use Contao\CalendarEventsModel;
 use Contao\CalendarFeedModel;
+use Contao\CoreBundle\InsertTag\InsertTagResult;
+use Contao\CoreBundle\InsertTag\OutputType;
+use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
+use Contao\CoreBundle\InsertTag\ResolvedParameters;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class InsertTagsListenerTest extends ContaoTestCase
+class EventInsertTagTest extends ContaoTestCase
 {
     public function testReplacesTheCalendarFeedTag(): void
     {
@@ -34,10 +38,10 @@ class InsertTagsListenerTest extends ContaoTestCase
         $framework = $this->mockContaoFramework($adapters);
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
 
-        $listener = new InsertTagsListener($framework, $urlGenerator);
-        $url = $listener('calendar_feed::2', false, null, []);
+        $listener = new EventInsertTag($framework, $urlGenerator);
+        $url = $listener(new ResolvedInsertTag('calendar_feed', new ResolvedParameters(['2']), []));
 
-        $this->assertSame('http://localhost/share/events.xml', $url);
+        $this->assertEquals(new InsertTagResult('http://localhost/share/events.xml', OutputType::url), $url);
     }
 
     public function testReplacesTheEventTags(): void
@@ -80,75 +84,67 @@ class InsertTagsListenerTest extends ContaoTestCase
             )
         ;
 
-        $listener = new InsertTagsListener($this->mockContaoFramework($adapters), $urlGenerator);
+        $listener = new EventInsertTag($this->mockContaoFramework($adapters), $urlGenerator);
 
         $this->assertSame(
             '<a href="events/the-foobar-event.html" title="The &quot;foobar&quot; event">The "foobar" event</a>',
-            $listener('event::2', false, null, []),
+            $listener(new ResolvedInsertTag('event', new ResolvedParameters(['2']), []))->getValue(),
         );
 
         $this->assertSame(
             '<a href="events/the-foobar-event.html" title="The &quot;foobar&quot; event" target="_blank" rel="noreferrer noopener">The "foobar" event</a>',
-            $listener('event::2::blank', false, null, []),
+            $listener(new ResolvedInsertTag('event', new ResolvedParameters(['2', 'blank']), []))->getValue(),
         );
 
         $this->assertSame(
             '<a href="events/the-foobar-event.html" title="The &quot;foobar&quot; event">',
-            $listener('event_open::2', false, null, []),
+            $listener(new ResolvedInsertTag('event_open', new ResolvedParameters(['2']), []))->getValue(),
         );
 
         $this->assertSame(
             '<a href="events/the-foobar-event.html" title="The &quot;foobar&quot; event" target="_blank" rel="noreferrer noopener">',
-            $listener('event_open::2::blank', false, null, []),
+            $listener(new ResolvedInsertTag('event_open', new ResolvedParameters(['2', 'blank']), []))->getValue(),
         );
 
         $this->assertSame(
             '<a href="http://domain.tld/events/the-foobar-event.html" title="The &quot;foobar&quot; event" target="_blank" rel="noreferrer noopener">',
-            $listener('event_open::2::blank::absolute', false, null, []),
+            $listener(new ResolvedInsertTag('event_open', new ResolvedParameters(['2', 'blank', 'absolute']), []))->getValue(),
         );
 
         $this->assertSame(
             '<a href="http://domain.tld/events/the-foobar-event.html" title="The &quot;foobar&quot; event" target="_blank" rel="noreferrer noopener">',
-            $listener('event_open::2::absolute::blank', false, null, []),
+            $listener(new ResolvedInsertTag('event_open', new ResolvedParameters(['2', 'absolute', 'blank']), []))->getValue(),
         );
 
         $this->assertSame(
             'events/the-foobar-event.html',
-            $listener('event_url::2', false, null, []),
+            $listener(new ResolvedInsertTag('event_url', new ResolvedParameters(['2']), []))->getValue(),
         );
 
         $this->assertSame(
             'http://domain.tld/events/the-foobar-event.html',
-            $listener('event_url::2', false, null, ['absolute']),
+            $listener(new ResolvedInsertTag('event_url', new ResolvedParameters(['2', 'absolute']), []))->getValue(),
         );
 
         $this->assertSame(
             'http://domain.tld/events/the-foobar-event.html',
-            $listener('event_url::2::absolute', false, null, []),
+            $listener(new ResolvedInsertTag('event_url', new ResolvedParameters(['2', 'absolute']), []))->getValue(),
         );
 
         $this->assertSame(
             'http://domain.tld/events/the-foobar-event.html',
-            $listener('event_url::2::blank::absolute', false, null, []),
+            $listener(new ResolvedInsertTag('event_url', new ResolvedParameters(['2', 'blank', 'absolute']), []))->getValue(),
         );
 
-        $this->assertSame(
-            'The &quot;foobar&quot; event',
-            $listener('event_title::2', false, null, []),
+        $this->assertEquals(
+            new InsertTagResult('The "foobar" event'),
+            $listener(new ResolvedInsertTag('event_title', new ResolvedParameters(['2']), [])),
         );
 
         $this->assertSame(
             '<p>The annual foobar event.</p>',
-            $listener('event_teaser::2', false, null, []),
+            $listener(new ResolvedInsertTag('event_teaser', new ResolvedParameters(['2']), []))->getValue(),
         );
-    }
-
-    public function testReturnsFalseIfTheTagIsUnknown(): void
-    {
-        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
-        $listener = new InsertTagsListener($this->mockContaoFramework(), $urlGenerator);
-
-        $this->assertFalse($listener('link_url::2', false, null, []));
     }
 
     public function testReturnsAnEmptyStringIfThereIsNoModel(): void
@@ -159,9 +155,9 @@ class InsertTagsListenerTest extends ContaoTestCase
         ];
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
-        $listener = new InsertTagsListener($this->mockContaoFramework($adapters), $urlGenerator);
+        $listener = new EventInsertTag($this->mockContaoFramework($adapters), $urlGenerator);
 
-        $this->assertSame('', $listener('calendar_feed::3', false, null, []));
-        $this->assertSame('', $listener('event_url::3', false, null, []));
+        $this->assertSame('', $listener(new ResolvedInsertTag('calendar_feed', new ResolvedParameters(['3']), []))->getValue());
+        $this->assertSame('', $listener(new ResolvedInsertTag('event_url', new ResolvedParameters(['3']), []))->getValue());
     }
 }

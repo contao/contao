@@ -13,7 +13,6 @@ declare(strict_types=1);
 use Contao\EasyCodingStandard\Fixer\ChainedMethodBlockFixer;
 use Contao\EasyCodingStandard\Fixer\CommentLengthFixer;
 use Contao\EasyCodingStandard\Fixer\MultiLineLambdaFunctionArgumentsFixer;
-use Contao\EasyCodingStandard\Fixer\TypeHintOrderFixer;
 use Contao\EasyCodingStandard\Set\SetList;
 use Contao\EasyCodingStandard\Sniffs\UseSprintfInExceptionsSniff;
 use PhpCsFixer\Fixer\Alias\ModernizeStrposFixer;
@@ -27,7 +26,6 @@ use PhpCsFixer\Fixer\ControlStructure\ControlStructureContinuationPositionFixer;
 use PhpCsFixer\Fixer\ControlStructure\TrailingCommaInMultilineFixer;
 use PhpCsFixer\Fixer\ControlStructure\YodaStyleFixer;
 use PhpCsFixer\Fixer\FunctionNotation\NoSpacesAfterFunctionNameFixer;
-use PhpCsFixer\Fixer\FunctionNotation\NullableTypeDeclarationForDefaultNullValueFixer;
 use PhpCsFixer\Fixer\FunctionNotation\UseArrowFunctionsFixer;
 use PhpCsFixer\Fixer\FunctionNotation\VoidReturnFixer;
 use PhpCsFixer\Fixer\LanguageConstruct\GetClassToClassKeywordFixer;
@@ -87,7 +85,6 @@ return ECSConfig::configure()
         MultilineWhitespaceBeforeSemicolonsFixer::class,
         NoSpacesAfterFunctionNameFixer::class,
         NoSuperfluousPhpdocTagsFixer::class,
-        NullableTypeDeclarationForDefaultNullValueFixer::class,
         OrderedClassElementsFixer::class,
         PhpdocOrderFixer::class,
         PhpdocScalarFixer::class,
@@ -104,7 +101,6 @@ return ECSConfig::configure()
         StrictComparisonFixer::class,
         StrictParamFixer::class,
         TrailingCommaInMultilineFixer::class,
-        TypeHintOrderFixer::class,
         UnusedVariableSniff::class,
         UseArrowFunctionsFixer::class,
         UselessParenthesesSniff::class,

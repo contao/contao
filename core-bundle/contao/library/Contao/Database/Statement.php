@@ -13,6 +13,7 @@ namespace Contao\Database;
 use Contao\Database;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Result as DoctrineResult;
+use Doctrine\DBAL\ParameterType;
 
 /**
  * Create and execute queries
@@ -238,24 +239,22 @@ class Statement
 			throw new \Exception('Empty query string');
 		}
 
-		$arrParams = array_map(
-			static function ($varParam) use ($arrTypes) {
-				// Automatically cast boolean to integer when no types are defined, otherwise
-				// PDO will convert "false" to an empty string (see https://bugs.php.net/bug.php?id=57157)
-				if (empty($arrTypes) && \is_bool($varParam))
-				{
-					return (int) $varParam;
-				}
+		foreach ($arrParams as $key => $varParam)
+		{
+			// Automatically set type to boolean when no type is defined,
+			// otherwise "false" will be converted to an empty string.
+			if (null === ($arrTypes[$key] ?? null))
+			{
+				$arrTypes[$key] = \is_bool($varParam) ? ParameterType::BOOLEAN : ParameterType::STRING;
+			}
 
-				if (\is_string($varParam) || \is_bool($varParam) || \is_float($varParam) || \is_int($varParam) || $varParam === null)
-				{
-					return $varParam;
-				}
+			if (\is_string($varParam) || \is_bool($varParam) || \is_float($varParam) || \is_int($varParam) || $varParam === null)
+			{
+				continue;
+			}
 
-				return serialize($varParam);
-			},
-			$arrParams
-		);
+			$arrParams[$key] = serialize($varParam);
+		}
 
 		// Execute the query
 		$this->statement = $this->resConnection->executeQuery($this->strQuery, $arrParams, $arrTypes);
