@@ -1,4 +1,5 @@
 includes:
+    - vendor-bin/phpstan/config/config.php
     - vendor-bin/phpstan/vendor/phpstan/phpstan/conf/bleedingEdge.neon
     - vendor-bin/phpstan/vendor/phpstan/phpstan-phpunit/extension.neon
     - vendor-bin/phpstan/vendor/phpstan/phpstan-phpunit/rules.neon
@@ -12,7 +13,6 @@ rules:
 
 parameters:
     level: 6
-    tmpDir: %env.TMPDIR%phpstan/contao53
 
     featureToggles:
         alwaysTrueAlwaysReported: false
