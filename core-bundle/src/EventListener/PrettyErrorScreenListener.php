@@ -248,7 +248,7 @@ class PrettyErrorScreenListener
         return 500;
     }
 
-    private function findErrorPage(int $type, Request $request): PageModel|null
+    private function findErrorPage(int $type, Request $request): ?PageModel
     {
         $pageModel = $request->attributes->get('pageModel');
 
