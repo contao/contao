@@ -12,6 +12,7 @@ rules:
 
 parameters:
     level: 6
+    tmpDir: %env.TMPDIR%phpstan/contao53
 
     featureToggles:
         alwaysTrueAlwaysReported: false
