@@ -1163,15 +1163,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						continue;
 					}
 
-					try
-					{
-						$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $v, new ReadAction($v, $objCTable->row()));
-					}
-					catch (AccessDeniedException)
-					{
-						continue;
-					}
-
 					foreach ($objCTable->row() as $kk=>$vv)
 					{
 						if ($kk == 'id')
@@ -1215,16 +1206,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					$copy[$v][$objCTable->id]['pid'] = $insertID;
 					$copy[$v][$objCTable->id]['tstamp'] = $time;
-
-					try
-					{
-						$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $v, new CreateAction($v, $copy[$v][$objCTable->id]));
-					}
-					catch (AccessDeniedException)
-					{
-						unset($copy[$v][$objCTable->id]);
-						continue;
-					}
 				}
 			}
 		}
@@ -1809,7 +1790,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	public function deleteChildren($table, $id, &$delete)
 	{
-		$cctable = array();
 		$ctable = $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? array();
 
 		if (empty($ctable) || !\is_array($ctable))
@@ -1823,7 +1803,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		foreach ($ctable as $v)
 		{
 			$this->loadDataContainer($v);
-			$cctable[$v] = $GLOBALS['TL_DCA'][$v]['config']['ctable'] ?? null;
 
 			// Consider the dynamic parent table (see #4867)
 			if ($GLOBALS['TL_DCA'][$v]['config']['dynamicPtable'] ?? null)
@@ -1839,36 +1818,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					->execute($id);
 			}
 
-			if ($objDelete->numRows && !($GLOBALS['TL_DCA'][$v]['config']['doNotDeleteRecords'] ?? null) && \strlen($v))
+			if ($objDelete->numRows && !($GLOBALS['TL_DCA'][$v]['config']['doNotDeleteRecords'] ?? null))
 			{
-				$rows = $objDelete->fetchAllAssoc();
-
-				static::preloadCurrentRecords(array_column($rows, 'id'), $v);
-
-				foreach ($rows as $row)
+				foreach ($objDelete->fetchEach('id') as $childId)
 				{
-					try
-					{
-						$currentRecord = $this->getCurrentRecord($row['id'], $v);
-
-						if ($currentRecord === null)
-						{
-							continue;
-						}
-
-						$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $v, new DeleteAction($v, $currentRecord));
-					}
-					catch (AccessDeniedException)
-					{
-						continue;
-					}
-
-					$delete[$v][] = $row['id'];
-
-					if (!empty($cctable[$v]))
-					{
-						$this->deleteChildren($v, $row['id'], $delete);
-					}
+					$delete[$v][] = $childId;
+					$this->deleteChildren($v, $childId, $delete);
 				}
 			}
 		}
@@ -1914,8 +1869,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				// Unset fields that no longer exist in the database
 				$row = array_intersect_key($row, $arrFields[$table]);
-
-				$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $table, new CreateAction($table, $row));
 
 				// Re-insert the data
 				$objInsertStmt = $db
