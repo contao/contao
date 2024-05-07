@@ -255,7 +255,7 @@ class PrettyErrorScreenListener
         if (!$pageModel instanceof PageModel) {
             $rootRequest = Request::create('http://'.$request->getHost());
             $rootRequest->headers->set('Accept-Language', $rootRequest->headers->get('Accept-Language'));
-            $parameters = $this->requestMatcher->matchRequest($request);
+            $parameters = $this->requestMatcher->matchRequest($rootRequest);
 
             if (($parameters['pageModel'] ?? null) instanceof PageModel) {
                 $pageModel = $parameters['pageModel'];
