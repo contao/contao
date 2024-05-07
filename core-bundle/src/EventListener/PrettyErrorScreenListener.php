@@ -14,13 +14,11 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\Config;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
-use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Exception\RouteParametersException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Util\LocaleUtil;
-use Contao\Frontend;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Symfony\Component\HttpFoundation\AcceptHeader;
@@ -149,18 +147,16 @@ class PrettyErrorScreenListener
 
             $request = $event->getRequest();
             $pageModel = $request->attributes->get('pageModel');
+            $pageAdapter = $this->framework->getAdapter(PageModel::class);
 
-            if (!$pageModel instanceof PageModel) {
-                // The try/catch must not be merged upstream to Contao 5!
-                try {
-                    $frontendAdapter = $this->framework->getAdapter(Frontend::class);
-                    $pageModel = $frontendAdapter->getRootPageFromUrl();
-                } catch (NoRootPageFoundException $exception) {
-                    return;
-                }
+            // This change must not be merged upstream to Contao 5!
+            if (
+                !$pageModel instanceof PageModel
+                && !($pageModel = $pageAdapter->findFirstPublishedRootByHostAndLanguage($request->getHost(), $request->headers->get('Accept-Language')))
+            ) {
+                return;
             }
 
-            $pageAdapter = $this->framework->getAdapter(PageModel::class);
             $errorPage = $pageAdapter->findFirstPublishedByTypeAndPid('error_'.$type, $pageModel->loadDetails()->rootId);
 
             if (null === $errorPage) {
