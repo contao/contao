@@ -32,8 +32,8 @@ jobs:
               with:
                   show-progress: false
 
-            - name: Install the dependencies
-              run: composer install --no-interaction --no-progress
+            - name: Install Contao
+              uses: ramsey/composer-install@v3
 
             - name: Generate the coverage report
               run: php -d pcov.enabled=1 vendor/bin/phpunit --testsuite=coverage --coverage-clover=clover.xml
