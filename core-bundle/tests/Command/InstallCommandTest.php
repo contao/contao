@@ -23,7 +23,6 @@ class InstallCommandTest extends TestCase
     protected function tearDown(): void
     {
         $fs = new Filesystem();
-        $fs->remove($this->getTempDir().'/assets/images_test');
         $fs->remove($this->getTempDir().'/files_test');
         $fs->remove($this->getTempDir().'/public/assets');
         $fs->remove($this->getTempDir().'/public/share');
@@ -60,13 +59,13 @@ class InstallCommandTest extends TestCase
 
     public function testHandlesCustomFilesAndImagesPaths(): void
     {
-        $command = new InstallCommand($this->getTempDir(), 'files_test', $this->getTempDir().'/assets/images_test');
+        $command = new InstallCommand($this->getTempDir(), 'files_test', $this->getTempDir().'/public/assets/images_test');
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
         $display = $tester->getDisplay();
 
         $this->assertSame(0, $code);
         $this->assertStringContainsString(' * files_test', $display);
-        $this->assertStringContainsString(' * assets/images_test', $display);
+        $this->assertStringContainsString(' * public/assets/images_test', $display);
     }
 }
