@@ -56,5 +56,5 @@ return ECSConfig::configure()
     ->withParallel()
     ->withSpacing(Option::INDENTATION_SPACES, "\n")
     ->withConfiguredRule(HeaderCommentFixer::class, ['header' => "This file is part of Contao.\n\n(c) Leo Feyer\n\n@license LGPL-3.0-or-later"])
-    ->withCache(sys_get_temp_dir().'/ecs_cache')
+    ->withCache(sys_get_temp_dir().'/ecs/contao53')
 ;
