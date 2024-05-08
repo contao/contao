@@ -3,7 +3,7 @@
 /vendor/
 
 # Composer bin
-/vendor-bin/*/vendor
+/vendor-bin/*/vendor/
 
 # Monorepo Tools
 /.monorepo-split-cache/
