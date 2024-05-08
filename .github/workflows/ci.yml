@@ -5,6 +5,11 @@ on:
 
 permissions: read-all
 
+defaults:
+    run:
+        # Simulate an interactive terminal with color support
+        shell: script -q -e -c "export TERM=xterm; bash {0}"
+
 jobs:
     rector:
         name: Rector
@@ -18,7 +23,9 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
             - name: Install the dependencies
               run: |
@@ -40,7 +47,9 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
             - name: Install the dependencies
               run: |
@@ -62,7 +71,9 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
             - name: Install the dependencies
               run: |
@@ -86,7 +97,9 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
             - name: Install the dependencies
               run: |
@@ -101,14 +114,12 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
             - name: Run YAMLlint
-              run: |
-                  python3 -m pip install --upgrade pip
-                  python3 -m pip install --upgrade setuptools wheel
-                  python3 -m pip install --upgrade yamllint
-                  /home/runner/.local/bin/yamllint .
+              run: yamllint --format=github .
 
     service-linter:
         name: Service linter
@@ -122,7 +133,9 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
             - name: Install the dependencies
               run: |
@@ -144,9 +157,10 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
               with:
                   fetch-depth: 0
+                  show-progress: false
 
             - name: Install the dependencies
               run: |
@@ -181,7 +195,9 @@ jobs:
                   mysql -uroot -proot -e "CREATE database contao_test"
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
             - name: Install the dependencies
               run: composer install --no-interaction --no-progress
@@ -211,7 +227,9 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
             - name: Install the dependencies
               run: composer install --no-interaction --no-progress
@@ -237,7 +255,9 @@ jobs:
                   mysql -uroot -proot -e "CREATE database contao_test"
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
             - name: Install the dependencies
               run: composer install --ignore-platform-req=php+ --no-interaction --no-progress
@@ -267,7 +287,9 @@ jobs:
                   mysql -uroot -proot -e "CREATE database contao_test"
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
             - name: Install the dependencies
               run: composer update --prefer-lowest --prefer-stable --no-interaction --no-progress
@@ -297,7 +319,9 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
             - name: Test the single bundles
               run: |
@@ -337,7 +361,9 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
             - name: Install the dependencies
               run: |
