@@ -262,7 +262,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
         $authenticator->authenticate($request);
     }
 
-    public function getUserData(): \Generator
+    public static function getUserData(): iterable
     {
         $veryLongUsername = str_repeat('k.jones', (int) ceil(UserBadge::MAX_USERNAME_LENGTH / \strlen('k.jones')));
 
@@ -357,7 +357,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
         $authenticator->start($request);
     }
 
-    public function getAuthenticationData(): \Generator
+    public function getAuthenticationData(): iterable
     {
         $token = $this->createMock(UsernamePasswordToken::class);
 

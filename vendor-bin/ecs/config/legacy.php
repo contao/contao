@@ -13,7 +13,7 @@ declare(strict_types=1);
 use Contao\EasyCodingStandard\Fixer\ChainedMethodBlockFixer;
 use Contao\EasyCodingStandard\Fixer\CommentLengthFixer;
 use Contao\EasyCodingStandard\Fixer\MultiLineLambdaFunctionArgumentsFixer;
-use Contao\EasyCodingStandard\Fixer\TypeHintOrderFixer;
+use Contao\EasyCodingStandard\Set\SetList;
 use Contao\EasyCodingStandard\Sniffs\UseSprintfInExceptionsSniff;
 use PhpCsFixer\Fixer\Alias\ModernizeStrposFixer;
 use PhpCsFixer\Fixer\ArrayNotation\ArraySyntaxFixer;
@@ -26,7 +26,6 @@ use PhpCsFixer\Fixer\ControlStructure\ControlStructureContinuationPositionFixer;
 use PhpCsFixer\Fixer\ControlStructure\TrailingCommaInMultilineFixer;
 use PhpCsFixer\Fixer\ControlStructure\YodaStyleFixer;
 use PhpCsFixer\Fixer\FunctionNotation\NoSpacesAfterFunctionNameFixer;
-use PhpCsFixer\Fixer\FunctionNotation\NullableTypeDeclarationForDefaultNullValueFixer;
 use PhpCsFixer\Fixer\FunctionNotation\UseArrowFunctionsFixer;
 use PhpCsFixer\Fixer\FunctionNotation\VoidReturnFixer;
 use PhpCsFixer\Fixer\LanguageConstruct\GetClassToClassKeywordFixer;
@@ -57,7 +56,17 @@ use Symplify\EasyCodingStandard\Config\ECSConfig;
 use Symplify\EasyCodingStandard\ValueObject\Option;
 
 return ECSConfig::configure()
-    ->withSets([__DIR__.'/../vendor/contao/easy-coding-standard/config/contao.php'])
+    ->withSets([SetList::CONTAO])
+    ->withPaths([
+        __DIR__.'/../../../calendar-bundle/contao',
+        __DIR__.'/../../../comments-bundle/contao',
+        __DIR__.'/../../../core-bundle/contao',
+        __DIR__.'/../../../faq-bundle/contao',
+        __DIR__.'/../../../listing-bundle/contao',
+        __DIR__.'/../../../manager-bundle/contao',
+        __DIR__.'/../../../news-bundle/contao',
+        __DIR__.'/../../../newsletter-bundle/contao',
+    ])
     ->withSkip([
         '*/languages/*',
         '*/templates/*',
@@ -76,7 +85,6 @@ return ECSConfig::configure()
         MultilineWhitespaceBeforeSemicolonsFixer::class,
         NoSpacesAfterFunctionNameFixer::class,
         NoSuperfluousPhpdocTagsFixer::class,
-        NullableTypeDeclarationForDefaultNullValueFixer::class,
         OrderedClassElementsFixer::class,
         PhpdocOrderFixer::class,
         PhpdocScalarFixer::class,
@@ -93,7 +101,6 @@ return ECSConfig::configure()
         StrictComparisonFixer::class,
         StrictParamFixer::class,
         TrailingCommaInMultilineFixer::class,
-        TypeHintOrderFixer::class,
         UnusedVariableSniff::class,
         UseArrowFunctionsFixer::class,
         UselessParenthesesSniff::class,
@@ -112,5 +119,5 @@ return ECSConfig::configure()
     ->withConfiguredRule(HeaderCommentFixer::class, ['header' => "This file is part of Contao.\n\n(c) Leo Feyer\n\n@license LGPL-3.0-or-later"])
     ->withConfiguredRule(ListSyntaxFixer::class, ['syntax' => 'long'])
     ->withConfiguredRule(NoExtraBlankLinesFixer::class, ['tokens' => ['curly_brace_block', 'extra', 'parenthesis_brace_block', 'square_brace_block', 'use']])
-    ->withCache(sys_get_temp_dir().'/ecs_legacy_cache')
+    ->withCache(sys_get_temp_dir().'/ecs/contao5x-legacy')
 ;

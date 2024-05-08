@@ -195,7 +195,7 @@ class FilesystemItemIteratorTest extends TestCase
         iterator_to_array($iterator);
     }
 
-    public function provideInvalidItems(): \Generator
+    public static function provideInvalidItems(): iterable
     {
         yield 'scalar' => [42, 'int'];
         yield 'object of wrong type' => [new \stdClass(), 'stdClass'];

@@ -64,7 +64,11 @@ final class ParsedSequence implements \IteratorAggregate, \Countable
         $serialized = '';
 
         foreach ($this as $item) {
-            $serialized .= \is_string($item) ? $item : $item->serialize();
+            $serialized .= match (true) {
+                $item instanceof InsertTag => $item->serialize(),
+                $item instanceof InsertTagResult => $item->getValue(),
+                default => (string) $item,
+            };
         }
 
         return $serialized;

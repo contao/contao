@@ -111,7 +111,7 @@ class StringUtilTest extends TestCase
         $this->assertSame($base32.$base32, StringUtil::decodeBase32(StringUtil::encodeBase32($base32.$base32)));
     }
 
-    public function getBase32(): \Generator
+    public static function getBase32(): iterable
     {
         yield ['', ''];
         yield [' ', '40'];
@@ -168,7 +168,7 @@ class StringUtilTest extends TestCase
         StringUtil::decodeBase32($invalid);
     }
 
-    public function getBase32Invalid(): \Generator
+    public static function getBase32Invalid(): iterable
     {
         yield [' '];
         yield ['-'];
@@ -248,7 +248,7 @@ class StringUtilTest extends TestCase
         $this->assertSame($expected, StringUtil::trimsplit($pattern, $string));
     }
 
-    public function trimsplitProvider(): \Generator
+    public static function trimsplitProvider(): iterable
     {
         yield 'Test regular split' => [
             ',',
@@ -301,7 +301,7 @@ class StringUtilTest extends TestCase
         $this->assertSame($expected ?? $source, StringUtil::revertInputEncoding($inputEncoded));
     }
 
-    public function getRevertInputEncoding(): \Generator
+    public static function getRevertInputEncoding(): iterable
     {
         yield ['foobar'];
         yield ['foo{{email::test@example.com}}bar'];
@@ -331,7 +331,7 @@ class StringUtilTest extends TestCase
         mb_substitute_character($prevSubstituteCharacter);
     }
 
-    public function validEncodingsProvider(): \Generator
+    public function validEncodingsProvider(): iterable
     {
         yield 'From UTF-8 to ISO-8859-1' => [
             '𝚏ōȏճăᴦ',
@@ -432,7 +432,7 @@ class StringUtilTest extends TestCase
         $this->assertSame($expected, StringUtil::addBasePath($data));
     }
 
-    public function getAddBasePathData(): \Generator
+    public static function getAddBasePathData(): iterable
     {
         yield [
             '<p><a href="{{env::base_path}}/en/foo.html"><img src="{{env::base_path}}/files/img.jpg" alt></a></p>',
@@ -458,7 +458,7 @@ class StringUtilTest extends TestCase
         $this->assertSame($expected, StringUtil::removeBasePath($data));
     }
 
-    public function getRemoveBasePathData(): \Generator
+    public static function getRemoveBasePathData(): iterable
     {
         yield [
             '<p><a href="en/foo.html"><img src="files/img.jpg" alt></a></p>',
@@ -484,7 +484,7 @@ class StringUtilTest extends TestCase
         $this->assertSame($expected, StringUtil::numberToString($source, $precision));
     }
 
-    public function numberToStringProvider(): \Generator
+    public static function numberToStringProvider(): iterable
     {
         yield [0, '0'];
         yield [1, '1'];
@@ -517,7 +517,7 @@ class StringUtilTest extends TestCase
         StringUtil::numberToString($source, $precision);
     }
 
-    public function numberToStringFailsProvider(): \Generator
+    public static function numberToStringFailsProvider(): iterable
     {
         yield [INF, \InvalidArgumentException::class];
         yield [NAN, \InvalidArgumentException::class];

@@ -54,8 +54,8 @@ class FileDownloadHelper
     /**
      * Generate a signed file URL that a browser will display inline.
      *
-     * You can optionally provide an array of $context, that will also be
-     * incorporated into the URL.
+     * You can optionally provide an array of $context, that will also be incorporated
+     * into the URL.
      */
     public function generateInlineUrl(string $url, string $path, array|null $context = null): string
     {
@@ -68,8 +68,8 @@ class FileDownloadHelper
     /**
      * Generate a signed file URL that a browser will download.
      *
-     * You can optionally provide an array of $context, that will also be
-     * incorporated into the URL.
+     * You can optionally provide an array of $context, that will also be incorporated
+     * into the URL.
      */
     public function generateDownloadUrl(string $url, string $path, string|null $fileName = null, array|null $context = null): string
     {
@@ -89,10 +89,10 @@ class FileDownloadHelper
     /**
      * Handle download request and stream file contents.
      *
-     * If you need to add custom logic, you can implement the $onProcess
-     * closure that gets called with a FilesystemItem object and the context
-     * defined when generating the URL. You can shortcut operation by returning
-     * your own response there, otherwise return null.
+     * If you need to add custom logic, you can implement the $onProcess closure that
+     * gets called with a FilesystemItem object and the context defined when
+     * generating the URL. You can shortcut operation by returning your own response
+     * there, otherwise return null.
      *
      * @param (\Closure(FilesystemItem, array):Response|null)|null $onProcess
      */

@@ -48,11 +48,16 @@ class PageTypeOptionsListener
             ;
         }
 
+        // Return if there is no current page, e.g. in the help wizard (see #7137)
+        if (!$currentRecord = $dc->getCurrentRecord()) {
+            return array_values($options);
+        }
+
         // Allow the currently selected option and anything the user has access to
         foreach ($options as $k => $pageType) {
             if (
                 $pageType !== $dc->value
-                && !$this->security->isGranted(ContaoCorePermissions::DC_PREFIX.'tl_page', new UpdateAction('tl_page', $dc->getCurrentRecord(), ['type' => $pageType]))
+                && !$this->security->isGranted(ContaoCorePermissions::DC_PREFIX.'tl_page', new UpdateAction('tl_page', $currentRecord, ['type' => $pageType]))
             ) {
                 unset($options[$k]);
             }

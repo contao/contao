@@ -46,8 +46,8 @@ class PageRegistry implements ResetInterface
     /**
      * Returns the route for a page.
      *
-     * If no path is configured (is null), the route will accept
-     * any parameters after the page alias (e.g. "en/page-alias/foo/bar.html").
+     * If no path is configured (is null), the route will accept any parameters after
+     * the page alias (e.g. "en/page-alias/foo/bar.html").
      *
      * A route enhancer might enhance the route for a specific page.
      */

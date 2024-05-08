@@ -176,7 +176,7 @@ class PageModelTest extends TestCase
         $this->assertSame(42, $pageModel->id);
     }
 
-    public function similarAliasProvider(): \Generator
+    public static function similarAliasProvider(): iterable
     {
         yield 'Use original alias without prefix and suffix' => [
             [
@@ -335,7 +335,7 @@ class PageModelTest extends TestCase
         $this->assertSame($expectedLayout, $page->layout);
     }
 
-    public function layoutInheritanceParentPagesProvider(): \Generator
+    public static function layoutInheritanceParentPagesProvider(): iterable
     {
         yield 'no parent with an inheritable layout' => [
             [
@@ -408,7 +408,7 @@ class PageModelTest extends TestCase
         $this->assertSame($expectedFolderUrl, $page->folderUrl);
     }
 
-    public function folderUrlProvider(): \Generator
+    public static function folderUrlProvider(): iterable
     {
         yield 'Inherits the alias from parent page' => [
             [

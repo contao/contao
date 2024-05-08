@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Interop;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Node\Node;
 use Twig\Node\NodeOutputInterface;
@@ -20,13 +21,15 @@ use Twig\Node\NodeOutputInterface;
 /**
  * @experimental
  */
+#[YieldReady]
 final class PhpTemplateParentReferenceNode extends Node implements NodeOutputInterface
 {
     public function compile(Compiler $compiler): void
     {
-        // echo sprintf('[[TL_PARENT_%s]]', \[…]\ContaoFramework::getNonce());'
+        /** @see PhpTemplateParentReferenceNodeTest::testCompilesParentReferenceCode() */
         $compiler
-            ->write('echo sprintf(\'[[TL_PARENT_%s]]\', \\')
+            ->write(class_exists(YieldReady::class) ? 'yield' : 'echo') // Backwards compatibility
+            ->write(' sprintf(\'[[TL_PARENT_%s]]\', \\')
             ->raw(ContaoFramework::class)
             ->raw('::getNonce());'."\n")
         ;

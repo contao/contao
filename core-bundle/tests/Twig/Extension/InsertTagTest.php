@@ -54,7 +54,7 @@ class InsertTagTest extends TestCase
         $this->assertSame($expected, $this->render($content, $context));
     }
 
-    public function provideVariableStatements(): \Generator
+    public static function provideVariableStatements(): iterable
     {
         yield 'no insert tag replacement' => [
             '{{ text }}',

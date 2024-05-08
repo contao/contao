@@ -26,7 +26,7 @@ class WysiwygStyleProcessorTest extends TestCase
         $this->assertSame($expectedStyles, $processor->extractStyles($html));
     }
 
-    public function extractStylesProvider(): \Generator
+    public static function extractStylesProvider(): iterable
     {
         yield 'HTML without styles' => [
             '<p data-foobar="true">Content</p>',
