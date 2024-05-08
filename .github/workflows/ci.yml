@@ -118,14 +118,8 @@ jobs:
               with:
                   show-progress: false
 
-            - name: Install YAMLlint
-              run: |
-                  python3 -m pip install --upgrade pip --progress-bar off
-                  python3 -m pip install --upgrade setuptools wheel --progress-bar off
-                  python3 -m pip install --upgrade yamllint --progress-bar off
-
             - name: Run YAMLlint
-              run: /home/runner/.local/bin/yamllint .
+              run: yamllint --format=github .
 
     service-linter:
         name: Service linter
