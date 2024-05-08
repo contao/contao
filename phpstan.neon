@@ -1,4 +1,5 @@
 includes:
+    - tools/phpstan/config/config.php
     - tools/phpstan/vendor/phpstan/phpstan-phpunit/extension.neon
     - tools/phpstan/vendor/phpstan/phpstan-phpunit/rules.neon
     - tools/phpstan/vendor/phpstan/phpstan-symfony/extension.neon

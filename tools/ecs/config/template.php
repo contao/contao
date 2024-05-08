@@ -36,5 +36,5 @@ return static function (ECSConfig $ecsConfig): void {
 
     $parameters = $ecsConfig->parameters();
     $parameters->set(Option::FILE_EXTENSIONS, ['html5']);
-    $parameters->set(Option::CACHE_DIRECTORY, sys_get_temp_dir().'/ecs_template_cache');
+    $parameters->set(Option::CACHE_DIRECTORY, sys_get_temp_dir().'/ecs/contao413-template');
 };
