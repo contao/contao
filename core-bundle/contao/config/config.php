@@ -98,8 +98,6 @@ use Contao\RootPageDependentSelect;
 use Contao\SectionWizard;
 use Contao\SelectMenu;
 use Contao\SerpPreview;
-use Contao\StringUtil;
-use Contao\System;
 use Contao\TableWizard;
 use Contao\TextArea;
 use Contao\TextField;
@@ -110,7 +108,6 @@ use Contao\TrblField;
 use Contao\Upload;
 use Contao\UserGroupModel;
 use Contao\UserModel;
-use Symfony\Component\Filesystem\Path;
 
 // Back end modules
 $GLOBALS['BE_MOD'] = array
@@ -394,21 +391,17 @@ $GLOBALS['TL_PURGE'] = array
 		'images' => array
 		(
 			'callback' => array(Automator::class, 'purgeImageCache'),
-			'affected' => array(StringUtil::stripRootDir(System::getContainer()->getParameter('contao.image.target_dir')))
+			'affected' => array('%contao.image.target_dir%')
 		),
 		'previews' => array
 		(
 			'callback' => array(Automator::class, 'purgePreviewCache'),
-			'affected' => array(StringUtil::stripRootDir(System::getContainer()->getParameter('contao.image.preview.target_dir')))
+			'affected' => array('%contao.image.preview.target_dir%')
 		),
 		'scripts' => array
 		(
 			'callback' => array(Automator::class, 'purgeScriptCache'),
-			'affected' => array
-			(
-				Path::join(StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir')), 'assets/js'),
-				Path::join(StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir')), 'assets/css')
-			)
+			'affected' => array('%contao.web_dir%/assets/js', '%contao.web_dir%/assets/css')
 		),
 		'temp' => array
 		(
