@@ -9,6 +9,11 @@ on:
 
 permissions: read-all
 
+defaults:
+    run:
+        # Simulate an interactive terminal with color support
+        shell: script -q -e -c "export TERM=xterm; bash {0}"
+
 jobs:
     monorepo-split:
         name: Monorepo split
