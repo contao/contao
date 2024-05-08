@@ -27,10 +27,13 @@ jobs:
               with:
                   show-progress: false
 
-            - name: Install the dependencies
-              run: |
-                  composer install --no-interaction --no-progress
-                  composer bin rector install --no-interaction --no-progress
+            - name: Install Contao
+              uses: ramsey/composer-install@v3
+
+            - name: Install Rector
+              uses: ramsey/composer-install@v3
+              with:
+                  working-directory: vendor-bin/rector
 
             - name: Run Rector
               run: vendor-bin/rector/vendor/bin/rector --dry-run --no-progress-bar
@@ -51,10 +54,13 @@ jobs:
               with:
                   show-progress: false
 
-            - name: Install the dependencies
-              run: |
-                  composer install --no-interaction --no-progress
-                  composer bin ecs install --no-interaction --no-progress
+            - name: Install Contao
+              uses: ramsey/composer-install@v3
+
+            - name: Install ECS
+              uses: ramsey/composer-install@v3
+              with:
+                  working-directory: vendor-bin/ecs
 
             - name: Run ECS
               run: vendor-bin/ecs/vendor/bin/ecs check --no-progress-bar
@@ -75,10 +81,13 @@ jobs:
               with:
                   show-progress: false
 
-            - name: Install the dependencies
-              run: |
-                  composer install --no-interaction --no-progress
-                  composer bin ecs install --no-interaction --no-progress
+            - name: Install Contao
+              uses: ramsey/composer-install@v3
+
+            - name: Install ECS
+              uses: ramsey/composer-install@v3
+              with:
+                  working-directory: vendor-bin/ecs
 
             - name: Run ECS
               run: |
@@ -101,10 +110,13 @@ jobs:
               with:
                   show-progress: false
 
-            - name: Install the dependencies
-              run: |
-                  composer install --no-interaction --no-progress
-                  composer bin phpstan install --no-interaction --no-progress
+            - name: Install Contao
+              uses: ramsey/composer-install@v3
+
+            - name: Install PHPStan
+              uses: ramsey/composer-install@v3
+              with:
+                  working-directory: vendor-bin/phpstan
 
             - name: Run PHPStan
               run: vendor-bin/phpstan/vendor/bin/phpstan analyse --no-progress
@@ -137,10 +149,13 @@ jobs:
               with:
                   show-progress: false
 
-            - name: Install the dependencies
-              run: |
-                  composer install --no-interaction --no-progress
-                  composer bin service-linter install --no-interaction --no-progress
+            - name: Install Contao
+              uses: ramsey/composer-install@v3
+
+            - name: Install the service linter
+              uses: ramsey/composer-install@v3
+              with:
+                  working-directory: vendor-bin/service-linter
 
             - name: Run the service linter
               run: vendor-bin/service-linter/bin/lint-service-ids
@@ -162,11 +177,18 @@ jobs:
                   fetch-depth: 0
                   show-progress: false
 
-            - name: Install the dependencies
-              run: |
-                  composer install --no-interaction --no-progress
-                  composer -dcore-bundle install --no-interaction --no-progress
-                  composer bin depcheck install --no-interaction --no-progress
+            - name: Install Contao
+              uses: ramsey/composer-install@v3
+
+            - name: Install the core bundle
+              uses: ramsey/composer-install@v3
+              with:
+                  working-directory: core-bundle
+
+            - name: Install depcheck
+              uses: ramsey/composer-install@v3
+              with:
+                  working-directory: vendor-bin/depcheck
 
             - name: Check for unknown symbols (contao/contao)
               run: vendor-bin/depcheck/vendor/bin/composer-dependency-analyser --config=depcheck.php
@@ -199,8 +221,8 @@ jobs:
               with:
                   show-progress: false
 
-            - name: Install the dependencies
-              run: composer install --no-interaction --no-progress
+            - name: Install Contao
+              uses: ramsey/composer-install@v3
 
             - name: Run the unit tests
               run: vendor/bin/phpunit
@@ -231,8 +253,8 @@ jobs:
               with:
                   show-progress: false
 
-            - name: Install the dependencies
-              run: composer install --no-interaction --no-progress
+            - name: Install Contao
+              uses: ramsey/composer-install@v3
 
             - name: Run the unit tests in reverse order
               run: vendor/bin/phpunit --order-by=reverse --extensions Contao\\CoreBundle\\Tests\\PhpunitExtension\\GlobalStateWatcher
@@ -259,8 +281,10 @@ jobs:
               with:
                   show-progress: false
 
-            - name: Install the dependencies
-              run: composer install --ignore-platform-req=php+ --no-interaction --no-progress
+            - name: Install Contao
+              uses: ramsey/composer-install@v3
+              with:
+                  composer-options: --ignore-platform-req=php+
 
             - name: Run the unit tests
               run: vendor/bin/phpunit
@@ -291,8 +315,10 @@ jobs:
               with:
                   show-progress: false
 
-            - name: Install the dependencies
-              run: composer update --prefer-lowest --prefer-stable --no-interaction --no-progress
+            - name: Install Contao
+              uses: ramsey/composer-install@v3
+              with:
+                  dependency-versions: lowest
 
             - name: Run the unit tests
               run: vendor/bin/phpunit
@@ -365,10 +391,13 @@ jobs:
               with:
                   show-progress: false
 
-            - name: Install the dependencies
-              run: |
-                  composer install --no-interaction --no-progress
-                  composer bin monorepo-tools install --no-interaction --no-progress
+            - name: Install Contao
+              uses: ramsey/composer-install@v3
+
+            - name: Install PHPStan
+              uses: ramsey/composer-install@v3
+              with:
+                  working-directory: vendor-bin/monorepo-tools
 
             - name: Validate the composer.json files
               run: vendor-bin/monorepo-tools/vendor/bin/monorepo-tools composer-json --validate
