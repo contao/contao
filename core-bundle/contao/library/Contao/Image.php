@@ -81,23 +81,8 @@ class Image
 			return $src;
 		}
 
-		$webDir = System::getContainer()->getParameter('contao.web_dir');
-
 		if (str_starts_with($src, 'icon'))
 		{
-			if (pathinfo($src, PATHINFO_EXTENSION) == 'svg')
-			{
-				return 'assets/contao/images/' . $src;
-			}
-
-			$filename = pathinfo($src, PATHINFO_FILENAME);
-
-			// Prefer SVG icons
-			if (file_exists($webDir . '/assets/contao/images/' . $filename . '.svg'))
-			{
-				return 'assets/contao/images/' . $filename . '.svg';
-			}
-
 			return 'assets/contao/images/' . $src;
 		}
 
@@ -113,13 +98,7 @@ class Image
 			trigger_deprecation('contao/core-bundle', '5.2', 'Using the "%s" icon has been deprecated and will no longer work in Contao 6. Use the "%s--disabled" icon instead.', $filename, substr($filename, 0, -1));
 		}
 
-		// Prefer SVG icons
-		if (file_exists($webDir . '/system/themes/' . $theme . '/icons/' . $filename . '.svg'))
-		{
-			return 'system/themes/' . $theme . '/icons/' . $filename . '.svg';
-		}
-
-		return 'system/themes/' . $theme . '/images/' . $src;
+		return 'system/themes/' . $theme . '/icons/' . $src;
 	}
 
 	/**
