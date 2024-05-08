@@ -28,7 +28,9 @@ jobs:
                   coverage: pcov
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
             - name: Install the dependencies
               run: composer install --no-interaction --no-progress

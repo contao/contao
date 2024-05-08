@@ -23,7 +23,9 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
             - name: Install the dependencies
               run: |
@@ -45,7 +47,9 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
             - name: Install the dependencies
               run: |
@@ -67,7 +71,9 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
             - name: Install the dependencies
               run: |
@@ -91,7 +97,9 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
             - name: Install the dependencies
               run: |
@@ -106,7 +114,9 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
             - name: Install YAMLlint
               run: |
@@ -129,7 +139,9 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
             - name: Install the dependencies
               run: |
@@ -151,9 +163,10 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
               with:
                   fetch-depth: 0
+                  show-progress: false
 
             - name: Install the dependencies
               run: |
@@ -188,7 +201,9 @@ jobs:
                   mysql -uroot -proot -e "CREATE database contao_test"
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
             - name: Install the dependencies
               run: composer install --no-interaction --no-progress
@@ -218,7 +233,9 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
             - name: Install the dependencies
               run: composer install --no-interaction --no-progress
@@ -244,7 +261,9 @@ jobs:
                   mysql -uroot -proot -e "CREATE database contao_test"
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
             - name: Install the dependencies
               run: composer install --ignore-platform-req=php+ --no-interaction --no-progress
@@ -274,7 +293,9 @@ jobs:
                   mysql -uroot -proot -e "CREATE database contao_test"
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
             - name: Install the dependencies
               run: composer update --prefer-lowest --prefer-stable --no-interaction --no-progress
@@ -304,7 +325,9 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
             - name: Test the single bundles
               run: |
@@ -344,7 +367,9 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
             - name: Install the dependencies
               run: |
