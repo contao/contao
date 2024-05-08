@@ -12,6 +12,7 @@ namespace Contao;
 
 use ScssPhp\ScssPhp\Compiler;
 use ScssPhp\ScssPhp\OutputStyle;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Combines .css or .js files into one single file
@@ -67,6 +68,11 @@ class Combiner extends System
 	protected $arrFiles = array();
 
 	/**
+	 * @var Filesystem
+	 */
+	protected $filesystem;
+
+	/**
 	 * Web dir
 	 * @var string
 	 */
@@ -77,6 +83,7 @@ class Combiner extends System
 	 */
 	public function __construct()
 	{
+		$this->filesystem = new Filesystem();
 		$this->strWebDir = System::getContainer()->getParameter('contao.web_dir');
 	}
 
@@ -195,9 +202,10 @@ class Combiner extends System
 
 				if ($blnDebug || !file_exists($this->strWebDir . '/' . $strPath))
 				{
-					$objFile = new File(StringUtil::stripRootDir($this->strWebDir . '/' . $strPath));
-					$objFile->write($this->handleScssLess(file_get_contents($this->strWebDir . '/' . $arrFile['name']), $arrFile));
-					$objFile->close();
+					$this->filesystem->dumpFile(
+						$this->strWebDir . '/' . $strPath,
+						$this->handleScssLess(file_get_contents($this->strWebDir . '/' . $arrFile['name']), $arrFile)
+					);
 				}
 
 				$return[] = $strUrl . $strPath . '|' . $arrFile['version'];
@@ -301,9 +309,7 @@ class Combiner extends System
 			return $strUrl . 'assets/' . $strTarget . '/' . $strKey . $this->strMode;
 		}
 
-		// Create the file
-		$objFile = new File(StringUtil::stripRootDir($this->strWebDir . '/assets/' . $strTarget . '/' . $strKey . $this->strMode));
-		$objFile->truncate();
+		$combinedContent = '';
 
 		foreach ($this->arrFiles as $arrFile)
 		{
@@ -333,11 +339,13 @@ class Combiner extends System
 				$content = $this->handleScssLess($content, $arrFile);
 			}
 
-			$objFile->append($content);
+			$combinedContent .= "$content\n";
 		}
 
 		unset($content);
-		$objFile->close();
+
+		// Create the file
+		$this->filesystem->dumpFile($this->strWebDir . '/assets/' . $strTarget . '/' . $strKey . $this->strMode, $combinedContent);
 
 		return $strUrl . 'assets/' . $strTarget . '/' . $strKey . $this->strMode;
 	}
