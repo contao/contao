@@ -181,7 +181,6 @@ class EntityCacheTagsTest extends DoctrineTestCase
         $page2->id = 6;
 
         $modelCollection = new Collection([$page1, $page2], 'tl_page');
-
         $entityCacheTags = $this->getEntityCacheTags();
 
         $this->assertSame(['contao.db.tl_page.5'], $entityCacheTags->getTagsFor($page1));
