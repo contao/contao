@@ -28,15 +28,14 @@ use Symfony\Contracts\Service\ResetInterface;
  *
  * In Contao, we use the same cache strategy to merge inline fragments into the
  * main page content. This means a fragment like a content element or frontend
- * module can influence the cache time of the page. A user might configure a
- * cache time of 1 day in the page settings, but the news list module might
- * know there is a news item scheduled for publishing in 5 hours (start time),
- * so the page cache time will be set to 5 hours instead.
+ * module can influence the cache time of the page. A user might configure a cache
+ * time of 1 day in the page settings, but the news list module might know there
+ * is a news item scheduled for publishing in 5 hours (start time), so the page
+ * cache time will be set to 5 hours instead.
  *
- * To apply the cache merging, a specific header needs to be present in both
- * the main and sub-request response. The header is automatically set for the
- * page content and classes implementing the abstract content element and
- * module controllers.
+ * To apply the cache merging, a specific header needs to be present in both the main
+ * and sub-request response. The header is automatically set for the page content and
+ * classes implementing the abstract content element and module controllers.
  *
  * @internal
  */

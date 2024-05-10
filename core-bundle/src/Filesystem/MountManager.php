@@ -23,8 +23,8 @@ use Symfony\Component\Filesystem\Path;
 
 /**
  * This class allows accessing multiple Flysystem adapters as if there was only
- * one interface. Which adapter is chosen for each operation is determined by
- * the path (prefix) each adapter is registered with.
+ * one interface. Which adapter is chosen for each operation is determined by the
+ * path (prefix) each adapter is registered with.
  *
  * Note: In general, user code should not directly interface with the
  *       MountManager, but use the VirtualFilesystem instead.

@@ -320,7 +320,7 @@ class RegisterFragmentsPassTest extends TestCase
         $this->assertSame(['tl_content', $expectedCustomTemplates], $calls[0][1]);
     }
 
-    public function provideTemplateNames(): \Generator
+    public static function provideTemplateNames(): iterable
     {
         yield 'legacy template' => [
             'ce_text',

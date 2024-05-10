@@ -57,7 +57,7 @@ class DebugPluginsCommandTest extends ContaoTestCase
         $this->assertStringContainsString($expectedOutput, $commandTester->getDisplay(true));
     }
 
-    public function commandOutputProvider(): \Generator
+    public static function commandOutputProvider(): iterable
     {
         yield 'Lists the test plugin' => [
             ['foo/bar-bundle' => new FixturesPlugin()],

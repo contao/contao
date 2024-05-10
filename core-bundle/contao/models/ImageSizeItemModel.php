@@ -92,6 +92,6 @@ class ImageSizeItemModel extends Model
 	{
 		$t = static::$strTable;
 
-		return static::findBy(array("$t.pid=? AND $t.invisible=0"), (int) $intPid, $arrOptions);
+		return static::findBy(array("$t.pid=? AND $t.invisible=0 AND $t.tstamp>0"), (int) $intPid, $arrOptions);
 	}
 }

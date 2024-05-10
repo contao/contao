@@ -372,7 +372,7 @@ class TemplateTest extends TestCase
         unset($GLOBALS['objPage']);
     }
 
-    public function provideBuffer(): \Generator
+    public static function provideBuffer(): iterable
     {
         yield 'plain string' => [
             'foo bar',
@@ -524,7 +524,7 @@ class TemplateTest extends TestCase
         $style = 'display:none';
         $algorithm = 'sha384';
 
-        $result = (new FrontendTemplate())->cspInlineStyle($style, $algorithm);
+        $result = (new FrontendTemplate())->cspUnsafeInlineStyle($style, $algorithm);
 
         $response = new Response();
         $cspHandler->applyHeaders($response);

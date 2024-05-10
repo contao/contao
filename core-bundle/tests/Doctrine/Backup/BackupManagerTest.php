@@ -304,7 +304,7 @@ class BackupManagerTest extends ContaoTestCase
         $manager->restore(new RestoreConfig($backup));
     }
 
-    public function successfulRestoreProvider(): \Generator
+    public static function successfulRestoreProvider(): iterable
     {
         $backup = Backup::createNew();
 

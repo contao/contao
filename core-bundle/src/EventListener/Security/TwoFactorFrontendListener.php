@@ -47,8 +47,8 @@ class TwoFactorFrontendListener
     }
 
     /**
-     * If we are in the front end, make sure the user completes the two-factor login process,
-     * or sets up the two-factor authentication if it is enforced in the root page.
+     * If we are in the front end, make sure the user completes the two-factor login
+     * process, or sets up the two-factor authentication if it is enforced in the root page.
      */
     public function __invoke(RequestEvent $event): void
     {

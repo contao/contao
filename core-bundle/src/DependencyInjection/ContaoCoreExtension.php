@@ -48,6 +48,7 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Toflar\CronjobSupervisor\Supervisor;
 
 class ContaoCoreExtension extends Extension implements PrependExtensionInterface, ConfigureFilesystemInterface
 {
@@ -108,10 +109,9 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $loader->load('migrations.yaml');
         $loader->load('services.yaml');
 
-        $container->setParameter('contao.web_dir', Path::join($projectDir, $this->getComposerExtraConfig($projectDir, 'public-dir') ?? 'public'));
+        $container->setParameter('contao.web_dir', $this->getComposerPublicDir($projectDir) ?? Path::join($projectDir, 'public'));
         $container->setParameter('contao.console_path', $config['console_path']);
         $container->setParameter('contao.upload_path', $config['upload_path']);
-        $container->setParameter('contao.component_dir', $this->getComposerExtraConfig($projectDir, 'contao-component-dir') ?? 'assets');
         $container->setParameter('contao.editable_files', $config['editable_files']);
         $container->setParameter('contao.preview_script', $config['preview_script']);
         $container->setParameter('contao.csrf_cookie_prefix', $config['csrf_cookie_prefix']);
@@ -212,10 +212,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
                 },
             );
         }
-
-        if ($container->hasParameter('kernel.debug') && $container->getParameter('kernel.debug')) {
-            $loader->load('services_debug.yaml');
-        }
     }
 
     public function configureFilesystem(FilesystemConfiguration $config): void
@@ -254,16 +250,24 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             return;
         }
 
+        // Disable workers completely if supervision is not supported
+        if (!Supervisor::canSuperviseWithProviders(Supervisor::getDefaultProviders())) {
+            $config['messenger']['workers'] = [];
+        } else {
+            $supervisor = new Definition(Supervisor::class);
+            $supervisor->setFactory([Supervisor::class, 'withDefaultProviders']);
+            $supervisor->addArgument('%kernel.cache_dir%/worker-supervisor');
+
+            $command = $container->getDefinition('contao.command.supervise_workers');
+            $command->setArgument(2, $supervisor);
+            $command->setArgument(3, $config['messenger']['workers']);
+        }
+
         // No workers defined -> remove our cron job and the command
         if (0 === \count($config['messenger']['workers'])) {
             $container->removeDefinition('contao.cron.supervise_workers');
             $container->removeDefinition('contao.command.supervise_workers');
-
-            return;
         }
-
-        $command = $container->getDefinition('contao.command.supervise_workers');
-        $command->setArgument(3, $config['messenger']['workers']);
     }
 
     private function handleSearchConfig(array $config, ContainerBuilder $container): void
@@ -318,8 +322,8 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         }
 
         $factory = $container->getDefinition('contao.crawl.escargot.factory');
-        $factory->setArgument(3, $config['crawl']['additional_uris']);
-        $factory->setArgument(4, $config['crawl']['default_http_client_options']);
+        $factory->setArgument(4, $config['crawl']['additional_uris']);
+        $factory->setArgument(5, $config['crawl']['default_http_client_options']);
     }
 
     /**
@@ -510,7 +514,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         }
     }
 
-    private function getComposerExtraConfig(string $projectDir, string $extra): string|null
+    private function getComposerPublicDir(string $projectDir): string|null
     {
         $fs = new Filesystem();
 
@@ -520,7 +524,11 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
         $composerConfig = json_decode(file_get_contents($composerJsonFilePath), true, 512, JSON_THROW_ON_ERROR);
 
-        return $composerConfig['extra'][$extra] ?? null;
+        if (null === ($publicDir = $composerConfig['extra']['public-dir'] ?? null)) {
+            return null;
+        }
+
+        return Path::join($projectDir, $publicDir);
     }
 
     private function handleSecurityConfig(array $config, ContainerBuilder $container): void

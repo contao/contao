@@ -13,16 +13,24 @@
     .mergeWith(content_layout_attributes, default_content_layout is not defined or default_content_layout)
 %}
 
+{# Media #}
+{% block text_media %}
+    {% if image %}
+        {% with {figure: image} %}{{ block('figure_component') }}{% endwith %}
+    {% endif %}
+{% endblock %}
+
 {% block content %}
-    {# Media #}
-    {% block text_media %}
-        {% if image %}
-            {% with {figure: image} %}{{ block('figure_component') }}{% endwith %}
-        {% endif %}
-    {% endblock %}
+    {% if layout != 'below' %}
+        {{ block('text_media') }}
+    {% endif %}
 
     {# Richtext #}
     {% block text %}
         {% with {text, attributes: text_attributes|default} %}{{ block('rich_text_component') }}{% endwith %}
     {% endblock %}
+
+    {% if layout == 'below' %}
+        {{ block('text_media') }}
+    {% endif %}
 {% endblock %}

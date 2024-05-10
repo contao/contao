@@ -591,7 +591,7 @@ class ImageFactoryTest extends TestCase
         );
     }
 
-    public function getCreateWithLegacyMode(): \Generator
+    public static function getCreateWithLegacyMode(): iterable
     {
         yield 'Left Top' => ['left_top', [0, 0, 0, 0]];
         yield 'Left Center' => ['left_center', [0, 0, 0, 1]];

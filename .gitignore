@@ -3,15 +3,7 @@
 /vendor/
 
 # Composer bin
-/tools/*/vendor
-/tools/monorepo/composer.lock
-
-# Cypress
-/cypress/screenshots/
-/cypress/videos/
-/cypress/webspace/*
-!/cypress/webspace/.env
-!/cypress/webspace/composer.json
+/vendor-bin/*/vendor/
 
 # Monorepo Tools
 /.monorepo-split-cache/
@@ -25,9 +17,9 @@
 !/.yarn/sdks
 !/.yarn/versions
 
+# Cypress
+/cypress/
+
 # PhpUnit
 /.phpunit.result.cache
 /phpunit.xml
-
-# CS fixer
-/.php_cs.cache

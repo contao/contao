@@ -22,9 +22,10 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
 
 /**
- * The priority must be lower than the one of MergeHttpHeadersListener (defaults to 256) and
- * must be lower than the one of the ClearSessionDataListener listener (defaults to -768) and
- * must be lower than the one of the CsrfTokenCookieSubscriber listener (defaults to -832).
+ * The priority must be lower than the one of MergeHttpHeadersListener (defaults
+ * to 256) and must be lower than the one of the ClearSessionDataListener listener
+ * (defaults to -768) and must be lower than the one of the
+ * CsrfTokenCookieSubscriber listener (defaults to -832).
  *
  * @internal
  */
@@ -38,16 +39,17 @@ class MakeResponsePrivateListener
     }
 
     /**
-     * Make sure that the current response becomes a private response if any
-     * of the following conditions are true.
+     * Make sure that the current response becomes a private response if any of the
+     * following conditions are true.
      *
      *   1. An Authorization header is present and not empty
      *   2. The session was started
      *   3. The response sets a cookie (same reason as 2 but for other cookies than the session cookie)
      *   4. The response has a "Vary: Cookie" header and the request provides at least one cookie
      *
-     * Some of this logic is also already implemented in the HttpCache (1, 2 and 3), but we
-     * want to make sure it works for any reverse proxy without having to configure too much.
+     * Some of this logic is also already implemented in the HttpCache (1, 2 and 3),
+     * but we want to make sure it works for any reverse proxy without having to
+     * configure too much.
      */
     public function __invoke(ResponseEvent $event): void
     {

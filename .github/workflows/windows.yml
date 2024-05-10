@@ -19,7 +19,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.2
+                  php-version: 8.2 # not all packages are compatible with PHP 8.3 yet
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   ini-values: memory_limit=1G
                   coverage: none
@@ -28,23 +28,13 @@ jobs:
               run: git config --global core.autocrlf false
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
               with:
                   ref: ${{ matrix.contao }}
+                  show-progress: false
 
-            - name: Get the Composer cache directory
-              id: composer-cache
-              run: echo "name=dir::$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-
-            - name: Cache the dependencies
-              uses: actions/cache@v3
-              with:
-                  path: ${{ steps.composer-cache.outputs.dir }}
-                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-                  restore-keys: ${{ runner.os }}-composer-
-
-            - name: Install the dependencies
-              run: composer install --no-interaction --no-progress
+            - name: Install Contao
+              uses: ramsey/composer-install@v3
 
             - name: Run the unit tests
-              run: vendor/bin/phpunit.bat --colors=always
+              run: vendor/bin/phpunit.bat

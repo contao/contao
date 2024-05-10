@@ -115,7 +115,7 @@ class ContentElementTestCase extends TestCase
     /**
      * @param array<string, mixed> $modelData
      *
-     * @param-out array<string, array<int|string, string>> $responseContextData
+     * @param-out array $responseContextData
      */
     protected function renderWithModelData(AbstractContentElementController $controller, array $modelData, string|null $template = null, bool $asEditorView = false, array|null &$responseContextData = null, ContainerBuilder|null $adjustedContainer = null, array $nestedFragments = []): Response
     {
@@ -201,11 +201,12 @@ class ContentElementTestCase extends TestCase
         // Record response context data
         $responseContextData = array_filter([
             DocumentLocation::head->value => $GLOBALS['TL_HEAD'] ?? [],
+            DocumentLocation::stylesheets->value => $GLOBALS['TL_STYLE_SHEETS'] ?? [],
             DocumentLocation::endOfBody->value => $GLOBALS['TL_BODY'] ?? [],
         ]);
 
         // Reset state
-        unset($GLOBALS['TL_HEAD'], $GLOBALS['TL_BODY']);
+        unset($GLOBALS['TL_HEAD'], $GLOBALS['TL_STYLE_SHEETS'], $GLOBALS['TL_BODY']);
 
         $this->resetStaticProperties([Highlighter::class]);
 

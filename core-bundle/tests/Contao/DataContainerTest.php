@@ -29,7 +29,7 @@ class DataContainerTest extends TestCase
         $this->assertSame($expected, array_values($names));
     }
 
-    public function getCombinerValues(): array
+    public static function getCombinerValues(): iterable
     {
         return [
             [

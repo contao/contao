@@ -71,7 +71,7 @@ class RequestProcessorTest extends ContaoTestCase
         $this->assertArrayNotHasKey('request_method', $record['extra']);
     }
 
-    public function logExtrasProvider(): \Generator
+    public static function logExtrasProvider(): iterable
     {
         yield [
             'https://example.com/foo/bar',
