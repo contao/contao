@@ -98,17 +98,15 @@ abstract class AbstractBasicEntitiesMigration extends AbstractMigration
     }
 
     /**
-     * Returns an array of arrays with the first element being the database
-     * table name and the second being the column name.
+     * Returns an array of arrays with the first element being the database table name
+     * and the second being the column name.
      *
      * For example:
      *
-     * ```php
-     * return [
-     *     ['tl_news', 'title'],
-     *     ['tl_news', 'description'],
-     * ];
-     * ```
+     *     return [
+     *         ['tl_news', 'title'],
+     *         ['tl_news', 'description'],
+     *     ];
      *
      * @return list<array{0:string, 1:string}>
      */

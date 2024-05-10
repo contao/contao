@@ -61,7 +61,7 @@ abstract class DeprecatedClassesPhpunitExtension implements AfterLastTestHook, B
         $unhandledErrors = [];
 
         $previousHandler = set_error_handler(
-            static function ($errno, $errstr) use (&$expectedDeprecations, &$previousHandler, &$unhandledErrors) {
+            static function ($errno, $errstr) use (&$expectedDeprecations, &$unhandledErrors, &$previousHandler) {
                 foreach ($expectedDeprecations as $key => $expectedDeprecation) {
                     if ((new StringMatchesFormatDescription($expectedDeprecation))->evaluate($errstr, '', true)) {
                         unset($expectedDeprecations[$key]);

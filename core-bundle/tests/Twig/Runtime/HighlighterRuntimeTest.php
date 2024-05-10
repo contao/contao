@@ -43,7 +43,7 @@ class HighlighterRuntimeTest extends TestCase
         $this->assertSame('the <highlighted> code', (string) $result);
     }
 
-    public function provideLanguageNames(): \Generator
+    public static function provideLanguageNames(): iterable
     {
         yield 'unchanged default' => ['php', 'php'];
 

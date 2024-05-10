@@ -353,7 +353,7 @@ class RouteProviderTest extends TestCase
         }
     }
 
-    public function getRoutes(): \Generator
+    public function getRoutes(): iterable
     {
         yield 'Sorts host first (1)' => [
             [
@@ -567,7 +567,7 @@ class RouteProviderTest extends TestCase
         }
     }
 
-    public function getRootRoutes(): \Generator
+    public function getRootRoutes(): iterable
     {
         $pages = [
             2 => $this->mockRootPage('en', 'english-root'),
@@ -718,7 +718,7 @@ class RouteProviderTest extends TestCase
         $this->getRouteProvider($framework, $pageRegistry)->getRouteByName('tl_page.18');
     }
 
-    public function getPageRoutes(): \Generator
+    public static function getPageRoutes(): iterable
     {
         foreach (['foo', 'foo/bar'] as $alias) {
             foreach (['en', 'de'] as $language) {

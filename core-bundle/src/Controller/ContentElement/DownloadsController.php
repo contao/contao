@@ -70,8 +70,8 @@ class DownloadsController extends AbstractDownloadContentElementController
     }
 
     /**
-     * Retrieve selected filesystem items but filter out those, that do not
-     * match the current DCA and configuration constraints.
+     * Retrieve selected filesystem items but filter out those, that do not match the
+     * current DCA and configuration constraints.
      */
     protected function getFilesystemItems(Request $request, ContentModel $model): FilesystemItemIterator
     {

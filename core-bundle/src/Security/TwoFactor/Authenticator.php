@@ -67,11 +67,11 @@ class Authenticator
     /**
      * Encodes the binary secret into base32 format (uppercase and not padded).
      *
-     * The 2FA app from Google (Google authenticator) does not strictly confirm
-     * to RFC 4648 [1] but to the old RFC 3548 [2].
+     * The 2FA app from Google (Google authenticator) does not strictly confirm to RFC
+     * 4648 but to the old RFC 3548.
      *
-     * [1] https://github.com/paragonie/constant_time_encoding/issues/9#issuecomment-331469087
-     * [2] https://github.com/google/google-authenticator/wiki/Key-Uri-Format#secret
+     * @see https://github.com/paragonie/constant_time_encoding/issues/9#issuecomment-331469087
+     * @see https://github.com/google/google-authenticator/wiki/Key-Uri-Format#secret
      */
     private function getUpperUnpaddedSecretForUser(User $user): string
     {

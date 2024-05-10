@@ -148,7 +148,7 @@ class ConfigureFilesystemPassTest extends TestCase
         $filesystem->remove(Path::join($tempDir, 'vendor'));
     }
 
-    public function provideSymlinks(): \Generator
+    public static function provideSymlinks(): iterable
     {
         yield 'absolute symlink' => [
             '<root>/vendor/foo',

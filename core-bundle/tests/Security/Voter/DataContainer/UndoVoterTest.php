@@ -126,7 +126,7 @@ class UndoVoterTest extends TestCase
         );
     }
 
-    public function voteOnActionProvider(): \Generator
+    public static function voteOnActionProvider(): iterable
     {
         yield [
             ['id' => 42],

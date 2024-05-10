@@ -85,7 +85,7 @@ class DcTableTest extends TestCase
         $this->assertSame($expected, $dataContainer->getPalette());
     }
 
-    public function getPalette(): \Generator
+    public static function getPalette(): iterable
     {
         yield [
             [

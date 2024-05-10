@@ -56,7 +56,7 @@ class ModelArgumentResolverTest extends TestCase
         }
     }
 
-    public function getArguments(): \Generator
+    public static function getArguments(): iterable
     {
         yield ['pageModel', PageModel::class];
         yield ['foobar', PageModel::class];

@@ -55,7 +55,7 @@ class ArrayUtilTest extends TestCase
         $this->assertSame($expectedFlipped, ArrayUtil::sortByOrderField($itemFlipped, serialize($order), null, true));
     }
 
-    public function sortByOrderFieldProvider(): \Generator
+    public static function sortByOrderFieldProvider(): iterable
     {
         yield [
             ['a', 'b', 'c'],

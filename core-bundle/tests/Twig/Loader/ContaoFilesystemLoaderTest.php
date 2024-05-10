@@ -221,7 +221,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $this->assertSame($isFresh, $loader->isFresh('@Contao/text.html.twig', 1623924000));
     }
 
-    public function provideTemplateFilemtimeSamples(): \Generator
+    public static function provideTemplateFilemtimeSamples(): iterable
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
         $cacheTime = 1623924000;
@@ -295,7 +295,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $loader->getDynamicParent($identifier, $sourcePath);
     }
 
-    public function provideInvalidDynamicParentQueries(): \Generator
+    public static function provideInvalidDynamicParentQueries(): iterable
     {
         yield 'invalid chain' => [
             'random',
@@ -336,7 +336,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $this->assertSame($expectedChains, $loader->getInheritanceChains($themeSlug));
     }
 
-    public function provideThemeSlugs(): \Generator
+    public static function provideThemeSlugs(): iterable
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
 

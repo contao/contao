@@ -164,7 +164,7 @@ trait TemplateInheritance
 		return $strBuffer;
 	}
 
-	public function setDebug(bool $debug = null): self
+	public function setDebug(bool|null $debug = null): self
 	{
 		$this->blnDebug = $debug;
 
@@ -313,7 +313,7 @@ trait TemplateInheritance
 	 * @param string $name The template name
 	 * @param array  $data An optional data array
 	 */
-	public function insert($name, array $data=null)
+	public function insert($name, array|null $data=null)
 	{
 		if ($this instanceof Template)
 		{

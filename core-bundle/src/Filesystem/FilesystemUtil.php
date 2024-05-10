@@ -24,8 +24,8 @@ use Symfony\Component\Uid\Uuid;
 class FilesystemUtil
 {
     /**
-     * Gets all files from a serialized string or array of binary UUIDs like
-     * for instance stored in "tl_content.multiSRC".
+     * Gets all files from a serialized string or array of binary UUIDs like for
+     * instance stored in "tl_content.multiSRC".
      *
      * The following rules apply:
      *  - Invalid or non-existent UUIDs are skipped without producing an error.

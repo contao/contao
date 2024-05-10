@@ -149,6 +149,7 @@ class FeedMigrationTest extends ContaoTestCase
                     'imgSize' => null,
                     'tstamp' => 16000000,
                     'published' => 1,
+                    'hide' => 1,
                 ],
             )
         ;
@@ -262,6 +263,7 @@ class FeedMigrationTest extends ContaoTestCase
                     'imgSize' => null,
                     'tstamp' => 16000000,
                     'published' => 1,
+                    'hide' => 1,
                 ],
             )
         ;
