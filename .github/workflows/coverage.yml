@@ -39,7 +39,7 @@ jobs:
               run: php -d pcov.enabled=1 vendor/bin/phpunit --testsuite=coverage --coverage-clover=clover.xml
 
             - name: Upload the coverage report
-              uses: codecov/codecov-action@v3
+              uses: codecov/codecov-action@v4
               with:
                   files: ./clover.xml
                   fail_ci_if_error: true

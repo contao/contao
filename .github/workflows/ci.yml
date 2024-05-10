@@ -394,7 +394,7 @@ jobs:
             - name: Install Contao
               uses: ramsey/composer-install@v3
 
-            - name: Install PHPStan
+            - name: Install the monorepo tools
               uses: ramsey/composer-install@v3
               with:
                   working-directory: vendor-bin/monorepo-tools
