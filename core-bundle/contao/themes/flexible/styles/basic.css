@@ -956,24 +956,8 @@ a.tl_submit {
 		--widget-cols: 6;
 	}
 
-	/* Backwards compatibility */
-	*:not(.widget-group) > .w50 {
-		width: calc(50% - 30px);
-		float: left;
-		min-height: 80px;
-	}
-
 	.m12 {
-		margin: 0 15px;
 		padding: 18px 0 16px;
-	}
-
-	.cbx {
-		min-height: 46px;
-	}
-
-	.cbx.m12 {
-		min-height: 80px;
 	}
 
 	.tip {
@@ -983,6 +967,25 @@ a.tl_submit {
 	.tl_checkbox_container .tl_checkbox {
 		margin-top: 0;
 		margin-bottom: 0;
+	}
+
+	/* Backwards compatibility */
+	*:not(.widget-group) > .m12 {
+		margin: 0 15px;
+	}
+
+	*:not(.widget-group) > .w50 {
+		width: calc(50% - 30px);
+		float: left;
+		min-height: 80px;
+	}
+
+	*:not(.widget-group) > .cbx {
+		min-height: 46px;
+	}
+
+	*:not(.widget-group) > .cbx.m12 {
+		min-height: 80px;
 	}
 }
 
