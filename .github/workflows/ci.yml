@@ -180,11 +180,6 @@ jobs:
             - name: Install Contao
               uses: ramsey/composer-install@v3
 
-            - name: Install the core bundle
-              uses: ramsey/composer-install@v3
-              with:
-                  working-directory: core-bundle
-
             - name: Install depcheck
               uses: ramsey/composer-install@v3
               with:
@@ -192,6 +187,11 @@ jobs:
 
             - name: Check for unknown symbols (contao/contao)
               run: vendor-bin/depcheck/vendor/bin/composer-dependency-analyser --config=depcheck.php
+
+            - name: Install the core bundle
+              uses: ramsey/composer-install@v3
+              with:
+                  working-directory: core-bundle
 
             - name: Check for unknown symbols (contao/core-bundle)
               run: vendor-bin/depcheck/vendor/bin/composer-dependency-analyser --config=depcheck.php --composer-json=core-bundle/composer.json
