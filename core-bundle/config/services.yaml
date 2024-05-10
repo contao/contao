@@ -443,6 +443,11 @@ services:
     contao.insert_tag.php_function_flag:
         class: Contao\CoreBundle\InsertTag\Flag\PhpFunctionFlag
 
+    contao.insert_tag.resolver.asset:
+        class: Contao\CoreBundle\InsertTag\Resolver\AssetInsertTag
+        arguments:
+            - '@assets.packages'
+
     contao.insert_tag.resolver.date:
         class: Contao\CoreBundle\InsertTag\Resolver\DateInsertTag
         arguments:
@@ -451,6 +456,12 @@ services:
     contao.insert_tag.resolver.form:
         class: Contao\CoreBundle\InsertTag\Resolver\FormInsertTag
         arguments:
+            - '@request_stack'
+
+    contao.insert_tag.resolver.format_date:
+        class: Contao\CoreBundle\InsertTag\Resolver\FormatDateInsertTag
+        arguments:
+            - '@contao.framework'
             - '@request_stack'
 
     contao.insert_tag.resolver.fragment:
@@ -472,6 +483,11 @@ services:
             - '@contao.framework'
             - '@contao.security.token_checker'
             - '@contao.routing.content_url_generator'
+
+    contao.insert_tag.resolver.translation:
+        class: Contao\CoreBundle\InsertTag\Resolver\TranslationInsertTag
+        arguments:
+            - '@translator'
 
     contao.insert_tag.string_util_flag:
         class: Contao\CoreBundle\InsertTag\Flag\StringUtilFlag

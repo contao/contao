@@ -89,11 +89,13 @@ class PageTypeAccessVoter extends AbstractDataContainerVoter implements ResetInt
         }
 
         $type = $action->getNew()['type'] ?? ($action instanceof UpdateAction ? $action->getCurrent()['type'] : null);
-        $pid = (int) ($action->getNewPid() ?? ($action instanceof UpdateAction ? $action->getCurrentPid() : null));
+        $currentPid = $action instanceof UpdateAction ? (int) $action->getCurrentPid() : null;
+        $pid = (int) ($action->getNewPid() ?? $currentPid);
 
         if (
             (null !== $action->getNewPid() || null !== ($action->getNew()['sorting'] ?? null))
             && (!$action instanceof UpdateAction || \in_array($type, self::FIRST_LEVEL_TYPES, true))
+            && ($pid !== $currentPid)
             && (!$this->isRootPage($pid) || $this->hasPageTypeInRoot($type, $pid))
         ) {
             return false;

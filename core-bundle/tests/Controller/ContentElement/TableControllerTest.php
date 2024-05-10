@@ -106,14 +106,14 @@ class TableControllerTest extends ContentElementTestCase
 
         $this->assertSameHtml($expectedOutput, $response->getContent());
 
-        $additionalHeadCode = $responseContextData[DocumentLocation::head->value];
+        $additionalBodyCode = $responseContextData[DocumentLocation::endOfBody->value];
 
-        $this->assertCount(2, $additionalHeadCode);
-        $this->assertArrayHasKey('tablesort_css', $responseContextData['head']);
+        $this->assertCount(1, $additionalBodyCode);
+        $this->assertArrayHasKey('tablesort_script', $additionalBodyCode);
 
         $this->assertMatchesRegularExpression(
             '/<script>[^<]+tablesort.min.js[^<]+<\/script>/',
-            $additionalHeadCode['tablesort_script'],
+            $additionalBodyCode['tablesort_script'],
         );
     }
 }
