@@ -5,6 +5,11 @@ on:
 
 permissions: read-all
 
+defaults:
+    run:
+        # Simulate an interactive terminal with color support
+        shell: script -q -e -c "export TERM=xterm; bash {0}"
+
 jobs:
     ecs:
         name: ECS
@@ -18,12 +23,17 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
-            - name: Install the dependencies
-              run: |
-                  composer install --no-interaction --no-progress
-                  composer bin ecs install --no-interaction --no-progress
+            - name: Install Contao
+              uses: ramsey/composer-install@v3
+
+            - name: Install ECS
+              uses: ramsey/composer-install@v3
+              with:
+                  working-directory: tools/ecs
 
             - name: Run ECS
               run: tools/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests tools/*/src --config tools/ecs/config/default.php --no-progress-bar
@@ -40,12 +50,17 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
-            - name: Install the dependencies
-              run: |
-                  composer install --no-interaction --no-progress
-                  composer bin ecs install --no-interaction --no-progress
+            - name: Install Contao
+              uses: ramsey/composer-install@v3
+
+            - name: Install ECS
+              uses: ramsey/composer-install@v3
+              with:
+                  working-directory: tools/ecs
 
             - name: Run ECS
               run: |
@@ -64,12 +79,17 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
-            - name: Install the dependencies
-              run: |
-                  composer install --no-interaction --no-progress
-                  composer bin phpstan install --no-interaction --no-progress
+            - name: Install Contao
+              uses: ramsey/composer-install@v3
+
+            - name: Install PHPStan
+              uses: ramsey/composer-install@v3
+              with:
+                  working-directory: tools/phpstan
 
             - name: Run PHPStan
               run: tools/phpstan/vendor/bin/phpstan analyse --no-progress
@@ -79,14 +99,11 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
-              uses: actions/checkout@v3
+              with:
+                  show-progress: false
 
             - name: Run YAMLlint
-              run: |
-                  python3 -m pip install --upgrade pip
-                  python3 -m pip install --upgrade setuptools wheel
-                  python3 -m pip install --upgrade yamllint
-                  /home/runner/.local/bin/yamllint .
+              run: yamllint --format=github .
 
     service-linter:
         name: Service linter
@@ -100,12 +117,17 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
-            - name: Install the dependencies
-              run: |
-                  composer install --no-interaction --no-progress
-                  composer bin service-linter install --no-interaction --no-progress
+            - name: Install Contao
+              uses: ramsey/composer-install@v3
+
+            - name: Install the service linter
+              uses: ramsey/composer-install@v3
+              with:
+                  working-directory: tools/service-linter
 
             - name: Run the service linter
               run: tools/service-linter/bin/lint-service-ids
@@ -122,9 +144,10 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
               with:
                   fetch-depth: 0
+                  show-progress: false
 
             - name: Install the dependencies
               run: |
@@ -167,10 +190,12 @@ jobs:
                   mysql -uroot -proot -e "CREATE database contao_test"
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
-            - name: Install the dependencies
-              run: composer install --no-interaction --no-progress
+            - name: Install Contao
+              uses: ramsey/composer-install@v3
 
             - name: Run the unit tests
               run: vendor/bin/phpunit
@@ -197,10 +222,12 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
-            - name: Install the dependencies
-              run: composer install --no-interaction --no-progress
+            - name: Install Contao
+              uses: ramsey/composer-install@v3
 
             - name: Run the unit tests in reverse order
               run: vendor/bin/phpunit --order-by=reverse --extensions Contao\\CoreBundle\\Tests\\PhpunitExtension\\GlobalStateWatcher
@@ -223,10 +250,14 @@ jobs:
                   mysql -uroot -proot -e "CREATE database contao_test"
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
-            - name: Install the dependencies
-              run: composer install --ignore-platform-req=php --no-interaction --no-progress
+            - name: Install Contao
+              uses: ramsey/composer-install@v3
+              with:
+                  composer-options: --ignore-platform-req=php+
 
             - name: Run the unit tests
               run: vendor/bin/phpunit
@@ -253,10 +284,14 @@ jobs:
                   mysql -uroot -proot -e "CREATE database contao_test"
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
-            - name: Install the dependencies
-              run: composer update --prefer-lowest --prefer-stable --no-interaction --no-progress
+            - name: Install Contao
+              uses: ramsey/composer-install@v3
+              with:
+                  dependency-versions: lowest
 
             - name: Run the unit tests
               run: vendor/bin/phpunit
@@ -283,7 +318,9 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
             - name: Test the single bundles
               run: |
@@ -327,12 +364,17 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
-            - name: Install the dependencies
-              run: |
-                  composer install --no-interaction --no-progress
-                  composer bin monorepo install --no-interaction --no-progress
+            - name: Install Contao
+              uses: ramsey/composer-install@v3
+
+            - name: Install the monorepo tools
+              uses: ramsey/composer-install@v3
+              with:
+                  working-directory: tools/monorepo
 
             - name: Validate the composer.json files
               run: tools/monorepo/vendor/bin/monorepo-tools composer-json --validate
