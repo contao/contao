@@ -246,7 +246,7 @@ class ModuleSubscribe extends Module
 	 *
 	 * @return array|bool
 	 */
-	protected function validateForm(Widget $objWidget=null)
+	protected function validateForm(Widget|null $objWidget=null)
 	{
 		// Validate the e-mail address
 		$varInput = Idna::encodeEmail(Input::post('email', true));

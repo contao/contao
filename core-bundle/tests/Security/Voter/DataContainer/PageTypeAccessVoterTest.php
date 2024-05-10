@@ -269,11 +269,11 @@ class PageTypeAccessVoterTest extends TestCase
                 VoterInterface::ACCESS_DENIED,
             ];
 
-            yield "Deny if only sorting of $type is changed" => [
+            yield "Allow if page of type $type is moved within the same root" => [
                 new UpdateAction('tl_page', ['pid' => 42, 'type' => $type], ['sorting' => 256]),
-                [42],
-                [[42, $type]],
-                VoterInterface::ACCESS_DENIED,
+                null,
+                null,
+                VoterInterface::ACCESS_ABSTAIN,
             ];
         }
     }
