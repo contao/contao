@@ -9,6 +9,11 @@ on:
 
 permissions: read-all
 
+defaults:
+    run:
+        # Simulate an interactive terminal with color support
+        shell: script -q -e -c "export TERM=xterm; bash {0}"
+
 jobs:
     monorepo-split:
         name: Monorepo split
@@ -22,18 +27,20 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
             - name: Cache the monorepo split
-              uses: actions/cache@v1
+              uses: actions/cache@v4
               with:
                   path: .monorepo-split-cache
                   key: dev-${GITHUB_REF##*/}
 
             - name: Install the dependencies
-              run: composer global require contao/monorepo-tools:dev-main
+              run: composer global require contao/monorepo-tools:^0.2
 
             - name: Split the monorepo
-              run: $HOME/.composer/vendor/bin/monorepo-tools split ${GITHUB_REF##*/}
+              run: $HOME/.composer/vendor/bin/monorepo-tools split ${GITHUB_REF##*/} ${{ github.event.forced && '--force-push' || '' }}
               env:
                   GITHUB_TOKEN: ${{ secrets.MONOREPO_SPLIT_TOKEN }}
