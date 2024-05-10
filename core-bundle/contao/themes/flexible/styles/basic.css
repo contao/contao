@@ -195,6 +195,16 @@ h1, h2, h3, h4, h5, h6, strong, b, th {
 	font-weight: 600;
 }
 
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+	body {
+		font-weight: 300;
+	}
+
+	h1, h2, h3, h4, h5, h6, strong, b, th {
+		font-weight: 500;
+	}
+}
+
 pre, code, .tl_textarea.monospace {
 	font: 300 .75rem/1.25 SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
@@ -359,12 +369,11 @@ fieldset > .widget-group {
 	margin: 0;
 }
 
-.widget-group > .clr,
-.widget-group > .subpal {
+.widget-group > .clr, .widget-group > .subpal {
 	grid-column-start: 1;
 }
 
-/* BC */
+/* Backwards compatibility */
 *:not(.widget-group) > .w50 {
 	float: none;
 	width: calc(100% - 30px);
@@ -468,6 +477,12 @@ fieldset.tl_radio_container {
 
 fieldset.tl_checkbox_container legend, fieldset.tl_radio_container legend {
 	font-weight: 600;
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+	fieldset.tl_checkbox_container legend, fieldset.tl_radio_container legend {
+		font-weight: 500;
+	}
 }
 
 fieldset.tl_checkbox_container .check-all {
@@ -682,6 +697,12 @@ select[multiple] {
 	font-weight: 600;
 }
 
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+	.tl_checkbox_single_container label {
+		font-weight: 500;
+	}
+}
+
 /* Grouped checkboxes */
 .checkbox_toggler {
 	font-weight: 600;
@@ -690,6 +711,12 @@ select[multiple] {
 .checkbox_toggler_first {
 	margin-top: 3px;
 	font-weight: 600;
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+	.checkbox_toggler, .checkbox_toggler_first {
+		font-weight: 500;
+	}
 }
 
 .checkbox_toggler img, .checkbox_toggler_first img {
@@ -919,33 +946,6 @@ a.tl_submit {
 	font-weight: 600;
 }
 
-/* Retina displays */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-	body {
-		font-weight: 300;
-	}
-
-	h1, h2, h3, h4, h5, h6, strong, b, th {
-		font-weight: 500;
-	}
-
-	fieldset.tl_checkbox_container legend, fieldset.tl_radio_container legend {
-		font-weight: 500;
-	}
-
-	.tl_checkbox_single_container label {
-		font-weight: 500;
-	}
-
-	.checkbox_toggler, .checkbox_toggler_first {
-		font-weight: 500;
-	}
-
-	.badge-title {
-		font-weight: 500;
-	}
-}
-
 /* Tablets */
 @media (min-width: 768px) {
 	.widget-group {
@@ -956,7 +956,7 @@ a.tl_submit {
 		--widget-cols: 6;
 	}
 
-	/* BC */
+	/* Backwards compatibility */
 	*:not(.widget-group) > .w50 {
 		width: calc(50% - 30px);
 		float: left;
