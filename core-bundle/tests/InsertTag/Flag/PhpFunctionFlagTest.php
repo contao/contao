@@ -30,7 +30,7 @@ class PhpFunctionFlagTest extends TestCase
         $this->assertSame($expected, $flag(new InsertTagFlag($flagName), new InsertTagResult($source))->getValue());
     }
 
-    public function getFlags(): \Generator
+    public static function getFlags(): iterable
     {
         yield ['addslashes', "foo'bar", "foo\\'bar"];
         yield ['trim', "\t\n foo\t\n ", 'foo'];

@@ -145,7 +145,7 @@ class UserCreateCommandTest extends TestCase
         (new CommandTester($command))->execute($input, ['interactive' => false]);
     }
 
-    public function usernamePasswordProvider(): \Generator
+    public static function usernamePasswordProvider(): iterable
     {
         yield ['foobar', 'Foo Bar', 'foobar@example.org', '12345678'];
         yield ['k.jones', 'Kevin Jones', 'k.jones@example.org', 'kevinjones'];

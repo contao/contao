@@ -15,8 +15,8 @@ namespace Contao\CoreBundle\Security\DataContainer;
 abstract class AbstractAction implements \Stringable
 {
     /**
-     * This allows for performance optimizations when voting on many data sets so voters are given
-     * the chance to preload voting information all at once.
+     * This allows for performance optimizations when voting on many data sets so
+     * voters are given the chance to preload voting information all at once.
      *
      * Intended usage:.
      *
@@ -33,8 +33,8 @@ abstract class AbstractAction implements \Stringable
      *     $this->denyAccessUnlessGranted('contao_dc.<table>', $action);
      * }
      *
-     * This ensures that every record is checked individually for maximum security, but it also allows voters to
-     * optimize for performance (entirely optional though).
+     * This ensures that every record is checked individually for maximum security, but it
+     * also allows voters to optimize for performance (entirely optional though).
      */
     private array|null $preloadHints = null;
 

@@ -49,7 +49,7 @@ class AutoFallbackTransportTest extends TestCase
         $transport->send(new Envelope(new \stdClass()));
     }
 
-    public function isRunning(): \Generator
+    public static function isRunning(): iterable
     {
         yield [true];
         yield [false];

@@ -53,7 +53,7 @@ class RedirectPageControllerTest extends TestCase
         }
     }
 
-    public function getRedirectPages(): \Generator
+    public static function getRedirectPages(): iterable
     {
         yield ['permanent', '/foobar/index.php/lorem/ipsum', 'https://example.com/foobar/index.php/lorem/ipsum'];
         yield ['temporary', '/foobar/index.php/lorem/ipsum', 'https://example.com/foobar/index.php/lorem/ipsum'];

@@ -23,8 +23,8 @@ use Doctrine\DBAL\Schema\TableDiff;
 class DoctrineAlterTableListener
 {
     /**
-     * Prevents renaming arbitrary columns by explicitly dropping the old ones
-     * and adding the new ones (see #1716).
+     * Prevents renaming arbitrary columns by explicitly dropping the old ones and
+     * adding the new ones (see #1716).
      */
     public function onSchemaAlterTableRenameColumn(SchemaAlterTableRenameColumnEventArgs $args): void
     {

@@ -24,8 +24,8 @@ use Twig\TokenParser\AbstractTokenParser;
 use Twig\TokenParser\IncludeTokenParser;
 
 /**
- * This parser is a drop in replacement for the IncludeTokenParser
- * that adds support for the Contao template hierarchy.
+ * This parser is a drop in replacement for the IncludeTokenParser that adds
+ * support for the Contao template hierarchy.
  *
  * @see IncludeTokenParser
  *
@@ -54,8 +54,8 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
     }
 
     /**
-     * Return the adjusted logical name or the unchanged input if it does not
-     * match the Contao Twig namespace.
+     * Return the adjusted logical name or the unchanged input if it does not match
+     * the Contao Twig namespace.
      */
     public static function adjustTemplateName(TemplateWrapper|string $name, ContaoFilesystemLoader $filesystemLoader): TemplateWrapper|string
     {

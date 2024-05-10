@@ -54,7 +54,7 @@ class SearchIndexListenerTest extends TestCase
         $listener($event);
     }
 
-    public function getRequestResponse(): \Generator
+    public static function getRequestResponse(): iterable
     {
         yield 'Should index because the response was successful and contains ld+json information' => [
             Request::create('/foobar'),

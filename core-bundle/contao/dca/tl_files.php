@@ -15,6 +15,7 @@ use Contao\Config;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Folder;
@@ -42,7 +43,6 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		(
 			array('tl_files', 'checkPermission'),
 			array('tl_files', 'addBreadcrumb'),
-			array('tl_files', 'adjustPalettes')
 		),
 		'oncreate_version_callback' => array
 		(
@@ -51,6 +51,10 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		'onrestore_version_callback' => array
 		(
 			array('tl_files', 'restoreVersion')
+		),
+		'onpalette_callback' => array
+		(
+			array('tl_files', 'adjustPalettes')
 		),
 		'sql' => array
 		(
@@ -456,11 +460,11 @@ class tl_files extends Backend
 	 *
 	 * @param DataContainer $dc
 	 */
-	public function adjustPalettes(DataContainer $dc)
+	public function adjustPalettes(string $strPalette, DataContainer $dc)
 	{
 		if (!$dc->id)
 		{
-			return;
+			return $strPalette;
 		}
 
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
@@ -469,20 +473,22 @@ class tl_files extends Backend
 		// Remove the metadata when editing folders
 		if ($blnIsFolder)
 		{
-			PaletteManipulator::create()
+			$strPalette = PaletteManipulator::create()
 				->removeField('meta')
-				->applyToPalette('default', $dc->table)
+				->applyToString($strPalette)
 			;
 		}
 
 		// Only show the important part fields for images
 		if ($blnIsFolder || !in_array(strtolower(substr($dc->id, strrpos($dc->id, '.') + 1)), System::getContainer()->getParameter('contao.image.valid_extensions')))
 		{
-			PaletteManipulator::create()
+			$strPalette = PaletteManipulator::create()
 				->removeField(array('importantPartX', 'importantPartY', 'importantPartWidth', 'importantPartHeight'))
-				->applyToPalette('default', $dc->table)
+				->applytoString($strPalette)
 			;
 		}
+
+		return $strPalette;
 	}
 
 	/**
@@ -671,7 +677,10 @@ class tl_files extends Backend
 	 */
 	public function editFile($row, $href, $label, $title, $icon, $attributes)
 	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+		$security = System::getContainer()->get('security.helper');
+		$subject = new UpdateAction('tl_files', $row);
+
+		return $security->isGranted(ContaoCorePermissions::DC_PREFIX . 'tl_files', $subject) && $security->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**

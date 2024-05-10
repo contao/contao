@@ -46,7 +46,7 @@ class VirtualFilesystemFactoryTest extends TestCase
         }
     }
 
-    public function provideReadOnlyValues(): \Generator
+    public static function provideReadOnlyValues(): iterable
     {
         yield 'protected' => [true];
         yield 'accessible' => [false];

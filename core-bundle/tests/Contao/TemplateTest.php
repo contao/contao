@@ -372,7 +372,7 @@ class TemplateTest extends TestCase
         unset($GLOBALS['objPage']);
     }
 
-    public function provideBuffer(): \Generator
+    public static function provideBuffer(): iterable
     {
         yield 'plain string' => [
             'foo bar',

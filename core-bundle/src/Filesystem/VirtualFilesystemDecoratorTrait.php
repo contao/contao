@@ -9,9 +9,9 @@ use Psr\Http\Message\UriInterface;
 use Symfony\Component\Uid\Uuid;
 
 /**
- * This trait simply delegates all methods of the VirtualFilesystemInterface to
- * an $inner implementation. With this, decoration of only a few methods is
- * possible with less boilerplate.
+ * This trait simply delegates all methods of the VirtualFilesystemInterface to an
+ * $inner implementation. With this, decoration of only a few methods is possible
+ * with less boilerplate.
  *
  * @internal
  */

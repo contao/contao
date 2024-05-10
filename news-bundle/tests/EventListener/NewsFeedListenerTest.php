@@ -244,14 +244,14 @@ class NewsFeedListenerTest extends ContaoTestCase
         $fs->remove($imageDir);
     }
 
-    public function featured(): \Generator
+    public static function featured(): iterable
     {
         yield 'All items' => ['all_items', null];
         yield 'Only featured' => ['featured', true];
         yield 'Only unfeatured items' => ['unfeatured', false];
     }
 
-    public function getFeedSource(): \Generator
+    public static function getFeedSource(): iterable
     {
         yield 'Teaser' => [
             'source_teaser',

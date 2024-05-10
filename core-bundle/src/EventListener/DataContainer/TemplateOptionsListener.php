@@ -106,8 +106,8 @@ class TemplateOptionsListener
     }
 
     /**
-     * Handles legacy elements that aren't implemented as fragment controllers
-     * or that still use the old template naming scheme.
+     * Handles legacy elements that aren't implemented as fragment controllers or that
+     * still use the old template naming scheme.
      */
     private function handleLegacyTemplates(string $type, string|null $identifier, bool $overrideAll, string $legacyPrefix, string|null $legacyProxyClass): array|null
     {
@@ -163,8 +163,8 @@ class TemplateOptionsListener
     }
 
     /**
-     * Returns the type that all currently edited items are sharing or null if
-     * there is no common type.
+     * Returns the type that all currently edited items are sharing or null if there
+     * is no common type.
      */
     private function getCommonOverrideAllType(DataContainer $dc): string|null
     {

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 use Contao\EasyCodingStandard\Fixer\ChainedMethodBlockFixer;
 use Contao\EasyCodingStandard\Fixer\CommentLengthFixer;
+use Contao\EasyCodingStandard\Set\SetList;
 use PhpCsFixer\Fixer\ClassNotation\VisibilityRequiredFixer;
 use PhpCsFixer\Fixer\ControlStructure\NoAlternativeSyntaxFixer;
 use PhpCsFixer\Fixer\FunctionNotation\VoidReturnFixer;
@@ -27,7 +28,16 @@ use Symplify\EasyCodingStandard\Config\ECSConfig;
 use Symplify\EasyCodingStandard\ValueObject\Option;
 
 return ECSConfig::configure()
-    ->withSets([__DIR__.'/../vendor/contao/easy-coding-standard/config/contao.php'])
+    ->withSets([SetList::CONTAO])
+    ->withPaths([
+        __DIR__.'/../../../calendar-bundle/contao/templates',
+        __DIR__.'/../../../comments-bundle/contao/templates',
+        __DIR__.'/../../../core-bundle/contao/templates',
+        __DIR__.'/../../../faq-bundle/contao/templates',
+        __DIR__.'/../../../listing-bundle/contao/templates',
+        __DIR__.'/../../../news-bundle/contao/templates',
+        __DIR__.'/../../../newsletter-bundle/contao/templates',
+    ])
     ->withSkip([
         BlankLineAfterOpeningTagFixer::class,
         ChainedMethodBlockFixer::class,
@@ -46,5 +56,5 @@ return ECSConfig::configure()
     ->withParallel()
     ->withSpacing(Option::INDENTATION_SPACES, "\n")
     ->withFileExtensions(['html5'])
-    ->withCache(sys_get_temp_dir().'/ecs_template_cache')
+    ->withCache(sys_get_temp_dir().'/ecs/contao5x-template')
 ;

@@ -60,7 +60,7 @@ class DefaultIndexerTest extends TestCase
         $indexer->index($document);
     }
 
-    public function indexProvider(): \Generator
+    public static function indexProvider(): iterable
     {
         yield 'Test does not index on empty content' => [
             new Document(new Uri('https://example.com'), 200, [], ''),

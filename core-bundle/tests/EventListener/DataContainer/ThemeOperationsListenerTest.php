@@ -46,7 +46,7 @@ class ThemeOperationsListenerTest extends TestCase
         }
     }
 
-    public function themeOperationsProvider(): \Generator
+    public static function themeOperationsProvider(): iterable
     {
         yield [
             'table=tl_module',

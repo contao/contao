@@ -39,7 +39,7 @@ class AbstractPageRouteProviderTest extends TestCase
         $this->assertSame($expected, $result);
     }
 
-    public function compareRoutesProvider(): \Generator
+    public function compareRoutesProvider(): iterable
     {
         yield 'Sorts route with host higher' => [
             new Route('', [], [], [], 'www.example.com'),
@@ -292,7 +292,7 @@ class AbstractPageRouteProviderTest extends TestCase
         $this->assertSame($expected, $result);
     }
 
-    public function ordersRoutesByPreferredLanguages(): \Generator
+    public static function ordersRoutesByPreferredLanguages(): iterable
     {
         yield [
             ['de', 'en'],
@@ -393,7 +393,7 @@ class AbstractPageRouteProviderTest extends TestCase
         $this->assertSame($expected, $result);
     }
 
-    public function convertLanguageForSortingProvider(): \Generator
+    public static function convertLanguageForSortingProvider(): iterable
     {
         yield 'Does nothing on empty array' => [
             [],

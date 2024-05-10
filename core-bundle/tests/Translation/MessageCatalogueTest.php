@@ -200,7 +200,7 @@ class MessageCatalogueTest extends TestCase
         $catalogue->$method(...$paramsContaoDomain);
     }
 
-    public function getForwardedDomainMethods(): \Generator
+    public static function getForwardedDomainMethods(): iterable
     {
         yield [
             'all',
@@ -245,7 +245,7 @@ class MessageCatalogueTest extends TestCase
         $this->assertSame($return, $catalogue->$method(...$params));
     }
 
-    public function getCompletelyForwardedMethods(): \Generator
+    public function getCompletelyForwardedMethods(): iterable
     {
         yield [
             'addCatalogue',

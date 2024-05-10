@@ -141,8 +141,8 @@ class TemplateLocator
     }
 
     /**
-     * Return a list of all subdirectories in $path that are not inside a
-     * directory containing a namespace root marker file.
+     * Return a list of all subdirectories in $path that are not inside a directory
+     * containing a namespace root marker file.
      */
     private function expandSubdirectories(string $path): array
     {

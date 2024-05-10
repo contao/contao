@@ -51,7 +51,7 @@ class BackupListCommandTest extends TestCase
         $this->assertSame(0, $code);
     }
 
-    public function successfulCommandRunProvider(): \Generator
+    public static function successfulCommandRunProvider(): iterable
     {
         yield 'Text format' => [
             [],
