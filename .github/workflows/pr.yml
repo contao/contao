@@ -14,7 +14,7 @@ jobs:
         continue-on-error: true
         steps:
             - name: Assign the PR
-              uses: toshimaru/auto-author-assign@v1.4.0
+              uses: toshimaru/auto-author-assign@v2.1.0
 
             - name: Add the label
               uses: christianvuerings/add-labels@v1
