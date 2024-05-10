@@ -1,5 +1,5 @@
 {% import "@ContaoCore/Image/Studio/_macros.html.twig" as studio %}
 
 {{- studio.figure(figure, figure.options|default({})|merge({
-    attr: { class: ('image_container ' ~ figure.options.attr.class|default(''))|trim }
+    attr: {class: ('image_container ' ~ figure.options.attr.class|default(''))|trim}
 })) -}}
