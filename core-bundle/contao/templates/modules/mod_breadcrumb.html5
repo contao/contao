@@ -1,6 +1,6 @@
 
 <!-- indexer::stop -->
-<nav class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?> aria-label="Breadcrumb">
+<nav class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?> aria-label="<?= $this->trans('MSC.breadcrumbMenu') ?>">
 
   <?php $this->block('headline'); ?>
     <?php if ($this->headline): ?>

@@ -23,6 +23,7 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
  * @property string  $name
  * @property string  $headline
  * @property string  $type
+ * @property string  $ariaLabel
  * @property integer $levelOffset
  * @property integer $showLevel
  * @property boolean $hardLimit
