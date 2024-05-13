@@ -403,22 +403,28 @@ class ContaoExtensionTest extends TestCase
         new \ReflectionClass(EscaperExtension::class);
 
         // Forward compatibility with twig/twig 4
-        if (method_exists(EscaperExtension::class, 'escape')) {
-            $escape = new \ReflectionMethod(EscaperExtension::class, 'escape');
+        if (method_exists(EscaperRuntime::class, 'escape')) {
+            yield [
+                new \ReflectionMethod(EscaperRuntime::class, 'escape'),
+                [
+                    [null, 'string'],
+                    ['string', 'strategy'],
+                    ['string', 'charset'],
+                    ['bool', 'autoescape'],
+                ],
+            ];
         } else {
-            $escape = new \ReflectionFunction('twig_escape_filter');
+            yield [
+                new \ReflectionFunction('twig_escape_filter'),
+                [
+                    [Environment::class, 'env'],
+                    [null, 'string'],
+                    [null, 'strategy'],
+                    [null, 'charset'],
+                    [null, 'autoescape'],
+                ],
+            ];
         }
-
-        yield [
-            $escape,
-            [
-                [Environment::class, 'env'],
-                [null, 'string'],
-                [null, 'strategy'],
-                [null, 'charset'],
-                [null, 'autoescape'],
-            ],
-        ];
 
         // Backwards compatibility with twig/twig <3.9
         if (\function_exists('twig_escape_filter_is_safe')) {
