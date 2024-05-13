@@ -44,6 +44,7 @@ use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\Node\TextNode;
 use Twig\NodeTraverser;
+use Twig\Runtime\EscaperRuntime;
 use Twig\Source;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -175,6 +176,11 @@ class ContaoExtensionTest extends TestCase
     public function testThrowsIfCoreIncludeFunctionIsNotFound(): void
     {
         $environment = $this->createMock(Environment::class);
+        $environment
+            ->method('getRuntime')
+            ->willReturn(new EscaperRuntime())
+        ;
+
         $environment
             ->method('getExtension')
             ->willReturnMap([
@@ -431,6 +437,11 @@ class ContaoExtensionTest extends TestCase
     {
         $environment ??= $this->createMock(Environment::class);
         $filesystemLoader ??= $this->createMock(ContaoFilesystemLoader::class);
+
+        $environment
+            ->method('getRuntime')
+            ->willReturn(new EscaperRuntime())
+        ;
 
         $environment
             ->method('getExtension')
