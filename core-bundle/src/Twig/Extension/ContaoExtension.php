@@ -52,6 +52,7 @@ use Twig\Extension\EscaperExtension;
 use Twig\Extension\GlobalsInterface;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
+use Twig\Runtime\EscaperRuntime;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
@@ -239,6 +240,8 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
     public function getFilters(): array
     {
         $escaperFilter = static function (Environment $env, $string, $strategy = 'html', $charset = null, $autoescape = false) {
+            $runtime = $env->getRuntime(EscaperRuntime::class);
+
             if ($string instanceof ChunkedText) {
                 $parts = [];
 
@@ -247,8 +250,8 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                         $parts[] = $chunk;
                     } else {
                         // Forward compatibility with twig/twig 4
-                        if (method_exists(EscaperExtension::class, 'escape')) {
-                            $parts[] = EscaperExtension::escape($env, $chunk, $strategy, $charset);
+                        if (method_exists($runtime, 'escape')) {
+                            $parts[] = $runtime->escape($chunk, $strategy, $charset);
                         } else {
                             $parts[] = twig_escape_filter($env, $chunk, $strategy, $charset);
                         }
@@ -259,8 +262,8 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             }
 
             // Forward compatibility with twig/twig 4
-            if (method_exists(EscaperExtension::class, 'escape')) {
-                return EscaperExtension::escape($env, $string, $strategy, $charset, $autoescape);
+            if (method_exists($runtime, 'escape')) {
+                return $runtime->escape($string, $strategy, $charset, $autoescape);
             }
 
             return twig_escape_filter($env, $string, $strategy, $charset, $autoescape);
