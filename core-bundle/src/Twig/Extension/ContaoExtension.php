@@ -70,9 +70,12 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
         private readonly ContaoVariable $contaoVariable,
     ) {
         $contaoEscaper = new ContaoEscaper();
-
         $escaperExtension = $environment->getExtension(EscaperExtension::class);
-        $escaperExtension->setEnvironment($environment, false);
+
+        if (method_exists($escaperExtension, 'setEnvironment')) {
+            $escaperExtension->setEnvironment($environment, false);
+        }
+
         $escaperExtension->setEscaper('contao_html', $contaoEscaper->escapeHtml(...));
         $escaperExtension->setEscaper('contao_html_attr', $contaoEscaper->escapeHtmlAttr(...));
 
