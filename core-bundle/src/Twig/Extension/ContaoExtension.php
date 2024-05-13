@@ -52,7 +52,6 @@ use Twig\Extension\EscaperExtension;
 use Twig\Extension\GlobalsInterface;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
-use Twig\Runtime\EscaperRuntime;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
@@ -243,8 +242,6 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
     public function getFilters(): array
     {
         $escaperFilter = static function (Environment $env, $string, $strategy = 'html', $charset = null, $autoescape = false) {
-            $runtime = $env->getRuntime(EscaperRuntime::class);
-
             if ($string instanceof ChunkedText) {
                 $parts = [];
 
@@ -252,21 +249,11 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                     if (ChunkedText::TYPE_RAW === $type) {
                         $parts[] = $chunk;
                     } else {
-                        // Forward compatibility with twig/twig 4
-                        if (method_exists($runtime, 'escape')) {
-                            $parts[] = $runtime->escape($chunk, $strategy, $charset);
-                        } else {
-                            $parts[] = twig_escape_filter($env, $chunk, $strategy, $charset);
-                        }
+                        $parts[] = twig_escape_filter($env, $chunk, $strategy, $charset);
                     }
                 }
 
                 return implode('', $parts);
-            }
-
-            // Forward compatibility with twig/twig 4
-            if (method_exists($runtime, 'escape')) {
-                return $runtime->escape($string, $strategy, $charset, $autoescape);
             }
 
             return twig_escape_filter($env, $string, $strategy, $charset, $autoescape);
@@ -283,12 +270,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 return [$value, substr($value, 7)];
             }
 
-            // Backwards compatibility with twig/twig <3.9
-            if (\function_exists('twig_escape_filter_is_safe')) {
-                return twig_escape_filter_is_safe($filterArgs);
-            }
-
-            return EscaperExtension::escapeFilterIsSafe($filterArgs);
+            return twig_escape_filter_is_safe($filterArgs);
         };
 
         return [
