@@ -48,6 +48,7 @@ use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\CoreExtension;
+use Twig\Extension\EscaperExtension;
 use Twig\Extension\GlobalsInterface;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
@@ -258,10 +259,10 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
         };
 
         $twigEscaperFilterIsSafe = static function (Node $filterArgs): array {
-            $expression = iterator_to_array($filterArgs)[0] ?? null;
+            $arg = iterator_to_array($filterArgs)[0] ?? null;
 
-            if ($expression instanceof ConstantExpression) {
-                $value = $expression->getAttribute('value');
+            if ($arg instanceof ConstantExpression) {
+                $value = $arg->getAttribute('value');
 
                 // Our escaper strategy variants that tolerate input encoding are also safe in
                 // the original context (e.g. for the filter argument 'contao_html' we will
@@ -271,7 +272,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 }
             }
 
-            return twig_escape_filter_is_safe($filterArgs);
+            return EscaperExtension::escapeFilterIsSafe($filterArgs);
         };
 
         return [
