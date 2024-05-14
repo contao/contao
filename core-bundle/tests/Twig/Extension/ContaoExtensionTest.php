@@ -405,10 +405,8 @@ class ContaoExtensionTest extends TestCase
         // Backwards compatibility with twig/twig <3.9.0
         new \ReflectionClass(EscaperExtension::class);
 
-        $escape = new \ReflectionFunction('twig_escape_filter');
-
         yield [
-            $escape,
+            new \ReflectionFunction('twig_escape_filter'),
             [
                 [Environment::class, 'env'],
                 [null, 'string'],
@@ -418,9 +416,7 @@ class ContaoExtensionTest extends TestCase
             ],
         ];
 
-        $escapeIsSafe = new \ReflectionFunction('twig_escape_filter_is_safe');
-
-        yield [$escapeIsSafe, [[Node::class, 'filterArgs']]];
+        yield [new \ReflectionFunction('twig_escape_filter_is_safe'), [[Node::class, 'filterArgs']]];
     }
 
     /**

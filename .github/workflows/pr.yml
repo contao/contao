@@ -13,7 +13,7 @@ jobs:
         runs-on: ubuntu-latest
         continue-on-error: true
         steps:
-            - name: Assign the PR
+            - name: Assign the author
               uses: toshimaru/auto-author-assign@v2.1.0
 
             - name: Assign the milestone

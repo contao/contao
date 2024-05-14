@@ -69,14 +69,15 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
         private readonly ContaoVariable $contaoVariable,
     ) {
         $contaoEscaper = new ContaoEscaper();
-        $escaper = $environment->getExtension(EscaperExtension::class);
+        $escaperExtension = $environment->getExtension(EscaperExtension::class);
 
-        if (method_exists($escaper, 'setEnvironment')) {
-            $escaper->setEnvironment($environment, false);
+        // Forward compatibility with twig/twig >=3.10.0
+        if (method_exists($escaperExtension, 'setEnvironment')) {
+            $escaperExtension->setEnvironment($environment);
         }
 
-        $escaper->setEscaper('contao_html', $contaoEscaper->escapeHtml(...));
-        $escaper->setEscaper('contao_html_attr', $contaoEscaper->escapeHtmlAttr(...));
+        $escaperExtension->setEscaper('contao_html', $contaoEscaper->escapeHtml(...));
+        $escaperExtension->setEscaper('contao_html_attr', $contaoEscaper->escapeHtmlAttr(...));
 
         // Use our escaper on all templates in the "@Contao" and "@Contao_*" namespaces,
         // as well as the existing bundle templates we're already shipping.
