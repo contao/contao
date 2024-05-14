@@ -44,6 +44,7 @@ use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\Node\TextNode;
 use Twig\NodeTraverser;
+use Twig\Runtime\EscaperRuntime;
 use Twig\Source;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -175,6 +176,11 @@ class ContaoExtensionTest extends TestCase
     public function testThrowsIfCoreIncludeFunctionIsNotFound(): void
     {
         $environment = $this->createMock(Environment::class);
+        $environment
+            ->method('getRuntime')
+            ->willReturn(new EscaperRuntime())
+        ;
+
         $environment
             ->method('getExtension')
             ->willReturnMap([
@@ -396,12 +402,7 @@ class ContaoExtensionTest extends TestCase
         // Make sure the functions outside the class scope are loaded
         new \ReflectionClass(EscaperExtension::class);
 
-        // Forward compatibility with twig/twig 4
-        if (method_exists(EscaperExtension::class, 'escape')) {
-            $escape = new \ReflectionMethod(EscaperExtension::class, 'escape');
-        } else {
-            $escape = new \ReflectionFunction('twig_escape_filter');
-        }
+        $escape = new \ReflectionFunction('twig_escape_filter');
 
         yield [
             $escape,
@@ -414,12 +415,7 @@ class ContaoExtensionTest extends TestCase
             ],
         ];
 
-        // Backwards compatibility with twig/twig <3.9
-        if (\function_exists('twig_escape_filter_is_safe')) {
-            $escapeIsSafe = new \ReflectionFunction('twig_escape_filter_is_safe');
-        } else {
-            $escapeIsSafe = new \ReflectionMethod(EscaperExtension::class, 'escapeFilterIsSafe');
-        }
+        $escapeIsSafe = new \ReflectionFunction('twig_escape_filter_is_safe');
 
         yield [$escapeIsSafe, [[Node::class, 'filterArgs']]];
     }
@@ -431,6 +427,11 @@ class ContaoExtensionTest extends TestCase
     {
         $environment ??= $this->createMock(Environment::class);
         $filesystemLoader ??= $this->createMock(ContaoFilesystemLoader::class);
+
+        $environment
+            ->method('getRuntime')
+            ->willReturn(new EscaperRuntime())
+        ;
 
         $environment
             ->method('getExtension')
