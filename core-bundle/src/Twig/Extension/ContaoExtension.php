@@ -48,7 +48,6 @@ use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\CoreExtension;
-use Twig\Extension\EscaperExtension;
 use Twig\Extension\GlobalsInterface;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
@@ -258,21 +257,26 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             return $runtime->escape($string, $strategy, $charset, $autoescape);
         };
 
+        /** @see \Twig\Extension\EscaperExtension::escapeFilterIsSafe() */
         $twigEscaperFilterIsSafe = static function (Node $filterArgs): array {
-            $arg = iterator_to_array($filterArgs)[0] ?? null;
+            foreach ($filterArgs as $arg) {
+                if ($arg instanceof ConstantExpression) {
+                    $value = $arg->getAttribute('value');
 
-            if ($arg instanceof ConstantExpression) {
-                $value = $arg->getAttribute('value');
+                    // Our escaper strategy variants that tolerate input encoding are also safe in
+                    // the original context (e.g. for the filter argument 'contao_html' we will
+                    // return ['contao_html', 'html']).
+                    if (\in_array($value, ['contao_html', 'contao_html_attr'], true)) {
+                        return [$value, substr($value, 7)];
+                    }
 
-                // Our escaper strategy variants that tolerate input encoding are also safe in
-                // the original context (e.g. for the filter argument 'contao_html' we will
-                // return ['contao_html', 'html']).
-                if (\in_array($value, ['contao_html', 'contao_html_attr'], true)) {
-                    return [$value, substr($value, 7)];
+                    return [$value];
                 }
+
+                return [];
             }
 
-            return EscaperExtension::escapeFilterIsSafe($filterArgs);
+            return ['html'];
         };
 
         return [
