@@ -37,6 +37,7 @@ use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\Node\TextNode;
 use Twig\NodeTraverser;
+use Twig\Runtime\EscaperRuntime;
 use Twig\Source;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -158,6 +159,14 @@ class ContaoExtensionTest extends TestCase
                 }],
             ])
         ;
+
+        // Forward compatibility with twig/twig >=3.10.0
+        if (class_exists(EscaperRuntime::class)) {
+            $environment
+                ->method('getRuntime')
+                ->willReturn(new EscaperRuntime())
+            ;
+        }
 
         $extension = new ContaoExtension($environment, $this->createMock(ContaoFilesystemLoader::class));
 
@@ -367,18 +376,11 @@ class ContaoExtensionTest extends TestCase
 
     public function provideTwigFunctionSignatures(): \Generator
     {
-        // Make sure the functions outside the class scope are loaded
+        // Backwards compatibility with twig/twig <3.9.0
         new \ReflectionClass(EscaperExtension::class);
 
-        // Forward compatibility with twig/twig 4
-        if (method_exists(EscaperExtension::class, 'escape')) {
-            $escape = new \ReflectionMethod(EscaperExtension::class.'::escape');
-        } else {
-            $escape = new \ReflectionFunction('twig_escape_filter');
-        }
-
         yield [
-            $escape,
+            new \ReflectionFunction('twig_escape_filter'),
             [
                 [Environment::class, 'env'],
                 [null, 'string'],
@@ -388,14 +390,7 @@ class ContaoExtensionTest extends TestCase
             ],
         ];
 
-        // Backwards compatibility with twig/twig <3.9
-        if (\function_exists('twig_escape_filter_is_safe')) {
-            $escapeIsSafe = new \ReflectionFunction('twig_escape_filter_is_safe');
-        } else {
-            $escapeIsSafe = new \ReflectionMethod(EscaperExtension::class.'::escapeFilterIsSafe');
-        }
-
-        yield [$escapeIsSafe, [[Node::class, 'filterArgs']]];
+        yield [new \ReflectionFunction('twig_escape_filter_is_safe'), [[Node::class, 'filterArgs']]];
     }
 
     /**
@@ -413,6 +408,14 @@ class ContaoExtensionTest extends TestCase
                 [CoreExtension::class, new CoreExtension()],
             ])
         ;
+
+        // Forward compatibility with twig/twig >=3.10.0
+        if (class_exists(EscaperRuntime::class)) {
+            $environment
+                ->method('getRuntime')
+                ->willReturn(new EscaperRuntime())
+            ;
+        }
 
         return new ContaoExtension($environment, $filesystemLoader);
     }
