@@ -185,7 +185,7 @@ class ContaoExtensionTest extends TestCase
             ])
         ;
 
-        // Forward compatibility with twig/twig >=3.9.0
+        // Forward compatibility with twig/twig >=3.10.0
         if (class_exists(EscaperRuntime::class)) {
             $environment
                 ->method('getRuntime')
@@ -439,7 +439,7 @@ class ContaoExtensionTest extends TestCase
             ])
         ;
 
-        // Forward compatibility with twig/twig >=3.9.0
+        // Forward compatibility with twig/twig >=3.10.0
         if (class_exists(EscaperRuntime::class)) {
             $environment
                 ->method('getRuntime')
