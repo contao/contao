@@ -164,7 +164,7 @@
         "terminal42/contao-ce-access": "<3.0",
         "thecodingmachine/safe": "<1.2",
         "twig/intl-extra": "3.9.0",
-        "twig/twig": "3.9.0"
+        "twig/twig": "3.9.0 || 3.10.0 || 3.10.1"
     },
     "suggest": {
         "contao/tcpdf-bundle": "To export articles as PDF files"
