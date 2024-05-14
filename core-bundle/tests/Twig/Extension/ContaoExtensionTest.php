@@ -402,7 +402,7 @@ class ContaoExtensionTest extends TestCase
 
     public static function provideTwigFunctionSignatures(): iterable
     {
-        // Make sure the functions outside the class scope are loaded
+        // Backwards compatibility with twig/twig <3.9.0
         new \ReflectionClass(EscaperExtension::class);
 
         $escape = new \ReflectionFunction('twig_escape_filter');
