@@ -272,7 +272,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 }
             }
 
-            return EscaperExtension::escapeFilterIsSafe($filterArgs);
+            return twig_escape_filter_is_safe($filterArgs);
         };
 
         return [
