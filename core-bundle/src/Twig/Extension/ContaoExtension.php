@@ -48,7 +48,6 @@ use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\CoreExtension;
-use Twig\Extension\EscaperExtension;
 use Twig\Extension\GlobalsInterface;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
@@ -238,7 +237,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
 
     public function getFilters(): array
     {
-        $escaperFilter = function (Environment $env, $string, $strategy = 'html', $charset = null, $autoescape = false) {
+        $escaperFilter = function (Environment $env, $string, string $strategy = 'html', string|null $charset = null, bool $autoescape = false) {
             $runtime = $this->environment->getRuntime(EscaperRuntime::class);
 
             if ($string instanceof ChunkedText) {
