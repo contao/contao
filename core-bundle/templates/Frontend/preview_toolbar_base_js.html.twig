@@ -1,6 +1,6 @@
 {% do csp_handler.addSource('img-src', 'data:') %}
-{% set styleNonce = csp_handler.getNonce('style-src') %}
-<style{% if styleNonce %} nonce="{{ styleNonce }}"{% endif %}>
+{% set style_nonce = csp_handler.getNonce('style-src') %}
+<style{% if style_nonce %} nonce="{{ style_nonce }}"{% endif %}>
     .cto-toolbar {
         font-family: -apple-system,system-ui,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
         font-weight: 400;
@@ -208,8 +208,8 @@
     }
 </style>
 
-{% set scriptNonce = csp_handler.getNonce('script-src') %}
-<script{% if scriptNonce %} nonce="{{ scriptNonce }}"{% endif %}>
+{% set script_nonce = csp_handler.getNonce('script-src') %}
+<script{% if script_nonce %} nonce="{{ script_nonce }}"{% endif %}>
     (function () {
         const toolbar = document.createElement('div');
         toolbar.classList.add('cto-toolbar');
