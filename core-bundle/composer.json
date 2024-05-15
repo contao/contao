@@ -151,7 +151,7 @@
         "terminal42/service-annotation-bundle": "^1.1",
         "toflar/cronjob-supervisor": "^2.0",
         "twig/string-extra": "^3.0",
-        "twig/twig": "^3.8",
+        "twig/twig": "^3.10.2",
         "ua-parser/uap-php": "^3.9",
         "webignition/robots-txt-file": "^3.0",
         "wikimedia/less.php": "^1.7"
@@ -179,9 +179,7 @@
         "contao/manager-plugin": "<2.0 || >=3.0",
         "doctrine/cache": "<1.10",
         "terminal42/contao-ce-access": "<3.0",
-        "thecodingmachine/safe": "<1.2",
-        "twig/intl-extra": "3.9.0",
-        "twig/twig": "3.9.0 || 3.10.0 || 3.10.1"
+        "thecodingmachine/safe": "<1.2"
     },
     "autoload": {
         "psr-4": {
