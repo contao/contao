@@ -70,9 +70,9 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
     ) {
         $contaoEscaper = new ContaoEscaper();
 
-        $runtime = $this->environment->getRuntime(EscaperRuntime::class);
-        $runtime->setEscaper('contao_html', $contaoEscaper->escapeHtml(...));
-        $runtime->setEscaper('contao_html_attr', $contaoEscaper->escapeHtmlAttr(...));
+        $escaperRuntime = $this->environment->getRuntime(EscaperRuntime::class);
+        $escaperRuntime->setEscaper('contao_html', $contaoEscaper->escapeHtml(...));
+        $escaperRuntime->setEscaper('contao_html_attr', $contaoEscaper->escapeHtmlAttr(...));
 
         // Use our escaper on all templates in the "@Contao" and "@Contao_*" namespaces,
         // as well as the existing bundle templates we're already shipping.
@@ -80,8 +80,8 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
         $this->addContaoEscaperRule('%^@ContaoCore/%');
 
         // Mark classes as safe for HTML that already escape their output themselves
-        $runtime->addSafeClass(HtmlAttributes::class, ['html', 'contao_html']);
-        $runtime->addSafeClass(HighlightResult::class, ['html', 'contao_html']);
+        $escaperRuntime->addSafeClass(HtmlAttributes::class, ['html', 'contao_html']);
+        $escaperRuntime->addSafeClass(HighlightResult::class, ['html', 'contao_html']);
 
         $this->environment->addGlobal(
             'request_token',
@@ -237,8 +237,8 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
 
     public function getFilters(): array
     {
-        $escaperFilter = function (Environment $env, $string, string $strategy = 'html', string|null $charset = null, bool $autoescape = false) {
-            $runtime = $this->environment->getRuntime(EscaperRuntime::class);
+        $escaperFilter = static function (Environment $env, $string, string $strategy = 'html', string|null $charset = null, bool $autoescape = false) {
+            $runtime = $env->getRuntime(EscaperRuntime::class);
 
             if ($string instanceof ChunkedText) {
                 $parts = [];
