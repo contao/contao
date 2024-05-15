@@ -1,5 +1,5 @@
 
-<div class="<?= $this->class ?> ce_text block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+<div<?= $this->attr($this->cssID)->addClass([$this->class, 'ce_text', 'block'])->addStyle($this->style) ?>>
 
   <?php if ($this->headline): ?>
     <h1><?= $this->headline ?></h1>
