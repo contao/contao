@@ -8,15 +8,17 @@ $this->wrapperAttributes = $this
 
 ?>
 
-<div<?= $this->wrapperAttributes ?>>
+<?php $this->block('wrapper'); ?>
+  <div<?= $this->wrapperAttributes ?>>
 
-  <?php $this->block('headline'); ?>
-    <?php if ($this->headline): ?>
-      <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
-    <?php endif; ?>
-  <?php $this->endblock(); ?>
+    <?php $this->block('headline'); ?>
+      <?php if ($this->headline): ?>
+        <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
+      <?php endif; ?>
+    <?php $this->endblock(); ?>
 
-  <?php $this->block('content'); ?>
-  <?php $this->endblock(); ?>
+    <?php $this->block('content'); ?>
+    <?php $this->endblock(); ?>
 
-</div>
+  </div>
+<?php $this->endblock(); ?>
