@@ -559,7 +559,7 @@ abstract class Backend extends Controller
 	 */
 	public static function addPagesBreadcrumb($strKey='tl_page_node')
 	{
-		$objSession = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
+		$objSession = System::getContainer()->get('contao.session.finder')->getSession();
 
 		// Set a new node
 		if (Input::get('pn') !== null)

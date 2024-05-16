@@ -12,25 +12,34 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Session;
 
-use Symfony\Component\HttpFoundation\Session\SessionBagInterface;
+use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Symfony\Component\HttpFoundation\Session\SessionFactoryInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class SessionFactory implements SessionFactoryInterface
 {
-    public function __construct(
-        readonly private SessionFactoryInterface $inner,
-        readonly private SessionBagInterface $backendBag,
-        readonly private SessionBagInterface $frontendBag,
-    ) {
+    public function __construct(readonly private SessionFactoryInterface $inner)
+    {
     }
 
     public function createSession(): SessionInterface
     {
         $session = $this->inner->createSession();
 
-        $session->registerBag($this->backendBag);
-        $session->registerBag($this->frontendBag);
+        $backendBag = new ArrayAttributeBag('_contao_be_attributes');
+        $backendBag->setName('contao_backend');
+
+        $session->registerBag($backendBag);
+
+        $backendPopupBag = new ArrayAttributeBag('_contao_be_popup_attributes');
+        $backendPopupBag->setName('contao_backend_popup');
+
+        $session->registerBag($backendPopupBag);
+
+        $frontendBag = new ArrayAttributeBag('_contao_fe_attributes');
+        $frontendBag->setName('contao_frontend');
+
+        $session->registerBag($frontendBag);
 
         return $session;
     }

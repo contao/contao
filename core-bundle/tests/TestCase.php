@@ -50,6 +50,11 @@ abstract class TestCase extends ContaoTestCase
 
         $session->registerBag($beBag);
 
+        $bePopupBag = new ArrayAttributeBag('_contao_be_popup_attributes');
+        $bePopupBag->setName('contao_backend_popup');
+
+        $session->registerBag($bePopupBag);
+
         $feBag = new ArrayAttributeBag('_contao_fe_attributes');
         $feBag->setName('contao_frontend');
 
