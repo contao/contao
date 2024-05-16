@@ -4,7 +4,8 @@ $this->wrapperAttributes = $this
     ->attr($this->cssID)
     ->addClass([$this->class, 'block'])
     ->addStyle($this->style)
-    ->mergeWith($this->wrapperAttributes);
+    ->mergeWith($this->wrapperAttributes)
+;
 
 ?>
 
