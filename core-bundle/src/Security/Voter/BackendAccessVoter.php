@@ -121,21 +121,12 @@ class BackendAccessVoter extends Voter implements ResetInterface
 
         // Additionally check the child pages of the mounted pages
         if ('pagemounts' === $field) {
-            $subject = array_flip($subject);
-            $matches = array_intersect_key($this->pagemountsCache[$user->id] ?? [], $subject);
-
-            if (\count($matches) !== \count($subject)) {
+            if (!isset($this->pagemountsCache[$user->id])) {
                 $database = $this->framework->createInstance(Database::class);
-
-                $this->pagemountsCache[$user->id] = array_replace(
-                    array_fill_keys($database->query('SELECT id FROM tl_page')->fetchEach('id'), false),
-                    array_fill_keys($database->getChildRecords($user->pagemounts, 'tl_page'), true),
-                );
-
-                $matches = array_intersect_key($this->pagemountsCache[$user->id], $subject);
+                $this->pagemountsCache[$user->id] = $database->getChildRecords($user->pagemounts, 'tl_page');
             }
 
-            return [] !== array_filter($matches);
+            return !empty($this->pagemountsCache[$user->id]) && array_intersect($subject, $this->pagemountsCache[$user->id]);
         }
 
         return false;

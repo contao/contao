@@ -147,15 +147,6 @@ class BackendAccessVoterTest extends TestCase
             ->method('getChildRecords')
             ->willReturn([])
         ;
-        $database
-            ->method('query')
-            ->willReturn(new class() {
-                public function fetchEach(string $column): array
-                {
-                    return [1, 2, 3, 4, 5, 6];
-                }
-            })
-        ;
 
         $voter = new BackendAccessVoter($this->mockContaoFramework([], [Database::class => $database]));
 
@@ -240,16 +231,6 @@ class BackendAccessVoterTest extends TestCase
             ->expects($this->once())
             ->method('getChildRecords')
             ->willReturn([4, 5, 6])
-        ;
-        $database
-            ->expects($this->once())
-            ->method('query')
-            ->willReturn(new class() {
-                public function fetchEach(string $column): array
-                {
-                    return [1, 2, 3, 4, 5, 6];
-                }
-            })
         ;
 
         $voter = new BackendAccessVoter($this->mockContaoFramework([], [Database::class => $database]));
