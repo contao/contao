@@ -732,11 +732,6 @@ select[multiple] {
 	margin: 0 0 6px 21px !important;
 }
 
-.tl_checkbox_container .tl_checkbox {
-	margin-top: 1px;
-	margin-bottom: 1px;
-}
-
 .tl_checkbox_container .checkbox_options:last-of-type {
 	margin-bottom: 0 !important;
 }
@@ -948,11 +943,6 @@ a.tl_submit {
 
 	.tip {
 		max-width: 320px;
-	}
-
-	.tl_checkbox_container .tl_checkbox {
-		margin-top: 0;
-		margin-bottom: 0;
 	}
 
 	/* Backwards compatibility */
