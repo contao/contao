@@ -27,15 +27,15 @@
         {# Just an image (no sources) #}
         {% block image %}
             {% set img = figure.image.img %}
-            {% set defineProportions = img.width|default(false) and img.height|default(false) %}
+            {% set define_proportions = img.width|default(false) and img.height|default(false) %}
             {% set img_attributes = attrs()
                 .set('src', img.src)
                 .set('alt', figure.hasMetadata ? figure.metadata.alt|insert_tag : '')
                 .setIfExists('title', figure.hasMetadata ? figure.metadata.title|insert_tag : null)
                 .setIfExists('srcset', img.srcset is defined and img.srcset != img.src ? img.srcset : null)
                 .setIfExists('sizes', img.sizes|default)
-                .setIfExists('width', defineProportions ? img.width : null)
-                .setIfExists('height', defineProportions ? img.height : null)
+                .setIfExists('width', define_proportions ? img.width : null)
+                .setIfExists('height', define_proportions ? img.height : null)
                 .setIfExists('loading', img.loading|default)
                 .addClass(img.class|default)
                 .mergeWith(figure.options.img_attr|default)
@@ -53,14 +53,14 @@
             {% block sources %}
                 {% for source in figure.image.sources %}
                     {% block source %}
-                        {% set defineProportions = source.width|default(false) and source.height|default(false) %}
+                        {% set define_proportions = source.width|default(false) and source.height|default(false) %}
                         {% set source_attributes = attrs()
                             .set('srcset', source.srcset)
                             .setIfExists('sizes', source.sizes|default)
                             .setIfExists('media', source.media|default)
                             .setIfExists('type', source.type|default)
-                            .setIfExists('width', defineProportions ? source.width : null)
-                            .setIfExists('height', defineProportions ? source.height : null)
+                            .setIfExists('width', define_proportions ? source.width : null)
+                            .setIfExists('height', define_proportions ? source.height : null)
                             .mergeWith(figure.options.picture_attr|default)
                             .mergeWith(source_attributes|default)
                         %}

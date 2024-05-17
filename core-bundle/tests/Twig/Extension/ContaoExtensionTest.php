@@ -44,6 +44,7 @@ use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\Node\TextNode;
 use Twig\NodeTraverser;
+use Twig\Runtime\EscaperRuntime;
 use Twig\Source;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -175,6 +176,11 @@ class ContaoExtensionTest extends TestCase
     public function testThrowsIfCoreIncludeFunctionIsNotFound(): void
     {
         $environment = $this->createMock(Environment::class);
+        $environment
+            ->method('getRuntime')
+            ->willReturn(new EscaperRuntime())
+        ;
+
         $environment
             ->method('getExtension')
             ->willReturnMap([
@@ -371,66 +377,17 @@ class ContaoExtensionTest extends TestCase
     }
 
     /**
-     * We need to adjust some of Twig's core functions (e.g. the escape filter) but
-     * still delegate to the original implementation for maximum compatibility. This
-     * test makes sure the function's signatures remains the same and changes to the
-     * original codebase do not stay unnoticed.
-     *
-     * @dataProvider provideTwigFunctionSignatures
-     */
-    public function testContaoUsesCorrectTwigFunctionSignatures(\ReflectionFunction|\ReflectionMethod $reflector, array $expectedParameters): void
-    {
-        $parameters = array_map(
-            static fn (\ReflectionParameter $parameter): array => [
-                ($type = $parameter->getType()) instanceof \ReflectionNamedType ? $type->getName() : null,
-                $parameter->getName(),
-            ],
-            $reflector->getParameters(),
-        );
-
-        $this->assertSame($parameters, $expectedParameters);
-    }
-
-    public static function provideTwigFunctionSignatures(): iterable
-    {
-        // Make sure the functions outside the class scope are loaded
-        new \ReflectionClass(EscaperExtension::class);
-
-        // Forward compatibility with twig/twig 4
-        if (method_exists(EscaperExtension::class, 'escape')) {
-            $escape = new \ReflectionMethod(EscaperExtension::class, 'escape');
-        } else {
-            $escape = new \ReflectionFunction('twig_escape_filter');
-        }
-
-        yield [
-            $escape,
-            [
-                [Environment::class, 'env'],
-                [null, 'string'],
-                [null, 'strategy'],
-                [null, 'charset'],
-                [null, 'autoescape'],
-            ],
-        ];
-
-        // Backwards compatibility with twig/twig <3.9
-        if (\function_exists('twig_escape_filter_is_safe')) {
-            $escapeIsSafe = new \ReflectionFunction('twig_escape_filter_is_safe');
-        } else {
-            $escapeIsSafe = new \ReflectionMethod(EscaperExtension::class, 'escapeFilterIsSafe');
-        }
-
-        yield [$escapeIsSafe, [[Node::class, 'filterArgs']]];
-    }
-
-    /**
      * @param Environment&MockObject $environment
      */
     private function getContaoExtension(Environment|null $environment = null, ContaoFilesystemLoader|null $filesystemLoader = null): ContaoExtension
     {
         $environment ??= $this->createMock(Environment::class);
         $filesystemLoader ??= $this->createMock(ContaoFilesystemLoader::class);
+
+        $environment
+            ->method('getRuntime')
+            ->willReturn(new EscaperRuntime())
+        ;
 
         $environment
             ->method('getExtension')
