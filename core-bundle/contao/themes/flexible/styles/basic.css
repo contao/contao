@@ -958,6 +958,7 @@ a.tl_submit {
 	/* Backwards compatibility */
 	*:not(.widget-group) > .m12 {
 		margin: 0 15px;
+		padding: 16px 0;
 	}
 
 	*:not(.widget-group) > .w50 {
@@ -972,6 +973,7 @@ a.tl_submit {
 
 	*:not(.widget-group) > .cbx.m12 {
 		min-height: 80px;
+		box-sizing: border-box;
 	}
 }
 
