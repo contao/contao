@@ -167,7 +167,7 @@ class BackendController extends AbstractController
                 'exception' => 'The requested page does not exist.',
                 'template' => '@ContaoCore/Error/backend.html.twig',
             ],
-            new Response('', 404)
+            new Response('', 404),
         );
     }
 
