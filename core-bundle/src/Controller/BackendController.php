@@ -157,7 +157,7 @@ class BackendController extends AbstractController
     }
 
     #[Route('/{parameters}', name: 'contao_backend_fallback', requirements: ['parameters' => '.*'], defaults: ['statusCode' => 404], priority: -1000)]
-    public function backendFallback()
+    public function backendFallback(): Response
     {
         return $this->render('@ContaoCore/Error/backend.html.twig', [
             'language' => 'en',
