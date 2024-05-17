@@ -159,13 +159,16 @@ class BackendController extends AbstractController
     #[Route('/{parameters}', name: 'contao_backend_fallback', requirements: ['parameters' => '.*'], priority: -1000)]
     public function backendFallback(): Response
     {
-        return $this->render('@ContaoCore/Error/backend.html.twig',
-        [
-            'language' => 'en',
-            'statusName' => 'Page Not Found',
-            'exception' => 'The requested page does not exist.',
-            'template' => '@ContaoCore/Error/backend.html.twig',
-        ], new Response('', 404));
+        return $this->render(
+            '@ContaoCore/Error/backend.html.twig',
+            [
+                'language' => 'en',
+                'statusName' => 'Page Not Found',
+                'exception' => 'The requested page does not exist.',
+                'template' => '@ContaoCore/Error/backend.html.twig',
+            ],
+            new Response('', 404)
+        );
     }
 
     public static function getSubscribedServices(): array
