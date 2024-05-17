@@ -164,7 +164,7 @@ class BackendController extends AbstractController
             'statusName' => 'Page Not Found',
             'exception' => 'The requested page does not exist.',
             'template' => '@ContaoCore/Error/backend.html.twig',
-        ]);
+        ], new Response('', 404));
     }
 
     public static function getSubscribedServices(): array
