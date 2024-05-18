@@ -105,12 +105,12 @@ class MergeHttpHeadersListener implements ResetInterface
     private function fetchHttpHeaders(Request $request): void
     {
         $headers = $this->headerStorage->all();
-        $session = $request->getSession();
+        $session = $request->hasSession() ? $request->getSession() : null;
         $deprectatedHeaders = array_filter(
             $headers,
             static function ($header) use ($session): bool {
                 // Ignore Set-Cookie header set by PHP when using NativeSessionStorage
-                if (str_starts_with($header, "Set-Cookie: {$session->getName()}=")) {
+                if ($session && str_starts_with($header, "Set-Cookie: {$session->getName()}=")) {
                     return false;
                 }
 
