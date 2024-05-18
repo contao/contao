@@ -106,19 +106,18 @@ class MergeHttpHeadersListener implements ResetInterface
     {
         $headers = $this->headerStorage->all();
         $session = $request->getSession();
-        $deprectatedHeaders = array_filter($headers, static function($header) use ($session): bool {
-            // Ignore Set-Cookie header set by PHP when using NativeSessionStorage
-            if (str_starts_with($header, "Set-Cookie: {$session->getName()}=")) {
-                return false;
-            }
+        $deprectatedHeaders = array_filter(
+            $headers,
+            static function ($header) use ($session): bool {
+                // Ignore Set-Cookie header set by PHP when using NativeSessionStorage
+                if (str_starts_with($header, "Set-Cookie: {$session->getName()}=")) {
+                    return false;
+                }
 
-            // Ignore X-Powered-By header
-            if (str_starts_with($header, "X-Powered-By:")) {
-                return false;
-            }
-
-            return true;
-        });
+                // Ignore X-Powered-By header
+                return !str_starts_with($header, 'X-Powered-By:');
+            },
+        );
 
         if ([] !== $deprectatedHeaders) {
             trigger_deprecation('contao/core-bundle', '5.3', 'Using the PHP header() function to set HTTP headers has been deprecated and will no longer work in Contao 6. Use the response object instead.');
