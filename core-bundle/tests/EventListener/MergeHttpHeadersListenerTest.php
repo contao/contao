@@ -20,6 +20,8 @@ use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -362,7 +364,9 @@ class MergeHttpHeadersListenerTest extends TestCase
     private function getResponseEvent(Response|null $response = null, int $requestType = HttpKernelInterface::MAIN_REQUEST): ResponseEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
+        $request = new Request();
+        $request->setSession(new Session(new MockArraySessionStorage()));
 
-        return new ResponseEvent($kernel, new Request(), $requestType, $response ?? new Response());
+        return new ResponseEvent($kernel, $request, $requestType, $response ?? new Response());
     }
 }
