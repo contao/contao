@@ -31,14 +31,14 @@ use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route(path="%contao.backend.route_prefix%", defaults={"_scope" = "backend", "_token_check" = true})
+ * @Route(path="%contao.backend.route_prefix%", defaults={"_scope" = "backend", "_token_check" = true, "_store_referrer" = false})
  *
  * @internal
  */
 class BackendController extends AbstractController
 {
     /**
-     * @Route("", name="contao_backend")
+     * @Route("", name="contao_backend", defaults={"_store_referrer" = true})
      */
     public function mainAction(): Response
     {

@@ -12,6 +12,7 @@ contao_backend_redirect:
     defaults:
         _scope: backend
         _controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::redirectAction
+        _store_referrer: false
         route: contao_backend
         permanent: true
 
@@ -20,6 +21,7 @@ contao_backend_fallback:
     defaults:
         _scope: backend
         _controller: Symfony\Bundle\FrameworkBundle\Controller\TemplateController
+        _store_referrer: false
         template: '@ContaoCore\Error\backend.html.twig'
         context:
             template: '@ContaoCore\Error\backend.html.twig'
