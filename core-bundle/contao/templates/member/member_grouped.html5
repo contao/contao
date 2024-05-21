@@ -1,10 +1,17 @@
+<?php
 
-<!-- indexer::stop -->
-<div<?= $this->attr($this->cssID)->addClass([$this->class, 'block'])->addStyle($this->style) ?>>
+$this->wrapperAttributes = $this
+    ->attr($this->cssID)
+    ->addClass([$this->class, 'block'])
+    ->addStyle($this->style)
+    ->mergeWith($this->wrapperAttributes)
+;
 
-  <?php if ($this->headline): ?>
-    <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
-  <?php endif; ?>
+?>
+
+<?php $this->extend('block_unsearchable'); ?>
+
+<?php $this->block('content'); ?>
 
   <?php if ($this->message): ?>
     <p class="tl_confirm"><?= $this->message ?></p>
@@ -30,5 +37,4 @@
     </div>
   </form>
 
-</div>
-<!-- indexer::continue -->
+<?php $this->endblock(); ?>

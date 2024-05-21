@@ -1,10 +1,17 @@
 
-<!-- indexer::stop -->
-<div<?= $this->attr($this->cssID)->addClass([$this->class, $this->logout ? 'logout' : 'login', 'block'])->addStyle($this->style) ?>>
+<?php
 
-  <?php if ($this->headline): ?>
-    <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
-  <?php endif; ?>
+$this->wrapperAttributes = $this
+    ->attr()
+    ->addClass($this->logout ? 'logout' : 'login')
+    ->mergeWith($this->wrapperAttributes)
+;
+
+?>
+
+<?php $this->extend('block_unsearchable'); ?>
+
+<?php $this->block('content'); ?>
 
   <form<?php if ($this->action): ?> action="<?= $this->action ?>"<?php endif; ?> id="<?= $this->formId ?>" method="post">
     <div class="formbody">
@@ -67,5 +74,4 @@
     </div>
   </form>
 
-</div>
-<!-- indexer::continue -->
+<?php $this->endblock(); ?>

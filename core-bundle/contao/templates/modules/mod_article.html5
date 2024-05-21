@@ -1,8 +1,18 @@
+<?php
+
+$this->wrapperAttributes = $this
+    ->attr($this->cssID)
+    ->addClass([$this->class, 'block'])
+    ->addStyle($this->style)
+    ->mergeWith($this->wrapperAttributes)
+;
+
+?>
 
 <?php if ($this->teaserOnly): ?>
 
   <?php $this->block('alias'); ?>
-    <article<?= $this->attr($this->cssID)->addClass([$this->class, 'block'])->addStyle($this->style) ?>>
+    <article<?= $this->wrapperAttributes ?>>
       <div class="ce_text block">
         <h2><?= $this->headline ?></h2>
         <div class="teaser">
@@ -21,7 +31,7 @@
 
 <?php else: ?>
 
-  <div<?= $this->attr($this->cssID)->addClass([$this->class, 'block'])->addStyle($this->style) ?>>
+  <div<?= $this->wrapperAttributes ?>>
     <?php if ($this->printable): ?>
       <?php $this->block('syndication'); ?>
         <!-- indexer::stop -->

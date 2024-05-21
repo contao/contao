@@ -1,10 +1,17 @@
 
-<!-- indexer::stop -->
-<div<?= $this->attr($this->cssID)->addClass([$this->class, 'two-factor', 'block'])->addStyle($this->style) ?>>
+<?php
 
-  <?php if ($this->headline): ?>
-    <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
-  <?php endif; ?>
+$this->wrapperAttributes = $this
+    ->attr()
+    ->addClass('two-factor')
+    ->mergeWith($this->wrapperAttributes)
+;
+
+?>
+
+<?php $this->extend('block_unsearchable'); ?>
+
+<?php $this->block('content'); ?>
 
   <?php if ($this->enable): ?>
     <?php if ($this->message): ?>
@@ -113,5 +120,4 @@
     </div>
   <?php endif; ?>
 
-</div>
-<!-- indexer::continue -->
+<?php $this->endblock(); ?>

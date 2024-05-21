@@ -1,5 +1,15 @@
+<?php
 
-<div<?= $this->attr($this->cssID)->addClass([$this->class, 'block'])->addStyle($this->style) ?>>
+$this->wrapperAttributes = $this
+    ->attr($this->cssID)
+    ->addClass([$this->class, 'block'])
+    ->addStyle($this->style)
+    ->mergeWith($this->wrapperAttributes)
+;
+
+?>
+
+<div<?= $this->wrapperAttributes ?>>
 
   <?php if ($this->headline): ?>
     <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>

@@ -1,6 +1,17 @@
+<?php
+
+$this->wrapperAttributes = $this
+    ->attr($this->cssID)
+    ->addClass([$this->class, 'block'])
+    ->addStyle($this->style)
+    ->set('aria-label', 'Breadcrumb')
+    ->mergeWith($this->wrapperAttributes)
+;
+
+?>
 
 <!-- indexer::stop -->
-<nav<?= $this->attr($this->cssID)->addClass([$this->class, 'block'])->addStyle($this->style)->set('aria-label', 'Breadcrumb') ?>>
+<nav<?= $this->wrapperAttributes ?>>
 
   <?php $this->block('headline'); ?>
     <?php if ($this->headline): ?>
@@ -19,9 +30,6 @@
       <?php endforeach; ?>
     </ul>
   <?php $this->endblock(); ?>
-
-</nav>
-<!-- indexer::continue -->
 
 <?php
 

@@ -1,5 +1,15 @@
+<?php
 
-<section<?= $this->attr($this->cssID)->addClass([$this->class, 'ce_accordion', 'block'])->addStyle($this->style) ?>>
+$this->wrapperAttributes = $this
+    ->attr($this->cssID)
+    ->addClass([$this->class, 'ce_accordion', 'block'])
+    ->addStyle($this->style)
+    ->mergeWith($this->wrapperAttributes)
+;
+
+?>
+
+<section<?= $this->wrapperAttributes ?>>
 
   <div class="<?= $this->toggler ?>"<?php if ($this->headlineStyle): ?> style="<?= $this->headlineStyle ?>"<?php endif; ?>>
     <?= $this->headline ?>
