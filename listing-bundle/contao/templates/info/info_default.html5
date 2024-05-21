@@ -1,5 +1,16 @@
+<?php
 
-<div<?= $this->attr($this->cssID)->addClass([$this->class, 'listing', 'block'])->addStyle($this->style) ?>>
+$this->wrapperAttributes = $this
+    ->attr()
+    ->addClass('listing')
+    ->mergeWith($this->wrapperAttributes)
+;
+
+$this->extend('block_searchable');
+
+?>
+
+<?php $this->block('content'); ?>
 
   <?php if ($this->headline): ?>
     <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
@@ -20,4 +31,4 @@
   <p class="back"><a href="<?= $this->referer ?>" title="<?= $this->back ?>"><?= $this->back ?></a></p>
   <!-- indexer::continue -->
 
-</div>
+<?php $this->endblock(); ?>

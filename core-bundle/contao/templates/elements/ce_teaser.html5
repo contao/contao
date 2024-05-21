@@ -6,22 +6,17 @@ $this->wrapperAttributes = $this
     ->mergeWith($this->wrapperAttributes)
 ;
 
+$this->extend('block_searchable');
+
 ?>
 
-<?php $this->extend('block_searchable'); ?>
-
 <?php $this->block('headline'); ?>
-
   <?php if ($this->headline): ?>
     <h1><?= $this->headline ?></h1>
   <?php endif; ?>
-
 <?php $this->endblock(); ?>
 
 <?php $this->block('content'); ?>
-
   <?= $this->text ?>
-
   <p class="more"><a href="<?= $this->href ?>" title="<?= $this->readMore ?>"><?= $this->more ?><span class="invisible"> <?= $this->headline ?></span></a></p>
-
 <?php $this->endblock(); ?>

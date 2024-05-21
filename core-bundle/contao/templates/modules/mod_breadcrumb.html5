@@ -31,6 +31,9 @@ $this->wrapperAttributes = $this
     </ul>
   <?php $this->endblock(); ?>
 
+</nav>
+<!-- indexer::continue -->
+
 <?php
 
 $this->addSchemaOrg($this->getSchemaOrgData());

@@ -7,9 +7,9 @@ $this->wrapperAttributes = $this
     ->mergeWith($this->wrapperAttributes)
 ;
 
-?>
+$this->extend('block_unsearchable');
 
-<?php $this->extend('block_unsearchable'); ?>
+?>
 
 <?php $this->block('content'); ?>
 
