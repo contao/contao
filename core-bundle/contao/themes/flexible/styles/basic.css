@@ -857,10 +857,6 @@ a.tl_submit {
 	width: 100%;
 }
 
-.nogrid .cbx {
-	min-height: 32px;
-}
-
 .subpal {
 	clear: both;
 }
@@ -955,6 +951,11 @@ a.tl_submit {
 		width: calc(50% - 30px);
 		float: left;
 		min-height: 80px;
+	}
+
+	.nogrid *:not(.widget-group) > .w25, .nogrid *:not(.widget-group) > .w33, .nogrid *:not(.widget-group) > .w50,
+	.nogrid *:not(.widget-group) > .w66, .nogrid *:not(.widget-group) > .w75 {
+		float: none;
 	}
 
 	*:not(.widget-group) > .cbx {
