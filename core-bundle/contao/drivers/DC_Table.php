@@ -2060,7 +2060,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 				}
 
-				$return .= "\n\n" . '<fieldset class="' . $class . ($legend ? '' : ' nolegend') . '" data-controller="contao--toggle-fieldset" data-contao--toggle-fieldset-id-value="' . $key . '" data-contao--toggle-fieldset-table-value="' . $this->strTable . '" data-contao--toggle-fieldset-collapsed-class="collapsed" data-contao--jump-targets-target="section" data-contao--jump-targets-label-value="' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '" data-action="contao--jump-targets:scrollto->contao--toggle-fieldset#open">' . $legend;
+				$return .= "\n\n" . '<fieldset class="' . $class . ($legend ? '' : ' nolegend') . '" data-controller="contao--toggle-fieldset" data-contao--toggle-fieldset-id-value="' . $key . '" data-contao--toggle-fieldset-table-value="' . $this->strTable . '" data-contao--toggle-fieldset-collapsed-class="collapsed" data-contao--jump-targets-target="section" data-contao--jump-targets-label-value="' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '" data-action="contao--jump-targets:scrollto->contao--toggle-fieldset#open">' . $legend . "\n" . '<div class="widget-group">';
 				$thisId = '';
 
 				// Build rows of the current box
@@ -2082,7 +2082,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 							if (\count($arrAjax) > 1)
 							{
-								$current = "\n" . '<div id="' . $thisId . '" class="subpal cf">' . $arrAjax[$thisId] . '</div>';
+								$current = "\n" . '<div id="' . $thisId . '" class="subpal widget-group">' . $arrAjax[$thisId] . '</div>';
 								unset($arrAjax[$thisId]);
 								end($arrAjax);
 								$thisId = key($arrAjax);
@@ -2100,7 +2100,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$thisId = 'sub_' . substr($vv, 1, -1);
 						$arrAjax[$thisId] = '';
 						$blnAjax = ($ajaxId == $thisId && Environment::get('isAjaxRequest')) ? true : $blnAjax;
-						$return .= "\n" . '<div id="' . $thisId . '" class="subpal cf">';
+						$return .= "\n" . '<div id="' . $thisId . '" class="subpal widget-group">';
 
 						continue;
 					}
@@ -2139,7 +2139,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 
 				$class = 'tl_box';
-				$return .= "\n" . '</fieldset>';
+				$return .= "\n</div>\n</fieldset>";
 			}
 
 			$this->submit();
@@ -2598,7 +2598,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 							$thisId = 'sub_' . substr($v, 1, -1) . '_' . $id;
 							$arrAjax[$thisId] = '';
 							$blnAjax = ($ajaxId == $thisId && Environment::get('isAjaxRequest')) ? true : $blnAjax;
-							$box .= "\n  " . '<div id="' . $thisId . '" class="subpal cf">';
+							$box .= "\n  " . '<div id="' . $thisId . '" class="subpal widget-group">';
 
 							continue;
 						}
