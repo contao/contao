@@ -149,7 +149,6 @@ class PrettyErrorScreenListenerTest extends TestCase
         ]);
 
         $rootPage = $this->mockPageWithProperties(['rootId' => 1]);
-
         $request = $this->getRequest('frontend');
 
         $httpKernel = $this->createMock(HttpKernelInterface::class);
@@ -282,8 +281,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $event = $this->getResponseEvent($exception, $this->getRequest('frontend'));
 
         $twig = $this->createMock(Environment::class);
-        $adapters = [PageModel::class => $this->mockAdapter(['findFirstPublishedRootByHostAndLanguage'])];
-        $framework = $this->mockContaoFramework($adapters);
+        $framework = $this->mockContaoFramework([PageModel::class => $this->mockAdapter(['findFirstPublishedRootByHostAndLanguage'])]);
         $pageRegistry = $this->createMock(PageRegistry::class);
         $httpKernel = $this->createMock(HttpKernelInterface::class);
         $requestMatcher = $this->createMock(RequestMatcherInterface::class);
@@ -456,10 +454,8 @@ class PrettyErrorScreenListenerTest extends TestCase
     {
         $twig ??= $this->createMock(Environment::class);
         $httpKernel ??= $this->createMock(HttpKernelInterface::class);
-        $requestMatcher = $this->createMock(RequestMatcherInterface::class);
-
-        $pageRegistry = $this->createMock(PageRegistry::class);
         $pageAdapter = $this->mockAdapter(['findFirstPublishedByTypeAndPid']);
+        $pageRegistry = $this->createMock(PageRegistry::class);
 
         if (null !== $errorPage) {
             $pageAdapter
@@ -476,6 +472,8 @@ class PrettyErrorScreenListenerTest extends TestCase
                 ->willReturn(new PageRoute($errorPage))
             ;
         }
+
+        $requestMatcher = $this->createMock(RequestMatcherInterface::class);
 
         if (null !== $rootPage) {
             $requestMatcher
