@@ -84,7 +84,7 @@ class RequestTokenListenerTest extends TestCase
     /**
      * @dataProvider getAttributeAndRequest
      */
-    public function testValidatesTheRequestTokenDependingOnTheRequest(bool $setAttribute, bool|null $tokenCheck, bool $isContaoRequest, bool $isValidToken): void
+    public function testValidatesTheRequestTokenDependingOnTheRequest(bool $setAttribute, ?bool $tokenCheck, bool $isContaoRequest, bool $isValidToken): void
     {
         $config = $this->mockConfiguredAdapter(['get' => false]);
         $framework = $this->mockContaoFramework([Config::class => $config]);
