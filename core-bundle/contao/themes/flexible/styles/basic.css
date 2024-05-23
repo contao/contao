@@ -371,36 +371,36 @@ fieldset > .widget-group {
 }
 
 /* Backwards compatibility */
-*:not(.widget-group) > .widget {
+:not(.widget-group) > .widget {
 	margin-left: 15px;
 	margin-right: 15px;
 	position: relative;
 }
 
-*:not(.widget-group) > .w50 {
+:not(.widget-group) > .w50 {
 	float: none;
 	width: calc(100% - 30px);
 }
 
-*:not(.widget-group) > .clr {
+:not(.widget-group) > .clr {
 	clear: both;
 	width: calc(100% - 30px);
 }
 
-*:not(.widget-group) > .long {
+:not(.widget-group) > .long {
 	width: calc(100% - 30px); /* see #6320 */
 }
 
-*:not(.widget-group) > .clr:not(.widget) {
+:not(.widget-group) > .clr:not(.widget) {
 	width: 100%;
 }
 
-*:not(.widget-group) > .clr:before {
+:not(.widget-group) > .clr:before {
 	content: "";
 	display: table;
 }
 
-*:not(.widget-group) > .m12 {
+:not(.widget-group) > .m12 {
 	margin: 0 15px;
 }
 
@@ -857,10 +857,6 @@ a.tl_submit {
 	width: 100%;
 }
 
-.nogrid .cbx {
-	min-height: 32px;
-}
-
 .subpal {
 	clear: both;
 }
@@ -946,22 +942,26 @@ a.tl_submit {
 	}
 
 	/* Backwards compatibility */
-	*:not(.widget-group) > .m12 {
+	:not(.widget-group) > .m12 {
 		margin: 0 15px;
 		padding: 16px 0;
 	}
 
-	*:not(.widget-group) > .w50 {
+	:not(.widget-group) > .w50 {
 		width: calc(50% - 30px);
 		float: left;
 		min-height: 80px;
 	}
 
-	*:not(.widget-group) > .cbx {
+	.nogrid :not(.widget-group) > :is(.w25, .w33, .w50, .w66, .w75) {
+		float: none;
+	}
+
+	:not(.widget-group) > .cbx {
 		min-height: 46px;
 	}
 
-	*:not(.widget-group) > .cbx.m12 {
+	:not(.widget-group) > .cbx.m12 {
 		min-height: 80px;
 		box-sizing: border-box;
 	}
