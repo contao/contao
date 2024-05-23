@@ -240,6 +240,7 @@ class StoreRefererListenerTest extends TestCase
         $request = new Request();
         $request->setSession($session);
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
+        $request->attributes->set('_store_referrer', false);
 
         $listener = $this->getListener($this->createMock(User::class));
         $listener($this->getResponseEvent($request));

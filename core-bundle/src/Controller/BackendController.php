@@ -50,7 +50,7 @@ class BackendController extends AbstractController
     }
 
     /**
-     * @Route("/login", name="contao_backend_login")
+     * @Route("/login", name="contao_backend_login", defaults={"_store_referrer" = false})
      */
     public function loginAction(Request $request): Response
     {
@@ -77,7 +77,7 @@ class BackendController extends AbstractController
     /**
      * Symfony will un-authenticate the user automatically by calling this route.
      *
-     * @Route("/logout", name="contao_backend_logout")
+     * @Route("/logout", name="contao_backend_logout", defaults={"_store_referrer" = false})
      */
     public function logoutAction(): RedirectResponse
     {
@@ -85,7 +85,7 @@ class BackendController extends AbstractController
     }
 
     /**
-     * @Route("/password", name="contao_backend_password")
+     * @Route("/password", name="contao_backend_password", defaults={"_store_referrer" = false})
      */
     public function passwordAction(): Response
     {
@@ -97,7 +97,7 @@ class BackendController extends AbstractController
     }
 
     /**
-     * @Route("/confirm", name="contao_backend_confirm")
+     * @Route("/confirm", name="contao_backend_confirm", defaults={"_store_referrer" = false})
      */
     public function confirmAction(): Response
     {
@@ -109,7 +109,7 @@ class BackendController extends AbstractController
     }
 
     /**
-     * @Route("/file", name="contao_backend_file")
+     * @Route("/file", name="contao_backend_file", defaults={"_store_referrer" = false})
      *
      * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
      *             Use the picker instead.
@@ -126,7 +126,7 @@ class BackendController extends AbstractController
     }
 
     /**
-     * @Route("/help", name="contao_backend_help")
+     * @Route("/help", name="contao_backend_help", defaults={"_store_referrer" = false})
      */
     public function helpAction(): Response
     {
@@ -138,7 +138,7 @@ class BackendController extends AbstractController
     }
 
     /**
-     * @Route("/page", name="contao_backend_page")
+     * @Route("/page", name="contao_backend_page", defaults={"_store_referrer" = false})
      *
      * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
      *             Use the picker instead.
@@ -155,7 +155,7 @@ class BackendController extends AbstractController
     }
 
     /**
-     * @Route("/popup", name="contao_backend_popup")
+     * @Route("/popup", name="contao_backend_popup", defaults={"_store_referrer" = false})
      */
     public function popupAction(): Response
     {
@@ -167,7 +167,7 @@ class BackendController extends AbstractController
     }
 
     /**
-     * @Route("/alerts", name="contao_backend_alerts")
+     * @Route("/alerts", name="contao_backend_alerts", defaults={"_store_referrer" = false})
      */
     public function alertsAction(): Response
     {
@@ -183,7 +183,7 @@ class BackendController extends AbstractController
      * It will determine the current provider URL based on the value, which is usually
      * read dynamically via JavaScript.
      *
-     * @Route("/picker", name="contao_backend_picker")
+     * @Route("/picker", name="contao_backend_picker", defaults={"_store_referrer" = false})
      */
     public function pickerAction(Request $request): RedirectResponse
     {

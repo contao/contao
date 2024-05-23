@@ -109,6 +109,15 @@ class MakeResponsePrivateListener
 
     private function isSessionEmpty(SessionInterface $session): bool
     {
+        foreach (headers_list() as $header) {
+            if (
+                str_starts_with($header, "Set-Cookie: {$session->getName()}=")
+                && !str_starts_with($header, "Set-Cookie: {$session->getName()}=deleted;")
+            ) {
+                return false;
+            }
+        }
+
         if (!$session->isStarted()) {
             return true;
         }
