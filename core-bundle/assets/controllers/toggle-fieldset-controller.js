@@ -16,7 +16,7 @@ export default class extends Controller {
             fs.setAttribute(`data-${identifier}-id-value`, id);
             fs.setAttribute(`data-${identifier}-table-value`, table);
             fs.setAttribute(`data-${identifier}-collapsed-class`, 'collapsed');
-            el.setAttribute('data-action', `click->${identifier}#toggle`);
+            el.setAttribute('data-action', `click->${identifier}#toggle keydown->${identifier}#toggleWithKeyboard`);
         }
 
         const migrateLegacy = () => {
@@ -66,6 +66,12 @@ export default class extends Controller {
 
             this.element.classList.add(this.collapsedClass);
         }
+    }
+
+    toggleWithKeyboard (event) {
+      if (13 === event.keyCode) {
+        this.toggle()
+      }
     }
 
     toggle () {

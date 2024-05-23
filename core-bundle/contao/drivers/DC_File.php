@@ -164,7 +164,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 				{
 					list($key, $cls) = explode(':', $legends[$k]) + array(null, null);
 
-					$legend = "\n" . '<legend data-action="click->contao--toggle-fieldset#toggle">' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '</legend>';
+					$legend = "\n" . '<legend data-action="click->contao--toggle-fieldset#toggle keydown->contao--toggle-fieldset#toggleWithKeyboard" tabindex="0">' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '</legend>';
 				}
 
 				if ($legend)
