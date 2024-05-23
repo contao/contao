@@ -241,7 +241,7 @@ class TemplateLoaderTest extends TestCase
      */
     public function testSupportsHyphensInCustomTemplateNames(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 4.9: Using hyphens in the template name "mod_article-custom.html5" has been deprecated %s.');
+        $this->expectDeprecation('Since contao/core-bundle 4.9: The template "mod_article-custom.html5" uses a deprecated name that will no longer work in Contao 5.0. Name it "mod_article_custom.html5" instead.');
 
         (new Filesystem())->touch([
             Path::join($this->getTempDir(), '/templates/mod_article-custom.html5'),

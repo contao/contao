@@ -56,6 +56,12 @@ final class ContaoExtension extends AbstractExtension
 
         /** @var EscaperExtension $escaperExtension */
         $escaperExtension = $environment->getExtension(EscaperExtension::class);
+
+        // Forward compatibility with twig/twig >=3.10.0
+        if (method_exists($escaperExtension, 'setEnvironment')) {
+            $escaperExtension->setEnvironment($environment);
+        }
+
         $escaperExtension->setEscaper('contao_html', [$contaoEscaper, 'escapeHtml']);
         $escaperExtension->setEscaper('contao_html_attr', [$contaoEscaper, 'escapeHtmlAttr']);
 
@@ -168,9 +174,11 @@ final class ContaoExtension extends AbstractExtension
                 $parts = [];
 
                 foreach ($string as [$type, $chunk]) {
-                    $parts[] = ChunkedText::TYPE_RAW === $type
-                        ? $chunk
-                        : twig_escape_filter($env, $chunk, $strategy, $charset);
+                    if (ChunkedText::TYPE_RAW === $type) {
+                        $parts[] = $chunk;
+                    } else {
+                        $parts[] = twig_escape_filter($env, $chunk, $strategy, $charset);
+                    }
                 }
 
                 return implode('', $parts);
@@ -180,14 +188,17 @@ final class ContaoExtension extends AbstractExtension
         };
 
         $twigEscaperFilterIsSafe = static function (Node $filterArgs): array {
-            // Our escaper strategy variants that tolerate input encoding are
-            // also safe in the original context (e.g. for the filter argument
-            // 'contao_html' we will return ['contao_html', 'html']).
-            if (
-                ($expression = iterator_to_array($filterArgs)[0] ?? null) instanceof ConstantExpression
-                && \in_array($value = $expression->getAttribute('value'), ['contao_html', 'contao_html_attr'], true)
-            ) {
-                return [$value, substr($value, 7)];
+            $expression = iterator_to_array($filterArgs)[0] ?? null;
+
+            if ($expression instanceof ConstantExpression) {
+                $value = $expression->getAttribute('value');
+
+                // Our escaper strategy variants that tolerate input encoding are
+                // also safe in the original context (e.g. for the filter argument
+                // 'contao_html' we will return ['contao_html', 'html']).
+                if (\in_array($value, ['contao_html', 'contao_html_attr'], true)) {
+                    return [$value, substr($value, 7)];
+                }
             }
 
             return twig_escape_filter_is_safe($filterArgs);

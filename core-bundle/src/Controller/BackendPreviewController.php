@@ -27,7 +27,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  * requested front end page while ensuring that the /preview.php entry point is
  * used. When requested, the front end user gets authenticated.
  *
- * @Route(path="%contao.backend.route_prefix%", defaults={"_scope" = "backend", "_allow_preview" = true})
+ * @Route("%contao.backend.route_prefix%/preview", name="contao_backend_preview", defaults={"_scope" = "backend", "_allow_preview" = true, "_store_referrer" = false})
  */
 class BackendPreviewController
 {
@@ -44,9 +44,6 @@ class BackendPreviewController
         $this->authorizationChecker = $authorizationChecker;
     }
 
-    /**
-     * @Route("/preview", name="contao_backend_preview")
-     */
     public function __invoke(Request $request): Response
     {
         // Skip the redirect if there is no preview script, otherwise we will

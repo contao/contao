@@ -122,7 +122,7 @@ class FeedItem
 
 		if ($size && $objFile->isImage)
 		{
-			$image = System::getContainer()->get('contao.image.image_factory')->create(Path::join($rootDir, $strFile), $size);
+			$image = System::getContainer()->get('contao.image.factory')->create(Path::join($rootDir, $strFile), $size);
 			$fileUrl = $strUrl . $image->getUrl($rootDir);
 			$objFile = new File(Path::makeRelative($image->getPath(), $rootDir));
 		}

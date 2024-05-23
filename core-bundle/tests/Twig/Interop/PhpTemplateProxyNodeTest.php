@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Twig\Interop;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNode;
+use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Environment;
 
@@ -32,12 +33,24 @@ class PhpTemplateProxyNodeTest extends TestCase
                 array_map(
                     function(callable $block) use ($context): string {
                         if ($this->env->isDebug()) { ob_start(); } else { ob_start(static function () { return ''; }); }
-                        try { $block($context); return ob_get_contents(); } finally { ob_end_clean(); }
+                        try {
+                            $content = '';
+                            foreach ($block($context) ?? [''] as $chunk) {
+                                $content .= ob_get_contents() . $chunk;
+                                ob_clean();
+                            }
+                            return $content . ob_get_contents();
+                        } finally { ob_end_clean(); }
                     }, $blocks
                 ), $context
             );
 
             SOURCE;
+
+        // Forward compatibility with twig/twig >=3.9.0
+        if (class_exists(YieldReady::class)) {
+            $expectedSource = str_replace('echo', 'yield', $expectedSource);
+        }
 
         $this->assertSame($expectedSource, $compiler->getSource());
     }

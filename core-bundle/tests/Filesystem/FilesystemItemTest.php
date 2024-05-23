@@ -38,6 +38,7 @@ class FilesystemItemTest extends TestCase
         $this->assertSame('foo/bar.png', $fileItem->getPath());
         $this->assertSame('foo/bar.png', (string) $fileItem);
         $this->assertSame(123450, $fileItem->getLastModified());
+        $this->assertSame('bar.png', $fileItem->getName());
         $this->assertSame(1024, $fileItem->getFileSize());
         $this->assertSame('image/png', $fileItem->getMimeType());
         $this->assertSame('bar', $fileItem->getExtraMetadata()['foo']);

@@ -37,6 +37,7 @@ use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\Node\TextNode;
 use Twig\NodeTraverser;
+use Twig\Runtime\EscaperRuntime;
 use Twig\Source;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -158,6 +159,14 @@ class ContaoExtensionTest extends TestCase
                 }],
             ])
         ;
+
+        // Forward compatibility with twig/twig >=3.10.0
+        if (class_exists(EscaperRuntime::class)) {
+            $environment
+                ->method('getRuntime')
+                ->willReturn(new EscaperRuntime())
+            ;
+        }
 
         $extension = new ContaoExtension($environment, $this->createMock(ContaoFilesystemLoader::class));
 
@@ -348,27 +357,30 @@ class ContaoExtensionTest extends TestCase
      * This test makes sure the function's signatures remains the same and changes
      * to the original codebase do not stay unnoticed.
      *
+     * @param \ReflectionFunction|\ReflectionMethod $reflector
+     *
      * @dataProvider provideTwigFunctionSignatures
      */
-    public function testContaoUsesCorrectTwigFunctionSignatures(string $function, array $expectedParameters): void
+    public function testContaoUsesCorrectTwigFunctionSignatures($reflector, array $expectedParameters): void
     {
-        // Make sure the functions outside the class scope are loaded
-        new \ReflectionClass(EscaperExtension::class);
-
         $parameters = array_map(
             static fn (\ReflectionParameter $parameter): array => [
                 ($type = $parameter->getType()) instanceof \ReflectionNamedType ? $type->getName() : null,
                 $parameter->getName(),
             ],
-            (new \ReflectionFunction($function))->getParameters()
+            $reflector->getParameters()
         );
+
         $this->assertSame($parameters, $expectedParameters);
     }
 
     public function provideTwigFunctionSignatures(): \Generator
     {
+        // Backwards compatibility with twig/twig <3.9.0
+        new \ReflectionClass(EscaperExtension::class);
+
         yield [
-            'twig_escape_filter',
+            new \ReflectionFunction('twig_escape_filter'),
             [
                 [Environment::class, 'env'],
                 [null, 'string'],
@@ -378,12 +390,7 @@ class ContaoExtensionTest extends TestCase
             ],
         ];
 
-        yield [
-            'twig_escape_filter_is_safe',
-            [
-                [Node::class, 'filterArgs'],
-            ],
-        ];
+        yield [new \ReflectionFunction('twig_escape_filter_is_safe'), [[Node::class, 'filterArgs']]];
     }
 
     /**
@@ -401,6 +408,14 @@ class ContaoExtensionTest extends TestCase
                 [CoreExtension::class, new CoreExtension()],
             ])
         ;
+
+        // Forward compatibility with twig/twig >=3.10.0
+        if (class_exists(EscaperRuntime::class)) {
+            $environment
+                ->method('getRuntime')
+                ->willReturn(new EscaperRuntime())
+            ;
+        }
 
         return new ContaoExtension($environment, $filesystemLoader);
     }

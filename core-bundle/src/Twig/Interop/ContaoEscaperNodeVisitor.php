@@ -17,7 +17,7 @@ use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FilterExpression;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
-use Twig\NodeVisitor\AbstractNodeVisitor;
+use Twig\NodeVisitor\NodeVisitorInterface;
 
 /**
  * This NodeVisitor alters all "escape('html')" and "escape('html_attr')"
@@ -27,7 +27,7 @@ use Twig\NodeVisitor\AbstractNodeVisitor;
  *
  * @experimental
  */
-final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
+final class ContaoEscaperNodeVisitor implements NodeVisitorInterface
 {
     private ?array $escaperFilterNodes = null;
 
@@ -52,7 +52,7 @@ final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
         return 1;
     }
 
-    protected function doEnterNode(Node $node, Environment $env): Node
+    public function enterNode(Node $node, Environment $env): Node
     {
         $isAffected = static function (array $rules, string $name): bool {
             foreach ($rules as $rule) {
@@ -75,7 +75,7 @@ final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
         return $node;
     }
 
-    protected function doLeaveNode(Node $node, Environment $env)
+    public function leaveNode(Node $node, Environment $env): Node
     {
         if ($node instanceof ModuleNode && null !== $this->escaperFilterNodes) {
             foreach ($this->escaperFilterNodes as [$escaperFilterNode, $strategy]) {

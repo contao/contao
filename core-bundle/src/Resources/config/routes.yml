@@ -12,5 +12,6 @@ contao_backend_redirect:
     defaults:
         _scope: backend
         _controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::redirectAction
+        _store_referrer: false
         route: contao_backend
         permanent: true
