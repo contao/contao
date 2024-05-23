@@ -31,7 +31,7 @@ use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route(path="%contao.backend.route_prefix%", defaults={"_scope" = "backend", "_token_check" = true})
+ * @Route(path="%contao.backend.route_prefix%", defaults={"_scope" = "backend"})
  *
  * @internal
  */

@@ -30,7 +30,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("%contao.backend.route_prefix%", defaults={"_scope" = "backend", "_token_check" = true, "_store_referrer" = false})
+ * @Route("%contao.backend.route_prefix%", defaults={"_scope" = "backend", "_store_referrer" = false})
  *
  * @internal
  */
