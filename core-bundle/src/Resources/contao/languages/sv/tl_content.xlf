@@ -311,6 +311,7 @@
       </trans-unit>
       <trans-unit id="tl_content.data.1">
         <source>These values are available as &lt;code&gt;$this-&gt;keys&lt;/code&gt; in the template.</source>
+        <target>Dessa värden är tillgängliga som &lt;code&gt;$this-&gt;keys&lt;/code&gt; i mallen</target>
       </trans-unit>
       <trans-unit id="tl_content.linkTitle.0">
         <source>Link text</source>

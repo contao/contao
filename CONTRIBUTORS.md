@@ -98,6 +98,7 @@
  * Physiklehrer ([Physiklehrer](https://github.com/Physiklehrer))
  * Rory Zünd ([rorych](https://github.com/rorych))
  * Stefan Schleich ([stefanschleich](https://github.com/stefanschleich))
+ * Stefan Schulz-Lauterbach ([stefansl](https://github.com/stefansl))
  * Stephan Gehle ([SGehle](https://github.com/SGehle))
  * Sven Baumann ([baumannsven](https://github.com/baumannsven))
  * Tsarma ([Tsarma](https://github.com/Tsarma))
