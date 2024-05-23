@@ -193,10 +193,11 @@ abstract class Controller extends System
 			foreach ($arrCustomized as $strFile)
 			{
 				$strTemplate = basename($strFile, strrchr($strFile, '.'));
+				$legacyPrefix = substr($strPrefix, 0, -1) . '-';
 
-				if (strpos($strTemplate, '-') !== false)
+				if (str_starts_with($strTemplate, $legacyPrefix))
 				{
-					trigger_deprecation('contao/core-bundle', '4.9', 'Using hyphens in the template name "' . $strTemplate . '.html5" has been deprecated and will no longer work in Contao 5.0. Use snake_case instead.');
+					trigger_deprecation('contao/core-bundle', '4.9', 'The template "' . $strTemplate . '.html5" uses a deprecated name that will no longer work in Contao 5.0. Name it "' . str_replace($legacyPrefix, $strPrefix, $strTemplate) . '.html5" instead.');
 				}
 
 				// Ignore bundle templates, e.g. mod_article and mod_article_list
