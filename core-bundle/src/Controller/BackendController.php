@@ -208,7 +208,7 @@ class BackendController extends AbstractController
     }
 
     /**
-     * @Route("/{parameters}", name="contao_backend_fallback", requirements={"parameters" = ".*"}, priority=-1000)
+     * @Route("/{parameters}", name="contao_backend_fallback", requirements={"parameters" = ".*"}, defaults={"_store_referrer" = false}, priority=-1000)
      */
     public function backendFallback(): Response
     {
