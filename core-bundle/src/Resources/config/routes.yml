@@ -15,19 +15,3 @@ contao_backend_redirect:
         _store_referrer: false
         route: contao_backend
         permanent: true
-
-contao_backend_fallback:
-    path: '%contao.backend.route_prefix%/{parameters}'
-    defaults:
-        _scope: backend
-        _controller: Symfony\Bundle\FrameworkBundle\Controller\TemplateController
-        _store_referrer: false
-        template: '@ContaoCore\Error\backend.html.twig'
-        context:
-            template: '@ContaoCore\Error\backend.html.twig'
-            language: en
-            statusName: Page Not Found
-            exception: The requested page does not exist.
-        statusCode: 404
-    requirements:
-        parameters: .*
