@@ -94,7 +94,7 @@ class AddInsertTagsPassTest extends TestCase
         }
     }
 
-    public function getAddsExpectedMethodCalls(): \Generator
+    public static function getAddsExpectedMethodCalls(): iterable
     {
         yield [
             [

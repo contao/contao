@@ -40,7 +40,6 @@
         :  </figure>
 #}
 
-
 {#
     Build a <figure> including a picture and - if available - a caption from
     Studio\Figure data.
@@ -81,14 +80,14 @@
     {%- if figure.image.sources -%}
         <picture{{ _self.html_attributes(picture_attributes) }}>
             {% for source in figure.image.sources %}
-                {%- set defineProportions = source.width|default(false) and source.height|default(false) -%}
+                {%- set define_proportions = source.width|default(false) and source.height|default(false) -%}
                 {%- set base_attributes = {
                     'srcset': source.srcset,
                     'sizes': source.sizes|default(null),
                     'media': source.media|default(null),
                     'type': source.type|default(null),
-                    'width': defineProportions ? source.width : null,
-                    'height': defineProportions ? source.height : null,
+                    'width': define_proportions ? source.width : null,
+                    'height': define_proportions ? source.height : null,
                 } -%}
                 <source{{ _self.html_attributes(base_attributes|merge(source_attributes)) }}>
             {%- endfor %}
@@ -108,7 +107,7 @@
         {% set img_attributes = figure.options.img_attr|default({})|merge(options.img_attr|default({})) %}
 
         {% set img = figure.image.img %}
-        {% set defineProportions = img.width|default(false) and img.height|default(false) %}
+        {% set define_proportions = img.width|default(false) and img.height|default(false) %}
 
         {% set base_attributes = {
             'src': img.src,
@@ -116,8 +115,8 @@
             'title': figure.hasMetadata ? (figure.metadata.title ?: null) : null,
             'srcset': img.srcset is defined and img.srcset != img.src ? img.srcset : null,
             'sizes': img.sizes|default(null),
-            'width': defineProportions ? img.width : null,
-            'height': defineProportions ? img.height : null,
+            'width': define_proportions ? img.width : null,
+            'height': define_proportions ? img.height : null,
             'loading': img.loading|default(null),
             'class': img.class|default(null),
         } %}

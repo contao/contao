@@ -57,8 +57,8 @@ class ChangeSet
     }
 
     /**
-     * Returns a copy of this ChangeSet with another one appended. Optionally
-     * all paths of the appended ChangeSet will be prefixed with $pathPrefix.
+     * Returns a copy of this ChangeSet with another one appended. Optionally all
+     * paths of the appended ChangeSet will be prefixed with $pathPrefix.
      */
     public function withOther(self $changeSet, string $pathPrefix = ''): self
     {
@@ -101,8 +101,8 @@ class ChangeSet
     /**
      * Returns true if there are no changes.
      *
-     * If $includeLastModified is set to true, changes to last modified
-     * timestamps will be considered as well.
+     * If $includeLastModified is set to true, changes to last modified timestamps
+     * will be considered as well.
      */
     public function isEmpty(bool $includeLastModified = false): bool
     {
@@ -135,8 +135,8 @@ class ChangeSet
     /**
      * Returns a list of changes that should be applied to existing items.
      *
-     * If $includeLastModified is set to true, changes to last modified
-     * timestamps will be included in the definitions.
+     * If $includeLastModified is set to true, changes to last modified timestamps
+     * will be included in the definitions.
      *
      * @return list<ItemToUpdate>
      */

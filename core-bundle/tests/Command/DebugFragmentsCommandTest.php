@@ -72,7 +72,7 @@ class DebugFragmentsCommandTest extends TestCase
         $this->assertSame($expectedOutput, preg_replace('/ +(?=\n)/', '', $commandTester->getDisplay(true)));
     }
 
-    public function commandOutputProvider(): \Generator
+    public static function commandOutputProvider(): iterable
     {
         yield 'Basic fragment list' => [
             [

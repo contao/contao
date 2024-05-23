@@ -58,7 +58,7 @@ class BackupTest extends ContaoTestCase
         new Backup($filename);
     }
 
-    public function invalidFileNameProvider(): \Generator
+    public static function invalidFileNameProvider(): iterable
     {
         yield 'Invalid file extension' => ['foobar__20211101141254.gif'];
         yield 'Missing __' => ['foobar20211101141254.sql.gz'];

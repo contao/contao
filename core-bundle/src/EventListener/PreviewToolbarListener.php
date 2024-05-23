@@ -29,8 +29,8 @@ use Twig\Environment as TwigEnvironment;
  *
  * The onKernelResponse method must be connected to the "kernel.response" event.
  *
- * The toolbar is only injected on well-formed HTML with a proper </body> tag,
- * so is never included in sub-requests or ESI requests.
+ * The toolbar is only injected on well-formed HTML with a proper </body> tag, so
+ * is never included in sub-requests or ESI requests.
  *
  * @internal
  */

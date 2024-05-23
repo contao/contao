@@ -17,9 +17,10 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
 
 /**
- * By default, the Contao back end is fully accessible unless a developer wants to have specific
- * permissions. That's why this voter is implemented with a very low priority, so it allows everything
- * in the back end as the last voter in case no other voter decided to deny access before.
+ * By default, the Contao back end is fully accessible unless a developer wants to
+ * have specific permissions. That's why this voter is implemented with a very low
+ * priority, so it allows everything in the back end as the last voter in case no
+ * other voter decided to deny access before.
  */
 class DefaultDataContainerVoter implements CacheableVoterInterface
 {

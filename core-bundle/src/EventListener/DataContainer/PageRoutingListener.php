@@ -94,9 +94,9 @@ class PageRoutingListener
     }
 
     /**
-     * Builds the URL from prefix, alias and suffix. We cannot use the router for
-     * this, since pages might have non-optional parameters. This value is only used to
-     * compare two pages and see if they _might_ conflict based on the alias itself.
+     * Builds the URL from prefix, alias and suffix. We cannot use the router for this,
+     * since pages might have non-optional parameters. This value is only used to compare
+     * two pages and see if they _might_ conflict based on the alias itself.
      */
     private function buildUrl(string $alias, string $urlPrefix, string $urlSuffix): string
     {

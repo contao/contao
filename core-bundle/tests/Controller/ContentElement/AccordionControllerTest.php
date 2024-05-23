@@ -68,7 +68,7 @@ class AccordionControllerTest extends ContentElementTestCase
             HTML;
 
         $this->assertSameHtml($expectedOutput, $response->getContent());
-        $this->assertArrayHasKey('handorgel_css', $responseContextData['head']);
+        $this->assertArrayHasKey('handorgel_css', $responseContextData['stylesheets']);
         $this->assertArrayHasKey('handorgel_js', $responseContextData['body']);
     }
 
@@ -122,7 +122,7 @@ class AccordionControllerTest extends ContentElementTestCase
             HTML;
 
         $this->assertSameHtml($expectedOutput, $response->getContent());
-        $this->assertArrayHasKey('handorgel_css', $responseContextData['head']);
+        $this->assertArrayHasKey('handorgel_css', $responseContextData['stylesheets']);
         $this->assertArrayHasKey('handorgel_js', $responseContextData['body']);
     }
 }

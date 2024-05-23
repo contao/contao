@@ -93,7 +93,7 @@ class SearchIndexSubscriberTest extends TestCase
         $this->assertSame($expectedDecision, $decision);
     }
 
-    public function shouldRequestProvider(): \Generator
+    public static function shouldRequestProvider(): iterable
     {
         yield 'Test skips URIs where the original URI contained a robots.txt no-follow tag' => [
             new CrawlUri(new Uri('https://contao.org'), 1, false, new Uri('https://original.contao.org')),
@@ -191,7 +191,7 @@ class SearchIndexSubscriberTest extends TestCase
         $this->assertSame($expectedDecision, $decision);
     }
 
-    public function needsContentProvider(): \Generator
+    public function needsContentProvider(): iterable
     {
         yield 'Test skips responses that were not successful' => [
             $this->mockResponse(true, 404),
@@ -290,7 +290,7 @@ class SearchIndexSubscriberTest extends TestCase
         $this->assertSame($expectedStats, $result->getInfo('stats'));
     }
 
-    public function onLastChunkProvider(): \Generator
+    public static function onLastChunkProvider(): iterable
     {
         yield 'Test skips URIs where the "X-Robots-Tag" header contains "noindex"' => [
             null,
@@ -403,7 +403,7 @@ class SearchIndexSubscriberTest extends TestCase
         $this->assertSame($expectedStats, $result->getInfo('stats'));
     }
 
-    public function onTransportExceptionProvider(): \Generator
+    public function onTransportExceptionProvider(): iterable
     {
         yield 'Test reports transport exception responses' => [
             new TransportException('Could not resolve host or timeout'),
@@ -471,7 +471,7 @@ class SearchIndexSubscriberTest extends TestCase
         $this->assertSame($expectedStats, $result->getInfo('stats'));
     }
 
-    public function onHttpExceptionProvider(): \Generator
+    public function onHttpExceptionProvider(): iterable
     {
         yield 'Test reports responses that were not successful' => [
             new ClientException($this->mockResponse(true, 404)),

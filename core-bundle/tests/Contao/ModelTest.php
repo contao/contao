@@ -118,7 +118,7 @@ class ModelTest extends TestCase
         $this->assertSame($expected, $fooModel::convertToPhpValue($key, $value));
     }
 
-    public function getDatabaseValues(): \Generator
+    public static function getDatabaseValues(): iterable
     {
         yield ['string_not_null', 'string', 'string'];
 
@@ -174,7 +174,7 @@ class ModelTest extends TestCase
         $this->assertSame($model->getEnum('foo'), $expected);
     }
 
-    public function getEnumFieldValues(): \Generator
+    public static function getEnumFieldValues(): iterable
     {
         yield [StringBackedEnum::class, StringBackedEnum::optionB->value, StringBackedEnum::optionB];
         yield [IntBackedEnum::class, IntBackedEnum::optionB->value, IntBackedEnum::optionB];

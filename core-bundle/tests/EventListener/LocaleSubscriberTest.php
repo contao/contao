@@ -49,7 +49,7 @@ class LocaleSubscriberTest extends TestCase
         $this->assertSame($expected, $request->attributes->get('_locale'));
     }
 
-    public function getLocaleRequestData(): \Generator
+    public static function getLocaleRequestData(): iterable
     {
         yield [null, 'en']; // see #264
         yield ['en', 'en'];
@@ -85,7 +85,7 @@ class LocaleSubscriberTest extends TestCase
         $this->assertSame($expected, $request->attributes->get('_locale'));
     }
 
-    public function acceptLanguageTestData(): \Generator
+    public static function acceptLanguageTestData(): iterable
     {
         yield [null, 'de', ['de', 'en']]; // see #264
         yield ['de', 'de', ['de', 'en']];
