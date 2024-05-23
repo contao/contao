@@ -644,7 +644,7 @@ class RoutingTest extends FunctionalTestCase
             '/en/folder/url/home/auto_item/foo.html',
             404,
             'Not Found',
-            [],
+            ['language' => 'en'],
             'root-with-folder-urls.local',
             true,
         ];

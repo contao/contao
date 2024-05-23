@@ -22,6 +22,7 @@ use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Symfony\Component\HttpFoundation\AcceptHeader;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -30,6 +31,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 use Symfony\Component\Security\Core\Security;
 use Twig\Environment;
@@ -46,8 +48,9 @@ class PrettyErrorScreenListener
     private Security $security;
     private PageRegistry $pageRegistry;
     private HttpKernelInterface $httpKernel;
+    private RequestMatcherInterface $requestMatcher;
 
-    public function __construct(bool $prettyErrorScreens, Environment $twig, ContaoFramework $framework, Security $security, PageRegistry $pageRegistry, HttpKernelInterface $httpKernel)
+    public function __construct(bool $prettyErrorScreens, Environment $twig, ContaoFramework $framework, Security $security, PageRegistry $pageRegistry, HttpKernelInterface $httpKernel, RequestMatcherInterface $requestMatcher)
     {
         $this->prettyErrorScreens = $prettyErrorScreens;
         $this->twig = $twig;
@@ -55,6 +58,7 @@ class PrettyErrorScreenListener
         $this->security = $security;
         $this->pageRegistry = $pageRegistry;
         $this->httpKernel = $httpKernel;
+        $this->requestMatcher = $requestMatcher;
     }
 
     /**
@@ -146,14 +150,7 @@ class PrettyErrorScreenListener
             $this->framework->initialize(true);
 
             $request = $event->getRequest();
-            $pageModel = $request->attributes->get('pageModel');
-
-            if (!$pageModel instanceof PageModel) {
-                return;
-            }
-
-            $pageAdapter = $this->framework->getAdapter(PageModel::class);
-            $errorPage = $pageAdapter->findFirstPublishedByTypeAndPid('error_'.$type, $pageModel->loadDetails()->rootId);
+            $errorPage = $this->findErrorPage($type, $request);
 
             if (null === $errorPage) {
                 return;
@@ -249,5 +246,26 @@ class PrettyErrorScreenListener
         }
 
         return 500;
+    }
+
+    private function findErrorPage(int $type, Request $request): ?PageModel
+    {
+        $pageModel = $request->attributes->get('pageModel');
+
+        if (!$pageModel instanceof PageModel) {
+            $rootRequest = Request::create('http://'.$request->getHost());
+            $rootRequest->headers->set('Accept-Language', $rootRequest->headers->get('Accept-Language'));
+            $parameters = $this->requestMatcher->matchRequest($rootRequest);
+
+            if (($parameters['pageModel'] ?? null) instanceof PageModel) {
+                $pageModel = $parameters['pageModel'];
+            } else {
+                return null;
+            }
+        }
+
+        $pageAdapter = $this->framework->getAdapter(PageModel::class);
+
+        return $pageAdapter->findFirstPublishedByTypeAndPid('error_'.$type, $pageModel->loadDetails()->rootId);
     }
 }
