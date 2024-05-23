@@ -1139,7 +1139,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->loadDataContainer($v);
 			$cctable[$v] = $GLOBALS['TL_DCA'][$v]['config']['ctable'] ?? null;
 
-			if (!($GLOBALS['TL_DCA'][$v]['config']['doNotCopyRecords'] ?? null) && \strlen($v))
+			if (!($GLOBALS['TL_DCA'][$v]['config']['doNotCopyRecords'] ?? null))
 			{
 				// Consider the dynamic parent table (see #4867)
 				if ($GLOBALS['TL_DCA'][$v]['config']['dynamicPtable'] ?? null)
