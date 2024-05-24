@@ -179,9 +179,11 @@
       </trans-unit>
       <trans-unit id="tl_module.reqFullAuth.0">
         <source>Require full authentication</source>
+        <target>Kräv fullständig autentisering</target>
       </trans-unit>
       <trans-unit id="tl_module.reqFullAuth.1">
         <source>Users with only a &quot;remember me&quot; cookie must verify their identity in order to access the module.</source>
+        <target>Användare som endast har en ”kom ihåg mig”-cookie måste verifiera sin identitet för att få tillgång till modulen.</target>
       </trans-unit>
       <trans-unit id="tl_module.memberTpl.0">
         <source>Form template</source>

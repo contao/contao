@@ -2,6 +2,16 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.9] (2024-05-24)
+
+**Fixed issues:**
+
+- [#7102] Invalidate the pagemounts cache in the back end access voter when duplicating a page ([lukasbableck])
+- [#7197] Remove a redundant `strlen()` check ([leofeyer])
+- [#7223] Correctly set the status code of the fallback route to 404 ([veronikaplenta])
+- [#7214] Make Twig 3.10.2 the minimum requirement ([leofeyer])
+- [#7202] Fix the CSS class of legacy templates in new elements and modules ([veronikaplenta])
+
 ## [5.3.8] (2024-05-07)
 
 **Fixed issues:**
@@ -322,6 +332,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.9]: https://github.com/contao/contao/releases/tag/5.3.9
 [5.3.8]: https://github.com/contao/contao/releases/tag/5.3.8
 [5.3.7]: https://github.com/contao/contao/releases/tag/5.3.7
 [5.3.6]: https://github.com/contao/contao/releases/tag/5.3.6
@@ -347,12 +358,14 @@ This project adheres to [Semantic Versioning].
 [de-es]: https://github.com/de-es
 [fritzmg]: https://github.com/fritzmg
 [leofeyer]: https://github.com/leofeyer
+[lukasbableck]: https://github.com/lukasbableck
 [m-vo]: https://github.com/m-vo
 [qzminski]: https://github.com/qzminski
 [ReneLuecking]: https://github.com/ReneLuecking
 [SeverinGloeckle]: https://github.com/SeverinGloeckle
 [stefansl]: https://github.com/stefansl
 [Toflar]: https://github.com/Toflar
+[veronikaplenta]: https://github.com/veronikaplenta
 [zoglo]: https://github.com/zoglo
 [#5424]: https://github.com/contao/contao/pull/5424
 [#5810]: https://github.com/contao/contao/pull/5810
@@ -557,6 +570,7 @@ This project adheres to [Semantic Versioning].
 [#7074]: https://github.com/contao/contao/pull/7074
 [#7081]: https://github.com/contao/contao/pull/7081
 [#7089]: https://github.com/contao/contao/pull/7089
+[#7102]: https://github.com/contao/contao/pull/7102
 [#7106]: https://github.com/contao/contao/pull/7106
 [#7107]: https://github.com/contao/contao/pull/7107
 [#7112]: https://github.com/contao/contao/pull/7112
@@ -586,3 +600,7 @@ This project adheres to [Semantic Versioning].
 [#7189]: https://github.com/contao/contao/pull/7189
 [#7192]: https://github.com/contao/contao/pull/7192
 [#7195]: https://github.com/contao/contao/pull/7195
+[#7197]: https://github.com/contao/contao/pull/7197
+[#7202]: https://github.com/contao/contao/pull/7202
+[#7214]: https://github.com/contao/contao/pull/7214
+[#7223]: https://github.com/contao/contao/pull/7223
