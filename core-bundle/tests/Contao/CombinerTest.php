@@ -29,7 +29,9 @@ class CombinerTest extends TestCase
         parent::setUp();
 
         $this->filesystem = new Filesystem();
-        $this->filesystem->mkdir($this->getTempDir().'/public/assets/css');
+
+        $this->filesystem->mkdir($this->getTempDir().'/assets/css');
+        $this->filesystem->mkdir($this->getTempDir().'/public');
         $this->filesystem->mkdir($this->getTempDir().'/system/tmp');
 
         $context = $this->createMock(ContaoContext::class);
@@ -54,11 +56,12 @@ class CombinerTest extends TestCase
 
     public function testCombinesCssFiles(): void
     {
-        $this->filesystem->dumpFile($this->getTempDir().'/public/file1.css', 'file1 { background: url("foo.bar") }');
+        $this->filesystem->dumpFile($this->getTempDir().'/file1.css', 'file1 { background: url("foo.bar") }');
         $this->filesystem->dumpFile($this->getTempDir().'/public/file2.css', 'public/file2');
+        $this->filesystem->dumpFile($this->getTempDir().'/file3.css', 'file3');
         $this->filesystem->dumpFile($this->getTempDir().'/public/file3.css', 'public/file3');
 
-        $mtime = filemtime($this->getTempDir().'/public/file1.css');
+        $mtime = filemtime($this->getTempDir().'/file1.css');
 
         $combiner = new Combiner();
         $combiner->add('file1.css');
@@ -92,7 +95,7 @@ class CombinerTest extends TestCase
 
         $this->assertStringEqualsFile(
             $this->getTempDir().'/public/'.$combinedFile,
-            "file1 { background: url(\"../../foo.bar\") }\n@media screen{\npublic/file2\n}\n@media screen{\npublic/file3\n}\n",
+            "file1 { background: url(\"../../foo.bar\") }\n@media screen{\npublic/file2\n}\n@media screen{\nfile3\n}\n",
         );
 
         System::getContainer()->setParameter('kernel.debug', true);
@@ -140,9 +143,9 @@ class CombinerTest extends TestCase
             EOF;
 
         $expected = <<<'EOF'
-            test1 { background: url("../../public/\"test\"/foo.bar") }
-            test2 { background: url("../../public/\"test\"/foo.bar") }
-            test3 { background: url('../../public/"test"/foo.bar') }
+            test1 { background: url("../../\"test\"/foo.bar") }
+            test2 { background: url("../../\"test\"/foo.bar") }
+            test3 { background: url('../../"test"/foo.bar') }
             EOF;
 
         $this->assertSame(
@@ -151,9 +154,9 @@ class CombinerTest extends TestCase
         );
 
         $expected = <<<'EOF'
-            test1 { background: url("../../public/'test'/foo.bar") }
-            test2 { background: url("../../public/'test'/foo.bar") }
-            test3 { background: url('../../public/\'test\'/foo.bar') }
+            test1 { background: url("../../'test'/foo.bar") }
+            test2 { background: url("../../'test'/foo.bar") }
+            test3 { background: url('../../\'test\'/foo.bar') }
             EOF;
 
         $this->assertSame(
@@ -162,9 +165,9 @@ class CombinerTest extends TestCase
         );
 
         $expected = <<<'EOF'
-            test1 { background: url("../../public/(test)/foo.bar") }
-            test2 { background: url("../../public/(test)/foo.bar") }
-            test3 { background: url('../../public/(test)/foo.bar') }
+            test1 { background: url("../../(test)/foo.bar") }
+            test2 { background: url("../../(test)/foo.bar") }
+            test3 { background: url('../../(test)/foo.bar') }
             EOF;
 
         $this->assertSame(
@@ -208,12 +211,12 @@ class CombinerTest extends TestCase
 
     public function testCombinesScssFiles(): void
     {
-        $this->filesystem->dumpFile($this->getTempDir().'/public/file1.scss', '$color: red; @import "file1_sub";');
-        $this->filesystem->dumpFile($this->getTempDir().'/public/file1_sub.scss', 'body { color: $color }');
-        $this->filesystem->dumpFile($this->getTempDir().'/public/file2.scss', 'body { color: green }');
+        $this->filesystem->dumpFile($this->getTempDir().'/file1.scss', '$color: red; @import "file1_sub";');
+        $this->filesystem->dumpFile($this->getTempDir().'/file1_sub.scss', 'body { color: $color }');
+        $this->filesystem->dumpFile($this->getTempDir().'/file2.scss', 'body { color: green }');
 
-        $mtime1 = filemtime($this->getTempDir().'/public/file1.scss');
-        $mtime2 = filemtime($this->getTempDir().'/public/file2.scss');
+        $mtime1 = filemtime($this->getTempDir().'/file1.scss');
+        $mtime2 = filemtime($this->getTempDir().'/file2.scss');
 
         $combiner = new Combiner();
         $combiner->add('file1.scss');
@@ -245,10 +248,10 @@ class CombinerTest extends TestCase
 
     public function testCombinesJsFiles(): void
     {
-        $this->filesystem->dumpFile($this->getTempDir().'/public/file1.js', 'file1();');
+        $this->filesystem->dumpFile($this->getTempDir().'/file1.js', 'file1();');
         $this->filesystem->dumpFile($this->getTempDir().'/public/file2.js', 'file2();');
 
-        $mtime1 = filemtime($this->getTempDir().'/public/file1.js');
+        $mtime1 = filemtime($this->getTempDir().'/file1.js');
         $mtime2 = filemtime($this->getTempDir().'/public/file2.js');
 
         $combiner = new Combiner();
