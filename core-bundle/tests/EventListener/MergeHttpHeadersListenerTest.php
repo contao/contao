@@ -50,7 +50,7 @@ class MergeHttpHeadersListenerTest extends TestCase
      */
     public function testMergesTheHeadersSent(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s.');
+        $this->expectDeprecation('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s');
 
         $responseEvent = $this->getResponseEvent();
 
@@ -92,7 +92,7 @@ class MergeHttpHeadersListenerTest extends TestCase
      */
     public function testDoesNotOverrideMultiValueHeaders(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s.');
+        $this->expectDeprecation('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s');
 
         $response = new Response();
         $response->headers->set('Set-Cookie', 'content=foobar');
@@ -180,7 +180,7 @@ class MergeHttpHeadersListenerTest extends TestCase
      */
     public function testInheritsHeadersFromSubrequest(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s.');
+        $this->expectDeprecation('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s');
 
         $responseEvent = $this->getResponseEvent();
 
@@ -217,7 +217,7 @@ class MergeHttpHeadersListenerTest extends TestCase
      */
     public function testInheritsMultiHeadersFromSubrequest(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s.');
+        $this->expectDeprecation('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s');
 
         $responseEvent = $this->getResponseEvent();
 
@@ -260,7 +260,7 @@ class MergeHttpHeadersListenerTest extends TestCase
      */
     public function testDoesNotMergeCacheControlHeaders(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s.');
+        $this->expectDeprecation('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s');
 
         $responseEvent = $this->getResponseEvent();
 
@@ -287,7 +287,7 @@ class MergeHttpHeadersListenerTest extends TestCase
      */
     public function testSetsTheStatusCodeFromHttpHeader(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s.');
+        $this->expectDeprecation('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s');
 
         $responseEvent = $this->getResponseEvent();
 
@@ -313,7 +313,7 @@ class MergeHttpHeadersListenerTest extends TestCase
      */
     public function testServiceIsResetable(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s.');
+        $this->expectDeprecation('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s');
 
         $response = new Response();
 
