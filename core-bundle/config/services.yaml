@@ -577,8 +577,6 @@ services:
         class: Contao\CoreBundle\Monolog\ContaoTableHandler
         arguments:
             - !service_closure '@database_connection'
-            - debug
-            - false
         tags:
             - { name: monolog.logger, channel: contao }
 
