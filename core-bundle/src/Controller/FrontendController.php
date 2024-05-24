@@ -23,7 +23,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\LogoutException;
 
 /**
- * @Route(defaults={"_scope" = "frontend", "_token_check" = true})
+ * @Route(defaults={"_scope" = "frontend"})
  *
  * @internal
  */
