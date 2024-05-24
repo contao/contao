@@ -1,3 +1,5 @@
+<?php $this->extend('block_unsearchable'); ?>
+
 <?php
 
 $this->wrapperAttributes = $this
@@ -6,8 +8,6 @@ $this->wrapperAttributes = $this
     ->addStyle($this->style)
     ->mergeWith($this->wrapperAttributes)
 ;
-
-$this->extend('block_unsearchable');
 
 ?>
 

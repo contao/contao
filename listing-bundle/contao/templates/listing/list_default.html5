@@ -1,3 +1,5 @@
+<?php $this->extend('block_searchable'); ?>
+
 <?php
 
 $this->wrapperAttributes = $this
@@ -5,8 +7,6 @@ $this->wrapperAttributes = $this
     ->addClass(['ce_table', 'listing'])
     ->mergeWith($this->wrapperAttributes)
 ;
-
-$this->extend('block_searchable');
 
 ?>
 
