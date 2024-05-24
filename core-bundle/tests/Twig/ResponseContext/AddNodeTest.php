@@ -16,7 +16,6 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\ResponseContext\AddNode;
 use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
-use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Environment;
 use Twig\Node\Expression\ConstantExpression;
@@ -43,7 +42,7 @@ class AddNodeTest extends TestCase
                 $__contao_document_content = '';
                 foreach((function () use (&$context, $macros, $blocks) {
                     // line 42
-                    echo "foobar";
+                    yield "foobar";
                     yield '';
                 })() as $__contao_document_chunk) {
                     $__contao_document_content .= ob_get_contents() . $__contao_document_chunk;
@@ -55,11 +54,6 @@ class AddNodeTest extends TestCase
             );
 
             SOURCE;
-
-        // Forward compatibility with twig/twig >=3.9.0
-        if (class_exists(YieldReady::class)) {
-            $expectedSource = str_replace('echo', 'yield', $expectedSource);
-        }
 
         $this->assertSame($expectedSource, $compiler->getSource());
     }
