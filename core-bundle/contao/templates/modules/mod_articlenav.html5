@@ -1,10 +1,16 @@
+<?php $this->extend('block_unsearchable'); ?>
 
-<!-- indexer::stop -->
-<div class="<?= $this->class ?> pagination block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+<?php
 
-  <?php if ($this->headline): ?>
-    <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
-  <?php endif; ?>
+$this->wrapperAttributes = $this
+    ->attr()
+    ->addClass('pagination')
+    ->mergeWith($this->wrapperAttributes)
+;
+
+?>
+
+<?php $this->block('content'); ?>
 
   <ul>
     <?php if ($this->first): ?>
@@ -32,5 +38,4 @@
     <?php endif; ?>
   </ul>
 
-</div>
-<!-- indexer::continue -->
+<?php $this->endblock(); ?>

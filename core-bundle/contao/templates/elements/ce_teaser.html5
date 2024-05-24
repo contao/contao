@@ -1,12 +1,20 @@
+<?php $this->extend('block_searchable'); ?>
 
-<div class="<?= $this->class ?> ce_text block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+<?php
 
-  <?php if ($this->headline): ?>
-    <h1><?= $this->headline ?></h1>
-  <?php endif; ?>
+$this->wrapperAttributes = $this
+    ->attr()
+    ->addClass('ce_text')
+    ->mergeWith($this->wrapperAttributes)
+;
+
+$this->hl = 'h1';
+
+?>
+
+<?php $this->block('content'); ?>
 
   <?= $this->text ?>
-
   <p class="more"><a href="<?= $this->href ?>" title="<?= $this->readMore ?>"><?= $this->more ?><span class="invisible"> <?= $this->headline ?></span></a></p>
 
-</div>
+<?php $this->endblock(); ?>
