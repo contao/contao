@@ -106,6 +106,7 @@ class MergeHttpHeadersListener implements ResetInterface
     {
         $headers = $this->headerStorage->all();
         $session = $request->hasSession() ? $request->getSession() : null;
+
         $deprectatedHeaders = array_filter(
             $headers,
             static function ($header) use ($session): bool {
