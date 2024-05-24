@@ -12,10 +12,6 @@ $this->wrapperAttributes = $this
 
 <?php $this->block('content'); ?>
 
-  <?php if ($this->headline): ?>
-    <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
-  <?php endif; ?>
-
   <table class="single_record">
   <tbody>
     <?php foreach ($this->record as $col): ?>
