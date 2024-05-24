@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\Twig\Interop;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNode;
-use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Environment;
 
@@ -28,7 +27,7 @@ class PhpTemplateProxyNodeTest extends TestCase
         (new PhpTemplateProxyNode(ContaoExtension::class))->compile($compiler);
 
         $expectedSource = <<<'SOURCE'
-            echo $this->extensions["Contao\\CoreBundle\\Twig\\Extension\\ContaoExtension"]->renderLegacyTemplate(
+            yield $this->extensions["Contao\\CoreBundle\\Twig\\Extension\\ContaoExtension"]->renderLegacyTemplate(
                 $this->getTemplateName(),
                 array_map(
                     function(callable $block) use ($context): string {
@@ -46,11 +45,6 @@ class PhpTemplateProxyNodeTest extends TestCase
             );
 
             SOURCE;
-
-        // Forward compatibility with twig/twig >=3.9.0
-        if (class_exists(YieldReady::class)) {
-            $expectedSource = str_replace('echo', 'yield', $expectedSource);
-        }
 
         $this->assertSame($expectedSource, $compiler->getSource());
     }

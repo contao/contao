@@ -1,13 +1,25 @@
+<?php
 
-<div class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+$this->wrapperAttributes = $this
+    ->attr($this->cssID)
+    ->addClass([$this->class, 'block'])
+    ->addStyle($this->style)
+    ->mergeWith($this->wrapperAttributes)
+;
 
-  <?php $this->block('headline'); ?>
-    <?php if ($this->headline): ?>
-      <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
-    <?php endif; ?>
-  <?php $this->endblock(); ?>
+?>
 
-  <?php $this->block('content'); ?>
-  <?php $this->endblock(); ?>
+<?php $this->block('wrapper'); ?>
+  <div<?= $this->wrapperAttributes ?>>
 
-</div>
+    <?php $this->block('headline'); ?>
+      <?php if ($this->headline): ?>
+        <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
+      <?php endif; ?>
+    <?php $this->endblock(); ?>
+
+    <?php $this->block('content'); ?>
+    <?php $this->endblock(); ?>
+
+  </div>
+<?php $this->endblock(); ?>

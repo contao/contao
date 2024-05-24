@@ -1,5 +1,6 @@
 {% extends "@Contao/content_element/_base.html.twig" %}
 {% use "@Contao/component/_figure.html.twig" %}
+{% use "@Contao/component/_rich_text.html.twig" %}
 
 {% set content_layout_attributes = attrs()
     .addClass('media media--' ~ layout, layout and image)
@@ -26,13 +27,7 @@
 
     {# Richtext #}
     {% block text %}
-        {% set text_attributes = attrs()
-            .addClass('rte')
-            .mergeWith(text_attributes|default)
-        %}
-        <div{% block text_attributes %}{{ text_attributes }}{% endblock %}>
-            {{ text|csp_inline_styles|insert_tag|encode_email|raw }}
-        </div>
+        {% with {text, attributes: text_attributes|default} %}{{ block('rich_text_component') }}{% endwith %}
     {% endblock %}
 
     {% if layout == 'below' %}
