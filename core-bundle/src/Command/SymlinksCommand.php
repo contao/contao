@@ -87,6 +87,12 @@ class SymlinksCommand extends Command
         $this->symlinkModules();
         $this->symlinkThemes();
 
+        // Symlink the assets directory if the Contao components were installed there
+        // instead of in public/assets (backwards compatibility)
+        if (is_dir($this->projectDir.'/assets/contao')) {
+            $this->symlink('assets', Path::join($this->webDir, 'assets'));
+        }
+
         // Symlink the themes directory
         $this->symlink('system/themes', Path::join($this->webDir, 'system/themes'));
 
