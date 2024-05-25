@@ -17,7 +17,7 @@ export default class extends Controller {
             fs.setAttribute(`data-${identifier}-table-value`, table);
             fs.setAttribute(`data-${identifier}-collapsed-class`, 'collapsed');
             el.setAttribute('tabindex', 0);
-            el.setAttribute('data-action', `click->${identifier}#toggle keydown.enter->${identifier}#toggle keydown.space->${identifier}#toggle:prevent`);
+            el.setAttribute('data-action', `click->${identifier}#toggle keydown.enter->${identifier}#toggle keyup.space->${identifier}#toggle:prevent`);
         }
 
         const migrateLegacy = () => {
