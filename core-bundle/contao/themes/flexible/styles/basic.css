@@ -405,6 +405,15 @@ table.with-zebra tbody tr:nth-child(even) td {
 	display: contents;
 }
 
+/* Legend buttons */
+button[data-action="contao--toggle-fieldset#toggle"] {
+	all: unset;
+}
+
+button[data-action="contao--toggle-fieldset#toggle"]:focus-visible {
+	outline: -webkit-focus-ring-color auto 1px;
+}
+
 /* Forms */
 optgroup {
 	padding-top: 3px;
