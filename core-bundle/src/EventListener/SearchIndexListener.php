@@ -52,7 +52,7 @@ class SearchIndexListener
 
         $request = $event->getRequest();
 
-        // Only handle GET requests (see #1194)
+        // Only handle GET requests (see #1194, #7240)
         if (!$request->isMethod(Request::METHOD_GET)) {
             return;
         }
