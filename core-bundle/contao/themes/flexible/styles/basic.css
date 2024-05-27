@@ -755,6 +755,9 @@ select[multiple] {
 
 .tl_radio_table td {
 	padding: 0 24px 0 0;
+	display: inline-flex;
+	align-items: center;
+	column-gap: 3px;
 }
 
 /* Upload fields */
