@@ -89,7 +89,7 @@ class SymlinksCommand extends Command
 
         // Symlink the assets directory if the Contao components were installed there
         // instead of in public/assets (backwards compatibility)
-        if (is_dir($this->projectDir.'/assets/contao')) {
+        if ('assets' === $this->getContaoComponentDir()) {
             $this->symlink('assets', Path::join($this->webDir, 'assets'));
         }
 
@@ -251,5 +251,22 @@ class SymlinksCommand extends Command
     private function getRelativePath(string $path): string
     {
         return Path::makeRelative($path, $this->projectDir);
+    }
+
+    private function getContaoComponentDir(): string|null
+    {
+        $fs = new Filesystem();
+
+        if (!$fs->exists($composerJsonFilePath = Path::join($this->projectDir, 'composer.json'))) {
+            return null;
+        }
+
+        $composerConfig = json_decode(file_get_contents($composerJsonFilePath), true, 512, JSON_THROW_ON_ERROR);
+
+        if (null === ($componentDir = $composerConfig['extra']['contao-component-dir'] ?? null)) {
+            return null;
+        }
+
+        return $componentDir;
     }
 }
