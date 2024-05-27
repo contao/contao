@@ -109,7 +109,7 @@ class EntityCacheTagsTest extends DoctrineTestCase
         $this->assertSame($expectedTags, $entityCacheTags->getTagsFor($argument));
     }
 
-    public function getArguments(): iterable
+    public static function getArguments(): iterable
     {
         yield 'single tag' => [
             'foo',
@@ -143,34 +143,19 @@ class EntityCacheTagsTest extends DoctrineTestCase
             ->setTags(new ArrayCollection([$tag]))
         ;
 
-        $page1 = $this->mockClassWithProperties(PageModel::class, except: ['getTable']);
-        $page1->id = 5;
-
-        $page2 = $this->mockClassWithProperties(PageModel::class, except: ['getTable']);
-        $page2->id = 6;
-
-        $modelCollection = new Collection([$page1, $page2], 'tl_page');
-
         yield 'specific tag for entity instance' => [
             $post,
             ['contao.db.tl_blog_post.5'],
         ];
 
-        yield 'specific tag for model instance' => [
-            $page1,
-            ['contao.db.tl_page.5'],
-        ];
-
         yield 'mixed' => [
-            [$post, $post->getAuthor(), $post->getComments(), $post->getTags(), $modelCollection, ArticleModel::class, 'foo'],
+            [$post, $post->getAuthor(), $post->getComments(), $post->getTags(), ArticleModel::class, 'foo'],
             [
                 'contao.db.tl_blog_post.5',
                 'contao.db.tl_author.100',
                 'contao.db.tl_comment.11',
                 'contao.db.tl_comment.12',
                 'contao.db.tl_tag.42',
-                'contao.db.tl_page.5',
-                'contao.db.tl_page.6',
                 'contao.db.tl_article',
                 'foo',
             ],
@@ -185,6 +170,21 @@ class EntityCacheTagsTest extends DoctrineTestCase
             ['', null, [], 'foo'],
             ['foo'],
         ];
+    }
+
+    public function testGetPageTags(): void
+    {
+        $page1 = $this->mockClassWithProperties(PageModel::class, except: ['getTable']);
+        $page1->id = 5;
+
+        $page2 = $this->mockClassWithProperties(PageModel::class, except: ['getTable']);
+        $page2->id = 6;
+
+        $modelCollection = new Collection([$page1, $page2], 'tl_page');
+        $entityCacheTags = $this->getEntityCacheTags();
+
+        $this->assertSame(['contao.db.tl_page.5'], $entityCacheTags->getTagsFor($page1));
+        $this->assertSame(['contao.db.tl_page.5', 'contao.db.tl_page.6'], $entityCacheTags->getTagsFor($modelCollection));
     }
 
     public function testDelegatesToResponseTagger(): void

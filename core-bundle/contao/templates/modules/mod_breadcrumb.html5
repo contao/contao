@@ -1,6 +1,17 @@
+<?php
+
+$this->wrapperAttributes = $this
+    ->attr($this->cssID)
+    ->addClass([$this->class, 'block'])
+    ->addStyle($this->style)
+    ->set('aria-label', $this->trans('MSC.breadcrumbMenu'))
+    ->mergeWith($this->wrapperAttributes)
+;
+
+?>
 
 <!-- indexer::stop -->
-<nav class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?> aria-label="<?= $this->trans('MSC.breadcrumbMenu') ?>">
+<nav<?= $this->wrapperAttributes ?>>
 
   <?php $this->block('headline'); ?>
     <?php if ($this->headline): ?>
