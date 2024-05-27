@@ -98,7 +98,15 @@ class Image
 			trigger_deprecation('contao/core-bundle', '5.2', 'Using the "%s" icon has been deprecated and will no longer work in Contao 6. Use the "%s--disabled" icon instead.', $filename, substr($filename, 0, -1));
 		}
 
-		return 'system/themes/' . $theme . '/icons/' . $src;
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+
+		// Prefer SVG icons
+		if (file_exists($projectDir . '/system/themes/' . $theme . '/icons/' . $filename . '.svg'))
+		{
+			return 'system/themes/' . $theme . '/icons/' . $filename . '.svg';
+		}
+
+		return 'system/themes/' . $theme . '/images/' . $src;
 	}
 
 	/**
