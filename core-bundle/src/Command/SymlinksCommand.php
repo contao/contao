@@ -41,6 +41,8 @@ class SymlinksCommand extends Command
 
     private int $statusCode = Command::SUCCESS;
 
+    private bool $symlinkAssets = false;
+
     public function __construct(
         private readonly string $projectDir,
         private readonly string $uploadPath,
@@ -59,13 +61,20 @@ class SymlinksCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->webDir = $input->getArgument('target') ?? 'public';
+        $this->symlinkAssets = 'assets' === $this->getContaoComponentDir();
 
         $this->generateSymlinks();
 
+        $io = new SymfonyStyle($input, $output);
+
         if ($this->rows) {
-            $io = new SymfonyStyle($input, $output);
             $io->newLine();
             $io->table(['', 'Symlink', 'Target / Error'], $this->rows);
+        }
+
+        if ($this->symlinkAssets) {
+            $io->text('<fg=yellow>Installing the Contao components into the "assets" directory has been deprecated and will no longer work in Contao 6.</>');
+            $io->text('<fg=yellow>Set "extra.contao-component-dir" to "public/assets" in your composer.json.</>');
         }
 
         return $this->statusCode;
@@ -89,7 +98,7 @@ class SymlinksCommand extends Command
 
         // Symlink the assets directory if the Contao components were installed there
         // instead of in public/assets (backwards compatibility)
-        if ('assets' === $this->getContaoComponentDir()) {
+        if ($this->symlinkAssets) {
             $this->symlink('assets', Path::join($this->webDir, 'assets'));
         }
 
