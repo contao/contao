@@ -100,7 +100,7 @@ class SymlinksCommand extends Command
         // instead of in public/assets (backwards compatibility)
         if ($this->symlinkAssets) {
             $this->symlink('assets', Path::join($this->webDir, 'assets'));
-        } elseif (is_link($symlink = Path::join($this->webDir, 'assets'))) {
+        } elseif (is_link($symlink = Path::join($this->projectDir, $this->webDir, 'assets'))) {
             $fs->remove($symlink);
         }
 
