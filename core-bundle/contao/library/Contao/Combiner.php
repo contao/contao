@@ -214,7 +214,7 @@ class Combiner extends System
 			{
 				$strPath = 'assets/' . $strTarget . '/' . str_replace('/', '_', $arrFile['name']) . $this->strMode;
 
-				if ($blnDebug || !file_exists($this->strRootDir . '/' . $strPath))
+				if ($blnDebug || !file_exists($this->strRootDir . '/' . $this->strWebDir . '/' . $strPath))
 				{
 					$this->filesystem->dumpFile(
 						$this->strRootDir . '/' . $this->strWebDir . '/' . $strPath,
