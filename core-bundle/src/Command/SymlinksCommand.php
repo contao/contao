@@ -73,8 +73,7 @@ class SymlinksCommand extends Command
         }
 
         if ($this->symlinkAssets) {
-            $io->text('<fg=yellow>Installing the Contao components into the "assets" directory has been deprecated and will no longer work in Contao 6.</>');
-            $io->text('<fg=yellow>Set "extra.contao-component-dir" to "public/assets" in your composer.json.</>');
+            $io->note('Installing the Contao components into the "assets" directory has been deprecated and will no longer work in Contao 6. Set "extra.contao-component-dir" to "public/assets" in your composer.json.');
         }
 
         return $this->statusCode;
