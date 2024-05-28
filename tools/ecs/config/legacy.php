@@ -117,5 +117,5 @@ return static function (ECSConfig $ecsConfig): void {
     $ecsConfig->lineEnding("\n");
 
     $parameters = $ecsConfig->parameters();
-    $parameters->set(Option::CACHE_DIRECTORY, sys_get_temp_dir().'/ecs_legacy_cache');
+    $parameters->set(Option::CACHE_DIRECTORY, sys_get_temp_dir().'/ecs/contao413-legacy');
 };

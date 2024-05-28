@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller;
 
 use Contao\CoreBundle\Controller\InsertTagsController;
+use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -64,6 +65,7 @@ class InsertTagsControllerTest extends TestCase
 
         $this->assertTrue($response->headers->hasCacheControlDirective('public'));
         $this->assertFalse($response->headers->hasCacheControlDirective('no-store'));
+        $this->assertSame('1', $response->headers->get(SubrequestCacheSubscriber::MERGE_CACHE_HEADER));
         $this->assertSame((new \DateTimeImmutable($year.'-12-31 23:59:59'))->getTimestamp(), $response->getExpires()->getTimestamp());
         $this->assertSame($year, $response->getContent());
     }

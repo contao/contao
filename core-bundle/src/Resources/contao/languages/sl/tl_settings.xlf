@@ -156,6 +156,30 @@
         <source>Here you can enter the maximum height for image uploads in pixels.</source>
         <target>Tu lahko določite največjo dovoljeno višino slik za nalaganje v pikslih.</target>
       </trans-unit>
+      <trans-unit id="tl_settings.undoPeriod.0">
+        <source>Storage time for undo steps</source>
+        <target>Čas shranjevanja razveljavitvenih korakov</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.undoPeriod.1">
+        <source>Here you can enter the storage time for undo steps in seconds (24 hours = 86400 seconds).</source>
+        <target>Tu lahko določite čas shranjevanja razveljavitvenih korakov v sekundah (24 ur= 86400 sekund).</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.versionPeriod.0">
+        <source>Storage time for versions</source>
+        <target>Čas shranjevanja različic</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.versionPeriod.1">
+        <source>Here you can enter the storage time for different versions of a record in seconds (90 days = 7776000 seconds).</source>
+        <target>Tu lahko določite čas shranjevanja preteklih različic v sekundah (90 dni= 7776000 sekund).</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.logPeriod.0">
+        <source>Storage time for log entries</source>
+        <target>Čas shranjevanja dnevnika vnosov</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.logPeriod.1">
+        <source>Here you can enter the storage time for log entries in seconds (14 days = 1209600 seconds).</source>
+        <target>Tu lahko določite čas shranjevanja dnevnika vnosov v sekundah (14 dni= 1209600 sekund).</target>
+      </trans-unit>
       <trans-unit id="tl_settings.defaultUser.0">
         <source>Default page owner</source>
         <target>Privzeti lastnik strani</target>
@@ -203,6 +227,10 @@
       <trans-unit id="tl_settings.uploads_legend">
         <source>Upload settings</source>
         <target>Nastavitve nalaganja</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.timeout_legend">
+        <source>Timeout values</source>
+        <target>Določitev časovnih vrednosti</target>
       </trans-unit>
       <trans-unit id="tl_settings.cron_legend">
         <source>Cron job settings</source>

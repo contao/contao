@@ -195,6 +195,7 @@
       </trans-unit>
       <trans-unit id="ERR.pageUrlNameExists">
         <source>This alias leads to a conflict with page &quot;%s&quot; (ID %s)!</source>
+        <target>Ta vzdevek je v konfliktu s stranjo &quot;%s&quot; (ID %s)!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>

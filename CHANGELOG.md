@@ -2,6 +2,26 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.44] (2024-05-23)
+
+**Fixed issues:**
+
+- [#7077] Render the Contao login page even if the current route is not a Contao page ([aschempp])
+- [#7232] Consolidate the route definitions in invokable controllers ([leofeyer])
+- [#7224] Backport 'Set a low priority for the back end fallback route' ([fritzmg])
+- [#7213] Check the cookie headers in the `isSessionEmpty()` method ([ausi])
+- [#7227] Store the referrer by default in `backend` scope ([fritzmg])
+- [#7181] Adjust the deprecation for custom template names ([leofeyer])
+- [#7194] Handle quoted columns names in the boolean fields migration ([ausi])
+- [#7179] Render the `date::Y` insert tag inline ([leofeyer])
+- [#7171] Backport the boolean fields migration ([fritzmg])
+- [#7169] Correctly resolve child definitions for callback tags ([Toflar])
+- [#7160] Restore the time period back end settings ([fritzmg])
+- [#7086] Add a fallback route for the back end ([aschempp])
+- [#7161] Send an `X-Robots-Tag: noindex` header in the back end ([fritzmg])
+- [#7126] Automatically set `ParameterType::BOOLEAN` for booleans ([fritzmg])
+- [#7155] Backport 'Fix non-existent "contao.image.image_factory" in FeedItem.php' ([stefansl])
+
 ## [4.13.43] (2024-04-19)
 
 **Fixed issues:**
@@ -982,6 +1002,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.44]: https://github.com/contao/contao/releases/tag/4.13.44
 [4.13.43]: https://github.com/contao/contao/releases/tag/4.13.43
 [4.13.42]: https://github.com/contao/contao/releases/tag/4.13.42
 [4.13.41]: https://github.com/contao/contao/releases/tag/4.13.41
@@ -1073,6 +1094,7 @@ This project adheres to [Semantic Versioning].
 [SeverinGloeckle]: https://github.com/SeverinGloeckle
 [Shadow-Devil]: https://github.com/Shadow-Devil
 [sheeep]: https://github.com/sheeep
+[stefansl]: https://github.com/stefansl
 [Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
 [Wusch]: https://github.com/Wusch
@@ -1789,8 +1811,23 @@ This project adheres to [Semantic Versioning].
 [#7069]: https://github.com/contao/contao/pull/7069
 [#7072]: https://github.com/contao/contao/pull/7072
 [#7076]: https://github.com/contao/contao/pull/7076
+[#7077]: https://github.com/contao/contao/pull/7077
 [#7078]: https://github.com/contao/contao/pull/7078
+[#7086]: https://github.com/contao/contao/pull/7086
 [#7092]: https://github.com/contao/contao/pull/7092
 [#7109]: https://github.com/contao/contao/pull/7109
 [#7123]: https://github.com/contao/contao/pull/7123
+[#7126]: https://github.com/contao/contao/pull/7126
 [#7131]: https://github.com/contao/contao/pull/7131
+[#7155]: https://github.com/contao/contao/pull/7155
+[#7160]: https://github.com/contao/contao/pull/7160
+[#7161]: https://github.com/contao/contao/pull/7161
+[#7169]: https://github.com/contao/contao/pull/7169
+[#7171]: https://github.com/contao/contao/pull/7171
+[#7179]: https://github.com/contao/contao/pull/7179
+[#7181]: https://github.com/contao/contao/pull/7181
+[#7194]: https://github.com/contao/contao/pull/7194
+[#7213]: https://github.com/contao/contao/pull/7213
+[#7224]: https://github.com/contao/contao/pull/7224
+[#7227]: https://github.com/contao/contao/pull/7227
+[#7232]: https://github.com/contao/contao/pull/7232

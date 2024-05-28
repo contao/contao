@@ -157,6 +157,30 @@
         <source>Here you can enter the maximum height for image uploads in pixels.</source>
         <target>اینجا می‌توانید بیشترین ارتفاع برای بارگذاری تصویر در واحد پیکسل وارد نمایید.</target>
       </trans-unit>
+      <trans-unit id="tl_settings.undoPeriod.0">
+        <source>Storage time for undo steps</source>
+        <target>زمان ذخیره‌سازی برای بازگردانی مراحل</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.undoPeriod.1">
+        <source>Here you can enter the storage time for undo steps in seconds (24 hours = 86400 seconds).</source>
+        <target>اینجا می‌توانید زمان ذخیره‌سازی بازگردانی مراحل را به ثانیه وارد نمایید (۲۴ ساعت = ۸۶۴۰۰ ثانیه).</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.versionPeriod.0">
+        <source>Storage time for versions</source>
+        <target>زمان ذخیره مانند برای نسخه‌ها</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.versionPeriod.1">
+        <source>Here you can enter the storage time for different versions of a record in seconds (90 days = 7776000 seconds).</source>
+        <target>اینجا می‌توانید زمان ذخیره‌سازی نسخه‌های مختلف یک رکورد را به ثانیه وارد نمایید (۹۰ روز = ۷۷۷۶۰۰ ثانیه).</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.logPeriod.0">
+        <source>Storage time for log entries</source>
+        <target>مدت زمان ذخیره برای ورودی های لاگ</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.logPeriod.1">
+        <source>Here you can enter the storage time for log entries in seconds (14 days = 1209600 seconds).</source>
+        <target>اینجا می‌توانید زمان ذخیره‌سازی ورودی‌های گزارش را به ثانیه وارد نمایید (۱۴ روز = ۱۲۰۹۶۰۰ ثانیه).</target>
+      </trans-unit>
       <trans-unit id="tl_settings.defaultUser.0">
         <source>Default page owner</source>
         <target>صاحب پیش‌فرض برگه</target>
@@ -204,6 +228,10 @@
       <trans-unit id="tl_settings.uploads_legend">
         <source>Upload settings</source>
         <target>تنطیمات بارگذاری</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.timeout_legend">
+        <source>Timeout values</source>
+        <target>مقادیر مهلت</target>
       </trans-unit>
       <trans-unit id="tl_settings.cron_legend">
         <source>Cron job settings</source>

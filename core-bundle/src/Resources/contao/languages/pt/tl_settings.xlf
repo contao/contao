@@ -157,6 +157,30 @@
         <source>Here you can enter the maximum height for image uploads in pixels.</source>
         <target>Informe a altura máxima de imagens para envio (upload).</target>
       </trans-unit>
+      <trans-unit id="tl_settings.undoPeriod.0">
+        <source>Storage time for undo steps</source>
+        <target>Tempo de armazenamento para &quot;undo&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.undoPeriod.1">
+        <source>Here you can enter the storage time for undo steps in seconds (24 hours = 86400 seconds).</source>
+        <target>Informe o tempo, em segundos, pelo qual um &quot;undo&quot; ficará armazenado (padrão: 24 horas = 86400 segundos).</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.versionPeriod.0">
+        <source>Storage time for versions</source>
+        <target>Tempo de armazenamento para versões</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.versionPeriod.1">
+        <source>Here you can enter the storage time for different versions of a record in seconds (90 days = 7776000 seconds).</source>
+        <target>Informe o tempo, em segundos, pelo qual diferentes versões de um registro ficará armazenado (padrão: 90 dias = 7776000 segundos).</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.logPeriod.0">
+        <source>Storage time for log entries</source>
+        <target>Tempo de armazenamento de entradas de &quot;log&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.logPeriod.1">
+        <source>Here you can enter the storage time for log entries in seconds (14 days = 1209600 seconds).</source>
+        <target>Informe o tempo, em segundos, pelo qual uma entrada de &quot;log&quot; ficará armazenada (padrão: 14 horas = 1209600 segundos).</target>
+      </trans-unit>
       <trans-unit id="tl_settings.defaultUser.0">
         <source>Default page owner</source>
         <target>Usuário padrão da página</target>
@@ -204,6 +228,10 @@
       <trans-unit id="tl_settings.uploads_legend">
         <source>Upload settings</source>
         <target>Configurações de upload</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.timeout_legend">
+        <source>Timeout values</source>
+        <target>Valores de timeout</target>
       </trans-unit>
       <trans-unit id="tl_settings.cron_legend">
         <source>Cron job settings</source>

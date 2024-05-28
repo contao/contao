@@ -227,7 +227,7 @@ class InsertTags extends Controller
 							$attributes,
 							array('clientCache' => (int) ($objPage->clientCache ?? 0), 'pageId' => ($objPage->id ?? null), 'request' => Environment::get('request'))
 						),
-						'esi',
+						$tag == 'date::Y' ? 'inline' : 'esi',
 						array('ignore_errors'=>false) // see #48
 					);
 

@@ -60,7 +60,6 @@ class LegacyRouteProvider implements RouteProviderInterface
                 '/',
                 [
                     '_scope' => 'frontend',
-                    '_token_check' => true,
                     '_controller' => 'Contao\CoreBundle\Controller\FrontendController::indexAction',
                 ]
             );
@@ -71,7 +70,6 @@ class LegacyRouteProvider implements RouteProviderInterface
                 '/{_url_fragment}',
                 [
                     '_scope' => 'frontend',
-                    '_token_check' => true,
                     '_controller' => 'Contao\CoreBundle\Controller\FrontendController::indexAction',
                 ],
                 ['_url_fragment' => '.*']

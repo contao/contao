@@ -140,7 +140,6 @@ class LegacyRouteProviderTest extends TestCase
         $this->assertSame(
             [
                 '_scope' => 'frontend',
-                '_token_check' => true,
                 '_controller' => 'Contao\CoreBundle\Controller\FrontendController::indexAction',
             ],
             $route->getDefaults()
@@ -165,7 +164,6 @@ class LegacyRouteProviderTest extends TestCase
         $this->assertSame(
             [
                 '_scope' => 'frontend',
-                '_token_check' => true,
                 '_controller' => 'Contao\CoreBundle\Controller\FrontendController::indexAction',
             ],
             $route->getDefaults()

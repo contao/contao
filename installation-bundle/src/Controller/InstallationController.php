@@ -30,7 +30,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("%contao.backend.route_prefix%", defaults={"_scope" = "backend", "_token_check" = true})
+ * @Route("%contao.backend.route_prefix%/install", name="contao_install", defaults={"_scope" = "backend", "_store_referrer" = false})
  *
  * @internal
  */
@@ -44,10 +44,7 @@ class InstallationController implements ContainerAwareInterface
         'sql_message' => '',
     ];
 
-    /**
-     * @Route("/install", name="contao_install")
-     */
-    public function installAction(): Response
+    public function __invoke(): Response
     {
         if (null !== ($response = $this->initializeApplication())) {
             return $response;

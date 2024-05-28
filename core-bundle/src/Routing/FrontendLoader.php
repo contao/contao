@@ -38,7 +38,6 @@ class FrontendLoader extends Loader
         $routes = new RouteCollection();
 
         $defaults = [
-            '_token_check' => true,
             '_controller' => 'Contao\CoreBundle\Controller\FrontendController::indexAction',
             '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
         ];

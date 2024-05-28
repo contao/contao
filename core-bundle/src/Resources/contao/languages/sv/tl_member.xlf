@@ -243,6 +243,7 @@
       </trans-unit>
       <trans-unit id="tl_member.captchaDetails">
         <source>Verification</source>
+        <target>Verifiering</target>
       </trans-unit>
       <trans-unit id="tl_member.new.0">
         <source>New</source>
