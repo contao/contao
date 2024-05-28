@@ -391,39 +391,42 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 			else
 			{
+				$isBasePath = static function (string $path, array $basePaths)
+				{
+					foreach ($basePaths as $basePath)
+					{
+						if (Path::isBasePath($basePath, $path))
+						{
+							return true;
+						}
+					}
+
+					return false;
+				};
+
 				$arrRoot = array();
+				$root = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null;
 
-				// Respect existing limitations (root IDs)
-				if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null))
+				while ($objRoot->next())
 				{
-					while ($objRoot->next())
+					// Respect given filemounts, e.g. set in the initPicker() method
+					if (!empty($this->arrFilemounts) && !$isBasePath($objRoot->path, $this->arrFilemounts))
 					{
-						foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] as $root)
-						{
-							if (strncmp($root . '/', $objRoot->path . '/', \strlen($root) + 1) === 0)
-							{
-								if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || \in_array($objRoot->extension, $this->arrValidFileTypes))
-								{
-									$arrFound[] = $objRoot->path;
-								}
-
-								$arrRoot[] = ($objRoot->type == 'folder') ? $objRoot->path : \dirname($objRoot->path);
-								continue 2;
-							}
-						}
+						continue;
 					}
-				}
-				else
-				{
-					while ($objRoot->next())
+
+					// Respect existing limitations (root IDs)
+					if (\is_array($root) && !$isBasePath($objRoot->path, $root))
 					{
-						if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || \in_array($objRoot->extension, $this->arrValidFileTypes))
-						{
-							$arrFound[] = $objRoot->path;
-						}
-
-						$arrRoot[] = ($objRoot->type == 'folder') ? $objRoot->path : \dirname($objRoot->path);
+						continue;
 					}
+
+					if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || \in_array($objRoot->extension, $this->arrValidFileTypes))
+					{
+						$arrFound[] = $objRoot->path;
+					}
+
+					$arrRoot[] = ($objRoot->type == 'folder') ? $objRoot->path : \dirname($objRoot->path);
 				}
 
 				$this->arrFilemounts = $this->eliminateNestedPaths(array_unique($arrRoot));
