@@ -16,15 +16,8 @@ export default class extends Controller {
             fs.setAttribute(`data-${identifier}-id-value`, id);
             fs.setAttribute(`data-${identifier}-table-value`, table);
             fs.setAttribute(`data-${identifier}-collapsed-class`, 'collapsed');
-            createButton(el);
-        }
-
-        const createButton = (el) => {
-          const btn = document.createElement('button')
-          btn.textContent = el.innerHTML;
-          btn.setAttribute('type', 'button');
-          btn.setAttribute('data-action', `${identifier}#toggle`);
-          el.replaceChild(btn, el.firstChild)
+            el.setAttribute('tabindex', 0);
+            el.setAttribute('data-action', `click->${identifier}#toggle keydown.enter->${identifier}#toggle keydown.space->contao--toggle-fieldset#prevent:prevent keyup.space->${identifier}#toggle:prevent`);
         }
 
         const migrateLegacy = () => {
