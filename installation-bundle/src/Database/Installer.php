@@ -163,6 +163,7 @@ class Installer
 
                             case 0 === strncmp($part, 'CHANGE ', 7):
                             case 0 === strncmp($part, 'RENAME ', 7):
+                            case 0 === strncmp($part, 'MODIFY ', 7):
                                 $return['ALTER_CHANGE'][md5($command)] = $command;
                                 $order[] = md5($command);
                                 break;
