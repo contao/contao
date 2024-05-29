@@ -438,7 +438,7 @@ class Form extends Hybrid
 			if ($this->format == 'xml')
 			{
 				// Encode the values (see #6053)
-				array_walk_recursive($fields, static function (&$value) { $value = htmlspecialchars($value, ENT_QUOTES|ENT_SUBSTITUTE|ENT_XML1); });
+				array_walk_recursive($fields, static function (&$value) { $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_XML1); });
 
 				$objTemplate = new FrontendTemplate('form_xml');
 				$objTemplate->fields = $fields;

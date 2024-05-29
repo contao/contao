@@ -1342,7 +1342,7 @@ abstract class DataContainer extends Backend
 		$values = array_map($this->objPickerCallback, $this->arrPickerValue);
 		$values = array_map('strval', $values);
 		$values = json_encode($values);
-		$values = htmlspecialchars($values);
+		$values = htmlspecialchars($values, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
 
 		return ' data-picker-value="' . $values . '"';
 	}
