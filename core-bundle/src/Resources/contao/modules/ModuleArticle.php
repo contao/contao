@@ -202,7 +202,7 @@ class ModuleArticle extends Module
 		$this->Template->elements = $arrElements;
 
 		// Backwards compatibility
-		if ($this->keywords)
+		if ($this->keywords && isset($GLOBALS['TL_KEYWORDS']))
 		{
 			$GLOBALS['TL_KEYWORDS'] .= ($GLOBALS['TL_KEYWORDS'] ? ', ' : '') . $this->keywords;
 		}
