@@ -3134,9 +3134,10 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$parents = array();
 		$uploadPath = Path::canonicalize($this->strUploadPath);
 
-		while (($filemount = Path::getDirectory($filemount)) !== $uploadPath)
+		while ($filemount !== $uploadPath)
 		{
 			$parents[] = $filemount;
+			$filemount = Path::getDirectory($filemount);
 		}
 
 		return $parents;

@@ -584,7 +584,7 @@ abstract class Controller extends System
 			$objElement = new $strClass(
 				$objRow,
 				$strColumn,
-				$compositor->getNestedFragments(ContentElementReference::TAG_NAME . '.' . $objRow->type, $objRow->id)
+				$compositor->getNestedFragments(ContentElementReference::TAG_NAME . '.' . $objRow->type, $objRow->origId ?: $objRow->id)
 			);
 		}
 		else
