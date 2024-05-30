@@ -70,7 +70,7 @@ class WidgetTest extends TestCase
         $_POST = [];
     }
 
-    public function postProvider(): \Generator
+    public static function postProvider(): iterable
     {
         yield [
             'foo',
@@ -193,7 +193,7 @@ class WidgetTest extends TestCase
         }
     }
 
-    public function getAttributesFromDca(): \Generator
+    public static function getAttributesFromDca(): iterable
     {
         yield [
             [[], 'foo'],

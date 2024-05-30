@@ -323,7 +323,7 @@ class Route404ProviderTest extends TestCase
         }
     }
 
-    public function sortRoutesProvider(): \Generator
+    public static function sortRoutesProvider(): iterable
     {
         yield 'adds page' => [
             ['tl_page.42.error_404'],

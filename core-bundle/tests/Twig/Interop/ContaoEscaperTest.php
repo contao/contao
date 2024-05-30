@@ -21,7 +21,6 @@ use Contao\System;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
-use Twig\Environment;
 use Twig\Error\RuntimeError;
 
 class ContaoEscaperTest extends TestCase
@@ -43,7 +42,7 @@ class ContaoEscaperTest extends TestCase
         $this->assertSame($expectedOutput, $this->invokeEscapeHtml($input, 'utf-8'), 'utf-8');
     }
 
-    public function provideHtmlInput(): \Generator
+    public static function provideHtmlInput(): iterable
     {
         yield 'simple string' => [
             'foo',
@@ -104,7 +103,7 @@ class ContaoEscaperTest extends TestCase
         return 'baz';
     }
 
-    public function provideHtmlAttributeInput(): \Generator
+    public static function provideHtmlAttributeInput(): iterable
     {
         yield 'simple string' => [
             'foo',
@@ -140,11 +139,11 @@ class ContaoEscaperTest extends TestCase
 
     private function invokeEscapeHtml(int|string $input, string|null $charset): string
     {
-        return (new ContaoEscaper())->escapeHtml($this->createMock(Environment::class), $input, $charset);
+        return (new ContaoEscaper())->escapeHtml($input, $charset);
     }
 
     private function invokeEscapeHtmlAttr(int|string $input, string|null $charset): string
     {
-        return (new ContaoEscaper())->escapeHtmlAttr($this->createMock(Environment::class), $input, $charset);
+        return (new ContaoEscaper())->escapeHtmlAttr($input, $charset);
     }
 }

@@ -558,7 +558,7 @@ window.Backend =
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
 		});
 		M.show({
-			'title': opt.title,
+			'title': opt.title?.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;'),
 			'contents': '<img src="' + opt.url + '" alt="">'
 		});
 	},
@@ -583,7 +583,7 @@ window.Backend =
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
 		});
 		M.show({
-			'title': opt.title,
+			'title': opt.title?.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;'),
 			'contents': '<iframe src="' + opt.url + '" width="100%" height="' + opt.height + '" frameborder="0"></iframe>',
 			'model': 'modal'
 		});
@@ -648,7 +648,7 @@ window.Backend =
 			this.hide();
 		});
 		M.show({
-			'title': opt.title,
+			'title': opt.title?.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;'),
 			'contents': '<iframe src="' + opt.url + '" name="simple-modal-iframe" width="100%" height="' + opt.height + '" frameborder="0"></iframe>',
 			'model': 'modal'
 		});

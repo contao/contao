@@ -46,7 +46,7 @@ class CodeControllerTest extends ContentElementTestCase
             <link rel="stylesheet" href="/foundation.css">
             HTML;
 
-        $additionalHeadCode = $responseContextData[DocumentLocation::head->value];
+        $additionalHeadCode = $responseContextData[DocumentLocation::stylesheets->value];
 
         $this->assertCount(1, $additionalHeadCode);
         $this->assertSameHtml($expectedHeadCode, $additionalHeadCode['highlighter_css']);

@@ -174,8 +174,8 @@
         <target>Condividi in Facebook</target>
       </trans-unit>
       <trans-unit id="tl_article.twitter">
-        <source>Share on Twitter</source>
-        <target>Condividi in Twitter</target>
+        <source>Share on X (formerly Twitter)</source>
+        <target>Condividi su X (ex Twitter)</target>
       </trans-unit>
       <trans-unit id="tl_article.new.0">
         <source>New</source>

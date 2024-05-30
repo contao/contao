@@ -31,7 +31,7 @@ class ValidatorTest extends TestCase
         );
     }
 
-    public function emailProvider(): \Generator
+    public static function emailProvider(): iterable
     {
         // Valid ASCII
         yield ['niceandsimple@example.com', 1];

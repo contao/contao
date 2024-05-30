@@ -31,8 +31,8 @@ final class PictureConfigurationRuntime implements RuntimeExtensionInterface
     /**
      * Creates a picture configuration from an array.
      *
-     * This is intended to be used from within templates where programmatic
-     * building is not available.
+     * This is intended to be used from within templates where programmatic building
+     * is not available.
      */
     public function fromArray(array $config): PictureConfiguration
     {

@@ -135,7 +135,7 @@ class FilesyncCommandTest extends TestCase
         $this->assertSame(0, $tester->getStatusCode());
     }
 
-    public function provideInputs(): \Generator
+    public static function provideInputs(): iterable
     {
         yield 'no input' => [
             [],

@@ -81,7 +81,7 @@ class PagePermissionVoterTest extends TestCase
         $this->assertSame($accessGranted ? VoterInterface::ACCESS_ABSTAIN : VoterInterface::ACCESS_DENIED, $result);
     }
 
-    public function voterProvider(): \Generator
+    public static function voterProvider(): iterable
     {
         // NEW BUTTON
         yield 'Allows new page (1)' => [

@@ -75,9 +75,11 @@
       </trans-unit>
       <trans-unit id="tl_module.news_keepCanonical.0">
         <source>Use the current URL for canonical links</source>
+        <target>Kanonik bağlantılar için geçerli adres kullanılsın</target>
       </trans-unit>
       <trans-unit id="tl_module.news_keepCanonical.1">
         <source>Keep the current URL instead of the configured reader page for canonical links.</source>
+        <target>Kanonik bağlantılar için yapılandırılmış okuyucu sayfası yerine geçerli adres kullanılır.</target>
       </trans-unit>
       <trans-unit id="tl_module.news_overview_legend">
         <source>Overview page</source>

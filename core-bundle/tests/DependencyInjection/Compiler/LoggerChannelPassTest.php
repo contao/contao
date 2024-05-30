@@ -95,7 +95,7 @@ class LoggerChannelPassTest extends TestCase
         $this->assertSame('contao.'.$action, $logger->getArgument(0), 'The channel name should not be transformed.');
     }
 
-    public function legacyActionNamesProvider(): array
+    public static function legacyActionNamesProvider(): iterable
     {
         return [
             ['error', 'ERROR'],

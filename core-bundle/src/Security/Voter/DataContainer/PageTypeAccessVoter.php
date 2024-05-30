@@ -20,18 +20,31 @@ use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
+use Symfony\Contracts\Service\ResetInterface;
 
 /**
  * @internal
  */
-class PageTypeAccessVoter extends AbstractDataContainerVoter
+class PageTypeAccessVoter extends AbstractDataContainerVoter implements ResetInterface
 {
+    use TypeAccessTrait;
+
     private const FIRST_LEVEL_TYPES = ['error_401', 'error_403', 'error_404', 'error_503'];
+
+    private array|null $rootIds = null;
+
+    private array|null $rootTypes = null;
 
     public function __construct(
         private readonly AccessDecisionManagerInterface $accessDecisionManager,
         private readonly Connection $connection,
     ) {
+    }
+
+    public function reset(): void
+    {
+        $this->rootIds = null;
+        $this->rootTypes = null;
     }
 
     protected function getTable(): string
@@ -52,29 +65,7 @@ class PageTypeAccessVoter extends AbstractDataContainerVoter
             return true;
         }
 
-        $types = [];
-
-        if (!$action instanceof CreateAction && isset($action->getCurrent()['type'])) {
-            $types[] = $action->getCurrent()['type'];
-        }
-
-        if (!$action instanceof DeleteAction && isset($action->getNew()['type'])) {
-            $types[] = $action->getNew()['type'];
-        }
-
-        if ([] === $types) {
-            return true;
-        }
-
-        // For the update action, the user needs access to both the current and the new
-        // page type, so if one is denied, return false.
-        foreach ($types as $type) {
-            if (!$this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], $type)) {
-                return false;
-            }
-        }
-
-        return true;
+        return $this->hasAccessToType($token, ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $action);
     }
 
     private function validateFirstLevelType(CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
@@ -98,11 +89,13 @@ class PageTypeAccessVoter extends AbstractDataContainerVoter
         }
 
         $type = $action->getNew()['type'] ?? ($action instanceof UpdateAction ? $action->getCurrent()['type'] : null);
-        $pid = (int) ($action->getNewPid() ?? ($action instanceof UpdateAction ? $action->getCurrentPid() : null));
+        $currentPid = $action instanceof UpdateAction ? (int) $action->getCurrentPid() : null;
+        $pid = (int) ($action->getNewPid() ?? $currentPid);
 
         if (
             (null !== $action->getNewPid() || null !== ($action->getNew()['sorting'] ?? null))
             && (!$action instanceof UpdateAction || \in_array($type, self::FIRST_LEVEL_TYPES, true))
+            && ($pid !== $currentPid)
             && (!$this->isRootPage($pid) || $this->hasPageTypeInRoot($type, $pid))
         ) {
             return false;
@@ -132,11 +125,25 @@ class PageTypeAccessVoter extends AbstractDataContainerVoter
 
     private function isRootPage(int $pageId): bool
     {
-        return 'root' === $this->connection->fetchOne('SELECT type FROM tl_page WHERE id=?', [$pageId]);
+        if (null === $this->rootIds) {
+            $this->rootIds = $this->connection->fetchFirstColumn("SELECT id FROM tl_page WHERE type='root'");
+            $this->rootIds = array_map('intval', $this->rootIds);
+        }
+
+        return \in_array($pageId, $this->rootIds, true);
     }
 
     private function hasPageTypeInRoot(string $type, int $rootId): bool
     {
-        return (bool) $this->connection->fetchOne('SELECT id FROM tl_page WHERE type=? AND pid=?', [$type, $rootId]);
+        if (null === $this->rootTypes) {
+            $this->rootTypes = [];
+            $records = $this->connection->fetchAllNumeric("SELECT p.pid, p.type FROM tl_page p JOIN tl_page r ON p.pid=r.id WHERE r.type='root' GROUP BY p.pid, p.type");
+
+            foreach ($records as $row) {
+                $this->rootTypes[$row[0]][$row[1]] = true;
+            }
+        }
+
+        return $this->rootTypes[$rootId][$type] ?? false;
     }
 }

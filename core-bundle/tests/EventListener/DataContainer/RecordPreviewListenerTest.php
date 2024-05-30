@@ -451,7 +451,7 @@ class RecordPreviewListenerTest extends TestCase
         $listener->storePrecompiledRecordPreview($dataContainer, '42');
     }
 
-    public function loadDataContainer(): \Generator
+    public static function loadDataContainer(): iterable
     {
         yield 'Not a table data container' => [
             'tl_files',
