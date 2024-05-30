@@ -22,7 +22,6 @@ use Contao\CoreBundle\Image\Preview\PreviewFactory;
 use Contao\CoreBundle\Image\Preview\PreviewProviderInterface;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\Image\Exception\FileNotExistsException;
 use Contao\Image\Image;
 use Contao\Image\ImageInterface;
 use Contao\Image\Picture;
@@ -99,7 +98,7 @@ class PreviewFactoryTest extends TestCase
 
         $factory = $this->createFactoryWithExampleProvider();
 
-        $this->expectException(FileNotExistsException::class);
+        $this->expectException(InvalidResourceException::class);
 
         $factory->createPreview($sourcePath);
     }

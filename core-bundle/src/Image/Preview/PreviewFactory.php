@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Image\Preview;
 
+use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\Image\PictureFactory;
@@ -19,7 +20,6 @@ use Contao\CoreBundle\Image\PictureFactoryInterface;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\Studio;
-use Contao\Image\Exception\FileNotExistsException;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureInterface;
@@ -92,7 +92,7 @@ class PreviewFactory
     }
 
     /**
-     * @throws UnableToGeneratePreviewException|MissingPreviewProviderException
+     * @throws UnableToGeneratePreviewException|MissingPreviewProviderException|InvalidResourceException
      *
      * @return iterable<ImageInterface>
      */
@@ -102,13 +102,13 @@ class PreviewFactory
             throw new \InvalidArgumentException();
         }
 
+        if (!(new Filesystem())->exists($path)) {
+            throw new InvalidResourceException(sprintf('No resource could be located at path "%s".', $path));
+        }
+
         // Supported image formats do not need an extra preview image
         if (\in_array(strtolower(pathinfo($path, PATHINFO_EXTENSION)), $this->validImageExtensions, true)) {
             return [$this->imageFactory->create($path)];
-        }
-
-        if (!(new Filesystem())->exists($path)) {
-            throw new FileNotExistsException($path.' does not exist');
         }
 
         $size = $this->normalizeSize($size);
