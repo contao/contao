@@ -547,6 +547,12 @@ services:
         arguments:
             - '@contao.menu.matcher'
 
+    contao.messenger.auto_fallback_worker:
+        class: Contao\CoreBundle\Messenger\AutoFallbackWorker
+        arguments:
+            - '@cache.app'
+            - '@console.command.messenger_consume_messages'
+
     contao.messenger.search_index_message_handler:
         class: Contao\CoreBundle\Messenger\MessageHandler\SearchIndexMessageHandler
         arguments:
