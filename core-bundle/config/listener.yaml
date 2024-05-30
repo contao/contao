@@ -514,11 +514,6 @@ services:
         arguments:
             - '@monolog.logger.contao.error'
 
-    contao.messenger.worker_listener:
-        class: Contao\CoreBundle\Messenger\EventListener\WorkerListener
-        arguments:
-            - '@contao.messenger.auto_fallback_notifier'
-
     contao.twig.loader.auto_refresh_template_hierarchy_listener:
         class: Contao\CoreBundle\Twig\Loader\AutoRefreshTemplateHierarchyListener
         arguments:
