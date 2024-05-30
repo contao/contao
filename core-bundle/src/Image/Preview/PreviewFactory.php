@@ -19,6 +19,7 @@ use Contao\CoreBundle\Image\PictureFactoryInterface;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\Image\Exception\FileNotExistsException;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureInterface;
@@ -106,6 +107,10 @@ class PreviewFactory
             return [$this->imageFactory->create($path)];
         }
 
+        if (!(new Filesystem())->exists($path)) {
+            throw new FileNotExistsException($path.' does not exist');
+        }
+
         $size = $this->normalizeSize($size);
         $targetPath = Path::join($this->cacheDir, $this->createCachePath($path, $size, $previewOptions));
 
@@ -156,7 +161,7 @@ class PreviewFactory
             }
         }
 
-        throw $lastProviderException ?? new MissingPreviewProviderException();
+        throw $lastProviderException ?? new MissingPreviewProviderException(sprintf('Missing preview provider to handle "%s".', $path));
     }
 
     /**
@@ -260,9 +265,15 @@ class PreviewFactory
      */
     public function createPreviewFigureBuilder(string $path, $size = null, ResizeOptions $resizeOptions = null, int $page = 1, array $previewOptions = []): FigureBuilder
     {
+        try {
+            $image = $this->createPreview($path, $this->getPreviewSizeFromImageSize($size), $page, $previewOptions);
+        } catch (\Throwable $exception) {
+            $image = $exception;
+        }
+
         return $this->imageStudio
             ->createFigureBuilder()
-            ->fromImage($this->createPreview($path, $this->getPreviewSizeFromImageSize($size), $page, $previewOptions))
+            ->from($image)
             ->setSize($size)
             ->setResizeOptions($resizeOptions)
         ;
