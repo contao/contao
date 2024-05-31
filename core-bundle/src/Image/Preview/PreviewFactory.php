@@ -265,18 +265,21 @@ class PreviewFactory
      */
     public function createPreviewFigureBuilder(string $path, $size = null, ResizeOptions $resizeOptions = null, int $page = 1, array $previewOptions = []): FigureBuilder
     {
-        try {
-            $image = $this->createPreview($path, $this->getPreviewSizeFromImageSize($size), $page, $previewOptions);
-        } catch (\Throwable $exception) {
-            $image = $exception;
-        }
-
-        return $this->imageStudio
+        $figureBuilder = $this->imageStudio
             ->createFigureBuilder()
-            ->from($image)
             ->setSize($size)
             ->setResizeOptions($resizeOptions)
         ;
+
+        try {
+            $figureBuilder->fromImage($this->createPreview($path, $this->getPreviewSizeFromImageSize($size), $page, $previewOptions));
+        } catch (InvalidResourceException $exception) {
+            $figureBuilder->setLastException($exception);
+        } catch (\Throwable $exception) {
+            $figureBuilder->setLastException(new InvalidResourceException($exception->getMessage(), $exception->getCode(), $exception));
+        }
+
+        return $figureBuilder;
     }
 
     /**
