@@ -243,6 +243,11 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
     private function handleMessengerConfig(array $config, ContainerBuilder $container): void
     {
+        if ($container->hasDefinition('contao.messenger.auto_fallback_worker')) {
+            $definition = $container->getDefinition('contao.messenger.auto_fallback_worker');
+            $definition->setArgument(2, $config['messenger']['auto_fallback_transports']);
+        }
+
         if (
             !$container->hasDefinition('contao.cron.supervise_workers')
             || !$container->hasDefinition('contao.command.supervise_workers')

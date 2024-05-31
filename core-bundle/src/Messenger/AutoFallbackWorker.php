@@ -19,16 +19,15 @@ use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\Messenger\Command\ConsumeMessagesCommand;
-use Symfony\Component\Messenger\Event\SendMessageToTransportsEvent;
 use Symfony\Component\Messenger\Event\WorkerRunningEvent;
 use Symfony\Component\Messenger\Event\WorkerStartedEvent;
 use Symfony\Component\Messenger\Event\WorkerStoppedEvent;
 
 /**
- * This service automatically detects which Symfony Messenger transports have real
- * workers running when a message is dispatched to the message bus. In case they
- * do not, it falls back to a kernel.terminate worker to ensure, messages are
- * always processed, no matter whether a real worker is running or not.
+ * This service accepts an array of Symfony Messenger transports and automatically
+ * detects which of those have real workers running. In case they do not, it falls
+ * back to a kernel.terminate worker to ensure, messages are always processed, no
+ * matter whether a real worker is running or not.
  *
  * Detecting works by using the WorkerStartedEvent and WorkerRunningEvent which
  * sets/updates a cache items and allowing a grace period.
@@ -41,58 +40,26 @@ class AutoFallbackWorker
 {
     private const GRACE_PERIOD = 'PT60S'; // If no real worker "pings" us within this grace period, we run our fallback worker
 
-    private const ADDITIONAL_MESSAGES = 1;
-
-    private array $messagesSentDuringRequest = [];
-
     private bool $fallbackWorkerRunning = false;
 
     public function __construct(
         private readonly CacheItemPoolInterface $cache,
         private readonly ConsumeMessagesCommand $consumeMessagesCommand,
+        private readonly array $transports,
     ) {
     }
 
     #[AsEventListener(priority: -512)]
     public function onKernelTerminate(TerminateEvent $event): void
     {
-        foreach ($this->messagesSentDuringRequest as $transportName => $messageCount) {
-            if ($this->isWorkerRunning($transportName)) {
-                continue;
-            }
-
-            // Always process a little more than only the accumulated messages during this
-            // request. This is to ensure that messages do not get lost. Something that
-            // shouldn't happen but could happen if e.g. real workers are getting killed due
-            // to server hickups or so.
-            $this->processTransport($transportName, $messageCount + self::ADDITIONAL_MESSAGES);
-        }
-
-        $this->messagesSentDuringRequest = [];
-    }
-
-    #[AsEventListener]
-    public function onSendMessageToTransports(SendMessageToTransportsEvent $event): void
-    {
-        // If we are running in our fallback worker process, we don't count
-        if ($this->fallbackWorkerRunning) {
-            return;
-        }
-
-        foreach (array_keys($event->getSenders()) as $transportName) {
-            $this->increaseMessageCountForTransportName($transportName);
+        foreach ($this->transports as $transportName) {
+            $this->processTransport($transportName);
         }
     }
 
     #[AsEventListener]
     public function onWorkerStarted(WorkerStartedEvent $event): void
     {
-        // If we are running in our fallback worker process, we never ping (otherwise we
-        // would self-disable)
-        if ($this->fallbackWorkerRunning) {
-            return;
-        }
-
         foreach ($event->getWorker()->getMetadata()->getTransportNames() as $transportName) {
             $this->ping($transportName);
         }
@@ -101,22 +68,10 @@ class AutoFallbackWorker
     #[AsEventListener]
     public function onWorkerRunning(WorkerRunningEvent $event): void
     {
-        // If we are running in our fallback worker process, we never ping (otherwise we
-        // would self-disable)
-        if ($this->fallbackWorkerRunning) {
-            // If we process more messages than accumulated during our request, we start the
-            // kernel.terminate worker with a --limit that is potentially higher than what's
-            // on the queue in total. This would cause the worker to run endlessly (or until
-            // reaching the time limit). This is not necessary. If we know this is our own
-            // fallback worker, and it is idle, we can stop it right away to free the process
-            // for the next requests.
-            //
-            // This check is added deliberately to prevent forgetting to remove this in case the ADDITONAL_MESSAGES
-            // feature ever gets removed, so ignore for phpstan
-            // @phpstan-ignore-next-line
-            if (self::ADDITIONAL_MESSAGES > 0 && $event->isWorkerIdle()) {
-                $event->getWorker()->stop();
-            }
+        // In case of our fallback worker running, we stop it immediately if it is idle
+        // in order to free the web process.
+        if ($this->fallbackWorkerRunning && $event->isWorkerIdle()) {
+            $event->getWorker()->stop();
 
             return;
         }
@@ -134,15 +89,21 @@ class AutoFallbackWorker
 
     public function ping(string $transportName): void
     {
+        // If we are running in our fallback worker process, we never ping (otherwise we
+        // would self-disable)
+        if ($this->fallbackWorkerRunning) {
+            return;
+        }
+
+        // If this is a transport we don't care about, we don't do anything either
+        if (!\in_array($transportName, $this->transports, true)) {
+            return;
+        }
+
         $item = $this->getCacheItemForTransportName($transportName);
         $item->expiresAfter(new \DateInterval(self::GRACE_PERIOD));
 
         $this->cache->save($item);
-    }
-
-    private function isWorkerRunning(string $transportName): bool
-    {
-        return $this->getCacheItemForTransportName($transportName)->isHit();
     }
 
     private function getCacheItemForTransportName(string $transportName): CacheItemInterface
@@ -150,27 +111,23 @@ class AutoFallbackWorker
         return $this->cache->getItem('auto-fallback-worker-'.$transportName);
     }
 
-    private function increaseMessageCountForTransportName(string $transportName): void
+    private function processTransport(string $transportName): void
     {
-        if (!isset($this->messagesSentDuringRequest[$transportName])) {
-            $this->messagesSentDuringRequest[$transportName] = 0;
+        // Real worker is running, abort
+        if ($this->getCacheItemForTransportName($transportName)->isHit()) {
+            return;
         }
 
-        ++$this->messagesSentDuringRequest[$transportName];
-    }
-
-    private function processTransport(string $transportName, int $limit): void
-    {
         $this->fallbackWorkerRunning = true;
         $input = new ArrayInput([
             'receivers' => [$transportName],
-            '--limit' => $limit, // This is the total message number limit
-            '--time-limit' => 30, // Ensure the kernel.terminate worker doesn't run forever in case of misconfiguration
+            '--time-limit' => 30,
         ]);
 
         // No need to log anything because this is done by the messenger:consume command
         // already and would only cause log duplication.
         $this->consumeMessagesCommand->run($input, new NullOutput());
+
         $this->fallbackWorkerRunning = false;
     }
 }

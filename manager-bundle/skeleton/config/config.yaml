@@ -60,6 +60,10 @@ framework:
 contao:
     preview_script: /preview.php
     messenger:
+        auto_fallback_transports:
+            - contao_prio_high
+            - contao_prio_normal
+            - contao_prio_low
         workers:
             -
                 transports:
