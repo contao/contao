@@ -95,7 +95,6 @@ class PreviewFactoryTest extends TestCase
     public function testCreateMissingPreview(): void
     {
         $sourcePath = Path::join($this->getTempDir(), 'sources/does-not-exist.pdf');
-
         $factory = $this->createFactoryWithExampleProvider();
 
         $this->expectException(InvalidResourceException::class);
@@ -346,10 +345,9 @@ class PreviewFactoryTest extends TestCase
     public function testCreatePreviewFigureBuilder(): void
     {
         $sourcePath = Path::join($this->getTempDir(), 'sources/foo.pdf');
-
         $factory = $this->createFactoryWithExampleProvider();
-
         $figureBuilder = $factory->createPreviewFigureBuilder($sourcePath);
+
         $this->assertNull($figureBuilder->buildIfResourceExists());
 
         (new Filesystem())->dumpFile($sourcePath, '%PDF-');
@@ -363,6 +361,7 @@ class PreviewFactoryTest extends TestCase
         (new Filesystem())->dumpFile($sourcePath, 'not a PDF');
 
         $figureBuilder = $factory->createPreviewFigureBuilder($sourcePath);
+
         $this->assertNull($figureBuilder->buildIfResourceExists());
 
         try {
