@@ -865,7 +865,7 @@ class Input
 
 		// Preserve basic entities
 		$varValue = static::preserveBasicEntities($varValue);
-		$varValue = html_entity_decode($varValue, ENT_QUOTES, System::getContainer()->getParameter('kernel.charset'));
+		$varValue = html_entity_decode($varValue, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, System::getContainer()->getParameter('kernel.charset'));
 
 		return $varValue;
 	}

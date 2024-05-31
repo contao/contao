@@ -227,19 +227,19 @@ class PageRegular extends Frontend
 
 		// Set the page title and description AFTER the modules have been generated
 		$this->Template->mainTitle = $objPage->rootPageTitle;
-		$this->Template->pageTitle = htmlspecialchars($headBag->getTitle());
+		$this->Template->pageTitle = htmlspecialchars($headBag->getTitle(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
 
 		// Remove shy-entities (see #2709)
 		$this->Template->mainTitle = str_replace('[-]', '', $this->Template->mainTitle);
 		$this->Template->pageTitle = str_replace('[-]', '', $this->Template->pageTitle);
 
 		// Meta robots tag
-		$this->Template->robots = htmlspecialchars($headBag->getMetaRobots());
+		$this->Template->robots = htmlspecialchars($headBag->getMetaRobots(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
 
 		// Canonical
 		if ($objPage->enableCanonical)
 		{
-			$this->Template->canonical = htmlspecialchars($headBag->getCanonicalUriForRequest($request));
+			$this->Template->canonical = htmlspecialchars($headBag->getCanonicalUriForRequest($request), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
 		}
 
 		// Fall back to the default title tag
@@ -250,7 +250,7 @@ class PageRegular extends Frontend
 
 		// Assign the title and description
 		$this->Template->title = strip_tags(System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objLayout->titleTag));
-		$this->Template->description = htmlspecialchars($headBag->getMetaDescription());
+		$this->Template->description = htmlspecialchars($headBag->getMetaDescription(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
 
 		// Body onload and body classes
 		$this->Template->onload = trim($objLayout->onload);

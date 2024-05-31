@@ -67,7 +67,7 @@ class SimpleTokenParser implements LoggerAwareInterface
 
         foreach ($tags as $tag) {
             $decodedTag = $allowHtml
-                ? html_entity_decode(StringUtil::restoreBasicEntities($tag), ENT_QUOTES, 'UTF-8')
+                ? html_entity_decode(StringUtil::restoreBasicEntities($tag), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8')
                 : $tag;
 
             // True if it is inside a matching if-tag

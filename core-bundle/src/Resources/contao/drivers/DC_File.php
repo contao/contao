@@ -220,13 +220,13 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 
 						if (!\is_array($this->varValue))
 						{
-							$this->varValue = htmlspecialchars($this->varValue);
+							$this->varValue = htmlspecialchars($this->varValue, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
 						}
 						else
 						{
 							foreach ($this->varValue as $key=>$val)
 							{
-								$this->varValue[$key] = htmlspecialchars($val);
+								$this->varValue[$key] = htmlspecialchars($val, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
 							}
 						}
 					}
@@ -441,7 +441,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 		}
 		elseif (\is_string($strCurrent))
 		{
-			$strCurrent = html_entity_decode($this->varValue, ENT_QUOTES, System::getContainer()->getParameter('kernel.charset'));
+			$strCurrent = html_entity_decode($this->varValue, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, System::getContainer()->getParameter('kernel.charset'));
 		}
 
 		// Save the value if there was no error

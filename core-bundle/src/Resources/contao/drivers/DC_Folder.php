@@ -597,7 +597,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$return .= '<script>'
 				. 'Dropzone.autoDiscover = false;'
 				. 'Backend.enableFileTreeUpload("tl_listing", ' . json_encode(array(
-					'url' => html_entity_decode($this->addToUrl('act=move&mode=2&pid=' . urlencode($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'][0] ?? $this->strUploadPath))),
+					'url' => html_entity_decode($this->addToUrl('act=move&mode=2&pid=' . urlencode($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'][0] ?? $this->strUploadPath)), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5),
 					'paramName' => 'files',
 					'maxFilesize' => $intMaxSize,
 					'acceptedFiles' => $strAccepted,
@@ -611,7 +611,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		$return .= '<script>'
 			. 'Backend.enableFileTreeDragAndDrop($("tl_listing").getChildren(".tl_file_manager")[0], ' . json_encode(array(
-				'url' => html_entity_decode($this->addToUrl('act=cut&mode=2&pid=' . urlencode($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'][0] ?? $this->strUploadPath))),
+				'url' => html_entity_decode($this->addToUrl('act=cut&mode=2&pid=' . urlencode($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'][0] ?? $this->strUploadPath)), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5),
 			)) . ')</script>'
 		;
 
@@ -657,7 +657,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$objSession->set('CLIPBOARD', $arrClipboard);
 
 		$this->Files->mkdir($strFolder . '/__new__');
-		$this->redirect(html_entity_decode($this->switchToEdit($strFolder . '/__new__')));
+		$this->redirect(html_entity_decode($this->switchToEdit($strFolder . '/__new__'), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5));
 	}
 
 	/**
@@ -2153,7 +2153,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 <div class="tl_tbox">
   <div class="widget">
     <h3><label for="ctrl_source">' . $GLOBALS['TL_LANG']['tl_files']['editor'][0] . '</label></h3>
-    <textarea name="source" id="ctrl_source" class="tl_textarea monospace" rows="12" cols="80" style="height:400px" onfocus="Backend.getScrollOffset()">' . "\n" . htmlspecialchars($strContent) . '</textarea>' . ((Config::get('showHelp') && isset($GLOBALS['TL_LANG']['tl_files']['editor'][1])) ? '
+    <textarea name="source" id="ctrl_source" class="tl_textarea monospace" rows="12" cols="80" style="height:400px" onfocus="Backend.getScrollOffset()">' . "\n" . htmlspecialchars($strContent, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '</textarea>' . ((Config::get('showHelp') && isset($GLOBALS['TL_LANG']['tl_files']['editor'][1])) ? '
     <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_files']['editor'][1] . '</p>' : '') . '
   </div>
 </div>
@@ -2698,7 +2698,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$blnIsOpen = true;
 			}
 
-			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFolder, ENT_QUOTES) . '" class="tl_folder click2edit toggle_select hover-div"><div class="tl_left" style="padding-left:' . ($intMargin + (($countFiles < 1) ? 20 : 0)) . 'px">';
+			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFolder, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_folder click2edit toggle_select hover-div"><div class="tl_left" style="padding-left:' . ($intMargin + (($countFiles < 1) ? 20 : 0)) . 'px">';
 
 			// Add a toggle button if there are childs
 			if ($countFiles > 0)
@@ -2801,7 +2801,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 
 			$currentEncoded = $this->urlEncode($currentFile);
-			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFile, ENT_QUOTES) . '" class="tl_file click2edit toggle_select hover-div"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing) . 'px">';
+			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFile, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_file click2edit toggle_select hover-div"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing) . 'px">';
 			$thumbnail .= ' <span class="tl_gray">(' . $this->getReadableSize($objFile->filesize);
 
 			if ($objFile->width && $objFile->height)

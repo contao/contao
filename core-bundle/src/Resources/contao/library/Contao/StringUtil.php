@@ -238,7 +238,7 @@ class StringUtil
 		$strString = preg_replace('/(&#*\w+)[\x00-\x20]+;/i', '$1;', $strString);
 		$strString = preg_replace('/(&#x*)([0-9a-f]+);/i', '$1$2;', $strString);
 
-		return html_entity_decode($strString, $strQuoteStyle, $strCharset);
+		return html_entity_decode($strString, $strQuoteStyle | ENT_SUBSTITUTE | ENT_HTML5, $strCharset);
 	}
 
 	/**
@@ -870,7 +870,7 @@ class StringUtil
 			$strString = static::stripInsertTags($strString);
 		}
 
-		return htmlspecialchars((string) $strString, ENT_QUOTES | ENT_HTML5, $GLOBALS['TL_CONFIG']['characterSet'] ?? 'UTF-8', $blnDoubleEncode);
+		return htmlspecialchars((string) $strString, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, $GLOBALS['TL_CONFIG']['characterSet'] ?? 'UTF-8', $blnDoubleEncode);
 	}
 
 	/**
@@ -985,7 +985,7 @@ class StringUtil
 		$arrSearch = array('/[^\pN\pL \.\&\/_-]+/u', '/[ \.\&\/-]+/');
 		$arrReplace = array('', '-');
 
-		$strString = html_entity_decode($strString, ENT_QUOTES, $GLOBALS['TL_CONFIG']['characterSet'] ?? 'UTF-8');
+		$strString = html_entity_decode($strString, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, $GLOBALS['TL_CONFIG']['characterSet'] ?? 'UTF-8');
 		$strString = static::stripInsertTags($strString);
 		$strString = preg_replace($arrSearch, $arrReplace, $strString);
 
