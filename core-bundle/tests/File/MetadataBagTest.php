@@ -75,7 +75,7 @@ class MetadataBagTest extends TestCase
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('The locale "it" does not exist in this metadata bag.');
 
-        /** @phpstan-ignore-next-line */
+        /** @phpstan-ignore expr.resultUnused */
         $bag['it'];
     }
 
