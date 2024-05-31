@@ -31,7 +31,7 @@ use Symfony\Component\Routing\Attribute\Route;
 /**
  * @internal
  */
-#[Route('%contao.backend.route_prefix%', defaults: ['_scope' => 'backend', '_token_check' => true])]
+#[Route('%contao.backend.route_prefix%', defaults: ['_scope' => 'backend'])]
 class BackendController extends AbstractController
 {
     #[Route('', name: 'contao_backend')]

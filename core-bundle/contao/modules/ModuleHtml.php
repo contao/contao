@@ -30,7 +30,7 @@ class ModuleHtml extends Module
 
 		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
-			$this->Template->html = '<pre>' . htmlspecialchars($this->html) . '</pre>';
+			$this->Template->html = '<pre>' . htmlspecialchars($this->html, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '</pre>';
 		}
 		else
 		{

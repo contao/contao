@@ -563,6 +563,7 @@ abstract class Controller extends System
 			return '';
 		}
 
+		$objRow = $objRow->cloneOriginal();
 		$objRow->typePrefix = 'ce_';
 		$strStopWatchId = 'contao.content_element.' . $objRow->type . ' (ID ' . $objRow->id . ')';
 
@@ -584,11 +585,16 @@ abstract class Controller extends System
 			$objElement = new $strClass(
 				$objRow,
 				$strColumn,
-				$compositor->getNestedFragments(ContentElementReference::TAG_NAME . '.' . $objRow->type, $objRow->id)
+				$compositor->getNestedFragments(ContentElementReference::TAG_NAME . '.' . $objRow->type, $objRow->origId ?: $objRow->id)
 			);
 		}
 		else
 		{
+			if (\is_array($contentElementReference?->attributes['classes'] ?? null))
+			{
+				$objRow->classes = array_merge($objRow->classes ?? array(), $contentElementReference->attributes['classes']);
+			}
+
 			$objElement = new $strClass($objRow, $strColumn);
 		}
 
