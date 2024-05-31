@@ -22,15 +22,15 @@ use Twig\Loader\LoaderInterface;
 use Twig\Source;
 
 /**
- * The ContaoFilesystemLoader loads templates from the Contao-specific template
- * directories inside of bundles (<bundle>/contao/templates), the app's global
- * template directory (<root>/templates) and registered theme directories
- * (<root>/templates/<theme>).
+ * The ContaoFilesystemLoader loads templates from the Contao-specific
+ * template directories inside of bundles (<bundle>/contao/templates), the
+ * app's global template directory (<root>/templates) and registered theme
+ * directories (<root>/templates/<theme>).
  *
- * Contrary to Twig's default loader, we keep track of template files instead
- * of directories. This allows us to group multiple representations of the same
- * template (identifier) from different namespaces in a single data structure:
- * the Contao template hierarchy.
+ * Contrary to Twig's default loader, we keep track of template files instead of
+ * directories. This allows us to group multiple representations of the same
+ * template (identifier) from different namespaces in a single data structure: the
+ * Contao template hierarchy.
  *
  * @experimental
  */
@@ -60,11 +60,11 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
     }
 
     /**
-     * Gets the cache key to use for the environment's template cache for a
-     * given template name.
+     * Gets the cache key to use for the environment's template cache for a given
+     * template name.
      *
-     * If we are currently in a theme context and a theme specific variant of
-     * the template exists, its cache key will be returned instead.
+     * If we are currently in a theme context and a theme specific variant of the
+     * template exists, its cache key will be returned instead.
      *
      * @param string $name The name of the template to load
      *
@@ -81,14 +81,14 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
         // We prefix the cache key to make sure templates from the default Symfony loader
         // won't be reused. Otherwise, we cannot reliably differentiate when to apply our
         // input encoding tolerant escaper filters (see #4623).
-        return 'c:'.Path::makeRelative($path, $this->projectDir);
+        return 'c:'.$path;
     }
 
     /**
      * Returns the source context for a given template logical name.
      *
-     * If we're currently in a theme context and a theme specific variant of
-     * the template exists, its source context will be returned instead.
+     * If we're currently in a theme context and a theme specific variant of the
+     * template exists, its source context will be returned instead.
      *
      * @param string $name The template logical name
      */
@@ -99,6 +99,8 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
         if (null === $path = $this->findTemplate($templateName)) {
             return new Source('', $templateName, '');
         }
+
+        $path = Path::makeAbsolute($path, $this->projectDir);
 
         // The Contao PHP templates will still be rendered by the Contao framework via a
         // PhpTemplateProxyNode. We're removing the source to not confuse Twig's lexer
@@ -135,8 +137,8 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
     /**
      * Check if we have the source code of a template, given its name.
      *
-     * If we are currently in a theme context and a theme specific variant of
-     * the template exists, its availability will be checked as well.
+     * If we are currently in a theme context and a theme specific variant of the
+     * template exists, its availability will be checked as well.
      *
      * @param string $name The name of the template to check if we can load
      *
@@ -156,11 +158,10 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
     }
 
     /**
-     * Returns true if the template or any variant of it in the hierarchy is
-     * still fresh.
+     * Returns true if the template or any variant of it in the hierarchy is still fresh.
      *
-     * If we are currently in a theme context and a theme specific variant of
-     * the template exists, its state will be checked as well.
+     * If we are currently in a theme context and a theme specific variant of the
+     * template exists, its state will be checked as well.
      *
      * @param string $name The template name
      * @param int    $time Timestamp of the last modification time of the
@@ -245,13 +246,12 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
     }
 
     /**
-     * Returns an array [<template identifier> => <path mappings>] where path
-     * mappings are arrays [<absolute path> => <template logical name>] in the
-     * order they should appear in the inheritance chain for the respective
-     * template identifier.
+     * Returns an array [<template identifier> => <path mappings>] where path mappings
+     * are arrays [<absolute path> => <template logical name>] in the order they
+     * should appear in the inheritance chain for the respective template identifier.
      *
-     * If a $themeSlug is given the result will additionally include templates
-     * of that theme if there are any.
+     * If a $themeSlug is given the result will additionally include templates of that
+     * theme if there are any.
      *
      * For example:
      *   [
@@ -267,18 +267,16 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
     {
         $this->ensureHierarchyIsBuilt();
 
-        $chains = $this->inheritanceChains;
+        $chains = [];
 
-        foreach ($chains as $identifier => $chain) {
+        foreach ($this->inheritanceChains as $identifier => $chain) {
             foreach ($chain as $path => $name) {
                 // Filter out theme paths that do not match the given slug.
                 if (null !== ($namespace = $this->themeNamespace->match($name)) && $namespace !== $themeSlug) {
-                    unset($chains[$identifier][$path]);
+                    continue;
                 }
-            }
 
-            if (empty($chains[$identifier])) {
-                unset($chains[$identifier]);
+                $chains[$identifier][Path::makeAbsolute($path, $this->projectDir)] = $name;
             }
         }
 
@@ -379,10 +377,10 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
                 if (null === ($existingType = $typeByIdentifier[$identifier] ?? null)) {
                     $typeByIdentifier[$identifier] = $type;
                 } elseif ($type !== $existingType) {
-                    throw new \OutOfBoundsException(sprintf('The "%s" template has incompatible types, got "%s" in "%s" and "%s" in "%s".', $identifier, $existingType, array_key_last($hierarchy[$identifier]), $type, $path));
+                    throw new \OutOfBoundsException(sprintf('The "%s" template has incompatible types, got "%s" in "%s" and "%s" in "%s".', $identifier, $existingType, Path::makeAbsolute(array_key_last($hierarchy[$identifier]), $this->projectDir), $type, $path));
                 }
 
-                $hierarchy[$identifier][$path] = "@$namespace/$shortName";
+                $hierarchy[$identifier][Path::makeRelative($path, $this->projectDir)] = "@$namespace/$shortName";
             }
         }
 
@@ -390,8 +388,8 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
     }
 
     /**
-     * Resolves the path of a given template name from the hierarchy or returns
-     * null if no matching element was found.
+     * Resolves the path of a given template name from the hierarchy or returns null
+     * if no matching element was found.
      */
     private function findTemplate(string $name): string|null
     {
@@ -432,8 +430,8 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
     }
 
     /**
-     * Returns the template name of a theme specific variant of the given name
-     * or null if not applicable.
+     * Returns the template name of a theme specific variant of the given name or null
+     * if not applicable.
      */
     private function getThemeTemplateName(string $name): string|null
     {

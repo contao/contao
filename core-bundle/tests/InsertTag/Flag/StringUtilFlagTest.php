@@ -29,7 +29,7 @@ class StringUtilFlagTest extends TestCase
         $this->assertSame($expected, $flag->$flagName(new InsertTagFlag($flagName), new InsertTagResult($source))->getValue());
     }
 
-    public function getFlags(): \Generator
+    public static function getFlags(): iterable
     {
         yield ['strtolower', 'FOO', 'foo'];
         yield ['strtoupper', 'foo', 'FOO'];

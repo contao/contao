@@ -174,8 +174,8 @@
         <target>Facebookで共有</target>
       </trans-unit>
       <trans-unit id="tl_article.twitter">
-        <source>Share on Twitter</source>
-        <target>Twitterで共有</target>
+        <source>Share on X (formerly Twitter)</source>
+        <target>X(かつてのTwitter)で共有</target>
       </trans-unit>
       <trans-unit id="tl_article.new.0">
         <source>New</source>

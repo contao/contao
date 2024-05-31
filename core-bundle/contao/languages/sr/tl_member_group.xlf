@@ -1,0 +1,102 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_member_group.php" source-language="en" target-language="sr">
+    <body>
+      <trans-unit id="tl_member_group.name.0">
+        <source>Title</source>
+        <target>Назив</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.name.1">
+        <source>Please enter the group title.</source>
+        <target>Унесите назив групе.</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.redirect.0">
+        <source>Redirect on login</source>
+        <target>Преусмеравање након пријављивања</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.redirect.1">
+        <source>Redirect group members to a custom page when they log in.</source>
+        <target>Преусмери чланове групе на одређену страницу након што се пријаве.</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.jumpTo.0">
+        <source>Redirect page</source>
+        <target>Страница преусмерења</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.jumpTo.1">
+        <source>Please choose the page to which the group members will be redirected.</source>
+        <target>Одаберите страницу на коју ће чланови групе бити преусмерени.</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.disable.0">
+        <source>Deactivate</source>
+        <target>Деактивирај</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.disable.1">
+        <source>Temporarily disable the group.</source>
+        <target>Привремено онемогући групу.</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.start.0">
+        <source>Activate on</source>
+        <target>Активирај</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.start.1">
+        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Ако желите да спречите да група буде активна пре неког дана/времена, можете то подесити овде. У супротном, оставите поље празним.</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.stop.0">
+        <source>Deactivate on</source>
+        <target>Деактивирај</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.stop.1">
+        <source>If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Ако желите да спречите да група буде активна након неког дана/времена, можете то подесити овде. У супротном, оставите поље празним.</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.title_legend">
+        <source>Title</source>
+        <target>Назив</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.redirect_legend">
+        <source>Auto-redirect</source>
+        <target>Аутопреусмерење.</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.account_legend">
+        <source>Group settings</source>
+        <target>Подешавања групе</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.new.0">
+        <source>New</source>
+        <target>Ново</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.new.1">
+        <source>Create a new member group</source>
+        <target>Креирај нову корисничку групу</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.show">
+        <source>Show the details of member group ID %s</source>
+        <target>Прикажи детаље корисничке групе ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.edit">
+        <source>Edit member group ID %s</source>
+        <target>Уреди корисничку групу ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.copy">
+        <source>Duplicate member group ID %s</source>
+        <target>Копирај корисничку групу ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.delete">
+        <source>Delete member group ID %s</source>
+        <target>Обриши корисничку групу ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.toggle.0">
+        <source>Activate/deactivate member group</source>
+        <target>Активирај/деактивирај групу чланова</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.toggle.1">
+        <source>Deactivate member group ID %s</source>
+        <target>Деактивирај групу чланова ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.toggle.2">
+        <source>Activate member group ID %s</source>
+        <target>Активирај групу чланова ID %s</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

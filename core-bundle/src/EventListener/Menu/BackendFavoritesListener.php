@@ -236,7 +236,7 @@ class BackendFavoritesListener
 
             unset($pairs['rt'], $pairs['ref'], $pairs['revise']);
 
-            if (!empty($pairs)) {
+            if ([] !== $pairs) {
                 $qs = '?'.http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
             }
         }

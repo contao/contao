@@ -13,7 +13,6 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database;
 use Contao\DataContainer;
@@ -34,7 +33,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		'onload_callback' => array
 		(
 			array('tl_user', 'handleUserProfile'),
-			array('tl_user', 'checkPermission'),
 			array('tl_user', 'addTemplateWarning')
 		),
 		'onsubmit_callback' => array
@@ -72,32 +70,10 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'operations' => array
 		(
-			'edit' => array
-			(
-				'href'                => 'act=edit',
-				'icon'                => 'edit.svg',
-				'button_callback'     => array('tl_user', 'editUser')
-			),
-			'copy' => array
-			(
-				'href'                => 'act=copy',
-				'icon'                => 'copy.svg',
-				'button_callback'     => array('tl_user', 'copyUser')
-			),
-			'delete' => array
-			(
-				'href'                => 'act=delete',
-				'icon'                => 'delete.svg',
-				'attributes'          => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false"',
-				'button_callback'     => array('tl_user', 'deleteUser')
-			),
-			'toggle' => array
-			(
-				'href'                => 'act=toggle&amp;field=disable',
-				'icon'                => 'visible.svg',
-				'reverse'             => true,
-				'button_callback'     => array('tl_user', 'toggleIcon')
-			),
+			'edit',
+			'copy',
+			'delete',
+			'toggle',
 			'show',
 			'su' => array
 			(
@@ -232,10 +208,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'inputType'               => 'checkbox',
 			'filter'                  => true,
 			'eval'                    => array('submitOnChange'=>true),
-			'save_callback' => array
-			(
-				array('tl_user', 'checkAdminStatus')
-			),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'groups' => array
@@ -363,10 +335,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'filter'                  => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_DESC,
 			'inputType'               => 'checkbox',
-			'save_callback' => array
-			(
-				array('tl_user', 'checkAdminDisable')
-			),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'start' => array
@@ -443,68 +411,6 @@ class tl_user extends Backend
 	 * @var int
 	 */
 	private static $origUserId;
-
-	/**
-	 * Check permissions to edit table tl_user
-	 *
-	 * @throws AccessDeniedException
-	 */
-	public function checkPermission()
-	{
-		$user = BackendUser::getInstance();
-
-		if ($user->isAdmin)
-		{
-			return;
-		}
-
-		// Unset the "admin" checkbox for regular users
-		unset($GLOBALS['TL_DCA']['tl_user']['fields']['admin']);
-
-		$db = Database::getInstance();
-
-		// Check current action
-		switch (Input::get('act'))
-		{
-			case 'create':
-			case 'select':
-			case 'show':
-				// Allow
-				break;
-
-			case 'toggle':
-			case 'delete':
-				if (Input::get('id') == $user->id)
-				{
-					throw new AccessDeniedException('Attempt to ' . Input::get('act') . ' own account ID ' . Input::get('id') . '.');
-				}
-				// no break
-
-			case 'edit':
-			case 'copy':
-			default:
-				$objUser = $db
-					->prepare("SELECT `admin` FROM tl_user WHERE id=?")
-					->limit(1)
-					->execute(Input::get('id'));
-
-				if ($objUser->admin && Input::get('act'))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' administrator account ID ' . Input::get('id') . '.');
-				}
-				break;
-
-			case 'editAll':
-			case 'deleteAll':
-			case 'overrideAll':
-				$objSession = System::getContainer()->get('request_stack')->getSession();
-				$session = $objSession->all();
-				$objUser = $db->execute("SELECT id FROM tl_user WHERE `admin`=1");
-				$session['CURRENT']['IDS'] = array_diff($session['CURRENT']['IDS'], $objUser->fetchEach('id'));
-				$objSession->replace($session);
-				break;
-		}
-	}
 
 	/**
 	 * Handle the profile page.
@@ -604,63 +510,6 @@ class tl_user extends Backend
 		);
 
 		return $args;
-	}
-
-	/**
-	 * Return the edit user button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function editUser($row, $href, $label, $title, $icon, $attributes)
-	{
-		return (BackendUser::getInstance()->isAdmin || !$row['admin']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
-	}
-
-	/**
-	 * Return the copy user button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 * @param string $table
-	 *
-	 * @return string
-	 */
-	public function copyUser($row, $href, $label, $title, $icon, $attributes, $table)
-	{
-		if ($GLOBALS['TL_DCA'][$table]['config']['closed'] ?? null)
-		{
-			return '';
-		}
-
-		return (BackendUser::getInstance()->isAdmin || !$row['admin']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
-	}
-
-	/**
-	 * Return the delete user button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function deleteUser($row, $href, $label, $title, $icon, $attributes)
-	{
-		return (BackendUser::getInstance()->isAdmin || !$row['admin']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -832,42 +681,6 @@ class tl_user extends Backend
 	}
 
 	/**
-	 * Prevent administrators from downgrading their own account
-	 *
-	 * @param mixed         $varValue
-	 * @param DataContainer $dc
-	 *
-	 * @return mixed
-	 */
-	public function checkAdminStatus($varValue, DataContainer $dc)
-	{
-		if (!$varValue && BackendUser::getInstance()->id == $dc->id)
-		{
-			$varValue = true;
-		}
-
-		return $varValue;
-	}
-
-	/**
-	 * Prevent administrators from disabling their own account
-	 *
-	 * @param mixed         $varValue
-	 * @param DataContainer $dc
-	 *
-	 * @return mixed
-	 */
-	public function checkAdminDisable($varValue, DataContainer $dc)
-	{
-		if ($varValue == 1 && BackendUser::getInstance()->id == $dc->id)
-		{
-			$varValue = '';
-		}
-
-		return $varValue;
-	}
-
-	/**
 	 * Store the date when the account has been added
 	 *
 	 * @param DataContainer $dc
@@ -909,45 +722,5 @@ class tl_user extends Backend
 		{
 			$user->findBy('id', $user->id);
 		}
-	}
-
-	/**
-	 * Return the "toggle visibility" button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
-	{
-		// Check permissions AFTER checking the tid, so hacking attempts are logged
-		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_user::disable'))
-		{
-			return '';
-		}
-
-		$href .= '&amp;id=' . $row['id'];
-
-		if ($row['disable'])
-		{
-			$icon = 'invisible.svg';
-		}
-
-		$user = BackendUser::getInstance();
-
-		// Protect admin accounts and own account
-		if ((!$user->isAdmin && $row['admin']) || $user->id == $row['id'])
-		{
-			return Image::getHtml($icon) . ' ';
-		}
-
-		$titleDisabled = (is_array($GLOBALS['TL_DCA']['tl_user']['list']['operations']['toggle']['label']) && isset($GLOBALS['TL_DCA']['tl_user']['list']['operations']['toggle']['label'][2])) ? sprintf($GLOBALS['TL_DCA']['tl_user']['list']['operations']['toggle']['label'][2], $row['id']) : $title;
-
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars(!$row['disable'] ? $title : $titleDisabled) . '" data-title="' . StringUtil::specialchars($title) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" data-action="contao--scroll-offset#store" onclick="return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['disable'] ? 0 : 1) . '"') . '</a> ';
 	}
 }

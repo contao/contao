@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle;
 
 use Composer\InstalledVersions;
+use Contao\CoreBundle\DependencyInjection\Compiler\AccessDecisionStrategyPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAssetsPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAvailableTransportsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddCronJobsPass;
@@ -122,6 +123,7 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new LoggerChannelPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, -1);
         $container->addCompilerPass(new ConfigureFilesystemPass());
         $container->addCompilerPass(new AddInsertTagsPass());
+        $container->addCompilerPass(new AccessDecisionStrategyPass());
     }
 
     public static function getVersion(): string

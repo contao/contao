@@ -46,9 +46,9 @@ class ConfigureFilesystemPass implements CompilerPassInterface
     }
 
     /**
-     * Flysystem does not support symlinks, but we can use the concept of
-     * "mounting" instead. For backwards compatibility, we therefore mount
-     * a local adapter for each symlink found in the upload directory.
+     * Flysystem does not support symlinks, but we can use the concept of "mounting"
+     * instead. For backwards compatibility, we therefore mount a local adapter for
+     * each symlink found in the upload directory.
      */
     private function mountAdaptersForSymlinks(ContainerBuilder $container, FilesystemConfiguration $config): void
     {

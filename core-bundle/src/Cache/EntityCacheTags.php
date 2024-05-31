@@ -24,8 +24,8 @@ use FOS\HttpCache\ResponseTagger;
 /**
  * Use this helper service to derive "contao.db.*" cache tags from entity/model
  * classes and instances. The tagWith*() and invalidateFor*() shortcut methods
- * directly tag the response or invalidate tags. If your application does not
- * use response tagging, these methods are no-ops.
+ * directly tag the response or invalidate tags. If your application does not use
+ * response tagging, these methods are no-ops.
  */
 class EntityCacheTags
 {

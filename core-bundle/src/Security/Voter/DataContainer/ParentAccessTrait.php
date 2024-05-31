@@ -25,7 +25,7 @@ trait ParentAccessTrait
     {
     }
 
-    protected function hasAccessToParent(TokenInterface $token, string $attribute, CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
+    private function hasAccessToParent(TokenInterface $token, string $attribute, CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
     {
         $pids = [];
 

@@ -254,7 +254,8 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
     }
 
     /**
-     * Returns the DataContainer fully qualified class name (FQCN) supported by this picker (e.g. "Contao\DC_Table" for DC_Table).
+     * Returns the DataContainer fully qualified class name (FQCN) supported by this
+     * picker (e.g. "Contao\DC_Table" for DC_Table).
      */
     abstract protected function getDataContainer(): string;
 }

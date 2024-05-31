@@ -12,12 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Command;
 
-use Contao\CoreBundle\Fragment\FragmentConfig;
+use Contao\CoreBundle\Controller\AbstractFragmentController;
+use Contao\CoreBundle\Fragment\FragmentRegistry;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 #[AsCommand(
     name: 'debug:fragments',
@@ -25,38 +27,31 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class DebugFragmentsCommand extends Command
 {
-    private array $identifiers = [];
-
-    private array $attributes = [];
-
-    /**
-     * @var array<FragmentConfig>
-     */
-    private array $configs = [];
-
-    public function add(string $identifier, FragmentConfig $config, array $attributes): void
-    {
-        $this->identifiers[] = $identifier;
-        $this->configs[$identifier] = $config;
-        $this->attributes[$identifier] = $attributes;
+    public function __construct(
+        private readonly FragmentRegistry $registry,
+        private readonly ContainerInterface $container,
+    ) {
+        parent::__construct();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $rows = [];
-        $identifiers = $this->identifiers;
-        natsort($identifiers);
+        $fragments = $this->registry->all();
+        ksort($fragments, SORT_NATURAL);
 
-        foreach ($identifiers as $identifier) {
-            $attributes = $this->attributes[$identifier];
-            $controller = $attributes['debugController'] ?? $this->configs[$identifier]->getController();
+        foreach ($fragments as $identifier => $config) {
+            $class = new \ReflectionClass(AbstractFragmentController::class);
+            $attributes = $class->getProperty('options')->getValue($this->container->get($config->getController()));
+            $controller = $attributes['debugController'] ?? $config->getController();
+
             unset($attributes['debugController']);
 
             $rows[] = [
                 $identifier,
                 $controller,
-                $this->configs[$identifier]->getRenderer(),
-                $this->generateArray($this->configs[$identifier]->getOptions()),
+                $config->getRenderer(),
+                $this->generateArray($config->getOptions()),
                 $this->generateArray($attributes),
             ];
         }

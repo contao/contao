@@ -381,7 +381,7 @@ class PluginTest extends ContaoTestCase
         $this->assertSame($expected, $bag['env(DATABASE_URL)']);
     }
 
-    public function getDatabaseParameters(): \Generator
+    public static function getDatabaseParameters(): iterable
     {
         yield [
             null,
@@ -605,7 +605,7 @@ class PluginTest extends ContaoTestCase
         $this->assertSame($expect, $extensionConfig);
     }
 
-    public function provideDatabaseDrivers(): \Generator
+    public static function provideDatabaseDrivers(): iterable
     {
         yield 'pdo with driver' => [
             [
@@ -715,7 +715,7 @@ class PluginTest extends ContaoTestCase
         $this->assertSame($expect, $extensionConfig);
     }
 
-    public function provideUserExtensionConfigs(): \Generator
+    public static function provideUserExtensionConfigs(): iterable
     {
         yield 'collate' => [
             [
@@ -829,7 +829,7 @@ class PluginTest extends ContaoTestCase
         $this->assertSame($expected, $bag['env(MAILER_DSN)']);
     }
 
-    public function getMailerParameters(): \Generator
+    public static function getMailerParameters(): iterable
     {
         $default = 'sendmail://default';
 
@@ -1067,7 +1067,7 @@ class PluginTest extends ContaoTestCase
         $this->assertSame($expect, $plugin->getExtensionConfig('doctrine', $extensionConfigs, $container));
     }
 
-    public function getOrmMappingConfigurations(): \Generator
+    public static function getOrmMappingConfigurations(): iterable
     {
         // Positive configurations
         yield 'with global auto_mapping enabled' => [
