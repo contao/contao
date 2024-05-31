@@ -310,6 +310,7 @@ class ConfigurationTest extends TestCase
                         ],
                     ],
                 ],
+                'auto_fallback_transports' => [],
             ],
             $configuration['messenger'],
         );

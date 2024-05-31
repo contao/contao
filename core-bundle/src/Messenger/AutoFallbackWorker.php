@@ -21,7 +21,6 @@ use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\Messenger\Command\ConsumeMessagesCommand;
 use Symfony\Component\Messenger\Event\WorkerRunningEvent;
 use Symfony\Component\Messenger\Event\WorkerStartedEvent;
-use Symfony\Component\Messenger\Event\WorkerStoppedEvent;
 
 /**
  * This service accepts an array of Symfony Messenger transports and automatically
@@ -79,12 +78,6 @@ class AutoFallbackWorker
         foreach ($event->getWorker()->getMetadata()->getTransportNames() as $transportName) {
             $this->ping($transportName);
         }
-    }
-
-    #[AsEventListener]
-    public function onWorkerStopped(WorkerStoppedEvent $event): void
-    {
-        $this->fallbackWorkerRunning = false;
     }
 
     public function ping(string $transportName): void
