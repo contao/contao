@@ -37,7 +37,7 @@ use Symfony\Component\Messenger\Event\WorkerStartedEvent;
  */
 class AutoFallbackWorker
 {
-    private const GRACE_PERIOD = 'PT60S'; // If no real worker "pings" us within this grace period, we run our fallback worker
+    private const GRACE_PERIOD = 'PT10M'; // If no real worker "pings" us within this grace period, we run our fallback worker
 
     private bool $fallbackWorkerRunning = false;
 
