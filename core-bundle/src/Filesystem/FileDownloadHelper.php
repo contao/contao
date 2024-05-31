@@ -94,7 +94,7 @@ class FileDownloadHelper
      * generating the URL. You can shortcut operation by returning your own response
      * there, otherwise return null.
      *
-     * @param (\Closure(FilesystemItem, array):Response|null)|null $onProcess
+     * @param (\Closure(FilesystemItem, array): (Response|null))|null $onProcess
      */
     public function handle(Request $request, VirtualFilesystemInterface $storage, \Closure|null $onProcess = null): Response
     {

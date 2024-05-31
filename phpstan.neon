@@ -48,6 +48,8 @@ parameters:
         - %currentWorkingDirectory%/core-bundle/tests/Functional/var/*
 
     ignoreErrors:
+        - identifier: missingType.iterableValue
+
         -
             # Ignore the unexpected type hint required for the tagged_locator
             message: '#type array<Symfony\\Component\\HttpKernel\\Fragment\\FragmentRendererInterface> is incompatible with native type Psr\\Container\\ContainerInterface#'
@@ -63,7 +65,6 @@ parameters:
         - '#Method Symfony\\Component\\HttpKernel\\CacheWarmer\\WarmableInterface::warmUp\(\) invoked with 2 parameters, 1 required\.#'
 
     treatPhpDocTypesAsCertain: false
-    checkMissingIterableValueType: false
     rememberPossiblyImpureFunctionValues: false
 
 services:
