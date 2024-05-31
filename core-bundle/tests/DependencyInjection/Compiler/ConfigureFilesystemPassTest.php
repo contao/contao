@@ -214,8 +214,6 @@ class ConfigureFilesystemPassTest extends TestCase
             Process::fromShellCommandline($command, $cwd)->mustRun(null, ['link' => $link, 'target' => $target]);
         } else {
             chdir($cwd);
-
-            /** @phpstan-ignore-next-line because we need to create relative symlinks and cannot use the Symfony file system for that */
             symlink($target, $link);
         }
     }
