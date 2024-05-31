@@ -424,7 +424,7 @@ class Form extends Hybrid
 			// Fallback to default subject
 			if (!$email->subject)
 			{
-				$email->subject = html_entity_decode(System::getContainer()->get('contao.insert_tag.parser')->replaceInline($this->subject), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+				$email->subject = html_entity_decode(System::getContainer()->get('contao.insert_tag.parser')->replaceInline($this->subject), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
 			}
 
 			// Send copy to sender
