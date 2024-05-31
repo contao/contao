@@ -892,7 +892,7 @@ abstract class Widget extends Controller
 					break;
 
 				case 'extnd':
-					if (!Validator::isExtendedAlphanumeric(html_entity_decode($varInput)))
+					if (!Validator::isExtendedAlphanumeric(html_entity_decode($varInput, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5)))
 					{
 						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['extnd'], $this->strLabel));
 					}
@@ -1004,7 +1004,7 @@ abstract class Widget extends Controller
 					break;
 
 				case 'phone':
-					if (!Validator::isPhone(html_entity_decode($varInput)))
+					if (!Validator::isPhone(html_entity_decode($varInput, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5)))
 					{
 						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['phone'], $this->strLabel));
 					}

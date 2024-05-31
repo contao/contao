@@ -157,7 +157,7 @@ abstract class Template extends Controller
 
 		if ($strKey === 'requestToken' && !\array_key_exists($strKey, $this->arrData))
 		{
-			return htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue());
+			return htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
 		}
 
 		return parent::__get($strKey);

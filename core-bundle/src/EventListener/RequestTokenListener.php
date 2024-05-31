@@ -57,7 +57,7 @@ class RequestTokenListener
             || $request->isXmlHttpRequest()
             || false === $request->attributes->get('_token_check')
             || $this->csrfTokenManager->canSkipTokenValidation($request, $this->csrfCookiePrefix.$this->csrfTokenName)
-            || (!$request->attributes->has('_token_check') && !$this->scopeMatcher->isContaoRequest($request))
+            || (true !== $request->attributes->get('_token_check') && !$this->scopeMatcher->isContaoRequest($request))
         ) {
             return;
         }
