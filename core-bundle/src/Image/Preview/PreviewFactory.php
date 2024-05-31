@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Image\Preview;
 
+use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\Image\PictureFactory;
@@ -91,7 +92,7 @@ class PreviewFactory
     }
 
     /**
-     * @throws UnableToGeneratePreviewException|MissingPreviewProviderException
+     * @throws UnableToGeneratePreviewException|MissingPreviewProviderException|InvalidResourceException
      *
      * @return iterable<ImageInterface>
      */
@@ -99,6 +100,10 @@ class PreviewFactory
     {
         if ($firstPage < 1 || $lastPage < 1 || $firstPage > $lastPage) {
             throw new \InvalidArgumentException();
+        }
+
+        if (!(new Filesystem())->exists($path)) {
+            throw new InvalidResourceException(sprintf('No resource could be located at path "%s".', $path));
         }
 
         // Supported image formats do not need an extra preview image
@@ -156,7 +161,7 @@ class PreviewFactory
             }
         }
 
-        throw $lastProviderException ?? new MissingPreviewProviderException();
+        throw $lastProviderException ?? new MissingPreviewProviderException(sprintf('Missing preview provider to handle "%s".', $path));
     }
 
     /**
@@ -260,12 +265,21 @@ class PreviewFactory
      */
     public function createPreviewFigureBuilder(string $path, $size = null, ResizeOptions $resizeOptions = null, int $page = 1, array $previewOptions = []): FigureBuilder
     {
-        return $this->imageStudio
+        $figureBuilder = $this->imageStudio
             ->createFigureBuilder()
-            ->fromImage($this->createPreview($path, $this->getPreviewSizeFromImageSize($size), $page, $previewOptions))
             ->setSize($size)
             ->setResizeOptions($resizeOptions)
         ;
+
+        try {
+            $figureBuilder->fromImage($this->createPreview($path, $this->getPreviewSizeFromImageSize($size), $page, $previewOptions));
+        } catch (InvalidResourceException $exception) {
+            $figureBuilder->setLastException($exception);
+        } catch (\Throwable $exception) {
+            $figureBuilder->setLastException(new InvalidResourceException($exception->getMessage(), $exception->getCode(), $exception));
+        }
+
+        return $figureBuilder;
     }
 
     /**
