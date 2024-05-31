@@ -20,7 +20,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\UrlUtil;
 use Contao\Database\Result;
-use Contao\Model\Registry;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\Glob;
 
@@ -569,6 +568,7 @@ abstract class Controller extends System
 			return '';
 		}
 
+		$objRow = $objRow->cloneOriginal();
 		$objRow->typePrefix = 'ce_';
 		$strStopWatchId = 'contao.content_element.' . $objRow->type . ' (ID ' . $objRow->id . ')';
 
@@ -597,11 +597,6 @@ abstract class Controller extends System
 		{
 			if (\is_array($contentElementReference?->attributes['classes'] ?? null))
 			{
-				if ($objRow instanceof Model && Registry::getInstance()->isRegistered($objRow))
-				{
-					$objRow = $objRow->cloneOriginal();
-				}
-
 				$objRow->classes = array_merge($objRow->classes ?? array(), $contentElementReference->attributes['classes']);
 			}
 
