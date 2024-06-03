@@ -133,8 +133,9 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->info('Contao provides a way to work on Messenger transports during the web process (kernel.terminate) in case they have no real "messenger:consume" worker. You may configure its behavior here.')
                     ->children()
-                        ->scalarNode('transports')
+                        ->arrayNode('transports')
                             ->info('The transports to apply the web worker logic on.')
+                            ->scalarPrototype()->end()
                             ->defaultValue([])
                         ->end()
                         ->scalarNode('grace_period')
@@ -151,7 +152,7 @@ class Configuration implements ConfigurationInterface
                                         return false;
                                     },
                                 )
-                                ->thenInvalid('%s')
+                                ->thenInvalid('Must be a valid string for \DateInterval(). %s given.')
                             ->end()
                         ->end()
                     ->end()
