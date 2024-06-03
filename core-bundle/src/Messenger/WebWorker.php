@@ -29,7 +29,12 @@ use Symfony\Component\Messenger\Event\WorkerStartedEvent;
  * processed, no matter whether a real worker is running or not.
  *
  * Detecting works by using the WorkerStartedEvent and WorkerRunningEvent which
- * sets/updates a cache items and allowing a grace period.
+ * sets/updates a cache items and allowing a grace period. The grace period defines how
+ * long after the last event the web worker should consider a real worker to be running.
+ * Imagine you only have one worker running, and it works on a message for 10 minutes.
+ * In such a case, no WorkerStartedEvent or WorkerRunningEvent will be triggered for 10
+ * minutes so if there were a grace period of only a few seconds, the web worker would
+ * jump in probably too quickly.
  *
  * In any case, this provides advantages as it allows us to always use a queue and
  * postpone processes to at least kernel.terminate in case there are no real
