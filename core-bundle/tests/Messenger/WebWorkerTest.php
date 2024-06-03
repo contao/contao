@@ -17,6 +17,8 @@ use Contao\CoreBundle\Tests\TestCase;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,7 +52,7 @@ class WebWorkerTest extends TestCase
     {
         $cache = $this->createMock(CacheItemPoolInterface::class);
         $cache
-            ->expects($this->once()) // Tests that transport-2 is not called
+            ->expects($this->atLeastOnce()) // Tests that transport-2 is not called
             ->method('getItem')
             ->with('contao-web-worker-transport-1')
         ;
@@ -61,7 +63,7 @@ class WebWorkerTest extends TestCase
             ['transport-1'],
         );
         $this->addEventsToEventDispatcher($webWorker);
-        $this->triggerWorkerOnKernelTerminate();
+        $this->triggerRealWorkers(['transport-1', 'transport-2']);
     }
 
     public function testWorkerIsStoppedIfIdle(): void
@@ -74,7 +76,7 @@ class WebWorkerTest extends TestCase
             ['transport-1'],
         );
         $this->addEventsToEventDispatcher($webWorker);
-        $this->triggerWorkerOnKernelTerminate();
+        $this->triggerWebWorker();
 
         // This test would run for 30 seconds if it failed. If the worker is correctly
         // stopped, it will return immediately and log "Stopping worker.".
@@ -94,13 +96,30 @@ class WebWorkerTest extends TestCase
         return $cache;
     }
 
-    private function triggerWorkerOnKernelTerminate(): void
+    private function triggerWebWorker(): void
     {
         $this->eventDispatcher->dispatch(new TerminateEvent(
             $this->createMock(HttpKernelInterface::class),
             new Request(),
             new Response(),
         ));
+    }
+
+    private function triggerRealWorkers(array $transports): void
+    {
+        $listener = static function (WorkerRunningEvent $event): void {
+            if ($event->isWorkerIdle()) {
+                $event->getWorker()->stop();
+            }
+        };
+
+        $this->eventDispatcher->addListener(WorkerRunningEvent::class, $listener);
+        $input = new ArrayInput([
+            'receivers' => $transports,
+        ]);
+
+        $this->command->run($input, new NullOutput());
+        $this->eventDispatcher->removeListener(WorkerRunningEvent::class, $listener);
     }
 
     private function createConsumeCommand(): void
