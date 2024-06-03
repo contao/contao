@@ -64,10 +64,14 @@ class ArrayUtil
 	 * @param mixed $arrArray
 	 *
 	 * @return boolean
+	 *
+	 * @deprecated Deprecated in Contao 5.4, to be removed in Contao 6. Use the array_is_list native PHP function instead.
 	 */
 	public static function isAssoc($arrArray): bool
 	{
-		return \is_array($arrArray) && !array_is_list($arrArray);
+		trigger_deprecation('contao/core-bundle', '5.4', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the array_is_list native PHP function instead.', __METHOD__);
+
+		return !array_is_list($arrArray);
 	}
 
 	/**
