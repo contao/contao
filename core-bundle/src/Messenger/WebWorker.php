@@ -84,8 +84,6 @@ class WebWorker
         // If we are running in our web worker process, we never ping (otherwise we
         // would self-disable)
         if ($this->webWorkerRunning) {
-            dump('test');
-
             return;
         }
 
