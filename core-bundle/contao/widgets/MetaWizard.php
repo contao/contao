@@ -46,7 +46,7 @@ class MetaWizard extends Widget
 	{
 		if ($strKey == 'metaFields')
 		{
-			if (!ArrayUtil::isAssoc($varValue))
+			if (!!\array_is_list($varValue))
 			{
 				$varValue = array_combine($varValue, array_fill(0, \count($varValue), ''));
 			}
