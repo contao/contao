@@ -12,10 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Messenger;
 
-use Contao\CoreBundle\Messenger\AutoFallbackWorker;
+use Contao\CoreBundle\Messenger\WebWorker;
 use Contao\CoreBundle\Tests\TestCase;
 use Psr\Cache\CacheItemPoolInterface;
-use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\DependencyInjection\Container;
@@ -32,13 +31,13 @@ use Symfony\Component\Messenger\Event\WorkerStartedEvent;
 use Symfony\Component\Messenger\RoutableMessageBus;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
 
-class AutoFallbackWorkerTest extends TestCase
+class WebWorkerTest extends TestCase
 {
     private EventDispatcher $eventDispatcher;
 
     private ConsumeMessagesCommand $command;
 
-    private LoggerInterface $logger;
+    private Logger $logger;
 
     protected function setUp(): void
     {
@@ -53,15 +52,15 @@ class AutoFallbackWorkerTest extends TestCase
         $cache
             ->expects($this->once()) // Tests that transport-2 is not called
             ->method('getItem')
-            ->with('auto-fallback-worker-transport-1')
+            ->with('contao-web-worker-transport-1')
         ;
 
-        $fallbackWorker = new AutoFallbackWorker(
+        $webWorker = new WebWorker(
             $cache,
             $this->command,
             ['transport-1'],
         );
-        $this->addEventsToEventDispatcher($fallbackWorker);
+        $this->addEventsToEventDispatcher($webWorker);
         $this->triggerWorkerOnKernelTerminate();
     }
 
@@ -69,12 +68,12 @@ class AutoFallbackWorkerTest extends TestCase
     {
         $cache = $this->createCache(); // No real workers running
 
-        $fallbackWorker = new AutoFallbackWorker(
+        $webWorker = new WebWorker(
             $cache,
             $this->command,
             ['transport-1'],
         );
-        $this->addEventsToEventDispatcher($fallbackWorker);
+        $this->addEventsToEventDispatcher($webWorker);
         $this->triggerWorkerOnKernelTerminate();
 
         // This test would run for 30 seconds if it failed. If the worker is correctly
@@ -82,12 +81,12 @@ class AutoFallbackWorkerTest extends TestCase
         $this->assertLoggerContainsMessage('Stopping worker.');
     }
 
-    private function createCache(array $transportsWithRunningWorkers = [])
+    private function createCache(array $transportsWithRunningWorkers = []): CacheItemPoolInterface
     {
         $cache = new ArrayAdapter();
 
         foreach ($transportsWithRunningWorkers as $transport) {
-            $item = $cache->getItem('auto-fallback-worker-'.$transport);
+            $item = $cache->getItem('contao-web-worker-'.$transport);
             $item->expiresAfter(60);
             $cache->save($item);
         }
@@ -119,24 +118,24 @@ class AutoFallbackWorkerTest extends TestCase
         );
     }
 
-    private function addEventsToEventDispatcher(AutoFallbackWorker $fallbackWorker): void
+    private function addEventsToEventDispatcher(WebWorker $webWorker): void
     {
         $this->eventDispatcher->addListener(
             WorkerStartedEvent::class,
-            static function (WorkerStartedEvent $event) use ($fallbackWorker): void {
-                $fallbackWorker->onWorkerStarted($event);
+            static function (WorkerStartedEvent $event) use ($webWorker): void {
+                $webWorker->onWorkerStarted($event);
             },
         );
         $this->eventDispatcher->addListener(
             WorkerRunningEvent::class,
-            static function (WorkerRunningEvent $event) use ($fallbackWorker): void {
-                $fallbackWorker->onWorkerRunning($event);
+            static function (WorkerRunningEvent $event) use ($webWorker): void {
+                $webWorker->onWorkerRunning($event);
             },
         );
         $this->eventDispatcher->addListener(
             TerminateEvent::class,
-            static function (TerminateEvent $event) use ($fallbackWorker): void {
-                $fallbackWorker->onKernelTerminate($event);
+            static function (TerminateEvent $event) use ($webWorker): void {
+                $webWorker->onKernelTerminate($event);
             },
         );
     }

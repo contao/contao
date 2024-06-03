@@ -310,7 +310,10 @@ class ConfigurationTest extends TestCase
                         ],
                     ],
                 ],
-                'auto_fallback_transports' => [],
+                'web_worker' => [
+                    'transports' => [],
+                    'grace_period' => 'PT10M',
+                ],
             ],
             $configuration['messenger'],
         );

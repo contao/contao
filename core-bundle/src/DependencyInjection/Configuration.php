@@ -129,10 +129,32 @@ class Configuration implements ConfigurationInterface
             ->addDefaultsIfNotSet()
             ->info('Allows to define Symfony Messenger workers (messenger:consume). Workers are started every minute using the Contao cron job framework.')
             ->children()
-                ->arrayNode('auto_fallback_transports')
-                    ->info('Contao provides a way to work on Messenger transports during kernel.terminate in case they have no real "messenger:consume" worker. You may configure them here.')
-                    ->prototype('scalar')->end()
-                    ->defaultValue([])
+                ->arrayNode('web_worker')
+                    ->addDefaultsIfNotSet()
+                    ->info('Contao provides a way to work on Messenger transports during the web process (kernel.terminate) in case they have no real "messenger:consume" worker. You may configure its behavior here.')
+                    ->children()
+                        ->scalarNode('transports')
+                            ->info('The transports to apply the web worker logic on.')
+                            ->defaultValue([])
+                        ->end()
+                        ->scalarNode('grace_period')
+                            ->defaultValue('PT10M')
+                            ->validate()
+                                ->ifTrue(
+                                    static function (string $period) {
+                                        try {
+                                            new \DateInterval($period);
+                                        } catch (\Exception) {
+                                            return true;
+                                        }
+
+                                        return false;
+                                    },
+                                )
+                                ->thenInvalid('%s')
+                            ->end()
+                        ->end()
+                    ->end()
                 ->end()
                 ->arrayNode('workers')
                     ->performNoDeepMerging()

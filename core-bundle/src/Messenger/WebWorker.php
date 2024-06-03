@@ -25,8 +25,8 @@ use Symfony\Component\Messenger\Event\WorkerStartedEvent;
 /**
  * This service accepts an array of Symfony Messenger transports and automatically
  * detects which of those have real workers running. In case they do not, it falls
- * back to a kernel.terminate worker to ensure, messages are always processed, no
- * matter whether a real worker is running or not.
+ * back to a web worker (kernel.terminate event) to ensure, messages are always
+ * processed, no matter whether a real worker is running or not.
  *
  * Detecting works by using the WorkerStartedEvent and WorkerRunningEvent which
  * sets/updates a cache items and allowing a grace period.
@@ -35,16 +35,15 @@ use Symfony\Component\Messenger\Event\WorkerStartedEvent;
  * postpone processes to at least kernel.terminate in case there are no real
  * workers available!
  */
-class AutoFallbackWorker
+class WebWorker
 {
-    private const GRACE_PERIOD = 'PT10M'; // If no real worker "pings" us within this grace period, we run our fallback worker
-
-    private bool $fallbackWorkerRunning = false;
+    private bool $webWorkerRunning = false;
 
     public function __construct(
         private readonly CacheItemPoolInterface $cache,
         private readonly ConsumeMessagesCommand $consumeMessagesCommand,
         private readonly array $transports,
+        private readonly string $gracePeriod = 'PT10M',
     ) {
     }
 
@@ -67,9 +66,9 @@ class AutoFallbackWorker
     #[AsEventListener]
     public function onWorkerRunning(WorkerRunningEvent $event): void
     {
-        // In case of our fallback worker running, we stop it immediately if it is idle
-        // in order to free the web process.
-        if ($this->fallbackWorkerRunning && $event->isWorkerIdle()) {
+        // In case of our web worker running, we stop it immediately if it is idle in
+        // order to free the web process.
+        if ($this->webWorkerRunning && $event->isWorkerIdle()) {
             $event->getWorker()->stop();
 
             return;
@@ -82,9 +81,9 @@ class AutoFallbackWorker
 
     public function ping(string $transportName): void
     {
-        // If we are running in our fallback worker process, we never ping (otherwise we
+        // If we are running in our web worker process, we never ping (otherwise we
         // would self-disable)
-        if ($this->fallbackWorkerRunning) {
+        if ($this->webWorkerRunning) {
             return;
         }
 
@@ -94,14 +93,14 @@ class AutoFallbackWorker
         }
 
         $item = $this->getCacheItemForTransportName($transportName);
-        $item->expiresAfter(new \DateInterval(self::GRACE_PERIOD));
+        $item->expiresAfter(new \DateInterval($this->gracePeriod));
 
         $this->cache->save($item);
     }
 
     private function getCacheItemForTransportName(string $transportName): CacheItemInterface
     {
-        return $this->cache->getItem('auto-fallback-worker-'.$transportName);
+        return $this->cache->getItem('contao-web-worker-'.$transportName);
     }
 
     private function processTransport(string $transportName): void
@@ -111,7 +110,7 @@ class AutoFallbackWorker
             return;
         }
 
-        $this->fallbackWorkerRunning = true;
+        $this->webWorkerRunning = true;
         $input = new ArrayInput([
             'receivers' => [$transportName],
             '--time-limit' => 30,
@@ -121,6 +120,6 @@ class AutoFallbackWorker
         // already and would only cause log duplication.
         $this->consumeMessagesCommand->run($input, new NullOutput());
 
-        $this->fallbackWorkerRunning = false;
+        $this->webWorkerRunning = false;
     }
 }
