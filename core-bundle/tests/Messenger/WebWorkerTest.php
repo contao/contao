@@ -172,6 +172,11 @@ class WebWorkerTest extends TestCase
 
     private function assertLoggerContainsMessage(string $message): void
     {
+        // Make phpstan happy
+        if (!method_exists($this->logger, 'getLogs')) {
+            $this->fail('Wrong logger.');
+        }
+
         $this->assertContains($message, $this->logger->getLogs());
     }
 }
