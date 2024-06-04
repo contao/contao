@@ -15,18 +15,17 @@ namespace Contao\CoreBundle\Tests\Messenger;
 use Contao\CoreBundle\Messenger\WebWorker;
 use Contao\CoreBundle\Tests\TestCase;
 use Psr\Cache\CacheItemPoolInterface;
-use Psr\Log\LogLevel;
+use Psr\Log\AbstractLogger;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpKernel\Log\Logger;
 use Symfony\Component\Messenger\Command\ConsumeMessagesCommand;
 use Symfony\Component\Messenger\Event\WorkerRunningEvent;
 use Symfony\Component\Messenger\Event\WorkerStartedEvent;
@@ -39,12 +38,24 @@ class WebWorkerTest extends TestCase
 
     private ConsumeMessagesCommand $command;
 
-    private Logger $logger;
+    private LoggerInterface $logger;
 
     protected function setUp(): void
     {
+        $this->logger = new class() extends AbstractLogger {
+            private array $logs = [];
+
+            public function log($level, \Stringable|string $message, array $context = []): void
+            {
+                $this->logs[] = $message;
+            }
+
+            public function getLogs(): array
+            {
+                return $this->logs;
+            }
+        };
         $this->eventDispatcher = new EventDispatcher();
-        $this->logger = new Logger(LogLevel::DEBUG, null, null, new RequestStack(), true);
         $this->createConsumeCommand();
     }
 
@@ -161,11 +172,6 @@ class WebWorkerTest extends TestCase
 
     private function assertLoggerContainsMessage(string $message): void
     {
-        foreach ($this->logger->getLogs() as $log) {
-            if ($log['message'] === $message) {
-                $this->addToAssertionCount(1);
-                break;
-            }
-        }
+        $this->assertContains($message, $this->logger->getLogs());
     }
 }
