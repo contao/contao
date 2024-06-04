@@ -1357,7 +1357,7 @@ abstract class DataContainer extends Backend
 		$values = array_map($this->objPickerCallback, $this->arrPickerValue);
 		$values = array_map('strval', $values);
 		$values = json_encode($values);
-		$values = htmlspecialchars($values);
+		$values = htmlspecialchars($values, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
 
 		return ' data-picker-value="' . $values . '"';
 	}
@@ -1503,7 +1503,7 @@ abstract class DataContainer extends Backend
 <form class="tl_form" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']) . '">
 <div class="tl_formbody">
   <input type="hidden" name="FORM_SUBMIT" value="tl_filters">
-  <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">
+  <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
   ' . $return . '
 </div>
 </form>';

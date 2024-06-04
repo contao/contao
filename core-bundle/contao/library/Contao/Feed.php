@@ -195,7 +195,7 @@ class Feed
 		{
 			$xml .= '<entry>';
 			$xml .= '<title>' . StringUtil::specialchars(strip_tags(StringUtil::stripInsertTags($objItem->title))) . '</title>';
-			$xml .= '<content type="html">' . preg_replace('/[\n\r]+/', ' ', htmlspecialchars($objItem->description, ENT_XML1, 'UTF-8')) . '</content>';
+			$xml .= '<content type="html">' . preg_replace('/[\n\r]+/', ' ', htmlspecialchars($objItem->description, ENT_QUOTES | ENT_SUBSTITUTE | ENT_XML1, 'UTF-8')) . '</content>';
 			$xml .= '<link rel="alternate" href="' . StringUtil::specialchars($objItem->link) . '" />';
 			$xml .= '<updated>' . date('Y-m-d\TH:i:sP', $objItem->published) . '</updated>';
 			$xml .= '<id>' . ($objItem->guid ?: StringUtil::specialchars($objItem->link)) . '</id>';

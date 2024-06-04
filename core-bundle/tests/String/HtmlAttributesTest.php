@@ -721,7 +721,7 @@ class HtmlAttributesTest extends TestCase
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('The attribute property "foo" does not exist.');
 
-        /** @phpstan-ignore-next-line */
+        /** @phpstan-ignore expr.resultUnused */
         $attributes['foo'];
     }
 
