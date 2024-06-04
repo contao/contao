@@ -247,7 +247,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                         $result = Date::parse($GLOBALS['objPage']->datimFormat ?? $GLOBALS['TL_CONFIG']['datimFormat'] ?? '', $value);
                     } elseif (\is_array($value)) {
                         $result = implode(', ', $value);
-                    } elseif (\is_array($opts) && ArrayUtil::isAssoc($opts)) {
+                    } elseif (ArrayUtil::isAssoc($opts)) {
                         $result = $opts[$value] ?? $value;
                     } elseif (\is_array($rfrc)) {
                         $result = isset($rfrc[$value]) ? (\is_array($rfrc[$value]) ? $rfrc[$value][0] : $rfrc[$value]) : $value;
