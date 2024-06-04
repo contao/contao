@@ -142,7 +142,7 @@ class Document
             // If array has numeric keys, it likely contains multiple data inside it which
             // should be treated as if coming from separate sources, and thus moved to the
             // root of an array.
-            $jsonLdItems = !\array_is_list($jsonLd) ? [$jsonLd] : $jsonLd;
+            $jsonLdItems = ArrayUtil::isAssoc($jsonLd) ? [$jsonLd] : $jsonLd;
 
             // Parsed the grouped values under the @graph within the same context
             foreach ($jsonLdItems as $jsonLdItem) {

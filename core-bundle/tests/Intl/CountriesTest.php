@@ -37,7 +37,7 @@ class CountriesTest extends TestCase
         $countryCodes = $this->getCountriesService()->getCountryCodes();
 
         $this->assertNotEmpty($countryCodes);
-        $this->assertFalse(!\array_is_list($countryCodes));
+        $this->assertFalse(ArrayUtil::isAssoc($countryCodes));
 
         foreach ($countryCodes as $countryCode) {
             $this->assertMatchesRegularExpression('/^[A-Z]{2}$/', $countryCode);
@@ -49,7 +49,7 @@ class CountriesTest extends TestCase
         $countryNames = $this->getCountriesService()->getCountries('en');
 
         $this->assertNotEmpty($countryNames);
-        $this->assertTrue(!\array_is_list($countryNames));
+        $this->assertTrue(ArrayUtil::isAssoc($countryNames));
 
         foreach ($countryNames as $countryCode => $countryName) {
             $this->assertMatchesRegularExpression('/^[A-Z]{2}$/', $countryCode);

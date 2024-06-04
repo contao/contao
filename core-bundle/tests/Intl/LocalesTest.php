@@ -46,7 +46,7 @@ class LocalesTest extends TestCase
         $localeIds = $this->getLocalesService()->getLocaleIds();
 
         $this->assertNotEmpty($localeIds);
-        $this->assertFalse(!\array_is_list($localeIds));
+        $this->assertFalse(ArrayUtil::isAssoc($localeIds));
 
         foreach ($localeIds as $localeId) {
             $this->assertMatchesRegularExpression('/^[a-z]{2}/', $localeId);
@@ -67,7 +67,7 @@ class LocalesTest extends TestCase
         $localeIds = $this->getLocalesService()->getLanguageLocaleIds();
 
         $this->assertNotEmpty($localeIds);
-        $this->assertFalse(!\array_is_list($localeIds));
+        $this->assertFalse(ArrayUtil::isAssoc($localeIds));
 
         foreach ($localeIds as $localeId) {
             $this->assertEmpty(\Locale::getRegion($localeId), $localeId.' should have no region');
@@ -79,7 +79,7 @@ class LocalesTest extends TestCase
         $locales = $this->getLocalesService()->getLocales('de');
 
         $this->assertNotEmpty($locales);
-        $this->assertTrue(!\array_is_list($locales));
+        $this->assertTrue(ArrayUtil::isAssoc($locales));
 
         foreach ($locales as $localeId => $label) {
             $this->assertMatchesRegularExpression('/^[a-z]{2}/', $localeId);
@@ -120,7 +120,7 @@ class LocalesTest extends TestCase
         $languages = $this->getLocalesService()->getLanguages('de');
 
         $this->assertNotEmpty($languages);
-        $this->assertTrue(!\array_is_list($languages));
+        $this->assertTrue(ArrayUtil::isAssoc($languages));
 
         $this->assertArrayNotHasKey('en_POSIX', $languages);
         $this->assertArrayNotHasKey('en_US_POSIX', $languages);

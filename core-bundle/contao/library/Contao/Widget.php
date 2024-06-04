@@ -1346,7 +1346,7 @@ abstract class Widget extends Controller
 		// Add options
 		if (\is_array($arrData['options'] ?? null))
 		{
-			$blnIsAssociative = ($arrData['eval']['isAssociative'] ?? null) || !\array_is_list($arrData['options'] ?? null);
+			$blnIsAssociative = ($arrData['eval']['isAssociative'] ?? null) || ArrayUtil::isAssoc($arrData['options'] ?? null);
 			$blnUseReference = isset($arrData['reference']);
 
 			if (($arrData['eval']['includeBlankOption'] ?? null) && !($arrData['eval']['multiple'] ?? null))
@@ -1373,7 +1373,7 @@ abstract class Widget extends Controller
 				}
 
 				$key = $blnUseReference && isset($arrData['reference'][$k]) ? (($ref = (\is_array($arrData['reference'][$k]) ? $arrData['reference'][$k][0] : $arrData['reference'][$k])) ? $ref : $k) : $k;
-				$blnIsAssoc = !\array_is_list($v);
+				$blnIsAssoc = ArrayUtil::isAssoc($v);
 
 				foreach ($v as $kk=>$vv)
 				{
