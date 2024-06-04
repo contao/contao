@@ -32,6 +32,7 @@ class SuperviseWorkersCron
 
         $process = $this->processUtil->createSymfonyConsoleProcess('contao:supervise-workers');
         $process->setTimeout(null);
+
         return $this->processUtil->createPromise($process);
     }
 }

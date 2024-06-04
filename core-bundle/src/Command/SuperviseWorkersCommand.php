@@ -80,13 +80,14 @@ class SuperviseWorkersCommand extends Command
         return new BasicCommand(
             $identifier,
             $desiredWorkers,
-            function () use($worker): Process {
+            function () use ($worker): Process {
                 $process = $this->processUtil->createSymfonyConsoleProcess(
                     'messenger:consume',
                     ...$worker['options'],
                     ...$worker['transports'],
                 );
                 $process->setTimeout(null);
+
                 return $process;
             },
         );
