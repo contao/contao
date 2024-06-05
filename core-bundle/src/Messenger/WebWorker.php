@@ -24,21 +24,20 @@ use Symfony\Component\Messenger\Event\WorkerStartedEvent;
 
 /**
  * This service accepts an array of Symfony Messenger transports and automatically
- * detects which of those have real workers running. In case they do not, it falls
- * back to a web worker (kernel.terminate event) to ensure, messages are always
+ * detects which ones have real workers running. In case they have not, it falls
+ * back to a web worker at "kernel.terminate" to ensure that messages are always
  * processed, no matter whether a real worker is running or not.
  *
  * Detecting works by using the WorkerStartedEvent and WorkerRunningEvent which
- * sets/updates a cache items and allowing a grace period. The grace period defines how
- * long after the last event the web worker should consider a real worker to be running.
- * Imagine you only have one worker running, and it works on a message for 10 minutes.
- * In such a case, no WorkerStartedEvent or WorkerRunningEvent will be triggered for 10
- * minutes so if there were a grace period of only a few seconds, the web worker would
- * jump in probably too quickly.
+ * sets/updates a cache item and allows a grace period. The grace period defines
+ * how long after the last event the web worker should consider a real worker to
+ * be running. Imagine you only have one worker running, and it works on a message
+ * for 10 minutes. In such a case, no WorkerStartedEvent or WorkerRunningEvent
+ * will be triggered for 10 minutes, so if there were a grace period of only a few
+ * seconds, the web worker would probably jump in too quickly.
  *
- * In any case, this provides advantages as it allows us to always use a queue and
- * postpone processes to at least kernel.terminate in case there are no real
- * workers available!
+ * In any case, this allows us to always use a queue and postpone processes to at
+ * least the "kernel.terminate" event if there are no real workers available!
  */
 class WebWorker
 {
@@ -71,8 +70,7 @@ class WebWorker
     #[AsEventListener]
     public function onWorkerRunning(WorkerRunningEvent $event): void
     {
-        // In case of our web worker running, we stop it immediately if it is idle in
-        // order to free the web process.
+        // Stop idle web workers to free the web process.
         if ($this->webWorkerRunning && $event->isWorkerIdle()) {
             $event->getWorker()->stop();
 
