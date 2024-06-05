@@ -91,6 +91,7 @@ class WebWorkerTest extends TestCase
 
         // This test would run for 30 seconds if it failed. If the worker is correctly
         // stopped, it will return immediately and log "Stopping worker.".
+        // @phpstan-ignore method.notFound
         $this->assertContains('Stopping worker.', $this->logger->getLogs());
     }
 
