@@ -120,6 +120,9 @@ class SearchIndexListener
             return true;
         }
 
+        if (!$response->isSuccessful()) {
+            return false;
+        }
         // Delete if the X-Robots-Tag header contains "noindex"
         if (false !== strpos($response->headers->get('X-Robots-Tag', ''), 'noindex')) {
             return true;
