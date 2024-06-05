@@ -59,7 +59,7 @@ class SearchIndexListener
 
         $document = Document::createFromRequestResponse($request, $response);
         $needsIndex = $this->needsIndex($request, $response, $document);
-        $needsDelete = $this->needsDelete($request, $response, $document);
+        $needsDelete = $this->needsDelete($response, $document);
 
         try {
             if ($needsIndex && $this->enabledFeatures & self::FEATURE_INDEX) {
@@ -113,7 +113,7 @@ class SearchIndexListener
         return 0 !== \count($lds);
     }
 
-    private function needsDelete(Request $request, Response $response, Document $document): bool
+    private function needsDelete(Response $response, Document $document): bool
     {
         // Always delete on 404 and 410 responses
         if (\in_array($response->getStatusCode(), [Response::HTTP_NOT_FOUND, Response::HTTP_GONE], true)) {
