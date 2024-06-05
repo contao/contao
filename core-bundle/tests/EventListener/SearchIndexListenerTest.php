@@ -161,7 +161,7 @@ class SearchIndexListenerTest extends TestCase
             false,
         ];
 
-        // From the unsucessful responses only the 404 and 410 status codes should execute a deletion.
+        // From the unsuccessful responses only the 404 and 410 status codes should execute a deletion.
         for ($status = 400; $status < 600; ++$status) {
             if (\in_array($status, [Response::HTTP_NOT_FOUND, Response::HTTP_GONE], true)) {
                 continue;

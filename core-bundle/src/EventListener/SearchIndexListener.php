@@ -120,7 +120,7 @@ class SearchIndexListener
             return true;
         }
 
-        // Ignore the following conditions if the response is not successful and do not delete.
+        // Do not delete if the response was not successful
         if (!$response->isSuccessful()) {
             return false;
         }
