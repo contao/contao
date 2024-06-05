@@ -571,6 +571,8 @@ class InsertTags extends Controller
 										}
 										catch (ExceptionInterface $exception)
 										{
+											$arrCache[$strTag] = '';
+											break 2;
 										}
 										break;
 									}
@@ -583,6 +585,8 @@ class InsertTags extends Controller
 									}
 									catch (ExceptionInterface $exception)
 									{
+										$arrCache[$strTag] = '';
+										break 2;
 									}
 									break;
 							}
