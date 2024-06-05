@@ -115,7 +115,7 @@ class SearchIndexListenerTest extends TestCase
             true,
         ];
 
-        yield 'Should not be deleted because even though the response was "not found" (404), it was disabled by the feature flag ' => [
+        yield 'Should not be deleted because even though the response was "not found" (404), it was disabled by the feature flag' => [
             Request::create('/foobar'),
             new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>', 404),
             SearchIndexListener::FEATURE_INDEX,
