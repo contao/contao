@@ -91,7 +91,7 @@ class WebWorkerTest extends TestCase
 
         // This test would run for 30 seconds if it failed. If the worker is correctly
         // stopped, it will return immediately and log "Stopping worker.".
-        $this->assertLoggerContainsMessage('Stopping worker.');
+        $this->assertContains('Stopping worker.', $this->logger->getLogs());
     }
 
     private function createCache(array $transportsWithRunningWorkers = []): CacheItemPoolInterface
@@ -168,15 +168,5 @@ class WebWorkerTest extends TestCase
                 $webWorker->onKernelTerminate($event);
             },
         );
-    }
-
-    private function assertLoggerContainsMessage(string $message): void
-    {
-        // Make phpstan happy
-        if (!method_exists($this->logger, 'getLogs')) {
-            $this->fail('Wrong logger.');
-        }
-
-        $this->assertContains($message, $this->logger->getLogs());
     }
 }
