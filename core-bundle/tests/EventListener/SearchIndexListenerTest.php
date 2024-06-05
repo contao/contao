@@ -126,7 +126,7 @@ class SearchIndexListenerTest extends TestCase
         $response = new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>', 200);
         $response->headers->set('X-Robots-Tag', 'noindex');
 
-        yield 'Should not index but should delete because the X-Robots-Tag header contains "noindex" ' => [
+        yield 'Should not index but should delete because the X-Robots-Tag header contains "noindex"' => [
             Request::create('/foobar'),
             $response,
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
@@ -137,7 +137,7 @@ class SearchIndexListenerTest extends TestCase
         $response = new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>', 500);
         $response->headers->set('X-Robots-Tag', 'noindex');
 
-        yield 'Should not index and delete because the X-Robots-Tag header contains "noindex" and response is unsuccesful ' => [
+        yield 'Should not index and delete because the X-Robots-Tag header contains "noindex" and response is unsuccessful' => [
             Request::create('/foobar'),
             $response,
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
@@ -145,7 +145,7 @@ class SearchIndexListenerTest extends TestCase
             false,
         ];
 
-        yield 'Should not index but should delete because the meta robots tag contains "noindex" ' => [
+        yield 'Should not index but should delete because the meta robots tag contains "noindex"' => [
             Request::create('/foobar'),
             new Response('<html><head><meta name="robots" content="noindex,nofollow"/></head><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>', 200),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
@@ -153,7 +153,7 @@ class SearchIndexListenerTest extends TestCase
             true,
         ];
 
-        yield 'Should not index and delete because the meta robots tag contains "noindex" and response is unsuccesful ' => [
+        yield 'Should not index and delete because the meta robots tag contains "noindex" and response is unsuccessful' => [
             Request::create('/foobar'),
             new Response('<html><head><meta name="robots" content="noindex,nofollow"/></head><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>', 500),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
