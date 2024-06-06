@@ -393,7 +393,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			$objSession->set('CLIPBOARD', $arrClipboard);
 
-			$this->redirect(Backend::addToUrl('', false, array('act', 'mode')));
+			if ($this->currentPid)
+			{
+				$this->redirect(Backend::addToUrl('id='.$this->currentPid, false, array('act', 'mode')));
+			}
+			else
+			{
+				$this->redirect(Backend::addToUrl('', false, array('act', 'mode', 'id')));
+			}
 		}
 
 		// Custom filter
