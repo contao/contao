@@ -444,6 +444,27 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertFalse($container->hasDefinition('contao.search.default_indexer'));
     }
 
+    public function testRemovesWebWorkerIfNoTransportsAreConfigured(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $extension = new ContaoCoreExtension();
+        $extension->load(
+            [
+                'contao' => [
+                    'messenger' => [
+                        'web_worker' => [
+                            'transports' => [],
+                        ],
+                    ],
+                ],
+            ],
+            $container,
+        );
+
+        $this->assertFalse($container->hasDefinition('contao.messenger.web_worker'));
+    }
+
     public function testSetsTheCorrectFeatureFlagOnTheSearchIndexListener(): void
     {
         $container = $this->getContainerBuilder();

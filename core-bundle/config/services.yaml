@@ -547,22 +547,17 @@ services:
         arguments:
             - '@contao.menu.matcher'
 
-    contao.messenger.auto_fallback_notifier:
-        class: Contao\CoreBundle\Messenger\AutoFallbackNotifier
-        arguments:
-            - '@cache.app'
-            - '@messenger.receiver_locator'
-
-    contao.messenger.auto_fallback_transport_factory:
-        class: Contao\CoreBundle\Messenger\Transport\AutoFallbackTransportFactory
-        arguments:
-            - '@contao.messenger.auto_fallback_notifier'
-            - '@messenger.receiver_locator'
-
     contao.messenger.search_index_message_handler:
         class: Contao\CoreBundle\Messenger\MessageHandler\SearchIndexMessageHandler
         arguments:
             - '@?contao.search.indexer'
+
+    contao.messenger.web_worker:
+        class: Contao\CoreBundle\Messenger\WebWorker
+        arguments:
+            - '@cache.app'
+            - '@console.command.messenger_consume_messages'
+            - '@messenger.receiver_locator'
 
     contao.model_argument_resolver:
         class: Contao\CoreBundle\HttpKernel\ModelArgumentResolver
