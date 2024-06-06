@@ -86,6 +86,7 @@ class SuperviseWorkersCommand extends Command
                     ...$worker['options'],
                     ...$worker['transports'],
                 );
+
                 $process->setTimeout(null);
 
                 return $process;
