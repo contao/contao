@@ -114,6 +114,7 @@ class WebWorker
         }
 
         $this->webWorkerRunning = true;
+
         $input = new ArrayInput([
             'receivers' => [$transportName],
             '--time-limit' => 30,

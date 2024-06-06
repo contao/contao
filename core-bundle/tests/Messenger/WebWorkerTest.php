@@ -55,6 +55,7 @@ class WebWorkerTest extends TestCase
                 return $this->logs;
             }
         };
+
         $this->eventDispatcher = new EventDispatcher();
         $this->createConsumeCommand();
     }
@@ -73,19 +74,21 @@ class WebWorkerTest extends TestCase
             $this->command,
             ['transport-1'],
         );
+
         $this->addEventsToEventDispatcher($webWorker);
         $this->triggerRealWorkers(['transport-1', 'transport-2']);
     }
 
     public function testWorkerIsStoppedIfIdle(): void
     {
-        $cache = $this->createCache(); // No real workers running
+        $cache = new ArrayAdapter(); // No real workers running
 
         $webWorker = new WebWorker(
             $cache,
             $this->command,
             ['transport-1'],
         );
+
         $this->addEventsToEventDispatcher($webWorker);
         $this->triggerWebWorker();
 
@@ -93,19 +96,6 @@ class WebWorkerTest extends TestCase
         // stopped, it will return immediately and log "Stopping worker.".
         // @phpstan-ignore method.notFound
         $this->assertContains('Stopping worker.', $this->logger->getLogs());
-    }
-
-    private function createCache(array $transportsWithRunningWorkers = []): CacheItemPoolInterface
-    {
-        $cache = new ArrayAdapter();
-
-        foreach ($transportsWithRunningWorkers as $transport) {
-            $item = $cache->getItem('contao-web-worker-'.$transport);
-            $item->expiresAfter(60);
-            $cache->save($item);
-        }
-
-        return $cache;
     }
 
     private function triggerWebWorker(): void
@@ -126,6 +116,7 @@ class WebWorkerTest extends TestCase
         };
 
         $this->eventDispatcher->addListener(WorkerRunningEvent::class, $listener);
+
         $input = new ArrayInput([
             'receivers' => $transports,
         ]);
@@ -157,12 +148,14 @@ class WebWorkerTest extends TestCase
                 $webWorker->onWorkerStarted($event);
             },
         );
+
         $this->eventDispatcher->addListener(
             WorkerRunningEvent::class,
             static function (WorkerRunningEvent $event) use ($webWorker): void {
                 $webWorker->onWorkerRunning($event);
             },
         );
+
         $this->eventDispatcher->addListener(
             TerminateEvent::class,
             static function (TerminateEvent $event) use ($webWorker): void {
