@@ -30,8 +30,9 @@ class SuperviseWorkersCron
             throw new CronExecutionSkippedException();
         }
 
-        return $this->processUtil->createPromise(
-            $this->processUtil->createSymfonyConsoleProcess('contao:supervise-workers'),
-        );
+        $process = $this->processUtil->createSymfonyConsoleProcess('contao:supervise-workers');
+        $process->setTimeout(null);
+
+        return $this->processUtil->createPromise($process);
     }
 }
