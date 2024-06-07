@@ -69,7 +69,7 @@ class Ajax extends Backend
 	 */
 	public function executePreActions()
 	{
-		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag(Input::get('popup') ? 'contao_backend_popup' : 'contao_backend');
 
 		switch ($this->strAction)
 		{

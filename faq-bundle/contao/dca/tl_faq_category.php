@@ -13,6 +13,7 @@ use Contao\BackendUser;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
+use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 
@@ -179,7 +180,7 @@ class tl_faq_category extends Backend
 
 		$db = Database::getInstance();
 
-		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag(Input::get('popup') ? 'contao_backend_popup' : 'contao_backend');
 		$arrNew = $objSessionBag->get('new_records');
 
 		if (is_array($arrNew['tl_faq_category']) && in_array($insertId, $arrNew['tl_faq_category']))

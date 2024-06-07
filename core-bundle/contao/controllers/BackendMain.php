@@ -113,7 +113,7 @@ class BackendMain extends Backend
 		// Toggle nodes
 		if (Input::get('mtg'))
 		{
-			$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
+			$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag(Input::get('popup') ? 'contao_backend_popup' : 'contao_backend');
 			$session = $objSessionBag->all();
 			$session['backend_modules'][Input::get('mtg')] = (isset($session['backend_modules'][Input::get('mtg')]) && $session['backend_modules'][Input::get('mtg')] == 0) ? 1 : 0;
 			$objSessionBag->replace($session);

@@ -288,7 +288,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$return = '';
 
 		$objSession = System::getContainer()->get('request_stack')->getSession();
-		$objSessionBag = $objSession->getBag('contao_backend');
+		$objSessionBag = $objSession->getBag(Input::get('popup') ? 'contao_backend_popup' : 'contao_backend');
 		$session = $objSessionBag->all();
 
 		// Add to clipboard
@@ -2559,7 +2559,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 */
 	protected function generateTree($path, $intMargin, $mount=false, $blnProtected=true, $arrClipboard=null, $arrFound=array())
 	{
-		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag(Input::get('popup') ? 'contao_backend_popup' : 'contao_backend');
 		$session = $objSessionBag->all();
 
 		// Get the session data and toggle the nodes
@@ -2878,7 +2878,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 */
 	protected function searchMenu()
 	{
-		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag(Input::get('popup') ? 'contao_backend_popup' : 'contao_backend');
 
 		$session = $objSessionBag->all();
 
@@ -3067,7 +3067,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				throw new \RuntimeException('Invalid path ' . $strPath);
 			}
 
-			$strNode = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend')->get('tl_files_node');
+			$strNode = System::getContainer()->get('request_stack')->getSession()->getBag(Input::get('popup') ? 'contao_backend_popup' : 'contao_backend')->get('tl_files_node');
 
 			// If the files node is not within the current path, remove it (see #856)
 			if ($strNode && ($i = array_search($strNode, $this->arrFilemounts)) !== false && strncmp($strNode . '/', $strPath . '/', \strlen($strPath) + 1) !== 0)

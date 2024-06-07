@@ -121,7 +121,7 @@ class CheckBox extends Widget
 			$this->arrAttributes['required'] = 'required';
 		}
 
-		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag(Input::get('popup') ? 'contao_backend_popup' : 'contao_backend');
 		$state = $objSessionBag->get('checkbox_groups');
 
 		// Toggle the checkbox group

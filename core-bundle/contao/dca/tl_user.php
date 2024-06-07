@@ -589,7 +589,7 @@ class tl_user extends Backend
 
 				if (in_array('purge_session', $arrPurge))
 				{
-					$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
+					$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag(Input::get('popup') ? 'contao_backend_popup' : 'contao_backend');
 					$objSessionBag->clear();
 					Message::addConfirmation($GLOBALS['TL_LANG']['tl_user']['sessionPurged']);
 				}

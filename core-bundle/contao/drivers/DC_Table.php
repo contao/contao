@@ -736,7 +736,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$s2e = ($GLOBALS['TL_DCA'][$this->strTable]['config']['switchToEdit'] ?? null) ? '&s2e=1' : '';
 				$insertID = $objInsertStmt->insertId;
 
-				$objSessionBag = $objSession->getBag('contao_backend');
+				$objSessionBag = $objSession->getBag(Input::get('popup') ? 'contao_backend_popup' : 'contao_backend');
 
 				// Save new record in the session
 				$new_records = $objSessionBag->get('new_records');
@@ -932,7 +932,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$objSession = System::getContainer()->get('request_stack')->getSession();
-		$objSessionBag = $objSession->getBag('contao_backend');
+		$objSessionBag = $objSession->getBag(Input::get('popup') ? 'contao_backend_popup' : 'contao_backend');
 
 		$currentRecord = $this->getCurrentRecord();
 
@@ -2019,7 +2019,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
-			$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
+			$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag(Input::get('popup') ? 'contao_backend_popup' : 'contao_backend');
 
 			$class = 'tl_tbox';
 			$fs = $objSessionBag->get('fieldset_states');
@@ -3633,7 +3633,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$ptable = $this->strTable;
 		}
 
-		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag(Input::get('popup') ? 'contao_backend_popup' : 'contao_backend');
 
 		$new_records = $objSessionBag->get('new_records');
 
@@ -3799,7 +3799,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$db = Database::getInstance();
 
 		$objSession = System::getContainer()->get('request_stack')->getSession();
-		$objSessionBag = $objSession->getBag('contao_backend');
+		$objSessionBag = $objSession->getBag(Input::get('popup') ? 'contao_backend_popup' : 'contao_backend');
 		$session = $objSessionBag->all();
 
 		// Toggle the nodes
@@ -4239,7 +4239,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			return '';
 		}
 
-		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag(Input::get('popup') ? 'contao_backend_popup' : 'contao_backend');
 
 		$session = $objSessionBag->all();
 		$node = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->strTable . '_' . $table . '_tree' : $this->strTable . '_tree';
@@ -5519,7 +5519,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	{
 		$searchFields = array();
 
-		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag(Input::get('popup') ? 'contao_backend_popup' : 'contao_backend');
 		$session = $objSessionBag->all();
 
 		// Get search fields
@@ -5695,7 +5695,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			return '';
 		}
 
-		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag(Input::get('popup') ? 'contao_backend_popup' : 'contao_backend');
 		$session = $objSessionBag->all();
 
 		$orderBy = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['fields'] ?? array('id');
@@ -5800,7 +5800,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function limitMenu($blnOptional=false)
 	{
-		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag(Input::get('popup') ? 'contao_backend_popup' : 'contao_backend');
 		$session = $objSessionBag->all();
 
 		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . $this->intCurrentPid : $this->strTable;
@@ -5935,7 +5935,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function filterMenu($intFilterPanel)
 	{
-		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag(Input::get('popup') ? 'contao_backend_popup' : 'contao_backend');
 
 		$fields = '';
 		$sortingFields = array();
@@ -6409,7 +6409,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function paginationMenu()
 	{
-		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag(Input::get('popup') ? 'contao_backend_popup' : 'contao_backend');
 		$session = $objSessionBag->all();
 
 		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . $this->intCurrentPid : $this->strTable;

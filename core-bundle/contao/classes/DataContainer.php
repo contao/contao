@@ -1377,7 +1377,7 @@ abstract class DataContainer extends Backend
 		// Reset all filters
 		if (Input::post('filter_reset') !== null && Input::post('FORM_SUBMIT') == 'tl_filters')
 		{
-			$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
+			$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag(Input::get('popup') ? 'contao_backend_popup' : 'contao_backend');
 			$data = $objSessionBag->all();
 
 			unset(

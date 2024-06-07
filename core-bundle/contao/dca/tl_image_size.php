@@ -14,6 +14,7 @@ use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Image\ResizeOptions;
+use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 use Imagine\Gd\Imagine as GdImagine;
@@ -229,7 +230,7 @@ class tl_image_size extends Backend
 			return;
 		}
 
-		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag(Input::get('popup') ? 'contao_backend_popup' : 'contao_backend');
 		$arrNew = $objSessionBag->get('new_records');
 
 		if (is_array($arrNew['tl_image_size']) && in_array($insertId, $arrNew['tl_image_size']))
