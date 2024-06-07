@@ -16,7 +16,7 @@ use Contao\CoreBundle\Routing\ScopeMatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionBagInterface;
 
-class SessionFinder
+class SessionBagFinder
 {
     public function __construct(
         readonly private ScopeMatcher $scopeMatcher,
@@ -24,7 +24,7 @@ class SessionFinder
     ) {
     }
 
-    public function getSession(): SessionBagInterface
+    public function getBag(): SessionBagInterface
     {
         if ($this->scopeMatcher->isBackendRequest()) {
             $name = 'contao_backend';

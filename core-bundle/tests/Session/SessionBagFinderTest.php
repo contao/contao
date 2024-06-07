@@ -13,12 +13,12 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Session;
 
 use Contao\CoreBundle\Routing\ScopeMatcher;
-use Contao\CoreBundle\Session\SessionFinder;
+use Contao\CoreBundle\Session\SessionBagFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class SessionFinderTest extends TestCase
+class SessionBagFinderTest extends TestCase
 {
     /**
      * @dataProvider provideScopeAndSession
@@ -42,8 +42,8 @@ class SessionFinderTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $sessionFinder = new SessionFinder($scopeMatcher, $requestStack);
-        $session = $sessionFinder->getSession();
+        $sessionBagFinder = new SessionBagFinder($scopeMatcher, $requestStack);
+        $session = $sessionBagFinder->getBag();
 
         $this->assertSame($storageKey, $session->getStorageKey());
         $this->assertSame($name, $session->getName());

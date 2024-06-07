@@ -1049,18 +1049,18 @@ services:
         arguments:
             - '@contao.framework'
 
+    contao.session.bag_finder:
+        class: Contao\CoreBundle\Session\SessionBagFinder
+        public: true
+        arguments:
+            - '@contao.routing.scope_matcher'
+            - '@request_stack'
+
     contao.session.factory:
         class: Contao\CoreBundle\Session\SessionFactory
         decorates: session.factory
         arguments:
             - '@contao.session.factory.inner'
-
-    contao.session.finder:
-        class: Contao\CoreBundle\Session\SessionFinder
-        public: true
-        arguments:
-            - '@contao.routing.scope_matcher'
-            - '@request_stack'
 
     contao.slug:
         class: Contao\CoreBundle\Slug\Slug
@@ -1285,7 +1285,7 @@ services:
     Contao\CoreBundle\Security\TwoFactor\BackupCodeManager: '@contao.security.two_factor.backup_code_manager'
     Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager: '@contao.security.two_factor.trusted_device_manager'
     Contao\CoreBundle\Slug\Slug: '@contao.slug'
-    Contao\CoreBundle\Session\SessionFinder: '@contao.session.finder'
+    Contao\CoreBundle\Session\SessionBagFinder: '@contao.session.bag_finder'
     Contao\CoreBundle\String\HtmlDecoder: '@contao.string.html_decoder'
     Contao\CoreBundle\String\SimpleTokenParser: '@contao.string.simple_token_parser'
     Contao\CoreBundle\Twig\Finder\FinderFactory: '@contao.twig.finder_factory'
