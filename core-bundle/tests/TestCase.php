@@ -16,6 +16,7 @@ use Contao\CoreBundle\Routing\Matcher\BackendMatcher;
 use Contao\CoreBundle\Routing\Matcher\FrontendMatcher;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
+use Contao\CoreBundle\Session\SessionFactory;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -45,15 +46,12 @@ abstract class TestCase extends ContaoTestCase
         $session = new Session(new MockArraySessionStorage());
         $session->setId('test-id');
 
-        $beBag = new ArrayAttributeBag('_contao_be_attributes');
-        $beBag->setName('contao_backend');
+        foreach (SessionFactory::SESSION_BAGS as $name => $storageKey) {
+            $bag = new ArrayAttributeBag($storageKey);
+            $bag->setName($name);
 
-        $session->registerBag($beBag);
-
-        $feBag = new ArrayAttributeBag('_contao_fe_attributes');
-        $feBag->setName('contao_frontend');
-
-        $session->registerBag($feBag);
+            $session->registerBag($bag);
+        }
 
         return $session;
     }
