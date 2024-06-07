@@ -101,9 +101,9 @@ class LinkInsertTag
                 }
             }
 
-            // Use "./" for the index page (#2394)
+            // Use "/" for the index page (#2394)
             if ('' === $strUrl) {
-                $strUrl = './';
+                $strUrl = '/';
             }
 
             $strName = $objNextPage->title;
