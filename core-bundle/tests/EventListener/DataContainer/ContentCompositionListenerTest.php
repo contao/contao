@@ -28,6 +28,7 @@ use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ClockMock;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
@@ -881,6 +882,8 @@ class ContentCompositionListenerTest extends TestCase
     private function expectRequest(bool $hasSession, array|null $newRecords = null): void
     {
         $request = $this->createMock(Request::class);
+        $request->query = new InputBag();
+
         $request
             ->expects($this->once())
             ->method('hasSession')

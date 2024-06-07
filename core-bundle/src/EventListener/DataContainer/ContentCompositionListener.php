@@ -93,7 +93,7 @@ class ContentCompositionListener
             return;
         }
 
-        $sessionBag = $request->getSession()->getBag('contao_backend');
+        $sessionBag = $request->getSession()->getBag($request->query->get('popup') ? 'contao_backend_popup' : 'contao_backend');
 
         if (!$sessionBag instanceof AttributeBagInterface) {
             return;

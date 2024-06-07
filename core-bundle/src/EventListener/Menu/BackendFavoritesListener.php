@@ -74,7 +74,7 @@ class BackendFavoritesListener
             'ref' => $request->attributes->get('_contao_referer_id'),
         ];
 
-        $bag = $this->requestStack->getSession()->getBag('contao_backend');
+        $bag = $this->requestStack->getSession()->getBag($request->query->get('popup') ? 'contao_backend_popup' : 'contao_backend');
 
         if (!$bag instanceof AttributeBagInterface) {
             return;
