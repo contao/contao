@@ -143,7 +143,7 @@ trait TemplateInheritance
 		}
 
 		// Replace insert tags
-		if ($this instanceof FrontendTemplate)
+		if ($this instanceof FrontendTemplate || $this instanceof Widget)
 		{
 			$container = System::getContainer();
 			$request = $container->get('request_stack')->getCurrentRequest();

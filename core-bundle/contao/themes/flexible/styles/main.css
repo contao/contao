@@ -1283,7 +1283,7 @@ table.tl_listing {
 }
 
 .tl_noopt {
-	margin: 0 0 -1px;
+	margin: 1px 0;
 }
 
 .tl_select_trigger {
@@ -2187,15 +2187,6 @@ ul.sgallery li {
 }
 
 /* Checkbox wizard */
-.tl_checkbox_wizard .fixed {
-	display: block;
-	margin-top: 1px;
-}
-
-.tl_checkbox_wizard .sortable span {
-	display: block;
-}
-
 .tl_checkbox_wizard .sortable img {
 	vertical-align: bottom;
 }
