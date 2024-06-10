@@ -1056,6 +1056,13 @@ services:
         calls:
             - [setName, [contao_backend]]
 
+    contao.session.contao_backend_popup:
+        class: Contao\CoreBundle\Session\Attribute\ArrayAttributeBag
+        arguments:
+            - _contao_be_popup_attributes
+        calls:
+            - [setName, [contao_backend]]
+
     contao.session.contao_frontend:
         class: Contao\CoreBundle\Session\Attribute\ArrayAttributeBag
         arguments:
@@ -1070,6 +1077,9 @@ services:
             - '@contao.session.factory.inner'
             - '@contao.session.contao_backend'
             - '@contao.session.contao_frontend'
+            - '@contao.session.contao_backend_popup'
+            - '@contao.routing.scope_matcher'
+            - '@request_stack'
 
     contao.slug:
         class: Contao\CoreBundle\Slug\Slug
