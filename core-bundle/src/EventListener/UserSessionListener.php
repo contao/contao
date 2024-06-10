@@ -43,7 +43,7 @@ class UserSessionListener
      */
     public function __invoke(RequestEvent $event): void
     {
-        if (!$this->scopeMatcher->isContaoMainRequest($event)) {
+        if (!$this->scopeMatcher->isContaoMainRequest($event) || $event->getRequest()->query->has('popup')) {
             return;
         }
 
@@ -55,7 +55,7 @@ class UserSessionListener
 
         $session = $user->session;
 
-        if (\is_array($session) && !$event->getRequest()->query->has('popup')) {
+        if (\is_array($session)) {
             $sessionBag = $this->getSessionBag($event->getRequest());
             $sessionBag->replace($session);
         }
@@ -69,7 +69,7 @@ class UserSessionListener
      */
     public function write(ResponseEvent $event): void
     {
-        if (!$this->scopeMatcher->isContaoMainRequest($event) || $event->getRequest()->query->has('popup')) {
+        if (!$this->scopeMatcher->isContaoMainRequest($event)) {
             return;
         }
 
