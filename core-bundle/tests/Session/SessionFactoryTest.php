@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Session;
 
 use Contao\CoreBundle\Routing\ScopeMatcher;
-use Contao\CoreBundle\Session\Attribute\AutoExpiringAttribute;
 use Contao\CoreBundle\Session\SessionFactory;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,12 +34,10 @@ class SessionFactoryTest extends TestCase
             ->expects($this->exactly(2))
             ->method('registerBag')
             ->with($this->callback(
-                function (SessionBagInterface $bag) use ($frontendBag, $backendBag): bool {
-                    return match ($bag) {
-                        $frontendBag => true,
-                        $backendBag => true,
-                        default => false,
-                    };
+                static fn (SessionBagInterface $bag): bool => match ($bag) {
+                    $frontendBag => true,
+                    $backendBag => true,
+                    default => false,
                 },
             ))
         ;
@@ -67,13 +64,13 @@ class SessionFactoryTest extends TestCase
         ;
 
         (new SessionFactory(
-                $inner,
-                $backendBag,
-                $frontendBag,
-                $backendPopupBag,
-                $scopeMatcher,
-                $requestStack,
-            ))
+            $inner,
+            $backendBag,
+            $frontendBag,
+            $backendPopupBag,
+            $scopeMatcher,
+            $requestStack,
+        ))
             ->createSession()
         ;
     }
@@ -89,12 +86,10 @@ class SessionFactoryTest extends TestCase
             ->expects($this->exactly(2))
             ->method('registerBag')
             ->with($this->callback(
-                function (SessionBagInterface $bag) use ($frontendBag, $backendPopupBag): bool {
-                    return match ($bag) {
-                        $frontendBag => true,
-                        $backendPopupBag => true,
-                        default => false,
-                    };
+                static fn (SessionBagInterface $bag): bool => match ($bag) {
+                    $frontendBag => true,
+                    $backendPopupBag => true,
+                    default => false,
                 },
             ))
         ;
@@ -121,13 +116,13 @@ class SessionFactoryTest extends TestCase
         ;
 
         (new SessionFactory(
-                $inner,
-                $backendBag,
-                $frontendBag,
-                $backendPopupBag,
-                $scopeMatcher,
-                $requestStack,
-            ))
+            $inner,
+            $backendBag,
+            $frontendBag,
+            $backendPopupBag,
+            $scopeMatcher,
+            $requestStack,
+        ))
             ->createSession()
         ;
     }
