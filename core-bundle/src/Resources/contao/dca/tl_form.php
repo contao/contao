@@ -130,6 +130,8 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 	(
 		'id' => array
 		(
+			'label'                   => array('ID'),
+			'search'                  => true,
 			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
 		),
 		'tstamp' => array
