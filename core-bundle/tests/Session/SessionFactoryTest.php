@@ -25,18 +25,14 @@ class SessionFactoryTest extends TestCase
 {
     public function testRegistersTheFrontendAndBackendBag(): void
     {
-        $frontendBag = $this->createMock(SessionBagInterface::class);
-        $backendBag = $this->createMock(SessionBagInterface::class);
-        $backendPopupBag = $this->createMock(SessionBagInterface::class);
-
         $session = $this->createMock(SessionInterface::class);
         $session
             ->expects($this->exactly(2))
             ->method('registerBag')
             ->with($this->callback(
-                static fn (SessionBagInterface $bag): bool => match ($bag) {
-                    $frontendBag => true,
-                    $backendBag => true,
+                static fn (SessionBagInterface $bag): bool => match ($bag->getStorageKey()) {
+                    SessionFactory::SESSION_BAGS['contao_frontend'] => true,
+                    SessionFactory::SESSION_BAGS['contao_backend'] => true,
                     default => false,
                 },
             ))
@@ -65,11 +61,8 @@ class SessionFactoryTest extends TestCase
 
         (new SessionFactory(
             $inner,
-            $backendBag,
-            $frontendBag,
-            $backendPopupBag,
-            $scopeMatcher,
             $requestStack,
+            $scopeMatcher,
         ))
             ->createSession()
         ;
@@ -77,18 +70,14 @@ class SessionFactoryTest extends TestCase
 
     public function testRegistersTheFrontendAndBackendPopupBag(): void
     {
-        $frontendBag = $this->createMock(SessionBagInterface::class);
-        $backendBag = $this->createMock(SessionBagInterface::class);
-        $backendPopupBag = $this->createMock(SessionBagInterface::class);
-
         $session = $this->createMock(SessionInterface::class);
         $session
             ->expects($this->exactly(2))
             ->method('registerBag')
             ->with($this->callback(
-                static fn (SessionBagInterface $bag): bool => match ($bag) {
-                    $frontendBag => true,
-                    $backendPopupBag => true,
+                static fn (SessionBagInterface $bag): bool => match ($bag->getStorageKey()) {
+                    SessionFactory::SESSION_BAGS['contao_frontend'] => true,
+                    SessionFactory::SESSION_BAGS['contao_backend'].'_popup' => true,
                     default => false,
                 },
             ))
@@ -117,11 +106,8 @@ class SessionFactoryTest extends TestCase
 
         (new SessionFactory(
             $inner,
-            $backendBag,
-            $frontendBag,
-            $backendPopupBag,
-            $scopeMatcher,
             $requestStack,
+            $scopeMatcher,
         ))
             ->createSession()
         ;
