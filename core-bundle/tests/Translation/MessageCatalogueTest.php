@@ -188,7 +188,7 @@ class MessageCatalogueTest extends TestCase
             ->expects($this->once())
             ->method($method)
             ->with(...$params)
-            ->willReturn($return)
+            ->willReturnCallback(static fn () => $return)
         ;
 
         $catalogue = $this->createCatalogue($parentCatalogue);
@@ -238,7 +238,7 @@ class MessageCatalogueTest extends TestCase
             ->expects($this->once())
             ->method($method)
             ->with(...$params)
-            ->willReturn($return)
+            ->willReturnCallback(static fn () => $return)
         ;
 
         $catalogue = $this->createCatalogue($parentCatalogue);
