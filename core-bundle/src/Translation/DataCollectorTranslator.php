@@ -21,7 +21,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
+ *
  * @final
+ *
  * @phpstan-ignore class.extendsFinalByPhpDoc
  */
 class DataCollectorTranslator extends SymfonyDataCollectorTranslator implements ResetInterface
