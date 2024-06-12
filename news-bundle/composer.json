@@ -30,7 +30,7 @@
         "php": "^8.1",
         "contao/core-bundle": "self.version",
         "debril/feed-io": "^6.0",
-        "friendsofsymfony/http-cache": "^2.4",
+        "friendsofsymfony/http-cache": "^3.0",
         "symfony/config": "^6.4 || ^7.0",
         "symfony/dependency-injection": "^6.4 || ^7.0",
         "symfony/deprecation-contracts": "^3.0",
