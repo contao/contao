@@ -1520,7 +1520,7 @@ table.tl_listing {
 
 .cte_type.icon-protected {
 	padding-left: 27px;
-	background: var(--table-header) url("icons/protected.svg") 8px center no-repeat;
+	background: var(--table-header) url("icons/protected.svg") 8px 8px no-repeat;
 }
 
 .cte_type .visibility {
@@ -2490,7 +2490,7 @@ ul.sortable button[disabled]:hover {
 
 #picker-menu a {
 	padding: 3px 12px 3px 32px;
-	background: url("icons/manager.svg") 12px center no-repeat;
+	background: url("icons/mover.svg") 12px center no-repeat;
 }
 
 #picker-menu a:hover {
@@ -2602,7 +2602,7 @@ time[title] {
 
 .list_icon {
 	margin-left: -3px;
-	padding-left: 20px;
+	padding-left: 24px;
 	background-position: left center;
 	background-repeat: no-repeat;
 }
