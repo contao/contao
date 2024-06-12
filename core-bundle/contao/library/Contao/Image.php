@@ -18,6 +18,7 @@ class Image
 {
 	private static array $deprecated = array
 	(
+		'alias',
 		'folPlus',
 		'folMinus',
 		'header',

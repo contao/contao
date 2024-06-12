@@ -47,8 +47,8 @@ class DisableCanonicalFieldsListenerTest extends TestCase
         $imageAdapter
             ->expects($this->once())
             ->method('getHtml')
-            ->with('show.svg', '', 'title="disabled"')
-            ->willReturn('<img src="show.svg" alt="" title="disabled">')
+            ->with('info.svg', '', 'title="disabled"')
+            ->willReturn('<img src="info.svg" alt="" title="disabled">')
         ;
 
         $framework = $this->mockContaoFramework([
@@ -73,7 +73,7 @@ class DisableCanonicalFieldsListenerTest extends TestCase
         $listener('', $dc);
 
         $this->assertInstanceOf(\Closure::class, $GLOBALS['TL_DCA']['tl_page']['fields']['canonicalLink']['xlabel'][0]);
-        $this->assertSame('<img src="show.svg" alt="" title="disabled">', $GLOBALS['TL_DCA']['tl_page']['fields']['canonicalLink']['xlabel'][0]());
+        $this->assertSame(' <img src="info.svg" alt="" title="disabled">', $GLOBALS['TL_DCA']['tl_page']['fields']['canonicalLink']['xlabel'][0]());
     }
 
     public function testDoesNotDisableTheFieldIfCanonicalUrlsAreEnabled(): void
