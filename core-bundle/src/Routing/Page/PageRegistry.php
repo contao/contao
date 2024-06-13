@@ -162,7 +162,7 @@ class PageRegistry implements ResetInterface
         unset(
             $this->routeConfigs[$type],
             $this->routeEnhancers[$type],
-            $this->contentComposition[$type]
+            $this->contentComposition[$type],
         );
 
         $this->urlPrefixes = $this->urlSuffixes = null;

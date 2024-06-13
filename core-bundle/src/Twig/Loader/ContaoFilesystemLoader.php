@@ -83,7 +83,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
         // We prefix the cache key to make sure templates from the default Symfony loader
         // won't be reused. Otherwise, we cannot reliably differentiate when to apply our
         // input encoding tolerant escaper filters (see #4623).
-        return 'c:'.Path::makeRelative($path, $this->projectDir);
+        return 'c:'.$path;
     }
 
     /**
@@ -101,6 +101,8 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
         if (null === $path = $this->findTemplate($templateName)) {
             return new Source('', $templateName, '');
         }
+
+        $path = Path::makeAbsolute($path, $this->projectDir);
 
         // The Contao PHP templates will still be rendered by the Contao framework via a
         // PhpTemplateProxyNode. We're removing the source to not confuse Twig's lexer
@@ -267,18 +269,16 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
     {
         $this->ensureHierarchyIsBuilt();
 
-        $chains = $this->inheritanceChains;
+        $chains = [];
 
-        foreach ($chains as $identifier => $chain) {
+        foreach ($this->inheritanceChains as $identifier => $chain) {
             foreach ($chain as $path => $name) {
                 // Filter out theme paths that do not match the given slug.
                 if (null !== ($namespace = $this->themeNamespace->match($name)) && $namespace !== $themeSlug) {
-                    unset($chains[$identifier][$path]);
+                    continue;
                 }
-            }
 
-            if (empty($chains[$identifier])) {
-                unset($chains[$identifier]);
+                $chains[$identifier][Path::makeAbsolute($path, $this->projectDir)] = $name;
             }
         }
 
@@ -379,10 +379,10 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
                 if (null === ($existingType = $typeByIdentifier[$identifier] ?? null)) {
                     $typeByIdentifier[$identifier] = $type;
                 } elseif ($type !== $existingType) {
-                    throw new \OutOfBoundsException(sprintf('The "%s" template has incompatible types, got "%s" in "%s" and "%s" in "%s".', $identifier, $existingType, array_key_last($hierarchy[$identifier]), $type, $path));
+                    throw new \OutOfBoundsException(sprintf('The "%s" template has incompatible types, got "%s" in "%s" and "%s" in "%s".', $identifier, $existingType, Path::makeAbsolute(array_key_last($hierarchy[$identifier]), $this->projectDir), $type, $path));
                 }
 
-                $hierarchy[$identifier][$path] = "@$namespace/$shortName";
+                $hierarchy[$identifier][Path::makeRelative($path, $this->projectDir)] = "@$namespace/$shortName";
             }
         }
 

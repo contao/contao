@@ -74,13 +74,13 @@ class HtmlAttributesTest extends TestCase
         ];
 
         yield 'special html parsing rules' => [
-            "/X===.._-/\n/Y/-==",
-            ['x' => '==.._-/', 'y' => '', '-' => '='],
+            "/X===.._-/\n/Y/-== bool='' ===",
+            ['x' => '==.._-/', 'y' => '', '-' => '=', 'bool' => '', '=' => '='],
         ];
 
-        yield 'skip closing and keep opening tags as per html parsing rules' => [
-            '>foo=<bar>baz>/</<attr=<value',
-            ['foo' => '<bar', 'baz' => '', '<' => '', '<attr' => '<value'],
+        yield 'terminate closing and keep opening tags as per html parsing rules' => [
+            '/</<attr=<value foo="bar>"baz>foo',
+            ['<' => '', '<attr' => '<value', 'foo' => 'bar>', 'baz' => ''],
         ];
 
         yield 'skip unclosed attributes completely' => [
@@ -89,8 +89,8 @@ class HtmlAttributesTest extends TestCase
         ];
 
         yield 'decode values' => [
-            'foo=&quot; bar="b&auml;z" baz=&ZeroWidthSpace;',
-            ['foo' => '"', 'bar' => 'bäz', 'baz' => "\u{200B}"],
+            'foo=&quot; bar="b&auml;z" baz=&ZeroWidthSpace; &lt;=&gt;',
+            ['foo' => '"', 'bar' => 'bäz', 'baz' => "\u{200B}", '&lt;' => '>'],
         ];
 
         yield 'no attributes' => [
@@ -103,8 +103,13 @@ class HtmlAttributesTest extends TestCase
             [],
         ];
 
+        yield 'duplicate attributes' => [
+            'foo=1 bar=2 bar=3 FOO=4',
+            ['foo' => '1', 'bar' => '2'],
+        ];
+
         yield 'complex styles' => [
-            'style=" content:&quot; foo : bar ; baz ( &quot;; foo : url(https://example.com/foo;bar) ; " STYLE=color:red',
+            'style=" content:&quot; foo : bar ; baz ( &quot;; foo : url(https://example.com/foo;bar) ;color:red" STYLE=color:blue',
             ['style' => 'content: " foo : bar ; baz ( "; foo: url(https://example.com/foo;bar); color: red;'],
         ];
 
@@ -270,14 +275,11 @@ class HtmlAttributesTest extends TestCase
         $this->assertSame($expectedProperties, iterator_to_array($attributes));
     }
 
-    /**
-     * @dataProvider provideInvalidAttributeNames
-     */
-    public function testSkipsInvalidAttributeNamesWhenParsingString(string $name): void
+    public function testSkipsInvalidAttributeNamesWhenParsingString(): void
     {
-        $attributes = new HtmlAttributes(sprintf('foo="bar" %s="bar" baz=42', $name));
+        $attributes = new HtmlAttributes("foo=bar f\xC2o\x00o=b&#xC2;ar baz=42");
 
-        $this->assertSame(['foo' => 'bar', 'baz' => '42'], iterator_to_array($attributes));
+        $this->assertSame(['foo' => 'bar', "f\u{FFFD}o\u{FFFD}o" => "b\u{C2}ar", 'baz' => '42'], iterator_to_array($attributes));
     }
 
     /**
@@ -308,8 +310,10 @@ class HtmlAttributesTest extends TestCase
     {
         yield 'invalid non-utf8 character' => ["f\xC2"];
         yield 'empty string' => [''];
-        yield 'equal sign' => ['='];
-        yield 'starts with an equal sign' => ['=foo'];
+        yield 'greater-than sign' => ['>'];
+        yield 'includes a slash' => ['f/oo'];
+        yield 'includes an equals sign' => ['f=oo'];
+        yield 'includes a space' => ['f oo'];
     }
 
     public function testSetAndUnsetProperties(): void
@@ -632,6 +636,48 @@ class HtmlAttributesTest extends TestCase
         $this->assertSame('', (new HtmlAttributes())->toString(false));
     }
 
+    /**
+     * @dataProvider provideBooleanAttributes
+     */
+    public function testCorrectlySerializesBooleanAttributes(array $attrArray, string $attrString): void
+    {
+        $this->assertSame($attrString, (new HtmlAttributes($attrArray))->toString(false));
+        $this->assertSame($attrArray, iterator_to_array(new HtmlAttributes($attrString)));
+    }
+
+    public static function provideBooleanAttributes(): iterable
+    {
+        yield [
+            ['foo' => ''],
+            'foo',
+        ];
+
+        yield [
+            ['foo' => '', '=' => ''],
+            'foo="" =',
+        ];
+
+        yield [
+            ['=' => '', 'foo' => ''],
+            '= foo',
+        ];
+
+        yield [
+            ['=' => '', '=foo' => ''],
+            '=="" =foo',
+        ];
+
+        yield [
+            ['=foo' => '', '=' => ''],
+            '=foo="" =',
+        ];
+
+        yield [
+            ['1' => '', '=' => '', '2' => ''],
+            '1="" = 2',
+        ];
+    }
+
     public function testThrowsIfValueContainsInvalidUtf8Characters(): void
     {
         $attributes = new HtmlAttributes(['foo' => "\xC2"]);
@@ -663,9 +709,9 @@ class HtmlAttributesTest extends TestCase
         $attributes = new HtmlAttributes();
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('An HTML attribute name must be valid UTF-8 and not contain the characters >, /, = or whitespace, got "=foo".');
+        $this->expectExceptionMessage('An HTML attribute name must be valid UTF-8 and not contain the characters >, /, = or whitespace, got ">foo".');
 
-        $attributes['=foo'] = 'bar';
+        $attributes['>foo'] = 'bar';
     }
 
     public function testThrowsIfPropertyDoesNotExistWhenUsingArrayAccess(): void
@@ -675,7 +721,7 @@ class HtmlAttributesTest extends TestCase
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('The attribute property "foo" does not exist.');
 
-        /** @phpstan-ignore-next-line */
+        /** @phpstan-ignore expr.resultUnused */
         $attributes['foo'];
     }
 
@@ -684,6 +730,20 @@ class HtmlAttributesTest extends TestCase
         $attributes = new HtmlAttributes(['foo' => 'bar', 'baz' => 42]);
 
         $this->assertSame('{"foo":"bar","baz":"42"}', json_encode($attributes, JSON_THROW_ON_ERROR));
+
+        $attributes = new HtmlAttributes('0=foo 1=bar');
+
+        $this->assertSame('{"0":"foo","1":"bar"}', json_encode($attributes, JSON_THROW_ON_ERROR));
+    }
+
+    public function testIteratorStringKeys(): void
+    {
+        $attributes = new HtmlAttributes('0=foo 1=bar');
+
+        foreach ($attributes as $key => $value) {
+            $this->assertIsString($key);
+            $this->assertIsString($value);
+        }
     }
 
     private function toStringable(string $string): \Stringable

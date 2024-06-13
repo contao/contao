@@ -168,6 +168,7 @@ class TemplateLoaderTest extends TestCase
     {
         (new Filesystem())->touch([
             Path::join($this->getTempDir(), 'templates/mod_article_custom.html5'),
+            Path::join($this->getTempDir(), 'templates/mod_article_foo-bar.html5'),
             Path::join($this->getTempDir(), 'templates/mod_article_list_custom.html5'),
         ]);
 
@@ -182,6 +183,7 @@ class TemplateLoaderTest extends TestCase
                 'mod_article_bar' => 'mod_article_bar',
                 'mod_article_custom' => 'mod_article_custom (global)',
                 'mod_article_foo' => 'mod_article_foo',
+                'mod_article_foo-bar' => 'mod_article_foo-bar (global)',
             ],
             Controller::getTemplateGroup('mod_article'),
         );
@@ -191,6 +193,7 @@ class TemplateLoaderTest extends TestCase
                 'mod_article_bar' => 'mod_article_bar',
                 'mod_article_custom' => 'mod_article_custom (global)',
                 'mod_article_foo' => 'mod_article_foo',
+                'mod_article_foo-bar' => 'mod_article_foo-bar (global)',
             ],
             Controller::getTemplateGroup('mod_article_'),
         );
@@ -237,20 +240,6 @@ class TemplateLoaderTest extends TestCase
         );
 
         unset($GLOBALS['CTLG']);
-    }
-
-    public function testThrowsIfThereAreHyphensInCustomTemplateNames(): void
-    {
-        (new Filesystem())->touch([
-            Path::join($this->getTempDir(), '/templates/mod_article-custom.html5'),
-        ]);
-
-        TemplateLoader::addFile('mod_article', 'core-bundle/contao/templates/modules');
-
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Using hyphens in the template name "mod_article-custom" is not allowed, use snake_case instead.');
-
-        Controller::getTemplateGroup('mod_article');
     }
 
     /**

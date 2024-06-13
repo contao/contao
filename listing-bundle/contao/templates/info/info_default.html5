@@ -1,9 +1,16 @@
+<?php $this->extend('block_searchable'); ?>
 
-<div class="<?= $this->class ?> listing block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+<?php
 
-  <?php if ($this->headline): ?>
-    <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
-  <?php endif; ?>
+$this->wrapperAttributes = $this
+    ->attr()
+    ->addClass('listing')
+    ->mergeWith($this->wrapperAttributes)
+;
+
+?>
+
+<?php $this->block('content'); ?>
 
   <table class="single_record">
   <tbody>
@@ -20,4 +27,4 @@
   <p class="back"><a href="<?= $this->referer ?>" title="<?= $this->back ?>"><?= $this->back ?></a></p>
   <!-- indexer::continue -->
 
-</div>
+<?php $this->endblock(); ?>

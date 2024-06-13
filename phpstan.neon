@@ -1,4 +1,5 @@
 includes:
+    - vendor-bin/phpstan/config/config.php
     - vendor-bin/phpstan/vendor/phpstan/phpstan/conf/bleedingEdge.neon
     - vendor-bin/phpstan/vendor/phpstan/phpstan-phpunit/extension.neon
     - vendor-bin/phpstan/vendor/phpstan/phpstan-phpunit/rules.neon
@@ -47,10 +48,11 @@ parameters:
         - %currentWorkingDirectory%/core-bundle/tests/Functional/var/*
 
     ignoreErrors:
-        -
-            # Ignore the unexpected type hint required for the tagged_locator
-            message: '#type array<Symfony\\Component\\HttpKernel\\Fragment\\FragmentRendererInterface> is incompatible with native type Psr\\Container\\ContainerInterface#'
-            path: %currentWorkingDirectory%/core-bundle/src/Fragment/FragmentHandler.php
+        - identifier: missingType.iterableValue
+
+        # Ignore the symlink warning in the file system test, because we need to create relative symlinks
+        - message: '#Function symlink is unsafe to use, rely on Symfony component Filesystem::symlink instead\.#'
+          path: %currentWorkingDirectory%/core-bundle/tests/DependencyInjection/Compiler/ConfigureFilesystemPassTest.php
 
         # Ignore the unused ModelMetadataTrait that will be removed in Contao 6
         - '#Trait Contao\\CoreBundle\\File\\ModelMetadataTrait is used zero times and is not analysed\.#'
@@ -62,7 +64,6 @@ parameters:
         - '#Method Symfony\\Component\\HttpKernel\\CacheWarmer\\WarmableInterface::warmUp\(\) invoked with 2 parameters, 1 required\.#'
 
     treatPhpDocTypesAsCertain: false
-    checkMissingIterableValueType: false
     rememberPossiblyImpureFunctionValues: false
 
 services:

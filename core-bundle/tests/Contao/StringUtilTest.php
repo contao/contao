@@ -553,7 +553,7 @@ class StringUtilTest extends TestCase
         $ref[0] = 'b';
         $ref = ['c'];
 
-        /** @phpstan-ignore-next-line because PHPStan gets confused by the references */
+        /** @phpstan-ignore method.impossibleType */
         $this->assertNotSame($array, $dereferenced);
         $this->assertNotSame($ref, $dereferenced[0]);
         $this->assertSame($ref, $array[0]);

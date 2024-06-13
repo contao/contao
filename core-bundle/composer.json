@@ -58,7 +58,7 @@
         "contao-components/swiper": "^11.0",
         "contao-components/tablesort": "^4.0",
         "contao-components/tablesorter": "^2.1",
-        "contao-components/tinymce4": "^5.0 || ^6.0",
+        "contao-components/tinymce4": "^5.0 || ^6.0 || ^7.0",
         "contao-components/tristen-tablesort": "^5.3.1",
         "contao/image": "^1.2",
         "contao/imagine-svg": "^1.0",
@@ -146,11 +146,12 @@
         "symfony/twig-bundle": "^6.4",
         "symfony/uid": "^6.4",
         "symfony/var-dumper": "^6.4",
+        "symfony/yaml": "^6.4",
         "terminal42/escargot": "^1.6",
         "terminal42/service-annotation-bundle": "^1.1",
         "toflar/cronjob-supervisor": "^2.0",
         "twig/string-extra": "^3.0",
-        "twig/twig": "^3.8",
+        "twig/twig": "^3.10.2",
         "ua-parser/uap-php": "^3.9",
         "webignition/robots-txt-file": "^3.0",
         "wikimedia/less.php": "^1.7"
@@ -178,9 +179,7 @@
         "contao/manager-plugin": "<2.0 || >=3.0",
         "doctrine/cache": "<1.10",
         "terminal42/contao-ce-access": "<3.0",
-        "thecodingmachine/safe": "<1.2",
-        "twig/intl-extra": "3.9.0",
-        "twig/twig": "3.9.0"
+        "thecodingmachine/safe": "<1.2"
     },
     "autoload": {
         "psr-4": {

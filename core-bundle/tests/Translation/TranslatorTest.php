@@ -123,7 +123,7 @@ class TranslatorTest extends TestCase
         unset(
             $GLOBALS['TL_LANG']['MSC']['foo'],
             $GLOBALS['TL_LANG']['MSC']['foo.bar\baz'],
-            $GLOBALS['TL_LANG']['MSC']['foo\\']['bar\baz.']
+            $GLOBALS['TL_LANG']['MSC']['foo\\']['bar\baz.'],
         );
     }
 

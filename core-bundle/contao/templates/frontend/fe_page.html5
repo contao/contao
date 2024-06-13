@@ -1,5 +1,23 @@
+<?php
+
+$this->rootAttributes = $this
+    ->attr()
+    ->set('lang', $this->language)
+    ->set('dir', 'rtl', $this->isRTL)
+    ->mergeWith($this->rootAttributes)
+;
+
+$this->bodyAttributes = $this
+    ->attr()
+    ->set('id', 'top')
+    ->addClass($this->class)
+    ->setIfExists('onload', $this->onload)
+    ->mergeWith($this->bodyAttributes)
+;
+
+?>
 <!DOCTYPE html>
-<html lang="<?= $this->language ?>"<?php if ($this->isRTL): ?> dir="rtl"<?php endif; ?>>
+<html<?= $this->rootAttributes ?>>
 <head>
 
   <?php $this->block('head'); ?>
@@ -25,7 +43,7 @@
   <?php $this->endblock(); ?>
 
 </head>
-<body id="top"<?php if ($this->class): ?> class="<?= $this->class ?>"<?php endif; ?><?php if ($this->onload): ?> onload="<?= $this->onload ?>"<?php endif; ?>>
+<body<?= $this->bodyAttributes ?>>
 
   <?php $this->block('body'); ?>
     <?php $this->sections('top'); ?>
