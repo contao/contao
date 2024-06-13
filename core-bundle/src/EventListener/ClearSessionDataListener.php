@@ -12,9 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
 use Symfony\Component\Security\Core\Security;
 
 /**
@@ -22,6 +24,13 @@ use Symfony\Component\Security\Core\Security;
  */
 class ClearSessionDataListener
 {
+    private ScopeMatcher $scopeMatcher;
+
+    public function __construct(ScopeMatcher $scopeMatcher)
+    {
+        $this->scopeMatcher = $scopeMatcher;
+    }
+
     /**
      * Clear the Contao session data if not a POST request.
      */
@@ -29,6 +38,11 @@ class ClearSessionDataListener
     {
         if (!$event->isMainRequest()) {
             return;
+        }
+
+        if ($this->scopeMatcher->isContaoMainRequest($event)) {
+            // Disable the default Symfony auto cache control
+            $event->getResponse()->headers->set(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER, '1');
         }
 
         $request = $event->getRequest();

@@ -36,6 +36,8 @@ services:
 
     contao.listener.clear_session_data:
         class: Contao\CoreBundle\EventListener\ClearSessionDataListener
+        arguments:
+            - '@contao.routing.scope_matcher'
         tags:
             # The priority must be higher than the one of the Symfony save session listener (defaults to -1000)
             - { name: kernel.event_listener, priority: -768 }
@@ -324,8 +326,8 @@ services:
         tags:
             # The priority must be lower than the one of MergeHttpHeadersListener (defaults to 256)
             # and must be lower than the one of the ClearSessionDataListener listener (defaults to -768)
-            # and must be lower than the one of the CsrfTokenCookieSubscriber listener (defaults to -832)
-            - { name: kernel.event_listener, priority: -896 }
+            # and must be lower than the one of the CsrfTokenCookieSubscriber listener (defaults to -1050)
+            - { name: kernel.event_listener, priority: -1100 }
 
     contao.listener.menu.backend:
         class: Contao\CoreBundle\EventListener\Menu\BackendMenuListener
