@@ -168,12 +168,16 @@ class MakeResponsePrivateListenerTest extends TestCase
 
     public function testMakesResponsePrivateWhenTheSessionIsStartedAndNotEmpty(): void
     {
+        $session = new Session(new MockArraySessionStorage());
+        $session->set('foobar', 'foobaz');
+
         $response = new Response();
         $response->setPublic();
         $response->setMaxAge(600);
-        $response->headers->setCookie(new Cookie('PHPSESSID', '1'));
 
         $request = new Request();
+        $request->setSession($session);
+        $request->cookies->set($session->getName(), $session->getId());
 
         $event = new ResponseEvent(
             $this->createMock(KernelInterface::class),
@@ -186,7 +190,7 @@ class MakeResponsePrivateListenerTest extends TestCase
         $listener->makeResponsePrivate($event);
 
         $this->assertTrue($response->headers->getCacheControlDirective('private'));
-        $this->assertSame('response-cookies (PHPSESSID)', $response->headers->get(MakeResponsePrivateListener::DEBUG_HEADER));
+        $this->assertSame('session-cookie', $response->headers->get(MakeResponsePrivateListener::DEBUG_HEADER));
     }
 
     public function testMakesResponsePrivateWhenTheResponseContainsACookie(): void

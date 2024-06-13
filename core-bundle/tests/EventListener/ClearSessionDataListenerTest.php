@@ -161,7 +161,7 @@ class ClearSessionDataListenerTest extends TestCase
             ->willReturn(false)
         ;
 
-        $request = new Request([], [], ['_scope' => 'frontend']);
+        $request = new Request();
         $request->setSession($session);
 
         $event = new ResponseEvent(
@@ -188,7 +188,7 @@ class ClearSessionDataListenerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $request = new Request([], [], ['_scope' => 'frontend']);
+        $request = new Request();
         $request->setSession($session);
 
         $event = new ResponseEvent(
