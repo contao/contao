@@ -1696,6 +1696,7 @@ table.tl_listing {
 
 /* Tree view */
 .tl_folder_top {
+	min-height: 18px;
 	padding: 5px 6px;
 	border: solid var(--tree-header-border);
 	border-width: 1px 0;
