@@ -33,6 +33,7 @@ use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class InsertTagsTest extends TestCase
 {
@@ -779,18 +780,12 @@ class InsertTagsTest extends TestCase
      *
      * @group legacy
      */
-    public function testRemovesLanguageInsertTags(string $source, string $expected, string $pageLanguage = 'en'): void
+    public function testRemovesLanguageInsertTags(string $source, string $expected, string $translatorLocale = 'en'): void
     {
-        $request = $this->createMock(Request::class);
-        $request
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
             ->method('getLocale')
-            ->willReturn($pageLanguage)
-        ;
-
-        $requestStack = $this->createMock(RequestStack::class);
-        $requestStack
-            ->method('getCurrentRequest')
-            ->willReturn($request)
+            ->willReturn($translatorLocale)
         ;
 
         $reflectionClass = new \ReflectionClass(InsertTags::class);
@@ -801,7 +796,7 @@ class InsertTagsTest extends TestCase
         System::getContainer()->set('contao.insert_tag.parser', $insertTagParser);
 
         $insertTagParser->addBlockSubscription(new InsertTagSubscription(
-            new IfLanguageInsertTag($requestStack),
+            new IfLanguageInsertTag($translator),
             '__invoke',
             'iflng',
             'iflng',
@@ -810,7 +805,7 @@ class InsertTagsTest extends TestCase
         ));
 
         $insertTagParser->addBlockSubscription(new InsertTagSubscription(
-            new IfLanguageInsertTag($requestStack),
+            new IfLanguageInsertTag($translator),
             '__invoke',
             'ifnlng',
             'ifnlng',
