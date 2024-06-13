@@ -270,6 +270,23 @@ class MakeResponsePrivateListenerTest extends TestCase
         $this->assertTrue($response->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
     }
 
+    public function testDoesNotDisableSymfonyAutoCache(): void
+    {
+        $response = new Response();
+
+        $event = new ResponseEvent(
+            $this->createMock(KernelInterface::class),
+            new Request(),
+            HttpKernelInterface::MAIN_REQUEST,
+            $response
+        );
+
+        $listener = new MakeResponsePrivateListener($this->createScopeMatcher(false));
+        $listener->disableSymfonyAutoCacheControl($event);
+
+        $this->assertFalse($response->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
+    }
+
     private function createScopeMatcher(bool $isContaoMainRequest): ScopeMatcher
     {
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
