@@ -84,7 +84,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $makeResponsePrivateDefinition = $container->getDefinition('contao.listener.make_response_private');
         $makeResponsePrivateTags = $makeResponsePrivateDefinition->getTags();
-        $makeResponsePrivatePriority = $makeResponsePrivateTags['kernel.event_listener'][0]['priority'] ?? 0;
+        $makeResponsePrivatePriority = $makeResponsePrivateTags['kernel.event_listener'][1]['priority'] ?? 0;
 
         $mergeHeadersListenerDefinition = $container->getDefinition('contao.listener.merge_http_headers');
         $mergeHeadersListenerTags = $mergeHeadersListenerDefinition->getTags();

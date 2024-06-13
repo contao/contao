@@ -19,7 +19,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
-use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -59,7 +58,7 @@ class ClearSessionDataListenerTest extends TestCase
 
         $_SESSION['FORM_DATA'] = ['foo' => 'bar', 'SUBMITTED_AT' => $submittedAt];
 
-        $listener = new ClearSessionDataListener($this->mockScopeMatcher());
+        $listener = new ClearSessionDataListener();
         $listener($event);
 
         if ($shouldClear) {
@@ -126,7 +125,7 @@ class ClearSessionDataListenerTest extends TestCase
             new Response()
         );
 
-        $listener = new ClearSessionDataListener($this->mockScopeMatcher());
+        $listener = new ClearSessionDataListener();
         $listener($event);
     }
 
@@ -149,7 +148,7 @@ class ClearSessionDataListenerTest extends TestCase
             new Response()
         );
 
-        $listener = new ClearSessionDataListener($this->mockScopeMatcher());
+        $listener = new ClearSessionDataListener();
         $listener($event);
     }
 
@@ -174,11 +173,10 @@ class ClearSessionDataListenerTest extends TestCase
 
         $_SESSION['FORM_DATA'] = ['foo' => 'bar'];
 
-        $listener = new ClearSessionDataListener($this->mockScopeMatcher());
+        $listener = new ClearSessionDataListener();
         $listener($event);
 
         $this->assertSame(['foo' => 'bar'], $_SESSION['FORM_DATA']);
-        $this->assertTrue($event->getResponse()->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
     }
 
     public function testClearsTheLegacyAttributeBags(): void
@@ -204,12 +202,11 @@ class ClearSessionDataListenerTest extends TestCase
         $_SESSION['FE_DATA'] = new AttributeBag();
         $_SESSION['FE_DATA']->set('foo', 'bar');
 
-        $listener = new ClearSessionDataListener($this->mockScopeMatcher());
+        $listener = new ClearSessionDataListener();
         $listener($event);
 
         $this->assertArrayNotHasKey('BE_DATA', $_SESSION);
         $this->assertArrayHasKey('FE_DATA', $_SESSION);
         $this->assertSame('bar', $_SESSION['FE_DATA']->get('foo'));
-        $this->assertTrue($event->getResponse()->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
     }
 }
