@@ -90,8 +90,9 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
             // The priority must be higher than the one of the Symfony route listener
             // (defaults to 32)
             KernelEvents::REQUEST => ['onKernelRequest', 36],
-            // The priority must be higher than the one of the make-response-private listener (defaults to -1012)
-            // and lower than the one of the session listener (defaults to -1000)
+            // The priority must be higher than the one of the make-response-private listener
+            // (defaults to -1012) and lower than the one of the session listener (defaults
+            // to -1000)
             KernelEvents::RESPONSE => ['onKernelResponse', -1006],
             ConsoleEvents::COMMAND => ['onCommand', 36],
         ];
@@ -109,11 +110,7 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
             return true;
         }
 
-        if ($request->getUserInfo()) {
-            return true;
-        }
-
-        return false;
+        return (bool) $request->getUserInfo();
     }
 
     private function setCookies(Request $request, Response $response): void

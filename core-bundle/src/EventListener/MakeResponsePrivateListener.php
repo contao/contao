@@ -31,7 +31,7 @@ class MakeResponsePrivateListener
     }
 
     /**
-     * The priority must be higher than the one of the session listener (defaults to -1000)
+     * The priority must be higher than the one of the session listener (defaults to -1000).
      */
     #[AsEventListener(priority: -896)]
     public function disableSymfonyAutoCacheControl(ResponseEvent $event): void
@@ -57,10 +57,11 @@ class MakeResponsePrivateListener
      * but we want to make sure it works for any reverse proxy without having to
      * configure too much.
      *
-     * The priority must be lower than the one of MergeHttpHeadersListener (defaults to 256)
-     * and must be lower than the one of the ClearSessionDataListener listener (defaults to -768)
-     * and must be lower than the one of the CsrfTokenCookieSubscriber listener (defaults to -1006)
-     * and must be higher than the one of the StreamedResponseListener listener (defaults to -1024)
+     * The priority must be lower than the one of MergeHttpHeadersListener (defaults
+     * to 256) and must be lower than the one of the ClearSessionDataListener listener
+     * (defaults to -768) and must be lower than the one of the
+     * CsrfTokenCookieSubscriber listener (defaults to -1006) and must be higher than
+     * the one of the StreamedResponseListener listener (defaults to -1024)
      */
     #[AsEventListener(priority: -1012)]
     public function makeResponsePrivate(ResponseEvent $event): void
@@ -92,7 +93,8 @@ class MakeResponsePrivateListener
             return;
         }
 
-        // 3) The response sets a cookie (including session cookies as this listener comes after the session listener)
+        // 3) The response sets a cookie (including session cookies as this listener
+        // comes after the session listener)
         if ($cookies = $response->headers->getCookies()) {
             $this->makePrivate(
                 $response,
