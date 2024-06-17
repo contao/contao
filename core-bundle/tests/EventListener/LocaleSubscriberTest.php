@@ -33,7 +33,6 @@ class LocaleSubscriberTest extends TestCase
     {
         $request = $this->createMock(Request::class);
         $request->attributes = $this->createMock(ParameterBag::class);
-
         $request->attributes
             ->expects($this->atLeastOnce())
             ->method('get')
