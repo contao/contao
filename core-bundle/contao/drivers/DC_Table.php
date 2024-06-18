@@ -392,6 +392,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			);
 
 			$objSession->set('CLIPBOARD', $arrClipboard);
+
+			if ($this->currentPid)
+			{
+				$this->redirect(Backend::addToUrl('id='.$this->currentPid, false, array('act', 'mode')));
+			}
+			else
+			{
+				$this->redirect(Backend::addToUrl('', false, array('act', 'mode', 'id')));
+			}
 		}
 
 		// Custom filter
@@ -3966,7 +3975,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$breadcrumb = $GLOBALS['TL_DCA'][$table]['list']['sorting']['breadcrumb'] ?? '';
 
 		// Return if there are no records
-		if (!$tree && Input::get('act') != 'paste')
+		if (!$tree && !$blnClipboard)
 		{
 			if ($breadcrumb)
 			{
@@ -4342,7 +4351,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			$mouseover = ' toggle_select hover-div';
 		}
-		elseif (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED && Input::get('act') == 'paste')
+		elseif (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED && $arrClipboard !== false)
 		{
 			$mouseover = ' hover-div';
 		}
@@ -4620,7 +4629,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <div class="tl_header click2edit toggle_select hover-div">';
 
 		// List all records of the child table
-		if (\in_array(Input::get('act'), array('paste', 'select', null)))
+		if (\in_array(Input::get('act'), array('select', null)))
 		{
 			// Header
 			$imagePasteNew = Image::getHtml('new.svg', $labelPasteNew[0]);
