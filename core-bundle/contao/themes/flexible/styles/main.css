@@ -1177,10 +1177,6 @@ table.tl_listing {
 	background: var(--content-bg);
 }
 
-.tl_file_list {
-	position: relative;
-}
-
 .tl_file_list .ellipsis {
 	height: 16px;
 	text-overflow: ellipsis;
