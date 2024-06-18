@@ -413,6 +413,7 @@ services:
               contao.image.resizer: '@contao.image.resizer'
               contao.assets.files_context: '@contao.assets.files_context'
               contao.framework: '@contao.framework'
+              contao.filesystem.virtual.files: '@contao.filesystem.virtual.files'
               event_dispatcher: '@event_dispatcher'
             - '%kernel.project_dir%'
             - '%contao.upload_path%'
