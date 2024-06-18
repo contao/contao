@@ -91,7 +91,7 @@ class LocaleSubscriberTest extends TestCase
         yield ['de', 'de', ['de', 'en']];
         yield ['de, en', 'en', ['en']];
         yield ['de', 'en', ['en']];
-        yield ['de-de, de, en', 'de', ['de', 'en']];
+        yield ['de-de, en', 'de', ['de', 'en']];
         yield ['de, fr, en', 'fr', ['en', 'fr']];
         yield ['fr, de-ch, en', 'de_CH', ['en', 'de_CH']];
     }
