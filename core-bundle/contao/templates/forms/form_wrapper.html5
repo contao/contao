@@ -65,10 +65,9 @@
               return;
             }
 
-            const template = document.createElement('template');
-            template.innerHTML = xhr.responseText.trim();
-
-            const newForm = template.content.firstElementChild;
+            const range = document.createRange();
+            range.selectNode(form.parentNode);
+            const newForm = range.createContextualFragment(xhr.responseText).firstElementChild;
             form.replaceWith(newForm);
 
             if (!newForm.getAttribute('action')) {
