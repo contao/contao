@@ -54,6 +54,9 @@
           // Send the triggered button data as well
           if (e.submitter) {
             formData.append(e.submitter.name, e.submitter.value);
+            // Prevent double form submission
+            e.submitter.disabled = true;
+            setTimeout(() => e.submitter.disabled = false, 30000);
           }
 
           request(form, formData, xhr => {
@@ -81,6 +84,16 @@
       }
 
       initForm(el);
+    });
+  </script>
+<?php else: ?>
+  <script<?= $this->attr()->setIfExists('nonce', $this->nonce('script-src')) ?>>
+    document.currentScript.previousElementSibling.querySelector('form').addEventListener('submit', e => {
+      // Prevent double form submission
+      if (e.submitter) {
+        e.submitter.disabled = true;
+        setTimeout(() => e.submitter.disabled = false, 30000);
+      }
     });
   </script>
 <?php endif; ?>
