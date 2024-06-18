@@ -118,6 +118,7 @@ class WebWorker
         $input = new ArrayInput([
             'receivers' => [$transportName],
             '--time-limit' => 30,
+            '--sleep' => 0,
         ]);
 
         // No need to log anything because this is done by the messenger:consume command
