@@ -19,9 +19,9 @@ use Contao\StringUtil;
 use Contao\Template;
 
 /**
- * A Figure object holds image and metadata ready to be applied to a
- * template's context. If you are using the legacy PHP templates, you can still
- * use the provided legacy helper methods to manually apply the data to them.
+ * A Figure object holds image and metadata ready to be applied to a template's
+ * context. If you are using the legacy PHP templates, you can still use the
+ * provided legacy helper methods to manually apply the data to them.
  *
  * Wherever possible, the actual data is only requested/built on demand.
  */
@@ -30,8 +30,8 @@ final class Figure
     /**
      * Creates a figure container.
      *
-     * All arguments but the main image result can also be set via a Closure
-     * that only returns the value on demand.
+     * All arguments but the main image result can also be set via a Closure that only
+     * returns the value on demand.
      *
      * @param Metadata|(\Closure(self):Metadata|null)|null                                $metadata       Metadata container
      * @param array<string, string|null>|(\Closure(self):array<string, string|null>)|null $linkAttributes Link attributes
@@ -123,8 +123,7 @@ final class Figure
     }
 
     /**
-     * Returns a key-value list of all link attributes. This excludes "href" by
-     * default.
+     * Returns a key-value list of all link attributes. This excludes "href" by default.
      */
     public function getLinkAttributes(bool $includeHref = false): HtmlAttributes
     {
@@ -317,9 +316,8 @@ final class Figure
     }
 
     /**
-     * Applies the legacy template data to an existing template. This will
-     * prevent overriding the "href" property if already present and use
-     * "imageHref" instead.
+     * Applies the legacy template data to an existing template. This will prevent
+     * overriding the "href" property if already present and use "imageHref" instead.
      *
      * Note: Do not use this method when building new templates from scratch or
      *       when using Twig templates! Instead, add this object to your

@@ -26,8 +26,8 @@ class Document
     private array|null $jsonLds = null;
 
     /**
-     * The key is the header name in lowercase letters and the value is again
-     * an array of header values.
+     * The key is the header name in lowercase letters and the value is again an array
+     * of header values.
      *
      * @param array<string, array> $headers
      */
@@ -108,8 +108,9 @@ class Document
     }
 
     /**
-     * Extracts all <script type="application/ld+json"> script tags and returns their contents as a JSON decoded
-     * array. Optionally allows to restrict it to a given context and type.
+     * Extracts all <script type="application/ld+json"> script tags and returns their
+     * contents as a JSON decoded array. Optionally allows to restrict it to a given
+     * context and type.
      */
     public function extractJsonLdScripts(string $context = '', string $type = ''): array
     {

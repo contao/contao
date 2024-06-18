@@ -50,6 +50,12 @@ class SearchIndexListener
         }
 
         $request = $event->getRequest();
+
+        // Only handle GET requests (see #1194, #7240)
+        if (!$request->isMethod(Request::METHOD_GET)) {
+            return;
+        }
+
         $document = Document::createFromRequestResponse($request, $response);
         $needsIndex = $this->needsIndex($request, $response, $document);
         $success = $event->getResponse()->isSuccessful();
@@ -65,11 +71,6 @@ class SearchIndexListener
 
     private function needsIndex(Request $request, Response $response, Document $document): bool
     {
-        // Only handle GET requests (see #1194)
-        if (!$request->isMethod(Request::METHOD_GET)) {
-            return false;
-        }
-
         // Do not index if called by crawler
         if (Factory::USER_AGENT === $request->headers->get('User-Agent')) {
             return false;

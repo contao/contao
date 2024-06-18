@@ -25,7 +25,7 @@ class UrlUtilTest extends TestCase
         $this->assertSame($expected, UrlUtil::makeAbsolute($url, $base));
     }
 
-    public function getMakeAbsolute(): \Generator
+    public static function getMakeAbsolute(): iterable
     {
         $fullUrl = 'https://user:pass@host:123/path/file?query#fragment';
 

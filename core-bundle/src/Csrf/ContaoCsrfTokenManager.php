@@ -89,8 +89,8 @@ class ContaoCsrfTokenManager extends CsrfTokenManager implements ResetInterface
     }
 
     /**
-     * Skip the CSRF token validation if the request has no cookies, no
-     * authenticated user and the session has not been started.
+     * Skip the CSRF token validation if the request has no cookies, no authenticated
+     * user and the session has not been started.
      */
     public function canSkipTokenValidation(Request $request, string $tokenCookieName): bool
     {

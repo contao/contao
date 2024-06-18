@@ -78,7 +78,7 @@ class PurgeExpiredDataCronTest extends ContaoTestCase
         ClockMock::withClockMock(false);
     }
 
-    public function cleanupLogsAndUndoProvider(): \Generator
+    public static function cleanupLogsAndUndoProvider(): iterable
     {
         yield 'Do not execute any queries if the periods are configured to 0' => [
             0,

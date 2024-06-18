@@ -845,8 +845,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			throw new UnprocessableEntityHttpException('Attempt to relate record ' . $this->intId . ' of table "' . $this->strTable . '" to its child record ' . Input::get('pid') . ' (circular reference).');
 		}
 
-		$this->set['tstamp'] = time();
-
 		// Dynamically set the parent table of tl_content
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
 		{
@@ -1148,7 +1146,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->loadDataContainer($v);
 			$cctable[$v] = $GLOBALS['TL_DCA'][$v]['config']['ctable'] ?? null;
 
-			if (!($GLOBALS['TL_DCA'][$v]['config']['doNotCopyRecords'] ?? null) && \strlen($v))
+			if (!($GLOBALS['TL_DCA'][$v]['config']['doNotCopyRecords'] ?? null))
 			{
 				// Consider the dynamic parent table (see #4867)
 				if ($GLOBALS['TL_DCA'][$v]['config']['dynamicPtable'] ?? null)
@@ -1168,15 +1166,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					// Exclude the duplicated record itself
 					if ($v == $table && $objCTable->id == $parentId)
-					{
-						continue;
-					}
-
-					try
-					{
-						$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $v, new ReadAction($v, $objCTable->row()));
-					}
-					catch (AccessDeniedException)
 					{
 						continue;
 					}
@@ -1224,16 +1213,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					$copy[$v][$objCTable->id]['pid'] = $insertID;
 					$copy[$v][$objCTable->id]['tstamp'] = $time;
-
-					try
-					{
-						$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $v, new CreateAction($v, $copy[$v][$objCTable->id]));
-					}
-					catch (AccessDeniedException)
-					{
-						unset($copy[$v][$objCTable->id]);
-						continue;
-					}
 				}
 			}
 		}
@@ -1818,7 +1797,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	public function deleteChildren($table, $id, &$delete)
 	{
-		$cctable = array();
 		$ctable = $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? array();
 
 		if (empty($ctable) || !\is_array($ctable))
@@ -1832,7 +1810,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		foreach ($ctable as $v)
 		{
 			$this->loadDataContainer($v);
-			$cctable[$v] = $GLOBALS['TL_DCA'][$v]['config']['ctable'] ?? null;
 
 			// Consider the dynamic parent table (see #4867)
 			if ($GLOBALS['TL_DCA'][$v]['config']['dynamicPtable'] ?? null)
@@ -1848,36 +1825,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					->execute($id);
 			}
 
-			if ($objDelete->numRows && !($GLOBALS['TL_DCA'][$v]['config']['doNotDeleteRecords'] ?? null) && \strlen($v))
+			if ($objDelete->numRows && !($GLOBALS['TL_DCA'][$v]['config']['doNotDeleteRecords'] ?? null))
 			{
-				$rows = $objDelete->fetchAllAssoc();
-
-				static::preloadCurrentRecords(array_column($rows, 'id'), $v);
-
-				foreach ($rows as $row)
+				foreach ($objDelete->fetchEach('id') as $childId)
 				{
-					try
-					{
-						$currentRecord = $this->getCurrentRecord($row['id'], $v);
-
-						if ($currentRecord === null)
-						{
-							continue;
-						}
-
-						$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $v, new DeleteAction($v, $currentRecord));
-					}
-					catch (AccessDeniedException)
-					{
-						continue;
-					}
-
-					$delete[$v][] = $row['id'];
-
-					if (!empty($cctable[$v]))
-					{
-						$this->deleteChildren($v, $row['id'], $delete);
-					}
+					$delete[$v][] = $childId;
+					$this->deleteChildren($v, $childId, $delete);
 				}
 			}
 		}
@@ -1923,8 +1876,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				// Unset fields that no longer exist in the database
 				$row = array_intersect_key($row, $arrFields[$table]);
-
-				$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $table, new CreateAction($table, $row));
 
 				// Re-insert the data
 				$objInsertStmt = $db
@@ -2446,7 +2397,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '"' . (!empty($this->onsubmit) ? ' onsubmit="' . implode(' ', $this->onsubmit) . '"' : '') . '>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">' . $strVersionField . $return;
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">' . $strVersionField . $return;
 
 		// Set the focus if there is an error
 		if ($this->noReload)
@@ -2808,7 +2759,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '">
 <div class="tl_formbody_edit nogrid">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
 <input type="hidden" name="IDS[]" value="' . implode('"><input type="hidden" name="IDS[]" value="', $ids) . '">' . ($this->noReload ? '
 <p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['general'] . '</p>' : '') . $return . '
 </div>
@@ -2873,7 +2824,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <form action="' . StringUtil::ampersand(Environment::get('requestUri')) . '&amp;fields=1" id="' . $this->strTable . '_all" class="tl_form tl_edit_form" method="post">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '_all">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
 <input type="hidden" name="IDS[]" value="' . implode('"><input type="hidden" name="IDS[]" value="', $ids) . '">' . ($blnIsError ? '
 <p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['general'] . '</p>' : '') . '
 <div class="tl_tbox">
@@ -3186,7 +3137,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '">
 <div class="tl_formbody_edit nogrid">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
 <input type="hidden" name="IDS[]" value="' . implode('"><input type="hidden" name="IDS[]" value="', $ids) . '">' . ($this->noReload ? '
 <p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['general'] . '</p>' : '') . $return . '
 </div>
@@ -3250,7 +3201,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <form action="' . StringUtil::ampersand(Environment::get('requestUri')) . '&amp;fields=1" id="' . $this->strTable . '_all" class="tl_form tl_edit_form" method="post">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '_all">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
 <input type="hidden" name="IDS[]" value="' . implode('"><input type="hidden" name="IDS[]" value="', $ids) . '">' . ($blnIsError ? '
 <p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['general'] . '</p>' : '') . '
 <div class="tl_tbox">
@@ -4035,7 +3986,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <p class="tl_empty">' . $GLOBALS['TL_LANG']['MSC']['noResult'] . '</p>';
 		}
 
-		$requestToken = htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue());
+		$requestToken = htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
 		$strRefererId = System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
 
 		$return .= ((Input::get('act') == 'select') ? '
@@ -4670,7 +4621,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <form id="tl_select" class="tl_form' . ((Input::get('act') == 'select') ? ' unselectable' : '') . '" method="post" novalidate>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_select">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">' : '') . ($blnClipboard ? '
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">' : '') . ($blnClipboard ? '
 <div id="paste_hint">
   <p>' . $GLOBALS['TL_LANG']['MSC']['selectNewPosition'] . '</p>
 </div>' : '') . '
@@ -5326,7 +5277,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <form id="tl_select" class="tl_form' . ((Input::get('act') == 'select') ? ' unselectable' : '') . '" method="post" novalidate>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_select">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">' : '') . '
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">' : '') . '
 <div class="tl_listing_container list_view" id="tl_listing"' . $this->getPickerValueAttribute() . '>' . ((Input::get('act') == 'select' || $this->strPickerFieldType == 'checkbox') ? '
 <div class="tl_select_trigger">
 <label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">

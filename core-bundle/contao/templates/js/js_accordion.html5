@@ -25,20 +25,20 @@ $GLOBALS['TL_CSS'][] = $this->asset('css/handorgel.min.css', 'contao-components/
         toggler.appendChild(button);
         toggler.parentNode.classList.add('handorgel');
         contentElements.push(toggler.nextElementSibling);
-      });
 
-      new handorgel(document.body, Object.assign({
-        headerElements,
-        contentElements,
-        headerOpenClass: 'open',
-        contentOpenClass: 'open',
-        headerOpenedClass: 'active',
-        contentOpenedClass: 'active',
-        headerFocusClass: 'focus',
-        contentFocusClass: 'focus',
-        headerDisabledClass: 'disabled',
-        contentDisabledClass: 'disabled',
-      }, options || {}));
+        new handorgel(toggler.parentElement, Object.assign({
+          headerElements,
+          contentElements,
+          headerOpenClass: 'open',
+          contentOpenClass: 'open',
+          headerOpenedClass: 'active',
+          contentOpenedClass: 'active',
+          headerFocusClass: 'focus',
+          contentFocusClass: 'focus',
+          headerDisabledClass: 'disabled',
+          contentDisabledClass: 'disabled',
+        }, options || {}));
+      });
     }
 
     // Change this selector according to your template, or duplicate

@@ -443,6 +443,11 @@ services:
     contao.insert_tag.php_function_flag:
         class: Contao\CoreBundle\InsertTag\Flag\PhpFunctionFlag
 
+    contao.insert_tag.resolver.asset:
+        class: Contao\CoreBundle\InsertTag\Resolver\AssetInsertTag
+        arguments:
+            - '@assets.packages'
+
     contao.insert_tag.resolver.date:
         class: Contao\CoreBundle\InsertTag\Resolver\DateInsertTag
         arguments:
@@ -453,13 +458,19 @@ services:
         arguments:
             - '@request_stack'
 
+    contao.insert_tag.resolver.format_date:
+        class: Contao\CoreBundle\InsertTag\Resolver\FormatDateInsertTag
+        arguments:
+            - '@contao.framework'
+            - '@request_stack'
+
     contao.insert_tag.resolver.fragment:
         class: Contao\CoreBundle\InsertTag\Resolver\FragmentInsertTag
 
     contao.insert_tag.resolver.if_language:
         class: Contao\CoreBundle\InsertTag\Resolver\IfLanguageInsertTag
         arguments:
-            - '@request_stack'
+            - '@translator'
 
     contao.insert_tag.resolver.legacy:
         class: Contao\CoreBundle\InsertTag\Resolver\LegacyInsertTag
@@ -472,6 +483,11 @@ services:
             - '@contao.framework'
             - '@contao.security.token_checker'
             - '@contao.routing.content_url_generator'
+
+    contao.insert_tag.resolver.translation:
+        class: Contao\CoreBundle\InsertTag\Resolver\TranslationInsertTag
+        arguments:
+            - '@translator'
 
     contao.insert_tag.string_util_flag:
         class: Contao\CoreBundle\InsertTag\Flag\StringUtilFlag
@@ -531,22 +547,17 @@ services:
         arguments:
             - '@contao.menu.matcher'
 
-    contao.messenger.auto_fallback_notifier:
-        class: Contao\CoreBundle\Messenger\AutoFallbackNotifier
-        arguments:
-            - '@cache.app'
-            - '@messenger.receiver_locator'
-
-    contao.messenger.auto_fallback_transport_factory:
-        class: Contao\CoreBundle\Messenger\Transport\AutoFallbackTransportFactory
-        arguments:
-            - '@contao.messenger.auto_fallback_notifier'
-            - '@messenger.receiver_locator'
-
     contao.messenger.search_index_message_handler:
         class: Contao\CoreBundle\Messenger\MessageHandler\SearchIndexMessageHandler
         arguments:
             - '@?contao.search.indexer'
+
+    contao.messenger.web_worker:
+        class: Contao\CoreBundle\Messenger\WebWorker
+        arguments:
+            - '@cache.app'
+            - '@console.command.messenger_consume_messages'
+            - '@messenger.receiver_locator'
 
     contao.model_argument_resolver:
         class: Contao\CoreBundle\HttpKernel\ModelArgumentResolver
@@ -561,8 +572,6 @@ services:
         class: Contao\CoreBundle\Monolog\ContaoTableHandler
         arguments:
             - !service_closure '@database_connection'
-            - debug
-            - false
         tags:
             - { name: monolog.logger, channel: contao }
 
@@ -1250,6 +1259,7 @@ services:
     # Autowiring aliases
     Contao\CoreBundle\Cache\EntityCacheTags: '@contao.cache.entity_tags'
     Contao\CoreBundle\Config\ResourceFinderInterface: '@contao.resource_finder'
+    Contao\CoreBundle\Csp\WysiwygStyleProcessor: '@contao.csp.wysiwyg_style_processor'
     Contao\CoreBundle\Csrf\ContaoCsrfTokenManager: '@contao.csrf.token_manager'
     Contao\CoreBundle\Doctrine\Backup\DumperInterface: '@contao.doctrine.backup.dumper'
     Contao\CoreBundle\Framework\ContaoFramework: '@contao.framework'

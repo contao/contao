@@ -67,7 +67,7 @@ class DefaultGlobalOperationsListenerTest extends TestCase
         }
     }
 
-    public function editAllOperationProvider(): \Generator
+    public static function editAllOperationProvider(): iterable
     {
         yield 'has operation if DCA is editable' => [false, false, false, false, true];
 
@@ -113,7 +113,7 @@ class DefaultGlobalOperationsListenerTest extends TestCase
         }
     }
 
-    public function toggleNodesOperationProvider(): \Generator
+    public static function toggleNodesOperationProvider(): iterable
     {
         yield 'does not have toggleNodes in unsorted mode' => [DC_Table::class, DataContainer::MODE_UNSORTED, false];
 

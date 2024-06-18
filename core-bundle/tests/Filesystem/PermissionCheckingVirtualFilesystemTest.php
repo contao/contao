@@ -50,7 +50,7 @@ class PermissionCheckingVirtualFilesystemTest extends TestCase
         $customViewVirtualFilesystem->$operation(...$arguments);
     }
 
-    public function provideOperationsThatShouldBeDenied(): \Generator
+    public static function provideOperationsThatShouldBeDenied(): iterable
     {
         $resource = tmpfile();
         fclose($resource);

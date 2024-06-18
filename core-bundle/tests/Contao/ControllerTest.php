@@ -137,7 +137,7 @@ class ControllerTest extends TestCase
         $this->assertFileExists(__DIR__.'/../../contao/themes/flexible/icons/'.$expected);
     }
 
-    public function pageStatusIconProvider(): \Generator
+    public function pageStatusIconProvider(): iterable
     {
         yield 'Published' => [
             $this->mockClassWithProperties(PageModel::class, [

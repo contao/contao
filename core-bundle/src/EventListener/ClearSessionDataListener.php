@@ -19,7 +19,8 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
 
 /**
- * The priority must be higher than the one of the Symfony save session listener (defaults to -1000).
+ * The priority must be higher than the one of the Symfony save session listener
+ * (defaults to -1000).
  *
  * @internal
  */

@@ -89,7 +89,7 @@ class PageTypeAccessVoterTest extends TestCase
         $this->assertSame($expected, $result);
     }
 
-    public function decidesAccessOnPageTypeInActionProvider(): \Generator
+    public static function decidesAccessOnPageTypeInActionProvider(): iterable
     {
         yield [
             new CreateAction('tl_page', ['type' => 'regular']),
@@ -166,7 +166,7 @@ class PageTypeAccessVoterTest extends TestCase
         $this->assertSame($expected, $result);
     }
 
-    public function errorPagesAreOnlyAllowedInRootPageProvider(): \Generator
+    public static function errorPagesAreOnlyAllowedInRootPageProvider(): iterable
     {
         $errorTypes = ['error_401', 'error_403', 'error_404', 'error_503'];
 
@@ -269,11 +269,11 @@ class PageTypeAccessVoterTest extends TestCase
                 VoterInterface::ACCESS_DENIED,
             ];
 
-            yield "Deny if only sorting of $type is changed" => [
+            yield "Allow if page of type $type is moved within the same root" => [
                 new UpdateAction('tl_page', ['pid' => 42, 'type' => $type], ['sorting' => 256]),
-                [42],
-                [[42, $type]],
-                VoterInterface::ACCESS_DENIED,
+                null,
+                null,
+                VoterInterface::ACCESS_ABSTAIN,
             ];
         }
     }
@@ -299,7 +299,7 @@ class PageTypeAccessVoterTest extends TestCase
         $this->assertSame($expected, $result);
     }
 
-    public function rootPageMustBeAtTopLevelProvider(): \Generator
+    public static function rootPageMustBeAtTopLevelProvider(): iterable
     {
         yield 'Abstains if current type is not root' => [
             new CreateAction('tl_page', ['pid' => 42, 'type' => 'regular']),

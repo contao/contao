@@ -28,8 +28,8 @@ class AutoRefreshTemplateHierarchyListener
     }
 
     /**
-     * Auto refresh template hierarchy in dev mode, so that added/removed files
-     * are immediately recognized.
+     * Auto refresh template hierarchy in dev mode, so that added/removed files are
+     * immediately recognized.
      */
     public function __invoke(RequestEvent $event): void
     {

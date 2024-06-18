@@ -54,7 +54,7 @@ class SearchIndexListenerTest extends TestCase
         $listener($event);
     }
 
-    public function getRequestResponse(): \Generator
+    public static function getRequestResponse(): iterable
     {
         yield 'Should index because the response was successful and contains ld+json information' => [
             Request::create('/foobar'),
@@ -74,7 +74,7 @@ class SearchIndexListenerTest extends TestCase
 
         yield 'Should be skipped because it is not a GET request' => [
             Request::create('/foobar', 'POST'),
-            new Response(),
+            new Response('', Response::HTTP_INTERNAL_SERVER_ERROR),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
             false,

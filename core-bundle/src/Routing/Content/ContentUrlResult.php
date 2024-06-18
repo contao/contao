@@ -49,7 +49,8 @@ final class ContentUrlResult
     }
 
     /**
-     * Result is a URL string which is possibly relative and could contain insert tags that should be resolved.
+     * Result is a URL string which is possibly relative and could contain insert tags
+     * that should be resolved.
      */
     public static function url(string $url): self
     {
@@ -66,8 +67,8 @@ final class ContentUrlResult
     /**
      * Restarts the resolver process to find a URL for the given content.
      *
-     * Same as with an HTTP redirect, this will not include any parameters given
-     * to the generate() method in the final URL.
+     * Same as with an HTTP redirect, this will not include any parameters given to
+     * the generate() method in the final URL.
      */
     public static function redirect(object|null $content): self
     {
@@ -84,8 +85,8 @@ final class ContentUrlResult
     /**
      * Returns a page model as the target page.
      *
-     * The ContentUrlGenerator will then generate the URL for this target page
-     * with parameters for the content.
+     * The ContentUrlGenerator will then generate the URL for this target page with
+     * parameters for the content.
      */
     public static function resolve(PageModel|null $content): self
     {

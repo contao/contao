@@ -57,8 +57,8 @@ class NewsFeedController extends AbstractController implements DynamicRouteInter
         $baseUrl = $staticUrl ?: $request->getSchemeAndHttpHost();
 
         $feed = new Feed();
-        $feed->setTitle(html_entity_decode($pageModel->title, ENT_QUOTES, $this->charset));
-        $feed->setDescription(html_entity_decode($pageModel->feedDescription ?? '', ENT_QUOTES, $this->charset));
+        $feed->setTitle(html_entity_decode($pageModel->title, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, $this->charset));
+        $feed->setDescription(html_entity_decode($pageModel->feedDescription ?? '', ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, $this->charset));
         $feed->setLanguage($pageModel->language);
 
         $event = new FetchArticlesForFeedEvent($feed, $request, $pageModel);

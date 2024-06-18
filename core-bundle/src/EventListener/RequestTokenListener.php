@@ -23,8 +23,8 @@ use Symfony\Component\Security\Csrf\CsrfToken;
 /**
  * Validates the request token if the request is a Contao request.
  *
- * The priority must be lower than the one of the Symfony route listener (defaults to 32)
- * and the Symfony locale aware listener (defaults to 15).
+ * The priority must be lower than the one of the Symfony route listener (defaults
+ * to 32) and the Symfony locale aware listener (defaults to 15).
  *
  * @internal
  */
@@ -57,7 +57,7 @@ class RequestTokenListener
             || $request->isXmlHttpRequest()
             || false === $request->attributes->get('_token_check')
             || $this->csrfTokenManager->canSkipTokenValidation($request, $this->csrfCookiePrefix.$this->csrfTokenName)
-            || (!$request->attributes->has('_token_check') && !$this->scopeMatcher->isContaoRequest($request))
+            || (true !== $request->attributes->get('_token_check') && !$this->scopeMatcher->isContaoRequest($request))
         ) {
             return;
         }

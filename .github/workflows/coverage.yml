@@ -10,6 +10,11 @@ on:
 
 permissions: read-all
 
+defaults:
+    run:
+        # Simulate an interactive terminal with color support
+        shell: script -q -e -c "export TERM=xterm; bash {0}"
+
 jobs:
     coverage:
         name: Codecov
@@ -23,17 +28,19 @@ jobs:
                   coverage: pcov
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
-            - name: Install the dependencies
-              run: composer install --no-interaction --no-progress
+            - name: Install Contao
+              uses: ramsey/composer-install@v3
 
             - name: Generate the coverage report
               run: php -d pcov.enabled=1 vendor/bin/phpunit --testsuite=coverage --coverage-clover=clover.xml
 
             - name: Upload the coverage report
-              uses: codecov/codecov-action@v3
+              uses: codecov/codecov-action@v4
               with:
                   files: ./clover.xml
                   fail_ci_if_error: true
-                  token: c9fc8445-628e-41c3-886a-a37ebd3c4807
+                  token: ${{ secrets.CODECOV_TOKEN }}

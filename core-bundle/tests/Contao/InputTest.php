@@ -147,8 +147,8 @@ class InputTest extends TestCase
 
         // html_entity_decode simulates the browser here
         $_POST = [
-            'decoded' => html_entity_decode($specialchars(null, $expected)),
-            'encoded' => html_entity_decode($specialchars(null, $expectedEncoded)),
+            'decoded' => html_entity_decode($specialchars(null, $expected), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5),
+            'encoded' => html_entity_decode($specialchars(null, $expectedEncoded), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5),
         ];
 
         Config::set('allowedTags', '');
@@ -199,7 +199,7 @@ class InputTest extends TestCase
         $this->assertSame($encoded, Input::postHtml('key'));
     }
 
-    public function encodeInputProvider(): \Generator
+    public static function encodeInputProvider(): iterable
     {
         yield [
             'foo',
@@ -349,7 +349,7 @@ class InputTest extends TestCase
         $this->assertSame($expectedEncoded, Input::postRaw('key'));
     }
 
-    public function encodeNoneModeProvider(): \Generator
+    public static function encodeNoneModeProvider(): iterable
     {
         yield ['', ''];
         yield ['foo', 'foo'];
@@ -413,7 +413,7 @@ class InputTest extends TestCase
         $this->assertSame($expectedEncoded, Input::postHtml('key', true));
     }
 
-    public function stripTagsProvider(): \Generator
+    public static function stripTagsProvider(): iterable
     {
         yield 'Encodes tags' => [
             'Text <with> tags',
@@ -708,7 +708,7 @@ class InputTest extends TestCase
         $this->assertSame($expected, Input::stripTags($source));
     }
 
-    public function stripTagsNoTagsAllowedProvider(): \Generator
+    public static function stripTagsNoTagsAllowedProvider(): iterable
     {
         yield 'Encodes tags' => [
             'Text <with> tags',
@@ -795,7 +795,7 @@ class InputTest extends TestCase
         $this->assertSame($expected, $simpleTokenParser->parse($html, $tokens));
     }
 
-    public function simpleTokensWithHtmlProvider(): \Generator
+    public static function simpleTokensWithHtmlProvider(): iterable
     {
         yield 'Token only' => [
             'foo##foo##baz',
