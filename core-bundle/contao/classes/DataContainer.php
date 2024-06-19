@@ -989,6 +989,10 @@ abstract class DataContainer extends Backend
 				{
 					$_icon = 'invisible.svg';
 				}
+				elseif ($icon == 'featured.svg')
+				{
+					$_icon = 'unfeatured.svg';
+				}
 
 				$state = $arrRow[$params['field']] ? 1 : 0;
 

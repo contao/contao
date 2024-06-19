@@ -18,11 +18,19 @@ class Image
 {
 	private static array $deprecated = array
 	(
-		'folPlus',
+		'alias',
+		'copychilds',
+		'copychilds_',
+		'filemanager',
 		'folMinus',
+		'folPlus',
 		'header',
 		'header_',
+		'important',
+		'manager',
+		'pickfile',
 		'settings',
+		'unpublished',
 	);
 
 	private static array $disabled = array
@@ -32,11 +40,10 @@ class Image
 		'article_',
 		'children_',
 		'copy_',
-		'copychilds_',
 		'cut_',
 		'delete_',
-		'diffTemplate_',
 		'diff_',
+		'diffTemplate_',
 		'edit_',
 		'editor_',
 		'featured_',

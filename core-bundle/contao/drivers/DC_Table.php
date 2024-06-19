@@ -3858,22 +3858,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$arrClipboard = null;
 		}
 
-		if (isset($GLOBALS['TL_DCA'][$table]['config']['label']))
-		{
-			$label = $GLOBALS['TL_DCA'][$table]['config']['label'];
-		}
-		elseif (($do = Input::get('do')) && isset($GLOBALS['TL_LANG']['MOD'][$do]))
-		{
-			$label = $GLOBALS['TL_LANG']['MOD'][$do][0];
-		}
-		else
-		{
-			$label = $GLOBALS['TL_LANG']['MOD']['page'][0];
-		}
-
-		$icon = !empty($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['icon']) ? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['icon'] : 'pagemounts.svg';
-		$label = Image::getHtml($icon) . ' <label>' . $label . '</label>';
-
 		// Check the default labels (see #509)
 		$labelNew = $GLOBALS['TL_LANG'][$this->strTable]['new'] ?? $GLOBALS['TL_LANG']['DCA']['new'];
 		$security = System::getContainer()->get('security.helper');
@@ -3993,7 +3977,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">
 </div>' : '') . '
 <ul class="tl_listing ' . $treeClass . ($this->strPickerFieldType ? ' picker unselectable' : '') . '">
-  <li class="tl_folder_top cf"><div class="tl_left">' . $label . '</div> <div class="tl_right">';
+  <li class="tl_folder_top cf"><div class="tl_left"></div> <div class="tl_right">';
 
 		$_buttons = '&nbsp;';
 

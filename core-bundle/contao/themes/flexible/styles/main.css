@@ -684,6 +684,10 @@ h2.sub_headline {
 	background-color: var(--active-bg);
 }
 
+.tl_submit_panel button + button {
+	margin-left: 1px;
+}
+
 .tl_filter {
 	width: 100%;
 }
@@ -1486,6 +1490,11 @@ table.tl_listing {
 	background: none;
 }
 
+.tl_right img, .tl_content_right img, .tl_right_nowrap img,
+.tl_right button, .tl_content_right button, .tl_right_nowrap button {
+	margin-left: 1px;
+}
+
 .cte_type {
 	margin: 0 0 4px;
 	font-size: .75rem;
@@ -1511,7 +1520,7 @@ table.tl_listing {
 
 .cte_type.icon-protected {
 	padding-left: 27px;
-	background: var(--table-header) url("icons/protected.svg") 8px center no-repeat;
+	background: var(--table-header) url("icons/protected.svg") 8px 8px no-repeat;
 }
 
 .cte_type .visibility {
@@ -1687,6 +1696,7 @@ table.tl_listing {
 
 /* Tree view */
 .tl_folder_top {
+	min-height: 18px;
 	padding: 5px 6px;
 	border: solid var(--tree-header-border);
 	border-width: 1px 0;
@@ -2186,6 +2196,10 @@ ul.sgallery li {
 	margin: 2px 0;
 }
 
+.tl_listwizard button {
+	margin-left: 1px;
+}
+
 /* Checkbox wizard */
 .tl_checkbox_wizard .sortable img {
 	vertical-align: bottom;
@@ -2477,7 +2491,7 @@ ul.sortable button[disabled]:hover {
 
 #picker-menu a {
 	padding: 3px 12px 3px 32px;
-	background: url("icons/manager.svg") 12px center no-repeat;
+	background: url("icons/mover.svg") 12px center no-repeat;
 }
 
 #picker-menu a:hover {
@@ -2589,7 +2603,7 @@ time[title] {
 
 .list_icon {
 	margin-left: -3px;
-	padding-left: 20px;
+	padding-left: 24px;
 	background-position: left center;
 	background-repeat: no-repeat;
 }
@@ -2635,7 +2649,6 @@ time[title] {
 }
 
 .header_store {
-	padding-left: 18px;
 	background-image: url("icons/store.svg");
 }
 
