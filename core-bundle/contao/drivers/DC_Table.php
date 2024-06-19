@@ -395,7 +395,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			if ($this->currentPid)
 			{
-				$this->redirect(Backend::addToUrl('id='.$this->currentPid, false, array('act', 'mode')));
+				$this->redirect(Backend::addToUrl('id=' . $this->currentPid, false, array('act', 'mode')));
 			}
 			else
 			{
@@ -4117,25 +4117,20 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </form>';
 		}
 
-		if (isset($GLOBALS['TL_DCA'][$this->strTable]['list']['global_operations']['toggleNodes']))
-		{
-			$return = '<div
-					data-controller="contao--toggle-nodes"
-					data-contao--toggle-nodes-mode-value="' . (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? 0) . '"
-					data-contao--toggle-nodes-toggle-action-value="toggleStructure"
-					data-contao--toggle-nodes-load-action-value="loadStructure"
-					data-contao--toggle-nodes-request-token-value="' . $requestToken . '"
-					data-contao--toggle-nodes-referer-id-value="' . $strRefererId . '"
-					data-contao--toggle-nodes-expand-value="' . $GLOBALS['TL_LANG']['MSC']['expandNode'] . '"
-					data-contao--toggle-nodes-collapse-value="' . $GLOBALS['TL_LANG']['MSC']['collapseNode'] . '"
-					data-contao--toggle-nodes-expand-all-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][0] . '"
-					data-contao--toggle-nodes-expand-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][1] . '"
-					data-contao--toggle-nodes-collapse-all-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][0] . '"
-					data-contao--toggle-nodes-collapse-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][0] . '"
-				>' . $return . '</div>';
-		}
-
-		return $return;
+		return '<div
+				data-controller="contao--toggle-nodes"
+				data-contao--toggle-nodes-mode-value="' . (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? 0) . '"
+				data-contao--toggle-nodes-toggle-action-value="toggleStructure"
+				data-contao--toggle-nodes-load-action-value="loadStructure"
+				data-contao--toggle-nodes-request-token-value="' . $requestToken . '"
+				data-contao--toggle-nodes-referer-id-value="' . $strRefererId . '"
+				data-contao--toggle-nodes-expand-value="' . $GLOBALS['TL_LANG']['MSC']['expandNode'] . '"
+				data-contao--toggle-nodes-collapse-value="' . $GLOBALS['TL_LANG']['MSC']['collapseNode'] . '"
+				data-contao--toggle-nodes-expand-all-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][0] . '"
+				data-contao--toggle-nodes-expand-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][1] . '"
+				data-contao--toggle-nodes-collapse-all-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][0] . '"
+				data-contao--toggle-nodes-collapse-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][0] . '"
+			>' . $return . '</div>';
 	}
 
 	/**
