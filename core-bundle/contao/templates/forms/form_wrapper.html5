@@ -67,6 +67,7 @@
 
             const range = document.createRange();
             range.selectNode(form.parentNode);
+
             const newForm = range.createContextualFragment(xhr.responseText).firstElementChild;
             form.replaceWith(newForm);
 
