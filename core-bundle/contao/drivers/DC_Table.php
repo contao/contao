@@ -395,7 +395,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			if ($this->currentPid)
 			{
-				$this->redirect(Backend::addToUrl('id='.$this->currentPid, false, array('act', 'mode')));
+				$this->redirect(Backend::addToUrl('id=' . $this->currentPid, false, array('act', 'mode')));
 			}
 			else
 			{
