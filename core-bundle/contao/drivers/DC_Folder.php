@@ -2526,7 +2526,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$arrClipboard = null;
 		}
 
-		return $this->generateTree($this->strRootDir . '/' . $strFolder, ($level + 1) * 18, false, $this->isProtectedPath($strFolder), $blnClipboard ? $arrClipboard : false);
+		return $this->generateTree($this->strRootDir . '/' . $strFolder, ($level + 1) * 16, false, $this->isProtectedPath($strFolder), $blnClipboard ? $arrClipboard : false);
 	}
 
 	/**
@@ -2565,7 +2565,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$return = '';
 		$files = array();
 		$folders = array();
-		$intSpacing = 18;
+		$intSpacing = 16;
 		$level = $intMargin / $intSpacing;
 
 		// Mount folder
@@ -2677,7 +2677,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$blnIsOpen = true;
 			}
 
-			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFolder, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_folder click2edit toggle_select hover-div"><div class="tl_left" style="padding-left:' . ($intMargin + (($countFiles < 1) ? 18 : 0)) . 'px">';
+			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFolder, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_folder click2edit toggle_select hover-div"><div class="tl_left" style="padding-left:' . ($intMargin + (($countFiles < 1) ? 16 : 0)) . 'px">';
 
 			// Add a toggle button if there are children
 			if ($countFiles > 0)
