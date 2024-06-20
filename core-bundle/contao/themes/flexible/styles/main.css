@@ -2593,7 +2593,7 @@ time[title] {
 .header_icon, .header_clipboard, .header_back, .header_new, .header_rss, .header_edit_all, .header_delete_all,
 .header_new_folder, .header_css_import, .header_theme_import, .header_store, .header_toggle, .header_sync {
 	display: inline-block;
-	padding: 3px 0 3px 21px;
+	padding: 3px 0 3px 22px;
 	background-color: transparent;
 	background-position: left center;
 	background-repeat: no-repeat;
@@ -2636,7 +2636,6 @@ time[title] {
 }
 
 .header_new_folder {
-	padding-left: 24px;
 	background-image: url("icons/newfolder.svg");
 }
 
@@ -2653,6 +2652,7 @@ time[title] {
 }
 
 .header_toggle {
+	padding-left: 18px;
 	background-image: var(--icon-toggle-all);
 }
 
