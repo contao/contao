@@ -1724,7 +1724,7 @@ table.tl_listing {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	line-height: normal;
+	line-height: 18px;
 }
 
 .tl_listing .tl_left.tl_left_dragging {
@@ -1750,21 +1750,12 @@ table.tl_listing {
 	background-color: transparent !important;
 }
 
-.tl_listing .tl_left * {
-	vertical-align: text-top;
-}
-
 .tl_listing .tl_left a:hover {
 	color: var(--text);
 }
 
-.tl_tree_xtnd .tl_file {
-	padding-top: 5px;
-	padding-bottom: 5px;
-}
-
-.tl_tree_xtnd .tl_file .tl_left img {
-	margin-right: 2px;
+.tl_listing .tl_left img {
+	margin-top: -3px;
 }
 
 .tl_file_manager .preview-image {
