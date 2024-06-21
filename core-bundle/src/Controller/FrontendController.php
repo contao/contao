@@ -24,7 +24,7 @@ use Symfony\Component\Security\Core\Exception\LogoutException;
 /**
  * @internal
  */
-#[Route(defaults: ['_scope' => 'frontend', '_token_check' => true])]
+#[Route(defaults: ['_scope' => 'frontend'])]
 class FrontendController extends AbstractController
 {
     #[Route('/_contao/cron', name: 'contao_frontend_cron')]

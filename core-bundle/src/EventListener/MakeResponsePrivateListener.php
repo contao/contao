@@ -16,20 +16,12 @@ use Contao\CoreBundle\Routing\ScopeMatcher;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
 
 /**
- * The priority must be lower than the one of MergeHttpHeadersListener (defaults
- * to 256) and must be lower than the one of the ClearSessionDataListener listener
- * (defaults to -768) and must be lower than the one of the
- * CsrfTokenCookieSubscriber listener (defaults to -832).
- *
  * @internal
  */
-#[AsEventListener(priority: -896)]
 class MakeResponsePrivateListener
 {
     final public const DEBUG_HEADER = 'Contao-Private-Response-Reason';
@@ -39,19 +31,40 @@ class MakeResponsePrivateListener
     }
 
     /**
+     * The priority must be higher than the one of the session listener (defaults to -1000).
+     */
+    #[AsEventListener(priority: -896)]
+    public function disableSymfonyAutoCacheControl(ResponseEvent $event): void
+    {
+        if (!$this->scopeMatcher->isContaoMainRequest($event)) {
+            return;
+        }
+
+        // Disable the default Symfony auto cache control
+        $event->getResponse()->headers->set(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER, '1');
+    }
+
+    /**
      * Make sure that the current response becomes a private response if any of the
      * following conditions are true.
      *
      *   1. An Authorization header is present and not empty
-     *   2. The session was started
-     *   3. The response sets a cookie (same reason as 2 but for other cookies than the session cookie)
+     *   2. The session was started by a request header
+     *   3. The response sets a cookie (including session cookies as this listener comes after the session listener)
      *   4. The response has a "Vary: Cookie" header and the request provides at least one cookie
      *
      * Some of this logic is also already implemented in the HttpCache (1, 2 and 3),
      * but we want to make sure it works for any reverse proxy without having to
      * configure too much.
+     *
+     * The priority must be lower than the one of MergeHttpHeadersListener (defaults
+     * to 256) and must be lower than the one of the ClearSessionDataListener listener
+     * (defaults to -768) and must be lower than the one of the
+     * CsrfTokenCookieSubscriber listener (defaults to -1006) and must be higher than
+     * the one of the StreamedResponseListener listener (defaults to -1024)
      */
-    public function __invoke(ResponseEvent $event): void
+    #[AsEventListener(priority: -1012)]
+    public function makeResponsePrivate(ResponseEvent $event): void
     {
         if (!$this->scopeMatcher->isContaoMainRequest($event)) {
             return;
@@ -59,9 +72,6 @@ class MakeResponsePrivateListener
 
         $request = $event->getRequest();
         $response = $event->getResponse();
-
-        // Disable the default Symfony auto cache control
-        $response->headers->set(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER, '1');
 
         // If the response is not cacheable for a reverse proxy, we don't have to do
         // anything anyway
@@ -76,15 +86,15 @@ class MakeResponsePrivateListener
             return;
         }
 
-        // 2) The session was started and is not empty
-        if ($request->hasSession() && !$this->isSessionEmpty($request->getSession())) {
+        // 2) The session was started by a request header
+        if ($request->hasSession(true) && $request->hasPreviousSession()) {
             $this->makePrivate($response, 'session-cookie');
 
             return;
         }
 
-        // 3) The response sets a cookie (same reason as 2 but for other cookies than the
-        // session cookie)
+        // 3) The response sets a cookie (including session cookies as this listener
+        // comes after the session listener)
         if ($cookies = $response->headers->getCookies()) {
             $this->makePrivate(
                 $response,
@@ -111,28 +121,5 @@ class MakeResponsePrivateListener
     {
         $response->setPrivate();
         $response->headers->set(self::DEBUG_HEADER, $reason);
-    }
-
-    private function isSessionEmpty(SessionInterface $session): bool
-    {
-        foreach (headers_list() as $header) {
-            if (
-                str_starts_with($header, "Set-Cookie: {$session->getName()}=")
-                && !str_starts_with($header, "Set-Cookie: {$session->getName()}=deleted;")
-            ) {
-                return false;
-            }
-        }
-
-        if (!$session->isStarted()) {
-            return true;
-        }
-
-        if ($session instanceof Session) {
-            // Marked @internal but no other way to check all attribute bags
-            return $session->isEmpty();
-        }
-
-        return [] === $session->all();
     }
 }

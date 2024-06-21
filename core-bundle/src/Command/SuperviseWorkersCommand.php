@@ -20,6 +20,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Messenger\Transport\Receiver\MessageCountAwareInterface;
+use Symfony\Component\Process\Process;
 use Toflar\CronjobSupervisor\BasicCommand;
 use Toflar\CronjobSupervisor\CommandInterface;
 use Toflar\CronjobSupervisor\Supervisor;
@@ -79,11 +80,17 @@ class SuperviseWorkersCommand extends Command
         return new BasicCommand(
             $identifier,
             $desiredWorkers,
-            fn () => $this->processUtil->createSymfonyConsoleProcess(
-                'messenger:consume',
-                ...$worker['options'],
-                ...$worker['transports'],
-            ),
+            function () use ($worker): Process {
+                $process = $this->processUtil->createSymfonyConsoleProcess(
+                    'messenger:consume',
+                    ...$worker['options'],
+                    ...$worker['transports'],
+                );
+
+                $process->setTimeout(null);
+
+                return $process;
+            },
         );
     }
 

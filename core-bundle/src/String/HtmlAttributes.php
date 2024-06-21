@@ -430,7 +430,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         foreach ($matches as [1 => $name, 2 => $value]) {
             if (!isset($usedNames[$name = strtolower($name)])) {
                 $usedNames[$name] = true;
-                yield $name => html_entity_decode($value ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                yield $name => html_entity_decode($value ?? '', ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
             }
         }
     }
