@@ -1724,7 +1724,7 @@ table.tl_listing {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	line-height: normal;
+	line-height: 18px;
 }
 
 .tl_listing .tl_left.tl_left_dragging {
@@ -1750,21 +1750,12 @@ table.tl_listing {
 	background-color: transparent !important;
 }
 
-.tl_listing .tl_left * {
-	vertical-align: text-top;
-}
-
 .tl_listing .tl_left a:hover {
 	color: var(--text);
 }
 
-.tl_tree_xtnd .tl_file {
-	padding-top: 5px;
-	padding-bottom: 5px;
-}
-
-.tl_tree_xtnd .tl_file .tl_left img {
-	margin-right: 2px;
+.tl_listing .tl_left img {
+	margin-top: -3px;
 }
 
 .tl_file_manager .preview-image {
@@ -2593,7 +2584,7 @@ time[title] {
 .header_icon, .header_clipboard, .header_back, .header_new, .header_rss, .header_edit_all, .header_delete_all,
 .header_new_folder, .header_css_import, .header_theme_import, .header_store, .header_toggle, .header_sync {
 	display: inline-block;
-	padding: 3px 0 3px 21px;
+	padding: 3px 0 3px 22px;
 	background-color: transparent;
 	background-position: left center;
 	background-repeat: no-repeat;
@@ -2636,7 +2627,6 @@ time[title] {
 }
 
 .header_new_folder {
-	padding-left: 24px;
 	background-image: url("icons/newfolder.svg");
 }
 
@@ -2653,6 +2643,7 @@ time[title] {
 }
 
 .header_toggle {
+	padding-left: 18px;
 	background-image: var(--icon-toggle-all);
 }
 
