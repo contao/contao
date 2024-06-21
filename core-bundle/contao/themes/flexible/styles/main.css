@@ -1754,7 +1754,7 @@ table.tl_listing {
 	color: var(--text);
 }
 
-.tl_listing .tl_left img {
+.tl_listing .tl_left img:not(.preview-image, .preview-important) {
 	margin-top: -3px;
 }
 
@@ -1763,7 +1763,7 @@ table.tl_listing {
 	max-height: 75px;
 	width: auto;
 	height: auto;
-	margin: 0 0 2px 22px;
+	margin: 3px 0 2px 22px;
 }
 
 .tl_file_manager .preview-important {
@@ -1771,7 +1771,7 @@ table.tl_listing {
 	max-height: 60px;
 	width: auto;
 	height: auto;
-	margin: 0 0 2px 0;
+	margin: 3px 0 2px 0;
 	vertical-align: bottom;
 }
 
@@ -2889,6 +2889,7 @@ fieldset.collapsed > legend {
 /* Undo */
 .tl_undo_header {
 	max-width: 880px;
+	margin-top: 2px;
 	display: grid;
 	grid-template-columns:2fr 2fr 3fr 3fr;
 	grid-column-gap: 24px;
@@ -2900,7 +2901,8 @@ fieldset.collapsed > legend {
 
 .tl_undo_preview {
 	margin-top: 5px;
-	padding: 10px 15px;
+	padding: 6px 0 3px;
+	font-size: .75rem;
 	position: relative;
 }
 
@@ -2918,8 +2920,8 @@ fieldset.collapsed > legend {
 	height: auto;
 }
 
-.tl_undo_preview {
-	font-size: .75rem;
+.tl_undo_preview a img {
+	margin-top: -3px;
 }
 
 .tl_undo_preview .cte_preview h1 {
@@ -3161,7 +3163,7 @@ fieldset.collapsed > legend {
 		grid-template-columns:2fr 3fr;
 	}
 
-	.tl_undo_header div:not(.tstamp):not(.source) {
+	.tl_undo_header div:not(.tstamp, .source) {
 		display: none;
 	}
 }
