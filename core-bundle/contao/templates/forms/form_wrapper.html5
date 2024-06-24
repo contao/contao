@@ -54,6 +54,7 @@
           // Send the triggered button data as well
           if (e.submitter) {
             formData.append(e.submitter.name, e.submitter.value);
+
             // Prevent double form submission
             e.submitter.disabled = true;
             setTimeout(() => e.submitter.disabled = false, 30000);
