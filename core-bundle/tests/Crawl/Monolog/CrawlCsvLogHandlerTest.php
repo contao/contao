@@ -32,7 +32,7 @@ class CrawlCsvLogHandlerTest extends TestCase
             fwrite($stream, $existingCsvContent);
         }
 
-        $record = new LogRecord($dt, 'test', Level::Debug, $message, $context, []);
+        $record = $this->getRecord($dt, $message, $context);
 
         $handler = new CrawlCsvLogHandler($stream);
         $handler->handle($record);
@@ -48,16 +48,13 @@ class CrawlCsvLogHandlerTest extends TestCase
         $dt = new \DateTimeImmutable();
         $formattedDt = '"'.$dt->format(CrawlCsvLogHandler::DATETIME_FORMAT).'"';
 
-        $record = new LogRecord(
+        $record = $this->getRecord(
             $dt,
-            'test',
-            Level::Debug,
             'foobar',
             [
                 'source' => 'source',
                 'crawlUri' => new CrawlUri(new Uri('https://contao.org'), 0),
             ],
-            [],
         );
 
         $stream = fopen('php://memory', 'r+');
@@ -123,5 +120,10 @@ class CrawlCsvLogHandlerTest extends TestCase
             'Time,Source,URI,"Found on URI","Found on level",Tags,Message'."\n",
             "foobar\rwith\nnew\r\nlines",
         ];
+    }
+
+    private function getRecord(\DateTimeImmutable $dt, string $message, array $context): LogRecord
+    {
+        return new LogRecord($dt, 'test', Level::Debug, $message, $context, []);
     }
 }
