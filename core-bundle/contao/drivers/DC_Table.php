@@ -5521,7 +5521,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function searchMenu()
 	{
-		$searchFields = array();
+		$searchFields = array('id');
 
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 		$session = $objSessionBag->all();
