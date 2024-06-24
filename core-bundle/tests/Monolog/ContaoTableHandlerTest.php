@@ -24,7 +24,7 @@ class ContaoTableHandlerTest extends TestCase
 {
     public function testHandlesContaoRecords(): void
     {
-        $record = new LogRecord(new \DateTimeImmutable(), 'test', Level::Debug, 'foobar', ['contao' => new ContaoContext('foobar')], []);
+        $record = new LogRecord(new \DateTimeImmutable(), 'test', Level::Debug, 'foobar', [], ['contao' => new ContaoContext('foobar')]);
 
         $connection = $this->createMock(Connection::class);
         $connection
@@ -56,7 +56,7 @@ class ContaoTableHandlerTest extends TestCase
 
     public function testDoesNotHandleARecordWithoutContaoContext(): void
     {
-        $record = new LogRecord(new \DateTimeImmutable(), 'test', Level::Debug, 'foobar', ['contao' => null], []);
+        $record = new LogRecord(new \DateTimeImmutable(), 'test', Level::Debug, 'foobar', [], ['contao' => null]);
 
         $connection = $this->createMock(Connection::class);
         $connection
