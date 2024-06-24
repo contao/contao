@@ -2759,7 +2759,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				}
 			}
 
-			$return .= '</div><div style="clear:both"></div></li>';
+			$return .= '</div></li>';
 
 			// Call the next node
 			if (!empty($content) && $blnIsOpen)
@@ -2860,7 +2860,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				}
 			}
 
-			$return .= $_buttons . '</div><div style="clear:both"></div></li>';
+			$return .= $_buttons . '</div></li>';
 		}
 
 		return $return;
