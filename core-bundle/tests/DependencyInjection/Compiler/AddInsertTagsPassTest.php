@@ -176,10 +176,10 @@ class AddInsertTagsPassTest extends TestCase
 
         yield [
             [
-                'service_a' => (new Definition(IfLanguageInsertTag::class))->addTag('contao.insert_tag', get_object_vars(new AsInsertTag('date', method: 'languageMatchesPage'))),
+                'service_a' => (new Definition(IfLanguageInsertTag::class))->addTag('contao.insert_tag', get_object_vars(new AsInsertTag('date', method: 'languageMatchesTranslatorLocale'))),
             ],
             [],
-            new InvalidDefinitionException('The contao.insert_tag definition for service "service_a" is invalid. The "Contao\CoreBundle\InsertTag\Resolver\IfLanguageInsertTag::languageMatchesPage" method exists but is not public.'),
+            new InvalidDefinitionException('The contao.insert_tag definition for service "service_a" is invalid. The "Contao\CoreBundle\InsertTag\Resolver\IfLanguageInsertTag::languageMatchesTranslatorLocale" method exists but is not public.'),
         ];
 
         yield [

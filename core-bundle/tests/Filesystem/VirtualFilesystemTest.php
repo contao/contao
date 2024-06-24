@@ -560,6 +560,7 @@ class VirtualFilesystemTest extends TestCase
         $this->assertInstanceOf(FilesystemItem::class, $fileB);
         $this->assertTrue($fileB->isFile());
 
+        /** @phpstan-ignore method.impossibleType */
         $this->assertSame(3, $handlerInvocationCount);
 
         $this->assertSame(12345, $fileB->getLastModified());
@@ -567,6 +568,7 @@ class VirtualFilesystemTest extends TestCase
         $this->assertSame('image/png', $fileB->getMimeType());
         $this->assertSame(['extra' => 'data'], $fileB->getExtraMetadata());
 
+        /** @phpstan-ignore method.impossibleType */
         $this->assertSame(7, $handlerInvocationCount);
     }
 

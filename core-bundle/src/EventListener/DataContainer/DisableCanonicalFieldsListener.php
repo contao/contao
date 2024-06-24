@@ -45,8 +45,8 @@ class DisableCanonicalFieldsListener
 
         $adapter = $this->framework->getAdapter(Image::class);
 
-        $renderHelpIcon = fn () => $adapter->getHtml(
-            'show.svg',
+        $renderHelpIcon = fn () => ' '.$adapter->getHtml(
+            'info.svg',
             '',
             sprintf(
                 'title="%s"',

@@ -403,7 +403,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'source' => array
 		(
-			'filter'                  => true,
 			'inputType'               => 'radio',
 			'options_callback'        => array('tl_calendar_events', 'getSourceOptions'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_calendar_events'],

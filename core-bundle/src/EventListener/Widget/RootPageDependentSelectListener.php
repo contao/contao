@@ -105,7 +105,7 @@ class RootPageDependentSelectListener
                 StringUtil::specialcharsUrl($href),
                 StringUtil::specialchars($title),
                 StringUtil::specialchars(str_replace("'", "\\'", $title)),
-                Image::getHtml('alias.svg', $title),
+                Image::getHtml('edit.svg', $title),
             );
         }
 

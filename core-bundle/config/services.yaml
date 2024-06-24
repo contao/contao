@@ -415,6 +415,7 @@ services:
               contao.assets.files_context: '@contao.assets.files_context'
               contao.routing.page_finder: '@contao.routing.page_finder'
               contao.framework: '@contao.framework'
+              contao.filesystem.virtual.files: '@contao.filesystem.virtual.files'
               event_dispatcher: '@event_dispatcher'
             - '%kernel.project_dir%'
             - '%contao.upload_path%'
@@ -472,7 +473,7 @@ services:
     contao.insert_tag.resolver.if_language:
         class: Contao\CoreBundle\InsertTag\Resolver\IfLanguageInsertTag
         arguments:
-            - '@request_stack'
+            - '@translator'
 
     contao.insert_tag.resolver.legacy:
         class: Contao\CoreBundle\InsertTag\Resolver\LegacyInsertTag
@@ -549,22 +550,17 @@ services:
         arguments:
             - '@contao.menu.matcher'
 
-    contao.messenger.auto_fallback_notifier:
-        class: Contao\CoreBundle\Messenger\AutoFallbackNotifier
-        arguments:
-            - '@cache.app'
-            - '@messenger.receiver_locator'
-
-    contao.messenger.auto_fallback_transport_factory:
-        class: Contao\CoreBundle\Messenger\Transport\AutoFallbackTransportFactory
-        arguments:
-            - '@contao.messenger.auto_fallback_notifier'
-            - '@messenger.receiver_locator'
-
     contao.messenger.search_index_message_handler:
         class: Contao\CoreBundle\Messenger\MessageHandler\SearchIndexMessageHandler
         arguments:
             - '@?contao.search.indexer'
+
+    contao.messenger.web_worker:
+        class: Contao\CoreBundle\Messenger\WebWorker
+        arguments:
+            - '@cache.app'
+            - '@console.command.messenger_consume_messages'
+            - '@messenger.receiver_locator'
 
     contao.model_argument_resolver:
         class: Contao\CoreBundle\HttpKernel\ModelArgumentResolver

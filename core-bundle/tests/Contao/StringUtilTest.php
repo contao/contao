@@ -558,6 +558,7 @@ class StringUtilTest extends TestCase
         $this->assertNotSame($ref, $dereferenced[0]);
         $this->assertSame($ref, $array[0]);
 
+        /** @phpstan-ignore method.impossibleType */
         $this->assertSame(
             [
                 ['a'],
