@@ -623,17 +623,21 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
 
                 trigger_deprecation('contao/core-bundle', '5.0', 'Using the file insert tag to include templates has been deprecated and will no longer work in Contao 6. Use the "Template" content element instead.');
 
+                $requestStack = $this->container->get('request_stack');
+                $subRequest = null;
                 $arrGet = $_GET;
                 $strFile = $insertTag->getParameters()->get(0);
 
                 // Take arguments and add them to the $_GET array
                 if (str_contains($strFile, '?')) {
+                    $subRequest = $requestStack->getCurrentRequest()->duplicate();
                     $arrChunks = explode('?', urldecode($strFile));
                     $strSource = StringUtil::decodeEntities($arrChunks[1]);
                     $arrParams = explode('&', $strSource);
 
                     foreach ($arrParams as $strParam) {
                         $arrParam = explode('=', $strParam);
+                        $subRequest->query->set($arrParam[0], $arrParam[1]);
                         $_GET[$arrParam[0]] = $arrParam[1];
                     }
 
@@ -647,6 +651,10 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
 
                 // Include .php, .tpl, .xhtml and .html5 files
                 if (preg_match('/\.(php|tpl|xhtml|html5)$/', $strFile) && (new Filesystem())->exists($this->container->getParameter('kernel.project_dir').'/templates/'.$strFile)) {
+                    if ($subRequest) {
+                        $requestStack->push($subRequest);
+                    }
+
                     ob_start();
 
                     try {
@@ -654,6 +662,10 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                         $result = ob_get_contents();
                     } finally {
                         ob_end_clean();
+
+                        if ($subRequest) {
+                            $requestStack->pop();
+                        }
                     }
                 }
 

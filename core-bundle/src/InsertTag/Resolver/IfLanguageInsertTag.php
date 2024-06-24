@@ -18,13 +18,13 @@ use Contao\CoreBundle\InsertTag\ParsedSequence;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\StringUtil;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AsBlockInsertTag('iflng', endTag: 'iflng')]
 #[AsBlockInsertTag('ifnlng', endTag: 'ifnlng')]
 class IfLanguageInsertTag implements BlockInsertTagResolverNestedResolvedInterface
 {
-    public function __construct(private readonly RequestStack $requestStack)
+    public function __construct(private readonly TranslatorInterface $translator)
     {
     }
 
@@ -36,20 +36,16 @@ class IfLanguageInsertTag implements BlockInsertTagResolverNestedResolvedInterfa
             throw new InvalidInsertTagException(sprintf('Missing language parameter in %s insert tag', $insertTag->getName()));
         }
 
-        if ($this->languageMatchesPage($language)) {
+        if ($this->languageMatchesTranslatorLocale($language)) {
             return $inverse ? new ParsedSequence([]) : $wrappedContent;
         }
 
         return $inverse ? $wrappedContent : new ParsedSequence([]);
     }
 
-    private function languageMatchesPage(string $language): bool
+    private function languageMatchesTranslatorLocale(string $language): bool
     {
-        if (!$request = $this->requestStack->getCurrentRequest()) {
-            return false;
-        }
-
-        $pageLanguage = LocaleUtil::formatAsLocale($request->getLocale());
+        $pageLanguage = LocaleUtil::formatAsLocale($this->translator->getLocale());
 
         foreach (StringUtil::trimsplit(',', $language) as $lang) {
             if ($pageLanguage === LocaleUtil::formatAsLocale($lang)) {
