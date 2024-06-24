@@ -30,8 +30,7 @@ class ContaoTableProcessorTest extends TestCase
     public function testCanBeInvoked(): void
     {
         $processor = $this->getContaoTableProcessor();
-
-        $record = new LogRecord(new \DateTimeImmutable(), '', Level::Debug, '', ['contao' => false], []);
+        $record = $this->getRecord(['contao' => false]);
 
         $this->assertSame($record, $processor($record));
     }
@@ -43,7 +42,7 @@ class ContaoTableProcessorTest extends TestCase
      */
     public function testReturnsDifferentActionsForDifferentErrorLevels(Level $logLevel, string $expectedAction): void
     {
-        $record = new LogRecord(new \DateTimeImmutable(), '', $logLevel, '', ['contao' => new ContaoContext(__METHOD__)], []);
+        $record = $this->getRecord(['contao' => new ContaoContext(__METHOD__)], $logLevel);
 
         $processor = $this->getContaoTableProcessor();
         $record = $processor($record);
@@ -61,7 +60,7 @@ class ContaoTableProcessorTest extends TestCase
      */
     public function testDoesNotChangeAnExistingAction(Level $logLevel): void
     {
-        $record = new LogRecord(new \DateTimeImmutable(), '', $logLevel, '', ['contao' => new ContaoContext(__METHOD__, ContaoContext::CRON)], []);
+        $record = $this->getRecord(['contao' => new ContaoContext(__METHOD__, ContaoContext::CRON)], $logLevel);
 
         $processor = $this->getContaoTableProcessor();
         $record = $processor($record);
@@ -93,28 +92,25 @@ class ContaoTableProcessorTest extends TestCase
 
         $processor = $this->getContaoTableProcessor($requestStack);
 
-        $record = new LogRecord(new \DateTimeImmutable(), '', Level::Debug, '', ['contao' => new ContaoContext(__METHOD__, null, null, null, 'foobar')], []);
-
+        $record = $this->getRecord(['contao' => new ContaoContext(__METHOD__, null, null, null, 'foobar')]);
         $record = $processor($record);
 
-        /** @var ContaoContext $context */
         $context = $record->extra['contao'];
 
         $this->assertSame('foobar', $context->getBrowser());
 
-        $record = new LogRecord(new \DateTimeImmutable(), '', Level::Debug, '', ['contao' => new ContaoContext(__METHOD__)], []);
+        $record = $this->getRecord(['contao' => new ContaoContext(__METHOD__)]);
         $record = $processor($record);
-        /** @var ContaoContext $context */
+
         $context = $record->extra['contao'];
 
         $this->assertSame('Contao test', $context->getBrowser());
 
         $requestStack->pop();
 
-        $record = new LogRecord(new \DateTimeImmutable(), '', Level::Debug, '', ['contao' => new ContaoContext(__METHOD__)], []);
+        $record = $this->getRecord(['contao' => new ContaoContext(__METHOD__)]);
         $record = $processor($record);
 
-        /** @var ContaoContext $context */
         $context = $record->extra['contao'];
 
         $this->assertSame('N/A', $context->getBrowser());
@@ -133,14 +129,14 @@ class ContaoTableProcessorTest extends TestCase
 
         $processor = $this->getContaoTableProcessor(null, $tokenStorage);
 
-        $record = new LogRecord(new \DateTimeImmutable(), '', Level::Debug, '', ['contao' => new ContaoContext(__METHOD__, null, 'foobar')], []);
+        $record = $this->getRecord(['contao' => new ContaoContext(__METHOD__, null, 'foobar')]);
         $record = $processor($record);
 
         $context = $record->extra['contao'];
 
         $this->assertSame('foobar', $context->getUsername());
 
-        $record = new LogRecord(new \DateTimeImmutable(), '', Level::Debug, '', ['contao' => new ContaoContext(__METHOD__)], []);
+        $record = $this->getRecord(['contao' => new ContaoContext(__METHOD__)]);
         $record = $processor($record);
 
         $context = $record['extra']['contao'];
@@ -149,7 +145,7 @@ class ContaoTableProcessorTest extends TestCase
 
         $tokenStorage->setToken(null);
 
-        $record = new LogRecord(new \DateTimeImmutable(), '', Level::Debug, '', ['contao' => new ContaoContext(__METHOD__)], []);
+        $record = $this->getRecord(['contao' => new ContaoContext(__METHOD__)]);
         $record = $processor($record);
 
         $context = $record->extra['contao'];
@@ -171,7 +167,8 @@ class ContaoTableProcessorTest extends TestCase
             $requestStack->push($request);
         }
 
-        $record = new LogRecord(new \DateTimeImmutable(), '', Level::Debug, '', ['contao' => new ContaoContext(__METHOD__, null, null, null, null, $contextSource)], []);
+        $record = $this->getRecord(['contao' => new ContaoContext(__METHOD__, null, null, null, null, $contextSource)]);
+
         $processor = $this->getContaoTableProcessor($requestStack);
         $result = $processor($record);
 
@@ -204,7 +201,8 @@ class ContaoTableProcessorTest extends TestCase
             $requestStack->push($request);
         }
 
-        $record = new LogRecord(new \DateTimeImmutable(), '', Level::Debug, '', ['contao' => new ContaoContext(__METHOD__, null, null, null, 'foobar')], []);
+        $record = $this->getRecord(['contao' => new ContaoContext(__METHOD__, null, null, null, 'foobar')]);
+
         $processor = $this->getContaoTableProcessor($requestStack);
         $record = $processor($record);
 
@@ -238,7 +236,8 @@ class ContaoTableProcessorTest extends TestCase
             $requestStack->push($request);
         }
 
-        $record = new LogRecord(new \DateTimeImmutable(), '', Level::Debug, '', ['contao' => new ContaoContext(__METHOD__, null, null, null, 'foobar')], []);
+        $record = $this->getRecord(['contao' => new ContaoContext(__METHOD__, null, null, null, 'foobar')]);
+
         $processor = $this->getContaoTableProcessor($requestStack);
         $record = $processor($record);
 
@@ -263,5 +262,14 @@ class ContaoTableProcessorTest extends TestCase
         $tokenStorage ??= $this->createMock(TokenStorageInterface::class);
 
         return new ContaoTableProcessor($requestStack, $tokenStorage, $this->mockScopeMatcher());
+    }
+
+    /**
+     * The processor moves the Contao context into the "extra" section, so pass it as
+     * fifth argument to the LogRecord class.
+     */
+    private function getRecord(array $context, Level $level = Level::Debug): LogRecord
+    {
+        return new LogRecord(new \DateTimeImmutable(), '', $level, '', $context, []);
     }
 }

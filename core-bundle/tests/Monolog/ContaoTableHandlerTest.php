@@ -24,8 +24,6 @@ class ContaoTableHandlerTest extends TestCase
 {
     public function testHandlesContaoRecords(): void
     {
-        $record = new LogRecord(new \DateTimeImmutable(), 'test', Level::Debug, 'foobar', [], ['contao' => new ContaoContext('foobar')]);
-
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
@@ -34,13 +32,14 @@ class ContaoTableHandlerTest extends TestCase
         ;
 
         $handler = new ContaoTableHandler(static fn () => $connection);
+        $record = $this->getRecord(['contao' => new ContaoContext('foobar')]);
 
         $this->assertFalse($handler->handle($record));
     }
 
     public function testDoesNotHandleARecordIfTheLogLevelDoesNotMatch(): void
     {
-        $record = new LogRecord(new \DateTimeImmutable(), 'test', Level::Debug, 'foobar', [], []);
+        $record = $this->getRecord([]);
 
         $connection = $this->createMock(Connection::class);
         $connection
@@ -56,7 +55,7 @@ class ContaoTableHandlerTest extends TestCase
 
     public function testDoesNotHandleARecordWithoutContaoContext(): void
     {
-        $record = new LogRecord(new \DateTimeImmutable(), 'test', Level::Debug, 'foobar', [], ['contao' => null]);
+        $record = $this->getRecord(['contao' => null]);
 
         $connection = $this->createMock(Connection::class);
         $connection
@@ -67,5 +66,14 @@ class ContaoTableHandlerTest extends TestCase
         $handler = new ContaoTableHandler(static fn () => $connection);
 
         $this->assertFalse($handler->handle($record));
+    }
+
+    /**
+     * The Contao context was moved to the "extra" section by the processor, so pass
+     * it as sixth argument to the LogRecord class.
+     */
+    private function getRecord(array $context): LogRecord
+    {
+        return new LogRecord(new \DateTimeImmutable(), 'test', Level::Debug, 'foobar', [], $context);
     }
 }

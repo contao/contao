@@ -33,6 +33,7 @@ class CrawlCsvLogHandlerTest extends TestCase
         }
 
         $record = new LogRecord($dt, 'test', Level::Debug, $message, $context, []);
+
         $handler = new CrawlCsvLogHandler($stream);
         $handler->handle($record);
 
