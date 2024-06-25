@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.alexf.1">
         <source>Here you can choose which fields will be editable.</source>
-        <target>Buradan hangi alanalrın düzenlenebilir olacağını belirtebilirsiniz.</target>
+        <target>Buradan hangi alanların düzenlenebilir olacağını belirtebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_user_group.disable.0">
         <source>Deactivate</source>

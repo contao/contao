@@ -119,7 +119,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.start.1">
         <source>In case the sending process is interrupted, you can enter a numeric offset here to continue with a particular recipient. You can check how many mails have been sent by selecting the category &lt;code&gt;NEWSLETTER_%s&lt;/code&gt; in the system log. If there are 120 entries, enter &quot;120&quot; to continue with the 121st recipient (counting starts at 0).</source>
-        <target>مواقعی که فرایند ارسال قطع شد، می‌توانید افست عددی را وارد کنید تا با گیرنده‌ی مشخصی ادامه پیدا کند. تعداد ایمیل فرستاده شده در دسته‌بندی &lt;code&gt;NEWSLETTER_%s&lt;/code&gt; در سیستم گزارش می‌توانید بررسی کنید. اگر آنجا ۱۲۰ ورودی بود، «۱۲۰» را برای ادامه با گیرنده‌ی ۱۲۱ام وارد کنید (شمارش با صفر شروع می‌شود).</target>
+        <target>مواقعی که فرایند ارسال لغو شد، می‌توانید افست عددی را وارد کنید تا با گیرنده‌ی مشخصی ادامه پیدا کند. تعداد ایمیل فرستاده شده در دسته‌بندی &lt;code&gt;NEWSLETTER_%s&lt;/code&gt; در سیستم گزارش می‌توانید بررسی کنید. اگر آنجا ۱۲۰ ورودی بود، «۱۲۰» را برای ادامه با گیرنده‌ی ۱۲۱ام وارد کنید (شمارش با صفر شروع می‌شود).</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendPreviewTo.0">
         <source>Send preview to</source>

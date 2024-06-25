@@ -27,7 +27,7 @@
       </trans-unit>
       <trans-unit id="MSC.unsubscribe">
         <source>Unsubscribe</source>
-        <target>قطع اشتراک</target>
+        <target>لغو اشتراک</target>
       </trans-unit>
       <trans-unit id="MSC.nl_subject">
         <source>Your subscription on %s</source>
@@ -43,7 +43,7 @@
       </trans-unit>
       <trans-unit id="MSC.nl_removed">
         <source>Your subscription has been cancelled.</source>
-        <target>قطع اشتراک شما با موفقیت انجام شد.</target>
+        <target>لغو اشتراک شما با موفقیت انجام شد.</target>
       </trans-unit>
       <trans-unit id="MSC.nl_channels">
         <source>Channels</source>

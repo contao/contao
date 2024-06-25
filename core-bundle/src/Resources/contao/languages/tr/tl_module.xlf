@@ -319,7 +319,7 @@
       </trans-unit>
       <trans-unit id="tl_module.fullsize.1">
         <source>Open the full-size image in a lightbox or the link in a new browser window.</source>
-        <target>Tam boyutlu görüntüyü bir lightbox içinde ya da bağlantıyı yeni bir tarayıcı penceresinde açar.</target>
+        <target>Tam boyutlu görüntüyü bir Lightbox içinde ya da bağlantıyı yeni bir tarayıcı penceresinde açar.</target>
       </trans-unit>
       <trans-unit id="tl_module.useCaption.0">
         <source>Show caption</source>

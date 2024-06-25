@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_news.date.1">
         <source>Please enter the date according to the global date format.</source>
-        <target>Lütfen küresel tarih biçimine uygun olarak tarihi yazın.</target>
+        <target>Lütfen genel tarih biçimine uygun olarak tarihi yazın.</target>
       </trans-unit>
       <trans-unit id="tl_news.time.0">
         <source>Time</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_news.time.1">
         <source>Please enter the time according to the global time format.</source>
-        <target>Lütfen küresel zaman biçimine uygun olarak saati yazın.</target>
+        <target>Lütfen genel saat biçimine uygun olarak saati yazın.</target>
       </trans-unit>
       <trans-unit id="tl_news.pageTitle.0">
         <source>Meta title</source>
@@ -195,7 +195,7 @@
       </trans-unit>
       <trans-unit id="tl_news.published.0">
         <source>Publish item</source>
-        <target>Öğeyi yayınla</target>
+        <target>Ögeyi yayınla</target>
       </trans-unit>
       <trans-unit id="tl_news.published.1">
         <source>Make the news item publicly visible on the website.</source>

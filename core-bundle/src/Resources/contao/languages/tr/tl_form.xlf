@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_form.recipient.1">
         <source>Separate multiple e-mail addresses with comma.</source>
-        <target>Virgül ile ayırarak birden fazla e-posta adresi yazabilirsiniz.</target>
+        <target>Birden fazla e-posta adresini virgül ile ayırarak yazabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_form.subject.0">
         <source>Subject</source>

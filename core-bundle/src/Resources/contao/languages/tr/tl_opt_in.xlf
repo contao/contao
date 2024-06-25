@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_opt_in.token">
         <source>Token</source>
-        <target>Belirteç</target>
+        <target>Kod</target>
       </trans-unit>
       <trans-unit id="tl_opt_in.confirmedOn">
         <source>Confirmed on</source>
@@ -27,11 +27,11 @@
       </trans-unit>
       <trans-unit id="tl_opt_in.show">
         <source>Show the details of token ID %s</source>
-        <target>%s kimlikli belirtecin ayrıntılarını görüntüle</target>
+        <target>%s kimlikli kodun ayrıntılarını görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_opt_in.resend">
         <source>Resend token ID %s</source>
-        <target>%s kimlikli belirteci yeniden gönder</target>
+        <target>%s kimlikli kodu yeniden gönder</target>
       </trans-unit>
     </body>
   </file>

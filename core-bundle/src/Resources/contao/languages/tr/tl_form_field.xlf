@@ -71,7 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.digit.1">
         <source>Allows numeric characters, minus (-) and full stop (.).</source>
-        <target>Rakamlar, eksi (-) ve nokta (.) karakterlerine izin verir.</target>
+        <target>Rakamlar, eksi (-) ve nokta (.) karakterleri kullanılabilir.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.alpha.0">
         <source>Alphabetic characters</source>
@@ -79,7 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.alpha.1">
         <source>Allows alphabetic characters, minus (-), full stop (.) and space ( ).</source>
-        <target>Harfler, rakamlar, eksi (-), nokta (.) ve boşluk ( ) karakterlerine izin verir.</target>
+        <target>Harfler, rakamlar, eksi (-), nokta (.) ve boşluk ( ) karakterleri kullanılabilir.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.alnum.0">
         <source>Alphanumeric characters</source>
@@ -87,7 +87,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.alnum.1">
         <source>Allows alphabetic and numeric characters, minus (-), full stop (.), underscore (_) and space ( ).</source>
-        <target>Harfler, rakamlar, eksi (-), nokta (.),  alt çizgi (_) ve boşluk ( ) karakterlerine izin verir.</target>
+        <target>Harfler, rakamlar, eksi (-), nokta (.),  alt çizgi (_) ve boşluk ( ) karakterleri kullanılabilir.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.extnd.0">
         <source>Extended alphanumeric characters</source>
@@ -95,7 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.extnd.1">
         <source>Allows everything except special characters which are usually encoded for security reasons: #&lt;&gt;()\=</source>
-        <target>Genellikle güvenlik nedeniyle kodlanan özel karakterler (#&lt;&gt;()\=) dışında herşeye izin verir.</target>
+        <target>Genellikle güvenlik nedeniyle kodlanan özel karakterler (#&lt;&gt;()\=) dışında tüm karakterler kullanılabilir.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.date.0">
         <source>Date</source>
@@ -127,7 +127,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.phone.1">
         <source>Allows numeric characters, plus (+), minus (-), slash (/), parentheses () and space ( ).</source>
-        <target>Rakamlar, artı (+), eksi (-), bölü (/), parantez açma ve kapama () ile boşluk ( ) karakterlerine izin verir.</target>
+        <target>Rakamlar, artı (+), eksi (-), bölü (/), parantez açma ve kapama () ile boşluk ( ) karakterleri kullanılabilir.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.email.0">
         <source>E-mail address</source>
@@ -191,7 +191,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.minlength.1">
         <source>Require the field value to be a certain number of characters long.</source>
-        <target>Alana belirli bir sayıdan az karakter yazılmasını engeller.</target>
+        <target>Alanda belirtilen sayıdan az karakter olmasını engeller.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.maxlength.0">
         <source>Maximum length</source>
@@ -199,7 +199,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.maxlength.1">
         <source>Limit the field length to a certain number of characters (text) or bytes (file uploads).</source>
-        <target>Alanın belirtilen sayıdan fazla karakter (metin) ya da belirtilen boyuttan büyük (dosya yükleme) olmasını engeller.</target>
+        <target>Alanda belirtilen sayıdan fazla karakter (metin) ya da belirtilen boyuttan büyük (dosya yükleme) olmasını engeller.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.maxImageWidth.0">
         <source>Maximum image width</source>

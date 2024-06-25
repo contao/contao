@@ -411,11 +411,11 @@
       </trans-unit>
       <trans-unit id="FMD.two_factor.0">
         <source>Two-factor authentication</source>
-        <target>İki aşamalı kimlik doğrulama</target>
+        <target>İki adımlı doğrulama</target>
       </trans-unit>
       <trans-unit id="FMD.two_factor.1">
         <source>Generates a form to set up or change two-factor authentication</source>
-        <target>İki aşamalı kimlik doğrulamasını ayarlayan ya da değiştiren bir form oluşturur</target>
+        <target>İki adımlı doğrulamayı ayarlayan ya da değiştiren bir form oluşturur</target>
       </trans-unit>
       <trans-unit id="FMD.root_page_dependent_modules.0">
         <source>Root page dependent modules</source>

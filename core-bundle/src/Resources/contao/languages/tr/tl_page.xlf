@@ -271,7 +271,7 @@
       </trans-unit>
       <trans-unit id="tl_page.urlSuffix.1">
         <source>The URL suffix will be added to the URI string to simulate static documents.</source>
-        <target>Adres dizgelerini durağan sayfalara benzetmek için kullanılacak son eki yazın.</target>
+        <target>Adres dizgelerini sabit sayfalara benzetmek için kullanılacak son eki yazın.</target>
       </trans-unit>
       <trans-unit id="tl_page.useSSL.0">
         <source>Protocol</source>
@@ -323,7 +323,7 @@
       </trans-unit>
       <trans-unit id="tl_page.subpageLayout.0">
         <source>Subpage layout</source>
-        <target>Alt sayfa yerleşim</target>
+        <target>Alt sayfa yerleşimi</target>
       </trans-unit>
       <trans-unit id="tl_page.subpageLayout.1">
         <source>Here you can select a different layout for subpages.</source>
@@ -367,7 +367,7 @@
       </trans-unit>
       <trans-unit id="tl_page.includeChmod.1">
         <source>Access rights determine what back end users can do with the page.</source>
-        <target>Erişim izlenleri yönetim bölümü kullanıcıların sayfa üzerinde yapabileceği işlemleri belirler.</target>
+        <target>Erişim izinleri yönetim bölümü kullanıcıların sayfa üzerinde yapabileceği işlemleri belirler.</target>
       </trans-unit>
       <trans-unit id="tl_page.cuser.0">
         <source>Owner</source>
@@ -419,7 +419,7 @@
       </trans-unit>
       <trans-unit id="tl_page.hide.0">
         <source>Hide in navigation</source>
-        <target>Gezinmeden gizlensin</target>
+        <target>Gezinmede gizlensin</target>
       </trans-unit>
       <trans-unit id="tl_page.hide.1">
         <source>Hide the page in the navigation menu.</source>
@@ -475,19 +475,19 @@
       </trans-unit>
       <trans-unit id="tl_page.enforceTwoFactor.0">
         <source>Enforce two-factor authentication</source>
-        <target>İki aşamalı kimlik doğrulama kullanılsın</target>
+        <target>İki adımlı doğrulama kullanılsın</target>
       </trans-unit>
       <trans-unit id="tl_page.enforceTwoFactor.1">
         <source>Enforce two-factor authentication for all members.</source>
-        <target>Bu seçenek etkinleştirildiğinde, tüm üyeler için iki aşamalı kimlik doğrulaması kullanılır.</target>
+        <target>Bu seçenek etkinleştirildiğinde, tüm üyeler için iki adımlı doğrulama kullanılır.</target>
       </trans-unit>
       <trans-unit id="tl_page.twoFactorJumpTo.0">
         <source>Two-factor redirect page</source>
-        <target>İki aşamalı kimlik doğrulama yönlendirme sayfası</target>
+        <target>İki adımlı doğrulama yönlendirme sayfası</target>
       </trans-unit>
       <trans-unit id="tl_page.twoFactorJumpTo.1">
         <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
-        <target>Lütfen üyelerin iki aşamalı kimlik doğrulamasını kurduktan sonra yönlendirilecekleri sayfayı seçin.</target>
+        <target>Lütfen üyelerin iki adımlı doğrulamayı kurduktan sonra yönlendirilecekleri sayfayı seçin.</target>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
@@ -567,7 +567,7 @@
       </trans-unit>
       <trans-unit id="tl_page.twoFactor_legend">
         <source>Two-factor authentication</source>
-        <target>İki aşamalı kimlik doğrulama</target>
+        <target>İki adımlı doğrulama</target>
       </trans-unit>
       <trans-unit id="tl_page.permanent">
         <source>301 Permanent redirect</source>
@@ -591,7 +591,7 @@
       </trans-unit>
       <trans-unit id="tl_page.layout_inherit">
         <source>Inherit page layout</source>
-        <target>Sayfa düzeni devralınsın</target>
+        <target>Sayfa yerleşimi devralınsın</target>
       </trans-unit>
       <trans-unit id="tl_page.new.0">
         <source>New</source>
@@ -651,7 +651,7 @@
       </trans-unit>
       <trans-unit id="tl_page.routeConflicts.0">
         <source>Route conflicts</source>
-        <target>Yöneltme çakışmaları</target>
+        <target>Yol çakışmaları</target>
       </trans-unit>
       <trans-unit id="tl_page.routeConflicts.1">
         <source>The following pages have a similar alias that may conflict with this page. If the URL is not resolved correctly, try changing the priority of the routes.</source>

@@ -19,11 +19,11 @@
       </trans-unit>
       <trans-unit id="tl_layout.rows.0">
         <source>Rows</source>
-        <target>Sütun sayısı</target>
+        <target>Satır sayısı</target>
       </trans-unit>
       <trans-unit id="tl_layout.rows.1">
         <source>Please choose the number of rows.</source>
-        <target>Lütfen sütun sayısını seçin.</target>
+        <target>Lütfen satır sayısını seçin.</target>
       </trans-unit>
       <trans-unit id="tl_layout.1rw.0">
         <source>Main row only</source>
@@ -159,7 +159,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.layout.css.1">
         <source>Generates a CSS layout based on the page layout settings. This component is required for the page layout generator to work!</source>
-        <target>Sayfa yerleşimi ayarlarına göre bir CSS düzeni oluşturur. Sayfa yerleşimi oluşturucunun çalışabilmesi için bu bileşen gereklidir!</target>
+        <target>Sayfa yerleşimi ayarlarına göre bir CSS yerleşimi oluşturur. Sayfa yerleşimi oluşturucunun çalışabilmesi için bu bileşen gereklidir!</target>
       </trans-unit>
       <trans-unit id="tl_layout.responsive.css.0">
         <source>Responsive layout</source>
@@ -239,7 +239,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.lightboxSize.1">
         <source>Here you can select an image size for the images shown in the lightbox.</source>
-        <target>Buradan ligthbox içinde görüntülenecek görsellerin boyutunu seçebilirsiniz.</target>
+        <target>Buradan Lightbox içinde görüntülenecek görsellerin boyutunu seçebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_layout.defaultImageDensities.0">
         <source>Default image pixel densities</source>

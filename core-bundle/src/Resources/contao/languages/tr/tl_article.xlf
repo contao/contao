@@ -227,7 +227,7 @@
       </trans-unit>
       <trans-unit id="tl_article.toggle">
         <source>Publish/unpublish article ID %s</source>
-        <target>%s kimlikli makaleyi yayınla ya da yayından kaldır</target>
+        <target>%s kimlikli makaleyi yayınla/yayından kaldır</target>
       </trans-unit>
       <trans-unit id="tl_article.pasteafter.1">
         <source>Paste after article ID %s</source>

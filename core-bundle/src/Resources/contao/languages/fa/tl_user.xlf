@@ -351,6 +351,7 @@
       </trans-unit>
       <trans-unit id="tl_user.previewPurged">
         <source>The preview cache has been purged</source>
+        <target>کش پیش‌نمایش پاک شده است.</target>
       </trans-unit>
       <trans-unit id="tl_user.tempPurged">
         <source>The shared cache has been purged</source>

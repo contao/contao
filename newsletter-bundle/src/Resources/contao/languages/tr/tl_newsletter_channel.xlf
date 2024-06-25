@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.jumpTo.1">
         <source>Please choose the newsletter reader page to which visitors will be redirected when clicking a newsletter.</source>
-        <target>Lütfen ziyaretçilerin bir habere bültenine tıkladığında yönlendirilecekleri haber bülteni okuyucu sayfasını seçin.</target>
+        <target>Lütfen ziyaretçilerin bir haber bültenine tıkladığında yönlendirilecekleri haber bülteni okuyucu sayfasını seçin.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.template.0">
         <source>E-mail template</source>

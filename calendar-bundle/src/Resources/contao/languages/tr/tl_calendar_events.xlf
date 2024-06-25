@@ -247,7 +247,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.featured.0">
         <source>Feature event</source>
-        <target>Etkinliği öne çıkarılmışlara ekle</target>
+        <target>Etkinlik öne çıkarılsın</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.featured.1">
         <source>Show the event in a featured event list.</source>
@@ -255,7 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.published.0">
         <source>Publish event</source>
-        <target>Etkinliği yayınla</target>
+        <target>Etkinlik yayınlansın</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.published.1">
         <source>Make the event publicly visible on the website.</source>

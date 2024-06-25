@@ -75,11 +75,11 @@
       </trans-unit>
       <trans-unit id="ERR.locale">
         <source>Please enter a valid locale such as &quot;en&quot; or &quot;en_US&quot;!</source>
-        <target>Lütfen &quot;tr&quot; yada &quot;tr_TR&quot; gibi geçerli bir yerel dil kodu yazın!</target>
+        <target>Lütfen &quot;tr&quot; ya da &quot;tr_TR&quot; gibi geçerli bir yerel dil kodu yazın!</target>
       </trans-unit>
       <trans-unit id="ERR.language">
         <source>Please enter a valid language code such as &quot;en&quot; or &quot;en-US&quot;!</source>
-        <target>Lütfen &quot;tr&quot; yada &quot;tr-TR&quot; gibi geçerli bir dil kodu yazın!</target>
+        <target>Lütfen &quot;tr&quot; ya da &quot;tr-TR&quot; gibi geçerli bir dil kodu yazın!</target>
       </trans-unit>
       <trans-unit id="ERR.alias">
         <source>Please enter only alphanumeric characters and the following special characters: .-_</source>
@@ -87,7 +87,7 @@
       </trans-unit>
       <trans-unit id="ERR.folderalias">
         <source>Please enter only alphanumeric characters and the following special characters: .-/_</source>
-        <target>Lütfen yalznıca harfler, rakamlar ve şu özel karakterleri yazın: .-/_</target>
+        <target>Lütfen yalnızca harfler, rakamlar ve şu özel karakterleri yazın: .-/_</target>
       </trans-unit>
       <trans-unit id="ERR.date">
         <source>Please enter the date as &quot;%s&quot;!</source>
@@ -115,7 +115,7 @@
       </trans-unit>
       <trans-unit id="ERR.filesize">
         <source>The maximum size for file uploads is %s (Contao or php.ini settings)!</source>
-        <target>Yüklenebilecek en büyük dosya boyutu &quot;%s&quot; (Contao yada php.ini ayarları)!</target>
+        <target>Yüklenebilecek en büyük dosya boyutu &quot;%s&quot; (Contao ya da php.ini ayarları)!</target>
       </trans-unit>
       <trans-unit id="ERR.filetype">
         <source>File type &quot;%s&quot; is not allowed to be uploaded!</source>
@@ -123,15 +123,15 @@
       </trans-unit>
       <trans-unit id="ERR.filepartial">
         <source>File %s was only partially uploaded!</source>
-        <target>%s dosyasının yalnızca bir kısmı yüklendi!</target>
+        <target>%s dosyasının yalnızca bir bölümü yüklendi!</target>
       </trans-unit>
       <trans-unit id="ERR.filewidth">
         <source>File %s exceeds the maximum image width of %d pixels!</source>
-        <target>%s dosyası en büyük görsel genişliği sınırı olan %d pixel değerinden büyük!</target>
+        <target>%s dosyası en büyük görsel genişliği sınırı olan %d piksel değerinden büyük!</target>
       </trans-unit>
       <trans-unit id="ERR.fileheight">
         <source>File %s exceeds the maximum image height of %d pixels!</source>
-        <target>%s dosyası en büyük görsel yüksekliği sınırı olan %d pixel değerinden büyük!</target>
+        <target>%s dosyası en büyük görsel yüksekliği sınırı olan %d piksel değerinden büyük!</target>
       </trans-unit>
       <trans-unit id="ERR.fileerror">
         <source>Error %s occurred when uploading file %s!</source>
@@ -163,7 +163,7 @@
       </trans-unit>
       <trans-unit id="ERR.invalidLogin">
         <source>Login failed (note that usernames and passwords are case-sensitive)!</source>
-        <target>Oturum açılamadı (kullanıcı adı ve parolanın büyük küçük harflere duyarlı olduğunu unutmayın)!</target>
+        <target>Oturum açılamadı (kullanıcı adı ve parolanın büyük/küçük harflere duyarlı olduğunu unutmayın)!</target>
       </trans-unit>
       <trans-unit id="ERR.invalidColor">
         <source>Invalid color format!</source>
@@ -215,7 +215,7 @@
       </trans-unit>
       <trans-unit id="ERR.invalidName">
         <source>This file or folder name is invalid!</source>
-        <target>Bu dosya yada klasör adı geçersiz!</target>
+        <target>Bu dosya ya da klasör adı geçersiz!</target>
       </trans-unit>
       <trans-unit id="ERR.invalidFile">
         <source>The file or folder &quot;%s&quot; is invalid!</source>
@@ -323,7 +323,7 @@
       </trans-unit>
       <trans-unit id="ERR.duplicateSectionTitle">
         <source>Duplicate layout section title &quot;%s&quot;!</source>
-        <target>&quot;%s&quot; yerleşim bölümü başlığı zaten var!</target>
+        <target>&quot;%s&quot; başlıklı yerleşim bölümü zaten var!</target>
       </trans-unit>
       <trans-unit id="ERR.duplicateSectionId">
         <source>Duplicate layout section ID &quot;%s&quot;!</source>
@@ -411,7 +411,7 @@
       </trans-unit>
       <trans-unit id="CTE.list.1">
         <source>Generates an ordered or unordered list.</source>
-        <target>Numaralı ya da nuramasız bir liste oluşturur.</target>
+        <target>Numaralı ya da numarasız bir liste oluşturur.</target>
       </trans-unit>
       <trans-unit id="CTE.table.0">
         <source>Table</source>
@@ -499,7 +499,7 @@
       </trans-unit>
       <trans-unit id="CTE.hyperlink.0">
         <source>Hyperlink</source>
-        <target>Hyperlink</target>
+        <target>Bağlantı</target>
       </trans-unit>
       <trans-unit id="CTE.hyperlink.1">
         <source>Generates a link to another website.</source>
@@ -507,7 +507,7 @@
       </trans-unit>
       <trans-unit id="CTE.toplink.0">
         <source>Top link</source>
-        <target>Yukarı bağlantısı</target>
+        <target>Üste git bağlantısı</target>
       </trans-unit>
       <trans-unit id="CTE.toplink.1">
         <source>Generates a link to jump to the top of the page.</source>
@@ -531,7 +531,7 @@
       </trans-unit>
       <trans-unit id="CTE.gallery.1">
         <source>Generates a lightbox image gallery.</source>
-        <target>Bir lightbox görsel galerisi oluşturur.</target>
+        <target>Bir Lightbox görsel galerisi oluşturur.</target>
       </trans-unit>
       <trans-unit id="CTE.player.0">
         <source>Video/audio</source>
@@ -1595,7 +1595,7 @@
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
         <source>Learn more about speeding up your workflow by using &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>İş akışınızı hızlandırmak için &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;klavye kısayollarını&lt;/a&gt; kullanmak hakkında ayrıntılı bilgi alın.</target>
+        <target>İş akışınızı hızlandırmak için &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;klavye kısayolları&lt;/a&gt; ile ilgili bilgi alın.</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -1663,7 +1663,7 @@
       </trans-unit>
       <trans-unit id="MSC.learnMore">
         <source>Learn more on %s</source>
-        <target>%s hakkında ayrıntılı bilgi alın</target>
+        <target>%s ile ilgili ayrıntılı bilgi alın</target>
       </trans-unit>
       <trans-unit id="MSC.user">
         <source>User</source>
@@ -1911,7 +1911,7 @@
       </trans-unit>
       <trans-unit id="MSC.female">
         <source>Female</source>
-        <target>Dişi</target>
+        <target>Kadın</target>
       </trans-unit>
       <trans-unit id="MSC.other">
         <source>Other</source>
@@ -1927,7 +1927,7 @@
       </trans-unit>
       <trans-unit id="MSC.fileModified">
         <source>Last modified</source>
-        <target>Son düzenlenme</target>
+        <target>Son değiştirilme</target>
       </trans-unit>
       <trans-unit id="MSC.fileAccessed">
         <source>Last accessed</source>
@@ -2619,7 +2619,7 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorAuthentication">
         <source>Two-factor authentication</source>
-        <target>İki aşamalı kimlik doğrulama</target>
+        <target>İki adımlı doğrulama</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorVerification">
         <source>Verification code</source>
@@ -2631,7 +2631,7 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorExplain">
         <source>Here you can enable two-factor authentication, which adds an extra layer of security to your account. In addition to your username and password, you will need to enter a verification code generated by a two-factor app such as 1Password, Authy, Google Authenticator, Microsoft Authenticator, LastPass Authenticator or any other TOTP app.</source>
-        <target>Buradan, hesabınıza ek bir güvenlik katmanı ekleyen iki aşamalı kimlik doğrulaması özelliğini etkinleştirebilirsiniz. Kullanıcı adınıza ve parolanıza ek olarak, 1Password, Authy, Google Authenticator, Microsoft Authenticator, LastPass Authenticator veya başka herhangi bir TOTP uygulaması gibi iki aşamalı bir kimlik doğrulaması uygulaması tarafından oluşturulan doğrulama kodunu yazmanız gerekir.</target>
+        <target>Buradan, hesabınıza ek bir güvenlik katmanı ekleyen iki adımlı doğrulama özelliğini etkinleştirebilirsiniz. Kullanıcı adınıza ve parolanıza ek olarak, 1Password, Authy, Google Authenticator, Microsoft Authenticator, LastPass Authenticator veya başka herhangi bir TOTP uygulaması gibi bir iki adımlı doğrulama uygulaması tarafından oluşturulan doğrulama kodunu yazmanız gerekir.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorScan">
         <source>Please scan the QR code with your 2FA/TOTP app.</source>
@@ -2639,11 +2639,11 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorActive">
         <source>Two-factor authentication has been enabled.</source>
-        <target>İki aşamalı kimlik doğrulaması etkinleştirildi.</target>
+        <target>İki adımlı doğrulama etkinleştirildi.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorEnforced">
         <source>Please enable up two-factor authentication before you continue.</source>
-        <target>Lütfen ilerlemeden önce iki aşamalı kimlik doğrulamasını etkinleştirin.</target>
+        <target>Lütfen ilerlemeden önce iki adımlı doğrulamayı etkinleştirin.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorTextCode">
         <source>If you cannot scan the QR code, enter this key instead:</source>
@@ -2655,7 +2655,7 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesExplain">
         <source>Backup codes can be used to access your account if you have lost your authentication device and cannot generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password! It is recommended to save them with a password manager such as Lastpass, 1Password or Keeper.</source>
-        <target>Kimlik doğrulama aygıtınızı kaybettiyseniz ve artık iki aşamalı kimlik doğrulama kod üretemiyorsanız, hesabınıza erişmek için yedek kodları kullanabilirsiniz. Yedek kodlarınıza, parolanız kadar özenli davranın! Bunları Lastpass, 1Password veya Keeper gibi bir parola yöneticisine kaydetmeniz önerilir.</target>
+        <target>Kimlik doğrulama aygıtınızı kaybettiyseniz ve artık iki adımlı doğrulama kodu üretemiyorsanız, hesabınıza erişmek için yedek kodları kullanabilirsiniz. Yedek kodlarınıza, parolanız kadar özenli davranın! Bunları Lastpass, 1Password veya Keeper gibi bir parola yöneticisine kaydetmeniz önerilir.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesInfo">
         <source>Make sure to copy the codes now. You will not be able to see them again!</source>
@@ -2759,7 +2759,7 @@
       </trans-unit>
       <trans-unit id="MSC.noSerpPreview">
         <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
-        <target>Yıolda zorunlu parametreler bulunduğundan ön izleme adresi oluşturulamadı.</target>
+        <target>Yolda zorunlu parametreler bulunduğundan ön izleme adresi oluşturulamadı.</target>
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>

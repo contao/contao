@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="FMD.unsubscribe.0">
         <source>Unsubscribe</source>
-        <target>قطع اشتراک</target>
+        <target>لغو اشتراک</target>
       </trans-unit>
       <trans-unit id="FMD.unsubscribe.1">
         <source>Generates a form to unsubscribe from one or more channels</source>

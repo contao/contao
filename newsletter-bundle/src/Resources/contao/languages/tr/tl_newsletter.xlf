@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.addFile.1">
         <source>Attach one or more files to the newsletter.</source>
-        <target>Haber bültenine bir ya da birkaç dosya ekle.</target>
+        <target>Haber bültenine bir ya da birkaç dosya ekleyebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.files.0">
         <source>Attachments</source>
@@ -103,7 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.mailsPerCycle.1">
         <source>The sending process is split into several cycles to prevent the script from timing out.</source>
-        <target>Gönderme işlemi betiğin zaman aşımına uğramaması için bir kaç pakate bölünerek yapılır.</target>
+        <target>Gönderme işlemi betiğin zaman aşımına uğramaması için birkaç pakete bölünerek yapılır.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.timeout.0">
         <source>Timeout in seconds</source>

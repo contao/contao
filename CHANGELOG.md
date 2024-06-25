@@ -2,6 +2,26 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.45] (2024-06-25)
+
+**Fixed issues:**
+
+- [#7180] Correctly show the file tree if the widget is restricted to a path ([leofeyer])
+- [#7275] Make ID always searchable in DC_Table ([Toflar])
+- [#7281] Check CSRF and private response after the session ([ausi])
+- [#7277] Improve the docs of `quoteIdentifier()` and `findInSet()` ([ausi])
+- [#7263] Handle failed `preg_split()` return values for image sources ([aschempp])
+- [#7266] Delete search index entries under more specific conditions ([fritzmg])
+- [#7264] Replace non-routable URLs with an empty string for the `{{link*}}` insert tags ([fritzmg])
+- [#7246] Use `ENT_QUOTES|ENT_SUBSTITUTE|ENT_HTML5` instead of just `ENT_QUOTES` ([leofeyer])
+- [#7255] Support `buildIfResourceExists()` in the preview factory ([ausi])
+- [#7254] Do not update the `tstamp` column on cut/paste ([ausi])
+- [#7247] Support MODIFY queries in the database installer ([Toflar])
+- [#7248] Handle legacy keywords when rendering an article in the back end ([fritzmg])
+- [#7240] Only handle `GET` requests in the search index listener ([fritzmg])
+- [#7233] Fix the `_token_check` logic ([leofeyer])
+- [#7236] Add 'Bubble the back end log entries to file logs' again ([leofeyer])
+
 ## [4.13.44] (2024-05-23)
 
 **Fixed issues:**
@@ -1002,6 +1022,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.45]: https://github.com/contao/contao/releases/tag/4.13.45
 [4.13.44]: https://github.com/contao/contao/releases/tag/4.13.44
 [4.13.43]: https://github.com/contao/contao/releases/tag/4.13.43
 [4.13.42]: https://github.com/contao/contao/releases/tag/4.13.42
@@ -1825,9 +1846,24 @@ This project adheres to [Semantic Versioning].
 [#7169]: https://github.com/contao/contao/pull/7169
 [#7171]: https://github.com/contao/contao/pull/7171
 [#7179]: https://github.com/contao/contao/pull/7179
+[#7180]: https://github.com/contao/contao/pull/7180
 [#7181]: https://github.com/contao/contao/pull/7181
 [#7194]: https://github.com/contao/contao/pull/7194
 [#7213]: https://github.com/contao/contao/pull/7213
 [#7224]: https://github.com/contao/contao/pull/7224
 [#7227]: https://github.com/contao/contao/pull/7227
 [#7232]: https://github.com/contao/contao/pull/7232
+[#7233]: https://github.com/contao/contao/pull/7233
+[#7236]: https://github.com/contao/contao/pull/7236
+[#7240]: https://github.com/contao/contao/pull/7240
+[#7246]: https://github.com/contao/contao/pull/7246
+[#7247]: https://github.com/contao/contao/pull/7247
+[#7248]: https://github.com/contao/contao/pull/7248
+[#7254]: https://github.com/contao/contao/pull/7254
+[#7255]: https://github.com/contao/contao/pull/7255
+[#7263]: https://github.com/contao/contao/pull/7263
+[#7264]: https://github.com/contao/contao/pull/7264
+[#7266]: https://github.com/contao/contao/pull/7266
+[#7275]: https://github.com/contao/contao/pull/7275
+[#7277]: https://github.com/contao/contao/pull/7277
+[#7281]: https://github.com/contao/contao/pull/7281

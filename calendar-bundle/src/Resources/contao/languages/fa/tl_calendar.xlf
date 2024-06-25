@@ -147,6 +147,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.1">
         <source>Manage calendar feeds</source>
+        <target>مدیریت خوارک تقویم</target>
       </trans-unit>
       <trans-unit id="tl_calendar.new.0">
         <source>New</source>

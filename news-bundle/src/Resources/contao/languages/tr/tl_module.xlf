@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_module.news_archives.1">
         <source>Please select one or more news archives.</source>
-        <target>Lütfen bir ya da bir kaç haber arşivi seçin.</target>
+        <target>Lütfen bir ya da birkaç haber arşivi seçin.</target>
       </trans-unit>
       <trans-unit id="tl_module.news_featured.0">
         <source>Featured items</source>
