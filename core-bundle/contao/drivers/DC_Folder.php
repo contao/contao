@@ -387,8 +387,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 			else
 			{
-				$isBasePath = static function (string $path, array $basePaths)
-				{
+				$isBasePath = static function (string $path, array $basePaths) {
 					foreach ($basePaths as $basePath)
 					{
 						if (Path::isBasePath($basePath, $path))
