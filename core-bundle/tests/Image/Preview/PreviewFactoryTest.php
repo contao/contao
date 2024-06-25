@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Image\Preview;
 
+use Contao\CoreBundle\Asset\ContaoContext;
+use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\Image\PictureFactoryInterface;
@@ -31,6 +33,7 @@ use Contao\ImageSizeModel;
 use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
 use Imagine\Image\ImagineInterface;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
@@ -87,6 +90,16 @@ class PreviewFactoryTest extends TestCase
         $this->expectException(MissingPreviewProviderException::class);
 
         $factory->createPreview($sourcePath, 256);
+    }
+
+    public function testCreateMissingPreview(): void
+    {
+        $sourcePath = Path::join($this->getTempDir(), 'sources/does-not-exist.pdf');
+        $factory = $this->createFactoryWithExampleProvider();
+
+        $this->expectException(InvalidResourceException::class);
+
+        $factory->createPreview($sourcePath);
     }
 
     public function testCreatePreviews(): void
@@ -329,6 +342,36 @@ class PreviewFactoryTest extends TestCase
         $factory->createPreviewPictures($sourcePath, [200, 200, 'box']);
     }
 
+    public function testCreatePreviewFigureBuilder(): void
+    {
+        $sourcePath = Path::join($this->getTempDir(), 'sources/foo.pdf');
+        $factory = $this->createFactoryWithExampleProvider();
+        $figureBuilder = $factory->createPreviewFigureBuilder($sourcePath);
+
+        $this->assertNull($figureBuilder->buildIfResourceExists());
+
+        (new Filesystem())->dumpFile($sourcePath, '%PDF-');
+
+        $figureBuilder = $factory->createPreviewFigureBuilder($sourcePath);
+        $preview = $figureBuilder->build()->getImage();
+
+        $this->assertFileExists(Path::join($this->getTempDir(), $preview->getImageSrc(true)));
+
+        (new Filesystem())->remove(Path::join($this->getTempDir(), 'assets/previews'));
+        (new Filesystem())->dumpFile($sourcePath, 'not a PDF');
+
+        $figureBuilder = $factory->createPreviewFigureBuilder($sourcePath);
+
+        $this->assertNull($figureBuilder->buildIfResourceExists());
+
+        try {
+            $figureBuilder->build();
+            $this->fail('FigureBuilder::build() should throw an exception');
+        } catch (InvalidResourceException $exception) {
+            $this->assertInstanceOf(MissingPreviewProviderException::class, $exception->getPrevious());
+        }
+    }
+
     private function createFactoryWithExampleProvider(ContaoFramework $framework = null): PreviewFactory
     {
         $pdfProvider = new class() implements PreviewProviderInterface {
@@ -385,11 +428,36 @@ class PreviewFactoryTest extends TestCase
             )
         ;
 
+        $locator = $this->createMock(ContainerInterface::class);
+
+        $studio = new Studio(
+            $locator,
+            $this->getTempDir(),
+            'files',
+            Path::join($this->getTempDir(), 'public'),
+            ['png']
+        );
+
+        $filesContext = $this->createMock(ContaoContext::class);
+        $filesContext
+            ->method('getStaticUrl')
+            ->willReturn('')
+        ;
+
+        $locator
+            ->method('get')
+            ->willReturnMap([
+                ['contao.image.studio', $studio],
+                ['contao.image.picture_factory', $pictureFactory],
+                ['contao.assets.files_context', $filesContext],
+            ])
+        ;
+
         return new PreviewFactory(
             [$pdfProvider],
             $imageFactory,
             $pictureFactory,
-            $this->createMock(Studio::class),
+            $studio,
             $framework ?? $this->createMock(ContaoFramework::class),
             'not so secret ;)',
             Path::join($this->getTempDir(), 'assets/previews'),

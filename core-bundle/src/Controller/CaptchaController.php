@@ -47,7 +47,7 @@ class CaptchaController extends AbstractController
         $captcha = new FormCaptcha();
 
         return new JsonResponse([
-            'question' => html_entity_decode($captcha->question),
+            'question' => html_entity_decode($captcha->question, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5),
             'sum' => $captcha->sum,
             'hash' => $captcha->sum.$captcha->hash,
         ]);

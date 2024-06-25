@@ -43,7 +43,7 @@ class MakeResponsePrivateListenerTest extends TestCase
         );
 
         $listener = new MakeResponsePrivateListener($this->createScopeMatcher(false));
-        $listener($event);
+        $listener->makeResponsePrivate($event);
 
         $this->assertTrue($response->headers->getCacheControlDirective('public'));
         $this->assertFalse($response->headers->has(MakeResponsePrivateListener::DEBUG_HEADER));
@@ -63,10 +63,9 @@ class MakeResponsePrivateListenerTest extends TestCase
         );
 
         $listener = new MakeResponsePrivateListener($this->createScopeMatcher(true));
-        $listener($event);
+        $listener->makeResponsePrivate($event);
 
         $this->assertTrue($response->headers->getCacheControlDirective('public'));
-        $this->assertTrue($response->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
         $this->assertSame('600', $response->headers->getCacheControlDirective('max-age'));
         $this->assertFalse($response->headers->has(MakeResponsePrivateListener::DEBUG_HEADER));
     }
@@ -88,9 +87,8 @@ class MakeResponsePrivateListenerTest extends TestCase
         );
 
         $listener = new MakeResponsePrivateListener($this->createScopeMatcher(true));
-        $listener($event);
+        $listener->makeResponsePrivate($event);
 
-        $this->assertTrue($response->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
         $this->assertTrue($response->headers->getCacheControlDirective('private'));
         $this->assertSame('authorization', $response->headers->get(MakeResponsePrivateListener::DEBUG_HEADER));
     }
@@ -112,9 +110,8 @@ class MakeResponsePrivateListenerTest extends TestCase
         );
 
         $listener = new MakeResponsePrivateListener($this->createScopeMatcher(true));
-        $listener($event);
+        $listener->makeResponsePrivate($event);
 
-        $this->assertTrue($response->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
         $this->assertTrue($response->headers->getCacheControlDirective('public'));
         $this->assertFalse($response->headers->has(MakeResponsePrivateListener::DEBUG_HEADER));
     }
@@ -136,9 +133,8 @@ class MakeResponsePrivateListenerTest extends TestCase
         );
 
         $listener = new MakeResponsePrivateListener($this->createScopeMatcher(true));
-        $listener($event);
+        $listener->makeResponsePrivate($event);
 
-        $this->assertTrue($response->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
         $this->assertTrue($response->headers->getCacheControlDirective('public'));
         $this->assertFalse($response->headers->has(MakeResponsePrivateListener::DEBUG_HEADER));
     }
@@ -164,9 +160,8 @@ class MakeResponsePrivateListenerTest extends TestCase
         );
 
         $listener = new MakeResponsePrivateListener($this->createScopeMatcher(true));
-        $listener($event);
+        $listener->makeResponsePrivate($event);
 
-        $this->assertTrue($response->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
         $this->assertTrue($response->headers->getCacheControlDirective('public'));
         $this->assertFalse($response->headers->has(MakeResponsePrivateListener::DEBUG_HEADER));
     }
@@ -182,6 +177,7 @@ class MakeResponsePrivateListenerTest extends TestCase
 
         $request = new Request();
         $request->setSession($session);
+        $request->cookies->set($session->getName(), $session->getId());
 
         $event = new ResponseEvent(
             $this->createMock(KernelInterface::class),
@@ -191,9 +187,8 @@ class MakeResponsePrivateListenerTest extends TestCase
         );
 
         $listener = new MakeResponsePrivateListener($this->createScopeMatcher(true));
-        $listener($event);
+        $listener->makeResponsePrivate($event);
 
-        $this->assertTrue($response->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
         $this->assertTrue($response->headers->getCacheControlDirective('private'));
         $this->assertSame('session-cookie', $response->headers->get(MakeResponsePrivateListener::DEBUG_HEADER));
     }
@@ -214,9 +209,8 @@ class MakeResponsePrivateListenerTest extends TestCase
         );
 
         $listener = new MakeResponsePrivateListener($this->createScopeMatcher(true));
-        $listener($event);
+        $listener->makeResponsePrivate($event);
 
-        $this->assertTrue($response->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
         $this->assertTrue($response->headers->getCacheControlDirective('private'));
         $this->assertSame('response-cookies (foobar, foobar2)', $response->headers->get(MakeResponsePrivateListener::DEBUG_HEADER));
     }
@@ -236,9 +230,8 @@ class MakeResponsePrivateListenerTest extends TestCase
         );
 
         $listener = new MakeResponsePrivateListener($this->createScopeMatcher(true));
-        $listener($event);
+        $listener->makeResponsePrivate($event);
 
-        $this->assertTrue($response->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
         $this->assertTrue($response->headers->getCacheControlDirective('private'));
         $this->assertSame('request-cookies (super-cookie)', $response->headers->get(MakeResponsePrivateListener::DEBUG_HEADER));
     }
@@ -258,11 +251,44 @@ class MakeResponsePrivateListenerTest extends TestCase
         );
 
         $listener = new MakeResponsePrivateListener($this->createScopeMatcher(true));
-        $listener($event);
+        $listener->makeResponsePrivate($event);
 
-        $this->assertTrue($response->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
         $this->assertTrue($response->headers->getCacheControlDirective('public'));
         $this->assertFalse($response->headers->has(MakeResponsePrivateListener::DEBUG_HEADER));
+    }
+
+    public function testDisablesSymfonyAutoCache(): void
+    {
+        $response = new Response();
+
+        $event = new ResponseEvent(
+            $this->createMock(KernelInterface::class),
+            new Request(),
+            HttpKernelInterface::MAIN_REQUEST,
+            $response
+        );
+
+        $listener = new MakeResponsePrivateListener($this->createScopeMatcher(true));
+        $listener->disableSymfonyAutoCacheControl($event);
+
+        $this->assertTrue($response->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
+    }
+
+    public function testDoesNotDisableSymfonyAutoCache(): void
+    {
+        $response = new Response();
+
+        $event = new ResponseEvent(
+            $this->createMock(KernelInterface::class),
+            new Request(),
+            HttpKernelInterface::MAIN_REQUEST,
+            $response
+        );
+
+        $listener = new MakeResponsePrivateListener($this->createScopeMatcher(false));
+        $listener->disableSymfonyAutoCacheControl($event);
+
+        $this->assertFalse($response->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
     }
 
     private function createScopeMatcher(bool $isContaoMainRequest): ScopeMatcher

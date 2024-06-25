@@ -715,8 +715,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			throw new InternalServerErrorException('Attempt to relate record ' . $this->intId . ' of table "' . $this->strTable . '" to its child record ' . Input::get('pid') . ' (circular reference).');
 		}
 
-		$this->set['tstamp'] = time();
-
 		// HOOK: style sheet category
 		if ($this->strTable == 'tl_style')
 		{
@@ -729,6 +727,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if ($category)
 			{
 				$this->set['category'] = $category;
+				$this->set['tstamp'] = time();
 			}
 		}
 
@@ -5218,7 +5217,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function searchMenu()
 	{
-		$searchFields = array();
+		$searchFields = array('id');
 
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');

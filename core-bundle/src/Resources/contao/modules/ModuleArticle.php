@@ -202,7 +202,7 @@ class ModuleArticle extends Module
 		$this->Template->elements = $arrElements;
 
 		// Backwards compatibility
-		if ($this->keywords)
+		if ($this->keywords && isset($GLOBALS['TL_KEYWORDS']))
 		{
 			$GLOBALS['TL_KEYWORDS'] .= ($GLOBALS['TL_KEYWORDS'] ? ', ' : '') . $this->keywords;
 		}
@@ -280,7 +280,7 @@ class ModuleArticle extends Module
 
 		// Generate article
 		$strArticle = $container->get('contao.insert_tag.parser')->replaceInline($this->generate());
-		$strArticle = html_entity_decode($strArticle, ENT_QUOTES, $container->getParameter('kernel.charset'));
+		$strArticle = html_entity_decode($strArticle, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, $container->getParameter('kernel.charset'));
 		$strArticle = $this->convertRelativeUrls($strArticle, '', true);
 
 		if (empty($GLOBALS['TL_HOOKS']['printArticleAsPdf']))

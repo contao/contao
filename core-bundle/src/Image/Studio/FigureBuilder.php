@@ -561,6 +561,16 @@ class FigureBuilder
     }
 
     /**
+     * @internal
+     */
+    public function setLastException(InvalidResourceException $exception): self
+    {
+        $this->lastException = $exception;
+
+        return $this;
+    }
+
+    /**
      * Creates a result object with the current settings, throws an exception
      * if the currently defined resource is invalid.
      *

@@ -703,8 +703,8 @@ class InsertTagsTest extends TestCase
         $this->assertSame($expected, $insertTagParser->replace($source));
         $this->assertSame($expected.$expected, $insertTagParser->replace($source.$source));
 
-        $source = '<a href="'.htmlspecialchars($source).'" title="'.htmlspecialchars($source).'">';
-        $expected = '<a href="'.htmlspecialchars($expected).'" title="'.htmlspecialchars($expected).'">';
+        $source = '<a href="'.htmlspecialchars($source).'" title="'.htmlspecialchars($source, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5).'">';
+        $expected = '<a href="'.htmlspecialchars($expected).'" title="'.htmlspecialchars($expected, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5).'">';
 
         $this->assertSame($expected, $insertTagParser->replaceInline($source));
         $this->assertSame($expected.$expected, $insertTagParser->replaceInline($source.$source));

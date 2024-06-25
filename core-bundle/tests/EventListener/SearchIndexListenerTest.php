@@ -99,7 +99,7 @@ class SearchIndexListenerTest extends TestCase
             false,
         ];
 
-        yield 'Should be deleted because the response was not successful (404)' => [
+        yield 'Should be deleted because the response was "not found" (404)' => [
             Request::create('/foobar'),
             new Response('', 404),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
@@ -107,26 +107,26 @@ class SearchIndexListenerTest extends TestCase
             true,
         ];
 
-        yield 'Should be deleted because the response was not successful (403)' => [
+        yield 'Should be deleted because the response was "gone" (410)' => [
             Request::create('/foobar'),
-            new Response('', 403),
+            new Response('', 404),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
             true,
         ];
 
-        yield 'Should not be deleted because even though the response was not successful (403), it was disabled by the feature flag ' => [
+        yield 'Should not be deleted because even though the response was "not found" (404), it was disabled by the feature flag' => [
             Request::create('/foobar'),
-            new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>', 403),
+            new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>', 404),
             SearchIndexListener::FEATURE_INDEX,
             false,
             false,
         ];
 
-        $response = new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>', 403);
+        $response = new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>', 200);
         $response->headers->set('X-Robots-Tag', 'noindex');
 
-        yield 'Should not be handled because the X-Robots-Tag header contains "noindex" ' => [
+        yield 'Should not index but should delete because the X-Robots-Tag header contains "noindex"' => [
             Request::create('/foobar'),
             $response,
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
@@ -134,12 +134,46 @@ class SearchIndexListenerTest extends TestCase
             true,
         ];
 
-        yield 'Should not be handled because the meta robots tag contains "noindex" ' => [
+        $response = new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>', 500);
+        $response->headers->set('X-Robots-Tag', 'noindex');
+
+        yield 'Should not index and delete because the X-Robots-Tag header contains "noindex" and response is unsuccessful' => [
             Request::create('/foobar'),
-            new Response('<html><head><meta name="robots" content="noindex,nofollow"/></head><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>', 403),
+            $response,
+            SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
+            false,
+            false,
+        ];
+
+        yield 'Should not index but should delete because the meta robots tag contains "noindex"' => [
+            Request::create('/foobar'),
+            new Response('<html><head><meta name="robots" content="noindex,nofollow"/></head><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>', 200),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
             true,
         ];
+
+        yield 'Should not index and delete because the meta robots tag contains "noindex" and response is unsuccessful' => [
+            Request::create('/foobar'),
+            new Response('<html><head><meta name="robots" content="noindex,nofollow"/></head><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>', 500),
+            SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
+            false,
+            false,
+        ];
+
+        // From the unsuccessful responses only the 404 and 410 status codes should execute a deletion.
+        for ($status = 400; $status < 600; ++$status) {
+            if (\in_array($status, [Response::HTTP_NOT_FOUND, Response::HTTP_GONE], true)) {
+                continue;
+            }
+
+            yield 'Should be skipped because the response status ('.$status.') is not successful and not a "not found" or "gone" response' => [
+                Request::create('/foobar'),
+                new Response('', $status),
+                SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
+                false,
+                false,
+            ];
+        }
     }
 }
