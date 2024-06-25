@@ -96,7 +96,7 @@ class LazySessionAccess implements \ArrayAccess, \Countable
 
         $this->session->start();
 
-        /** @phpstan-ignore-next-line */
+        /** @phpstan-ignore instanceof.alwaysFalse */
         if ($_SESSION instanceof self) {
             throw new \RuntimeException('Unable to start the native session, $_SESSION was not replaced.');
         }

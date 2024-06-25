@@ -424,7 +424,7 @@ class StringUtilTest extends TestCase
     {
         $this->expectDeprecation('Since contao/core-bundle 4.9: Passing a non-stringable argument to StringUtil::convertEncoding() has been deprecated %s.');
 
-        /** @phpstan-ignore-next-line */
+        /** @phpstan-ignore argument.type */
         $result = StringUtil::convertEncoding($value, 'UTF-8');
 
         $this->assertSame('', $result);

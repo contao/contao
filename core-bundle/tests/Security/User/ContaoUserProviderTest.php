@@ -231,7 +231,7 @@ class ContaoUserProviderTest extends TestCase
         $this->expectException(UnsupportedUserException::class);
         $this->expectExceptionMessage(sprintf('Unsupported class "%s".', \get_class($user)));
 
-        /** @phpstan-ignore-next-line */
+        /** @phpstan-ignore argument.type */
         $provider->upgradePassword($user, 'newsuperhash');
     }
 

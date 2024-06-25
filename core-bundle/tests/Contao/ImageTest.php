@@ -833,7 +833,7 @@ class ImageTest extends TestCase
         $imageObj->setTargetHeight(20);
         $this->assertSame($imageObj->getTargetHeight(), 20);
 
-        /** @phpstan-ignore-next-line */
+        /** @phpstan-ignore argument.type */
         $imageObj->setTargetHeight(50.125);
         $this->assertSame($imageObj->getTargetHeight(), 50);
 
@@ -841,7 +841,7 @@ class ImageTest extends TestCase
         $imageObj->setTargetWidth(20);
         $this->assertSame($imageObj->getTargetWidth(), 20);
 
-        /** @phpstan-ignore-next-line */
+        /** @phpstan-ignore argument.type */
         $imageObj->setTargetWidth(50.125);
         $this->assertSame($imageObj->getTargetWidth(), 50);
 
@@ -1001,10 +1001,10 @@ class ImageTest extends TestCase
 
         $this->assertNull(Image::get('', 100, 100));
 
-        /** @phpstan-ignore-next-line */
+        /** @phpstan-ignore argument.type */
         $this->assertNull(Image::get(0, 100, 100));
 
-        /** @phpstan-ignore-next-line */
+        /** @phpstan-ignore argument.type */
         $this->assertNull(Image::get(null, 100, 100));
     }
 
