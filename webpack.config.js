@@ -40,43 +40,48 @@ Encore
 
 const themeConfig = Encore.getWebpackConfig();
 
-Encore.reset();
+module.exports = [jsConfig, themeConfig];
 
-Encore
-    .setOutputPath('core-bundle/contao/themes/flexible/icons')
-    .setPublicPath('/system/themes/flexible/icons')
-    .setManifestKeyPrefix('')
-    .disableSingleRuntimeChunk()
-    .addPlugin(new ImageMinimizerPlugin({
-        minimizer: {
-            implementation: ImageMinimizerPlugin.svgoMinify,
-            options: {
-                encodeOptions: {
-                    multipass: true,
-                    plugins: [{
-                        name: 'preset-default',
-                        params: {
-                            overrides: {
-                                inlineStyles: {
-                                    onlyMatchedOnce: false,
-                                },
-                                convertPathData: {
-                                    noSpaceAfterFlags: true,
+if (!Encore.isDev()) {
+
+    Encore.reset();
+
+    Encore
+        .setOutputPath('core-bundle/contao/themes/flexible/icons')
+        .setPublicPath('/system/themes/flexible/icons')
+        .setManifestKeyPrefix('')
+        .disableSingleRuntimeChunk()
+        .addPlugin(new ImageMinimizerPlugin({
+            minimizer: {
+                implementation: ImageMinimizerPlugin.svgoMinify,
+                options: {
+                    encodeOptions: {
+                        multipass: true,
+                        plugins: [{
+                            name: 'preset-default',
+                            params: {
+                                overrides: {
+                                    inlineStyles: {
+                                        onlyMatchedOnce: false,
+                                    },
+                                    convertPathData: {
+                                        noSpaceAfterFlags: true,
+                                    },
                                 },
                             },
-                        },
-                    }],
+                        }],
+                    },
                 },
             },
-        },
-    }))
-    .copyFiles({
-        from: './core-bundle/contao/themes/flexible/icons',
-        to: '[name].[ext]',
-        pattern: /\.svg$/,
-    })
-;
+        }))
+        .copyFiles({
+            from: './core-bundle/contao/themes/flexible/icons',
+            to: '[name].[ext]',
+            pattern: /\.svg$/,
+        })
+    ;
 
-const iconConfig = Encore.getWebpackConfig();
+    const iconConfig = Encore.getWebpackConfig();
 
-module.exports = [jsConfig, themeConfig, iconConfig];
+    module.exports?.push(iconConfig)
+}
