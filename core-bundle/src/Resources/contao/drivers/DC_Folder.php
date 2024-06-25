@@ -406,11 +406,12 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 				$arrRoot = array();
 				$root = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null;
+				$checkFilemounts = !empty($this->arrFilemounts) || null !== $root;
 
 				while ($objRoot->next())
 				{
 					// Respect given filemounts, e.g. set in the initPicker() method
-					if ((!empty($this->arrFilemounts) || null !== $root) && !$isBasePath($objRoot->path, $this->arrFilemounts))
+					if ($checkFilemounts && !$isBasePath($objRoot->path, $this->arrFilemounts))
 					{
 						continue;
 					}
@@ -3110,21 +3111,23 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			{
 				$this->arrFilemounts = array($strPath);
 			}
-
-			foreach ($this->arrFilemounts as $i => $strFolder)
+			else
 			{
-				// Unset all file mounts outside the path
-				if (!Path::isBasePath($strPath, $strFolder))
+				foreach ($this->arrFilemounts as $i => $strFolder)
 				{
-					unset($this->arrFilemounts[$i]);
-				}
+					// Unset all file mounts outside the path
+					if (!Path::isBasePath($strPath, $strFolder))
+					{
+						unset($this->arrFilemounts[$i]);
+					}
 
-				// If the path is inside a valid file mount, unset all file
-				// mounts and fall back to the path itself (see #856 and #6412)
-				if (Path::isBasePath($strFolder, $strPath))
-				{
-					$this->arrFilemounts = array($strPath);
-					break;
+					// If the path is inside a valid file mount, unset all file
+					// mounts and fall back to the path itself (see #856 and #6412)
+					if (Path::isBasePath($strFolder, $strPath))
+					{
+						$this->arrFilemounts = array($strPath);
+						break;
+					}
 				}
 			}
 
