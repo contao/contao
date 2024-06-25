@@ -387,39 +387,43 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 			else
 			{
+				$isBasePath = static function (string $path, array $basePaths)
+				{
+					foreach ($basePaths as $basePath)
+					{
+						if (Path::isBasePath($basePath, $path))
+						{
+							return true;
+						}
+					}
+
+					return false;
+				};
+
 				$arrRoot = array();
+				$root = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null;
+				$checkFilemounts = !empty($this->arrFilemounts) || null !== $root;
 
-				// Respect existing limitations (root IDs)
-				if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null))
+				while ($objRoot->next())
 				{
-					while ($objRoot->next())
+					// Respect given filemounts, e.g. set in the initPicker() method
+					if ($checkFilemounts && !$isBasePath($objRoot->path, $this->arrFilemounts))
 					{
-						foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] as $root)
-						{
-							if (strncmp($root . '/', $objRoot->path . '/', \strlen($root) + 1) === 0)
-							{
-								if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || \in_array($objRoot->extension, $this->arrValidFileTypes))
-								{
-									$arrFound[] = $objRoot->path;
-								}
-
-								$arrRoot[] = ($objRoot->type == 'folder') ? $objRoot->path : \dirname($objRoot->path);
-								continue 2;
-							}
-						}
+						continue;
 					}
-				}
-				else
-				{
-					while ($objRoot->next())
+
+					// Respect existing limitations (root IDs)
+					if (\is_array($root) && !$isBasePath($objRoot->path, $root))
 					{
-						if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || \in_array($objRoot->extension, $this->arrValidFileTypes))
-						{
-							$arrFound[] = $objRoot->path;
-						}
-
-						$arrRoot[] = ($objRoot->type == 'folder') ? $objRoot->path : \dirname($objRoot->path);
+						continue;
 					}
+
+					if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || \in_array($objRoot->extension, $this->arrValidFileTypes))
+					{
+						$arrFound[] = $objRoot->path;
+					}
+
+					$arrRoot[] = ($objRoot->type == 'folder') ? $objRoot->path : \dirname($objRoot->path);
 				}
 
 				$this->updateFilemounts($arrRoot);
@@ -3062,13 +3066,38 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				throw new \RuntimeException('Invalid path ' . $strPath);
 			}
 
+			if (empty($this->arrFilemounts) && null === ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null))
+			{
+				$this->updateFilemounts(array($strPath));
+			}
+			else
+			{
+				foreach ($this->arrFilemounts as $i => $strFolder)
+				{
+					// Unset all file mounts outside the path
+					if (!Path::isBasePath($strPath, $strFolder))
+					{
+						unset($this->arrFilemounts[$i]);
+					}
+
+					// If the path is inside a valid file mount, unset all file
+					// mounts and fall back to the path itself (see #856 and #6412)
+					if (Path::isBasePath($strFolder, $strPath))
+					{
+						$this->updateFilemounts(array($strPath));
+						break;
+					}
+				}
+			}
+
+			$this->updateFilemounts($this->arrFilemounts);
+
 			$strNode = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend')->get('tl_files_node');
 
-			// If the files node is not within the current path, remove it (see #856)
-			if ($strNode && ($i = array_search($strNode, $this->arrFilemounts)) !== false && strncmp($strNode . '/', $strPath . '/', \strlen($strPath) + 1) !== 0)
+			// Hide the breadcrumb if the files node is not mounted
+			if ($strNode && $this->arrFilemounts && !\in_array($strNode, $this->arrFilemounts))
 			{
-				unset($this->arrFilemounts[$i], $GLOBALS['TL_DCA']['tl_files']['list']['sorting']['breadcrumb']);
-				$this->updateFilemounts($this->arrFilemounts);
+				unset($GLOBALS['TL_DCA']['tl_files']['list']['sorting']['breadcrumb']);
 			}
 
 			// Allow only those roots that are allowed in root nodes
@@ -3078,7 +3107,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 				foreach ($this->arrFilemounts as $strFolder)
 				{
-					if (str_starts_with($strPath, $strFolder))
+					if (Path::isBasePath($strPath, $strFolder))
 					{
 						$blnValid = true;
 						break;
@@ -3087,11 +3116,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 				if (!$blnValid)
 				{
-					$strPath = '';
+					$this->updateFilemounts(array());
 				}
 			}
-
-			$this->updateFilemounts(array($strPath));
 		}
 
 		if (isset($attributes['extensions']))
