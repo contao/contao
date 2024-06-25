@@ -1,0 +1,114 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_calendar.php" source-language="en" target-language="fa">
+    <body>
+      <trans-unit id="tl_calendar.title.0">
+        <source>Title</source>
+        <target>عنوان</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.title.1">
+        <source>Please enter the calendar title.</source>
+        <target>لطفا عنوان تقویم را وارد نمایید.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.jumpTo.0">
+        <source>Redirect page</source>
+        <target>برگه‌ی تغییر مسیر</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.jumpTo.1">
+        <source>Please choose the event reader page to which visitors will be redirected when clicking an event.</source>
+        <target>لطفا برگه‌ای را که می خواهید کاربران بعد از کلیک بر روی رویداد به آنجا بازگردانی شوند را انتخاب نمایید.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.protected.0">
+        <source>Protect calendar</source>
+        <target>حفاظت تقویم</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.protected.1">
+        <source>Show events to certain member groups only.</source>
+        <target>با فعال کردن این بخش مشاهده محتوا تنها برای اعضاء خاصی امکان پذیر می شود .</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.groups.0">
+        <source>Allowed member groups</source>
+        <target>گروه‌های اعضاء مجاز</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.groups.1">
+        <source>These groups will be able to see the events in this calendar.</source>
+        <target>در این بخش می‌توانید مشخص کنید که اعضای کدام گروه قادر به مشاهده این تقویم می باشند .</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.tstamp.0">
+        <source>Revision date</source>
+        <target>تاریخ بازنگری</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.tstamp.1">
+        <source>Date and time of the latest revision</source>
+        <target>تاریخ و ساعت آخرین بازنگری</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.title_legend">
+        <source>Title and redirect page</source>
+        <target>عنوان و برگه تغییر مسیر</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.protected_legend">
+        <source>Access protection</source>
+        <target>حفاظت دسترسی</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.feed_legend">
+        <source>RSS/Atom feed</source>
+        <target>فید RSS/Atom</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.notify_admin">
+        <source>System administrator</source>
+        <target>مدیر سامانه</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.notify_author">
+        <source>Author of the event</source>
+        <target>نویسنده رویداد</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.notify_both">
+        <source>Author and system administrator</source>
+        <target>نویسنده و مدیر سامانه</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.source_teaser">
+        <source>Event teasers</source>
+        <target>تیزرهای رویداد</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.source_text">
+        <source>Full articles</source>
+        <target>مقاله‌های کامل</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.feeds.0">
+        <source>Calendar feeds</source>
+        <target>فیدهای تقویم</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.feeds.1">
+        <source>Manage calendar feeds</source>
+        <target>مدیرین خوارک تقویم</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.new.0">
+        <source>New</source>
+        <target>جدید</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.new.1">
+        <source>Create a new calendar</source>
+        <target>ساخت یک سالنمای جدید</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.show">
+        <source>Show the details of calendar ID %s</source>
+        <target>نمایش جزئیات سالنمای شناسه %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.edit">
+        <source>Edit calendar ID %s</source>
+        <target>ویرایش سالنمای شناسه %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.children">
+        <source>Edit the events of calendar ID %s</source>
+        <target>ویرایش رویدادههای تقویم شناسه‌ی %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.copy">
+        <source>Duplicate calendar ID %s</source>
+        <target>تکثیر سالنمای شناسه %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.delete">
+        <source>Delete calendar ID %s</source>
+        <target>حذف سالنمای شناسه %s</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

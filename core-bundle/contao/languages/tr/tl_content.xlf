@@ -95,7 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_content.imageUrl.1">
         <source>A custom image link target will override the lightbox link, so the image cannot be viewed fullsize anymore.</source>
-        <target>Özel bir görsel bağlantısı hedefi, lightbox bağlantısını değiştirir. Bu nedenle görsel artık tam boyutlu görüntülenemez.</target>
+        <target>Özel bir görsel bağlantısı hedefi, Lightbox bağlantısını değiştirir. Bu nedenle görsel artık tam boyutlu görüntülenemez.</target>
       </trans-unit>
       <trans-unit id="tl_content.fullsize.0">
         <source>Full-size view/new window</source>
@@ -103,7 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_content.fullsize.1">
         <source>Open the full-size image in a lightbox or the link in a new browser window.</source>
-        <target>Tam boyutlu görüntüyü bir lightbox içinde ya da bağlantıyı yeni bir tarayıcı penceresinde açar.</target>
+        <target>Tam boyutlu görüntüyü bir Lightbox içinde ya da bağlantıyı yeni bir tarayıcı penceresinde açar.</target>
       </trans-unit>
       <trans-unit id="tl_content.floating.0">
         <source>Image alignment</source>
@@ -331,7 +331,7 @@
       </trans-unit>
       <trans-unit id="tl_content.linkTitle.0">
         <source>Link text</source>
-        <target>Bağlantı metmi</target>
+        <target>Bağlantı metni</target>
       </trans-unit>
       <trans-unit id="tl_content.linkTitle.1">
         <source>The link text will be displayed instead of the target URL.</source>
@@ -803,11 +803,11 @@
       </trans-unit>
       <trans-unit id="tl_content.includeTemplate">
         <source>The &lt;em&gt;%s&lt;/em&gt; template needs to be included in the page layout.</source>
-        <target>&lt;em&gt;%s&lt;/em&gt; kalıbının sayfa düzenine katılması gereklidir.</target>
+        <target>&lt;em&gt;%s&lt;/em&gt; kalıbının sayfa yerleşimine katılması gereklidir.</target>
       </trans-unit>
       <trans-unit id="tl_content.includeTemplates">
         <source>The &lt;em&gt;%s&lt;/em&gt; or &lt;em&gt;%s&lt;/em&gt; template needs to be included in the page layout.</source>
-        <target>&lt;em&gt;%s&lt;/em&gt; ya da &lt;em&gt;%s&lt;/em&gt; kalıbının sayfa düzenine katılması gereklidir.</target>
+        <target>&lt;em&gt;%s&lt;/em&gt; ya da &lt;em&gt;%s&lt;/em&gt; kalıbının sayfa yerleşimine katılması gereklidir.</target>
       </trans-unit>
       <trans-unit id="tl_content.player_autoplay">
         <source>Autoplay</source>
@@ -827,7 +827,7 @@
       </trans-unit>
       <trans-unit id="tl_content.player_playsinline">
         <source>Play inline (no fullscreen mode)</source>
-        <target>Satır arasında oynatılsın (tak ekran kipi yok)</target>
+        <target>Satır arasında oynatılsın (tam ekran kipi yok)</target>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.auto">
         <source>Auto (preload the entire video)</source>
