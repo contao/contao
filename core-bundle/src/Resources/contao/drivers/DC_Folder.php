@@ -410,7 +410,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				while ($objRoot->next())
 				{
 					// Respect given filemounts, e.g. set in the initPicker() method
-					if (!empty($this->arrFilemounts) && !$isBasePath($objRoot->path, $this->arrFilemounts))
+					if ((!empty($this->arrFilemounts) || null !== $root) && !$isBasePath($objRoot->path, $this->arrFilemounts))
 					{
 						continue;
 					}
@@ -3106,26 +3106,34 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				throw new \RuntimeException('Invalid path ' . $strPath);
 			}
 
-			// Unset all file mounts outside the path
+			if (empty($this->arrFilemounts) && null === ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null)) {
+				$this->arrFilemounts = array($strPath);
+			}
+
 			foreach ($this->arrFilemounts as $i => $strFolder)
 			{
+				// Unset all file mounts outside the path
 				if (!Path::isBasePath($strPath, $strFolder))
 				{
 					unset($this->arrFilemounts[$i]);
 				}
+
+				// If the path is inside a valid file mount unset all file
+				// mounts and fall back to the path itself (see #856 and #6412)
+				if (Path::isBasePath($strFolder, $strPath))
+				{
+					$this->arrFilemounts = array($strPath);
+					break;
+				}
 			}
 
-			// If there are no valid file mounts left from the breadcrumb menu,
-			// fall back to the path (see #856 and #6412)
-			if (empty($this->arrFilemounts))
-			{
-				$this->arrFilemounts = array($strPath);
-			}
+			// Make sure indexes start with zero
+			$this->arrFilemounts = array_values($this->arrFilemounts);
 
 			$strNode = System::getContainer()->get('session')->getBag('contao_backend')->get('tl_files_node');
 
 			// Hide the breadcrumb if the files node is not mounted
-			if ($strNode && !\in_array($strNode, $this->arrFilemounts))
+			if ($strNode && $this->arrFilemounts && !\in_array($strNode, $this->arrFilemounts))
 			{
 				unset($GLOBALS['TL_DCA']['tl_files']['list']['sorting']['breadcrumb']);
 			}
