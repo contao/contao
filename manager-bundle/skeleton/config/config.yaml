@@ -153,8 +153,6 @@ fos_http_cache:
         enabled: true
     tags:
         enabled: true
-        annotations:
-            enabled: false
         max_header_value_length: 4096
 
 # Scheb 2FA configuration
