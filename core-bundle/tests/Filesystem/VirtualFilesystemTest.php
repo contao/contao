@@ -541,7 +541,7 @@ class VirtualFilesystemTest extends TestCase
         $this->assertSame(2048, $fileA->getFileSize());
         $this->assertSame('text/csv', $fileA->getMimeType());
 
-        /** @phpstan-ignore-next-line */
+        /** @phpstan-ignore method.impossibleType */
         $this->assertSame(3, $handlerInvocationCount);
 
         // Read from the DbafsManager
@@ -557,6 +557,7 @@ class VirtualFilesystemTest extends TestCase
         $this->assertInstanceOf(FilesystemItem::class, $fileB);
         $this->assertTrue($fileB->isFile());
 
+        /** @phpstan-ignore method.impossibleType */
         $this->assertSame(3, $handlerInvocationCount);
 
         $this->assertSame(12345, $fileB->getLastModified());
@@ -564,6 +565,7 @@ class VirtualFilesystemTest extends TestCase
         $this->assertSame('image/png', $fileB->getMimeType());
         $this->assertSame(['extra' => 'data'], $fileB->getExtraMetadata());
 
+        /** @phpstan-ignore method.impossibleType */
         $this->assertSame(7, $handlerInvocationCount);
     }
 

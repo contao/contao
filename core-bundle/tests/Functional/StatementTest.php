@@ -75,7 +75,7 @@ class StatementTest extends FunctionalTestCase
     {
         $GLOBALS['TL_MODELS']['tl_page'] = PageModel::class;
 
-        /** @phpstan-ignore-next-line */
+        /** @phpstan-ignore argument.type */
         $this->assertNull(PageModel::findWithDetails(null));
         $this->assertNull(PageModel::findByPk(null));
         $this->assertNull(PageModel::findOneBy('id', null));

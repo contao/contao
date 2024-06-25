@@ -31,40 +31,36 @@ parameters:
         - %currentWorkingDirectory%/core-bundle/tests/Functional/var/*
 
     ignoreErrors:
-        -
-            # Ignore the forward compatible phpDoc comment of the PictureFactoryInterface
-            message: '#PHPDoc tag @param references unknown parameter: \$options#'
-            path: %currentWorkingDirectory%/core-bundle/src/Image/PictureFactoryInterface.php
+        - identifier: missingType.iterableValue
 
-        -
-            # Ignore the forward compatible phpDoc comment of the Symfony token classes
-            message: '#expects Symfony\\Component\\Security\\Core\\User\\UserInterface, string given\.#'
-            paths:
-                - %currentWorkingDirectory%/core-bundle/src/Security/Authentication/ContaoLoginAuthenticationListener.php
-                - %currentWorkingDirectory%/core-bundle/src/Security/Authentication/Token/FrontendPreviewToken.php
+        # Ignore the forward compatible phpDoc comment of the PictureFactoryInterface
+        - message: '#PHPDoc tag @param references unknown parameter: \$options#'
+          path: %currentWorkingDirectory%/core-bundle/src/Image/PictureFactoryInterface.php
 
-        -
-            # Ignore missing return types in interfaces that we can only change in Contao 5
-            message: '#has no return type specified#'
-            paths:
-                - %currentWorkingDirectory%/core-bundle/src/Config/Dumper/DumperInterface.php
-                - %currentWorkingDirectory%/core-bundle/src/ContaoFrameworkInterface.php
-                - %currentWorkingDirectory%/core-bundle/src/Framework/ContaoFrameworkInterface.php
-                - %currentWorkingDirectory%/core-bundle/src/Framework/FrameworkAwareInterface.php
+        # Ignore the forward compatible phpDoc comment of the Symfony token classes
+        - message: '#expects Symfony\\Component\\Security\\Core\\User\\UserInterface, string given\.#'
+          paths:
+              - %currentWorkingDirectory%/core-bundle/src/Security/Authentication/ContaoLoginAuthenticationListener.php
+              - %currentWorkingDirectory%/core-bundle/src/Security/Authentication/Token/FrontendPreviewToken.php
 
-        -
-            # Ignore incorrect assertSame detection for reference variables
-            message: '#Call to method .*::assertSame\(\) with .* will always evaluate to false\.#'
-            path: %currentWorkingDirectory%/core-bundle/tests/Contao/SystemTest.php
+        # Ignore missing return types in interfaces that we can only change in Contao 5
+        - message: '#has no return type specified#'
+          paths:
+              - %currentWorkingDirectory%/core-bundle/src/Config/Dumper/DumperInterface.php
+              - %currentWorkingDirectory%/core-bundle/src/ContaoFrameworkInterface.php
+              - %currentWorkingDirectory%/core-bundle/src/Framework/ContaoFrameworkInterface.php
+              - %currentWorkingDirectory%/core-bundle/src/Framework/FrameworkAwareInterface.php
 
-        -
-            # Ignore unused properties in the deprecated LogoutHandler
-            message: '#Property Contao\\CoreBundle\\Security\\Logout\\LogoutHandler::.* is never read, only written\.#'
-            path: %currentWorkingDirectory%/core-bundle/src/Security/Logout/LogoutHandler.php
+        # Ignore incorrect assertSame detection for reference variables
+        - message: '#Call to method .*::assertSame\(\) with .* will always evaluate to false\.#'
+          path: %currentWorkingDirectory%/core-bundle/tests/Contao/SystemTest.php
+
+        # Ignore unused properties in the deprecated LogoutHandler
+        - message: '#Property Contao\\CoreBundle\\Security\\Logout\\LogoutHandler::.* is never read, only written\.#'
+          path: %currentWorkingDirectory%/core-bundle/src/Security/Logout/LogoutHandler.php
 
         # Ignore the wrong return type hint of the UrlGeneratorInterface::generate() method
         - '#Method Contao\\CoreBundle\\Picker\\AbstractPickerProvider::generateUrl\(\) never returns null so it can be removed from the return type\.#'
 
     treatPhpDocTypesAsCertain: false
-    checkMissingIterableValueType: false
     rememberPossiblyImpureFunctionValues: false
