@@ -59,6 +59,10 @@ parameters:
         - message: '#Property Contao\\CoreBundle\\Security\\Logout\\LogoutHandler::.* is never read, only written\.#'
           path: %currentWorkingDirectory%/core-bundle/src/Security/Logout/LogoutHandler.php
 
+        # Ignore the symlink warning in the file system test, because we need to create relative symlinks
+        - message: '#Function symlink is unsafe to use, rely on Symfony component Filesystem::symlink instead\.#'
+          path: %currentWorkingDirectory%/core-bundle/tests/DependencyInjection/Compiler/ConfigureFilesystemPassTest.php
+
         # Ignore the wrong return type hint of the UrlGeneratorInterface::generate() method
         - '#Method Contao\\CoreBundle\\Picker\\AbstractPickerProvider::generateUrl\(\) never returns null so it can be removed from the return type\.#'
 
