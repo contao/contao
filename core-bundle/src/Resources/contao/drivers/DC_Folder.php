@@ -3106,7 +3106,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				throw new \RuntimeException('Invalid path ' . $strPath);
 			}
 
-			if (empty($this->arrFilemounts) && null === ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null)) {
+			if (empty($this->arrFilemounts) && null === ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null))
+			{
 				$this->arrFilemounts = array($strPath);
 			}
 
@@ -3118,7 +3119,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					unset($this->arrFilemounts[$i]);
 				}
 
-				// If the path is inside a valid file mount unset all file
+				// If the path is inside a valid file mount, unset all file
 				// mounts and fall back to the path itself (see #856 and #6412)
 				if (Path::isBasePath($strFolder, $strPath))
 				{
