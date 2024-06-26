@@ -83,5 +83,5 @@ if (!Encore.isDev()) {
 
     const iconConfig = Encore.getWebpackConfig();
 
-    module.exports?.push(iconConfig)
+    module.exports.push(iconConfig)
 }
