@@ -11,7 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Controller\AltchaController;
-use Symfony\Component\Routing\RouterInterface;
+use Contao\CoreBundle\String\HtmlAttributes;
 
 class FormAltcha extends Widget
 {
@@ -40,7 +40,7 @@ class FormAltcha extends Widget
 	 */
 	protected $prefix = 'widget widget-altcha';
 
-	protected string $strAltchaAttributes = '';
+	protected HtmlAttributes $altchaAttributes;
 
 	protected string $altchaAuto = '';
 
@@ -96,7 +96,7 @@ class FormAltcha extends Widget
 			return $objTemplate->parse();
 		}
 
-		$this->strAltchaAttributes = $this->getAltchaAttributes();
+		$this->altchaAttributes = $this->getAltchaAttributes();
 
 		// TODO: Use ResponseContext, once it supports appending to <head>
 		$GLOBALS['TL_HEAD'][] = '<script async defer src="' . $this->asset('js/altcha.min.js', 'contao-components/altcha') . '" type="module"></script>';
@@ -104,33 +104,22 @@ class FormAltcha extends Widget
 		return parent::parse($arrAttributes);
 	}
 
-	protected function getAltchaAttributes(): string
+	protected function getAltchaAttributes(): HtmlAttributes
 	{
-		/** @var RouterInterface $router */
-		$router = $this->getContainer()->get('router');
-
-		$attributes = array();
-		$attributes[] = sprintf('challengeurl="%s"', $router->generate(AltchaController::class));
-		$attributes[] = sprintf('name="%s"', $this->name);
+		$attributes = new HtmlAttributes();
+		$attributes->set('name', $this->name);
+		$attributes->set('challengeurl', $this->getContainer()->get('router')->generate(AltchaController::class));
+		$attributes->set('strings', $this->getLocalization());
 
 		if (\in_array($this->altchaAuto, array('onfocus', 'onload', 'onsubmit'), true))
 		{
-			$attributes[] = sprintf('auto="%s"', StringUtil::specialchars($this->altchaAuto));
+			$attributes->set('auto', StringUtil::specialchars($this->altchaAuto));
 		}
 
-		if ($this->altchaHideLogo)
-		{
-			$attributes[] = 'hidelogo';
-		}
+		$attributes->setIfExists('hidelogo', $this->altchaHideLogo);
+		$attributes->setIfExists('hidefooter', $this->altchaHideFooter);
 
-		if ($this->altchaHideFooter)
-		{
-			$attributes[] = 'hidefooter';
-		}
-
-		$attributes[] = sprintf('strings="%s"', $this->getLocalization());
-
-		return implode(' ', $attributes);
+		return $attributes;
 	}
 
 	/**
