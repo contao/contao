@@ -28,10 +28,10 @@ class Altcha
     #[Id]
     #[Column(type: 'integer', options: ['unsigned' => true])]
     #[GeneratedValue]
-    protected int|null $id = null;
+    protected int $id;
 
-    #[Column(type: 'string', nullable: true)]
-    protected string|null $challenge = null;
+    #[Column(type: 'string', length: 64, nullable: false)]
+    protected string $challenge;
 
     #[Column(type: 'datetime')]
     protected \DateTimeInterface $created;
