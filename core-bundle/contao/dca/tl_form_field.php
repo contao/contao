@@ -386,19 +386,19 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'inputType'               => 'select',
 			'options'                 => array('onfocus', 'onload', 'onsubmit'),
 			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(16) NOT NULL default ''"
+			'sql'                     => "varchar(12) NOT NULL default ''"
 		),
 		'altchaHideLogo' => array
 		(
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w25'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'altchaHideFooter' => array
 		(
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w25'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'invisible' => array
 		(
