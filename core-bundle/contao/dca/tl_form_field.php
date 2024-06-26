@@ -385,7 +385,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'inputType'               => 'select',
 			'options'                 => array('onfocus', 'onload', 'onsubmit'),
-			'eval'                    => array('includeBlankOption' => true, 'tl_class' => 'w50'),
+			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(16) NOT NULL default ''"
 		),
 		'altchaHideLogo' => array

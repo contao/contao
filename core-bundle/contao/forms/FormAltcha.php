@@ -41,9 +41,13 @@ class FormAltcha extends Widget
 	protected $prefix = 'widget widget-altcha';
 
 	protected string $strAltchaAttributes = '';
+
 	protected string $altchaAuto = '';
+
 	protected bool $altchaHideLogo = false;
+
 	protected bool $altchaHideFooter = false;
+
 	protected int $altchaMaxNumber = 10000000;
 
 	/**
@@ -134,7 +138,7 @@ class FormAltcha extends Widget
 	 */
 	protected function validator($varInput): mixed
 	{
-		$altcha = $this->getContainer()->get('contao.altcha.altcha');
+		$altcha = $this->getContainer()->get('contao.altcha');
 
 		if (!$varInput || !$altcha->validate($varInput))
 		{

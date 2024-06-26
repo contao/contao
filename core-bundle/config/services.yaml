@@ -7,6 +7,18 @@ services:
             calls:
                 - [setFramework, ['@contao.framework']]
 
+    contao.altcha:
+        class: Contao\CoreBundle\Altcha\Altcha
+        public: true
+        arguments:
+            - '@contao.repository.altcha'
+            - '@doctrine.orm.entity_manager'
+            - '%kernel.secret%'
+            - ~
+            - ~
+            - ~
+            - ~
+
     contao.assets.assets_context:
         class: Contao\CoreBundle\Asset\ContaoContext
         public: true
@@ -636,18 +648,6 @@ services:
             - '@router'
             - '@translator'
             - '@database_connection'
-
-    contao.altcha.altcha:
-        class: Contao\CoreBundle\Altcha\Altcha
-        public: true
-        arguments:
-            - '@contao.repository.altcha'
-            - '@doctrine.orm.entity_manager'
-            - '%kernel.secret%'
-            - ~
-            - ~
-            - ~
-            - ~
 
     contao.process_util:
         class: Contao\CoreBundle\Util\ProcessUtil

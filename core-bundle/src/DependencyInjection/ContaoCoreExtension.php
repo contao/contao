@@ -576,11 +576,11 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
     private function handleAltcha(array $config, ContainerBuilder $container): void
     {
-        if (!$container->hasDefinition('contao.altcha.altcha')) {
+        if (!$container->hasDefinition('contao.altcha')) {
             return;
         }
 
-        $altcha = $container->getDefinition('contao.altcha.altcha');
+        $altcha = $container->getDefinition('contao.altcha');
         $altcha->setArgument(3, $config['altcha']['algorithm']);
         $altcha->setArgument(4, $config['altcha']['range_min']);
         $altcha->setArgument(5, $config['altcha']['range_max']);
