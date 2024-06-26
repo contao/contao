@@ -7,6 +7,11 @@ on:
 
 permissions: read-all
 
+defaults:
+    run:
+        # Simulate an interactive terminal with color support
+        shell: script -q -e -c "export TERM=xterm; bash {0}"
+
 jobs:
     tests:
         name: Isolated tests
@@ -15,20 +20,25 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.2
+                  php-version: 8.3 # latest stable version
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
-            - name: Install the dependencies
-              run: |
-                  composer install --no-interaction --no-progress
-                  composer bin isolated-tests install --no-interaction --no-progress
+            - name: Install Contao
+              uses: ramsey/composer-install@v3
+
+            - name: Install the isolated tests
+              uses: ramsey/composer-install@v3
+              with:
+                  working-directory: vendor-bin/isolated-tests
 
             - name: Run the unit tests
-              run: vendor/bin/phpunit --extensions Contao\\CoreBundle\\Tests\\PhpunitExtension\\GlobalStateWatcher --colors=always
+              run: vendor/bin/phpunit --extensions Contao\\CoreBundle\\Tests\\PhpunitExtension\\GlobalStateWatcher
 
             - name: Run the unit tests isolated
-              run: tools/isolated-tests/bin/run-tests-isolated --ansi
+              run: vendor-bin/isolated-tests/bin/run-tests-isolated

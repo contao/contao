@@ -31,9 +31,8 @@ final class FigureRuntime implements RuntimeExtensionInterface
     /**
      * Renders a figure.
      *
-     * The provided configuration array is used to configure a FigureBuilder
-     * object. If not explicitly set, the default figure template will be used
-     * to render the results.
+     * The provided configuration array is used to configure a FigureBuilder object. If not
+     * explicitly set, the default figure template will be used to render the results.
      *
      * Returns null if the resource is invalid.
      *
@@ -53,8 +52,7 @@ final class FigureRuntime implements RuntimeExtensionInterface
     /**
      * Builds a figure.
      *
-     * The provided configuration array is used to configure a FigureBuilder
-     * object.
+     * The provided configuration array is used to configure a FigureBuilder object.
      *
      * Returns null if the resource is invalid.
      *

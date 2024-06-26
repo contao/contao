@@ -223,7 +223,7 @@ class ContaoKernelTest extends ContaoTestCase
         $this->assertSame($expectedResult, $files);
     }
 
-    public function containerConfigurationProvider(): \Generator
+    public function containerConfigurationProvider(): iterable
     {
         yield [
             __DIR__.'/../Fixtures/HttpKernel/WithParametersYml',

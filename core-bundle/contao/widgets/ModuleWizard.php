@@ -204,7 +204,7 @@ class ModuleWizard extends Widget
 
 			$return .= '
     <td><select name="' . $this->strId . '[' . $i . '][col]" class="tl_select_column" data-action="focus->contao--scroll-offset#store">' . $options . '</select></td>
-    <td>';
+    <td class="tl_right">';
 
 			// Add buttons
 			foreach ($arrButtons as $button)

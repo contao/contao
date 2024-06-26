@@ -110,9 +110,6 @@ class ModuleNewsReader extends ModuleNews
 			$this->news_template = 'news_full';
 		}
 
-		$arrArticle = $this->parseArticle($objArticle);
-		$this->Template->articles = $arrArticle;
-
 		// Overwrite the page metadata (see #2853, #4955 and #87)
 		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
@@ -166,6 +163,9 @@ class ModuleNewsReader extends ModuleNews
 				$htmlHeadBag->setCanonicalUri($urlGenerator->generate($objArticle, array(), UrlGeneratorInterface::ABSOLUTE_URL));
 			}
 		}
+
+		$arrArticle = $this->parseArticle($objArticle);
+		$this->Template->articles = $arrArticle;
 
 		$bundles = System::getContainer()->getParameter('kernel.bundles');
 

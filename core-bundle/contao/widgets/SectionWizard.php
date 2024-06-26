@@ -133,7 +133,7 @@ class SectionWizard extends Widget
 
 			$return .= '
     <td><select name="' . $this->strId . '[' . $i . '][position]" class="tl_select" data-action="focus->contao--scroll-offset#store">' . $options . '</select></td>
-    <td>';
+    <td class="tl_right">';
 
 			// Add the buttons
 			foreach ($arrButtons as $button)

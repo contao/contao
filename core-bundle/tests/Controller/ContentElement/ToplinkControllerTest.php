@@ -46,6 +46,7 @@ class ToplinkControllerTest extends ContentElementTestCase
         $additionalBodyCode = $responseContextData[DocumentLocation::endOfBody->value];
 
         $this->assertCount(1, $additionalBodyCode);
+        $this->assertArrayHasKey('toplink_script', $additionalBodyCode);
 
         $this->assertMatchesRegularExpression(
             '/<script>[^<]+link\.href = location\.href[^<]+<\/script>/',
@@ -53,7 +54,7 @@ class ToplinkControllerTest extends ContentElementTestCase
         );
     }
 
-    public function provideLinkText(): \Generator
+    public static function provideLinkText(): iterable
     {
         yield 'no value' => [
             '',

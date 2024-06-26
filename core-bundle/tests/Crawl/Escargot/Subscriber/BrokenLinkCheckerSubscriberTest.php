@@ -90,7 +90,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         $this->assertSame($expectedDecision, $decision);
     }
 
-    public function shouldRequestProvider(): \Generator
+    public static function shouldRequestProvider(): iterable
     {
         yield 'Test skips URIs that do not belong to our base URI collection' => [
             new CrawlUri(new Uri('https://github.com'), 0),
@@ -174,7 +174,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         $this->assertSame($expectedStats, $result->getInfo('stats'));
     }
 
-    public function needsContentProvider(): \Generator
+    public function needsContentProvider(): iterable
     {
         yield 'Test reports responses that were not successful' => [
             new CrawlUri(new Uri('https://contao.org'), 0),
@@ -283,7 +283,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         $this->assertSame($expectedStats, $result->getInfo('stats'));
     }
 
-    public function onTransportExceptionProvider(): \Generator
+    public function onTransportExceptionProvider(): iterable
     {
         yield 'Test reports transport exception responses' => [
             new TransportException('Could not resolve host or timeout'),
@@ -345,7 +345,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         $this->assertSame($expectedStats, $result->getInfo('stats'));
     }
 
-    public function onHttpExceptionProvider(): \Generator
+    public function onHttpExceptionProvider(): iterable
     {
         yield 'Test reports responses that were not successful' => [
             new ClientException($this->mockResponse(404)),

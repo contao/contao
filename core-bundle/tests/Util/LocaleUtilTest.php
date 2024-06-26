@@ -28,7 +28,7 @@ class LocaleUtilTest extends TestCase
         $this->assertSame($expected, LocaleUtil::getFallbacks(str_replace('_', '-', $locale)));
     }
 
-    public function getFallbacks(): \Generator
+    public static function getFallbacks(): iterable
     {
         yield ['de', ['de']];
         yield ['de_DE', ['de', 'de_DE']];

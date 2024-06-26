@@ -13,13 +13,12 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Interop;
 
 use Contao\StringUtil;
-use Twig\Environment;
 use Twig\Error\RuntimeError;
 
 /**
  * The ContaoEscaper mimics Twig's default escape filters but prevents double
- * encoding. It must therefore ONLY be applied to templates with already
- * encoded context (input encoding)!
+ * encoding. It must therefore ONLY be applied to templates with already encoded
+ * context (input encoding)!
  *
  * This strategy will get dropped once we move to output encoding.
  *
@@ -33,7 +32,7 @@ final class ContaoEscaper
      *
      * @see twig_escape_filter
      */
-    public function escapeHtml(Environment $environment, mixed $string, string|null $charset): string
+    public function escapeHtml(mixed $string, string|null $charset): string
     {
         if (null !== $charset && 'UTF-8' !== strtoupper($charset)) {
             throw new RuntimeError(sprintf('The "contao_html" escape filter does not support the %s charset, use UTF-8 instead.', $charset));
@@ -45,12 +44,12 @@ final class ContaoEscaper
     }
 
     /**
-     * This implementation is a clone of Twig's html_attr escape strategy but
-     * replaces insert tags and decodes entities beforehand.
+     * This implementation is a clone of Twig's html_attr escape strategy but replaces
+     * insert tags and decodes entities beforehand.
      *
      * @see twig_escape_filter
      */
-    public function escapeHtmlAttr(Environment $environment, mixed $string, string|null $charset): string
+    public function escapeHtmlAttr(mixed $string, string|null $charset): string
     {
         if (null !== $charset && 'UTF-8' !== strtoupper($charset)) {
             throw new RuntimeError(sprintf('The "contao_html_attr" escape filter does not support the %s charset, use UTF-8 instead.', $charset));

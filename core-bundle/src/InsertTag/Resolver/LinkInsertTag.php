@@ -92,8 +92,18 @@ class LinkInsertTag
                         $strUrl = StringUtil::encodeEmail($strUrl);
                     }
                 } catch (ExceptionInterface) {
-                    // Use empty URL defined above
+                    // Replace with empty string (#7250)
+                    switch ($insertTag->getName()) {
+                        case 'link':
+                        case 'link_open':
+                        case 'link_url': return new InsertTagResult('');
+                    }
                 }
+            }
+
+            // Use "/" for the index page (#2394)
+            if ('' === $strUrl) {
+                $strUrl = '/';
             }
 
             $strName = $objNextPage->title;
@@ -107,9 +117,9 @@ class LinkInsertTag
         }
 
         return match ($insertTag->getName()) {
-            'link' => new InsertTagResult(sprintf('<a href="%s" title="%s"%s%s>%s</a>', $strUrl ?: './', StringUtil::specialcharsAttribute($strTitle), $strClass, $strTarget, $strName), OutputType::html),
-            'link_open' => new InsertTagResult(sprintf('<a href="%s" title="%s"%s%s>', $strUrl ?: './', StringUtil::specialcharsAttribute($strTitle), $strClass, $strTarget), OutputType::html),
-            'link_url' => new InsertTagResult($strUrl ?: './', OutputType::url),
+            'link' => new InsertTagResult(sprintf('<a href="%s" title="%s"%s%s>%s</a>', $strUrl, StringUtil::specialcharsAttribute($strTitle), $strClass, $strTarget, $strName), OutputType::html),
+            'link_open' => new InsertTagResult(sprintf('<a href="%s" title="%s"%s%s>', $strUrl, StringUtil::specialcharsAttribute($strTitle), $strClass, $strTarget), OutputType::html),
+            'link_url' => new InsertTagResult($strUrl, OutputType::url),
             'link_title' => new InsertTagResult(StringUtil::specialcharsAttribute($strTitle), OutputType::html),
             'link_name' => new InsertTagResult(StringUtil::specialcharsAttribute($strName), OutputType::html),
             default => throw new InvalidInsertTagException(),

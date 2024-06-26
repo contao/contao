@@ -210,8 +210,8 @@ class CheckBox extends Widget
 				$this->mandatory ? '<span class="mandatory">*</span>' : '',
 				$this->xlabel,
 				$this->strName,
-				$blnCheckAll ? '<input type="checkbox" id="check_all_' . $this->strId . '" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this,\'ctrl_' . $this->strId . '\')' . ($this->onclick ? ';' . $this->onclick : '') . '"> <label for="check_all_' . $this->strId . '" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label><br>' : '',
-				str_replace('<br></fieldset><br>', '</fieldset>', implode('<br>', $arrOptions)),
+				$blnCheckAll ? '<span><input type="checkbox" id="check_all_' . $this->strId . '" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this,\'ctrl_' . $this->strId . '\')' . ($this->onclick ? ';' . $this->onclick : '') . '"> <label for="check_all_' . $this->strId . '" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label></span>' : '',
+				implode(' ', $arrOptions),
 				$this->wizard
 			);
 		}
@@ -221,7 +221,7 @@ class CheckBox extends Widget
 			$this->strId,
 			$this->strClass ? ' ' . $this->strClass : '',
 			$this->strName,
-			str_replace('<br></div><br>', '</div>', implode('<br>', $arrOptions)),
+			implode(' ', $arrOptions),
 			$this->wizard
 		);
 	}
@@ -237,7 +237,7 @@ class CheckBox extends Widget
 	protected function generateCheckbox($arrOption, $i)
 	{
 		return sprintf(
-			'<input type="checkbox" name="%s" id="opt_%s" class="tl_checkbox" value="%s"%s%s data-action="focus->contao--scroll-offset#store"> <label for="opt_%s">%s%s%s</label>%s',
+			'<span><input type="checkbox" name="%s" id="opt_%s" class="tl_checkbox" value="%s"%s%s data-action="focus->contao--scroll-offset#store"> <label for="opt_%s">%s%s%s</label>%s</span>',
 			$this->strName . ($this->multiple ? '[]' : ''),
 			$this->strId . '_' . $i,
 			$this->multiple ? self::specialcharsValue($arrOption['value']) : 1,

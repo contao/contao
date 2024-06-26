@@ -28,10 +28,10 @@ interface ContentUrlResolverInterface
     public function resolve(object $content): ContentUrlResult|null;
 
     /**
-     * Returns an array of parameters for the given content that can be used
-     * to generate a URL for this content. If the parameter is used in the page alias,
-     * it will be used to generate the URL. Otherwise, it is ignored (contrary to the Symfony
-     * URL generator which would add it as a query parameter).
+     * Returns an array of parameters for the given content that can be used to
+     * generate a URL for this content. If the parameter is used in the page alias, it
+     * will be used to generate the URL. Otherwise, it is ignored (contrary to the
+     * Symfony URL generator which would add it as a query parameter).
      *
      * @return array<string, string|int>
      */

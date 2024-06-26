@@ -24,7 +24,8 @@ class HtmlDecoder
     /**
      * Converts an input-encoded string to plain text UTF-8.
      *
-     * Strips or replaces insert tags, strips HTML tags, decodes entities, escapes insert tag braces.
+     * Strips or replaces insert tags, strips HTML tags, decodes entities, escapes
+     * insert tag braces.
      *
      * @see StringUtil::revertInputEncoding()
      *
@@ -47,9 +48,9 @@ class HtmlDecoder
     /**
      * Converts an HTML string to plain text with normalized white space.
      *
-     * It handles all Contao input encoding specifics like insert tags, basic
-     * entities and encoded entities and is meant to be used with content from
-     * fields that have the allowHtml flag enabled.
+     * It handles all Contao input encoding specifics like insert tags, basic entities
+     * and encoded entities and is meant to be used with content from fields that have
+     * the allowHtml flag enabled.
      *
      * @param bool $removeInsertTags True to remove insert tags instead of replacing them
      */

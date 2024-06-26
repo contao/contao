@@ -23,8 +23,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
- * The priority must be lower than the Symfony route listener (defaults to 32)
- * and lower than the Symfony firewall listener (defaults to 8).
+ * The priority must be lower than the Symfony route listener (defaults to 32) and
+ * lower than the Symfony firewall listener (defaults to 8).
  *
  * @internal
  */

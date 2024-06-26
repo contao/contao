@@ -27,7 +27,7 @@ class AutoExpiringAttributeTest extends TestCase
         $this->assertSame($shouldBeExpired, $attribute->isExpired($now));
     }
 
-    public function isExpiredProvider(): \Generator
+    public static function isExpiredProvider(): iterable
     {
         yield '5 seconds TTL, should be marked as expired after 10 seconds' => [
             new \DateTime(),

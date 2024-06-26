@@ -16,17 +16,27 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\FrontendUser;
 use Contao\StringUtil;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class MemberGroupVoter extends Voter
+class MemberGroupVoter implements VoterInterface, CacheableVoterInterface
 {
-    protected function supports(string $attribute, mixed $subject): bool
+    public function supportsAttribute(string $attribute): bool
     {
         return ContaoCorePermissions::MEMBER_IN_GROUPS === $attribute;
     }
 
-    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
+    public function supportsType(string $subjectType): bool
     {
+        return true;
+    }
+
+    public function vote(TokenInterface $token, $subject, array $attributes): int
+    {
+        if (!array_filter($attributes, $this->supportsAttribute(...))) {
+            return self::ACCESS_ABSTAIN;
+        }
+
         if (!\is_array($subject)) {
             $subject = StringUtil::deserialize($subject, true);
         }
@@ -35,22 +45,22 @@ class MemberGroupVoter extends Voter
         $subject = array_filter($subject, static fn ($val) => (string) (int) $val === (string) $val);
 
         if (!$subject) {
-            return false;
+            return self::ACCESS_DENIED;
         }
 
         $user = $token->getUser();
 
         if (!$user instanceof FrontendUser) {
-            return \in_array(-1, array_map('intval', $subject), true);
+            return \in_array(-1, array_map('intval', $subject), true) ? self::ACCESS_GRANTED : self::ACCESS_DENIED;
         }
 
         $groups = StringUtil::deserialize($user->groups, true);
 
         // No groups assigned
         if (empty($groups)) {
-            return false;
+            return self::ACCESS_DENIED;
         }
 
-        return [] !== array_intersect($subject, $groups);
+        return [] !== array_intersect($subject, $groups) ? self::ACCESS_GRANTED : self::ACCESS_DENIED;
     }
 }
