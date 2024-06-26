@@ -42,15 +42,9 @@ class AltchaRepository extends ServiceEntityRepository
         $table = $this->getClassMetadata()->getTableName();
 
         $this->connection->executeStatement(
-            "DELETE FROM $table WHERE solved = :solved OR expires < :expires",
-            [
-                'solved' => true,
-                'expires' => new \DateTimeImmutable('now'),
-            ],
-            [
-                'solved' => true,
-                'expires' => Types::DATETIME_IMMUTABLE,
-            ],
+            "DELETE FROM $table WHERE expires < :expires",
+            ['expires' => new \DateTimeImmutable()],
+            ['expires' => Types::DATETIME_IMMUTABLE],
         );
     }
 
@@ -59,36 +53,9 @@ class AltchaRepository extends ServiceEntityRepository
         $table = $this->getClassMetadata()->getTableName();
 
         return false !== $this->connection->fetchOne(
-            "SELECT id FROM $table WHERE challenge = :challenge AND solved = :solved",
-            [
-                'challenge' => $challenge,
-                'solved' => true,
-            ],
-            [
-                'challenge' => Types::STRING,
-                'solved' => Types::BOOLEAN,
-            ],
-        );
-    }
-
-    public function markChallengeAsSolved(string $challenge): int|string
-    {
-        $table = $this->getClassMetadata()->getTableName();
-
-        return $this->connection->executeStatement(
-            "UPDATE $table SET solved = :solved_true WHERE challenge = :challenge AND expires > :expires AND solved = :solved_false",
-            [
-                'solved_true' => true,
-                'challenge' => $challenge,
-                'expires' => new \DateTimeImmutable(),
-                'solved_false' => false,
-            ],
-            [
-                'solved_true' => Types::BOOLEAN,
-                'challenge' => Types::STRING,
-                'expires' => Types::DATE_IMMUTABLE,
-                'solved_false' => Types::BOOLEAN,
-            ],
+            "SELECT id FROM $table WHERE challenge = :challenge",
+            ['challenge' => $challenge],
+            ['challenge' => Types::STRING],
         );
     }
 }

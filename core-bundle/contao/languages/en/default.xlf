@@ -591,10 +591,10 @@
         <source>A single-line input field that is not visible in the form.</source>
       </trans-unit>
       <trans-unit id="FFL.altcha.0">
-        <source>ALTCHA antispam (CAPTCHA)</source>
+        <source>ALTCHA antispam</source>
       </trans-unit>
       <trans-unit id="FFL.altcha.1">
-        <source>Provides an <a href="https://altcha.org/" title="altcha.org">ALTCHA</a> antispam form field to verify that the form is being submitted by a human (CAPTCHA).</source>
+        <source>Provides an ALTCHA antispam form field to verify that the form is submitted by a human (CAPTCHA).</source>
       </trans-unit>
       <trans-unit id="FFL.captcha.0">
         <source>Security question</source>
@@ -2169,7 +2169,7 @@
         <source>Light mode</source>
       </trans-unit>
       <trans-unit id="MSC.altchaFooter">
-        <source>Protected by <a href="https://altcha.org/" target="_blank">ALTCHA</a></source>
+        <source>Protected by &lt;a href="https://altcha.org/" target="_blank"&gt;ALTCHA&lt;/a&gt;</source>
       </trans-unit>
       <trans-unit id="MSC.altchaLabel">
         <source>I'm not a robot</source>

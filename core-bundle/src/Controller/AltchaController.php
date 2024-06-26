@@ -18,12 +18,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/_contao_altcha/challenge')]
+#[Route('/_contao/altcha_challenge')]
 class AltchaController extends AbstractController
 {
-    public function __construct(
-        private readonly Altcha $altcha,
-    ) {
+    public function __construct(private readonly Altcha $altcha)
+    {
     }
 
     /**
@@ -31,6 +30,6 @@ class AltchaController extends AbstractController
      */
     public function __invoke(): JsonResponse
     {
-        return $this->json($this->altcha->createChallenge());
+        return new JsonResponse($this->altcha->createChallenge()->toArray());
     }
 }

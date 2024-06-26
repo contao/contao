@@ -16,34 +16,33 @@ use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Index;
 use Doctrine\ORM\Mapping\Table;
 
-#[Table(name: 'tl_altcha')]
+#[Table(name: 'altcha_challenges')]
 #[Entity]
+#[Index(columns: ['challenge'], name: 'challenge')]
+#[Index(columns: ['expires'], name: 'expires')]
 class Altcha
 {
     #[Id]
-    #[Column(type: 'integer')]
-    #[GeneratedValue(strategy: 'AUTO')]
+    #[Column(type: 'integer', options: ['unsigned' => true])]
+    #[GeneratedValue]
     protected int|null $id = null;
-
-    #[Column(type: 'datetime')]
-    protected \DateTimeInterface $created;
 
     #[Column(type: 'string', nullable: true)]
     protected string|null $challenge = null;
 
-    #[Column(type: 'boolean')]
-    protected bool $solved;
+    #[Column(type: 'datetime')]
+    protected \DateTimeInterface $created;
 
     #[Column(type: 'datetime')]
     protected \DateTimeInterface $expires;
 
     public function __construct(string $challenge, \DateTimeInterface $expires)
     {
-        $this->created = new \DateTime();
-        $this->solved = false;
         $this->challenge = $challenge;
+        $this->created = new \DateTime();
         $this->expires = $expires;
     }
 
@@ -55,18 +54,6 @@ class Altcha
     public function setId(int $id): self
     {
         $this->id = $id;
-
-        return $this;
-    }
-
-    public function getCreated(): \DateTimeInterface
-    {
-        return $this->created;
-    }
-
-    public function setCreated(\DateTimeInterface $created): self
-    {
-        $this->created = $created;
 
         return $this;
     }
@@ -83,14 +70,14 @@ class Altcha
         return $this;
     }
 
-    public function getSolved(): bool
+    public function getCreated(): \DateTimeInterface
     {
-        return $this->solved;
+        return $this->created;
     }
 
-    public function setSolved(bool $solved): self
+    public function setCreated(\DateTimeInterface $created): self
     {
-        $this->solved = $solved;
+        $this->created = $created;
 
         return $this;
     }

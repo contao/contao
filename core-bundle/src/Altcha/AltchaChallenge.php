@@ -41,4 +41,14 @@ class AltchaChallenge
     {
         return $this->signature;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'algorithm' => $this->algorithm,
+            'challenge' => $this->challenge,
+            'salt' => $this->salt,
+            'signature' => $this->signature,
+        ];
+    }
 }

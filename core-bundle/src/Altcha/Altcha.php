@@ -39,32 +39,21 @@ class Altcha
      */
     public function createChallenge(string|null $salt = null, int|null $number = null): AltchaChallenge
     {
-        $salt ??= bin2hex(random_bytes(12));
-        $number ??= random_int($this->altchaRangeMin, $this->altchaRangeMax);
         $algorithms = Algorithm::values();
 
         if (!\in_array($this->altchaAlgorithm, $algorithms, true)) {
-            $strError = 'Invalid algorithm selected. It has to be set to one of these "%s".';
-
-            throw new InvalidAlgorithmException(sprintf($strError, implode('", "', $algorithms)));
+            throw new InvalidAlgorithmException(sprintf('Invalid algorithm selected. It has to be one of these: %s', implode(', ', $algorithms)));
         }
 
+        if (!$salt) {
+            $salt = bin2hex(random_bytes(12)).'?expires='.strtotime("now +$this->altchaChallengeExpiry seconds");
+        }
+
+        $number ??= random_int($this->altchaRangeMin, $this->altchaRangeMax);
+
         $algorithm = str_replace('-', '', strtolower($this->altchaAlgorithm));
-
-        // Generate the challenge
         $challenge = hash($algorithm, $salt.$number);
-
-        // Generate the signature
         $signature = hash_hmac($algorithm, $challenge, $this->secret);
-
-        // The challenge expires in 1 hour (default) and it must be saved in the database
-        // to prevent replay attacks.
-        $expiryDate = date('Y-m-d\\TH:i:sP', time() + $this->altchaChallengeExpiry);
-        $objAltcha = new AltchaEntity($challenge, new \DateTimeImmutable($expiryDate));
-
-        // Insert record into tl_altcha
-        $this->entityManager->persist($objAltcha);
-        $this->entityManager->flush();
 
         return new AltchaChallenge($this->altchaAlgorithm, $challenge, $salt, $signature);
     }
@@ -83,15 +72,26 @@ class Altcha
             return false;
         }
 
-        // Return false, if challenge has expired or has already been solved
-        if (1 !== $this->repository->markChallengeAsSolved($challenge)) {
+        $check = $this->createChallenge($json['salt'], $json['number']);
+
+        if ($json['algorithm'] !== $check->getAlgorithm()) {
             return false;
         }
 
-        $check = $this->createChallenge($json['salt'], $json['number']);
+        if ($json['challenge'] !== $check->getChallenge()) {
+            return false;
+        }
 
-        return $json['algorithm'] === $check->getAlgorithm()
-            && $json['challenge'] === $check->getChallenge()
-            && $json['signature'] === $check->getSignature();
+        if ($json['signature'] !== $check->getSignature()) {
+            return false;
+        }
+
+        $entity = new AltchaEntity($challenge, new \DateTimeImmutable("now +$this->altchaChallengeExpiry seconds"));
+
+        // Save the solved challenge in the database to prevent replay attacks
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
+
+        return true;
     }
 }

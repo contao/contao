@@ -18,9 +18,8 @@ use Contao\CoreBundle\Repository\AltchaRepository;
 #[AsCronJob('hourly')]
 class PurgeExpiredAltchaChallengesCron
 {
-    public function __construct(
-        private readonly AltchaRepository $repository,
-    ) {
+    public function __construct(private readonly AltchaRepository $repository)
+    {
     }
 
     public function __invoke(): void
