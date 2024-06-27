@@ -112,12 +112,7 @@ class FormAltcha extends Widget
 		$attributes->set('name', $this->name);
 		$attributes->set('challengeurl', $this->getContainer()->get('router')->generate(AltchaController::class));
 		$attributes->set('strings', $this->getLocalization());
-
-		if (\in_array($this->altchaAuto, array('onfocus', 'onload', 'onsubmit'), true))
-		{
-			$attributes->set('auto', StringUtil::specialchars($this->altchaAuto));
-		}
-
+		$attributes->setIfExists('auto', $this->altchaAuto);
 		$attributes->setIfExists('hidelogo', $this->altchaHideLogo);
 		$attributes->setIfExists('hidefooter', $this->altchaHideFooter);
 
