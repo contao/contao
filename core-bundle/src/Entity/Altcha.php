@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Entity;
 
+use Contao\CoreBundle\Repository\AltchaRepository;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
@@ -20,7 +21,7 @@ use Doctrine\ORM\Mapping\Index;
 use Doctrine\ORM\Mapping\Table;
 
 #[Table(name: 'altcha_challenges')]
-#[Entity]
+#[Entity(repositoryClass: AltchaRepository::class)]
 #[Index(columns: ['challenge'], name: 'challenge')]
 #[Index(columns: ['expires'], name: 'expires')]
 class Altcha
