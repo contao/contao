@@ -13,5 +13,5 @@
       <p class="error"><?= $this->getErrorAsString() ?></p>
     <?php endif; ?>
 
-    <altcha-widget <?= $this->altchaAttributes ?>></altcha-widget>
+    <altcha-widget<?= $this->altchaAttributes ?>></altcha-widget>
 <?php $this->endblock(); ?>
