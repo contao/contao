@@ -43,7 +43,6 @@ const themeConfig = Encore.getWebpackConfig();
 module.exports = [jsConfig, themeConfig];
 
 if (!Encore.isDev()) {
-
     Encore.reset();
 
     Encore
