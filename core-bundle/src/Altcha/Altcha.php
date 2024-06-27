@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Altcha;
 
 use Contao\CoreBundle\Altcha\Config\Algorithm;
+use Contao\CoreBundle\Altcha\Exception\ChallengeExpiredException;
 use Contao\CoreBundle\Altcha\Exception\InvalidAlgorithmException;
 use Contao\CoreBundle\Entity\Altcha as AltchaEntity;
 use Contao\CoreBundle\Repository\AltchaRepository;
@@ -47,6 +48,12 @@ class Altcha
 
         if (!$salt) {
             $salt = bin2hex(random_bytes(12)).'?expires='.strtotime("now +$this->altchaChallengeExpiry seconds");
+        } else {
+            parse_str(explode('?', $salt, 2)[1] ?? '', $parameters);
+
+            if ((int) ($parameters['expires'] ?? 0) < time()) {
+                throw new ChallengeExpiredException('The given challange has expired. Please try again.');
+            }
         }
 
         $number ??= random_int($this->altchaRangeMin, $this->altchaRangeMax);
