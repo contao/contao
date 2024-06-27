@@ -16,16 +16,6 @@ use Contao\CoreBundle\String\HtmlAttributes;
 class FormAltcha extends Widget
 {
 	/**
-	 * @var bool
-	 */
-	protected $useRawRequestData = true;
-
-	/**
-	 * @var boolean
-	 */
-	protected $blnSubmitInput = false;
-
-	/**
 	 * @var boolean
 	 */
 	protected $blnForAttribute = true;
@@ -49,6 +39,18 @@ class FormAltcha extends Widget
 	protected bool $altchaHideFooter = false;
 
 	protected int $altchaMaxNumber = 10000000;
+
+	/**
+	 * Use the raw request data.
+	 *
+	 * @param array $arrAttributes An optional attributes array
+	 */
+	public function __construct($arrAttributes=null)
+	{
+		parent::__construct($arrAttributes);
+
+		$this->useRawRequestData = true;
+	}
 
 	/**
 	 * Return a parameter.
