@@ -100,9 +100,6 @@ class FormAltcha extends Widget
 
 		$this->altchaAttributes = $this->getAltchaAttributes();
 
-		// TODO: Use ResponseContext, once it supports appending to <head>
-		$GLOBALS['TL_HEAD'][] = '<script async defer src="' . $this->asset('js/altcha.min.js', 'contao-components/altcha') . '" type="module"></script>';
-
 		return parent::parse($arrAttributes);
 	}
 
