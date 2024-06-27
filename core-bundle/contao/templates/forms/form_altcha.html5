@@ -1,5 +1,14 @@
 <?php $this->extend('form_row'); ?>
 
+<?php
+
+$GLOBALS['TL_CSS'][] = $this->asset('css/altcha.min.css', 'contao-components/altcha');
+$GLOBALS['TL_BODY'][] = sprintf('<script src="%s" type="module"></script>', $this->asset('js/altcha.js', 'contao-components/altcha'));
+
+$this->altchaAttributes->set('workerurl', $this->asset('js/worker.js', 'contao-components/altcha'));
+
+?>
+
 <?php $this->block('label'); ?>
   <?php if ($this->label): ?>
     <label for="ctrl_<?= $this->id ?>"<?php if ($this->class): ?> class="<?= $this->class ?>"<?php endif; ?>>
@@ -15,8 +24,3 @@
 
     <altcha-widget<?= $this->altchaAttributes ?>></altcha-widget>
 <?php $this->endblock(); ?>
-
-<?php
-
-$GLOBALS['TL_CSS'][] = $this->asset('css/altcha.min.css', 'contao-components/altcha');
-$GLOBALS['TL_BODY'][] = sprintf('<script src="%s" type="module"></script>', $this->asset('js/altcha.js', 'contao-components/altcha'));
