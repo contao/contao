@@ -925,7 +925,8 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->integerNode('challenge_expiry')
                     ->info('The time period in seconds for which a challenge is valid.')
-                    ->defaultValue(3600)
+                    ->min(3600)
+                    ->defaultValue(86400)
                 ->end()
             ->end()
         ;
