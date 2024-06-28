@@ -15,6 +15,8 @@ use Contao\CoreBundle\String\HtmlAttributes;
 
 class FormAltcha extends Widget
 {
+	public HtmlAttributes $altchaAttributes;
+
 	/**
 	 * @var boolean
 	 */
@@ -71,15 +73,13 @@ class FormAltcha extends Widget
 			return $objTemplate->parse();
 		}
 
-		$attributes = new HtmlAttributes();
-		$attributes->set('name', $this->name);
-		$attributes->set('challengeurl', $this->getContainer()->get('router')->generate(AltchaController::class));
-		$attributes->set('strings', $this->getLocalization());
-		$attributes->setIfExists('auto', $this->altchaAuto);
-		$attributes->setIfExists('hidelogo', $this->altchaHideLogo);
-		$attributes->setIfExists('hidefooter', $this->altchaHideFooter);
-
-		$this->altchaAttributes = $attributes;
+		$this->altchaAttributes = new HtmlAttributes();
+		$this->altchaAttributes->set('name', $this->name);
+		$this->altchaAttributes->set('challengeurl', $this->getContainer()->get('router')->generate(AltchaController::class));
+		$this->altchaAttributes->set('strings', $this->getLocalization());
+		$this->altchaAttributes->setIfExists('auto', $this->altchaAuto);
+		$this->altchaAttributes->setIfExists('hidelogo', $this->altchaHideLogo);
+		$this->altchaAttributes->setIfExists('hidefooter', $this->altchaHideFooter);
 
 		return parent::parse($arrAttributes);
 	}
