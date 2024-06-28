@@ -2,6 +2,14 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.11] (2024-06-28)
+
+**Fixed issues:**
+
+- [#7315] Fix the priority of the web worker and improve memory handling ([Toflar])
+- [#7317] Fix missing submitter in form data ([ausi])
+- [#7309] Fix infinite loop in `encore dev --watch` ([zoglo])
+
 ## [5.3.10] (2024-06-25)
 
 **Fixed issues:**
@@ -360,6 +368,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.11]: https://github.com/contao/contao/releases/tag/5.3.11
 [5.3.10]: https://github.com/contao/contao/releases/tag/5.3.10
 [5.3.9]: https://github.com/contao/contao/releases/tag/5.3.9
 [5.3.8]: https://github.com/contao/contao/releases/tag/5.3.8
@@ -656,5 +665,7 @@ This project adheres to [Semantic Versioning].
 [#7293]: https://github.com/contao/contao/pull/7293
 [#7294]: https://github.com/contao/contao/pull/7294
 [#7296]: https://github.com/contao/contao/pull/7296
-[#7298]: https://github.com/contao/contao/pull/7298
 [#7300]: https://github.com/contao/contao/pull/7300
+[#7309]: https://github.com/contao/contao/pull/7309
+[#7315]: https://github.com/contao/contao/pull/7315
+[#7317]: https://github.com/contao/contao/pull/7317
