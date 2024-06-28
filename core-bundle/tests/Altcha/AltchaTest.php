@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Altcha;
 
 use Contao\CoreBundle\Altcha\Altcha;
-use Contao\CoreBundle\Altcha\Exception\ChallengeExpiredException;
 use Contao\CoreBundle\Altcha\Exception\InvalidAlgorithmException;
 use Contao\CoreBundle\Repository\AltchaRepository;
 use Contao\CoreBundle\Tests\TestCase;
@@ -74,6 +73,23 @@ class AltchaTest extends TestCase
         $this->assertTrue($altcha->validate(base64_encode(json_encode($payload, JSON_THROW_ON_ERROR))));
     }
 
+    public function testDoesNotValidateThePayloadIfItIsInvalid(): void
+    {
+        $repository = $this->createMock(AltchaRepository::class);
+        $repository
+            ->expects($this->never())
+            ->method('isReplay')
+        ;
+
+        $altcha = $this->getAltcha($repository);
+        $challenge = $altcha->createChallenge('salt?expires='.(time() + 600), 42);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid payload given.');
+
+        $altcha->validate(base64_encode(json_encode($challenge->toArray(), JSON_THROW_ON_ERROR)));
+    }
+
     public function testDoesNotValidateThePayloadUponRelayAttacks(): void
     {
         $repository = $this->createMock(AltchaRepository::class);
@@ -111,23 +127,13 @@ class AltchaTest extends TestCase
             ->method('isReplay')
         ;
 
-        $entityManager = $this->createMock(EntityManager::class);
-        $entityManager
-            ->expects($this->never())
-            ->method('persist')
-        ;
+        $altcha = $this->getAltcha($repository);
+        $challenge = $altcha->createChallenge('salt?expires='.(time() - 600), 42);
 
-        $entityManager
-            ->expects($this->never())
-            ->method('flush')
-        ;
+        $payload = $challenge->toArray();
+        $payload['number'] = 42;
 
-        $altcha = $this->getAltcha($repository, $entityManager);
-
-        $this->expectException(ChallengeExpiredException::class);
-        $this->expectExceptionMessage('The given challange has expired. Please try again.');
-
-        $altcha->createChallenge('salt?expires='.(time() - 600), 42);
+        $this->assertFalse($altcha->validate(base64_encode(json_encode($payload, JSON_THROW_ON_ERROR))));
     }
 
     public function testDoesNotValidateThePayloadIfTheAlgorithmDoesNotMatch(): void

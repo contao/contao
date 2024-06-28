@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Altcha;
 
 use Contao\CoreBundle\Altcha\Config\Algorithm;
-use Contao\CoreBundle\Altcha\Exception\ChallengeExpiredException;
 use Contao\CoreBundle\Altcha\Exception\InvalidAlgorithmException;
 use Contao\CoreBundle\Entity\Altcha as AltchaEntity;
 use Contao\CoreBundle\Repository\AltchaRepository;
@@ -68,15 +67,15 @@ class Altcha
             }
         }
 
-        if ($this->repository->isReplay($json['challenge'])) {
-            return false;
-        }
-
         parse_str(explode('?', $json['salt'], 2)[1] ?? '', $parameters);
         $expiry = (int) ($parameters['expires'] ?? 0);
 
         if ($expiry < time()) {
-            throw new ChallengeExpiredException('The given challange has expired. Please try again.');
+            return false;
+        }
+
+        if ($this->repository->isReplay($json['challenge'])) {
+            return false;
         }
 
         $check = $this->createChallenge($json['salt'], $json['number']);
