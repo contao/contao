@@ -92,12 +92,12 @@ class TwigIntegrationTest extends TestCase
             ),
         );
 
+        $requestStack = new RequestStack();
+        $requestStack->push($request = new Request());
+
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('twig', $environment);
         $container->set(ContextFactory::class, new ContextFactory());
-
-        $requestStack = new RequestStack();
-        $requestStack->push($request = new Request());
         $container->set('request_stack', $requestStack);
 
         System::setContainer($container);
