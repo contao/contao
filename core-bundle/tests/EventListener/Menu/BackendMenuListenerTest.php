@@ -77,6 +77,7 @@ class BackendMenuListenerTest extends TestCase
                 'data-action' => 'contao--toggle-navigation#toggle:prevent',
                 'data-contao--toggle-navigation-category-param' => 'category1',
                 'aria-controls' => 'category1',
+                'data-turbo-prefetch' => 'false',
                 'aria-expanded' => 'true',
             ],
             $children['category1']->getLinkAttributes(),
@@ -112,6 +113,7 @@ class BackendMenuListenerTest extends TestCase
                 'data-action' => 'contao--toggle-navigation#toggle:prevent',
                 'data-contao--toggle-navigation-category-param' => 'category2',
                 'aria-controls' => 'category2',
+                'data-turbo-prefetch' => 'false',
                 'aria-expanded' => 'false',
             ],
             $children['category2']->getLinkAttributes(),
@@ -259,7 +261,7 @@ class BackendMenuListenerTest extends TestCase
         );
 
         // Alerts
-        $this->assertSame('<a href="/contao/alerts" class="icon-alert" title="MSC.systemMessages" onclick="Backend.openModalIframe({\'title\':\'MSC.systemMessages\',\'url\':this.href});return false">MSC.systemMessages</a><sup>1</sup>', $children['alerts']->getLabel());
+        $this->assertSame('<a href="/contao/alerts" class="icon-alert" title="MSC.systemMessages" data-turbo-prefetch="false" onclick="Backend.openModalIframe({\'title\':\'MSC.systemMessages\',\'url\':this.href});return false">MSC.systemMessages</a><sup>1</sup>', $children['alerts']->getLabel());
         $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['alerts']->getExtras());
 
         // Color scheme

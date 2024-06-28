@@ -106,6 +106,7 @@ class BackendLogoutListenerTest extends ContaoTestCase
             [
                 'class' => 'icon-logout',
                 'accesskey' => 'q',
+                'data-turbo-prefetch' => 'false',
             ],
             $children['logout']->getLinkAttributes(),
         );
