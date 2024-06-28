@@ -119,6 +119,7 @@ class WebWorker
             'receivers' => [$transportName],
             '--time-limit' => 30,
             '--sleep' => 0,
+            '--no-reset' => true, // Do not reset the container between every message (otherwise web profiler profiles etc. would all be gone)
         ]);
 
         // No need to log anything because this is done by the messenger:consume command
