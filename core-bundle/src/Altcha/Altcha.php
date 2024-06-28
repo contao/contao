@@ -62,13 +62,13 @@ class Altcha
     {
         $json = json_decode(base64_decode($payload, true), true, 512, JSON_THROW_ON_ERROR);
 
-        if (null === $json) {
-            return false;
+        foreach (['challenge', 'salt', 'algorithm', 'signature', 'number'] as $key) {
+            if (!isset($json[$key])) {
+                throw new \InvalidArgumentException('Invalid payload given.');
+            }
         }
 
-        $challenge = $json['challenge'] ?? '';
-
-        if ($this->repository->isReplay($challenge)) {
+        if ($this->repository->isReplay($json['challenge'])) {
             return false;
         }
 
@@ -93,7 +93,7 @@ class Altcha
             return false;
         }
 
-        $entity = new AltchaEntity($challenge, (new \DateTimeImmutable())->setTimestamp($expiry));
+        $entity = new AltchaEntity($json['challenge'], (new \DateTimeImmutable())->setTimestamp($expiry));
 
         // Save the solved challenge in the database to prevent replay attacks
         $this->entityManager->persist($entity);
