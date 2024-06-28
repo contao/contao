@@ -284,7 +284,7 @@ class ModuleEventReader extends Events
 		{
 			$id = $objEvent->id;
 
-			$objTemplate->details = function () use ($id)
+			$objTemplate->details = function () use ($id, $objTemplate)
 			{
 				$strDetails = '';
 				$objElement = ContentModel::findPublishedByPidAndTable($id, 'tl_calendar_events');
@@ -297,7 +297,7 @@ class ModuleEventReader extends Events
 					}
 				}
 
-				return $strDetails;
+				return $objTemplate->details = $strDetails;
 			};
 
 			$objTemplate->hasDetails = static function () use ($id)

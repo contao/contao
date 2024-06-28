@@ -116,7 +116,7 @@ abstract class ModuleNews extends Module
 		{
 			$id = $objArticle->id;
 
-			$objTemplate->text = function () use ($id)
+			$objTemplate->text = function () use ($id, $objTemplate)
 			{
 				$strText = '';
 				$objElement = ContentModel::findPublishedByPidAndTable($id, 'tl_news');
@@ -129,7 +129,7 @@ abstract class ModuleNews extends Module
 					}
 				}
 
-				return $strText;
+				return $objTemplate->text = $strText;
 			};
 
 			$objTemplate->hasText = static function () use ($objArticle)
