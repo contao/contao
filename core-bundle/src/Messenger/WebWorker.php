@@ -115,12 +115,21 @@ class WebWorker
 
         $this->webWorkerRunning = true;
 
-        $input = new ArrayInput([
+        $inputParameters = [
             'receivers' => [$transportName],
             '--time-limit' => 30,
             '--sleep' => 0,
             '--no-reset' => true, // Do not reset the container between every message (otherwise web profiler profiles etc. would all be gone)
-        ]);
+        ];
+
+        // Ensure we also consider configured memory limits in order to try to not process more messages than
+        // the configured memory limit allows. Meaning this will either abort after having consumend the configured
+        // memory limit for the web process or 30 seconds - whichever limit is hit first.
+        if ($memoryLimit = (string) ini_get('memory_limit')) {
+            $inputParameters['--memory-limit'] = $memoryLimit;
+        }
+
+        $input = new ArrayInput($inputParameters);
 
         // No need to log anything because this is done by the messenger:consume command
         // already and would only cause log duplication.
