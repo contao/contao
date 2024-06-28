@@ -917,6 +917,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->integerNode('range_max')
                     ->info('A higher value increases the complexity/security but may significantly increase the computational load on client devices, potentially impacting the user experience.')
+                    ->max(1000000)
                     ->defaultValue(100000)
                 ->end()
                 ->integerNode('challenge_expiry')

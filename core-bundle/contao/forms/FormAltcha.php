@@ -38,8 +38,6 @@ class FormAltcha extends Widget
 
 	protected bool $altchaHideFooter = false;
 
-	protected int $altchaMaxNumber = 10000000;
-
 	/**
 	 * Use the raw request data.
 	 *
