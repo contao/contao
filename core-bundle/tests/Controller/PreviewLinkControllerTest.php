@@ -42,7 +42,7 @@ class PreviewLinkControllerTest extends TestCase
         $this->assertSame($url, $response->getTargetUrl());
     }
 
-    public function authenticateGuestProvider(): \Generator
+    public static function authenticateGuestProvider(): iterable
     {
         yield 'show unpublished' => ['/foo/bar', true];
         yield 'hide unpublished' => ['/foo/baz', false];

@@ -81,7 +81,7 @@ class ArticleContentVoterTest extends TestCase
         $this->assertSame($expected, $result);
     }
 
-    public function voterProvider(): \Generator
+    public static function voterProvider(): iterable
     {
         yield 'Abstains when access is allowed' => [
             ['ptable' => 'tl_article'],

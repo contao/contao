@@ -708,7 +708,7 @@ class PictureFactoryTest extends TestCase
         $pictureFactory->create($path, $size, $resizeOptions);
     }
 
-    public function getResizeOptionsScenarios(): \Generator
+    public static function getResizeOptionsScenarios(): iterable
     {
         yield 'Prefer skipIfDimensionsMatch from explicitly set options (1)' => [
             (new ResizeOptions())->setSkipIfDimensionsMatch(true),
@@ -795,7 +795,7 @@ class PictureFactoryTest extends TestCase
         $this->assertSame($expected, $picture->getRawImg()['hasSingleAspectRatio']);
     }
 
-    public function getAspectRatios(): \Generator
+    public static function getAspectRatios(): iterable
     {
         yield [true, 100, 100, 50, 50];
         yield [true, 100, 100, 101, 100];

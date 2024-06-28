@@ -164,11 +164,6 @@ abstract class Controller extends System
 			{
 				$strTemplate = basename($strFile, strrchr($strFile, '.'));
 
-				if (str_contains($strTemplate, '-'))
-				{
-					throw new \RuntimeException(sprintf('Using hyphens in the template name "%s" is not allowed, use snake_case instead.', $strTemplate));
-				}
-
 				// Ignore bundle templates, e.g. mod_article and mod_article_list
 				if (\in_array($strTemplate, $arrBundleTemplates))
 				{
@@ -568,6 +563,7 @@ abstract class Controller extends System
 			return '';
 		}
 
+		$objRow = $objRow->cloneOriginal();
 		$objRow->typePrefix = 'ce_';
 		$strStopWatchId = 'contao.content_element.' . $objRow->type . ' (ID ' . $objRow->id . ')';
 
@@ -589,11 +585,16 @@ abstract class Controller extends System
 			$objElement = new $strClass(
 				$objRow,
 				$strColumn,
-				$compositor->getNestedFragments(ContentElementReference::TAG_NAME . '.' . $objRow->type, $objRow->id)
+				$compositor->getNestedFragments(ContentElementReference::TAG_NAME . '.' . $objRow->type, $objRow->origId ?: $objRow->id)
 			);
 		}
 		else
 		{
+			if (\is_array($contentElementReference?->attributes['classes'] ?? null))
+			{
+				$objRow->classes = array_merge($objRow->classes ?? array(), $contentElementReference->attributes['classes']);
+			}
+
 			$objElement = new $strClass($objRow, $strColumn);
 		}
 
@@ -822,6 +823,12 @@ abstract class Controller extends System
 		$arrReplace["[[TL_BODY_$nonce]]"] = $strScripts;
 		$strScripts = '';
 
+		// Add the component style sheets
+		if (!empty($GLOBALS['TL_STYLE_SHEETS']) && \is_array($GLOBALS['TL_STYLE_SHEETS']))
+		{
+			$strScripts .= implode('', array_unique($GLOBALS['TL_STYLE_SHEETS']));
+		}
+
 		$objCombiner = new Combiner();
 
 		// Add the CSS framework style sheets
@@ -962,7 +969,7 @@ abstract class Controller extends System
 			{
 				if ($blnCombineScripts)
 				{
-					$strScripts = Template::generateScriptTag($objCombinerDefer->getCombinedFile(), true) . $strScripts;
+					$strScripts = Template::generateScriptTag($objCombinerDefer->getCombinedFile(), defer: true) . $strScripts;
 				}
 				else
 				{
@@ -1477,7 +1484,7 @@ abstract class Controller extends System
 	 *
 	 * @return string The script path with the static URL
 	 */
-	public static function addStaticUrlTo($script, ContaoContext $context = null)
+	public static function addStaticUrlTo($script, ContaoContext|null $context = null)
 	{
 		// Absolute URLs
 		if (preg_match('@^https?://@', $script))

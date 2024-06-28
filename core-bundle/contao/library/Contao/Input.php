@@ -952,7 +952,7 @@ class Input
 
 		// Preserve basic entities
 		$varValue = static::preserveBasicEntities($varValue);
-		$varValue = html_entity_decode($varValue, ENT_QUOTES, System::getContainer()->getParameter('kernel.charset'));
+		$varValue = html_entity_decode($varValue, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, System::getContainer()->getParameter('kernel.charset'));
 
 		return $varValue;
 	}
@@ -1059,7 +1059,10 @@ class Input
 			return $varValue;
 		}
 
-		return str_replace(array('{{', '}}'), array('&#123;&#123;', '&#125;&#125;'), (string) $varValue);
+		$varValue = str_replace(array('{{', '}}'), array('&#123;&#123;', '&#125;&#125;'), (string) $varValue);
+
+		// Encode single curly braces at the beginning and end of the string
+		return preg_replace(array('/^(\s*)\{|\{(\s*)$/', '/^(\s*)\}|\}(\s*)$/'), array('$1&#123;$2', '$1&#125;$2'), $varValue);
 	}
 
 	/**

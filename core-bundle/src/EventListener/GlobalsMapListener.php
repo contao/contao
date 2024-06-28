@@ -24,10 +24,9 @@ class GlobalsMapListener
     /**
      * Maps fragments to the globals array.
      *
-     * Note: Existing elements in $GLOBALS[$key] won't be overwritten. This
-     * allows opting out of our new content elements/modules as fragments by
-     * creating a $GLOBALS definition that points to the respective legacy
-     * class.
+     * Note: Existing elements in $GLOBALS[$key] won't be overwritten. This allows
+     * opting out of our new content elements/modules as fragments by creating a
+     * $GLOBALS definition that points to the respective legacy class.
      */
     public function onInitializeSystem(): void
     {

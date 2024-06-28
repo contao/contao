@@ -13,9 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Picker;
 
 /**
- * A DcaPickerProvider is able to handle DC_Table or DC_Folder. The interface is optional,
- * because not every picker is based on a regular Contao DataContainer object. If you e.g.
- * implement a Dropbox file picker, a DC is not used.
+ * A DcaPickerProvider is able to handle DC_Table or DC_Folder. The interface is
+ * optional, because not every picker is based on a regular Contao DataContainer
+ * object. If you e.g. implement a Dropbox file picker, a DC is not used.
  */
 interface DcaPickerProviderInterface extends PickerProviderInterface
 {

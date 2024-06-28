@@ -145,8 +145,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 	(
 		'id' => array
 		(
-			'label'                   => array('ID'),
-			'search'                  => true,
 			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
 		),
 		'pid' => array
@@ -964,7 +962,7 @@ class tl_page extends Backend
 	 *
 	 * @return string
 	 */
-	public function addIcon($row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false, $isVisibleRootTrailPage=false)
+	public function addIcon($row, $label, DataContainer|null $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false, $isVisibleRootTrailPage=false)
 	{
 		return Backend::addPageIcon($row, $label, $dc, $imageAttribute, $blnReturnImage, $blnProtected, $isVisibleRootTrailPage);
 	}

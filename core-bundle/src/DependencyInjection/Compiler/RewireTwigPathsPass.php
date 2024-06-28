@@ -21,10 +21,10 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class RewireTwigPathsPass implements CompilerPassInterface
 {
     /**
-     * Rewires Symfony's "addPath" method calls to our fail tolerant version
-     * of a filesystem loader which tolerates missing paths. Those will occur
-     * as soon as a user removes registered directories (e.g. from within the
-     * backend) and that would otherwise require the container to be rebuilt.
+     * Rewires Symfony's "addPath" method calls to our fail tolerant version of a
+     * filesystem loader which tolerates missing paths. Those will occur as soon as a
+     * user removes registered directories (e.g. from within the backend) and that
+     * would otherwise require the container to be rebuilt.
      */
     public function process(ContainerBuilder $container): void
     {

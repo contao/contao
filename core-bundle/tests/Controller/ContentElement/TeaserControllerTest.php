@@ -28,6 +28,7 @@ class TeaserControllerTest extends ContentElementTestCase
 
         $expectedOutput = <<<'HTML'
             <div class="content-teaser">
+                <h1>A title</h1>
                 <p>This will tease you to read article 1.</p>
                 <a href title="translated(contao_default:MSC.readMore[A title])">translated(contao_default:MSC.more)</a>
             </div>
@@ -48,6 +49,7 @@ class TeaserControllerTest extends ContentElementTestCase
 
         $expectedOutput = <<<'HTML'
             <div class="content-teaser">
+                <h1>Just a title, no teaser</h1>
                 <a href title="translated(contao_default:MSC.readMore[Just a title, no teaser])">translated(contao_default:MSC.more)</a>
             </div>
             HTML;

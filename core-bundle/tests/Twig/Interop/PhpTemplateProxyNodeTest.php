@@ -27,12 +27,19 @@ class PhpTemplateProxyNodeTest extends TestCase
         (new PhpTemplateProxyNode(ContaoExtension::class))->compile($compiler);
 
         $expectedSource = <<<'SOURCE'
-            echo $this->extensions["Contao\\CoreBundle\\Twig\\Extension\\ContaoExtension"]->renderLegacyTemplate(
+            yield $this->extensions["Contao\\CoreBundle\\Twig\\Extension\\ContaoExtension"]->renderLegacyTemplate(
                 $this->getTemplateName(),
                 array_map(
                     function(callable $block) use ($context): string {
                         if ($this->env->isDebug()) { ob_start(); } else { ob_start(static function () { return ''; }); }
-                        try { $block($context); return ob_get_contents(); } finally { ob_end_clean(); }
+                        try {
+                            $content = '';
+                            foreach ($block($context) ?? [''] as $chunk) {
+                                $content .= ob_get_contents() . $chunk;
+                                ob_clean();
+                            }
+                            return $content . ob_get_contents();
+                        } finally { ob_end_clean(); }
                     }, array_intersect_key($blocks, $this->blocks)
                 ), $context
             );

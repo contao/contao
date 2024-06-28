@@ -31,7 +31,7 @@ use Symfony\Component\Security\Http\LoginLink\LoginLinkHandlerInterface;
  * requested front end page while ensuring that the /preview.php entry point is
  * used. When requested, the front end user gets authenticated.
  */
-#[Route('%contao.backend.route_prefix%', defaults: ['_scope' => 'backend', '_allow_preview' => true])]
+#[Route('%contao.backend.route_prefix%/preview', name: 'contao_backend_preview', defaults: ['_scope' => 'backend', '_allow_preview' => true, '_store_referrer' => false])]
 class BackendPreviewController
 {
     public function __construct(
@@ -44,7 +44,6 @@ class BackendPreviewController
     ) {
     }
 
-    #[Route('/preview', name: 'contao_backend_preview')]
     public function __invoke(Request $request): Response
     {
         // Skip the redirect if there is no preview script, otherwise we will end up in

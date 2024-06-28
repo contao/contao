@@ -231,7 +231,7 @@ class BackendMenuListener
         $label = sprintf(
             '<a href="%s" class="icon-alert" title="%s" data-turbo-prefetch="false" onclick="Backend.openModalIframe({\'title\':\'%s\',\'url\':this.href});return false">%s</a>',
             $this->router->generate('contao_backend_alerts'),
-            htmlspecialchars($systemMessages),
+            htmlspecialchars($systemMessages, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5),
             StringUtil::specialchars(str_replace("'", "\\'", $systemMessages)),
             $systemMessages,
         );

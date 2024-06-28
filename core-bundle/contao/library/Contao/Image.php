@@ -18,11 +18,19 @@ class Image
 {
 	private static array $deprecated = array
 	(
-		'folPlus',
+		'alias',
+		'copychilds',
+		'copychilds_',
+		'filemanager',
 		'folMinus',
+		'folPlus',
 		'header',
 		'header_',
+		'important',
+		'manager',
+		'pickfile',
 		'settings',
+		'unpublished',
 	);
 
 	private static array $disabled = array
@@ -32,11 +40,10 @@ class Image
 		'article_',
 		'children_',
 		'copy_',
-		'copychilds_',
 		'cut_',
 		'delete_',
-		'diffTemplate_',
 		'diff_',
+		'diffTemplate_',
 		'edit_',
 		'editor_',
 		'featured_',
@@ -161,8 +168,19 @@ class Image
 
 		if (str_contains($template, '{darkAttributes}'))
 		{
+			$darkAttributes = new HtmlAttributes($attributes);
+
+			foreach (array('data-icon', 'data-icon-disabled') as $icon)
+			{
+				if (isset($darkAttributes[$icon]))
+				{
+					$pathinfo = pathinfo($darkAttributes[$icon]);
+					$darkAttributes[$icon] = $pathinfo['filename'] . '--dark.' . $pathinfo['extension'];
+				}
+			}
+
 			$search[] = '{darkAttributes}';
-			$replace[] = (new HtmlAttributes($attributes))->mergeWith(array('class' => 'color-scheme--dark', 'loading' => 'lazy'))->toString();
+			$replace[] = $darkAttributes->mergeWith(array('class' => 'color-scheme--dark', 'loading' => 'lazy'))->toString();
 		}
 
 		if (str_contains($template, '{lightAttributes}'))

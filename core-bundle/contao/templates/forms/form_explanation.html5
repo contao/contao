@@ -1,4 +1,13 @@
+<?php
 
-<div class="<?= $this->prefix ?> explanation<?php if ($this->class): ?> <?= $this->class ?><?php endif; ?>">
+$this->wrapperAttributes = $this
+    ->attr()
+    ->addClass([$this->prefix, 'explanation', $this->class])
+    ->mergeWith($this->wrapperAttributes)
+;
+
+?>
+
+<div<?= $this->wrapperAttributes ?>>
   <?= $this->cspInlineStyles($this->generate()) ?>
 </div>

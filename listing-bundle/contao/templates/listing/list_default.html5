@@ -1,9 +1,16 @@
+<?php $this->extend('block_searchable'); ?>
 
-<div class="<?= $this->class ?> ce_table listing block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+<?php
 
-  <?php if ($this->headline): ?>
-    <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
-  <?php endif; ?>
+$this->wrapperAttributes = $this
+    ->attr()
+    ->addClass(['ce_table', 'listing'])
+    ->mergeWith($this->wrapperAttributes)
+;
+
+?>
+
+<?php $this->block('content'); ?>
 
   <?php if ($this->searchable): ?>
     <div class="list_search">
@@ -93,4 +100,4 @@
 
   <?= $this->pagination ?>
 
-</div>
+<?php $this->endblock(); ?>

@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Routing\Content;
 
 use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
 use Contao\PageModel;
-use Nyholm\Psr7\Uri;
 
 final class ContentUrlResult
 {
@@ -22,7 +21,7 @@ final class ContentUrlResult
 
     public function __construct(public readonly object|string $content)
     {
-        if (\is_string($content) && !(new Uri($content))->getScheme()) {
+        if (\is_string($content) && !parse_url($content, PHP_URL_SCHEME)) {
             throw new \InvalidArgumentException('The content must not be a relative URL.');
         }
     }
@@ -50,7 +49,8 @@ final class ContentUrlResult
     }
 
     /**
-     * Result is a URL string which is possibly relative and could contain insert tags that should be resolved.
+     * Result is a URL string which is possibly relative and could contain insert tags
+     * that should be resolved.
      */
     public static function url(string $url): self
     {
@@ -67,8 +67,8 @@ final class ContentUrlResult
     /**
      * Restarts the resolver process to find a URL for the given content.
      *
-     * Same as with an HTTP redirect, this will not include any parameters given
-     * to the generate() method in the final URL.
+     * Same as with an HTTP redirect, this will not include any parameters given to
+     * the generate() method in the final URL.
      */
     public static function redirect(object|null $content): self
     {
@@ -85,8 +85,8 @@ final class ContentUrlResult
     /**
      * Returns a page model as the target page.
      *
-     * The ContentUrlGenerator will then generate the URL for this target page
-     * with parameters for the content.
+     * The ContentUrlGenerator will then generate the URL for this target page with
+     * parameters for the content.
      */
     public static function resolve(PageModel|null $content): self
     {

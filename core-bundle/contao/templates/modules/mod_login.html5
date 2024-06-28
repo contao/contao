@@ -1,10 +1,16 @@
+<?php $this->extend('block_unsearchable'); ?>
 
-<!-- indexer::stop -->
-<div class="<?= $this->class ?> <?= $this->logout ? 'logout' : 'login' ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+<?php
 
-  <?php if ($this->headline): ?>
-    <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
-  <?php endif; ?>
+$this->wrapperAttributes = $this
+    ->attr()
+    ->addClass($this->logout ? 'logout' : 'login')
+    ->mergeWith($this->wrapperAttributes)
+;
+
+?>
+
+<?php $this->block('content'); ?>
 
   <form<?php if ($this->action): ?> action="<?= $this->action ?>"<?php endif; ?> id="<?= $this->formId ?>" method="post">
     <div class="formbody">
@@ -28,8 +34,9 @@
           <input type="text" name="verify" id="verify" class="text" value="" autocapitalize="off" autocomplete="one-time-code" required>
         </div>
         <div class="widget widget-checkbox">
-          <input type="checkbox" name="trusted" id="trusted" class="tl_checkbox" value="1">
-          <label for="trusted"><?= $this->trans('MSC.twoFactorTrustDevice') ?></label>
+          <fieldset class="checkbox_container">
+            <span><input type="checkbox" name="trusted" id="trusted" value="1" class="tl_checkbox"> <label for="trusted"><?= $this->trans('MSC.twoFactorTrustDevice') ?></label></span>
+          </fieldset>
         </div>
       <?php else: ?>
         <?php if ($this->remembered): ?>
@@ -66,5 +73,4 @@
     </div>
   </form>
 
-</div>
-<!-- indexer::continue -->
+<?php $this->endblock(); ?>

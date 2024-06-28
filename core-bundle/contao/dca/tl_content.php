@@ -167,8 +167,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL auto_increment",
-			'search'                  => true
+			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
 		),
 		'pid' => array
 		(
@@ -1355,7 +1354,7 @@ class tl_content extends Backend
 		$title = sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'], $dc->value);
 		$href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'form', 'table'=>'tl_form_field', 'id'=>$dc->value, 'popup'=>'1', 'nb'=>'1'));
 
-		return ' <a href="' . StringUtil::specialcharsUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $title)) . '\',\'url\':this.href});return false">' . Image::getHtml('alias.svg', $title) . '</a>';
+		return ' <a href="' . StringUtil::specialcharsUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $title)) . '\',\'url\':this.href});return false">' . Image::getHtml('edit.svg', $title) . '</a>';
 	}
 
 	/**
@@ -1401,10 +1400,20 @@ class tl_content extends Backend
 			return '';
 		}
 
-		$title = sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'], $dc->value);
-		$href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$dc->value, 'popup'=>'1', 'nb'=>'1'));
+		// DataContainer::getCurrentRecord() will check permission on the record
+		try
+		{
+			$module = $dc->getCurrentRecord($dc->value, 'tl_module');
+		}
+		catch (AccessDeniedException)
+		{
+			return '';
+		}
 
-		return ' <a href="' . StringUtil::specialcharsUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $title)) . '\',\'url\':this.href});return false">' . Image::getHtml('alias.svg', $title) . '</a>';
+		$title = sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'], $module['id']);
+		$href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$module['id'], 'popup'=>'1', 'nb'=>'1'));
+
+		return ' <a href="' . StringUtil::specialcharsUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $title)) . '\',\'url\':this.href});return false">' . Image::getHtml('edit.svg', $title) . '</a>';
 	}
 
 	/**

@@ -79,7 +79,7 @@ class TemplateLocatorTest extends TestCase
         $this->assertEmpty($locator->findThemeDirectories());
     }
 
-    public function provideDatabaseExceptions(): \Generator
+    public function provideDatabaseExceptions(): iterable
     {
         yield 'table not found' => [
             new TableNotFoundException($this->createMock(LegacyDriverException::class), null),
@@ -183,6 +183,7 @@ class TemplateLocatorTest extends TestCase
 
         $expectedTemplates = [
             'content_element/foo.html.twig' => Path::join($projectDir, 'templates/content_element/foo.html.twig'),
+            'my/theme/content_element/bar.html.twig' => Path::join($projectDir, 'templates/my/theme/content_element/bar.html.twig'),
         ];
 
         $expectedThemeTemplates = [

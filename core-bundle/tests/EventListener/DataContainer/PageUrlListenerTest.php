@@ -77,7 +77,7 @@ class PageUrlListenerTest extends TestCase
         $this->assertSame($expectedAlias, $listener->generateAlias('', $dc));
     }
 
-    public function generatesAliasProvider(): \Generator
+    public static function generatesAliasProvider(): iterable
     {
         yield 'Test alias without changes and no folderUrl' => [
             [
@@ -392,7 +392,7 @@ class PageUrlListenerTest extends TestCase
         $this->assertSame($value, $listener->generateAlias($value, $dc));
     }
 
-    public function duplicateAliasProvider(): \Generator
+    public static function duplicateAliasProvider(): iterable
     {
         yield 'No duplicate aliases' => [
             [

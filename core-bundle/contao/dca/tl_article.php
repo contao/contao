@@ -101,8 +101,6 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 	(
 		'id' => array
 		(
-			'label'                   => array('ID'),
-			'search'                  => true,
 			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
 		),
 		'pid' => array
@@ -386,7 +384,7 @@ class tl_article extends Backend
 				// Find all sections with an article module (see #6094)
 				foreach ($arrModules as $arrModule)
 				{
-					if ($arrModule['mod'] == 0 && $arrModule['enable'])
+					if ($arrModule['mod'] == 0 && ($arrModule['enable'] ?? null))
 					{
 						$arrSections[] = $arrModule['col'];
 					}
