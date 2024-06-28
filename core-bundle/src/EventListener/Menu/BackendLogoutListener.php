@@ -55,6 +55,7 @@ class BackendLogoutListener
             ->setAttribute('class', 'logout')
             ->setLinkAttribute('class', 'icon-logout')
             ->setLinkAttribute('accesskey', 'q')
+            ->setLinkAttribute('data-turbo-prefetch', 'false')
             ->setExtra('translation_domain', false)
         ;
 
