@@ -51,7 +51,7 @@ class WebWorker
     ) {
     }
 
-    #[AsEventListener(priority: -512)]
+    #[AsEventListener(priority: -2048)] // Priority must be lower than the ProfilerListener so resetting the services won't affect collecting the profiler information
     public function onKernelTerminate(TerminateEvent $event): void
     {
         foreach ($this->transports as $transportName) {
@@ -119,7 +119,6 @@ class WebWorker
             'receivers' => [$transportName],
             '--time-limit' => 30,
             '--sleep' => 0,
-            '--no-reset' => true, // Do not reset the container between every message (otherwise web profiler profiles etc. would all be gone)
         ];
 
         // Ensure we also consider configured memory limits in order to try to not process more messages than
