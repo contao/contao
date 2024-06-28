@@ -92,7 +92,7 @@
     document.currentScript.previousElementSibling.querySelector('form').addEventListener('submit', e => {
       // Prevent double form submission
       if (e.submitter) {
-        e.submitter.disabled = true;
+        setTimeout(() => e.submitter.disabled = true);
         setTimeout(() => e.submitter.disabled = false, 30000);
       }
     });
