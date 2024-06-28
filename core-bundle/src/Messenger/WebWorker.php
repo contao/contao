@@ -123,9 +123,9 @@ class WebWorker
         ];
 
         // Ensure we also consider configured memory limits in order to try to not process more messages than
-        // the configured memory limit allows. Meaning this will either abort after having consumend the configured
+        // the configured memory limit allows. Meaning this will either abort after having consumed the configured
         // memory limit for the web process or 30 seconds - whichever limit is hit first.
-        if ($memoryLimit = (string) ini_get('memory_limit')) {
+        if (($memoryLimit = (string) ini_get('memory_limit')) && '-1' !== $memoryLimit) {
             $inputParameters['--memory-limit'] = $memoryLimit;
         }
 
