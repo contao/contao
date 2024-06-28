@@ -582,8 +582,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
         $altcha = $container->getDefinition('contao.altcha');
         $altcha->setArgument(3, $config['altcha']['algorithm']);
-        $altcha->setArgument(4, $config['altcha']['range_min']);
-        $altcha->setArgument(5, $config['altcha']['range_max']);
-        $altcha->setArgument(6, $config['altcha']['challenge_expiry']);
+        $altcha->setArgument(4, $config['altcha']['range_max']);
+        $altcha->setArgument(5, $config['altcha']['challenge_expiry']);
     }
 }

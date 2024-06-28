@@ -29,7 +29,6 @@ class Altcha
         private readonly EntityManagerInterface $entityManager,
         private readonly string $secret,
         private readonly string $altchaAlgorithm,
-        private readonly int $altchaRangeMin,
         private readonly int $altchaRangeMax,
         private readonly int $altchaChallengeExpiry,
     ) {
@@ -56,7 +55,7 @@ class Altcha
             }
         }
 
-        $number ??= random_int($this->altchaRangeMin, $this->altchaRangeMax);
+        $number ??= random_int(0, $this->altchaRangeMax);
 
         $algorithm = str_replace('-', '', strtolower($this->altchaAlgorithm));
         $challenge = hash($algorithm, $salt.$number);

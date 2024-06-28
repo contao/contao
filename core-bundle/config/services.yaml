@@ -17,7 +17,6 @@ services:
             - ~
             - ~
             - ~
-            - ~
 
     contao.assets.assets_context:
         class: Contao\CoreBundle\Asset\ContaoContext
