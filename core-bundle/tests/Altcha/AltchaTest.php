@@ -225,6 +225,6 @@ class AltchaTest extends TestCase
         $repository ??= $this->createMock(AltchaRepository::class);
         $entityManager ??= $this->createMock(EntityManager::class);
 
-        return new Altcha($repository, $entityManager, 'secret', $algorithm, 10000, 100000, 3600);
+        return new Altcha($repository, $entityManager, 'secret', $algorithm, 1000000, 3600);
     }
 }
