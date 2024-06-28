@@ -51,7 +51,11 @@ class WebWorker
     ) {
     }
 
-    #[AsEventListener(priority: -2048)] // Priority must be lower than the ProfilerListener so resetting the services won't affect collecting the profiler information
+    /**
+     * The priority must be lower than the one of the profiler listener, so resetting
+     * the services will not affect collecting the profiler information.
+     */
+    #[AsEventListener(priority: -2048)]
     public function onKernelTerminate(TerminateEvent $event): void
     {
         foreach ($this->transports as $transportName) {
@@ -121,10 +125,11 @@ class WebWorker
             '--sleep' => 0,
         ];
 
-        // Ensure we also consider configured memory limits in order to try to not process more messages than
-        // the configured memory limit allows. Meaning this will either abort after having consumed the configured
-        // memory limit for the web process or 30 seconds - whichever limit is hit first.
-        if (($memoryLimit = (string) ini_get('memory_limit')) && '-1' !== $memoryLimit) {
+        // This ensures that we also consider configured memory limits in order to try to
+        // not process more messages than the configured memory limit allows. Meaning
+        // this will either abort after having consumed the configured memory limit for
+        // the web process or 30 seconds - whichever limit is hit first.
+        if (($memoryLimit = (string) \ini_get('memory_limit')) && '-1' !== $memoryLimit) {
             $inputParameters['--memory-limit'] = $memoryLimit;
         }
 
