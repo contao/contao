@@ -30,14 +30,6 @@ class FormAltcha extends Widget
 	 */
 	protected $prefix = 'widget widget-altcha';
 
-	protected HtmlAttributes $altchaAttributes;
-
-	protected string $altchaAuto = '';
-
-	protected bool $altchaHideLogo = false;
-
-	protected bool $altchaHideFooter = false;
-
 	/**
 	 * Use the raw request data.
 	 *
@@ -95,8 +87,6 @@ class FormAltcha extends Widget
 
 			return $objTemplate->parse();
 		}
-
-		$this->altchaAttributes = $this->getAltchaAttributes();
 
 		return parent::parse($arrAttributes);
 	}
