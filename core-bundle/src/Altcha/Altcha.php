@@ -47,12 +47,6 @@ class Altcha
 
         if (!$salt) {
             $salt = bin2hex(random_bytes(12)).'?expires='.strtotime("now +$this->altchaChallengeExpiry seconds");
-        } else {
-            parse_str(explode('?', $salt, 2)[1] ?? '', $parameters);
-
-            if ((int) ($parameters['expires'] ?? 0) < time()) {
-                throw new ChallengeExpiredException('The given challange has expired. Please try again.');
-            }
         }
 
         $number ??= random_int(0, $this->altchaRangeMax);
@@ -78,6 +72,13 @@ class Altcha
             return false;
         }
 
+        parse_str(explode('?', $json['salt'], 2)[1] ?? '', $parameters);
+        $expiry = (int) ($parameters['expires'] ?? 0);
+
+        if ($expiry < time()) {
+            throw new ChallengeExpiredException('The given challange has expired. Please try again.');
+        }
+
         $check = $this->createChallenge($json['salt'], $json['number']);
 
         if ($json['algorithm'] !== $check->getAlgorithm()) {
@@ -92,7 +93,7 @@ class Altcha
             return false;
         }
 
-        $entity = new AltchaEntity($challenge, new \DateTimeImmutable("now +$this->altchaChallengeExpiry seconds"));
+        $entity = new AltchaEntity($challenge, (new \DateTimeImmutable())->setTimestamp($expiry));
 
         // Save the solved challenge in the database to prevent replay attacks
         $this->entityManager->persist($entity);
