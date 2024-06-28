@@ -25,7 +25,7 @@ application.load(context.keys().map((key) => {
 /* Turbo support */
 // Cancel all prefetch requests that contain a request token
 document.documentElement.addEventListener('turbo:before-prefetch', e => {
-    if ((new URLSearchParams(e.target.href)).has('rt')) {
+    if ((new URLSearchParams(e.target.href)).has('rt') || e.target.closest('.sf-toolbar') !== null) {
         e.preventDefault();
     }
 });
