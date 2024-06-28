@@ -43,23 +43,6 @@ class FormAltcha extends Widget
 	}
 
 	/**
-	 * Return a parameter.
-	 *
-	 * @param string $strKey The parameter name
-	 *
-	 * @return mixed The parameter value
-	 */
-	public function __get($strKey)
-	{
-		if ('altchaAttributes' === $strKey)
-		{
-			return $this->getAltchaAttributes();
-		}
-
-		return parent::__get($strKey);
-	}
-
-	/**
 	 * Generate the widget and return it as string.
 	 *
 	 * @return string The widget markup
@@ -88,11 +71,6 @@ class FormAltcha extends Widget
 			return $objTemplate->parse();
 		}
 
-		return parent::parse($arrAttributes);
-	}
-
-	protected function getAltchaAttributes(): HtmlAttributes
-	{
 		$attributes = new HtmlAttributes();
 		$attributes->set('name', $this->name);
 		$attributes->set('challengeurl', $this->getContainer()->get('router')->generate(AltchaController::class));
@@ -101,7 +79,9 @@ class FormAltcha extends Widget
 		$attributes->setIfExists('hidelogo', $this->altchaHideLogo);
 		$attributes->setIfExists('hidefooter', $this->altchaHideFooter);
 
-		return $attributes;
+		$this->altchaAttributes = $attributes;
+
+		return parent::parse($arrAttributes);
 	}
 
 	/**
