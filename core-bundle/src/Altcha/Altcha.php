@@ -33,6 +33,11 @@ class Altcha
     ) {
     }
 
+    public function getRangeMax(): int
+    {
+        return $this->altchaRangeMax;
+    }
+
     /**
      * @throws InvalidAlgorithmException
      */

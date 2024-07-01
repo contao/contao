@@ -75,6 +75,7 @@ class FormAltcha extends Widget
 
 		$this->altchaAttributes = new HtmlAttributes();
 		$this->altchaAttributes->set('name', $this->name);
+		$this->altchaAttributes->set('maxnumber', $this->getContainer()->get('contao.altcha')->getRangeMax());
 		$this->altchaAttributes->set('challengeurl', $this->getContainer()->get('router')->generate(AltchaController::class));
 		$this->altchaAttributes->set('strings', $this->getLocalization());
 		$this->altchaAttributes->setIfExists('auto', $this->altchaAuto);
