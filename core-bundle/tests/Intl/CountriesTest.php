@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Intl;
 
-use Contao\ArrayUtil;
 use Contao\CoreBundle\Intl\Countries;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
@@ -37,7 +36,7 @@ class CountriesTest extends TestCase
         $countryCodes = $this->getCountriesService()->getCountryCodes();
 
         $this->assertNotEmpty($countryCodes);
-        $this->assertFalse(ArrayUtil::isAssoc($countryCodes));
+        $this->assertTrue(array_is_list($countryCodes));
 
         foreach ($countryCodes as $countryCode) {
             $this->assertMatchesRegularExpression('/^[A-Z]{2}$/', $countryCode);
@@ -49,7 +48,7 @@ class CountriesTest extends TestCase
         $countryNames = $this->getCountriesService()->getCountries('en');
 
         $this->assertNotEmpty($countryNames);
-        $this->assertTrue(ArrayUtil::isAssoc($countryNames));
+        $this->assertFalse(array_is_list($countryNames));
 
         foreach ($countryNames as $countryCode => $countryName) {
             $this->assertMatchesRegularExpression('/^[A-Z]{2}$/', $countryCode);

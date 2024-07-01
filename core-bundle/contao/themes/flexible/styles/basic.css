@@ -466,19 +466,26 @@ optgroup {
 
 fieldset.tl_checkbox_container, fieldset.tl_radio_container {
 	border: 0;
-	margin: 15px 0 1px;
+	margin: 15px 0 0;
 	padding: 0;
 }
 
-fieldset.tl_checkbox_container {
-	line-height: 15px;
+fieldset.tl_checkbox_container > span, fieldset.tl_radio_container > span, .tl_checkbox_single_container > span {
+	margin: 2px 0;
+	display: flex;
+	align-items: center;
+	column-gap: 3px;
 }
 
-fieldset.tl_radio_container {
-	line-height: 16px;
+fieldset.tl_checkbox_wizard .sortable > span, fieldset.tl_radio_container .sortable > span {
+	margin: 0;
+	display: flex;
+	align-items: center;
+	column-gap: 3px;
 }
 
 fieldset.tl_checkbox_container legend, fieldset.tl_radio_container legend {
+	margin-bottom: 1px;
 	font-weight: 600;
 }
 
@@ -690,13 +697,10 @@ select[multiple] {
 }
 
 .tl_checkbox_single_container {
-	height: 16px;
-	margin: 16px 0 1px;
+	margin: 16px 0 0;
 }
 
 .tl_checkbox_single_container label {
-	margin-left: 4px;
-	margin-right: 3px;
 	font-weight: 600;
 }
 
@@ -707,12 +711,11 @@ select[multiple] {
 }
 
 /* Grouped checkboxes */
-.checkbox_toggler {
-	font-weight: 600;
+.checkbox_toggler_first {
+	margin-top: 2px;
 }
 
-.checkbox_toggler_first {
-	margin-top: 3px;
+.checkbox_toggler, .checkbox_toggler_first {
 	font-weight: 600;
 }
 
@@ -729,7 +732,7 @@ select[multiple] {
 }
 
 .checkbox_options {
-	margin: 0 0 6px 21px !important;
+	margin: 0 0 3px 21px !important;
 }
 
 .tl_checkbox_container .checkbox_options:last-of-type {
@@ -752,6 +755,9 @@ select[multiple] {
 
 .tl_radio_table td {
 	padding: 0 24px 0 0;
+	display: inline-flex;
+	align-items: center;
+	column-gap: 3px;
 }
 
 /* Upload fields */

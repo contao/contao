@@ -42,7 +42,7 @@ class FallbackPreviewProvider implements PreviewProviderInterface
         $svgCode .= '<path d="M11.61 1.79H2.7V16.2h12.6V5.51zm2.69 3.72h-2.67V2.82zm.28 10H3.42v-13h7.38v3.86h3.78z" fill="#ccc"/>';
         $svgCode .= '<path d="M14.25 11.88a1.83 1.83 0 0 1-1.83 1.83H2.83A1.83 1.83 0 0 1 1 11.89v-2.3a1.83 1.83 0 0 1 1.83-1.83h9.59a1.83 1.83 0 0 1 1.83 1.83z" fill="#c9473d"/>';
         $svgCode .= '<text fill="#fff" text-anchor="middle" x="7.7" y="12.2" style="font: bold 4px -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif;">';
-        $svgCode .= htmlspecialchars(strtoupper(pathinfo($sourcePath, PATHINFO_EXTENSION)), ENT_XML1);
+        $svgCode .= htmlspecialchars(strtoupper(pathinfo($sourcePath, PATHINFO_EXTENSION)), ENT_QUOTES | ENT_SUBSTITUTE | ENT_XML1);
         $svgCode .= '</text>';
         $svgCode .= '</svg>';
 

@@ -83,7 +83,7 @@ class ContaoCoreExtensionTest extends TestCase
         $container = $this->getContainerBuilder();
 
         $makeResponsePrivateDefinition = $container->getDefinition('contao.listener.make_response_private');
-        $attribute = (new \ReflectionClass($makeResponsePrivateDefinition->getClass()))->getAttributes()[0];
+        $attribute = (new \ReflectionClass($makeResponsePrivateDefinition->getClass()))->getMethod('makeResponsePrivate')->getAttributes()[0];
         $makeResponsePrivatePriority = $attribute->getArguments()['priority'];
 
         $mergeHeadersListenerDefinition = $container->getDefinition('contao.listener.merge_http_headers');
@@ -442,6 +442,27 @@ class ContaoCoreExtensionTest extends TestCase
         // Should still have the interface registered for autoconfiguration
         $this->assertArrayHasKey(IndexerInterface::class, $container->getAutoconfiguredInstanceof());
         $this->assertFalse($container->hasDefinition('contao.search.default_indexer'));
+    }
+
+    public function testRemovesWebWorkerIfNoTransportsAreConfigured(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $extension = new ContaoCoreExtension();
+        $extension->load(
+            [
+                'contao' => [
+                    'messenger' => [
+                        'web_worker' => [
+                            'transports' => [],
+                        ],
+                    ],
+                ],
+            ],
+            $container,
+        );
+
+        $this->assertFalse($container->hasDefinition('contao.messenger.web_worker'));
     }
 
     public function testSetsTheCorrectFeatureFlagOnTheSearchIndexListener(): void

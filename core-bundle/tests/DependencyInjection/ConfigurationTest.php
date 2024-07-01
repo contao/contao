@@ -310,6 +310,10 @@ class ConfigurationTest extends TestCase
                         ],
                     ],
                 ],
+                'web_worker' => [
+                    'transports' => [],
+                    'grace_period' => 'PT10M',
+                ],
             ],
             $configuration['messenger'],
         );
@@ -360,6 +364,24 @@ class ConfigurationTest extends TestCase
                 $exception->getMessage(),
             );
         }
+    }
+
+    public function testFailsOnInvalidWebWorkerGracePeriod(): void
+    {
+        $params = [
+            [
+                'messenger' => [
+                    'web_worker' => [
+                        'grace_period' => 'nonsense',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('Invalid configuration for path "contao.messenger.web_worker.grace_period": Must be a valid string for \DateInterval(). "nonsense" given.');
+
+        (new Processor())->processConfiguration($this->configuration, $params);
     }
 
     /**

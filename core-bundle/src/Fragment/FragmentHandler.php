@@ -29,6 +29,7 @@ class FragmentHandler extends BaseFragmentHandler
      * @internal
      */
     public function __construct(
+        /** @phpstan-ignore property.phpDocType */
         private readonly ContainerInterface $renderers,
         private readonly BaseFragmentHandler $fragmentHandler,
         RequestStack $requestStack,

@@ -29,10 +29,12 @@ jobs:
                   mysql -uroot -proot -e "CREATE database contao_test"
 
             - name: Install Node.js
-              uses: actions/setup-node@v3
+              uses: actions/setup-node@v4
               with:
-                  node-version: ${{ env.NODE_VERSION }}
-            - run: corepack enable
+                  node-version: 20
+
+            - name: Enable corepack
+              run: corepack enable
 
             - name: Install Symfony CLI
               run: |

@@ -42,12 +42,12 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException;
+use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Toflar\CronjobSupervisor\Supervisor;
 
 class ContaoCoreExtension extends Extension implements PrependExtensionInterface, ConfigureFilesystemInterface
@@ -243,6 +243,19 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
     private function handleMessengerConfig(array $config, ContainerBuilder $container): void
     {
+        if ($container->hasDefinition('contao.messenger.web_worker')) {
+            $definition = $container->getDefinition('contao.messenger.web_worker');
+
+            // Remove the entire service and all its listeners if there are no web worker
+            // transports configured
+            if ([] === $config['messenger']['web_worker']['transports']) {
+                $container->removeDefinition('contao.messenger.web_worker');
+            } else {
+                $definition->setArgument(2, $config['messenger']['web_worker']['transports']);
+                $definition->setArgument(3, $config['messenger']['web_worker']['grace_period']);
+            }
+        }
+
         if (
             !$container->hasDefinition('contao.cron.supervise_workers')
             || !$container->hasDefinition('contao.command.supervise_workers')
