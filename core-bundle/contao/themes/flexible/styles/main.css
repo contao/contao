@@ -1844,19 +1844,24 @@ label.tl_change_selected {
 
 /* Picker */
 .selector_container {
-	margin-top: 1px;
+	margin-top: 2px;
 	position: relative;
 }
 
 .selector_container > ul {
-	margin: 0 0 1px;
+	margin: 0 0 3px;
 	padding: 0;
 	list-style-type: none;
 }
 
+.selector_container > ul:empty {
+	margin: 0;
+}
+
 .selector_container > ul > li {
 	margin: 0 9px 0 0;
-	padding: 2px 0;
+	padding: 1px 0;
+	line-height: 16px;
 }
 
 .selector_container p {
@@ -1864,8 +1869,7 @@ label.tl_change_selected {
 }
 
 .selector_container ul:not(.sgallery) img {
-	margin-right: 1px;
-	vertical-align: text-top;
+	margin-top: -3px;
 }
 
 .selector_container img {
@@ -1905,6 +1909,10 @@ ul.sgallery {
 	grid-auto-rows: 75px;
 	gap: 4px;
 	padding: 2px 0;
+}
+
+ul.sgallery:empty {
+	padding: 0;
 }
 
 ul.sgallery li {
@@ -2099,7 +2107,7 @@ ul.sgallery li {
 
 .tl_key_value_wizard {
 	width: 100%;
-	max-width: 450px;
+	max-width: 628px;
 }
 
 .tl_optionwizard, .tl_key_value_wizard {
@@ -2271,7 +2279,7 @@ ul.sgallery li {
 .tl_sectionwizard {
 	margin-top: 2px;
 	width: 100%;
-	max-width: 680px;
+	max-width: 800px;
 }
 
 .tl_sectionwizard td {

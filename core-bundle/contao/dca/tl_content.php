@@ -454,7 +454,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['target'],
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'overwriteLink' => array
@@ -543,7 +543,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'metaIgnore' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'galleryTpl' => array
@@ -697,7 +697,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'sliderContinuous' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w25 m12'),
+			'eval'                    => array('tl_class'=>'w25'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'data' => array
@@ -1049,14 +1049,9 @@ class tl_content extends Backend
 				unset($GLOBALS['TL_DCA']['tl_content']['fields']['imageUrl']);
 				break;
 
-			case 'image':
-				$GLOBALS['TL_DCA']['tl_content']['fields']['fullsize']['eval']['tl_class'] .= ' m12';
-				break;
-
 			case 'download':
 			case 'downloads':
 				$GLOBALS['TL_DCA']['tl_content']['fields']['size']['eval']['mandatory'] = true;
-				$GLOBALS['TL_DCA']['tl_content']['fields']['fullsize']['eval']['tl_class'] .= ' m12';
 				break;
 		}
 

@@ -195,7 +195,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		'minifyMarkup' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => true)
 		),
 		'lightboxSize' => array
