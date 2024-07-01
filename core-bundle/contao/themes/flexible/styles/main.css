@@ -1158,6 +1158,7 @@ table.tl_listing {
 }
 
 .tl_folder_list, .tl_folder_tlist {
+	line-height: 16px;
 	padding: 6px;
 	border-bottom: 1px solid var(--border);
 	background: var(--table-header);
@@ -1171,14 +1172,18 @@ table.tl_listing {
 }
 
 .tl_folder_tlist {
-	line-height: 16px;
 	border-top: 1px solid var(--border);
 }
 
 .tl_file, .tl_file_list {
-	padding: 5px 6px;
+	line-height: 16px;
+	padding: 9px 6px;
 	border-bottom: 1px solid var(--border);
 	background: var(--content-bg);
+}
+
+.tl_file {
+	padding: 8px 6px;
 }
 
 .tl_file_list .ellipsis {
@@ -1190,7 +1195,7 @@ table.tl_listing {
 }
 
 .tl_right_nowrap {
-	padding: 6px;
+	padding: 8px 6px 6px;
 	vertical-align: top;
 	text-align: right;
 	white-space: nowrap;
@@ -1349,7 +1354,7 @@ table.tl_listing {
 }
 
 .tl_content .inside {
-	padding: 6px;
+	padding: 9px 6px;
 	background-color: var(--content-bg);
 }
 
@@ -1695,17 +1700,21 @@ table.tl_listing {
 
 /* Tree view */
 .tl_folder_top {
-	min-height: 18px;
-	padding: 5px 6px;
+	min-height: 16px;
+	padding: 6px;
 	border: solid var(--tree-header-border);
 	border-width: 1px 0;
 	background: var(--tree-header);
 }
 
 .tl_folder {
-	padding: 5px 6px;
+	padding: 8px 6px;
 	border-bottom: 1px solid var(--border);
 	background: var(--table-header);
+}
+
+.tl_tree_xtnd .tl_folder {
+	padding: 5px 6px;
 }
 
 .tl_folder.tl_folder_dropping, .tl_folder_top.tl_folder_dropping {
@@ -1964,12 +1973,13 @@ ul.sgallery li {
 	margin-bottom: 18px;
 }
 
-#tl_versions th, #tl_versions td {
+#tl_versions th {
+	line-height: 16px;
 	padding: 6px;
 }
 
-#tl_versions th {
-	line-height: 16px;
+#tl_versions td {
+	padding: 9px 6px;
 }
 
 #tl_versions td:first-child {
