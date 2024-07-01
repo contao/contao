@@ -98,7 +98,6 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 		'themes' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['themes'],
-			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'options'                 => array('modules', 'layout', 'image_sizes', 'theme_import', 'theme_export'),
 			'reference'               => &$GLOBALS['TL_LANG']['MOD'],

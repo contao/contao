@@ -130,7 +130,7 @@ class RadioButton extends Widget
 		foreach ($arrAllOptions as $i=>$arrOption)
 		{
 			$arrOptions[] = sprintf(
-				'<input type="radio" name="%s" id="opt_%s" class="tl_radio" value="%s"%s%s data-action="focus->contao--scroll-offset#store"> <label for="opt_%s">%s</label>',
+				'<span><input type="radio" name="%s" id="opt_%s" class="tl_radio" value="%s"%s%s data-action="focus->contao--scroll-offset#store"> <label for="opt_%s">%s</label></span>',
 				$this->strName,
 				$this->strId . '_' . $i,
 				self::specialcharsValue($arrOption['value'] ?? ''),
@@ -155,7 +155,7 @@ class RadioButton extends Widget
 			$this->strLabel,
 			$this->mandatory ? '<span class="mandatory">*</span>' : '',
 			$this->xlabel,
-			implode('<br>', $arrOptions),
+			implode(' ', $arrOptions),
 			$this->wizard
 		);
 	}

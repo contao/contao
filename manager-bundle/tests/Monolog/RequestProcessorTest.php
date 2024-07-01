@@ -14,6 +14,8 @@ namespace Contao\ManagerBundle\Tests\Monolog;
 
 use Contao\ManagerBundle\Monolog\RequestProcessor;
 use Contao\TestCase\ContaoTestCase;
+use Monolog\Level;
+use Monolog\LogRecord;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -32,11 +34,11 @@ class RequestProcessorTest extends ContaoTestCase
         $processor = new RequestProcessor();
         $processor->onKernelRequest($event);
 
-        $record = ['extra' => []];
+        $record = new LogRecord(new \DateTimeImmutable(), '', Level::Debug, '', [], []);
         $record = $processor($record);
 
-        $this->assertSame($uri, $record['extra']['request_uri']);
-        $this->assertSame($method, $record['extra']['request_method']);
+        $this->assertArrayHasKey('request_uri', $record->extra);
+        $this->assertArrayHasKey('request_method', $record->extra);
     }
 
     /**
@@ -50,11 +52,11 @@ class RequestProcessorTest extends ContaoTestCase
         $processor = new RequestProcessor();
         $processor->onKernelRequest($event);
 
-        $record = ['extra' => []];
+        $record = new LogRecord(new \DateTimeImmutable(), '', Level::Debug, '', [], []);
         $record = $processor($record);
 
-        $this->assertArrayNotHasKey('request_uri', $record['extra']);
-        $this->assertArrayNotHasKey('request_method', $record['extra']);
+        $this->assertArrayNotHasKey('request_uri', $record->extra);
+        $this->assertArrayNotHasKey('request_method', $record->extra);
     }
 
     /**
@@ -64,11 +66,11 @@ class RequestProcessorTest extends ContaoTestCase
     {
         $processor = new RequestProcessor();
 
-        $record = ['extra' => []];
+        $record = new LogRecord(new \DateTimeImmutable(), '', Level::Debug, '', [], []);
         $record = $processor($record);
 
-        $this->assertArrayNotHasKey('request_uri', $record['extra']);
-        $this->assertArrayNotHasKey('request_method', $record['extra']);
+        $this->assertArrayNotHasKey('request_uri', $record->extra);
+        $this->assertArrayNotHasKey('request_method', $record->extra);
     }
 
     public static function logExtrasProvider(): iterable

@@ -147,8 +147,8 @@ class InputTest extends TestCase
 
         // html_entity_decode simulates the browser here
         $_POST = [
-            'decoded' => html_entity_decode($specialchars(null, $expected)),
-            'encoded' => html_entity_decode($specialchars(null, $expectedEncoded)),
+            'decoded' => html_entity_decode($specialchars(null, $expected), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5),
+            'encoded' => html_entity_decode($specialchars(null, $expectedEncoded), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5),
         ];
 
         Config::set('allowedTags', '');

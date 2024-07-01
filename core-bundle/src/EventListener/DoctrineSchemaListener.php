@@ -48,7 +48,7 @@ class DoctrineSchemaListener
                 continue;
             }
 
-            $transport->configureSchema($event->getSchema(), $event->getEntityManager()->getConnection());
+            $transport->configureSchema($event->getSchema(), $event->getEntityManager()->getConnection(), static fn () => false);
         }
     }
 }
