@@ -32,6 +32,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class InsertTagParserTest extends TestCase
 {
@@ -214,7 +215,7 @@ class InsertTagParserTest extends TestCase
 
         $parser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
         $parser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'br', null, true, false));
-        $parser->addBlockSubscription(new InsertTagSubscription(new IfLanguageInsertTag($this->createMock(RequestStack::class)), '__invoke', 'ifnlng', 'ifnlng', true, false));
+        $parser->addBlockSubscription(new InsertTagSubscription(new IfLanguageInsertTag($this->createMock(TranslatorInterface::class)), '__invoke', 'ifnlng', 'ifnlng', true, false));
         System::getContainer()->set('contao.insert_tag.parser', $parser);
 
         $this->assertSame($expected, $parser->replaceInline($source));
