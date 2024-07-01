@@ -333,9 +333,6 @@ body.popup {
 
 #main .content {
 	margin: 0 15px 15px;
-}
-
-#main .content {
 	background: var(--content-bg);
 	border: 1px solid var(--content-border);
 }
