@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DependencyInjection;
 
 use Contao\Config;
+use Contao\CoreBundle\Altcha\Config\Algorithm;
 use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
 use Contao\CoreBundle\Doctrine\Backup\RetentionPolicy;
 use Contao\CoreBundle\Util\LocaleUtil;
@@ -116,6 +117,7 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addSanitizerNode())
                 ->append($this->addCronNode())
                 ->append($this->addCspNode())
+                ->append($this->addAltchaNode())
             ->end()
         ;
 
@@ -897,6 +899,31 @@ class Configuration implements ConfigurationInterface
                 ->integerNode('max_header_size')
                     ->info('Do not increase this value beyond the allowed response header size of your web server, as this will result in a 500 server error.')
                     ->defaultValue(3072)
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addAltchaNode(): NodeDefinition
+    {
+        return (new TreeBuilder('altcha'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->enumNode('algorithm')
+                    ->info('The algorithm used to generate the challenges. Select between "SHA-256", "SHA-384" or "SHA-512".')
+                    ->values(Algorithm::values())
+                    ->defaultValue(Algorithm::sha256->value)
+                ->end()
+                ->integerNode('range_max')
+                    ->info('A higher value increases the complexity/security but may significantly increase the computational load on client devices, potentially impacting the user experience.')
+                    ->max(1_000_000)
+                    ->defaultValue(100_000)
+                ->end()
+                ->integerNode('challenge_expiry')
+                    ->info('The time period in seconds for which a challenge is valid.')
+                    ->min(3600)
+                    ->defaultValue(86400)
                 ->end()
             ->end()
         ;

@@ -7,6 +7,17 @@ services:
             calls:
                 - [setFramework, ['@contao.framework']]
 
+    contao.altcha:
+        class: Contao\CoreBundle\Altcha\Altcha
+        public: true
+        arguments:
+            - '@contao.repository.altcha'
+            - '@doctrine.orm.entity_manager'
+            - '%kernel.secret%'
+            - ~
+            - ~
+            - ~
+
     contao.assets.assets_context:
         class: Contao\CoreBundle\Asset\ContaoContext
         public: true
@@ -92,6 +103,11 @@ services:
             - !service_closure '@doctrine.orm.entity_manager'
             - '@cache.app'
             - '@?logger'
+
+    contao.cron.purge_expired_altcha_challenges:
+        class: Contao\CoreBundle\Cron\PurgeExpiredAltchaChallengesCron
+        arguments:
+            - '@contao.repository.altcha'
 
     contao.cron.purge_expired_data:
         class: Contao\CoreBundle\Cron\PurgeExpiredDataCron
@@ -636,6 +652,11 @@ services:
         class: Contao\CoreBundle\Util\ProcessUtil
         arguments:
             - '%contao.console_path%'
+
+    contao.repository.altcha:
+        class: Contao\CoreBundle\Repository\AltchaRepository
+        arguments:
+            - '@doctrine'
 
     contao.repository.cron_job:
         class: Contao\CoreBundle\Repository\CronJobRepository

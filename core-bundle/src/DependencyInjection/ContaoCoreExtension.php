@@ -153,6 +153,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleCronConfig($config, $container);
         $this->handleSecurityConfig($config, $container);
         $this->handleCspConfig($config, $container);
+        $this->handleAltcha($config, $container);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -571,5 +572,17 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             $processor = $container->getDefinition('contao.csp.wysiwyg_style_processor');
             $processor->setArgument(0, $config['csp']['allowed_inline_styles']);
         }
+    }
+
+    private function handleAltcha(array $config, ContainerBuilder $container): void
+    {
+        if (!$container->hasDefinition('contao.altcha')) {
+            return;
+        }
+
+        $altcha = $container->getDefinition('contao.altcha');
+        $altcha->setArgument(3, $config['altcha']['algorithm']);
+        $altcha->setArgument(4, $config['altcha']['range_max']);
+        $altcha->setArgument(5, $config['altcha']['challenge_expiry']);
     }
 }

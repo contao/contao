@@ -27,6 +27,7 @@ use Contao\Crawl;
 use Contao\FilesModel;
 use Contao\FileTree;
 use Contao\Form;
+use Contao\FormAltcha;
 use Contao\FormCaptcha;
 use Contao\FormCheckbox;
 use Contao\FormExplanation;
@@ -335,6 +336,7 @@ $GLOBALS['TL_FFL'] = array
 	'range'         => FormRange::class,
 	'hidden'        => FormHidden::class,
 	'captcha'       => FormCaptcha::class,
+	'altcha'        => FormAltcha::class,
 	'submit'        => FormSubmit::class,
 );
 
