@@ -157,6 +157,11 @@ class Database
 	/**
 	 * Auto-generate a FIND_IN_SET() statement
 	 *
+	 * Do not pass user input as $strKey to this method as only identifiers get
+	 * quoted and SQL expressions get returned as is!
+	 *
+	 * @internal Do not use this class in your code
+	 *
 	 * @param string  $strKey     The field name
 	 * @param mixed   $varSet     The set to find the key in
 	 * @param boolean $blnIsField If true, the set will not be quoted
@@ -656,6 +661,12 @@ class Database
 
 	/**
 	 * Quote the column name if it is a reserved word
+	 *
+	 * Do not pass user input to this method as only identifiers get quoted and
+	 * SQL expressions get returned as is!
+	 *
+	 * @internal Do not use this class in your code; use the "quoteIdentifier()"
+	 *           method of the "@database_connection" service instead
 	 *
 	 * @param string $strName
 	 *

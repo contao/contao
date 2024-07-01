@@ -1176,7 +1176,6 @@ table.tl_listing {
 }
 
 .tl_file, .tl_file_list {
-	position: relative;
 	padding: 5px 6px;
 	border-bottom: 1px solid var(--border);
 	background: var(--content-bg);

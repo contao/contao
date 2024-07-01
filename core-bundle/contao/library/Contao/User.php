@@ -406,7 +406,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	/**
 	 * {@inheritdoc}
 	 */
-	public function eraseCredentials()
+	public function eraseCredentials(): void
 	{
 	}
 

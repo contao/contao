@@ -129,6 +129,34 @@ class Configuration implements ConfigurationInterface
             ->addDefaultsIfNotSet()
             ->info('Allows to define Symfony Messenger workers (messenger:consume). Workers are started every minute using the Contao cron job framework.')
             ->children()
+                ->arrayNode('web_worker')
+                    ->addDefaultsIfNotSet()
+                    ->info('Contao provides a way to work on Messenger transports in the web process (kernel.terminate) if there is no real "messenger:consume" worker. You can configure its behavior here.')
+                    ->children()
+                        ->arrayNode('transports')
+                            ->info('The transports to apply the web worker logic to.')
+                            ->scalarPrototype()->end()
+                            ->defaultValue([])
+                        ->end()
+                        ->scalarNode('grace_period')
+                            ->defaultValue('PT10M')
+                            ->validate()
+                                ->ifTrue(
+                                    static function (string $period) {
+                                        try {
+                                            new \DateInterval($period);
+                                        } catch (\Exception) {
+                                            return true;
+                                        }
+
+                                        return false;
+                                    },
+                                )
+                                ->thenInvalid('Must be a valid string for \DateInterval(). %s given.')
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
                 ->arrayNode('workers')
                     ->performNoDeepMerging()
                     ->arrayPrototype()
