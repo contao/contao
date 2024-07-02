@@ -31,7 +31,7 @@ class ConfigurationTest extends TestCase
     {
         parent::setUp();
 
-        $this->configuration = new Configuration($this->getTempDir());
+        $this->configuration = new Configuration();
     }
 
     public function testAddsTheImagineService(): void
@@ -72,7 +72,7 @@ class ConfigurationTest extends TestCase
         $this->assertSame('C:/Temp/contao', $configuration['image']['target_dir']);
     }
 
-    public function getPaths(): \Generator
+    public static function getPaths(): iterable
     {
         yield ['/tmp/contao', 'C:\Temp\contao'];
         yield ['/tmp/foo/../contao', 'C:\Temp\foo\..\contao'];
@@ -100,7 +100,7 @@ class ConfigurationTest extends TestCase
         (new Processor())->processConfiguration($this->configuration, $params);
     }
 
-    public function getInvalidUploadPaths(): \Generator
+    public static function getInvalidUploadPaths(): iterable
     {
         yield [''];
         yield ['app'];
@@ -157,7 +157,7 @@ class ConfigurationTest extends TestCase
         (new Processor())->processConfiguration($this->configuration, $params);
     }
 
-    public function getReservedImageSizeNames(): \Generator
+    public static function getReservedImageSizeNames(): iterable
     {
         yield [ResizeConfiguration::MODE_BOX];
         yield [ResizeConfiguration::MODE_PROPORTIONAL];
@@ -310,6 +310,10 @@ class ConfigurationTest extends TestCase
                         ],
                     ],
                 ],
+                'web_worker' => [
+                    'transports' => [],
+                    'grace_period' => 'PT10M',
+                ],
             ],
             $configuration['messenger'],
         );
@@ -362,6 +366,24 @@ class ConfigurationTest extends TestCase
         }
     }
 
+    public function testFailsOnInvalidWebWorkerGracePeriod(): void
+    {
+        $params = [
+            [
+                'messenger' => [
+                    'web_worker' => [
+                        'grace_period' => 'nonsense',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('Invalid configuration for path "contao.messenger.web_worker.grace_period": Must be a valid string for \DateInterval(). "nonsense" given.');
+
+        (new Processor())->processConfiguration($this->configuration, $params);
+    }
+
     /**
      * @dataProvider invalidAllowedInlineStylesRegexProvider
      */
@@ -383,7 +405,7 @@ class ConfigurationTest extends TestCase
         (new Processor())->processConfiguration($this->configuration, $params);
     }
 
-    public function invalidAllowedInlineStylesRegexProvider(): \Generator
+    public static function invalidAllowedInlineStylesRegexProvider(): iterable
     {
         yield [
             'te(st',
@@ -422,7 +444,7 @@ class ConfigurationTest extends TestCase
         (new Processor())->processConfiguration($this->configuration, $params);
     }
 
-    public function cronConfigurationProvider(): \Generator
+    public static function cronConfigurationProvider(): iterable
     {
         yield 'Default value' => [
             [], 'auto',

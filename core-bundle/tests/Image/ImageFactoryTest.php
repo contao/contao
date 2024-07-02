@@ -47,13 +47,7 @@ class ImageFactoryTest extends TestCase
         parent::setUp();
 
         $filesystem = new Filesystem();
-
-        foreach (['assets', 'images'] as $directory) {
-            $filesystem->mirror(
-                Path::join((new self())->getFixturesDir(), $directory),
-                Path::join(self::getTempDir(), $directory),
-            );
-        }
+        $filesystem->mirror(Path::join($this->getFixturesDir(), 'images'), Path::join(self::getTempDir(), 'images'));
 
         System::setContainer($this->getContainerWithContaoConfiguration(self::getTempDir()));
     }
@@ -591,7 +585,7 @@ class ImageFactoryTest extends TestCase
         );
     }
 
-    public function getCreateWithLegacyMode(): \Generator
+    public static function getCreateWithLegacyMode(): iterable
     {
         yield 'Left Top' => ['left_top', [0, 0, 0, 0]];
         yield 'Left Center' => ['left_center', [0, 0, 0, 1]];

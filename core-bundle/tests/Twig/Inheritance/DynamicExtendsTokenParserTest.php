@@ -74,7 +74,7 @@ class DynamicExtendsTokenParserTest extends TestCase
         }
     }
 
-    public function provideSources(): \Generator
+    public static function provideSources(): iterable
     {
         yield 'regular extend' => [
             "{% extends '@Foo/bar.html.twig' %}",
@@ -158,7 +158,7 @@ class DynamicExtendsTokenParserTest extends TestCase
         $parser->parse($tokenStream);
     }
 
-    public function provideSourcesWithErrors(): \Generator
+    public static function provideSourcesWithErrors(): iterable
     {
         yield 'extend from within a block' => [
             "{% block b %}{% extends '@Foo/bar.html.twig' %}{% endblock %}",

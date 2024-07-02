@@ -188,7 +188,7 @@ class MessageCatalogueTest extends TestCase
             ->expects($this->once())
             ->method($method)
             ->with(...$params)
-            ->willReturn($return)
+            ->willReturnCallback(static fn () => $return)
         ;
 
         $catalogue = $this->createCatalogue($parentCatalogue);
@@ -200,7 +200,7 @@ class MessageCatalogueTest extends TestCase
         $catalogue->$method(...$paramsContaoDomain);
     }
 
-    public function getForwardedDomainMethods(): \Generator
+    public static function getForwardedDomainMethods(): iterable
     {
         yield [
             'all',
@@ -238,14 +238,14 @@ class MessageCatalogueTest extends TestCase
             ->expects($this->once())
             ->method($method)
             ->with(...$params)
-            ->willReturn($return)
+            ->willReturnCallback(static fn () => $return)
         ;
 
         $catalogue = $this->createCatalogue($parentCatalogue);
         $this->assertSame($return, $catalogue->$method(...$params));
     }
 
-    public function getCompletelyForwardedMethods(): \Generator
+    public function getCompletelyForwardedMethods(): iterable
     {
         yield [
             'addCatalogue',

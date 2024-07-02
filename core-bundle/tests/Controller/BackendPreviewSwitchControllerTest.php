@@ -26,8 +26,8 @@ use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Result;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
@@ -159,7 +159,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $this->assertSame(Response::HTTP_NO_CONTENT, $response->getStatusCode());
     }
 
-    public function getAuthenticationScenarios(): \Generator
+    public static function getAuthenticationScenarios(): iterable
     {
         yield [null, 'authenticateFrontendGuest'];
         yield ['', 'authenticateFrontendGuest'];
@@ -180,7 +180,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
         );
 
         $request = $this->createMock(Request::class);
-        $request->request = new ParameterBag(['FORM_SUBMIT' => 'tl_switch', 'user' => 'foobar']);
+        $request->request = new InputBag(['FORM_SUBMIT' => 'tl_switch', 'user' => 'foobar']);
 
         $request
             ->method('isXmlHttpRequest')

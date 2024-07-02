@@ -58,7 +58,7 @@ class LegacyTemplateFunctionsRuntimeTest extends TestCase
         $runtime->$methodName([], 'foo');
     }
 
-    public function provideMethodCalls(): \Generator
+    public static function provideMethodCalls(): iterable
     {
         yield 'sections' => ['renderLayoutSections', 'sections'];
 

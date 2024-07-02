@@ -1,4 +1,4 @@
-<p align="center"><img src="https://contao.org/files/contao/logo/contao-logo-corporate.svg"></p>
+<p align="center"><img src="https://contao.org/files/contao/logo/contao-logo-corporate.svg" alt="Contao Open Source CMS"></p>
 
 <p align="center">
 <a href="https://github.com/contao/contao/actions"><img src="https://github.com/contao/contao/actions/workflows/ci.yml/badge.svg?branch=5.x" alt></a>
@@ -13,8 +13,8 @@ Visit the [project website][1] for more information.
 
 ## Purpose
 
-The purpose of this package is to develop the Contao bundles. Use it if you e.g. want to create a pull request or if you
-want to report an issue.
+The purpose of this package is to develop the Contao bundles in a monorepo. Use it when you want to create a pull
+request or report an issue.
 
 The monorepo is automatically split into separate packages:
 
@@ -30,6 +30,12 @@ The monorepo is automatically split into separate packages:
 
 **Please do not use `contao/contao` in production**! Use the split packages instead.
 
+## Platinum partners
+
+Thanks to our platinum partners for helping us fund the development of Contao.
+
+<a href="https://postyou.de"><img src="https://contao.org/files/uploads/partner-logos/6889-postyou.svg" width="300" alt></a>
+
 ## Development
 
 To create a pull request and to test your changes within a running Contao application, it is the easiest to use the
@@ -39,8 +45,8 @@ To create a pull request and to test your changes within a running Contao applic
 composer create-project --no-install contao/managed-edition <directory> <branch>
 ```
 
-Replace `<directory>` with the directory you want to install the Managed Edition in (use `.` for the current one).
-Replace `<branch>` with `5.x-dev` if you want to add a new feature or with `<lts-version>.x-dev` (currently
+Replace `<directory>` with the directory where you want to install the Managed Edition (use `.` for the current
+directory). Replace `<branch>` with `5.x-dev` if you want to add a new feature, or with `<lts-version>.x-dev` (currently
 `4.13.x-dev`) if you want to fix a bug.
 
 Then adjust the `require` section in your `composer.json` file, so Composer loads the monorepo instead of the individual
@@ -48,7 +54,7 @@ bundles:
 
 ```json
 "require": {
-    "php": "^8.0",
+    "php": "^8.1",
     "contao/contao": "5.x-dev"
 },
 ```
@@ -61,11 +67,11 @@ Next, install the dependencies:
 composer update
 ```
 
-Composer will automatically clone the Git repo into the `vendor/contao/contao` folder. You can finish the setup by
+Composer automatically clones the Git repository into the `vendor/contao/contao` folder. You can complete the setup by
 running `vendor/bin/contao-setup` on the command line.
 
-All the changes you make in `vendor/contao/contao` are tracked via Git, so you can submit your pull request directly
-from within your application.
+Any changes you make in `vendor/contao/contao` will be tracked via Git, so you can submit your pull request directly
+from your application.
 
 ## Running scripts
 
@@ -78,27 +84,27 @@ composer bin all install
 Then run the code quality scripts via Composer:
 
 ```bash
-composer run all
+composer all
 ```
 
 You can also run the scripts separately:
 
 ```bash
-composer run rector
-composer run cs-fixer
-composer run service-linter
-composer run monorepo-tools
-composer run unit-tests
-composer run functional-tests
-composer run phpstan
-composer run require-checker
+composer rector
+composer ecs
+composer service-linter
+composer monorepo-tools
+composer unit-tests
+composer functional-tests
+composer phpstan
+composer depcheck
 ```
 
-If you want to pass additional flags to the underlying commands, you can use the `--` argument:
+Use the `--` argument to pass additional flags to the underlying commands:
 
 ```bash
-composer run unit-tests -- --filter CoreBundle
-composer run cs-fixer -- --clear-cache
+composer unit-tests -- --filter CoreBundle
+composer ecs -- --clear-cache
 ```
 
 ## Functional tests
@@ -118,10 +124,10 @@ the following line:
 </php>
 ```
 
-Then run the functional tests via the `run` command:
+Then run the functional tests via Composer:
 
 ```bash
-composer run functional-tests
+composer functional-tests
 ```
 
 ## Yarn 4
@@ -138,12 +144,11 @@ using `npm install -g corepack` or `brew install corepack`.
 
 ## End-to-end tests
 
-Before you can run the end-to-end tests, you have to install the [Symfony Local Web Server][4] with TLS support. Then
-install the required Node packages and run the end-to-end tests:
+The Contao end-to-end tests are availabe as an [NPM package][4]. You can install and run them via Yarn:
 
 ```bash
-yarn install
-yarn run e2e-tests
+yarn add contao-e2e-tests --dev
+yarn contao-e2e-tests
 ```
 
 ## License
@@ -157,5 +162,5 @@ Visit the [support page][5] to learn about the available support options.
 [1]: https://contao.org
 [2]: https://github.com/contao/managed-edition
 [3]: https://yarnpkg.com/getting-started/install
-[4]: https://symfony.com/doc/current/setup/symfony_server.html
+[4]: https://www.npmjs.com/package/contao-e2e-tests
 [5]: https://to.contao.org/support

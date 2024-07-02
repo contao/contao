@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Routing\Content;
 
 use Contao\ArticleModel;
+use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\Content\StringResolver;
 use Contao\CoreBundle\Routing\Content\StringUrl;
@@ -20,6 +21,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\UrlHelper;
+use Symfony\Component\Routing\RequestContext;
 
 class StringResolverTest extends TestCase
 {
@@ -31,19 +33,44 @@ class StringResolverTest extends TestCase
             ->method($this->anything())
         ;
 
-        $urlHelper = new UrlHelper(new RequestStack());
+        $requestStack = new RequestStack();
+        $requestContext = new RequestContext();
+        $urlHelper = new UrlHelper($requestStack, $requestContext);
         $content = $this->mockClassWithProperties(ArticleModel::class);
 
-        $resolver = new StringResolver($insertTagParser, $urlHelper);
+        $resolver = new StringResolver($insertTagParser, $urlHelper, $requestStack, $requestContext);
         $result = $resolver->resolve($content);
 
         $this->assertNull($result);
     }
 
+    public function testThrowsExceptionIfInsertTagIsEmpty(): void
+    {
+        $content = new StringUrl('{{link_url::42}}');
+
+        $insertTagParser = $this->createMock(InsertTagParser::class);
+        $insertTagParser
+            ->expects($this->once())
+            ->method('replaceInline')
+            ->with($content->value)
+            ->willReturn('')
+        ;
+
+        $requestStack = new RequestStack();
+        $requestContext = new RequestContext();
+        $urlHelper = new UrlHelper($requestStack, $requestContext);
+
+        $resolver = new StringResolver($insertTagParser, $urlHelper, $requestStack, $requestContext);
+
+        $this->expectException(ForwardPageNotFoundException::class);
+
+        $resolver->resolve($content);
+    }
+
     /**
-     * @dataProvider resolvesStringUrlProvider
+     * @dataProvider stringUrlProvider
      */
-    public function testResolvesStringUrl(StringUrl $content, string $insertTagResult, string $baseUrl, string $expected): void
+    public function testResolvesStringUrlFromRequestStack(StringUrl $content, string $insertTagResult, string $baseUrl, string $expected): void
     {
         $insertTagParser = $this->createMock(InsertTagParser::class);
         $insertTagParser
@@ -56,16 +83,41 @@ class StringResolverTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push(Request::create($baseUrl));
 
-        $urlHelper = new UrlHelper($requestStack);
+        $requestContext = new RequestContext();
+        $urlHelper = new UrlHelper($requestStack, $requestContext);
 
-        $resolver = new StringResolver($insertTagParser, $urlHelper);
+        $resolver = new StringResolver($insertTagParser, $urlHelper, $requestStack, $requestContext);
         $result = $resolver->resolve($content);
 
         $this->assertTrue($result->hasTargetUrl());
         $this->assertSame($expected, $result->getTargetUrl());
     }
 
-    public function resolvesStringUrlProvider(): \Generator
+    /**
+     * @dataProvider stringUrlProvider
+     */
+    public function testResolvesStringUrlFromRequestContext(StringUrl $content, string $insertTagResult, string $baseUrl, string $expected): void
+    {
+        $insertTagParser = $this->createMock(InsertTagParser::class);
+        $insertTagParser
+            ->expects($this->once())
+            ->method('replaceInline')
+            ->with($content->value)
+            ->willReturn($insertTagResult)
+        ;
+
+        $requestStack = new RequestStack();
+        $requestContext = RequestContext::fromUri($baseUrl);
+        $urlHelper = new UrlHelper($requestStack, $requestContext);
+
+        $resolver = new StringResolver($insertTagParser, $urlHelper, $requestStack, $requestContext);
+        $result = $resolver->resolve($content);
+
+        $this->assertTrue($result->hasTargetUrl());
+        $this->assertSame($expected, $result->getTargetUrl());
+    }
+
+    public static function stringUrlProvider(): iterable
     {
         yield 'Returns an absolute URL' => [
             new StringUrl('https://example.com/foo/bar'),
@@ -86,6 +138,13 @@ class StringResolverTest extends TestCase
             '/foo/bar',
             'https://foobar.com',
             'https://foobar.com/foo/bar',
+        ];
+
+        yield 'Makes protocol-relative URL absolute' => [
+            new StringUrl('{{link_url::42}}'),
+            '//example.com/foo/bar',
+            'https://example.com',
+            'https://example.com/foo/bar',
         ];
 
         yield 'Correctly handles mailto: links' => [

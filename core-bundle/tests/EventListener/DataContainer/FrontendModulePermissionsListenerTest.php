@@ -16,7 +16,7 @@ use Contao\BackendUser;
 use Contao\CoreBundle\EventListener\DataContainer\FrontendModulePermissionsListener;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\ModuleEventlist;
+use Contao\Form;
 use Contao\ModuleNavigation;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -66,8 +66,8 @@ class FrontendModulePermissionsListenerTest extends TestCase
         ;
 
         $GLOBALS['FE_MOD'] = [
-            'events' => [
-                'eventlist' => ModuleEventlist::class,
+            'application' => [
+                'form' => Form::class,
             ],
             'navigationMenu' => [
                 'navigation' => ModuleNavigation::class,
@@ -78,7 +78,7 @@ class FrontendModulePermissionsListenerTest extends TestCase
 
         $this->assertSame(
             [
-                'events' => ['eventlist'],
+                'application' => ['form'],
                 'navigationMenu' => ['navigation'],
             ],
             $listener->frontendModuleOptions(),

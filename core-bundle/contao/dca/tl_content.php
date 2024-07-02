@@ -167,8 +167,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL auto_increment",
-			'search'                  => true
+			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
 		),
 		'pid' => array
 		(
@@ -455,7 +454,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['target'],
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'overwriteLink' => array
@@ -544,7 +543,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'metaIgnore' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'galleryTpl' => array
@@ -698,7 +697,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'sliderContinuous' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w25 m12'),
+			'eval'                    => array('tl_class'=>'w25'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'data' => array
@@ -1050,14 +1049,9 @@ class tl_content extends Backend
 				unset($GLOBALS['TL_DCA']['tl_content']['fields']['imageUrl']);
 				break;
 
-			case 'image':
-				$GLOBALS['TL_DCA']['tl_content']['fields']['fullsize']['eval']['tl_class'] .= ' m12';
-				break;
-
 			case 'download':
 			case 'downloads':
 				$GLOBALS['TL_DCA']['tl_content']['fields']['size']['eval']['mandatory'] = true;
-				$GLOBALS['TL_DCA']['tl_content']['fields']['fullsize']['eval']['tl_class'] .= ' m12';
 				break;
 		}
 
@@ -1355,7 +1349,7 @@ class tl_content extends Backend
 		$title = sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'], $dc->value);
 		$href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'form', 'table'=>'tl_form_field', 'id'=>$dc->value, 'popup'=>'1', 'nb'=>'1'));
 
-		return ' <a href="' . StringUtil::specialcharsUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $title)) . '\',\'url\':this.href});return false">' . Image::getHtml('alias.svg', $title) . '</a>';
+		return ' <a href="' . StringUtil::specialcharsUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $title)) . '\',\'url\':this.href});return false">' . Image::getHtml('edit.svg', $title) . '</a>';
 	}
 
 	/**
@@ -1401,10 +1395,20 @@ class tl_content extends Backend
 			return '';
 		}
 
-		$title = sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'], $dc->value);
-		$href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$dc->value, 'popup'=>'1', 'nb'=>'1'));
+		// DataContainer::getCurrentRecord() will check permission on the record
+		try
+		{
+			$module = $dc->getCurrentRecord($dc->value, 'tl_module');
+		}
+		catch (AccessDeniedException)
+		{
+			return '';
+		}
 
-		return ' <a href="' . StringUtil::specialcharsUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $title)) . '\',\'url\':this.href});return false">' . Image::getHtml('alias.svg', $title) . '</a>';
+		$title = sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'], $module['id']);
+		$href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$module['id'], 'popup'=>'1', 'nb'=>'1'));
+
+		return ' <a href="' . StringUtil::specialcharsUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $title)) . '\',\'url\':this.href});return false">' . Image::getHtml('edit.svg', $title) . '</a>';
 	}
 
 	/**

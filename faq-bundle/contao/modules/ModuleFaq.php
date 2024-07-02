@@ -24,7 +24,7 @@ class ModuleFaq extends Frontend
 	 *
 	 * @return array
 	 */
-	public static function getSchemaOrgData(iterable $arrFaqs, string $identifier = null): array
+	public static function getSchemaOrgData(iterable $arrFaqs, string|null $identifier = null): array
 	{
 		$jsonLd = array(
 			'@type' => 'FAQPage',

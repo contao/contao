@@ -110,11 +110,10 @@ class AddAssetsPackagesPass implements CompilerPassInterface
     {
         $packages = $container->getDefinition('assets.packages');
         $context = new Reference('contao.assets.assets_context');
-        $componentDir = $container->getParameter('contao.component_dir');
 
         foreach (InstalledVersions::getInstalledPackagesByType('contao-component') as $name) {
             $serviceId = 'assets._package_'.$name;
-            $basePath = Path::join($componentDir, Path::makeRelative($name, 'contao-components'));
+            $basePath = Path::join('assets', Path::makeRelative($name, 'contao-components'));
             $version = $this->createVersionStrategy($container, $name);
 
             $container->setDefinition($serviceId, $this->createPackageDefinition($basePath, $version, $context));

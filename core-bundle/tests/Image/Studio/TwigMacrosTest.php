@@ -42,7 +42,7 @@ class TwigMacrosTest extends TestCase
         $this->assertSame($expected, $this->renderMacro("html_attributes($attributes)"));
     }
 
-    public function provideAttributes(): \Generator
+    public static function provideAttributes(): iterable
     {
         yield 'no attributes' => [
             '{}',
@@ -78,7 +78,7 @@ class TwigMacrosTest extends TestCase
         $this->assertSame($expected, trim($html));
     }
 
-    public function provideCaptionOptions(): \Generator
+    public static function provideCaptionOptions(): iterable
     {
         yield 'no options' => [
             '{}',
@@ -121,7 +121,7 @@ class TwigMacrosTest extends TestCase
         $this->assertSame($expected, trim($html));
     }
 
-    public function provideImgData(): \Generator
+    public static function provideImgData(): iterable
     {
         yield 'minimal' => [
             ['src' => 'foo.png'],
@@ -208,7 +208,7 @@ class TwigMacrosTest extends TestCase
         $this->assertSame($expected, trim($html));
     }
 
-    public function provideImgOptions(): \Generator
+    public static function provideImgOptions(): iterable
     {
         yield 'no options' => [
             '{}',
@@ -257,7 +257,7 @@ class TwigMacrosTest extends TestCase
         $this->assertSame($expected, trim($html));
     }
 
-    public function providePictureSources(): \Generator
+    public static function providePictureSources(): iterable
     {
         yield 'no sources' => [
             [],
@@ -336,7 +336,7 @@ class TwigMacrosTest extends TestCase
         $this->assertSame($expected, trim($html));
     }
 
-    public function providePictureOptions(): \Generator
+    public static function providePictureOptions(): iterable
     {
         yield 'no options' => [
             '{}',
@@ -393,7 +393,7 @@ class TwigMacrosTest extends TestCase
         $this->assertSame($expected, trim($html));
     }
 
-    public function provideFigureData(): \Generator
+    public function provideFigureData(): iterable
     {
         yield 'minimal' => [
             null,
@@ -484,7 +484,7 @@ class TwigMacrosTest extends TestCase
         $this->assertSame($expected, trim($html));
     }
 
-    public function provideFigureOptions(): \Generator
+    public static function provideFigureOptions(): iterable
     {
         yield 'no options' => [
             '{}',
@@ -547,7 +547,7 @@ class TwigMacrosTest extends TestCase
         $this->assertSame($graph['@graph'], $schemaData);
     }
 
-    public function provideAddSchemaOrgOptions(): \Generator
+    public static function provideAddSchemaOrgOptions(): iterable
     {
         yield 'default (enabled)' => [
             'figure(figure)',

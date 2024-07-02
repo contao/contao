@@ -31,7 +31,7 @@ class CspParserTest extends TestCase
         }
     }
 
-    public static function directivesProvider(): \Generator
+    public static function directivesProvider(): iterable
     {
         yield ["default-src self; script-src 'none'; style-src unsafe-inline", ['default-src' => "'self'", 'script-src' => "'none'", 'style-src' => "'unsafe-inline'"]];
         yield ["script-src 'self' example.com", ['script-src' => "'self' example.com"]];

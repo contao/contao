@@ -11,7 +11,6 @@
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Controller;
-use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
 use Contao\DataContainer;
@@ -30,7 +29,6 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'markAsCopy'                  => 'name',
 		'onload_callback' => array
 		(
-			array('tl_module', 'checkPermission'),
 			array('tl_module', 'addCustomLayoutSectionReferences')
 		),
 		'sql' => array
@@ -66,7 +64,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 	(
 		'__selector__'                => array('type', 'defineRoot', 'protected', 'reg_assignDir', 'reg_activate'),
 		'default'                     => '{title_legend},name,type',
-		'navigation'                  => '{title_legend},name,headline,type;{nav_legend},levelOffset,showLevel,hardLimit,showProtected,showHidden;{reference_legend:hide},defineRoot;{template_legend:hide},customTpl,navigationTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
+		'navigation'                  => '{title_legend},name,headline,type;{nav_legend},showProtected,showHidden,levelOffset,showLevel,hardLimit;{reference_legend:hide},defineRoot;{template_legend:hide},customTpl,navigationTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
 		'customnav'                   => '{title_legend},name,headline,type;{nav_legend},pages,showProtected;{template_legend:hide},customTpl,navigationTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
 		'breadcrumb'                  => '{title_legend},name,headline,type;{nav_legend},showHidden;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
 		'quicknav'                    => '{title_legend},name,headline,type;{label_legend},customLabel;{nav_legend},showLevel,hardLimit,showProtected,showHidden;{reference_legend:hide},rootPage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
@@ -108,7 +106,6 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 	(
 		'id' => array
 		(
-			'search'                  => true,
 			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
 		),
 		'pid' => array
@@ -152,19 +149,19 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'levelOffset' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>5, 'rgxp'=>'natural', 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>5, 'rgxp'=>'natural', 'tl_class'=>'w25 clr'),
 			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
 		),
 		'showLevel' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>5, 'rgxp'=>'natural', 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>5, 'rgxp'=>'natural', 'tl_class'=>'w25'),
 			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
 		),
 		'hardLimit' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w25 clr'),
+			'eval'                    => array('tl_class'=>'w25'),
 			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'showProtected' => array
@@ -301,7 +298,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'fuzzy' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'contextLength' => array
@@ -381,7 +378,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'fullsize' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'multiSRC' => array
@@ -474,7 +471,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'reg_deleteDir' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'reg_assignDir' => array
@@ -565,19 +562,6 @@ $GLOBALS['TL_DCA']['tl_module'] = array
  */
 class tl_module extends Backend
 {
-	/**
-	 * Check permissions to edit the table
-	 *
-	 * @throws AccessDeniedException
-	 */
-	public function checkPermission()
-	{
-		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULES))
-		{
-			throw new AccessDeniedException('Not enough permissions to access the front end modules module.');
-		}
-	}
-
 	/**
 	 * Return all front end modules as array
 	 *

@@ -41,7 +41,7 @@ class ContaoSetupCommand extends Command
     private readonly \Closure $createProcessHandler;
 
     /**
-     * @param (\Closure(array<string>):Process)|null $createProcessHandler
+     * @param (\Closure(array<string>): Process)|null $createProcessHandler
      */
     public function __construct(
         private readonly string $projectDir,
@@ -101,8 +101,10 @@ class ContaoSetupCommand extends Command
         $commands = [
             ['skeleton:install', $this->webDir, '--env=prod'],
             ['assets:install', $this->webDir, '--symlink', '--relative', '--env=prod'],
-            ['contao:install', $this->webDir, '--env=prod'],
+            // Run contao:symlinks before contao:install in case the assets directory is
+            // still in the root folder (backwards compatibility)
             ['contao:symlinks', $this->webDir, '--env=prod'],
+            ['contao:install', $this->webDir, '--env=prod'],
             ['cache:clear', '--no-warmup', '--env=prod'],
             ['cache:clear', '--no-warmup', '--env=dev'],
             ['cache:warmup', '--env=prod'],

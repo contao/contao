@@ -16,8 +16,10 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\DcaPickerProviderInterface;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\Security\DataContainer\AbstractAction;
+use Contao\CoreBundle\Security\DataContainer\CreateAction;
+use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
+use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\Image\ResizeConfiguration;
 use Doctrine\DBAL\ArrayParameterType;
 
@@ -861,12 +863,14 @@ abstract class DataContainer extends Backend
 			return;
 		}
 
-		$message = 'Access denied.';
-
-		if ($subject instanceof AbstractAction)
+		$message = match (true)
 		{
-			$message = sprintf('Access denied to %s [%s].', $subject, $attribute);
-		}
+			$subject instanceof ReadAction => sprintf('Not enough permissions to read %s.', $subject),
+			$subject instanceof CreateAction => sprintf('Not enough permissions to create %s.', $subject),
+			$subject instanceof UpdateAction => sprintf('Not enough permissions to update %s.', $subject),
+			$subject instanceof DeleteAction => sprintf('Not enough permissions to delete %s.', $subject),
+			default => 'Access denied.'
+		};
 
 		$exception = new AccessDeniedException($message);
 		$exception->setAttributes($attribute);
@@ -984,6 +988,10 @@ abstract class DataContainer extends Backend
 				if ($icon == 'visible.svg')
 				{
 					$_icon = 'invisible.svg';
+				}
+				elseif ($icon == 'featured.svg')
+				{
+					$_icon = 'unfeatured.svg';
 				}
 
 				$state = $arrRow[$params['field']] ? 1 : 0;
@@ -1353,7 +1361,7 @@ abstract class DataContainer extends Backend
 		$values = array_map($this->objPickerCallback, $this->arrPickerValue);
 		$values = array_map('strval', $values);
 		$values = json_encode($values);
-		$values = htmlspecialchars($values);
+		$values = htmlspecialchars($values, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
 
 		return ' data-picker-value="' . $values . '"';
 	}
@@ -1499,7 +1507,7 @@ abstract class DataContainer extends Backend
 <form class="tl_form" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']) . '">
 <div class="tl_formbody">
   <input type="hidden" name="FORM_SUBMIT" value="tl_filters">
-  <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">
+  <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
   ' . $return . '
 </div>
 </form>';
@@ -1644,7 +1652,7 @@ abstract class DataContainer extends Backend
 	 *
 	 * @return string|array<string>
 	 */
-	public function generateRecordLabel(array $row, string $table = null, bool $protected = false, bool $isVisibleRootTrailPage = false)
+	public function generateRecordLabel(array $row, string|null $table = null, bool $protected = false, bool $isVisibleRootTrailPage = false)
 	{
 		$table = $table ?? $this->strTable;
 		$labelConfig = &$GLOBALS['TL_DCA'][$table]['list']['label'];
@@ -1842,7 +1850,7 @@ abstract class DataContainer extends Backend
 	/**
 	 * @param array<string, mixed>|null $row Pass null to remove a given cache entry
 	 */
-	protected static function setCurrentRecordCache(string|int $id, string $table, array $row): void
+	protected static function setCurrentRecordCache(int|string $id, string $table, array $row): void
 	{
 		self::$arrCurrentRecordCache[$table . '.' . $id] = $row;
 	}
@@ -1851,7 +1859,7 @@ abstract class DataContainer extends Backend
 	 * @throws AccessDeniedException     if the current user has no read permission
 	 * @return array<string, mixed>|null
 	 */
-	public function getCurrentRecord(string|int $id = null, string $table = null): array|null
+	public function getCurrentRecord(int|string|null $id = null, string|null $table = null): array|null
 	{
 		$id = $id ?: $this->intId;
 		$table = $table ?: $this->strTable;
@@ -1890,7 +1898,7 @@ abstract class DataContainer extends Backend
 		return self::$arrCurrentRecordCache[$key];
 	}
 
-	public static function clearCurrentRecordCache(string|int $id = null, string $table = null): void
+	public static function clearCurrentRecordCache(int|string|null $id = null, string|null $table = null): void
 	{
 		if (null === $table)
 		{

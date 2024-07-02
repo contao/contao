@@ -35,7 +35,8 @@ use Twig\Environment;
 use Twig\Error\Error;
 
 /**
- * The priority must be higher than the one of the Twig exception listener (defaults to -128).
+ * The priority must be higher than the one of the Twig exception listener
+ * (defaults to -128).
  *
  * @internal
  */

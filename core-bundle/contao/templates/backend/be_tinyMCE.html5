@@ -15,6 +15,7 @@ window.tinymce && tinymce.init({
   element_format: 'html',
   document_base_url: '<?= Environment::get('base') ?>',
   entities: '160,nbsp,60,lt,62,gt,173,shy',
+  license_key: 'gpl',
   branding: false,
   promotion: false,
   skin: (document.documentElement.dataset.colorScheme === 'dark' ? 'tinymce-5-dark' : 'tinymce-5'),

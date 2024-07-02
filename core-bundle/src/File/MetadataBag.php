@@ -13,8 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\File;
 
 /**
- * This class acts as a collection for \Contao\CoreBundle\File\Metadata
- * instances of different locales for the same entity.
+ * This class acts as a collection for \Contao\CoreBundle\File\Metadata instances
+ * of different locales for the same entity.
  *
  * @implements \ArrayAccess<string, Metadata>
  */

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Monolog;
 
+use Monolog\LogRecord;
 use Monolog\Processor\ProcessorInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,11 +23,11 @@ class RequestProcessor implements ProcessorInterface, EventSubscriberInterface
 {
     private Request|null $request = null;
 
-    public function __invoke(array $record): array
+    public function __invoke(LogRecord $record): LogRecord
     {
         if ($this->request) {
-            $record['extra']['request_uri'] = $this->request->getUri();
-            $record['extra']['request_method'] = $this->request->getMethod();
+            $record->extra['request_uri'] = $this->request->getUri();
+            $record->extra['request_method'] = $this->request->getMethod();
         }
 
         return $record;

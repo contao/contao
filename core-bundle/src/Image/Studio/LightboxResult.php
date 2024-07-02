@@ -91,12 +91,12 @@ class LightboxResult
     /**
      * Returns the lightbox size configuration from the associated page layout.
      *
-     * Will return null if there is no lightbox size configuration or if not
-     * in a request context.
+     * Will return null if there is no lightbox size configuration or if not in a
+     * request context.
      */
     private function getDefaultLightboxSizeConfiguration(): array|null
     {
-        $page = $GLOBALS['objPage'] ?? null;
+        $page = $this->locator->get('contao.routing.page_finder')->getCurrentPage();
 
         if (!$page instanceof PageModel || null === $page->layout) {
             return null;

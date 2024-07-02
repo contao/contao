@@ -16,22 +16,14 @@ use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Monolog\ContaoTableHandler;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
+use Monolog\Level;
 use Monolog\Logger;
+use Monolog\LogRecord;
 
 class ContaoTableHandlerTest extends TestCase
 {
     public function testHandlesContaoRecords(): void
     {
-        $record = [
-            'level' => Logger::DEBUG,
-            'level_name' => 'DEBUG',
-            'channel' => 'test',
-            'extra' => ['contao' => new ContaoContext('foobar')],
-            'context' => [],
-            'datetime' => new \DateTimeImmutable(),
-            'message' => 'foobar',
-        ];
-
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
@@ -40,21 +32,14 @@ class ContaoTableHandlerTest extends TestCase
         ;
 
         $handler = new ContaoTableHandler(static fn () => $connection);
+        $record = $this->getRecord(['contao' => new ContaoContext('foobar')]);
 
         $this->assertFalse($handler->handle($record));
     }
 
     public function testDoesNotHandleARecordIfTheLogLevelDoesNotMatch(): void
     {
-        $record = [
-            'level' => Logger::DEBUG,
-            'level_name' => 'DEBUG',
-            'channel' => 'test',
-            'extra' => [],
-            'context' => [],
-            'datetime' => new \DateTimeImmutable(),
-            'message' => 'foobar',
-        ];
+        $record = $this->getRecord([]);
 
         $connection = $this->createMock(Connection::class);
         $connection
@@ -70,15 +55,7 @@ class ContaoTableHandlerTest extends TestCase
 
     public function testDoesNotHandleARecordWithoutContaoContext(): void
     {
-        $record = [
-            'level' => Logger::DEBUG,
-            'level_name' => 'DEBUG',
-            'channel' => 'test',
-            'extra' => ['contao' => null],
-            'context' => [],
-            'datetime' => new \DateTimeImmutable(),
-            'message' => 'foobar',
-        ];
+        $record = $this->getRecord(['contao' => null]);
 
         $connection = $this->createMock(Connection::class);
         $connection
@@ -89,5 +66,14 @@ class ContaoTableHandlerTest extends TestCase
         $handler = new ContaoTableHandler(static fn () => $connection);
 
         $this->assertFalse($handler->handle($record));
+    }
+
+    /**
+     * The Contao context was moved to the "extra" section by the processor, so pass
+     * it as sixth argument to the LogRecord class.
+     */
+    private function getRecord(array $context): LogRecord
+    {
+        return new LogRecord(new \DateTimeImmutable(), 'test', Level::Debug, 'foobar', [], $context);
     }
 }

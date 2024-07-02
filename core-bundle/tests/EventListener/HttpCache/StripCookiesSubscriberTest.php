@@ -43,7 +43,7 @@ class StripCookiesSubscriberTest extends TestCase
         $this->assertSame($expectedCookies, $request->cookies->all());
     }
 
-    public function cookiesProvider(): \Generator
+    public static function cookiesProvider(): iterable
     {
         yield [
             ['PHPSESSID' => 'foobar', 'my_cookie' => 'value'],

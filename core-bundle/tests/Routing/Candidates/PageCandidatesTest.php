@@ -50,7 +50,7 @@ class PageCandidatesTest extends TestCase
         $this->assertSame($expected['locale'] ?? $expected['default'], $candidates->getCandidates($request));
     }
 
-    public function getCandidatesProvider(): \Generator
+    public static function getCandidatesProvider(): iterable
     {
         yield [
             '/foo.html',

@@ -66,8 +66,8 @@ class ContaoSetupCommandTest extends ContaoTestCase
         $commandArguments = [
             [$phpPath, ...$phpFlags, $consolePath, 'skeleton:install', 'public', '--env=prod', ...$flags],
             [$phpPath, ...$phpFlags, $consolePath, 'assets:install', 'public', '--symlink', '--relative', '--env=prod', ...$flags],
-            [$phpPath, ...$phpFlags, $consolePath, 'contao:install', 'public', '--env=prod', ...$flags],
             [$phpPath, ...$phpFlags, $consolePath, 'contao:symlinks', 'public', '--env=prod', ...$flags],
+            [$phpPath, ...$phpFlags, $consolePath, 'contao:install', 'public', '--env=prod', ...$flags],
             [$phpPath, ...$phpFlags, $consolePath, 'cache:clear', '--no-warmup', '--env=prod', ...$flags],
             [$phpPath, ...$phpFlags, $consolePath, 'cache:clear', '--no-warmup', '--env=dev', ...$flags],
             [$phpPath, ...$phpFlags, $consolePath, 'cache:warmup', '--env=prod', ...$flags],
@@ -84,7 +84,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
         ini_set('memory_limit', $memoryLimit);
     }
 
-    public function provideCommands(): \Generator
+    public static function provideCommands(): iterable
     {
         yield 'no arguments' => [
             [],
@@ -242,7 +242,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
         $filesystem->remove([$dotEnvFile, $dotEnvLocalFile, $dotEnvLocalTargetFile]);
     }
 
-    public function provideKernelSecretValues(): \Generator
+    public static function provideKernelSecretValues(): iterable
     {
         yield 'no secret set, no .env file' => ['', false];
         yield 'default secret set, no .env file' => ['ThisTokenIsNotSoSecretChangeIt', false];
