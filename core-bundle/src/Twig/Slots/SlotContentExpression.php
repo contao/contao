@@ -18,12 +18,20 @@ use Twig\Node\NodeOutputInterface;
 
 /**
  * @experimental
+ *
+ * To mark this expression as safe in all contexts, we extend from
+ * ConstantExpression. However, the Twig optimizer currently breaks
+ * implementations of child classes (see
+ * https://github.com/twigphp/Twig/issues/4119). As a workaround we therefore set
+ * the value attribute to null, so that the node is ignored.
  */
 final class SlotContentExpression extends ConstantExpression implements NodeOutputInterface
 {
     public function __construct(string $name, int $lineno)
     {
-        parent::__construct($name, $lineno);
+        parent::__construct(null, $lineno);
+
+        $this->attributes['name'] = $name;
     }
 
     public function compile(Compiler $compiler): void
@@ -32,9 +40,9 @@ final class SlotContentExpression extends ConstantExpression implements NodeOutp
          * $context['_slots'][<name>]
          */
         $compiler
-            ->raw('$context[\'_slots\'][')
-            ->string($this->getAttribute('value'))
-            ->raw(']')
+            ->raw('$context[\'_slots\'][\'')
+            ->raw($this->getAttribute('name'))
+            ->raw('\']')
         ;
     }
 }

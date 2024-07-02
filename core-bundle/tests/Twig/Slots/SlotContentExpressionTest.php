@@ -27,7 +27,7 @@ class SlotContentExpressionTest extends TestCase
         $node->compile($compiler);
 
         $expectedSource = <<<'SOURCE'
-            $context['_slots']["foo"]
+            $context['_slots']['foo']
             SOURCE;
 
         $this->assertSame($expectedSource, $compiler->getSource());

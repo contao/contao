@@ -53,10 +53,10 @@ class SlotTokenParserTest extends TestCase
         $environment->addTokenParser(new SlotTokenParser());
         $environment->setLoader(new ArrayLoader(['template.html.twig' => $code]));
 
-        $this->assertSame($environment->render('template.html.twig', $context), $expectedOutput);
+        $this->assertSame($expectedOutput, $environment->render('template.html.twig', $context));
     }
 
-    public function provideSources(): \Generator
+    public static function provideSources(): iterable
     {
         yield 'slot with default body and no content' => [
             ['foo' => 'bar'],
