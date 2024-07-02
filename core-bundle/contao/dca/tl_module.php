@@ -167,7 +167,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'hardLimit' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w25 m12'),
+			'eval'                    => array('tl_class'=>'w25'),
 			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'showProtected' => array
@@ -304,7 +304,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'fuzzy' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'contextLength' => array
@@ -384,7 +384,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'fullsize' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'multiSRC' => array
@@ -477,7 +477,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'reg_deleteDir' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'reg_assignDir' => array

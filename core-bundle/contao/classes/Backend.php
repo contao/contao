@@ -90,10 +90,10 @@ abstract class Backend extends Controller
 			return 'en';
 		}
 
-		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+		$webDir = System::getContainer()->getParameter('contao.web_dir');
 
 		// The translation exists
-		if (file_exists($projectDir . '/assets/tinymce4/js/langs/' . $lang . '.js'))
+		if (file_exists($webDir . '/assets/tinymce4/js/langs/' . $lang . '.js'))
 		{
 			return $lang;
 		}
@@ -101,7 +101,7 @@ abstract class Backend extends Controller
 		if (($short = substr($GLOBALS['TL_LANGUAGE'], 0, 2)) != $lang)
 		{
 			// Try the short tag, e.g. "de" instead of "de_CH"
-			if (file_exists($projectDir . '/assets/tinymce4/js/langs/' . $short . '.js'))
+			if (file_exists($webDir . '/assets/tinymce4/js/langs/' . $short . '.js'))
 			{
 				return $short;
 			}
@@ -109,7 +109,7 @@ abstract class Backend extends Controller
 		elseif (($long = $short . '_' . strtoupper($short)) != $lang)
 		{
 			// Try the long tag, e.g. "fr_FR" instead of "fr" (see #6952)
-			if (file_exists($projectDir . '/assets/tinymce4/js/langs/' . $long . '.js'))
+			if (file_exists($webDir . '/assets/tinymce4/js/langs/' . $long . '.js'))
 			{
 				return $long;
 			}

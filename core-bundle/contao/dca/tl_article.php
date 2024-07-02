@@ -158,7 +158,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		'showTeaser' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'teaserCssID' => array

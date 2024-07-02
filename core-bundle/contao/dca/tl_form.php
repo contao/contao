@@ -166,7 +166,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		(
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'storeValues' => array
@@ -204,7 +204,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		'novalidate' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'attributes' => array
