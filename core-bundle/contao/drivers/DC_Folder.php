@@ -1480,7 +1480,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 						}
 
 						$this->strExtension = $strExtension ? '.' . $strExtension : '';
-						$this->varValue = substr($objFile->name, 0, -\strlen($this->strExtension));
+						$this->varValue = substr($objFile->name, 0, -\strlen($this->strExtension) ?: null);
 
 						// Fix hidden Unix system files
 						if (str_starts_with($this->varValue, '.'))
