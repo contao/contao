@@ -14,6 +14,9 @@ namespace Contao\CoreBundle\Twig\Slots;
 
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Expression\FilterExpression;
+use Twig\Node\Expression\GetAttrExpression;
+use Twig\Node\Expression\NameExpression;
 use Twig\Node\Node;
 use Twig\Node\PrintNode;
 use Twig\Token;
@@ -44,7 +47,10 @@ final class SlotTokenParser extends AbstractTokenParser
             $this->traverseAndReplaceMarkerExpression($markerExpression, $nameToken->getValue(), $body);
         } else {
             $line = $stream->getCurrent()->getLine();
-            $body->setNode('body', new PrintNode(new SlotContentExpression($nameToken->getValue(), $line), $line));
+            $body->setNode(
+                'body',
+                new PrintNode($this->getSlotReferenceExpression($nameToken->getValue(), $line), $line),
+            );
         }
 
         // Parse optional {% else %} tag with fallback content
@@ -85,7 +91,7 @@ final class SlotTokenParser extends AbstractTokenParser
                 $target->removeNode((string) $key);
             }
 
-            $target->setNode('expr', new SlotContentExpression($name, $target->getTemplateLine()));
+            $target->setNode('expr', $this->getSlotReferenceExpression($name, $target->getTemplateLine()));
 
             return;
         }
@@ -93,5 +99,24 @@ final class SlotTokenParser extends AbstractTokenParser
         foreach ($node as $child) {
             $this->traverseAndReplaceMarkerExpression($markerExpression, $name, $child, [$node, ...$parents]);
         }
+    }
+
+    /**
+     * Build an expression that is equivalent to "_slots.<name>|raw".
+     */
+    private function getSlotReferenceExpression(string $name, int $line): AbstractExpression
+    {
+        return new FilterExpression(
+            new GetAttrExpression(
+                new NameExpression('_slots', $line),
+                new ConstantExpression($name, $line),
+                null,
+                'array',
+                $line,
+            ),
+            new ConstantExpression('raw', $line),
+            new Node(),
+            $line,
+        );
     }
 }
