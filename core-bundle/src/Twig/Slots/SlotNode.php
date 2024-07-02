@@ -42,7 +42,7 @@ final class SlotNode extends Node implements NodeOutputInterface
             ->addDebugInfo($this)
             ->write('if(isset($context[\'_slots\'][\'')
             ->raw($name)
-            ->raw('\'])) {'."\n")
+            ->raw("'])) {\n")
             ->indent()
             ->subcompile($this->getNode('body'))
             ->outdent()

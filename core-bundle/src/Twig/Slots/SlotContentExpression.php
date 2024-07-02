@@ -42,7 +42,7 @@ final class SlotContentExpression extends ConstantExpression implements NodeOutp
         $compiler
             ->raw('$context[\'_slots\'][\'')
             ->raw($this->getAttribute('name'))
-            ->raw('\']')
+            ->raw("']")
         ;
     }
 }
