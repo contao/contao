@@ -21,15 +21,16 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class SymlinkedLocalFilesProvider implements PublicUriProviderInterface
 {
     /**
-     * @var array<string, string>
+     * @var \WeakMap<LocalFilesystemAdapter, string>
      */
-    private array $adapters = [];
+    private \WeakMap $adapters;
 
     public function __construct(
         LocalFilesystemAdapter $localFilesAdapter,
         readonly string $uploadDir,
         private readonly RequestStack $requestStack,
     ) {
+        $this->adapters = new \WeakMap();
         $this->registerAdapter($localFilesAdapter, $uploadDir);
     }
 
@@ -38,7 +39,7 @@ class SymlinkedLocalFilesProvider implements PublicUriProviderInterface
      */
     public function registerAdapter(LocalFilesystemAdapter $adapter, string $rootPath): void
     {
-        $this->adapters[spl_object_hash($adapter)] = $rootPath;
+        $this->adapters[$adapter] = $rootPath;
     }
 
     /**
@@ -47,7 +48,7 @@ class SymlinkedLocalFilesProvider implements PublicUriProviderInterface
      */
     public function getUri(FilesystemAdapter $adapter, string $adapterPath, OptionsInterface|null $options): UriInterface|null
     {
-        if ($options || null === ($rootPath = ($this->adapters[spl_object_hash($adapter)] ?? null))) {
+        if ($options || null === ($rootPath = ($this->adapters[$adapter] ?? null))) {
             return null;
         }
 
