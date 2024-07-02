@@ -66,8 +66,8 @@ class ContaoSetupCommandTest extends ContaoTestCase
         $commandArguments = [
             [$phpPath, ...$phpFlags, $consolePath, 'skeleton:install', 'public', '--env=prod', ...$flags],
             [$phpPath, ...$phpFlags, $consolePath, 'assets:install', 'public', '--symlink', '--relative', '--env=prod', ...$flags],
-            [$phpPath, ...$phpFlags, $consolePath, 'contao:install', 'public', '--env=prod', ...$flags],
             [$phpPath, ...$phpFlags, $consolePath, 'contao:symlinks', 'public', '--env=prod', ...$flags],
+            [$phpPath, ...$phpFlags, $consolePath, 'contao:install', 'public', '--env=prod', ...$flags],
             [$phpPath, ...$phpFlags, $consolePath, 'cache:clear', '--no-warmup', '--env=prod', ...$flags],
             [$phpPath, ...$phpFlags, $consolePath, 'cache:clear', '--no-warmup', '--env=dev', ...$flags],
             [$phpPath, ...$phpFlags, $consolePath, 'cache:warmup', '--env=prod', ...$flags],

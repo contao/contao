@@ -59,12 +59,12 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
     public function getConfiguration(array $config, ContainerBuilder $container): Configuration
     {
-        return new Configuration((string) $container->getParameter('kernel.project_dir'));
+        return new Configuration();
     }
 
     public function prepend(ContainerBuilder $container): void
     {
-        $configuration = new Configuration((string) $container->getParameter('kernel.project_dir'));
+        $configuration = new Configuration();
 
         $config = $container->getExtensionConfig($this->getAlias());
         $config = $container->getParameterBag()->resolveValue($config);
@@ -99,7 +99,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
         $projectDir = (string) $container->getParameter('kernel.project_dir');
 
-        $configuration = new Configuration($projectDir);
+        $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../../config'));

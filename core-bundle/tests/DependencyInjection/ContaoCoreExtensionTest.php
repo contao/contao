@@ -511,23 +511,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertFalse($container->has('contao.listener.search_index'));
     }
 
-    public function testRegistersTheImageTargetPath(): void
-    {
-        $container = new ContainerBuilder(
-            new ParameterBag([
-                'kernel.debug' => false,
-                'kernel.charset' => 'UTF-8',
-                'kernel.project_dir' => Path::normalize($this->getTempDir()),
-                'kernel.default_locale' => 'en',
-            ]),
-        );
-
-        $extension = new ContaoCoreExtension();
-        $extension->load([], $container);
-
-        $this->assertSame(Path::normalize($this->getTempDir()).'/assets/images', $container->getParameter('contao.image.target_dir'));
-    }
-
     /**
      * @dataProvider provideComposerJsonContent
      */

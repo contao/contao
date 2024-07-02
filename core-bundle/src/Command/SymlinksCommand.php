@@ -41,6 +41,8 @@ class SymlinksCommand extends Command
 
     private int $statusCode = Command::SUCCESS;
 
+    private bool $symlinkAssets = false;
+
     public function __construct(
         private readonly string $projectDir,
         private readonly string $uploadPath,
@@ -59,13 +61,19 @@ class SymlinksCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->webDir = $input->getArgument('target') ?? 'public';
+        $this->symlinkAssets = 'assets' === $this->getContaoComponentDir();
 
         $this->generateSymlinks();
 
+        $io = new SymfonyStyle($input, $output);
+
         if ($this->rows) {
-            $io = new SymfonyStyle($input, $output);
             $io->newLine();
             $io->table(['', 'Symlink', 'Target / Error'], $this->rows);
+        }
+
+        if ($this->symlinkAssets) {
+            $io->note('Installing the Contao components into the "assets" directory has been deprecated and will no longer work in Contao 6. Set "extra.contao-component-dir" to "public/assets" in your composer.json.');
         }
 
         return $this->statusCode;
@@ -87,8 +95,15 @@ class SymlinksCommand extends Command
         $this->symlinkModules();
         $this->symlinkThemes();
 
-        // Symlink the assets and themes directory
-        $this->symlink('assets', Path::join($this->webDir, 'assets'));
+        // Symlink the assets directory if the Contao components were installed there
+        // instead of in public/assets (backwards compatibility)
+        if ($this->symlinkAssets) {
+            $this->symlink('assets', Path::join($this->webDir, 'assets'));
+        } elseif (is_link($symlink = Path::join($this->projectDir, $this->webDir, 'assets'))) {
+            $fs->remove($symlink);
+        }
+
+        // Symlink the themes directory
         $this->symlink('system/themes', Path::join($this->webDir, 'system/themes'));
 
         // Symlinks the logs directory
@@ -246,5 +261,22 @@ class SymlinksCommand extends Command
     private function getRelativePath(string $path): string
     {
         return Path::makeRelative($path, $this->projectDir);
+    }
+
+    private function getContaoComponentDir(): string|null
+    {
+        $fs = new Filesystem();
+
+        if (!$fs->exists($composerJsonFilePath = Path::join($this->projectDir, 'composer.json'))) {
+            return null;
+        }
+
+        $composerConfig = json_decode(file_get_contents($composerJsonFilePath), true, 512, JSON_THROW_ON_ERROR);
+
+        if (null === ($componentDir = $composerConfig['extra']['contao-component-dir'] ?? null)) {
+            return null;
+        }
+
+        return $componentDir;
     }
 }

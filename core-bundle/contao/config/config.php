@@ -99,8 +99,6 @@ use Contao\RootPageDependentSelect;
 use Contao\SectionWizard;
 use Contao\SelectMenu;
 use Contao\SerpPreview;
-use Contao\StringUtil;
-use Contao\System;
 use Contao\TableWizard;
 use Contao\TextArea;
 use Contao\TextField;
@@ -395,17 +393,17 @@ $GLOBALS['TL_PURGE'] = array
 		'images' => array
 		(
 			'callback' => array(Automator::class, 'purgeImageCache'),
-			'affected' => array(StringUtil::stripRootDir(System::getContainer()->getParameter('contao.image.target_dir')))
+			'affected' => array('%contao.image.target_dir%')
 		),
 		'previews' => array
 		(
 			'callback' => array(Automator::class, 'purgePreviewCache'),
-			'affected' => array(StringUtil::stripRootDir(System::getContainer()->getParameter('contao.image.preview.target_dir')))
+			'affected' => array('%contao.image.preview.target_dir%')
 		),
 		'scripts' => array
 		(
 			'callback' => array(Automator::class, 'purgeScriptCache'),
-			'affected' => array('assets/js', 'assets/css')
+			'affected' => array('%contao.web_dir%/assets/js', '%contao.web_dir%/assets/css')
 		),
 		'temp' => array
 		(

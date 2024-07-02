@@ -94,7 +94,7 @@ class CombinerTest extends TestCase
         $this->assertMatchesRegularExpression('/^assets\/css\/file1\.css,file2\.css,file3\.css-[a-z0-9]+\.css$/', $combinedFile);
 
         $this->assertStringEqualsFile(
-            $this->getTempDir().'/'.$combinedFile,
+            $this->getTempDir().'/public/'.$combinedFile,
             "file1 { background: url(\"../../foo.bar\") }\n@media screen{\npublic/file2\n}\n@media screen{\nfile3\n}\n",
         );
 
@@ -231,7 +231,7 @@ class CombinerTest extends TestCase
         );
 
         $this->assertStringEqualsFile(
-            $this->getTempDir().'/'.$combiner->getCombinedFile(),
+            $this->getTempDir().'/public/'.$combiner->getCombinedFile(),
             "body{color:red}\nbody{color:green}\n",
         );
 
@@ -269,7 +269,7 @@ class CombinerTest extends TestCase
         $combinedFile = $combiner->getCombinedFile();
 
         $this->assertMatchesRegularExpression('/^assets\/js\/file1\.js,file2\.js-[a-z0-9]+\.js$/', $combinedFile);
-        $this->assertStringEqualsFile($this->getTempDir().'/'.$combinedFile, "file1();\nfile2();\n");
+        $this->assertStringEqualsFile($this->getTempDir().'/public/'.$combinedFile, "file1();\nfile2();\n");
 
         System::getContainer()->setParameter('kernel.debug', true);
 

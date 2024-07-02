@@ -65,8 +65,6 @@ class InstallCommand extends Command
     private function addEmptyDirs(): void
     {
         static $emptyDirs = [
-            'assets/css',
-            'assets/js',
             'system',
             'system/cache',
             'system/config',
@@ -74,6 +72,8 @@ class InstallCommand extends Command
             'system/themes',
             'system/tmp',
             'templates',
+            '%s/assets/css',
+            '%s/assets/js',
             '%s/share',
             '%s/system',
         ];
