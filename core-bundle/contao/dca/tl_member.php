@@ -330,7 +330,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		),
 		'useTwoFactor' => array
 		(
-			'eval'                    => array('isBoolean'=>true, 'doNotCopy'=>true, 'tl_class'=>'w50 m12'),
+			'eval'                    => array('isBoolean'=>true, 'doNotCopy'=>true, 'tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'backupCodes' => array
