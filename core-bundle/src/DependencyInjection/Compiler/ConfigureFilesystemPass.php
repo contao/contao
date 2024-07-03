@@ -15,8 +15,11 @@ namespace Contao\CoreBundle\DependencyInjection\Compiler;
 use Contao\CoreBundle\DependencyInjection\Filesystem\ConfigureFilesystemInterface;
 use Contao\CoreBundle\DependencyInjection\Filesystem\FilesystemConfiguration;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 use Symfony\Component\Finder\Finder;
@@ -31,7 +34,9 @@ class ConfigureFilesystemPass implements CompilerPassInterface
             $extension->configureFilesystem($config);
         }
 
-        $this->mountAdaptersForSymlinks($container, $config);
+        $symlinkedLocalFilesProvider = $container->getDefinition('contao.filesystem.public_uri.symlinked_local_files_provider');
+
+        $this->mountAdaptersForSymlinks($container, $config, $symlinkedLocalFilesProvider);
     }
 
     /**
@@ -50,7 +55,7 @@ class ConfigureFilesystemPass implements CompilerPassInterface
      * instead. For backwards compatibility, we therefore mount a local adapter for
      * each symlink found in the upload directory.
      */
-    private function mountAdaptersForSymlinks(ContainerBuilder $container, FilesystemConfiguration $config): void
+    private function mountAdaptersForSymlinks(ContainerBuilder $container, FilesystemConfiguration $config, Definition $symlinkedLocalFilesProvider): void
     {
         $parameterBag = $container->getParameterBag();
         $projectDir = $parameterBag->resolveValue($parameterBag->get('kernel.project_dir'));
@@ -74,8 +79,14 @@ class ConfigureFilesystemPass implements CompilerPassInterface
                 $target = Path::join($item->getPath(), $target);
             }
 
-            // Mount a local adapter in place of the symlink
-            $config->mountLocalAdapter($target, Path::join($uploadDir, $item->getRelativePathname()));
+            // Mount a local adapter in place of the symlink and register it in the default
+            // public URI provider
+            $mountPath = Path::join($uploadDir, $item->getRelativePathname());
+            $name ??= str_replace(['.', '/', '-'], '_', Container::underscore($mountPath));
+            $adapterId = "contao.filesystem.adapter.$name";
+
+            $config->mountLocalAdapter($target, $mountPath, $name);
+            $symlinkedLocalFilesProvider->addMethodCall('registerAdapter', [new Reference($adapterId), $mountPath]);
         }
     }
 }
