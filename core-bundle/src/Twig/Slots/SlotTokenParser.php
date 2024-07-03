@@ -47,10 +47,7 @@ final class SlotTokenParser extends AbstractTokenParser
             $this->traverseAndReplaceMarkerExpression($markerExpression, $nameToken->getValue(), $body);
         } else {
             $line = $stream->getCurrent()->getLine();
-            $body->setNode(
-                'body',
-                new PrintNode($this->getSlotReferenceExpression($nameToken->getValue(), $line), $line),
-            );
+            $body->setNode('body', new PrintNode($this->getSlotReferenceExpression($nameToken->getValue(), $line), $line));
         }
 
         // Parse optional {% else %} tag with fallback content
@@ -102,7 +99,7 @@ final class SlotTokenParser extends AbstractTokenParser
     }
 
     /**
-     * Build an expression that is equivalent to "_slots.<name>|raw".
+     * Builds an expression that is equivalent to "_slots.<name>|raw".
      */
     private function getSlotReferenceExpression(string $name, int $line): AbstractExpression
     {

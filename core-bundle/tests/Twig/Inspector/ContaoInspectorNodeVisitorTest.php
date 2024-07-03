@@ -50,7 +50,6 @@ class ContaoInspectorNodeVisitorTest extends TestCase
         );
 
         $inspector = new Inspector($environment, $cache, $filesystemLoader);
-
         $information = $inspector->inspectTemplate('template.html.twig');
 
         $this->assertSame(['A', 'B'], $information->getSlots());

@@ -32,11 +32,12 @@ class SlotNodeTest extends TestCase
             new PrintNode(new ConstantExpression('bar', 0), 0),
             0,
         );
+
         $node->compile($compiler);
 
         if (class_exists(YieldReady::class)) {
             $expectedSource = <<<'SOURCE'
-                if(isset($context['_slots']['foo'])) {
+                if (isset($context['_slots']['foo'])) {
                     yield "foo";
                 } else {
                     yield "bar";
@@ -45,7 +46,7 @@ class SlotNodeTest extends TestCase
                 SOURCE;
         } else {
             $expectedSource = <<<'SOURCE'
-                if(isset($context['_slots']['foo'])) {
+                if (isset($context['_slots']['foo'])) {
                     echo "foo";
                 } else {
                     echo "bar";

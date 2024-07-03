@@ -43,7 +43,13 @@ final class InspectorNodeVisitor implements NodeVisitorInterface
 
         // Retrieve the parent template if it was set statically
         $getParent = static function (ModuleNode $node): string|null {
-            if (!$node->hasNode('parent') || !($parent = $node->getNode('parent')) instanceof ConstantExpression) {
+            if (!$node->hasNode('parent')) {
+                return null;
+            }
+
+            $parent = $node->getNode('parent');
+
+            if (!$parent instanceof ConstantExpression) {
                 return null;
             }
 

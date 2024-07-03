@@ -30,17 +30,10 @@ final class SlotNode extends Node implements NodeOutputInterface
     {
         $name = $this->getAttribute('name');
 
-        /*
-         * if(isset($context['_slots'][<name>])) {
-         *      <body>
-         * }
-         * else {
-         *      <default body>
-         * }
-         */
+        /** @see SlotNodeTest::testCompilesCode() */
         $compiler
             ->addDebugInfo($this)
-            ->write('if(isset($context[\'_slots\'][\'')
+            ->write('if (isset($context[\'_slots\'][\'')
             ->raw($name)
             ->raw("'])) {\n")
             ->indent()

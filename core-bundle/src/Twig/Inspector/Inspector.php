@@ -62,7 +62,6 @@ class Inspector
         // Accumulate data for the template as well as all statically set parents
         do {
             $data = $this->getData($name);
-
             $slots = array_unique([...$slots, ...$data['slots']]);
             $name = $data['parent'] ?? false;
         } while ($name);
@@ -70,11 +69,7 @@ class Inspector
         sort($blocks);
         sort($slots);
 
-        return new TemplateInformation(
-            $source,
-            $blocks,
-            $slots,
-        );
+        return new TemplateInformation($source, $blocks, $slots);
     }
 
     private function loadTemplate(string $name): TemplateWrapper
