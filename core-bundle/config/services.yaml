@@ -1167,6 +1167,7 @@ services:
             - '@contao.twig.filesystem_loader'
             - '@contao.csrf.token_manager'
             - '@contao.twig.global.variable'
+            - '@contao.twig.inspector_node_visitor'
 
     contao.twig.fail_tolerant_filesystem_loader:
         class: Contao\CoreBundle\Twig\Loader\FailTolerantFilesystemLoader
@@ -1238,6 +1239,13 @@ services:
         public: true
         arguments:
             - '@twig'
+            - '@cache.system'
+            - '@contao.twig.filesystem_loader'
+
+    contao.twig.inspector_node_visitor:
+        class: Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor
+        arguments:
+            - '@cache.system'
 
     contao.twig.interop.context_factory:
         class: Contao\CoreBundle\Twig\Interop\ContextFactory
