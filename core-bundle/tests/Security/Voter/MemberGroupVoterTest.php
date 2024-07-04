@@ -16,7 +16,7 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\Voter\MemberGroupVoter;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
-use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
+use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -122,7 +122,7 @@ class MemberGroupVoterTest extends TestCase
     {
         $user = $this->createMock(FrontendUser::class);
 
-        $token = $this->createMock(TwoFactorToken::class);
+        $token = $this->createMock(TwoFactorTokenInterface::class);
         $token
             ->expects($this->once())
             ->method('getUser')
