@@ -31,8 +31,7 @@ class SessionFactoryTest extends TestCase
             ->method('registerBag')
             ->with($this->callback(
                 static fn (SessionBagInterface $bag): bool => match ($bag->getStorageKey()) {
-                    SessionFactory::SESSION_BAGS['contao_frontend'] => true,
-                    SessionFactory::SESSION_BAGS['contao_backend'] => true,
+                    '_contao_fe_attributes', '_contao_be_attributes' => true,
                     default => false,
                 },
             ))
@@ -59,13 +58,7 @@ class SessionFactoryTest extends TestCase
             ->willReturn(Request::create('/contao'))
         ;
 
-        (new SessionFactory(
-            $inner,
-            $requestStack,
-            $scopeMatcher,
-        ))
-            ->createSession()
-        ;
+        (new SessionFactory($inner, $requestStack, $scopeMatcher))->createSession();
     }
 
     public function testRegistersTheFrontendAndBackendPopupBag(): void
@@ -76,8 +69,7 @@ class SessionFactoryTest extends TestCase
             ->method('registerBag')
             ->with($this->callback(
                 static fn (SessionBagInterface $bag): bool => match ($bag->getStorageKey()) {
-                    SessionFactory::SESSION_BAGS['contao_frontend'] => true,
-                    SessionFactory::SESSION_BAGS['contao_backend'].'_popup' => true,
+                    '_contao_fe_attributes', '_contao_be_attributes_popup' => true,
                     default => false,
                 },
             ))
@@ -104,12 +96,6 @@ class SessionFactoryTest extends TestCase
             ->willReturn(Request::create('/contao?popup=1'))
         ;
 
-        (new SessionFactory(
-            $inner,
-            $requestStack,
-            $scopeMatcher,
-        ))
-            ->createSession()
-        ;
+        (new SessionFactory($inner, $requestStack, $scopeMatcher))->createSession();
     }
 }

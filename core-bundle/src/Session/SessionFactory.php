@@ -15,16 +15,12 @@ namespace Contao\CoreBundle\Session;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\SessionBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionFactoryInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class SessionFactory implements SessionFactoryInterface
 {
-    public const SESSION_BAGS = [
-        'contao_backend' => '_contao_be_attributes',
-        'contao_frontend' => '_contao_fe_attributes',
-    ];
-
     public function __construct(
         readonly private SessionFactoryInterface $inner,
         readonly private RequestStack $requestStack,
@@ -35,21 +31,33 @@ class SessionFactory implements SessionFactoryInterface
     public function createSession(): SessionInterface
     {
         $session = $this->inner->createSession();
-        $request = $this->requestStack->getMainRequest();
-
-        foreach (self::SESSION_BAGS as $name => $storageKey) {
-            // Store the 'contao_backend' session bag under a different storage key for the
-            // back end popup (#7176).
-            if ('contao_backend' === $name && $this->scopeMatcher->isBackendRequest($request) && $request->query->has('popup')) {
-                $storageKey .= '_popup';
-            }
-
-            $bag = new ArrayAttributeBag($storageKey);
-            $bag->setName($name);
-
-            $session->registerBag($bag);
-        }
+        $session->registerBag($this->getBackendBag());
+        $session->registerBag($this->getFrontendBag());
 
         return $session;
+    }
+
+    private function getBackendBag(): SessionBagInterface
+    {
+        $storageKey = '_contao_be_attributes';
+        $request = $this->requestStack->getMainRequest();
+
+        // Use a different storage key in the back end popup (see #7176)
+        if ($this->scopeMatcher->isBackendRequest($request) && $request->query->has('popup')) {
+            $storageKey .= '_popup';
+        }
+
+        $bag = new ArrayAttributeBag($storageKey);
+        $bag->setName('contao_backend');
+
+        return $bag;
+    }
+
+    private function getFrontendBag(): SessionBagInterface
+    {
+        $bag = new ArrayAttributeBag('_contao_fe_attributes');
+        $bag->setName('contao_frontend');
+
+        return $bag;
     }
 }
