@@ -13,6 +13,10 @@ window.ace && window.addEvent('domready', function() {
       dom = ace.require("ace/lib/dom"),
       ws = ace.require("ace/ext/whitespace");
 
+  if(ta === null) {
+    return;
+  }
+
   // Create a div to apply the editor to
   let div = document.createElement('div');
   div.id = '<?= $this->selector ?>_div';
