@@ -154,11 +154,13 @@ class Automator extends System
 	 */
 	public function purgeScriptCache()
 	{
+		$webDir = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir'));
+
 		// assets/js and assets/css
 		foreach (array('assets/js', 'assets/css') as $dir)
 		{
 			// Purge the folder
-			$objFolder = new Folder($dir);
+			$objFolder = new Folder($webDir . '/' . $dir);
 			$objFolder->purge();
 		}
 

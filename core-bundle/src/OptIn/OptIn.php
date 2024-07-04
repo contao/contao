@@ -42,6 +42,8 @@ class OptIn implements OptInInterface
             $token = $prefix.'-'.substr($token, \strlen($prefix) + 1);
         }
 
+        $this->framework->initialize();
+
         $optIn = $this->framework->createInstance(OptInModel::class);
         $optIn->tstamp = time();
         $optIn->token = $token;
@@ -60,6 +62,8 @@ class OptIn implements OptInInterface
 
     public function find(string $identifier): OptInTokenInterface|null
     {
+        $this->framework->initialize();
+
         $adapter = $this->framework->getAdapter(OptInModel::class);
 
         if (!$model = $adapter->findByToken($identifier)) {
@@ -71,6 +75,8 @@ class OptIn implements OptInInterface
 
     public function purgeTokens(): void
     {
+        $this->framework->initialize();
+
         $adapter = $this->framework->getAdapter(OptInModel::class);
 
         if (!$tokens = $adapter->findExpiredTokens()) {

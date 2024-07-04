@@ -330,6 +330,18 @@ class FigureBuilder
      */
     public function fromStorage(VirtualFilesystemInterface $storage, Uuid|string $location): self
     {
+        // TODO: After contao/image supports a virtual storage, remove this workaround
+        // and replace it with something that can use $storage->generatePublicUri(). This
+        // workaround is currently required to support paths to symlinked folders inside
+        // the files directory.
+        if ($storage === $this->locator->get('contao.filesystem.virtual.files')) {
+            $path = Path::join($this->webDir, $this->uploadPath, $storage->get($location)->getPath());
+
+            if ($this->filesystem->exists($path)) {
+                return $this->fromPath($path);
+            }
+        }
+
         try {
             $stream = $storage->readStream($location);
         } catch (VirtualFilesystemException|UnableToResolveUuidException $e) {

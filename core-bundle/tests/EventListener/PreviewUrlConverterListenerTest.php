@@ -23,7 +23,7 @@ use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
@@ -206,7 +206,7 @@ class PreviewUrlConverterListenerTest extends TestCase
         $route = new PageRoute($pageModel);
 
         $request = $this->createMock(Request::class);
-        $request->query = new ParameterBag(['page' => '9']);
+        $request->query = new InputBag(['page' => '9']);
 
         $request
             ->expects($this->once())
@@ -267,7 +267,7 @@ class PreviewUrlConverterListenerTest extends TestCase
         $route = new PageRoute($pageModel);
 
         $request = $this->createMock(Request::class);
-        $request->query = new ParameterBag(['page' => '42']);
+        $request->query = new InputBag(['page' => '42']);
 
         $adapters = [
             PageModel::class => $this->mockConfiguredAdapter(['findWithDetails' => $pageModel]),

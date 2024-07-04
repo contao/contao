@@ -22,8 +22,6 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -93,8 +91,9 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
             // (defaults to 32)
             KernelEvents::REQUEST => ['onKernelRequest', 36],
             // The priority must be higher than the one of the make-response-private listener
-            // (defaults to -896)
-            KernelEvents::RESPONSE => ['onKernelResponse', -832],
+            // (defaults to -1012) and lower than the one of the session listener (defaults
+            // to -1000)
+            KernelEvents::RESPONSE => ['onKernelResponse', -1006],
             ConsoleEvents::COMMAND => ['onCommand', 36],
         ];
     }
@@ -111,34 +110,7 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
             return true;
         }
 
-        if ($request->getUserInfo()) {
-            return true;
-        }
-
-        return $request->hasSession() && !$this->isSessionEmpty($request->getSession());
-    }
-
-    private function isSessionEmpty(SessionInterface $session): bool
-    {
-        foreach (headers_list() as $header) {
-            if (
-                str_starts_with($header, "Set-Cookie: {$session->getName()}=")
-                && !str_starts_with($header, "Set-Cookie: {$session->getName()}=deleted;")
-            ) {
-                return false;
-            }
-        }
-
-        if (!$session->isStarted()) {
-            return true;
-        }
-
-        if ($session instanceof Session) {
-            // Marked @internal but no other way to check all attribute bags
-            return $session->isEmpty();
-        }
-
-        return [] === $session->all();
+        return (bool) $request->getUserInfo();
     }
 
     private function setCookies(Request $request, Response $response): void

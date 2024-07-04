@@ -131,7 +131,7 @@ class KeyValueWizard extends Widget
 
 			// Add row buttons
 			$return .= '
-      <td>';
+      <td class="tl_right">';
 
 			foreach ($arrButtons as $button)
 			{

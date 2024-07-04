@@ -42,12 +42,12 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException;
+use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Toflar\CronjobSupervisor\Supervisor;
 
 class ContaoCoreExtension extends Extension implements PrependExtensionInterface, ConfigureFilesystemInterface
@@ -59,12 +59,12 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
     public function getConfiguration(array $config, ContainerBuilder $container): Configuration
     {
-        return new Configuration((string) $container->getParameter('kernel.project_dir'));
+        return new Configuration();
     }
 
     public function prepend(ContainerBuilder $container): void
     {
-        $configuration = new Configuration((string) $container->getParameter('kernel.project_dir'));
+        $configuration = new Configuration();
 
         $config = $container->getExtensionConfig($this->getAlias());
         $config = $container->getParameterBag()->resolveValue($config);
@@ -99,7 +99,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
         $projectDir = (string) $container->getParameter('kernel.project_dir');
 
-        $configuration = new Configuration($projectDir);
+        $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../../config'));
@@ -153,6 +153,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleCronConfig($config, $container);
         $this->handleSecurityConfig($config, $container);
         $this->handleCspConfig($config, $container);
+        $this->handleAltcha($config, $container);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -243,6 +244,19 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
     private function handleMessengerConfig(array $config, ContainerBuilder $container): void
     {
+        if ($container->hasDefinition('contao.messenger.web_worker')) {
+            $definition = $container->getDefinition('contao.messenger.web_worker');
+
+            // Remove the entire service and all its listeners if there are no web worker
+            // transports configured
+            if ([] === $config['messenger']['web_worker']['transports']) {
+                $container->removeDefinition('contao.messenger.web_worker');
+            } else {
+                $definition->setArgument(2, $config['messenger']['web_worker']['transports']);
+                $definition->setArgument(3, $config['messenger']['web_worker']['grace_period']);
+            }
+        }
+
         if (
             !$container->hasDefinition('contao.cron.supervise_workers')
             || !$container->hasDefinition('contao.command.supervise_workers')
@@ -558,5 +572,17 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             $processor = $container->getDefinition('contao.csp.wysiwyg_style_processor');
             $processor->setArgument(0, $config['csp']['allowed_inline_styles']);
         }
+    }
+
+    private function handleAltcha(array $config, ContainerBuilder $container): void
+    {
+        if (!$container->hasDefinition('contao.altcha')) {
+            return;
+        }
+
+        $altcha = $container->getDefinition('contao.altcha');
+        $altcha->setArgument(3, $config['altcha']['algorithm']);
+        $altcha->setArgument(4, $config['altcha']['range_max']);
+        $altcha->setArgument(5, $config['altcha']['challenge_expiry']);
     }
 }

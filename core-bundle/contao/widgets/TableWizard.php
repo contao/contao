@@ -123,7 +123,7 @@ class TableWizard extends Widget
 			}
 
 			$return .= '
-      <td>';
+      <td class="tl_right">';
 
 			// Add row buttons
 			foreach ($arrRowButtons as $button)
