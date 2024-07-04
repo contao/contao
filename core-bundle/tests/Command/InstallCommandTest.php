@@ -23,11 +23,8 @@ class InstallCommandTest extends TestCase
     protected function tearDown(): void
     {
         $fs = new Filesystem();
-        $fs->remove($this->getTempDir().'/assets/css');
-        $fs->remove($this->getTempDir().'/assets/images');
-        $fs->remove($this->getTempDir().'/assets/images_test');
-        $fs->remove($this->getTempDir().'/assets/js');
         $fs->remove($this->getTempDir().'/files_test');
+        $fs->remove($this->getTempDir().'/public/assets');
         $fs->remove($this->getTempDir().'/public/share');
         $fs->remove($this->getTempDir().'/public/system');
         $fs->remove($this->getTempDir().'/system/cache');
@@ -44,15 +41,15 @@ class InstallCommandTest extends TestCase
 
     public function testCreatesTheContaoFolders(): void
     {
-        $command = new InstallCommand($this->getTempDir(), 'files', $this->getTempDir().'/assets/images');
+        $command = new InstallCommand($this->getTempDir(), 'files', $this->getTempDir().'/public/assets/images');
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
         $output = $tester->getDisplay();
 
         $this->assertSame(0, $code);
-        $this->assertStringContainsString(' * assets/css', $output);
-        $this->assertStringContainsString(' * assets/images', $output);
-        $this->assertStringContainsString(' * assets/js', $output);
+        $this->assertStringContainsString(' * public/assets/css', $output);
+        $this->assertStringContainsString(' * public/assets/images', $output);
+        $this->assertStringContainsString(' * public/assets/js', $output);
         $this->assertStringContainsString(' * public/system', $output);
         $this->assertStringContainsString(' * system/cache', $output);
         $this->assertStringContainsString(' * system/config', $output);
@@ -62,13 +59,13 @@ class InstallCommandTest extends TestCase
 
     public function testHandlesCustomFilesAndImagesPaths(): void
     {
-        $command = new InstallCommand($this->getTempDir(), 'files_test', $this->getTempDir().'/assets/images_test');
+        $command = new InstallCommand($this->getTempDir(), 'files_test', $this->getTempDir().'/public/assets/images_test');
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
         $display = $tester->getDisplay();
 
         $this->assertSame(0, $code);
         $this->assertStringContainsString(' * files_test', $display);
-        $this->assertStringContainsString(' * assets/images_test', $display);
+        $this->assertStringContainsString(' * public/assets/images_test', $display);
     }
 }

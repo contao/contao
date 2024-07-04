@@ -20,6 +20,7 @@ use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicUseTokenParser;
+use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaper;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNode;
@@ -41,6 +42,7 @@ use Contao\CoreBundle\Twig\Runtime\SanitizerRuntime;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
 use Contao\CoreBundle\Twig\Runtime\StringRuntime;
 use Contao\CoreBundle\Twig\Runtime\UrlRuntime;
+use Contao\CoreBundle\Twig\Slots\SlotTokenParser;
 use Contao\FrontendTemplateTrait;
 use Contao\StringUtil;
 use Contao\Template;
@@ -67,6 +69,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
         private readonly ContaoFilesystemLoader $filesystemLoader,
         ContaoCsrfTokenManager $tokenManager,
         private readonly ContaoVariable $contaoVariable,
+        private readonly InspectorNodeVisitor $inspectorNodeVisitor,
     ) {
         $contaoEscaper = new ContaoEscaper();
 
@@ -128,6 +131,9 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             new ContaoEscaperNodeVisitor(
                 fn () => $this->contaoEscaperFilterRules,
             ),
+            // Records data about a template during compilation, so that they get available
+            // at runtime
+            $this->inspectorNodeVisitor,
             // Allows rendering PHP templates with the legacy framework by installing proxy nodes
             new PhpTemplateProxyNodeVisitor(self::class),
             // Triggers PHP deprecations if deprecated constructs are found in the
@@ -146,6 +152,8 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             new DynamicUseTokenParser($this->filesystemLoader),
             // Add a parser for the Contao specific "add" tag
             new AddTokenParser(self::class),
+            // Add a parser for the Contao specific "slot" tag
+            new SlotTokenParser(),
         ];
     }
 
