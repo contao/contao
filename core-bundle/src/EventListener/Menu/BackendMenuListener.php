@@ -76,6 +76,7 @@ class BackendMenuListener
                     ->setLinkAttribute('data-action', 'contao--toggle-navigation#toggle:prevent')
                     ->setLinkAttribute('data-contao--toggle-navigation-category-param', $categoryName)
                     ->setLinkAttribute('aria-controls', $categoryName)
+                    ->setLinkAttribute('data-turbo-prefetch', 'false')
                     ->setChildrenAttribute('id', $categoryName)
                     ->setExtra('translation_domain', false)
                 ;
@@ -228,7 +229,7 @@ class BackendMenuListener
         $systemMessages = $this->translator->trans('MSC.systemMessages', [], 'contao_default');
 
         $label = sprintf(
-            '<a href="%s" class="icon-alert" title="%s" onclick="Backend.openModalIframe({\'title\':\'%s\',\'url\':this.href});return false">%s</a>',
+            '<a href="%s" class="icon-alert" title="%s" data-turbo-prefetch="false" onclick="Backend.openModalIframe({\'title\':\'%s\',\'url\':this.href});return false">%s</a>',
             $this->router->generate('contao_backend_alerts'),
             htmlspecialchars($systemMessages, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5),
             StringUtil::specialchars(str_replace("'", "\\'", $systemMessages)),

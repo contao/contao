@@ -98,6 +98,7 @@ class SerpPreview extends Widget
 			</div>
 			<script>
 			  window.addEvent('domready', function() {
+			    if (!Contao.SerpPreview) return;
 			    new Contao.SerpPreview({
 			      id: '$id',
 			      trail: '$trail',

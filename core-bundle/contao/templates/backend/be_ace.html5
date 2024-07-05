@@ -9,9 +9,8 @@ if ($GLOBALS['TL_CONFIG']['useCE']):
 <script>window.ace || document.write('<script src="<?= $this->asset('js/ace.js', 'contao-components/ace') ?>" charset="utf-8">\x3C/script><script src="<?= $this->asset('js/ext-language_tools.js', 'contao-components/ace') ?>" charset="utf-8">\x3C/script><script src="<?= $this->asset('js/ext-whitespace.js', 'contao-components/ace') ?>" charset="utf-8">\x3C/script>')</script>
 <script>
 window.ace && window.addEvent('domready', function() {
-  let ta = document.getElementById('<?= $this->selector ?>'),
-      dom = ace.require("ace/lib/dom"),
-      ws = ace.require("ace/ext/whitespace");
+  let ta = document.getElementById('<?= $this->selector ?>');
+  if (!ta) return;
 
   // Create a div to apply the editor to
   let div = document.createElement('div');
@@ -40,6 +39,7 @@ window.ace && window.addEvent('domready', function() {
   <?php endif; ?>
 
   // Auto-detect the indentation
+  let ws = ace.require('ace/ext/whitespace');
   ws.detectIndentation(editor.getSession());
 
   // Add the fullscreen command
@@ -47,6 +47,7 @@ window.ace && window.addEvent('domready', function() {
     name: 'Fullscreen',
     bindKey: 'F11',
     exec: function(editor) {
+      let dom = ace.require('ace/lib/dom');
       dom.toggleCssClass(document.body, 'ace-fullsize');
       editor.resize();
     }

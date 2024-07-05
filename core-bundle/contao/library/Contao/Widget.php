@@ -487,6 +487,8 @@ abstract class Widget extends Controller
 	{
 		$this->class = 'error';
 		$this->arrErrors[] = $strError;
+
+		System::getContainer()->get('request_stack')?->getMainRequest()->attributes->set('_contao_widget_error', true);
 	}
 
 	/**

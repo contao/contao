@@ -37,6 +37,8 @@ use Highlight\Highlighter;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
@@ -92,9 +94,13 @@ class TwigIntegrationTest extends TestCase
             ),
         );
 
+        $requestStack = new RequestStack();
+        $requestStack->push($request = new Request());
+
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('twig', $environment);
         $container->set(ContextFactory::class, new ContextFactory());
+        $container->set('request_stack', $requestStack);
 
         System::setContainer($container);
 
@@ -102,7 +108,8 @@ class TwigIntegrationTest extends TestCase
         $textField = new FormText(['class' => 'my_class', 'label' => 'foo']);
         $textField->addError('bar');
 
-        $this->assertSame("my_class error\nfoo foo\n bar", $textField->parse());
+        $this->assertSame("my_class error\nfoo foo\n bar", $textField->parse(), 'HTML is built correctly');
+        $this->assertTrue($request->attributes->get('_contao_widget_error'), 'error attribute is set');
     }
 
     public function testRendersTwigTemplateWithLegacyParent(): void

@@ -30,6 +30,8 @@
     <?= $this->javascripts ?>
   <?php $this->endblock(); ?>
 
+  <?php /* If the following hash changes, Turbo will reload the entire page instead of merging contents. */ ?>
+  <meta data-turbo-track="reload" content="<?= md5($this->stylesheets."\0".$this->javascripts); ?>">
 </head>
 <body id="top" class="be_main<?php if ($this->isPopup): ?> popup<?php endif; ?>"<?= $this->attributes ?>>
 
