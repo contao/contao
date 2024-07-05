@@ -299,6 +299,22 @@ class UserSessionListenerTest extends TestCase
         $this->addToAssertionCount(1); // does not throw an exception
     }
 
+    public function testDoesNotReplaceTheSessionInPopups(): void
+    {
+        $security = $this->createMock(Security::class);
+        $security
+            ->expects($this->never())
+            ->method('getUser')
+        ;
+
+        $request = new Request();
+        $request->query->set('popup', '1');
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
+
+        $listener = $this->getListener(null, $security);
+        $listener($this->getRequestEvent($request));
+    }
+
     public function testFailsToReplaceTheSessionIfThereIsNoSession(): void
     {
         $user = $this->mockClassWithProperties(BackendUser::class);

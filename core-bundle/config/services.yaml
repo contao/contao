@@ -1066,27 +1066,13 @@ services:
         arguments:
             - '@contao.framework'
 
-    contao.session.contao_backend:
-        class: Contao\CoreBundle\Session\Attribute\ArrayAttributeBag
-        arguments:
-            - _contao_be_attributes
-        calls:
-            - [setName, [contao_backend]]
-
-    contao.session.contao_frontend:
-        class: Contao\CoreBundle\Session\Attribute\ArrayAttributeBag
-        arguments:
-            - _contao_fe_attributes
-        calls:
-            - [setName, [contao_frontend]]
-
     contao.session.factory:
         class: Contao\CoreBundle\Session\SessionFactory
         decorates: session.factory
         arguments:
             - '@contao.session.factory.inner'
-            - '@contao.session.contao_backend'
-            - '@contao.session.contao_frontend'
+            - '@request_stack'
+            - '@contao.routing.scope_matcher'
 
     contao.slug:
         class: Contao\CoreBundle\Slug\Slug
