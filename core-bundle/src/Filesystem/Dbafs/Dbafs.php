@@ -596,7 +596,7 @@ class Dbafs implements DbafsInterface, ResetInterface
                         $columns,
                         implode(', ', array_fill(0, \count($chunk), $placeholders)),
                     ),
-                    array_merge(...array_map('array_values', $chunk)),
+                    array_merge(...array_map(array_values(...), $chunk)),
                 );
             }
         }

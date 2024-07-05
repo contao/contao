@@ -24,7 +24,7 @@ class CspReportListenerTest extends TestCase
     public function testLogsCspReportWithContaoContext(): void
     {
         $uri = 'https://example.com/foobar';
-        $line = '1337';
+        $line = 1337;
         $directive = 'script-src-elem';
         $expectedMessage = sprintf('Content-Security-Policy violation reported for "%s" on line %d', $directive, $line);
 
@@ -46,8 +46,17 @@ class CspReportListenerTest extends TestCase
 
         $report = new Report([
             'document-uri' => $uri,
-            'line-number' => $line,
+            'referrer' => '',
+            'blocked-uri' => '',
             'effective-directive' => $directive,
+            'violated-directive' => '',
+            'original-policy' => '',
+            'disposition' => '',
+            'status-code' => 0,
+            'script-sample' => '',
+            'source-file' => '',
+            'line-number' => $line,
+            'column-number' => 0,
         ]);
 
         $event = new ReportEvent($report);

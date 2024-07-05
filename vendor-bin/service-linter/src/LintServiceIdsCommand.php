@@ -287,7 +287,7 @@ class LintServiceIdsCommand extends Command
             }
 
             $sortedIds = $serviceIds;
-            usort($sortedIds, 'strnatcasecmp');
+            usort($sortedIds, strnatcasecmp(...));
             $sortedIds = array_values($sortedIds);
 
             if ($serviceIds !== $sortedIds) {

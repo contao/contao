@@ -250,7 +250,7 @@ class UserCreateCommand extends Command
         ];
 
         if (!$isAdmin && $groups) {
-            $data[$this->connection->quoteIdentifier('groups')] = serialize(array_map('strval', $groups));
+            $data[$this->connection->quoteIdentifier('groups')] = serialize(array_map(\strval(...), $groups));
         }
 
         $this->connection->insert('tl_user', $data, ['admin' => Types::BOOLEAN, 'pwChange' => Types::BOOLEAN]);
