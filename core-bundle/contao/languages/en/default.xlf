@@ -1977,16 +1977,16 @@
         <source>You have to add a website root page to enter file metadata.</source>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
-        <source>Breadcrumb menu</source>
+        <source>Breadcrumb</source>
       </trans-unit>
       <trans-unit id="MSC.mainNavigation">
-        <source>Main navigation</source>
+        <source>Main</source>
       </trans-unit>
       <trans-unit id="MSC.headerNavigation">
-        <source>Header navigation</source>
+        <source>Header</source>
       </trans-unit>
       <trans-unit id="MSC.pagination">
-        <source>Pagination menu</source>
+        <source>Pagination</source>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.unicodeLowercase">
         <source>Unicode numbers and lowercase letters</source>

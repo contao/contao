@@ -4,7 +4,7 @@ $this->wrapperAttributes = $this
     ->attr($this->cssID)
     ->addClass([$this->class, 'block'])
     ->addStyle($this->style)
-    ->set('aria-label', 'Breadcrumb')
+    ->set('aria-label', $this->trans('MSC.breadcrumbMenu'))
     ->mergeWith($this->wrapperAttributes)
 ;
 

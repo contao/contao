@@ -4,6 +4,7 @@ $this->wrapperAttributes = $this
     ->attr($this->cssID)
     ->addClass([$this->class, 'block'])
     ->addStyle($this->style)
+    ->setIfExists('aria-label', $this->ariaLabel)
     ->mergeWith($this->wrapperAttributes)
 ;
 
