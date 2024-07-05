@@ -72,7 +72,7 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
             }
 
             if ($value) {
-                $attributes['value'] = array_map('\intval', explode(',', $value));
+                $attributes['value'] = array_map(\intval(...), explode(',', $value));
             }
 
             return $attributes;

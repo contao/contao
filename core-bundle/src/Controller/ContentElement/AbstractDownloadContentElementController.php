@@ -105,7 +105,7 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
         return $filesystemItemIterator->filter(
             static fn (FilesystemItem $item): bool => \in_array(
                 Path::getExtension($item->getPath(), true),
-                array_map('strtolower', $allowedDownload),
+                array_map(strtolower(...), $allowedDownload),
                 true,
             ),
         );

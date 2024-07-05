@@ -48,10 +48,12 @@ class RequestTokenListener
 
         $request = $event->getRequest();
 
-        // Only check the request token if a) the request is a POST request, b) the
-        // request is not an Ajax request, c) the _token_check attribute is not false, d)
-        // the _token_check attribute is true or the request is a Contao request and e)
-        // the request has cookies, an authenticated user or the session has been started
+        // Only check the request token if
+        // - the request is a POST request,
+        // - the request is not an Ajax request,
+        // - the _token_check attribute is not false,
+        // - the _token_check attribute is true or the request is a Contao request and
+        // - the request has cookies, an authenticated user or the session has been started.
         if (
             'POST' !== $request->getRealMethod()
             || $request->isXmlHttpRequest()
