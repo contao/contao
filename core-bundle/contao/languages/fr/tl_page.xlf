@@ -1,0 +1,756 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_page.php" source-language="en" target-language="fr">
+    <body>
+      <trans-unit id="tl_page.title.0">
+        <source>Page name</source>
+        <target>Nom de la page</target>
+      </trans-unit>
+      <trans-unit id="tl_page.title.1">
+        <source>Please enter the page name.</source>
+        <target>Saisir le nom de la page.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.type.0">
+        <source>Page type</source>
+        <target>Type de page</target>
+      </trans-unit>
+      <trans-unit id="tl_page.type.1">
+        <source>Please choose the page type.</source>
+        <target>Choisir le type de page.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.alias.0">
+        <source>Page alias</source>
+        <target>Alias de la page</target>
+      </trans-unit>
+      <trans-unit id="tl_page.alias.1">
+        <source>The page alias is a unique reference to the page which can be called instead of its numeric ID.</source>
+        <target>Un alias de page est une référence unique qui remplace l'ID numérique de la page.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.requireItem.0">
+        <source>Require an item</source>
+        <target>Nécessite un élément</target>
+      </trans-unit>
+      <trans-unit id="tl_page.requireItem.1">
+        <source>Trigger a 404 error if the page URL does not contain an item alias.</source>
+        <target>Génère une erreur 404 si l'URL de la page ne contient aucun élément d'alias.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routePath.0">
+        <source>Route path</source>
+        <target>Chemin de la route</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routePath.1">
+        <source>A preview of the final path (possibly with placeholders) to match this page.</source>
+        <target>Une prévisualisation de chemin final (si possible avec placeholders) pour représenter cette page.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routePriority.0">
+        <source>Route priority</source>
+        <target>Priorité de route</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routePriority.1">
+        <source>Optionally configure the priority to affect the order of routes. Default: 0</source>
+        <target>Configurer optionnellement la priorité afin d'affecter l'ordre des routes. Par défaut : 0</target>
+      </trans-unit>
+      <trans-unit id="tl_page.pageTitle.0">
+        <source>Page title</source>
+        <target>Titre de la page</target>
+      </trans-unit>
+      <trans-unit id="tl_page.pageTitle.1">
+        <source>Please enter the page title.</source>
+        <target>Saisir le titre de la page.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.language.0">
+        <source>Language</source>
+        <target>Langue</target>
+      </trans-unit>
+      <trans-unit id="tl_page.language.1">
+        <source>Please enter the page language according to the ISO-639 standard (e.g. &quot;en&quot; for English or &quot;en_US&quot; for American English).</source>
+        <target>Veuillez saisir la langue de la page selon la norme ISO-639 standard (e.g. &quot;en&quot; pour l'anglais ou  &quot;en_US&quot; pour l'anglais américain).</target>
+      </trans-unit>
+      <trans-unit id="tl_page.robots.0">
+        <source>Robots tag</source>
+        <target>Balises Robots</target>
+      </trans-unit>
+      <trans-unit id="tl_page.robots.1">
+        <source>Here you can define how search engines handle the page. The setting also determines whether the page appears in the &lt;code&gt;sitemap.xml&lt;/code&gt; file or not.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.maintenanceMode.0">
+        <source>Maintenance mode</source>
+        <target>Mode de maintenance</target>
+      </trans-unit>
+      <trans-unit id="tl_page.maintenanceMode.1">
+        <source>Show visitors a page that this website is currently being maintained.</source>
+        <target>Montrer aux visiteurs une page indiquant que ce site est en cours de maintenance.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.description.0">
+        <source>Page description</source>
+        <target>Description de la page</target>
+      </trans-unit>
+      <trans-unit id="tl_page.description.1">
+        <source>Here you can enter a short description of the page which will be evaluated by search engines like Google or Yahoo. Search engines usually indicate between 150 and 300 characters.</source>
+        <target>Saisir une courte description de la page qui sera utilisée par les moteurs de recherche tels que Google ou Yahoo. Généralement entre 150 et 300 caractères.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.redirect.0">
+        <source>Redirect type</source>
+        <target>Type de redirection</target>
+      </trans-unit>
+      <trans-unit id="tl_page.redirect.1">
+        <source>Please choose the redirect type.</source>
+        <target>Choisir un type de redirection.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.alwaysForward.0">
+        <source>Always redirect</source>
+        <target>Toujours rediriger</target>
+      </trans-unit>
+      <trans-unit id="tl_page.alwaysForward.1">
+        <source>Redirect to the target page even if there are query or path parameters.</source>
+        <target>Rediriger vers la page cible même s'il y a des paramètres de requête ou de chemin.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.jumpTo.0">
+        <source>Redirect page</source>
+        <target>Page de redirection</target>
+      </trans-unit>
+      <trans-unit id="tl_page.jumpTo.1">
+        <source>Please choose the page to which visitors will be redirected. Leave blank to redirect to the first regular subpage.</source>
+        <target>Choisir la page vers laquelle les visiteurs seront redirigés. Laisser vide pour rediriger vers la première sous-page simple.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.redirectBack.0">
+        <source>Redirect to last page visited</source>
+        <target>Redirection vers la dernière page visitée</target>
+      </trans-unit>
+      <trans-unit id="tl_page.redirectBack.1">
+        <source>Redirect the member back to the last page visited instead of the redirect page.</source>
+        <target>Redirigez le membre vers la dernière page visitée au lieu de la page de redirection.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.fallback.0">
+        <source>Language fallback</source>
+        <target>Langue de secours</target>
+      </trans-unit>
+      <trans-unit id="tl_page.fallback.1">
+        <source>Show this page if there is none that matches the visitor's language.</source>
+        <target>Afficher cette page si aucune page ne correspond à la langue du visiteur.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.disableLanguageRedirect.0">
+        <source>Disable language redirect</source>
+        <target>Désactiver la redirection en fonction de la langue</target>
+      </trans-unit>
+      <trans-unit id="tl_page.disableLanguageRedirect.1">
+        <source>Do not redirect visitors to this website root based on their preferred browser language.</source>
+        <target>Ne redirigez pas les visiteurs vers la racine de ce site en fonction de la langue de leur navigateur.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.favicon.0">
+        <source>Favicon</source>
+        <target>Favicon</target>
+      </trans-unit>
+      <trans-unit id="tl_page.favicon.1">
+        <source>Here you can select a favicon for the website.</source>
+        <target>Ici, vous pouvez choisir une favicon pour le site.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.robotsTxt.0">
+        <source>Custom robots.txt content</source>
+        <target>Fichier robots.txt personnalisé.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.robotsTxt.1">
+        <source>Here you can enter custom robots.txt content. It may be extended automatically by extensions.</source>
+        <target>Ici, vous poubez saisir le contenu de votre fichier robots.txt. Il peut être modifié par des extensions tierces.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.dns.0">
+        <source>Domain name</source>
+        <target>Nom de domaine</target>
+      </trans-unit>
+      <trans-unit id="tl_page.dns.1">
+        <source>Here you can restrict the access to the website to a certain domain name.</source>
+        <target>Restreindre l'accès au site à un nom de domaine.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticFiles.0">
+        <source>Files URL</source>
+        <target>URL des fichiers</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticFiles.1">
+        <source>The files URL applies to the &lt;em&gt;files&lt;/em&gt; directory (page speed optimization).</source>
+        <target>L'URL des fichiers s'applique au répertoire &lt;em&gt;files&lt;/em&gt;  (optimisation de la vitesse de chargement des pages).</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticPlugins.0">
+        <source>Assets URL</source>
+        <target>URL des ressources</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticPlugins.1">
+        <source>The assets URL applies to the &lt;em&gt;assets&lt;/em&gt; directory (page speed optimization).</source>
+        <target>L'URL des ressources s'applique à toutes les ressources se trouvant dans le répertoire &lt;em&gt;assets&lt;/em&gt; (optimisation de la vitesse de chargement des pages).</target>
+      </trans-unit>
+      <trans-unit id="tl_page.mailerTransport.0">
+        <source>Mailer transport</source>
+        <target>Envoi d'e-mail</target>
+      </trans-unit>
+      <trans-unit id="tl_page.mailerTransport.1">
+        <source>Here you can override the mailer transport used to send e-mails on this website.</source>
+        <target>Ici, vous pouvez remplacer la méthode d'envoi d'email utilisée sur ce site Web.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCanonical.0">
+        <source>Enable rel=&quot;canonical&quot;</source>
+        <target>Activez rel=&quot;canonical&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCanonical.1">
+        <source>Add rel=&quot;canonical&quot; tags to the website.</source>
+        <target>Ajoutez les balises rel&quot;canonical&quot; au site web.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalLink.0">
+        <source>Custom URL</source>
+        <target>URL personnalisée</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalLink.1">
+        <source>Here you can set a custom canonical URL like https://example.com/.</source>
+        <target>Ici vous pouvez renseigner une URL canonique personnalisée de type https://example.com/.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalKeepParams.0">
+        <source>Query parameters</source>
+        <target>Paramètres de la requête</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalKeepParams.1">
+        <source>By default, Contao strips the query parameters in the canonical URL. Here you can add a comma-separated list of query parameters to preserve. Use &quot;*&quot; as a wildcard.</source>
+        <target>Par défaut, Contao supprime les paramètres de requête dans l'URL canonique. Ici vous pouvez ajouter une liste de paramètres de requête (séparés par des virgules) à préserver. Utilisez &quot;*&quot; comme joker.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.adminEmail.0">
+        <source>E-mail address of the website administrator</source>
+        <target>Adresse e-mail de l'administrateur du site</target>
+      </trans-unit>
+      <trans-unit id="tl_page.adminEmail.1">
+        <source>This e-mail address will be used to send and receive system messages.</source>
+        <target>Cette adresse e-mail sera utilisée pour envoyer et recevoir des messages système.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.dateFormat.0">
+        <source>Date format</source>
+        <target>Format de la date</target>
+      </trans-unit>
+      <trans-unit id="tl_page.dateFormat.1">
+        <source>The date format string will be parsed with the PHP date() function.</source>
+        <target>Choisir un format de date utilisé par la fonction PHP date().</target>
+      </trans-unit>
+      <trans-unit id="tl_page.timeFormat.0">
+        <source>Time format</source>
+        <target>Format de l'heure</target>
+      </trans-unit>
+      <trans-unit id="tl_page.timeFormat.1">
+        <source>The time format string will be parsed with the PHP date() function.</source>
+        <target>Choisir un format d'heure utilisé par la fonction PHP date().</target>
+      </trans-unit>
+      <trans-unit id="tl_page.datimFormat.0">
+        <source>Date and time format</source>
+        <target>Format de la date et de l'heure</target>
+      </trans-unit>
+      <trans-unit id="tl_page.datimFormat.1">
+        <source>The date and time format string will be parsed with the PHP date() function.</source>
+        <target>Choisir un format de date et d'heure utilisé par la fonction PHP date().</target>
+      </trans-unit>
+      <trans-unit id="tl_page.validAliasCharacters.0">
+        <source>Valid alias characters</source>
+        <target>Caractères valides pour l'alias</target>
+      </trans-unit>
+      <trans-unit id="tl_page.validAliasCharacters.1">
+        <source>Here you can select a custom character set for auto-generated aliases.</source>
+        <target>Vous pouvez sélectionner ici un jeu de caractère personnalisé</target>
+      </trans-unit>
+      <trans-unit id="tl_page.useFolderUrl.0">
+        <source>Enable folder URLs</source>
+        <target>Activer les répertoires dans les URLs</target>
+      </trans-unit>
+      <trans-unit id="tl_page.useFolderUrl.1">
+        <source>Generate folder-style page aliases like &lt;em&gt;docs/install/download.html&lt;/em&gt; instead of &lt;em&gt;docs-install-download.html&lt;/em&gt;.</source>
+        <target>Génère des alias de page avec des noms de dossier comme &lt;em&gt;docs/install/download.html&lt;/em&gt; au lieu de &lt;em&gt;docs-install-download.html&lt;/em&gt;</target>
+      </trans-unit>
+      <trans-unit id="tl_page.urlPrefix.0">
+        <source>URL prefix</source>
+        <target>Préfixe d'URL</target>
+      </trans-unit>
+      <trans-unit id="tl_page.urlPrefix.1">
+        <source>Enter a URL prefix (e.g. the language) that will be prepended to all page aliases below this website root page.</source>
+        <target>Entrez un préfixe d'URL (par exemple la langue) qui sera ajouté à tous les alias de page en dessous de la page racine de ce site web.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.urlSuffix.0">
+        <source>URL suffix</source>
+        <target>Suffixe d'URL</target>
+      </trans-unit>
+      <trans-unit id="tl_page.urlSuffix.1">
+        <source>The URL suffix will be added to the URI string to simulate static documents.</source>
+        <target>Le suffixe d'URL sera ajouté à la chaîne URI pour simuler des documents statiques.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.useSSL.0">
+        <source>Protocol</source>
+        <target>Protocole</target>
+      </trans-unit>
+      <trans-unit id="tl_page.useSSL.1">
+        <source>Here you can select which protocol to use for the website.</source>
+        <target>Ici, vous pouvez sélectionner le protocole à utiliser pour le site Web.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.autoforward.0">
+        <source>Forward to another page</source>
+        <target>Aller vers une autre page</target>
+      </trans-unit>
+      <trans-unit id="tl_page.autoforward.1">
+        <source>Redirect visitors to another page (e.g. a login page).</source>
+        <target>Rediriger les visiteurs vers une autre page (ex. : une page de connexion).</target>
+      </trans-unit>
+      <trans-unit id="tl_page.protected.0">
+        <source>Protect page</source>
+        <target>Page protégée</target>
+      </trans-unit>
+      <trans-unit id="tl_page.protected.1">
+        <source>Restrict page access to certain member groups.</source>
+        <target>Limiter l'accès de cette page à certains groupes de membres.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.groups.0">
+        <source>Allowed member groups</source>
+        <target>Groupes de membres autorisés</target>
+      </trans-unit>
+      <trans-unit id="tl_page.groups.1">
+        <source>These groups will be able to access the page.</source>
+        <target>Ces groupes seront en mesure d'accéder à la page.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.includeLayout.0">
+        <source>Assign a layout</source>
+        <target>Attribuer une présentation</target>
+      </trans-unit>
+      <trans-unit id="tl_page.includeLayout.1">
+        <source>Assign a page layout to the page and its subpages.</source>
+        <target>Attribuer une présentation à la page et ses sous-pages.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.layout.0">
+        <source>Page layout</source>
+        <target>Présentation de page</target>
+      </trans-unit>
+      <trans-unit id="tl_page.layout.1">
+        <source>You can manage page layouts with the &quot;themes&quot; module.</source>
+        <target>Gérer les présentations avec le module &lt;em&gt;Présentations de page&lt;/em&gt;.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.subpageLayout.0">
+        <source>Subpage layout</source>
+        <target>Présentation des sous-pages</target>
+      </trans-unit>
+      <trans-unit id="tl_page.subpageLayout.1">
+        <source>Here you can select a different layout for subpages.</source>
+        <target>Ici vous pouvez sélectionner une présentation de page différente pour les sous-pages.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.includeCache.0">
+        <source>Set cache timeouts</source>
+        <target>Définir les délais d'attente du cache</target>
+      </trans-unit>
+      <trans-unit id="tl_page.includeCache.1">
+        <source>Set cache timeout values for the page and its subpages.</source>
+        <target>Définissez les valeurs de délai d'attente du cache pour la page et ses sous-pages.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cache.0">
+        <source>Shared cache timeout</source>
+        <target>Délai d'attente du cache serveur</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cache.1">
+        <source>The period after which the page should no longer be considered fresh by a shared cache.</source>
+        <target>La période après laquelle la page ne devrait plus être considérée comme nouvelle par le cache serveur.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.alwaysLoadFromCache.0">
+        <source>Always load from shared cache</source>
+        <target>Toujours charger à partir du cache serveur</target>
+      </trans-unit>
+      <trans-unit id="tl_page.alwaysLoadFromCache.1">
+        <source>Always load this page from the shared cache, even if a member is logged in. Note that you can no longer personalize the page for logged in members in this case!</source>
+        <target>Charge toujours cette page à partir du cache serveur, mais si un membre est connecté. Notez que vous ne pouvez plus personnaliser la page pour les membres connectés dans ce cas.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.clientCache.0">
+        <source>Private cache timeout</source>
+        <target>Délai d'attente du cache visiteur</target>
+      </trans-unit>
+      <trans-unit id="tl_page.clientCache.1">
+        <source>The period after which the page should no longer be considered fresh by a private cache.</source>
+        <target>La période après laquelle la page ne devrait plus être considérée comme nouvelle par le navigateur du visiteur.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.includeChmod.0">
+        <source>Assign access rights</source>
+        <target>Attribution des droits d'accès</target>
+      </trans-unit>
+      <trans-unit id="tl_page.includeChmod.1">
+        <source>Access rights determine what back end users can do with the page.</source>
+        <target>Les droits d'accès déterminent ce que les utilisateurs peuvent faire avec la page.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cuser.0">
+        <source>Owner</source>
+        <target>Propriétaire</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cuser.1">
+        <source>Please select a user as the owner of the page.</source>
+        <target>Sélectionner un utilisateur qui sera propriétaire de la page.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cgroup.0">
+        <source>Group</source>
+        <target>Groupe</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cgroup.1">
+        <source>Please select a user group as the owner of the page.</source>
+        <target>Veuillez sélectionner un groupe d'utilisateurs comme propriétaire de la page.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.chmod.0">
+        <source>Access rights</source>
+        <target>Droits d'accès</target>
+      </trans-unit>
+      <trans-unit id="tl_page.chmod.1">
+        <source>Please assign the access rights for the page and its subpages.</source>
+        <target>Attribuer les droits d'accès pour la page et ses sous-pages.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.noSearch.0">
+        <source>Do not search</source>
+        <target>Ne pas rechercher cette page</target>
+      </trans-unit>
+      <trans-unit id="tl_page.noSearch.1">
+        <source>Exclude the page from the search index.</source>
+        <target>Exclure la page de l'index de recherche du site.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cssClass.0">
+        <source>CSS class</source>
+        <target>Classe(s) CSS</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cssClass.1">
+        <source>The class(es) will be used in the navigation menu and the &amp;lt;body&amp;gt; tag.</source>
+        <target>La/les classe(s) sera(ont) utilisée(s) dans le menu de navigation et la balise &amp;lt;body&amp;gt;.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.sitemap.0">
+        <source>Show in HTML sitemap</source>
+        <target>Afficher dans le plan de site HTML</target>
+      </trans-unit>
+      <trans-unit id="tl_page.sitemap.1">
+        <source>Here you can define whether the page is shown in the HTML sitemap.</source>
+        <target>Définir si la page est affichée dans le plan de site HTML.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.hide.0">
+        <source>Hide in navigation</source>
+        <target>Masquer dans la navigation</target>
+      </trans-unit>
+      <trans-unit id="tl_page.hide.1">
+        <source>Hide the page in the navigation menu.</source>
+        <target>Masquer la page dans le menu de navigation.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.accesskey.0">
+        <source>Access key</source>
+        <target>Touche de raccourci</target>
+      </trans-unit>
+      <trans-unit id="tl_page.accesskey.1">
+        <source>A navigation item can be focused by pressing the [ALT] or [CTRL] key and the access key simultaneously.</source>
+        <target>Un élément de navigation peut prendre le focus en appuyant sur la touche [ALT] ou [CTRL] enfoncée et la touche d'accès simultanément.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.published.0">
+        <source>Publish page</source>
+        <target>Publier la page</target>
+      </trans-unit>
+      <trans-unit id="tl_page.published.1">
+        <source>Make the page publicly visible on the website.</source>
+        <target>Rendre la page visible aux visiteurs de votre site.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.start.0">
+        <source>Show from</source>
+        <target>Afficher à partir du</target>
+      </trans-unit>
+      <trans-unit id="tl_page.start.1">
+        <source>If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Si vous souhaitez empêcher l'affichage de la page sur le site web avant une certaine date/heure, vous pouvez l'indiquer ici. Sinon, laissez le champ vide.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.stop.0">
+        <source>Show until</source>
+        <target>Afficher jusqu'au</target>
+      </trans-unit>
+      <trans-unit id="tl_page.stop.1">
+        <source>If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Si vous souhaitez empêcher l'affichage de la page sur le site web après une certaine date/heure, vous pouvez l'indiquer ici. Sinon, laissez le champ vide.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enforceTwoFactor.0">
+        <source>Enforce two-factor authentication</source>
+        <target>Forcer l'authentication à deux facteurs</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enforceTwoFactor.1">
+        <source>Enforce two-factor authentication for all members.</source>
+        <target>Forcer l'authentication à deux facteurs pour tous les membres</target>
+      </trans-unit>
+      <trans-unit id="tl_page.twoFactorJumpTo.0">
+        <source>Two-factor redirect page</source>
+        <target>Page de redirection pour l'authentication à deux facteurs</target>
+      </trans-unit>
+      <trans-unit id="tl_page.twoFactorJumpTo.1">
+        <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
+        <target>Choisir la page vers laquelle les visiteurs seront redirigés lors de la configuration de l'authentification à deux facteurs.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCsp.0">
+        <source>Enable CSP</source>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCsp.1">
+        <source>Enable Content Security Policy for this website.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.csp.0">
+        <source>Content Security Policy</source>
+      </trans-unit>
+      <trans-unit id="tl_page.csp.1">
+        <source>Here you can enter custom Content Security Policy directives.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportOnly.0">
+        <source>Reporting only</source>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportOnly.1">
+        <source>Only report policy violations without enforcing them.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportLog.0">
+        <source>Enable report logging</source>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportLog.1">
+        <source>Log CSP violations to the Contao system log.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.title_legend">
+        <source>Name and type</source>
+        <target>Nom et type</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routing_legend">
+        <source>Routing</source>
+        <target>Routage</target>
+      </trans-unit>
+      <trans-unit id="tl_page.meta_legend">
+        <source>Metadata</source>
+        <target>Métadata</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonical_legend">
+        <source>Canonical URL</source>
+        <target>URL canonique</target>
+      </trans-unit>
+      <trans-unit id="tl_page.system_legend">
+        <source>System settings</source>
+        <target>Paramètres du système</target>
+      </trans-unit>
+      <trans-unit id="tl_page.redirect_legend">
+        <source>Redirect settings</source>
+        <target>Paramètres de redirection</target>
+      </trans-unit>
+      <trans-unit id="tl_page.url_legend">
+        <source>URL settings</source>
+        <target>Paramètres d'URL</target>
+      </trans-unit>
+      <trans-unit id="tl_page.language_legend">
+        <source>Language settings</source>
+        <target>Paramètres de langue</target>
+      </trans-unit>
+      <trans-unit id="tl_page.website_legend">
+        <source>Website settings</source>
+        <target>Paramètres su site</target>
+      </trans-unit>
+      <trans-unit id="tl_page.global_legend">
+        <source>Global settings</source>
+        <target>Paramètres globaux</target>
+      </trans-unit>
+      <trans-unit id="tl_page.sitemap_legend">
+        <source>XML sitemap</source>
+        <target>Plan du site XML</target>
+      </trans-unit>
+      <trans-unit id="tl_page.forward_legend">
+        <source>Auto-forward</source>
+        <target>Redirection automatique</target>
+      </trans-unit>
+      <trans-unit id="tl_page.protected_legend">
+        <source>Access protection</source>
+        <target>Protection d'accès</target>
+      </trans-unit>
+      <trans-unit id="tl_page.layout_legend">
+        <source>Layout settings</source>
+        <target>Paramètres de présentation</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cache_legend">
+        <source>Cache settings</source>
+        <target>Paramètres du cache</target>
+      </trans-unit>
+      <trans-unit id="tl_page.chmod_legend">
+        <source>Access rights</source>
+        <target>Droits d'accès</target>
+      </trans-unit>
+      <trans-unit id="tl_page.expert_legend">
+        <source>Expert settings</source>
+        <target>Paramètres avancés</target>
+      </trans-unit>
+      <trans-unit id="tl_page.tabnav_legend">
+        <source>Keyboard navigation</source>
+        <target>Navigation au clavier</target>
+      </trans-unit>
+      <trans-unit id="tl_page.publish_legend">
+        <source>Publish settings</source>
+        <target>Paramètres de publication</target>
+      </trans-unit>
+      <trans-unit id="tl_page.twoFactor_legend">
+        <source>Two-factor authentication</source>
+        <target>Vérification en deux étapes</target>
+      </trans-unit>
+      <trans-unit id="tl_page.csp_legend">
+        <source>Content Security Policy</source>
+      </trans-unit>
+      <trans-unit id="tl_page.permanent">
+        <source>301 Permanent redirect</source>
+        <target>Redirection permanente (301)</target>
+      </trans-unit>
+      <trans-unit id="tl_page.temporary">
+        <source>302 Temporary redirect</source>
+        <target>Redirection temporaire (302)</target>
+      </trans-unit>
+      <trans-unit id="tl_page.map_default">
+        <source>Default</source>
+        <target>Défaut</target>
+      </trans-unit>
+      <trans-unit id="tl_page.map_always">
+        <source>Show always</source>
+        <target>Toujours afficher</target>
+      </trans-unit>
+      <trans-unit id="tl_page.map_never">
+        <source>Show never</source>
+        <target>Ne jamais afficher</target>
+      </trans-unit>
+      <trans-unit id="tl_page.layout_inherit">
+        <source>Inherit page layout</source>
+        <target>Hériter le thème de page</target>
+      </trans-unit>
+      <trans-unit id="tl_page.new.0">
+        <source>New</source>
+        <target>Nouveau</target>
+      </trans-unit>
+      <trans-unit id="tl_page.new.1">
+        <source>Create a new page</source>
+        <target>Créer une nouvelle page</target>
+      </trans-unit>
+      <trans-unit id="tl_page.show">
+        <source>Show the details of page ID %s</source>
+        <target>Afficher les détails de la page ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.edit">
+        <source>Edit page ID %s</source>
+        <target>Éditer la page ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cut">
+        <source>Move page ID %s</source>
+        <target>Déplacer la page ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.copy">
+        <source>Duplicate page ID %s</source>
+        <target>Dupliquer la page ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.copyChildren">
+        <source>Duplicate page ID %s with its subpages</source>
+        <target>Dupliquer la page ID %s avec ses sous-pages</target>
+      </trans-unit>
+      <trans-unit id="tl_page.delete">
+        <source>Delete page ID %s</source>
+        <target>Supprimer la page ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.toggle.0">
+        <source>Publish/unpublish page</source>
+        <target>Publier/dé-publier la page</target>
+      </trans-unit>
+      <trans-unit id="tl_page.toggle.1">
+        <source>Unpublish page ID %s</source>
+        <target>Dé-publier la page ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.toggle.2">
+        <source>Publish page ID %s</source>
+        <target>Publier la page ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.pasteinto.0">
+        <source>Paste at the top</source>
+        <target>Coller au début</target>
+      </trans-unit>
+      <trans-unit id="tl_page.pasteinto.1">
+        <source>Paste into page ID %s</source>
+        <target>Coller dedans la page ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.pasteafter.1">
+        <source>Paste after page ID %s</source>
+        <target>Coller après la page ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.articles">
+        <source>Edit the articles of page ID %s</source>
+        <target>Éditer les articles de la page ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routeConflicts.0">
+        <source>Route conflicts</source>
+        <target>Conflits de route</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routeConflicts.1">
+        <source>The following pages have a similar alias that may conflict with this page. If the URL is not resolved correctly, try changing the priority of the routes.</source>
+        <target>Les pages suivantes ont un alias similaire qui pourrait entrer en conflit avec cette page. Si l'URL n'est pas correctement résolue, essayez de changer la priorité des routes.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.relCanonical">
+        <source>Enable canonical URLs in the website root page to enable this configuration.</source>
+        <target>Autoriser les URLs canoniques dans la page racine du site pour activer cette configuration.</target>
+      </trans-unit>
+      <trans-unit id="CACHE.0">
+        <source>0 (do not cache)</source>
+        <target>Ne pas mettre en cache</target>
+      </trans-unit>
+      <trans-unit id="CACHE.5">
+        <source>5 seconds</source>
+        <target>5 secondes</target>
+      </trans-unit>
+      <trans-unit id="CACHE.15">
+        <source>15 seconds</source>
+        <target>15 secondes</target>
+      </trans-unit>
+      <trans-unit id="CACHE.30">
+        <source>30 seconds</source>
+        <target>30 secondes</target>
+      </trans-unit>
+      <trans-unit id="CACHE.60">
+        <source>60 seconds</source>
+        <target>1 minute</target>
+      </trans-unit>
+      <trans-unit id="CACHE.300">
+        <source>5 minutes</source>
+        <target>5 minutes</target>
+      </trans-unit>
+      <trans-unit id="CACHE.900">
+        <source>15 minutes</source>
+        <target>15 minutes</target>
+      </trans-unit>
+      <trans-unit id="CACHE.1800">
+        <source>30 minutes</source>
+        <target>30 minutes</target>
+      </trans-unit>
+      <trans-unit id="CACHE.3600">
+        <source>60 minutes</source>
+        <target>60 minutes</target>
+      </trans-unit>
+      <trans-unit id="CACHE.10800">
+        <source>3 hours</source>
+        <target>3 heures</target>
+      </trans-unit>
+      <trans-unit id="CACHE.21600">
+        <source>6 hours</source>
+        <target>6 heures</target>
+      </trans-unit>
+      <trans-unit id="CACHE.43200">
+        <source>12 hours</source>
+        <target>12 heures</target>
+      </trans-unit>
+      <trans-unit id="CACHE.86400">
+        <source>24 hours</source>
+        <target>24 heures</target>
+      </trans-unit>
+      <trans-unit id="CACHE.259200">
+        <source>3 days</source>
+        <target>3 jours</target>
+      </trans-unit>
+      <trans-unit id="CACHE.604800">
+        <source>7 days</source>
+        <target>7 jours</target>
+      </trans-unit>
+      <trans-unit id="CACHE.2592000">
+        <source>30 days</source>
+        <target>30 jours</target>
+      </trans-unit>
+      <trans-unit id="CACHE.7776000">
+        <source>3 months</source>
+        <target>3 mois</target>
+      </trans-unit>
+      <trans-unit id="CACHE.15552000">
+        <source>6 months</source>
+        <target>6 mois</target>
+      </trans-unit>
+      <trans-unit id="CACHE.31536000">
+        <source>1 year</source>
+        <target>1 an</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

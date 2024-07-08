@@ -70,8 +70,8 @@
         <target>robotsタグ</target>
       </trans-unit>
       <trans-unit id="tl_page.robots.1">
-        <source>Here you can define how search engines handle the page.</source>
-        <target>検索エンジンがページを扱う方法を指定します。</target>
+        <source>Here you can define how search engines handle the page. The setting also determines whether the page appears in the &lt;code&gt;sitemap.xml&lt;/code&gt; file or not.</source>
+        <target>このページを検索エンジンが扱う方法を指定できます。この設定はページが&lt;code&gt;sitemap.xml&lt;/code&gt;ファイルに含めるかどうかも決定します。</target>
       </trans-unit>
       <trans-unit id="tl_page.maintenanceMode.0">
         <source>Maintenance mode</source>
@@ -473,6 +473,38 @@
         <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
         <target>メンバーが2ファクター認証を設定するために移動するページを選択してください。</target>
       </trans-unit>
+      <trans-unit id="tl_page.enableCsp.0">
+        <source>Enable CSP</source>
+        <target>CSPを有効</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCsp.1">
+        <source>Enable Content Security Policy for this website.</source>
+        <target>このウェブサイトでコンテンツ・セキュリティー・ポリシーを有効にします。</target>
+      </trans-unit>
+      <trans-unit id="tl_page.csp.0">
+        <source>Content Security Policy</source>
+        <target>コンテンツ・セキュリティー・ポリシー</target>
+      </trans-unit>
+      <trans-unit id="tl_page.csp.1">
+        <source>Here you can enter custom Content Security Policy directives.</source>
+        <target>独自のコンテンツ・セキュリティー・ポリシーの指示を設定できます。</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportOnly.0">
+        <source>Reporting only</source>
+        <target>報告だけ</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportOnly.1">
+        <source>Only report policy violations without enforcing them.</source>
+        <target>ポリシーを強制せずに違反したことだけ報告します。</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportLog.0">
+        <source>Enable report logging</source>
+        <target>報告のログ出力を有効</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportLog.1">
+        <source>Log CSP violations to the Contao system log.</source>
+        <target>コンテンツ・セキュリティー・ポリシーの違反をContaoのシステムログに記録します。</target>
+      </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
         <target>名前と種類</target>
@@ -553,6 +585,10 @@
         <source>Two-factor authentication</source>
         <target>2ファクター認証</target>
       </trans-unit>
+      <trans-unit id="tl_page.csp_legend">
+        <source>Content Security Policy</source>
+        <target>コンテンツ・セキュリティー・ポリシー</target>
+      </trans-unit>
       <trans-unit id="tl_page.permanent">
         <source>301 Permanent redirect</source>
         <target>301 永続的なリダイレクト</target>
@@ -601,7 +637,7 @@
         <source>Duplicate page ID %s</source>
         <target>ID %sのページを複製</target>
       </trans-unit>
-      <trans-unit id="tl_page.copyChilds">
+      <trans-unit id="tl_page.copyChildren">
         <source>Duplicate page ID %s with its subpages</source>
         <target>下位のページを含めてID %sのページを複製</target>
       </trans-unit>

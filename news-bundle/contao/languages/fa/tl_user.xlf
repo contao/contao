@@ -15,6 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_user.newp.1">
         <source>Here you can define the news archive permissions.</source>
+        <target>اینجا می‌توانید مجوزهای بایگانی اخبار را تعریف نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_user.news_legend">
         <source>News permissions</source>

@@ -174,8 +174,8 @@
         <target>Povej naprej na Facebook</target>
       </trans-unit>
       <trans-unit id="tl_article.twitter">
-        <source>Share on Twitter</source>
-        <target>Povej naprej na Twitter</target>
+        <source>Share on X (formerly Twitter)</source>
+        <target>Deli na X (prej Twitter)</target>
       </trans-unit>
       <trans-unit id="tl_article.new.0">
         <source>New</source>

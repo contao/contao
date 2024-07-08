@@ -140,6 +140,13 @@
         <source>The crawler crawls all URLs it finds. Here you can decide what to do with these results.</source>
         <target>Pajek - crawler obišče vse povezave, ki jih najde. Tu se lahko odločite, kaj storiti z njegovimi rezultati.</target>
       </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDepth.0">
+        <source>Maximum depth</source>
+        <target>Največja globina</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDepth.1">
+        <source>The maximum depth to crawl.</source>
+      </trans-unit>
       <trans-unit id="tl_maintenance.crawlMember.0">
         <source>Front end member</source>
         <target>Uporabnik spletnega mesta</target>
@@ -147,6 +154,9 @@
       <trans-unit id="tl_maintenance.crawlMember.1">
         <source>Automatically log in a front end member to index protected pages.</source>
         <target>Samodejno prijavi uporabnika za indeksiranje zaščitenih strani.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlHint">
+        <source>Your website is currently crawled with %d concurrent requests. If your server can handle more than %1$d concurrent requests, ask your system administrator to increase the &lt;code&gt;%s&lt;/code&gt; setting in the system configuration to speed up the crawling process. Refer to the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao manual&lt;/a&gt; for more information.</source>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlWaitToBeFinished">
         <source>The crawler is currently working. Please wait for it to finish to see the results.</source>

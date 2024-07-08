@@ -433,6 +433,12 @@
         <source>Generates an ordered or unordered list.</source>
         <target>Maakt een geordende of ongeordende lijst.</target>
       </trans-unit>
+      <trans-unit id="CTE.description_list.0">
+        <source>Description list</source>
+      </trans-unit>
+      <trans-unit id="CTE.description_list.1">
+        <source>Generates a description list with terms and details.</source>
+      </trans-unit>
       <trans-unit id="CTE.table.0">
         <source>Table</source>
         <target>Tabel</target>
@@ -441,29 +447,41 @@
         <source>Generates an optionally sortable table.</source>
         <target>Maakt een tabel, die optioneel gesorteerd kan worden.</target>
       </trans-unit>
-      <trans-unit id="CTE.accordion">
+      <trans-unit id="CTE.accordion.0">
         <source>Accordion</source>
         <target>Accordeon</target>
       </trans-unit>
+      <trans-unit id="CTE.accordion.1">
+        <source>Generates an accordion.</source>
+        <target>Genereert een accordeon</target>
+      </trans-unit>
+      <trans-unit id="CTE.element_group.0">
+        <source>Element group</source>
+        <target>Element groep</target>
+      </trans-unit>
+      <trans-unit id="CTE.element_group.1">
+        <source>Generates a group of nested elements.</source>
+        <target>Genereert een groep geneste elementen.</target>
+      </trans-unit>
       <trans-unit id="CTE.accordionStart.0">
-        <source>Wrapper start</source>
-        <target>Wrapper start</target>
+        <source>Accordion wrapper start</source>
+        <target>Accordion-wrapper starten</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStart.1">
         <source>Generates the opening part of the accordion wrapper.</source>
         <target>Markeert het beginnende gedeelte van de accordeon wrapper.</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.0">
-        <source>Wrapper stop</source>
-        <target>Wrapper stop</target>
+        <source>Accordion wrapper stop</source>
+        <target>Accordion-wrapper stoppen</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.1">
         <source>Generates the closing part of the accordion wrapper.</source>
         <target>Markeert het afsluitende gedeelte van de accordeon wrapper.</target>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.0">
-        <source>Single element</source>
-        <target>Enkel element</target>
+        <source>Accordion single element</source>
+        <target>Enkel Accordeon element</target>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.1">
         <source>Generates a single accordion element.</source>
@@ -493,21 +511,29 @@
         <source>Generates an element to insert a custom template.</source>
         <target>Genereert een element om een aangepaste sjabloon in te voegen.</target>
       </trans-unit>
+      <trans-unit id="CTE.swiper.0">
+        <source>Content slider</source>
+        <target>Content slider</target>
+      </trans-unit>
+      <trans-unit id="CTE.swiper.1">
+        <source>Generates a content slider element.</source>
+        <target>Genereert een content slider element.</target>
+      </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
         <target>Content slider</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStart.0">
-        <source>Wrapper start</source>
-        <target>Wrapper start</target>
+        <source>Slider wrapper start</source>
+        <target>Slider-wrapper starten</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStart.1">
         <source>Generates the opening part of the slider wrapper.</source>
         <target>Markeert het beginnende gedeelte van de slider wrapper.</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStop.0">
-        <source>Wrapper stop</source>
-        <target>Wrapper stop</target>
+        <source>Slider wrapper stop</source>
+        <target>Slider-wrapper stoppen</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStop.1">
         <source>Generates the closing part of the slider wrapper.</source>
@@ -640,6 +666,10 @@
       <trans-unit id="CTE.teaser.1">
         <source>Displays the teaser text of an article.</source>
         <target>Toont de teaser tekst van een artikel.</target>
+      </trans-unit>
+      <trans-unit id="CTE.legacy">
+        <source>Legacy elements</source>
+        <target>Legacy elementen</target>
       </trans-unit>
       <trans-unit id="FFL.explanation.0">
         <source>Explanation</source>
@@ -1602,8 +1632,8 @@
         <target>Back-end sneltoetsen</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>Meer informatie over het versnellen van uw workflow door &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;sneltoetsen&lt;/a&gt; te gebruiken.</target>
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <target>Meer informatie over het versnellen van uw workflow door &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;sneltoetsen&lt;/a&gt; te gebruiken.</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -2325,6 +2355,10 @@
         <source>Quick link</source>
         <target>Snelkeuze</target>
       </trans-unit>
+      <trans-unit id="MSC.lostPassword">
+        <source>Forgot your password?</source>
+        <target>Wachtwoord vergeten?</target>
+      </trans-unit>
       <trans-unit id="MSC.username">
         <source>Username</source>
         <target>Gebruikersnaam</target>
@@ -2344,6 +2378,12 @@
       <trans-unit id="MSC.emptyField">
         <source>Please enter your username and password!</source>
         <target>Vul uw gebruikersnaam en wachtwoord in!</target>
+      </trans-unit>
+      <trans-unit id="MSC.reauthenticate">
+        <source>Please enter your password to verify your identity.</source>
+      </trans-unit>
+      <trans-unit id="MSC.verify">
+        <source>Verify</source>
       </trans-unit>
       <trans-unit id="MSC.confirmation">
         <source>Confirmation</source>
@@ -2458,8 +2498,7 @@
         <target>Delen op Facebook</target>
       </trans-unit>
       <trans-unit id="MSC.twitterShare">
-        <source>Share on Twitter</source>
-        <target>Delen op Twitter</target>
+        <source>Share on X (formerly Twitter)</source>
       </trans-unit>
       <trans-unit id="MSC.pleaseWait">
         <source>Please wait</source>

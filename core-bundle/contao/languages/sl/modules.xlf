@@ -39,6 +39,7 @@
       </trans-unit>
       <trans-unit id="MOD.page.1">
         <source>Set up the pages of your website(s)</source>
+        <target>Uredite strani na vašem spletnem mestu</target>
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.0">
         <source>Templates</source>
@@ -165,6 +166,7 @@
       </trans-unit>
       <trans-unit id="MOD.favorites.1">
         <source>Manage your back end menu favorites</source>
+        <target>Upravljajte vaše izpostavljene elemente v meniju administracije</target>
       </trans-unit>
       <trans-unit id="MOD.tl_content">
         <source>Content elements</source>

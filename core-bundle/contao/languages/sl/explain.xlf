@@ -14,8 +14,8 @@
         <target>Vstavi značke</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.1.1">
-        <source>For more information about insert tags, see &lt;a href=&quot;https://docs.contao.org/dev/framework/insert-tags/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://docs.contao.org/dev/framework/insert-tags/&lt;/a&gt;.</source>
-        <target>Za več informacij o insert tags prosimo obiščite &lt;a href=&quot;https://docs.contao.org/dev/framework/insert-tags/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://docs.contao.org/dev/framework/insert-tags/&lt;/a&gt;.</target>
+        <source>For more information about insert tags, see the &lt;a href=&quot;https://to.contao.org/docs/insert-tags?lang=en&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao manual&lt;/a&gt;.</source>
+        <target>Za več informacij o insert tags obiščite &lt;a href=&quot;https://to.contao.org/docs/insert-tags?lang=en&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Priročnik za Contao&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.2.0">
         <source>Code editor</source>
@@ -30,7 +30,8 @@
         <target>Označba</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.3.1">
-        <source>To learn more about markdown, see the &lt;a href=&quot;https://docs.contao.org/manual/en/article-management/content-elements/text-elements/#markdown&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao manual&lt;/a&gt;.</source>
+        <source>To learn more about markdown, see the &lt;a href=&quot;https://to.contao.org/docs/markdown?lang=en&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao manual&lt;/a&gt;.</source>
+        <target>Za več informacij o markdown obiščite &lt;a href=&quot;https://to.contao.org/docs/markdown?lang=en&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Priročnik za Contao&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPL.dateFormat.0.0">
         <source>colspan</source>
@@ -38,6 +39,7 @@
       </trans-unit>
       <trans-unit id="XPL.dateFormat.0.1">
         <source>Contao supports all date and time formats that can be parsed with the PHP date() function. However, to ensure that any input can be transformed into a UNIX timestamp, you can only use numeric date and time formats (j, d, m, n, y, Y, g, G, h, H, i, s) in the back end.&lt;br&gt;&lt;br&gt;&lt;strong&gt;You can enter different front end formats in the website root pages.&lt;/strong&gt;&lt;br&gt;&lt;br&gt;&lt;em&gt;Here are some examples of valid date and time formats&lt;/em&gt;:</source>
+        <target>Contao podpira vse datumske in časovne oblike, ki so lahko obdelane s funkcijo date() v PHP. Zaradi zagotovila, da je možno vsak vnos pretvoriti v UNIX časovni način, lahko v administraciji uporabljate samo številčne oblike za datum in čas (j, d, m, n, y, Y, g, G, h, H, i, s).&lt;br /&gt;&lt;br /&gt;&lt;strong&gt;V koren spletne strani lahko vnesete drugačne oblike za frond-end.&lt;/strong&gt;&lt;br /&gt;&lt;br /&gt;&lt;em&gt;Tukaj je nekaj primerov veljavnih oblik za datum in čas&lt;/em&gt;:</target>
       </trans-unit>
       <trans-unit id="XPL.dateFormat.1.0">
         <source>Y-m-d</source>

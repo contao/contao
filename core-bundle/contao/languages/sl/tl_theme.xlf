@@ -46,8 +46,8 @@
         <target>Izvorne datoteke</target>
       </trans-unit>
       <trans-unit id="tl_theme.source.1">
-        <source>Here you can upload one or more .cto or .sql files to be imported.</source>
-        <target>Tu lahko naložite eno ali več datotek .cto ali .sql, ki bodo uvožene.</target>
+        <source>Here you can upload one or more .cto, .zip or .sql files to be imported.</source>
+        <target>Tu lahko naložite eno ali več datotek .cto, .zip ali .sql, ki bodo uvožene.</target>
       </trans-unit>
       <trans-unit id="tl_theme.tstamp.0">
         <source>Revision date</source>

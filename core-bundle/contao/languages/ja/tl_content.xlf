@@ -17,6 +17,14 @@
         <source>Here you can add a headline to the content element.</source>
         <target>コンテント要素に見出しを追加できます。</target>
       </trans-unit>
+      <trans-unit id="tl_content.sectionHeadline.0">
+        <source>Section headline</source>
+        <target>セクションの見出し</target>
+      </trans-unit>
+      <trans-unit id="tl_content.sectionHeadline.1">
+        <source>Here you can add a section headline, e.g. a tab title or accordion header.</source>
+        <target>セクションの見出し、例えばタブの題名やアコーディオンのヘッダーを追加できます。</target>
+      </trans-unit>
       <trans-unit id="tl_content.text.0">
         <source>Text</source>
         <target>テキスト</target>
@@ -209,6 +217,14 @@
         <source>Please choose the sort order.</source>
         <target>並べ替えの順序を選択してください。</target>
       </trans-unit>
+      <trans-unit id="tl_content.closeSections.0">
+        <source>Close all sections</source>
+        <target>すべてのセクションを閉じる</target>
+      </trans-unit>
+      <trans-unit id="tl_content.closeSections.1">
+        <source>Do not open the first section by default.</source>
+        <target>初期状態で最初のセクションを開きません。</target>
+      </trans-unit>
       <trans-unit id="tl_content.mooType.0">
         <source>Operation mode</source>
         <target>動作モード</target>
@@ -310,8 +326,8 @@
         <target>テンプレートのデータ</target>
       </trans-unit>
       <trans-unit id="tl_content.data.1">
-        <source>These values are available as &lt;code&gt;$this-&gt;data&lt;/code&gt; in the template.</source>
-        <target>これらの値は&lt;code&gt;$this-&gt;data&lt;/code&gt;としてテンプレートで利用できます。</target>
+        <source>These values are available as &lt;code&gt;$this-&gt;keys&lt;/code&gt; in the template.</source>
+        <target>これらの値は&lt;code&gt;$this-&gt;keys&lt;/code&gt;としてテンプレートで利用できます。</target>
       </trans-unit>
       <trans-unit id="tl_content.linkTitle.0">
         <source>Link text</source>
@@ -650,9 +666,21 @@
         <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>特定の日時より後はコンテント要素をウェブサイトに表示したくない場合は、その日時を入力します。それ以外の場合は空のままにします。</target>
       </trans-unit>
+      <trans-unit id="tl_content.tstamp.0">
+        <source>Revision date</source>
+        <target>改訂日</target>
+      </trans-unit>
+      <trans-unit id="tl_content.tstamp.1">
+        <source>Date and time of the latest revision</source>
+        <target>最新のリビジョンの日付と時刻</target>
+      </trans-unit>
       <trans-unit id="tl_content.type_legend">
         <source>Element type</source>
         <target>要素の種類</target>
+      </trans-unit>
+      <trans-unit id="tl_content.section_legend">
+        <source>Section settings</source>
+        <target>セクションの設定</target>
       </trans-unit>
       <trans-unit id="tl_content.text_legend">
         <source>Text/HTML/Code</source>
@@ -691,6 +719,10 @@
         <target>並べ替えのオプション</target>
       </trans-unit>
       <trans-unit id="tl_content.moo_legend">
+        <source>Accordion settings</source>
+        <target>アコーディオンの設定</target>
+      </trans-unit>
+      <trans-unit id="tl_content.accordion_legend">
         <source>Accordion settings</source>
         <target>アコーディオンの設定</target>
       </trans-unit>
@@ -941,6 +973,22 @@
       <trans-unit id="tl_content.table.1">
         <source>Import table items from a CSV file</source>
         <target>CSVファイルから表の項目をインポート</target>
+      </trans-unit>
+      <trans-unit id="tl_content.dl_label.0">
+        <source>Description list items</source>
+        <target>説明リストの項目</target>
+      </trans-unit>
+      <trans-unit id="tl_content.dl_label.1">
+        <source>Please enter a list of terms and details for the description list. You can leave the term field empty to create multiple details for one term.</source>
+        <target>説明リストの用語と詳細を入力してください。用語の欄を空にすると1つの用語に複数の説明を作成できます。</target>
+      </trans-unit>
+      <trans-unit id="tl_content.dl_key">
+        <source>Term</source>
+        <target>用語</target>
+      </trans-unit>
+      <trans-unit id="tl_content.dl_value">
+        <source>Details</source>
+        <target>詳細</target>
       </trans-unit>
     </body>
   </file>

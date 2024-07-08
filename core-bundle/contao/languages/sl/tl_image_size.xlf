@@ -77,6 +77,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadata.0">
         <source>Preserve copyright metadata</source>
+        <target>Ohrani metapodatke o avtorskih pravicah</target>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadata.1">
         <source>Preserve copyright-related metadata fields (EXIF, IPTC, XMP).</source>
@@ -87,6 +88,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataFields.1">
         <source>Please select the metadata fields to preserve.</source>
+        <target>Prosimo, izberite polja metapodatkov, ki naj se obdržijo</target>
       </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.0">
         <source>Use original image if dimensions match</source>

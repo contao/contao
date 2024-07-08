@@ -174,8 +174,8 @@
         <target>Sdílet přes Facebook</target>
       </trans-unit>
       <trans-unit id="tl_article.twitter">
-        <source>Share on Twitter</source>
-        <target>Sdílet přes Twitter</target>
+        <source>Share on X (formerly Twitter)</source>
+        <target>Sdílet přes X (dříve Twitter)</target>
       </trans-unit>
       <trans-unit id="tl_article.new.0">
         <source>New</source>

@@ -127,6 +127,13 @@
         <source>Please choose the page to which visitors will be redirected when clicking a link or submitting a form.</source>
         <target>Prosimo, izberite stran kamor bodo ob kliku na povezavo ali oddaji obrazca preusmerjeni obiskovalci.</target>
       </trans-unit>
+      <trans-unit id="tl_module.pwResetPage.0">
+        <source>Reset password page</source>
+        <target>Stran za ponastavitev gesla</target>
+      </trans-unit>
+      <trans-unit id="tl_module.pwResetPage.1">
+        <source>Here you can choose a page to which visitors will be redirected when clicking the &lt;em&gt;Forgot your password?&lt;/em&gt; link.</source>
+      </trans-unit>
       <trans-unit id="tl_module.overviewPage.0">
         <source>Overview page</source>
         <target>Pregledna stran</target>
@@ -165,6 +172,13 @@
       <trans-unit id="tl_module.editable.1">
         <source>Show these fields in the front end form.</source>
         <target>Pokaži ta polja v predstavitvi (front end) obrazca.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reqFullAuth.0">
+        <source>Require full authentication</source>
+        <target>Zahtevaj celotno avtentikacijo</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reqFullAuth.1">
+        <source>Users with only a &quot;remember me&quot; cookie must verify their identity in order to access the module.</source>
       </trans-unit>
       <trans-unit id="tl_module.memberTpl.0">
         <source>Form template</source>

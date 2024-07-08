@@ -433,6 +433,14 @@
         <source>Generates an ordered or unordered list.</source>
         <target>順序付きや順序なしの箇条書きを生成します。</target>
       </trans-unit>
+      <trans-unit id="CTE.description_list.0">
+        <source>Description list</source>
+        <target>説明リスト</target>
+      </trans-unit>
+      <trans-unit id="CTE.description_list.1">
+        <source>Generates a description list with terms and details.</source>
+        <target>用語と詳細からなる説明リストを生成します。</target>
+      </trans-unit>
       <trans-unit id="CTE.table.0">
         <source>Table</source>
         <target>表</target>
@@ -441,29 +449,41 @@
         <source>Generates an optionally sortable table.</source>
         <target>並べ替えも可能な表を生成します。</target>
       </trans-unit>
-      <trans-unit id="CTE.accordion">
+      <trans-unit id="CTE.accordion.0">
         <source>Accordion</source>
         <target>アコーディオン</target>
       </trans-unit>
+      <trans-unit id="CTE.accordion.1">
+        <source>Generates an accordion.</source>
+        <target>アコーディオンを生成します。</target>
+      </trans-unit>
+      <trans-unit id="CTE.element_group.0">
+        <source>Element group</source>
+        <target>要素のグループ</target>
+      </trans-unit>
+      <trans-unit id="CTE.element_group.1">
+        <source>Generates a group of nested elements.</source>
+        <target>入れ子の要素のグループを生成します。</target>
+      </trans-unit>
       <trans-unit id="CTE.accordionStart.0">
-        <source>Wrapper start</source>
-        <target>ラッパーの開始</target>
+        <source>Accordion wrapper start</source>
+        <target>アコーディオンのラッパーの開始</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStart.1">
         <source>Generates the opening part of the accordion wrapper.</source>
         <target>アコーディオンのラッパーを開始する部分を生成します。</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.0">
-        <source>Wrapper stop</source>
-        <target>ラッパーの終了</target>
+        <source>Accordion wrapper stop</source>
+        <target>アコーディオンのラッパーの終了</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.1">
         <source>Generates the closing part of the accordion wrapper.</source>
         <target>アコーディオンのラッパーを終了する部分を生成します。</target>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.0">
-        <source>Single element</source>
-        <target>単一の要素</target>
+        <source>Accordion single element</source>
+        <target>単一のアコーディオンの要素</target>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.1">
         <source>Generates a single accordion element.</source>
@@ -493,21 +513,29 @@
         <source>Generates an element to insert a custom template.</source>
         <target>独自のテンプレートを挿入する要素を生成します。</target>
       </trans-unit>
+      <trans-unit id="CTE.swiper.0">
+        <source>Content slider</source>
+        <target>コンテントスライダー</target>
+      </trans-unit>
+      <trans-unit id="CTE.swiper.1">
+        <source>Generates a content slider element.</source>
+        <target>コンテントスライダーの要素を生成します。</target>
+      </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
         <target>コンテントスライダー</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStart.0">
-        <source>Wrapper start</source>
-        <target>ラッパーの開始</target>
+        <source>Slider wrapper start</source>
+        <target>スライダーのラッパーの開始</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStart.1">
         <source>Generates the opening part of the slider wrapper.</source>
         <target>スライダーのラッパーを開始する部分を生成します。</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStop.0">
-        <source>Wrapper stop</source>
-        <target>ラッパーの終了</target>
+        <source>Slider wrapper stop</source>
+        <target>スライダーのラッパーの終了</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStop.1">
         <source>Generates the closing part of the slider wrapper.</source>
@@ -640,6 +668,10 @@
       <trans-unit id="CTE.teaser.1">
         <source>Displays the teaser text of an article.</source>
         <target>アーティクルのティーザーのテキストを表示します。</target>
+      </trans-unit>
+      <trans-unit id="CTE.legacy">
+        <source>Legacy elements</source>
+        <target>レガシーな要素</target>
       </trans-unit>
       <trans-unit id="FFL.explanation.0">
         <source>Explanation</source>
@@ -1602,8 +1634,8 @@
         <target>バックエンドのキーボードのショートカット</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>&lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;キーボードのショートカット&lt;/a&gt;を使って、作業の流れを高速化する方法を学びましょう。</target>
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <target>&lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;キーボードのショートカット&lt;/a&gt;を使用した作業の流れを高速にする方法を学びましょう。</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -2325,6 +2357,10 @@
         <source>Quick link</source>
         <target>クイックリンク</target>
       </trans-unit>
+      <trans-unit id="MSC.lostPassword">
+        <source>Forgot your password?</source>
+        <target>パスワードを忘れましたか?</target>
+      </trans-unit>
       <trans-unit id="MSC.username">
         <source>Username</source>
         <target>ユーザー名</target>
@@ -2344,6 +2380,14 @@
       <trans-unit id="MSC.emptyField">
         <source>Please enter your username and password!</source>
         <target>ユーザー名とパスワードを入力しください。</target>
+      </trans-unit>
+      <trans-unit id="MSC.reauthenticate">
+        <source>Please enter your password to verify your identity.</source>
+        <target>パスワードを入力して、あなたの識別情報を検証してください。</target>
+      </trans-unit>
+      <trans-unit id="MSC.verify">
+        <source>Verify</source>
+        <target>検証</target>
       </trans-unit>
       <trans-unit id="MSC.confirmation">
         <source>Confirmation</source>
@@ -2458,8 +2502,8 @@
         <target>Facebookで共有</target>
       </trans-unit>
       <trans-unit id="MSC.twitterShare">
-        <source>Share on Twitter</source>
-        <target>Twitterで共有</target>
+        <source>Share on X (formerly Twitter)</source>
+        <target>X(かつてのTwitter)で共有</target>
       </trans-unit>
       <trans-unit id="MSC.pleaseWait">
         <source>Please wait</source>

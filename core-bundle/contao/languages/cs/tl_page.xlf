@@ -70,8 +70,8 @@
         <target>Tag pro hledací roboty</target>
       </trans-unit>
       <trans-unit id="tl_page.robots.1">
-        <source>Here you can define how search engines handle the page.</source>
-        <target>Zde můžete nastavit, jak mají tuto stránku vnímat vyhledávací roboti.</target>
+        <source>Here you can define how search engines handle the page. The setting also determines whether the page appears in the &lt;code&gt;sitemap.xml&lt;/code&gt; file or not.</source>
+        <target>Zde můžeš určit, jak budou vyhledávače zacházet s tvou stránkou. Tato nastavení také ovlivní, zda se daná stránka objeví v souboru &lt;code&gt;sitemap.xml&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_page.maintenanceMode.0">
         <source>Maintenance mode</source>
@@ -473,6 +473,38 @@
         <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
         <target>Vyberte prosím stránku, na níž bude uživatel přesměrován po úspěšném dvoufázovém ověření.</target>
       </trans-unit>
+      <trans-unit id="tl_page.enableCsp.0">
+        <source>Enable CSP</source>
+        <target>Povolit CSP</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCsp.1">
+        <source>Enable Content Security Policy for this website.</source>
+        <target>Povolí Content Security Policy pro tuto stránku.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.csp.0">
+        <source>Content Security Policy</source>
+        <target>Content Security Policy</target>
+      </trans-unit>
+      <trans-unit id="tl_page.csp.1">
+        <source>Here you can enter custom Content Security Policy directives.</source>
+        <target>Zde můžeš zadat vlastní příkazy pro Content Security Policy.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportOnly.0">
+        <source>Reporting only</source>
+        <target>Pouze oznamovat</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportOnly.1">
+        <source>Only report policy violations without enforcing them.</source>
+        <target>Zpravovat o porušení bez vyvolání jich.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportLog.0">
+        <source>Enable report logging</source>
+        <target>Povolit logování </target>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportLog.1">
+        <source>Log CSP violations to the Contao system log.</source>
+        <target>Budou se zaznamenávat zprávy o porušení ochrany obsahu v systémovém logu Contaa. </target>
+      </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
         <target>Název a typ</target>
@@ -553,6 +585,10 @@
         <source>Two-factor authentication</source>
         <target>Dvoufázové ověření</target>
       </trans-unit>
+      <trans-unit id="tl_page.csp_legend">
+        <source>Content Security Policy</source>
+        <target>Content Security Policy</target>
+      </trans-unit>
       <trans-unit id="tl_page.permanent">
         <source>301 Permanent redirect</source>
         <target>trvalý</target>
@@ -601,7 +637,7 @@
         <source>Duplicate page ID %s</source>
         <target>Duplikovat stránku ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.copyChilds">
+      <trans-unit id="tl_page.copyChildren">
         <source>Duplicate page ID %s with its subpages</source>
         <target>Duplikovat stránku ID %s s podstránkamy</target>
       </trans-unit>

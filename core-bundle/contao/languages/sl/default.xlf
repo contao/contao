@@ -199,6 +199,7 @@
       </trans-unit>
       <trans-unit id="ERR.pageUrlNameExists">
         <source>This alias leads to a conflict with page &quot;%s&quot; (ID %s)!</source>
+        <target>Ta vzdevek je v konfliktu s stranjo &quot;%s&quot; (ID %s)!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
@@ -432,6 +433,12 @@
         <source>Generates an ordered or unordered list.</source>
         <target>Generira razvrščen ali nerazvrščen seznam.</target>
       </trans-unit>
+      <trans-unit id="CTE.description_list.0">
+        <source>Description list</source>
+      </trans-unit>
+      <trans-unit id="CTE.description_list.1">
+        <source>Generates a description list with terms and details.</source>
+      </trans-unit>
       <trans-unit id="CTE.table.0">
         <source>Table</source>
         <target>Tabela</target>
@@ -440,29 +447,37 @@
         <source>Generates an optionally sortable table.</source>
         <target>Generira tabelo. Opcijsko z razvrščanjem.</target>
       </trans-unit>
-      <trans-unit id="CTE.accordion">
+      <trans-unit id="CTE.accordion.0">
         <source>Accordion</source>
         <target>Harmonika</target>
       </trans-unit>
+      <trans-unit id="CTE.accordion.1">
+        <source>Generates an accordion.</source>
+      </trans-unit>
+      <trans-unit id="CTE.element_group.0">
+        <source>Element group</source>
+        <target>Skupina elementov</target>
+      </trans-unit>
+      <trans-unit id="CTE.element_group.1">
+        <source>Generates a group of nested elements.</source>
+        <target>Ustvari skupino vgnezdenih elementov.</target>
+      </trans-unit>
       <trans-unit id="CTE.accordionStart.0">
-        <source>Wrapper start</source>
-        <target>Začetek ovoja</target>
+        <source>Accordion wrapper start</source>
       </trans-unit>
       <trans-unit id="CTE.accordionStart.1">
         <source>Generates the opening part of the accordion wrapper.</source>
         <target>Generira začetni del ovoja harmonike.</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.0">
-        <source>Wrapper stop</source>
-        <target>Konec ovoja</target>
+        <source>Accordion wrapper stop</source>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.1">
         <source>Generates the closing part of the accordion wrapper.</source>
         <target>Generira zaključni del ovoja harmonike.</target>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.0">
-        <source>Single element</source>
-        <target>Samostojen element</target>
+        <source>Accordion single element</source>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.1">
         <source>Generates a single accordion element.</source>
@@ -491,21 +506,26 @@
       <trans-unit id="CTE.template.1">
         <source>Generates an element to insert a custom template.</source>
       </trans-unit>
+      <trans-unit id="CTE.swiper.0">
+        <source>Content slider</source>
+        <target>Drsnik vsebine</target>
+      </trans-unit>
+      <trans-unit id="CTE.swiper.1">
+        <source>Generates a content slider element.</source>
+      </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
         <target>Drsnik vsebine</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStart.0">
-        <source>Wrapper start</source>
-        <target>Začetek ovoja</target>
+        <source>Slider wrapper start</source>
       </trans-unit>
       <trans-unit id="CTE.sliderStart.1">
         <source>Generates the opening part of the slider wrapper.</source>
         <target>Generira začetni del ovoja drsnika.</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStop.0">
-        <source>Wrapper stop</source>
-        <target>Konec ovoja</target>
+        <source>Slider wrapper stop</source>
       </trans-unit>
       <trans-unit id="CTE.sliderStop.1">
         <source>Generates the closing part of the slider wrapper.</source>
@@ -638,6 +658,9 @@
       <trans-unit id="CTE.teaser.1">
         <source>Displays the teaser text of an article.</source>
         <target>Prikaže uvodni tekst članka.</target>
+      </trans-unit>
+      <trans-unit id="CTE.legacy">
+        <source>Legacy elements</source>
       </trans-unit>
       <trans-unit id="FFL.explanation.0">
         <source>Explanation</source>
@@ -1591,8 +1614,7 @@
         <target>Bližnjice na tipkovnici, na voljo v administraciji</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>Za več informacij o načinu pohitritve dela preberite članek o &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;bližnjicah na tipkovnici&lt;/a&gt;.</target>
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -2314,6 +2336,10 @@
         <source>Quick link</source>
         <target>Hitra povezava</target>
       </trans-unit>
+      <trans-unit id="MSC.lostPassword">
+        <source>Forgot your password?</source>
+        <target>Pozabljeno geslo?</target>
+      </trans-unit>
       <trans-unit id="MSC.username">
         <source>Username</source>
         <target>Uporabniško ime</target>
@@ -2333,6 +2359,13 @@
       <trans-unit id="MSC.emptyField">
         <source>Please enter your username and password!</source>
         <target>Vnesite uporabniško ime in geslo.</target>
+      </trans-unit>
+      <trans-unit id="MSC.reauthenticate">
+        <source>Please enter your password to verify your identity.</source>
+        <target>Prosimo, potrdite svojo identiteto z vašim geslom.</target>
+      </trans-unit>
+      <trans-unit id="MSC.verify">
+        <source>Verify</source>
       </trans-unit>
       <trans-unit id="MSC.confirmation">
         <source>Confirmation</source>
@@ -2447,8 +2480,8 @@
         <target>Povej naprej na Facebook</target>
       </trans-unit>
       <trans-unit id="MSC.twitterShare">
-        <source>Share on Twitter</source>
-        <target>Povej naprej na Twitter</target>
+        <source>Share on X (formerly Twitter)</source>
+        <target>Deli na X (prej Twitter)</target>
       </trans-unit>
       <trans-unit id="MSC.pleaseWait">
         <source>Please wait</source>

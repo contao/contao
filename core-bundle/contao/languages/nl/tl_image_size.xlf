@@ -83,6 +83,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadata.1">
         <source>Preserve copyright-related metadata fields (EXIF, IPTC, XMP).</source>
+        <target>Behoud auteursrechtgerelateerde metadatavelden (EXIF, IPTC, XMP).</target>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataFields.0">
         <source>Metadata fields</source>
@@ -90,6 +91,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataFields.1">
         <source>Please select the metadata fields to preserve.</source>
+        <target>Selecteer de metadatavelden die u wilt behouden.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.0">
         <source>Use original image if dimensions match</source>
@@ -105,6 +107,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.imageQuality.1">
         <source>Here you can set the image compression quality between 0 (lowest quality) and 100 (highest quality). Leave blank to use the system default.</source>
+        <target>Hier kunt u de beeldcompressiekwaliteit instellen tussen 0 (laagste kwaliteit) en 100 (hoogste kwaliteit). Laat dit leeg om de systeemstandaard te gebruiken.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.0">
         <source>Enable lazy loading</source>
@@ -168,12 +171,15 @@
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataOptions.default">
         <source>Use default settings</source>
+        <target>Gebruik standaardinstellingen</target>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataOptions.overwrite">
         <source>Select custom metadata fields</source>
+        <target>Selecteer aangepaste metadatavelden</target>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataOptions.delete">
         <source>Remove all metadata fields</source>
+        <target>Verwijder alle metadatavelden</target>
       </trans-unit>
       <trans-unit id="tl_image_size.new.0">
         <source>New</source>

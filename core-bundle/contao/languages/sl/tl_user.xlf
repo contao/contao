@@ -177,6 +177,14 @@
         <source>Here you can select the allowed form field types.</source>
         <target>Tu lahko določite dovoljena vnosna polja v obrazcih</target>
       </trans-unit>
+      <trans-unit id="tl_user.frontendModules.0">
+        <source>Front end modules</source>
+        <target>Moduli na spletnem mestu</target>
+      </trans-unit>
+      <trans-unit id="tl_user.frontendModules.1">
+        <source>Here you can select the allowed front end module types.</source>
+        <target>Tu lahko določite dovoljene vrste modulov za front-end.</target>
+      </trans-unit>
       <trans-unit id="tl_user.pagemounts.0">
         <source>Pagemounts</source>
         <target>Vključene strani</target>

@@ -70,8 +70,7 @@
         <target>Robots tag</target>
       </trans-unit>
       <trans-unit id="tl_page.robots.1">
-        <source>Here you can define how search engines handle the page.</source>
-        <target>Hier kunt u bepalen hoe zoekmachines de pagina afhandelen.</target>
+        <source>Here you can define how search engines handle the page. The setting also determines whether the page appears in the &lt;code&gt;sitemap.xml&lt;/code&gt; file or not.</source>
       </trans-unit>
       <trans-unit id="tl_page.maintenanceMode.0">
         <source>Maintenance mode</source>
@@ -99,9 +98,11 @@
       </trans-unit>
       <trans-unit id="tl_page.alwaysForward.0">
         <source>Always redirect</source>
+        <target>Altijd omleiden</target>
       </trans-unit>
       <trans-unit id="tl_page.alwaysForward.1">
         <source>Redirect to the target page even if there are query or path parameters.</source>
+        <target>Omleiden naar de doelpagina, zelfs als er query- of padparameters zijn.</target>
       </trans-unit>
       <trans-unit id="tl_page.jumpTo.0">
         <source>Redirect page</source>
@@ -471,6 +472,30 @@
         <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
         <target>Kies de pagina waarnaar leden worden doorgestuurd om tweefactorauthenticatie in te stellen.</target>
       </trans-unit>
+      <trans-unit id="tl_page.enableCsp.0">
+        <source>Enable CSP</source>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCsp.1">
+        <source>Enable Content Security Policy for this website.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.csp.0">
+        <source>Content Security Policy</source>
+      </trans-unit>
+      <trans-unit id="tl_page.csp.1">
+        <source>Here you can enter custom Content Security Policy directives.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportOnly.0">
+        <source>Reporting only</source>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportOnly.1">
+        <source>Only report policy violations without enforcing them.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportLog.0">
+        <source>Enable report logging</source>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportLog.1">
+        <source>Log CSP violations to the Contao system log.</source>
+      </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
         <target>Naam en type</target>
@@ -551,6 +576,9 @@
         <source>Two-factor authentication</source>
         <target>Twee-traps authenticatie</target>
       </trans-unit>
+      <trans-unit id="tl_page.csp_legend">
+        <source>Content Security Policy</source>
+      </trans-unit>
       <trans-unit id="tl_page.permanent">
         <source>301 Permanent redirect</source>
         <target>301 Permanente redirect</target>
@@ -599,7 +627,7 @@
         <source>Duplicate page ID %s</source>
         <target>Kopieer pagina ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.copyChilds">
+      <trans-unit id="tl_page.copyChildren">
         <source>Duplicate page ID %s with its subpages</source>
         <target>Kopieer pagina ID %s met subpagina's</target>
       </trans-unit>

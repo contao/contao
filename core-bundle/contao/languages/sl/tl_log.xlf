@@ -59,6 +59,7 @@
       </trans-unit>
       <trans-unit id="tl_log.uri.0">
         <source>Request URI</source>
+        <target>Naslov URI zahteve</target>
       </trans-unit>
       <trans-unit id="tl_log.uri.1">
         <source>The URI of the request</source>

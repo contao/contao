@@ -163,6 +163,7 @@
       </trans-unit>
       <trans-unit id="ERR.tooManyLoginAttempts">
         <source>Too many failed login attempts, please try again later.</source>
+        <target>Troppi tentativi di accesso non riusciti, riprova più tardi.</target>
       </trans-unit>
       <trans-unit id="ERR.invalidLogin">
         <source>Login failed (note that usernames and passwords are case-sensitive)!</source>
@@ -366,9 +367,11 @@
       </trans-unit>
       <trans-unit id="ERR.noAdminEmailUrl">
         <source>There is no administrator e-mail address set in the &lt;a href=&quot;%s&quot; target=&quot;_top&quot;&gt;system settings&lt;/a&gt;.</source>
+        <target>Non è stato impostato alcun indirizzo e-mail di amministratore nel &lt;a href=&quot;%s&quot; target=&quot;_top&quot;&gt;system settings&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="ERR.noAdminEmail">
         <source>There is no administrator e-mail address set, please contact the site administrator.</source>
+        <target>Non è stato impostato alcun indirizzo e-mail per l'amministratore, contattare l'amministratore del sito.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -430,6 +433,14 @@
         <source>Generates an ordered or unordered list.</source>
         <target>Genera un elenco ordinato e non.</target>
       </trans-unit>
+      <trans-unit id="CTE.description_list.0">
+        <source>Description list</source>
+        <target>Elenco delle descrizioni</target>
+      </trans-unit>
+      <trans-unit id="CTE.description_list.1">
+        <source>Generates a description list with terms and details.</source>
+        <target>Genera un elenco di descrizioni con termini e dettagli.</target>
+      </trans-unit>
       <trans-unit id="CTE.table.0">
         <source>Table</source>
         <target>Tabella</target>
@@ -438,29 +449,41 @@
         <source>Generates an optionally sortable table.</source>
         <target>Genera una tabella (con opzioni di ordinamento).</target>
       </trans-unit>
-      <trans-unit id="CTE.accordion">
+      <trans-unit id="CTE.accordion.0">
         <source>Accordion</source>
         <target>Fisarmonica</target>
       </trans-unit>
+      <trans-unit id="CTE.accordion.1">
+        <source>Generates an accordion.</source>
+        <target>Genera un elemento a fisarmonica.</target>
+      </trans-unit>
+      <trans-unit id="CTE.element_group.0">
+        <source>Element group</source>
+        <target>Elemento del gruppo</target>
+      </trans-unit>
+      <trans-unit id="CTE.element_group.1">
+        <source>Generates a group of nested elements.</source>
+        <target>Genera un gruppo di elementi nidificati.</target>
+      </trans-unit>
       <trans-unit id="CTE.accordionStart.0">
-        <source>Wrapper start</source>
-        <target>Wrapper start</target>
+        <source>Accordion wrapper start</source>
+        <target>Inizio dell'elemento fisarmonica</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStart.1">
         <source>Generates the opening part of the accordion wrapper.</source>
         <target>Genera l'elemento di partenza di un elemento fisarmonica.</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.0">
-        <source>Wrapper stop</source>
-        <target>Wrapper stop</target>
+        <source>Accordion wrapper stop</source>
+        <target>Fine dell'elemento fisarmonica</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.1">
         <source>Generates the closing part of the accordion wrapper.</source>
         <target>Genera l'elemento di chiusura di un elemento fisarmonica.</target>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.0">
-        <source>Single element</source>
-        <target>Elemento singolo</target>
+        <source>Accordion single element</source>
+        <target>Elemento singolo a fisarmonica</target>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.1">
         <source>Generates a single accordion element.</source>
@@ -490,21 +513,29 @@
         <source>Generates an element to insert a custom template.</source>
         <target>Genera un elemento per inserire un template personalizzato.</target>
       </trans-unit>
+      <trans-unit id="CTE.swiper.0">
+        <source>Content slider</source>
+        <target>Contenuto slider</target>
+      </trans-unit>
+      <trans-unit id="CTE.swiper.1">
+        <source>Generates a content slider element.</source>
+        <target>Genera un elemento di conetnuto slide.</target>
+      </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
         <target>Contenuto slider</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStart.0">
-        <source>Wrapper start</source>
-        <target>Wrapper start</target>
+        <source>Slider wrapper start</source>
+        <target>Inizio elemento slide</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStart.1">
         <source>Generates the opening part of the slider wrapper.</source>
         <target>Genera l'elemento di partenza di un elemento slider.</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStop.0">
-        <source>Wrapper stop</source>
-        <target>Wrapper stop</target>
+        <source>Slider wrapper stop</source>
+        <target>Fine elemento slide</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStop.1">
         <source>Generates the closing part of the slider wrapper.</source>
@@ -637,6 +668,10 @@
       <trans-unit id="CTE.teaser.1">
         <source>Displays the teaser text of an article.</source>
         <target>Mostra il testo di anteprima di un articolo.</target>
+      </trans-unit>
+      <trans-unit id="CTE.legacy">
+        <source>Legacy elements</source>
+        <target>Elementi legacy</target>
       </trans-unit>
       <trans-unit id="FFL.explanation.0">
         <source>Explanation</source>
@@ -1599,8 +1634,8 @@
         <target>Scorciatoie da tastiera del backend</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>Scopri di più su come velocizzare il tuo flusso di lavoro usando le &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;scelte rapide da tastiera&lt;/a&gt;.</target>
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <target>Scopri di più su come velocizzare il tuo flusso di lavoro usando le &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;scelte rapide da tastiera&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -2040,6 +2075,7 @@
       </trans-unit>
       <trans-unit id="MSC.copyMultiple">
         <source>Copy repeatedly</source>
+        <target>Copia ripetutamente</target>
       </trans-unit>
       <trans-unit id="MSC.aliasSelected">
         <source>Generate aliases</source>
@@ -2127,6 +2163,7 @@
       </trans-unit>
       <trans-unit id="MSC.guests">
         <source>Guests (not logged in)</source>
+        <target>Ospiti (non registrati)</target>
       </trans-unit>
       <trans-unit id="MSC.updateMode">
         <source>Update mode</source>
@@ -2320,6 +2357,10 @@
         <source>Quick link</source>
         <target>Link veloce</target>
       </trans-unit>
+      <trans-unit id="MSC.lostPassword">
+        <source>Forgot your password?</source>
+        <target>Hai dimenticato la password?</target>
+      </trans-unit>
       <trans-unit id="MSC.username">
         <source>Username</source>
         <target>Nome utente</target>
@@ -2339,6 +2380,14 @@
       <trans-unit id="MSC.emptyField">
         <source>Please enter your username and password!</source>
         <target>Inserisci nome utente e password!</target>
+      </trans-unit>
+      <trans-unit id="MSC.reauthenticate">
+        <source>Please enter your password to verify your identity.</source>
+        <target>Inserire la password per verificare la propria identità.</target>
+      </trans-unit>
+      <trans-unit id="MSC.verify">
+        <source>Verify</source>
+        <target>Verifica</target>
       </trans-unit>
       <trans-unit id="MSC.confirmation">
         <source>Confirmation</source>
@@ -2453,8 +2502,8 @@
         <target>Condividi in Facebook</target>
       </trans-unit>
       <trans-unit id="MSC.twitterShare">
-        <source>Share on Twitter</source>
-        <target>Condividi in Twitter</target>
+        <source>Share on X (formerly Twitter)</source>
+        <target>Condividi su X (ex Twitter)</target>
       </trans-unit>
       <trans-unit id="MSC.pleaseWait">
         <source>Please wait</source>
@@ -2674,9 +2723,11 @@
       </trans-unit>
       <trans-unit id="MSC.favorite">
         <source>Save URL as favorite</source>
+        <target>Salva l'URL come preferito</target>
       </trans-unit>
       <trans-unit id="MSC.editFavorites">
         <source>Edit favorites</source>
+        <target>Modifica i favoriti</target>
       </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
@@ -2808,9 +2859,11 @@
       </trans-unit>
       <trans-unit id="MSC.editImageSize">
         <source>Edit the image size</source>
+        <target>Modifica la dimensione dell'immagine</target>
       </trans-unit>
       <trans-unit id="MSC.booleanNot">
         <source>Not %s</source>
+        <target>Non %s</target>
       </trans-unit>
       <trans-unit id="MSC.darkMode">
         <source>Dark mode</source>
@@ -2818,6 +2871,7 @@
       </trans-unit>
       <trans-unit id="MSC.lightMode">
         <source>Light mode</source>
+        <target>Light mode</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -3009,12 +3063,15 @@
       </trans-unit>
       <trans-unit id="DCA.toggle.0">
         <source>Publish/unpublish element</source>
+        <target>Publica/non pubblicare l'elemento</target>
       </trans-unit>
       <trans-unit id="DCA.toggle.1">
         <source>Unpublish element ID %s</source>
+        <target>Annulla pubblicazione elemento ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.toggle.2">
         <source>Publish element ID %s</source>
+        <target>Pubblica elemento ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.pasteinto.0">
         <source>Paste at the top</source>

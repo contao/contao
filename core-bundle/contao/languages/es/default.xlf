@@ -31,9 +31,11 @@
       </trans-unit>
       <trans-unit id="ERR.minval">
         <source>Field &quot;%s&quot; has to be at least %s!</source>
+        <target>El campo &quot;%s&quot; tiene que ser al menos %s!</target>
       </trans-unit>
       <trans-unit id="ERR.maxval">
         <source>Field &quot;%s&quot; must not be greater than %s!</source>
+        <target>El campo &quot;%s&quot; no puede ser mayor a %s!</target>
       </trans-unit>
       <trans-unit id="ERR.digit">
         <source>Please enter digits only!</source>
@@ -161,6 +163,7 @@
       </trans-unit>
       <trans-unit id="ERR.tooManyLoginAttempts">
         <source>Too many failed login attempts, please try again later.</source>
+        <target>Demasiados intentos fallidos de inicio de sesión. Vuelva a intentarlo más tarde.</target>
       </trans-unit>
       <trans-unit id="ERR.invalidLogin">
         <source>Login failed (note that usernames and passwords are case-sensitive)!</source>
@@ -364,9 +367,11 @@
       </trans-unit>
       <trans-unit id="ERR.noAdminEmailUrl">
         <source>There is no administrator e-mail address set in the &lt;a href=&quot;%s&quot; target=&quot;_top&quot;&gt;system settings&lt;/a&gt;.</source>
+        <target>No hay ninguna dirección de correo electrónico de administrador configurada en la &lt;a href=&quot;%s&quot; target=&quot;_top&quot;&gt;configuración del sistema&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="ERR.noAdminEmail">
         <source>There is no administrator e-mail address set, please contact the site administrator.</source>
+        <target>No hay ninguna dirección de correo electrónico de administrador configurada; comuníquese con el administrador del sitio.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -428,6 +433,14 @@
         <source>Generates an ordered or unordered list.</source>
         <target>Este elemento contiene un lista ordenada o desordenada.</target>
       </trans-unit>
+      <trans-unit id="CTE.description_list.0">
+        <source>Description list</source>
+        <target>Lista de descripción</target>
+      </trans-unit>
+      <trans-unit id="CTE.description_list.1">
+        <source>Generates a description list with terms and details.</source>
+        <target>Genera una lista de descripción con términos y detalles.</target>
+      </trans-unit>
       <trans-unit id="CTE.table.0">
         <source>Table</source>
         <target>Tabla</target>
@@ -436,29 +449,41 @@
         <source>Generates an optionally sortable table.</source>
         <target>Este elemento contiene una tabla.</target>
       </trans-unit>
-      <trans-unit id="CTE.accordion">
+      <trans-unit id="CTE.accordion.0">
         <source>Accordion</source>
         <target>Acordeon</target>
       </trans-unit>
+      <trans-unit id="CTE.accordion.1">
+        <source>Generates an accordion.</source>
+        <target>Genera un acordeón.</target>
+      </trans-unit>
+      <trans-unit id="CTE.element_group.0">
+        <source>Element group</source>
+        <target>Grupo de elementos</target>
+      </trans-unit>
+      <trans-unit id="CTE.element_group.1">
+        <source>Generates a group of nested elements.</source>
+        <target>Genera un grupo de elementos anidados.</target>
+      </trans-unit>
       <trans-unit id="CTE.accordionStart.0">
-        <source>Wrapper start</source>
-        <target>Inicio de contenedor</target>
+        <source>Accordion wrapper start</source>
+        <target>Inicio de envoltura de acordeón</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStart.1">
         <source>Generates the opening part of the accordion wrapper.</source>
         <target>Genera la parte abierta de un acordeón.</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.0">
-        <source>Wrapper stop</source>
-        <target>Final de contenedor</target>
+        <source>Accordion wrapper stop</source>
+        <target>Final de envoltura de acordeón</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.1">
         <source>Generates the closing part of the accordion wrapper.</source>
         <target>Genera la parte de cierre de un acordeón.</target>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.0">
-        <source>Single element</source>
-        <target>Elemento simple</target>
+        <source>Accordion single element</source>
+        <target>Elemento único de acordeón.</target>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.1">
         <source>Generates a single accordion element.</source>
@@ -488,21 +513,29 @@
         <source>Generates an element to insert a custom template.</source>
         <target>Genera un elemento para insertar una plantilla personalizada.</target>
       </trans-unit>
+      <trans-unit id="CTE.swiper.0">
+        <source>Content slider</source>
+        <target>Slider de contenido</target>
+      </trans-unit>
+      <trans-unit id="CTE.swiper.1">
+        <source>Generates a content slider element.</source>
+        <target>Genera un elemento deslizante de contenido.</target>
+      </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
         <target>Slider de contenido</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStart.0">
-        <source>Wrapper start</source>
-        <target>Inicio de contenedor</target>
+        <source>Slider wrapper start</source>
+        <target>Inicio del contenedor deslizante</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStart.1">
         <source>Generates the opening part of the slider wrapper.</source>
         <target>Genera la parte abierta del Slider.</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStop.0">
-        <source>Wrapper stop</source>
-        <target>Final de contenedor</target>
+        <source>Slider wrapper stop</source>
+        <target>Final de envoltura deslizante</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStop.1">
         <source>Generates the closing part of the slider wrapper.</source>
@@ -635,6 +668,10 @@
       <trans-unit id="CTE.teaser.1">
         <source>Displays the teaser text of an article.</source>
         <target>Este elemento permite mostrar el texto teaser de un cierto artículo.</target>
+      </trans-unit>
+      <trans-unit id="CTE.legacy">
+        <source>Legacy elements</source>
+        <target>Elementos heredados (legacy)</target>
       </trans-unit>
       <trans-unit id="FFL.explanation.0">
         <source>Explanation</source>
@@ -1597,8 +1634,8 @@
         <target>Teclas de acceso rápido del Backend</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>Obtenga más información sobre cómo acelerar su flujo de trabajo mediante el uso de métodos &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;abreviados de teclado&lt;/a&gt;.</target>
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <target>Obtenga más información sobre cómo acelerar su flujo de trabajo utilizando &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;atajos de teclado&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -1958,6 +1995,7 @@
       </trans-unit>
       <trans-unit id="MSC.imageMetadata">
         <source>%s metadata</source>
+        <target>%s metadata</target>
       </trans-unit>
       <trans-unit id="MSC.versioning">
         <source>Version management</source>
@@ -2001,12 +2039,15 @@
       </trans-unit>
       <trans-unit id="MSC.folderC">
         <source>Public folder</source>
+        <target>Carpeta pública</target>
       </trans-unit>
       <trans-unit id="MSC.folderCP">
         <source>Protected folder</source>
+        <target>Carpeta protegida</target>
       </trans-unit>
       <trans-unit id="MSC.typeOfFile">
         <source>%s file</source>
+        <target>%s fichero</target>
       </trans-unit>
       <trans-unit id="MSC.loadingData">
         <source>Loading data</source>
@@ -2034,6 +2075,7 @@
       </trans-unit>
       <trans-unit id="MSC.copyMultiple">
         <source>Copy repeatedly</source>
+        <target>Copiar repetidamente</target>
       </trans-unit>
       <trans-unit id="MSC.aliasSelected">
         <source>Generate aliases</source>
@@ -2121,6 +2163,7 @@
       </trans-unit>
       <trans-unit id="MSC.guests">
         <source>Guests (not logged in)</source>
+        <target>Invitados (no conectados)</target>
       </trans-unit>
       <trans-unit id="MSC.updateMode">
         <source>Update mode</source>
@@ -2314,6 +2357,10 @@
         <source>Quick link</source>
         <target>Enlace rápido</target>
       </trans-unit>
+      <trans-unit id="MSC.lostPassword">
+        <source>Forgot your password?</source>
+        <target>¿Olvidó su contraseña?</target>
+      </trans-unit>
       <trans-unit id="MSC.username">
         <source>Username</source>
         <target>Usuario</target>
@@ -2333,6 +2380,14 @@
       <trans-unit id="MSC.emptyField">
         <source>Please enter your username and password!</source>
         <target>Por favor, introduce tu usuario y contraseña.</target>
+      </trans-unit>
+      <trans-unit id="MSC.reauthenticate">
+        <source>Please enter your password to verify your identity.</source>
+        <target>Por favor ingrese su contraseña para verificar su identidad.</target>
+      </trans-unit>
+      <trans-unit id="MSC.verify">
+        <source>Verify</source>
+        <target>Verificar</target>
       </trans-unit>
       <trans-unit id="MSC.confirmation">
         <source>Confirmation</source>
@@ -2447,8 +2502,8 @@
         <target>Compartir en Facebook</target>
       </trans-unit>
       <trans-unit id="MSC.twitterShare">
-        <source>Share on Twitter</source>
-        <target>Compartir en Twitter</target>
+        <source>Share on X (formerly Twitter)</source>
+        <target>Compartir en X (anteriormente Twitter)</target>
       </trans-unit>
       <trans-unit id="MSC.pleaseWait">
         <source>Please wait</source>
@@ -2664,12 +2719,15 @@
       </trans-unit>
       <trans-unit id="MSC.favorites">
         <source>Favorites</source>
+        <target>Favoritos</target>
       </trans-unit>
       <trans-unit id="MSC.favorite">
         <source>Save URL as favorite</source>
+        <target>Guardar URL como favorita</target>
       </trans-unit>
       <trans-unit id="MSC.editFavorites">
         <source>Edit favorites</source>
+        <target>Editar favoritos</target>
       </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
@@ -2801,15 +2859,19 @@
       </trans-unit>
       <trans-unit id="MSC.editImageSize">
         <source>Edit the image size</source>
+        <target>Editar el tamaño de la imagen</target>
       </trans-unit>
       <trans-unit id="MSC.booleanNot">
         <source>Not %s</source>
+        <target>No %s</target>
       </trans-unit>
       <trans-unit id="MSC.darkMode">
         <source>Dark mode</source>
+        <target>modo oscuro</target>
       </trans-unit>
       <trans-unit id="MSC.lightMode">
         <source>Light mode</source>
+        <target>Modo claro</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2949,15 +3011,19 @@
       </trans-unit>
       <trans-unit id="DCA.expandNodes.0">
         <source>Expand all</source>
+        <target>Expandir todo</target>
       </trans-unit>
       <trans-unit id="DCA.expandNodes.1">
         <source>Expand all nodes</source>
+        <target>Expandir todos los nodos</target>
       </trans-unit>
       <trans-unit id="DCA.collapseNodes.0">
         <source>Collapse all</source>
+        <target>Desplegar todo</target>
       </trans-unit>
       <trans-unit id="DCA.collapseNodes.1">
         <source>Collapse all nodes</source>
+        <target>Desplegar todos los nodos</target>
       </trans-unit>
       <trans-unit id="DCA.new.0">
         <source>New</source>
@@ -2997,12 +3063,15 @@
       </trans-unit>
       <trans-unit id="DCA.toggle.0">
         <source>Publish/unpublish element</source>
+        <target>Publicar/despublicar elemento</target>
       </trans-unit>
       <trans-unit id="DCA.toggle.1">
         <source>Unpublish element ID %s</source>
+        <target>Despublicar elemento ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.toggle.2">
         <source>Publish element ID %s</source>
+        <target>Publicar elemento ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.pasteinto.0">
         <source>Paste at the top</source>

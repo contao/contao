@@ -111,6 +111,7 @@
       </trans-unit>
       <trans-unit id="tl_article.start.1">
         <source>If you want to prevent the article from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Jeśli chcesz zapobiec wyświetlaniu artykułu na stronie internetowej przed określoną datą/czasem, możesz to wpisać tutaj. W przeciwnym razie pozostaw pole puste.</target>
       </trans-unit>
       <trans-unit id="tl_article.stop.0">
         <source>Show until</source>
@@ -118,6 +119,7 @@
       </trans-unit>
       <trans-unit id="tl_article.stop.1">
         <source>If you want to prevent the article from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Jeśli chcesz zapobiec wyświetlaniu artykułu na stronie internetowej po określonej dacie/czasie, możesz to wpisać tutaj. W przeciwnym razie pozostaw to pole puste.</target>
       </trans-unit>
       <trans-unit id="tl_article.tstamp.0">
         <source>Revision date</source>
@@ -172,8 +174,7 @@
         <target>Opublikuj na Facebooku</target>
       </trans-unit>
       <trans-unit id="tl_article.twitter">
-        <source>Share on Twitter</source>
-        <target>Opublikuj na Twitterze</target>
+        <source>Share on X (formerly Twitter)</source>
       </trans-unit>
       <trans-unit id="tl_article.new.0">
         <source>New</source>
@@ -213,9 +214,11 @@
       </trans-unit>
       <trans-unit id="tl_article.toggle.1">
         <source>Unpublish article ID %s</source>
+        <target>Ukryj artykuł ID %s</target>
       </trans-unit>
       <trans-unit id="tl_article.toggle.2">
         <source>Publish article ID %s</source>
+        <target>Opublikuj artykuł ID %s</target>
       </trans-unit>
       <trans-unit id="tl_article.pasteafter.1">
         <source>Paste after article ID %s</source>

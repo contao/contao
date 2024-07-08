@@ -1,0 +1,98 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_image_size_item.php" source-language="en" target-language="fr">
+    <body>
+      <trans-unit id="tl_image_size_item.media.0">
+        <source>Media query</source>
+        <target>Media query</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.media.1">
+        <source>Here you can define when to use the image size, e.g. &lt;em&gt;(max-width: 600px)&lt;/em&gt;.</source>
+        <target>Définir quand utiliser la taille de l'image, par exemple &lt;em&gt;(max-width: 600px)&lt;/em&gt;.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.invisible.0">
+        <source>Invisible</source>
+        <target>Invisible</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.invisible.1">
+        <source>Do not use the image size definition.</source>
+        <target>Ne pas utiliser la définition de la taille de l'image.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.tstamp.0">
+        <source>Revision date</source>
+        <target>Date de révision</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.tstamp.1">
+        <source>Date and time of the latest revision</source>
+        <target>Date et heure de la dernière révision</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.title_legend">
+        <source>Image size settings</source>
+        <target>Paramètres de la taille de l'image</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.source_legend">
+        <source>Image source settings</source>
+        <target>Source de l'image</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.visibility_legend">
+        <source>Visibility</source>
+        <target>Visibilité</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.new.0">
+        <source>New</source>
+        <target>Nouveau</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.new.1">
+        <source>Create a new media query</source>
+        <target>Créer un nouveau media query</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.show">
+        <source>Show the details of media query ID %s</source>
+        <target>Afficher les détails du media query ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.edit">
+        <source>Edit media query ID %s</source>
+        <target>Éditer le media query ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.cut">
+        <source>Move media query ID %s</source>
+        <target>Déplacer le media query ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.copy">
+        <source>Duplicate media query ID %s</source>
+        <target>Dupliquer le media query ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.delete">
+        <source>Delete media query ID %s</source>
+        <target>Supprimer le media query ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.toggle.0">
+        <source>Activate/deactivate media query</source>
+        <target>Activer/désactiver la media query</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.toggle.1">
+        <source>Deactivate media query ID %s</source>
+        <target>Désactiver la media query ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.toggle.2">
+        <source>Activate media query ID %s</source>
+        <target>Activer la media query ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.pasteafter.0">
+        <source>Paste at the top</source>
+        <target>Coller au début</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.pasteafter.1">
+        <source>Paste after media query ID %s</source>
+        <target>Coller après le media query ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.pastenew.0">
+        <source>Create a new media query at the top</source>
+        <target>Créer une nouvelle media query au début</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.pastenew.1">
+        <source>Create a new media query after media query ID %s</source>
+        <target>Créer une media query après la media query ID %s</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

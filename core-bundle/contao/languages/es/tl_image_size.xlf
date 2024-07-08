@@ -79,15 +79,19 @@
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadata.0">
         <source>Preserve copyright metadata</source>
+        <target>Preservar los metadatos de derechos de autor</target>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadata.1">
         <source>Preserve copyright-related metadata fields (EXIF, IPTC, XMP).</source>
+        <target>Preservar los campos de metadatos relacionados con los derechos de autor (EXIF, IPTC, XMP).</target>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataFields.0">
         <source>Metadata fields</source>
+        <target>Campos de metadatos</target>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataFields.1">
         <source>Please select the metadata fields to preserve.</source>
+        <target>Seleccione los campos de metadatos que desea conservar.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.0">
         <source>Use original image if dimensions match</source>
@@ -99,9 +103,11 @@
       </trans-unit>
       <trans-unit id="tl_image_size.imageQuality.0">
         <source>Image quality</source>
+        <target>Calidad de la imagen</target>
       </trans-unit>
       <trans-unit id="tl_image_size.imageQuality.1">
         <source>Here you can set the image compression quality between 0 (lowest quality) and 100 (highest quality). Leave blank to use the system default.</source>
+        <target>Aquí puede establecer la calidad de compresión de la imagen entre 0 (calidad más baja) y 100 (calidad más alta). Déjelo en blanco para utilizar el valor predeterminado del sistema.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.0">
         <source>Enable lazy loading</source>
@@ -133,6 +139,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.metadata_legend">
         <source>Metadata settings</source>
+        <target>Configuración de metadatos</target>
       </trans-unit>
       <trans-unit id="tl_image_size.expert_legend">
         <source>Expert settings</source>
@@ -164,12 +171,15 @@
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataOptions.default">
         <source>Use default settings</source>
+        <target>Utilizar la configuración predeterminada</target>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataOptions.overwrite">
         <source>Select custom metadata fields</source>
+        <target>Seleccionar campos de metadatos personalizados</target>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataOptions.delete">
         <source>Remove all metadata fields</source>
+        <target>Eliminar todos los campos de metadatos</target>
       </trans-unit>
       <trans-unit id="tl_image_size.new.0">
         <source>New</source>
