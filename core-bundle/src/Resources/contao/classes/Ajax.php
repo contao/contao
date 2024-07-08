@@ -171,6 +171,8 @@ class Ajax extends Backend
 	 *
 	 * @param DataContainer $dc
 	 *
+	 * @return never
+	 *
 	 * @throws NoContentResponseException
 	 * @throws ResponseException
 	 * @throws BadRequestHttpException

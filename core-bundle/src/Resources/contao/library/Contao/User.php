@@ -397,6 +397,8 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	/**
 	 * Remove the authentication cookie and destroy the current session
 	 *
+	 * @return never
+	 *
 	 * @throws RedirectResponseException
 	 *
 	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
