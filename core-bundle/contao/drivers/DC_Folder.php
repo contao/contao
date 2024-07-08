@@ -21,6 +21,7 @@ use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
+use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Util\SymlinkUtil;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureConfigurationItem;
@@ -907,6 +908,11 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$new = $destination;
 			$ext = strtolower(substr($destination, strrpos($destination, '.') + 1));
 
+			if ($ext === 'twig')
+			{
+				$ext = ContaoTwigUtil::getExtension($destination);
+			}
+
 			// Add a suffix if the file exists
 			while (file_exists($this->strRootDir . '/' . $new) && $count < 12)
 			{
@@ -1451,8 +1457,14 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 						$objFile = is_dir($this->strRootDir . '/' . $this->intId) ? new Folder($this->intId) : new File($this->intId);
 
 						$this->strPath = StringUtil::stripRootDir($objFile->dirname);
-						$this->strExtension = $objFile->origext ? '.' . $objFile->origext : '';
-						$this->varValue = $objFile->filename;
+
+						if (($strExtension = $objFile->origext) === 'twig')
+						{
+							$strExtension = ContaoTwigUtil::getExtension($objFile->name);
+						}
+
+						$this->strExtension = $strExtension ? '.' . $strExtension : '';
+						$this->varValue = substr($objFile->name, 0, -\strlen($this->strExtension) ?: null);
 
 						// Fix hidden Unix system files
 						if (str_starts_with($this->varValue, '.'))
