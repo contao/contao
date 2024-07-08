@@ -190,9 +190,9 @@ abstract class Template extends Controller
 	}
 
 	/**
-	 * Template helper to add a function to a template which is evaluated only once. This is
-	 * helpful for lazy-evaluating data where we can use functions without arguments. Let's
-	 * say you wanted to lazy-evaluate a variable, for example like this:
+	 * Adds a function to a template which is evaluated only once. This is helpful for
+	 * lazy-evaluating data where we can use functions without arguments. Let's say
+	 * you wanted to lazy-evaluate a variable like this:
 	 *
 	 *     $template->hasText = function () use ($article) {
 	 *         return ContentModel::countPublishedByPidAndTable($article->id, 'tl_news') > 0;
