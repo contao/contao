@@ -178,33 +178,6 @@ abstract class Template extends Controller
 	}
 
 	/**
-	 * Template helper to add a function to a template which is evaluated only once. This is helpful for lazy-evaluating
-	 * data where we can use functions without arguments.
-	 * Let's say you wanted to lazy-evaluate a variable, for example like this:
-	 *
-	 * $template->hasText = function () use ($article) {
-	 *     return ContentModel::countPublishedByPidAndTable($article->id, 'tl_news') > 0;
-	 * };
-	 *
-	 * This would cause a query everytime $template->hasText is accessed in the template. You can improve this by turning
-	 * it into this;
-	 *
-	 * $template->hasText = Template::once(function () use ($article) {
-	 *     return ContentModel::countPublishedByPidAndTable($article->id, 'tl_news') > 0;
-	 * });
-	 */
-	public static function once(callable $callback)
-	{
-		return function() use (&$callback) {
-			if (is_callable($callback)) {
-				$callback = $callback();
-			}
-
-			return $callback;
-		};
-	}
-
-	/**
 	 * Check whether a property is set
 	 *
 	 * @param string $strKey The property name
@@ -214,6 +187,34 @@ abstract class Template extends Controller
 	public function __isset($strKey)
 	{
 		return isset($this->arrData[$strKey]);
+	}
+
+	/**
+	 * Template helper to add a function to a template which is evaluated only once. This is
+	 * helpful for lazy-evaluating data where we can use functions without arguments. Let's
+	 * say you wanted to lazy-evaluate a variable, for example like this:
+	 *
+	 *     $template->hasText = function () use ($article) {
+	 *         return ContentModel::countPublishedByPidAndTable($article->id, 'tl_news') > 0;
+	 *     };
+	 *
+	 * This would cause a query everytime $template->hasText is accessed in the
+	 * template. You can improve this by turning it into this;
+	 *
+	 *     $template->hasText = Template::once(function () use ($article) {
+	 *         return ContentModel::countPublishedByPidAndTable($article->id, 'tl_news') > 0;
+	 *     });
+	 */
+	public static function once(callable $callback)
+	{
+		return static function () use (&$callback) {
+			if (\is_callable($callback))
+			{
+				$callback = $callback();
+			}
+
+			return $callback;
+		};
 	}
 
 	/**
