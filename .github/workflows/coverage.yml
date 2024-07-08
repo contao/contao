@@ -4,9 +4,9 @@ on:
     pull_request: ~
     push:
         branches:
-            - 5.x
+            - 5.4
         tags:
-            - '*'
+            - 5.4.*
 
 permissions: read-all
 
