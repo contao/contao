@@ -3,7 +3,7 @@
 <?php
 
 $GLOBALS['TL_CSS'][] = $this->asset('css/altcha.min.css', 'contao-components/altcha');
-$GLOBALS['TL_BODY'][] = sprintf('<script src="%s" type="module"></script>', $this->asset('js/altcha.js', 'contao-components/altcha'));
+$GLOBALS['TL_BODY'][] = sprintf('<script src="%s" type="module"></script>', $this->asset('js/altcha.min.js', 'contao-components/altcha'));
 
 ?>
 
