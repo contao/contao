@@ -441,7 +441,7 @@ class tl_templates extends Backend
 	 *
 	 * @throws InternalServerErrorException
 	 */
-	public function compareTemplate(DataContainer $dc)
+	public function compareTemplate(DataContainer $dc): never
 	{
 		$objCurrentFile = new File($dc->id);
 		$strName = $objCurrentFile->filename;
