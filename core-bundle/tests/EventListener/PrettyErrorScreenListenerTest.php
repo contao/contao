@@ -174,7 +174,6 @@ class PrettyErrorScreenListenerTest extends TestCase
     public function testHandlesRoutingExceptionWhenFindingPageModel(int $type, \Exception $exception): void
     {
         $request = $this->getRequest('frontend');
-
         $twig = $this->createMock(Environment::class);
         $httpKernel = $this->createMock(HttpKernelInterface::class);
         $pageRegistry = $this->createMock(PageRegistry::class);
@@ -187,7 +186,6 @@ class PrettyErrorScreenListenerTest extends TestCase
         ;
 
         $pageAdapter = $this->mockAdapter(['findFirstPublishedByTypeAndPid']);
-
         $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
 
         $security = $this->createMock(Security::class);
