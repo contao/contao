@@ -1,7 +1,8 @@
 extends: default
 
 ignore: |
-    /.yarn/
+    /node_modules/
+    /pnpm-lock.yaml
     /vendor/
     /vendor-bin/
 

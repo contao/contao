@@ -272,7 +272,7 @@ class ModuleEventReader extends Events
 		{
 			$id = $objEvent->id;
 
-			$objTemplate->details = function () use ($id) {
+			$objTemplate->details = Template::once(function () use ($id) {
 				$strDetails = '';
 				$objElement = ContentModel::findPublishedByPidAndTable($id, 'tl_calendar_events');
 
@@ -285,11 +285,11 @@ class ModuleEventReader extends Events
 				}
 
 				return $strDetails;
-			};
+			});
 
-			$objTemplate->hasDetails = static function () use ($id) {
+			$objTemplate->hasDetails = Template::once(static function () use ($id) {
 				return ContentModel::countPublishedByPidAndTable($id, 'tl_calendar_events') > 0;
-			};
+			});
 		}
 
 		$objTemplate->addImage = false;
