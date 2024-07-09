@@ -1170,6 +1170,8 @@ abstract class Controller extends System
 
 	/**
 	 * Reload the current page
+	 *
+	 * @return never
 	 */
 	public static function reload()
 	{
@@ -1181,6 +1183,8 @@ abstract class Controller extends System
 	 *
 	 * @param string  $strLocation The target URL
 	 * @param integer $intStatus   The HTTP status code (defaults to 303)
+	 *
+	 * @return never
 	 */
 	public static function redirect($strLocation, $intStatus=303)
 	{
