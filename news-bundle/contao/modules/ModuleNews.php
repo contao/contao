@@ -123,7 +123,7 @@ abstract class ModuleNews extends Module
 		{
 			$id = $objArticle->id;
 
-			$objTemplate->text = function () use ($id) {
+			$objTemplate->text = Template::once(function () use ($id) {
 				$strText = '';
 				$objElement = ContentModel::findPublishedByPidAndTable($id, 'tl_news');
 
@@ -136,11 +136,11 @@ abstract class ModuleNews extends Module
 				}
 
 				return $strText;
-			};
+			});
 
-			$objTemplate->hasText = null === $url ? false : static function () use ($objArticle) {
+			$objTemplate->hasText = null === $url ? false : Template::once(static function () use ($objArticle) {
 				return ContentModel::countPublishedByPidAndTable($objArticle->id, 'tl_news') > 0;
-			};
+			});
 		}
 
 		global $objPage;

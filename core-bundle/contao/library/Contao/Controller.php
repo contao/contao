@@ -1061,7 +1061,7 @@ abstract class Controller extends System
 	/**
 	 * Reload the current page
 	 */
-	public static function reload()
+	public static function reload(): never
 	{
 		static::redirect(Environment::get('uri'));
 	}
@@ -1072,7 +1072,7 @@ abstract class Controller extends System
 	 * @param string  $strLocation The target URL
 	 * @param integer $intStatus   The HTTP status code (defaults to 303)
 	 */
-	public static function redirect($strLocation, $intStatus=303)
+	public static function redirect($strLocation, $intStatus=303): never
 	{
 		$strLocation = str_replace('&amp;', '&', $strLocation);
 

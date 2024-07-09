@@ -130,25 +130,22 @@ Then run the functional tests via Composer:
 composer functional-tests
 ```
 
-## Yarn 4
+## Node.js
 
-To build the assets and to run the end-to-end tests (see below), you need to enable [Corepack][3], a package manager
-that allows you to manage different Yarn package versions across multiple projects:
+To build the assets, you need a Node.js version >= 18.12 and the [pnpm][3] package manager. Then run these commands:
 
 ```bash
-corepack enable
+pnpm install
+pnpm build
 ```
-
-If Corepack is not bundled with your Node.js installation, you might have to install it as a separate package, e.g.
-using `npm install -g corepack` or `brew install corepack`.
 
 ## End-to-end tests
 
-The Contao end-to-end tests are availabe as an [NPM package][4]. You can install and run them via Yarn:
+The Contao end-to-end tests are availabe as an [NPM package][4]. You can install and run them with `pnpm`:
 
 ```bash
-yarn add contao-e2e-tests --dev
-yarn contao-e2e-tests
+pnpm add contao-e2e-tests --dev
+pnpm contao-e2e-tests
 ```
 
 ## License
@@ -161,6 +158,6 @@ Visit the [support page][5] to learn about the available support options.
 
 [1]: https://contao.org
 [2]: https://github.com/contao/managed-edition
-[3]: https://yarnpkg.com/getting-started/install
+[3]: https://pnpm.io
 [4]: https://www.npmjs.com/package/contao-e2e-tests
 [5]: https://to.contao.org/support
