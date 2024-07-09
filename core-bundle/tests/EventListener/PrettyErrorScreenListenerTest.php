@@ -38,6 +38,7 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 use Symfony\Component\Security\Core\Security;
@@ -165,6 +166,41 @@ class PrettyErrorScreenListenerTest extends TestCase
 
         $this->assertTrue($event->hasResponse());
         $this->assertSame($type, $event->getResponse()->getStatusCode());
+    }
+
+    /**
+     * @dataProvider getErrorTypes
+     */
+    public function testHandlesRoutingExceptionWhenFindingPageModel(int $type, \Exception $exception): void
+    {
+        $request = $this->getRequest('frontend');
+        $twig = $this->createMock(Environment::class);
+        $httpKernel = $this->createMock(HttpKernelInterface::class);
+        $pageRegistry = $this->createMock(PageRegistry::class);
+
+        $requestMatcher = $this->createMock(RequestMatcherInterface::class);
+        $requestMatcher
+            ->expects($this->once())
+            ->method('matchRequest')
+            ->willThrowException(new RouteNotFoundException())
+        ;
+
+        $pageAdapter = $this->mockAdapter(['findFirstPublishedByTypeAndPid']);
+        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
+
+        $security = $this->createMock(Security::class);
+        $security
+            ->method('isGranted')
+            ->with('ROLE_USER')
+            ->willReturn(false)
+        ;
+
+        $event = $this->getResponseEvent($exception, $request);
+
+        $listener = new PrettyErrorScreenListener(true, $twig, $framework, $security, $pageRegistry, $httpKernel, $requestMatcher);
+        $listener($event);
+
+        $this->assertFalse($event->hasResponse());
     }
 
     public function getErrorTypes(): \Generator

@@ -31,6 +31,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 use Symfony\Component\Security\Core\Security;
@@ -255,7 +256,12 @@ class PrettyErrorScreenListener
         if (!$pageModel instanceof PageModel) {
             $rootRequest = Request::create('http://'.$request->getHost());
             $rootRequest->headers->set('Accept-Language', $rootRequest->headers->get('Accept-Language'));
-            $parameters = $this->requestMatcher->matchRequest($rootRequest);
+
+            try {
+                $parameters = $this->requestMatcher->matchRequest($rootRequest);
+            } catch (ExceptionInterface $exception) {
+                return null;
+            }
 
             if (($parameters['pageModel'] ?? null) instanceof PageModel) {
                 $pageModel = $parameters['pageModel'];
