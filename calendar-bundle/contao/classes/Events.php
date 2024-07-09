@@ -333,7 +333,7 @@ abstract class Events extends Module
 		{
 			$id = $objEvents->id;
 
-			$arrEvent['details'] = function () use ($id) {
+			$arrEvent['details'] = Template::once(function () use ($id) {
 				$strDetails = '';
 				$objElement = ContentModel::findPublishedByPidAndTable($id, 'tl_calendar_events');
 
@@ -346,11 +346,11 @@ abstract class Events extends Module
 				}
 
 				return $strDetails;
-			};
+			});
 
-			$arrEvent['hasDetails'] = null === $url ? false : static function () use ($id) {
+			$arrEvent['hasDetails'] = null === $url ? false : Template::once(static function () use ($id) {
 				return ContentModel::countPublishedByPidAndTable($id, 'tl_calendar_events') > 0;
-			};
+			});
 		}
 
 		// Get today's start and end timestamp
