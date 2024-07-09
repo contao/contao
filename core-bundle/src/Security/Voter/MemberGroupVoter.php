@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Security\Voter;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\FrontendUser;
 use Contao\StringUtil;
+use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -39,7 +40,7 @@ class MemberGroupVoter extends Voter
 
         $user = $token->getUser();
 
-        if (!$user instanceof FrontendUser) {
+        if (!$user instanceof FrontendUser || $token instanceof TwoFactorTokenInterface) {
             return \in_array(-1, array_map('intval', $subject), true);
         }
 
