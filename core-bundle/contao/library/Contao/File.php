@@ -776,7 +776,7 @@ class File extends System
 	 *
 	 * @throws ResponseException
 	 */
-	public function sendToBrowser($filename='', $inline=false)
+	public function sendToBrowser($filename='', $inline=false): never
 	{
 		$response = new BinaryFileResponse($this->strRootDir . '/' . $this->strFile);
 		$response->setPrivate(); // public by default
