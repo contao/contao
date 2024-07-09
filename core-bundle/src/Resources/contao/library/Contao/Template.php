@@ -199,7 +199,7 @@ abstract class Template extends Controller
 	 *     };
 	 *
 	 * This would cause a query everytime $template->hasText is accessed in the
-	 * template. You can improve this by turning it into this;
+	 * template. You can improve this by turning it into this:
 	 *
 	 *     $template->hasText = Template::once(function () use ($article) {
 	 *         return ContentModel::countPublishedByPidAndTable($article->id, 'tl_news') > 0;
