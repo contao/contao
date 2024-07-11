@@ -1,6 +1,6 @@
 import { Application } from '@hotwired/stimulus'
 import { definitionForModuleAndIdentifier, identifierForContextKey } from '@hotwired/stimulus-webpack-helpers'
-import * as Turbo from "@hotwired/turbo"
+import '@hotwired/turbo'
 
 import './scripts/mootao.js'
 import './scripts/core.js'
