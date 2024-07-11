@@ -725,6 +725,7 @@ class ControllerTest extends TestCase
 
         try {
             Controller::redirect($location);
+            /** @phpstan-ignore catch.neverThrown */
         } catch (RedirectResponseException $exception) {
             /** @var RedirectResponse $response */
             $response = $exception->getResponse();

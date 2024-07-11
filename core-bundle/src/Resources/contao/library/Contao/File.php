@@ -773,8 +773,8 @@ class File extends System
 	 *
 	 * @param string  $filename An optional filename
 	 * @param boolean $inline   Show the file in the browser instead of opening the download dialog
-     *
-     * @return never
+	 *
+	 * @return never
 	 *
 	 * @throws ResponseException
 	 */

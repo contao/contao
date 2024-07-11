@@ -85,26 +85,26 @@ composer bin all install
 Then run the code quality scripts via Composer:
 
 ```bash
-composer run all
+composer all
 ```
 
 You can also run the scripts separately:
 
 ```bash
-composer run unit-tests
-composer run functional-tests
-composer run cs-fixer
-composer run service-linter
-composer run phpstan
-composer run monorepo-tools
+composer unit-tests
+composer functional-tests
+composer cs-fixer
+composer service-linter
+composer phpstan
+composer monorepo-tools
 ```
 
 If you want to pass additional flags to the underlying commands, you can use
 the `--` argument:
 
 ```bash
-composer run unit-tests -- --filter CoreBundle
-composer run cs-fixer -- --clear-cache
+composer unit-tests -- --filter CoreBundle
+composer cs-fixer -- --clear-cache
 ```
 
 ## Functional tests
@@ -127,7 +127,7 @@ to `core-bundle/phpunit.xml` and adjust the following line:
 Then run the functional tests via the `run` command:
 
 ```bash
-composer run functional-tests
+composer functional-tests
 ```
 
 ## License
