@@ -538,14 +538,6 @@ class ModuleRegistration extends Module
 			return;
 		}
 
-		if ($optInToken->isConfirmed())
-		{
-			$this->Template->type = 'error';
-			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['tokenConfirmed'];
-
-			return;
-		}
-
 		if ($optInToken->getEmail() != $objMember->email)
 		{
 			$this->Template->type = 'error';
@@ -554,22 +546,25 @@ class ModuleRegistration extends Module
 			return;
 		}
 
-		$objMember->disable = '';
-		$objMember->save();
-
-		$optInToken->confirm();
-
-		// HOOK: post activation callback
-		if (isset($GLOBALS['TL_HOOKS']['activateAccount']) && \is_array($GLOBALS['TL_HOOKS']['activateAccount']))
+		if (!$optInToken->isConfirmed())
 		{
-			foreach ($GLOBALS['TL_HOOKS']['activateAccount'] as $callback)
-			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($objMember, $this);
-			}
-		}
+			$objMember->disable = '';
+			$objMember->save();
 
-		System::getContainer()->get('monolog.logger.contao.access')->info('User account ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ') has been activated');
+			$optInToken->confirm();
+
+			// HOOK: post activation callback
+			if (isset($GLOBALS['TL_HOOKS']['activateAccount']) && \is_array($GLOBALS['TL_HOOKS']['activateAccount']))
+			{
+				foreach ($GLOBALS['TL_HOOKS']['activateAccount'] as $callback)
+				{
+					$this->import($callback[0]);
+					$this->{$callback[0]}->{$callback[1]}($objMember, $this);
+				}
+			}
+
+			System::getContainer()->get('monolog.logger.contao.access')->info('User account ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ') has been activated');
+		}
 
 		// Redirect to the jumpTo page
 		if (($objTarget = $this->objModel->getRelated('reg_jumpTo')) instanceof PageModel)
