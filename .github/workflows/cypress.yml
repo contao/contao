@@ -49,11 +49,11 @@ jobs:
                   show-progress: false
 
             - name: Install the dependencies
-              run: yarn add contao-e2e-tests --dev
+              run: pnpm add contao-e2e-tests --dev
 
             - name: Run the Cypress tests
               id: cypress
-              run: yarn contao-e2e-tests
+              run: pnpm contao-e2e-tests
               env:
                   DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
 
