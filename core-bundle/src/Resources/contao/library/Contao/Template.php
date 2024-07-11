@@ -207,7 +207,8 @@ abstract class Template extends Controller
 	 */
 	public static function once(callable $callback)
 	{
-		return static function () use (&$callback) {
+		return static function () use (&$callback)
+		{
 			if (\is_callable($callback))
 			{
 				$callback = $callback();
