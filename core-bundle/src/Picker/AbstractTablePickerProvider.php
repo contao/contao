@@ -147,7 +147,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         }
 
         if ($value = $config->getValue()) {
-            $attributes['value'] = array_map('\intval', explode(',', $value));
+            $attributes['value'] = array_map(\intval(...), explode(',', $value));
         }
 
         return $attributes;

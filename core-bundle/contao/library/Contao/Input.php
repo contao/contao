@@ -169,12 +169,12 @@ class Input
 				}
 			}
 
-			return array_map(strval(...), array_values($keys));
+			return array_map(\strval(...), array_values($keys));
 		}
 
 		trigger_deprecation('contao/core-bundle', '5.0', 'Getting data from $_GET with the "%s" class has been deprecated and will no longer work in Contao 6. Make sure the request_stack has a request instead.', __CLASS__);
 
-		return array_map(strval(...), array_keys($_GET ?? array()));
+		return array_map(\strval(...), array_keys($_GET ?? array()));
 	}
 
 	/**

@@ -52,7 +52,7 @@ class MemberGroupVoter implements VoterInterface, CacheableVoterInterface
         $user = $token->getUser();
 
         if (!$user instanceof FrontendUser || $token instanceof TwoFactorTokenInterface) {
-            return \in_array(-1, array_map('intval', $subject), true) ? self::ACCESS_GRANTED : self::ACCESS_DENIED;
+            return \in_array(-1, array_map(\intval(...), $subject), true) ? self::ACCESS_GRANTED : self::ACCESS_DENIED;
         }
 
         $groups = StringUtil::deserialize($user->groups, true);

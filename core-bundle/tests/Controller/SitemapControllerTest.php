@@ -889,7 +889,7 @@ class SitemapControllerTest extends TestCase
                     function (string $attribute, array $pageGroups) use ($allowedPageIds) {
                         $this->assertSame(ContaoCorePermissions::MEMBER_IN_GROUPS, $attribute);
 
-                        return [] !== array_intersect(array_map('intval', $pageGroups), $allowedPageIds);
+                        return [] !== array_intersect(array_map(\intval(...), $pageGroups), $allowedPageIds);
                     },
                 )
             ;
