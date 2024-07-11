@@ -109,7 +109,7 @@ class MakeResponsePrivateListener
 
         // 4) The response has a "Vary: Cookie" header and the request provides at least
         // one cookie
-        if ($request->cookies->count() && \in_array('cookie', array_map('strtolower', $response->getVary()), true)) {
+        if ($request->cookies->count() && \in_array('cookie', array_map(strtolower(...), $response->getVary()), true)) {
             $this->makePrivate(
                 $response,
                 sprintf('request-cookies (%s)', implode(', ', array_keys($request->cookies->all()))),

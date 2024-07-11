@@ -84,7 +84,7 @@ class InsertTagParser implements ResetInterface
         $this->allowedTagsRegex = '('.implode(
             '|',
             array_map(
-                static fn ($allowedTag) => '^'.implode('.+', array_map('preg_quote', explode('*', $allowedTag))).'$',
+                static fn ($allowedTag) => '^'.implode('.+', array_map(preg_quote(...), explode('*', $allowedTag))).'$',
                 $allowedTags ?: [''],
             ),
         ).')';
