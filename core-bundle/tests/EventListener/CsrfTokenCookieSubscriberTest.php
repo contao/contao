@@ -16,6 +16,7 @@ use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Csrf\MemoryTokenStorage;
 use Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -111,6 +112,35 @@ class CsrfTokenCookieSubscriberTest extends TestCase
         $this->assertTrue($cookie->isHttpOnly());
         $this->assertTrue($cookie->isSecure());
         $this->assertSame('lax', $cookie->getSameSite());
+    }
+
+    public function testDoesNotAddTheTokenCookiesToTheResponseIfAllCookiesAreDeleted(): void
+    {
+        $request = Request::create('https://foobar.com');
+        $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
+
+        $tokenManager = $this->createMock(ContaoCsrfTokenManager::class);
+
+        $tokenStorage = $this->createMock(MemoryTokenStorage::class);
+        $tokenStorage
+            ->expects($this->never())
+            ->method('getUsedTokens')
+        ;
+
+        $response = new Response();
+        $response->headers->clearCookie('unrelated-cookie');
+
+        $listener = new CsrfTokenCookieSubscriber($tokenManager, $tokenStorage);
+        $listener->onKernelResponse($this->getResponseEvent($request, $response));
+
+        $cookies = $response->headers->getCookies();
+
+        $this->assertCount(1, $cookies);
+
+        $cookie = $cookies[0];
+
+        $this->assertSame('unrelated-cookie', $cookie->getName());
+        $this->asserTtrue($cookie->isCleared());
     }
 
     public function testDoesNotAddTheTokenCookiesToTheResponseIfTheyAlreadyExist(): void
