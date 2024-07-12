@@ -106,15 +106,18 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
         $responseCookies = $response->headers->getCookies(ResponseHeaderBag::COOKIES_FLAT);
 
         // Ignore any cookies in the request and response that are being deleted (#7344)
-        $responseCookies = array_filter($responseCookies, static function (Cookie $responseCookie) use ($requestCookies): bool {
-            if ($responseCookie->isCleared()) {
-                unset($requestCookies[$responseCookie->getName()]);
+        $responseCookies = array_filter(
+            $responseCookies,
+            static function (Cookie $responseCookie) use ($requestCookies): bool {
+                if ($responseCookie->isCleared()) {
+                    unset($requestCookies[$responseCookie->getName()]);
 
-                return false;
+                    return false;
+                }
+
+                return true;
             }
-
-            return true;
-        });
+        );
 
         // Check if any of the remaining request cookies is not a CSRF cookie
         foreach ($requestCookies as $key => $value) {
