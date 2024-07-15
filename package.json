@@ -12,10 +12,12 @@
         "webpack": "^5.91.0",
         "webpack-cli": "^5.1.4"
     },
-    "private": true,
     "scripts": {
-        "build": "encore production --progress",
-        "watch": "encore dev --watch"
+        "dev-server": "encore dev-server",
+        "dev": "encore dev",
+        "watch": "encore dev --watch",
+        "build": "encore production --progress"
     },
+    "private": true,
     "packageManager": "pnpm@9.5.0"
 }
