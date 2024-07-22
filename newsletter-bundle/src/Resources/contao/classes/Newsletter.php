@@ -222,7 +222,7 @@ class Newsletter extends Backend
 					}
 				}
 
-				if ($intSkipped = \count($_SESSION['SKIPPED_RECIPIENTS']))
+				if ($intSkipped = \count($_SESSION['SKIPPED_RECIPIENTS'] ?? 0))
 				{
 					$intTotal -= $intSkipped;
 					Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['skipped'], $intSkipped));
