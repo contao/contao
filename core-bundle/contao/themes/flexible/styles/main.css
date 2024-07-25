@@ -1664,6 +1664,7 @@ table.tl_listing {
 	background: var(--content-bg);
 	line-height: 11px;
 	text-align: center;
+	z-index: 1;
 }
 
 .limit_toggler button {
