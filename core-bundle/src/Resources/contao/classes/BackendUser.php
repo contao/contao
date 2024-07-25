@@ -621,7 +621,7 @@ class BackendUser extends User
 
 	public function __serialize(): array
 	{
-		return array('admin' => $this->arrData['admin'], 'amg' => $this->arrData['amg'], 'parent' => parent::__serialize());
+		return array('admin' => $this->arrData['admin'] ?? null, 'amg' => $this->arrData['amg'] ?? null, 'parent' => parent::__serialize());
 	}
 
 	/**

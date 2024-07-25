@@ -584,12 +584,12 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	{
 		return array
 		(
-			'id' => $this->arrData['id'],
-			'username' => $this->arrData['username'],
-			'password' => $this->arrData['password'],
-			'disable' => $this->arrData['disable'],
-			'start' => $this->arrData['start'],
-			'stop' => $this->arrData['stop']
+			'id' => $this->arrData['id'] ?? null,
+			'username' => $this->arrData['username'] ?? null,
+			'password' => $this->arrData['password'] ?? null,
+			'disable' => $this->arrData['disable'] ?? null,
+			'start' => $this->arrData['start'] ?? null,
+			'stop' => $this->arrData['stop'] ?? null
 		);
 	}
 
