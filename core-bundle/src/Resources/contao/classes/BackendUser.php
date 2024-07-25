@@ -295,7 +295,7 @@ class BackendUser extends User
 	{
 		trigger_deprecation('contao/core-bundle', '4.13', 'Using "Contao\BackendUser::isAllowed()" has been deprecated and will no longer work in Contao 5. Use the "security.helper" service with the ContaoCorePermissions constants instead.');
 
-		if ($this->arrData['admin'])
+		if ($this->arrData['admin'] ?? false)
 		{
 			return true;
 		}
