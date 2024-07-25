@@ -459,7 +459,7 @@ class BackendUser extends User
 					// The new page/file picker can return integers instead of arrays, so use empty() instead of is_array() and StringUtil::deserialize(true) here
 					if (!empty($value))
 					{
-						$this->arrData[$field] = array_merge((\is_array($this->arrData[$field]) ? $this->arrData[$field] : ($this->arrData[$field] ? array($this->arrData[$field]) : array())), $value);
+						$this->arrData[$field] = array_merge((\is_array($this->arrData[$field] ?? null) ? $this->arrData[$field] : ($this->arrData[$field] ?? null ? array($this->arrData[$field]) : array())), $value);
 						$this->arrData[$field] = array_unique($this->arrData[$field]);
 					}
 				}
