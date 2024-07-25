@@ -92,12 +92,6 @@ class BackendUser extends User
 	protected $strCookie = 'BE_USER_AUTH';
 
 	/**
-	 * Allowed excluded fields
-	 * @var array
-	 */
-	protected $alexf = array();
-
-	/**
 	 * File mount IDs
 	 * @var array
 	 */
@@ -181,9 +175,6 @@ class BackendUser extends User
 
 			case 'fop':
 				return \is_array($this->arrData['fop']) ? $this->arrData['fop'] : ($this->arrData['fop'] ? array($this->arrData['fop']) : false);
-
-			case 'alexf':
-				return $this->alexf;
 		}
 
 		return parent::__get($strKey);
@@ -249,7 +240,7 @@ class BackendUser extends User
 	 */
 	public function hasAccess($field, $array)
 	{
-		if ($this->isAdmin)
+		if ($this->arrData['admin'])
 		{
 			return true;
 		}
@@ -259,7 +250,7 @@ class BackendUser extends User
 			$field = array($field);
 		}
 
-		if (\is_array($this->$array) && array_intersect($field, $this->$array))
+		if (\is_array($this->arrData[$array]) && array_intersect($field, $this->arrData[$array]))
 		{
 			return true;
 		}
@@ -267,7 +258,7 @@ class BackendUser extends User
 		if ($array == 'filemounts')
 		{
 			// Check the subfolders (filemounts)
-			foreach ($this->filemounts as $folder)
+			foreach ($this->arrData['filemounts'] as $folder)
 			{
 				if (preg_match('/^' . preg_quote($folder, '/') . '(\/|$)/i', $field[0]))
 				{
@@ -277,7 +268,7 @@ class BackendUser extends User
 		}
 		elseif ($array == 'pagemounts')
 		{
-			$childIds = $this->Database->getChildRecords($this->pagemounts, 'tl_page');
+			$childIds = $this->Database->getChildRecords($this->arrData['pagemounts'], 'tl_page');
 
 			if (!empty($childIds) && array_intersect($field, $childIds))
 			{
@@ -304,7 +295,7 @@ class BackendUser extends User
 	{
 		trigger_deprecation('contao/core-bundle', '4.13', 'Using "Contao\BackendUser::isAllowed()" has been deprecated and will no longer work in Contao 5. Use the "security.helper" service with the ContaoCorePermissions constants instead.');
 
-		if ($this->isAdmin)
+		if ($this->arrData['admin'])
 		{
 			return true;
 		}
@@ -353,12 +344,12 @@ class BackendUser extends User
 		$chmod = \is_array($chmod) ? $chmod : array($chmod);
 		$permission = array('w' . $int);
 
-		if (\in_array($row['cgroup'], $this->groups))
+		if (\in_array($row['cgroup'], $this->arrData['groups']))
 		{
 			$permission[] = 'g' . $int;
 		}
 
-		if ($row['cuser'] == $this->id)
+		if ($row['cuser'] == $this->intId)
 		{
 			$permission[] = 'u' . $int;
 		}
@@ -381,12 +372,12 @@ class BackendUser extends User
 	{
 		trigger_deprecation('contao/core-bundle', '4.13', 'Using "Contao\BackendUser::canEditFieldsOfTable()" has been deprecated and will no longer work in Contao 5. Use the "security.helper" service with the ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE constant instead.');
 
-		if ($this->isAdmin)
+		if ($this->arrData['admin'] ?? false)
 		{
 			return true;
 		}
 
-		return \count(preg_grep('/^' . preg_quote($table, '/') . '::/', $this->alexf)) > 0;
+		return \count(preg_grep('/^' . preg_quote($table, '/') . '::/', $this->arrData['alexf'])) > 0;
 	}
 
 	/**
@@ -394,7 +385,7 @@ class BackendUser extends User
 	 */
 	public function save()
 	{
-		$filemounts = $this->filemounts;
+		$filemounts = $this->arrData['filemounts'];
 
 		if (!empty($this->arrFilemountIds))
 		{
@@ -402,7 +393,7 @@ class BackendUser extends User
 		}
 
 		parent::save();
-		$this->filemounts = $filemounts;
+		$this->arrData['filemounts'] = $filemounts;
 	}
 
 	/**
@@ -410,25 +401,25 @@ class BackendUser extends User
 	 */
 	protected function setUserFromDb()
 	{
-		$this->intId = $this->id;
+		$this->intId = $this->arrData['id'];
 
 		// Unserialize values
 		foreach ($this->arrData as $k=>$v)
 		{
 			if (!is_numeric($v))
 			{
-				$this->$k = StringUtil::deserialize($v);
+				$this->arrData[$k] = StringUtil::deserialize($v);
 			}
 		}
 
-		$GLOBALS['TL_USERNAME'] = $this->username;
+		$GLOBALS['TL_USERNAME'] = $this->arrData['username'];
 
-		Config::set('showHelp', $this->showHelp);
-		Config::set('useRTE', $this->useRTE);
-		Config::set('useCE', $this->useCE);
-		Config::set('thumbnails', $this->thumbnails);
-		Config::set('backendTheme', $this->backendTheme);
-		Config::set('fullscreen', $this->fullscreen);
+		Config::set('showHelp', $this->arrData['showHelp']);
+		Config::set('useRTE', $this->arrData['useRTE']);
+		Config::set('useCE', $this->arrData['useCE']);
+		Config::set('thumbnails', $this->arrData['thumbnails']);
+		Config::set('backendTheme', $this->arrData['backendTheme']);
+		Config::set('fullscreen', $this->arrData['fullscreen']);
 
 		// Inherit permissions
 		$always = array('alexf');
@@ -441,19 +432,19 @@ class BackendUser extends User
 		}
 
 		// Overwrite user permissions if only group permissions shall be inherited
-		if ($this->inherit == 'group')
+		if ($this->arrData['inherit'] == 'group')
 		{
 			foreach ($depends as $field)
 			{
-				$this->$field = array();
+				$this->arrData[$field] = array();
 			}
 		}
 
 		// Merge permissions
-		$inherit = \in_array($this->inherit, array('group', 'extend')) ? array_merge($always, $depends) : $always;
+		$inherit = \in_array($this->arrData['inherit'], array('group', 'extend')) ? array_merge($always, $depends) : $always;
 		$time = Date::floorToMinute();
 
-		foreach ((array) $this->groups as $id)
+		foreach ((array) $this->arrData['groups'] as $id)
 		{
 			$objGroup = $this->Database->prepare("SELECT * FROM tl_user_group WHERE id=? AND disable!='1' AND (start='' OR start<=$time) AND (stop='' OR stop>$time)")
 									   ->limit(1)
@@ -468,50 +459,50 @@ class BackendUser extends User
 					// The new page/file picker can return integers instead of arrays, so use empty() instead of is_array() and StringUtil::deserialize(true) here
 					if (!empty($value))
 					{
-						$this->$field = array_merge((\is_array($this->$field) ? $this->$field : ($this->$field ? array($this->$field) : array())), $value);
-						$this->$field = array_unique($this->$field);
+						$this->arrData[$field] = array_merge((\is_array($this->arrData[$field]) ? $this->arrData[$field] : ($this->arrData[$field] ? array($this->arrData[$field]) : array())), $value);
+						$this->arrData[$field] = array_unique($this->arrData[$field]);
 					}
 				}
 			}
 		}
 
 		// Make sure pagemounts and filemounts are set!
-		if (!\is_array($this->pagemounts))
+		if (!\is_array($this->arrData['pagemounts']))
 		{
-			$this->pagemounts = array();
+			$this->arrData['pagemounts'] = array();
 		}
 		else
 		{
-			$this->pagemounts = array_filter($this->pagemounts);
+			$this->arrData['pagemounts'] = array_filter($this->arrData['pagemounts']);
 		}
 
-		if (!\is_array($this->filemounts))
+		if (!\is_array($this->arrData['filemounts']))
 		{
-			$this->filemounts = array();
+			$this->arrData['filemounts'] = array();
 		}
 		else
 		{
-			$this->filemounts = array_filter($this->filemounts);
+			$this->arrData['filemounts'] = array_filter($this->arrData['filemounts']);
 		}
 
 		// Store the numeric file mounts
-		$this->arrFilemountIds = $this->filemounts;
+		$this->arrFilemountIds = $this->arrData['filemounts'];
 
 		// Convert the file mounts into paths
-		if (!$this->isAdmin && !empty($this->filemounts))
+		if (!$this->arrData['admin'] && !empty($this->arrData['filemounts']))
 		{
-			$objFiles = FilesModel::findMultipleByUuids($this->filemounts);
+			$objFiles = FilesModel::findMultipleByUuids($this->arrData['filemounts']);
 
 			if ($objFiles !== null)
 			{
-				$this->filemounts = $objFiles->fetchEach('path');
+				$this->arrData['filemounts'] = $objFiles->fetchEach('path');
 			}
 		}
 
 		// Hide the "admin" field if the user is not an admin (see #184)
-		if (!$this->isAdmin && ($index = array_search('tl_user::admin', $this->alexf)) !== false)
+		if (!$this->arrData['admin'] && ($index = array_search('tl_user::admin', $this->arrData['alexf'])) !== false)
 		{
-			unset($this->alexf[$index]);
+			unset($this->arrData['alexf'][$index]);
 		}
 	}
 
@@ -604,12 +595,12 @@ class BackendUser extends User
 	 */
 	public function getRoles()
 	{
-		if ($this->isAdmin)
+		if ($this->arrData['admin'])
 		{
 			return array('ROLE_USER', 'ROLE_ADMIN', 'ROLE_ALLOWED_TO_SWITCH', 'ROLE_ALLOWED_TO_SWITCH_MEMBER');
 		}
 
-		if (!empty($this->amg) && \is_array($this->amg))
+		if (!empty($this->arrData['amg']) && \is_array($this->arrData['amg']))
 		{
 			return array('ROLE_USER', 'ROLE_ALLOWED_TO_SWITCH_MEMBER');
 		}
@@ -630,7 +621,7 @@ class BackendUser extends User
 
 	public function __serialize(): array
 	{
-		return array('admin' => $this->admin, 'amg' => $this->amg, 'parent' => parent::__serialize());
+		return array('admin' => $this->arrData['admin'], 'amg' => $this->arrData['amg'], 'parent' => parent::__serialize());
 	}
 
 	/**
@@ -657,7 +648,7 @@ class BackendUser extends User
 			return;
 		}
 
-		list($this->admin, $this->amg, $parent) = array_values($data);
+		list($this->arrData['admin'], $this->arrData['amg'], $parent) = array_values($data);
 
 		parent::__unserialize($parent);
 	}
@@ -672,7 +663,7 @@ class BackendUser extends User
 			return false;
 		}
 
-		if ((bool) $this->admin !== (bool) $user->admin)
+		if ((bool) $this->arrData['admin'] !== $user->isAdmin)
 		{
 			return false;
 		}
