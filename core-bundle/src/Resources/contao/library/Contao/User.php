@@ -220,7 +220,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 			return 'anon.';
 		}
 
-		return (string) ($this->arrData['username'] ?: ($this->getTable() . '.' . $this->intId));
+		return $this->username ?: ($this->getTable() . '.' . $this->intId);
 	}
 
 	/**
@@ -348,7 +348,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 
 		$this->Database->prepare("UPDATE " . $this->strTable . " %s WHERE id=?")
 					   ->set($arrSet)
-					   ->execute($this->intId);
+					   ->execute($this->id);
 	}
 
 	/**
@@ -428,7 +428,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 			return false;
 		}
 
-		$groups = StringUtil::deserialize($this->arrData['groups'], true);
+		$groups = StringUtil::deserialize($this->groups, true);
 
 		// No groups assigned
 		if (empty($groups))
@@ -519,7 +519,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 
 	public function setUsername($username)
 	{
-		$this->arrData['username'] = $username;
+		$this->username = $username;
 
 		return $this;
 	}
@@ -529,17 +529,17 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function getUserIdentifier(): string
 	{
-		if (null === $this->arrData['username'] ?? null)
+		if (null === $this->username)
 		{
 			throw new \RuntimeException('Missing username in User object');
 		}
 
-		if (!\is_string($this->arrData['username']))
+		if (!\is_string($this->username))
 		{
-			throw new \RuntimeException(sprintf('Invalid type "%s" for username', \gettype($this->arrData['username'])));
+			throw new \RuntimeException(sprintf('Invalid type "%s" for username', \gettype($this->username)));
 		}
 
-		return $this->arrData['username'];
+		return $this->username;
 	}
 
 	/**
@@ -547,12 +547,12 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function getPassword(): ?string
 	{
-		return $this->arrData['password'] ?? null;
+		return $this->password;
 	}
 
 	public function setPassword($password)
 	{
-		$this->arrData['password'] = $password;
+		$this->password = $password;
 
 		return $this;
 	}
@@ -584,12 +584,12 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	{
 		return array
 		(
-			'id' => $this->arrData['id'] ?? null,
-			'username' => $this->arrData['username'] ?? null,
-			'password' => $this->arrData['password'] ?? null,
-			'disable' => $this->arrData['disable'] ?? null,
-			'start' => $this->arrData['start'] ?? null,
-			'stop' => $this->arrData['stop'] ?? null
+			'id' => $this->id,
+			'username' => $this->username,
+			'password' => $this->password,
+			'disable' => $this->disable,
+			'start' => $this->start,
+			'stop' => $this->stop
 		);
 	}
 
@@ -608,7 +608,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 			return;
 		}
 
-		list($this->arrData['id'], $this->arrData['username'], $this->arrData['password'], $this->arrData['disable'], $this->arrData['start'], $this->arrData['stop']) = array_values($data);
+		list($this->id, $this->username, $this->password, $this->disable, $this->start, $this->stop) = array_values($data);
 	}
 
 	/**
@@ -633,22 +633,22 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 			return false;
 		}
 
-		if ($this->arrData['password'] ?? null !== $user->password)
+		if ($this->password !== $user->password)
 		{
 			return false;
 		}
 
-		if ((bool) ($this->arrData['disable'] ?? false) !== (bool) $user->disable)
+		if ((bool) $this->disable !== (bool) $user->disable)
 		{
 			return false;
 		}
 
-		if ($this->arrData['start'] ?? null !== '' && $this->arrData['start'] ?? null > time())
+		if ($this->start !== '' && $this->start > time())
 		{
 			return false;
 		}
 
-		if ($this->arrData['stop'] ?? null !== '' && $this->arrData['stop'] ?? null <= time())
+		if ($this->stop !== '' && $this->stop <= time())
 		{
 			return false;
 		}

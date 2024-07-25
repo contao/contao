@@ -190,7 +190,7 @@ class FrontendUser extends User
 			return false;
 		}
 
-		$this->arrGroups = $this->arrData['groups'];
+		$this->arrGroups = $this->groups;
 
 		return true;
 	}
@@ -200,10 +200,10 @@ class FrontendUser extends User
 	 */
 	public function save()
 	{
-		$groups = $this->arrData['groups'];
+		$groups = $this->groups;
 		$this->arrData['groups'] = $this->arrGroups;
 		parent::save();
-		$this->arrData['groups'] = $groups;
+		$this->groups = $groups;
 	}
 
 	/**
@@ -211,7 +211,7 @@ class FrontendUser extends User
 	 */
 	protected function setUserFromDb()
 	{
-		$this->intId = $this->arrData['id'];
+		$this->intId = $this->id;
 
 		// Unserialize values
 		foreach ($this->arrData as $k=>$v)
@@ -222,24 +222,24 @@ class FrontendUser extends User
 			}
 		}
 
-		$GLOBALS['TL_USERNAME'] = $this->arrData['username'];
+		$GLOBALS['TL_USERNAME'] = $this->username;
 
 		// Make sure that groups is an array
-		if (!\is_array($this->arrData['groups']))
+		if (!\is_array($this->groups))
 		{
-			$this->arrData['groups'] = $this->arrData['groups'] ? array($this->arrData['groups']) : array();
+			$this->groups = $this->groups ? array($this->groups) : array();
 		}
 
 		// Skip inactive groups
 		if (($objGroups = MemberGroupModel::findAllActive()) !== null)
 		{
-			$this->arrData['groups'] = array_intersect($this->arrData['groups'], $objGroups->fetchEach('id'));
+			$this->groups = array_intersect($this->groups, $objGroups->fetchEach('id'));
 		}
 
 		// Get the group login page
-		if (($this->arrData['groups'][0] ?? 0) > 0)
+		if (($this->groups[0] ?? 0) > 0)
 		{
-			$objGroup = MemberGroupModel::findPublishedById($this->arrData['groups'][0]);
+			$objGroup = MemberGroupModel::findPublishedById($this->groups[0]);
 
 			if ($objGroup !== null && $objGroup->redirect && $objGroup->jumpTo)
 			{
