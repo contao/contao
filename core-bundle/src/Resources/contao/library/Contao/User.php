@@ -529,7 +529,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function getUserIdentifier(): string
 	{
-		if (null === $this->arrData['username'])
+		if (null === $this->arrData['username'] ?? null)
 		{
 			throw new \RuntimeException('Missing username in User object');
 		}
@@ -547,7 +547,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function getPassword(): ?string
 	{
-		return $this->arrData['password'];
+		return $this->arrData['password'] ?? null;
 	}
 
 	public function setPassword($password)
@@ -633,22 +633,22 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 			return false;
 		}
 
-		if ($this->arrData['password'] !== $user->password)
+		if ($this->arrData['password'] ?? null !== $user->password)
 		{
 			return false;
 		}
 
-		if ((bool) $this->arrData['disable'] !== (bool) $user->disable)
+		if ((bool) ($this->arrData['disable'] ?? false) !== (bool) $user->disable)
 		{
 			return false;
 		}
 
-		if ($this->arrData['start'] !== '' && $this->arrData['start'] > time())
+		if ($this->arrData['start'] ?? null !== '' && $this->arrData['start'] ?? null > time())
 		{
 			return false;
 		}
 
-		if ($this->arrData['stop'] !== '' && $this->arrData['stop'] <= time())
+		if ($this->arrData['stop'] ?? null !== '' && $this->arrData['stop'] ?? null <= time())
 		{
 			return false;
 		}
