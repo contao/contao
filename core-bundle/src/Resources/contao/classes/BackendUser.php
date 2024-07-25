@@ -240,7 +240,7 @@ class BackendUser extends User
 	 */
 	public function hasAccess($field, $array)
 	{
-		if ($this->arrData['admin'])
+		if ($this->arrData['admin'] ?? null)
 		{
 			return true;
 		}
@@ -250,7 +250,7 @@ class BackendUser extends User
 			$field = array($field);
 		}
 
-		if (\is_array($this->arrData[$array]) && array_intersect($field, $this->arrData[$array]))
+		if (\is_array($this->arrData[$array] ?? null) && array_intersect($field, $this->arrData[$array]))
 		{
 			return true;
 		}
@@ -401,7 +401,7 @@ class BackendUser extends User
 	 */
 	protected function setUserFromDb()
 	{
-		$this->intId = $this->arrData['id'];
+		$this->intId = $this->arrData['id'] ?? null;
 
 		// Unserialize values
 		foreach ($this->arrData as $k=>$v)
@@ -412,14 +412,14 @@ class BackendUser extends User
 			}
 		}
 
-		$GLOBALS['TL_USERNAME'] = $this->arrData['username'];
+		$GLOBALS['TL_USERNAME'] = $this->arrData['username'] ?? null;
 
-		Config::set('showHelp', $this->arrData['showHelp']);
-		Config::set('useRTE', $this->arrData['useRTE']);
-		Config::set('useCE', $this->arrData['useCE']);
-		Config::set('thumbnails', $this->arrData['thumbnails']);
-		Config::set('backendTheme', $this->arrData['backendTheme']);
-		Config::set('fullscreen', $this->arrData['fullscreen']);
+		Config::set('showHelp', $this->arrData['showHelp'] ?? true);
+		Config::set('useRTE', $this->arrData['useRTE'] ?? true);
+		Config::set('useCE', $this->arrData['useCE'] ?? true);
+		Config::set('thumbnails', $this->arrData['thumbnails'] ?? true);
+		Config::set('backendTheme', $this->arrData['backendTheme'] ?? 'flexible');
+		Config::set('fullscreen', $this->arrData['fullscreen'] ?? false);
 
 		// Inherit permissions
 		$always = array('alexf');
@@ -432,7 +432,7 @@ class BackendUser extends User
 		}
 
 		// Overwrite user permissions if only group permissions shall be inherited
-		if ($this->arrData['inherit'] == 'group')
+		if (($this->arrData['inherit'] ?? null) == 'group')
 		{
 			foreach ($depends as $field)
 			{
@@ -441,7 +441,7 @@ class BackendUser extends User
 		}
 
 		// Merge permissions
-		$inherit = \in_array($this->arrData['inherit'], array('group', 'extend')) ? array_merge($always, $depends) : $always;
+		$inherit = \in_array($this->arrData['inherit'] ?? null, array('group', 'extend')) ? array_merge($always, $depends) : $always;
 		$time = Date::floorToMinute();
 
 		foreach ((array) $this->arrData['groups'] as $id)
@@ -467,7 +467,7 @@ class BackendUser extends User
 		}
 
 		// Make sure pagemounts and filemounts are set!
-		if (!\is_array($this->arrData['pagemounts']))
+		if (!\is_array($this->arrData['pagemounts'] ?? null))
 		{
 			$this->arrData['pagemounts'] = array();
 		}
@@ -476,7 +476,7 @@ class BackendUser extends User
 			$this->arrData['pagemounts'] = array_filter($this->arrData['pagemounts']);
 		}
 
-		if (!\is_array($this->arrData['filemounts']))
+		if (!\is_array($this->arrData['filemounts'] ?? null))
 		{
 			$this->arrData['filemounts'] = array();
 		}
