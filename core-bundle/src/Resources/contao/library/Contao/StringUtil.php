@@ -221,6 +221,11 @@ class StringUtil
 	 */
 	public static function decodeEntities($strString, $strQuoteStyle=ENT_QUOTES, $strCharset=null)
 	{
+		if (\is_array($strString))
+		{
+			return array_map(__METHOD__, $strString);
+		}
+
 		if ((string) $strString === '')
 		{
 			return '';
