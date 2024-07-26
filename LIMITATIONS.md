@@ -14,7 +14,7 @@ item or from a news item to an event. They can only copy or move elements from e
 
 More information: https://github.com/contao/core/issues/5234
 
-## ALTCHA form field not working on unsafe environments within chromium based browsers
+## ALTCHA form field not working on unsafe environments
 
 The ALTCHA captcha does not work in insecure environments because it uses methods of the Web Crypto API.
 
