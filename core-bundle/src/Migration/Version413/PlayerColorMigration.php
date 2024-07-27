@@ -47,7 +47,7 @@ class PlayerColorMigration extends AbstractMigration
 
     public function run(): MigrationResult
     {
-        $this->connection->executeQuery("UPDATE tl_content SET playerColor = '' WHERE CHAR_LENGTH(playerColor) > 6");
+        $this->connection->executeQuery("UPDATE tl_content SET playerColor = '' WHERE LENGTH(playerColor) > 6");
 
         return $this->createResult(true);
     }
