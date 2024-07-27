@@ -42,7 +42,7 @@ class PlayerColorMigration extends AbstractMigration
             return false;
         }
 
-        return (bool) $this->connection->fetchOne('SELECT TRUE from tl_content WHERE CHAR_LENGTH(playerColor) > 6');
+        return (bool) $this->connection->fetchOne('SELECT TRUE from tl_content WHERE LENGTH(playerColor) > 6');
     }
 
     public function run(): MigrationResult
