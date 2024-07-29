@@ -105,7 +105,7 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
         $requestCookies = $request->cookies->all();
         $responseCookies = $response->headers->getCookies(ResponseHeaderBag::COOKIES_FLAT);
 
-        // Ignore any cookies in the request and response that are being deleted (#7344)
+        // Ignore any cookies in the request and response that are being deleted (see #7344)
         $responseCookies = array_filter(
             $responseCookies,
             static function (Cookie $responseCookie) use (&$requestCookies): bool {
