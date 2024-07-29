@@ -1661,7 +1661,7 @@ table.tl_listing {
 	position: absolute;
 	bottom: 0;
 	left: 0;
-	background: var(--content-bg);
+	background: linear-gradient(transparent, var(--content-bg));
 	line-height: 11px;
 	text-align: center;
 	z-index: 1;
@@ -1670,7 +1670,7 @@ table.tl_listing {
 .limit_toggler button {
 	margin: 0;
 	padding: 0;
-	border: 0;
+	border: 1px solid var(--border);
 	background: var(--content-bg);
 	width: 24px;
 	line-height: 8px;
