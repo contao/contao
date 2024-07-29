@@ -69,6 +69,24 @@ class MigrateCommandTest extends TestCase
     /**
      * @group legacy
      */
+    public function testAbortsEarlyIfNonInteractiveAndThereAreOnlyDropMigrations(): void
+    {
+        $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
+
+        $backupManager = $this->createBackupManager(false);
+        $command = $this->getCommand([], [], null, $backupManager);
+        $tester = new CommandTester($command);
+        $code = $tester->execute([], ['interactive' => false]);
+        $display = $tester->getDisplay();
+
+        $this->assertSame(0, $code);
+        $this->assertMatchesRegularExpression('/Database dump skipped because there are no migrations to execute./', $display);
+        $this->assertMatchesRegularExpression('/All migrations completed/', $display);
+    }
+
+    /**
+     * @group legacy
+     */
     public function testExecutesBackupIfPendingSchemaDiff(): void
     {
         $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
