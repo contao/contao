@@ -558,7 +558,9 @@ class Versions extends Controller
 								array_walk_recursive($to[$k], static function (&$value) {
 									$value = StringUtil::decodeEntities($value);
 								});
-							} else {
+							}
+							else
+							{
 								$to[$k] = StringUtil::decodeEntities($to[$k]);
 							}
 
@@ -566,7 +568,9 @@ class Versions extends Controller
 								array_walk_recursive($from[$k], static function (&$value) {
 									$value = StringUtil::decodeEntities($value);
 								});
-							} else {
+							}
+							else
+							{
 								$from[$k] = StringUtil::decodeEntities($from[$k]);
 							}
 						}
