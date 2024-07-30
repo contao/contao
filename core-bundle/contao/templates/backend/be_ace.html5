@@ -4,9 +4,7 @@ namespace Contao;
 
 if ($GLOBALS['TL_CONFIG']['useCE']):
 
-// Use document.write() here in case ACE is loaded in a subpalette (see #1424)
 ?>
-<script>window.ace || document.write('<script src="<?= $this->asset('js/ace.js', 'contao-components/ace') ?>" charset="utf-8">\x3C/script><script src="<?= $this->asset('js/ext-language_tools.js', 'contao-components/ace') ?>" charset="utf-8">\x3C/script><script src="<?= $this->asset('js/ext-whitespace.js', 'contao-components/ace') ?>" charset="utf-8">\x3C/script>')</script>
 <script>
 window.ace && window.addEvent('domready', function() {
   let ta = document.getElementById('<?= $this->selector ?>');

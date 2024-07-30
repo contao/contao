@@ -25,6 +25,10 @@
     <script src="<?= $this->asset('js/chosen.min.js', 'contao-components/chosen') ?>"></script>
     <script src="<?= $this->asset('js/simplemodal.min.js', 'contao-components/simplemodal') ?>"></script>
     <script src="<?= $this->asset('js/datepicker.min.js', 'contao-components/datepicker') ?>"></script>
+    <script src="<?= $this->asset('js/tinymce.min.js', 'contao-components/tinymce4') ?>"></script>
+    <script src="<?= $this->asset('js/ace.js', 'contao-components/ace') ?>"></script>
+    <script src="<?= $this->asset('js/ext-language_tools.js', 'contao-components/ace') ?>"></script>
+    <script src="<?= $this->asset('js/ext-whitespace.js', 'contao-components/ace') ?>"></script>
     <script src="<?= $this->asset('backend.js', 'contao_core') ?>"></script>
     <script><?= $this->getDateString() ?></script>
     <?= $this->javascripts ?>
