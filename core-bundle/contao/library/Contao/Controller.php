@@ -563,7 +563,7 @@ abstract class Controller extends System
 			return '';
 		}
 
-		$objRow = clone $objRow;
+		$objRow = $objRow->cloneDetached();
 		$objRow->typePrefix = 'ce_';
 		$strStopWatchId = 'contao.content_element.' . $objRow->type . ' (ID ' . $objRow->id . ')';
 
