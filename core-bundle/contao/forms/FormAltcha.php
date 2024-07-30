@@ -73,6 +73,8 @@ class FormAltcha extends Widget
 			return $objTemplate->parse();
 		}
 
+		$this->isSecure = $request->isSecure();
+
 		$this->altchaAttributes = new HtmlAttributes();
 		$this->altchaAttributes->set('name', $this->name);
 		$this->altchaAttributes->set('maxnumber', $this->getContainer()->get('contao.altcha')->getRangeMax());
