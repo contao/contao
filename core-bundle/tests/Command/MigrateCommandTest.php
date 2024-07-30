@@ -80,9 +80,7 @@ class MigrateCommandTest extends TestCase
             ->expects($this->atLeastOnce())
             ->method('compileCommands')
             ->willReturnCallback(
-                function (bool $doNotDropColumns = false): array {
-                    return $doNotDropColumns ? [] : ['DROP QUERY'];
-                },
+                static fn (bool $doNotDropColumns = false): array => $doNotDropColumns ? [] : ['DROP QUERY'],
             )
         ;
 
