@@ -538,13 +538,6 @@ class Comments extends Frontend
 				return;
 			}
 
-			if ($optInToken->isConfirmed())
-			{
-				$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['tokenConfirmed'];
-
-				return;
-			}
-
 			if ($optInToken->getEmail() != $objNotify->email)
 			{
 				$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['tokenEmailMismatch'];
@@ -552,10 +545,13 @@ class Comments extends Frontend
 				return;
 			}
 
-			$objNotify->active = true;
-			$objNotify->save();
+			if (!$optInToken->isConfirmed())
+			{
+				$objNotify->active = true;
+				$objNotify->save();
 
-			$optInToken->confirm();
+				$optInToken->confirm();
+			}
 
 			$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['com_optInConfirm'];
 		}

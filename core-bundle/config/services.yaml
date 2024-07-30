@@ -576,7 +576,6 @@ services:
         arguments:
             - '@cache.app'
             - '@console.command.messenger_consume_messages'
-            - '@messenger.receiver_locator'
 
     contao.model_argument_resolver:
         class: Contao\CoreBundle\HttpKernel\ModelArgumentResolver
