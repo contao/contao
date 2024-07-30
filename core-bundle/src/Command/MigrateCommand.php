@@ -110,9 +110,10 @@ class MigrateCommand extends Command
     private function backup(InputInterface $input): bool
     {
         $asJson = 'ndjson' === $input->getOption('format');
+        $skipDropStatements = !$input->isInteractive() && !$input->getOption('with-deletes');
 
         // Return early if there is no work to be done
-        if (!$this->hasWorkToDo()) {
+        if (!$this->hasWorkToDo($skipDropStatements)) {
             if (!$asJson) {
                 $this->io->info('Database dump skipped because there are no migrations to execute.');
             }
@@ -207,14 +208,14 @@ class MigrateCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function hasWorkToDo(): bool
+    private function hasWorkToDo(bool $skipDropStatements = false): bool
     {
         // There are some pending migrations
         if ($this->migrations->hasPending()) {
             return true;
         }
 
-        return [] !== $this->commandCompiler->compileCommands();
+        return [] !== $this->commandCompiler->compileCommands($skipDropStatements);
     }
 
     private function executeMigrations(bool &$dryRun, bool $asJson, string|null $specifiedHash = null): bool
