@@ -73,8 +73,6 @@ class FormAltcha extends Widget
 			return $objTemplate->parse();
 		}
 
-		$this->isSecure = $request->isSecure();
-
 		$this->altchaAttributes = new HtmlAttributes();
 		$this->altchaAttributes->set('name', $this->name);
 		$this->altchaAttributes->set('maxnumber', $this->getContainer()->get('contao.altcha')->getRangeMax());
@@ -83,6 +81,17 @@ class FormAltcha extends Widget
 		$this->altchaAttributes->setIfExists('auto', $this->altchaAuto);
 		$this->altchaAttributes->setIfExists('hidelogo', $this->altchaHideLogo);
 		$this->altchaAttributes->setIfExists('hidefooter', $this->altchaHideFooter);
+
+		$this->canUseAltcha = $request->isSecure();
+
+		if (!$this->canUseAltcha)
+		{
+			$host = $request->getHost();
+
+			// The context is also considered secure if the host is 127.0.0.1, localhost or *.localhost.
+			// https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts#when_is_a_context_considered_secure
+			$this->canUseAltcha = \in_array($host, array('127.0.0.1', 'localhost')) || str_ends_with($host, '.localhost');
+		}
 
 		return parent::parse($arrAttributes);
 	}
