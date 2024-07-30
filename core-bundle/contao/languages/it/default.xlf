@@ -373,6 +373,15 @@
         <source>There is no administrator e-mail address set, please contact the site administrator.</source>
         <target>Non è stato impostato alcun indirizzo e-mail per l'amministratore, contattare l'amministratore del sito.</target>
       </trans-unit>
+      <trans-unit id="ERR.altchaVerificationFailed">
+        <source>ALTCHA antispam verification failed. Are you a human or a robot?</source>
+      </trans-unit>
+      <trans-unit id="ERR.altchaWidgetError">
+        <source>Verification failed. Try again later.</source>
+      </trans-unit>
+      <trans-unit id="ERR.altchaInsecureConnection">
+        <source>ALTCHA is not available without a secure HTTPS connection. If your production website does not use HTTPS (not recommended), please use the security question instead.</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Somma %d a %d.</target>
@@ -776,6 +785,12 @@
       <trans-unit id="FFL.hidden.1">
         <source>A single-line input field that is not visible in the form.</source>
         <target>Il campo nascosto è una singola linea che verrà visualizzata nel form.</target>
+      </trans-unit>
+      <trans-unit id="FFL.altcha.0">
+        <source>ALTCHA antispam</source>
+      </trans-unit>
+      <trans-unit id="FFL.altcha.1">
+        <source>Provides an ALTCHA antispam form field to verify that the form is submitted by a human (CAPTCHA).</source>
       </trans-unit>
       <trans-unit id="FFL.captcha.0">
         <source>Security question</source>
@@ -2618,20 +2633,17 @@
         <target>Devi aggiungere una pagina principale del sito Web per inserire i metadati dei file.</target>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
-        <source>Breadcrumb menu</source>
-        <target>Breadcrumb menu</target>
+        <source>Breadcrumb</source>
       </trans-unit>
       <trans-unit id="MSC.mainNavigation">
-        <source>Main navigation</source>
-        <target>Navigazione principale</target>
+        <source>Main</source>
       </trans-unit>
       <trans-unit id="MSC.headerNavigation">
-        <source>Header navigation</source>
-        <target>Navigazione di intestazioni</target>
+        <source>Header</source>
+        <target>Intestazione</target>
       </trans-unit>
       <trans-unit id="MSC.pagination">
-        <source>Pagination menu</source>
-        <target>Menu paginazione</target>
+        <source>Pagination</source>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.unicodeLowercase">
         <source>Unicode numbers and lowercase letters</source>
@@ -2872,6 +2884,21 @@
       <trans-unit id="MSC.lightMode">
         <source>Light mode</source>
         <target>Light mode</target>
+      </trans-unit>
+      <trans-unit id="MSC.altchaFooter">
+        <source>Protected by &lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;</source>
+      </trans-unit>
+      <trans-unit id="MSC.altchaLabel">
+        <source>I'm not a robot</source>
+      </trans-unit>
+      <trans-unit id="MSC.altchaVerified">
+        <source>I'm human</source>
+      </trans-unit>
+      <trans-unit id="MSC.altchaVerifying">
+        <source>Verifying …</source>
+      </trans-unit>
+      <trans-unit id="MSC.altchaWaitAlert">
+        <source>Verifying … please wait.</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

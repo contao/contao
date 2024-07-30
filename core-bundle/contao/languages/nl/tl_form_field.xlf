@@ -369,6 +369,24 @@
         <source>Please select an image from the files directory.</source>
         <target>Selecteer een afbeelding in de bestandsdirectory.</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.altchaAuto.0">
+        <source>Auto verification</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaAuto.1">
+        <source>Automatically verify without user interaction.</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaHideLogo.0">
+        <source>Hide logo</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaHideLogo.1">
+        <source>Hide the ALTCHA logo.</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaHideFooter.0">
+        <source>Hide footer</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaHideFooter.1">
+        <source>Hide the footer (ALTCHA link).</source>
+      </trans-unit>
       <trans-unit id="tl_form_field.invisible.0">
         <source>Invisible</source>
         <target>Niet zichtbaar</target>

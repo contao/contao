@@ -2,6 +2,15 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.4.0-RC2] (2024-07-30)
+
+**Fixed issues:**
+
+- [#7387] Load the TinyMCE and ACE scripts within `be_main` ([zoglo])
+- [#7384] Show a warning if ALTCHA is used with an insecure connection ([leofeyer])
+- [#7373] Fix the `contao-setup` command ([leofeyer])
+- [#7378] Disable Turbo on `editAll` and `overrideAll` forms ([fritzmg])
+
 ## [5.4.0-RC1] (2024-07-08)
 
 **New features:**
@@ -41,6 +50,7 @@ This project adheres to [Semantic Versioning].
 - [#7229] Fix the `.nogrid` backwards compatibility layer ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.4.0-RC2]: https://github.com/contao/contao/releases/tag/5.4.0-RC2
 [5.4.0-RC1]: https://github.com/contao/contao/releases/tag/5.4.0-RC1
 [bytehead]: https://github.com/bytehead
 [fritzmg]: https://github.com/fritzmg
@@ -82,3 +92,7 @@ This project adheres to [Semantic Versioning].
 [#7302]: https://github.com/contao/contao/pull/7302
 [#7318]: https://github.com/contao/contao/pull/7318
 [#7326]: https://github.com/contao/contao/pull/7326
+[#7373]: https://github.com/contao/contao/pull/7373
+[#7378]: https://github.com/contao/contao/pull/7378
+[#7384]: https://github.com/contao/contao/pull/7384
+[#7387]: https://github.com/contao/contao/pull/7387

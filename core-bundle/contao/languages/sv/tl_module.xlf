@@ -25,6 +25,14 @@
         <source>Please choose the type of module.</source>
         <target>Välj modultyp.</target>
       </trans-unit>
+      <trans-unit id="tl_module.ariaLabel.0">
+        <source>ARIA label</source>
+        <target>ARIA etikett</target>
+      </trans-unit>
+      <trans-unit id="tl_module.ariaLabel.1">
+        <source>Here you can enter an ARIA label. Avoid using the role in the label, as screen readers read out both the label and the role. For example, &quot;Main navigation&quot; would be read as &quot;Main navigation navigation&quot;.</source>
+        <target>Här kan du ange en ARIA label. Undvik att använda rollen i etiketten, eftersom skärmläsare läser upp både etiketten och rollen. Till exempel skulle ”Huvudnavigering” läsas som ”Huvudnavigering navigering”.</target>
+      </trans-unit>
       <trans-unit id="tl_module.levelOffset.0">
         <source>Start level</source>
         <target>Startnivå</target>
