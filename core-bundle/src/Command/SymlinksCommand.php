@@ -273,10 +273,6 @@ class SymlinksCommand extends Command
 
         $composerConfig = json_decode(file_get_contents($composerJsonFilePath), true, 512, JSON_THROW_ON_ERROR);
 
-        if (null === ($componentDir = $composerConfig['extra']['contao-component-dir'] ?? null)) {
-            return null;
-        }
-
-        return $componentDir;
+        return $composerConfig['extra']['contao-component-dir'] ?? null;
     }
 }

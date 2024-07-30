@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Command;
 
-use Contao\CoreBundle\Util\SymlinkUtil;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -37,7 +36,6 @@ class InstallCommand extends Command
     public function __construct(
         private readonly string $projectDir,
         private readonly string $uploadPath,
-        private readonly string $imageDir,
     ) {
         parent::__construct();
     }
@@ -73,24 +71,14 @@ class InstallCommand extends Command
             'system/themes',
             'system/tmp',
             'templates',
-            '%s/assets/css',
-            '%s/assets/js',
             '%s/share',
             '%s/system',
         ];
-
-        $symlinkAssets = 'assets' === $this->getContaoComponentDir();
-
-        // Create the symlink to the assets directory (backwards compatibility)
-        if ($symlinkAssets && !is_dir(Path::join($this->projectDir, $this->webDir, 'assets'))) {
-            SymlinkUtil::symlink('assets', Path::join($this->webDir, 'assets'), $this->projectDir);
-        }
 
         foreach ($emptyDirs as $path) {
             $this->addEmptyDir(Path::join($this->projectDir, sprintf($path, $this->webDir)));
         }
 
-        $this->addEmptyDir($this->imageDir);
         $this->addEmptyDir(Path::join($this->projectDir, $this->uploadPath));
     }
 
@@ -103,22 +91,5 @@ class InstallCommand extends Command
         $this->fs->mkdir($path);
 
         $this->rows[] = Path::makeRelative($path, $this->projectDir);
-    }
-
-    private function getContaoComponentDir(): string|null
-    {
-        $fs = new Filesystem();
-
-        if (!$fs->exists($composerJsonFilePath = Path::join($this->projectDir, 'composer.json'))) {
-            return null;
-        }
-
-        $composerConfig = json_decode(file_get_contents($composerJsonFilePath), true, 512, JSON_THROW_ON_ERROR);
-
-        if (null === ($componentDir = $composerConfig['extra']['contao-component-dir'] ?? null)) {
-            return null;
-        }
-
-        return $componentDir;
     }
 }
