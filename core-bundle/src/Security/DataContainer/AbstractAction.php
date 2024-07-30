@@ -44,7 +44,7 @@ abstract class AbstractAction implements \Stringable
 
     public function __toString(): string
     {
-        return sprintf('[Subject: %s]', implode('; ', $this->getSubjectInfo()));
+        return \sprintf('[Subject: %s]', implode('; ', $this->getSubjectInfo()));
     }
 
     public function getPreloadHints(): array|null

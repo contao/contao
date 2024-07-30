@@ -370,7 +370,7 @@ class ContaoExtensionTest extends TestCase
             }
         }
 
-        $this->fail(sprintf('No escaper rule matched template "%s".', $templateName));
+        $this->fail(\sprintf('No escaper rule matched template "%s".', $templateName));
     }
 
     public static function provideTemplateNames(): iterable

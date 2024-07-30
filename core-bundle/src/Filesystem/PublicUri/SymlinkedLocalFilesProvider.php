@@ -52,7 +52,7 @@ class SymlinkedLocalFilesProvider implements PublicUriProviderInterface
             return null;
         }
 
-        return new Uri(sprintf('%s/%s/%s', $this->getSchemeAndHost(), $rootPath, $adapterPath));
+        return new Uri(\sprintf('%s/%s/%s', $this->getSchemeAndHost(), $rootPath, $adapterPath));
     }
 
     private function getSchemeAndHost(): string

@@ -64,7 +64,7 @@ class JumpToParentOperationListener
             return;
         }
 
-        $newTitle = sprintf(
+        $newTitle = \sprintf(
             $this->translator->trans('tl_undo.parent_modal', [], 'contao_tl_undo'),
             $table,
             $originalRow['id'],

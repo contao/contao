@@ -122,7 +122,7 @@ class ModuleFaqPage extends Module
 				$strAuthor = $objAuthor->name;
 			}
 
-			$objTemp->info = sprintf($GLOBALS['TL_LANG']['MSC']['faqCreatedBy'], Date::parse($objPage->dateFormat, $objFaq->tstamp), $strAuthor);
+			$objTemp->info = \sprintf($GLOBALS['TL_LANG']['MSC']['faqCreatedBy'], Date::parse($objPage->dateFormat, $objFaq->tstamp), $strAuthor);
 
 			if (($objPid = FaqCategoryModel::findById($objFaq->pid)) && empty($arrFaqs[$objFaq->pid]))
 			{

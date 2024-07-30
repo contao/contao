@@ -48,7 +48,7 @@ class EnumOptionsListener
             }
 
             if (!is_subclass_of($enum, \BackedEnum::class)) {
-                throw new \LogicException(sprintf('Invalid enum configuration. Class "%s" must extend BackedEnum.', $enum));
+                throw new \LogicException(\sprintf('Invalid enum configuration. Class "%s" must extend BackedEnum.', $enum));
             }
 
             // Generate options from the enum cases

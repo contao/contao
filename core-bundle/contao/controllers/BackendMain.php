@@ -178,7 +178,7 @@ class BackendMain extends Backend
 			$formatter = new DateTimeFormatter(System::getContainer()->get('translator'));
 			$diff = $formatter->formatDiff(new \DateTime(date('Y-m-d H:i:s', $user->lastLogin)), new \DateTime());
 
-			$objTemplate->loginMsg = sprintf(
+			$objTemplate->loginMsg = \sprintf(
 				$GLOBALS['TL_LANG']['MSC']['lastLogin'][1],
 				'<time title="' . Date::parse(Config::get('datimFormat'), $user->lastLogin) . '">' . $diff . '</time>'
 			);
@@ -191,7 +191,7 @@ class BackendMain extends Backend
 		$objTemplate->recordOfTable = StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['MSC']['recordOfTable']));
 		$objTemplate->systemMessages = $GLOBALS['TL_LANG']['MSC']['systemMessages'];
 		$objTemplate->shortcuts = $GLOBALS['TL_LANG']['MSC']['shortcuts'][0];
-		$objTemplate->shortcutsLink = sprintf($GLOBALS['TL_LANG']['MSC']['shortcuts'][1], 'https://to.contao.org/docs/shortcuts');
+		$objTemplate->shortcutsLink = \sprintf($GLOBALS['TL_LANG']['MSC']['shortcuts'][1], 'https://to.contao.org/docs/shortcuts');
 		$objTemplate->editElement = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['editElement']);
 
 		return $objTemplate->parse();
@@ -242,7 +242,7 @@ class BackendMain extends Backend
 		$data['charset'] = System::getContainer()->getParameter('kernel.charset');
 		$data['home'] = $GLOBALS['TL_LANG']['MSC']['home'];
 		$data['isPopup'] = Input::get('popup');
-		$data['learnMore'] = sprintf($GLOBALS['TL_LANG']['MSC']['learnMore'], '<a href="https://contao.org" target="_blank" rel="noreferrer noopener">contao.org</a>');
+		$data['learnMore'] = \sprintf($GLOBALS['TL_LANG']['MSC']['learnMore'], '<a href="https://contao.org" target="_blank" rel="noreferrer noopener">contao.org</a>');
 
 		$twig = $container->get('twig');
 

@@ -255,7 +255,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 		// Check whether the target file is writeable
 		if (file_exists($configFile) && !is_writable($configFile))
 		{
-			Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['notWriteable'], 'system/config/localconfig.php'));
+			Message::addError(\sprintf($GLOBALS['TL_LANG']['ERR']['notWriteable'], 'system/config/localconfig.php'));
 		}
 
 		// Submit buttons

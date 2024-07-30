@@ -141,7 +141,7 @@ class CheckBox extends Widget
 		{
 			foreach ($this->unknownOption as $val)
 			{
-				$arrAllOptions[] = array('value' => $val, 'label' => sprintf($GLOBALS['TL_LANG']['MSC']['unknownOption'], $val));
+				$arrAllOptions[] = array('value' => $val, 'label' => \sprintf($GLOBALS['TL_LANG']['MSC']['unknownOption'], $val));
 			}
 		}
 
@@ -201,7 +201,7 @@ class CheckBox extends Widget
 
 		if ($this->multiple)
 		{
-			return sprintf(
+			return \sprintf(
 				'<fieldset id="ctrl_%s" class="tl_checkbox_container%s"><legend>%s%s%s%s</legend><input type="hidden" name="%s" value="">%s%s</fieldset>%s',
 				$this->strId,
 				$this->strClass ? ' ' . $this->strClass : '',
@@ -216,7 +216,7 @@ class CheckBox extends Widget
 			);
 		}
 
-		return sprintf(
+		return \sprintf(
 			'<div id="ctrl_%s" class="tl_checkbox_single_container%s"><input type="hidden" name="%s" value="">%s</div>%s',
 			$this->strId,
 			$this->strClass ? ' ' . $this->strClass : '',
@@ -236,7 +236,7 @@ class CheckBox extends Widget
 	 */
 	protected function generateCheckbox($arrOption, $i)
 	{
-		return sprintf(
+		return \sprintf(
 			'<span><input type="checkbox" name="%s" id="opt_%s" class="tl_checkbox" value="%s"%s%s data-action="focus->contao--scroll-offset#store"> <label for="opt_%s">%s%s%s</label>%s</span>',
 			$this->strName . ($this->multiple ? '[]' : ''),
 			$this->strId . '_' . $i,

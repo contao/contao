@@ -46,7 +46,7 @@ class Altcha
         $algorithms = Algorithm::values();
 
         if (!\in_array($this->altchaAlgorithm, $algorithms, true)) {
-            throw new InvalidAlgorithmException(sprintf('Invalid algorithm selected. It has to be one of these: %s', implode(', ', $algorithms)));
+            throw new InvalidAlgorithmException(\sprintf('Invalid algorithm selected. It has to be one of these: %s', implode(', ', $algorithms)));
         }
 
         if (!$salt) {

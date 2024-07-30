@@ -25,7 +25,7 @@ class ThemeNamespace
     public function generateSlug(string $relativePath): string
     {
         if (!Path::isRelative($relativePath)) {
-            throw new \InvalidArgumentException(sprintf('Path "%s" must be relative.', $relativePath));
+            throw new \InvalidArgumentException(\sprintf('Path "%s" must be relative.', $relativePath));
         }
 
         $path = Path::normalize($relativePath);

@@ -48,7 +48,7 @@ class FragmentHandler extends BaseFragmentHandler
         }
 
         if (!$config = $this->fragmentRegistry->get($uri->controller)) {
-            throw new UnknownFragmentException(sprintf('Invalid fragment identifier "%s"', $uri->controller));
+            throw new UnknownFragmentException(\sprintf('Invalid fragment identifier "%s"', $uri->controller));
         }
 
         $this->preHandleFragment($uri, $config);

@@ -48,7 +48,7 @@ class DisableCanonicalFieldsListener
         $renderHelpIcon = fn () => ' '.$adapter->getHtml(
             'info.svg',
             '',
-            sprintf(
+            \sprintf(
                 'title="%s"',
                 StringUtil::specialchars($this->translator->trans('tl_page.relCanonical', [], 'contao_tl_page')),
             ),

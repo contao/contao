@@ -108,7 +108,7 @@ class UserCreateCommand extends Command
             }
 
             if (mb_strlen($value) < $minLength) {
-                throw new \RuntimeException(sprintf('Please use at least %d characters.', $minLength));
+                throw new \RuntimeException(\sprintf('Please use at least %d characters.', $minLength));
             }
 
             if ($value === $username) {
@@ -177,7 +177,7 @@ class UserCreateCommand extends Command
             $input->getOption('change-password'),
         );
 
-        $io->success(sprintf('User %s%s created.', $username, $isAdmin ? ' with admin permissions' : ''));
+        $io->success(\sprintf('User %s%s created.', $username, $isAdmin ? ' with admin permissions' : ''));
 
         return Command::SUCCESS;
     }

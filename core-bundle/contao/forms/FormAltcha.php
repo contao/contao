@@ -51,7 +51,7 @@ class FormAltcha extends Widget
 	 */
 	public function generate(): string
 	{
-		return sprintf('<altcha-widget%s></altcha-widget>', $this->getAltchaAttributes());
+		return \sprintf('<altcha-widget%s></altcha-widget>', $this->getAltchaAttributes());
 	}
 
 	/**

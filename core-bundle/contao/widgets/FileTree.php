@@ -75,7 +75,7 @@ class FileTree extends Widget
 		{
 			if ($this->mandatory)
 			{
-				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['mandatory'], $this->strLabel));
+				$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['mandatory'], $this->strLabel));
 			}
 
 			return '';
@@ -142,7 +142,7 @@ class FileTree extends Widget
 			// Only files within a custom path can be selected
 			if ($this->path && !str_starts_with($objFile->path, $this->path . '/'))
 			{
-				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['pathOnly'], $this->path));
+				$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['pathOnly'], $this->path));
 				break;
 			}
 
@@ -154,7 +154,7 @@ class FileTree extends Widget
 
 				if (!\in_array($objFile->extension, $extensions))
 				{
-					$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['extensionsOnly'], $this->extensions));
+					$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['extensionsOnly'], $this->extensions));
 					break;
 				}
 			}
@@ -416,7 +416,7 @@ class FileTree extends Widget
 
 			$img = $picture->getImg($projectDir);
 
-			return sprintf('<img src="%s"%s width="%s" height="%s" alt class="%s" title="%s" loading="lazy">', $img['src'], $img['srcset'] != $img['src'] ? ' srcset="' . $img['srcset'] . '"' : '', $img['width'], $img['height'], $strClass, StringUtil::specialchars($strInfo));
+			return \sprintf('<img src="%s"%s width="%s" height="%s" alt class="%s" title="%s" loading="lazy">', $img['src'], $img['srcset'] != $img['src'] ? ' srcset="' . $img['srcset'] . '"' : '', $img['width'], $img['height'], $strClass, StringUtil::specialchars($strInfo));
 		}
 
 		return Image::getHtml('placeholder.svg', '', 'class="' . $strClass . '" title="' . StringUtil::specialchars($strInfo) . '"');

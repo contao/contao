@@ -16,6 +16,6 @@ class InspectionException extends \RuntimeException
 {
     public function __construct(string $templateName, \Throwable|null $previous = null, string|null $reason = null)
     {
-        parent::__construct(sprintf('Could not inspect template "%s".%s', $templateName, null !== $reason ? " $reason" : ''), 0, $previous);
+        parent::__construct(\sprintf('Could not inspect template "%s".%s', $templateName, null !== $reason ? " $reason" : ''), 0, $previous);
     }
 }

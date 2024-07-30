@@ -52,7 +52,7 @@ class FilesystemConfiguration
     public function addVirtualFilesystem(string $name, string $prefix, bool $readonly = false): Definition
     {
         if (null !== $this->getVirtualFilesystem($name)) {
-            throw new InvalidConfigurationException(sprintf('A virtual filesystem with the name "%s" is already defined.', $name));
+            throw new InvalidConfigurationException(\sprintf('A virtual filesystem with the name "%s" is already defined.', $name));
         }
 
         $definition = new Definition(VirtualFilesystem::class, [$prefix, $readonly]);
@@ -169,7 +169,7 @@ class FilesystemConfiguration
     public function addDefaultDbafs(string $virtualFilesystemName, string $table, string $hashFunction = 'md5', bool $useLastModified = true): Definition
     {
         if (null === ($virtualFilesystem = $this->getVirtualFilesystem($virtualFilesystemName))) {
-            throw new InvalidConfigurationException(sprintf('A virtual filesystem with the name "%s" does not exist.', $virtualFilesystemName));
+            throw new InvalidConfigurationException(\sprintf('A virtual filesystem with the name "%s" does not exist.', $virtualFilesystemName));
         }
 
         // Add an individual hash generator

@@ -112,6 +112,6 @@ final class PictureConfigurationRuntime implements RuntimeExtensionInterface
             $keys = array_map(static fn (string $v): string => "$prefix.$v", $keys);
         }
 
-        throw new \InvalidArgumentException(sprintf('Could not map picture configuration key(s) "%s".', implode('", "', $keys)));
+        throw new \InvalidArgumentException(\sprintf('Could not map picture configuration key(s) "%s".', implode('", "', $keys)));
     }
 }

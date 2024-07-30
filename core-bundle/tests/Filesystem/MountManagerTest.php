@@ -396,7 +396,7 @@ class MountManagerTest extends TestCase
 
         // Normalize listing for comparison
         $listing = array_map(
-            static fn (FilesystemItem $i): string => sprintf('%s (%s)', $i->getPath(), $i->isFile() ? 'file' : 'dir'),
+            static fn (FilesystemItem $i): string => \sprintf('%s (%s)', $i->getPath(), $i->isFile() ? 'file' : 'dir'),
             [...$manager->listContents($path, $deep)],
         );
 

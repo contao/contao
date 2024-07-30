@@ -113,7 +113,7 @@ class ImageSize extends Widget
 
 		if (!$this->isValidOption($varInput[2]))
 		{
-			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['invalid'], $varInput[2]));
+			$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['invalid'], $varInput[2]));
 		}
 
 		return $varInput;
@@ -182,14 +182,14 @@ class ImageSize extends Widget
 		// Add an unknown option, so it is not lost when saving the record (see #920)
 		if (isset($this->unknownOption[2]))
 		{
-			$arrAllOptions[] = array('value' => $this->unknownOption[2], 'label' => sprintf($GLOBALS['TL_LANG']['MSC']['unknownOption'], $this->unknownOption[2]));
+			$arrAllOptions[] = array('value' => $this->unknownOption[2], 'label' => \sprintf($GLOBALS['TL_LANG']['MSC']['unknownOption'], $this->unknownOption[2]));
 		}
 
 		foreach ($arrAllOptions as $strKey=>$arrOption)
 		{
 			if (isset($arrOption['value']))
 			{
-				$arrOptions[] = sprintf(
+				$arrOptions[] = \sprintf(
 					'<option value="%s"%s>%s</option>',
 					self::specialcharsValue($arrOption['value']),
 					$this->optionSelected($arrOption['value'], $this->varValue[2] ?? null),
@@ -204,7 +204,7 @@ class ImageSize extends Widget
 
 				foreach ($arrOption as $arrOptgroup)
 				{
-					$arrOptgroups[] = sprintf(
+					$arrOptgroups[] = \sprintf(
 						'<option value="%s"%s>%s</option>',
 						self::specialcharsValue($arrOptgroup['value'] ?? ''),
 						$this->optionSelected($arrOptgroup['value'] ?? null, $this->varValue[2] ?? null),
@@ -214,11 +214,11 @@ class ImageSize extends Widget
 					$arrValues[] = $arrOptgroup['value'] ?? '';
 				}
 
-				$arrOptions[] = sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', StringUtil::specialchars($strKey), implode('', $arrOptgroups));
+				$arrOptions[] = \sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', StringUtil::specialchars($strKey), implode('', $arrOptgroups));
 			}
 		}
 
-		$arrFields[] = sprintf(
+		$arrFields[] = \sprintf(
 			'<select name="%s[2]" id="ctrl_%s" class="tl_select_interval" data-action="focus->contao--scroll-offset#store"%s>%s</select>',
 			$this->strName,
 			$this->strId . '_3',
@@ -228,7 +228,7 @@ class ImageSize extends Widget
 
 		for ($i=0; $i<2; $i++)
 		{
-			$arrFields[] = sprintf(
+			$arrFields[] = \sprintf(
 				'<input type="text" name="%s[%s]" id="ctrl_%s" class="tl_text_4 tl_imageSize_%s" value="%s"%s data-action="focus->contao--scroll-offset#store">',
 				$this->strName,
 				$i,
@@ -239,7 +239,7 @@ class ImageSize extends Widget
 			);
 		}
 
-		return sprintf(
+		return \sprintf(
 			'<div id="ctrl_%s" class="tl_image_size%s"%s>%s</div>%s',
 			$this->strId,
 			$this->strClass ? ' ' . $this->strClass : '',

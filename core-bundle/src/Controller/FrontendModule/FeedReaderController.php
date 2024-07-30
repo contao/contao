@@ -62,7 +62,7 @@ class FeedReaderController extends AbstractFrontendModuleController
                 );
             } catch (\Exception $exception) {
                 $feed = null;
-                $this->logger->error(sprintf('Could not read feed %s: %s', $url, $exception->getMessage()));
+                $this->logger->error(\sprintf('Could not read feed %s: %s', $url, $exception->getMessage()));
 
                 continue;
             }
