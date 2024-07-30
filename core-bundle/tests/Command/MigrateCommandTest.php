@@ -74,7 +74,19 @@ class MigrateCommandTest extends TestCase
         $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
 
         $backupManager = $this->createBackupManager(false);
-        $command = $this->getCommand([], [], null, $backupManager);
+
+        $commandCompiler = $this->createMock(CommandCompiler::class);
+        $commandCompiler
+            ->expects($this->atLeastOnce())
+            ->method('compileCommands')
+            ->willReturnCallback(
+                function (bool $doNotDropColumns = false): array {
+                    return $doNotDropColumns ? [] : ['DROP QUERY'];
+                },
+            )
+        ;
+
+        $command = $this->getCommand([], [], $commandCompiler, $backupManager);
         $tester = new CommandTester($command);
         $code = $tester->execute([], ['interactive' => false]);
         $display = $tester->getDisplay();
