@@ -4,9 +4,7 @@ namespace Contao;
 
 if ($GLOBALS['TL_CONFIG']['useRTE']):
 
-// Use document.write() here in case TinyMCE is loaded in a subpalette (see #1424)
 ?>
-<script>window.tinymce || document.write('<script src="<?= $this->asset('js/tinymce.min.js', 'contao-components/tinymce4') ?>">\x3C/script>')</script>
 <script>
 window.tinymce && tinymce.init({
   selector: '#<?= $this->selector ?>',
