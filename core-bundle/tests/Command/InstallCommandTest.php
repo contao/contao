@@ -24,7 +24,6 @@ class InstallCommandTest extends TestCase
     {
         $fs = new Filesystem();
         $fs->remove($this->getTempDir().'/files_test');
-        $fs->remove($this->getTempDir().'/public/assets');
         $fs->remove($this->getTempDir().'/public/share');
         $fs->remove($this->getTempDir().'/public/system');
         $fs->remove($this->getTempDir().'/system/cache');
@@ -41,31 +40,16 @@ class InstallCommandTest extends TestCase
 
     public function testCreatesTheContaoFolders(): void
     {
-        $command = new InstallCommand($this->getTempDir(), 'files', $this->getTempDir().'/public/assets/images');
+        $command = new InstallCommand($this->getTempDir(), 'files');
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
         $output = $tester->getDisplay();
 
         $this->assertSame(0, $code);
-        $this->assertStringContainsString(' * public/assets/css', $output);
-        $this->assertStringContainsString(' * public/assets/images', $output);
-        $this->assertStringContainsString(' * public/assets/js', $output);
         $this->assertStringContainsString(' * public/system', $output);
         $this->assertStringContainsString(' * system/cache', $output);
         $this->assertStringContainsString(' * system/config', $output);
         $this->assertStringContainsString(' * system/tmp', $output);
         $this->assertStringContainsString(' * templates', $output);
-    }
-
-    public function testHandlesCustomFilesAndImagesPaths(): void
-    {
-        $command = new InstallCommand($this->getTempDir(), 'files_test', $this->getTempDir().'/public/assets/images_test');
-        $tester = new CommandTester($command);
-        $code = $tester->execute([]);
-        $display = $tester->getDisplay();
-
-        $this->assertSame(0, $code);
-        $this->assertStringContainsString(' * files_test', $display);
-        $this->assertStringContainsString(' * public/assets/images_test', $display);
     }
 }
