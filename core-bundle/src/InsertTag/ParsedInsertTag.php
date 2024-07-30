@@ -27,7 +27,7 @@ final class ParsedInsertTag extends InsertTag
         $parameters = parent::getParameters();
 
         if (!$parameters instanceof ParsedParameters) {
-            throw new \TypeError(sprintf('%s(): Return value must be of type %s, got %s', __METHOD__, ParsedParameters::class, $parameters::class));
+            throw new \TypeError(\sprintf('%s(): Return value must be of type %s, got %s', __METHOD__, ParsedParameters::class, $parameters::class));
         }
 
         return $parameters;

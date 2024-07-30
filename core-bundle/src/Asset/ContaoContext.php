@@ -41,7 +41,7 @@ class ContaoContext implements ContextInterface
         $protocol = $this->isSecure() ? 'https' : 'http';
         $relative = preg_replace('@https?://@', '', $staticUrl);
 
-        return sprintf('%s://%s%s', $protocol, $relative, $request->getBasePath());
+        return \sprintf('%s://%s%s', $protocol, $relative, $request->getBasePath());
     }
 
     public function isSecure(): bool

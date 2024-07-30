@@ -89,7 +89,7 @@ class AuthenticatorTest extends TestCase
         $authenticator = new Authenticator();
 
         $this->assertSame(
-            sprintf(
+            \sprintf(
                 'otpauth://totp/example.com:foobar@example.com?secret=%s&issuer=example.com',
                 Base32::encodeUpperUnpadded($secret),
             ),
@@ -97,7 +97,7 @@ class AuthenticatorTest extends TestCase
         );
 
         $this->assertNotSame(
-            sprintf(
+            \sprintf(
                 'otpauth://totp/example.com:foobar@example.com?secret=%s&issuer=example.com',
                 Base32::encodeUpperUnpadded('foobar'),
             ),

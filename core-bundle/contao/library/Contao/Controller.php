@@ -93,7 +93,7 @@ abstract class Controller extends System
 	{
 		if (str_contains($strPrefix, '/') || str_contains($strDefaultTemplate, '/'))
 		{
-			throw new \InvalidArgumentException(sprintf('Using %s() with modern fragment templates is not supported. Use the "contao.twig.finder_factory" service instead.', __METHOD__));
+			throw new \InvalidArgumentException(\sprintf('Using %s() with modern fragment templates is not supported. Use the "contao.twig.finder_factory" service instead.', __METHOD__));
 		}
 
 		$arrTemplates = array();
@@ -122,7 +122,7 @@ abstract class Controller extends System
 		$arrMapper['mod'][] = 'message';
 
 		$templateHierarchy = System::getContainer()->get('contao.twig.filesystem_loader');
-		$identifierPattern = sprintf('/^%s%s/', preg_quote($strPrefix, '/'), !str_ends_with($strPrefix, '_') ? '($|_)' : '');
+		$identifierPattern = \sprintf('/^%s%s/', preg_quote($strPrefix, '/'), !str_ends_with($strPrefix, '_') ? '($|_)' : '');
 
 		$prefixedFiles = array_merge(
 			array_filter(
@@ -563,7 +563,7 @@ abstract class Controller extends System
 			return '';
 		}
 
-		$objRow = clone $objRow;
+		$objRow = $objRow->cloneOriginal();
 		$objRow->typePrefix = 'ce_';
 		$strStopWatchId = 'contao.content_element.' . $objRow->type . ' (ID ' . $objRow->id . ')';
 
@@ -1177,7 +1177,7 @@ abstract class Controller extends System
 		// Check whether the file type is allowed to be downloaded
 		if (!\in_array($objFile->extension, $arrAllowedTypes))
 		{
-			throw new AccessDeniedException(sprintf('File type "%s" is not allowed', $objFile->extension));
+			throw new AccessDeniedException(\sprintf('File type "%s" is not allowed', $objFile->extension));
 		}
 
 		// HOOK: post download callback
@@ -1459,7 +1459,7 @@ abstract class Controller extends System
 					'id'        => $objFiles->id,
 					'uuid'      => $objFiles->uuid,
 					'name'      => $objFile->basename,
-					'title'     => StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename)),
+					'title'     => StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename)),
 					'link'      => $arrMeta['title'],
 					'caption'   => $arrMeta['caption'] ?? null,
 					'href'      => $strHref,

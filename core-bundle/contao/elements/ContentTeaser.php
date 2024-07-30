@@ -72,7 +72,7 @@ class ContentTeaser extends ContentElement
 		$this->Template->href = $urlGenerator->generate($objArticle);
 		$this->Template->text = $objArticle->teaser;
 		$this->Template->headline = $objArticle->title;
-		$this->Template->readMore = StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->title));
+		$this->Template->readMore = StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->title));
 		$this->Template->more = $GLOBALS['TL_LANG']['MSC']['more'];
 	}
 }

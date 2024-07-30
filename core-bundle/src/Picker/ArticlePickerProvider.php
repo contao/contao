@@ -68,7 +68,7 @@ class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements D
 
     public function convertDcaValue(PickerConfig $config, mixed $value): int|string
     {
-        return sprintf($this->getInsertTag($config), $value);
+        return \sprintf($this->getInsertTag($config), $value);
     }
 
     protected function getRouteParameters(PickerConfig|null $config = null): array

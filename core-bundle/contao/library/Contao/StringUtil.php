@@ -321,7 +321,7 @@ class StringUtil
 
 			foreach ($arrCharacters as $index => $strCharacter)
 			{
-				$strEncoded .= sprintf(($index % 2) ? '&#x%X;' : '&#%s;', mb_ord($strCharacter));
+				$strEncoded .= \sprintf(($index % 2) ? '&#x%X;' : '&#%s;', mb_ord($strCharacter));
 			}
 
 			$strString = str_replace($strEmail, $strEncoded, $strString);
@@ -1067,7 +1067,7 @@ class StringUtil
 
 		if (strncmp($normalizedPath, $projectDir, $length) !== 0 || \strlen($normalizedPath) <= $length || $normalizedPath[$length] !== '/')
 		{
-			throw new \InvalidArgumentException(sprintf('Path "%s" is not inside the Contao root dir "%s"', $path, $projectDir));
+			throw new \InvalidArgumentException(\sprintf('Path "%s" is not inside the Contao root dir "%s"', $path, $projectDir));
 		}
 
 		return substr($path, $length + 1);
@@ -1134,12 +1134,12 @@ class StringUtil
 
 		if ($precision <= 1)
 		{
-			throw new \InvalidArgumentException(sprintf('Precision must be greater than 1, "%s" given.', $precision));
+			throw new \InvalidArgumentException(\sprintf('Precision must be greater than 1, "%s" given.', $precision));
 		}
 
-		if (!preg_match('/^(-?)(\d)\.(\d+)e([+-]\d+)$/', sprintf('%.' . ($precision - 1) . 'e', $number), $match))
+		if (!preg_match('/^(-?)(\d)\.(\d+)e([+-]\d+)$/', \sprintf('%.' . ($precision - 1) . 'e', $number), $match))
 		{
-			throw new \InvalidArgumentException(sprintf('Unable to convert "%s" into a string representation.', $number));
+			throw new \InvalidArgumentException(\sprintf('Unable to convert "%s" into a string representation.', $number));
 		}
 
 		$significantDigits = rtrim($match[2] . $match[3], '0');

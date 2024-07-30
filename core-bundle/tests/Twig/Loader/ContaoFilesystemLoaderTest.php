@@ -700,7 +700,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $namespaces = ['Contao\CoreBundle\Twig\Loader', 'Twig\Loader'];
 
         foreach ($namespaces as $namespace) {
-            $mock = sprintf(
+            $mock = \sprintf(
                 <<<'EOPHP'
                     namespace %s;
 
