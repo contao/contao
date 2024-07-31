@@ -1,5 +1,14 @@
 # Deprecated features
 
+## $GLOBALS['objPage']
+
+Both `$GLOBALS['objPage']` and `global $objPage` have been deprecated in Contao 5.4 and will no longer work in Contao 6.
+Use the page finder service instead:
+
+```php
+$page = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
+```
+
 ## Base tag
 
 Relying on the `<base>` tag has been deprecated in Contao 5.0 and will no longer work in Contao 6. Use absolute paths
