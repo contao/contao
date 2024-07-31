@@ -1701,9 +1701,9 @@ abstract class DataContainer extends Backend
 			{
 				list($strKey, $strTable) = explode(':', $v, 2);
 				list($strTable, $strField) = explode('.', $strTable, 2);
-
+				$strRelationField = Database::quoteIdentifier($GLOBALS['TL_DCA'][$table]['fields'][$v]['relation']['field'] ?? 'id');
 				$objRef = Database::getInstance()
-					->prepare("SELECT " . Database::quoteIdentifier($strField) . " FROM " . $strTable . " WHERE id=?")
+					->prepare("SELECT " . Database::quoteIdentifier($strField) . " FROM " . $strTable . " WHERE " .$strRelationField ."=?")
 					->limit(1)
 					->execute($row[$strKey]);
 
@@ -1712,9 +1712,9 @@ abstract class DataContainer extends Backend
 			elseif (isset($row[$v], $GLOBALS['TL_DCA'][$table]['fields'][$v]['foreignKey']))
 			{
 				$key = explode('.', $GLOBALS['TL_DCA'][$table]['fields'][$v]['foreignKey'], 2);
-
+				$strRelationField = Database::quoteIdentifier($GLOBALS['TL_DCA'][$table]['fields'][$v]['relation']['field'] ?? 'id');
 				$objRef = Database::getInstance()
-					->prepare("SELECT " . Database::quoteIdentifier($key[1]) . " AS value FROM " . $key[0] . " WHERE id=?")
+					->prepare("SELECT " . Database::quoteIdentifier($key[1]) . " AS value FROM " . $key[0] . " WHERE " .$strRelationField ."=?")
 					->limit(1)
 					->execute($row[$v]);
 
