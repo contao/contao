@@ -335,7 +335,7 @@ class FigureBuilder
         // workaround is currently required to support paths to symlinked folders inside
         // the files directory.
         if ($storage === $this->locator->get('contao.filesystem.virtual.files')) {
-            $path = Path::join($this->webDir, $this->uploadPath, $storage->get($location)->getPath());
+            $path = Path::join($this->projectDir, $this->uploadPath, $storage->get($location)->getPath());
 
             if ($this->filesystem->exists($path)) {
                 return $this->fromPath($path);
