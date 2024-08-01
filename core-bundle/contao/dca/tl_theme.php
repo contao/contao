@@ -74,7 +74,6 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 		(
 			'edit',
 			'delete',
-			'show',
 			'modules' => array
 			(
 				'href'                => 'table=tl_module',
@@ -90,6 +89,7 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 				'href'                => 'table=tl_image_size',
 				'icon'                => 'sizes.svg',
 			),
+			'show',
 			'exportTheme' => array
 			(
 				'href'                => 'key=exportTheme',
