@@ -710,7 +710,7 @@ services:
     contao.routing.images_loader:
         class: Contao\CoreBundle\Routing\ImagesLoader
         arguments:
-            - '%kernel.project_dir%'
+            - '%contao.web_dir%'
             - '%contao.image.target_dir%'
         tags:
             - routing.loader

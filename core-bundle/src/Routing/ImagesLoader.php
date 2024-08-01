@@ -25,9 +25,9 @@ class ImagesLoader extends Loader
     /**
      * @internal
      */
-    public function __construct(string $projectDir, string $imageTargetDir)
+    public function __construct(string $webDir, string $imageTargetDir)
     {
-        $this->pathPrefix = Path::makeRelative($imageTargetDir, $projectDir);
+        $this->pathPrefix = Path::makeRelative($imageTargetDir, $webDir);
     }
 
     public function load(mixed $resource, string|null $type = null): RouteCollection
