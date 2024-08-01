@@ -397,6 +397,7 @@ class FileTree extends Widget
 		{
 			$container = System::getContainer();
 			$projectDir = $container->getParameter('kernel.project_dir');
+			$webDir = $container->getParameter('contao.web_dir');
 
 			$resizeConfig = (new ResizeConfiguration())
 				->setWidth(100)
@@ -414,7 +415,7 @@ class FileTree extends Widget
 				->get('contao.image.preview_factory')
 				->createPreviewPicture($projectDir . '/' . $objFile->path, $pictureConfig);
 
-			$img = $picture->getImg($projectDir);
+			$img = $picture->getImg($webDir);
 
 			return \sprintf('<img src="%s"%s width="%s" height="%s" alt class="%s" title="%s" loading="lazy">', $img['src'], $img['srcset'] != $img['src'] ? ' srcset="' . $img['srcset'] . '"' : '', $img['width'], $img['height'], $strClass, StringUtil::specialchars($strInfo));
 		}

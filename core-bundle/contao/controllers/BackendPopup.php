@@ -148,6 +148,7 @@ class BackendPopup extends Backend
 			else
 			{
 				$objTemplate->hasPreview = true;
+				$webDir = $container->getParameter('contao.web_dir');
 
 				try
 				{
@@ -164,8 +165,8 @@ class BackendPopup extends Backend
 
 					$objTemplate->previewPictures = array(
 						array(
-							'img' => $picture->getImg($projectDir, $staticUrl),
-							'sources' => $picture->getSources($projectDir, $staticUrl),
+							'img' => $picture->getImg($webDir, $staticUrl),
+							'sources' => $picture->getSources($webDir, $staticUrl),
 						)
 					);
 				}

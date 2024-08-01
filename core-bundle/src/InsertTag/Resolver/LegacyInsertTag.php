@@ -591,8 +591,8 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                         $picture = $this->container->get('contao.image.picture_factory')->create($this->container->getParameter('kernel.project_dir').'/'.$strFile, $size);
 
                         $data = [
-                            'img' => $picture->getImg($this->container->getParameter('kernel.project_dir'), $staticUrl),
-                            'sources' => $picture->getSources($this->container->getParameter('kernel.project_dir'), $staticUrl),
+                            'img' => $picture->getImg($this->container->getParameter('contao.web_dir'), $staticUrl),
+                            'sources' => $picture->getSources($this->container->getParameter('contao.web_dir'), $staticUrl),
                             'alt' => StringUtil::specialcharsAttribute($alt),
                             'class' => StringUtil::specialcharsAttribute($class),
                         ];
