@@ -111,7 +111,7 @@ class BackendLogoutListenerTest extends ContaoTestCase
         );
     }
 
-    public function getLogoutData(): \Generator
+    public function getLogoutData(): iterable
     {
         $switchUserToken = $this->createMock(SwitchUserToken::class);
         $switchUserToken

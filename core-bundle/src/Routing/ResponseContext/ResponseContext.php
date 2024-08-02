@@ -96,9 +96,6 @@ final class ResponseContext
         return $this->headerBag ??= new PartialResponseHeaderBag();
     }
 
-    /**
-     * @param \Closure|object $objectOrFactory
-     */
     private function registerService(string $serviceId, object $objectOrFactory): void
     {
         $this->services[$serviceId] = $objectOrFactory;

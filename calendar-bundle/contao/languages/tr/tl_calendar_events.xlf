@@ -223,7 +223,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.linkText.0">
         <source>Link text</source>
-        <target>Bağlantı metmi</target>
+        <target>Bağlantı metni</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.linkText.1">
         <source>Here you can override the default &quot;read more…&quot; link text.</source>
@@ -255,7 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.featured.0">
         <source>Feature event</source>
-        <target>Etkinliği öne çıkarılmışlara ekle</target>
+        <target>Etkinlik öne çıkarılsın</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.featured.1">
         <source>Show the event in a featured event list.</source>
@@ -263,7 +263,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.published.0">
         <source>Publish event</source>
-        <target>Etkinliği yayınla</target>
+        <target>Etkinlik yayınlansın</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.published.1">
         <source>Make the event publicly visible on the website.</source>
@@ -387,7 +387,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.toggle.0">
         <source>Publish/unpublish event</source>
-        <target>Etkinliği yayımla/yayımlama</target>
+        <target>Etkinliği yayınla/yayından kaldır</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.toggle.1">
         <source>Unpublish event ID %s</source>

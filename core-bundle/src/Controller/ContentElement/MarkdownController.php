@@ -69,9 +69,9 @@ class MarkdownController extends AbstractContentElementController
     }
 
     /**
-     * Hint: This is protected on purpose, so you can override it for your app specific requirements.
-     * If you want to provide an extension with additional logic, consider providing your own special
-     * content element for that.
+     * Hint: This is protected on purpose, so you can override it for your app
+     * specific requirements. If you want to provide an extension with additional
+     * logic, consider providing your own special content element for that.
      */
     protected function createConverter(ContentModel $model, Request $request): ConverterInterface
     {

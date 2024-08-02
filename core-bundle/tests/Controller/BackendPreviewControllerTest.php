@@ -192,7 +192,7 @@ class BackendPreviewControllerTest extends TestCase
         $this->assertSame($expectedLocation, $response->headers->get('Location'));
     }
 
-    public function redirectsFromPreviewUrlConvertEventListener(): \Generator
+    public static function redirectsFromPreviewUrlConvertEventListener(): iterable
     {
         yield 'Redirect to front end' => [
             'https://www.example.com/preview.php/contao/preview?page=17',

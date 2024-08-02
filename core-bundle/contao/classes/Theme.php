@@ -134,7 +134,7 @@ class Theme extends Backend
 <form id="tl_theme_import" class="tl_form tl_edit_form" method="post" enctype="multipart/form-data">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_theme_import">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
 <input type="hidden" name="MAX_FILE_SIZE" value="' . Config::get('maxFileSize') . '">
 
 <div class="tl_tbox">
@@ -173,7 +173,7 @@ class Theme extends Backend
 <form id="tl_theme_import" class="tl_form tl_edit_form" method="post">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_theme_import">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
 <input type="hidden" name="confirm" value="1">';
 
 		$count = 0;
@@ -320,7 +320,7 @@ class Theme extends Backend
 
 			foreach ($exampleWebsites as $exampleWebsite)
 			{
-				$return .= '<option value="' . htmlspecialchars($exampleWebsite) . '">' . htmlspecialchars($exampleWebsite) . '</option>';
+				$return .= '<option value="' . htmlspecialchars($exampleWebsite, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">' . htmlspecialchars($exampleWebsite, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '</option>';
 			}
 
 			$return .= '</select>

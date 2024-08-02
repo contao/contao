@@ -19,6 +19,12 @@ services:
         arguments:
             - '@logger'
 
+    contao_news.insert_tag.news:
+        class: Contao\NewsBundle\InsertTag\NewsInsertTag
+        arguments:
+            - '@contao.framework'
+            - '@contao.routing.content_url_generator'
+
     contao_news.listener.data_container.layout_feed_options:
         class: Contao\NewsBundle\EventListener\DataContainer\LayoutFeedOptionsListener
         arguments:
@@ -43,13 +49,6 @@ services:
         arguments:
             - '@contao.framework'
             - '@contao.routing.content_url_generator'
-
-    contao_news.listener.insert_tags:
-        class: Contao\NewsBundle\EventListener\InsertTagsListener
-        arguments:
-            - '@contao.framework'
-            - '@contao.routing.content_url_generator'
-            - '@logger'
 
     contao_news.listener.news_feed:
         class: Contao\NewsBundle\EventListener\NewsFeedListener

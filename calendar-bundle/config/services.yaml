@@ -12,6 +12,12 @@ services:
         arguments:
             - '@contao.framework'
 
+    contao_calendar.insert_tag.event:
+        class: Contao\CalendarBundle\InsertTag\EventInsertTag
+        arguments:
+            - '@contao.framework'
+            - '@contao.routing.content_url_generator'
+
     contao_calendar.listener.data_container.start_stop_validation:
         class: Contao\CoreBundle\EventListener\DataContainer\StartStopValidationListener
         arguments:
@@ -23,12 +29,6 @@ services:
         class: Contao\CalendarBundle\EventListener\GeneratePageListener
         arguments:
             - '@contao.framework'
-
-    contao_calendar.listener.insert_tags:
-        class: Contao\CalendarBundle\EventListener\InsertTagsListener
-        arguments:
-            - '@contao.framework'
-            - '@contao.routing.content_url_generator'
 
     contao_calendar.listener.preview_url_convert:
         class: Contao\CalendarBundle\EventListener\PreviewUrlConvertListener

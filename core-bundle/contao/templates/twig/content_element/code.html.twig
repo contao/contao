@@ -23,7 +23,7 @@
 {% endblock %}
 
 {% block style %}
-    {% add "highlighter_css" to head %}
+    {% add "highlighter_css" to stylesheets %}
         {% with {file: highlighter_css_file} %}{{ block('stylesheet_component') }}{% endwith %}
     {% endadd %}
 {% endblock %}

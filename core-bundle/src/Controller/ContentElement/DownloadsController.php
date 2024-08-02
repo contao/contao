@@ -48,14 +48,6 @@ class DownloadsController extends AbstractDownloadContentElementController
         $template->set('sort_mode', $sortMode);
         $template->set('randomize_order', $randomize = 'random' === $model->sortBy);
 
-        // Limit elements; use client-side logic for only displaying the first $limit
-        // elements in case we are dealing with a random order
-        if ($model->numberOfItems > 0 && !$randomize) {
-            $filesystemItems = $filesystemItems->limit($model->numberOfItems);
-        }
-
-        $template->set('limit', $model->numberOfItems > 0 && $randomize ? $model->numberOfItems : null);
-
         $downloads = $this->compileDownloadsList($filesystemItems, $model, $request);
 
         // Explicitly define title/text metadata for a single file
@@ -70,8 +62,8 @@ class DownloadsController extends AbstractDownloadContentElementController
     }
 
     /**
-     * Retrieve selected filesystem items but filter out those, that do not
-     * match the current DCA and configuration constraints.
+     * Retrieve selected filesystem items but filter out those, that do not match the
+     * current DCA and configuration constraints.
      */
     protected function getFilesystemItems(Request $request, ContentModel $model): FilesystemItemIterator
     {

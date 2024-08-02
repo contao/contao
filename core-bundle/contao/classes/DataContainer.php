@@ -478,7 +478,9 @@ abstract class DataContainer extends Backend
 			$arrData['eval']['useRawRequestData'] = true;
 		}
 
-		$objWidget = new $strClass($strClass::getAttributesFromDca($arrData, $this->strInputName, $this->varValue, $this->strField, $this->strTable, $this));
+		$arrAttributes = $strClass::getAttributesFromDca($arrData, $this->strInputName, $this->varValue, $this->strField, $this->strTable, $this);
+
+		$objWidget = new $strClass($arrAttributes);
 		$objWidget->xlabel = $xlabel;
 		$objWidget->currentRecord = $this->intId;
 
@@ -508,7 +510,7 @@ abstract class DataContainer extends Backend
 				}
 
 				// Convert file paths in src attributes (see #5965)
-				if ($varValue && isset($arrData['eval']['rte']) && str_starts_with($arrData['eval']['rte'], 'tiny'))
+				if ($varValue && isset($arrAttributes['rte']) && str_starts_with($arrAttributes['rte'], 'tiny'))
 				{
 					$varValue = StringUtil::srcToInsertTag($varValue);
 					$varValue = StringUtil::addBasePath($varValue);
@@ -541,9 +543,9 @@ abstract class DataContainer extends Backend
 		$strHelpClass = '';
 
 		// Date picker
-		if ($arrData['eval']['datepicker'] ?? null)
+		if ($arrAttributes['datepicker'] ?? null)
 		{
-			$rgxp = $arrData['eval']['rgxp'] ?? 'date';
+			$rgxp = $arrAttributes['rgxp'] ?? 'date';
 			$format = Date::formatToJs(Config::get($rgxp . 'Format'));
 
 			switch ($rgxp)
@@ -564,7 +566,7 @@ abstract class DataContainer extends Backend
 			$strOnSelect = '';
 
 			// Trigger the auto-submit function (see #8603)
-			if ($arrData['eval']['submitOnChange'] ?? null)
+			if ($arrAttributes['submitOnChange'] ?? null)
 			{
 				$strOnSelect = ",\n        onSelect: function() { Backend.autoSubmit(\"" . $this->strTable . "\"); }";
 			}
@@ -587,10 +589,10 @@ abstract class DataContainer extends Backend
 		}
 
 		// Color picker
-		if ($arrData['eval']['colorpicker'] ?? null)
+		if ($arrAttributes['colorpicker'] ?? null)
 		{
 			// Support single fields as well (see #5240)
-			$strKey = ($arrData['eval']['multiple'] ?? null) ? $this->strField . '_0' : $this->strField;
+			$strKey = ($arrAttributes['multiple'] ?? null) ? $this->strField . '_0' : $this->strField;
 
 			$wizard .= ' ' . Image::getHtml('pickcolor.svg', $GLOBALS['TL_LANG']['MSC']['colorpicker'], 'title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['colorpicker']) . '" id="moo_' . $this->strField . '" style="cursor:pointer"') . '
   <script>
@@ -608,13 +610,13 @@ abstract class DataContainer extends Backend
   </script>';
 		}
 
-		$arrClasses = StringUtil::trimsplit(' ', $arrData['eval']['tl_class'] ?? '');
+		$arrClasses = StringUtil::trimsplit(' ', $arrAttributes['tl_class'] ?? '');
 
 		// DCA picker
-		if (isset($arrData['eval']['dcaPicker']) && (\is_array($arrData['eval']['dcaPicker']) || $arrData['eval']['dcaPicker'] === true))
+		if (isset($arrAttributes['dcaPicker']) && (\is_array($arrAttributes['dcaPicker']) || $arrAttributes['dcaPicker'] === true))
 		{
 			$arrClasses[] = 'dcapicker';
-			$wizard .= Backend::getDcaPickerWizard($arrData['eval']['dcaPicker'], $this->strTable, $this->strField, $this->strInputName);
+			$wizard .= Backend::getDcaPickerWizard($arrAttributes['dcaPicker'], $this->strTable, $this->strField, $this->strInputName);
 		}
 
 		if (($arrData['inputType'] ?? null) == 'password')
@@ -640,7 +642,7 @@ abstract class DataContainer extends Backend
 
 		$hasWizardClass = \in_array('wizard', $arrClasses);
 
-		if ($wizard && !($arrData['eval']['disabled'] ?? false) && !($arrData['eval']['readonly'] ?? false))
+		if ($wizard && !($arrAttributes['disabled'] ?? false) && !($arrAttributes['readonly'] ?? false))
 		{
 			$objWidget->wizard = $wizard;
 
@@ -663,26 +665,26 @@ abstract class DataContainer extends Backend
 		$arrClasses[] = 'widget';
 
 		// Mark floated single checkboxes
-		if (($arrData['inputType'] ?? null) == 'checkbox' && !($arrData['eval']['multiple'] ?? null) && preg_grep('/^w\d+$/', $arrClasses))
+		if (($arrData['inputType'] ?? null) == 'checkbox' && !($arrAttributes['multiple'] ?? null) && preg_grep('/^w\d+$/', $arrClasses))
 		{
 			$arrClasses[] = 'cbx';
 		}
-		elseif (($arrData['inputType'] ?? null) == 'text' && ($arrData['eval']['multiple'] ?? null) && \in_array('wizard', $arrClasses))
+		elseif (($arrData['inputType'] ?? null) == 'text' && ($arrAttributes['multiple'] ?? null) && \in_array('wizard', $arrClasses))
 		{
 			$arrClasses[] = 'inline';
 		}
 
 		if (!empty($arrClasses))
 		{
-			$arrData['eval']['tl_class'] = implode(' ', array_unique($arrClasses));
+			$arrAttributes['tl_class'] = implode(' ', array_unique($arrClasses));
 		}
 
 		$updateMode = '';
 
 		// Replace the textarea with an RTE instance
-		if (!empty($arrData['eval']['rte']))
+		if (!empty($arrAttributes['rte']))
 		{
-			list($file, $type) = explode('|', $arrData['eval']['rte'], 2) + array(null, null);
+			list($file, $type) = explode('|', $arrAttributes['rte'], 2) + array(null, null);
 
 			$fileBrowserTypes = array();
 			$pickerBuilder = System::getContainer()->get('contao.picker.builder');
@@ -700,7 +702,7 @@ abstract class DataContainer extends Backend
 			$objTemplate->type = $type;
 			$objTemplate->fileBrowserTypes = implode(' ', $fileBrowserTypes);
 			$objTemplate->source = $this->strTable . '.' . $this->intId;
-			$objTemplate->readonly = (bool) ($arrData['eval']['readonly'] ?? false);
+			$objTemplate->readonly = (bool) ($arrAttributes['readonly'] ?? false);
 
 			$updateMode = $objTemplate->parse();
 
@@ -708,7 +710,7 @@ abstract class DataContainer extends Backend
 		}
 
 		// Handle multi-select fields in "override all" mode
-		elseif ((($arrData['inputType'] ?? null) == 'checkbox' || ($arrData['inputType'] ?? null) == 'checkboxWizard') && ($arrData['eval']['multiple'] ?? null) && Input::get('act') == 'overrideAll')
+		elseif ((($arrData['inputType'] ?? null) == 'checkbox' || ($arrData['inputType'] ?? null) == 'checkboxWizard') && ($arrAttributes['multiple'] ?? null) && Input::get('act') == 'overrideAll')
 		{
 			$updateMode = '
 </div>
@@ -774,7 +776,7 @@ abstract class DataContainer extends Backend
 		}
 
 		return $strPreview . '
-<div' . (!empty($arrData['eval']['tl_class']) ? ' class="' . trim($arrData['eval']['tl_class']) . '"' : '') . '>' . $objWidget->parse() . $updateMode . (!$objWidget->hasErrors() ? $this->help($strHelpClass, $objWidget->description) : '') . '
+<div' . (!empty($arrAttributes['tl_class']) ? ' class="' . trim($arrAttributes['tl_class']) . '"' : '') . '>' . $objWidget->parse() . $updateMode . (!$objWidget->hasErrors() ? $this->help($strHelpClass, $objWidget->description) : '') . '
 </div>';
 	}
 
@@ -1357,7 +1359,7 @@ abstract class DataContainer extends Backend
 		$values = array_map($this->objPickerCallback, $this->arrPickerValue);
 		$values = array_map('strval', $values);
 		$values = json_encode($values);
-		$values = htmlspecialchars($values);
+		$values = htmlspecialchars($values, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
 
 		return ' data-picker-value="' . $values . '"';
 	}
@@ -1503,7 +1505,7 @@ abstract class DataContainer extends Backend
 <form class="tl_form" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']) . '">
 <div class="tl_formbody">
   <input type="hidden" name="FORM_SUBMIT" value="tl_filters">
-  <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">
+  <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
   ' . $return . '
 </div>
 </form>';
@@ -1648,7 +1650,7 @@ abstract class DataContainer extends Backend
 	 *
 	 * @return string|array<string>
 	 */
-	public function generateRecordLabel(array $row, string $table = null, bool $protected = false, bool $isVisibleRootTrailPage = false)
+	public function generateRecordLabel(array $row, string|null $table = null, bool $protected = false, bool $isVisibleRootTrailPage = false)
 	{
 		$table = $table ?? $this->strTable;
 		$labelConfig = &$GLOBALS['TL_DCA'][$table]['list']['label'];
@@ -1846,7 +1848,7 @@ abstract class DataContainer extends Backend
 	/**
 	 * @param array<string, mixed>|null $row Pass null to remove a given cache entry
 	 */
-	protected static function setCurrentRecordCache(string|int $id, string $table, array $row): void
+	protected static function setCurrentRecordCache(int|string $id, string $table, array $row): void
 	{
 		self::$arrCurrentRecordCache[$table . '.' . $id] = $row;
 	}
@@ -1855,7 +1857,7 @@ abstract class DataContainer extends Backend
 	 * @throws AccessDeniedException     if the current user has no read permission
 	 * @return array<string, mixed>|null
 	 */
-	public function getCurrentRecord(string|int $id = null, string $table = null): array|null
+	public function getCurrentRecord(int|string|null $id = null, string|null $table = null): array|null
 	{
 		$id = $id ?: $this->intId;
 		$table = $table ?: $this->strTable;
@@ -1894,7 +1896,7 @@ abstract class DataContainer extends Backend
 		return self::$arrCurrentRecordCache[$key];
 	}
 
-	public static function clearCurrentRecordCache(string|int $id = null, string $table = null): void
+	public static function clearCurrentRecordCache(int|string|null $id = null, string|null $table = null): void
 	{
 		if (null === $table)
 		{

@@ -56,7 +56,7 @@ class CteAliasListener implements ResetInterface
         if ('deleteAll' === $request->query->get('act')) {
             $session = $request->getSession();
             $sessionData = $session->all();
-            $sessionData['CURRENT']['IDS'] = array_diff($sessionData['CURRENT']['IDS'], array_map('intval', array_keys($aliasRefs)));
+            $sessionData['CURRENT']['IDS'] = array_diff($sessionData['CURRENT']['IDS'], array_map(\intval(...), array_keys($aliasRefs)));
             $session->replace($sessionData);
         }
     }

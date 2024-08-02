@@ -121,7 +121,7 @@ class BackendAccessVoter extends Voter implements ResetInterface
 
         // Additionally check the child pages of the mounted pages
         if ('pagemounts' === $field) {
-            if (!isset($this->pagemountsCache[$user->id])) {
+            if (!isset($this->pagemountsCache[$user->id]) || (!empty($this->pagemountsCache[$user->id]) && !array_intersect($subject, $this->pagemountsCache[$user->id]))) {
                 $database = $this->framework->createInstance(Database::class);
                 $this->pagemountsCache[$user->id] = $database->getChildRecords($user->pagemounts, 'tl_page');
             }
@@ -167,7 +167,8 @@ class BackendAccessVoter extends Voter implements ResetInterface
     }
 
     /**
-     * Checks if the user has access to any field of a table (against tl_user(_group).alexf).
+     * Checks if the user has access to any field of a table (against
+     * tl_user(_group).alexf).
      */
     private function canEditFieldsOf(mixed $table, BackendUser $user): bool
     {

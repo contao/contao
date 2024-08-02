@@ -69,6 +69,34 @@ class MigrateCommandTest extends TestCase
     /**
      * @group legacy
      */
+    public function testAbortsEarlyIfNonInteractiveAndThereAreOnlyDropMigrations(): void
+    {
+        $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
+
+        $backupManager = $this->createBackupManager(false);
+
+        $commandCompiler = $this->createMock(CommandCompiler::class);
+        $commandCompiler
+            ->expects($this->atLeastOnce())
+            ->method('compileCommands')
+            ->willReturnCallback(
+                static fn (bool $skipDropStatements = false): array => $skipDropStatements ? [] : ['DROP QUERY'],
+            )
+        ;
+
+        $command = $this->getCommand([], [], $commandCompiler, $backupManager);
+        $tester = new CommandTester($command);
+        $code = $tester->execute([], ['interactive' => false]);
+        $display = $tester->getDisplay();
+
+        $this->assertSame(0, $code);
+        $this->assertMatchesRegularExpression('/Database dump skipped because there are no migrations to execute./', $display);
+        $this->assertMatchesRegularExpression('/All migrations completed/', $display);
+    }
+
+    /**
+     * @group legacy
+     */
     public function testExecutesBackupIfPendingSchemaDiff(): void
     {
         $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
@@ -588,7 +616,7 @@ class MigrateCommandTest extends TestCase
         }
     }
 
-    public function provideBadConfigurations(): \Generator
+    public static function provideBadConfigurations(): iterable
     {
         yield 'database version too old' => [
             [
@@ -746,13 +774,13 @@ class MigrateCommandTest extends TestCase
         $this->assertStringContainsString(sprintf('%s: "SET SESSION sql_mode=', $expectedOptionKey), $json['message']);
     }
 
-    public function getOutputFormats(): \Generator
+    public static function getOutputFormats(): iterable
     {
         yield ['txt'];
         yield ['ndjson'];
     }
 
-    public function getOutputFormatsAndBackup(): \Generator
+    public static function getOutputFormatsAndBackup(): iterable
     {
         yield 'txt and backups enabled' => ['txt', true];
         yield 'txt and backups disabled' => ['txt', false];
@@ -760,7 +788,7 @@ class MigrateCommandTest extends TestCase
         yield 'ndjson and backups disabled' => ['ndjson', false];
     }
 
-    public function provideInvalidSqlModes(): \Generator
+    public static function provideInvalidSqlModes(): iterable
     {
         yield 'empty sql_mode, pdo driver' => [
             '', new PdoDriver(), 1002,

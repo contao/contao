@@ -61,7 +61,7 @@ class StartStopValidationListenerTest extends TestCase
         $listener($values, $dc);
     }
 
-    public function valueProvider(): \Generator
+    public static function valueProvider(): iterable
     {
         yield 'Start and stop is not submitted' => [
             ['foo' => 'bar'],

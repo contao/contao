@@ -76,9 +76,27 @@ class FragmentTemplateTest extends TestCase
         $template->$method(...$args);
     }
 
-    public function provideIllegalParentMethods(): \Generator
+    public function provideIllegalParentMethods(): iterable
     {
-        $excluded = ['__construct', '__set', '__get', '__isset', 'setData', 'getData', 'setName', 'getName', 'getResponse', 'addCspSource', 'addCspHash', 'cspInlineStyle', 'cspInlineStyles', 'nonce', 'attr'];
+        $excluded = [
+            '__construct',
+            '__set',
+            '__get',
+            '__isset',
+            'once',
+            'setData',
+            'getData',
+            'setName',
+            'getName',
+            'getResponse',
+            'addCspSource',
+            'addCspHash',
+            'cspInlineStyle',
+            'cspInlineStyles',
+            'nonce',
+            'attr',
+        ];
+
         $parent = (new \ReflectionClass(FragmentTemplate::class))->getParentClass();
 
         foreach ($parent->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
@@ -98,7 +116,7 @@ class FragmentTemplateTest extends TestCase
                         'bool' => false,
                         'string' => '',
                         'array' => [],
-                        /** @phpstan-ignore-next-line because mocked type cannot be inferred */
+                        /** @phpstan-ignore argument.templateType */
                         default => $this->createMock($name),
                     };
                 },

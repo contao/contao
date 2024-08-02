@@ -2,8 +2,9 @@ extends: default
 
 ignore: |
     /node_modules/
-    /tools/
+    /pnpm-lock.yaml
     /vendor/
+    /vendor-bin/
 
 rules:
     braces:

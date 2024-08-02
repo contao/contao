@@ -44,7 +44,7 @@ class FormHtml extends Widget
 
 		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
-			$this->html = htmlspecialchars($this->html);
+			$this->html = htmlspecialchars($this->html, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
 		}
 
 		return parent::parse($arrAttributes);
@@ -61,7 +61,7 @@ class FormHtml extends Widget
 
 		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
-			return htmlspecialchars($this->html);
+			return htmlspecialchars($this->html, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
 		}
 
 		return $this->html;

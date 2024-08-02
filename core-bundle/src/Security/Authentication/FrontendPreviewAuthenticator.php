@@ -96,8 +96,8 @@ class FrontendPreviewAuthenticator
     }
 
     /**
-     * Replaces the current token if the frontend firewall is active.
-     * Otherwise, the token is stored in the session.
+     * Replaces the current token if the frontend firewall is active. Otherwise, the
+     * token is stored in the session.
      */
     private function updateToken(UsernamePasswordToken|null $token): void
     {

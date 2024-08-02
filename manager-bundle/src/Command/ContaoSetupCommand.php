@@ -41,7 +41,7 @@ class ContaoSetupCommand extends Command
     private readonly \Closure $createProcessHandler;
 
     /**
-     * @param (\Closure(array<string>):Process)|null $createProcessHandler
+     * @param (\Closure(array<string>): Process)|null $createProcessHandler
      */
     public function __construct(
         private readonly string $projectDir,

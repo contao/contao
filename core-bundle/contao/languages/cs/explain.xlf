@@ -15,6 +15,7 @@
       </trans-unit>
       <trans-unit id="XPL.insertTags.1.1">
         <source>For more information about insert tags, see the &lt;a href=&quot;https://to.contao.org/docs/insert-tags?lang=en&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao manual&lt;/a&gt;.</source>
+        <target>Více informací o insert tag najdete v &lt;a href=&quot;https://to.contao.org/docs/insert-tags?lang=en&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;návodu Contaa&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.2.0">
         <source>Code editor</source>
@@ -30,6 +31,7 @@
       </trans-unit>
       <trans-unit id="XPL.insertTags.3.1">
         <source>To learn more about markdown, see the &lt;a href=&quot;https://to.contao.org/docs/markdown?lang=en&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao manual&lt;/a&gt;.</source>
+        <target>Dozvědět se víc o markdownu můžete v &lt;a href=&quot;https://to.contao.org/docs/markdown?lang=en&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Dokumentaci Contaa&lt;/a&gt;</target>
       </trans-unit>
       <trans-unit id="XPL.dateFormat.0.0">
         <source>colspan</source>

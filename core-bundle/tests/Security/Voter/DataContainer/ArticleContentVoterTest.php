@@ -70,7 +70,7 @@ class ArticleContentVoterTest extends TestCase
         $voter->vote($token, $action, [ContaoCorePermissions::DC_PREFIX.'tl_content']);
     }
 
-    public function checksElementAccessPermissionProvider(): \Generator
+    public static function checksElementAccessPermissionProvider(): iterable
     {
         yield [
             new ReadAction('tl_content', []),
