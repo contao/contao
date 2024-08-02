@@ -61,6 +61,7 @@ class ArticleContentVoterTest extends TestCase
         ;
 
         $fetchAllAssociativeMap = [];
+
         foreach ($parentRecords as $id => $records) {
             $fetchAllAssociativeMap[] = [
                 'SELECT id, @pid:=pid AS pid, ptable FROM tl_content WHERE id=?'.str_repeat(' UNION SELECT id, @pid:=pid AS pid, ptable FROM tl_content WHERE id=@pid', 9),
@@ -71,6 +72,7 @@ class ArticleContentVoterTest extends TestCase
         }
 
         $fetchOneMap = [];
+
         foreach ($articleParents as $id => $pid) {
             $fetchOneMap[] = [
                 'SELECT pid FROM tl_article WHERE id=?',
