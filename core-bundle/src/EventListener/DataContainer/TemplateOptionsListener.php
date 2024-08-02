@@ -50,7 +50,7 @@ class TemplateOptionsListener
 
         $type = $overrideAll
             ? $this->getCommonOverrideAllType($dc)
-            : $dc->getCurrentRecord()['type'] ?? null;
+            : $dc->getActiveRecord()['type'] ?? null;
 
         if (null === $type) {
             // Add a blank option that allows to reset all custom templates to the default
