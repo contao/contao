@@ -8,7 +8,6 @@ if ($GLOBALS['TL_CONFIG']['useRTE']):
 <script>
 {
   const config = {
-    selector: '#<?= $this->selector ?>',
     min_height: 336,
     language: '<?= Backend::getTinyMceLanguage() ?>',
     element_format: 'html',

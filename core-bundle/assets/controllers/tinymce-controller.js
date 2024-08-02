@@ -8,13 +8,32 @@ export default class extends Controller {
             return;
         }
 
-        this.config = this.element.tinymceConfig;
+        // Move the config to a member variable to prevent memory leaks.
+        this.config = {
+            ...this.element.tinymceConfig,
+            ...{
+                target: this.element
+            }
+        };
+
         delete this.element.tinymceConfig;
 
-        tinymce?.init(this.config);
+        // TinyMCE creates the editor id based on the target element's id (if set).
+        // This leads to a problem if an editor with the same id is still around,
+        // which would be the case if the disconnect event cleaning up the resource
+        // did not run, yet. We therefore remove the id and re-add it after
+        // initializing the editor.
+        const elementId = this.element.id;
+        this.element.removeAttribute('id');
+
+        tinymce?.init(this.config).then((editors) => {
+            this.editorId = editors[0]?.id;
+        });
+
+        this.element.setAttribute('id', elementId);
     }
 
     disconnect() {
-        tinymce?.remove(this.config.selector);
+        tinymce?.get(this.editorId)?.remove();
     }
 }
