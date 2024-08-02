@@ -50,11 +50,13 @@ class NewsContentVoter extends AbstractDynamicPtableVoter
             return true;
         }
 
+        if (!$this->accessDecisionManager->decide($token, [ContaoNewsPermissions::USER_CAN_ACCESS_MODULE])) {
+            return false;
+        }
+
         $archiveId = $this->getArchiveId($id);
 
-        return $archiveId
-            && $this->accessDecisionManager->decide($token, [ContaoNewsPermissions::USER_CAN_ACCESS_MODULE])
-            && $this->accessDecisionManager->decide($token, [ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE], $archiveId);
+        return $archiveId && $this->accessDecisionManager->decide($token, [ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE], $archiveId);
     }
 
     private function getArchiveId(int $newsId): int|null

@@ -50,11 +50,13 @@ class CalendarContentVoter extends AbstractDynamicPtableVoter
             return true;
         }
 
+        if (!$this->accessDecisionManager->decide($token, [ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE])) {
+            return false;
+        }
+
         $calendarId = $this->getCalendarId($id);
 
-        return $calendarId
-            && $this->accessDecisionManager->decide($token, [ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE])
-            && $this->accessDecisionManager->decide($token, [ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], $calendarId);
+        return $calendarId && $this->accessDecisionManager->decide($token, [ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], $calendarId);
     }
 
     private function getCalendarId(int $eventId): int|null

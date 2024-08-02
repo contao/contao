@@ -181,4 +181,22 @@ class NewsContentVoterTest extends TestCase
             [1 => 1],
         ];
     }
+
+    public function testIgnoresOtherParentTables(): void
+    {
+        $token = $this->createMock(TokenInterface::class);
+
+        $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
+        $accessDecisionManager
+            ->expects($this->never())
+            ->method('decide')
+        ;
+
+        $action = new CreateAction('tl_content', ['ptable' => 'tl_article', 'pid' => 1]);
+
+        $voter = new NewsContentVoter($accessDecisionManager, $this->createMock(Connection::class));
+        $decision = $voter->vote($token, $action, [ContaoCorePermissions::DC_PREFIX.'tl_content']);
+
+        $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $decision);
+    }
 }
