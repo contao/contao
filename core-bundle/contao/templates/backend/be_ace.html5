@@ -20,7 +20,7 @@ window.ace && window.addEvent('domready', function() {
   ta.style['display'] = 'none';
 
   // Instantiate the editor
-  let editor = ace.edit('<?= $this->selector ?>_div');
+  let editor = ace.edit('<?= $this->selector ?>_div', {maxLines: Infinity});
   editor.$blockScrolling = Infinity;
   editor.setTheme((document.documentElement.dataset.colorScheme === 'dark' ? 'ace/theme/twilight' : 'ace/theme/clouds'));
   editor.renderer.setScrollMargin(3, 3, 0, 0);
@@ -58,29 +58,16 @@ window.ace && window.addEvent('domready', function() {
     enableLiveAutocompletion: true
   });
 
-  // Disable command conflicts with AltGr (see #5792)
-  editor.commands.bindKey('Ctrl-alt-a|Ctrl-alt-e|Ctrl-alt-h|Ctrl-alt-l|Ctrl-alt-s', null);
-
-  // Adjust the height of the editor
-  let updateHeight = function() {
-    let newHeight
-      = editor.getSession().getScreenLength()
-      * (editor.renderer.lineHeight || 16);
-    editor.container.style['height'] = Math.max(newHeight + 8, 30) + 'px';
-    editor.resize();
-  };
-
   editor.on('focus', function() {
     window.dispatchEvent(new Event('store-scroll-offset'));
-    updateHeight();
   });
 
   editor.getSession().on('change', function() {
     ta.value = editor.getValue();
-    updateHeight();
   });
 
-  updateHeight();
+  // Disable command conflicts with AltGr (see #5792)
+  editor.commands.bindKey('Ctrl-alt-a|Ctrl-alt-e|Ctrl-alt-h|Ctrl-alt-l|Ctrl-alt-s', null);
 });
 </script>
 <?php endif; ?>
