@@ -68,9 +68,11 @@ class ContentElementTypeVoterTest extends TestCase
         $accessDecisionManager
             ->expects($matcher)
             ->method('decide')
-            ->with($token, [ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE], $this->callback(function (string $type) use ($matcher, $types) {
-                return $types[$matcher->getInvocationCount() - 1] === $type;
-            }))
+            ->with(
+                $token,
+                [ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE],
+                $this->callback(static fn (string $type) => $types[$matcher->getInvocationCount() - 1] === $type),
+            )
             ->willReturn(true)
         ;
 
@@ -78,31 +80,31 @@ class ContentElementTypeVoterTest extends TestCase
         $voter->vote($token, $action, [ContaoCorePermissions::DC_PREFIX.'tl_content']);
     }
 
-    public function checksElementAccessPermissionProvider(): \Generator
+    public static function checksElementAccessPermissionProvider(): iterable
     {
         yield [
             new ReadAction('tl_content', []),
-            []
+            [],
         ];
 
         yield [
             new CreateAction('tl_content', ['type' => 'foo']),
-            ['foo']
+            ['foo'],
         ];
 
         yield [
             new UpdateAction('tl_content', ['type' => 'foo']),
-            ['foo']
+            ['foo'],
         ];
 
         yield [
             new UpdateAction('tl_content', ['type' => 'foo'], ['type' => 'bar']),
-            ['foo', 'bar']
+            ['foo', 'bar'],
         ];
 
         yield [
             new DeleteAction('tl_content', ['type' => 'bar']),
-            ['bar']
+            ['bar'],
         ];
     }
 }

@@ -15,8 +15,8 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Contracts\Service\ResetInterface;
 
 /**
- * Checks if a content element can be nested within another.
- * This does not check access to the parent table (e.g. articles)!
+ * Checks if a content element can be nested within another. This does not check
+ * access to the parent table (e.g. articles)!
  *
  * @internal
  */

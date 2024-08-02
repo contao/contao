@@ -22,6 +22,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class ArticleContentVoterTest extends TestCase
 {
@@ -41,60 +42,141 @@ class ArticleContentVoterTest extends TestCase
     /**
      * @dataProvider checksElementAccessPermissionProvider
      */
-    public function testChecksElementAccessPermission(CreateAction|DeleteAction|ReadAction|UpdateAction $action, array $pageIds): void
+    public function testChecksElementAccessPermission(CreateAction|DeleteAction|ReadAction|UpdateAction $action, array $parentRecords, array $articleParents): void
     {
         $token = $this->createMock(TokenInterface::class);
 
-        $accessDecisionMatcher = $this->exactly(\count($pageIds));
+        $accessDecisionMap = [[$token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'article', true]];
+
+        foreach ($articleParents as $pageId) {
+            $accessDecisionMap[] = [$token, [ContaoCorePermissions::USER_CAN_ACCESS_PAGE], $pageId, true];
+            $accessDecisionMap[] = [$token, [ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], $pageId, true];
+        }
+
         $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
         $accessDecisionManager
-            ->expects($accessDecisionMatcher)
+            ->expects($this->exactly(max(\count($parentRecords), \count($articleParents)) * 3))
             ->method('decide')
-            //->with($token, [ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE], $this->callback(function (string $type) use ($accessDecisionMatcher, $types) {
-            //    return $types[$accessDecisionMatcher->getInvocationCount() - 1] === $type;
-            //}))
-            ->willReturn(true)
+            ->willReturnMap($accessDecisionMap)
         ;
 
-        $articleIds = array_keys($pageIds);
-        $connectionMatcher = $this->exactly(\count($pageIds));
+        $fetchAllAssociativeMap = [];
+        foreach ($parentRecords as $id => $records) {
+            $fetchAllAssociativeMap[] = [
+                'SELECT id, @pid:=pid AS pid, ptable FROM tl_content WHERE id=?'.str_repeat(' UNION SELECT id, @pid:=pid AS pid, ptable FROM tl_content WHERE id=@pid', 9),
+                [$id],
+                [],
+                $records,
+            ];
+        }
+
+        $fetchOneMap = [];
+        foreach ($articleParents as $id => $pid) {
+            $fetchOneMap[] = [
+                'SELECT pid FROM tl_article WHERE id=?',
+                [$id],
+                [],
+                $pid,
+            ];
+        }
+
         $connection = $this->createMock(Connection::class);
         $connection
-            ->expects($connectionMatcher)
+            ->expects($this->exactly(\count($parentRecords)))
+            ->method('fetchAllAssociative')
+            ->willReturnMap($fetchAllAssociativeMap)
+        ;
+
+        $connection
+            ->expects($this->exactly(\count($articleParents)))
             ->method('fetchOne')
-            ->with('SELECT pid FROM tl_article WHERE id=?', $this->callback(static fn (int $articleId) => $articleIds[$connectionMatcher->getInvocationCount()] === $articleId))
-            ->willReturnCallback(static fn (string $query, int $articleId) => $pageIds[$articleId])
+            ->willReturnMap($fetchOneMap)
         ;
 
         $voter = new ArticleContentVoter($accessDecisionManager, $connection);
-        $voter->vote($token, $action, [ContaoCorePermissions::DC_PREFIX.'tl_content']);
+        $decision = $voter->vote($token, $action, [ContaoCorePermissions::DC_PREFIX.'tl_content']);
+
+        $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $decision);
     }
 
     public static function checksElementAccessPermissionProvider(): iterable
     {
-        yield [
-            new ReadAction('tl_content', []),
-            []
+        yield 'Check access to page when creating element in article' => [
+            new CreateAction('tl_article', ['ptable' => 'tl_article', 'pid' => 1]),
+            [],
+            [1 => 1],
         ];
 
-        //yield [
-        //    new CreateAction('tl_content', ['type' => 'foo']),
-        //    ['foo']
-        //];
-        //
-        //yield [
-        //    new UpdateAction('tl_content', ['type' => 'foo']),
-        //    ['foo']
-        //];
-        //
-        //yield [
-        //    new UpdateAction('tl_content', ['type' => 'foo'], ['type' => 'bar']),
-        //    ['foo', 'bar']
-        //];
-        //
-        //yield [
-        //    new DeleteAction('tl_content', ['type' => 'bar']),
-        //    ['bar']
-        //];
+        yield 'Check access to page when creating nested element' => [
+            new CreateAction('tl_article', ['ptable' => 'tl_content', 'pid' => 3]),
+            [3 => [['id' => 3, 'ptable' => 'tl_article', 'pid' => 2]]],
+            [2 => 1],
+        ];
+
+        yield 'Check access to page when creating deep nested element' => [
+            new CreateAction('tl_article', ['ptable' => 'tl_content', 'pid' => 3]),
+            [3 => [['id' => 3, 'ptable' => 'tl_content', 'pid' => 2], ['id' => 2, 'ptable' => 'tl_article', 'pid' => 1]]],
+            [1 => 1],
+        ];
+
+        yield 'Check access to page when reading element in article' => [
+            new ReadAction('tl_article', ['ptable' => 'tl_article', 'pid' => 1]),
+            [],
+            [1 => 1],
+        ];
+
+        yield 'Check access to page when reading nested element' => [
+            new ReadAction('tl_article', ['ptable' => 'tl_content', 'pid' => 3]),
+            [3 => [['id' => 3, 'ptable' => 'tl_article', 'pid' => 2]]],
+            [2 => 1],
+        ];
+
+        yield 'Check access to page when reading deep nested element' => [
+            new ReadAction('tl_article', ['ptable' => 'tl_content', 'pid' => 3]),
+            [3 => [['id' => 3, 'ptable' => 'tl_content', 'pid' => 2], ['id' => 2, 'ptable' => 'tl_article', 'pid' => 1]]],
+            [1 => 1],
+        ];
+
+        yield 'Check access to current page when updating element in article' => [
+            new UpdateAction('tl_article', ['ptable' => 'tl_article', 'pid' => 1]),
+            [],
+            [1 => 1],
+        ];
+
+        yield 'Check access to current and new page when updating element in article' => [
+            new UpdateAction('tl_article', ['ptable' => 'tl_article', 'pid' => 1], ['pid' => 2]),
+            [],
+            [1 => 1, 2 => 2],
+        ];
+
+        yield 'Check access to page when moving nested element to article' => [
+            new UpdateAction('tl_article', ['ptable' => 'tl_content', 'pid' => 3], ['ptable' => 'tl_article', 'pid' => 1]),
+            [3 => [['id' => 3, 'ptable' => 'tl_article', 'pid' => 2]]],
+            [2 => 2, 1 => 1],
+        ];
+
+        yield 'Check access to page when moving nested element to other element' => [
+            new UpdateAction('tl_article', ['ptable' => 'tl_content', 'pid' => 3], ['ptable' => 'tl_content', 'pid' => 4]),
+            [3 => [['id' => 3, 'ptable' => 'tl_article', 'pid' => 2]], 4 => [['id' => 4, 'ptable' => 'tl_article', 'pid' => 1]]],
+            [2 => 2, 1 => 1],
+        ];
+
+        yield 'Check access when deleting element in article' => [
+            new DeleteAction('tl_article', ['ptable' => 'tl_article', 'pid' => 1]),
+            [],
+            [1 => 1],
+        ];
+
+        yield 'Check access when deleting nested element' => [
+            new DeleteAction('tl_article', ['ptable' => 'tl_content', 'pid' => 3]),
+            [3 => [['id' => 3, 'ptable' => 'tl_article', 'pid' => 2]]],
+            [2 => 1],
+        ];
+
+        yield 'Check access when deleting deep nested element' => [
+            new DeleteAction('tl_article', ['ptable' => 'tl_content', 'pid' => 3]),
+            [3 => [['id' => 3, 'ptable' => 'tl_content', 'pid' => 2], ['id' => 2, 'ptable' => 'tl_article', 'pid' => 1]]],
+            [1 => 1],
+        ];
     }
 }
