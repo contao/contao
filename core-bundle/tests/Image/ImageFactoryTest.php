@@ -47,7 +47,13 @@ class ImageFactoryTest extends TestCase
         parent::setUp();
 
         $filesystem = new Filesystem();
-        $filesystem->mirror(Path::join($this->getFixturesDir(), 'images'), Path::join(self::getTempDir(), 'images'));
+
+        foreach (['assets', 'images'] as $directory) {
+            $filesystem->mirror(
+                Path::join((new self())->getFixturesDir(), $directory),
+                Path::join(self::getTempDir(), $directory),
+            );
+        }
 
         System::setContainer($this->getContainerWithContaoConfiguration(self::getTempDir()));
     }
