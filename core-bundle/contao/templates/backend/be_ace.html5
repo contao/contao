@@ -9,7 +9,7 @@ if ($GLOBALS['TL_CONFIG']['useCE']):
   {
     const target = document.getElementById('<?= $this->selector ?>');
     target.setAttribute('data-contao--ace-type-value', '<?= Backend::getAceType($this->type) ?>');
-    target.setAttribute('data-contao--ace-read-only-value', '<?= ($this->readonly ? 'true' : 'false') ?>');
+    target.setAttribute('data-contao--ace-read-only-value', '<?= $this->readonly ? 'true' : 'false' ?>');
     target.setAttribute('data-controller', 'contao--ace');
   }
 </script>
