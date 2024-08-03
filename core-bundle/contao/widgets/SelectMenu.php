@@ -187,20 +187,15 @@ class SelectMenu extends Widget
 			}
 		}
 
-		// Chosen
-		if ($this->chosen)
-		{
-			$strClass .= ' tl_chosen';
-		}
-
 		return \sprintf(
-			'%s<select name="%s" id="ctrl_%s" class="%s%s"%s data-action="focus->contao--scroll-offset#store">%s</select>%s',
+			'%s<select name="%s" id="ctrl_%s" class="%s%s"%s data-action="focus->contao--scroll-offset#store"%s>%s</select>%s',
 			$this->multiple ? '<input type="hidden" name="' . (str_ends_with($this->strName, '[]') ? substr($this->strName, 0, -2) : $this->strName) . '" value="">' : '',
 			$this->strName,
 			$this->strId,
 			$strClass,
 			$this->strClass ? ' ' . $this->strClass : '',
 			$this->getAttributes(),
+			$this->chosen ? ' data-controller="contao--chosen"' : '',
 			implode('', $arrOptions),
 			$this->wizard
 		);
