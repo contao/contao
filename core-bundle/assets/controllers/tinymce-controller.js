@@ -40,4 +40,20 @@ export default class extends Controller {
     disconnect() {
         tinymce?.get(this.editorId)?.remove();
     }
+
+    leave(event) {
+        const editor = tinymce?.get(this.editorId)
+
+        if(!editor || !editor.plugins.hasOwnProperty('autosave') || editor.isNotDirty) {
+            return;
+        }
+
+        // Trigger a beforeunload event like when navigating away to capture the tinyMCE autosave message
+        const delegate = document.createEvent('BeforeUnloadEvent');
+        delegate.initEvent('beforeunload', false, true);
+
+        if(!window.dispatchEvent(delegate) && !confirm(delegate.returnValue)) {
+            event.preventDefault();
+        }
+    }
 }

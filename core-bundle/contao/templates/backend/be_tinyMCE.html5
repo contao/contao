@@ -87,6 +87,7 @@ if ($GLOBALS['TL_CONFIG']['useRTE']):
   // Add Stimulus data and controller reference
   const target = document.querySelector('#<?= $this->selector ?>');
   target.tinymceConfig = config;
+  target.setAttribute('data-action', 'turbo:before-visit@window->contao--tinymce#leave');
   target.setAttribute('data-controller', 'contao--tinymce');
 }
 </script>
