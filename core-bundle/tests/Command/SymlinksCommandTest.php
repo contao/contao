@@ -30,7 +30,7 @@ class SymlinksCommandTest extends TestCase
 
         $filesystem = new Filesystem();
 
-        foreach (['files', 'system', 'var', 'vendor'] as $directory) {
+        foreach (['assets', 'files', 'system', 'var', 'vendor'] as $directory) {
             $filesystem->mirror(
                 Path::join(__DIR__.'/../Fixtures', $directory),
                 Path::join(self::getTempDir(), $directory),
@@ -69,12 +69,14 @@ class SymlinksCommandTest extends TestCase
         $this->assertMatchesRegularExpression('# public/system/modules/foobar/html +system/modules/foobar/html #', $display);
         $this->assertMatchesRegularExpression('# vendor/contao/test-bundle/Resources/contao/themes/default #', $display);
         $this->assertMatchesRegularExpression('# system/themes/flexible +vendor/contao/test-bundle/Resources/contao/themes/flexible #', $display);
+        $this->assertMatchesRegularExpression('# public/assets +assets #', $display);
         $this->assertMatchesRegularExpression('# public/system/themes +system/themes #', $display);
         $this->assertMatchesRegularExpression('# system/logs +var/logs #', $display);
 
         $this->assertFileExists(Path::join(self::getTempDir(), 'public/files/public'));
         $this->assertDirectoryExists(Path::join(self::getTempDir(), 'public/system/modules/foobar'));
         $this->assertDirectoryExists(Path::join(self::getTempDir(), 'public/system/themes/default'));
+        $this->assertDirectoryExists(Path::join(self::getTempDir(), 'public/assets'));
     }
 
     public function testConvertsAbsolutePathsToRelativePaths(): void

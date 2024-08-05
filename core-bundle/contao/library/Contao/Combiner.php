@@ -214,10 +214,10 @@ class Combiner extends System
 			{
 				$strPath = 'assets/' . $strTarget . '/' . str_replace('/', '_', $arrFile['name']) . $this->strMode;
 
-				if ($blnDebug || !file_exists($this->strRootDir . '/' . $this->strWebDir . '/' . $strPath))
+				if ($blnDebug || !file_exists($this->strRootDir . '/' . $strPath))
 				{
 					$this->filesystem->dumpFile(
-						$this->strRootDir . '/' . $this->strWebDir . '/' . $strPath,
+						$this->strRootDir . '/' . $strPath,
 						$this->handleScssLess(file_get_contents($this->strRootDir . '/' . $arrFile['name']), $arrFile)
 					);
 				}
@@ -324,12 +324,11 @@ class Combiner extends System
 		$strKey = StringUtil::substr(implode(',', $arrPrefix), 64, '...') . '-' . substr(md5($this->strKey), 0, 8);
 
 		// Load the existing file
-		if (file_exists($this->strRootDir . '/' . $this->strWebDir . '/assets/' . $strTarget . '/' . $strKey . $this->strMode))
+		if (file_exists($this->strRootDir . '/assets/' . $strTarget . '/' . $strKey . $this->strMode))
 		{
 			return $strUrl . 'assets/' . $strTarget . '/' . $strKey . $this->strMode;
 		}
 
-		// Create the file
 		$combinedContent = '';
 
 		foreach ($this->arrFiles as $arrFile)
@@ -366,7 +365,7 @@ class Combiner extends System
 		unset($content);
 
 		// Create the file
-		$this->filesystem->dumpFile($this->strRootDir . '/' . $this->strWebDir . '/assets/' . $strTarget . '/' . $strKey . $this->strMode, $combinedContent);
+		$this->filesystem->dumpFile($this->strRootDir . '/assets/' . $strTarget . '/' . $strKey . $this->strMode, $combinedContent);
 
 		return $strUrl . 'assets/' . $strTarget . '/' . $strKey . $this->strMode;
 	}

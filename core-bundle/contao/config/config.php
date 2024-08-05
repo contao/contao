@@ -403,7 +403,7 @@ $GLOBALS['TL_PURGE'] = array
 		'scripts' => array
 		(
 			'callback' => array(Automator::class, 'purgeScriptCache'),
-			'affected' => array('%contao.web_dir%/assets/js', '%contao.web_dir%/assets/css')
+			'affected' => array('assets/js', 'assets/css')
 		),
 		'temp' => array
 		(
