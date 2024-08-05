@@ -18,6 +18,5 @@
         "watch": "encore dev --watch",
         "build": "encore production --progress"
     },
-    "private": true,
-    "packageManager": "pnpm@9.5.0"
+    "private": true
 }

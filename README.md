@@ -126,20 +126,20 @@ composer run functional-tests
 
 ## Node.js
 
-To build the assets, you need a Node.js version >= 18.12 and the [pnpm][3] package manager. Then run these commands:
+To build the assets, you need a Node.js version >= 18.12. Then run these commands:
 
 ```bash
-pnpm install
-pnpm build
+npm install
+npm run build
 ```
 
 ## End-to-end tests
 
-The Contao end-to-end tests are availabe as an [NPM package][4]. You can install and run them with `pnpm`:
+The Contao end-to-end tests are availabe as an [NPM package][3]. You can install and run them like this:
 
 ```bash
-pnpm add contao-e2e-tests --dev
-pnpm contao-e2e-tests
+npm add --save-dev contao-e2e-tests
+npm run contao-e2e-tests
 ```
 
 ## License
@@ -148,10 +148,9 @@ Contao is licensed under the terms of the LGPLv3.
 
 ## Getting support
 
-Visit the [support page][5] to learn about the available support options.
+Visit the [support page][4] to learn about the available support options.
 
 [1]: https://contao.org
 [2]: https://github.com/contao/managed-edition
-[3]: https://pnpm.io
-[4]: https://www.npmjs.com/package/contao-e2e-tests
-[5]: https://to.contao.org/support
+[3]: https://www.npmjs.com/package/contao-e2e-tests
+[4]: https://to.contao.org/support
