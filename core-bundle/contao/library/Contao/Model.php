@@ -231,7 +231,7 @@ abstract class Model
 	public function cloneDetached()
 	{
 		$clone = clone $this;
-		$clone->setRow($this->row());
+		$clone->arrData[static::$strPk] = $this->arrData[static::$strPk];
 		$clone->preventSaving(false);
 
 		return $clone;
