@@ -22,23 +22,6 @@ application.load(context.keys().map((key) => {
     }
 }).filter((value) => value));
 
-// BC layer to make elements using 'class="tl_chosen"' get a 'data-controller="contao--chosen"' attribute.
-new MutationObserver(function (mutationsList) {
-    for (const mutation of mutationsList) {
-        if (mutation.type === 'childList') {
-            mutation.addedNodes.forEach((element) => {
-                if (element.matches && element.matches('select.tl_chosen') && element.getAttribute('data-controller') !== 'contao--chosen') {
-                    element.setAttribute('data-controller', 'contao--chosen');
-                }
-            })
-        }
-    }
-}).observe(document, {
-    attributes: false,
-    childList: true,
-    subtree: true
-});
-
 /* Turbo support */
 // Cancel all prefetch requests that contain a request token
 document.documentElement.addEventListener('turbo:before-prefetch', e => {
