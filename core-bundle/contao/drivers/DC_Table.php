@@ -1130,7 +1130,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$children = Input::get('childs');
 		}
 
-		if ($children && $db->fieldExists('pid', $table) && $db->fieldExists('sorting', $table))
+		if ($children && ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null) == self::MODE_TREE)
 		{
 			$ctable[] = $table;
 		}
