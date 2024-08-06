@@ -20,6 +20,7 @@ use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Doctrine\DBAL\Exception\DriverException;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\String\UnicodeString;
@@ -2170,7 +2171,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$objTemplate->href = Environment::get('requestUri');
 				$objTemplate->button = $GLOBALS['TL_LANG']['MSC']['continue'];
 
-				throw new ResponseException($objTemplate->getResponse());
+				// We need to set the status code to either 422 or 500 in order for Turbo to render this response.
+				$response = $objTemplate->getResponse();
+				$response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
+
+				throw new ResponseException($response);
 			}
 
 			// Redirect
@@ -2388,13 +2393,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </script>';
 		}
 
-		// Begin the form (-> DO NOT CHANGE THIS ORDER -> this way the onsubmit attribute of the form can be changed by a field)
+		// Begin the form (-> DO NOT CHANGE TH"IS ORDER -> this way the onsubmit attribute of the form can be changed by a field)
 		$return = $version . ($this->noReload ? '
 <p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . Message::generate() . (Input::get('nb') ? '' : '
 <div id="tl_buttons">
 <a href="' . $strBackUrl . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" data-action="contao--scroll-offset#discard">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>') . '
-<turbo-frame id="' . $this->strTable . '_edit_form" target="_top" data-turbo-action="forward">
+<turbo-frame id="tl_edit_form_frame" target="_top" data-turbo-action="forward">
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '"' . (!empty($this->onsubmit) ? ' onsubmit="' . implode(' ', $this->onsubmit) . '"' : '') . ' data-turbo-frame="_self">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
