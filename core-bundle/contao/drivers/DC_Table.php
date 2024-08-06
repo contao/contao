@@ -3861,6 +3861,22 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			$blnClipboard = true;
 			$arrClipboard = $arrClipboard[$this->strTable];
+			if(is_array($arrClipboard['id']))
+			{
+				foreach ($arrClipboard['id'] as $k=>$v)
+				{
+					if($this->getCurrentRecord($v) === null)
+					{
+						unset($arrClipboard['id'][$k]);
+					}
+				}
+			}else{
+				if($this->getCurrentRecord($arrClipboard['id']) === null)
+				{
+					$blnClipboard = false;
+					$arrClipboard = null;
+				}
+			}
 		}
 		else
 		{
