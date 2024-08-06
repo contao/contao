@@ -26,17 +26,17 @@ class RootPageDependentSelect extends SelectMenu
 		$rootPages = $framework->getAdapter(PageModel::class)->findByType('root', array('order' => 'sorting'));
 		$wizard = StringUtil::deserialize($this->wizard);
 
-		$this->blankOptionLabel = $translator->trans(sprintf('tl_module.%sBlankOptionLabel', $this->name), array(), 'contao_tl_module');
+		$this->blankOptionLabel = $translator->trans(\sprintf('tl_module.%sBlankOptionLabel', $this->name), array(), 'contao_tl_module');
 
 		foreach ($rootPages as $rootPage)
 		{
-			$this->arrOptions[0]['label'] = sprintf($this->blankOptionLabel, $rootPage->title);
+			$this->arrOptions[0]['label'] = \sprintf($this->blankOptionLabel, $rootPage->title);
 			$this->strLabel = $rootPage->title;
 
-			$fields[] = sprintf(
+			$fields[] = \sprintf(
 				'<select name="%s[]" id="ctrl_%s" class="%s%s"%s data-action="focus->contao--scroll-offset#store">%s</select>%s',
 				$this->strName,
-				sprintf('%s-%s', $this->strId, $rootPage->id),
+				\sprintf('%s-%s', $this->strId, $rootPage->id),
 				$cssClasses,
 				$this->strClass ? ' ' . $this->strClass : '',
 				$this->getAttributes(),
@@ -72,14 +72,14 @@ class RootPageDependentSelect extends SelectMenu
 			{
 				if ($this->isSelected($option))
 				{
-					$option['label'] = sprintf(
+					$option['label'] = \sprintf(
 						'%s <span class="label-info">[%s]</span>',
 						$option['label'],
 						$rootPage->title,
 					);
 				}
 
-				$options[] = sprintf(
+				$options[] = \sprintf(
 					'<option value="%s"%s>%s</option>',
 					self::specialcharsValue($option['value']),
 					$this->isSelected($option),

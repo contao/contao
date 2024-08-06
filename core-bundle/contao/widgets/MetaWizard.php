@@ -101,8 +101,8 @@ class MetaWizard extends Widget
 						$fieldLabel = $GLOBALS['TL_LANG']['MSC']['aw_' . $kk];
 
 						$errorMsg = isset($this->metaFields[$kk]['rgxpErrMsg'])
-							? sprintf($this->metaFields[$kk]['rgxpErrMsg'], $fieldLabel, $langTrans, $rgxp)
-							: sprintf($GLOBALS['TL_LANG']['tl_files']['metaRgxpError'], $fieldLabel, $langTrans, $rgxp);
+							? \sprintf($this->metaFields[$kk]['rgxpErrMsg'], $fieldLabel, $langTrans, $rgxp)
+							: \sprintf($GLOBALS['TL_LANG']['tl_files']['metaRgxpError'], $fieldLabel, $langTrans, $rgxp);
 
 						$this->addError($errorMsg);
 						$this->arrFieldErrors[$lang][$kk] = true;

@@ -258,7 +258,7 @@ class DcaSchemaProvider
     {
         if ('PRIMARY' === $keyName) {
             if (!preg_match_all('/`([^`]+)`/', $sql, $matches)) {
-                throw new \RuntimeException(sprintf('Primary key definition "%s" could not be parsed.', $sql));
+                throw new \RuntimeException(\sprintf('Primary key definition "%s" could not be parsed.', $sql));
             }
 
             $table->setPrimaryKey($matches[1]);
@@ -267,7 +267,7 @@ class DcaSchemaProvider
         }
 
         if (!preg_match('/(.*) `([^`]+)` \((.*)\)/', $sql, $matches)) {
-            throw new \RuntimeException(sprintf('Key definition "%s" could not be parsed.', $sql));
+            throw new \RuntimeException(\sprintf('Key definition "%s" could not be parsed.', $sql));
         }
 
         $columns = [];

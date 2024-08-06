@@ -138,7 +138,7 @@ class TemplateOptionsListenerTest extends TestCase
         $connection
             ->method('executeQuery')
             ->with(
-                sprintf('SELECT type FROM %s WHERE id IN (?) GROUP BY type LIMIT 2', 'tl_content'),
+                \sprintf('SELECT type FROM %s WHERE id IN (?) GROUP BY type LIMIT 2', 'tl_content'),
                 [[1, 2, 3]],
                 [ArrayParameterType::STRING],
             )

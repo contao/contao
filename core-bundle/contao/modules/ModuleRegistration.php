@@ -232,7 +232,7 @@ class ModuleRegistration extends Module
 					}
 					catch (\OutOfBoundsException $e)
 					{
-						$objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['invalidDate'], $varValue));
+						$objWidget->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['invalidDate'], $varValue));
 					}
 				}
 
@@ -245,7 +245,7 @@ class ModuleRegistration extends Module
 				// Make sure that unique fields are unique (check the eval setting first -> #3063)
 				if (($arrData['eval']['unique'] ?? null) && (\is_array($varValue) || (string) $varValue !== '') && !$db->isUniqueValue('tl_member', $field, $varValue))
 				{
-					$objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?? $field));
+					$objWidget->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?? $field));
 				}
 
 				// Save callback
@@ -458,7 +458,7 @@ class ModuleRegistration extends Module
 		$event = new MemberActivationMailEvent(
 			MemberModel::findById($arrData['id']),
 			$optInToken,
-			sprintf($GLOBALS['TL_LANG']['MSC']['emailSubject'], Idna::decode(Environment::get('host'))),
+			\sprintf($GLOBALS['TL_LANG']['MSC']['emailSubject'], Idna::decode(Environment::get('host'))),
 			$this->reg_text,
 			$arrTokenData,
 		);
@@ -589,7 +589,7 @@ class ModuleRegistration extends Module
 		$objEmail = new Email();
 		$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
 		$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'] ?? null;
-		$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['adminSubject'], Idna::decode(Environment::get('host')));
+		$objEmail->subject = \sprintf($GLOBALS['TL_LANG']['MSC']['adminSubject'], Idna::decode(Environment::get('host')));
 
 		$strData = "\n\n";
 
@@ -611,7 +611,7 @@ class ModuleRegistration extends Module
 			$strData .= ($GLOBALS['TL_LANG']['tl_member'][$k][0] ?? $k) . ': ' . (\is_array($v) ? implode(', ', $v) : $v) . "\n";
 		}
 
-		$objEmail->text = sprintf($GLOBALS['TL_LANG']['MSC']['adminText'], $intId, $strData . "\n") . "\n";
+		$objEmail->text = \sprintf($GLOBALS['TL_LANG']['MSC']['adminText'], $intId, $strData . "\n") . "\n";
 		$objEmail->sendTo($GLOBALS['TL_ADMIN_EMAIL']);
 	}
 }

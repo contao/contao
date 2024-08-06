@@ -158,7 +158,7 @@ abstract class ModuleNews extends Module
 			$intTotal = CommentsModel::countPublishedBySourceAndParent('tl_news', $objArticle->id);
 
 			$objTemplate->numberOfComments = $intTotal;
-			$objTemplate->commentCount = sprintf($GLOBALS['TL_LANG']['MSC']['commentCount'], $intTotal);
+			$objTemplate->commentCount = \sprintf($GLOBALS['TL_LANG']['MSC']['commentCount'], $intTotal);
 		}
 
 		// Add the meta information
@@ -204,7 +204,7 @@ abstract class ModuleNews extends Module
 				// set by the news list and news archive modules (see #5851).
 				if ($intCount > 0 && !$figure->getLinkHref())
 				{
-					$linkTitle = StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true);
+					$linkTitle = StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true);
 
 					$figure = $figureBuilder
 						->setLinkHref($objTemplate->link)
@@ -311,10 +311,10 @@ abstract class ModuleNews extends Module
 		$strReadMore = $blnIsInternal ? $GLOBALS['TL_LANG']['MSC']['readMore'] : $GLOBALS['TL_LANG']['MSC']['open'];
 		$strArticleUrl = $this->generateContentUrl($objArticle, $blnAddArchive);
 
-		return sprintf(
+		return \sprintf(
 			'<a href="%s" title="%s"%s>%s%s</a>',
 			$strArticleUrl,
-			StringUtil::specialchars(sprintf($strReadMore, $blnIsInternal ? $objArticle->headline : $strArticleUrl), true),
+			StringUtil::specialchars(\sprintf($strReadMore, $blnIsInternal ? $objArticle->headline : $strArticleUrl), true),
 			$objArticle->target && !$blnIsInternal ? ' target="_blank" rel="noreferrer noopener"' : '',
 			$strLink,
 			$blnIsReadMore && $blnIsInternal ? '<span class="invisible"> ' . $objArticle->headline . '</span>' : ''

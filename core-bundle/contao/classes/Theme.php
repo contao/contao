@@ -72,7 +72,7 @@ class Theme extends Backend
 					// Skip folders
 					if (is_dir($this->strRootDir . '/' . $strFile))
 					{
-						Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['importFolder'], basename($strFile)));
+						Message::addError(\sprintf($GLOBALS['TL_LANG']['ERR']['importFolder'], basename($strFile)));
 						continue;
 					}
 
@@ -81,7 +81,7 @@ class Theme extends Backend
 					// Skip anything but .cto, .sql and .zip files
 					if ($objFile->extension != 'cto' && $objFile->extension != 'sql' && $objFile->extension != 'zip')
 					{
-						Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['filetype'], $objFile->extension));
+						Message::addError(\sprintf($GLOBALS['TL_LANG']['ERR']['filetype'], $objFile->extension));
 						continue;
 					}
 
@@ -203,7 +203,7 @@ class Theme extends Backend
 			// Continue if there is no XML file
 			if ($objArchive->getFile('theme.xml') === false)
 			{
-				$return .= "\n  " . '<p class="tl_red" style="margin:0">' . sprintf($GLOBALS['TL_LANG']['tl_theme']['missing_xml'], basename($strFile)) . "</p>\n</div>";
+				$return .= "\n  " . '<p class="tl_red" style="margin:0">' . \sprintf($GLOBALS['TL_LANG']['tl_theme']['missing_xml'], basename($strFile)) . "</p>\n</div>";
 				continue;
 			}
 
@@ -250,7 +250,7 @@ class Theme extends Backend
 					if (!\in_array($name, $arrDbFields[$table]))
 					{
 						$blnHasError = true;
-						$return .= "\n  " . '<p class="tl_red" style="margin:0">' . sprintf($GLOBALS['TL_LANG']['tl_theme']['missing_field'], $table . '.' . $name) . '</p>';
+						$return .= "\n  " . '<p class="tl_red" style="margin:0">' . \sprintf($GLOBALS['TL_LANG']['tl_theme']['missing_field'], $table . '.' . $name) . '</p>';
 					}
 				}
 			}
@@ -284,7 +284,7 @@ class Theme extends Backend
 				if (file_exists($this->strRootDir . '/' . $objArchive->file_name))
 				{
 					$blnTplExists = true;
-					$return .= "\n  " . '<p class="tl_red" style="margin:0">' . sprintf($GLOBALS['TL_LANG']['tl_theme']['template_exists'], $objArchive->file_name) . '</p>';
+					$return .= "\n  " . '<p class="tl_red" style="margin:0">' . \sprintf($GLOBALS['TL_LANG']['tl_theme']['template_exists'], $objArchive->file_name) . '</p>';
 				}
 			}
 
@@ -413,7 +413,7 @@ class Theme extends Backend
 			// Continue if there is no XML file
 			if (!$xml instanceof \DOMDocument)
 			{
-				Message::addError(sprintf($GLOBALS['TL_LANG']['tl_theme']['missing_xml'], basename($strZipFile)));
+				Message::addError(\sprintf($GLOBALS['TL_LANG']['tl_theme']['missing_xml'], basename($strZipFile)));
 				continue;
 			}
 
@@ -708,7 +708,7 @@ class Theme extends Backend
 			$db->unlockTables();
 
 			// Notify the user
-			Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_theme']['theme_imported'], basename($strZipFile)));
+			Message::addConfirmation(\sprintf($GLOBALS['TL_LANG']['tl_theme']['theme_imported'], basename($strZipFile)));
 
 			// HOOK: add custom logic
 			if (isset($GLOBALS['TL_HOOKS']['extractThemeFiles']) && \is_array($GLOBALS['TL_HOOKS']['extractThemeFiles']))

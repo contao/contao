@@ -23,7 +23,7 @@ class UnableToResolveUuidException extends \RuntimeException
         private readonly Uuid $uuid,
         string $message = '',
     ) {
-        parent::__construct(rtrim(sprintf('Unable to resolve UUID "%s" to a path. %s', $uuid->toRfc4122(), $message)));
+        parent::__construct(rtrim(\sprintf('Unable to resolve UUID "%s" to a path. %s', $uuid->toRfc4122(), $message)));
     }
 
     public function getUuid(): Uuid

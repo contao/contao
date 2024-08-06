@@ -97,7 +97,7 @@ class PaletteManipulator
         $palettes = &$GLOBALS['TL_DCA'][$table]['palettes'];
 
         if (!isset($palettes[$name])) {
-            throw new PaletteNotFoundException(sprintf('Palette "%s" not found in table "%s"', $name, $table));
+            throw new PaletteNotFoundException(\sprintf('Palette "%s" not found in table "%s"', $name, $table));
         }
 
         $palettes[$name] = $this->applyToString($palettes[$name]);
@@ -110,7 +110,7 @@ class PaletteManipulator
         $subpalettes = &$GLOBALS['TL_DCA'][$table]['subpalettes'];
 
         if (!isset($subpalettes[$name])) {
-            throw new PaletteNotFoundException(sprintf('Subpalette "%s" not found in table "%s"', $name, $table));
+            throw new PaletteNotFoundException(\sprintf('Subpalette "%s" not found in table "%s"', $name, $table));
         }
 
         $subpalettes[$name] = $this->applyToString($subpalettes[$name], true);
@@ -215,7 +215,7 @@ class PaletteManipulator
             }
 
             if (!\is_int($legend)) {
-                $palette .= sprintf('{%s%s},', $legend, $group['hide'] ? ':hide' : '');
+                $palette .= \sprintf('{%s%s},', $legend, $group['hide'] ? ':hide' : '');
             }
 
             $palette .= implode(',', $group['fields']);

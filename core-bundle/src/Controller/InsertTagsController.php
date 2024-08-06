@@ -38,7 +38,7 @@ class InsertTagsController
     public function renderAction(Request $request, string $insertTag): Response
     {
         if (!str_starts_with($insertTag, '{{') || !str_ends_with($insertTag, '}}')) {
-            throw new BadRequestHttpException(sprintf('Invalid insert tag "%s"', $insertTag));
+            throw new BadRequestHttpException(\sprintf('Invalid insert tag "%s"', $insertTag));
         }
 
         $result = $this->insertTagParser->renderTag(substr($insertTag, 2, -2));

@@ -106,6 +106,6 @@ class UserSessionListener
             return $bag;
         }
 
-        throw new \RuntimeException(sprintf('Expected an attribute bag, got %s.', get_debug_type($bag)));
+        throw new \RuntimeException(\sprintf('Expected an attribute bag, got %s.', get_debug_type($bag)));
     }
 }

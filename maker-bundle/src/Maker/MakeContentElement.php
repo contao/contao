@@ -36,7 +36,7 @@ class MakeContentElement extends AbstractFragmentMaker
     public function configureCommand(Command $command, InputConfiguration $inputConfig): void
     {
         $command
-            ->addArgument('element-class', InputArgument::REQUIRED, sprintf('Enter a class name for the element controller (e.g. <fg=yellow>%sController</>)', Str::asClassName(Str::getRandomTerm())))
+            ->addArgument('element-class', InputArgument::REQUIRED, \sprintf('Enter a class name for the element controller (e.g. <fg=yellow>%sController</>)', Str::asClassName(Str::getRandomTerm())))
         ;
     }
 

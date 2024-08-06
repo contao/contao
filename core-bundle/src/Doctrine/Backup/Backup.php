@@ -35,7 +35,7 @@ class Backup implements \Stringable
 
     public function __toString(): string
     {
-        return sprintf('[Backup]: %s', $this->getFilename());
+        return \sprintf('[Backup]: %s', $this->getFilename());
     }
 
     public function getFilename(): string
@@ -68,7 +68,7 @@ class Backup implements \Stringable
         $now = $dateTime ?? new \DateTime('now');
         $now->setTimezone(new \DateTimeZone('UTC'));
 
-        return new self(sprintf('backup__%s.sql.gz', $now->format(self::DATETIME_FORMAT)));
+        return new self(\sprintf('backup__%s.sql.gz', $now->format(self::DATETIME_FORMAT)));
     }
 
     public function toArray(): array
@@ -92,7 +92,7 @@ class Backup implements \Stringable
     private function validateFileName(string $filename): string
     {
         if (!preg_match(self::VALID_BACKUP_NAME_REGEX, $filename)) {
-            throw new BackupManagerException(sprintf('The filename "%s" does not match "%s"', $filename, self::VALID_BACKUP_NAME_REGEX));
+            throw new BackupManagerException(\sprintf('The filename "%s" does not match "%s"', $filename, self::VALID_BACKUP_NAME_REGEX));
         }
 
         return $filename;

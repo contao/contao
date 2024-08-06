@@ -33,7 +33,7 @@ class IfLanguageInsertTag implements BlockInsertTagResolverNestedResolvedInterfa
         $inverse = 'iflng' !== $insertTag->getName();
 
         if (!$language = $insertTag->getParameters()->get(0)) {
-            throw new InvalidInsertTagException(sprintf('Missing language parameter in %s insert tag', $insertTag->getName()));
+            throw new InvalidInsertTagException(\sprintf('Missing language parameter in %s insert tag', $insertTag->getName()));
         }
 
         if ($this->languageMatchesTranslatorLocale($language)) {

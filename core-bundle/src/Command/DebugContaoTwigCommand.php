@@ -129,7 +129,7 @@ class DebugContaoTwigCommand extends Command
                     // display the effective @Contao name.
                     $identifier = ltrim("$namePrefix/$label", '/');
 
-                    $io->writeln(sprintf(
+                    $io->writeln(\sprintf(
                         '%s<fg=green;options=bold>%s</>%s',
                         $currentPrefix,
                         $label,
@@ -144,7 +144,7 @@ class DebugContaoTwigCommand extends Command
                 // Display file and logical name
                 $io->writeln($currentPrefix.$label);
 
-                $io->writeln(sprintf(
+                $io->writeln(\sprintf(
                     '%s<fg=white>Original name:</> <fg=yellow>%s</>',
                     $currentPrefixWithNewline,
                     $element,

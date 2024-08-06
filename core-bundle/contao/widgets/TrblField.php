@@ -116,7 +116,7 @@ class TrblField extends Widget
 
 		foreach ($this->arrOptions as $arrUnit)
 		{
-			$arrUnits[] = sprintf(
+			$arrUnits[] = \sprintf(
 				'<option value="%s"%s>%s</option>',
 				self::specialcharsValue($arrUnit['value']),
 				$this->isSelected($arrUnit),
@@ -134,7 +134,7 @@ class TrblField extends Widget
 
 		foreach ($arrKeys as $strKey)
 		{
-			$arrFields[] = sprintf(
+			$arrFields[] = \sprintf(
 				'<input type="text" name="%s[%s]" id="ctrl_%s" class="tl_text_trbl trbl_%s%s" value="%s"%s data-action="focus->contao--scroll-offset#store">',
 				$this->strName,
 				$strKey,
@@ -146,7 +146,7 @@ class TrblField extends Widget
 			);
 		}
 
-		return sprintf(
+		return \sprintf(
 			'%s <select name="%s[unit]" class="tl_select_unit" data-action="focus->contao--scroll-offset#store"%s>%s</select>%s',
 			implode(' ', $arrFields),
 			$this->strName,

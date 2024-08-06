@@ -304,12 +304,12 @@ class FormSelect extends Widget
 					$strOptions .= '</optgroup>';
 				}
 
-				$strOptions .= sprintf('<optgroup label="%s">', StringUtil::specialchars($arrOption['label'] ?? ''));
+				$strOptions .= \sprintf('<optgroup label="%s">', StringUtil::specialchars($arrOption['label'] ?? ''));
 				$blnHasGroups = true;
 				continue;
 			}
 
-			$strOptions .= sprintf(
+			$strOptions .= \sprintf(
 				'<option value="%s"%s>%s</option>',
 				$arrOption['value'] ?? null,
 				$this->isSelected($arrOption),
@@ -322,7 +322,7 @@ class FormSelect extends Widget
 			$strOptions .= '</optgroup>';
 		}
 
-		return sprintf(
+		return \sprintf(
 			'<select name="%s" id="ctrl_%s" class="%s"%s>%s</select>',
 			$this->name,
 			$this->strId,

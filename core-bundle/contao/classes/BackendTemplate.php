@@ -131,7 +131,7 @@ class BackendTemplate extends Template
 			if (!empty($attributes) && \is_array($attributes))
 			{
 				$this->attributes = ' ' . implode(' ', array_map(
-					static function ($v, $k) { return sprintf('data-%s="%s"', $k, $v); },
+					static function ($v, $k) { return \sprintf('data-%s="%s"', $k, $v); },
 					$attributes,
 					array_keys($attributes)
 				));

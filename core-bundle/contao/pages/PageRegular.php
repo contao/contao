@@ -309,7 +309,7 @@ class PageRegular extends Frontend
 				if (isset($arrSize['value']) && $arrSize['value'] && $arrSize['value'] >= 0)
 				{
 					$arrMargin = array('left'=>'0 auto 0 0', 'center'=>'0 auto', 'right'=>'0 0 0 auto');
-					$strFramework .= sprintf('#wrapper{width:%s;margin:%s}', $arrSize['value'] . $arrSize['unit'], $arrMargin[$objLayout->align]);
+					$strFramework .= \sprintf('#wrapper{width:%s;margin:%s}', $arrSize['value'] . $arrSize['unit'], $arrMargin[$objLayout->align]);
 				}
 			}
 
@@ -320,7 +320,7 @@ class PageRegular extends Frontend
 
 				if (isset($arrSize['value']) && $arrSize['value'] && $arrSize['value'] >= 0)
 				{
-					$strFramework .= sprintf('#header{height:%s}', $arrSize['value'] . $arrSize['unit']);
+					$strFramework .= \sprintf('#header{height:%s}', $arrSize['value'] . $arrSize['unit']);
 				}
 			}
 
@@ -333,8 +333,8 @@ class PageRegular extends Frontend
 
 				if (isset($arrSize['value']) && $arrSize['value'] && $arrSize['value'] >= 0)
 				{
-					$strFramework .= sprintf('#left{width:%s;right:%s}', $arrSize['value'] . $arrSize['unit'], $arrSize['value'] . $arrSize['unit']);
-					$strContainer .= sprintf('padding-left:%s;', $arrSize['value'] . $arrSize['unit']);
+					$strFramework .= \sprintf('#left{width:%s;right:%s}', $arrSize['value'] . $arrSize['unit'], $arrSize['value'] . $arrSize['unit']);
+					$strContainer .= \sprintf('padding-left:%s;', $arrSize['value'] . $arrSize['unit']);
 				}
 			}
 
@@ -345,15 +345,15 @@ class PageRegular extends Frontend
 
 				if (isset($arrSize['value']) && $arrSize['value'] && $arrSize['value'] >= 0)
 				{
-					$strFramework .= sprintf('#right{width:%s}', $arrSize['value'] . $arrSize['unit']);
-					$strContainer .= sprintf('padding-right:%s;', $arrSize['value'] . $arrSize['unit']);
+					$strFramework .= \sprintf('#right{width:%s}', $arrSize['value'] . $arrSize['unit']);
+					$strContainer .= \sprintf('padding-right:%s;', $arrSize['value'] . $arrSize['unit']);
 				}
 			}
 
 			// Main column
 			if ($strContainer)
 			{
-				$strFramework .= sprintf('#container{%s}', substr($strContainer, 0, -1));
+				$strFramework .= \sprintf('#container{%s}', substr($strContainer, 0, -1));
 			}
 
 			// Footer
@@ -363,7 +363,7 @@ class PageRegular extends Frontend
 
 				if (isset($arrSize['value']) && $arrSize['value'] && $arrSize['value'] >= 0)
 				{
-					$strFramework .= sprintf('#footer{height:%s}', $arrSize['value'] . $arrSize['unit']);
+					$strFramework .= \sprintf('#footer{height:%s}', $arrSize['value'] . $arrSize['unit']);
 				}
 			}
 
@@ -442,8 +442,8 @@ class PageRegular extends Frontend
 		// Add the check_cookies image and the request token script if needed
 		if ($objPage->alwaysLoadFromCache)
 		{
-			$GLOBALS['TL_BODY'][] = sprintf('<img src="%s" width="1" height="1" class="invisible" alt aria-hidden="true" onload="this.parentNode.removeChild(this)">', System::getContainer()->get('router')->generate('contao_frontend_check_cookies'));
-			$GLOBALS['TL_BODY'][] = sprintf('<script src="%s" async></script>', System::getContainer()->get('router')->generate('contao_frontend_request_token_script'));
+			$GLOBALS['TL_BODY'][] = \sprintf('<img src="%s" width="1" height="1" class="invisible" alt aria-hidden="true" onload="this.parentNode.removeChild(this)">', System::getContainer()->get('router')->generate('contao_frontend_check_cookies'));
+			$GLOBALS['TL_BODY'][] = \sprintf('<script src="%s" async></script>', System::getContainer()->get('router')->generate('contao_frontend_request_token_script'));
 		}
 
 		// Default settings

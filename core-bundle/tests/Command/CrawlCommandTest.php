@@ -139,7 +139,7 @@ class CrawlCommandTest extends TestCase
         $tester = new CommandTester($command);
         $tester->execute(['--queue' => 'doctrine']);
 
-        $expectCli = sprintf('[Job ID: %s]', $jobId);
+        $expectCli = \sprintf('[Job ID: %s]', $jobId);
 
         $this->assertStringContainsString($expectCli, $tester->getDisplay(true));
 

@@ -89,7 +89,7 @@ class PreviewFactory
         }
 
         if (!(new Filesystem())->exists($path)) {
-            throw new InvalidResourceException(sprintf('No resource could be located at path "%s".', $path));
+            throw new InvalidResourceException(\sprintf('No resource could be located at path "%s".', $path));
         }
 
         // Supported image formats do not need an extra preview image
@@ -137,7 +137,7 @@ class PreviewFactory
                     }
 
                     if (\count($previews) > 1 + $lastPage - $firstPage) {
-                        throw new \LogicException(sprintf('Preview provider "%s" returned %s pages instead of the requested %s.', $provider::class, \count($previews), 1 + $lastPage - $firstPage));
+                        throw new \LogicException(\sprintf('Preview provider "%s" returned %s pages instead of the requested %s.', $provider::class, \count($previews), 1 + $lastPage - $firstPage));
                     }
 
                     return array_map(fn ($path) => $this->imageFactory->create($path), $previews);
@@ -147,7 +147,7 @@ class PreviewFactory
             }
         }
 
-        throw $lastProviderException ?? new MissingPreviewProviderException(sprintf('Missing preview provider to handle "%s".', $path));
+        throw $lastProviderException ?? new MissingPreviewProviderException(\sprintf('Missing preview provider to handle "%s".', $path));
     }
 
     public function createPreviewImage(string $path, ResizeConfiguration|array|int|string|null $size = null, ResizeOptions|null $resizeOptions = null, int $page = 1, array $previewOptions = []): ImageInterface

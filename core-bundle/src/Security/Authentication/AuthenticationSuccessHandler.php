@@ -105,7 +105,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         $response = new RedirectResponse($this->determineTargetUrl($request));
 
         $this->logger?->info(
-            sprintf('User "%s" has logged in', $this->user->username),
+            \sprintf('User "%s" has logged in', $this->user->username),
             ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, $this->user->username)],
         );
 

@@ -103,7 +103,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         $name = strtolower($name);
 
         if (!preg_match('(^[^>\s/][^>\s/=]*$)', $name) || !preg_match('//u', $name) || str_contains($name, "\x00")) {
-            throw new \InvalidArgumentException(sprintf('An HTML attribute name must be valid UTF-8 and not contain the characters >, /, = or whitespace, got "%s".', $name));
+            throw new \InvalidArgumentException(\sprintf('An HTML attribute name must be valid UTF-8 and not contain the characters >, /, = or whitespace, got "%s".', $name));
         }
 
         // Unset if value is set to false
@@ -317,7 +317,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
                 $attributes[\count($attributes) - 1] .= '=""';
             }
 
-            $attributes[] = '' !== $value ? sprintf('%s="%s"', $name, $this->escapeValue($name, $value)) : $name;
+            $attributes[] = '' !== $value ? \sprintf('%s="%s"', $name, $this->escapeValue($name, $value)) : $name;
         }
 
         $string = implode(' ', $attributes);
@@ -343,7 +343,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     public function offsetGet(mixed $offset): mixed
     {
         if (!$this->offsetExists($offset)) {
-            throw new \OutOfBoundsException(sprintf('The attribute property "%s" does not exist.', $offset));
+            throw new \OutOfBoundsException(\sprintf('The attribute property "%s" does not exist.', $offset));
         }
 
         return $this->attributes[$offset];
@@ -438,7 +438,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     private function escapeValue(string $name, string $value): string
     {
         if (!preg_match('//u', $value) || str_contains($value, "\x00")) {
-            throw new \RuntimeException(sprintf('The value of property "%s" is not a valid UTF-8 string.', $name));
+            throw new \RuntimeException(\sprintf('The value of property "%s" is not a valid UTF-8 string.', $name));
         }
 
         $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, null, $this->doubleEncoding);

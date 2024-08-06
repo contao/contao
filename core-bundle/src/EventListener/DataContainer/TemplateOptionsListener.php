@@ -84,12 +84,12 @@ class TemplateOptionsListener
             $guessedType = $legacyPrefix.$type;
 
             if (isset($this->filesystemLoader->getInheritanceChains()[$guessedType])) {
-                $help = sprintf('In case you wanted to use the legacy type "%s", define it explicitly in the "template" property of your controller\'s service tag/attribute.', $guessedType);
+                $help = \sprintf('In case you wanted to use the legacy type "%s", define it explicitly in the "template" property of your controller\'s service tag/attribute.', $guessedType);
             } else {
                 $help = 'Did you forget to create the default template?';
             }
 
-            throw new \LogicException(sprintf('Tried to list template options for the modern fragment type "%s" but could not find any template. %s', $identifier, $help));
+            throw new \LogicException(\sprintf('Tried to list template options for the modern fragment type "%s" but could not find any template. %s', $identifier, $help));
         }
 
         return $templateOptions;
@@ -190,7 +190,7 @@ class TemplateOptionsListener
             'tl_content' => 'ce_',
             'tl_module' => 'mod_',
             'tl_form_field' => 'form_',
-            default => throw new \InvalidArgumentException(sprintf('Not implemented for "%s".', $dc->table)),
+            default => throw new \InvalidArgumentException(\sprintf('Not implemented for "%s".', $dc->table)),
         };
     }
 

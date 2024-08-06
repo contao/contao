@@ -69,7 +69,7 @@ final class AddNode extends Node implements NodeOutputInterface
             ->write('')
             ->repr($this->getAttribute('identifier'))
             ->raw(', $__contao_document_content, ')
-            ->raw(sprintf('\\%s::%s', DocumentLocation::class, $this->getAttribute('location')->name)."\n")
+            ->raw(\sprintf('\\%s::%s', DocumentLocation::class, $this->getAttribute('location')->name)."\n")
             ->outdent()
             ->write(');'."\n")
         ;

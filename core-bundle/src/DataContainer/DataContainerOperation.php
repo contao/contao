@@ -42,16 +42,16 @@ class DataContainerOperation implements \ArrayAccess
 
         if (isset($operation['label'])) {
             if (\is_array($operation['label'])) {
-                $operation['title'] = sprintf($operation['label'][1] ?? '', $id);
+                $operation['title'] = \sprintf($operation['label'][1] ?? '', $id);
                 $operation['label'] = $operation['label'][0] ?? $name;
             } else {
-                $operation['label'] = $operation['title'] = sprintf($operation['label'], $id);
+                $operation['label'] = $operation['title'] = \sprintf($operation['label'], $id);
             }
         } else {
             $operation['label'] = $operation['title'] = $name;
         }
 
-        $attributes = !empty($operation['attributes']) ? ' '.ltrim(sprintf($operation['attributes'], $id, $id)) : '';
+        $attributes = !empty($operation['attributes']) ? ' '.ltrim(\sprintf($operation['attributes'], $id, $id)) : '';
 
         // Add the key as CSS class
         if (str_contains($attributes, 'class="')) {
