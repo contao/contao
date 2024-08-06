@@ -124,7 +124,7 @@ class FrontendPreviewAuthenticator
             }
         } catch (UserNotFoundException) {
             $this->logger?->info(
-                sprintf('Could not find a front end user with the username "%s"', $username),
+                \sprintf('Could not find a front end user with the username "%s"', $username),
                 ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, '')],
             );
 

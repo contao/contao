@@ -175,7 +175,7 @@ class BackendMenuListener
 
         $info = $factory
             ->createItem('info')
-            ->setLabel(sprintf('<strong>%s</strong> %s', $user->name, $user->email))
+            ->setLabel(\sprintf('<strong>%s</strong> %s', $user->name, $user->email))
             ->setAttribute('class', 'info')
             ->setExtra('safe_label', true)
             ->setExtra('translation_domain', false)
@@ -228,7 +228,7 @@ class BackendMenuListener
     {
         $systemMessages = $this->translator->trans('MSC.systemMessages', [], 'contao_default');
 
-        $label = sprintf(
+        $label = \sprintf(
             '<a href="%s" class="icon-alert" title="%s" data-turbo-prefetch="false" onclick="Backend.openModalIframe({\'title\':\'%s\',\'url\':this.href});return false">%s</a>',
             $this->router->generate('contao_backend_alerts'),
             htmlspecialchars($systemMessages, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5),

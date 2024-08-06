@@ -90,10 +90,10 @@ abstract class Backend extends Controller
 			return 'en';
 		}
 
-		$webDir = System::getContainer()->getParameter('contao.web_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// The translation exists
-		if (file_exists($webDir . '/assets/tinymce4/js/langs/' . $lang . '.js'))
+		if (file_exists($projectDir . '/assets/tinymce4/js/langs/' . $lang . '.js'))
 		{
 			return $lang;
 		}
@@ -101,7 +101,7 @@ abstract class Backend extends Controller
 		if (($short = substr($GLOBALS['TL_LANGUAGE'], 0, 2)) != $lang)
 		{
 			// Try the short tag, e.g. "de" instead of "de_CH"
-			if (file_exists($webDir . '/assets/tinymce4/js/langs/' . $short . '.js'))
+			if (file_exists($projectDir . '/assets/tinymce4/js/langs/' . $short . '.js'))
 			{
 				return $short;
 			}
@@ -109,7 +109,7 @@ abstract class Backend extends Controller
 		elseif (($long = $short . '_' . strtoupper($short)) != $lang)
 		{
 			// Try the long tag, e.g. "fr_FR" instead of "fr" (see #6952)
-			if (file_exists($webDir . '/assets/tinymce4/js/langs/' . $long . '.js'))
+			if (file_exists($projectDir . '/assets/tinymce4/js/langs/' . $long . '.js'))
 			{
 				return $long;
 			}
@@ -353,7 +353,7 @@ abstract class Backend extends Controller
 			// Add the name of the submodule
 			if (isset($GLOBALS['TL_LANG'][$strTable][Input::get('key')][1]))
 			{
-				$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][Input::get('key')][1] ?? '%s', Input::get('id')) . '</span>';
+				$this->Template->headline .= ' <span>' . \sprintf($GLOBALS['TL_LANG'][$strTable][Input::get('key')][1] ?? '%s', Input::get('id')) . '</span>';
 			}
 			else
 			{
@@ -446,7 +446,7 @@ abstract class Backend extends Controller
 								'ref' => $request->attributes->get('_contao_referer_id'),
 							));
 
-							$trail[] = sprintf(' <span><a href="%s">%s</a></span>', $strUrl, $linkLabel);
+							$trail[] = \sprintf(' <span><a href="%s">%s</a></span>', $strUrl, $linkLabel);
 						}
 					}
 
@@ -509,11 +509,11 @@ abstract class Backend extends Controller
 				{
 					if (\is_array($GLOBALS['TL_LANG'][$strTable][$act]))
 					{
-						$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], Input::get('id')) . '</span>';
+						$this->Template->headline .= ' <span>' . \sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], Input::get('id')) . '</span>';
 					}
 					else
 					{
-						$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act], Input::get('id')) . '</span>';
+						$this->Template->headline .= ' <span>' . \sprintf($GLOBALS['TL_LANG'][$strTable][$act], Input::get('id')) . '</span>';
 					}
 				}
 			}
@@ -534,11 +534,11 @@ abstract class Backend extends Controller
 				{
 					if (\is_array($GLOBALS['TL_LANG'][$strTable][$act]))
 					{
-						$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], Input::get('pid')) . '</span>';
+						$this->Template->headline .= ' <span>' . \sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], Input::get('pid')) . '</span>';
 					}
 					else
 					{
-						$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act], Input::get('pid')) . '</span>';
+						$this->Template->headline .= ' <span>' . \sprintf($GLOBALS['TL_LANG'][$strTable][$act], Input::get('pid')) . '</span>';
 					}
 				}
 			}
@@ -1079,7 +1079,7 @@ abstract class Backend extends Controller
 			}
 			else
 			{
-				$strOptions .= sprintf('<option value="{{link_url::%s}}"%s>%s%s</option>', $objPages->id, ('{{link_url::' . $objPages->id . '}}' == Input::get('value')) ? ' selected="selected"' : '', str_repeat(' &nbsp; &nbsp; ', $level), StringUtil::specialchars($objPages->title));
+				$strOptions .= \sprintf('<option value="{{link_url::%s}}"%s>%s%s</option>', $objPages->id, ('{{link_url::' . $objPages->id . '}}' == Input::get('value')) ? ' selected="selected"' : '', str_repeat(' &nbsp; &nbsp; ', $level), StringUtil::specialchars($objPages->title));
 				$strOptions .= $this->doCreatePageList($objPages->id, $level);
 			}
 		}
@@ -1181,7 +1181,7 @@ abstract class Backend extends Controller
 					continue;
 				}
 
-				$strFiles .= sprintf('<option value="%s"%s>%s</option>', $strFolder . '/' . $strFile, ($strFolder . '/' . $strFile == Input::get('value')) ? ' selected="selected"' : '', StringUtil::specialchars($strFile));
+				$strFiles .= \sprintf('<option value="%s"%s>%s</option>', $strFolder . '/' . $strFile, ($strFolder . '/' . $strFile == Input::get('value')) ? ' selected="selected"' : '', StringUtil::specialchars($strFile));
 			}
 		}
 

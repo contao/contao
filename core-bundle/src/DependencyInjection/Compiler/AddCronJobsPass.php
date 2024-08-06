@@ -38,7 +38,7 @@ class AddCronJobsPass implements CompilerPassInterface
         foreach ($serviceIds as $serviceId => $tags) {
             foreach ($tags as $attributes) {
                 if (!isset($attributes['interval'])) {
-                    throw new InvalidDefinitionException(sprintf('Missing interval attribute in tagged cron service with service id "%s"', $serviceId));
+                    throw new InvalidDefinitionException(\sprintf('Missing interval attribute in tagged cron service with service id "%s"', $serviceId));
                 }
 
                 $jobDefinition = $container->findDefinition($serviceId);
@@ -54,7 +54,7 @@ class AddCronJobsPass implements CompilerPassInterface
 
                 // Validate the cron expression
                 if (!CronExpression::isValidExpression($interval)) {
-                    throw new InvalidDefinitionException(sprintf('The contao.cronjob definition for service "%s" has an invalid interval expression "%s"', $serviceId, $interval));
+                    throw new InvalidDefinitionException(\sprintf('The contao.cronjob definition for service "%s" has an invalid interval expression "%s"', $serviceId, $interval));
                 }
 
                 $newDefinition = new Definition(CronJob::class, [new Reference($serviceId), $interval, $method]);
@@ -84,17 +84,17 @@ class AddCronJobsPass implements CompilerPassInterface
     private function getMethod(array $attributes, string $class, string $serviceId): string|null
     {
         $ref = new \ReflectionClass($class);
-        $invalid = sprintf('The contao.cronjob definition for service "%s" is invalid. ', $serviceId);
+        $invalid = \sprintf('The contao.cronjob definition for service "%s" is invalid. ', $serviceId);
 
         if (isset($attributes['method'])) {
             if (!$ref->hasMethod($attributes['method'])) {
-                $invalid .= sprintf('The class "%s" does not have a method "%s".', $class, $attributes['method']);
+                $invalid .= \sprintf('The class "%s" does not have a method "%s".', $class, $attributes['method']);
 
                 throw new InvalidDefinitionException($invalid);
             }
 
             if (!$ref->getMethod($attributes['method'])->isPublic()) {
-                $invalid .= sprintf('The "%s::%s" method exists but is not public.', $class, $attributes['method']);
+                $invalid .= \sprintf('The "%s::%s" method exists but is not public.', $class, $attributes['method']);
 
                 throw new InvalidDefinitionException($invalid);
             }
@@ -123,9 +123,9 @@ class AddCronJobsPass implements CompilerPassInterface
             }
 
             if ($private) {
-                $invalid .= sprintf('The "%s::%s" method exists but is not public.', $class, $method);
+                $invalid .= \sprintf('The "%s::%s" method exists but is not public.', $class, $method);
             } else {
-                $invalid .= sprintf('Either specify a method name or implement the "%s" or __invoke method.', $method);
+                $invalid .= \sprintf('Either specify a method name or implement the "%s" or __invoke method.', $method);
             }
         }
 

@@ -245,15 +245,15 @@ class Configuration implements ConfigurationInterface
 
                                 foreach (array_keys($value) as $name) {
                                     if (preg_match('/^\d+$/', (string) $name)) {
-                                        throw new \InvalidArgumentException(sprintf('The image size name "%s" cannot contain only digits', $name));
+                                        throw new \InvalidArgumentException(\sprintf('The image size name "%s" cannot contain only digits', $name));
                                     }
 
                                     if (\in_array($name, $reservedImageSizeNames, true)) {
-                                        throw new \InvalidArgumentException(sprintf('"%s" is a reserved image size name (reserved names: %s)', $name, implode(', ', $reservedImageSizeNames)));
+                                        throw new \InvalidArgumentException(\sprintf('"%s" is a reserved image size name (reserved names: %s)', $name, implode(', ', $reservedImageSizeNames)));
                                     }
 
                                     if (preg_match('/[^a-z0-9_]/', (string) $name)) {
-                                        throw new \InvalidArgumentException(sprintf('The image size name "%s" must consist of lowercase letters, digits and underscores only', $name));
+                                        throw new \InvalidArgumentException(\sprintf('The image size name "%s" must consist of lowercase letters, digits and underscores only', $name));
                                     }
                                 }
 
@@ -365,9 +365,9 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->scalarNode('target_dir')
                     ->info('The target directory for the cached images processed by Contao.')
-                    ->example('%contao.web_dir%/assets/images')
+                    ->example('%kernel.project_dir%/assets/images')
                     ->cannotBeEmpty()
-                    ->defaultValue('%contao.web_dir%/assets/images')
+                    ->defaultValue('%kernel.project_dir%/assets/images')
                     ->validate()
                         ->always(static fn (string $value): string => Path::canonicalize($value))
                     ->end()
@@ -385,9 +385,9 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('target_dir')
                             ->info('The target directory for the cached previews.')
-                            ->example('%contao.web_dir%/assets/previews')
+                            ->example('%kernel.project_dir%/assets/previews')
                             ->cannotBeEmpty()
-                            ->defaultValue('%contao.web_dir%/assets/previews')
+                            ->defaultValue('%kernel.project_dir%/assets/previews')
                             ->validate()
                                 ->always(static fn (string $value): string => Path::canonicalize($value))
                             ->end()
@@ -704,7 +704,7 @@ class Configuration implements ConfigurationInterface
                         static function (array $attributes): array {
                             foreach (array_keys($attributes) as $name) {
                                 if (preg_match('/[^a-z0-9\-.:_]/', (string) $name)) {
-                                    throw new \InvalidArgumentException(sprintf('The attribute name "%s" must be a valid HTML attribute name.', $name));
+                                    throw new \InvalidArgumentException(\sprintf('The attribute name "%s" must be a valid HTML attribute name.', $name));
                                 }
                             }
 
@@ -820,7 +820,7 @@ class Configuration implements ConfigurationInterface
                             static function (array $protocols): array {
                                 foreach ($protocols as $protocol) {
                                     if (!preg_match('/^[a-z][a-z0-9\-+.]*$/i', (string) $protocol)) {
-                                        throw new \InvalidArgumentException(sprintf('The protocol name "%s" must be a valid URI scheme.', $protocol));
+                                        throw new \InvalidArgumentException(\sprintf('The protocol name "%s" must be a valid URI scheme.', $protocol));
                                     }
                                 }
 
@@ -879,11 +879,11 @@ class Configuration implements ConfigurationInterface
                             static function (array $allowedProperties): array {
                                 foreach ($allowedProperties as $property => $regex) {
                                     if (false === @preg_match(WysiwygStyleProcessor::prepareRegex($regex), '')) {
-                                        throw new \InvalidArgumentException(sprintf('The regex "%s" for property "%s" is invalid.', $regex, $property));
+                                        throw new \InvalidArgumentException(\sprintf('The regex "%s" for property "%s" is invalid.', $regex, $property));
                                     }
 
                                     if (str_contains($regex, '.*')) {
-                                        throw new \InvalidArgumentException(sprintf('The regex "%s" for property "%s" contains ".*" which is not allowed due to security reasons.', $regex, $property));
+                                        throw new \InvalidArgumentException(\sprintf('The regex "%s" for property "%s" contains ".*" which is not allowed due to security reasons.', $regex, $property));
                                     }
                                 }
 

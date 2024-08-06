@@ -79,7 +79,7 @@ class PurgeData extends Backend implements MaintenanceModuleInterface
 			foreach ($config['affected'] as $table)
 			{
 				$objCount = $db->execute("SELECT COUNT(*) AS count FROM " . $table);
-				$arrJobs[$key]['affected'] .= '<br>' . $table . ': <span>' . sprintf($GLOBALS['TL_LANG']['MSC']['entries'], $objCount->count) . ', ' . $this->getReadableSize($db->getSizeOf($table), 0) . '</span>';
+				$arrJobs[$key]['affected'] .= '<br>' . $table . ': <span>' . \sprintf($GLOBALS['TL_LANG']['MSC']['entries'], $objCount->count) . ', ' . $this->getReadableSize($db->getSizeOf($table), 0) . '</span>';
 			}
 		}
 
@@ -123,7 +123,7 @@ class PurgeData extends Backend implements MaintenanceModuleInterface
 					$total = iterator_count($objFiles);
 				}
 
-				$arrJobs[$key]['affected'] .= '<br>' . $folder . ': <span>' . sprintf($GLOBALS['TL_LANG']['MSC']['files'], $total) . '</span>';
+				$arrJobs[$key]['affected'] .= '<br>' . $folder . ': <span>' . \sprintf($GLOBALS['TL_LANG']['MSC']['files'], $total) . '</span>';
 			}
 		}
 

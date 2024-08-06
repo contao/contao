@@ -100,7 +100,7 @@ class RootPageDependentSelectListener
             $title = $this->translator->trans('tl_content.editalias', [$id], 'contao_content');
             $href = $this->router->generate('contao_backend', ['do' => 'themes', 'table' => 'tl_module', 'act' => 'edit', 'id' => $id, 'popup' => '1', 'nb' => '1']);
 
-            $wizards[$rootPage] = sprintf(
+            $wizards[$rootPage] = \sprintf(
                 ' <a href="%s" title="%s" onclick="Backend.openModalIframe({\'title\':\'%s\',\'url\':this.href});return false">%s</a>',
                 StringUtil::specialcharsUrl($href),
                 StringUtil::specialchars($title),
@@ -125,7 +125,7 @@ class RootPageDependentSelectListener
         $pages = [];
 
         foreach ($rows->iterateAssociative() as $rootPage) {
-            $pages[$rootPage['id']] = sprintf('%s (%s)', $rootPage['title'], $rootPage['language']);
+            $pages[$rootPage['id']] = \sprintf('%s (%s)', $rootPage['title'], $rootPage['language']);
         }
 
         return $pages;

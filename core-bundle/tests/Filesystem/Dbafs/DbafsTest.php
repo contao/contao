@@ -1419,7 +1419,7 @@ class DbafsTest extends TestCase
     {
         $hash = md5((string) $index);
 
-        $uuid = sprintf(
+        $uuid = \sprintf(
             '%08s-%04s-1%03s-8000-000000000000',
             substr($hash, -8),
             substr($hash, -12, 4),

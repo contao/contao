@@ -84,7 +84,6 @@ services:
         arguments:
             - '%kernel.project_dir%'
             - '%contao.upload_path%'
-            - '%contao.image.target_dir%'
 
     contao.command.migrate:
         class: Contao\CoreBundle\Command\MigrateCommand

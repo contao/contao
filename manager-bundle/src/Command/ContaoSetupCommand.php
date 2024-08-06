@@ -101,10 +101,8 @@ class ContaoSetupCommand extends Command
         $commands = [
             ['skeleton:install', $this->webDir, '--env=prod'],
             ['assets:install', $this->webDir, '--symlink', '--relative', '--env=prod'],
-            // Run contao:symlinks before contao:install in case the assets directory is
-            // still in the root folder (backwards compatibility)
-            ['contao:symlinks', $this->webDir, '--env=prod'],
             ['contao:install', $this->webDir, '--env=prod'],
+            ['contao:symlinks', $this->webDir, '--env=prod'],
             ['cache:clear', '--no-warmup', '--env=prod'],
             ['cache:clear', '--no-warmup', '--env=dev'],
             ['cache:warmup', '--env=prod'],
@@ -141,7 +139,7 @@ class ContaoSetupCommand extends Command
         );
 
         if (!$process->isSuccessful()) {
-            throw new \RuntimeException(sprintf('An error occurred while executing the "%s" command: %s', implode(' ', $command), $process->getErrorOutput()));
+            throw new \RuntimeException(\sprintf('An error occurred while executing the "%s" command: %s', implode(' ', $command), $process->getErrorOutput()));
         }
     }
 

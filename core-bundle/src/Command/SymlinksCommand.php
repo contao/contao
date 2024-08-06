@@ -41,8 +41,6 @@ class SymlinksCommand extends Command
 
     private int $statusCode = Command::SUCCESS;
 
-    private bool $symlinkAssets = false;
-
     public function __construct(
         private readonly string $projectDir,
         private readonly string $uploadPath,
@@ -61,19 +59,13 @@ class SymlinksCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->webDir = $input->getArgument('target') ?? 'public';
-        $this->symlinkAssets = 'assets' === $this->getContaoComponentDir();
 
         $this->generateSymlinks();
 
-        $io = new SymfonyStyle($input, $output);
-
         if ($this->rows) {
+            $io = new SymfonyStyle($input, $output);
             $io->newLine();
             $io->table(['', 'Symlink', 'Target / Error'], $this->rows);
-        }
-
-        if ($this->symlinkAssets) {
-            $io->note('Installing the Contao components into the "assets" directory has been deprecated and will no longer work in Contao 6. Set "extra.contao-component-dir" to "public/assets" in your composer.json.');
         }
 
         return $this->statusCode;
@@ -95,15 +87,8 @@ class SymlinksCommand extends Command
         $this->symlinkModules();
         $this->symlinkThemes();
 
-        // Symlink the assets directory if the Contao components were installed there
-        // instead of in public/assets (backwards compatibility)
-        if ($this->symlinkAssets) {
-            $this->symlink('assets', Path::join($this->webDir, 'assets'));
-        } elseif (is_link($symlink = Path::join($this->projectDir, $this->webDir, 'assets'))) {
-            $fs->remove($symlink);
-        }
-
-        // Symlink the themes directory
+        // Symlink the assets and themes directory
+        $this->symlink('assets', Path::join($this->webDir, 'assets'));
         $this->symlink('system/themes', Path::join($this->webDir, 'system/themes'));
 
         // Symlinks the logs directory
@@ -184,7 +169,7 @@ class SymlinksCommand extends Command
             SymlinkUtil::symlink($target, $link, $this->projectDir);
 
             $this->rows[] = [
-                sprintf(
+                \sprintf(
                     '<fg=green;options=bold>%s</>',
                     '\\' === \DIRECTORY_SEPARATOR ? 'OK' : "\xE2\x9C\x94", // HEAVY CHECK MARK (U+2714)
                 ),
@@ -195,12 +180,12 @@ class SymlinksCommand extends Command
             $this->statusCode = Command::FAILURE;
 
             $this->rows[] = [
-                sprintf(
+                \sprintf(
                     '<fg=red;options=bold>%s</>',
                     '\\' === \DIRECTORY_SEPARATOR ? 'ERROR' : "\xE2\x9C\x98", // HEAVY BALLOT X (U+2718)
                 ),
                 $link,
-                sprintf('<error>%s</error>', $e->getMessage()),
+                \sprintf('<error>%s</error>', $e->getMessage()),
             ];
         }
     }
@@ -248,9 +233,9 @@ class SymlinksCommand extends Command
                 unset($files[$key]);
 
                 $this->rows[] = [
-                    sprintf('<fg=yellow;options=bold>%s</>', '\\' === \DIRECTORY_SEPARATOR ? 'WARNING' : '!'),
+                    \sprintf('<fg=yellow;options=bold>%s</>', '\\' === \DIRECTORY_SEPARATOR ? 'WARNING' : '!'),
                     Path::join($this->webDir, $prepend, $path),
-                    sprintf('<comment>Skipped because %s will be symlinked.</comment>', Path::join($prepend, $otherPath)),
+                    \sprintf('<comment>Skipped because %s will be symlinked.</comment>', Path::join($prepend, $otherPath)),
                 ];
             }
         }
@@ -261,22 +246,5 @@ class SymlinksCommand extends Command
     private function getRelativePath(string $path): string
     {
         return Path::makeRelative($path, $this->projectDir);
-    }
-
-    private function getContaoComponentDir(): string|null
-    {
-        $fs = new Filesystem();
-
-        if (!$fs->exists($composerJsonFilePath = Path::join($this->projectDir, 'composer.json'))) {
-            return null;
-        }
-
-        $composerConfig = json_decode(file_get_contents($composerJsonFilePath), true, 512, JSON_THROW_ON_ERROR);
-
-        if (null === ($componentDir = $composerConfig['extra']['contao-component-dir'] ?? null)) {
-            return null;
-        }
-
-        return $componentDir;
     }
 }

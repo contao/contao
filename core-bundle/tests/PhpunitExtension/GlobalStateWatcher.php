@@ -52,7 +52,7 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
     {
         foreach (['globalKeys', 'globals', 'staticMembers', 'phpIni', 'setFunctions', 'fileSystem', 'constants', 'env'] as $member) {
             if ($this->$member !== ($after = $this->{'build'.$member}())) {
-                throw new ExpectationFailedException(sprintf("\nUnexpected change to global state (%s) in %s\n%s", $member, $test, $this->diff($this->$member, $after)));
+                throw new ExpectationFailedException(\sprintf("\nUnexpected change to global state (%s) in %s\n%s", $member, $test, $this->diff($this->$member, $after)));
             }
         }
     }

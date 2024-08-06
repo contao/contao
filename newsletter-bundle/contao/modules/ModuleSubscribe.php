@@ -176,61 +176,56 @@ class ModuleSubscribe extends Module
 			return;
 		}
 
-		if ($optInToken->isConfirmed())
+		if (!$optInToken->isConfirmed())
 		{
-			$this->Template->mclass = 'error';
-			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['tokenConfirmed'];
+			$arrRecipients = array();
 
-			return;
-		}
-
-		$arrRecipients = array();
-
-		// Validate the token
-		foreach ($arrIds as $intId)
-		{
-			if (!$objRecipient = NewsletterRecipientsModel::findById($intId))
+			// Validate the token
+			foreach ($arrIds as $intId)
 			{
-				$this->Template->mclass = 'error';
-				$this->Template->message = $GLOBALS['TL_LANG']['MSC']['invalidToken'];
+				if (!$objRecipient = NewsletterRecipientsModel::findById($intId))
+				{
+					$this->Template->mclass = 'error';
+					$this->Template->message = $GLOBALS['TL_LANG']['MSC']['invalidToken'];
 
-				return;
+					return;
+				}
+
+				if ($optInToken->getEmail() != $objRecipient->email)
+				{
+					$this->Template->mclass = 'error';
+					$this->Template->message = $GLOBALS['TL_LANG']['MSC']['tokenEmailMismatch'];
+
+					return;
+				}
+
+				$arrRecipients[] = $objRecipient;
 			}
 
-			if ($optInToken->getEmail() != $objRecipient->email)
-			{
-				$this->Template->mclass = 'error';
-				$this->Template->message = $GLOBALS['TL_LANG']['MSC']['tokenEmailMismatch'];
+			$time = time();
+			$arrAdd = array();
+			$arrCids = array();
 
-				return;
+			// Activate the subscriptions
+			foreach ($arrRecipients as $objRecipient)
+			{
+				$arrAdd[] = $objRecipient->id;
+				$arrCids[] = $objRecipient->pid;
+
+				$objRecipient->tstamp = $time;
+				$objRecipient->active = true;
+				$objRecipient->save();
 			}
 
-			$arrRecipients[] = $objRecipient;
-		}
+			$optInToken->confirm();
 
-		$time = time();
-		$arrAdd = array();
-		$arrCids = array();
-
-		// Activate the subscriptions
-		foreach ($arrRecipients as $objRecipient)
-		{
-			$arrAdd[] = $objRecipient->id;
-			$arrCids[] = $objRecipient->pid;
-
-			$objRecipient->tstamp = $time;
-			$objRecipient->active = true;
-			$objRecipient->save();
-		}
-
-		$optInToken->confirm();
-
-		// HOOK: post activation callback
-		if (isset($GLOBALS['TL_HOOKS']['activateRecipient']) && \is_array($GLOBALS['TL_HOOKS']['activateRecipient']))
-		{
-			foreach ($GLOBALS['TL_HOOKS']['activateRecipient'] as $callback)
+			// HOOK: post activation callback
+			if (isset($GLOBALS['TL_HOOKS']['activateRecipient']) && \is_array($GLOBALS['TL_HOOKS']['activateRecipient']))
 			{
-				System::importStatic($callback[0])->{$callback[1]}($optInToken->getEmail(), $arrAdd, $arrCids, $this);
+				foreach ($GLOBALS['TL_HOOKS']['activateRecipient'] as $callback)
+				{
+					System::importStatic($callback[0])->{$callback[1]}($optInToken->getEmail(), $arrAdd, $arrCids, $this);
+				}
 			}
 		}
 
@@ -371,7 +366,7 @@ class ModuleSubscribe extends Module
 
 		// Send the token
 		$optInToken->send(
-			sprintf($GLOBALS['TL_LANG']['MSC']['nl_subject'], Idna::decode(Environment::get('host'))),
+			\sprintf($GLOBALS['TL_LANG']['MSC']['nl_subject'], Idna::decode(Environment::get('host'))),
 			System::getContainer()->get('contao.string.simple_token_parser')->parse($this->nl_subscribe, $arrData)
 		);
 

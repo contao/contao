@@ -40,7 +40,7 @@ class DefaultIndexer implements IndexerInterface
         }
 
         if (($canonical = $document->extractCanonicalUri()) && (string) $canonical !== (string) $document->getUri()) {
-            $this->throwBecause(sprintf('Ignored because canonical URI "%s" does not match document URI.', $canonical));
+            $this->throwBecause(\sprintf('Ignored because canonical URI "%s" does not match document URI.', $canonical));
         }
 
         try {

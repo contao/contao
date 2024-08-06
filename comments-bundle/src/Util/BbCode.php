@@ -159,24 +159,24 @@ final class BbCode
 
             switch ($node->tag) {
                 case 'b':
-                    return sprintf('<strong>%s</strong>', $children);
+                    return \sprintf('<strong>%s</strong>', $children);
 
                 case 'i':
-                    return sprintf('<em>%s</em>', $children);
+                    return \sprintf('<em>%s</em>', $children);
 
                 case 'u':
-                    return sprintf('<span style="text-decoration: underline">%s</span>', $children);
+                    return \sprintf('<span style="text-decoration: underline">%s</span>', $children);
 
                 case 'quote':
                     if (null !== $node->value) {
-                        return sprintf(
+                        return \sprintf(
                             '<blockquote><p>%s</p>%s</blockquote>',
-                            sprintf($GLOBALS['TL_LANG']['MSC']['com_quote'], StringUtil::specialchars($node->value, true)),
+                            \sprintf($GLOBALS['TL_LANG']['MSC']['com_quote'], StringUtil::specialchars($node->value, true)),
                             $children,
                         );
                     }
 
-                    return sprintf('<blockquote>%s</blockquote>', $children);
+                    return \sprintf('<blockquote>%s</blockquote>', $children);
 
                 case 'email':
                     $uri = $node->value ?: $node->getFirstChildValue() ?? '';
@@ -184,7 +184,7 @@ final class BbCode
 
                     try {
                         if (Validator::isEmail($uri)) {
-                            return sprintf('<a href="mailto:%s">%s</a>', StringUtil::specialchars(Idna::encodeEmail($uri), true), StringUtil::specialchars($title, true));
+                            return \sprintf('<a href="mailto:%s">%s</a>', StringUtil::specialchars(Idna::encodeEmail($uri), true), StringUtil::specialchars($title, true));
                         }
                     } catch (\InvalidArgumentException) {
                     }
@@ -197,7 +197,7 @@ final class BbCode
 
                     try {
                         if (Validator::isUrl($uri)) {
-                            return sprintf('<a href="%s" rel="noopener noreferrer nofollow">%s</a>', StringUtil::specialchars(Idna::encodeUrl($uri), true), StringUtil::specialchars($title, true));
+                            return \sprintf('<a href="%s" rel="noopener noreferrer nofollow">%s</a>', StringUtil::specialchars(Idna::encodeUrl($uri), true), StringUtil::specialchars($title, true));
                         }
                     } catch (\InvalidArgumentException) {
                     }
@@ -210,7 +210,7 @@ final class BbCode
         }
 
         if (Node::TYPE_CODE === $node->type) {
-            return sprintf('<div class="code"><p>%s</p><pre>%s</pre></div>', $GLOBALS['TL_LANG']['MSC']['com_code'], StringUtil::specialchars($node->value, true));
+            return \sprintf('<div class="code"><p>%s</p><pre>%s</pre></div>', $GLOBALS['TL_LANG']['MSC']['com_code'], StringUtil::specialchars($node->value, true));
         }
 
         if (Node::TYPE_TEXT === $node->type) {

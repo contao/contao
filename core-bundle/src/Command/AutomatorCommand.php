@@ -50,7 +50,7 @@ class AutomatorCommand extends Command
         try {
             $this->runAutomator($input, $output);
         } catch (InvalidArgumentException $e) {
-            $output->writeln(sprintf('%s (see help contao:automator).', $e->getMessage()));
+            $output->writeln(\sprintf('%s (see help contao:automator).', $e->getMessage()));
 
             return Command::FAILURE;
         }
@@ -108,7 +108,7 @@ class AutomatorCommand extends Command
 
         if (null !== $task) {
             if (!\in_array($task, $commands, true)) {
-                throw new InvalidArgumentException(sprintf('Invalid task "%s"', $task)); // no full stop here
+                throw new InvalidArgumentException(\sprintf('Invalid task "%s"', $task)); // no full stop here
             }
 
             return $task;

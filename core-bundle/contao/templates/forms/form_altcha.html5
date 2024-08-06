@@ -20,5 +20,9 @@ $GLOBALS['TL_BODY'][] = sprintf('<script src="%s" type="module"></script>', $thi
       <p class="error"><?= $this->getErrorAsString() ?></p>
     <?php endif; ?>
 
-    <altcha-widget<?= $this->altchaAttributes->set('workerurl', $this->asset('js/worker.js', 'contao-components/altcha')) ?>></altcha-widget>
+    <?php if (!$this->canUseAltcha): ?>
+      <p class="error"><?= $this->trans('ERR.altchaInsecureConnection') ?></p>
+    <?php else: ?>
+      <altcha-widget<?= $this->altchaAttributes->set('workerurl', $this->asset('js/worker.js', 'contao-components/altcha')) ?>></altcha-widget>
+    <?php endif; ?>
 <?php $this->endblock(); ?>

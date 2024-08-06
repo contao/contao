@@ -120,7 +120,7 @@ class FormPassword extends Widget
 
 		if (mb_strlen($varInput) < $intLength)
 		{
-			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['passwordLength'], $intLength));
+			$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['passwordLength'], $intLength));
 		}
 
 		$varInput = parent::validator($varInput);
@@ -146,7 +146,7 @@ class FormPassword extends Widget
 	 */
 	public function parse($arrAttributes=null)
 	{
-		$this->confirmLabel = sprintf($GLOBALS['TL_LANG']['MSC']['confirm'][0], $this->strLabel);
+		$this->confirmLabel = \sprintf($GLOBALS['TL_LANG']['MSC']['confirm'][0], $this->strLabel);
 
 		return parent::parse($arrAttributes);
 	}
@@ -158,7 +158,7 @@ class FormPassword extends Widget
 	 */
 	public function generate()
 	{
-		return sprintf(
+		return \sprintf(
 			'<input type="password" name="%s" id="ctrl_%s" class="text password%s" value="" autocomplete="new-password"%s%s',
 			$this->strName,
 			$this->strId,

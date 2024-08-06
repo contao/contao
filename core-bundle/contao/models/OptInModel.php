@@ -177,7 +177,7 @@ class OptInModel extends Model
 
 		if ($objCount->count > 0)
 		{
-			throw new \LogicException(sprintf('Token "%s" already contains related records', $this->token));
+			throw new \LogicException(\sprintf('Token "%s" already contains related records', $this->token));
 		}
 
 		foreach ($arrRelated as $strTable=>$arrIds)

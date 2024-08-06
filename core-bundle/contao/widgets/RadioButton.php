@@ -124,12 +124,12 @@ class RadioButton extends Widget
 		// Add an unknown option, so it is not lost when saving the record (see #920)
 		if (isset($this->unknownOption[0]))
 		{
-			$arrAllOptions[] = array('value' => $this->unknownOption[0], 'label' => sprintf($GLOBALS['TL_LANG']['MSC']['unknownOption'], $this->unknownOption[0]));
+			$arrAllOptions[] = array('value' => $this->unknownOption[0], 'label' => \sprintf($GLOBALS['TL_LANG']['MSC']['unknownOption'], $this->unknownOption[0]));
 		}
 
 		foreach ($arrAllOptions as $i=>$arrOption)
 		{
-			$arrOptions[] = sprintf(
+			$arrOptions[] = \sprintf(
 				'<span><input type="radio" name="%s" id="opt_%s" class="tl_radio" value="%s"%s%s data-action="focus->contao--scroll-offset#store"> <label for="opt_%s">%s</label></span>',
 				$this->strName,
 				$this->strId . '_' . $i,
@@ -147,7 +147,7 @@ class RadioButton extends Widget
 			$arrOptions[]= '<p class="tl_noopt">' . $GLOBALS['TL_LANG']['MSC']['noResult'] . '</p>';
 		}
 
-		return sprintf(
+		return \sprintf(
 			'<fieldset id="ctrl_%s" class="tl_radio_container%s"><legend>%s%s%s%s</legend>%s</fieldset>%s',
 			$this->strId,
 			$this->strClass ? ' ' . $this->strClass : '',

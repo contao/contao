@@ -97,7 +97,7 @@ class InsertTagParser implements ResetInterface
         }
 
         if (isset($this->blockSubscriptions[$subscription->name])) {
-            throw new \InvalidArgumentException(sprintf('The insert tag "%s" is already registered as a block insert tag.', $subscription->name));
+            throw new \InvalidArgumentException(\sprintf('The insert tag "%s" is already registered as a block insert tag.', $subscription->name));
         }
 
         $this->subscriptions[$subscription->name] = $subscription;
@@ -110,7 +110,7 @@ class InsertTagParser implements ResetInterface
         }
 
         if (isset($this->subscriptions[$subscription->name])) {
-            throw new \InvalidArgumentException(sprintf('The block insert tag "%s" is already registered as a regular insert tag.', $subscription->name));
+            throw new \InvalidArgumentException(\sprintf('The block insert tag "%s" is already registered as a regular insert tag.', $subscription->name));
         }
 
         $this->blockSubscriptions[$subscription->name] = $subscription;
@@ -248,7 +248,7 @@ class InsertTagParser implements ResetInterface
         $name = array_shift($parameters);
 
         if (!preg_match('/^[a-z\x80-\xFF][a-z0-9_\x80-\xFF]*$/i', $name)) {
-            throw new \InvalidArgumentException(sprintf('Invalid insert tag name "%s"', $name));
+            throw new \InvalidArgumentException(\sprintf('Invalid insert tag name "%s"', $name));
         }
 
         if ($parameters) {
@@ -256,7 +256,7 @@ class InsertTagParser implements ResetInterface
 
             foreach ($parameterMatches[0] ?? [''] as $index => $parameterMatch) {
                 if (!str_starts_with($parameterMatch, '::')) {
-                    throw new \InvalidArgumentException(sprintf('Invalid insert tag parameter syntax "%s"', $parameters[0]));
+                    throw new \InvalidArgumentException(\sprintf('Invalid insert tag parameter syntax "%s"', $parameters[0]));
                 }
 
                 $parameterMatches[0][$index] = substr($parameterMatch, 2);
@@ -482,7 +482,7 @@ class InsertTagParser implements ResetInterface
             );
         }
 
-        throw new \InvalidArgumentException(sprintf('Unsupported insert tag class "%s"', $tag::class));
+        throw new \InvalidArgumentException(\sprintf('Unsupported insert tag class "%s"', $tag::class));
     }
 
     private function unresolveTag(InsertTag $tag): ParsedInsertTag
@@ -499,7 +499,7 @@ class InsertTagParser implements ResetInterface
             );
         }
 
-        throw new \InvalidArgumentException(sprintf('Unsupported insert tag class "%s"', $tag::class));
+        throw new \InvalidArgumentException(\sprintf('Unsupported insert tag class "%s"', $tag::class));
     }
 
     private function resolveParameters(ParsedParameters $parameters): ResolvedParameters

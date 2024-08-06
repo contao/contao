@@ -32,9 +32,7 @@ jobs:
               uses: actions/setup-node@v4
               with:
                   node-version: 20
-
-            - name: Enable corepack
-              run: corepack enable
+                  cache: npm
 
             - name: Install Symfony CLI
               run: |
@@ -49,11 +47,13 @@ jobs:
                   show-progress: false
 
             - name: Install the dependencies
-              run: pnpm add contao-e2e-tests
+              run: |
+                  npm ci
+                  npm install contao-e2e-tests --save-dev
 
             - name: Run the Cypress tests
               id: cypress
-              run: pnpm contao-e2e-tests
+              run: npm run contao-e2e-tests
               env:
                   DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
 

@@ -99,7 +99,7 @@ $this->wrapperAttributes = $this
   </script>
 <?php else: ?>
   <script<?= $this->attr()->setIfExists('nonce', $this->nonce('script-src')) ?>>
-    document.currentScript.previousElementSibling.querySelector('form').addEventListener('submit', e => {
+    document.currentScript.previousElementSibling.querySelector('form')?.addEventListener('submit', e => {
       // Prevent double form submission
       if (e.submitter) {
         setTimeout(() => e.submitter.disabled = true);

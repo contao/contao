@@ -1672,6 +1672,7 @@ table.tl_listing {
 	position: absolute;
 	bottom: 0;
 	left: 0;
+	z-index: 1;
 	background: var(--content-bg);
 	line-height: 11px;
 	text-align: center;
@@ -3051,7 +3052,7 @@ fieldset.collapsed > legend {
 	}
 
 	#main .content {
-		margin: 15px 10px;
+		margin: 0 10px 10px;
 	}
 
 	#main_headline {

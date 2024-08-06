@@ -29,7 +29,7 @@ final class ContaoModuleBundle extends Bundle
         $this->path = Path::join($projectDir, 'system/modules', $this->name);
 
         if (!is_dir($this->path)) {
-            throw new \LogicException(sprintf('The module folder "system/modules/%s" does not exist.', $this->name));
+            throw new \LogicException(\sprintf('The module folder "system/modules/%s" does not exist.', $this->name));
         }
     }
 }

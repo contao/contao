@@ -49,6 +49,6 @@ class FrontendShare extends Frontend
 			return new RedirectResponse('https://twitter.com/intent/tweet?url=' . rawurlencode($url) . '&text=' . rawurlencode($text));
 		}
 
-		throw new BadRequestHttpException(sprintf('Invalid action "%s"', Input::get('p')));
+		throw new BadRequestHttpException(\sprintf('Invalid action "%s"', Input::get('p')));
 	}
 }

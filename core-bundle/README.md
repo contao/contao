@@ -23,7 +23,7 @@ composer config extra.symfony.allow-contrib true
 Add the `contao-component-dir` to the `extra` section of your `composer.json` file.
 
 ```
-composer config extra.contao-component-dir public/assets
+composer config extra.contao-component-dir assets
 ```
 
 ## Installation
