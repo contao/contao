@@ -375,12 +375,15 @@
       </trans-unit>
       <trans-unit id="ERR.altchaVerificationFailed">
         <source>ALTCHA antispam verification failed. Are you a human or a robot?</source>
+        <target>ALTCHA проверка на спам не удалась. Вы человек или робот?</target>
       </trans-unit>
       <trans-unit id="ERR.altchaWidgetError">
         <source>Verification failed. Try again later.</source>
+        <target>Верификация не удалась. Попробуйте позже.</target>
       </trans-unit>
       <trans-unit id="ERR.altchaInsecureConnection">
         <source>ALTCHA is not available without a secure HTTPS connection. If your production website does not use HTTPS (not recommended), please use the security question instead.</source>
+        <target>ALTCHA не доступен без безопасного HTTPS-соединения. Если ваш производственный сайт не использует HTTPS (не рекомендуется), пожалуйста, используйте вместо этого секретный вопрос.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -788,9 +791,11 @@
       </trans-unit>
       <trans-unit id="FFL.altcha.0">
         <source>ALTCHA antispam</source>
+        <target>ALTCHA антиспам</target>
       </trans-unit>
       <trans-unit id="FFL.altcha.1">
         <source>Provides an ALTCHA antispam form field to verify that the form is submitted by a human (CAPTCHA).</source>
+        <target>Предоставляет поле формы ALTCHA антиспам для проверки того, что форма отправлена человеком (CAPTCHA).</target>
       </trans-unit>
       <trans-unit id="FFL.captcha.0">
         <source>Security question</source>
@@ -2634,9 +2639,11 @@
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb</source>
+        <target>Навигационная цепочка</target>
       </trans-unit>
       <trans-unit id="MSC.mainNavigation">
         <source>Main</source>
+        <target>Главная</target>
       </trans-unit>
       <trans-unit id="MSC.headerNavigation">
         <source>Header</source>
@@ -2644,6 +2651,7 @@
       </trans-unit>
       <trans-unit id="MSC.pagination">
         <source>Pagination</source>
+        <target>Разбивка на страницы</target>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.unicodeLowercase">
         <source>Unicode numbers and lowercase letters</source>
@@ -2887,18 +2895,23 @@
       </trans-unit>
       <trans-unit id="MSC.altchaFooter">
         <source>Protected by &lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;</source>
+        <target>Защищено &lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;</target>
       </trans-unit>
       <trans-unit id="MSC.altchaLabel">
         <source>I'm not a robot</source>
+        <target>Я не робот</target>
       </trans-unit>
       <trans-unit id="MSC.altchaVerified">
         <source>I'm human</source>
+        <target>Я человек</target>
       </trans-unit>
       <trans-unit id="MSC.altchaVerifying">
         <source>Verifying …</source>
+        <target>Проверка...</target>
       </trans-unit>
       <trans-unit id="MSC.altchaWaitAlert">
         <source>Verifying … please wait.</source>
+        <target>Проверка... пожалуйста, подождите.</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

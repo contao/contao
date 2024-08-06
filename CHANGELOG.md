@@ -2,6 +2,17 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.4.0-RC3] (2024-08-06)
+
+**Fixed issues:**
+
+- [#7408] Fix several Turbo issues ([m-vo])
+- [#7410] Allow ALTCHA version 0.7 ([leofeyer])
+- [#7395] Simplify the automatic ACE editor height ([m-vo])
+- [#7406] Revert 'Move the `assets` folder to `public/assets`' ([leofeyer])
+- [#7394] Add a Stimulus controller to configure TinyMCE instances ([m-vo])
+- [#7393] Add a note about `$GLOBALS['objPage']` to the DEPRECATED.md file ([leofeyer])
+
 ## [5.4.0-RC2] (2024-07-30)
 
 **Fixed issues:**
@@ -50,6 +61,7 @@ This project adheres to [Semantic Versioning].
 - [#7229] Fix the `.nogrid` backwards compatibility layer ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.4.0-RC3]: https://github.com/contao/contao/releases/tag/5.4.0-RC3
 [5.4.0-RC2]: https://github.com/contao/contao/releases/tag/5.4.0-RC2
 [5.4.0-RC1]: https://github.com/contao/contao/releases/tag/5.4.0-RC1
 [bytehead]: https://github.com/bytehead
@@ -96,3 +108,9 @@ This project adheres to [Semantic Versioning].
 [#7378]: https://github.com/contao/contao/pull/7378
 [#7384]: https://github.com/contao/contao/pull/7384
 [#7387]: https://github.com/contao/contao/pull/7387
+[#7393]: https://github.com/contao/contao/pull/7393
+[#7394]: https://github.com/contao/contao/pull/7394
+[#7395]: https://github.com/contao/contao/pull/7395
+[#7406]: https://github.com/contao/contao/pull/7406
+[#7408]: https://github.com/contao/contao/pull/7408
+[#7410]: https://github.com/contao/contao/pull/7410

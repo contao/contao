@@ -27,9 +27,11 @@
       </trans-unit>
       <trans-unit id="tl_module.ariaLabel.0">
         <source>ARIA label</source>
+        <target>ARIA etiketi</target>
       </trans-unit>
       <trans-unit id="tl_module.ariaLabel.1">
         <source>Here you can enter an ARIA label. Avoid using the role in the label, as screen readers read out both the label and the role. For example, &quot;Main navigation&quot; would be read as &quot;Main navigation navigation&quot;.</source>
+        <target>Buraya bir ARIA etiketi yazabilirsiniz. Etikette rolü kullanmaktan kaçının, çünkü ekran okuyucular hem etiketi hem de rolü okur. Örneğin, &quot;Ana gezinme&quot; &quot;Ana gezinme gezinme&quot; olarak okunur.</target>
       </trans-unit>
       <trans-unit id="tl_module.levelOffset.0">
         <source>Start level</source>
@@ -281,11 +283,11 @@
       </trans-unit>
       <trans-unit id="tl_module.searchType.0">
         <source>Search form layout</source>
-        <target>Arama formu düzeni</target>
+        <target>Arama formu yerleşimi</target>
       </trans-unit>
       <trans-unit id="tl_module.searchType.1">
         <source>Here you can select the search form layout.</source>
-        <target>Buradan arama formu düzenini seçebilirsiniz.</target>
+        <target>Buradan arama formu yerleşimini seçebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_module.searchTpl.0">
         <source>Search results template</source>
@@ -297,11 +299,11 @@
       </trans-unit>
       <trans-unit id="tl_module.inColumn.0">
         <source>Layout section</source>
-        <target>Düzen bölümü</target>
+        <target>Yerleşim bölümü</target>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.1">
         <source>Please choose the layout section whose articles you want to list.</source>
-        <target>Makalenin listelenmesini istediğiniz düzen bölümünü seçin.</target>
+        <target>Makalenin görüntülenmesini istediğiniz yerleşim bölümünü seçin.</target>
       </trans-unit>
       <trans-unit id="tl_module.skipFirst.0">
         <source>Skip items</source>
@@ -333,7 +335,7 @@
       </trans-unit>
       <trans-unit id="tl_module.fullsize.1">
         <source>Open the full-size image in a lightbox or the link in a new browser window.</source>
-        <target>Tam boyutlu görüntüyü bir lightbox içinde ya da bağlantıyı yeni bir tarayıcı penceresinde açar.</target>
+        <target>Tam boyutlu görüntüyü bir Lightbox içinde ya da bağlantıyı yeni bir tarayıcı penceresinde açar.</target>
       </trans-unit>
       <trans-unit id="tl_module.useCaption.0">
         <source>Show caption</source>

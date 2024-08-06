@@ -2639,11 +2639,11 @@
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb</source>
-        <target>Seitenpfad</target>
+        <target>Navigationspfad</target>
       </trans-unit>
       <trans-unit id="MSC.mainNavigation">
         <source>Main</source>
-        <target>Haupt</target>
+        <target>Hauptmenü</target>
       </trans-unit>
       <trans-unit id="MSC.headerNavigation">
         <source>Header</source>

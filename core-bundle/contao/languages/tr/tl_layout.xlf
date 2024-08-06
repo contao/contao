@@ -7,15 +7,15 @@
       </trans-unit>
       <trans-unit id="tl_layout.name.1">
         <source>Please enter the layout title.</source>
-        <target>Lütfen düzen başlığını yazın.</target>
+        <target>Lütfen yerleşim başlığını yazın.</target>
       </trans-unit>
       <trans-unit id="tl_layout.fallback.0">
         <source>Default layout</source>
-        <target>Varsayılan düzen</target>
+        <target>Varsayılan yerleşim</target>
       </trans-unit>
       <trans-unit id="tl_layout.fallback.1">
         <source>Make the layout the default layout.</source>
-        <target>Bu düzeni varsayılan yapar.</target>
+        <target>Bu yerleşimi varsayılan yapar.</target>
       </trans-unit>
       <trans-unit id="tl_layout.rows.0">
         <source>Rows</source>
@@ -131,11 +131,11 @@
       </trans-unit>
       <trans-unit id="tl_layout.sections.0">
         <source>Custom layout sections</source>
-        <target>Özel düzen bölümleri</target>
+        <target>Özel yerleşim bölümleri</target>
       </trans-unit>
       <trans-unit id="tl_layout.sections.1">
         <source>Here you can define custom layout sections.</source>
-        <target>Buradan özel düzen bölümlerini ayarlayabilirsiniz.</target>
+        <target>Buradan özel yerleşim bölümlerini ayarlayabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_layout.framework.0">
         <source>CSS framework</source>
@@ -147,19 +147,19 @@
       </trans-unit>
       <trans-unit id="tl_layout.layout.css.0">
         <source>Layout builder</source>
-        <target>Düzen oluşturucu</target>
+        <target>Yerleşim oluşturucu</target>
       </trans-unit>
       <trans-unit id="tl_layout.layout.css.1">
         <source>Generates a CSS layout based on the page layout settings. This component is required for the page layout generator to work!</source>
-        <target>Sayfa düzeni ayarlarına göre bir CSS düzeni oluşturur. Sayfa düzeni oluşturucunun çalışabilmesi için bu bileşen gereklidir!</target>
+        <target>Sayfa yerleşimi ayarlarına göre bir CSS yerleşimi oluşturur. Sayfa yerleşimi oluşturucunun çalışabilmesi için bu bileşen gereklidir!</target>
       </trans-unit>
       <trans-unit id="tl_layout.responsive.css.0">
         <source>Responsive layout</source>
-        <target>Uyumlu düzen</target>
+        <target>Uyumlu yerleşim</target>
       </trans-unit>
       <trans-unit id="tl_layout.responsive.css.1">
         <source>Adds a meta viewport tag to the page header and scales the CSS layout based on the device width.</source>
-        <target>Sayfa üst bilgisine bir meta viewport kod imi ekler ve CSS düzenini aygıt genişliğine göre ölçeklendirir.</target>
+        <target>Sayfa üst bilgisine bir meta viewport kod imi ekler ve CSS yerleşimini aygıt genişliğine göre ölçeklendirir.</target>
       </trans-unit>
       <trans-unit id="tl_layout.grid.css.0">
         <source>12-column grid</source>
@@ -215,7 +215,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.lightboxSize.1">
         <source>Here you can select an image size for the images shown in the lightbox.</source>
-        <target>Buradan ligthbox içinde görüntülenecek görsellerin boyutunu seçebilirsiniz.</target>
+        <target>Buradan Lightbox içinde görüntülenecek görsellerin boyutunu seçebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_layout.defaultImageDensities.0">
         <source>Default image pixel densities</source>
@@ -295,7 +295,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.addJQuery.1">
         <source>Include the jQuery library in the layout.</source>
-        <target>Bu seçenek etkinleştirildiğinde, düzene jQuery kitaplığı eklenir.</target>
+        <target>Bu seçenek etkinleştirildiğinde, yerleşime jQuery kitaplığı eklenir.</target>
       </trans-unit>
       <trans-unit id="tl_layout.jquery.0">
         <source>jQuery templates</source>
@@ -311,7 +311,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.addMooTools.1">
         <source>Include the MooTools library in the layout.</source>
-        <target>Bu seçenek etkinleştirildiğinde, düzene MooTools kitaplığı eklenir.</target>
+        <target>Bu seçenek etkinleştirildiğinde, yerleşime MooTools kitaplığı eklenir.</target>
       </trans-unit>
       <trans-unit id="tl_layout.mootools.0">
         <source>MooTools templates</source>
@@ -355,11 +355,11 @@
       </trans-unit>
       <trans-unit id="tl_layout.static.0">
         <source>Static layout</source>
-        <target>Durağan düzen</target>
+        <target>Sabit yerleşim</target>
       </trans-unit>
       <trans-unit id="tl_layout.static.1">
         <source>Create a static layout with a fixed width and alignment.</source>
-        <target>Sabit genişlik ve hizalama ile bir durağan düzen oluşturur.</target>
+        <target>Sabit genişlik ve hizalama ile bir sabit yerleşim oluşturur.</target>
       </trans-unit>
       <trans-unit id="tl_layout.width.0">
         <source>Overall width</source>
@@ -419,7 +419,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.static_legend">
         <source>Static layout</source>
-        <target>Durağan düzen</target>
+        <target>Sabit yerleşim</target>
       </trans-unit>
       <trans-unit id="tl_layout.jquery_legend">
         <source>jQuery</source>
@@ -455,27 +455,27 @@
       </trans-unit>
       <trans-unit id="tl_layout.new.1">
         <source>Create a new page layout</source>
-        <target>Yeni bir sayfa düzeni ekle</target>
+        <target>Yeni bir sayfa yerleşimi ekle</target>
       </trans-unit>
       <trans-unit id="tl_layout.show">
         <source>Show the details of page layout ID %s</source>
-        <target>%s kimlikli sayfa düzeninin ayrıntılarını görüntüle</target>
+        <target>%s kimlikli sayfa yerleşiminin ayrıntılarını görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_layout.edit">
         <source>Edit page layout ID %s</source>
-        <target>%s kimlikli sayfa düzenini düzenle</target>
+        <target>%s kimlikli sayfa yerleşimini düzenle</target>
       </trans-unit>
       <trans-unit id="tl_layout.copy">
         <source>Duplicate page layout ID %s</source>
-        <target>%s kimlikli sayfa düzenini kopyala</target>
+        <target>%s kimlikli sayfa yerleşimini kopyala</target>
       </trans-unit>
       <trans-unit id="tl_layout.cut">
         <source>Move page layout ID %s</source>
-        <target>%s kimlikli sayfa düzenini taşı</target>
+        <target>%s kimlikli sayfa yerleşimini taşı</target>
       </trans-unit>
       <trans-unit id="tl_layout.delete">
         <source>Delete page layout ID %s</source>
-        <target>%s kimlikli sayfa düzenini sil</target>
+        <target>%s kimlikli sayfa yerleşimini sil</target>
       </trans-unit>
     </body>
   </file>
