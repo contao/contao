@@ -40,8 +40,9 @@ html[data-color-scheme="dark"] {
 	--icon-loading: url("icons/loading--dark.svg");
 }
 
-/* Account for the jump links bar */
 html {
+	height: 100%;
+	/* Account for the jump links bar */
 	scroll-padding-top: 36px;
 	scroll-behavior: smooth;
 }
@@ -54,8 +55,11 @@ html {
 
 /* Body */
 body {
+	display: grid;
+	grid-template-rows: auto 1fr;
 	background: var(--body-bg);
 	overflow-y: scroll;
+	min-height: 100%;
 }
 
 body.popup {
@@ -285,7 +289,7 @@ body.popup {
 /* Container */
 #container {
 	display: flex;
-	min-height: calc(100vh - 40px);
+	position: relative;
 }
 
 .popup #container {
@@ -304,8 +308,7 @@ body.popup {
 }
 
 #left .version {
-	margin-top: 4em;
-	padding: 15px 18px;
+	padding: calc(4em + 15px) 18px 15px;
 	font-size: .75rem;
 	line-height: 1.4;
 }
@@ -319,6 +322,7 @@ body.popup {
 	width: calc(100% - 220px);
 	display: flex;
 	flex-direction: column;
+	min-height: 100%;
 }
 
 .popup #main {
@@ -736,6 +740,7 @@ h2.sub_headline {
 .jump-targets {
 	min-height: 30px;
 	padding-top: 1px;
+	display: grid;
 	background: var(--panel-bg);
 	border-bottom: 1px solid var(--content-border);
 	position: sticky;
@@ -2964,6 +2969,7 @@ fieldset.collapsed > legend {
 	}
 
 	.show-navigation #main {
+		position: relative;
 		-webkit-transform: translateX(240px);
 		transform: translateX(240px);
 	}
@@ -2971,8 +2977,9 @@ fieldset.collapsed > legend {
 	#left {
 		visibility: hidden;
 		position: absolute;
-		top: 40px;
+		top: 0;
 		width: 240px;
+		min-height: 100%;
 		transition: transform .2s ease, visibility .2s ease;
 		-webkit-transform: translateX(-240px);
 		transform: translateX(-240px);
