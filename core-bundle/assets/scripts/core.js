@@ -2289,11 +2289,6 @@ window.addEvent('domready', function() {
 	Backend.enableImageSizeWidgets();
 	Backend.enableToggleSelect();
 
-	// Chosen
-	if (Elements.chosen != undefined) {
-		$$('select.tl_chosen').chosen();
-	}
-
 	Theme.stopClickPropagation();
 	Theme.setupCtrlClick();
 	Theme.setupTextareaResizing();
@@ -2311,13 +2306,6 @@ window.addEvent('resize', function() {
 window.addEvent('ajax_change', function() {
 	Backend.enableImageSizeWidgets();
 	Backend.enableToggleSelect();
-
-	// Chosen
-	if (Elements.chosen != undefined) {
-		$$('select.tl_chosen').filter(function(el) {
-			return el.getStyle('display') != 'none';
-		}).chosen();
-	}
 
 	Theme.stopClickPropagation();
 	Theme.setupCtrlClick();

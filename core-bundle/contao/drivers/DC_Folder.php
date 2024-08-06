@@ -2891,7 +2891,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		return '
     <div class="tl_search tl_subpanel">
       <strong>' . $GLOBALS['TL_LANG']['MSC']['search'] . ':</strong>
-      <select name="tl_field" class="tl_select tl_chosen' . ($active ? ' active' : '') . '">
+      <select name="tl_field" class="tl_select' . ($active ? ' active' : '') . '" data-controller="contao--chosen">
         <option value="name">' . ($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['label'][0] ?: (\is_array($GLOBALS['TL_LANG']['MSC']['name'] ?? null) ? $GLOBALS['TL_LANG']['MSC']['name'][0] : ($GLOBALS['TL_LANG']['MSC']['name'] ?? null))) . '</option>
       </select>
       <span>=</span>
@@ -3190,7 +3190,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			->get('contao.image.preview_factory')
 			->createPreviewPicture($projectDir . '/' . $relpath, $pictureConfig);
 
-		$img = $picture->getImg($projectDir);
+		$img = $picture->getImg($projectDir, $container->get('contao.assets.files_context')->getStaticUrl());
 
 		return \sprintf('<img src="%s"%s width="%s" height="%s" alt class="%s" loading="lazy">', $img['src'], $img['srcset'] != $img['src'] ? ' srcset="' . $img['srcset'] . '"' : '', $img['width'], $img['height'], $isImportantPath ? 'preview-important' : 'preview-image');
 	}
