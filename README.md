@@ -145,7 +145,7 @@ The Contao end-to-end tests are availabe as an [NPM package][3]. You can install
 
 ```bash
 npm install contao-e2e-tests --save-dev
-npm run contao-e2e-tests
+npx contao-e2e-tests
 ```
 
 ## License

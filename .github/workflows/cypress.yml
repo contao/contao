@@ -53,7 +53,7 @@ jobs:
 
             - name: Run the Cypress tests
               id: cypress
-              run: npm run contao-e2e-tests
+              run: npx run contao-e2e-tests
               env:
                   DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
 
