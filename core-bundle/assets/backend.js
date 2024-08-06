@@ -8,12 +8,12 @@ import './scripts/modulewizard.js';
 import './scripts/sectionwizard.js';
 import './scripts/tips.js';
 
-// Start Stimulus application and register all controllers with `contao--` prefix.
+// Start the Stimulus application
 const application = Application.start();
 application.debug = process.env.NODE_ENV === 'development';
 
+// Register all controllers with `contao--` prefix
 const context = require.context('./controllers', true, /\.js$/);
-
 application.load(context.keys()
     .map((key) => {
         const identifier = identifierForContextKey(key);
