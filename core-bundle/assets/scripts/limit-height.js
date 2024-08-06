@@ -9,7 +9,7 @@ window.addEventListener('DOMContentLoaded', function() {
         // Return if the element is a wrapper
         if (parent && (parent.classList.contains('wrapper_start') || parent.classList.contains('wrapper_stop'))) return;
 
-        const hgt = Number(div.className.replace(/[^0-9]*/, ''))
+        const hgt = Number(div.className.replace(/[^0-9]*/, ''));
 
         // Return if there is no height value
         if (!hgt) return;

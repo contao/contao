@@ -619,7 +619,7 @@ class PageRegular extends Frontend
 			{
 				if (file_exists($projectDir . '/' . $objFiles->path))
 				{
-					$strScripts .= Template::generateScriptTag($objFiles->path, false, null);
+					$strScripts .= Template::generateScriptTag(static::addAssetsUrlTo($objFiles->path), false, null);
 				}
 			}
 		}

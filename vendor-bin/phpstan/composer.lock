@@ -7,75 +7,17 @@
     "content-hash": "9a7c3e1a42fc07f726c105e38a1f7bee",
     "packages": [
         {
-            "name": "nikic/php-parser",
-            "version": "v5.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "683130c2ff8c2739f4822ff7ac5c873ec529abd1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/683130c2ff8c2739f4822ff7ac5c873ec529abd1",
-                "reference": "683130c2ff8c2739f4822ff7ac5c873ec529abd1",
-                "shasum": ""
-            },
-            "require": {
-                "ext-ctype": "*",
-                "ext-json": "*",
-                "ext-tokenizer": "*",
-                "php": ">=7.4"
-            },
-            "require-dev": {
-                "ircmaxell/php-yacc": "^0.0.7",
-                "phpunit/phpunit": "^9.0"
-            },
-            "bin": [
-                "bin/php-parse"
-            ],
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "5.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "PhpParser\\": "lib/PhpParser"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Nikita Popov"
-                }
-            ],
-            "description": "A PHP parser written in PHP",
-            "keywords": [
-                "parser",
-                "php"
-            ],
-            "support": {
-                "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v5.1.0"
-            },
-            "time": "2024-07-01T20:03:41+00:00"
-        },
-        {
             "name": "phpstan/phpstan",
-            "version": "1.11.8",
+            "version": "1.11.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "6adbd118e6c0515dd2f36b06cde1d6da40f1b8ec"
+                "reference": "e370bcddadaede0c1716338b262346f40d296f82"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/6adbd118e6c0515dd2f36b06cde1d6da40f1b8ec",
-                "reference": "6adbd118e6c0515dd2f36b06cde1d6da40f1b8ec",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e370bcddadaede0c1716338b262346f40d296f82",
+                "reference": "e370bcddadaede0c1716338b262346f40d296f82",
                 "shasum": ""
             },
             "require": {
@@ -120,7 +62,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-07-24T07:01:22+00:00"
+            "time": "2024-08-01T16:25:18+00:00"
         },
         {
             "name": "phpstan/phpstan-phpunit",
@@ -248,29 +190,29 @@
         },
         {
             "name": "slam/phpstan-extensions",
-            "version": "v6.4.0",
+            "version": "v6.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Slamdunk/phpstan-extensions.git",
-                "reference": "e485ec42d76f3dcdbbb6bd10ef3333ae1b1ec6f0"
+                "reference": "389ac3a952b64386dda56becf376c16c493edccb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Slamdunk/phpstan-extensions/zipball/e485ec42d76f3dcdbbb6bd10ef3333ae1b1ec6f0",
-                "reference": "e485ec42d76f3dcdbbb6bd10ef3333ae1b1ec6f0",
+                "url": "https://api.github.com/repos/Slamdunk/phpstan-extensions/zipball/389ac3a952b64386dda56becf376c16c493edccb",
+                "reference": "389ac3a952b64386dda56becf376c16c493edccb",
                 "shasum": ""
             },
             "require": {
-                "nikic/php-parser": "^4.19.1 || ^5.0.2",
                 "php": "~8.2.0 || ~8.3.0",
-                "phpstan/phpstan": "^1.11.4"
+                "phpstan/phpstan": "^1.11.8"
             },
             "require-dev": {
                 "nette/di": "^3.2.2",
-                "nette/neon": "^3.4.1",
+                "nette/neon": "^3.4.3",
+                "nikic/php-parser": "^4.19.1 || ^5.0.2",
                 "phpstan/phpstan-phpunit": "^1.4.0",
-                "phpunit/phpunit": "^11.2.1",
-                "slam/php-cs-fixer-extensions": "^3.10.0"
+                "phpunit/phpunit": "^11.2.9",
+                "slam/php-cs-fixer-extensions": "^3.11.1"
             },
             "type": "phpstan-extension",
             "extra": {
@@ -299,7 +241,7 @@
             "description": "Slam extension of phpstan",
             "support": {
                 "issues": "https://github.com/Slamdunk/phpstan-extensions/issues",
-                "source": "https://github.com/Slamdunk/phpstan-extensions/tree/v6.4.0"
+                "source": "https://github.com/Slamdunk/phpstan-extensions/tree/v6.4.1"
             },
             "funding": [
                 {
@@ -311,7 +253,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-06-11T10:06:12+00:00"
+            "time": "2024-08-01T13:49:19+00:00"
         },
         {
             "name": "thecodingmachine/phpstan-strict-rules",

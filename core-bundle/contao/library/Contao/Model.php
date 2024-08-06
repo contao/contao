@@ -224,6 +224,20 @@ abstract class Model
 	}
 
 	/**
+	 * Clone a model with all data and prevent saving
+	 *
+	 * @return static The model
+	 */
+	public function cloneDetached()
+	{
+		$clone = clone $this;
+		$clone->arrData[static::$strPk] = $this->arrData[static::$strPk];
+		$clone->preventSaving(false);
+
+		return $clone;
+	}
+
+	/**
 	 * Set an object property
 	 *
 	 * @param string $strKey   The property name

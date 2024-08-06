@@ -2,7 +2,6 @@ extends: default
 
 ignore: |
     /node_modules/
-    /pnpm-lock.yaml
     /vendor/
     /vendor-bin/
 
