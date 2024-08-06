@@ -8,7 +8,6 @@ if ($GLOBALS['TL_CONFIG']['useRTE']):
 <script>
 {
   const config = {
-    selector: '#<?= $this->selector ?>',
     min_height: 336,
     language: '<?= Backend::getTinyMceLanguage() ?>',
     element_format: 'html',
@@ -87,7 +86,8 @@ if ($GLOBALS['TL_CONFIG']['useRTE']):
 
   // Add Stimulus data and controller reference
   const target = document.querySelector('#<?= $this->selector ?>');
-  target.setAttribute('data-contao--tinymce-config-value', JSON.stringify(config));
+  target.tinymceConfig = config;
+  target.setAttribute('data-action', 'turbo:before-visit@window->contao--tinymce#leave');
   target.setAttribute('data-controller', 'contao--tinymce');
 }
 </script>
