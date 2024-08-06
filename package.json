@@ -19,5 +19,5 @@
         "build": "encore production --progress"
     },
     "private": true,
-    "packageManager": "pnpm@9.5.0"
+    "packageManager": "npm@10.8.2"
 }
