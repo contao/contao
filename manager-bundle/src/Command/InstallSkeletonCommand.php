@@ -107,7 +107,7 @@ class InstallSkeletonCommand extends Command
             $targetPath = Path::join($this->projectDir, $webDir, $file->getRelativePathname());
 
             $this->fs->copy($file->getPathname(), $targetPath, true);
-            $this->io->writeln(sprintf('Added the <comment>%s/%s</comment> file.', $webDir, $file->getFilename()));
+            $this->io->writeln(\sprintf('Added the <comment>%s/%s</comment> file.', $webDir, $file->getFilename()));
         }
     }
 

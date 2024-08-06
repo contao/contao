@@ -259,34 +259,34 @@ class Pagination
 		$objTemplate->hasLast = $this->hasLast();
 
 		$objTemplate->pages = $this->getItemsAsArray();
-		$objTemplate->total = sprintf($this->lblTotal, $this->intPage, $this->intTotalPages);
+		$objTemplate->total = \sprintf($this->lblTotal, $this->intPage, $this->intTotalPages);
 
 		$objTemplate->first = array
 		(
 			'link' => $this->lblFirst,
 			'href' => $this->linkToPage(1),
-			'title' => sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), 1)
+			'title' => \sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), 1)
 		);
 
 		$objTemplate->previous = array
 		(
 			'link' => $this->lblPrevious,
 			'href' => $this->linkToPage($this->intPage - 1),
-			'title' => sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), $this->intPage - 1)
+			'title' => \sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), $this->intPage - 1)
 		);
 
 		$objTemplate->next = array
 		(
 			'link' => $this->lblNext,
 			'href' => $this->linkToPage($this->intPage + 1),
-			'title' => sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), $this->intPage + 1)
+			'title' => \sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), $this->intPage + 1)
 		);
 
 		$objTemplate->last = array
 		(
 			'link' => $this->lblLast,
 			'href' => $this->linkToPage($this->intTotalPages),
-			'title' => sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), $this->intTotalPages)
+			'title' => \sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), $this->intTotalPages)
 		);
 
 		$objTemplate->class = 'pagination-' . $this->strParameter;
@@ -313,11 +313,11 @@ class Pagination
 		{
 			if ($arrItem['href'] === null)
 			{
-				$arrLinks[] = sprintf('<li><strong class="active">%s</strong></li>', $arrItem['page']);
+				$arrLinks[] = \sprintf('<li><strong class="active">%s</strong></li>', $arrItem['page']);
 			}
 			else
 			{
-				$arrLinks[] = sprintf('<li><a href="%s" class="link" title="%s">%s</a></li>', $arrItem['href'], $arrItem['title'], $arrItem['page']);
+				$arrLinks[] = \sprintf('<li><a href="%s" class="link" title="%s">%s</a></li>', $arrItem['href'], $arrItem['title'], $arrItem['page']);
 			}
 		}
 
@@ -386,7 +386,7 @@ class Pagination
 				(
 					'page'  => $i,
 					'href'  => $this->linkToPage($i),
-					'title' => StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], $i))
+					'title' => StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], $i))
 				);
 			}
 		}

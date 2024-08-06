@@ -65,7 +65,7 @@ class EventInsertTag implements InsertTagResolverNestedResolvedInterface
             return new InsertTagResult('');
         }
 
-        return new InsertTagResult(sprintf('%sshare/%s.xml', $feed->feedBase, $feed->alias), OutputType::url);
+        return new InsertTagResult(\sprintf('%sshare/%s.xml', $feed->feedBase, $feed->alias), OutputType::url);
     }
 
     private function replaceEventInsertTag(string $insertTag, string $idOrAlias, array $arguments): InsertTagResult
@@ -86,7 +86,7 @@ class EventInsertTag implements InsertTagResolverNestedResolvedInterface
 
         return match ($insertTag) {
             'event' => new InsertTagResult(
-                sprintf(
+                \sprintf(
                     '<a href="%s" title="%s"%s>%s</a>',
                     StringUtil::specialcharsAttribute($generateUrl()),
                     StringUtil::specialcharsAttribute($model->title),
@@ -96,7 +96,7 @@ class EventInsertTag implements InsertTagResolverNestedResolvedInterface
                 OutputType::html,
             ),
             'event_open' => new InsertTagResult(
-                sprintf(
+                \sprintf(
                     '<a href="%s" title="%s"%s>',
                     StringUtil::specialcharsAttribute($generateUrl()),
                     StringUtil::specialcharsAttribute($model->title),

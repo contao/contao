@@ -24,7 +24,7 @@ class HashGenerator implements HashGeneratorInterface
         private readonly bool $useLastModified = true,
     ) {
         if (!\in_array($hashAlgorithm, $supportedHashAlgorithms = hash_algos(), true)) {
-            throw new \InvalidArgumentException(sprintf('The "%s" hash algorithm is not available on this system. Try "%s" instead.', $hashAlgorithm, implode('" or "', $supportedHashAlgorithms)));
+            throw new \InvalidArgumentException(\sprintf('The "%s" hash algorithm is not available on this system. Try "%s" instead.', $hashAlgorithm, implode('" or "', $supportedHashAlgorithms)));
         }
     }
 

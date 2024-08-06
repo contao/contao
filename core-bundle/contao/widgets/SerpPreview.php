@@ -87,7 +87,7 @@ class SerpPreview extends Widget
 
 		if ($titleTag = $this->getTitleTag($model))
 		{
-			$title = StringUtil::substr(sprintf($titleTag, $title), 64);
+			$title = StringUtil::substr(\sprintf($titleTag, $title), 64);
 		}
 
 		return <<<EOT

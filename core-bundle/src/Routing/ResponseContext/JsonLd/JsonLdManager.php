@@ -72,7 +72,7 @@ class JsonLdManager
 
         // Create one <script> block per JSON-LD context (see #6401)
         foreach ($data as $context) {
-            $return[] = sprintf(
+            $return[] = \sprintf(
                 "<script type=\"application/ld+json\">\n%s\n</script>",
                 json_encode($context, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR),
             );
@@ -93,7 +93,7 @@ class JsonLdManager
         $schemaClass = '\Spatie\SchemaOrg\\'.$jsonLd['@type'];
 
         if (!class_exists($schemaClass)) {
-            throw new \InvalidArgumentException(sprintf('Unknown schema.org type "%s" provided!', $jsonLd['@type']));
+            throw new \InvalidArgumentException(\sprintf('Unknown schema.org type "%s" provided!', $jsonLd['@type']));
         }
 
         $schema = new $schemaClass();

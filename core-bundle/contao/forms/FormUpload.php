@@ -102,7 +102,7 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 				}
 				else
 				{
-					$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['mandatory'], $this->strLabel));
+					$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['mandatory'], $this->strLabel));
 				}
 			}
 
@@ -138,15 +138,15 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 		{
 			if ($file['error'] == 1 || $file['error'] == 2)
 			{
-				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['filesize'], $maxlength_kb_readable));
+				$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['filesize'], $maxlength_kb_readable));
 			}
 			elseif ($file['error'] == 3)
 			{
-				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['filepartial'], $file['name']));
+				$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['filepartial'], $file['name']));
 			}
 			elseif ($file['error'] > 0)
 			{
-				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['fileerror'], $file['error'], $file['name']));
+				$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['fileerror'], $file['error'], $file['name']));
 			}
 
 			unset($_FILES[$this->strName]);
@@ -157,7 +157,7 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 		// File is too big
 		if ($file['size'] > $maxlength_kb)
 		{
-			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['filesize'], $maxlength_kb_readable));
+			$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['filesize'], $maxlength_kb_readable));
 			unset($_FILES[$this->strName]);
 
 			return;
@@ -169,7 +169,7 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 		// File type is not allowed
 		if (!\in_array($objFile->extension, $uploadTypes))
 		{
-			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['filetype'], $objFile->extension));
+			$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['filetype'], $objFile->extension));
 			unset($_FILES[$this->strName]);
 
 			return;
@@ -182,7 +182,7 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 			// Image exceeds maximum image width
 			if ($intImageWidth > 0 && $arrImageSize[0] > $intImageWidth)
 			{
-				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['filewidth'], $file['name'], $intImageWidth));
+				$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['filewidth'], $file['name'], $intImageWidth));
 				unset($_FILES[$this->strName]);
 
 				return;
@@ -193,7 +193,7 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 			// Image exceeds maximum image height
 			if ($intImageHeight > 0 && $arrImageSize[1] > $intImageHeight)
 			{
-				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['fileheight'], $file['name'], $intImageHeight));
+				$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['fileheight'], $file['name'], $intImageHeight));
 				unset($_FILES[$this->strName]);
 
 				return;
@@ -306,7 +306,7 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 	 */
 	public function generate()
 	{
-		return sprintf(
+		return \sprintf(
 			'<input type="file" name="%s" id="ctrl_%s" class="upload%s"%s%s',
 			$this->strName,
 			$this->strId,

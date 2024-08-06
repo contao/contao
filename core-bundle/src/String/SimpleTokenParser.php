@@ -104,7 +104,7 @@ class SimpleTokenParser implements LoggerAwareInterface
             '/##([^#=!<>\s][^=!<>\s]*?)##/',
             function (array $matches) use ($data) {
                 if (!\array_key_exists($matches[1], $data)) {
-                    $this->logger?->log(LogLevel::INFO, sprintf('Tried to parse unknown simple token "%s".', $matches[1]));
+                    $this->logger?->log(LogLevel::INFO, \sprintf('Tried to parse unknown simple token "%s".', $matches[1]));
 
                     return '##'.$matches[1].'##';
                 }
@@ -186,7 +186,7 @@ class SimpleTokenParser implements LoggerAwareInterface
     {
         $this->logger?->log(
             LogLevel::INFO,
-            sprintf('Tried to evaluate unknown simple token(s): "%s".', implode('", "', $tokenNames)),
+            \sprintf('Tried to evaluate unknown simple token(s): "%s".', implode('", "', $tokenNames)),
         );
     }
 }

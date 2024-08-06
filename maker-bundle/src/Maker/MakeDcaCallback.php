@@ -56,7 +56,7 @@ class MakeDcaCallback extends AbstractMaker
     public function configureCommand(Command $command, InputConfiguration $inputConfig): void
     {
         $command
-            ->addArgument('callback-class', InputArgument::REQUIRED, sprintf('Enter a class name for the callback (e.g. <fg=yellow>%sListener</>)', Str::asClassName(Str::getRandomTerm())))
+            ->addArgument('callback-class', InputArgument::REQUIRED, \sprintf('Enter a class name for the callback (e.g. <fg=yellow>%sListener</>)', Str::asClassName(Str::getRandomTerm())))
         ;
     }
 
@@ -156,7 +156,7 @@ class MakeDcaCallback extends AbstractMaker
 
                 $command->addArgument($chunk, InputArgument::OPTIONAL);
 
-                $question = new Question(sprintf('Please enter a value for "%s"', $chunk));
+                $question = new Question(\sprintf('Please enter a value for "%s"', $chunk));
                 $question->setValidator(Validator::notBlank(...));
 
                 $input->setArgument($chunk, $io->askQuestion($question));

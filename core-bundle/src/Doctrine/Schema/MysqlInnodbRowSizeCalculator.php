@@ -52,7 +52,7 @@ class MysqlInnodbRowSizeCalculator
         $rowFormat = $table->hasOption('row_format') ? $table->getOption('row_format') : 'DYNAMIC';
 
         if ('innodb' !== strtolower($engine)) {
-            throw new \InvalidArgumentException(sprintf('Invalid engine %s, only InnoDB is supported.', $engine));
+            throw new \InvalidArgumentException(\sprintf('Invalid engine %s, only InnoDB is supported.', $engine));
         }
 
         // Start with 25 InnoDB extra bytes
@@ -106,7 +106,7 @@ class MysqlInnodbRowSizeCalculator
             $this->isTableTooLarge($this->getMysqlColumnDefinitions($maxBits))
             || !$this->isTableTooLarge($this->getMysqlColumnDefinitions($maxBits + 1))
         ) {
-            throw new \LogicException(sprintf('Assumed limit of %s seems to be wrong.', $maxBits / 8));
+            throw new \LogicException(\sprintf('Assumed limit of %s seems to be wrong.', $maxBits / 8));
         }
 
         // Find the correct size using binary search
@@ -145,7 +145,7 @@ class MysqlInnodbRowSizeCalculator
             $this->isTableTooLarge($this->getInnodbColumnDefinitions($maxBits), $rowFormat)
             || !$this->isTableTooLarge($this->getInnodbColumnDefinitions($maxBits + 1), $rowFormat)
         ) {
-            throw new \LogicException(sprintf('Assumed limit of %s seems to be wrong.', $maxBits / 8));
+            throw new \LogicException(\sprintf('Assumed limit of %s seems to be wrong.', $maxBits / 8));
         }
 
         // Find the correct size using binary search
@@ -354,7 +354,7 @@ class MysqlInnodbRowSizeCalculator
     private function getInnodbColumnSizeBits(Column $column, string $charset, string $rowFormat): int
     {
         if ('DYNAMIC' !== strtoupper($rowFormat)) {
-            throw new \InvalidArgumentException(sprintf('Invalid row format %s, only DYNAMIC is supported.', $rowFormat));
+            throw new \InvalidArgumentException(\sprintf('Invalid row format %s, only DYNAMIC is supported.', $rowFormat));
         }
 
         $platform = $this->connection->getDatabasePlatform();

@@ -50,7 +50,7 @@ export default class extends Controller {
 
         // Called as soon as registered, so DOM may not have been loaded yet
         if (document.readyState === "loading") {
-            document.addEventListener("DOMContentLoaded", migrateLegacy)
+            document.addEventListener("DOMContentLoaded", migrateLegacy);
         } else {
             migrateLegacy();
         }

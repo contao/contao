@@ -310,7 +310,7 @@ class LintServiceIdsCommand extends Command
     private function error(string $message, mixed ...$args): void
     {
         $this->hasError = true;
-        $this->io->warning(sprintf($message, ...$args));
+        $this->io->warning(\sprintf($message, ...$args));
     }
 
     private function getServiceIdFromClass(string $class): string|null

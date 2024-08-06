@@ -169,7 +169,7 @@ class SymlinksCommand extends Command
             SymlinkUtil::symlink($target, $link, $this->projectDir);
 
             $this->rows[] = [
-                sprintf(
+                \sprintf(
                     '<fg=green;options=bold>%s</>',
                     '\\' === \DIRECTORY_SEPARATOR ? 'OK' : "\xE2\x9C\x94", // HEAVY CHECK MARK (U+2714)
                 ),
@@ -180,12 +180,12 @@ class SymlinksCommand extends Command
             $this->statusCode = Command::FAILURE;
 
             $this->rows[] = [
-                sprintf(
+                \sprintf(
                     '<fg=red;options=bold>%s</>',
                     '\\' === \DIRECTORY_SEPARATOR ? 'ERROR' : "\xE2\x9C\x98", // HEAVY BALLOT X (U+2718)
                 ),
                 $link,
-                sprintf('<error>%s</error>', $e->getMessage()),
+                \sprintf('<error>%s</error>', $e->getMessage()),
             ];
         }
     }
@@ -233,9 +233,9 @@ class SymlinksCommand extends Command
                 unset($files[$key]);
 
                 $this->rows[] = [
-                    sprintf('<fg=yellow;options=bold>%s</>', '\\' === \DIRECTORY_SEPARATOR ? 'WARNING' : '!'),
+                    \sprintf('<fg=yellow;options=bold>%s</>', '\\' === \DIRECTORY_SEPARATOR ? 'WARNING' : '!'),
                     Path::join($this->webDir, $prepend, $path),
-                    sprintf('<comment>Skipped because %s will be symlinked.</comment>', Path::join($prepend, $otherPath)),
+                    \sprintf('<comment>Skipped because %s will be symlinked.</comment>', Path::join($prepend, $otherPath)),
                 ];
             }
         }

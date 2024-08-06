@@ -31,7 +31,7 @@ class ContaoManagerPass implements CompilerPassInterface
                 $managerPath = 'contao-manager.phar.php';
             }
         } elseif (!is_file($filePath = Path::join($webDir, $managerPath))) {
-            throw new \LogicException(sprintf('You have configured "contao_manager.manager_path" but the file "%s" does not exist', $filePath));
+            throw new \LogicException(\sprintf('You have configured "contao_manager.manager_path" but the file "%s" does not exist', $filePath));
         }
 
         $container->setParameter('contao_manager.manager_path', $managerPath);

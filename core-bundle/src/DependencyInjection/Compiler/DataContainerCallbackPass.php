@@ -68,11 +68,11 @@ class DataContainerCallbackPass implements CompilerPassInterface
     private function addCallback(array &$callbacks, string $serviceId, string $class, array $attributes): void
     {
         if (!isset($attributes['table'])) {
-            throw new InvalidDefinitionException(sprintf('Missing table attribute in tagged callback service ID "%s"', $serviceId));
+            throw new InvalidDefinitionException(\sprintf('Missing table attribute in tagged callback service ID "%s"', $serviceId));
         }
 
         if (!isset($attributes['target'])) {
-            throw new InvalidDefinitionException(sprintf('Missing target attribute in tagged callback service ID "%s"', $serviceId));
+            throw new InvalidDefinitionException(\sprintf('Missing target attribute in tagged callback service ID "%s"', $serviceId));
         }
 
         if (
@@ -94,17 +94,17 @@ class DataContainerCallbackPass implements CompilerPassInterface
     private function getMethod(array $attributes, string $class, string $serviceId): string
     {
         $ref = new \ReflectionClass($class);
-        $invalid = sprintf('The contao.callback definition for service "%s" is invalid. ', $serviceId);
+        $invalid = \sprintf('The contao.callback definition for service "%s" is invalid. ', $serviceId);
 
         if (isset($attributes['method'])) {
             if (!$ref->hasMethod($attributes['method'])) {
-                $invalid .= sprintf('The class "%s" does not have a method "%s".', $class, $attributes['method']);
+                $invalid .= \sprintf('The class "%s" does not have a method "%s".', $class, $attributes['method']);
 
                 throw new InvalidDefinitionException($invalid);
             }
 
             if (!$ref->getMethod($attributes['method'])->isPublic()) {
-                $invalid .= sprintf('The "%s::%s" method exists but is not public.', $class, $attributes['method']);
+                $invalid .= \sprintf('The "%s::%s" method exists but is not public.', $class, $attributes['method']);
 
                 throw new InvalidDefinitionException($invalid);
             }
@@ -135,9 +135,9 @@ class DataContainerCallbackPass implements CompilerPassInterface
         }
 
         if ($private) {
-            $invalid .= sprintf('The "%s::%s" method exists but is not public.', $class, $method);
+            $invalid .= \sprintf('The "%s::%s" method exists but is not public.', $class, $method);
         } else {
-            $invalid .= sprintf('Either specify a method name or implement the "%s" or __invoke method.', $method);
+            $invalid .= \sprintf('Either specify a method name or implement the "%s" or __invoke method.', $method);
         }
 
         throw new InvalidDefinitionException($invalid);
