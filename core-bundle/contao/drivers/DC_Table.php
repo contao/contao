@@ -20,6 +20,7 @@ use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Doctrine\DBAL\Exception\DriverException;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\String\UnicodeString;
@@ -2296,7 +2297,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		if (!Input::get('nb'))
 		{
-			$arrButtons['saveNclose'] = '<button type="submit" name="saveNclose" id="saveNclose" class="tl_submit" accesskey="c" data-action="contao--scroll-offset#discard">' . $GLOBALS['TL_LANG']['MSC']['saveNclose'] . '</button>';
+			$arrButtons['saveNclose'] = '<button type="submit" name="saveNclose" id="saveNclose" class="tl_submit" accesskey="c" data-action="contao--scroll-offset#discard" data-turbo-frame="_top">' . $GLOBALS['TL_LANG']['MSC']['saveNclose'] . '</button>';
 
 			if (!Input::get('nc'))
 			{
@@ -2317,7 +2318,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				if ($this->ptable || ($GLOBALS['TL_DCA'][$this->strTable]['config']['switchToEdit'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
 				{
-					$arrButtons['saveNback'] = '<button type="submit" name="saveNback" id="saveNback" class="tl_submit" accesskey="g" data-action="contao--scroll-offset#discard">' . $GLOBALS['TL_LANG']['MSC']['saveNback'] . '</button>';
+					$arrButtons['saveNback'] = '<button type="submit" name="saveNback" id="saveNback" class="tl_submit" accesskey="g" data-action="contao--scroll-offset#discard" data-turbo-frame="_top">' . $GLOBALS['TL_LANG']['MSC']['saveNback'] . '</button>';
 				}
 			}
 		}
@@ -2394,7 +2395,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <div id="tl_buttons">
 <a href="' . $strBackUrl . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" data-action="contao--scroll-offset#discard">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>') . '
-<form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '"' . (!empty($this->onsubmit) ? ' onsubmit="' . implode(' ', $this->onsubmit) . '"' : '') . '>
+<turbo-frame id="tl_edit_form" target="_top" data-turbo-action="forward">
+<form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '"' . (!empty($this->onsubmit) ? ' onsubmit="' . implode(' ', $this->onsubmit) . '"' : '') . ' data-turbo-frame="_self">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
 <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">' . $strVersionField . $return;
@@ -2768,7 +2770,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
   ' . $strButtons . '
 </div>
 </div>
-</form>';
+</form>
+</turbo-frame>';
 
 			// Set the focus if there is an error
 			if ($this->noReload)
