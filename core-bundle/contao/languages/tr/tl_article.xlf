@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_article.inColumn.1">
         <source>Please choose the layout section you want the article to be displayed in.</source>
-        <target>Makalenin görüntülenmesini istediğiniz düzen bölümünü seçin.</target>
+        <target>Makalenin görüntülenmesini istediğiniz yerleşim bölümünü seçin.</target>
       </trans-unit>
       <trans-unit id="tl_article.teaserCssID.0">
         <source>Teaser CSS ID/class</source>
@@ -211,7 +211,7 @@
       </trans-unit>
       <trans-unit id="tl_article.toggle.0">
         <source>Publish/unpublish article</source>
-        <target>Makaleyi yayımla/yayımlama</target>
+        <target>Makaleyi yayınla/yayından kaldır</target>
       </trans-unit>
       <trans-unit id="tl_article.toggle.1">
         <source>Unpublish article ID %s</source>

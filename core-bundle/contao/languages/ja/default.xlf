@@ -375,12 +375,15 @@
       </trans-unit>
       <trans-unit id="ERR.altchaVerificationFailed">
         <source>ALTCHA antispam verification failed. Are you a human or a robot?</source>
+        <target>ALTCHAのspam防止による検証ができません。あなたは人間ですか、ロボットですか?</target>
       </trans-unit>
       <trans-unit id="ERR.altchaWidgetError">
         <source>Verification failed. Try again later.</source>
+        <target>検証できません。後で、もう一度試してください。</target>
       </trans-unit>
       <trans-unit id="ERR.altchaInsecureConnection">
         <source>ALTCHA is not available without a secure HTTPS connection. If your production website does not use HTTPS (not recommended), please use the security question instead.</source>
+        <target>ALTCHAは安全なHTTPS接続なしでは利用できません。実運用中のWebサイトがHTTPSを使用していない(ことは推奨できません)場合は、代わりにセキュリティ質問を使用してください。</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -788,9 +791,11 @@
       </trans-unit>
       <trans-unit id="FFL.altcha.0">
         <source>ALTCHA antispam</source>
+        <target>ALTCHA spam防止</target>
       </trans-unit>
       <trans-unit id="FFL.altcha.1">
         <source>Provides an ALTCHA antispam form field to verify that the form is submitted by a human (CAPTCHA).</source>
+        <target>ALTCHA spam防止のフォームの項目を提供して、フォームが人間による提出であることを検証します。(CAPTCHA)</target>
       </trans-unit>
       <trans-unit id="FFL.captcha.0">
         <source>Security question</source>
@@ -798,7 +803,7 @@
       </trans-unit>
       <trans-unit id="FFL.captcha.1">
         <source>A simple math question to verify that the form is being submitted by a human (CAPTCHA).</source>
-        <target>(ボットのようなプログラムではなく)人間によってフォームが提出されたことを確認するための、やさしい計算問題です。(CAPTCHA)</target>
+        <target>人間によってフォームが提出されたことを確認するための、やさしい計算問題です。(CAPTCHA)</target>
       </trans-unit>
       <trans-unit id="FFL.submit.0">
         <source>Submit field</source>
@@ -2634,9 +2639,11 @@
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb</source>
+        <target>パンくず</target>
       </trans-unit>
       <trans-unit id="MSC.mainNavigation">
         <source>Main</source>
+        <target>メイン</target>
       </trans-unit>
       <trans-unit id="MSC.headerNavigation">
         <source>Header</source>
@@ -2644,6 +2651,7 @@
       </trans-unit>
       <trans-unit id="MSC.pagination">
         <source>Pagination</source>
+        <target>ページ分割</target>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.unicodeLowercase">
         <source>Unicode numbers and lowercase letters</source>
@@ -2887,18 +2895,23 @@
       </trans-unit>
       <trans-unit id="MSC.altchaFooter">
         <source>Protected by &lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;</source>
+        <target>&lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;による保護</target>
       </trans-unit>
       <trans-unit id="MSC.altchaLabel">
         <source>I'm not a robot</source>
+        <target>私はロボットでありません</target>
       </trans-unit>
       <trans-unit id="MSC.altchaVerified">
         <source>I'm human</source>
+        <target>私は人間です</target>
       </trans-unit>
       <trans-unit id="MSC.altchaVerifying">
         <source>Verifying …</source>
+        <target>検証中...</target>
       </trans-unit>
       <trans-unit id="MSC.altchaWaitAlert">
         <source>Verifying … please wait.</source>
+        <target>検証中...しばらくお待ちください。</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
