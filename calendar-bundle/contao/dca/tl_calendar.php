@@ -81,7 +81,8 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 			(
 				'href'                => 'table=tl_calendar_feed',
 				'class'               => 'header_rss',
-				'button_callback'     => array('tl_calendar', 'manageFeeds')
+				'button_callback'     => array('tl_calendar', 'manageFeeds'),
+				'addRequestToken'     => false,
 			),
 			'all'
 		)

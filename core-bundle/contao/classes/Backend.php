@@ -189,15 +189,17 @@ abstract class Backend extends Controller
 	 * @param string  $strRequest
 	 * @param boolean $blnAddRef
 	 * @param array   $arrUnset
+	 * @param boolean $addRequestToken
 	 *
 	 * @return string
 	 */
-	public static function addToUrl($strRequest, $blnAddRef=true, $arrUnset=array())
+	public static function addToUrl($strRequest, $blnAddRef=true, $arrUnset=array(), $addRequestToken=true)
 	{
 		// Unset the "no back button" flag
 		$arrUnset[] = 'nb';
+		$rt = $addRequestToken ? 'rt=' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue() : '';
 
-		return parent::addToUrl($strRequest . ($strRequest ? '&amp;' : '') . 'rt=' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), $blnAddRef, $arrUnset);
+		return parent::addToUrl($strRequest . ($strRequest && $rt ? '&amp;' : '') . $rt, $blnAddRef, $arrUnset);
 	}
 
 	/**
