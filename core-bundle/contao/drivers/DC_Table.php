@@ -2393,7 +2393,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </script>';
 		}
 
-		// Begin the form (-> DO NOT CHANGE TH"IS ORDER -> this way the onsubmit attribute of the form can be changed by a field)
+		// Begin the form (-> DO NOT CHANGE THIS ORDER -> this way the onsubmit attribute of the form can be changed by a field)
 		$return = $version . ($this->noReload ? '
 <p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . Message::generate() . (Input::get('nb') ? '' : '
 <div id="tl_buttons">
