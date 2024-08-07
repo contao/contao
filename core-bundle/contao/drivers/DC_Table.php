@@ -247,6 +247,31 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	}
 
 	/**
+	 * Returns the current user changes merged with the database information.
+	 *
+	 * @return array<string, mixed>|null
+	 * @throws AccessDeniedException     if the current user has no read permission on the current record
+	 */
+	public function getActiveRecord(): array|null
+	{
+		$currentRecord = $this->getCurrentRecord();
+
+		if (null === $currentRecord)
+		{
+			return null;
+		}
+
+		return array_merge($currentRecord, array_map(static function ($value) {
+			if (\is_string($value) || \is_bool($value) || \is_float($value) || \is_int($value) || $value === null)
+			{
+				return $value;
+			}
+
+			return serialize($value);
+		}, $this->arrSubmit));
+	}
+
+	/**
 	 * With this method, the ID of the current (parent) record can be
 	 * determined stateless based on the current request only.
 	 *

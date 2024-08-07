@@ -22,7 +22,6 @@ use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\Image\ResizeConfiguration;
 use Doctrine\DBAL\ArrayParameterType;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provide methods to handle data container arrays.
@@ -251,7 +250,7 @@ abstract class DataContainer extends Backend
 	 * Active record
 	 * @var Model|object|null
 	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6;
-	 *             use $dc->getCurrentRecord(), $dc->getSubmittedRecord() or $dc->getActiveRecord() instead.
+	 *             Depending on your DC driver, use $dc->getActiveRecord() or $dc->getCurrentRecord() instead.
 	 */
 	protected $objActiveRecord;
 
@@ -370,7 +369,7 @@ abstract class DataContainer extends Backend
 				return $this->strPalette;
 
 			case 'activeRecord':
-				trigger_deprecation('contao/core-bundle', '5.0', 'The active record has been deprecated and will be removed in Contao 6. Use ' . __CLASS__ . '::getCurrentRecord(), ' . __CLASS__ . '::getSubmittedRecord() or ' . __CLASS__ . '::getActiveRecord() instead.');
+				trigger_deprecation('contao/core-bundle', '5.0', 'The active record has been deprecated and will be removed in Contao 6. Depending on your DC driver, use ' . __CLASS__ . '::getCurrentRecord(), or ' . __CLASS__ . '::getActiveRecord() instead.');
 
 				return $this->objActiveRecord;
 
@@ -1897,67 +1896,6 @@ abstract class DataContainer extends Backend
 		}
 
 		return self::$arrCurrentRecordCache[$key];
-	}
-
-	/**
-	 * Returns the user changes merged with the database information.
-	 *
-	 * @return array<string, mixed>|null
-	 * @throws AccessDeniedException     if the current user has no read permission on the current record
-	 */
-	public function getActiveRecord(int|string|null $id = null, string|null $table = null): array|null
-	{
-		$currentRecord = $this->getCurrentRecord($id, $table);
-		$submittedRecord = $this->getSubmittedRecord($id, $table);
-
-		if (null === $submittedRecord)
-		{
-			return $currentRecord;
-		}
-
-		if (null === $currentRecord)
-		{
-			return $submittedRecord;
-		}
-
-		return array_merge($currentRecord, $submittedRecord);
-	}
-
-	/**
-	 * Returns the user changes of the record only. Does not contain any information stored in the database.
-	 *
-	 * @return array<string, mixed>|null
-	 * */
-	public function getSubmittedRecord(int|string|null $id = null, string|null $table = null): array|null
-	{
-		$id = $id ?: $this->intId;
-		$table = $table ?: $this->strTable;
-
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		if (!$request instanceof Request)
-		{
-			return null;
-		}
-
-		if (Input::post('FORM_SUBMIT') !== $table)
-		{
-			return null;
-		}
-
-		$values = array();
-
-		foreach ($request->request->all() as $k => $v)
-		{
-			if (Input::get('act') === 'editAll' && !str_ends_with($k, '_' . $id))
-			{
-				continue;
-			}
-
-			$values[$k] = Input::post($k);
-		}
-
-		return $values;
 	}
 
 	public static function clearCurrentRecordCache(int|string|null $id = null, string|null $table = null): void

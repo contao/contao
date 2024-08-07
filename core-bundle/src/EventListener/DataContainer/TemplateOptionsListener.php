@@ -20,6 +20,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Twig\Finder\FinderFactory;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\DataContainer;
+use Contao\DC_Table;
 use Contao\ModuleProxy;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
@@ -44,7 +45,7 @@ class TemplateOptionsListener
     ) {
     }
 
-    public function __invoke(DataContainer $dc): array
+    public function __invoke(DC_Table $dc): array
     {
         $overrideAll = $this->isOverrideAll();
 
