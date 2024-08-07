@@ -26,7 +26,7 @@ abstract class DeprecatedClassesPhpunitExtension implements AfterLastTestHook, B
         if ($this->failed) {
             echo "\n\n";
 
-            throw new ExpectationFailedException(sprintf('Expected deprecations were not triggered or did not match. See %s::deprecationProvider()', self::class));
+            throw new ExpectationFailedException(\sprintf('Expected deprecations were not triggered or did not match. See %s::deprecationProvider()', self::class));
         }
     }
 
@@ -96,10 +96,10 @@ abstract class DeprecatedClassesPhpunitExtension implements AfterLastTestHook, B
         if ($unhandledErrors) {
             (new StringMatchesFormatDescription($expectedDeprecation))->evaluate(
                 $unhandledErrors[0],
-                sprintf('Expected deprecation for "%s" did not match.', $className),
+                \sprintf('Expected deprecation for "%s" did not match.', $className),
             );
         }
 
-        throw new ExpectationFailedException(sprintf('Expected deprecation for "%s" was not triggered: "%s"', $className, $expectedDeprecation));
+        throw new ExpectationFailedException(\sprintf('Expected deprecation for "%s" was not triggered: "%s"', $className, $expectedDeprecation));
     }
 }

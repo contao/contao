@@ -35,7 +35,7 @@ final class ContaoEscaper
     public function escapeHtml(mixed $string, string|null $charset): string
     {
         if (null !== $charset && 'UTF-8' !== strtoupper($charset)) {
-            throw new RuntimeError(sprintf('The "contao_html" escape filter does not support the %s charset, use UTF-8 instead.', $charset));
+            throw new RuntimeError(\sprintf('The "contao_html" escape filter does not support the %s charset, use UTF-8 instead.', $charset));
         }
 
         $string = (string) $string;
@@ -52,7 +52,7 @@ final class ContaoEscaper
     public function escapeHtmlAttr(mixed $string, string|null $charset): string
     {
         if (null !== $charset && 'UTF-8' !== strtoupper($charset)) {
-            throw new RuntimeError(sprintf('The "contao_html_attr" escape filter does not support the %s charset, use UTF-8 instead.', $charset));
+            throw new RuntimeError(\sprintf('The "contao_html_attr" escape filter does not support the %s charset, use UTF-8 instead.', $charset));
         }
 
         $string = (string) $string;
@@ -95,12 +95,12 @@ final class ContaoEscaper
                         62 => '&gt;', /* greater-than sign */
                     ];
 
-                    return $entityMap[$ord] ?? sprintf('&#x%02X;', $ord);
+                    return $entityMap[$ord] ?? \sprintf('&#x%02X;', $ord);
                 }
 
                 // Per OWASP recommendations, we'll use hex entities for any other characters
                 // where a named entity does not exist.
-                return sprintf('&#x%04X;', mb_ord($chr, 'UTF-8'));
+                return \sprintf('&#x%04X;', mb_ord($chr, 'UTF-8'));
             },
             $string,
         );

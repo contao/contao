@@ -54,7 +54,7 @@ final class MessageCatalogue implements MessageCatalogueInterface
     public function all(string|null $domain = null): array
     {
         if ($this->isContaoDomain($domain)) {
-            throw new LogicException(sprintf('Getting Contao translations via %s() is not yet supported', __METHOD__));
+            throw new LogicException(\sprintf('Getting Contao translations via %s() is not yet supported', __METHOD__));
         }
 
         return $this->inner->all($domain);
@@ -63,7 +63,7 @@ final class MessageCatalogue implements MessageCatalogueInterface
     public function set(string $id, string $translation, string $domain = 'messages'): void
     {
         if ($this->isContaoDomain($domain)) {
-            throw new LogicException(sprintf('Setting Contao translations via %s() is not yet supported', __METHOD__));
+            throw new LogicException(\sprintf('Setting Contao translations via %s() is not yet supported', __METHOD__));
         }
 
         $this->inner->set($id, $translation, $domain);
@@ -99,7 +99,7 @@ final class MessageCatalogue implements MessageCatalogueInterface
     public function replace(array $messages, string $domain = 'messages'): void
     {
         if ($this->isContaoDomain($domain)) {
-            throw new LogicException(sprintf('Setting Contao translations via %s() is not yet supported', __METHOD__));
+            throw new LogicException(\sprintf('Setting Contao translations via %s() is not yet supported', __METHOD__));
         }
 
         $this->inner->replace($messages, $domain);
@@ -108,7 +108,7 @@ final class MessageCatalogue implements MessageCatalogueInterface
     public function add(array $messages, string $domain = 'messages'): void
     {
         if ($this->isContaoDomain($domain)) {
-            throw new LogicException(sprintf('Setting Contao translations via %s() is not yet supported', __METHOD__));
+            throw new LogicException(\sprintf('Setting Contao translations via %s() is not yet supported', __METHOD__));
         }
 
         $this->inner->add($messages, $domain);

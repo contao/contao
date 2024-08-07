@@ -83,7 +83,7 @@ class ResizeImagesCommand extends Command
         }
 
         if (!$output instanceof ConsoleOutputInterface) {
-            throw new \InvalidArgumentException(sprintf('Output must be an instance of "%s"', ConsoleOutputInterface::class));
+            throw new \InvalidArgumentException(\sprintf('Output must be an instance of "%s"', ConsoleOutputInterface::class));
         }
 
         $this->io = new SymfonyStyle($input, $output->section());
@@ -96,11 +96,11 @@ class ResizeImagesCommand extends Command
         $concurrent = (float) $input->getOption('concurrent');
 
         if ($timeLimit < 0) {
-            throw new InvalidArgumentException(sprintf('Time-limit value "%s" is invalid.', $timeLimit));
+            throw new InvalidArgumentException(\sprintf('Time-limit value "%s" is invalid.', $timeLimit));
         }
 
         if ($concurrent <= 0) {
-            throw new InvalidArgumentException(sprintf('Concurrent value "%s" is invalid.', $concurrent));
+            throw new InvalidArgumentException(\sprintf('Concurrent value "%s" is invalid.', $concurrent));
         }
 
         $this->tableOutput = $output->section();

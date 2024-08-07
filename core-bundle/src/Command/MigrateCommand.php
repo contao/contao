@@ -124,7 +124,7 @@ class MigrateCommand extends Command
         $config = $this->backupManager->createCreateConfig();
 
         if (!$asJson) {
-            $this->io->info(sprintf(
+            $this->io->info(\sprintf(
                 'Creating a database dump to "%s" with the default options. Use --no-backup to disable this feature.',
                 $config->getBackup()->getFilename(),
             ));
@@ -162,7 +162,7 @@ class MigrateCommand extends Command
         $specifiedHash = $input->getOption('hash');
 
         if (!\in_array($input->getOption('format'), ['txt', 'ndjson'], true)) {
-            throw new InvalidOptionException(sprintf('Unsupported format "%s".', $input->getOption('format')));
+            throw new InvalidOptionException(\sprintf('Unsupported format "%s".', $input->getOption('format')));
         }
 
         if ($asJson && !$dryRun && $input->isInteractive()) {
@@ -253,7 +253,7 @@ class MigrateCommand extends Command
             }
 
             if (null !== $specifiedHash && $specifiedHash !== $actualHash) {
-                throw new InvalidOptionException(sprintf('Specified hash "%s" does not match the actual hash "%s"', $specifiedHash, $actualHash));
+                throw new InvalidOptionException(\sprintf('Specified hash "%s" does not match the actual hash "%s"', $specifiedHash, $actualHash));
             }
 
             if (!$asJson) {
@@ -360,7 +360,7 @@ class MigrateCommand extends Command
             }
 
             if (null !== $specifiedHash && $specifiedHash !== $commandsHash) {
-                throw new InvalidOptionException(sprintf('Specified hash "%s" does not match the actual hash "%s"', $specifiedHash, $commandsHash));
+                throw new InvalidOptionException(\sprintf('Specified hash "%s" does not match the actual hash "%s"', $specifiedHash, $commandsHash));
             }
 
             $options = $withDeletesOption

@@ -54,7 +54,7 @@ class RootPageDependentModulesController extends AbstractFrontendModuleControlle
             $cssID[0] = substr($idAttribute, 5, -1);
         }
 
-        $cssID[1] = trim(sprintf('%s %s', $cssID[1] ?? '', implode(' ', (array) $model->classes)));
+        $cssID[1] = trim(\sprintf('%s %s', $cssID[1] ?? '', implode(' ', (array) $model->classes)));
 
         $module->cssID = $cssID;
 

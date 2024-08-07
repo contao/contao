@@ -71,7 +71,7 @@ class ContaoUserProviderTest extends TestCase
         $provider = $this->getProvider();
 
         $this->expectException(UnsupportedUserException::class);
-        $this->expectExceptionMessage(sprintf('Unsupported class "%s".', $user::class));
+        $this->expectExceptionMessage(\sprintf('Unsupported class "%s".', $user::class));
 
         $provider->refreshUser($user);
     }
@@ -115,7 +115,7 @@ class ContaoUserProviderTest extends TestCase
         $provider = $this->getProvider();
 
         $this->expectException(UnsupportedUserException::class);
-        $this->expectExceptionMessage(sprintf('Unsupported class "%s".', $user::class));
+        $this->expectExceptionMessage(\sprintf('Unsupported class "%s".', $user::class));
 
         /** @phpstan-ignore argument.type */
         $provider->upgradePassword($user, 'newsuperhash');

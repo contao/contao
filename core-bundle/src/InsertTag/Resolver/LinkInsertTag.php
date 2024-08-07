@@ -108,7 +108,7 @@ class LinkInsertTag
 
             $strName = $objNextPage->title;
             $strTarget = $objNextPage->target ? ' target="_blank" rel="noreferrer noopener"' : '';
-            $strClass = $objNextPage->cssClass ? sprintf(' class="%s"', $objNextPage->cssClass) : '';
+            $strClass = $objNextPage->cssClass ? \sprintf(' class="%s"', $objNextPage->cssClass) : '';
             $strTitle = $objNextPage->pageTitle ?: $objNextPage->title;
         }
 
@@ -117,8 +117,8 @@ class LinkInsertTag
         }
 
         return match ($insertTag->getName()) {
-            'link' => new InsertTagResult(sprintf('<a href="%s" title="%s"%s%s>%s</a>', $strUrl, StringUtil::specialcharsAttribute($strTitle), $strClass, $strTarget, $strName), OutputType::html),
-            'link_open' => new InsertTagResult(sprintf('<a href="%s" title="%s"%s%s>', $strUrl, StringUtil::specialcharsAttribute($strTitle), $strClass, $strTarget), OutputType::html),
+            'link' => new InsertTagResult(\sprintf('<a href="%s" title="%s"%s%s>%s</a>', $strUrl, StringUtil::specialcharsAttribute($strTitle), $strClass, $strTarget, $strName), OutputType::html),
+            'link_open' => new InsertTagResult(\sprintf('<a href="%s" title="%s"%s%s>', $strUrl, StringUtil::specialcharsAttribute($strTitle), $strClass, $strTarget), OutputType::html),
             'link_url' => new InsertTagResult($strUrl, OutputType::url),
             'link_title' => new InsertTagResult(StringUtil::specialcharsAttribute($strTitle), OutputType::html),
             'link_name' => new InsertTagResult(StringUtil::specialcharsAttribute($strName), OutputType::html),

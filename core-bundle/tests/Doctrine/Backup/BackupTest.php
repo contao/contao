@@ -49,7 +49,7 @@ class BackupTest extends ContaoTestCase
     {
         $this->expectException(BackupManagerException::class);
 
-        $this->expectExceptionMessage(sprintf(
+        $this->expectExceptionMessage(\sprintf(
             'The filename "%s" does not match "%s"',
             $filename,
             Backup::VALID_BACKUP_NAME_REGEX,

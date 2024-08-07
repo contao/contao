@@ -2,6 +2,26 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.12] (2024-08-06)
+
+**Fixed issues:**
+
+- [#7385] Clone content elements with all data ([aschempp])
+- [#7411] Make sure to add the assets/files context to all image paths ([leofeyer])
+- [#7397] Use `maxLines: Infinity` to automatically resize the ACE editor ([leofeyer])
+- [#7398] Make the theme icons forward compatible ([leofeyer])
+- [#7382] Fix the double form submission script ([leofeyer])
+- [#7376] Skip database backups if the remaining migrations will not be executed ([fritzmg])
+- [#7381] Fix the padding of the main content area on mobile devices ([leofeyer])
+- [#7374] Fix the z-index of the limit height toggle ([leofeyer])
+- [#7364] Use the modified element when cloning ([aschempp])
+- [#7358] Use the widget attributes to generate the DCA row ([aschempp])
+- [#7348] Cleanup a leftover service argument ([Toflar])
+- [#7343] Do not limit the number of download items ([mpitz])
+- [#7327] Add the `:never` return type to methods that never return ([aschempp])
+- [#7319] Generate public URIs for automatically mounted adapters replacing symlinks ([m-vo])
+- [#7320] Handle `.<ext>.twig` file extensions in DC_Folder ([m-vo])
+
 ## [5.3.11] (2024-06-28)
 
 **Fixed issues:**
@@ -368,6 +388,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.12]: https://github.com/contao/contao/releases/tag/5.3.12
 [5.3.11]: https://github.com/contao/contao/releases/tag/5.3.11
 [5.3.10]: https://github.com/contao/contao/releases/tag/5.3.10
 [5.3.9]: https://github.com/contao/contao/releases/tag/5.3.9
@@ -399,6 +420,7 @@ This project adheres to [Semantic Versioning].
 [lukasbableck]: https://github.com/lukasbableck
 [m-vo]: https://github.com/m-vo
 [md-netdesign]: https://github.com/md-netdesign
+[mpitz]: https://github.com/mpitz
 [qzminski]: https://github.com/qzminski
 [ReneLuecking]: https://github.com/ReneLuecking
 [SeverinGloeckle]: https://github.com/SeverinGloeckle
@@ -669,3 +691,18 @@ This project adheres to [Semantic Versioning].
 [#7309]: https://github.com/contao/contao/pull/7309
 [#7315]: https://github.com/contao/contao/pull/7315
 [#7317]: https://github.com/contao/contao/pull/7317
+[#7319]: https://github.com/contao/contao/pull/7319
+[#7320]: https://github.com/contao/contao/pull/7320
+[#7327]: https://github.com/contao/contao/pull/7327
+[#7343]: https://github.com/contao/contao/pull/7343
+[#7348]: https://github.com/contao/contao/pull/7348
+[#7358]: https://github.com/contao/contao/pull/7358
+[#7364]: https://github.com/contao/contao/pull/7364
+[#7374]: https://github.com/contao/contao/pull/7374
+[#7376]: https://github.com/contao/contao/pull/7376
+[#7381]: https://github.com/contao/contao/pull/7381
+[#7382]: https://github.com/contao/contao/pull/7382
+[#7385]: https://github.com/contao/contao/pull/7385
+[#7397]: https://github.com/contao/contao/pull/7397
+[#7398]: https://github.com/contao/contao/pull/7398
+[#7411]: https://github.com/contao/contao/pull/7411

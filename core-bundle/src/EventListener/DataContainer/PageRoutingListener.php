@@ -80,7 +80,7 @@ class PageRoutingListener
             $conflicts[] = [
                 'page' => $aliasPage,
                 'path' => $this->getPathWithParameters($this->pageRegistry->getRoute($aliasPage)),
-                'editUrl' => $backendAdapter->addToUrl(sprintf('act=edit&id=%s&popup=1&nb=1', $aliasPage->id)),
+                'editUrl' => $backendAdapter->addToUrl(\sprintf('act=edit&id=%s&popup=1&nb=1', $aliasPage->id)),
             ];
         }
 

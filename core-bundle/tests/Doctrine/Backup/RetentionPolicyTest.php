@@ -147,6 +147,6 @@ class RetentionPolicyTest extends ContaoTestCase
     {
         $dt = \DateTime::createFromFormat(\DateTimeInterface::ATOM, $atomDateTime);
 
-        return new Backup(sprintf('backup__%s.sql.gz', $dt->format(Backup::DATETIME_FORMAT)));
+        return new Backup(\sprintf('backup__%s.sql.gz', $dt->format(Backup::DATETIME_FORMAT)));
     }
 }

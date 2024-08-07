@@ -270,7 +270,7 @@ class FilesystemItem implements \Stringable
     private function assertIsFile(string $method): void
     {
         if (!$this->isFile) {
-            throw new \LogicException(sprintf('Cannot call %s() on a non-file filesystem item.', $method));
+            throw new \LogicException(\sprintf('Cannot call %s() on a non-file filesystem item.', $method));
         }
     }
 

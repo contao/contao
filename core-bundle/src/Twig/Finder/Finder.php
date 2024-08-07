@@ -130,7 +130,7 @@ final class Finder implements \IteratorAggregate, \Countable
                 return null;
             }
 
-            return sprintf(
+            return \sprintf(
                 '%s [%s • %s]',
                 $this->translator->trans($identifier, [], 'templates'),
                 $identifier,
@@ -138,7 +138,7 @@ final class Finder implements \IteratorAggregate, \Countable
             );
         };
 
-        $getLabel = static fn (string $identifier, array $sourceLabels): string => sprintf(
+        $getLabel = static fn (string $identifier, array $sourceLabels): string => \sprintf(
             '%s [%s]',
             $identifier,
             implode(', ', $sourceLabels),

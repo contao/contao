@@ -853,7 +853,7 @@ class Dbafs
 	{
 		if (preg_match('//u', $strPath) !== 1)
 		{
-			throw new \InvalidArgumentException(sprintf('Path "%s" contains malformed UTF-8 characters.', $strPath));
+			throw new \InvalidArgumentException(\sprintf('Path "%s" contains malformed UTF-8 characters.', $strPath));
 		}
 	}
 }

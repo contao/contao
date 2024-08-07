@@ -224,6 +224,20 @@ abstract class Model
 	}
 
 	/**
+	 * Clone a model with all data and prevent saving
+	 *
+	 * @return static The model
+	 */
+	public function cloneDetached()
+	{
+		$clone = clone $this;
+		$clone->arrData[static::$strPk] = $this->arrData[static::$strPk];
+		$clone->preventSaving(false);
+
+		return $clone;
+	}
+
+	/**
 	 * Set an object property
 	 *
 	 * @param string $strKey   The property name
@@ -751,7 +765,7 @@ abstract class Model
 		// The enum does not exist
 		if (null === $enum)
 		{
-			throw new \Exception(sprintf('Field %s.%s has no enum configured', static::getTable(), $strKey));
+			throw new \Exception(\sprintf('Field %s.%s has no enum configured', static::getTable(), $strKey));
 		}
 
 		$varValue = $this->{$strKey};
@@ -759,7 +773,7 @@ abstract class Model
 		// The value is invalid
 		if (!\is_string($varValue) && !\is_int($varValue))
 		{
-			throw new \Exception(sprintf('Value of %s.%s must be a string or an integer to resolve a backed enumeration', static::getTable(), $strKey));
+			throw new \Exception(\sprintf('Value of %s.%s must be a string or an integer to resolve a backed enumeration', static::getTable(), $strKey));
 		}
 
 		return $this->arrEnums[$strKey]::tryFrom($varValue);
@@ -1354,7 +1368,7 @@ abstract class Model
 	{
 		if (!isset($GLOBALS['TL_MODELS'][$strTable]))
 		{
-			throw new \RuntimeException(sprintf('There is no class for table "%s" registered in $GLOBALS[\'TL_MODELS\'].', $strTable));
+			throw new \RuntimeException(\sprintf('There is no class for table "%s" registered in $GLOBALS[\'TL_MODELS\'].', $strTable));
 		}
 
 		return $GLOBALS['TL_MODELS'][$strTable];

@@ -71,7 +71,7 @@ class FragmentTemplateTest extends TestCase
         $template = $this->getFragmentTemplate();
 
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage(sprintf('Calling the "%s()" function on a FragmentTemplate is not allowed. Set template data instead and optionally output it with getResponse().', $method));
+        $this->expectExceptionMessage(\sprintf('Calling the "%s()" function on a FragmentTemplate is not allowed. Set template data instead and optionally output it with getResponse().', $method));
 
         $template->$method(...$args);
     }

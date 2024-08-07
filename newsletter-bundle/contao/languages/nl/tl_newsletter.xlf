@@ -19,9 +19,11 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.preheader.0">
         <source>Preheader text</source>
+        <target>Tekst vooraf</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.preheader.1">
         <source>Here you can enter a preheader text. A preheader text should be between 40-130 characters long.</source>
+        <target>Hier kunt u een preheadertekst invoeren. Een preheadertekst moet tussen de 40-130 tekens lang zijn.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.content.0">
         <source>HTML content</source>
@@ -185,7 +187,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.rejected">
         <source>%s invalid e-mail address(es) has/have been disabled (see system log).</source>
-        <target>%s ongeldige e-mail adressen zijn geblokkeerd (zie systeemlog).</target>
+        <target>%s ongeldig(e) e-mail adres(sen) zijn geblokkeerd (zie systeemlog).</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.skipped">
         <source>%s e-mail address(es) has/have been skipped.</source>

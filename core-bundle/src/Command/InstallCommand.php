@@ -79,7 +79,7 @@ class InstallCommand extends Command
         ];
 
         foreach ($emptyDirs as $path) {
-            $this->addEmptyDir(Path::join($this->projectDir, sprintf($path, $this->webDir)));
+            $this->addEmptyDir(Path::join($this->projectDir, \sprintf($path, $this->webDir)));
         }
 
         $this->addEmptyDir($this->imageDir);

@@ -41,11 +41,11 @@ class AddInsertTagsPass implements CompilerPassInterface
             foreach ($serviceIds as $serviceId => $tags) {
                 foreach ($tags as $attributes) {
                     if (!preg_match('/^[a-z\x80-\xFF][a-z0-9_\x80-\xFF]*$/i', (string) ($attributes['name'] ?? ''))) {
-                        throw new InvalidDefinitionException(sprintf('Invalid insert tag name "%s"', $attributes['name'] ?? ''));
+                        throw new InvalidDefinitionException(\sprintf('Invalid insert tag name "%s"', $attributes['name'] ?? ''));
                     }
 
                     if (!preg_match('/^[a-z\x80-\xFF][a-z0-9_\x80-\xFF]*$|^$/i', (string) ($attributes['endTag'] ?? ''))) {
-                        throw new InvalidDefinitionException(sprintf('Invalid insert tag end tag name "%s"', $attributes['endTag'] ?? ''));
+                        throw new InvalidDefinitionException(\sprintf('Invalid insert tag end tag name "%s"', $attributes['endTag'] ?? ''));
                     }
 
                     $class = $container->findDefinition($serviceId)->getClass();
@@ -80,7 +80,7 @@ class AddInsertTagsPass implements CompilerPassInterface
         foreach ($serviceIds as $serviceId => $tags) {
             foreach ($tags as $attributes) {
                 if (!preg_match('/^[a-z\x80-\xFF][a-z0-9_\x80-\xFF]*$/i', (string) ($attributes['name'] ?? ''))) {
-                    throw new InvalidDefinitionException(sprintf('Invalid insert tag flag name "%s"', $attributes['name'] ?? ''));
+                    throw new InvalidDefinitionException(\sprintf('Invalid insert tag flag name "%s"', $attributes['name'] ?? ''));
                 }
 
                 $method = $this->getMethod($attributes['method'], 'contao.insert_tag_flag', $container->findDefinition($serviceId)->getClass(), $serviceId);
@@ -106,12 +106,12 @@ class AddInsertTagsPass implements CompilerPassInterface
     private function getMethod(string|null $method, string $serviceTag, string $class, string $serviceId): string
     {
         $ref = new \ReflectionClass($class);
-        $invalid = sprintf('The %s definition for service "%s" is invalid. ', $serviceTag, $serviceId);
+        $invalid = \sprintf('The %s definition for service "%s" is invalid. ', $serviceTag, $serviceId);
 
         $method = $method ?: '__invoke';
 
         if (!$ref->hasMethod($method)) {
-            $invalid .= sprintf('The class "%s" does not have a method "%s".', $class, $method);
+            $invalid .= \sprintf('The class "%s" does not have a method "%s".', $class, $method);
 
             throw new InvalidDefinitionException($invalid);
         }
@@ -119,7 +119,7 @@ class AddInsertTagsPass implements CompilerPassInterface
         $ref = $ref->getMethod($method);
 
         if (!$ref->isPublic()) {
-            $invalid .= sprintf('The "%s::%s" method exists but is not public.', $class, $method);
+            $invalid .= \sprintf('The "%s::%s" method exists but is not public.', $class, $method);
 
             throw new InvalidDefinitionException($invalid);
         }
@@ -127,7 +127,7 @@ class AddInsertTagsPass implements CompilerPassInterface
         $expectedReturnType = 'contao.block_insert_tag' === $serviceTag ? ParsedSequence::class : InsertTagResult::class;
 
         if ($expectedReturnType !== (string) $ref->getReturnType()) {
-            $invalid .= sprintf('The "%s::%s" method exists but has an invalid return type. Expected "%s", got "%s".', $class, $method, $expectedReturnType, $ref->getReturnType());
+            $invalid .= \sprintf('The "%s::%s" method exists but has an invalid return type. Expected "%s", got "%s".', $class, $method, $expectedReturnType, $ref->getReturnType());
 
             throw new InvalidDefinitionException($invalid);
         }
@@ -143,7 +143,7 @@ class AddInsertTagsPass implements CompilerPassInterface
         return match ($type = (string) (((new \ReflectionMethod($class, $method))->getParameters()[0] ?? null)?->getType() ?? 'NULL')) {
             ResolvedInsertTag::class => true,
             ParsedInsertTag::class => false,
-            default => throw new InvalidDefinitionException(sprintf('The "%s::%s" method has an invalid parameter type. Expected "%s" or "%s", got "%s".', $class, $method, ResolvedInsertTag::class, ParsedInsertTag::class, $type)),
+            default => throw new InvalidDefinitionException(\sprintf('The "%s::%s" method has an invalid parameter type. Expected "%s" or "%s", got "%s".', $class, $method, ResolvedInsertTag::class, ParsedInsertTag::class, $type)),
         };
     }
 }

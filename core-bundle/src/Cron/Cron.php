@@ -110,7 +110,7 @@ class Cron
             }
         }
 
-        throw new \InvalidArgumentException(sprintf('Cronjob "%s" does not exist.', $name));
+        throw new \InvalidArgumentException(\sprintf('Cronjob "%s" does not exist.', $name));
     }
 
     /**
@@ -192,7 +192,7 @@ class Cron
 
         foreach ($crons as $cron) {
             try {
-                $this->logger?->debug(sprintf('Executing cron job "%s"', $cron->getName()));
+                $this->logger?->debug(\sprintf('Executing cron job "%s"', $cron->getName()));
 
                 $promise = $cron($scope);
 
@@ -202,13 +202,13 @@ class Cron
 
                 $promise->then(
                     function () use ($cron): void {
-                        $this->logger?->debug(sprintf('Asynchronous cron job "%s" finished successfully', $cron->getName()));
+                        $this->logger?->debug(\sprintf('Asynchronous cron job "%s" finished successfully', $cron->getName()));
                     },
                     function ($reason) use ($onSkip, $cron): void {
                         if ($reason instanceof CronExecutionSkippedException) {
                             $onSkip($cron);
                         } else {
-                            $this->logger?->debug(sprintf('Asynchronous cron job "%s" failed: %s', $cron->getName(), $reason));
+                            $this->logger?->debug(\sprintf('Asynchronous cron job "%s" failed: %s', $cron->getName(), $reason));
                         }
                     },
                 );

@@ -69,7 +69,7 @@ class RobotsTxtListener
 
         $rootPage = $event->getRootPage();
 
-        $sitemap = sprintf(
+        $sitemap = \sprintf(
             '%s%s/sitemap.xml',
             $rootPage->useSSL ? 'https://' : 'http://',
             $rootPage->dns ?: $event->getRequest()->server->get('HTTP_HOST'),

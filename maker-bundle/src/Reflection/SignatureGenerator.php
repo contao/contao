@@ -35,17 +35,17 @@ class SignatureGenerator
             }
 
             $paramReference = str_starts_with($name, '&');
-            $parameterTemplate = sprintf('%s %s$%s', $paramType, $paramReference ? '&' : '', $paramName);
+            $parameterTemplate = \sprintf('%s %s$%s', $paramType, $paramReference ? '&' : '', $paramName);
 
             if (null !== $defaultValue) {
-                $parameterTemplate = sprintf('%s = %s', $parameterTemplate, $defaultValue);
+                $parameterTemplate = \sprintf('%s = %s', $parameterTemplate, $defaultValue);
             }
 
             $parameterTemplate = trim($parameterTemplate);
             $parameterTemplates[] = $parameterTemplate;
         }
 
-        return sprintf(
+        return \sprintf(
             'public function %s(%s)%s',
             $methodName,
             implode(', ', $parameterTemplates),

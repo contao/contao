@@ -197,7 +197,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         ];
 
         if (!\is_string($credentials['username']) && (!\is_object($credentials['username']) || !method_exists($credentials['username'], '__toString'))) {
-            throw new BadRequestHttpException(sprintf('The key "%s" must be a string, "%s" given.', $this->options['username_parameter'], \gettype($credentials['username'])));
+            throw new BadRequestHttpException(\sprintf('The key "%s" must be a string, "%s" given.', $this->options['username_parameter'], \gettype($credentials['username'])));
         }
 
         $credentials['username'] = trim($credentials['username']);

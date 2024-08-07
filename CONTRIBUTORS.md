@@ -97,6 +97,7 @@
  * Janosch Oltmanns ([JanoschOltmanns](https://github.com/JanoschOltmanns))
  * Jens Dutzi ([Blog404DE](https://github.com/Blog404DE))
  * Marc Reimann ([MacKP](https://github.com/MacKP))
+ * Marcel Pitz ([mpitz](https://github.com/mpitz))
  * Marko Cupic ([markocupic](https://github.com/markocupic))
  * Niels ([Niels](https://github.com/Niels))
  * Physiklehrer ([Physiklehrer](https://github.com/Physiklehrer))
