@@ -70,7 +70,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 			'recipients' => array
 			(
 				'href'                => 'table=tl_newsletter_recipients',
-				'icon'                => 'mgroup.svg',
+				'icon'                => 'mgroup.svg'
 			)
 		)
 	),
