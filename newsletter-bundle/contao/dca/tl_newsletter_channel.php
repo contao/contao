@@ -71,7 +71,6 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 			(
 				'href'                => 'table=tl_newsletter_recipients',
 				'icon'                => 'mgroup.svg',
-				'addRequestToken'     => false,
 			)
 		)
 	),

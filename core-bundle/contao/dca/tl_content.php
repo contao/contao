@@ -82,7 +82,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 				'href'                => 'table=tl_content&ptable=tl_content',
 				'icon'                => 'children.svg',
 				'button_callback'     => array('tl_content', 'editChildren'),
-				'addRequestToken'     => false,
 			),
 			'copy' => array
 			(

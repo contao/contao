@@ -2714,7 +2714,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			if ($this->isMounted($currentFolder))
 			{
-				$strFolderLabel = '<a href="' . $this->addToUrl('fn=' . $currentEncoded) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $strFolderLabel . '</a>';
+				$strFolderLabel = '<a href="' . $this->addToUrl('fn=' . $currentEncoded) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-turbo-prefetch="false">' . $strFolderLabel . '</a>';
 			}
 
 			$return .= Image::getHtml($folderImg, $folderAlt) . ' ' . $strFolderLabel . '</div> <div class="tl_right">';

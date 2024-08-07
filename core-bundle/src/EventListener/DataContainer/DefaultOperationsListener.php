@@ -109,7 +109,6 @@ class DefaultOperationsListener
                         'href' => 'table='.$ctable,
                         'icon' => 'children.svg',
                         'button_callback' => $this->accessChildrenCallback($ctable, $table),
-                        'addRequestToken' => false,
                     ],
                 ];
             }
@@ -172,7 +171,6 @@ class DefaultOperationsListener
             'show' => [
                 'href' => 'act=show',
                 'icon' => 'show.svg',
-                'addRequestToken' => false,
             ],
         ];
     }
