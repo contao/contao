@@ -1663,6 +1663,10 @@ table.tl_listing {
 	background: linear-gradient(transparent, var(--content-bg));
 }
 
+[data-contao--limit-height-target][style*="max-height"]:hover .limit_toggler {
+	background: linear-gradient(transparent, var(--hover-row));
+}
+
 .limit_toggler {
 	width: 100%;
 	position: absolute;
