@@ -1656,12 +1656,15 @@ table.tl_listing {
 	overflow: hidden;
 }
 
+[data-contao--limit-height-target][style*="max-height"] .limit_toggler {
+    background: linear-gradient(transparent, var(--content-bg));
+}
+
 .limit_toggler {
 	width: 100%;
 	position: absolute;
 	bottom: 0;
 	left: 0;
-	background: linear-gradient(transparent, var(--content-bg));
 	line-height: 11px;
 	text-align: center;
 	z-index: 1;
