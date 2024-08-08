@@ -135,7 +135,7 @@ composer functional-tests
 To build the assets, you need a Node.js version >= 18.12. Then run these commands:
 
 ```bash
-npm install
+npm ci
 npm run build
 ```
 
