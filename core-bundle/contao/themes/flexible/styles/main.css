@@ -1655,6 +1655,7 @@ table.tl_listing {
 .limit_height {
 	overflow: hidden;
 }
+
 [data-contao--limit-height-target] {
 	position: relative;
 }
