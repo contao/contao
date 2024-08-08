@@ -1655,12 +1655,17 @@ table.tl_listing {
 .limit_height {
 	overflow: hidden;
 }
+
 [data-contao--limit-height-target] {
 	position: relative;
 }
 
 [data-contao--limit-height-target][style*="max-height"] .limit_toggler {
-	background: linear-gradient(transparent, var(--content-bg));
+	background: linear-gradient(transparent, var(--content-bg) 60%);
+}
+
+[data-contao--limit-height-target][style*="max-height"]:hover .limit_toggler {
+	background: linear-gradient(transparent, var(--hover-row) 60%);
 }
 
 .limit_toggler {
@@ -1668,9 +1673,12 @@ table.tl_listing {
 	position: absolute;
 	bottom: -1px;
 	left: 0;
+	height: 40px;
 	line-height: 11px;
-	text-align: center;
 	z-index: 1;
+	display: flex;
+	justify-content: center;
+	align-items: end;
 }
 
 .limit_toggler button {
