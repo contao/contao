@@ -272,7 +272,7 @@ class FormText extends Widget
 	 */
 	public function generate()
 	{
-		return sprintf(
+		return \sprintf(
 			'<input type="%s" name="%s" id="ctrl_%s" class="text%s%s" value="%s"%s%s',
 			$this->type,
 			$this->strName,

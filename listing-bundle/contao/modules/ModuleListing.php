@@ -279,7 +279,7 @@ class ModuleListing extends Module
 			(
 				'link' => $strField,
 				'href' => (StringUtil::ampersand($strUrl) . $strVarConnector . 'order_by=' . $arrFields[$i]) . '&amp;sort=' . $sort,
-				'title' => StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['list_orderBy'], $strField)),
+				'title' => StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['list_orderBy'], $strField)),
 				'class' => $class
 			);
 		}
@@ -341,7 +341,7 @@ class ModuleListing extends Module
 		$this->Template->for = $strFor;
 		$this->Template->order_by = $order_by;
 		$this->Template->sort = $sort;
-		$this->Template->no_results = sprintf($GLOBALS['TL_LANG']['MSC']['sNoResult'], $strFor);
+		$this->Template->no_results = \sprintf($GLOBALS['TL_LANG']['MSC']['sNoResult'], $strFor);
 	}
 
 	/**

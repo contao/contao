@@ -288,7 +288,7 @@ class Result
 
 		if (!isset($result[$intOffset]))
 		{
-			throw new \OutOfBoundsException(sprintf('The result does not contain any data at offset %d.', $intOffset));
+			throw new \OutOfBoundsException(\sprintf('The result does not contain any data at offset %d.', $intOffset));
 		}
 
 		return $result[$intOffset];

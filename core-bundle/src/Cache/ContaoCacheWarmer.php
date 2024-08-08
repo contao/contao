@@ -181,7 +181,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         // Cache the available Contao language files (see #6454)
         $this->filesystem->dumpFile(
             Path::join($cacheDir, 'contao/config/available-language-files.php'),
-            sprintf("<?php\n\nreturn %s;\n", var_export($processed, true)),
+            \sprintf("<?php\n\nreturn %s;\n", var_export($processed, true)),
         );
     }
 
@@ -206,14 +206,14 @@ class ContaoCacheWarmer implements CacheWarmerInterface
 
             $this->filesystem->dumpFile(
                 Path::join($cacheDir, 'contao/sql', "$table.php"),
-                sprintf(
+                \sprintf(
                     "<?php\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n\$this->blnIsDbTable = true;\n",
-                    sprintf('$this->arrMeta = %s;', var_export($extract->getMeta(), true)),
-                    sprintf('$this->arrFields = %s;', var_export($extract->getFields(), true)),
-                    sprintf('$this->arrUniqueFields = %s;', var_export($extract->getUniqueFields(), true)),
-                    sprintf('$this->arrKeys = %s;', var_export($extract->getKeys(), true)),
-                    sprintf('$this->arrRelations = %s;', var_export($extract->getRelations(), true)),
-                    sprintf('$this->arrEnums = %s;', var_export($extract->getEnums(), true)),
+                    \sprintf('$this->arrMeta = %s;', var_export($extract->getMeta(), true)),
+                    \sprintf('$this->arrFields = %s;', var_export($extract->getFields(), true)),
+                    \sprintf('$this->arrUniqueFields = %s;', var_export($extract->getUniqueFields(), true)),
+                    \sprintf('$this->arrKeys = %s;', var_export($extract->getKeys(), true)),
+                    \sprintf('$this->arrRelations = %s;', var_export($extract->getRelations(), true)),
+                    \sprintf('$this->arrEnums = %s;', var_export($extract->getEnums(), true)),
                 ),
             );
         }
@@ -235,7 +235,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
 
         $this->filesystem->dumpFile(
             Path::join($cacheDir, 'contao/config/templates.php'),
-            sprintf("<?php\n\nreturn %s;\n", var_export($mapper, true)),
+            \sprintf("<?php\n\nreturn %s;\n", var_export($mapper, true)),
         );
     }
 
@@ -243,7 +243,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     {
         $this->filesystem->dumpFile(
             Path::join($cacheDir, 'contao/config/column-types.php'),
-            sprintf("<?php\n\nreturn %s;\n", var_export(Model::getColumnCastTypesFromDca(), true)),
+            \sprintf("<?php\n\nreturn %s;\n", var_export(Model::getColumnCastTypesFromDca(), true)),
         );
     }
 

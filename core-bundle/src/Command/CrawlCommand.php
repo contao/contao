@@ -142,7 +142,7 @@ class CrawlCommand extends Command
         $output->writeln('');
 
         $io->comment(
-            sprintf(
+            \sprintf(
                 '[Job ID: %s] Finished crawling! Find the details for each subscriber below:',
                 $this->escargot->getJobId(),
             ),

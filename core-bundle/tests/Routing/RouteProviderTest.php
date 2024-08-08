@@ -339,7 +339,7 @@ class RouteProviderTest extends TestCase
             $this->assertSame(
                 $pages[$i],
                 $routedPage,
-                sprintf(
+                \sprintf(
                     'Position %s should be %s/%s but is %s/%s',
                     $i,
                     $pages[$i]->rootLanguage,
@@ -553,7 +553,7 @@ class RouteProviderTest extends TestCase
             $this->assertSame(
                 $page,
                 $routedPage,
-                sprintf(
+                \sprintf(
                     'Position %s should be %s/%s but is %s/%s',
                     $i,
                     $page->rootLanguage,
@@ -637,7 +637,7 @@ class RouteProviderTest extends TestCase
         $request = $this->mockRequestWithPath(($prependLocale ? '/'.$language : '').'/foo/bar'.$urlSuffix);
 
         $route = new PageRoute($pageModel);
-        $route->setPath(sprintf('/%s{parameters}', $pageModel->alias ?: $pageModel->id));
+        $route->setPath(\sprintf('/%s{parameters}', $pageModel->alias ?: $pageModel->id));
         $route->setDefault('parameters', '/foo/bar');
         $route->setRequirement('parameters', $pageModel->requireItem ? '/.+' : '(/.+)?');
 

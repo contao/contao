@@ -67,7 +67,7 @@ class Database
 
 		if (!\is_object($this->resConnection))
 		{
-			throw new \Exception(sprintf('Could not connect to database (%s)', $this->error));
+			throw new \Exception(\sprintf('Could not connect to database (%s)', $this->error));
 		}
 	}
 

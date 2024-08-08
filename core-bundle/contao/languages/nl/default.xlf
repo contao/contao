@@ -435,9 +435,11 @@
       </trans-unit>
       <trans-unit id="CTE.description_list.0">
         <source>Description list</source>
+        <target>Beschrijving lijst</target>
       </trans-unit>
       <trans-unit id="CTE.description_list.1">
         <source>Generates a description list with terms and details.</source>
+        <target>Genereert een beschrijvingslijst met termen en details.</target>
       </trans-unit>
       <trans-unit id="CTE.table.0">
         <source>Table</source>
@@ -2381,9 +2383,11 @@
       </trans-unit>
       <trans-unit id="MSC.reauthenticate">
         <source>Please enter your password to verify your identity.</source>
+        <target>Voer uw wachtwoord in om uw identiteit te verifiëren.</target>
       </trans-unit>
       <trans-unit id="MSC.verify">
         <source>Verify</source>
+        <target>Verifiëren</target>
       </trans-unit>
       <trans-unit id="MSC.confirmation">
         <source>Confirmation</source>
@@ -2499,6 +2503,7 @@
       </trans-unit>
       <trans-unit id="MSC.twitterShare">
         <source>Share on X (formerly Twitter)</source>
+        <target>Deel op X (voorheen Twitter)</target>
       </trans-unit>
       <trans-unit id="MSC.pleaseWait">
         <source>Please wait</source>

@@ -68,7 +68,7 @@ class FrontendModulePermissionsListener
                 continue;
             }
 
-            $options[$module['theme']][$module['id']] = sprintf('%s (ID %s)', $module['name'], $module['id']);
+            $options[$module['theme']][$module['id']] = \sprintf('%s (ID %s)', $module['name'], $module['id']);
         }
 
         return $options;

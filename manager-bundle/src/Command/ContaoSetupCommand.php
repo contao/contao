@@ -139,7 +139,7 @@ class ContaoSetupCommand extends Command
         );
 
         if (!$process->isSuccessful()) {
-            throw new \RuntimeException(sprintf('An error occurred while executing the "%s" command: %s', implode(' ', $command), $process->getErrorOutput()));
+            throw new \RuntimeException(\sprintf('An error occurred while executing the "%s" command: %s', implode(' ', $command), $process->getErrorOutput()));
         }
     }
 

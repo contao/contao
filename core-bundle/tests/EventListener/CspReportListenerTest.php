@@ -26,7 +26,7 @@ class CspReportListenerTest extends TestCase
         $uri = 'https://example.com/foobar';
         $line = 1337;
         $directive = 'script-src-elem';
-        $expectedMessage = sprintf('Content-Security-Policy violation reported for "%s" on line %d', $directive, $line);
+        $expectedMessage = \sprintf('Content-Security-Policy violation reported for "%s" on line %d', $directive, $line);
 
         $logger = $this->createMock(LoggerInterface::class);
         $logger

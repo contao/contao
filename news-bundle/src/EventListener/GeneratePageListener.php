@@ -68,6 +68,6 @@ class GeneratePageListener
 
     private function generateFeedTag(string $href, string $format, string $title): string
     {
-        return sprintf('<link type="%s" rel="alternate" href="%s" title="%s">', NewsFeedController::$contentTypes[$format], $href, StringUtil::specialchars($title));
+        return \sprintf('<link type="%s" rel="alternate" href="%s" title="%s">', NewsFeedController::$contentTypes[$format], $href, StringUtil::specialchars($title));
     }
 }

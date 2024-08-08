@@ -250,7 +250,7 @@ final class Figure
             'width' => $originalSize->getWidth(),
             'height' => $originalSize->getHeight(),
             'arrSize' => $fileInfoImageSize,
-            'imgSize' => !empty($fileInfoImageSize) ? sprintf(' width="%d" height="%d"', $fileInfoImageSize[0], $fileInfoImageSize[1]) : '',
+            'imgSize' => !empty($fileInfoImageSize) ? \sprintf(' width="%d" height="%d"', $fileInfoImageSize[0], $fileInfoImageSize[1]) : '',
             'singleSRC' => $image->getFilePath(),
             'src' => $image->getImageSrc(),
             'fullsize' => ('_blank' === ($linkAttributes['target'] ?? null)) || $this->hasLightbox(),
@@ -280,7 +280,7 @@ final class Figure
 
         if ($linkAttributes) {
             $htmlAttributes = array_map(
-                static fn (string $attribute, string $value) => sprintf('%s="%s"', $attribute, $value),
+                static fn (string $attribute, string $value) => \sprintf('%s="%s"', $attribute, $value),
                 array_keys($linkAttributes),
                 $linkAttributes,
             );

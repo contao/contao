@@ -96,7 +96,7 @@ class PlayerController extends AbstractContentElementController
         ;
 
         $range = $model->playerStart || $model->playerStop
-            ? sprintf('#t=%s', implode(',', [$model->playerStart ?: '', $model->playerStop ?: '']))
+            ? \sprintf('#t=%s', implode(',', [$model->playerStart ?: '', $model->playerStop ?: '']))
             : '';
 
         $captions = [$model->playerCaption];

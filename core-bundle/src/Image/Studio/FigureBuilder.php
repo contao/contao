@@ -154,7 +154,7 @@ class FigureBuilder
         $this->lastException = null;
 
         if ('file' !== $filesModel->type) {
-            $this->lastException = new InvalidResourceException(sprintf('DBAFS item "%s" is not a file.', $filesModel->path));
+            $this->lastException = new InvalidResourceException(\sprintf('DBAFS item "%s" is not a file.', $filesModel->path));
 
             return $this;
         }
@@ -163,7 +163,7 @@ class FigureBuilder
         $this->filesModel = $filesModel;
 
         if (!$this->filesystem->exists($this->filePath)) {
-            $this->lastException = new InvalidResourceException(sprintf('No resource could be located at path "%s".', $this->filePath));
+            $this->lastException = new InvalidResourceException(\sprintf('No resource could be located at path "%s".', $this->filePath));
         }
 
         return $this;
@@ -177,7 +177,7 @@ class FigureBuilder
         $this->lastException = null;
 
         if (!$filesModel = $this->getFilesModelAdapter()->findByUuid($uuid)) {
-            $this->lastException = new InvalidResourceException(sprintf('DBAFS item with UUID "%s" could not be found.', $uuid));
+            $this->lastException = new InvalidResourceException(\sprintf('DBAFS item with UUID "%s" could not be found.', $uuid));
 
             return $this;
         }
@@ -193,7 +193,7 @@ class FigureBuilder
         $this->lastException = null;
 
         if (!$filesModel = $this->getFilesModelAdapter()->findById($id)) {
-            $this->lastException = new InvalidResourceException(sprintf('DBAFS item with ID "%s" could not be found.', $id));
+            $this->lastException = new InvalidResourceException(\sprintf('DBAFS item with ID "%s" could not be found.', $id));
 
             return $this;
         }
@@ -238,7 +238,7 @@ class FigureBuilder
         $this->filesModel = null;
 
         if (!$this->filesystem->exists($this->filePath)) {
-            $this->lastException = new InvalidResourceException(sprintf('No resource could be located at path "%s".', $this->filePath));
+            $this->lastException = new InvalidResourceException(\sprintf('No resource could be located at path "%s".', $this->filePath));
         }
 
         return $this;
@@ -267,7 +267,7 @@ class FigureBuilder
 
         if (null === $path) {
             if ('' !== $uri->getHost()) {
-                $this->lastException = new InvalidResourceException(sprintf('Resource URL "%s" outside of base URLs "%s".', $url, implode('", "', $baseUrls)));
+                $this->lastException = new InvalidResourceException(\sprintf('Resource URL "%s" outside of base URLs "%s".', $url, implode('", "', $baseUrls)));
 
                 return $this;
             }
@@ -276,7 +276,7 @@ class FigureBuilder
         }
 
         if (preg_match('/%2f|%5c/i', $path)) {
-            $this->lastException = new InvalidResourceException(sprintf('Resource URL path "%s" contains invalid percent encoding.', $path));
+            $this->lastException = new InvalidResourceException(\sprintf('Resource URL path "%s" contains invalid percent encoding.', $path));
 
             return $this;
         }
@@ -345,7 +345,7 @@ class FigureBuilder
         try {
             $stream = $storage->readStream($location);
         } catch (VirtualFilesystemException|UnableToResolveUuidException $e) {
-            $this->lastException = new InvalidResourceException(sprintf('Could not read resource from storage: %s', $e->getMessage()), previous: $e);
+            $this->lastException = new InvalidResourceException(\sprintf('Could not read resource from storage: %s', $e->getMessage()), previous: $e);
 
             return $this;
         }
@@ -356,7 +356,7 @@ class FigureBuilder
         $uri = $metadata['uri'];
 
         if ('STDIO' !== $metadata['stream_type'] || 'plainfile' !== $metadata['wrapper_type'] || !Path::isAbsolute($uri)) {
-            $this->lastException = new InvalidResourceException(sprintf('Only streams of type STDIO/plainfile pointing to an absolute path are currently supported when reading an image from a storage, got "%s/%s" with URI "%s".', $metadata['stream_type'], $metadata['wrapper_type'], $uri));
+            $this->lastException = new InvalidResourceException(\sprintf('Only streams of type STDIO/plainfile pointing to an absolute path are currently supported when reading an image from a storage, got "%s/%s" with URI "%s".', $metadata['stream_type'], $metadata['wrapper_type'], $uri));
 
             return $this;
         }
@@ -470,7 +470,7 @@ class FigureBuilder
 
         foreach ($attributes as $key => $value) {
             if (!\is_string($key) || !\is_string($value)) {
-                throw new \InvalidArgumentException(sprintf('Link attributes must be an array of type <string, string>, <%s, %s> given.', get_debug_type($key), get_debug_type($value)));
+                throw new \InvalidArgumentException(\sprintf('Link attributes must be an array of type <string, string>, <%s, %s> given.', get_debug_type($key), get_debug_type($value)));
             }
         }
 
@@ -621,7 +621,7 @@ class FigureBuilder
             // Make sure the resource can be processed
             $figure->getImage()->getOriginalDimensions();
         } catch (\Throwable $e) {
-            $this->lastException = new InvalidResourceException(sprintf('The file "%s" could not be opened as an image.', $this->filePath), 0, $e);
+            $this->lastException = new InvalidResourceException(\sprintf('The file "%s" could not be opened as an image.', $this->filePath), 0, $e);
 
             return null;
         }

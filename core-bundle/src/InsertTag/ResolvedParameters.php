@@ -25,7 +25,7 @@ final class ResolvedParameters extends InsertTagParameters
     {
         foreach ($parameters as $parameter) {
             if (!\is_string($parameter)) {
-                throw new \TypeError(sprintf('%s(): Argument #1 ($parameters) must be of type list<%s>, list<%s> given', __METHOD__, 'string', get_debug_type($parameter)));
+                throw new \TypeError(\sprintf('%s(): Argument #1 ($parameters) must be of type list<%s>, list<%s> given', __METHOD__, 'string', get_debug_type($parameter)));
             }
         }
 

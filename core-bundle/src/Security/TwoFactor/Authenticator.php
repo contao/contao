@@ -40,7 +40,7 @@ class Authenticator
     {
         $issuer = rawurlencode($request->getHttpHost());
 
-        return sprintf(
+        return \sprintf(
             'otpauth://totp/%s:%s?secret=%s&issuer=%s',
             $issuer,
             rawurlencode($user->getUserIdentifier()).'@'.$issuer,

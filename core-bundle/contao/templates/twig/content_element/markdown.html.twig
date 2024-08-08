@@ -1,5 +1,5 @@
 {% extends "@Contao/content_element/_base.html.twig" %}
 
 {% block content %}
-    {{ content|raw }}
+    {{ content|encode_email|raw }}
 {% endblock %}
