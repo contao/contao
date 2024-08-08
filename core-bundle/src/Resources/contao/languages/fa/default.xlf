@@ -2504,7 +2504,7 @@
       </trans-unit>
       <trans-unit id="MSC.addComment">
         <source>Add a comment</source>
-        <target>افزودن یک دیدگاه</target>
+        <target>افزودن دیدگاه</target>
       </trans-unit>
       <trans-unit id="MSC.autologin">
         <source>Remember me</source>
