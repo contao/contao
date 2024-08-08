@@ -19,6 +19,7 @@ use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
+use Contao\Database\Statement;
 use Doctrine\DBAL\Exception\DriverException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Security\Csrf\CsrfToken;
@@ -247,10 +248,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	}
 
 	/**
-	 * Returns the current user changes merged with the database information.
+	 * Returns the database record merged with the submitted changes.
 	 *
 	 * @return array<string, mixed>|null
-	 * @throws AccessDeniedException     if the current user has no read permission on the current record
+	 * @throws AccessDeniedException     If the user has no read permission on the current record
 	 */
 	public function getActiveRecord(): array|null
 	{
@@ -261,14 +262,18 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			return null;
 		}
 
-		return array_merge($currentRecord, array_map(static function ($value) {
-			if (\is_string($value) || \is_bool($value) || \is_float($value) || \is_int($value) || $value === null)
-			{
-				return $value;
-			}
+		return array_merge($currentRecord, array_map(
+			static function ($value) {
+				/** @see Statement::query() */
+				if (\is_string($value) || \is_bool($value) || \is_float($value) || \is_int($value) || $value === null)
+				{
+					return $value;
+				}
 
-			return serialize($value);
-		}, $this->arrSubmit));
+				return serialize($value);
+			},
+			$this->arrSubmit
+		));
 	}
 
 	/**

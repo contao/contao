@@ -250,7 +250,7 @@ abstract class DataContainer extends Backend
 	 * Active record
 	 * @var Model|object|null
 	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6;
-	 *             Depending on your DC driver, use $dc->getActiveRecord() or $dc->getCurrentRecord() instead.
+	 *             use DataContainer::getCurrentRecord() or DC_Table::getActiveRecord() instead.
 	 */
 	protected $objActiveRecord;
 
@@ -369,7 +369,7 @@ abstract class DataContainer extends Backend
 				return $this->strPalette;
 
 			case 'activeRecord':
-				trigger_deprecation('contao/core-bundle', '5.0', 'The active record has been deprecated and will be removed in Contao 6. Depending on your DC driver, use ' . __CLASS__ . '::getCurrentRecord(), or ' . __CLASS__ . '::getActiveRecord() instead.');
+				trigger_deprecation('contao/core-bundle', '5.0', 'The active record has been deprecated and will be removed in Contao 6. Use DataContainer::getCurrentRecord() or DC_Table::getActiveRecord() instead.');
 
 				return $this->objActiveRecord;
 
@@ -1854,9 +1854,9 @@ abstract class DataContainer extends Backend
 	}
 
 	/**
-	 * Returns the record information from the database. Does not contain any user changes at the moment you call it.
+	 * Returns the database record. Does not contain any user changes at the moment you call it.
 	 *
-	 * @throws AccessDeniedException     if the current user has no read permission
+	 * @throws AccessDeniedException     If the current user has no read permission
 	 * @return array<string, mixed>|null
 	 */
 	public function getCurrentRecord(int|string|null $id = null, string|null $table = null): array|null
