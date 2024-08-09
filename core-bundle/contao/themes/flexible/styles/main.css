@@ -1671,7 +1671,7 @@ table.tl_listing {
 .limit_toggler {
 	width: 100%;
 	position: absolute;
-	bottom: -1px;
+	bottom: 0;
 	left: 0;
 	height: 40px;
 	line-height: 11px;
@@ -1684,7 +1684,7 @@ table.tl_listing {
 .limit_toggler button {
 	margin: 0;
 	padding: 0;
-	border: 1px solid var(--border);
+	border: 0;
 	background: var(--content-bg);
 	width: 24px;
 	line-height: 8px;
