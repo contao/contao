@@ -2369,7 +2369,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
   ' . $strButtons . '
 </div>
 </div>
-</form>';
+</form>
+</turbo-frame>';
 
 		$strVersionField = '';
 
@@ -2395,11 +2396,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		// Begin the form (-> DO NOT CHANGE THIS ORDER -> this way the onsubmit attribute of the form can be changed by a field)
 		$return = $version . ($this->noReload ? '
+<turbo-frame id="tl_edit_form_frame" target="_top" data-turbo-action="forward">
 <p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . Message::generate() . (Input::get('nb') ? '' : '
 <div id="tl_buttons">
 <a href="' . $strBackUrl . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" data-action="contao--scroll-offset#discard">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>') . '
-<turbo-frame id="tl_edit_form_frame" target="_top" data-turbo-action="forward">
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '"' . (!empty($this->onsubmit) ? ' onsubmit="' . implode(' ', $this->onsubmit) . '"' : '') . ' data-turbo-frame="_self">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
@@ -2774,8 +2775,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
   ' . $strButtons . '
 </div>
 </div>
-</form>
-</turbo-frame>';
+</form>';
 
 			// Set the focus if there is an error
 			if ($this->noReload)
