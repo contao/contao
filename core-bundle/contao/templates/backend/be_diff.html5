@@ -21,7 +21,7 @@
 
   <div id="container">
     <main id="main">
-      <form method="post">
+      <form method="post" data-turbo="false">
         <div class="formbody">
           <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
           <?php if ($this->staticFrom): ?>
