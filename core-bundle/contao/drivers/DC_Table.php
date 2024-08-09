@@ -2173,7 +2173,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				// We need to set the status code to either 422 or 500 in order for Turbo to render this response.
 				$response = $objTemplate->getResponse();
-				$response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
+				$response->setStatusCode(Response::HTTP_CONFLICT);
 
 				throw new ResponseException($response);
 			}
