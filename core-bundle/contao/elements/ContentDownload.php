@@ -164,7 +164,9 @@ class ContentDownload extends ContentElement
 
 		if ($this->fullsize)
 		{
-			if (!empty($GLOBALS['objPage']) && ($layoutId = $GLOBALS['objPage']->layout) && ($layout = LayoutModel::findById($layoutId)))
+			$pageModel = $container->get('contao.routing.page_finder')->getCurrentPage();
+
+			if ($pageModel && ($layoutId = $pageModel->layout) && ($layout = LayoutModel::findById($layoutId)))
 			{
 				$lightboxSize = StringUtil::deserialize($layout->lightboxSize, true);
 			}
