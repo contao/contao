@@ -117,18 +117,25 @@ class WebWorker
             return;
         }
 
+        $timeLimit = 1;
+
+        if (\function_exists('fastcgi_finish_request') || \function_exists('litespeed_finish_request')) {
+            // Substract 10 seconds to make sure we never exceed the max execution time
+            $timeLimit = round(min(30, max(1, $this->getRemainingExecutionTime() - 10)));
+        }
+
         $this->webWorkerRunning = true;
 
         $inputParameters = [
             'receivers' => [$transportName],
-            '--time-limit' => 30,
+            '--time-limit' => $timeLimit,
             '--sleep' => 0,
         ];
 
         // This ensures that we also consider configured memory limits in order to try to
         // not process more messages than the configured memory limit allows. Meaning
         // this will either abort after having consumed the configured memory limit for
-        // the web process or 30 seconds - whichever limit is hit first.
+        // the web process or 1 (or 30) seconds - whichever limit is hit first.
         if (($memoryLimit = (string) \ini_get('memory_limit')) && '-1' !== $memoryLimit) {
             $inputParameters['--memory-limit'] = $memoryLimit;
         }
@@ -140,5 +147,17 @@ class WebWorker
         $this->consumeMessagesCommand->run($input, new NullOutput());
 
         $this->webWorkerRunning = false;
+    }
+
+    private function getRemainingExecutionTime(): int
+    {
+        $maxTime = (int) ini_get('max_execution_time');
+
+        if (1 > $maxTime) {
+            return PHP_INT_MAX;
+        }
+
+        // Substract already used up execution time
+        return $maxTime - (microtime(true) - ($_SERVER['REQUEST_TIME_FLOAT'] ?? microtime(true)));
     }
 }
