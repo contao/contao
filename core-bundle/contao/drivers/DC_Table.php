@@ -3870,6 +3870,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						unset($arrClipboard['id'][$k]);
 					}
 				}
+				if (empty($arrClipboard['id']))
+				{
+					$blnClipboard = false;
+					$arrClipboard = null;
+				}
 			}
 			else
 			{
