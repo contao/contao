@@ -103,7 +103,7 @@ class CalendarContentVoterTest extends TestCase
 
     public static function checksElementAccessPermissionProvider(): iterable
     {
-        yield 'Check access to news archive when creating element in news' => [
+        yield 'Check access to calendar when creating element in events' => [
             new CreateAction('tl_content', ['ptable' => 'tl_calendar_events', 'pid' => 1]),
             [],
             [1 => 1],
