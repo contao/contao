@@ -19,6 +19,7 @@ use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
+use Contao\Database\Statement;
 use Doctrine\DBAL\Exception\DriverException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
@@ -245,6 +246,35 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$session[$strRefererId][$this->strTable] = Environment::get('requestUri');
 			$objSession->set($strKey, $session);
 		}
+	}
+
+	/**
+	 * Returns the database record merged with the submitted changes.
+	 *
+	 * @return array<string, mixed>|null
+	 * @throws AccessDeniedException     If the user has no read permission on the current record
+	 */
+	public function getActiveRecord(): array|null
+	{
+		$currentRecord = $this->getCurrentRecord();
+
+		if (null === $currentRecord)
+		{
+			return null;
+		}
+
+		return array_merge($currentRecord, array_map(
+			static function ($value) {
+				/** @see Statement::query() */
+				if (\is_string($value) || \is_bool($value) || \is_float($value) || \is_int($value) || $value === null)
+				{
+					return $value;
+				}
+
+				return serialize($value);
+			},
+			$this->arrSubmit
+		));
 	}
 
 	/**
@@ -1131,7 +1161,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$children = Input::get('childs');
 		}
 
-		if ($children && $db->fieldExists('pid', $table) && $db->fieldExists('sorting', $table))
+		if (!($GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null) && $children && $db->fieldExists('pid', $table) && $db->fieldExists('sorting', $table))
 		{
 			$ctable[] = $table;
 		}
