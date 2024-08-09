@@ -2171,7 +2171,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$objTemplate->href = Environment::get('requestUri');
 				$objTemplate->button = $GLOBALS['TL_LANG']['MSC']['continue'];
 
-				// We need to set the status code to either 422 or 500 in order for Turbo to render this response.
+				// We need to set the status code to either 4xx or 5xx in order for Turbo to render this response.
 				$response = $objTemplate->getResponse();
 				$response->setStatusCode(Response::HTTP_CONFLICT);
 
