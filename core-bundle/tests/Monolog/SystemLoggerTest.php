@@ -39,7 +39,7 @@ class SystemLoggerTest extends TestCase
         (new SystemLogger($logger, $action))->{$method}($message);
     }
 
-    public function psrLogActionsProvider(): array
+    public static function psrLogActionsProvider(): iterable
     {
         return [
             ['emergency'],

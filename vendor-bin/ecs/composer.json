@@ -1,0 +1,10 @@
+{
+    "require": {
+        "contao/easy-coding-standard": "^6.12"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    }
+}

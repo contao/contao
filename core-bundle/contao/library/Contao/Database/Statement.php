@@ -13,6 +13,7 @@ namespace Contao\Database;
 use Contao\Database;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Result as DoctrineResult;
+use Doctrine\DBAL\ParameterType;
 
 /**
  * Create and execute queries
@@ -131,7 +132,7 @@ class Statement
 	{
 		if (substr_count((string) $this->strQuery, '%s') !== 1 || !\in_array(strtoupper(substr($this->strQuery, 0, 6)), array('INSERT', 'UPDATE'), true))
 		{
-			throw new \InvalidArgumentException(sprintf('Using "%s()" is only supported for INSERT and UPDATE queries with the "%%s" placeholder.', __METHOD__));
+			throw new \InvalidArgumentException(\sprintf('Using "%s()" is only supported for INSERT and UPDATE queries with the "%%s" placeholder.', __METHOD__));
 		}
 
 		$this->arrSetParams = array_values($arrParams);
@@ -140,7 +141,7 @@ class Statement
 			static function ($strName) {
 				if (!preg_match('/^(?:[A-Za-z0-9_$]+|`[^`]+`)$/', $strName))
 				{
-					throw new \RuntimeException(sprintf('Invalid column name "%s" in %s()', $strName, __METHOD__));
+					throw new \RuntimeException(\sprintf('Invalid column name "%s" in %s()', $strName, __METHOD__));
 				}
 
 				return Database::quoteIdentifier($strName);
@@ -151,7 +152,7 @@ class Statement
 		// INSERT
 		if (strncasecmp($this->strQuery, 'INSERT', 6) === 0)
 		{
-			$strQuery = sprintf(
+			$strQuery = \sprintf(
 				'(%s) VALUES (%s)',
 				implode(', ', $arrParamNames),
 				implode(', ', array_fill(0, \count($arrParams), '?'))
@@ -238,24 +239,22 @@ class Statement
 			throw new \Exception('Empty query string');
 		}
 
-		$arrParams = array_map(
-			static function ($varParam) use ($arrTypes) {
-				// Automatically cast boolean to integer when no types are defined, otherwise
-				// PDO will convert "false" to an empty string (see https://bugs.php.net/bug.php?id=57157)
-				if (empty($arrTypes) && \is_bool($varParam))
-				{
-					return (int) $varParam;
-				}
+		foreach ($arrParams as $key => $varParam)
+		{
+			// Automatically set type to boolean when no type is defined,
+			// otherwise "false" will be converted to an empty string.
+			if (null === ($arrTypes[$key] ?? null))
+			{
+				$arrTypes[$key] = \is_bool($varParam) ? ParameterType::BOOLEAN : ParameterType::STRING;
+			}
 
-				if (\is_string($varParam) || \is_bool($varParam) || \is_float($varParam) || \is_int($varParam) || $varParam === null)
-				{
-					return $varParam;
-				}
+			if (\is_string($varParam) || \is_bool($varParam) || \is_float($varParam) || \is_int($varParam) || $varParam === null)
+			{
+				continue;
+			}
 
-				return serialize($varParam);
-			},
-			$arrParams
-		);
+			$arrParams[$key] = serialize($varParam);
+		}
 
 		// Execute the query
 		$this->statement = $this->resConnection->executeQuery($this->strQuery, $arrParams, $arrTypes);

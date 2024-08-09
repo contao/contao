@@ -26,7 +26,7 @@ class PhpTemplateParentReferenceNodeTest extends TestCase
         (new PhpTemplateParentReferenceNode())->compile($compiler);
 
         $expectedSource = <<<'SOURCE'
-            echo sprintf('[[TL_PARENT_%s]]', \Contao\CoreBundle\Framework\ContaoFramework::getNonce());
+            yield sprintf('[[TL_PARENT_%s]]', \Contao\CoreBundle\Framework\ContaoFramework::getNonce());
 
             SOURCE;
 

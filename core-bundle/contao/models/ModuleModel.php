@@ -21,6 +21,7 @@ use Contao\Model\Collection;
  * @property string            $name
  * @property string            $headline
  * @property string            $type
+ * @property string            $ariaLabel
  * @property integer           $levelOffset
  * @property integer           $showLevel
  * @property boolean           $hardLimit
@@ -92,6 +93,7 @@ use Contao\Model\Collection;
  * @method static ModuleModel|null findOneByName($val, array $opt=array())
  * @method static ModuleModel|null findOneByHeadline($val, array $opt=array())
  * @method static ModuleModel|null findOneByType($val, array $opt=array())
+ * @method static ModuleModel|null findOneByAriaLabel($val, array $opt=array())
  * @method static ModuleModel|null findOneByLevelOffset($val, array $opt=array())
  * @method static ModuleModel|null findOneByShowLevel($val, array $opt=array())
  * @method static ModuleModel|null findOneByHardLimit($val, array $opt=array())
@@ -157,6 +159,7 @@ use Contao\Model\Collection;
  * @method static Collection<ModuleModel>|ModuleModel[]|null findByName($val, array $opt=array())
  * @method static Collection<ModuleModel>|ModuleModel[]|null findByHeadline($val, array $opt=array())
  * @method static Collection<ModuleModel>|ModuleModel[]|null findByType($val, array $opt=array())
+ * @method static Collection<ModuleModel>|ModuleModel[]|null findByAriaLabel($val, array $opt=array())
  * @method static Collection<ModuleModel>|ModuleModel[]|null findByLevelOffset($val, array $opt=array())
  * @method static Collection<ModuleModel>|ModuleModel[]|null findByShowLevel($val, array $opt=array())
  * @method static Collection<ModuleModel>|ModuleModel[]|null findByHardLimit($val, array $opt=array())
@@ -226,6 +229,7 @@ use Contao\Model\Collection;
  * @method static integer countByName($val, array $opt=array())
  * @method static integer countByHeadline($val, array $opt=array())
  * @method static integer countByType($val, array $opt=array())
+ * @method static integer countByAriaLabel($val, array $opt=array())
  * @method static integer countByLevelOffset($val, array $opt=array())
  * @method static integer countByShowLevel($val, array $opt=array())
  * @method static integer countByHardLimit($val, array $opt=array())

@@ -43,9 +43,9 @@ class ArticleContentVoter implements VoterInterface, CacheableVoterInterface
     }
 
     /**
-     * This only implements read access permission on tl_content
-     * to disable the "children" operation on tl_article. It should be extended
-     * to also check all other permissions on tl_content.
+     * This only implements read access permission on tl_content to disable the
+     * "children" operation on tl_article. It should be extended to also check all
+     * other permissions on tl_content.
      */
     public function vote(TokenInterface $token, $subject, array $attributes): int
     {

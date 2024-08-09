@@ -1,10 +1,16 @@
+<?php $this->extend('block_unsearchable'); ?>
 
-<!-- indexer::stop -->
-<div class="<?= $this->class ?> two-factor block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+<?php
 
-  <?php if ($this->headline): ?>
-    <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
-  <?php endif; ?>
+$this->wrapperAttributes = $this
+    ->attr()
+    ->addClass('two-factor')
+    ->mergeWith($this->wrapperAttributes)
+;
+
+?>
+
+<?php $this->block('content'); ?>
 
   <?php if ($this->enable): ?>
     <?php if ($this->message): ?>
@@ -20,7 +26,7 @@
         </div>
         <div class="widget">
           <p><?= $this->trans('MSC.twoFactorTextCode') ?></p>
-          <code style="<?= $this->cspInlineStyle('word-break:break-all') ?>"><?= $this->secret ?></code>
+          <code style="<?= $this->cspUnsafeInlineStyle('word-break:break-all') ?>"><?= $this->secret ?></code>
         </div>
         <div class="widget widget-text">
           <label for="verify"><?= $this->trans('MSC.twoFactorVerification') ?></label>
@@ -113,5 +119,4 @@
     </div>
   <?php endif; ?>
 
-</div>
-<!-- indexer::continue -->
+<?php $this->endblock(); ?>

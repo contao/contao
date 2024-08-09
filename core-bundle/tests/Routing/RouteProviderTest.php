@@ -339,7 +339,7 @@ class RouteProviderTest extends TestCase
             $this->assertSame(
                 $pages[$i],
                 $routedPage,
-                sprintf(
+                \sprintf(
                     'Position %s should be %s/%s but is %s/%s',
                     $i,
                     $pages[$i]->rootLanguage,
@@ -353,7 +353,7 @@ class RouteProviderTest extends TestCase
         }
     }
 
-    public function getRoutes(): \Generator
+    public function getRoutes(): iterable
     {
         yield 'Sorts host first (1)' => [
             [
@@ -553,7 +553,7 @@ class RouteProviderTest extends TestCase
             $this->assertSame(
                 $page,
                 $routedPage,
-                sprintf(
+                \sprintf(
                     'Position %s should be %s/%s but is %s/%s',
                     $i,
                     $page->rootLanguage,
@@ -567,7 +567,7 @@ class RouteProviderTest extends TestCase
         }
     }
 
-    public function getRootRoutes(): \Generator
+    public function getRootRoutes(): iterable
     {
         $pages = [
             2 => $this->mockRootPage('en', 'english-root'),
@@ -637,7 +637,7 @@ class RouteProviderTest extends TestCase
         $request = $this->mockRequestWithPath(($prependLocale ? '/'.$language : '').'/foo/bar'.$urlSuffix);
 
         $route = new PageRoute($pageModel);
-        $route->setPath(sprintf('/%s{parameters}', $pageModel->alias ?: $pageModel->id));
+        $route->setPath(\sprintf('/%s{parameters}', $pageModel->alias ?: $pageModel->id));
         $route->setDefault('parameters', '/foo/bar');
         $route->setRequirement('parameters', $pageModel->requireItem ? '/.+' : '(/.+)?');
 
@@ -718,7 +718,7 @@ class RouteProviderTest extends TestCase
         $this->getRouteProvider($framework, $pageRegistry)->getRouteByName('tl_page.18');
     }
 
-    public function getPageRoutes(): \Generator
+    public static function getPageRoutes(): iterable
     {
         foreach (['foo', 'foo/bar'] as $alias) {
             foreach (['en', 'de'] as $language) {

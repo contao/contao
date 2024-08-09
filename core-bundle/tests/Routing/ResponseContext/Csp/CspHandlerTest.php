@@ -165,7 +165,7 @@ class CspHandlerTest extends TestCase
         $this->assertSame($expectedCspHeader, $response->headers->get('Content-Security-Policy'));
     }
 
-    public function cspExceedsMaximumLengthIsProperlyReducedProvider(): \Generator
+    public static function cspExceedsMaximumLengthIsProperlyReducedProvider(): iterable
     {
         yield 'All hashes fit into the header, nothing should be reduced' => [
             3072,

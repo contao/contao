@@ -367,7 +367,7 @@ class TemplateTest extends TestCase
         unset($GLOBALS['objPage']);
     }
 
-    public function provideBuffer(): \Generator
+    public static function provideBuffer(): iterable
     {
         yield 'plain string' => [
             'foo bar',
@@ -494,7 +494,7 @@ class TemplateTest extends TestCase
 
         $expectedHash = base64_encode(hash($algorithm, $script, true));
 
-        $this->assertSame(sprintf("script-src 'self' '%s-%s'", $algorithm, $expectedHash), $response->headers->get('Content-Security-Policy'));
+        $this->assertSame(\sprintf("script-src 'self' '%s-%s'", $algorithm, $expectedHash), $response->headers->get('Content-Security-Policy'));
     }
 
     public function testAddsCspInlineStyleHash(): void
@@ -519,7 +519,7 @@ class TemplateTest extends TestCase
         $style = 'display:none';
         $algorithm = 'sha384';
 
-        $result = (new FrontendTemplate())->cspInlineStyle($style, $algorithm);
+        $result = (new FrontendTemplate())->cspUnsafeInlineStyle($style, $algorithm);
 
         $response = new Response();
         $cspHandler->applyHeaders($response);
@@ -527,7 +527,7 @@ class TemplateTest extends TestCase
         $expectedHash = base64_encode(hash($algorithm, $style, true));
 
         $this->assertSame($style, $result);
-        $this->assertSame(sprintf("style-src 'self' 'unsafe-hashes' '%s-%s'", $algorithm, $expectedHash), $response->headers->get('Content-Security-Policy'));
+        $this->assertSame(\sprintf("style-src 'self' 'unsafe-hashes' '%s-%s'", $algorithm, $expectedHash), $response->headers->get('Content-Security-Policy'));
     }
 
     public function testExtractsStyleAttributesForCsp(): void
@@ -563,6 +563,6 @@ class TemplateTest extends TestCase
         $algorithm = 'sha256';
         $expectedHash = base64_encode(hash($algorithm, 'text-decoration: underline;', true));
 
-        $this->assertSame(sprintf("style-src 'self' 'unsafe-hashes' '%s-%s'", $algorithm, $expectedHash), $response->headers->get('Content-Security-Policy'));
+        $this->assertSame(\sprintf("style-src 'self' 'unsafe-hashes' '%s-%s'", $algorithm, $expectedHash), $response->headers->get('Content-Security-Policy'));
     }
 }

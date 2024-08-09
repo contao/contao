@@ -93,7 +93,7 @@ abstract class Controller extends System
 	{
 		if (str_contains($strPrefix, '/') || str_contains($strDefaultTemplate, '/'))
 		{
-			throw new \InvalidArgumentException(sprintf('Using %s() with modern fragment templates is not supported. Use the "contao.twig.finder_factory" service instead.', __METHOD__));
+			throw new \InvalidArgumentException(\sprintf('Using %s() with modern fragment templates is not supported. Use the "contao.twig.finder_factory" service instead.', __METHOD__));
 		}
 
 		$arrTemplates = array();
@@ -122,7 +122,7 @@ abstract class Controller extends System
 		$arrMapper['mod'][] = 'message';
 
 		$templateHierarchy = System::getContainer()->get('contao.twig.filesystem_loader');
-		$identifierPattern = sprintf('/^%s%s/', preg_quote($strPrefix, '/'), !str_ends_with($strPrefix, '_') ? '($|_)' : '');
+		$identifierPattern = \sprintf('/^%s%s/', preg_quote($strPrefix, '/'), !str_ends_with($strPrefix, '_') ? '($|_)' : '');
 
 		$prefixedFiles = array_merge(
 			array_filter(
@@ -163,11 +163,6 @@ abstract class Controller extends System
 			foreach ($arrCustomized as $strFile)
 			{
 				$strTemplate = basename($strFile, strrchr($strFile, '.'));
-
-				if (str_contains($strTemplate, '-'))
-				{
-					throw new \RuntimeException(sprintf('Using hyphens in the template name "%s" is not allowed, use snake_case instead.', $strTemplate));
-				}
 
 				// Ignore bundle templates, e.g. mod_article and mod_article_list
 				if (\in_array($strTemplate, $arrBundleTemplates))
@@ -568,6 +563,7 @@ abstract class Controller extends System
 			return '';
 		}
 
+		$objRow = $objRow->cloneDetached();
 		$objRow->typePrefix = 'ce_';
 		$strStopWatchId = 'contao.content_element.' . $objRow->type . ' (ID ' . $objRow->id . ')';
 
@@ -589,11 +585,16 @@ abstract class Controller extends System
 			$objElement = new $strClass(
 				$objRow,
 				$strColumn,
-				$compositor->getNestedFragments(ContentElementReference::TAG_NAME . '.' . $objRow->type, $objRow->id)
+				$compositor->getNestedFragments(ContentElementReference::TAG_NAME . '.' . $objRow->type, $objRow->origId ?: $objRow->id)
 			);
 		}
 		else
 		{
+			if (\is_array($contentElementReference?->attributes['classes'] ?? null))
+			{
+				$objRow->classes = array_merge($objRow->classes ?? array(), $contentElementReference->attributes['classes']);
+			}
+
 			$objElement = new $strClass($objRow, $strColumn);
 		}
 
@@ -822,6 +823,12 @@ abstract class Controller extends System
 		$arrReplace["[[TL_BODY_$nonce]]"] = $strScripts;
 		$strScripts = '';
 
+		// Add the component style sheets
+		if (!empty($GLOBALS['TL_STYLE_SHEETS']) && \is_array($GLOBALS['TL_STYLE_SHEETS']))
+		{
+			$strScripts .= implode('', array_unique($GLOBALS['TL_STYLE_SHEETS']));
+		}
+
 		$objCombiner = new Combiner();
 
 		// Add the CSS framework style sheets
@@ -962,7 +969,7 @@ abstract class Controller extends System
 			{
 				if ($blnCombineScripts)
 				{
-					$strScripts = Template::generateScriptTag($objCombinerDefer->getCombinedFile(), true) . $strScripts;
+					$strScripts = Template::generateScriptTag($objCombinerDefer->getCombinedFile(), defer: true) . $strScripts;
 				}
 				else
 				{
@@ -1054,7 +1061,7 @@ abstract class Controller extends System
 	/**
 	 * Reload the current page
 	 */
-	public static function reload()
+	public static function reload(): never
 	{
 		static::redirect(Environment::get('uri'));
 	}
@@ -1065,7 +1072,7 @@ abstract class Controller extends System
 	 * @param string  $strLocation The target URL
 	 * @param integer $intStatus   The HTTP status code (defaults to 303)
 	 */
-	public static function redirect($strLocation, $intStatus=303)
+	public static function redirect($strLocation, $intStatus=303): never
 	{
 		$strLocation = str_replace('&amp;', '&', $strLocation);
 
@@ -1170,7 +1177,7 @@ abstract class Controller extends System
 		// Check whether the file type is allowed to be downloaded
 		if (!\in_array($objFile->extension, $arrAllowedTypes))
 		{
-			throw new AccessDeniedException(sprintf('File type "%s" is not allowed', $objFile->extension));
+			throw new AccessDeniedException(\sprintf('File type "%s" is not allowed', $objFile->extension));
 		}
 
 		// HOOK: post download callback
@@ -1452,7 +1459,7 @@ abstract class Controller extends System
 					'id'        => $objFiles->id,
 					'uuid'      => $objFiles->uuid,
 					'name'      => $objFile->basename,
-					'title'     => StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename)),
+					'title'     => StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename)),
 					'link'      => $arrMeta['title'],
 					'caption'   => $arrMeta['caption'] ?? null,
 					'href'      => $strHref,
@@ -1477,7 +1484,7 @@ abstract class Controller extends System
 	 *
 	 * @return string The script path with the static URL
 	 */
-	public static function addStaticUrlTo($script, ContaoContext $context = null)
+	public static function addStaticUrlTo($script, ContaoContext|null $context = null)
 	{
 		// Absolute URLs
 		if (preg_match('@^https?://@', $script))

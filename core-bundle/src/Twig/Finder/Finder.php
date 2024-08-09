@@ -85,8 +85,8 @@ final class Finder implements \IteratorAggregate, \Countable
 
     /**
      * Also includes variant templates, e.g: "content_element/text/special" when
-     * filtering for "content_element/text". If $exclusive is set to true, only
-     * the variants will be output.
+     * filtering for "content_element/text". If $exclusive is set to true, only the
+     * variants will be output.
      */
     public function withVariants(bool $exclusive = false): self
     {
@@ -97,8 +97,7 @@ final class Finder implements \IteratorAggregate, \Countable
     }
 
     /**
-     * Also includes templates of a certain theme. Only one theme at a time can
-     * be queried.
+     * Also includes templates of a certain theme. Only one theme at a time can be queried.
      */
     public function withTheme(string $themeSlug): self
     {
@@ -131,7 +130,7 @@ final class Finder implements \IteratorAggregate, \Countable
                 return null;
             }
 
-            return sprintf(
+            return \sprintf(
                 '%s [%s • %s]',
                 $this->translator->trans($identifier, [], 'templates'),
                 $identifier,
@@ -139,7 +138,7 @@ final class Finder implements \IteratorAggregate, \Countable
             );
         };
 
-        $getLabel = static fn (string $identifier, array $sourceLabels): string => sprintf(
+        $getLabel = static fn (string $identifier, array $sourceLabels): string => \sprintf(
             '%s [%s]',
             $identifier,
             implode(', ', $sourceLabels),

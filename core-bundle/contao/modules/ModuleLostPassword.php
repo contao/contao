@@ -304,7 +304,7 @@ class ModuleLostPassword extends Module
 
 		// Send the token
 		$optInToken->send(
-			sprintf($GLOBALS['TL_LANG']['MSC']['passwordSubject'], Idna::decode(Environment::get('host'))),
+			\sprintf($GLOBALS['TL_LANG']['MSC']['passwordSubject'], Idna::decode(Environment::get('host'))),
 			System::getContainer()->get('contao.string.simple_token_parser')->parse($this->reg_password, $arrData)
 		);
 

@@ -341,7 +341,7 @@ class ModuleEventlist extends Events
 			// Add the template variables
 			$objTemplate->classList = $event['class'] . ' cal_' . $event['parent'];
 			$objTemplate->classUpcoming = $event['class'] . ' cal_' . $event['parent'];
-			$objTemplate->readMore = StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $event['title']));
+			$objTemplate->readMore = StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $event['title']));
 			$objTemplate->more = $event['linkText'] ?: $GLOBALS['TL_LANG']['MSC']['more'];
 			$objTemplate->locationLabel = $GLOBALS['TL_LANG']['MSC']['location'];
 

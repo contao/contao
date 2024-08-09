@@ -24,8 +24,8 @@ use Symfony\Component\Uid\Uuid;
 class FilesystemUtil
 {
     /**
-     * Gets all files from a serialized string or array of binary UUIDs like
-     * for instance stored in "tl_content.multiSRC".
+     * Gets all files from a serialized string or array of binary UUIDs like for
+     * instance stored in "tl_content.multiSRC".
      *
      * The following rules apply:
      *  - Invalid or non-existent UUIDs are skipped without producing an error.
@@ -51,11 +51,11 @@ class FilesystemUtil
         if (!\is_resource($contents)) {
             $type = \gettype($contents);
 
-            throw new \LogicException(sprintf('Invalid stream provided, expected stream resource, received "%s".', $type));
+            throw new \LogicException(\sprintf('Invalid stream provided, expected stream resource, received "%s".', $type));
         }
 
         if ('stream' !== ($type = get_resource_type($contents))) {
-            throw new \LogicException(sprintf('Invalid stream provided, expected stream resource, received resource of type "%s".', $type));
+            throw new \LogicException(\sprintf('Invalid stream provided, expected stream resource, received resource of type "%s".', $type));
         }
     }
 

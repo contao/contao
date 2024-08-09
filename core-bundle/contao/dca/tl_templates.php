@@ -411,11 +411,11 @@ class tl_templates extends Backend
 <form id="tl_create_template" class="tl_form tl_edit_form" method="post">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_create_template">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
 <div class="tl_tbox cf">
 <div class="w50 widget">
   <h3><label for="ctrl_original">' . $GLOBALS['TL_LANG']['tl_templates']['original'][0] . '</label></h3>
-  <select name="original" id="ctrl_original" class="tl_select tl_chosen" data-action="focus->contao--scroll-offset#store">' . $strAllTemplates . '</select>' . (($GLOBALS['TL_LANG']['tl_templates']['original'][1] && Config::get('showHelp')) ? '
+  <select name="original" id="ctrl_original" class="tl_select" data-action="focus->contao--scroll-offset#store" data-controller="contao--chosen">' . $strAllTemplates . '</select>' . (($GLOBALS['TL_LANG']['tl_templates']['original'][1] && Config::get('showHelp')) ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_templates']['original'][1] . '</p>' : '') . '
 </div>
 <div class="w50 widget">
@@ -441,7 +441,7 @@ class tl_templates extends Backend
 	 *
 	 * @throws InternalServerErrorException
 	 */
-	public function compareTemplate(DataContainer $dc)
+	public function compareTemplate(DataContainer $dc): never
 	{
 		$objCurrentFile = new File($dc->id);
 		$strName = $objCurrentFile->filename;

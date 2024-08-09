@@ -211,9 +211,10 @@ class DcaSchemaProvider
             case 'real':
             case 'numeric':
             case 'decimal':
-                if (preg_match('/[a-z]+\((\d+),(\d+)\)/i', $dbType, $match)) {
+                if (preg_match('/[a-z]+\((\d+),(\d+)\)/i', $dbType, $matches)) {
                     $length = null;
-                    [, $precision, $scale] = $match;
+                    $precision = (int) $matches[1];
+                    $scale = (int) $matches[2];
                 }
                 break;
 
@@ -257,7 +258,7 @@ class DcaSchemaProvider
     {
         if ('PRIMARY' === $keyName) {
             if (!preg_match_all('/`([^`]+)`/', $sql, $matches)) {
-                throw new \RuntimeException(sprintf('Primary key definition "%s" could not be parsed.', $sql));
+                throw new \RuntimeException(\sprintf('Primary key definition "%s" could not be parsed.', $sql));
             }
 
             $table->setPrimaryKey($matches[1]);
@@ -266,7 +267,7 @@ class DcaSchemaProvider
         }
 
         if (!preg_match('/(.*) `([^`]+)` \((.*)\)/', $sql, $matches)) {
-            throw new \RuntimeException(sprintf('Key definition "%s" could not be parsed.', $sql));
+            throw new \RuntimeException(\sprintf('Key definition "%s" could not be parsed.', $sql));
         }
 
         $columns = [];

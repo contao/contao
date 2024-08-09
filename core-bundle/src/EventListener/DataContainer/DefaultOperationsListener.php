@@ -163,7 +163,7 @@ class DefaultOperationsListener
                 'href' => 'act=toggle&amp;field='.$toggleField,
                 'icon' => 'visible.svg',
                 'showInHeader' => (bool) $ctable,
-                'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table),
+                'button_callback' => $this->toggleCallback($table, $toggleField),
             ];
         }
 
@@ -223,8 +223,22 @@ class DefaultOperationsListener
         };
     }
 
+    private function toggleCallback(string $table, string $toggleField): \Closure
+    {
+        return function (DataContainerOperation $operation) use ($toggleField, $table): void {
+            $new = [$toggleField => !($operation['record'][$toggleField] ?? false)];
+
+            if (!$this->isGranted(UpdateAction::class, $table, $operation, $new)) {
+                // Do not use DataContainerOperation::disable() because it would not show the
+                // actual state
+                unset($operation['route'], $operation['href']);
+            }
+        };
+    }
+
     /**
-     * Finds the one and only toggle field in a DCA. Returns null if multiple fields can be toggled.
+     * Finds the one and only toggle field in a DCA. Returns null if multiple fields
+     * can be toggled.
      */
     private function getToggleField(string $table): string|null
     {
@@ -252,7 +266,7 @@ class DefaultOperationsListener
             CreateAction::class => new CreateAction($table, array_replace($operation->getRecord(), (array) $new)),
             UpdateAction::class => new UpdateAction($table, $operation->getRecord(), $new),
             DeleteAction::class => new DeleteAction($table, $operation->getRecord()),
-            default => throw new \InvalidArgumentException(sprintf('Invalid action class "%s".', $actionClass)),
+            default => throw new \InvalidArgumentException(\sprintf('Invalid action class "%s".', $actionClass)),
         };
 
         return $this->security->isGranted(ContaoCorePermissions::DC_PREFIX.$table, $subject);

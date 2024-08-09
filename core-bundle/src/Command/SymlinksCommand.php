@@ -44,7 +44,6 @@ class SymlinksCommand extends Command
     public function __construct(
         private readonly string $projectDir,
         private readonly string $uploadPath,
-        private readonly string $componentDir,
         private readonly string $logsDir,
         private readonly ResourceFinderInterface $resourceFinder,
         private readonly EventDispatcherInterface $eventDispatcher,
@@ -89,7 +88,7 @@ class SymlinksCommand extends Command
         $this->symlinkThemes();
 
         // Symlink the assets and themes directory
-        $this->symlink($this->componentDir, Path::join($this->webDir, $this->componentDir));
+        $this->symlink('assets', Path::join($this->webDir, 'assets'));
         $this->symlink('system/themes', Path::join($this->webDir, 'system/themes'));
 
         // Symlinks the logs directory
@@ -170,7 +169,7 @@ class SymlinksCommand extends Command
             SymlinkUtil::symlink($target, $link, $this->projectDir);
 
             $this->rows[] = [
-                sprintf(
+                \sprintf(
                     '<fg=green;options=bold>%s</>',
                     '\\' === \DIRECTORY_SEPARATOR ? 'OK' : "\xE2\x9C\x94", // HEAVY CHECK MARK (U+2714)
                 ),
@@ -181,12 +180,12 @@ class SymlinksCommand extends Command
             $this->statusCode = Command::FAILURE;
 
             $this->rows[] = [
-                sprintf(
+                \sprintf(
                     '<fg=red;options=bold>%s</>',
                     '\\' === \DIRECTORY_SEPARATOR ? 'ERROR' : "\xE2\x9C\x98", // HEAVY BALLOT X (U+2718)
                 ),
                 $link,
-                sprintf('<error>%s</error>', $e->getMessage()),
+                \sprintf('<error>%s</error>', $e->getMessage()),
             ];
         }
     }
@@ -234,9 +233,9 @@ class SymlinksCommand extends Command
                 unset($files[$key]);
 
                 $this->rows[] = [
-                    sprintf('<fg=yellow;options=bold>%s</>', '\\' === \DIRECTORY_SEPARATOR ? 'WARNING' : '!'),
+                    \sprintf('<fg=yellow;options=bold>%s</>', '\\' === \DIRECTORY_SEPARATOR ? 'WARNING' : '!'),
                     Path::join($this->webDir, $prepend, $path),
-                    sprintf('<comment>Skipped because %s will be symlinked.</comment>', Path::join($prepend, $otherPath)),
+                    \sprintf('<comment>Skipped because %s will be symlinked.</comment>', Path::join($prepend, $otherPath)),
                 ];
             }
         }

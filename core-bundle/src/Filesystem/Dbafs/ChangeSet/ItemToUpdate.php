@@ -38,7 +38,7 @@ class ItemToUpdate
     public function getNewHash(): string
     {
         if (null === $this->newHash) {
-            throw new \LogicException(sprintf('The update to item "%s" does not include a new hash.', $this->existingPath));
+            throw new \LogicException(\sprintf('The update to item "%s" does not include a new hash.', $this->existingPath));
         }
 
         return $this->newHash;
@@ -52,7 +52,7 @@ class ItemToUpdate
     public function getNewPath(): string
     {
         if (null === $this->newPath) {
-            throw new \LogicException(sprintf('The update to item "%s" does not include a new path.', $this->existingPath));
+            throw new \LogicException(\sprintf('The update to item "%s" does not include a new path.', $this->existingPath));
         }
 
         return $this->newPath;
@@ -66,7 +66,7 @@ class ItemToUpdate
     public function getLastModified(): int|null
     {
         if (false === $this->lastModified) {
-            throw new \LogicException(sprintf('The update to item "%s" does not include a last modified date.', $this->existingPath));
+            throw new \LogicException(\sprintf('The update to item "%s" does not include a last modified date.', $this->existingPath));
         }
 
         return $this->lastModified;

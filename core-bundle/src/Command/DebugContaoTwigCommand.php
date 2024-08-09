@@ -90,7 +90,7 @@ class DebugContaoTwigCommand extends Command
             $node = &$prefixTree;
 
             foreach ($parts as $part) {
-                /** @phpstan-ignore-next-line */
+                /** @phpstan-ignore isset.offset */
                 if (!isset($node[$part])) {
                     $node[$part] = [];
                 }
@@ -129,7 +129,7 @@ class DebugContaoTwigCommand extends Command
                     // display the effective @Contao name.
                     $identifier = ltrim("$namePrefix/$label", '/');
 
-                    $io->writeln(sprintf(
+                    $io->writeln(\sprintf(
                         '%s<fg=green;options=bold>%s</>%s',
                         $currentPrefix,
                         $label,
@@ -144,7 +144,7 @@ class DebugContaoTwigCommand extends Command
                 // Display file and logical name
                 $io->writeln($currentPrefix.$label);
 
-                $io->writeln(sprintf(
+                $io->writeln(\sprintf(
                     '%s<fg=white>Original name:</> <fg=yellow>%s</>',
                     $currentPrefixWithNewline,
                     $element,
@@ -162,6 +162,7 @@ class DebugContaoTwigCommand extends Command
     {
         $nameCellStyle = new TableCellStyle(['fg' => 'yellow']);
         $blockCellStyle = new TableCellStyle(['fg' => 'magenta']);
+        $slotCellStyle = new TableCellStyle(['fg' => 'blue']);
         $codeCellStyle = new TableCellStyle(['fg' => 'white']);
 
         foreach ($chains as $identifier => $chain) {
@@ -187,6 +188,18 @@ class DebugContaoTwigCommand extends Command
                             'Blocks',
                             wordwrap(implode(', ', $blocks)),
                             $blockCellStyle,
+                        ),
+                        ['', ''],
+                    ];
+                }
+
+                if ($slots = $templateInformation->getSlots()) {
+                    $rows = [
+                        ...$rows,
+                        ...$this->formatMultiline(
+                            'Slots',
+                            wordwrap(implode(', ', $slots)),
+                            $slotCellStyle,
                         ),
                         ['', ''],
                     ];

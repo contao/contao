@@ -138,7 +138,7 @@ class TemplateOptionsListenerTest extends TestCase
         $connection
             ->method('executeQuery')
             ->with(
-                sprintf('SELECT type FROM %s WHERE id IN (?) GROUP BY type LIMIT 2', 'tl_content'),
+                \sprintf('SELECT type FROM %s WHERE id IN (?) GROUP BY type LIMIT 2', 'tl_content'),
                 [[1, 2, 3]],
                 [ArrayParameterType::STRING],
             )
@@ -150,7 +150,7 @@ class TemplateOptionsListenerTest extends TestCase
         $this->assertSame($expectedOptions, $callback($this->mockDataContainer('tl_content')));
     }
 
-    public function provideOverrideAllScenarios(): \Generator
+    public static function provideOverrideAllScenarios(): iterable
     {
         yield 'selected items share a common type' => [
             'foo_element_type',

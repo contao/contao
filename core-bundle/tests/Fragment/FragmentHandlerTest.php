@@ -77,7 +77,7 @@ class FragmentHandlerTest extends TestCase
         $fragmentHandler->render($uri);
     }
 
-    public function getRenderingStrategies(): \Generator
+    public static function getRenderingStrategies(): iterable
     {
         yield ['inline'];
         yield ['esi'];
@@ -104,7 +104,7 @@ class FragmentHandlerTest extends TestCase
         $fragmentHandler->render($uri);
     }
 
-    public function getOptions(): \Generator
+    public static function getOptions(): iterable
     {
         yield [['foo' => 'bar']];
         yield [['bar' => 'baz']];
@@ -132,7 +132,7 @@ class FragmentHandlerTest extends TestCase
         $fragmentHandler->render($uri);
     }
 
-    public function getNonScalarAttributes(): \Generator
+    public static function getNonScalarAttributes(): iterable
     {
         yield ['esi', 'forward'];
         yield ['hinclude', 'forward'];

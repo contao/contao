@@ -55,7 +55,7 @@ class RoutingTest extends FunctionalTestCase
         $this->assertStringContainsString($pageTitle, $title);
     }
 
-    public function getAliases(): \Generator
+    public static function getAliases(): iterable
     {
         yield 'Renders the page if the alias is "index" and the request is empty' => [
             ['theme', 'root-with-index'],
@@ -277,7 +277,7 @@ class RoutingTest extends FunctionalTestCase
         $this->assertStringContainsString($pageTitle, $title);
     }
 
-    public function getAliasesWithLocale(): \Generator
+    public static function getAliasesWithLocale(): iterable
     {
         yield 'Redirects to the language root if the request is empty' => [
             ['theme', 'root-with-index'],
@@ -508,7 +508,7 @@ class RoutingTest extends FunctionalTestCase
         $this->assertStringContainsString($pageTitle, $title);
     }
 
-    public function getAliasesWithoutUrlSuffix(): \Generator
+    public static function getAliasesWithoutUrlSuffix(): iterable
     {
         yield 'Renders the page if the alias is "index" and the request is empty' => [
             ['theme', 'root-with-index'],
@@ -660,7 +660,7 @@ class RoutingTest extends FunctionalTestCase
         $this->assertStringContainsString($pageTitle, $title);
     }
 
-    public function getRootAliases(): \Generator
+    public static function getRootAliases(): iterable
     {
         yield 'Renders the root page if one of the accept languages matches' => [
             ['theme', 'root-with-index'],
@@ -755,7 +755,7 @@ class RoutingTest extends FunctionalTestCase
         $this->assertStringContainsString($pageTitle, $title);
     }
 
-    public function getRootAliasesWithLocale(): \Generator
+    public static function getRootAliasesWithLocale(): iterable
     {
         yield 'Redirects to the language root if one of the accept languages matches' => [
             ['theme', 'same-domain-root'],
@@ -977,7 +977,7 @@ class RoutingTest extends FunctionalTestCase
         }
     }
 
-    public function disabledLanguageRedirectsProvider(): \Generator
+    public static function disabledLanguageRedirectsProvider(): iterable
     {
         // Redirects to fallback because it is the only route on path "/"
         yield 'unknown locale, alias=home, disableLanguageRedirect=1' => [
@@ -1121,7 +1121,7 @@ class RoutingTest extends FunctionalTestCase
         $this->assertStringContainsString($pageTitle, $title);
     }
 
-    public function getUrlPrefixMixProvider(): \Generator
+    public static function getUrlPrefixMixProvider(): iterable
     {
         yield 'Renders the index page of supported accept language' => [
             '/',

@@ -562,7 +562,7 @@ class DefaultOperationsListenerTest extends TestCase
         $operation['button_callback']($config);
     }
 
-    public function checkPermissionsProvider(): \Generator
+    public static function checkPermissionsProvider(): iterable
     {
         yield 'edit operation' => [
             'edit',

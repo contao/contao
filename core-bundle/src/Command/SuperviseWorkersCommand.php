@@ -20,6 +20,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Messenger\Transport\Receiver\MessageCountAwareInterface;
+use Symfony\Component\Process\Process;
 use Toflar\CronjobSupervisor\BasicCommand;
 use Toflar\CronjobSupervisor\CommandInterface;
 use Toflar\CronjobSupervisor\Supervisor;
@@ -40,11 +41,6 @@ class SuperviseWorkersCommand extends Command
         private readonly array $workers,
     ) {
         parent::__construct();
-    }
-
-    public static function create(ContainerInterface $messengerTransportLocator, ProcessUtil $processUtil, string $storageDirectory, array $workers): self
-    {
-        return new self($messengerTransportLocator, $processUtil, new Supervisor($storageDirectory), $workers);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -84,11 +80,17 @@ class SuperviseWorkersCommand extends Command
         return new BasicCommand(
             $identifier,
             $desiredWorkers,
-            fn () => $this->processUtil->createSymfonyConsoleProcess(
-                'messenger:consume',
-                ...$worker['options'],
-                ...$worker['transports'],
-            ),
+            function () use ($worker): Process {
+                $process = $this->processUtil->createSymfonyConsoleProcess(
+                    'messenger:consume',
+                    ...$worker['options'],
+                    ...$worker['transports'],
+                );
+
+                $process->setTimeout(null);
+
+                return $process;
+            },
         );
     }
 
@@ -98,13 +100,13 @@ class SuperviseWorkersCommand extends Command
 
         foreach ($transportNames as $transportName) {
             if (!$this->messengerTransportLocator->has($transportName)) {
-                throw new \LogicException(sprintf('Configuration error! There is no transport named "%s" to start a worker for.', $transportName));
+                throw new \LogicException(\sprintf('Configuration error! There is no transport named "%s" to start a worker for.', $transportName));
             }
 
             $transport = $this->messengerTransportLocator->get($transportName);
 
             if (!$transport instanceof MessageCountAwareInterface) {
-                throw new \LogicException(sprintf('Configuration error! Cannot enable autoscaling for transport "%s".', $transportName));
+                throw new \LogicException(\sprintf('Configuration error! Cannot enable autoscaling for transport "%s".', $transportName));
             }
 
             $total += $transport->getMessageCount();

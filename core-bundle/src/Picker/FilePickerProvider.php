@@ -85,7 +85,7 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         $filesAdapter = $this->framework->getAdapter(FilesModel::class);
 
         if ($filesModel = $filesAdapter->findByPath(rawurldecode($value))) {
-            return sprintf($this->getInsertTag($config), StringUtil::binToUuid($filesModel->uuid));
+            return \sprintf($this->getInsertTag($config), StringUtil::binToUuid($filesModel->uuid));
         }
 
         return $value;

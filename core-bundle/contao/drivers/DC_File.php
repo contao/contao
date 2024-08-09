@@ -185,7 +185,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 					}
 				}
 
-				$return .= "\n\n" . '<fieldset class="' . $class . ($legend ? '' : ' nolegend') . '" data-controller="contao--toggle-fieldset" data-contao--toggle-fieldset-id-value="' . $key . '" data-contao--toggle-fieldset-table-value="' . $this->strTable . '" data-contao--toggle-fieldset-collapsed-class="collapsed" data-contao--jump-targets-target="section" data-contao--jump-targets-label-value="' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '" data-action="contao--jump-targets:scrollto->contao--toggle-fieldset#open">' . $legend;
+				$return .= "\n\n" . '<fieldset class="' . $class . ($legend ? '' : ' nolegend') . '" data-controller="contao--toggle-fieldset" data-contao--toggle-fieldset-id-value="' . $key . '" data-contao--toggle-fieldset-table-value="' . $this->strTable . '" data-contao--toggle-fieldset-collapsed-class="collapsed" data-contao--jump-targets-target="section" data-contao--jump-targets-label-value="' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '" data-action="contao--jump-targets:scrollto->contao--toggle-fieldset#open">' . $legend . "\n" . '<div class="widget-group">';
 
 				// Build rows of the current box
 				foreach ($v as $vv)
@@ -207,7 +207,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 					{
 						$thisId = 'sub_' . substr($vv, 1, -1);
 						$blnAjax = $ajaxId == $thisId && Environment::get('isAjaxRequest');
-						$return .= "\n  " . '<div id="' . $thisId . '" class="subpal cf">';
+						$return .= "\n  " . '<div id="' . $thisId . '" class="subpal widget-group">';
 
 						continue;
 					}
@@ -246,7 +246,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 				}
 
 				$class = 'tl_box';
-				$return .= "\n" . '</fieldset>';
+				$return .= "\n</div>\n</fieldset>";
 			}
 		}
 
@@ -255,7 +255,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 		// Check whether the target file is writeable
 		if (file_exists($configFile) && !is_writable($configFile))
 		{
-			Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['notWriteable'], 'system/config/localconfig.php'));
+			Message::addError(\sprintf($GLOBALS['TL_LANG']['ERR']['notWriteable'], 'system/config/localconfig.php'));
 		}
 
 		// Submit buttons
@@ -298,7 +298,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post"' . (!empty($this->onsubmit) ? ' onsubmit="' . implode(' ', $this->onsubmit) . '"' : '') . '>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">' . $return;
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">' . $return;
 
 		// Reload the page to prevent _POST variables from being sent twice
 		if (!$this->noReload && Input::post('FORM_SUBMIT') == $this->strTable)
@@ -419,7 +419,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 		}
 		elseif (\is_string($strCurrent))
 		{
-			$strCurrent = html_entity_decode($this->varValue, ENT_QUOTES, System::getContainer()->getParameter('kernel.charset'));
+			$strCurrent = html_entity_decode($this->varValue, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, System::getContainer()->getParameter('kernel.charset'));
 		}
 
 		// Save the value if there was no error

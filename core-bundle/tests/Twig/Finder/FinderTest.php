@@ -222,7 +222,7 @@ class FinderTest extends TestCase
                     $this->assertSame('contao_default', $domain);
 
                     return match ($id) {
-                        'MSC.templatesTheme' => sprintf('Theme %s', $parameters[0]),
+                        'MSC.templatesTheme' => \sprintf('Theme %s', $parameters[0]),
                         'MSC.global' => 'Global',
                         default => throw new \LogicException('Unsupported translation id.'),
                     };

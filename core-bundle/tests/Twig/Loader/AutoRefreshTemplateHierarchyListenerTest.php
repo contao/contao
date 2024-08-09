@@ -35,7 +35,7 @@ class AutoRefreshTemplateHierarchyListenerTest extends TestCase
         $listener($event);
     }
 
-    public function provideRequestScenarios(): \Generator
+    public function provideRequestScenarios(): iterable
     {
         $mainRequestEvent = $this->createMock(RequestEvent::class);
         $mainRequestEvent
