@@ -1656,15 +1656,29 @@ table.tl_listing {
 	overflow: hidden;
 }
 
+[data-contao--limit-height-target] {
+	position: relative;
+}
+
+[data-contao--limit-height-target][style*="max-height"] .limit_toggler {
+	background: linear-gradient(transparent, var(--content-bg) 60%);
+}
+
+[data-contao--limit-height-target][style*="max-height"]:hover .limit_toggler {
+	background: linear-gradient(transparent, var(--hover-row) 60%);
+}
+
 .limit_toggler {
 	width: 100%;
 	position: absolute;
 	bottom: 0;
 	left: 0;
-	z-index: 1;
-	background: var(--content-bg);
+	height: 40px;
 	line-height: 11px;
-	text-align: center;
+	z-index: 1;
+	display: flex;
+	justify-content: center;
+	align-items: end;
 }
 
 .limit_toggler button {
