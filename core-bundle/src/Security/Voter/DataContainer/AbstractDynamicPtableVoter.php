@@ -35,14 +35,11 @@ abstract class AbstractDynamicPtableVoter extends AbstractDataContainerVoter imp
 
     protected function hasAccess(TokenInterface $token, CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
     {
-        if (
-            !$action instanceof CreateAction
-            && !$this->hasAccessToParent($token, $action->getCurrent())
-        ) {
+        if (!$action instanceof CreateAction && !$this->hasAccessToParent($token, $action->getCurrent())) {
             return false;
         }
 
-        // no need to check the "new" record if parent ID and table did not change
+        // No need to check the "new" record if the parent ID and table did not change
         if (
             $action instanceof ReadAction
             || $action instanceof DeleteAction
