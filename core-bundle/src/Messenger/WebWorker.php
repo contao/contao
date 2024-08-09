@@ -120,7 +120,7 @@ class WebWorker
         $timeLimit = 1;
 
         if (\function_exists('fastcgi_finish_request') || \function_exists('litespeed_finish_request')) {
-            // Substract 10 seconds to make sure we never exceed the max execution time
+            // Subtract 10 seconds to make sure we never exceed the max execution time
             $timeLimit = round(min(30, max(1, $this->getRemainingExecutionTime() - 10)));
         }
 
@@ -149,9 +149,9 @@ class WebWorker
         $this->webWorkerRunning = false;
     }
 
-    private function getRemainingExecutionTime(): int
+    private function getRemainingExecutionTime(): float|int
     {
-        $maxTime = (int) ini_get('max_execution_time');
+        $maxTime = (int) \ini_get('max_execution_time');
 
         if (1 > $maxTime) {
             return PHP_INT_MAX;
