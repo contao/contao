@@ -244,6 +244,24 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$session[$strRefererId][$this->strTable] = Environment::get('requestUri');
 			$objSession->set($strKey, $session);
 		}
+
+		$arrClipboard = $objSession->get('CLIPBOARD');
+		if (!empty($arrClipboard[$this->strTable]) && $arrClipboard[$this->strTable]['mode'] != 'create')
+		{
+			if (\is_array($arrClipboard[$this->strTable]['id']))
+			{
+				$arrClipboard[$this->strTable]['id'] = array_filter($arrClipboard[$this->strTable]['id'], fn ($record) => $this->getCurrentRecord($record) !== null);
+				if (empty($arrClipboard[$this->strTable]['id']))
+				{
+					unset($arrClipboard[$this->strTable]);
+				}
+			}
+			elseif ($this->getCurrentRecord($arrClipboard[$this->strTable]['id']) === null)
+			{
+				unset($arrClipboard[$this->strTable]);
+			}
+			$objSession->set('CLIPBOARD', $arrClipboard);
+		}
 	}
 
 	/**
@@ -3861,29 +3879,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			$blnClipboard = true;
 			$arrClipboard = $arrClipboard[$this->strTable];
-			if (\is_array($arrClipboard['id']))
-			{
-				foreach ($arrClipboard['id'] as $k=>$v)
-				{
-					if ($this->getCurrentRecord($v) === null)
-					{
-						unset($arrClipboard['id'][$k]);
-					}
-				}
-				if (empty($arrClipboard['id']))
-				{
-					$blnClipboard = false;
-					$arrClipboard = null;
-				}
-			}
-			else
-			{
-				if ($this->getCurrentRecord($arrClipboard['id']) === null)
-				{
-					$blnClipboard = false;
-					$arrClipboard = null;
-				}
-			}
 		}
 		else
 		{
