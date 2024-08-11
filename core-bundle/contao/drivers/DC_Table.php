@@ -2436,18 +2436,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
 <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">' . $strVersionField . $return;
 
-		// Set the focus if there is an error
-		if ($this->noReload)
-		{
-			$return .= '
-<script>
-  window.addEvent(\'domready\', function() {
-    var error = $(\'' . $this->strTable . '\').getElement(\'label.error\');
-    if (error) Backend.vScrollTo((error.getPosition().y - 20));
-  });
-</script>';
-		}
-
 		$return = '
 <div data-controller="contao--jump-targets">
 	<div class="jump-targets"><div class="inner" data-contao--jump-targets-target="navigation"></div></div>
@@ -2806,18 +2794,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </div>
 </div>
 </form>';
-
-			// Set the focus if there is an error
-			if ($this->noReload)
-			{
-				$return .= '
-<script>
-  window.addEvent(\'domready\', function() {
-    var error = $(\'' . $this->strTable . '\').getElement(\'label.error\');
-    if (error) Backend.vScrollTo((error.getPosition().y - 20));
-  });
-</script>';
-			}
 		}
 
 		// Else show a form to select the fields
@@ -3184,18 +3160,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </div>
 </div>
 </form>';
-
-			// Set the focus if there is an error
-			if ($this->noReload)
-			{
-				$return .= '
-<script>
-  window.addEvent(\'domready\', function() {
-    var error = $(\'' . $this->strTable . '\').getElement(\'label.error\');
-    if (error) Backend.vScrollTo((error.getPosition().y - 20));
-  });
-</script>';
-			}
 		}
 
 		// Else show a form to select the fields
