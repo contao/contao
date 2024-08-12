@@ -175,6 +175,9 @@ class BackendUser extends User
 
 			case 'fop':
 				return \is_array($this->arrData['fop']) ? $this->arrData['fop'] : ($this->arrData['fop'] ? array($this->arrData['fop']) : false);
+
+			case 'alexf':
+				return \is_array($this->arrData[$strKey] ?? null) ? $this->arrData[$strKey] : array();
 		}
 
 		return parent::__get($strKey);
