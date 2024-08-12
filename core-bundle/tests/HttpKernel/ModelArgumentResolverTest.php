@@ -41,7 +41,7 @@ class ModelArgumentResolverTest extends TestCase
         $framework = $this->mockContaoFramework([$class => $adapter]);
 
         $request = Request::create('/foobar');
-        $request->attributes->set('pageModel', 42);
+        $request->attributes->set('pageModel', $pageModel);
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
 
         $metadata = new ArgumentMetadata($name, $class, false, false, '');
@@ -139,7 +139,7 @@ class ModelArgumentResolverTest extends TestCase
         $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
 
         $request = Request::create('/foobar');
-        $request->attributes->set('pageModel', 42);
+        $request->attributes->set('pageModel', $pageModel);
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
 
         $metadata = new ArgumentMetadata('pageModel', PageModel::class, false, false, '', true);
@@ -154,7 +154,6 @@ class ModelArgumentResolverTest extends TestCase
         $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
 
         $request = Request::create('/foobar');
-        $request->attributes->set('pageModel', 42);
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
 
         $metadata = new ArgumentMetadata('pageModel', PageModel::class, false, false, '');
