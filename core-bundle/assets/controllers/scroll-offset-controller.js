@@ -96,13 +96,10 @@ export default class extends Controller {
     }
 
     widgetErrorTargetConnected() {
-        // We need to postpone scrolling as TinyMCE init will cause a layout shift
-        setTimeout(() => {
-            this.widgetErrorTarget.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }, 1);
+        this.widgetErrorTarget.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
     }
 
     store () {
