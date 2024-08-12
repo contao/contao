@@ -42,7 +42,7 @@
         "ausi/slug-generator": "^1.1",
         "bacon/bacon-qr-code": "^2.0",
         "contao-components/ace": "^1.8",
-        "contao-components/altcha": "^0.6.2 || ^0.7",
+        "contao-components/altcha": "^0.6.2 || ^0.7 || ^0.8",
         "contao-components/chosen": "^2.0",
         "contao-components/colorbox": "^1.6",
         "contao-components/colorpicker": "^1.5",
