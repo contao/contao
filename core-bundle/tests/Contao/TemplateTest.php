@@ -365,8 +365,6 @@ class TemplateTest extends TestCase
         };
 
         $this->assertSame($expectedOutput, $template->testCompile());
-
-        unset($GLOBALS['objPage']);
     }
 
     public static function provideBuffer(): iterable

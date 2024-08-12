@@ -27,7 +27,6 @@ class RoutingTest extends FunctionalTestCase
         parent::setUp();
 
         $_GET = [];
-        unset($GLOBALS['objPage']);
 
         $GLOBALS['TL_CONFIG']['addLanguageToUrl'] = false;
     }
