@@ -1575,8 +1575,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 </turbo-frame>';
 
 		// Begin the form (-> DO NOT CHANGE THIS ORDER -> this way the onsubmit attribute of the form can be changed by a field)
-		$return = $version . '
-<turbo-frame id="tl_edit_form_frame" target="_top" data-turbo-action="forward">' . Message::generate() . ($this->noReload ? '
+		$return = '
+<turbo-frame id="tl_edit_form_frame" target="_top" data-turbo-action="forward">' . $version . Message::generate() . ($this->noReload ? '
 <p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['general'] . '</p>' : '') . '
 <div id="tl_buttons">
 <a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" data-action="contao--scroll-offset#discard">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
