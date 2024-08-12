@@ -330,7 +330,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 		}
 
 		$return = '
-<turbo-frame id="tl_edit_form_frame" target="_top" data-turbo-action="forward" data-controller="contao--jump-targets">
+<turbo-frame id="tl_edit_form_frame" target="_top" data-turbo-action="advance" data-controller="contao--jump-targets">
 	<div class="jump-targets"><div class="inner" data-contao--jump-targets-target="navigation"></div></div>
 	' . $return . '
 </turbo-frame>';
