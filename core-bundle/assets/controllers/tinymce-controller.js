@@ -25,13 +25,8 @@ export default class extends Controller {
         tinymce?.init(config).then((editors) => {
             this.editorId = editors[0]?.id;
 
-            // TinyMCE init causes a layout shift, thus we need to execute contao--scroll-offset#widgetErrorTargetConnected again.
-            if (this.element.closest('form').querySelector('[data-contao--scroll-offset-target="widgetError"]')) {
-                this.application
-                    .getControllerForElementAndIdentifier(document.documentElement, 'contao--scroll-offset')
-                    .widgetErrorTargetConnected()
-                ;
-            }
+            // Fire a custom event when the editor finished intializing.
+            this.dispatch('editor-loaded', { detail: { content: editors[0] ?? null } });
         });
 
         this.element.setAttribute('id', elementId);
