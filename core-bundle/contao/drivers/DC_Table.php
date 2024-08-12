@@ -2399,8 +2399,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
   ' . $strButtons . '
 </div>
 </div>
-</form>
-</turbo-frame>';
+</form>';
 
 		$strVersionField = '';
 
@@ -2425,8 +2424,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Begin the form (-> DO NOT CHANGE THIS ORDER -> this way the onsubmit attribute of the form can be changed by a field)
-		$return = '
-<turbo-frame id="tl_edit_form_frame" target="_top" data-turbo-action="forward">' . $version .  Message::generate() . ($this->noReload ? '
+		$return = $version .  Message::generate() . ($this->noReload ? '
 <p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . (Input::get('nb') ? '' : '
 <div id="tl_buttons">
 <a href="' . $strBackUrl . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" data-action="contao--scroll-offset#discard">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
@@ -2437,10 +2435,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">' . $strVersionField . $return;
 
 		$return = '
-<div data-controller="contao--jump-targets">
+<turbo-frame id="tl_edit_form_frame" target="_top" data-turbo-action="forward" data-controller="contao--jump-targets">
 	<div class="jump-targets"><div class="inner" data-contao--jump-targets-target="navigation"></div></div>
 	' . $return . '
-</div>';
+</turbo-frame>';
 
 		return $return;
 	}
