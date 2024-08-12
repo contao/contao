@@ -110,9 +110,7 @@ export default class extends Controller {
         this.offset = null;
     }
 
-    editorLoaded() {
-        // TinyMCE initializes asynchronously and causes a layout shift, 
-        // thus we scroll to any widget with errors again.
+    scrollToWidgetError() {
         if (this.hasWidgetErrorTarget) {
             this.widgetErrorTargetConnected();
         }
