@@ -23,6 +23,7 @@ use Contao\Image\DeferredResizerInterface;
 use Contao\Image\Image;
 use Contao\Image\ImageDimensions;
 use Contao\Image\ImageInterface;
+use Contao\Image\Picture;
 use Contao\Image\PictureInterface;
 use Contao\Image\Resizer;
 use Imagine\Image\ImagineInterface;
@@ -126,10 +127,10 @@ class ImageResultTest extends TestCase
             ),
         ];
 
-        $picture = $this->createMock(PictureInterface::class);
+        $picture = $this->createMock(Picture::class);
         $picture
             ->expects($this->once())
-            ->method('getImg')
+            ->method('getRawImg')
             ->with()
             ->willReturn($img)
         ;
