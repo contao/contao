@@ -296,8 +296,7 @@ abstract class Module extends Frontend
 
 		$db = Database::getInstance();
 		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
-
-		global $objPage;
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		// Browse subpages
 		foreach ($arrSubpages as list('page' => $objSubpage, 'hasSubpages' => $blnHasSubpages))

@@ -52,8 +52,6 @@ class ModuleNavigation extends Module
 	 */
 	protected function compile()
 	{
-		global $objPage;
-
 		// Set the trail and level
 		if ($this->defineRoot && $this->rootPage > 0)
 		{
@@ -62,6 +60,7 @@ class ModuleNavigation extends Module
 		}
 		else
 		{
+			$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 			$trail = $objPage->trail;
 			$level = ($this->levelOffset > 0) ? $this->levelOffset : 0;
 		}

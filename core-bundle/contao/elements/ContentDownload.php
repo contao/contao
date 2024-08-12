@@ -100,8 +100,7 @@ class ContentDownload extends ContentElement
 		}
 		else
 		{
-			global $objPage;
-
+			$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 			$arrMeta = Frontend::getMetaData($this->objFile->meta, $objPage->language);
 
 			if (empty($arrMeta) && $objPage->rootFallbackLanguage !== null)

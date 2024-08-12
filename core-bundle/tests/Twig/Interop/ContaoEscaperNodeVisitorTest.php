@@ -16,6 +16,7 @@ use Contao\Config;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
@@ -116,6 +117,7 @@ class ContaoEscaperNodeVisitorTest extends TestCase
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
         $container->set('monolog.logger.contao.error', $this->createMock(LoggerInterface::class));
         $container->set('fragment.handler', $this->createMock(FragmentHandler::class));
+        $container->set('contao.routing.page_finder', $this->createMock(PageFinder::class));
 
         System::setContainer($container);
 

@@ -52,7 +52,7 @@ class ModuleBreadcrumb extends Module
 	 */
 	protected function compile()
 	{
-		global $objPage;
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		$type = null;
 		$pageId = $objPage->id;

@@ -416,7 +416,7 @@ class ModuleListing extends Module
 			return '';
 		}
 
-		global $objPage;
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		// Array
 		if (\is_array($value))

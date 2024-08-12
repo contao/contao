@@ -71,8 +71,6 @@ class ModuleFaqReader extends Module
 	 */
 	protected function compile()
 	{
-		global $objPage;
-
 		if ($this->overviewPage && ($overviewPage = PageModel::findById($this->overviewPage)))
 		{
 			$this->Template->referer = System::getContainer()->get('contao.routing.content_url_generator')->generate($overviewPage);
@@ -156,6 +154,7 @@ class ModuleFaqReader extends Module
 			$strAuthor = $objAuthor->name;
 		}
 
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 		$this->Template->info = \sprintf($GLOBALS['TL_LANG']['MSC']['faqCreatedBy'], Date::parse($objPage->dateFormat, $objFaq->tstamp), $strAuthor);
 
 		// Tag the FAQ (see #2137)

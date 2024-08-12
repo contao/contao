@@ -48,8 +48,7 @@ class ModuleArticlenav extends Module
 			return $objTemplate->parse();
 		}
 
-		global $objPage;
-
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 		$this->objArticles = ArticleModel::findPublishedWithTeaserByPidAndColumn($objPage->id, $this->strColumn);
 
 		// Return if there are no articles
@@ -79,8 +78,6 @@ class ModuleArticlenav extends Module
 	 */
 	protected function compile()
 	{
-		global $objPage;
-
 		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
 		$intActive = null;
 		$articles = array();

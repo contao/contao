@@ -58,9 +58,8 @@ class ModuleQuicknav extends Module
 	 */
 	protected function compile()
 	{
-		global $objPage;
-
 		$host = null;
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		// Start from the website root if there is no reference page
 		if (!$this->rootPage)
@@ -98,8 +97,6 @@ class ModuleQuicknav extends Module
 	 */
 	protected function getQuicknavPages($pid, $level=1, $host=null)
 	{
-		global $objPage;
-
 		$arrPages = array();
 
 		// Get all active subpages
@@ -115,6 +112,7 @@ class ModuleQuicknav extends Module
 		$container = System::getContainer();
 		$security = $container->get('security.helper');
 		$urlGenerator = $container->get('contao.routing.content_url_generator');
+		$objPage = $container->get('contao.routing.page_finder')->getCurrentPage();
 		$db = Database::getInstance();
 
 		foreach ($objSubpages as $objSubpage)

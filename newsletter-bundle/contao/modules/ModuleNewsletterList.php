@@ -70,13 +70,12 @@ class ModuleNewsletterList extends Module
 	 */
 	protected function compile()
 	{
-		global $objPage;
-
 		$arrNewsletter = array();
 
 		$strRequest = StringUtil::ampersand(Environment::get('requestUri'));
 		$objNewsletter = NewsletterModel::findSentByPids($this->nl_channels);
 		$container = System::getContainer();
+		$objPage = $container->get('contao.routing.page_finder')->getCurrentPage();
 
 		if ($objNewsletter !== null)
 		{

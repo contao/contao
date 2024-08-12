@@ -103,8 +103,6 @@ class ModuleArticle extends Module
 	 */
 	protected function compile()
 	{
-		global $objPage;
-
 		$id = 'article-' . $this->id;
 
 		// Generate the CSS ID if it is not set
@@ -115,6 +113,8 @@ class ModuleArticle extends Module
 
 		$this->Template->column = $this->inColumn;
 		$this->Template->noMarkup = $this->blnNoMarkup;
+
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		// Add the modification date
 		$this->Template->timestamp = $this->tstamp;

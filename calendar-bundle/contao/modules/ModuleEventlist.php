@@ -90,8 +90,6 @@ class ModuleEventlist extends Events
 	 */
 	protected function compile()
 	{
-		global $objPage;
-
 		$blnClearInput = false;
 
 		$intYear = (int) Input::get('year');
@@ -131,6 +129,7 @@ class ModuleEventlist extends Events
 			$blnClearInput = true;
 		}
 
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 		$blnDynamicFormat = !$this->cal_ignoreDynamic && \in_array($this->cal_format, array('cal_day', 'cal_month', 'cal_year'));
 
 		// Create the date object

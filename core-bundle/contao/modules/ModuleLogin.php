@@ -105,8 +105,6 @@ class ModuleLogin extends Module
 	 */
 	protected function compile()
 	{
-		global $objPage;
-
 		$container = System::getContainer();
 		$request = $container->get('request_stack')->getCurrentRequest();
 		$security = $container->get('security.helper');
@@ -115,6 +113,7 @@ class ModuleLogin extends Module
 		$lastUsername = '';
 		$isRemembered = $security->isGranted('IS_REMEMBERED');
 		$isTwoFactorInProgress = $security->isGranted('IS_AUTHENTICATED_2FA_IN_PROGRESS');
+		$objPage = $container->get('contao.routing.page_finder')->getCurrentPage();
 
 		// The user can re-authenticate on the error_401 page or on the redirect page of the error_401 page
 		$canReauthenticate = $objPage?->type == 'error_401' || ($this->targetPath && $this->targetPath === $request?->query->get('redirect'));

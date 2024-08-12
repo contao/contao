@@ -32,8 +32,6 @@ class Comments extends Frontend
 	 */
 	public function addCommentsToTemplate(FrontendTemplate $objTemplate, \stdClass $objConfig, $strSource, $intParent, $varNotifies)
 	{
-		global $objPage;
-
 		$limit = 0;
 		$offset = 0;
 		$total = 0;
@@ -94,6 +92,7 @@ class Comments extends Frontend
 		{
 			$tags = array();
 			$objPartial = new FrontendTemplate($objConfig->template ?: 'com_default');
+			$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 			while ($objComments->next())
 			{

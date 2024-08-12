@@ -143,8 +143,7 @@ abstract class ModuleNews extends Module
 			});
 		}
 
-		global $objPage;
-
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 		$objTemplate->date = Date::parse($objPage->datimFormat, $objArticle->date);
 
 		if ($objAuthor = UserModel::findById($objArticle->author))

@@ -114,7 +114,7 @@ class FrontendTemplate extends Template
 			throw new UnusedArgumentsException('Unused arguments: ' . implode(', ', Input::getUnusedRouteParameters()));
 		}
 
-		global $objPage;
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		// Minify the markup
 		if ($objPage !== null && $objPage->minifyMarkup)
@@ -141,7 +141,7 @@ class FrontendTemplate extends Template
 	 */
 	private function setCacheHeaders(Response $response)
 	{
-		global $objPage;
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		// Do not cache the response if caching was not configured
 		if ($objPage->cache < 1 && $objPage->clientCache < 1)
