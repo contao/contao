@@ -1,8 +1,11 @@
 {% extends "@Contao/content_element/_base.html.twig" %}
 {% use "@Contao/component/_stylesheet.html.twig" %}
 
+{% set swiper_id = 'swiper-' ~ data.id %}
+
 {% block content %}
     {% set slider_attributes = attrs()
+        .set('id', swiper_id)
         .addClass('swiper')
         .set('data-delay', delay)
         .set('data-speed', speed)
@@ -61,22 +64,23 @@
             .mergeWith(script_attributes|default)
         %}
         <script src="{{ asset('js/swiper-bundle.min.js', 'contao-components/swiper') }}"></script>
+    {% endadd %}
+    {% add to body %}
         <script{{ script_attributes }}>
             (function() {
-                const swiper = document.querySelectorAll('.swiper');
-                swiper.forEach (el => {
+                const swiper = document.getElementById('{{ swiper_id }}');
                     let opts = {
-                        speed: el.getAttribute('data-speed'),
-                        initialSlide: el.getAttribute('data-offset'),
-                        loop: el.hasAttribute('data-loop'),
+                        speed: swiper.getAttribute('data-speed'),
+                        initialSlide: swiper.getAttribute('data-offset'),
+                        loop: swiper.hasAttribute('data-loop'),
                     };
 
-                    let delay = el.getAttribute('data-delay');
+                    let delay = swiper.getAttribute('data-delay');
                     if (delay > 0) {
                         opts['autoplay'] = { delay: delay };
                     }
 
-                    new Swiper(el, Object.assign({
+                    new Swiper(swiper, Object.assign({
                         {% block init_options %}
                             pagination: {
                                 el: '.swiper-pagination',
@@ -89,7 +93,6 @@
                             {# Put custom options here #}
                         {% endblock %}
                     }, opts));
-                });
             })();
         </script>
     {% endadd %}
