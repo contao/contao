@@ -88,7 +88,7 @@ class ImageResult
     {
         if ($asPath) {
             /** @var Image $image */
-            $image = $this->getPicture()->getRawImg()['src'];
+            $image = $this->getPicture()->getImg()['src'];
 
             return Path::makeRelative($image->getPath(), $this->projectDir);
         }
