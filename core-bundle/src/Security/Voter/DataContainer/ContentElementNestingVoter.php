@@ -42,7 +42,7 @@ class ContentElementNestingVoter extends AbstractDataContainerVoter implements R
 
     protected function hasAccess(TokenInterface $token, CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
     {
-        // Check access to read children of a nested element (children operation).
+        // Check access to list children of an element (children operation).
         if (
             $action instanceof ReadAction
             && !isset($action->getCurrent()['type'])
@@ -53,29 +53,25 @@ class ContentElementNestingVoter extends AbstractDataContainerVoter implements R
             return false;
         }
 
-        // Never disallow to read or delete invalid nested elements.
+        // Never disallow to read or delete invalid nested elements here. (Delete) access
+        // to an element type is checked by other voters.
         if ($action instanceof ReadAction || $action instanceof DeleteAction) {
             return true;
         }
 
         $type = $action->getNew()['type'] ?? ($action instanceof UpdateAction ? $action->getCurrent()['type'] ?? '' : '');
+        $ptable = $action->getNew()['ptable'] ?? ($action instanceof UpdateAction ? $action->getCurrent()['ptable'] ?? null : null);
 
         // Check access if element is moved to or created in a new ptable
         if (
-            'tl_content' === ($action->getNew()['ptable'] ?? null)
+            'tl_content' === $ptable
             && ($pid = (int) $action->getNewPid()) > 0
             && !$this->canNestInParent($pid, $type)
         ) {
             return false;
         }
 
-        // Also check access to element if it is moved inside the same ptable to a new
-        // parent ID
-        return !($action instanceof UpdateAction
-        && !isset($action->getNew()['ptable'])
-        && 'tl_content' === ($action->getCurrent()['ptable'] ?? null)
-        && ($pid = (int) $action->getNewPid()) > 0
-        && !$this->canNestInParent($pid, $type));
+        return true;
     }
 
     private function canNestInParent(int $pid, string $type): bool
@@ -103,6 +99,7 @@ class ContentElementNestingVoter extends AbstractDataContainerVoter implements R
             return $this->types[$pid] = true;
         }
 
+        // Check this after assigning $this->types to cache the database query
         if ('' === $type) {
             return true;
         }
