@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Slots;
 
+use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Node\Node;
 use Twig\Node\NodeOutputInterface;
@@ -19,6 +20,7 @@ use Twig\Node\NodeOutputInterface;
 /**
  * @experimental
  */
+#[YieldReady]
 final class SlotNode extends Node implements NodeOutputInterface
 {
     public function __construct(string $name, Node $body, Node|null $fallback, int $lineno)
