@@ -189,15 +189,24 @@ abstract class Backend extends Controller
 	 * @param string  $strRequest
 	 * @param boolean $blnAddRef
 	 * @param array   $arrUnset
+	 * @param boolean $addRequestToken
 	 *
 	 * @return string
 	 */
-	public static function addToUrl($strRequest, $blnAddRef=true, $arrUnset=array())
+	public static function addToUrl($strRequest, $blnAddRef=true, $arrUnset=array(), $addRequestToken=null)
 	{
 		// Unset the "no back button" flag
 		$arrUnset[] = 'nb';
 
-		return parent::addToUrl($strRequest . ($strRequest ? '&amp;' : '') . 'rt=' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), $blnAddRef, $arrUnset);
+		if (null === $addRequestToken)
+		{
+			parse_str(StringUtil::decodeEntities((string) $strRequest), $params);
+			$addRequestToken = !\in_array($params['act'] ?? null, array(null, 'edit', 'show', 'select'));
+		}
+
+		$rt = $addRequestToken ? 'rt=' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue() : '';
+
+		return parent::addToUrl($strRequest . ($strRequest && $rt ? '&amp;' : '') . $rt, $blnAddRef, $arrUnset);
 	}
 
 	/**
@@ -625,7 +634,7 @@ abstract class Backend extends Controller
 				}
 				else
 				{
-					$arrLinks[] = self::addPageIcon($objPage->row(), '', null, '', true) . ' <a href="' . self::addToUrl('pn=' . $objPage->id) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $objPage->title . '</a>';
+					$arrLinks[] = self::addPageIcon($objPage->row(), '', null, '', true) . ' <a href="' . self::addToUrl('pn=' . $objPage->id) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-turbo-prefetch="false">' . $objPage->title . '</a>';
 				}
 
 				$intId = $objPage->pid;
@@ -646,7 +655,7 @@ abstract class Backend extends Controller
 		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['showRootTrails'] = false;
 
 		// Add root link
-		$arrLinks[] = Image::getHtml('pagemounts.svg') . ' <a href="' . self::addToUrl('pn=0') . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']) . '">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
+		$arrLinks[] = Image::getHtml('pagemounts.svg') . ' <a href="' . self::addToUrl('pn=0') . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']) . '" data-turbo-prefetch="false">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
 		$arrLinks = array_reverse($arrLinks);
 
 		// Insert breadcrumb menu
@@ -697,7 +706,7 @@ abstract class Backend extends Controller
 		// Add the breadcrumb link if you have access to that page
 		if (!$isVisibleRootTrailPage)
 		{
-			$label = '<a href="' . self::addToUrl('pn=' . $row['id']) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $label . '</a>';
+			$label = '<a href="' . self::addToUrl('pn=' . $row['id']) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-turbo-prefetch="false">' . $label . '</a>';
 		}
 		else
 		{
@@ -801,7 +810,7 @@ abstract class Backend extends Controller
 		$arrLinks = array();
 
 		// Add root link
-		$arrLinks[] = Image::getHtml('filemounts.svg') . ' <a href="' . self::addToUrl('fn=') . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']) . '">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
+		$arrLinks[] = Image::getHtml('filemounts.svg') . ' <a href="' . self::addToUrl('fn=') . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']) . '" data-turbo-prefetch="false">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
 
 		// Generate breadcrumb trail
 		foreach ($arrNodes as $strFolder)
@@ -821,7 +830,7 @@ abstract class Backend extends Controller
 			}
 			else
 			{
-				$arrLinks[] = Image::getHtml('folderC.svg') . ' <a href="' . self::addToUrl('fn=' . $strPath) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $strFolder . '</a>';
+				$arrLinks[] = Image::getHtml('folderC.svg') . ' <a href="' . self::addToUrl('fn=' . $strPath) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-turbo-prefetch="false">' . $strFolder . '</a>';
 			}
 		}
 
