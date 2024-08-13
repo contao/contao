@@ -17,6 +17,7 @@ use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\Messenger\Command\ConsumeMessagesCommand;
 use Symfony\Component\Messenger\Event\WorkerRunningEvent;
@@ -59,7 +60,7 @@ class WebWorker
     public function onKernelTerminate(TerminateEvent $event): void
     {
         foreach ($this->transports as $transportName) {
-            $this->processTransport($transportName);
+            $this->processTransport($transportName, $event->getRequest());
         }
     }
 
@@ -110,7 +111,7 @@ class WebWorker
         return $this->cache->getItem('contao-web-worker-'.$transportName);
     }
 
-    private function processTransport(string $transportName): void
+    private function processTransport(string $transportName, Request $request): void
     {
         // Real worker is running, abort
         if ($this->getCacheItemForTransportName($transportName)->isHit()) {
@@ -120,8 +121,14 @@ class WebWorker
         $timeLimit = 1;
 
         if (\function_exists('fastcgi_finish_request') || \function_exists('litespeed_finish_request')) {
-            // Subtract 10 seconds to make sure we never exceed the max execution time
-            $timeLimit = round(min(30, max(1, $this->getRemainingExecutionTime() - 10)));
+            // Subtract 10 seconds to reduce the risk of exceeding the max execution time. If
+            // you found this comment because you ran into a timeout, it is likely that some
+            // of your messages take many seconds to finish. This would be an indicator that
+            // you need to set up real workers to work on your queue. In case you are using
+            // the Contao Managed Edition, this is as easy as configuring a minutely cronjob
+            // (https://docs.contao.org/manual/en/performance/cronjobs/). Otherwise, refer to
+            // the Symfony documentation on Messenger workers.
+            $timeLimit = round(min(30, max(1, $this->getRemainingExecutionTime($request) - 10)));
         }
 
         $this->webWorkerRunning = true;
@@ -149,7 +156,7 @@ class WebWorker
         $this->webWorkerRunning = false;
     }
 
-    private function getRemainingExecutionTime(): float|int
+    private function getRemainingExecutionTime(Request $request): float|int
     {
         $maxTime = (int) \ini_get('max_execution_time');
 
@@ -158,6 +165,6 @@ class WebWorker
         }
 
         // Substract already used up execution time
-        return $maxTime - (microtime(true) - ($_SERVER['REQUEST_TIME_FLOAT'] ?? microtime(true)));
+        return $maxTime - (microtime(true) - ($request->server->get('REQUEST_TIME_FLOAT') ?? microtime(true)));
     }
 }
