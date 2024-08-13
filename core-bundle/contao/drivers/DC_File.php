@@ -260,7 +260,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 
 		// Submit buttons
 		$arrButtons = array();
-		$arrButtons['save'] = '<button type="submit" name="save" id="save" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG']['MSC']['save'] . '</button>';
+		$arrButtons['save'] = '<button type="submit" name="save" id="save" class="tl_submit" accesskey="s" data-turbo-frame="_self">' . $GLOBALS['TL_LANG']['MSC']['save'] . '</button>';
 		$arrButtons['saveNclose'] = '<button type="submit" name="saveNclose" id="saveNclose" class="tl_submit" accesskey="c" data-action="contao--scroll-offset#discard">' . $GLOBALS['TL_LANG']['MSC']['saveNclose'] . '</button>';
 
 		// Call the buttons_callback (see #4691)
@@ -329,22 +329,11 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 			$this->reload();
 		}
 
-		// Set the focus if there is an error
-		if ($this->noReload)
-		{
-			$return .= '
-<script>
-  window.addEvent(\'domready\', function() {
-    Backend.vScrollTo(($(\'' . $this->strTable . '\').getElement(\'label.error\').getPosition().y - 20));
-  });
-</script>';
-		}
-
 		$return = '
-<div data-controller="contao--jump-targets">
+<turbo-frame id="tl_edit_form_frame" target="_top" data-turbo-action="advance" data-controller="contao--jump-targets">
 	<div class="jump-targets"><div class="inner" data-contao--jump-targets-target="navigation"></div></div>
 	' . $return . '
-</div>';
+</turbo-frame>';
 
 		return $return;
 	}
