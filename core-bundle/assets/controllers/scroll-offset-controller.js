@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus'
 
 export default class extends Controller {
-    static targets = ['scrollTo', 'autoFocus'];
+    static targets = ['scrollTo', 'autoFocus', 'widgetError'];
 
     static values = {
         sessionKey: {
@@ -95,12 +95,25 @@ export default class extends Controller {
         input.focus();
     }
 
+    widgetErrorTargetConnected() {
+        this.widgetErrorTarget.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+    }
+
     store () {
         this.offset = this.element.scrollTop;
     }
 
     discard () {
         this.offset = null;
+    }
+
+    scrollToWidgetError() {
+        if (this.hasWidgetErrorTarget) {
+            this.widgetErrorTargetConnected();
+        }
     }
 
     get offset () {

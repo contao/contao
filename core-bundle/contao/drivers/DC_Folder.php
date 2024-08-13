@@ -1522,7 +1522,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		// Submit buttons
 		$arrButtons = array();
-		$arrButtons['save'] = '<button type="submit" name="save" id="save" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG']['MSC']['save'] . '</button>';
+		$arrButtons['save'] = '<button type="submit" name="save" id="save" class="tl_submit" accesskey="s" data-turbo-frame="_self">' . $GLOBALS['TL_LANG']['MSC']['save'] . '</button>';
 
 		if (!Input::get('nb'))
 		{
@@ -1571,10 +1571,12 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
   ' . $strButtons . '
 </div>
 </div>
-</form>';
+</form>
+</turbo-frame>';
 
 		// Begin the form (-> DO NOT CHANGE THIS ORDER -> this way the onsubmit attribute of the form can be changed by a field)
-		$return = $version . Message::generate() . ($this->noReload ? '
+		$return = '
+<turbo-frame id="tl_edit_form_frame" target="_top" data-turbo-action="advance">' . $version . Message::generate() . ($this->noReload ? '
 <p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['general'] . '</p>' : '') . '
 <div id="tl_buttons">
 <a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" data-action="contao--scroll-offset#discard">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
@@ -1639,17 +1641,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			{
 				$this->redirect($this->addToUrl('id=' . $this->urlEncode($this->intId)));
 			}
-		}
-
-		// Set the focus if there is an error
-		if ($this->noReload)
-		{
-			$return .= '
-<script>
-  window.addEvent(\'domready\', function() {
-    Backend.vScrollTo(($(\'' . $this->strTable . '\').getElement(\'label.error\').getPosition().y - 20));
-  });
-</script>';
 		}
 
 		return $return;
@@ -1895,17 +1886,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 </div>
 </div>
 </form>';
-
-			// Set the focus if there is an error
-			if ($this->noReload)
-			{
-				$return .= '
-<script>
-  window.addEvent(\'domready\', function() {
-    Backend.vScrollTo(($(\'' . $this->strTable . '\').getElement(\'label.error\').getPosition().y - 20));
-  });
-</script>';
-			}
 
 			// Reload the page to prevent _POST variables from being sent twice
 			if (!$this->noReload && Input::post('FORM_SUBMIT') == $this->strTable)

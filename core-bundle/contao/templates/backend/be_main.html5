@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="<?= $this->language ?>" data-controller="contao--scroll-offset" data-action="store-scroll-offset@window->contao--scroll-offset#store">
+<html lang="<?= $this->language ?>" data-controller="contao--scroll-offset" data-action="store-scroll-offset@window->contao--scroll-offset#store contao--tinymce:editor-loaded->contao--scroll-offset#scrollToWidgetError">
 <head>
 
   <?php $this->block('head'); ?>

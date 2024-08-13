@@ -21,6 +21,7 @@ use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\Database\Statement;
 use Doctrine\DBAL\Exception\DriverException;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\String\UnicodeString;
@@ -2200,7 +2201,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$objTemplate->href = Environment::get('requestUri');
 				$objTemplate->button = $GLOBALS['TL_LANG']['MSC']['continue'];
 
-				throw new ResponseException($objTemplate->getResponse());
+				// We need to set the status code to either 4xx or 5xx in order for Turbo to render this response.
+				$response = $objTemplate->getResponse();
+				$response->setStatusCode(Response::HTTP_CONFLICT);
+
+				throw new ResponseException($response);
 			}
 
 			// Redirect
@@ -2322,7 +2327,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		// Submit buttons
 		$arrButtons = array();
-		$arrButtons['save'] = '<button type="submit" name="save" id="save" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG']['MSC']['save'] . '</button>';
+		$arrButtons['save'] = '<button type="submit" name="save" id="save" class="tl_submit" accesskey="s" data-turbo-frame="_self">' . $GLOBALS['TL_LANG']['MSC']['save'] . '</button>';
 
 		if (!Input::get('nb'))
 		{
@@ -2429,23 +2434,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
 <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">' . $strVersionField . $return;
 
-		// Set the focus if there is an error
-		if ($this->noReload)
-		{
-			$return .= '
-<script>
-  window.addEvent(\'domready\', function() {
-    var error = $(\'' . $this->strTable . '\').getElement(\'label.error\');
-    if (error) Backend.vScrollTo((error.getPosition().y - 20));
-  });
-</script>';
-		}
-
 		$return = '
-<div data-controller="contao--jump-targets">
+<turbo-frame id="tl_edit_form_frame" target="_top" data-turbo-action="advance" data-controller="contao--jump-targets">
 	<div class="jump-targets"><div class="inner" data-contao--jump-targets-target="navigation"></div></div>
 	' . $return . '
-</div>';
+</turbo-frame>';
 
 		return $return;
 	}
@@ -2799,18 +2792,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </div>
 </div>
 </form>';
-
-			// Set the focus if there is an error
-			if ($this->noReload)
-			{
-				$return .= '
-<script>
-  window.addEvent(\'domready\', function() {
-    var error = $(\'' . $this->strTable . '\').getElement(\'label.error\');
-    if (error) Backend.vScrollTo((error.getPosition().y - 20));
-  });
-</script>';
-			}
 		}
 
 		// Else show a form to select the fields
@@ -3177,18 +3158,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </div>
 </div>
 </form>';
-
-			// Set the focus if there is an error
-			if ($this->noReload)
-			{
-				$return .= '
-<script>
-  window.addEvent(\'domready\', function() {
-    var error = $(\'' . $this->strTable . '\').getElement(\'label.error\');
-    if (error) Backend.vScrollTo((error.getPosition().y - 20));
-  });
-</script>';
-			}
 		}
 
 		// Else show a form to select the fields
