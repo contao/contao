@@ -118,8 +118,10 @@ class WebWorker
             return;
         }
 
+        // Short time limit for SAPIs that do not support sending the response before finishing the process (e.g. mod_php)
         $timeLimit = 1;
 
+        // For SAPIs that support sending the response before finishing the request, we can run our web worker longer
         if (\function_exists('fastcgi_finish_request') || \function_exists('litespeed_finish_request')) {
             // Subtract 10 seconds to reduce the risk of exceeding the max execution time. If
             // you found this comment because you ran into a timeout, it is likely that some
@@ -142,7 +144,7 @@ class WebWorker
         // This ensures that we also consider configured memory limits in order to try to
         // not process more messages than the configured memory limit allows. Meaning
         // this will either abort after having consumed the configured memory limit for
-        // the web process or 1 (or 30) seconds - whichever limit is hit first.
+        // the web process $timeLimit seconds - whichever limit is hit first.
         if (($memoryLimit = (string) \ini_get('memory_limit')) && '-1' !== $memoryLimit) {
             $inputParameters['--memory-limit'] = $memoryLimit;
         }
