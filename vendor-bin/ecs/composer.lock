@@ -537,16 +537,16 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v3.61.1",
+            "version": "v3.62.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer.git",
-                "reference": "94a87189f55814e6cabca2d9a33b06de384a2ab8"
+                "reference": "627692f794d35c43483f34b01d94740df2a73507"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/94a87189f55814e6cabca2d9a33b06de384a2ab8",
-                "reference": "94a87189f55814e6cabca2d9a33b06de384a2ab8",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/627692f794d35c43483f34b01d94740df2a73507",
+                "reference": "627692f794d35c43483f34b01d94740df2a73507",
                 "shasum": ""
             },
             "require": {
@@ -628,7 +628,7 @@
             ],
             "support": {
                 "issues": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/issues",
-                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.61.1"
+                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.62.0"
             },
             "funding": [
                 {
@@ -636,7 +636,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-07-31T14:33:15+00:00"
+            "time": "2024-08-07T17:03:09+00:00"
         },
         {
             "name": "kubawerlos/php-cs-fixer-custom-fixers",
@@ -2908,16 +2908,16 @@
         },
         {
             "name": "symplify/easy-coding-standard",
-            "version": "12.3.4",
+            "version": "12.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/easy-coding-standard/easy-coding-standard.git",
-                "reference": "03cd792d7fa6d9dc59b6e12a5ca73d9873ee9c0e"
+                "reference": "0d7c2cfee3debdf11c12135e90d69d1d9f4eef03"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/easy-coding-standard/easy-coding-standard/zipball/03cd792d7fa6d9dc59b6e12a5ca73d9873ee9c0e",
-                "reference": "03cd792d7fa6d9dc59b6e12a5ca73d9873ee9c0e",
+                "url": "https://api.github.com/repos/easy-coding-standard/easy-coding-standard/zipball/0d7c2cfee3debdf11c12135e90d69d1d9f4eef03",
+                "reference": "0d7c2cfee3debdf11c12135e90d69d1d9f4eef03",
                 "shasum": ""
             },
             "require": {
@@ -2953,7 +2953,7 @@
             ],
             "support": {
                 "issues": "https://github.com/easy-coding-standard/easy-coding-standard/issues",
-                "source": "https://github.com/easy-coding-standard/easy-coding-standard/tree/12.3.4"
+                "source": "https://github.com/easy-coding-standard/easy-coding-standard/tree/12.3.5"
             },
             "funding": [
                 {
@@ -2965,7 +2965,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-08-01T07:55:09+00:00"
+            "time": "2024-08-08T08:43:50+00:00"
         }
     ],
     "packages-dev": [],
