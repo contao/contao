@@ -30,8 +30,8 @@
         <target>ARIAラベル</target>
       </trans-unit>
       <trans-unit id="tl_module.ariaLabel.1">
-        <source>Here you can enter an ARIA label. Avoid using the role in the label, as screen readers read out both the label and the role. For example, &quot;Main navigation&quot; would be read as &quot;Main navigation navigation&quot;.</source>
-        <target>ARIAラベルを入力できます。ラベルにロールを使用するのは避けてください、なぜならスクリーンリーダーはラベルと役割の両方を読み上げるからです。例えば、「メインのナビゲーション」は「メインのナビゲーションナビゲーション」と読み上げられるでしょう。</target>
+        <source>If there is more than one navigation element on the page, each should have a unique label.</source>
+        <target>ページに複数のナビゲーション要素がある場合は、それぞれ重複しないラベルとしなければなりません。</target>
       </trans-unit>
       <trans-unit id="tl_module.levelOffset.0">
         <source>Start level</source>

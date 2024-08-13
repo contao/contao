@@ -30,8 +30,8 @@
         <target>ARIA etiketi</target>
       </trans-unit>
       <trans-unit id="tl_module.ariaLabel.1">
-        <source>Here you can enter an ARIA label. Avoid using the role in the label, as screen readers read out both the label and the role. For example, &quot;Main navigation&quot; would be read as &quot;Main navigation navigation&quot;.</source>
-        <target>Buraya bir ARIA etiketi yazabilirsiniz. Etikette rolü kullanmaktan kaçının, çünkü ekran okuyucular hem etiketi hem de rolü okur. Örneğin, &quot;Ana gezinme&quot; &quot;Ana gezinme gezinme&quot; olarak okunur.</target>
+        <source>If there is more than one navigation element on the page, each should have a unique label.</source>
+        <target>Sayfada birden fazla gezinme ögesi varsa, her birinin benzersiz bir etiketi olmalıdır.</target>
       </trans-unit>
       <trans-unit id="tl_module.levelOffset.0">
         <source>Start level</source>

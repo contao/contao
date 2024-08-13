@@ -30,8 +30,8 @@
         <target>Метка ARIA</target>
       </trans-unit>
       <trans-unit id="tl_module.ariaLabel.1">
-        <source>Here you can enter an ARIA label. Avoid using the role in the label, as screen readers read out both the label and the role. For example, &quot;Main navigation&quot; would be read as &quot;Main navigation navigation&quot;.</source>
-        <target>Здесь можно ввести метку ARIA. Избегайте использования роли в метке, поскольку программы чтения с экрана читают как метку, так и роль. Например, &quot;Основная навигация&quot; будет прочитано как &quot;Основная навигация навигация&quot;.</target>
+        <source>If there is more than one navigation element on the page, each should have a unique label.</source>
+        <target>Если на странице более одного элемента навигации, каждый из них должен иметь уникальную метку.</target>
       </trans-unit>
       <trans-unit id="tl_module.levelOffset.0">
         <source>Start level</source>
