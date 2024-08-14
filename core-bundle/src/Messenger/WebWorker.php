@@ -42,6 +42,8 @@ use Symfony\Component\Messenger\Event\WorkerStartedEvent;
  */
 class WebWorker
 {
+    private const MAX_DURATION = 30;
+
     private bool $webWorkerRunning = false;
 
     public function __construct(
@@ -59,8 +61,10 @@ class WebWorker
     #[AsEventListener(priority: -2048)]
     public function onKernelTerminate(TerminateEvent $event): void
     {
+        $stopTime = $this->calculateStopTime($event->getRequest());
+
         foreach ($this->transports as $transportName) {
-            $this->processTransport($transportName, $event->getRequest());
+            $this->processTransport($transportName, $stopTime);
         }
     }
 
@@ -111,28 +115,17 @@ class WebWorker
         return $this->cache->getItem('contao-web-worker-'.$transportName);
     }
 
-    private function processTransport(string $transportName, Request $request): void
+    private function processTransport(string $transportName, float $stopTime): void
     {
         // Real worker is running, abort
         if ($this->getCacheItemForTransportName($transportName)->isHit()) {
             return;
         }
 
-        // Short time limit for SAPIs that do not support sending the response before
-        // finishing the process (e.g. mod_php)
-        $timeLimit = 1;
+        $timeLimit = round($stopTime - microtime(true));
 
-        // For SAPIs that support sending the response before finishing the process, we
-        // can run our web worker longer
-        if (\function_exists('fastcgi_finish_request') || \function_exists('litespeed_finish_request')) {
-            // Subtract 10 seconds to reduce the risk of exceeding the max execution time. If
-            // you found this comment because you ran into a timeout, it is likely that some
-            // of your messages take many seconds to finish. This would be an indicator that
-            // you need to set up real workers to work on your queue. In case you are using
-            // the Contao Managed Edition, this is as easy as configuring a minutely cronjob
-            // (https://docs.contao.org/manual/en/performance/cronjobs/). Otherwise, refer to
-            // the Symfony documentation on Messenger workers.
-            $timeLimit = round(min(30, max(1, $this->getRemainingExecutionTime($request) - 10)));
+        if ($timeLimit < 1) {
+            return;
         }
 
         $this->webWorkerRunning = true;
@@ -158,6 +151,28 @@ class WebWorker
         $this->consumeMessagesCommand->run($input, new NullOutput());
 
         $this->webWorkerRunning = false;
+    }
+
+    private function calculateStopTime(Request $request): float
+    {
+        // Short time limit for SAPIs that do not support sending the response before
+        // finishing the process (e.g. mod_php)
+        $timeLimit = 1;
+
+        // For SAPIs that support sending the response before finishing the process, we
+        // can run our web worker longer
+        if (\function_exists('fastcgi_finish_request') || \function_exists('litespeed_finish_request')) {
+            // Subtract 10 seconds to reduce the risk of exceeding the max execution time. If
+            // you found this comment because you ran into a timeout, it is likely that some
+            // of your messages take many seconds to finish. This would be an indicator that
+            // you need to set up real workers to work on your queue. In case you are using
+            // the Contao Managed Edition, this is as easy as configuring a minutely cronjob
+            // (https://docs.contao.org/manual/en/performance/cronjobs/). Otherwise, refer to
+            // the Symfony documentation on Messenger workers.
+            $timeLimit = min(self::MAX_DURATION, max(1, $this->getRemainingExecutionTime($request) - 10));
+        }
+
+        return microtime(true) + $timeLimit;
     }
 
     private function getRemainingExecutionTime(Request $request): float|int
