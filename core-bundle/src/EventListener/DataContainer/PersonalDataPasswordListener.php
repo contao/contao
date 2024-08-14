@@ -34,7 +34,7 @@ class PersonalDataPasswordListener
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if ($request?->query->has('act') && 'select' !== $request?->query->get('act')) {
+        if ($request?->query->has('act') && 'select' !== $request->query->get('act')) {
             return;
         }
 
