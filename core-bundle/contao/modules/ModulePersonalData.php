@@ -136,10 +136,11 @@ class ModulePersonalData extends Module
 
 		$arrSubmitted = array();
 		$arrFiles = array();
+		$arrFields = array();
 
 		$db = Database::getInstance();
 
-		// Build the form
+		// Collect the editable fields
 		foreach ($this->editable as $field)
 		{
 			$arrData = $GLOBALS['TL_DCA']['tl_member']['fields'][$field] ?? array();
@@ -156,6 +157,24 @@ class ModulePersonalData extends Module
 				$arrData['inputType'] = 'upload';
 			}
 
+			// Also check for the old password
+			if ('password' === $field && $objMember->password)
+			{
+				$arrFields['oldPassword'] = array
+				(
+					'name'      => 'oldpassword',
+					'label'     => &$GLOBALS['TL_LANG']['MSC']['oldPassword'],
+					'inputType' => 'text',
+					'eval'      => array('preserveTags'=>true, 'hideInput'=>true, 'autocomplete'=>'current-password', 'feEditable'=>true),
+				);
+			}
+
+			$arrFields[$field] = $arrData;
+		}
+
+		// Build the form
+		foreach ($arrFields as $field => $arrData)
+		{
 			/** @var class-string<Widget> $strClass */
 			$strClass = $GLOBALS['TL_FFL'][$arrData['inputType'] ?? null] ?? null;
 
@@ -280,6 +299,18 @@ class ModulePersonalData extends Module
 							$objWidget->class = 'error';
 							$objWidget->addError($e->getMessage());
 						}
+					}
+				}
+
+				// Validate the old password if a new one was submitted
+				if ($field == 'oldPassword' && Input::post('password'))
+				{
+					$passwordHasher = System::getContainer()->get('security.password_hasher_factory')->getPasswordHasher(FrontendUser::class);
+
+					if (!$passwordHasher->verify($objMember->password, $varValue))
+					{
+						$objWidget->value = '';
+						$objWidget->addError($GLOBALS['TL_LANG']['MSC']['oldPasswordWrong']);
 					}
 				}
 
