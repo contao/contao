@@ -31,7 +31,8 @@ use Doctrine\Common\Annotations\Annotation\Target;
  *     @Attribute("renderer", type="string"),
  * })
  *
- * @deprecated Use the #[AsFrontendModule] attribute instead.
+ * @deprecated Deprecated since Contao 5.4, to be removed in Contao 6;
+ *             use the #[AsFrontendModule] attribute instead
  */
 final class FrontendModule extends AbstractFragmentAnnotation
 {

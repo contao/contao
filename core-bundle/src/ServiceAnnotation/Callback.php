@@ -30,7 +30,8 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
  *     @Attribute("priority", type="int"),
  * })
  *
- * @deprecated Use the #[AsCallback] attribute instead.
+ * @deprecated Deprecated since Contao 5.4, to be removed in Contao 6;
+ *             use the #[AsCallback] attribute instead
  */
 final class Callback implements ServiceTagInterface
 {

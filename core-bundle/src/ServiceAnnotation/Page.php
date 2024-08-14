@@ -25,7 +25,8 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
  *
  * @see Route
  *
- * @deprecated Use the #[AsPage] attribute instead.
+ * @deprecated Deprecated since Contao 5.4, to be removed in Contao 6;
+ *             use the #[AsPage] attribute instead
  */
 final class Page implements ServiceTagInterface
 {

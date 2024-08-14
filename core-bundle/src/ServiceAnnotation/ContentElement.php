@@ -32,7 +32,8 @@ use Doctrine\Common\Annotations\Annotation\Target;
  *     @Attribute("attributes", type = "array"),
  * })
  *
- * @deprecated Use the #[AsContentElement] attribute instead.
+ * @deprecated Deprecated since Contao 5.4, to be removed in Contao 6;
+ *             use the #[AsContentElement] attribute instead
  */
 final class ContentElement extends AbstractFragmentAnnotation
 {

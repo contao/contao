@@ -28,7 +28,8 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
  *     @Attribute("value", type="string", required=true)
  * })
  *
- * @deprecated Use the #[AsCronJob] attribute instead.
+ * @deprecated Deprecated since Contao 5.4, to be removed in Contao 6;
+ *             use the #[AsCronJob] attribute instead
  */
 final class CronJob implements ServiceTagInterface
 {

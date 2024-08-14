@@ -29,7 +29,8 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
  *     @Attribute("priority", type="int"),
  * })
  *
- * @deprecated Use the #[AsHook] attribute instead.
+ * @deprecated Deprecated since Contao 5.4, to be removed in Contao 6;
+ *             use the #[AsHook] attribute instead
  */
 final class Hook implements ServiceTagInterface
 {

@@ -28,7 +28,8 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
  *     @Attribute("priority", type="int"),
  * })
  *
- * @deprecated Use the #[AsPickerProvider] attribute instead.
+ * @deprecated Deprecated since Contao 5.4, to be removed in Contao 6;
+ *             use the #[AsPickerProvider] attribute instead
  */
 final class PickerProvider implements ServiceTagInterface
 {
