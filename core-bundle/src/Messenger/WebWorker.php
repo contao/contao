@@ -118,10 +118,12 @@ class WebWorker
             return;
         }
 
-        // Short time limit for SAPIs that do not support sending the response before finishing the process (e.g. mod_php)
+        // Short time limit for SAPIs that do not support sending the response before
+        // finishing the process (e.g. mod_php)
         $timeLimit = 1;
 
-        // For SAPIs that support sending the response before finishing the request, we can run our web worker longer
+        // For SAPIs that support sending the response before finishing the process, we
+        // can run our web worker longer
         if (\function_exists('fastcgi_finish_request') || \function_exists('litespeed_finish_request')) {
             // Subtract 10 seconds to reduce the risk of exceeding the max execution time. If
             // you found this comment because you ran into a timeout, it is likely that some
