@@ -571,7 +571,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $dbName .= '?serverVersion='.$this->encodeUrlParameter((string) $version);
         }
 
-        return sprintf(
+        return \sprintf(
             '%s://%s%s:%s%s',
             str_replace('_', '-', $driver),
             $userPassword,
@@ -609,7 +609,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $portSuffix = ':'.$port;
         }
 
-        return sprintf(
+        return \sprintf(
             '%s://%s%s%s',
             $transport,
             $credentials,

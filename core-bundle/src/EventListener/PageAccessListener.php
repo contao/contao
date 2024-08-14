@@ -58,7 +58,7 @@ class PageAccessListener
         // Do not check for logged in member if -1 (guest group) is allowed
         if (
             !$this->security->isGranted('ROLE_MEMBER')
-            && !\in_array(-1, array_map('intval', $pageModel->groups), true)
+            && !\in_array(-1, array_map(\intval(...), $pageModel->groups), true)
         ) {
             throw new InsufficientAuthenticationException('Not authenticated');
         }

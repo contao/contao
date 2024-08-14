@@ -130,7 +130,7 @@ class Newsletter extends Backend
 
 				if ($this->sendNewsletter($objEmail, $objNewsletter, $arrRecipient, $text, $html))
 				{
-					Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['confirm'], 1));
+					Message::addConfirmation(\sprintf($GLOBALS['TL_LANG']['tl_newsletter']['confirm'], 1));
 				}
 
 				$this->redirect($referer);
@@ -219,7 +219,7 @@ class Newsletter extends Backend
 				{
 					$intRejected = \count($arrRejected);
 
-					Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['rejected'], $intRejected));
+					Message::addInfo(\sprintf($GLOBALS['TL_LANG']['tl_newsletter']['rejected'], $intRejected));
 					$intTotal -= $intRejected;
 
 					foreach ($arrRejected as $strRecipient)
@@ -235,13 +235,13 @@ class Newsletter extends Backend
 				if ($intSkipped = \count($objSession->get('skipped_recipients', array())))
 				{
 					$intTotal -= $intSkipped;
-					Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['skipped'], $intSkipped));
+					Message::addInfo(\sprintf($GLOBALS['TL_LANG']['tl_newsletter']['skipped'], $intSkipped));
 				}
 
 				$objSession->remove('rejected_recipients');
 				$objSession->remove('skipped_recipients');
 
-				Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['confirm'], $intTotal));
+				Message::addConfirmation(\sprintf($GLOBALS['TL_LANG']['tl_newsletter']['confirm'], $intTotal));
 
 				$href = UrlUtil::makeAbsolute($referer, Environment::get('base'));
 
@@ -282,7 +282,7 @@ class Newsletter extends Backend
 <table class="prev_header">
   <tr>
     <td>' . $GLOBALS['TL_LANG']['tl_newsletter']['from'] . '</td>
-    <td>' . sprintf($sprintf, Idna::decodeEmail($objNewsletter->sender)) . '</td>
+    <td>' . \sprintf($sprintf, Idna::decodeEmail($objNewsletter->sender)) . '</td>
   </tr>
   <tr>
     <td>' . $GLOBALS['TL_LANG']['tl_newsletter']['subject'][0] . '</td>
@@ -319,7 +319,7 @@ class Newsletter extends Backend
 <div class="w50 widget">
   <h3><label for="ctrl_start">' . $GLOBALS['TL_LANG']['tl_newsletter']['start'][0] . '</label></h3>
   <input type="text" name="start" id="ctrl_start" value="0" class="tl_text" data-action="focus->contao--scroll-offset#store">' . (($GLOBALS['TL_LANG']['tl_newsletter']['start'][1] && Config::get('showHelp')) ? '
-  <p class="tl_help tl_tip">' . sprintf($GLOBALS['TL_LANG']['tl_newsletter']['start'][1], $objNewsletter->id) . '</p>' : '') . '
+  <p class="tl_help tl_tip">' . \sprintf($GLOBALS['TL_LANG']['tl_newsletter']['start'][1], $objNewsletter->id) . '</p>' : '') . '
 </div>
 <div class="w50 widget">
   <h3><label for="ctrl_recipient">' . $GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][0] . '</label></h3>
@@ -461,7 +461,7 @@ class Newsletter extends Backend
 		catch (RfcComplianceException|TransportException $e)
 		{
 			$arrRejected[] = $arrRecipient['email'];
-			System::getContainer()->get('monolog.logger.contao.error')->error(sprintf('Invalid recipient address "%s": %s', Idna::decodeEmail($arrRecipient['email']), $e->getMessage()));
+			System::getContainer()->get('monolog.logger.contao.error')->error(\sprintf('Invalid recipient address "%s": %s', Idna::decodeEmail($arrRecipient['email']), $e->getMessage()));
 		}
 
 		// Rejected recipients
@@ -511,7 +511,7 @@ class Newsletter extends Backend
 
 				if ($objFile->extension != 'csv')
 				{
-					Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['filetype'], $objFile->extension));
+					Message::addError(\sprintf($GLOBALS['TL_LANG']['ERR']['filetype'], $objFile->extension));
 					continue;
 				}
 
@@ -589,11 +589,11 @@ class Newsletter extends Backend
 				}
 			}
 
-			Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_newsletter_recipients']['confirm'], $intTotal));
+			Message::addConfirmation(\sprintf($GLOBALS['TL_LANG']['tl_newsletter_recipients']['confirm'], $intTotal));
 
 			if ($intInvalid > 0)
 			{
-				Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_newsletter_recipients']['invalid'], $intInvalid));
+				Message::addInfo(\sprintf($GLOBALS['TL_LANG']['tl_newsletter_recipients']['invalid'], $intInvalid));
 			}
 
 			$this->reload();

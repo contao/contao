@@ -69,7 +69,7 @@ class Versions extends Controller
 
 		if (!isset($GLOBALS['TL_DCA'][$strTable]))
 		{
-			throw new \InvalidArgumentException(sprintf('"%s" is not a valid table', StringUtil::specialchars($strTable)));
+			throw new \InvalidArgumentException(\sprintf('"%s" is not a valid table', StringUtil::specialchars($strTable)));
 		}
 
 		$this->strTable = $strTable;
@@ -335,10 +335,10 @@ class Versions extends Controller
 		{
 			System::getContainer()
 				->get('monolog.logger.contao.error')
-				->error(sprintf('Could not restore version %d of %s.%d: %s.', $intVersion, $this->strTable, $this->intPid, $e->getMessage()))
+				->error(\sprintf('Could not restore version %d of %s.%d: %s.', $intVersion, $this->strTable, $this->intPid, $e->getMessage()))
 			;
 
-			Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['versionNotRestored'], $intVersion));
+			Message::addError(\sprintf($GLOBALS['TL_LANG']['ERR']['versionNotRestored'], $intVersion));
 			Controller::reload();
 		}
 
@@ -651,7 +651,7 @@ class Versions extends Controller
 <select name="version" class="tl_select">' . $versions . '
 </select>
 <button type="submit" name="showVersion" id="showVersion" class="tl_submit">' . $GLOBALS['TL_LANG']['MSC']['restore'] . '</button>
-<a href="' . Backend::addToUrl('versions=1&amp;popup=1') . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG']['MSC']['recordOfTable'], $this->intPid, $this->strTable))) . '\',\'url\':this.href});return false">' . Image::getHtml('diff.svg') . '</a>
+<a href="' . Backend::addToUrl('versions=1&amp;popup=1') . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", \sprintf($GLOBALS['TL_LANG']['MSC']['recordOfTable'], $this->intPid, $this->strTable))) . '\',\'url\':this.href});return false">' . Image::getHtml('diff.svg') . '</a>
 </div>
 </form>
 

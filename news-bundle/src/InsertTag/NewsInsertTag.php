@@ -50,7 +50,7 @@ class NewsInsertTag implements InsertTagResolverNestedResolvedInterface
 
         return match ($insertTag->getName()) {
             'news' => new InsertTagResult(
-                sprintf(
+                \sprintf(
                     '<a href="%s" title="%s"%s>%s</a>',
                     StringUtil::specialcharsAttribute($this->generateNewsUrl($model, $arguments)),
                     StringUtil::specialcharsAttribute($model->headline),
@@ -60,7 +60,7 @@ class NewsInsertTag implements InsertTagResolverNestedResolvedInterface
                 OutputType::html,
             ),
             'news_open' => new InsertTagResult(
-                sprintf(
+                \sprintf(
                     '<a href="%s" title="%s"%s>',
                     StringUtil::specialcharsAttribute($this->generateNewsUrl($model, $arguments)),
                     StringUtil::specialcharsAttribute($model->headline),

@@ -67,7 +67,7 @@ class PageControllerTest extends FunctionalTestCase
             foreach ([true, false] as $withDefault) {
                 foreach ([true, false] as $withSuffix) {
                     foreach ([true, false] as $withAlias) {
-                        $description = sprintf(
+                        $description = \sprintf(
                             'Request: %s, withDefault: %s, withSuffix: %s, withAlias: %s',
                             $request,
                             $withDefault ? 'yes' : 'no',

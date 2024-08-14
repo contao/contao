@@ -190,7 +190,7 @@ class Idna
 
 		if (!isset($arrUrl['scheme']))
 		{
-			throw new \InvalidArgumentException(sprintf('Expected a FQDN, got "%s"', $strUrl));
+			throw new \InvalidArgumentException(\sprintf('Expected a FQDN, got "%s"', $strUrl));
 		}
 
 		// Scheme
@@ -279,7 +279,7 @@ class Idna
 
 		if (!isset($arrUrl['scheme']))
 		{
-			throw new \InvalidArgumentException(sprintf('Expected a FQDN, got "%s"', $strUrl));
+			throw new \InvalidArgumentException(\sprintf('Expected a FQDN, got "%s"', $strUrl));
 		}
 
 		// Scheme

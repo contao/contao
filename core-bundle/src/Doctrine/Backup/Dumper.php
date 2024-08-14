@@ -85,15 +85,15 @@ class Dumper implements DumperInterface
     private function dumpViews(AbstractSchemaManager $schemaManager, AbstractPlatform $platform): \Generator
     {
         foreach ($schemaManager->listViews() as $view) {
-            yield sprintf('-- BEGIN VIEW %s', $view->getName());
-            yield sprintf('CREATE OR REPLACE VIEW %s AS %s;', $view->getQuotedName($platform), $view->getSql());
+            yield \sprintf('-- BEGIN VIEW %s', $view->getName());
+            yield \sprintf('CREATE OR REPLACE VIEW %s AS %s;', $view->getQuotedName($platform), $view->getSql());
         }
     }
 
     private function dumpSchema(AbstractPlatform $platform, Table $table): \Generator
     {
-        yield sprintf('-- BEGIN STRUCTURE %s', $table->getName());
-        yield sprintf('DROP TABLE IF EXISTS `%s`;', $table->getName());
+        yield \sprintf('-- BEGIN STRUCTURE %s', $table->getName());
+        yield \sprintf('DROP TABLE IF EXISTS `%s`;', $table->getName());
 
         foreach ($platform->getCreateTableSQL($table) as $statement) {
             yield $statement.';';
@@ -102,7 +102,7 @@ class Dumper implements DumperInterface
 
     private function dumpData(Connection $connection, Table $table): \Generator
     {
-        yield sprintf('-- BEGIN DATA %s', $table->getName());
+        yield \sprintf('-- BEGIN DATA %s', $table->getName());
 
         $values = [];
         $columnBindingTypes = [];

@@ -475,27 +475,35 @@
       </trans-unit>
       <trans-unit id="tl_page.enableCsp.0">
         <source>Enable CSP</source>
+        <target>Povolit CSP</target>
       </trans-unit>
       <trans-unit id="tl_page.enableCsp.1">
         <source>Enable Content Security Policy for this website.</source>
+        <target>Povolí Content Security Policy pro tuto stránku.</target>
       </trans-unit>
       <trans-unit id="tl_page.csp.0">
         <source>Content Security Policy</source>
+        <target>Content Security Policy</target>
       </trans-unit>
       <trans-unit id="tl_page.csp.1">
         <source>Here you can enter custom Content Security Policy directives.</source>
+        <target>Zde můžeš zadat vlastní příkazy pro Content Security Policy</target>
       </trans-unit>
       <trans-unit id="tl_page.cspReportOnly.0">
         <source>Reporting only</source>
+        <target>Pouze oznamovat</target>
       </trans-unit>
       <trans-unit id="tl_page.cspReportOnly.1">
         <source>Only report policy violations without enforcing them.</source>
+        <target>Zpravovat o porušení bez vyvolání jich.</target>
       </trans-unit>
       <trans-unit id="tl_page.cspReportLog.0">
         <source>Enable report logging</source>
+        <target>Povolit logování </target>
       </trans-unit>
       <trans-unit id="tl_page.cspReportLog.1">
         <source>Log CSP violations to the Contao system log.</source>
+        <target>Budou se zaznamenávat zprávy o porušení ochrany obsahu v systémovém logu Contaa. </target>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
@@ -579,6 +587,7 @@
       </trans-unit>
       <trans-unit id="tl_page.csp_legend">
         <source>Content Security Policy</source>
+        <target>Content Security Policy</target>
       </trans-unit>
       <trans-unit id="tl_page.permanent">
         <source>301 Permanent redirect</source>

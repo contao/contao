@@ -134,7 +134,7 @@ class InputUnit extends Widget
 
 		foreach ($this->arrOptions as $arrUnit)
 		{
-			$arrUnits[] = sprintf(
+			$arrUnits[] = \sprintf(
 				'<option value="%s"%s>%s</option>',
 				self::specialcharsValue($arrUnit['value']),
 				$this->isSelected($arrUnit),
@@ -147,7 +147,7 @@ class InputUnit extends Widget
 			$this->varValue = array('value'=>$this->varValue);
 		}
 
-		return sprintf(
+		return \sprintf(
 			'<input type="text" name="%s[value]" id="ctrl_%s" class="tl_text_unit%s" value="%s"%s data-action="focus->contao--scroll-offset#store" data-contao--scroll-offset-target="autoFocus"> <select name="%s[unit]" class="tl_select_unit" data-action="focus->contao--scroll-offset#store"%s>%s</select>%s',
 			$this->strName,
 			$this->strId,

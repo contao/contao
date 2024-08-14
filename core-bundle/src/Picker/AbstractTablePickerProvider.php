@@ -41,7 +41,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         $table = $this->getTableFromContext($config->getContext());
 
         if (!$modules = $this->getModulesForTable($table)) {
-            throw new \RuntimeException(sprintf('Table "%s" is not in any back end module (context: %s)', $table, $config->getContext()));
+            throw new \RuntimeException(\sprintf('Table "%s" is not in any back end module (context: %s)', $table, $config->getContext()));
         }
 
         $module = array_keys($modules)[0];
@@ -147,7 +147,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         }
 
         if ($value = $config->getValue()) {
-            $attributes['value'] = array_map('\intval', explode(',', $value));
+            $attributes['value'] = array_map(\intval(...), explode(',', $value));
         }
 
         return $attributes;

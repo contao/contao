@@ -21,6 +21,7 @@ use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
+use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Util\SymlinkUtil;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureConfigurationItem;
@@ -241,8 +242,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 		}
 
-		$this->arrEditableFileTypes = StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA'][$this->strTable]['config']['editableFileTypes'] ?? throw new \InvalidArgumentException(sprintf('Missing config.editableFileTypes setting for DC_Folder "%s"', $this->strTable))));
-		$this->strUploadPath = $GLOBALS['TL_DCA'][$this->strTable]['config']['uploadPath'] ?? throw new \InvalidArgumentException(sprintf('Missing config.uploadPath setting for DC_Folder "%s"', $this->strTable));
+		$this->arrEditableFileTypes = StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA'][$this->strTable]['config']['editableFileTypes'] ?? throw new \InvalidArgumentException(\sprintf('Missing config.editableFileTypes setting for DC_Folder "%s"', $this->strTable))));
+		$this->strUploadPath = $GLOBALS['TL_DCA'][$this->strTable]['config']['uploadPath'] ?? throw new \InvalidArgumentException(\sprintf('Missing config.uploadPath setting for DC_Folder "%s"', $this->strTable));
 
 		// Get all file mounts (root folders)
 		$this->updateFilemounts(\is_array($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root'] ?? null) ? $GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root'] : array());
@@ -387,39 +388,42 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 			else
 			{
+				$isBasePath = static function (string $path, array $basePaths) {
+					foreach ($basePaths as $basePath)
+					{
+						if (Path::isBasePath($basePath, $path))
+						{
+							return true;
+						}
+					}
+
+					return false;
+				};
+
 				$arrRoot = array();
+				$root = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null;
+				$checkFilemounts = !empty($this->arrFilemounts) || null !== $root;
 
-				// Respect existing limitations (root IDs)
-				if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null))
+				while ($objRoot->next())
 				{
-					while ($objRoot->next())
+					// Respect given filemounts, e.g. set in the initPicker() method
+					if ($checkFilemounts && !$isBasePath($objRoot->path, $this->arrFilemounts))
 					{
-						foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] as $root)
-						{
-							if (strncmp($root . '/', $objRoot->path . '/', \strlen($root) + 1) === 0)
-							{
-								if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || \in_array($objRoot->extension, $this->arrValidFileTypes))
-								{
-									$arrFound[] = $objRoot->path;
-								}
-
-								$arrRoot[] = ($objRoot->type == 'folder') ? $objRoot->path : \dirname($objRoot->path);
-								continue 2;
-							}
-						}
+						continue;
 					}
-				}
-				else
-				{
-					while ($objRoot->next())
+
+					// Respect existing limitations (root IDs)
+					if (\is_array($root) && !$isBasePath($objRoot->path, $root))
 					{
-						if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || \in_array($objRoot->extension, $this->arrValidFileTypes))
-						{
-							$arrFound[] = $objRoot->path;
-						}
-
-						$arrRoot[] = ($objRoot->type == 'folder') ? $objRoot->path : \dirname($objRoot->path);
+						continue;
 					}
+
+					if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || \in_array($objRoot->extension, $this->arrValidFileTypes))
+					{
+						$arrFound[] = $objRoot->path;
+					}
+
+					$arrRoot[] = ($objRoot->type == 'folder') ? $objRoot->path : \dirname($objRoot->path);
 				}
 
 				$this->updateFilemounts($arrRoot);
@@ -735,7 +739,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Do not move if the target exists and would be overwritten (not possible for folders anyway)
 		if (file_exists($this->strRootDir . '/' . $destination))
 		{
-			Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['filetarget'], basename($source), \dirname($destination)));
+			Message::addError(\sprintf($GLOBALS['TL_LANG']['ERR']['filetarget'], basename($source), \dirname($destination)));
 		}
 		else
 		{
@@ -919,6 +923,11 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$count = 1;
 			$new = $destination;
 			$ext = strtolower(substr($destination, strrpos($destination, '.') + 1));
+
+			if ($ext === 'twig')
+			{
+				$ext = ContaoTwigUtil::getExtension($destination);
+			}
 
 			// Add a suffix if the file exists
 			while (file_exists($this->strRootDir . '/' . $new) && $count < 12)
@@ -1464,8 +1473,14 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 						$objFile = is_dir($this->strRootDir . '/' . $this->intId) ? new Folder($this->intId) : new File($this->intId);
 
 						$this->strPath = StringUtil::stripRootDir($objFile->dirname);
-						$this->strExtension = $objFile->origext ? '.' . $objFile->origext : '';
-						$this->varValue = $objFile->filename;
+
+						if (($strExtension = $objFile->origext) === 'twig')
+						{
+							$strExtension = ContaoTwigUtil::getExtension($objFile->name);
+						}
+
+						$this->strExtension = $strExtension ? '.' . $strExtension : '';
+						$this->varValue = substr($objFile->name, 0, -\strlen($this->strExtension) ?: null);
 
 						// Fix hidden Unix system files
 						if (str_starts_with($this->varValue, '.'))
@@ -1576,7 +1591,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		// Begin the form (-> DO NOT CHANGE THIS ORDER -> this way the onsubmit attribute of the form can be changed by a field)
 		$return = $version . Message::generate() . ($this->noReload ? '
-<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['general'] . '</p>' : '') . '
+<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . '
 <div id="tl_buttons">
 <a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" data-action="contao--scroll-offset#discard">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>
@@ -1888,7 +1903,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
 <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
 <input type="hidden" name="IDS[]" value="' . implode('"><input type="hidden" name="IDS[]" value="', array_map(array($this, 'urlEncode'), $ids)) . '">' . ($this->noReload ? '
-<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['general'] . '</p>' : '') . $return . '
+<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . $return . '
 </div>
 <div class="tl_formbody_submit">
 <div class="tl_submit_container">
@@ -1948,7 +1963,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '_all">
 <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
 <input type="hidden" name="IDS[]" value="' . implode('"><input type="hidden" name="IDS[]" value="', array_map(array($this, 'urlEncode'), $ids)) . '">' . ($blnIsError ? '
-<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['general'] . '</p>' : '') . '
+<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . '
 <div class="tl_tbox">
 <div class="widget">
 <fieldset class="tl_checkbox_container">
@@ -2267,7 +2282,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// The target exists
 			if (strcasecmp($this->strPath . '/' . $this->varValue . $this->strExtension, $this->strPath . '/' . $varValue . $this->strExtension) !== 0 && file_exists($this->strRootDir . '/' . $this->strPath . '/' . $varValue . $this->strExtension))
 			{
-				throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['fileExists'], $varValue));
+				throw new \Exception(\sprintf($GLOBALS['TL_LANG']['ERR']['fileExists'], $varValue));
 			}
 
 			$filesObj = Files::getInstance();
@@ -2415,7 +2430,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Make sure unique fields are unique
 			if (($arrData['eval']['unique'] ?? null) && (\is_array($varValue) || (string) $varValue !== '') && !$db->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
 			{
-				throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?? $this->strField));
+				throw new \Exception(\sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?? $this->strField));
 			}
 
 			// Save the value if there was no error
@@ -2599,7 +2614,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 				if (preg_match('//u', $v) !== 1)
 				{
-					trigger_error(sprintf('Path "%s" contains malformed UTF-8 characters.', $path . '/' . $v), E_USER_WARNING);
+					trigger_error(\sprintf('Path "%s" contains malformed UTF-8 characters.', $path . '/' . $v), E_USER_WARNING);
 					continue;
 				}
 
@@ -2726,7 +2741,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				if ($arrClipboard !== false && Input::get('act') != 'select')
 				{
 					$labelPasteInto = $GLOBALS['TL_LANG'][$this->strTable]['pasteinto'] ?? $GLOBALS['TL_LANG']['DCA']['pasteinto'];
-					$imagePasteInto = Image::getHtml('pasteinto.svg', sprintf($labelPasteInto[1], $currentEncoded));
+					$imagePasteInto = Image::getHtml('pasteinto.svg', \sprintf($labelPasteInto[1], $currentEncoded));
 
 					if ((\in_array($arrClipboard['mode'], array('copy', 'cut')) && (($arrClipboard['mode'] == 'cut' && \dirname($arrClipboard['id']) == $currentFolder) || preg_match('#^' . preg_quote(rawurldecode($arrClipboard['id']), '#') . '(/|$)#i', $currentFolder))) || !$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentFolder))))
 					{
@@ -2734,13 +2749,13 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					}
 					else
 					{
-						$return .= '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $currentEncoded . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(sprintf($labelPasteInto[1], $currentEncoded)) . '" data-action="contao--scroll-offset#store">' . $imagePasteInto . '</a> ';
+						$return .= '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $currentEncoded . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(\sprintf($labelPasteInto[1], $currentEncoded)) . '" data-action="contao--scroll-offset#store">' . $imagePasteInto . '</a> ';
 					}
 				}
 				// Default buttons
 				else
 				{
-					$uploadButton = ' <a href="' . $this->addToUrl('&amp;act=move&amp;mode=2&amp;pid=' . $currentEncoded) . '" title="' . StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['tl_files']['uploadFF'], $currentEncoded)) . '">' . Image::getHtml('new.svg', $GLOBALS['TL_LANG']['tl_files']['move'][0]) . '</a>';
+					$uploadButton = ' <a href="' . $this->addToUrl('&amp;act=move&amp;mode=2&amp;pid=' . $currentEncoded) . '" title="' . StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['tl_files']['uploadFF'], $currentEncoded)) . '">' . Image::getHtml('new.svg', $GLOBALS['TL_LANG']['tl_files']['move'][0]) . '</a>';
 
 					// Only show the upload button for mounted folders
 					if (!$user->isAdmin && \in_array($currentFolder, $user->filemounts))
@@ -2759,7 +2774,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				}
 			}
 
-			$return .= '</div><div style="clear:both"></div></li>';
+			$return .= '</div></li>';
 
 			// Call the next node
 			if (!empty($content) && $blnIsOpen)
@@ -2833,7 +2848,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 
 			$strFileNameEncoded = StringUtil::convertEncoding(StringUtil::specialchars(basename($currentFile), false, true), System::getContainer()->getParameter('kernel.charset'));
-			$iconAlt = sprintf($GLOBALS['TL_LANG']['MSC']['typeOfFile'], strtoupper($objFile->extension));
+			$iconAlt = \sprintf($GLOBALS['TL_LANG']['MSC']['typeOfFile'], strtoupper($objFile->extension));
 
 			// No popup links for protected files and templates (see #700)
 			if ($blnProtected || $this->strTable == 'tl_templates')
@@ -2860,7 +2875,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				}
 			}
 
-			$return .= $_buttons . '</div><div style="clear:both"></div></li>';
+			$return .= $_buttons . '</div></li>';
 		}
 
 		return $return;
@@ -3062,13 +3077,38 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				throw new \RuntimeException('Invalid path ' . $strPath);
 			}
 
+			if (empty($this->arrFilemounts) && null === ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null))
+			{
+				$this->updateFilemounts(array($strPath));
+			}
+			else
+			{
+				foreach ($this->arrFilemounts as $i => $strFolder)
+				{
+					// Unset all file mounts outside the path
+					if (!Path::isBasePath($strPath, $strFolder))
+					{
+						unset($this->arrFilemounts[$i]);
+					}
+
+					// If the path is inside a valid file mount, unset all file
+					// mounts and fall back to the path itself (see #856 and #6412)
+					if (Path::isBasePath($strFolder, $strPath))
+					{
+						$this->updateFilemounts(array($strPath));
+						break;
+					}
+				}
+			}
+
+			$this->updateFilemounts($this->arrFilemounts);
+
 			$strNode = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend')->get('tl_files_node');
 
-			// If the files node is not within the current path, remove it (see #856)
-			if ($strNode && ($i = array_search($strNode, $this->arrFilemounts)) !== false && strncmp($strNode . '/', $strPath . '/', \strlen($strPath) + 1) !== 0)
+			// Hide the breadcrumb if the files node is not mounted
+			if ($strNode && $this->arrFilemounts && !\in_array($strNode, $this->arrFilemounts))
 			{
-				unset($this->arrFilemounts[$i], $GLOBALS['TL_DCA']['tl_files']['list']['sorting']['breadcrumb']);
-				$this->updateFilemounts($this->arrFilemounts);
+				unset($GLOBALS['TL_DCA']['tl_files']['list']['sorting']['breadcrumb']);
 			}
 
 			// Allow only those roots that are allowed in root nodes
@@ -3078,7 +3118,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 				foreach ($this->arrFilemounts as $strFolder)
 				{
-					if (str_starts_with($strPath, $strFolder))
+					if (Path::isBasePath($strPath, $strFolder))
 					{
 						$blnValid = true;
 						break;
@@ -3087,11 +3127,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 				if (!$blnValid)
 				{
-					$strPath = '';
+					$this->updateFilemounts(array());
 				}
 			}
-
-			$this->updateFilemounts(array($strPath));
 		}
 
 		if (isset($attributes['extensions']))
@@ -3168,8 +3206,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			->get('contao.image.preview_factory')
 			->createPreviewPicture($projectDir . '/' . $relpath, $pictureConfig);
 
-		$img = $picture->getImg($projectDir);
+		$img = $picture->getImg($projectDir, $container->get('contao.assets.files_context')->getStaticUrl());
 
-		return sprintf('<img src="%s"%s width="%s" height="%s" alt class="%s" loading="lazy">', $img['src'], $img['srcset'] != $img['src'] ? ' srcset="' . $img['srcset'] . '"' : '', $img['width'], $img['height'], $isImportantPath ? 'preview-important' : 'preview-image');
+		return \sprintf('<img src="%s"%s width="%s" height="%s" alt class="%s" loading="lazy">', $img['src'], $img['srcset'] != $img['src'] ? ' srcset="' . $img['srcset'] . '"' : '', $img['width'], $img['height'], $isImportantPath ? 'preview-important' : 'preview-image');
 	}
 }

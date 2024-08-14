@@ -127,7 +127,7 @@ class PageTypeAccessVoter extends AbstractDataContainerVoter implements ResetInt
     {
         if (null === $this->rootIds) {
             $this->rootIds = $this->connection->fetchFirstColumn("SELECT id FROM tl_page WHERE type='root'");
-            $this->rootIds = array_map('intval', $this->rootIds);
+            $this->rootIds = array_map(\intval(...), $this->rootIds);
         }
 
         return \in_array($pageId, $this->rootIds, true);

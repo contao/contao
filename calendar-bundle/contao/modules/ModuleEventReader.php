@@ -213,25 +213,25 @@ class ModuleEventReader extends Events
 				}
 				else
 				{
-					$repeat = sprintf($GLOBALS['TL_LANG']['MSC']['cal_multiple_' . $arrRange['unit']], $arrRange['value']);
+					$repeat = \sprintf($GLOBALS['TL_LANG']['MSC']['cal_multiple_' . $arrRange['unit']], $arrRange['value']);
 				}
 
 				if ($objEvent->recurrences > 0)
 				{
-					$until = ' ' . sprintf($GLOBALS['TL_LANG']['MSC']['cal_until'], Date::parse($objPage->dateFormat, $objEvent->repeatEnd));
+					$until = ' ' . \sprintf($GLOBALS['TL_LANG']['MSC']['cal_until'], Date::parse($objPage->dateFormat, $objEvent->repeatEnd));
 				}
 
 				if ($objEvent->recurrences > 0 && $intEndTime <= time())
 				{
-					$recurring = sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat_ended'], $repeat, $until);
+					$recurring = \sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat_ended'], $repeat, $until);
 				}
 				elseif ($objEvent->addTime)
 				{
-					$recurring = sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat'], $repeat, $until, date('Y-m-d\TH:i:sP', $intStartTime), $strDate . ($strTime ? ' ' . $strTime : ''));
+					$recurring = \sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat'], $repeat, $until, date('Y-m-d\TH:i:sP', $intStartTime), $strDate . ($strTime ? ' ' . $strTime : ''));
 				}
 				else
 				{
-					$recurring = sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat'], $repeat, $until, date('Y-m-d', $intStartTime), $strDate);
+					$recurring = \sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat'], $repeat, $until, date('Y-m-d', $intStartTime), $strDate);
 				}
 			}
 		}
@@ -272,7 +272,7 @@ class ModuleEventReader extends Events
 		{
 			$id = $objEvent->id;
 
-			$objTemplate->details = function () use ($id) {
+			$objTemplate->details = Template::once(function () use ($id) {
 				$strDetails = '';
 				$objElement = ContentModel::findPublishedByPidAndTable($id, 'tl_calendar_events');
 
@@ -285,11 +285,11 @@ class ModuleEventReader extends Events
 				}
 
 				return $strDetails;
-			};
+			});
 
-			$objTemplate->hasDetails = static function () use ($id) {
+			$objTemplate->hasDetails = Template::once(static function () use ($id) {
 				return ContentModel::countPublishedByPidAndTable($id, 'tl_calendar_events') > 0;
-			};
+			});
 		}
 
 		$objTemplate->addImage = false;

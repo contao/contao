@@ -150,7 +150,7 @@ class BackendConfirm extends Backend
 		// Replace the ID wildcard
 		if (str_contains($arrInfo['act'], '%s'))
 		{
-			$arrInfo['act'] = sprintf($arrInfo['act'], $vars['id']);
+			$arrInfo['act'] = \sprintf($arrInfo['act'], $vars['id']);
 		}
 
 		unset($arrInfo['pid'], $arrInfo['clipboard'], $arrInfo['ref'], $arrInfo['mode']);

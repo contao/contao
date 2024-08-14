@@ -33,7 +33,7 @@ class ContentModule extends ContentElement
 		}
 
 		// Clone the model, so we do not modify the shared model in the registry
-		$objModel = $objModule->cloneOriginal();
+		$objModel = $objModule->cloneDetached();
 		$cssID = StringUtil::deserialize($objModel->cssID, true);
 
 		// Override the CSS ID (see #305)

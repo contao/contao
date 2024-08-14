@@ -79,7 +79,7 @@ final class FragmentTemplate extends Template
 
     public function get(string $key): mixed
     {
-        return $this->context[$key] ?? throw new \RuntimeException(sprintf('Key "%s" does not exist.', $key));
+        return $this->context[$key] ?? throw new \RuntimeException(\sprintf('Key "%s" does not exist.', $key));
     }
 
     public function has(string $key): bool
@@ -667,6 +667,6 @@ final class FragmentTemplate extends Template
     {
         $function = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function'];
 
-        throw new \LogicException(sprintf('Calling the "%s()" function on a FragmentTemplate is not allowed. Set template data instead and optionally output it with getResponse().', $function));
+        throw new \LogicException(\sprintf('Calling the "%s()" function on a FragmentTemplate is not allowed. Set template data instead and optionally output it with getResponse().', $function));
     }
 }

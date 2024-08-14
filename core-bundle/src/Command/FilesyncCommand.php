@@ -99,7 +99,7 @@ class FilesyncCommand extends Command
         $table->render();
 
         $output->writeln(
-            sprintf(
+            \sprintf(
                 ' Total items added: %s | updated/moved: %s | deleted: %s',
                 \count($changeSet->getItemsToCreate()),
                 \count($changeSet->getItemsToUpdate()),

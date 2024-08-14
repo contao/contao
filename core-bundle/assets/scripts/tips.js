@@ -41,11 +41,11 @@
                 if ((rtl && position.x < 200) || (!rtl && position.x < (clientWidth - 200))) {
                     tip.style.left = `${(window.scrollX + position.left + x)}px`;
                     tip.style.right = 'auto';
-                    tip.classList.remove('tip--rtl')
+                    tip.classList.remove('tip--rtl');
                 } else {
                     tip.style.left = 'auto';
                     tip.style.right = `${(clientWidth - window.scrollX - position.right + x)}px`;
-                    tip.classList.add('tip--rtl')
+                    tip.classList.add('tip--rtl');
                 }
 
                 tip.innerHTML = `<div>${text}</div>`;
@@ -65,7 +65,7 @@
                     el.setAttribute('title', el.getAttribute('data-original-title'));
                 }
 
-                el.removeAttribute('data-original-title')
+                el.removeAttribute('data-original-title');
             }
 
             clearTimeout(timer)

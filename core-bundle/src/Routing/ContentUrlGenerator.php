@@ -174,7 +174,7 @@ class ContentUrlGenerator implements ResetInterface, RequestContextAwareInterfac
     private function getRouteKey(object $content): string
     {
         if (is_subclass_of($content, Model::class)) {
-            return sprintf('%s.%s', $content::getTable(), $content->{$content::getPk()});
+            return \sprintf('%s.%s', $content::getTable(), $content->{$content::getPk()});
         }
 
         // If the content is a Doctrine ORM entity, try using its identifier
@@ -193,7 +193,7 @@ class ContentUrlGenerator implements ResetInterface, RequestContextAwareInterfac
             ->getSingleIdentifierValue($content)
         ;
 
-        return sprintf('%s.%s', $metadata->getTableName(), $identifier);
+        return \sprintf('%s.%s', $metadata->getTableName(), $identifier);
     }
 
     /**

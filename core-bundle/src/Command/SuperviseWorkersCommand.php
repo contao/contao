@@ -100,13 +100,13 @@ class SuperviseWorkersCommand extends Command
 
         foreach ($transportNames as $transportName) {
             if (!$this->messengerTransportLocator->has($transportName)) {
-                throw new \LogicException(sprintf('Configuration error! There is no transport named "%s" to start a worker for.', $transportName));
+                throw new \LogicException(\sprintf('Configuration error! There is no transport named "%s" to start a worker for.', $transportName));
             }
 
             $transport = $this->messengerTransportLocator->get($transportName);
 
             if (!$transport instanceof MessageCountAwareInterface) {
-                throw new \LogicException(sprintf('Configuration error! Cannot enable autoscaling for transport "%s".', $transportName));
+                throw new \LogicException(\sprintf('Configuration error! Cannot enable autoscaling for transport "%s".', $transportName));
             }
 
             $total += $transport->getMessageCount();

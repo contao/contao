@@ -64,7 +64,7 @@ class SymlinkUtil
         $linkPath = Path::join($projectDir, $link);
 
         if (!is_link($linkPath) && (new Filesystem())->exists($linkPath)) {
-            throw new \LogicException(sprintf('The path "%s" exists and is not a symlink.', $link));
+            throw new \LogicException(\sprintf('The path "%s" exists and is not a symlink.', $link));
         }
     }
 }

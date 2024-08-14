@@ -48,7 +48,7 @@ class FrontendModulePermissionsListener
     #[AsCallback(table: 'tl_user_group', target: 'fields.frontendModules.options')]
     public function frontendModuleOptions(): array
     {
-        return array_map('array_keys', $GLOBALS['FE_MOD']);
+        return array_map(array_keys(...), $GLOBALS['FE_MOD']);
     }
 
     #[AsCallback('tl_content', 'fields.module.options')]
@@ -68,7 +68,7 @@ class FrontendModulePermissionsListener
                 continue;
             }
 
-            $options[$module['theme']][$module['id']] = sprintf('%s (ID %s)', $module['name'], $module['id']);
+            $options[$module['theme']][$module['id']] = \sprintf('%s (ID %s)', $module['name'], $module['id']);
         }
 
         return $options;
