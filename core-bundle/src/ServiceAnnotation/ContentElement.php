@@ -31,11 +31,15 @@ use Doctrine\Common\Annotations\Annotation\Target;
  *     @Attribute("renderer", type = "string"),
  *     @Attribute("attributes", type = "array"),
  * })
+ *
+ * @deprecated Use the #[AsContentElement] attribute instead.
  */
 final class ContentElement extends AbstractFragmentAnnotation
 {
     public function getName(): string
     {
+        trigger_deprecation('contao/core-bundle', '5.4', 'Using the @ContentElement annotation has been deprecated and will no longer work in Contao 6. Use the #[AsContentElement] attribute instead.');
+
         return ContentElementReference::TAG_NAME;
     }
 }

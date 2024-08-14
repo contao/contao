@@ -24,6 +24,8 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
  * @Target({"CLASS", "METHOD"})
  *
  * @see Route
+ *
+ * @deprecated Use the #[AsPage] attribute instead.
  */
 final class Page implements ServiceTagInterface
 {
@@ -78,6 +80,8 @@ final class Page implements ServiceTagInterface
 
     public function getName(): string
     {
+        trigger_deprecation('contao/core-bundle', '5.4', 'Using the @Page annotation has been deprecated and will no longer work in Contao 6. Use the #[AsPage] attribute instead.');
+
         return 'contao.page';
     }
 
