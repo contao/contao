@@ -331,7 +331,7 @@ class ModulePersonalData extends Module
 					}
 
 					// Set the new value
-					if ($varValue !== $user->$field)
+					if ($varValue !== $user->$field && $field !== 'oldPassword')
 					{
 						$user->$field = $varValue;
 
