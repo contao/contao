@@ -60,24 +60,28 @@ export default class extends Controller {
     connect () {
         if (this.element.querySelectorAll('label.error, label.mandatory').length) {
             this.element.classList.remove(this.collapsedClass);
-            this.element.querySelector('button').ariaExpanded = 'false';
         } else if (this.element.classList.contains('hide')) {
             if (window.console) {
                 console.warn(`Using class "hide" on a fieldset is deprecated and will be removed in Contao 6. Use class "${this.collapsedClass}" instead.`);
             }
 
             this.element.classList.add(this.collapsedClass);
-            this.element.querySelector('button').ariaExpanded = 'true';
+        }
+
+        if (this.element.classList.contains(this.collapsedClass)) {
+            this.setAriaAttributes(false);
+        } else {
+            this.setAriaAttributes(true);
         }
     }
 
     toggle () {
         if (this.element.classList.contains(this.collapsedClass)) {
             this.open();
-            this.element.querySelector('button').ariaExpanded = 'true';
+            this.setAriaAttributes(true);
         } else {
             this.close();
-            this.element.querySelector('button').ariaExpanded = 'false';
+            this.setAriaAttributes(false);
         }
     }
 
@@ -133,5 +137,13 @@ export default class extends Controller {
                 state: state,
             })
         });
+    }
+
+    setAriaAttributes(state) {
+        const button = this.element.querySelector('button');
+
+        if (button) {
+            button.ariaExpanded = state;
+        }
     }
 }
