@@ -527,7 +527,7 @@
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModules.1">
         <source>Please select a module for every website root page.</source>
-        <target>Bitte wählen Sie ein Modul für jede Website-Startseite.</target>
+        <target>Bitte wählen Sie ein Modul für jeden Website-Startpunkt.</target>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
         <source>Choose module for &quot;%s&quot;</source>

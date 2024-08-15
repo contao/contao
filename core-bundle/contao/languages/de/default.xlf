@@ -191,7 +191,7 @@
       </trans-unit>
       <trans-unit id="ERR.urlPrefixExists">
         <source>The URL prefix &quot;%s&quot; is already used by another website root page with the same domain name!</source>
-        <target>Das URL-Präfix &quot;%s&quot; wird bereits von einer anderen Website-Startseite mit demselben Domainnamen verwendet!</target>
+        <target>Das URL-Präfix &quot;%s&quot; wird bereits von einem anderen Website-Startpunkt mit demselben Domainnamen verwendet!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlExists">
         <source>A page with the URL &quot;%s&quot; already exists!</source>
@@ -263,23 +263,23 @@
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
         <source>None of the active website root pages without an explicit DNS setting have the language fallback option set.</source>
-        <target>Keine der aktiven Website-Startseiten ohne explizite DNS-Einstellungen wurde als Sprachen-Fallback definiert.</target>
+        <target>Keiner der aktiven Website-Startpunkte ohne explizite DNS-Einstellungen wurde als Sprachen-Fallback definiert.</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackDns">
         <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; have the language fallback option set.</source>
-        <target>Keine der aktiven Website-Startseiten für &lt;strong&gt;%s&lt;/strong&gt; wurde als Sprachen-Fallback definiert.</target>
+        <target>Keiner der aktiven Website-Startpunkte für &lt;strong&gt;%s&lt;/strong&gt; wurde als Sprachen-Fallback definiert.</target>
       </trans-unit>
       <trans-unit id="ERR.multipleFallback">
         <source>You can only define one website root page per domain as the language fallback.</source>
-        <target>Sie können nur eine Website-Startseite pro Domain als Sprachen-Fallback definieren.</target>
+        <target>Sie können nur einen Website-Startpunkt pro Domain als Sprachen-Fallback definieren.</target>
       </trans-unit>
       <trans-unit id="ERR.topLevelRoot">
         <source>Top-level pages must be website root pages!</source>
-        <target>Seiten in der obersten Ebene müssen Website-Startseiten sein!</target>
+        <target>Seiten in der obersten Ebene müssen Website-Startpunkte sein!</target>
       </trans-unit>
       <trans-unit id="ERR.topLevelRegular">
         <source>There are top-level pages which are not website root pages.</source>
-        <target>Es sind Seiten in der obersten Ebene, die keine Website-Startseiten sind.</target>
+        <target>Es sind Seiten in der obersten Ebene, die keine Website-Startpunkte sind.</target>
       </trans-unit>
       <trans-unit id="ERR.form">
         <source>The form could not be sent</source>
@@ -839,7 +839,7 @@
       </trans-unit>
       <trans-unit id="PTY.root.0">
         <source>Website root</source>
-        <target>Website-Startseite</target>
+        <target>Startpunkt einer Webseite</target>
       </trans-unit>
       <trans-unit id="PTY.root.1">
         <source>This type of page marks the starting point of a new website.</source>
@@ -883,7 +883,7 @@
       </trans-unit>
       <trans-unit id="PTY.error_503.1">
         <source>When a website root page is in maintenance mode, all requests will show a 503 error page.</source>
-        <target>Wenn sich eine Website-Startseite im Wartungsmodus befindet, wird für alle Anfragen eine 503-Fehlerseite angezeigt.</target>
+        <target>Wenn sich ein Website-Startpunkt im Wartungsmodus befindet, wird für alle Anfragen eine 503-Fehlerseite angezeigt.</target>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
@@ -2635,7 +2635,7 @@
       </trans-unit>
       <trans-unit id="MSC.metaNoLanguages">
         <source>You have to add a website root page to enter file metadata.</source>
-        <target>Sie müssen eine Website-Startseite anlegen, um Metadaten einzugeben.</target>
+        <target>Sie müssen einen Website-Startpunkt anlegen, um Metadaten einzugeben.</target>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb</source>

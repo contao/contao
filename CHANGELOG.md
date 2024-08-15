@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.4.0] (2024-08-15)
+
+**Fixed issues:**
+
+- [#7441] Deprecate the service annotations ([leofeyer])
+
 ## [5.4.0-RC4] (2024-08-13)
 
 **Fixed issues:**
@@ -68,6 +74,7 @@ This project adheres to [Semantic Versioning].
 - [#7229] Fix the `.nogrid` backwards compatibility layer ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.4.0]: https://github.com/contao/contao/releases/tag/5.4.0
 [5.4.0-RC4]: https://github.com/contao/contao/releases/tag/5.4.0-RC4
 [5.4.0-RC3]: https://github.com/contao/contao/releases/tag/5.4.0-RC3
 [5.4.0-RC2]: https://github.com/contao/contao/releases/tag/5.4.0-RC2
@@ -125,3 +132,4 @@ This project adheres to [Semantic Versioning].
 [#7410]: https://github.com/contao/contao/pull/7410
 [#7419]: https://github.com/contao/contao/pull/7419
 [#7437]: https://github.com/contao/contao/pull/7437
+[#7441]: https://github.com/contao/contao/pull/7441

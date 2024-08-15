@@ -135,7 +135,7 @@
       </trans-unit>
       <trans-unit id="tl_page.disableLanguageRedirect.1">
         <source>Do not redirect visitors to this website root based on their preferred browser language.</source>
-        <target>Besucher nicht auf Basis ihrer bevorzugten Browser-Sprache zu dieser Website-Startseite weiterleiten.</target>
+        <target>Besucher nicht auf Basis ihrer bevorzugten Browser-Sprache zu diesem Website-Startpunkt weiterleiten.</target>
       </trans-unit>
       <trans-unit id="tl_page.favicon.0">
         <source>Favicon</source>
@@ -263,7 +263,7 @@
       </trans-unit>
       <trans-unit id="tl_page.urlPrefix.1">
         <source>Enter a URL prefix (e.g. the language) that will be prepended to all page aliases below this website root page.</source>
-        <target>Geben Sie ein URL-Präfix (z. B. die Sprache) ein, das allen Seitenaliasen unterhalb dieser Website-Startseite vorangestellt wird.</target>
+        <target>Geben Sie ein URL-Präfix (z. B. die Sprache) ein, das allen Seitenaliasen unterhalb dieses Website-Startpunkts vorangestellt wird.</target>
       </trans-unit>
       <trans-unit id="tl_page.urlSuffix.0">
         <source>URL suffix</source>
@@ -683,7 +683,7 @@
       </trans-unit>
       <trans-unit id="tl_page.relCanonical">
         <source>Enable canonical URLs in the website root page to enable this configuration.</source>
-        <target>Aktivieren Sie kanonische URLs in der Website-Startseite, um diese Konfiguration zu aktivieren.</target>
+        <target>Aktivieren Sie kanonische URLs im Website-Startpunkt, um diese Konfiguration zu aktivieren.</target>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>
