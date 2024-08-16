@@ -1,6 +1,8 @@
 import { Application } from '@hotwired/stimulus';
 import { definitionForModuleAndIdentifier, identifierForContextKey } from '@hotwired/stimulus-webpack-helpers';
-import '@hotwired/turbo';
+
+import * as Turbo from '@hotwired/turbo';
+Turbo.session.drive = false;
 
 import './scripts/mootao.js';
 import './scripts/core.js';
@@ -36,7 +38,7 @@ const mooDomready = () => {
     if (!document.body.mooDomreadyFired) {
         document.body.mooDomreadyFired = true;
         window.fireEvent('domready');
-    }  
+    }
 }
 
 document.documentElement.addEventListener('turbo:render', mooDomready);
