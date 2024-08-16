@@ -153,7 +153,7 @@ class ContaoCoreBundle extends Bundle
         CronExpression::registerAlias('@minutely', '* * * * *');
     }
 
-    public function shutdown()
+    public function shutdown(): void
     {
         CronExpression::unregisterAlias('@minutely');
     }
