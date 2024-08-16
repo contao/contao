@@ -152,4 +152,9 @@ class ContaoCoreBundle extends Bundle
         // Register the '@minutely' cron expression alias
         CronExpression::registerAlias('@minutely', '* * * * *');
     }
+
+    public function shutdown()
+    {
+        CronExpression::unregisterAlias('@minutely');
+    }
 }
