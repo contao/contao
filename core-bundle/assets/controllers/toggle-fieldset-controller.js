@@ -17,7 +17,7 @@ export default class extends Controller {
             fs.setAttribute(`data-${identifier}-table-value`, table);
             fs.setAttribute(`data-${identifier}-collapsed-class`, 'collapsed');
             el.setAttribute('tabindex', 0);
-            el.setAttribute('data-action', `click->${identifier}#toggle keydown.enter->${identifier}#toggle keydown.space->contao--toggle-fieldset#prevent:prevent keyup.space->${identifier}#toggle:prevent`);
+            el.setAttribute('data-action', `click->${identifier}#toggle keydown.enter->${identifier}#toggle keydown.space->${identifier}#prevent:prevent keyup.space->${identifier}#toggle:prevent`);
         }
 
         const migrateLegacy = () => {
@@ -139,7 +139,7 @@ export default class extends Controller {
         });
     }
 
-    setAriaAttributes(state) {
+    setAriaExpanded(state) {
         const button = this.element.querySelector('button');
 
         if (button) {
