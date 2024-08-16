@@ -68,7 +68,7 @@
         "doctrine/doctrine-bundle": "^2.8",
         "doctrine/orm": "^2.17",
         "doctrine/persistence": "^3.2",
-        "dragonmantank/cron-expression": "^2.3",
+        "dragonmantank/cron-expression": "^3.1",
         "debril/feed-io": "^6.0",
         "friendsofsymfony/http-cache": "^3.0",
         "friendsofsymfony/http-cache-bundle": "^3.0",
