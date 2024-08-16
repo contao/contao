@@ -2752,11 +2752,6 @@ label.error, legend.error, .tl_checkbox_container.error legend {
 }
 
 /* Fieldsets */
-fieldset legend {
-	padding-inline-start: 0;
-	padding-inline-end: 0;
-}
-
 fieldset.tl_tbox, fieldset.tl_box {
 	margin-top: 5px;
 	padding-top: 0;
