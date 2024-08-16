@@ -36,7 +36,7 @@ const mooDomready = () => {
     if (!document.body.mooDomreadyFired) {
         document.body.mooDomreadyFired = true;
         window.fireEvent('domready');
-    }  
+    }
 }
 
 document.documentElement.addEventListener('turbo:render', mooDomready);
