@@ -188,6 +188,7 @@ services:
         arguments:
             - '@database_connection'
             - '@translator'
+            - '@security.helper'
 
     contao.listener.data_container.preview_link:
         class: Contao\CoreBundle\EventListener\DataContainer\PreviewLinkListener
