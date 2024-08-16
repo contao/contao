@@ -69,19 +69,19 @@ export default class extends Controller {
         }
 
         if (this.element.classList.contains(this.collapsedClass)) {
-            this.setAriaAttributes(false);
+            this.setAriaExpanded(false);
         } else {
-            this.setAriaAttributes(true);
+            this.setAriaExpanded(true);
         }
     }
 
     toggle () {
         if (this.element.classList.contains(this.collapsedClass)) {
             this.open();
-            this.setAriaAttributes(true);
+            this.setAriaExpanded(true);
         } else {
             this.close();
-            this.setAriaAttributes(false);
+            this.setAriaExpanded(false);
         }
     }
 
