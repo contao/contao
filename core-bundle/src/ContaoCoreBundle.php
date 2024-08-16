@@ -147,7 +147,7 @@ class ContaoCoreBundle extends Bundle
         return \dirname(__DIR__);
     }
 
-    public function boot()
+    public function boot(): void
     {
         // Register the '@minutely' cron expression alias
         CronExpression::registerAlias('@minutely', '* * * * *');

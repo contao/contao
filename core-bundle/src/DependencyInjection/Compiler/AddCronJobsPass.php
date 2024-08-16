@@ -46,7 +46,7 @@ class AddCronJobsPass implements CompilerPassInterface
                 $interval = $attributes['interval'];
 
                 // Map interval to expression macros
-                if (\in_array($interval, ['minutely', 'hourly', 'daily', 'weekly', 'monthly', 'yearly', true])) {
+                if (\in_array($interval, ['minutely', 'hourly', 'daily', 'weekly', 'monthly', 'yearly', true], true)) {
                     $interval = '@'.$interval;
                 }
 

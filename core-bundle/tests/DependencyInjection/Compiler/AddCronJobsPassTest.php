@@ -26,13 +26,13 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class AddCronJobsPassTest extends TestCase
 {
-    public static function setUpBeforeClass(): void
+    protected function setUp(): void
     {
         // Register the '@minutely' cron expression alias (see ContaoCoreBundle::boot)
         CronExpression::registerAlias('@minutely', '* * * * *');
     }
 
-    public static function tearDownAfterClass(): void
+    protected function tearDown(): void
     {
         CronExpression::unregisterAlias('@minutely');
     }
