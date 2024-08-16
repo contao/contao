@@ -12,32 +12,24 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
-use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
-use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\Message;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Doctrine\DBAL\Connection;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[AsCallback(table: 'tl_module', target: 'config.onload')]
+/**
+ * @internal
+ */
+#[AsHook('getSystemMessages')]
 class PersonalDataPasswordListener
 {
     public function __construct(
-        private readonly ContaoFramework $framework,
         private readonly Connection $connection,
         private readonly TranslatorInterface $translator,
-        private readonly RequestStack $requestStack,
     ) {
     }
 
-    public function __invoke(): void
+    public function __invoke(): string|null
     {
-        $request = $this->requestStack->getCurrentRequest();
-
-        if ($request?->query->has('act') && 'select' !== $request->query->get('act')) {
-            return;
-        }
-
         $count = $this->connection
             ->executeQuery("
                 SELECT COUNT(*)
@@ -50,10 +42,11 @@ class PersonalDataPasswordListener
         ;
 
         if ($count < 1) {
-            return;
+            return null;
         }
 
-        $messages = $this->framework->getAdapter(Message::class);
-        $messages->addError($this->translator->trans('ERR.personalDataPassword', [], 'contao_default'));
+        $message = $this->translator->trans('ERR.personalDataPassword', [], 'contao_default');
+
+        return '<p class="tl_error">' . $message . '</p>';
     }
 }

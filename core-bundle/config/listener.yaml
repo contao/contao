@@ -186,10 +186,8 @@ services:
     contao.listener.data_container.personal_data_password:
         class: Contao\CoreBundle\EventListener\DataContainer\PersonalDataPasswordListener
         arguments:
-            - '@contao.framework'
             - '@database_connection'
             - '@translator'
-            - '@request_stack'
 
     contao.listener.data_container.preview_link:
         class: Contao\CoreBundle\EventListener\DataContainer\PreviewLinkListener
