@@ -2758,7 +2758,6 @@ fieldset legend {
 }
 
 fieldset.tl_tbox, fieldset.tl_box {
-	--navcol-state: url("icons/navcol.svg");
 	margin-top: 5px;
 	padding-top: 0;
 	border-top: none;
@@ -2771,16 +2770,15 @@ fieldset.tl_tbox.nolegend, fieldset.tl_box.nolegend {
 	border-top: 0;
 }
 
-fieldset.tl_tbox > legend,
-fieldset.tl_box > legend {
+fieldset.tl_tbox > legend, fieldset.tl_box > legend {
 	box-sizing: border-box;
 	color: var(--legend);
 	padding: 9px 12px 9px 28px;
-	background: var(--navcol-state) 13px 10px no-repeat;
+	background: url("icons/navcol.svg") 13px 10px no-repeat;
 	cursor: pointer;
 }
 
-fieldset:is(.tl_tbox,.tl_box) >legend {
+fieldset:is(.tl_tbox,.tl_box) > legend {
 	width: 100%;
 }
 
@@ -2803,7 +2801,7 @@ fieldset.collapsed div {
 }
 
 fieldset.collapsed > legend {
-	--navcol-state: url("icons/navexp.svg");
+	background: url("icons/navexp.svg") 13px 10px no-repeat;
 }
 
 /* Maintenance */
