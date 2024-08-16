@@ -46,11 +46,9 @@ class AddCronJobsPass implements CompilerPassInterface
                 $interval = $attributes['interval'];
 
                 // Map interval to expression macros
-                $interval = str_replace(
-                    ['minutely', 'hourly', 'daily', 'weekly', 'monthly', 'yearly'],
-                    ['* * * * *', '@hourly', '@daily', '@weekly', '@monthly', '@yearly'],
-                    $interval,
-                );
+                if (\in_array($interval, ['minutely', 'hourly', 'daily', 'weekly', 'monthly', 'yearly', true])) {
+                    $interval = '@'.$interval;
+                }
 
                 // Validate the cron expression
                 if (!CronExpression::isValidExpression($interval)) {

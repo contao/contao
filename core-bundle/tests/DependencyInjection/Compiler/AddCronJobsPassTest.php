@@ -17,6 +17,7 @@ use Contao\CoreBundle\Cron\CronJob;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddCronJobsPass;
 use Contao\CoreBundle\Fixtures\Cron\TestCronJob;
 use Contao\CoreBundle\Fixtures\Cron\TestInvokableCronJob;
+use Cron\CronExpression;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Exception\InvalidDefinitionException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -25,6 +26,17 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class AddCronJobsPassTest extends TestCase
 {
+    public static function setUpBeforeClass(): void
+    {
+        // Register the '@minutely' cron expression alias (see ContaoCoreBundle::boot)
+        CronExpression::registerAlias('@minutely', '* * * * *');
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        CronExpression::unregisterAlias('@minutely');
+    }
+
     public function testDoesNothingIfThereIsNoCron(): void
     {
         $container = $this->createMock(ContainerBuilder::class);
@@ -175,7 +187,7 @@ class AddCronJobsPassTest extends TestCase
         $definitions = array_column($crons, 0);
 
         $this->assertCount(5, $crons);
-        $this->assertSame('* * * * *', $definitions[0]->getArgument(1));
+        $this->assertSame('@minutely', $definitions[0]->getArgument(1));
         $this->assertSame('@hourly', $definitions[1]->getArgument(1));
         $this->assertSame('@daily', $definitions[2]->getArgument(1));
         $this->assertSame('@weekly', $definitions[3]->getArgument(1));
