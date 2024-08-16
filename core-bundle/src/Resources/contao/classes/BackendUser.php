@@ -92,6 +92,12 @@ class BackendUser extends User
 	protected $strCookie = 'BE_USER_AUTH';
 
 	/**
+	 * Allowed excluded fields
+	 * @var array
+	 */
+	protected $alexf = array();
+
+	/**
 	 * File mount IDs
 	 * @var array
 	 */
@@ -177,7 +183,7 @@ class BackendUser extends User
 				return \is_array($this->arrData['fop']) ? $this->arrData['fop'] : ($this->arrData['fop'] ? array($this->arrData['fop']) : false);
 
 			case 'alexf':
-				return $this->arrData['alexf'] ?? array();
+				return $this->alexf;
 		}
 
 		return parent::__get($strKey);
@@ -411,7 +417,7 @@ class BackendUser extends User
 		{
 			if (!is_numeric($v))
 			{
-				$this->arrData[$k] = StringUtil::deserialize($v);
+				$this->$k = StringUtil::deserialize($v);
 			}
 		}
 
@@ -439,7 +445,7 @@ class BackendUser extends User
 		{
 			foreach ($depends as $field)
 			{
-				$this->arrData[$field] = array();
+				$this->$field = array();
 			}
 		}
 
@@ -462,8 +468,8 @@ class BackendUser extends User
 					// The new page/file picker can return integers instead of arrays, so use empty() instead of is_array() and StringUtil::deserialize(true) here
 					if (!empty($value))
 					{
-						$this->arrData[$field] = array_merge((\is_array($this->arrData[$field] ?? null) ? $this->arrData[$field] : ($this->arrData[$field] ?? null ? array($this->arrData[$field]) : array())), $value);
-						$this->arrData[$field] = array_unique($this->arrData[$field]);
+						$this->$field = array_merge((\is_array($this->$field) ? $this->$field : ($this->$field ? array($this->$field) : array())), $value);
+						$this->$field = array_unique($this->$field);
 					}
 				}
 			}
