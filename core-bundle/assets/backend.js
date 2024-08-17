@@ -7,7 +7,6 @@ import './scripts/core.js';
 import './scripts/limit-height.js';
 import './scripts/modulewizard.js';
 import './scripts/sectionwizard.js';
-import './scripts/tips.js';
 
 // Start the Stimulus application
 const application = Application.start();
@@ -36,7 +35,7 @@ const mooDomready = () => {
     if (!document.body.mooDomreadyFired) {
         document.body.mooDomreadyFired = true;
         window.fireEvent('domready');
-    }  
+    }
 }
 
 document.documentElement.addEventListener('turbo:render', mooDomready);
