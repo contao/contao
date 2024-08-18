@@ -12,6 +12,8 @@ namespace Contao;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Knp\Bundle\TimeBundle\DateTimeFormatter;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -143,6 +145,19 @@ class BackendMain extends Backend
 
 			$this->Template->main .= $this->getBackendModule(Input::get('do'), $picker);
 			$this->Template->title = $this->Template->headline;
+		}
+
+		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
+
+		if ($responseContext?->has(HtmlHeadBag::class))
+		{
+			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
+			$this->Template->metaTags = $htmlHeadBag->getMetaTags();
+		}
+
+		if ($responseContext?->has(HtmlAttributes::class))
+		{
+			$this->Template->htmlAttributes = $responseContext->get(HtmlAttributes::class);
 		}
 
 		// Set the status code to 422 if a widget did not validate, so that

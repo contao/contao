@@ -21,6 +21,9 @@ use Contao\BackendPassword;
 use Contao\BackendPopup;
 use Contao\CoreBundle\Picker\PickerBuilderInterface;
 use Contao\CoreBundle\Picker\PickerConfig;
+use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,10 +37,19 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('%contao.backend.route_prefix%', defaults: ['_scope' => 'backend'])]
 class BackendController extends AbstractController
 {
+    public function __construct(private readonly CoreResponseContextFactory $coreResponseContextFactory)
+    {
+    }
+
     #[Route('', name: 'contao_backend')]
     public function mainAction(): Response
     {
         $this->initializeContaoFramework();
+
+        $this->coreResponseContextFactory->createResponseContext()
+            ->addLazy(HtmlHeadBag::class)
+            ->addLazy(HtmlAttributes::class, static fn () => new HtmlAttributes())
+        ;
 
         $controller = new BackendMain();
 
