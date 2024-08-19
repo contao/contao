@@ -218,7 +218,7 @@ class FrontendUser extends User
 		{
 			if (!is_numeric($v))
 			{
-				$this->$k = StringUtil::deserialize($v);
+				$this->arrData[$k] = StringUtil::deserialize($v);
 			}
 		}
 

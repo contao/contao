@@ -131,6 +131,11 @@ services:
         arguments:
             - '@database_connection'
 
+    contao.migration.version_413.player_color:
+        class: Contao\CoreBundle\Migration\Version413\PlayerColorMigration
+        arguments:
+            - '@database_connection'
+
     contao.migration.version_413.rel_lightbox:
         class: Contao\CoreBundle\Migration\Version413\RelLightboxMigration
         arguments:

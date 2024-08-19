@@ -64,6 +64,33 @@ class MigrateCommandTest extends TestCase
         $this->assertMatchesRegularExpression('/All migrations completed/', $display);
     }
 
+    public function testAbortsEarlyIfNonInteractiveAndThereAreOnlyDropMigrations(): void
+    {
+        $backupManager = $this->createBackupManager(false);
+
+        $installer = $this->createMock(Installer::class);
+        $installer
+            ->expects($this->atLeastOnce())
+            ->method('compileCommands')
+        ;
+
+        $installer
+            ->expects($this->exactly(3))
+            ->method('getCommands')
+            ->with(false)
+            ->willReturn(['hash' => 'DROP QUERY'], ['hash' => 'DROP QUERY'], ['hash' => 'DROP QUERY'])
+        ;
+
+        $command = $this->getCommand([], [], [], $installer, $backupManager);
+        $tester = new CommandTester($command);
+        $code = $tester->execute([], ['interactive' => false]);
+        $display = $tester->getDisplay();
+
+        $this->assertSame(0, $code);
+        $this->assertMatchesRegularExpression('/Database dump skipped because there are no migrations to execute./', $display);
+        $this->assertMatchesRegularExpression('/All migrations completed/', $display);
+    }
+
     public function testAbortsEarlyIfTheBackupFails(): void
     {
         $backupManager = $this->createBackupManager(true);
