@@ -544,7 +544,8 @@ class tl_news extends Backend
 			$root = $this->User->news;
 		}
 
-		$id = strlen(Input::get('id')) ? Input::get('id') : CURRENT_ID;
+		$currentId = \defined('CURRENT_ID') ? CURRENT_ID : 0;
+		$id = strlen(Input::get('id')) ? Input::get('id') : $currentId;
 
 		// Check current action
 		switch (Input::get('act'))
@@ -552,7 +553,7 @@ class tl_news extends Backend
 			case 'paste':
 			case 'select':
 				// Check CURRENT_ID here (see #247)
-				if (!in_array(CURRENT_ID, $root))
+				if (!in_array($currentId, $root))
 				{
 					throw new AccessDeniedException('Not enough permissions to access news archive ID ' . $id . '.');
 				}
