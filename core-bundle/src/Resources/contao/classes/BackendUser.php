@@ -159,25 +159,19 @@ class BackendUser extends User
 		switch ($strKey)
 		{
 			case 'isAdmin':
-				return $this->arrData['admin'] ? true : false;
+				return (bool) $this->arrData['admin'];
 
 			case 'groups':
-				return \is_array($this->arrData['groups'] ?? null) ? $this->arrData['groups'] : (($this->arrData['groups'] ?? null) ? array($this->arrData['groups']) : array());
+			case 'alexf':
+				return \is_array($this->arrData[$strKey] ?? null) ? $this->arrData[$strKey] : (($this->arrData[$strKey] ?? null) ? array($this->arrData[$strKey]) : array());
 
 			case 'pagemounts':
-				return \is_array($this->arrData['pagemounts'] ?? null) ? $this->arrData['pagemounts'] : (($this->arrData['pagemounts'] ?? null) ? array($this->arrData['pagemounts']) : false);
-
 			case 'filemounts':
-				return \is_array($this->arrData['filemounts'] ?? null) ? $this->arrData['filemounts'] : (($this->arrData['filemounts'] ?? null) ? array($this->arrData['filemounts']) : false);
+			case 'fop':
+				return \is_array($this->arrData[$strKey] ?? null) ? $this->arrData[$strKey] : (($this->arrData[$strKey] ?? null) ? array($this->arrData[$strKey]) : false);
 
 			case 'filemountIds':
 				return $this->arrFilemountIds;
-
-			case 'fop':
-				return \is_array($this->arrData['fop'] ?? null) ? $this->arrData['fop'] : (($this->arrData['fop'] ?? null) ? array($this->arrData['fop']) : false);
-
-			case 'alexf':
-				return \is_array($this->arrData['alexf'] ?? null) ? $this->arrData['alexf'] : (($this->arrData['alexf'] ?? null) ? array($this->arrData['alexf']) : array());
 		}
 
 		return parent::__get($strKey);
