@@ -464,7 +464,7 @@ class BackendUser extends User
 		}
 
 		// Make sure pagemounts, filemounts and alexf are set!
-		if (!\is_array($this->arrData['pagemounts']))
+		if (!\is_array($this->arrData['pagemounts'] ?? null))
 		{
 			$this->arrData['pagemounts'] = array();
 		}
@@ -473,7 +473,7 @@ class BackendUser extends User
 			$this->arrData['pagemounts'] = array_filter($this->arrData['pagemounts']);
 		}
 
-		if (!\is_array($this->arrData['filemounts']))
+		if (!\is_array($this->arrData['filemounts'] ?? null))
 		{
 			$this->arrData['filemounts'] = array();
 		}
@@ -482,7 +482,7 @@ class BackendUser extends User
 			$this->arrData['filemounts'] = array_filter($this->arrData['filemounts']);
 		}
 
-		if (!\is_array($this->arrData['alexf']))
+		if (!\is_array($this->arrData['alexf'] ?? null))
 		{
 			$this->arrData['alexf'] = array();
 		}
