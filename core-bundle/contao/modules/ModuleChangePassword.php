@@ -183,6 +183,9 @@ class ModuleChangePassword extends Module
 				}
 			}
 
+			// Generate a new session ID
+			$session->migrate();
+
 			// Update the current user, so they are not logged out automatically
 			$user->findBy('id', $objMember->id);
 

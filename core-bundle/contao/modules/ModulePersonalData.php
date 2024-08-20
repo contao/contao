@@ -136,6 +136,7 @@ class ModulePersonalData extends Module
 
 		$arrSubmitted = array();
 		$arrFiles = array();
+		$migrateSession = false;
 
 		$db = Database::getInstance();
 
@@ -307,6 +308,11 @@ class ModulePersonalData extends Module
 						// Set the new field in the member model
 						$blnModified = true;
 						$objMember->$field = $varValue;
+
+						if (in_array($field, array('username', 'password')))
+						{
+							$migrateSession = true;
+						}
 					}
 				}
 			}
@@ -334,6 +340,12 @@ class ModulePersonalData extends Module
 		{
 			$objMember->tstamp = time();
 			$objMember->save();
+
+			// Generate a new session ID
+			if ($migrateSession)
+			{
+				$session->migrate();
+			}
 		}
 
 		$this->Template->hasError = $doNotSubmit;
