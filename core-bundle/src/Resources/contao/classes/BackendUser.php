@@ -177,7 +177,7 @@ class BackendUser extends User
 				return \is_array($this->arrData['fop']) ? $this->arrData['fop'] : ($this->arrData['fop'] ? array($this->arrData['fop']) : false);
 
 			case 'alexf':
-				return $this->arrData['alexf'] ?? array();
+				return \is_array($this->arrData['alexf']) ? $this->arrData['alexf'] : ($this->arrData['alexf'] ? array($this->arrData['alexf']) : false);
 		}
 
 		return parent::__get($strKey);
@@ -469,23 +469,32 @@ class BackendUser extends User
 			}
 		}
 
-		// Make sure pagemounts and filemounts are set!
-		if (!\is_array($this->pagemounts))
+		// Make sure pagemounts, filemounts and alexf are set!
+		if (!\is_array($this->arrData['pagemounts']))
 		{
-			$this->pagemounts = array();
+			$this->arrData['pagemounts'] = array();
 		}
 		else
 		{
-			$this->pagemounts = array_filter($this->pagemounts);
+			$this->arrData['pagemounts'] = array_filter($this->arrData['pagemounts']);
 		}
 
-		if (!\is_array($this->filemounts))
+		if (!\is_array($this->arrData['filemounts']))
 		{
-			$this->filemounts = array();
+			$this->arrData['filemounts'] = array();
 		}
 		else
 		{
-			$this->filemounts = array_filter($this->filemounts);
+			$this->arrData['filemounts'] = array_filter($this->arrData['filemounts']);
+		}
+
+		if (!\is_array($this->arrData['alexf']))
+		{
+			$this->arrData['alexf'] = array();
+		}
+		else
+		{
+			$this->arrData['alexf'] = array_filter($this->arrData['alexf']);
 		}
 
 		// Store the numeric file mounts
@@ -505,7 +514,7 @@ class BackendUser extends User
 		// Hide the "admin" field if the user is not an admin (see #184)
 		if (!$this->isAdmin && ($index = array_search('tl_user::admin', $this->alexf)) !== false)
 		{
-			unset($this->alexf[$index]);
+			unset($this->arrData['alexf'][$index]);
 		}
 	}
 
