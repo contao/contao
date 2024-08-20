@@ -2773,6 +2773,19 @@ fieldset.tl_tbox > legend, fieldset.tl_box > legend {
 	cursor: pointer;
 }
 
+fieldset:is(.tl_tbox,.tl_box) > legend {
+	width: 100%;
+}
+
+fieldset:is(.tl_tbox,.tl_box) > legend > button {
+	text-align: initial;
+	border: 0 none;
+	width: 100%;
+	line-height: inherit;
+	padding: 0;
+	background: transparent;
+}
+
 fieldset.collapsed {
 	margin-bottom: 0;
 	padding-bottom: 5px;
