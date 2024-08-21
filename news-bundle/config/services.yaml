@@ -107,3 +107,9 @@ services:
         class: Contao\NewsBundle\Security\Voter\NewsArchiveAccessVoter
         arguments:
             - '@security.access.decision_manager'
+
+    contao_news.security.news_content_voter:
+        class: Contao\NewsBundle\Security\Voter\NewsContentVoter
+        arguments:
+            - '@security.access.decision_manager'
+            - '@database_connection'
