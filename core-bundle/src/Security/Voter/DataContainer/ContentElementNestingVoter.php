@@ -61,10 +61,11 @@ class ContentElementNestingVoter extends AbstractDataContainerVoter implements R
 
         $type = $action->getNew()['type'] ?? ($action instanceof UpdateAction ? $action->getCurrent()['type'] ?? '' : '');
         $ptable = $action->getNew()['ptable'] ?? ($action instanceof UpdateAction ? $action->getCurrent()['ptable'] ?? null : null);
+
         // Check access if element is moved to or created in a new ptable
         return !('tl_content' === $ptable
-        && ($pid = (int) $action->getNewPid()) > 0
-        && !$this->canNestInParent($pid, $type));
+            && ($pid = (int) $action->getNewPid()) > 0
+            && !$this->canNestInParent($pid, $type));
     }
 
     private function canNestInParent(int $pid, string $type): bool
