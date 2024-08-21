@@ -95,9 +95,22 @@ class PlayerController extends AbstractContentElementController
             ->setIfExists('preload', $model->playerPreload)
         ;
 
-        $range = $model->playerStart || $model->playerStop
-            ? \sprintf('#t=%s', implode(',', [$model->playerStart ?: '', $model->playerStop ?: '']))
-            : '';
+        $range = '';
+
+        if ($model->playerStart || $model->playerStop)
+        {
+            $range = '#t=';
+
+            if ($model->playerStart)
+            {
+                $range .= $model->playerStart;
+            }
+
+            if ($model->playerStop)
+            {
+                $range .= ',' . $model->playerStop;
+            }
+        }
 
         $captions = [$model->playerCaption];
 
