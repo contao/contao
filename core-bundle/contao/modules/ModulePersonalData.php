@@ -309,7 +309,7 @@ class ModulePersonalData extends Module
 						$blnModified = true;
 						$objMember->$field = $varValue;
 
-						if (in_array($field, array('username', 'password')))
+						if (\in_array($field, array('username', 'password')))
 						{
 							$migrateSession = true;
 						}
