@@ -59,7 +59,7 @@ class DeprecationsNodeVisitor implements NodeVisitorInterface
             return $node;
         }
 
-        $suggestedTransformation = sprintf('"{{ \'{{%1$s}}\' }}" -> "{{ insert_tag(\'%1$s\') }}".', $matches[1]);
+        $suggestedTransformation = \sprintf('"{{ \'{{%1$s}}\' }}" -> "{{ insert_tag(\'%1$s\') }}".', $matches[1]);
 
         $message = 'You should not rely on insert tags being replaced in the rendered HTML. '
             .'This behavior will gradually be phased out in Contao 5 and will no longer work in Contao 6. '

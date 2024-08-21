@@ -24,7 +24,7 @@ use Contao\CoreBundle\Twig\Finder\Finder;
 use Contao\CoreBundle\Twig\Finder\FinderFactory;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
-use Contao\DataContainer;
+use Contao\DC_Table;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
@@ -138,7 +138,7 @@ class TemplateOptionsListenerTest extends TestCase
         $connection
             ->method('executeQuery')
             ->with(
-                sprintf('SELECT type FROM %s WHERE id IN (?) GROUP BY type LIMIT 2', 'tl_content'),
+                \sprintf('SELECT type FROM %s WHERE id IN (?) GROUP BY type LIMIT 2', 'tl_content'),
                 [[1, 2, 3]],
                 [ArrayParameterType::STRING],
             )
@@ -298,14 +298,14 @@ class TemplateOptionsListenerTest extends TestCase
         return $this->mockContaoFramework([Controller::class => $controllerAdapter]);
     }
 
-    private function mockDataContainer(string $table, array $currentRecord = []): DataContainer&MockObject
+    private function mockDataContainer(string $table, array $currentRecord = []): DC_Table&MockObject
     {
-        $dc = $this->mockClassWithProperties(DataContainer::class);
+        $dc = $this->mockClassWithProperties(DC_Table::class);
         $dc->table = $table;
 
         if ($currentRecord) {
             $dc
-                ->method('getCurrentRecord')
+                ->method('getActiveRecord')
                 ->willReturn($currentRecord)
             ;
         }

@@ -32,7 +32,7 @@ final class ParsedSequence implements \IteratorAggregate, \Countable
 
     public function get(int $index): InsertTag|InsertTagResult|string
     {
-        return $this->sequence[$index] ?? throw new \InvalidArgumentException(sprintf('Index "%s" not exists', $index));
+        return $this->sequence[$index] ?? throw new \InvalidArgumentException(\sprintf('Index "%s" not exists', $index));
     }
 
     public function count(): int

@@ -250,7 +250,7 @@ abstract class DataContainer extends Backend
 	 * Active record
 	 * @var Model|object|null
 	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6;
-	 *             use $dc->getCurrentRecord() instead.
+	 *             use DataContainer::getCurrentRecord() or DC_Table::getActiveRecord() instead.
 	 */
 	protected $objActiveRecord;
 
@@ -369,7 +369,7 @@ abstract class DataContainer extends Backend
 				return $this->strPalette;
 
 			case 'activeRecord':
-				trigger_deprecation('contao/core-bundle', '5.0', 'The active record has been deprecated and will be removed in Contao 6. Use ' . __CLASS__ . '::getCurrentRecord() instead.');
+				trigger_deprecation('contao/core-bundle', '5.0', 'The active record has been deprecated and will be removed in Contao 6. Use DataContainer::getCurrentRecord() or DC_Table::getActiveRecord() instead.');
 
 				return $this->objActiveRecord;
 
@@ -867,10 +867,10 @@ abstract class DataContainer extends Backend
 
 		$message = match (true)
 		{
-			$subject instanceof ReadAction => sprintf('Not enough permissions to read %s.', $subject),
-			$subject instanceof CreateAction => sprintf('Not enough permissions to create %s.', $subject),
-			$subject instanceof UpdateAction => sprintf('Not enough permissions to update %s.', $subject),
-			$subject instanceof DeleteAction => sprintf('Not enough permissions to delete %s.', $subject),
+			$subject instanceof ReadAction => \sprintf('Not enough permissions to read %s.', $subject),
+			$subject instanceof CreateAction => \sprintf('Not enough permissions to create %s.', $subject),
+			$subject instanceof UpdateAction => \sprintf('Not enough permissions to update %s.', $subject),
+			$subject instanceof DeleteAction => \sprintf('Not enough permissions to delete %s.', $subject),
 			default => 'Access denied.'
 		};
 
@@ -1011,7 +1011,7 @@ abstract class DataContainer extends Backend
 					}
 					else
 					{
-						$titleDisabled = (\is_array($v['label']) && isset($v['label'][2])) ? sprintf($v['label'][2], $arrRow['id']) : $config['title'];
+						$titleDisabled = (\is_array($v['label']) && isset($v['label'][2])) ? \sprintf($v['label'][2], $arrRow['id']) : $config['title'];
 					}
 
 					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($state ? $config['title'] : $titleDisabled) . '" data-title="' . StringUtil::specialchars($config['title']) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" data-action="contao--scroll-offset#store" onclick="return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $config['label'], 'data-icon="' . $icon . '" data-icon-disabled="' . $_icon . '" data-state="' . $state . '"') . '</a> ';
@@ -1073,7 +1073,7 @@ abstract class DataContainer extends Backend
 					$v['icon'] = Image::getPath($v['icon']);
 				}
 
-				$attributes = sprintf(' style="background-image:url(\'%s\')"', Controller::addAssetsUrlTo($v['icon'])) . $attributes;
+				$attributes = \sprintf(' style="background-image:url(\'%s\')"', Controller::addAssetsUrlTo($v['icon'])) . $attributes;
 			}
 
 			if (!$label)
@@ -1254,7 +1254,7 @@ abstract class DataContainer extends Backend
 					}
 					else
 					{
-						$titleDisabled = (\is_array($v['label']) && isset($v['label'][2])) ? sprintf($v['label'][2], $arrRow['id']) : $config['title'];
+						$titleDisabled = (\is_array($v['label']) && isset($v['label'][2])) ? \sprintf($v['label'][2], $arrRow['id']) : $config['title'];
 					}
 
 					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($state ? $config['title'] : $titleDisabled) . '" data-title="' . StringUtil::specialchars($config['title']) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" data-action="contao--scroll-offset#store" onclick="return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $config['label'], 'data-icon="' . $icon . '" data-icon-disabled="' . $_icon . '" data-state="' . $state . '"') . '</a> ';
@@ -1330,7 +1330,7 @@ abstract class DataContainer extends Backend
 			$checked .= ' data-contao--scroll-offset-target="scrollTo"';
 		}
 
-		return sprintf(
+		return \sprintf(
 			' <input type="%s" name="picker%s" id="picker_%s" class="tl_tree_%s" value="%s" %s%s%s>',
 			$this->strPickerFieldType,
 			$this->strPickerFieldType === 'checkbox' ? '[]' : '',
@@ -1802,12 +1802,12 @@ abstract class DataContainer extends Backend
 	protected function markAsCopy(string $label, string $value): string
 	{
 		// Do not mark as copy more than once (see #6058)
-		if (preg_match('/' . preg_quote(sprintf($label, ''), '/') . '/', StringUtil::decodeEntities($value)))
+		if (preg_match('/' . preg_quote(\sprintf($label, ''), '/') . '/', StringUtil::decodeEntities($value)))
 		{
 			return $value;
 		}
 
-		return sprintf($label, $value);
+		return \sprintf($label, $value);
 	}
 
 	/**
@@ -1854,7 +1854,9 @@ abstract class DataContainer extends Backend
 	}
 
 	/**
-	 * @throws AccessDeniedException     if the current user has no read permission
+	 * Returns the database record. Does not contain any user changes at the moment you call it.
+	 *
+	 * @throws AccessDeniedException     If the current user has no read permission
 	 * @return array<string, mixed>|null
 	 */
 	public function getCurrentRecord(int|string|null $id = null, string|null $table = null): array|null
@@ -1902,7 +1904,7 @@ abstract class DataContainer extends Backend
 		{
 			if (null !== $id)
 			{
-				throw new \InvalidArgumentException(sprintf('Missing $table parameter for passed ID "%s".', $id));
+				throw new \InvalidArgumentException(\sprintf('Missing $table parameter for passed ID "%s".', $id));
 			}
 
 			self::$arrCurrentRecordCache = array();

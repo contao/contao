@@ -130,7 +130,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 			{
 				// TODO: we need a way to authenticate with a token instead of our own cookie
 				$session = System::getContainer()->get('request_stack')->getSession();
-				$clientOptions = array('headers' => array('Cookie' => sprintf('%s=%s', $session->getName(), $session->getId())));
+				$clientOptions = array('headers' => array('Cookie' => \sprintf('%s=%s', $session->getName(), $session->getId())));
 			}
 		}
 		else
@@ -197,7 +197,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 			->withMaxDurationInSeconds(20)
 			->withLogger($this->createLogger($factory, $activeSubscribers, $jobId, $debugLogPath));
 
-		$template->hint = sprintf($GLOBALS['TL_LANG']['tl_maintenance']['crawlHint'], $concurrency, 'contao.backend.crawl_concurrency', 'https://to.contao.org/docs/crawler');
+		$template->hint = \sprintf($GLOBALS['TL_LANG']['tl_maintenance']['crawlHint'], $concurrency, 'contao.backend.crawl_concurrency', 'https://to.contao.org/docs/crawler');
 
 		if (Environment::get('isAjaxRequest'))
 		{
@@ -307,7 +307,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 			return $this->logDir;
 		}
 
-		$this->logDir = sprintf('%s/%s/contao-crawl', sys_get_temp_dir(), md5(System::getContainer()->getParameter('kernel.project_dir')));
+		$this->logDir = \sprintf('%s/%s/contao-crawl', sys_get_temp_dir(), md5(System::getContainer()->getParameter('kernel.project_dir')));
 
 		if (!is_dir($this->logDir))
 		{

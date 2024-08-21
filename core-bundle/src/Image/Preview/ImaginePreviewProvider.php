@@ -117,7 +117,7 @@ class ImaginePreviewProvider implements PreviewProviderInterface
             return $this->imagine->getDriverInfo()->isFormatSupported($format);
         }
 
-        throw new \RuntimeException(sprintf('Unsupported Imagine implementation "%s"', $this->imagine::class));
+        throw new \RuntimeException(\sprintf('Unsupported Imagine implementation "%s"', $this->imagine::class));
     }
 
     private function openImagick(string $sourcePath, int $size, int $firstPage, int $lastPage): ImageInterface

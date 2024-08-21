@@ -36,7 +36,7 @@ class BackupManager
         $now = $dateTime ?? new \DateTime('now');
         $now->setTimezone(new \DateTimeZone('UTC'));
 
-        $filename = sprintf('backup__%s.sql.gz', $now->format(Backup::DATETIME_FORMAT));
+        $filename = \sprintf('backup__%s.sql.gz', $now->format(Backup::DATETIME_FORMAT));
 
         return new Backup($filename);
     }
@@ -215,7 +215,7 @@ class BackupManager
         $backup = $config->getBackup();
 
         if (!$this->backupsStorage->fileExists($backup->getFilename())) {
-            throw new BackupManagerException(sprintf('Dump "%s" does not exist.', $backup->getFilename()));
+            throw new BackupManagerException(\sprintf('Dump "%s" does not exist.', $backup->getFilename()));
         }
 
         $tmpFile = (new Filesystem())->tempnam(sys_get_temp_dir(), 'ctobckupmgr');

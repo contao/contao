@@ -66,7 +66,7 @@ class UserChecker implements UserCheckerInterface
             return;
         }
 
-        $ex = new DisabledException(sprintf('User "%s" is not allowed to log in', $user->username));
+        $ex = new DisabledException(\sprintf('User "%s" is not allowed to log in', $user->username));
         $ex->setUser($user);
 
         throw $ex;
@@ -86,14 +86,14 @@ class UserChecker implements UserCheckerInterface
         $logMessage = '';
 
         if ($notActiveYet) {
-            $logMessage = sprintf(
+            $logMessage = \sprintf(
                 'The account is not active yet (activation date: %s)',
                 Date::parse($config->get('dateFormat'), $start),
             );
         }
 
         if ($notActiveAnymore) {
-            $logMessage = sprintf(
+            $logMessage = \sprintf(
                 'The account is not active anymore (deactivation date: %s)',
                 Date::parse($config->get('dateFormat'), $stop),
             );

@@ -216,7 +216,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
         $identifier = ContaoTwigUtil::getIdentifier($shortNameOrIdentifier);
 
         if (null === ($chain = $hierarchy[$identifier] ?? null)) {
-            throw new \LogicException(sprintf('The template "%s" could not be found in the template hierarchy.', $identifier));
+            throw new \LogicException(\sprintf('The template "%s" could not be found in the template hierarchy.', $identifier));
         }
 
         // Find the next element in the hierarchy or use the first if it cannot be found
@@ -224,7 +224,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
         $next = array_values($chain)[false !== $index ? $index + 1 : 0] ?? null;
 
         if (null === $next) {
-            throw new \LogicException(sprintf('The template "%s" does not have a parent "%s" it can extend from.', $sourcePath, $identifier));
+            throw new \LogicException(\sprintf('The template "%s" does not have a parent "%s" it can extend from.', $sourcePath, $identifier));
         }
 
         return $next;
@@ -239,7 +239,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
         $hierarchy = $this->getInheritanceChains($themeSlug);
 
         if (null === ($chain = $hierarchy[$identifier] ?? null)) {
-            throw new \LogicException(sprintf('The template "%s" could not be found in the template hierarchy.', $identifier));
+            throw new \LogicException(\sprintf('The template "%s" could not be found in the template hierarchy.', $identifier));
         }
 
         return $chain[array_key_first($chain)];
@@ -355,7 +355,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
                 if (null !== ($existingPath = $templatesByNamespace[$namespace][$shortName] ?? null)) {
                     $basePath = Path::getLongestCommonBasePath($templatePath, $existingPath);
 
-                    throw new \OutOfBoundsException(sprintf('There cannot be more than one "%s" template in "%s".', $shortName, $basePath));
+                    throw new \OutOfBoundsException(\sprintf('There cannot be more than one "%s" template in "%s".', $shortName, $basePath));
                 }
 
                 $templatesByNamespace[$namespace][$shortName] = $templatePath;
@@ -377,7 +377,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
                 if (null === ($existingType = $typeByIdentifier[$identifier] ?? null)) {
                     $typeByIdentifier[$identifier] = $type;
                 } elseif ($type !== $existingType) {
-                    throw new \OutOfBoundsException(sprintf('The "%s" template has incompatible types, got "%s" in "%s" and "%s" in "%s".', $identifier, $existingType, Path::makeAbsolute(array_key_last($hierarchy[$identifier]), $this->projectDir), $type, $path));
+                    throw new \OutOfBoundsException(\sprintf('The "%s" template has incompatible types, got "%s" in "%s" and "%s" in "%s".', $identifier, $existingType, Path::makeAbsolute(array_key_last($hierarchy[$identifier]), $this->projectDir), $type, $path));
                 }
 
                 $hierarchy[$identifier][Path::makeRelative($path, $this->projectDir)] = "@$namespace/$shortName";

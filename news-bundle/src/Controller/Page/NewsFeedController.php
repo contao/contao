@@ -93,7 +93,7 @@ class NewsFeedController extends AbstractController implements DynamicRouteInter
         $format = $route->getPageModel()->feedFormat;
 
         if (!isset($this->urlSuffixes[$format])) {
-            throw new \RuntimeException(sprintf('%s is not a valid format. Must be one of: %s', $format, implode(',', array_keys($this->urlSuffixes))));
+            throw new \RuntimeException(\sprintf('%s is not a valid format. Must be one of: %s', $format, implode(',', array_keys($this->urlSuffixes))));
         }
 
         $route->setUrlSuffix($this->urlSuffixes[$format]);

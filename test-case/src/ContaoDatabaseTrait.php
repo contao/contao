@@ -22,7 +22,7 @@ trait ContaoDatabaseTrait
     protected static function loadFileIntoDatabase(string $sqlFile): void
     {
         if (!file_exists($sqlFile)) {
-            throw new \InvalidArgumentException(sprintf('File "%s" does not exist', $sqlFile));
+            throw new \InvalidArgumentException(\sprintf('File "%s" does not exist', $sqlFile));
         }
 
         static::getConnection()->executeStatement(file_get_contents($sqlFile));

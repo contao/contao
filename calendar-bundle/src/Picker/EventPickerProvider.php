@@ -79,7 +79,7 @@ class EventPickerProvider extends AbstractInsertTagPickerProvider implements Dca
 
     public function convertDcaValue(PickerConfig $config, mixed $value): string
     {
-        return sprintf($this->getInsertTag($config), $value);
+        return \sprintf($this->getInsertTag($config), $value);
     }
 
     protected function getRouteParameters(PickerConfig|null $config = null): array

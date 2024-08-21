@@ -141,7 +141,7 @@ class CheckBoxWizard extends Widget
 		{
 			foreach ($this->unknownOption as $val)
 			{
-				$arrAllOptions[] = array('value' => $val, 'label' => sprintf($GLOBALS['TL_LANG']['MSC']['unknownOption'], $val));
+				$arrAllOptions[] = array('value' => $val, 'label' => \sprintf($GLOBALS['TL_LANG']['MSC']['unknownOption'], $val));
 			}
 		}
 
@@ -158,7 +158,7 @@ class CheckBoxWizard extends Widget
 			$blnCheckAll = false;
 		}
 
-		return sprintf(
+		return \sprintf(
 			'<fieldset id="ctrl_%s" class="tl_checkbox_container tl_checkbox_wizard%s"><legend>%s%s%s%s</legend><input type="hidden" name="%s" value="">%s<div class="sortable">%s</div></fieldset>%s<script>Backend.checkboxWizard("ctrl_%s")</script>',
 			$this->strId,
 			$this->strClass ? ' ' . $this->strClass : '',
@@ -185,7 +185,7 @@ class CheckBoxWizard extends Widget
 	 */
 	protected function generateCheckbox($arrOption, $i, $strButtons)
 	{
-		return sprintf(
+		return \sprintf(
 			'<span><input type="checkbox" name="%s" id="opt_%s" class="tl_checkbox" value="%s"%s%s data-action="focus->contao--scroll-offset#store"> %s<label for="opt_%s">%s</label></span>',
 			$this->strName . ($this->multiple ? '[]' : ''),
 			$this->strId . '_' . $i,

@@ -53,7 +53,7 @@ class DisableAppConfiguredSettingsListener
         return $adapter->getHtml(
             'show.svg',
             '',
-            sprintf(
+            \sprintf(
                 'title="%s"',
                 StringUtil::specialchars($this->translator->trans('tl_settings.configuredInApp', [], 'contao_tl_settings')),
             ),
