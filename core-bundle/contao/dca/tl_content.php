@@ -612,8 +612,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'playerStart' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>8, 'nospace'=>true, 'tl_class'=>'w25'),
-			'sql'                     => "varchar(8) COLLATE ascii_bin NOT NULL default ''"
+			'eval'                    => array('maxlength'=>16, 'nospace'=>true, 'tl_class'=>'w25'),
+			'sql'                     => "varchar(16) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'playerStop' => array
 		(
