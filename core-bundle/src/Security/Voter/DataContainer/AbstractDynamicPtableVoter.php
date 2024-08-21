@@ -65,7 +65,7 @@ abstract class AbstractDynamicPtableVoter extends AbstractDataContainerVoter imp
             $record = $this->getParentTableAndId((int) $record['pid']);
         }
 
-        return $this->hasAccessToRecord($token, $record['ptable'], $record['pid']);
+        return $this->hasAccessToRecord($token, $record['ptable'], (int) $record['pid']);
     }
 
     private function getParentTableAndId(int $id): array
