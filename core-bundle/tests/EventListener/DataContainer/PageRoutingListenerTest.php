@@ -379,15 +379,10 @@ class PageRoutingListenerTest extends TestCase
             ->willReturn(false)
         ;
 
-        $pageRoutes = [
-            $this->mockPageRouteFromPageModel($pageModel),
-            $this->mockPageRouteFromPageModel($aliasPage),
-        ];
-
         $pageRegistry
-            ->expects($this->exactly(2))
+            ->expects($this->once())
             ->method('getRoute')
-            ->willReturn(...$pageRoutes)
+            ->willReturn($this->mockPageRouteFromPageModel($pageModel))
         ;
 
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 1]);
@@ -518,8 +513,9 @@ class PageRoutingListenerTest extends TestCase
 
         $pageRegistry = $this->createMock(PageRegistry::class);
         $pageRegistry
-            ->expects($this->never())
+            ->expects($this->once())
             ->method('isRoutable')
+            ->willReturn(true)
         ;
 
         $pageRoutes = [

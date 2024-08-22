@@ -70,10 +70,14 @@ class PageRoutingListener
                 continue;
             }
 
+            if (!$this->pageRegistry->isRoutable($aliasPage)) {
+                continue;
+            }
+
             $aliasRoute = $this->pageRegistry->getRoute($aliasPage);
             $aliasUrl = $this->buildUrl($aliasPage->alias, $aliasRoute->getUrlPrefix(), $aliasRoute->getUrlSuffix());
 
-            if ($currentUrl !== $aliasUrl || !$this->pageRegistry->isRoutable($aliasPage)) {
+            if ($currentUrl !== $aliasUrl) {
                 continue;
             }
 
