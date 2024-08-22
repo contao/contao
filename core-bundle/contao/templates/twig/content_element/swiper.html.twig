@@ -4,41 +4,35 @@
 {#
 Global settings for all sliders
 - Create a new template 'swiper.html.twig' (content_element/swiper.html.twig)
-- Copy the block ‘init_options’ and adjust them (https://swiperjs.com/)
+- Copy the block ‘init_options’ and customise them (https://swiperjs.com/)
 
 Custom template
 - Create folder 'swiper' if it does not exist
 - Create a new template 'custom.html.twig' in folder 'swiper' (content_element/swiper/custom.html.twig)
-- Copy the section ‘Custom slider settings’ and adjust them (https://swiperjs.com/)
-#}
-
-
-{# Custom slider settings #}
-{#
-
-{% set slider_settings = {
-    effect: 'fade',
-    fadeEffect: {
-        crossFade: true
-    },
-    pagination: {
-        el: '.swiper-pagination',
-        type: 'progressbar',
-    },
-} %}
+- Copy the section ‘Slider settings’ and customise them (https://swiperjs.com/)
+- After the section ‘Slider settings’, assign the new setting to ‘slider_attributes’:
 
 {% set slider_attributes = attrs().set('data-settings', slider_settings|json_encode) %}
 
 #}
-{# End custom slider settings #}
+
+{# Slider settings #}
+
+{% set slider_settings = {
+    speed: speed,
+    initialSlide: offset,
+    loop: loop,
+} %}
+{% if delay > 0 %}
+    {% set slider_settings = slider_settings|merge({ autoplay: {delay: delay} }) %} 
+{% endif %}
+
+{# End Slider settings #}
 
 {% block content %}
     {% set slider_attributes = attrs()
         .addClass('swiper')
-        .set('data-delay', delay)
-        .set('data-speed', speed)
-        .set('data-offset', offset)
-        .set('data-loop', loop)
+        .set('data-settings', slider_settings|json_encode )
         .mergeWith(slider_attributes|default)
     %}
     <div{{ slider_attributes }}>
@@ -96,20 +90,10 @@ Custom template
             (function() {
                 const swiper = document.querySelectorAll('.swiper');
                 swiper.forEach (el => {
-                    let opts = {
-                        speed: el.getAttribute('data-speed'),
-                        initialSlide: el.getAttribute('data-offset'),
-                        loop: el.hasAttribute('data-loop'),
-                    };
-
-                    let delay = el.getAttribute('data-delay');
-                    if (delay > 0) {
-                        opts['autoplay'] = { delay: delay };
-                    }
+                    let opts = '';
 
                     if (el.hasAttribute('data-settings')) {
-                        let settings = JSON.parse(el.getAttribute('data-settings'));
-                        opts = Object.assign({}, settings, opts);
+                        opts = JSON.parse(el.getAttribute('data-settings'));
                     }
 
                     new Swiper(el, Object.assign({
