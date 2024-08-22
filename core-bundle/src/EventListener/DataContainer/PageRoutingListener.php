@@ -58,11 +58,9 @@ class PageRoutingListener
             return '';
         }
 
-        $currentPage->loadDetails();
+        $conflicts = [];
         $currentRoute = $this->pageRegistry->getRoute($currentPage);
         $currentUrl = $this->buildUrl($currentPage->alias, $currentRoute->getUrlPrefix(), $currentRoute->getUrlSuffix());
-
-        $conflicts = [];
         $backendAdapter = $this->framework->getAdapter(Backend::class);
 
         foreach ($aliasPages as $aliasPage) {
@@ -81,7 +79,7 @@ class PageRoutingListener
 
             $conflicts[] = [
                 'page' => $aliasPage,
-                'path' => $this->getPathWithParameters($this->pageRegistry->getRoute($aliasPage)),
+                'path' => $this->getPathWithParameters($aliasRoute),
                 'editUrl' => $backendAdapter->addToUrl(\sprintf('act=edit&id=%s&popup=1&nb=1', $aliasPage->id)),
             ];
         }

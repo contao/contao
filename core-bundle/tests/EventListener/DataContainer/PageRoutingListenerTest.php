@@ -166,7 +166,8 @@ class PageRoutingListenerTest extends TestCase
             ]),
         ];
 
-        $aliasRoutes = [
+        $pageRoutes = [
+            $this->createMock(PageRoute::class),
             $this->mockPageRoute('foo'),
             $this->mockPageRoute('bar'),
             $this->mockPageRoute('baz'),
@@ -213,10 +214,10 @@ class PageRoutingListenerTest extends TestCase
         ;
 
         $pageRegistry
-            ->expects($this->exactly(3))
+            ->expects($this->exactly(4))
             ->method('getRoute')
-            ->withConsecutive(...array_map(static fn ($page) => [$page], $aliasPages))
-            ->willReturn(...$aliasRoutes)
+            ->withConsecutive([$pageModel], ...array_map(static fn ($page) => [$page], $aliasPages))
+            ->willReturn(...$pageRoutes)
         ;
 
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 1]);
@@ -381,9 +382,15 @@ class PageRoutingListenerTest extends TestCase
             ->willReturn(false)
         ;
 
+        $pageRoutes = [
+            $this->createMock(PageRoute::class),
+            $this->createMock(PageRoute::class),
+        ];
+
         $pageRegistry
-            ->expects($this->never())
+            ->expects($this->exactly(2))
             ->method('getRoute')
+            ->willReturn(...$pageRoutes)
         ;
 
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 1]);
@@ -450,8 +457,9 @@ class PageRoutingListenerTest extends TestCase
         ;
 
         $pageRegistry
-            ->expects($this->never())
+            ->expects($this->once())
             ->method('getRoute')
+            ->willReturn($this->createMock(PageRoute::class))
         ;
 
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 1]);
@@ -517,9 +525,24 @@ class PageRoutingListenerTest extends TestCase
             ->method('isRoutable')
         ;
 
+        $pageRoute = $this->createMock(PageRoute::class);
+        $pageRoute
+            ->expects($this->once())
+            ->method('getUrlPrefix')
+            ->willReturn('de')
+        ;
+
+        $aliasRoute = $this->createMock(PageRoute::class);
+        $aliasRoute
+            ->expects($this->once())
+            ->method('getUrlPrefix')
+            ->willReturn('en')
+        ;
+
         $pageRegistry
-            ->expects($this->never())
+            ->expects($this->exactly(2))
             ->method('getRoute')
+            ->willReturn($pageRoute, $aliasRoute)
         ;
 
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 1]);
