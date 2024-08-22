@@ -245,6 +245,6 @@ class PageRegistry implements ResetInterface
 
     private function isParameterless(PageModel $pageModel): bool
     {
-        return 'forward' === $pageModel->type && !$pageModel->alwaysForward;
+        return 'news_feed' === $pageModel->type || ('forward' === $pageModel->type && !$pageModel->alwaysForward);
     }
 }
