@@ -1193,7 +1193,7 @@ class Theme extends Backend
 		}
 
 		// Add all template files to the archive (see #7048)
-		$this->addFiles($objArchive, $strFolder);
+		$this->addTemplateFiles($objArchive, $strFolder);
 	}
 
 	/**
@@ -1204,7 +1204,7 @@ class Theme extends Backend
 	 *
 	 * @throws \Exception
 	 */
-	protected function addFiles(ZipWriter $objArchive, $strFolder): void
+	protected function addTemplateFiles(ZipWriter $objArchive, $strFolder): void
 	{
 		$path = $this->strRootDir . '/' . $strFolder;
 
@@ -1213,7 +1213,7 @@ class Theme extends Backend
 			// Recursive call of templates (see #7472)
 			if (is_dir($path . '/' . $item))
 			{
-				$this->addFiles($objArchive, $strFolder . '/' . $item);
+				$this->addTemplateFiles($objArchive, $strFolder . '/' . $item);
 			}
 			else if (preg_match('/\.(html5|sql|twig)$/', $item) && !str_starts_with($item, 'be_') && !str_starts_with($item, 'nl_'))
 			{
