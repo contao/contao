@@ -16,6 +16,7 @@ use Contao\ContentTable;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
@@ -41,7 +42,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			array('tl_content', 'adjustDcaByType'),
 			array('tl_content', 'showJsLibraryHint'),
-			array('tl_content', 'filterContentElements'),
+			array('tl_content', 'setDefaultElementType'),
 		),
 		'sql' => array
 		(
@@ -68,43 +69,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'child_record_callback'   => array('tl_content', 'addCteType'),
 			'renderAsGrid'            => true,
 			'limitHeight'             => 160
-		),
-		'operations' => array
-		(
-			'edit' => array
-			(
-				'href'                => 'act=edit',
-				'icon'                => 'edit.svg',
-				'button_callback'     => array('tl_content', 'disableButton')
-			),
-			'children' => array
-			(
-				'href'                => 'table=tl_content&ptable=tl_content',
-				'icon'                => 'children.svg',
-				'button_callback'     => array('tl_content', 'editChildren')
-			),
-			'copy' => array
-			(
-				'href'                => 'act=paste&amp;mode=copy',
-				'icon'                => 'copy.svg',
-				'attributes'          => 'data-action="contao--scroll-offset#store"',
-				'button_callback'     => array('tl_content', 'copyElement')
-			),
-			'cut',
-			'delete' => array
-			(
-				'href'                => 'act=delete',
-				'icon'                => 'delete.svg',
-				'attributes'          => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false"',
-			),
-			'toggle' => array
-			(
-				'href'                => 'act=toggle&amp;field=invisible',
-				'icon'                => 'visible.svg',
-				'showInHeader'        => true,
-				'button_callback'     => array('tl_content', 'toggleIcon')
-			),
-			'show'
 		),
 	),
 
@@ -803,14 +767,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 	)
 );
 
-// Dynamically add the permission check
-if (Input::get('do') == 'article')
-{
-	System::loadLanguageFile('tl_article');
-
-	array_unshift($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'], array('tl_content', 'checkPermission'));
-}
-
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -819,172 +775,12 @@ if (Input::get('do') == 'article')
 class tl_content extends Backend
 {
 	/**
-	 * Check permissions to edit table tl_content
-	 *
-	 * @param DataContainer $dc
-	 */
-	public function checkPermission(DataContainer $dc)
-	{
-		$user = BackendUser::getInstance();
-
-		if ($user->isAdmin)
-		{
-			return;
-		}
-
-		$db = Database::getInstance();
-
-		// Get the pagemounts
-		$pagemounts = array();
-
-		foreach ($user->pagemounts as $root)
-		{
-			$pagemounts[] = array($root);
-			$pagemounts[] = $db->getChildRecords($root, 'tl_page');
-		}
-
-		if (!empty($pagemounts))
-		{
-			$pagemounts = array_merge(...$pagemounts);
-		}
-
-		$pagemounts = array_unique($pagemounts);
-
-		// Check the current action
-		switch (Input::get('act'))
-		{
-			case '': // empty
-			case 'paste':
-			case 'create':
-			case 'select':
-				// Check access to the article
-				$this->checkAccessToElement($dc->currentPid, $pagemounts, true, $dc->parentTable);
-				break;
-
-			case 'editAll':
-			case 'deleteAll':
-			case 'overrideAll':
-			case 'cutAll':
-			case 'copyAll':
-				// Check access to the parent element if a content element is moved
-				if (in_array(Input::get('act'), array('cutAll', 'copyAll')))
-				{
-					$this->checkAccessToElement(Input::get('pid'), $pagemounts, Input::get('mode') == 2, $dc->parentTable);
-				}
-
-				$objCes = $db
-					->prepare("SELECT id FROM tl_content WHERE ptable=? AND pid=?")
-					->execute($dc->parentTable, $dc->currentPid);
-
-				$objSession = System::getContainer()->get('request_stack')->getSession();
-
-				$session = $objSession->all();
-				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objCes->fetchEach('id'));
-				$objSession->replace($session);
-				break;
-
-			case 'cut':
-			case 'copy':
-				// Check access to the parent element if a content element is moved
-				$this->checkAccessToElement(Input::get('pid'), $pagemounts, Input::get('mode') == 2, $dc->parentTable);
-				// no break
-
-			default:
-				// Check access to the content element
-				$this->checkAccessToElement(Input::get('id'), $pagemounts, false, $dc->parentTable);
-				break;
-		}
-	}
-
-	/**
-	 * Check access to a particular content element
-	 *
-	 * @param integer $id
-	 * @param array   $pagemounts
-	 * @param boolean $blnIsPid
-	 *
-	 * @throws AccessDeniedException
-	 */
-	protected function checkAccessToElement($id, $pagemounts, $blnIsPid=false, $ptable=null)
-	{
-		if ($ptable == 'tl_content')
-		{
-			while (true)
-			{
-				$objElement = Database::getInstance()
-					->prepare("SELECT * FROM tl_content WHERE id=?")
-					->execute($id);
-
-				if (!$objElement->numRows || $objElement->ptable != 'tl_content')
-				{
-					break;
-				}
-
-				$id = $objElement->pid;
-			}
-
-			$objPage = Database::getInstance()
-				->prepare("SELECT p.id, p.pid, p.includeChmod, p.chmod, p.cuser, p.cgroup, a.id AS aid FROM tl_article a, tl_page p WHERE a.id=? AND a.pid=p.id")
-				->limit(1)
-				->execute($objElement->pid);
-		}
-		elseif ($blnIsPid)
-		{
-			$objPage = Database::getInstance()
-				->prepare("SELECT p.id, p.pid, p.includeChmod, p.chmod, p.cuser, p.cgroup, a.id AS aid FROM tl_article a, tl_page p WHERE a.id=? AND a.pid=p.id")
-				->limit(1)
-				->execute($id);
-		}
-		else
-		{
-			$objPage = Database::getInstance()
-				->prepare("SELECT p.id, p.pid, p.includeChmod, p.chmod, p.cuser, p.cgroup, a.id AS aid FROM tl_content c, tl_article a, tl_page p WHERE c.id=? AND c.pid=a.id AND a.pid=p.id")
-				->limit(1)
-				->execute($id);
-		}
-
-		// Invalid ID
-		if ($objPage->numRows < 1)
-		{
-			throw new AccessDeniedException('Invalid content element ID ' . $id . '.');
-		}
-
-		// The page is not mounted
-		if (!in_array($objPage->id, $pagemounts))
-		{
-			throw new AccessDeniedException('Not enough permissions to modify article ID ' . $objPage->aid . ' on page ID ' . $objPage->id . '.');
-		}
-
-		// Not enough permissions to modify the article
-		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, $objPage->row()))
-		{
-			throw new AccessDeniedException('Not enough permissions to modify article ID ' . $objPage->aid . '.');
-		}
-	}
-
-	/**
 	 * Return all content elements as array
 	 *
 	 * @return array
 	 */
 	public function getContentElements(DataContainer $dc)
 	{
-		$allowedTypes = array();
-
-		if ($dc->parentTable == 'tl_content')
-		{
-			$parent = Database::getInstance()
-				->prepare("SELECT * FROM tl_content WHERE id=?")
-				->execute($dc->getCurrentRecord()['pid']);
-
-			$compositor = System::getContainer()->get('contao.fragment.compositor');
-
-			if ($compositor->supportsNesting('contao.content_element.' . $parent->type))
-			{
-				$allowedTypes = $compositor->getAllowedTypes('contao.content_element.' . $parent->type);
-			}
-		}
-
 		$security = System::getContainer()->get('security.helper');
 		$groups = array();
 
@@ -992,14 +788,8 @@ class tl_content extends Backend
 		{
 			foreach (array_keys($v) as $kk)
 			{
-				// Filter elements that are not allowed to be nested
-				if ($allowedTypes && !in_array($kk, $allowedTypes))
-				{
-					continue;
-				}
-
-				// Filter elements that are not allowed for the current user
-				if ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $kk))
+				// Check if an element of this type can be created in the current context (e.g. nested fragments)
+				if ($security->isGranted(ContaoCorePermissions::DC_PREFIX . 'tl_content', new CreateAction('tl_content', array('ptable' => $dc->parentTable, 'pid' => $dc->currentPid, 'type' => $kk))))
 				{
 					$groups[$k][] = $kk;
 				}
@@ -1067,89 +857,15 @@ class tl_content extends Backend
 	}
 
 	/**
-	 * Filter the content elements
+	 * Set default element type based on user access.
 	 */
-	public function filterContentElements()
+	public function setDefaultElementType()
 	{
 		$user = BackendUser::getInstance();
 
-		if ($user->isAdmin)
+		if (!$user->isAdmin && !in_array($GLOBALS['TL_DCA']['tl_content']['fields']['type']['sql']['default'] ?? null, $user->elements))
 		{
-			return;
-		}
-
-		if (empty($user->elements))
-		{
-			$GLOBALS['TL_DCA']['tl_content']['config']['closed'] = true;
-			$GLOBALS['TL_DCA']['tl_content']['config']['notEditable'] = true;
-		}
-		elseif (!in_array($GLOBALS['TL_DCA']['tl_content']['fields']['type']['sql']['default'] ?? null, $user->elements))
-		{
-			$GLOBALS['TL_DCA']['tl_content']['fields']['type']['default'] = $user->elements[0];
-		}
-
-		$db = Database::getInstance();
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-
-		// Prevent editing content elements with not allowed types
-		if (Input::get('act') == 'edit' || Input::get('act') == 'toggle' || Input::get('act') == 'delete' || (Input::get('act') == 'paste' && Input::get('mode') == 'copy'))
-		{
-			$objCes = $db
-				->prepare("SELECT type FROM tl_content WHERE id=?")
-				->execute(Input::get('id'));
-
-			if ($objCes->numRows && !in_array($objCes->type, $user->elements))
-			{
-				throw new AccessDeniedException('Not enough permissions to modify content elements of type "' . $objCes->type . '".');
-			}
-		}
-
-		// Prevent editing content elements with not allowed types
-		if (Input::get('act') == 'editAll' || Input::get('act') == 'overrideAll' || Input::get('act') == 'deleteAll')
-		{
-			$session = $objSession->all();
-
-			if (!empty($session['CURRENT']['IDS']) && is_array($session['CURRENT']['IDS']))
-			{
-				if (empty($user->elements))
-				{
-					$session['CURRENT']['IDS'] = array();
-				}
-				else
-				{
-					$objCes = $db
-						->prepare("SELECT id FROM tl_content WHERE id IN(" . implode(',', array_map('\intval', $session['CURRENT']['IDS'])) . ") AND type IN(" . implode(',', array_fill(0, count($user->elements), '?')) . ")")
-						->execute(...$user->elements);
-
-					$session['CURRENT']['IDS'] = array_intersect($session['CURRENT']['IDS'], $objCes->fetchEach('id'));
-				}
-
-				$objSession->replace($session);
-			}
-		}
-
-		// Prevent copying content elements with not allowed types
-		if (Input::get('act') == 'copyAll')
-		{
-			$session = $objSession->all();
-
-			if (!empty($session['CLIPBOARD']['tl_content']['id']) && is_array($session['CLIPBOARD']['tl_content']['id']))
-			{
-				if (empty($user->elements))
-				{
-					$session['CLIPBOARD']['tl_content']['id'] = array();
-				}
-				else
-				{
-					$objCes = $db
-						->prepare("SELECT id, type FROM tl_content WHERE id IN(" . implode(',', array_map('\intval', $session['CLIPBOARD']['tl_content']['id'])) . ") AND type IN(" . implode(',', array_fill(0, count($user->elements), '?')) . ")")
-						->execute(...$user->elements);
-
-					$session['CLIPBOARD']['tl_content']['id'] = array_intersect($session['CLIPBOARD']['tl_content']['id'], $objCes->fetchEach('id'));
-				}
-
-				$objSession->replace($session);
-			}
+			$GLOBALS['TL_DCA']['tl_content']['fields']['type']['default'] = $user->elements[0] ?? '';
 		}
 	}
 
@@ -1497,69 +1213,6 @@ class tl_content extends Backend
 	}
 
 	/**
-	 * Disable the button if the element type is not allowed
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function disableButton($row, $href, $label, $title, $icon, $attributes)
-	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $row['type']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
-	}
-
-	/**
-	 * Return the edit children button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function editChildren($row, $href, $label, $title, $icon, $attributes)
-	{
-		if (!System::getContainer()->get('contao.fragment.compositor')->supportsNesting('contao.content_element.' . $row['type']))
-		{
-			return '';
-		}
-
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $row['type']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id'], true, array('act', 'mode')) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
-	}
-
-	/**
-	 * Return the copy content element button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function copyElement($row, $href, $label, $title, $icon, $attributes)
-	{
-		$href .= '&amp;id=' . $row['id'];
-
-		if (System::getContainer()->get('contao.fragment.compositor')->supportsNesting('contao.content_element.' . $row['type']))
-		{
-			$href .= '&amp;children=1';
-		}
-
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $row['type']) ? '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
-	}
-
-	/**
 	 * Dynamically add flags to the "singleSRC" field
 	 *
 	 * @param mixed         $varValue
@@ -1678,44 +1331,5 @@ class tl_content extends Backend
 		}
 
 		return $varValue;
-	}
-
-	/**
-	 * Return the "toggle visibility" button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
-	{
-		$security = System::getContainer()->get('security.helper');
-
-		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_content::invisible'))
-		{
-			return '';
-		}
-
-		// Disable the button if the element type is not allowed
-		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $row['type']))
-		{
-			return Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
-		}
-
-		$href .= '&amp;id=' . $row['id'];
-
-		if ($row['invisible'])
-		{
-			$icon = 'invisible.svg';
-		}
-
-		$titleDisabled = (is_array($GLOBALS['TL_DCA']['tl_content']['list']['operations']['toggle']['label']) && isset($GLOBALS['TL_DCA']['tl_content']['list']['operations']['toggle']['label'][2])) ? sprintf($GLOBALS['TL_DCA']['tl_content']['list']['operations']['toggle']['label'][2], $row['id']) : $title;
-
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars(!$row['invisible'] ? $title : $titleDisabled) . '" data-title="' . StringUtil::specialchars($title) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" data-action="contao--scroll-offset#store" onclick="return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
 	}
 }

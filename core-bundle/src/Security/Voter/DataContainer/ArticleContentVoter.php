@@ -12,58 +12,60 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Voter\DataContainer;
 
-use Contao\ArticleModel;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\Security\DataContainer\ReadAction;
+use Doctrine\DBAL\Connection;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 /**
  * @internal
  */
-class ArticleContentVoter implements VoterInterface, CacheableVoterInterface
+class ArticleContentVoter extends AbstractDynamicPtableVoter
 {
+    private array $pageIds = [];
+
     public function __construct(
-        private readonly ContaoFramework $framework,
         private readonly AccessDecisionManagerInterface $accessDecisionManager,
+        private readonly Connection $connection,
     ) {
+        parent::__construct($connection);
     }
 
-    public function supportsAttribute(string $attribute): bool
+    public function reset(): void
     {
-        return ContaoCorePermissions::DC_PREFIX.'tl_content' === $attribute;
+        parent::reset();
+
+        $this->pageIds = [];
     }
 
-    public function supportsType(string $subjectType): bool
+    protected function getTable(): string
     {
-        return ReadAction::class === $subjectType;
+        return 'tl_content';
     }
 
-    /**
-     * This only implements read access permission on tl_content to disable the
-     * "children" operation on tl_article. It should be extended to also check all
-     * other permissions on tl_content.
-     */
-    public function vote(TokenInterface $token, $subject, array $attributes): int
+    protected function hasAccessToRecord(TokenInterface $token, string $table, int $id): bool
     {
-        if (!$subject instanceof ReadAction || 'tl_article' !== ($subject->getCurrent()['ptable'] ?? null)) {
-            return self::ACCESS_ABSTAIN;
+        if ('tl_article' !== $table) {
+            return true;
         }
 
-        if (!array_filter($attributes, $this->supportsAttribute(...))) {
-            return self::ACCESS_ABSTAIN;
+        if (!$this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'article')) {
+            return false;
         }
 
-        $articleAdapter = $this->framework->getAdapter(ArticleModel::class);
-        $articleModel = $articleAdapter->findById($subject->getCurrentPid());
+        $pageId = $this->getPageId($id);
 
-        if ($articleModel && !$this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], $articleModel->pid)) {
-            return self::ACCESS_DENIED;
+        return $pageId
+            && $this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_ACCESS_PAGE], $pageId)
+            && $this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], $pageId);
+    }
+
+    private function getPageId(int $articleId): int|null
+    {
+        if (!isset($this->pageIds[$articleId])) {
+            $this->pageIds[$articleId] = $this->connection->fetchOne('SELECT pid FROM tl_article WHERE id=?', [$articleId]);
         }
 
-        return self::ACCESS_ABSTAIN;
+        return $this->pageIds[$articleId] ?: null;
     }
 }
