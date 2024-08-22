@@ -25,7 +25,7 @@ use FeedIo\Specification;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-#[AsPage(contentComposition: false)]
+#[AsPage(path: '', contentComposition: false)]
 class NewsFeedController extends AbstractController implements DynamicRouteInterface
 {
     final public const TYPE = 'news_feed';

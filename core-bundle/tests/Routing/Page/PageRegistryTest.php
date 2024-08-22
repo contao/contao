@@ -74,22 +74,6 @@ class PageRegistryTest extends TestCase
         $this->assertNull($route->getDefault('parameters'));
     }
 
-    public function testReturnsUnparameteredPageRouteForNewsFeedPages(): void
-    {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
-            'type' => 'news_feed',
-            'alias' => 'bar',
-            'urlPrefix' => 'foo',
-            'urlSuffix' => '.xml',
-        ]);
-
-        $registry = new PageRegistry($this->createMock(Connection::class));
-        $route = $registry->getRoute($pageModel);
-
-        $this->assertSame('/foo/bar.xml', $route->getPath());
-        $this->assertNull($route->getDefault('parameters'));
-    }
-
     public function testReturnsParameteredPageRouteIfTheAlwaysForwardOptionIsSet(): void
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class, [

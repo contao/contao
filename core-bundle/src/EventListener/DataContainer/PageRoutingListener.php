@@ -54,14 +54,12 @@ class PageRoutingListener
             return '';
         }
 
-        $currentSuffix = 'news_feed' === $currentPage->type ? '.xml' : $currentPage->urlSuffix;
-
         if (!$aliasPages = $pageAdapter->findSimilarByAlias($currentPage)) {
             return '';
         }
 
         $conflicts = [];
-        $currentUrl = $this->buildUrl($currentPage->alias, $currentPage->urlPrefix, $currentSuffix);
+        $currentUrl = $this->buildUrl($currentPage->alias, $currentPage->urlPrefix, $currentPage->urlSuffix);
         $backendAdapter = $this->framework->getAdapter(Backend::class);
 
         foreach ($aliasPages as $aliasPage) {
@@ -71,8 +69,7 @@ class PageRoutingListener
                 continue;
             }
 
-            $aliasSuffix = 'news_feed' === $aliasPage->type ? '.xml' : $aliasPage->urlSuffix;
-            $aliasUrl = $this->buildUrl($aliasPage->alias, $aliasPage->urlPrefix, $aliasSuffix);
+            $aliasUrl = $this->buildUrl($aliasPage->alias, $aliasPage->urlPrefix, $aliasPage->urlSuffix);
 
             if ($currentUrl !== $aliasUrl || !$this->pageRegistry->isRoutable($aliasPage)) {
                 continue;
