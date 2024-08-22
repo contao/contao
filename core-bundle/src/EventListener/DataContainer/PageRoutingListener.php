@@ -58,8 +58,11 @@ class PageRoutingListener
             return '';
         }
 
+        $currentPage->loadDetails();
+        $currentRoute = $this->pageRegistry->getRoute($currentPage);
+        $currentUrl = $this->buildUrl($currentPage->alias, $currentRoute->getUrlPrefix(), $currentRoute->getUrlSuffix());
+
         $conflicts = [];
-        $currentUrl = $this->buildUrl($currentPage->alias, $currentPage->urlPrefix, $currentPage->urlSuffix);
         $backendAdapter = $this->framework->getAdapter(Backend::class);
 
         foreach ($aliasPages as $aliasPage) {
@@ -69,7 +72,8 @@ class PageRoutingListener
                 continue;
             }
 
-            $aliasUrl = $this->buildUrl($aliasPage->alias, $aliasPage->urlPrefix, $aliasPage->urlSuffix);
+            $aliasRoute = $this->pageRegistry->getRoute($aliasPage);
+            $aliasUrl = $this->buildUrl($aliasPage->alias, $aliasRoute->getUrlPrefix(), $aliasRoute->getUrlSuffix());
 
             if ($currentUrl !== $aliasUrl || !$this->pageRegistry->isRoutable($aliasPage)) {
                 continue;
