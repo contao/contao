@@ -168,8 +168,7 @@ class PageRoutingListenerTest extends TestCase
 
         $pageRoutes = [$this->mockPageRouteFromPageModel($pageModel)];
 
-        foreach ($aliasPages as $aliasPage)
-        {
+        foreach ($aliasPages as $aliasPage) {
             $pageRoutes[] = $this->mockPageRouteFromPageModel($aliasPage);
         }
 
