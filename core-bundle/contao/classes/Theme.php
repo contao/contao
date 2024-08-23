@@ -1210,12 +1210,12 @@ class Theme extends Backend
 
 		foreach (Folder::scan($path) as $item)
 		{
-			// Recursive call of templates (see #7472)
+			// Add subfolders recursively (see #7472)
 			if (is_dir($path . '/' . $item))
 			{
 				$this->addTemplateFiles($objArchive, $strFolder . '/' . $item);
 			}
-			else if (preg_match('/\.(html5|sql|twig)$/', $item) && !str_starts_with($item, 'be_') && !str_starts_with($item, 'nl_'))
+			elseif (preg_match('/\.(html5|sql|twig)$/', $item) && !str_starts_with($item, 'be_') && !str_starts_with($item, 'nl_'))
 			{
 				$objArchive->addFile($strFolder . '/' . $item);
 			}
