@@ -404,6 +404,12 @@
       <trans-unit id="XPL.autocomplete.52.1">
         <source>URL representing an instant messaging protocol endpoint (for example, "aim:goim?screenname=example" or "xmpp:fred@example.net")</source>
       </trans-unit>
+      <trans-unit id="XPL.autocomplete.53.0">
+        <source>section-*</source>
+      </trans-unit>
+      <trans-unit id="XPL.autocomplete.53.1">
+        <source>Can be used to group input fields within a form.&lt;br&gt;&lt;br&gt;The &lt;em&gt;wildcard&lt;/em&gt; (*) can be replaced with a unique identifier that distinguishes between different autocomplete fields in a form:&lt;br&gt;&lt;br&gt;&lt;code&gt;autocomplete="section-blue shipping street-address"&lt;/code&gt;&lt;br&gt;&lt;code&gt;autocomplete="section-red shipping street-address"&lt;/code&gt;&lt;br&gt;&lt;br&gt;This can help in grouping fields for better autofill.</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>
