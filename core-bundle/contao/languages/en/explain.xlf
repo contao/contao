@@ -86,328 +86,328 @@
       <trans-unit id="XPL.imageSizeDensities.1.1">
         <source>If the sizes attribute is not defined, this setting simply defines the pixel densities you want to support. The dimensions of the images are adjusted automatically. E.g. &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; creates the following HTML code: &lt;code&gt;&amp;lt;img srcset="img-a.jpg 1x, img-b.jpg 1.5x, img-c.jpg 2x"&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;If the sizes attribute is defined, the same image sizes are generated but width descriptors are used for the srcset attribute. E.g. a 200 pixel wide image with the densities &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; creates the following HTML code: &lt;code&gt;&amp;lt;img srcset="img-a.jpg 200w, img-b.jpg 300w, img-c.jpg 400w"&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;For more information about the srcset attribute please visit &lt;a href="https://www.w3.org/TR/2016/PR-html51-20160915/semantics-embedded-content.html#element-attrdef-img-srcset" target="_blank" rel="noreferrer noopener"&gt;w3.org&lt;/a&gt;.</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.0.0">
+      <trans-unit id="XPL.autocomplete.name.0">
         <source>name</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.0.1">
+      <trans-unit id="XPL.autocomplete.name.1">
         <source>Full name</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.1.0">
+      <trans-unit id="XPL.autocomplete.honorific-prefix.0">
         <source>honorific-prefix</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.1.1">
+      <trans-unit id="XPL.autocomplete.honorific-prefix.1">
         <source>Prefix or title (e.g., "Mr.", "Ms.", "Dr.", "Mlle")</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.2.0">
+      <trans-unit id="XPL.autocomplete.given-name.0">
         <source>given-name</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.2.1">
+      <trans-unit id="XPL.autocomplete.given-name.1">
         <source>Given name (in some Western cultures, also known as the first name)</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.3.0">
+      <trans-unit id="XPL.autocomplete.additional-name.0">
         <source>additional-name</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.3.1">
+      <trans-unit id="XPL.autocomplete.additional-name.1">
         <source>Additional names (in some Western cultures, also known as middle names, forenames other than the first name)</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.4.0">
+      <trans-unit id="XPL.autocomplete.family-name.0">
         <source>family-name</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.4.1">
+      <trans-unit id="XPL.autocomplete.family-name.1">
         <source>Family name (in some Western cultures, also known as the last name or surname)</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.5.0">
+      <trans-unit id="XPL.autocomplete.honorific-suffix.0">
         <source>honorific-suffix</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.5.1">
+      <trans-unit id="XPL.autocomplete.honorific-suffix.1">
         <source>Suffix (e.g., "Jr.", "B.Sc.", "MBASW", "II")</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.6.0">
+      <trans-unit id="XPL.autocomplete.nickname.0">
         <source>nickname</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.6.1">
+      <trans-unit id="XPL.autocomplete.nickname.1">
         <source>Nickname, screen name, handle: a typically short name used instead of the full name</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.7.0">
+      <trans-unit id="XPL.autocomplete.organization-title.0">
         <source>organization-title</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.7.1">
+      <trans-unit id="XPL.autocomplete.organization-title.1">
         <source>Job title (e.g., "Software Engineer", "Senior Vice President", "Deputy Managing Director")</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.8.0">
+      <trans-unit id="XPL.autocomplete.username.0">
         <source>username</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.8.1">
+      <trans-unit id="XPL.autocomplete.username.1">
         <source>A username</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.9.0">
+      <trans-unit id="XPL.autocomplete.new-password.0">
         <source>new-password</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.9.1">
+      <trans-unit id="XPL.autocomplete.new-password.1">
         <source>A new password (e.g., when creating an account or changing a password)</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.10.0">
+      <trans-unit id="XPL.autocomplete.current-password.0">
         <source>current-password</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.10.1">
+      <trans-unit id="XPL.autocomplete.current-password.1">
         <source>The current password for the account identified by the username field (e.g., when logging in)</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.11.0">
+      <trans-unit id="XPL.autocomplete.organization.0">
         <source>organization</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.11.1">
+      <trans-unit id="XPL.autocomplete.organization.1">
         <source>Company name corresponding to the person, address, or contact information in the other fields associated with this field</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.12.0">
+      <trans-unit id="XPL.autocomplete.street-address.0">
         <source>street-address</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.12.1">
+      <trans-unit id="XPL.autocomplete.street-address.1">
         <source>Street address (multiple lines, newlines preserved)</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.13.0">
+      <trans-unit id="XPL.autocomplete.address-line1.0">
         <source>address-line1</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.13.1">
+      <trans-unit id="XPL.autocomplete.address-line1.1">
         <source>Street address (one line per field, line 1)</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.14.0">
+      <trans-unit id="XPL.autocomplete.address-line2.0">
         <source>address-line2</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.14.1">
+      <trans-unit id="XPL.autocomplete.address-line2.1">
         <source>Street address (one line per field, line 2)</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.15.0">
+      <trans-unit id="XPL.autocomplete.address-line3.0">
         <source>address-line3</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.15.1">
+      <trans-unit id="XPL.autocomplete.address-line3.1">
         <source>Street address (one line per field, line 3)</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.16.0">
+      <trans-unit id="XPL.autocomplete.address-level4.0">
         <source>address-level4</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.16.1">
+      <trans-unit id="XPL.autocomplete.address-level4.1">
         <source>The most fine-grained administrative level, in addresses with four administrative levels</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.17.0">
+      <trans-unit id="XPL.autocomplete.address-level3.0">
         <source>address-level3</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.17.1">
+      <trans-unit id="XPL.autocomplete.address-level3.1">
         <source>The third administrative level, in addresses with three or more administrative levels</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.18.0">
+      <trans-unit id="XPL.autocomplete.address-level2.0">
         <source>address-level2</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.18.1">
+      <trans-unit id="XPL.autocomplete.address-level2.1">
         <source>The second administrative level, in addresses with two or more administrative levels; in countries with two administrative levels, this would typically be the city, town, village, or other locality within which the relevant street address is found</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.19.0">
+      <trans-unit id="XPL.autocomplete.address-level1.0">
         <source>address-level1</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.19.1">
+      <trans-unit id="XPL.autocomplete.address-level1.1">
         <source>The broadest administrative level in the address, i.e., the province within which the locality is found; for example, in the US, this would be the state; in Switzerland, it would be the canton; in the UK, the post town</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.20.0">
+      <trans-unit id="XPL.autocomplete.country.0">
         <source>country</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.20.1">
+      <trans-unit id="XPL.autocomplete.country.1">
         <source>Country code</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.21.0">
+      <trans-unit id="XPL.autocomplete.country-name.0">
         <source>country-name</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.21.1">
+      <trans-unit id="XPL.autocomplete.country-name.1">
         <source>Country name</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.22.0">
+      <trans-unit id="XPL.autocomplete.postal-code.0">
         <source>postal-code</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.22.1">
+      <trans-unit id="XPL.autocomplete.postal-code.1">
         <source>Postal code, post code, ZIP code, CEDEX code (if CEDEX, append "CEDEX", and the dissemination, if relevant, to the address-level2 field)</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.23.0">
+      <trans-unit id="XPL.autocomplete.cc-name.0">
         <source>cc-name</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.23.1">
+      <trans-unit id="XPL.autocomplete.cc-name.1">
         <source>Full name as given on the payment instrument</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.24.0">
+      <trans-unit id="XPL.autocomplete.cc-given-name.0">
         <source>cc-given-name</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.24.1">
+      <trans-unit id="XPL.autocomplete.cc-given-name.1">
         <source>Given name as given on the payment instrument (in some Western cultures, also known as the first name)</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.25.0">
+      <trans-unit id="XPL.autocomplete.cc-additional-name.0">
         <source>cc-additional-name</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.25.1">
+      <trans-unit id="XPL.autocomplete.cc-additional-name.1">
         <source>Additional names given on the payment instrument (in some Western cultures, also known as middle names, forenames other than the first name)</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.26.0">
+      <trans-unit id="XPL.autocomplete.cc-family-name.0">
         <source>cc-family-name</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.26.1">
+      <trans-unit id="XPL.autocomplete.cc-family-name.1">
         <source>Family name given on the payment instrument (in some Western cultures, also known as the last name or surname)</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.27.0">
+      <trans-unit id="XPL.autocomplete.cc-number.0">
         <source>cc-number</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.27.1">
+      <trans-unit id="XPL.autocomplete.cc-number.1">
         <source>Code identifying the payment instrument (e.g., the credit card number)</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.28.0">
+      <trans-unit id="XPL.autocomplete.cc-exp.0">
         <source>cc-exp</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.28.1">
+      <trans-unit id="XPL.autocomplete.cc-exp.1">
         <source>Expiration date of the payment instrument</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.29.0">
+      <trans-unit id="XPL.autocomplete.cc-exp-month.0">
         <source>cc-exp-month</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.29.1">
+      <trans-unit id="XPL.autocomplete.cc-exp-month.1">
         <source>Month component of the expiration date of the payment instrument</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.30.0">
+      <trans-unit id="XPL.autocomplete.cc-exp-year.0">
         <source>cc-exp-year</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.30.1">
+      <trans-unit id="XPL.autocomplete.cc-exp-year.1">
         <source>Year component of the expiration date of the payment instrument</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.31.0">
+      <trans-unit id="XPL.autocomplete.cc-csc.0">
         <source>cc-csc</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.31.1">
+      <trans-unit id="XPL.autocomplete.cc-csc.1">
         <source>Security code for the payment instrument (also known as the card security code (CSC), card validation code (CVC), card verification value (CVV), signature panel code (SPC), credit card ID (CCID), etc)</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.32.0">
+      <trans-unit id="XPL.autocomplete.cc-type.0">
         <source>cc-type</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.32.1">
+      <trans-unit id="XPL.autocomplete.cc-type.1">
         <source>Type of payment instrument</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.33.0">
+      <trans-unit id="XPL.autocomplete.transaction-currency.0">
         <source>transaction-currency</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.33.1">
+      <trans-unit id="XPL.autocomplete.transaction-currency.1">
         <source>The currency that the user would prefer the transaction to use</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.34.0">
+      <trans-unit id="XPL.autocomplete.transaction-amount.0">
         <source>transaction-amount</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.34.1">
+      <trans-unit id="XPL.autocomplete.transaction-amount.1">
         <source>The amount that the user would like for the transaction (e.g., when entering a bid or sale price)</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.35.0">
+      <trans-unit id="XPL.autocomplete.language.0">
         <source>language</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.35.1">
+      <trans-unit id="XPL.autocomplete.language.1">
         <source>Preferred language</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.36.0">
+      <trans-unit id="XPL.autocomplete.bday.0">
         <source>bday</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.36.1">
+      <trans-unit id="XPL.autocomplete.bday.1">
         <source>Birthday</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.37.0">
+      <trans-unit id="XPL.autocomplete.bday-day.0">
         <source>bday-day</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.37.1">
+      <trans-unit id="XPL.autocomplete.bday-day.1">
         <source>Day component of birthday</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.38.0">
+      <trans-unit id="XPL.autocomplete.bday-month.0">
         <source>bday-month</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.38.1">
+      <trans-unit id="XPL.autocomplete.bday-month.1">
         <source>Month component of birthday</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.39.0">
+      <trans-unit id="XPL.autocomplete.bday-year.0">
         <source>bday-year</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.39.1">
+      <trans-unit id="XPL.autocomplete.bday-year.1">
         <source>Year component of birthday</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.40.0">
+      <trans-unit id="XPL.autocomplete.sex.0">
         <source>sex</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.40.1">
+      <trans-unit id="XPL.autocomplete.sex.1">
         <source>Gender identity (e.g., Female, Fa’afafine)</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.41.0">
+      <trans-unit id="XPL.autocomplete.url.0">
         <source>url</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.41.1">
+      <trans-unit id="XPL.autocomplete.url.1">
         <source>Home page or other Web page corresponding to the company, person, address, or contact information in the other fields associated with this field</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.42.0">
+      <trans-unit id="XPL.autocomplete.photo.0">
         <source>photo</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.42.1">
+      <trans-unit id="XPL.autocomplete.photo.1">
         <source>Photograph, icon, or other image corresponding to the company, person, address, or contact information in the other fields associated with this field</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.43.0">
+      <trans-unit id="XPL.autocomplete.tel.0">
         <source>tel</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.43.1">
+      <trans-unit id="XPL.autocomplete.tel.1">
         <source>Full telephone number, including country code</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.44.0">
+      <trans-unit id="XPL.autocomplete.tel-country-code.0">
         <source>tel-country-code</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.44.1">
+      <trans-unit id="XPL.autocomplete.tel-country-code.1">
         <source>Country code component of the telephone number</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.45.0">
+      <trans-unit id="XPL.autocomplete.tel-national.0">
         <source>tel-national</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.45.1">
+      <trans-unit id="XPL.autocomplete.tel-national.1">
         <source>Telephone number without the country code component, with a country-internal prefix applied if applicable</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.46.0">
+      <trans-unit id="XPL.autocomplete.tel-area-code.0">
         <source>tel-area-code</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.46.1">
+      <trans-unit id="XPL.autocomplete.tel-area-code.1">
         <source>Area code component of the telephone number, with a country-internal prefix applied if applicable</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.47.0">
+      <trans-unit id="XPL.autocomplete.tel-local.0">
         <source>tel-local</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.47.1">
+      <trans-unit id="XPL.autocomplete.tel-local.1">
         <source>Telephone number without the country code and area code components</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.48.0">
+      <trans-unit id="XPL.autocomplete.tel-local-prefix.0">
         <source>tel-local-prefix</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.48.1">
+      <trans-unit id="XPL.autocomplete.tel-local-prefix.1">
         <source>First part of the component of the telephone number that follows the area code, when that component is split into two components</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.49.0">
+      <trans-unit id="XPL.autocomplete.tel-local-suffix.0">
         <source>tel-local-suffix</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.49.1">
+      <trans-unit id="XPL.autocomplete.tel-local-suffix.1">
         <source>Second part of the component of the telephone number that follows the area code, when that component is split into two components</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.50.0">
+      <trans-unit id="XPL.autocomplete.tel-extension.0">
         <source>tel-extension</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.50.1">
+      <trans-unit id="XPL.autocomplete.tel-extension.1">
         <source>Telephone number internal extension code</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.51.0">
+      <trans-unit id="XPL.autocomplete.email.0">
         <source>email</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.51.1">
+      <trans-unit id="XPL.autocomplete.email.1">
         <source>E-mail address</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.52.0">
+      <trans-unit id="XPL.autocomplete.impp.0">
         <source>impp</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.52.1">
+      <trans-unit id="XPL.autocomplete.impp.1">
         <source>URL representing an instant messaging protocol endpoint (for example, "aim:goim?screenname=example" or "xmpp:fred@example.net")</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.53.0">
+      <trans-unit id="XPL.autocomplete.section.0">
         <source>section-*</source>
       </trans-unit>
-      <trans-unit id="XPL.autocomplete.53.1">
+      <trans-unit id="XPL.autocomplete.section.1">
         <source>Can be used to group input fields within a form.&lt;br&gt;&lt;br&gt;The &lt;em&gt;wildcard&lt;/em&gt; (*) can be replaced with a unique identifier that distinguishes between different autocomplete fields in a form:&lt;br&gt;&lt;br&gt;&lt;code&gt;autocomplete="section-blue shipping street-address"&lt;/code&gt;&lt;br&gt;&lt;code&gt;autocomplete="section-red shipping street-address"&lt;/code&gt;&lt;br&gt;&lt;br&gt;This can help in grouping fields for better autofill.</source>
       </trans-unit>
     </body>
