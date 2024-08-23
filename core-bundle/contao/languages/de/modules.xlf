@@ -435,7 +435,7 @@
       </trans-unit>
       <trans-unit id="FMD.root_page_dependent_modules.1">
         <source>Generates different modules depending on the website root page</source>
-        <target>Erzeugt je nach Website-Startseite verschiedene Module</target>
+        <target>Erzeugt je nach Website-Startpunkt verschiedene Module</target>
       </trans-unit>
     </body>
   </file>
