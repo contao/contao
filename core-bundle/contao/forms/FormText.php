@@ -120,6 +120,7 @@ class FormText extends Widget
 				break;
 
 			case 'placeholder':
+			case 'autocomplete':
 				$this->arrAttributes[$strKey] = $varValue;
 				break;
 
