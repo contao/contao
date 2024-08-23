@@ -1178,11 +1178,13 @@ table.tl_listing {
 }
 
 .tl_file_list .ellipsis {
-	height: 16px;
-	text-overflow: ellipsis;
 	overflow: hidden;
-	padding-right: 18px;
 	word-break: break-all;
+	display: -webkit-box;
+	-webkit-line-clamp: 1;
+	-webkit-box-orient: vertical;
+	line-height: normal;
+	margin-top: -1px;
 }
 
 .tl_right_nowrap {
@@ -3183,10 +3185,6 @@ fieldset.collapsed > legend {
 
 	#tl_maintenance_cache tr th:last-child, #tl_maintenance_cache tr td:last-child {
 		display: none;
-	}
-
-	.tl_file_list .ellipsis {
-		padding-right: 10px;
 	}
 
 	.tl_undo_header {
