@@ -10,25 +10,26 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Security\Voter\DataContainer;
+namespace Contao\NewsBundle\Tests\Security\Voter;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
-use Contao\CoreBundle\Security\Voter\DataContainer\ArticleContentVoter;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\NewsBundle\Security\ContaoNewsPermissions;
+use Contao\NewsBundle\Security\Voter\NewsContentVoter;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class ArticleContentVoterTest extends TestCase
+class NewsContentVoterTest extends TestCase
 {
     public function testSupportsAttributesAndTypes(): void
     {
-        $voter = new ArticleContentVoter($this->createMock(AccessDecisionManagerInterface::class), $this->createMock(Connection::class));
+        $voter = new NewsContentVoter($this->createMock(AccessDecisionManagerInterface::class), $this->createMock(Connection::class));
 
         $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_content'));
         $this->assertTrue($voter->supportsType(ReadAction::class));
@@ -42,20 +43,19 @@ class ArticleContentVoterTest extends TestCase
     /**
      * @dataProvider checksElementAccessPermissionProvider
      */
-    public function testChecksElementAccessPermission(CreateAction|DeleteAction|ReadAction|UpdateAction $action, array $parentRecords, array $articleParents): void
+    public function testChecksElementAccessPermission(CreateAction|DeleteAction|ReadAction|UpdateAction $action, array $parentRecords, array $newsArchives): void
     {
         $token = $this->createMock(TokenInterface::class);
 
-        $accessDecisionMap = [[$token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'article', true]];
+        $accessDecisionMap = [[$token, [ContaoNewsPermissions::USER_CAN_ACCESS_MODULE], null, true]];
 
-        foreach ($articleParents as $pageId) {
-            $accessDecisionMap[] = [$token, [ContaoCorePermissions::USER_CAN_ACCESS_PAGE], $pageId, true];
-            $accessDecisionMap[] = [$token, [ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], $pageId, true];
+        foreach ($newsArchives as $archiveId) {
+            $accessDecisionMap[] = [$token, [ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE], $archiveId, true];
         }
 
         $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
         $accessDecisionManager
-            ->expects($this->exactly(max(\count($parentRecords), \count($articleParents)) * 3))
+            ->expects($this->exactly(max(\count($parentRecords), \count($newsArchives)) * 2))
             ->method('decide')
             ->willReturnMap($accessDecisionMap)
         ;
@@ -73,9 +73,9 @@ class ArticleContentVoterTest extends TestCase
 
         $fetchOneMap = [];
 
-        foreach ($articleParents as $id => $pid) {
+        foreach ($newsArchives as $id => $pid) {
             $fetchOneMap[] = [
-                'SELECT pid FROM tl_article WHERE id=?',
+                'SELECT pid FROM tl_news WHERE id=?',
                 [$id],
                 [],
                 $pid,
@@ -90,12 +90,12 @@ class ArticleContentVoterTest extends TestCase
         ;
 
         $connection
-            ->expects($this->exactly(\count($articleParents)))
+            ->expects($this->exactly(\count($newsArchives)))
             ->method('fetchOne')
             ->willReturnMap($fetchOneMap)
         ;
 
-        $voter = new ArticleContentVoter($accessDecisionManager, $connection);
+        $voter = new NewsContentVoter($accessDecisionManager, $connection);
         $decision = $voter->vote($token, $action, [ContaoCorePermissions::DC_PREFIX.'tl_content']);
 
         $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $decision);
@@ -103,81 +103,81 @@ class ArticleContentVoterTest extends TestCase
 
     public static function checksElementAccessPermissionProvider(): iterable
     {
-        yield 'Check access to page when creating element in article' => [
-            new CreateAction('tl_content', ['ptable' => 'tl_article', 'pid' => 1]),
+        yield 'Check access to news archive when creating element in news' => [
+            new CreateAction('tl_content', ['ptable' => 'tl_news', 'pid' => 1]),
             [],
             [1 => 1],
         ];
 
-        yield 'Check access to page when creating nested element' => [
+        yield 'Check access to news archive when creating nested element' => [
             new CreateAction('tl_content', ['ptable' => 'tl_content', 'pid' => 3]),
-            [3 => [['ptable' => 'tl_article', 'pid' => 2]]],
+            [3 => [['ptable' => 'tl_news', 'pid' => 2]]],
             [2 => 1],
         ];
 
-        yield 'Check access to page when creating deep nested element' => [
+        yield 'Check access to news archive when creating deep nested element' => [
             new CreateAction('tl_content', ['ptable' => 'tl_content', 'pid' => 3]),
-            [3 => [['ptable' => 'tl_content', 'pid' => 2], ['ptable' => 'tl_article', 'pid' => 1]]],
+            [3 => [['ptable' => 'tl_content', 'pid' => 2], ['ptable' => 'tl_news', 'pid' => 1]]],
             [1 => 1],
         ];
 
-        yield 'Check access to page when reading element in article' => [
-            new ReadAction('tl_content', ['ptable' => 'tl_article', 'pid' => 1]),
+        yield 'Check access to news archive when reading element in news' => [
+            new ReadAction('tl_content', ['ptable' => 'tl_news', 'pid' => 1]),
             [],
             [1 => 1],
         ];
 
-        yield 'Check access to page when reading nested element' => [
+        yield 'Check access to news archive when reading nested element' => [
             new ReadAction('tl_content', ['ptable' => 'tl_content', 'pid' => 3]),
-            [3 => [['ptable' => 'tl_article', 'pid' => 2]]],
+            [3 => [['ptable' => 'tl_news', 'pid' => 2]]],
             [2 => 1],
         ];
 
-        yield 'Check access to page when reading deep nested element' => [
+        yield 'Check access to news archive when reading deep nested element' => [
             new ReadAction('tl_content', ['ptable' => 'tl_content', 'pid' => 3]),
-            [3 => [['ptable' => 'tl_content', 'pid' => 2], ['ptable' => 'tl_article', 'pid' => 1]]],
+            [3 => [['ptable' => 'tl_content', 'pid' => 2], ['ptable' => 'tl_news', 'pid' => 1]]],
             [1 => 1],
         ];
 
-        yield 'Check access to current page when updating element in article' => [
-            new UpdateAction('tl_content', ['ptable' => 'tl_article', 'pid' => 1]),
+        yield 'Check access to current news archive when updating element in news' => [
+            new UpdateAction('tl_content', ['ptable' => 'tl_news', 'pid' => 1]),
             [],
             [1 => 1],
         ];
 
-        yield 'Check access to current and new page when updating element in article' => [
-            new UpdateAction('tl_content', ['ptable' => 'tl_article', 'pid' => 1], ['pid' => 2]),
+        yield 'Check access to current and new news archive when updating element in news' => [
+            new UpdateAction('tl_content', ['ptable' => 'tl_news', 'pid' => 1], ['pid' => 2]),
             [],
             [1 => 1, 2 => 2],
         ];
 
-        yield 'Check access to page when moving nested element to article' => [
-            new UpdateAction('tl_content', ['ptable' => 'tl_content', 'pid' => 3], ['ptable' => 'tl_article', 'pid' => 1]),
-            [3 => [['ptable' => 'tl_article', 'pid' => 2]]],
+        yield 'Check access to news archive when moving nested element to news' => [
+            new UpdateAction('tl_content', ['ptable' => 'tl_content', 'pid' => 3], ['ptable' => 'tl_news', 'pid' => 1]),
+            [3 => [['ptable' => 'tl_news', 'pid' => 2]]],
             [2 => 2, 1 => 1],
         ];
 
-        yield 'Check access to page when moving nested element to other element' => [
+        yield 'Check access to news archive when moving nested element to other element' => [
             new UpdateAction('tl_content', ['ptable' => 'tl_content', 'pid' => 3], ['ptable' => 'tl_content', 'pid' => 4]),
-            [3 => [['ptable' => 'tl_article', 'pid' => 2]], 4 => [['ptable' => 'tl_article', 'pid' => 1]]],
+            [3 => [['ptable' => 'tl_news', 'pid' => 2]], 4 => [['ptable' => 'tl_news', 'pid' => 1]]],
             [2 => 2, 1 => 1],
         ];
 
-        yield 'Check access when deleting element in article' => [
-            new DeleteAction('tl_content', ['ptable' => 'tl_article', 'pid' => 1]),
+        yield 'Check access when deleting element in news' => [
+            new DeleteAction('tl_content', ['ptable' => 'tl_news', 'pid' => 1]),
             [],
             [1 => 1],
         ];
 
         yield 'Check access when deleting nested element' => [
             new DeleteAction('tl_content', ['ptable' => 'tl_content', 'pid' => 3]),
-            [3 => [['ptable' => 'tl_article', 'pid' => 2]]],
+            [3 => [['ptable' => 'tl_news', 'pid' => 2]]],
             [2 => 1],
         ];
 
         yield 'Check access when deleting deep nested element' => [
             new DeleteAction('tl_content', ['ptable' => 'tl_content', 'pid' => 3]),
-            [3 => [['ptable' => 'tl_content', 'pid' => 2], ['ptable' => 'tl_article', 'pid' => 1]]],
+            [3 => [['ptable' => 'tl_content', 'pid' => 2], ['ptable' => 'tl_news', 'pid' => 1]]],
             [1 => 1],
         ];
     }
@@ -192,9 +192,9 @@ class ArticleContentVoterTest extends TestCase
             ->method('decide')
         ;
 
-        $action = new CreateAction('tl_content', ['ptable' => 'tl_news', 'pid' => 1]);
+        $action = new CreateAction('tl_content', ['ptable' => 'tl_article', 'pid' => 1]);
 
-        $voter = new ArticleContentVoter($accessDecisionManager, $this->createMock(Connection::class));
+        $voter = new NewsContentVoter($accessDecisionManager, $this->createMock(Connection::class));
         $decision = $voter->vote($token, $action, [ContaoCorePermissions::DC_PREFIX.'tl_content']);
 
         $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $decision);
