@@ -3,7 +3,7 @@
 $this->wrapperAttributes = $this
     ->attr($this->cssID)
     ->addClass([$this->class, 'ce_accordion', 'block'])
-    ->addStyle($this->style)
+    ->addStyle($this->style ?? '')
     ->mergeWith($this->wrapperAttributes)
 ;
 

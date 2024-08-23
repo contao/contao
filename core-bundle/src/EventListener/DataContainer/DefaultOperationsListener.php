@@ -106,7 +106,7 @@ class DefaultOperationsListener
             if (DataContainer::MODE_TREE_EXTENDED !== ($GLOBALS['TL_DCA'][$ctable]['list']['sorting']['mode'] ?? null)) {
                 $operations += [
                     'children' => [
-                        'href' => 'table='.$ctable,
+                        'href' => 'table='.$ctable.($ctable === $table ? '&amp;ptable='.$table : ''),
                         'icon' => 'children.svg',
                         'button_callback' => $this->accessChildrenCallback($ctable, $table),
                     ],
@@ -198,7 +198,11 @@ class DefaultOperationsListener
             $subject = new ReadAction($ctable, $data);
 
             if (!$this->security->isGranted(ContaoCorePermissions::DC_PREFIX.$ctable, $subject)) {
-                $operation->disable();
+                if ($ctable === $table) {
+                    $operation->setHtml('');
+                } else {
+                    $operation->disable();
+                }
             }
         };
     }

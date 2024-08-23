@@ -63,12 +63,12 @@
                             initializedRows.set(ntr, true);
                             tr.parentNode.insertBefore(ntr, tr.nextSibling);
 
-                            // Remove the ID of the select before initializing Chosen
+                            // Remove the ID of the select (used by Chosen)
                             const select = ntr.querySelector('select.tl_select');
                             select.removeAttribute('id');
 
+                            // Remove the existing Chosen container
                             ntr.querySelector('.chzn-container').remove();
-                            new Chosen(select);
 
                             addEventsTo(ntr);
                             makeSortable(tbody);
