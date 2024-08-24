@@ -47,7 +47,7 @@ class SwiperControllerTest extends ContentElementTestCase
             ],
         );
 
-        $jsonSettings = htmlspecialchars(json_encode([
+        $expectedJson = htmlspecialchars(json_encode([
             'speed' => 300,
             'offset' => 0,
             'loop' => true,
@@ -55,7 +55,7 @@ class SwiperControllerTest extends ContentElementTestCase
 
         $expectedOutput = <<<HTML
             <div class="content-swiper">
-                <div class="swiper" data-settings="{$jsonSettings}" data-delay="0" data-speed="300" data-offset="0" data-loop>
+                <div class="swiper" data-settings="{$expectedJson}" data-delay="0" data-speed="300" data-offset="0" data-loop>
                     <div class="swiper-wrapper">
                         <div class="swiper-slide">
                             text
