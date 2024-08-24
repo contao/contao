@@ -150,7 +150,7 @@ class Cron
                 }
 
                 // Check if the cron should be run
-                $expression = CronExpression::factory($interval);
+                $expression = new CronExpression($interval);
 
                 if (!$force && $lastRunDate && $now < $expression->getNextRunDate($lastRunDate)) {
                     continue;

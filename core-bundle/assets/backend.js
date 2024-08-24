@@ -7,7 +7,6 @@ import './scripts/core.js';
 import './scripts/limit-height.js';
 import './scripts/modulewizard.js';
 import './scripts/sectionwizard.js';
-import './scripts/tips.js';
 
 // Start the Stimulus application
 const application = Application.start();
@@ -32,9 +31,12 @@ document.documentElement.addEventListener('turbo:before-prefetch', e => {
 });
 
 // Make the MooTools scripts reinitialize themselves
-document.documentElement.addEventListener('turbo:render', () => {
+const mooDomready = () => {
     if (!document.body.mooDomreadyFired) {
         document.body.mooDomreadyFired = true;
         window.fireEvent('domready');
     }
-});
+}
+
+document.documentElement.addEventListener('turbo:render', mooDomready);
+document.documentElement.addEventListener('turbo:frame-render', mooDomready);

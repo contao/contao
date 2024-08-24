@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Twig\Slots;
 
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Expression\Filter\RawFilter;
 use Twig\Node\Expression\FilterExpression;
 use Twig\Node\Expression\GetAttrExpression;
 use Twig\Node\Expression\NameExpression;
@@ -103,14 +104,20 @@ final class SlotTokenParser extends AbstractTokenParser
      */
     private function getSlotReferenceExpression(string $name, int $line): AbstractExpression
     {
+        $node = new GetAttrExpression(
+            new NameExpression('_slots', $line),
+            new ConstantExpression($name, $line),
+            null,
+            'array',
+            $line,
+        );
+
+        if (class_exists(RawFilter::class)) {
+            return new RawFilter($node);
+        }
+
         return new FilterExpression(
-            new GetAttrExpression(
-                new NameExpression('_slots', $line),
-                new ConstantExpression($name, $line),
-                null,
-                'array',
-                $line,
-            ),
+            $node,
             new ConstantExpression('raw', $line),
             new Node(),
             $line,
