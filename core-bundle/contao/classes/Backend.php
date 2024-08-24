@@ -643,7 +643,7 @@ abstract class Backend extends Controller
 
 		// Limit tree and disable root trails
 		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = array($intNode);
-		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['showRootTrails'] = false;
+		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['visibleRoot'] = $intNode;
 
 		// Add root link
 		$arrLinks[] = Image::getHtml('pagemounts.svg') . ' <a href="' . self::addToUrl('pn=0') . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']) . '">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
