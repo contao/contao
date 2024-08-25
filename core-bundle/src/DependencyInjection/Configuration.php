@@ -380,6 +380,47 @@ class Configuration implements ConfigurationInterface
                     ->info('Adds, removes or overwrites the list of enabled image extensions that can be used.')
                     ->prototype('scalar')->end()
                     ->defaultValue(['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp', 'avif'])
+                    ->example(['+heic', '-svgz', 'jxl'])
+                    ->validate()
+                        ->ifTrue(
+                            static function (array $extensions): bool {
+                                foreach ($extensions as $extension) {
+                                    if (!preg_match('/^[+-]?.+$/', $extension)) {
+                                        return true;
+                                    }
+                                }
+
+                                return false;
+                            },
+                        )
+                        ->thenInvalid('Make sure your provided image extensions are valid and optionally start with +/- to add/remove the extension to/from the default list.')
+                    ->end()
+                    ->validate()
+                        ->always(
+                            static function (array $extensions): array {
+                                $newList = array_filter($extensions, static fn ($extension) => !\in_array($extension[0], ['-', '+'], true));
+
+                                if (!empty($newList)) {
+                                    return array_unique($newList);
+                                }
+
+                                $currentExtensions = ['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp'];
+
+                                foreach ($extensions as $configuration) {
+                                    $prefix = $configuration[0];
+                                    $extension = substr($configuration, 1);
+
+                                    if ('-' === $prefix && \in_array($extension, $currentExtensions, true)) {
+                                        unset($currentExtensions[array_search($extension, $currentExtensions, true)]);
+                                    } elseif ('+' === $prefix && !\in_array($extension, $currentExtensions, true)) {
+                                        $currentExtensions[] = $extension;
+                                    }
+                                }
+
+                                return array_unique($currentExtensions);
+                            },
+                        )
+                    ->end()
                 ->end()
                 ->arrayNode('preview')
                     ->addDefaultsIfNotSet()

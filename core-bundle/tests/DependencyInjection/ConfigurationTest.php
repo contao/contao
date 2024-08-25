@@ -54,6 +54,57 @@ class ConfigurationTest extends TestCase
         $this->assertSame('my_super_service', $configuration['image']['imagine_service']);
     }
 
+    public function testReplacesAllImageExtensions(): void
+    {
+        $params = [
+            'contao' => [
+                'image' => [
+                    'valid_extensions' => ['jpg', 'jpeg', 'png'],
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertSame(['jpg', 'jpeg', 'png'], $configuration['image']['valid_extensions']);
+    }
+
+    public function testAddsImageExtension(): void
+    {
+        $extensions = ['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp'];
+        $extensions[] = 'heic';
+
+        $params = [
+            'contao' => [
+                'image' => [
+                    'valid_extensions' => ['+heic'],
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertSame($extensions, $configuration['image']['valid_extensions']);
+    }
+
+    public function testRemovesImageExtension(): void
+    {
+        $extensions = ['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp'];
+        $extensions = array_diff($extensions, ['svg', 'svgz']);
+
+        $params = [
+            'contao' => [
+                'image' => [
+                    'valid_extensions' => ['-svg', '-svgz'],
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertSame($extensions, $configuration['image']['valid_extensions']);
+    }
+
     /**
      * @dataProvider getPaths
      */
