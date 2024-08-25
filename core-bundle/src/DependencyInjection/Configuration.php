@@ -400,7 +400,7 @@ class Configuration implements ConfigurationInterface
                             static function (array $extensions): array {
                                 $newList = array_filter($extensions, static fn ($extension) => !\in_array($extension[0], ['-', '+'], true));
 
-                                if (!empty($newList)) {
+                                if ($newList !== []) {
                                     return array_unique($newList);
                                 }
 
