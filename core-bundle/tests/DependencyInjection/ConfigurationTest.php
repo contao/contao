@@ -54,6 +54,21 @@ class ConfigurationTest extends TestCase
         $this->assertSame('my_super_service', $configuration['image']['imagine_service']);
     }
 
+    public function testInvalidImageExtension(): void
+    {
+        $params = [
+            'contao' => [
+                'image' => [
+                    'valid_extensions' => ['', '+', '-'],
+                ],
+            ],
+        ];
+
+        $this->expectException(InvalidConfigurationException::class);
+
+        (new Processor())->processConfiguration($this->configuration, $params);
+    }
+
     public function testReplacesAllImageExtensions(): void
     {
         $params = [
