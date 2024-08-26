@@ -3722,53 +3722,42 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </div>';
 
 		$tree = '';
-		$blnHasSorting = $this->Database->fieldExists('sorting', $table);
 		$arrFound = array();
 
 		if (!empty($this->procedure))
 		{
-			$fld = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? 'pid' : 'id';
-
-			if ($fld == 'id')
+			if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED)
 			{
-				$objRoot = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . ($blnHasSorting ? " ORDER BY sorting, id" : ""))
-										  ->execute($this->values);
-			}
-			elseif ($blnHasSorting)
-			{
-				$objRoot = $this->Database->prepare("SELECT pid, (SELECT sorting FROM " . $table . " WHERE " . $this->strTable . ".pid=" . $table . ".id) AS psort FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . " GROUP BY pid ORDER BY psort, pid")
-										  ->execute($this->values);
+				$objFound = $this->Database->prepare("SELECT pid AS id, (SELECT sorting FROM " . $table . " WHERE " . $this->strTable . ".pid=" . $table . ".id) AS psort FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . " GROUP BY id ORDER BY psort, id")
+					->execute($this->values);
 			}
 			else
 			{
-				$objRoot = $this->Database->prepare("SELECT pid FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . " GROUP BY pid")
-										  ->execute($this->values);
+				$objFound = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . ' ORDER BY sorting, id')
+					->execute($this->values);
 			}
 
-			if ($objRoot->numRows < 1)
+			if ($objFound->numRows < 1)
 			{
 				$this->updateRoot(array());
 			}
 			// Respect existing limitations (root IDs)
 			elseif (!empty($this->root))
 			{
-				$arrRoot = array();
-
-				while ($objRoot->next())
+				while ($objFound->next())
 				{
-					if (\count(array_intersect($this->root, $this->Database->getParentRecords($objRoot->$fld, $table))) > 0)
+					if (\count(array_intersect($this->root, $this->Database->getParentRecords($objFound->id, $table))) > 0)
 					{
-						$arrRoot[] = $objRoot->$fld;
+						$arrFound[] = $objFound->id;
 					}
 				}
 
-				$arrFound = $arrRoot;
-				$this->updateRoot($this->eliminateNestedPages($arrFound, $table, $blnHasSorting));
+				$this->updateRoot($arrFound);
 			}
 			else
 			{
-				$arrFound = $objRoot->fetchEach($fld);
-				$this->updateRoot($this->eliminateNestedPages($arrFound, $table, $blnHasSorting));
+				$arrFound = $objFound->fetchEach('id');
+				$this->updateRoot($arrFound);
 			}
 		}
 
@@ -3795,7 +3784,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			for ($i=0, $c=\count($topMostRootIds); $i<$c; $i++)
 			{
-				$tree .= $this->generateTree($table, $topMostRootIds[$i], array('p'=>($topMostRootIds[($i-1)] ?? null), 'n'=>($topMostRootIds[($i+1)] ?? null)), $blnHasSorting, -20, ($blnClipboard ? $arrClipboard : false), (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && $blnClipboard && $topMostRootIds[$i] == $arrClipboard['id']), false, false, $arrFound);
+				$tree .= $this->generateTree($table, $topMostRootIds[$i], array('p'=>($topMostRootIds[($i-1)] ?? null), 'n'=>($topMostRootIds[($i+1)] ?? null)), true, -20, ($blnClipboard ? $arrClipboard : false), (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && $blnClipboard && $topMostRootIds[$i] == $arrClipboard['id']), false, false, $arrFound);
 			}
 		}
 
