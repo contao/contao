@@ -83,7 +83,7 @@ class DownloadsController extends AbstractDownloadContentElementController
         };
 
         // Find filesystem items
-        $filesystemItems = FilesystemUtil::listContentsFromSerialized($this->filesStorage, $sources);
+        $filesystemItems = FilesystemUtil::listContentsFromSerialized($this->filesStorage, $sources ?? []);
 
         // Optionally filter out files without metadata
         if ('downloads' === $model->type && $model->metaIgnore) {
