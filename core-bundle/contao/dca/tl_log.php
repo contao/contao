@@ -140,19 +140,21 @@ class tl_log extends Backend
 	 */
 	public function colorize($row, $label)
 	{
+		$class = 'ellipsis';
+
 		switch ($row['action'])
 		{
 			case 'CONFIGURATION':
 			case 'REPOSITORY':
-				$label = preg_replace('@^(.*</span> )(.*)$@U', '$1 <span class="tl_blue">$2</span>', $label);
+				$class .= ' tl_blue';
 				break;
 
 			case 'CRON':
-				$label = preg_replace('@^(.*</span> )(.*)$@U', '$1 <span class="tl_green">$2</span>', $label);
+				$class .= ' tl_green';
 				break;
 
 			case 'ERROR':
-				$label = preg_replace('@^(.*</span> )(.*)$@U', '$1 <span class="tl_red">$2</span>', $label);
+				$class .= ' tl_red';
 				break;
 
 			default:
@@ -160,12 +162,12 @@ class tl_log extends Backend
 				{
 					foreach ($GLOBALS['TL_HOOKS']['colorizeLogEntries'] as $callback)
 					{
-						$label = System::importStatic($callback[0])->{$callback[1]}($row, $label);
+						$label = System::importStatic($callback[0])->{$callback[1]}($row, $label, $class);
 					}
 				}
 				break;
 		}
 
-		return '<div class="ellipsis">' . $label . '</div>';
+		return '<div class="' . $class . '">' . $label . '</div>';
 	}
 }
