@@ -2,17 +2,17 @@
 {% use "@Contao/component/_stylesheet.html.twig" %}
 
 {#
-The ‘slider_settings’ variable contains the settings for the content slider. 
-You can use the merge function to customise the settings.
-
-Example:
-    {% set slider_settings = slider_settings|merge({
-        effect: 'fade',
-        fadeEffect: {
-            crossFade: true
-        },
-    }) %}
+    The "slider_settings" variable contains the settings for the content slider. 
+    You can use the merge function to customise the settings.
     
+    Example:
+        {% set slider_settings = slider_settings|merge({
+            effect: 'fade',
+            fadeEffect: {
+                crossFade: true
+            },
+        }) %}
+        
 #}
 
 {% block content %}
