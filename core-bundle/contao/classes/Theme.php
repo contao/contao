@@ -1200,7 +1200,7 @@ class Theme extends Backend
 	 * Add files to an archive
 	 *
 	 * @param ZipWriter $objArchive
-	 * @param string $strFolder
+	 * @param string    $strFolder
 	 *
 	 * @throws \Exception
 	 */
