@@ -401,7 +401,7 @@ class Configuration implements ConfigurationInterface
                                 $newList = array_filter($extensions, static fn ($extension) => !\in_array($extension[0], ['-', '+'], true));
 
                                 if ([] !== $newList) {
-                                    return array_unique($newList);
+                                    return array_values(array_unique($newList));
                                 }
 
                                 $currentExtensions = ['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp'];
@@ -417,7 +417,7 @@ class Configuration implements ConfigurationInterface
                                     }
                                 }
 
-                                return array_unique($currentExtensions);
+                                return array_values(array_unique($currentExtensions));
                             },
                         )
                     ->end()
