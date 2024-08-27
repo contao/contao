@@ -385,7 +385,7 @@ class Configuration implements ConfigurationInterface
                         ->ifTrue(
                             static function (array $extensions): bool {
                                 foreach ($extensions as $extension) {
-                                    if (!preg_match('/^[+-]?.+$/', $extension)) {
+                                    if (!preg_match('/^[+-]?[a-z0-9]+$/', $extension)) {
                                         return true;
                                     }
                                 }

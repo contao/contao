@@ -86,8 +86,7 @@ class ConfigurationTest extends TestCase
 
     public function testAddsImageExtension(): void
     {
-        $extensions = ['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp'];
-        $extensions[] = 'heic';
+        $extensions = ['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp', 'heic'];
 
         $params = [
             'contao' => [
@@ -104,8 +103,7 @@ class ConfigurationTest extends TestCase
 
     public function testRemovesImageExtension(): void
     {
-        $extensions = ['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp'];
-        $extensions = array_diff($extensions, ['svg', 'svgz']);
+        $extensions = ['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'webp'];
 
         $params = [
             'contao' => [
