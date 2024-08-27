@@ -2,11 +2,13 @@
 
 <?php $this->block('content'); ?>
 
-  <?php foreach ($this->keys as $key => $value): ?>
+  <?php if ($this->keys): ?>
     <dl>
-      <dt><?= $key ?></dt>
-      <dd><?= $value ?></dd>
+      <?php foreach ($this->keys as $key => $value): ?>
+        <dt><?= $key ?></dt>
+        <dd><?= $value ?></dd>
+      <?php endforeach; ?>
     </dl>
-  <?php endforeach; ?>
+  <?php endif; ?>
 
 <?php $this->endblock(); ?>
