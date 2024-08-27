@@ -469,11 +469,10 @@ class MigrateCommand extends Command
         [$version] = explode('-', (string) $this->connection->fetchOne('SELECT @@version'));
 
         if (version_compare($version, '5.1.0', '<')) {
-            $errors[] =
-                <<<EOF
-                    Your database version is not supported!
-                    Contao requires at least MySQL 5.1.0 but you have version $version. Please update your database version.
-                    EOF;
+            $errors[] = <<<EOF
+                Your database version is not supported!
+                Contao requires at least MySQL 5.1.0 but you have version $version. Please update your database version.
+                EOF;
 
             return $errors;
         }
@@ -485,18 +484,17 @@ class MigrateCommand extends Command
             $row = $this->connection->fetchAssociative("SHOW COLLATION LIKE '$collate'");
 
             if (false === $row) {
-                $errors[] =
-                    <<<EOF
-                        The configured collation is not supported!
-                        The configured collation "$collate" is not available on your server. Please install it (recommended) or configure a different character set and collation in the "config/config.yaml" file.
+                $errors[] = <<<EOF
+                    The configured collation is not supported!
+                    The configured collation "$collate" is not available on your server. Please install it (recommended) or configure a different character set and collation in the "config/config.yaml" file.
 
-                        dbal:
-                            connections:
-                                default:
-                                    default_table_options:
-                                        charset: utf8
-                                        collation: utf8_unicode_ci
-                        EOF;
+                    dbal:
+                        connections:
+                            default:
+                                default_table_options:
+                                    charset: utf8
+                                    collation: utf8_unicode_ci
+                    EOF;
             }
         }
 
@@ -513,36 +511,34 @@ class MigrateCommand extends Command
             }
 
             if (!$engineFound) {
-                $errors[] =
-                    <<<EOF
-                        The configured database engine is not supported!
-                        The configured database engine "$engine" is not available on your server. Please install it (recommended) or configure a different database engine in the "config/config.yaml" file.
+                $errors[] = <<<EOF
+                    The configured database engine is not supported!
+                    The configured database engine "$engine" is not available on your server. Please install it (recommended) or configure a different database engine in the "config/config.yaml" file.
 
-                        dbal:
-                            connections:
-                                default:
-                                    default_table_options:
-                                        engine: MyISAM
-                                        row_format: ~
-                        EOF;
+                    dbal:
+                        connections:
+                            default:
+                                default_table_options:
+                                    engine: MyISAM
+                                    row_format: ~
+                    EOF;
             }
         }
 
         // Check if utf8mb4 can be used if the user has configured it
         if ($engine && $collate && str_starts_with($collate, 'utf8mb4')) {
             if ('innodb' !== strtolower($engine)) {
-                $errors[] =
-                    <<<EOF
-                        Invalid combination of database engine and collation!
-                        The configured database engine "$engine" does not support utf8mb4. Please use InnoDB instead (recommended) or configure a different character set and collation in the "config/config.yaml" file.
+                $errors[] = <<<EOF
+                    Invalid combination of database engine and collation!
+                    The configured database engine "$engine" does not support utf8mb4. Please use InnoDB instead (recommended) or configure a different character set and collation in the "config/config.yaml" file.
 
-                        dbal:
-                            connections:
-                                default:
-                                    default_table_options:
-                                        charset: utf8
-                                        collation: utf8_unicode_ci
-                        EOF;
+                    dbal:
+                        connections:
+                            default:
+                                default_table_options:
+                                    charset: utf8
+                                    collation: utf8_unicode_ci
+                    EOF;
 
                 return $errors;
             }
@@ -566,18 +562,17 @@ class MigrateCommand extends Command
 
             // The innodb_large_prefix option is disabled
             if (!\in_array(strtolower((string) $largePrefixSetting), ['1', 'on'], true)) {
-                $errors[] =
-                    <<<'EOF'
-                        The "innodb_large_prefix" option is not enabled!
-                        The "innodb_large_prefix" option is not enabled on your server. Please enable it (recommended) or configure a different character set and collation in the "config/config.yaml" file.
+                $errors[] = <<<'EOF'
+                    The "innodb_large_prefix" option is not enabled!
+                    The "innodb_large_prefix" option is not enabled on your server. Please enable it (recommended) or configure a different character set and collation in the "config/config.yaml" file.
 
-                        dbal:
-                            connections:
-                                default:
-                                    default_table_options:
-                                        charset: utf8
-                                        collation: utf8_unicode_ci
-                        EOF;
+                    dbal:
+                        connections:
+                            default:
+                                default_table_options:
+                                    charset: utf8
+                                    collation: utf8_unicode_ci
+                    EOF;
             }
 
             $fileFormatSetting = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_format'")['Value'] ?? '';
@@ -589,15 +584,14 @@ class MigrateCommand extends Command
                 // The innodb_file_per_table option is disabled
                 || (null !== $filePerTableSetting && !\in_array(strtolower((string) $filePerTableSetting), ['1', 'on'], true))
             ) {
-                $errors[] =
-                    <<<'EOF'
-                        InnoDB is not configured properly!
-                        Using large prefixes in MySQL versions prior to 5.7.7 and MariaDB versions prior to 10.2 requires the "Barracuda" file format and the "innodb_file_per_table" option.
+                $errors[] = <<<'EOF'
+                    InnoDB is not configured properly!
+                    Using large prefixes in MySQL versions prior to 5.7.7 and MariaDB versions prior to 10.2 requires the "Barracuda" file format and the "innodb_file_per_table" option.
 
-                        innodb_large_prefix = 1
-                        innodb_file_format = Barracuda
-                        innodb_file_per_table = 1
-                        EOF;
+                    innodb_large_prefix = 1
+                    innodb_file_format = Barracuda
+                    innodb_file_per_table = 1
+                    EOF;
             }
         }
 
@@ -617,17 +611,16 @@ class MigrateCommand extends Command
         if (!array_intersect(explode(',', strtoupper($sqlMode)), ['TRADITIONAL', 'STRICT_ALL_TABLES', 'STRICT_TRANS_TABLES'])) {
             $initOptionsKey = $this->connection->getDriver() instanceof MysqliDriver ? 3 : 1002;
 
-            $warnings[] =
-                <<<EOF
-                    Running MySQL in non-strict mode can cause corrupt or truncated data.
-                    Please enable the strict mode either in your "my.cnf" file or configure the connection options in the "config/config.yaml" as follows:
+            $warnings[] = <<<EOF
+                Running MySQL in non-strict mode can cause corrupt or truncated data.
+                Please enable the strict mode either in your "my.cnf" file or configure the connection options in the "config/config.yaml" as follows:
 
-                    dbal:
-                        connections:
-                            default:
-                                options:
-                                    $initOptionsKey: "SET SESSION sql_mode=(SELECT CONCAT(@@sql_mode, ',TRADITIONAL'))"
-                    EOF;
+                dbal:
+                    connections:
+                        default:
+                            options:
+                                $initOptionsKey: "SET SESSION sql_mode=(SELECT CONCAT(@@sql_mode, ',TRADITIONAL'))"
+                EOF;
         }
 
         return $warnings;
@@ -698,11 +691,10 @@ class MigrateCommand extends Command
         // If serverVersion is not configured, we will actually never end up here
         $currentVersion = $this->connection->getParams()['serverVersion'] ?? '';
 
-        $message =
-            <<<EOF
-                Wrong database version configured!
-                You have version $version but the database connection is configured to $currentVersion.
-                EOF;
+        $message = <<<EOF
+            Wrong database version configured!
+            You have version $version but the database connection is configured to $currentVersion.
+            EOF;
 
         if ($asJson) {
             $this->writeNdjson('problem', ['message' => $message]);
