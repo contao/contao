@@ -1,6 +1,18 @@
 {% extends "@Contao/content_element/_base.html.twig" %}
 {% use "@Contao/component/_stylesheet.html.twig" %}
 
+{#
+The ‘slider_settings’ variable contains the settings for the content slider. You can use the merge function to customise the settings.
+
+Example:
+{% set slider_settings = slider_settings|merge({
+    effect: 'fade',
+    fadeEffect: {
+        crossFade: true
+    },
+}) %}
+#}
+
 {% block content %}
     {% set slider_attributes = attrs()
         .addClass('swiper')
