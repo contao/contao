@@ -46,9 +46,9 @@ class Factory
     private array $subscribers = [];
 
     /**
-     * @var \Closure(array<string, mixed>): HttpClientInterface|null
+     * @var \Closure(array<string, mixed>): HttpClientInterface
      */
-    private readonly \Closure|null $httpClientFactory;
+    private readonly \Closure $httpClientFactory;
 
     /**
      * @param array<string>                                            $additionalUris
