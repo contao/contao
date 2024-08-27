@@ -81,42 +81,41 @@ class RootPageDependentSelectTest extends TestCase
 
         $widget = new RootPageDependentSelect(RootPageDependentSelect::getAttributesFromDca($fieldConfig, $fieldConfig['name']));
 
-        $expectedOutput =
-            <<<'OUTPUT'
-                <select
-                    name="rootPageDependentModules[]"
-                    id="ctrl_rootPageDependentModules-1"
-                    class="tl_select tl_chosen"
-                    data-action="focus->contao--scroll-offset#store"
-                >
-                    <option value="">Choose module for "Root Page 1"</option>
-                    <option value="10">Module-10</option>
-                    <option value="20">Module-20</option>
-                    <option value="30">Module-30</option>
-                </select>
-                <select
-                    name="rootPageDependentModules[]"
-                    id="ctrl_rootPageDependentModules-2"
-                    class="tl_select tl_chosen"
-                    data-action="focus->contao--scroll-offset#store"
-                >
-                    <option value="">Choose module for "Root Page 2"</option>
-                    <option value="10">Module-10</option>
-                    <option value="20">Module-20</option>
-                    <option value="30">Module-30</option>
-                </select>
-                <select
-                    name="rootPageDependentModules[]"
-                    id="ctrl_rootPageDependentModules-3"
-                    class="tl_select tl_chosen"
-                    data-action="focus->contao--scroll-offset#store"
-                >
-                    <option value="">Choose module for "Root Page 3"</option>
-                    <option value="10">Module-10</option>
-                    <option value="20">Module-20</option>
-                    <option value="30">Module-30</option>
-                </select>
-                OUTPUT;
+        $expectedOutput = <<<'OUTPUT'
+            <select
+                name="rootPageDependentModules[]"
+                id="ctrl_rootPageDependentModules-1"
+                class="tl_select tl_chosen"
+                data-action="focus->contao--scroll-offset#store"
+            >
+                <option value="">Choose module for "Root Page 1"</option>
+                <option value="10">Module-10</option>
+                <option value="20">Module-20</option>
+                <option value="30">Module-30</option>
+            </select>
+            <select
+                name="rootPageDependentModules[]"
+                id="ctrl_rootPageDependentModules-2"
+                class="tl_select tl_chosen"
+                data-action="focus->contao--scroll-offset#store"
+            >
+                <option value="">Choose module for "Root Page 2"</option>
+                <option value="10">Module-10</option>
+                <option value="20">Module-20</option>
+                <option value="30">Module-30</option>
+            </select>
+            <select
+                name="rootPageDependentModules[]"
+                id="ctrl_rootPageDependentModules-3"
+                class="tl_select tl_chosen"
+                data-action="focus->contao--scroll-offset#store"
+            >
+                <option value="">Choose module for "Root Page 3"</option>
+                <option value="10">Module-10</option>
+                <option value="20">Module-20</option>
+                <option value="30">Module-30</option>
+            </select>
+            OUTPUT;
 
         $minifiedExpectedOutput = preg_replace(['/\s\s|\n/', '/\s</'], ['', '<'], $expectedOutput);
 

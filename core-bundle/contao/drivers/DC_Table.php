@@ -3984,11 +3984,18 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		if (!empty($this->visibleRootTrails))
 		{
-			// Make sure we use the topmost root IDs only from all the visible root trail ids and also ensure correct sorting
-			$topMostRootIds = $db
-				->prepare("SELECT id FROM $table WHERE (pid=0 OR pid IS NULL) AND id IN (" . implode(',', array_merge($this->visibleRootTrails, $this->root)) . ")" . ($db->fieldExists('sorting', $table) ? ' ORDER BY sorting, id' : ''))
-				->execute()
-				->fetchEach('id');
+			if (isset($GLOBALS['TL_DCA']['tl_page']['list']['sorting']['visibleRoot']))
+			{
+				$topMostRootIds = array($GLOBALS['TL_DCA']['tl_page']['list']['sorting']['visibleRoot']);
+			}
+			else
+			{
+				// Make sure we use the topmost root IDs only from all the visible root trail ids and also ensure correct sorting
+				$topMostRootIds = $db
+					->prepare("SELECT id FROM $table WHERE (pid=0 OR pid IS NULL) AND id IN (" . implode(',', array_merge($this->visibleRootTrails, $this->root)) . ")" . ($db->fieldExists('sorting', $table) ? ' ORDER BY sorting, id' : ''))
+					->execute()
+					->fetchEach('id');
+			}
 		}
 
 		// Call a recursive function that builds the tree

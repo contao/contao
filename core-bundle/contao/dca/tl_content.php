@@ -576,14 +576,14 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'playerStart' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w25'),
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'eval'                    => array('maxlength'=>16, 'nospace'=>true, 'tl_class'=>'w25'),
+			'sql'                     => "varchar(16) NOT NULL default ''"
 		),
 		'playerStop' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w25'),
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'eval'                    => array('maxlength'=>16, 'nospace'=>true, 'tl_class'=>'w25'),
+			'sql'                     => "varchar(16) NOT NULL default ''"
 		),
 		'playerCaption' => array
 		(
