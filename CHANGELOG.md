@@ -2,6 +2,16 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.47] (2024-08-23)
+
+**Fixed issues:**
+
+- [#7462] Consistent handing of user fields ([aschempp])
+- [#7459] Disable copying and deleting of tl_undo records ([lukasbableck])
+- [#7433] Cast `$alexf` data to array ([fritzmg])
+- [#7425] Encode e-mails in the `MarkdownController` ([Toflar])
+- [#7380] Render partial tree instead of disabling root trails with breadcrumb ([aschempp])
+
 ## [4.13.46] (2024-08-06)
 
 **Fixed issues:**
@@ -1038,6 +1048,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.47]: https://github.com/contao/contao/releases/tag/4.13.47
 [4.13.46]: https://github.com/contao/contao/releases/tag/4.13.46
 [4.13.45]: https://github.com/contao/contao/releases/tag/4.13.45
 [4.13.44]: https://github.com/contao/contao/releases/tag/4.13.44
@@ -1895,3 +1906,8 @@ This project adheres to [Semantic Versioning].
 [#7365]: https://github.com/contao/contao/pull/7365
 [#7371]: https://github.com/contao/contao/pull/7371
 [#7379]: https://github.com/contao/contao/pull/7379
+[#7380]: https://github.com/contao/contao/pull/7380
+[#7425]: https://github.com/contao/contao/pull/7425
+[#7433]: https://github.com/contao/contao/pull/7433
+[#7459]: https://github.com/contao/contao/pull/7459
+[#7462]: https://github.com/contao/contao/pull/7462
