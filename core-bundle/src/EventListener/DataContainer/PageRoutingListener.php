@@ -60,7 +60,7 @@ class PageRoutingListener
 
         $conflicts = [];
         $currentRoute = $this->pageRegistry->getRoute($currentPage);
-        $currentUrl = $this->buildUrl($currentPage->alias, $currentRoute->getUrlPrefix(), $currentRoute->getUrlSuffix());
+        $currentUrl = $currentRoute->compile()->getStaticPrefix().$currentRoute->getUrlSuffix();
         $backendAdapter = $this->framework->getAdapter(Backend::class);
 
         foreach ($aliasPages as $aliasPage) {
@@ -75,7 +75,7 @@ class PageRoutingListener
             }
 
             $aliasRoute = $this->pageRegistry->getRoute($aliasPage);
-            $aliasUrl = $this->buildUrl($aliasPage->alias, $aliasRoute->getUrlPrefix(), $aliasRoute->getUrlSuffix());
+            $aliasUrl = $aliasRoute->compile()->getStaticPrefix().$aliasRoute->getUrlSuffix();
 
             if ($currentUrl !== $aliasUrl) {
                 continue;
@@ -95,22 +95,6 @@ class PageRoutingListener
         return $this->twig->render('@ContaoCore/Backend/be_route_conflicts.html.twig', [
             'conflicts' => $conflicts,
         ]);
-    }
-
-    /**
-     * Builds the URL from prefix, alias and suffix. We cannot use the router for this,
-     * since pages might have non-optional parameters. This value is only used to compare
-     * two pages and see if they _might_ conflict based on the alias itself.
-     */
-    private function buildUrl(string $alias, string $urlPrefix, string $urlSuffix): string
-    {
-        $url = '/'.$alias.$urlSuffix;
-
-        if ($urlPrefix) {
-            $url = '/'.$urlPrefix.$url;
-        }
-
-        return $url;
     }
 
     private function getPathWithParameters(PageRoute $route): string

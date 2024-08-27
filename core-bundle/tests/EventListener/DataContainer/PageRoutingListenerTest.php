@@ -20,6 +20,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\PageModel;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\Routing\CompiledRoute;
 use Twig\Environment;
 
 class PageRoutingListenerTest extends TestCase
@@ -563,9 +564,11 @@ class PageRoutingListenerTest extends TestCase
     private function mockPageRouteFromPageModel(PageModel&MockObject $pageModel): PageRoute&MockObject
     {
         $url = '/'.$pageModel->alias.$pageModel->urlSuffix;
+        $staticPrefix = '/'.$pageModel->alias;
 
         if ($pageModel->urlPrefix) {
             $url = '/'.$pageModel->urlPrefix.$url;
+            $staticPrefix = '/'.$pageModel->urlPrefix.$staticPrefix;
         }
 
         $route = $this->createMock(PageRoute::class);
@@ -587,6 +590,11 @@ class PageRoutingListenerTest extends TestCase
         $route
             ->method('getUrlSuffix')
             ->willReturn($pageModel->urlSuffix)
+        ;
+
+        $route
+            ->method('compile')
+            ->willReturn(new CompiledRoute($staticPrefix, '', [], []))
         ;
 
         return $route;
