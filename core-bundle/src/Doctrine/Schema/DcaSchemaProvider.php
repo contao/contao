@@ -191,7 +191,7 @@ class DcaSchemaProvider
             $platformOptions['collation'] = $collation;
         }
 
-        if (!empty($platformOptions)) {
+        if ([] !== $platformOptions) {
             $options['platformOptions'] = $platformOptions;
         }
 
