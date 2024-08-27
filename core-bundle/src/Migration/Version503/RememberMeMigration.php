@@ -34,34 +34,32 @@ class RememberMeMigration extends AbstractMigration
 
     public function run(): MigrationResult
     {
-        $this->connection->executeStatement(
-            <<<'SQL'
-                CREATE TABLE `rememberme_token` (
-                    `series`   varchar(88)  UNIQUE PRIMARY KEY NOT NULL,
-                    `value`    varchar(88)  NOT NULL,
-                    `lastUsed` datetime     NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-                    `class`    varchar(100) NOT NULL,
-                    `username` varchar(200) NOT NULL
-                );
-                SQL,
+        $this->connection->executeStatement(<<<'SQL'
+            CREATE TABLE `rememberme_token` (
+                `series`   varchar(88)  UNIQUE PRIMARY KEY NOT NULL,
+                `value`    varchar(88)  NOT NULL,
+                `lastUsed` datetime     NOT NULL COMMENT '(DC2Type:datetime_immutable)',
+                `class`    varchar(100) NOT NULL,
+                `username` varchar(200) NOT NULL
+            );
+            SQL,
         );
 
         $schemaManager = $this->connection->createSchemaManager();
         $username = isset($schemaManager->listTableColumns('tl_remember_me')['useridentifier']) ? 'userIdentifier' : 'username';
 
-        $this->connection->executeStatement(
-            <<<SQL
-                INSERT INTO rememberme_token (
-                    SELECT
-                        TRIM(TRAILING CHAR(0) FROM CAST(series AS char)),
-                        TRIM(TRAILING CHAR(0) FROM CAST(value AS char)),
-                        lastUsed,
-                        class,
-                        $username
-                    FROM tl_remember_me
-                    WHERE $username != ''
-                )
-                SQL,
+        $this->connection->executeStatement(<<<SQL
+            INSERT INTO rememberme_token (
+                SELECT
+                    TRIM(TRAILING CHAR(0) FROM CAST(series AS char)),
+                    TRIM(TRAILING CHAR(0) FROM CAST(value AS char)),
+                    lastUsed,
+                    class,
+                    $username
+                FROM tl_remember_me
+                WHERE $username != ''
+            )
+            SQL,
         );
 
         $this->connection->executeStatement('DROP TABLE tl_remember_me');
