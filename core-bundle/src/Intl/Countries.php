@@ -67,33 +67,4 @@ class Countries
     {
         return $this->countries;
     }
-
-    /**
-     * Add, remove or replace countries as configured in the container configuration.
-     *
-     * @return list<string>
-     */
-    private function filterCountries(array $countries, array $filter): array
-    {
-        $newList = array_filter($filter, static fn ($country) => !\in_array($country[0], ['-', '+'], true));
-
-        if ($newList) {
-            $countries = $newList;
-        }
-
-        foreach ($filter as $country) {
-            $prefix = $country[0];
-            $countryCode = substr($country, 1);
-
-            if ('-' === $prefix && \in_array($countryCode, $countries, true)) {
-                unset($countries[array_search($countryCode, $countries, true)]);
-            } elseif ('+' === $prefix && !\in_array($countryCode, $countries, true)) {
-                $countries[] = $countryCode;
-            }
-        }
-
-        sort($countries);
-
-        return $countries;
-    }
 }
