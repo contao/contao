@@ -71,22 +71,24 @@ class ConfigurationTest extends TestCase
 
     public function testReplacesAllImageExtensions(): void
     {
+        $extensions = ['jpeg', 'jpg', 'png'];
+
         $params = [
             'contao' => [
                 'image' => [
-                    'valid_extensions' => ['jpg', 'jpeg', 'png'],
+                    'valid_extensions' => $extensions,
                 ],
             ],
         ];
 
         $configuration = (new Processor())->processConfiguration($this->configuration, $params);
 
-        $this->assertSame(['jpg', 'jpeg', 'png'], $configuration['image']['valid_extensions']);
+        $this->assertSame($extensions, $configuration['image']['valid_extensions']);
     }
 
     public function testAddsImageExtension(): void
     {
-        $extensions = ['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp', 'heic'];
+        $extensions = ['avif', 'bmp', 'gif', 'heic', 'jpeg', 'jpg', 'png', 'svg', 'svgz', 'tif', 'tiff', 'webp'];
 
         $params = [
             'contao' => [
@@ -103,7 +105,7 @@ class ConfigurationTest extends TestCase
 
     public function testRemovesImageExtension(): void
     {
-        $extensions = ['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'webp'];
+        $extensions = ['avif', 'bmp', 'gif', 'jpeg', 'jpg', 'png', 'tif', 'tiff', 'webp'];
 
         $params = [
             'contao' => [
@@ -302,6 +304,7 @@ class ConfigurationTest extends TestCase
     {
         $params = [
             // This first configuration should be overridden by the latter (no deep merging),
+
             // in order to control all the workers in your app.
             [
                 'messenger' => [
