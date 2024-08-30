@@ -304,7 +304,6 @@ class ConfigurationTest extends TestCase
     {
         $params = [
             // This first configuration should be overridden by the latter (no deep merging),
-
             // in order to control all the workers in your app.
             [
                 'messenger' => [
