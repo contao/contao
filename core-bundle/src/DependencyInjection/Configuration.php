@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection;
 
+use Contao\ArrayUtil;
 use Contao\Config;
 use Contao\CoreBundle\Altcha\Config\Algorithm;
 use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
@@ -398,26 +399,9 @@ class Configuration implements ConfigurationInterface
                     ->validate()
                         ->always(
                             static function (array $extensions): array {
-                                $newList = array_filter($extensions, static fn ($extension) => !\in_array($extension[0], ['-', '+'], true));
+                                $default = ['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp', 'avif'];
 
-                                if ([] !== $newList) {
-                                    return array_values(array_unique($newList));
-                                }
-
-                                $currentExtensions = ['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp'];
-
-                                foreach ($extensions as $configuration) {
-                                    $prefix = $configuration[0];
-                                    $extension = substr($configuration, 1);
-
-                                    if ('-' === $prefix && \in_array($extension, $currentExtensions, true)) {
-                                        unset($currentExtensions[array_search($extension, $currentExtensions, true)]);
-                                    } elseif ('+' === $prefix && !\in_array($extension, $currentExtensions, true)) {
-                                        $currentExtensions[] = $extension;
-                                    }
-                                }
-
-                                return array_values(array_unique($currentExtensions));
+                                return ArrayUtil::filterValuesToIgnore($default, $extensions);
                             },
                         )
                     ->end()

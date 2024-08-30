@@ -149,4 +149,46 @@ class ArrayUtil
 	{
 		return array_map(static fn ($item) => \is_array($item) ? self::mapRecursive($fn, $item) : $fn($item), $arr);
 	}
+
+	/**
+	 * Add, remove or replace values from the current array based on your configuration.
+	 */
+	public static function filterValuesToIgnore(array $current, array $filter, string|null $default = null): array
+	{
+		$newList = array_filter($filter, static fn ($newValue) => !\in_array($newValue[0], array('-', '+'), true));
+
+		if ($newList)
+		{
+			$current = $newList;
+		}
+
+		foreach ($filter as $newValue)
+		{
+			$prefix = $newValue[0];
+			$value = substr($newValue, 1);
+
+			if ('-' === $prefix && \in_array($value, $current, true))
+			{
+				unset($current[array_search($value, $current, true)]);
+			}
+			elseif ('+' === $prefix && !\in_array($value, $current, true))
+			{
+				$current[] = $value;
+			}
+		}
+
+		sort($current);
+
+		// Make sure the default is the first element (see contao/core#6533)
+		if (null !== $default)
+		{
+			if (\in_array($default, $current, true))
+			{
+				unset($current[array_search($default, $current, true)]);
+			}
+			array_unshift($current, $default);
+		}
+
+		return $current;
+	}
 }

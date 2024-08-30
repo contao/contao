@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Intl;
 
+use Contao\ArrayUtil;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -30,7 +31,7 @@ class Countries
         array $configCountries,
         private readonly string $defaultLocale,
     ) {
-        $this->countries = $this->filterCountries($defaultCountries, $configCountries);
+        $this->countries = ArrayUtil::filterValuesToIgnore($defaultCountries, $configCountries);
     }
 
     /**
