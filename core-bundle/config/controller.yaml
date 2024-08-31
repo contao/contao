@@ -25,9 +25,7 @@ services:
         arguments:
             - '@contao.altcha'
 
-    Contao\CoreBundle\Controller\BackendController:
-        arguments:
-            - '@contao.routing.response_context_factory'
+    Contao\CoreBundle\Controller\BackendController: ~
 
     Contao\CoreBundle\Controller\BackendCsvImportController:
         public: true
