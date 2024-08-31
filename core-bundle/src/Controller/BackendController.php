@@ -21,7 +21,6 @@ use Contao\BackendPassword;
 use Contao\BackendPopup;
 use Contao\CoreBundle\Picker\PickerBuilderInterface;
 use Contao\CoreBundle\Picker\PickerConfig;
-use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
