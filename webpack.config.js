@@ -29,15 +29,15 @@ Encore
         config.url = false;
     })
     .enableSassLoader()
-    .addStyleEntry('backend', './core-bundle/contao/themes/flexible/styles/main.css')
-    .addStyleEntry('confirm', './core-bundle/contao/themes/flexible/styles/confirm.css')
-    .addStyleEntry('conflict', './core-bundle/contao/themes/flexible/styles/conflict.css')
-    .addStyleEntry('diff', './core-bundle/contao/themes/flexible/styles/diff.css')
-    .addStyleEntry('help', './core-bundle/contao/themes/flexible/styles/help.css')
-    .addStyleEntry('login', './core-bundle/contao/themes/flexible/styles/login.css')
-    .addStyleEntry('popup', './core-bundle/contao/themes/flexible/styles/popup.css')
-    .addStyleEntry('tinymce', './core-bundle/contao/themes/flexible/styles/tinymce.css')
-    .addStyleEntry('tinymce-dark', './core-bundle/contao/themes/flexible/styles/tinymce-dark.css')
+    .addStyleEntry('backend', './core-bundle/contao/themes/flexible/styles/layout/_main.scss')
+    .addStyleEntry('confirm', './core-bundle/contao/themes/flexible/styles/pages/_confirm.scss')
+    .addStyleEntry('conflict', './core-bundle/contao/themes/flexible/styles/pages/_conflict.scss')
+    .addStyleEntry('diff', './core-bundle/contao/themes/flexible/styles/pages/_diff.scss')
+    .addStyleEntry('help', './core-bundle/contao/themes/flexible/styles/pages/_help.scss')
+    .addStyleEntry('login', './core-bundle/contao/themes/flexible/styles/pages/_login.scss')
+    .addStyleEntry('popup', './core-bundle/contao/themes/flexible/styles/pages/_popup.scss')
+    .addStyleEntry('tinymce', './core-bundle/contao/themes/flexible/styles/components/_tinymce.scss')
+    .addStyleEntry('tinymce-dark', './core-bundle/contao/themes/flexible/styles/components/_tinymce-dark.scss')
 ;
 
 const themeConfig = Encore.getWebpackConfig();
