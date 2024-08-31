@@ -385,6 +385,10 @@
         <source>ALTCHA is not available without a secure HTTPS connection. If your production website does not use HTTPS (not recommended), please use the security question instead.</source>
         <target>ALTCHA не доступен без безопасного HTTPS-соединения. Если ваш производственный сайт не использует HTTPS (не рекомендуется), пожалуйста, используйте вместо этого секретный вопрос.</target>
       </trans-unit>
+      <trans-unit id="ERR.personalDataPassword">
+        <source>There is at least one &quot;personal data&quot; module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the &quot;change password&quot; module instead.</source>
+        <target>Существует как минимум один модуль &quot;личных данных&quot;, позволяющий изменить пароль. Это уязвимость безопасности, которая больше не будет работать в Contao 6. Вместо этого используйте модуль &quot;изменить пароль&quot;.</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Пожалуйста, прибавьте %d к %d.</target>

@@ -2,6 +2,17 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.4.1] (2024-08-23)
+
+**Fixed issues:**
+
+- [#7471] Fix the line height of the ellipsis containers ([leofeyer])
+- [#7458] Add a Stimulus controller to handle back end tooltips  ([zoglo])
+- [#7456] Use `Turbo.cache.exemptPageFromCache()` in the SERP preview script ([leofeyer])
+- [#7451] Do not initialize Chosen twice in the module wizard ([leofeyer])
+- [#7446] Ensure that `$this->style` is never `null` ([leofeyer])
+- [#7449] Disable Turbo on theme import forms ([zoglo])
+
 ## [5.4.0] (2024-08-15)
 
 **Fixed issues:**
@@ -74,6 +85,7 @@ This project adheres to [Semantic Versioning].
 - [#7229] Fix the `.nogrid` backwards compatibility layer ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.4.1]: https://github.com/contao/contao/releases/tag/5.4.1
 [5.4.0]: https://github.com/contao/contao/releases/tag/5.4.0
 [5.4.0-RC4]: https://github.com/contao/contao/releases/tag/5.4.0-RC4
 [5.4.0-RC3]: https://github.com/contao/contao/releases/tag/5.4.0-RC3
@@ -133,3 +145,9 @@ This project adheres to [Semantic Versioning].
 [#7419]: https://github.com/contao/contao/pull/7419
 [#7437]: https://github.com/contao/contao/pull/7437
 [#7441]: https://github.com/contao/contao/pull/7441
+[#7446]: https://github.com/contao/contao/pull/7446
+[#7449]: https://github.com/contao/contao/pull/7449
+[#7451]: https://github.com/contao/contao/pull/7451
+[#7456]: https://github.com/contao/contao/pull/7456
+[#7458]: https://github.com/contao/contao/pull/7458
+[#7471]: https://github.com/contao/contao/pull/7471

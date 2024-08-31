@@ -1185,11 +1185,13 @@ table.tl_listing {
 }
 
 .tl_file_list .ellipsis {
-	height: 16px;
-	text-overflow: ellipsis;
 	overflow: hidden;
-	padding-right: 18px;
 	word-break: break-all;
+	display: -webkit-box;
+	-webkit-line-clamp: 1;
+	-webkit-box-orient: vertical;
+	line-height: normal;
+	margin-top: -1px;
 }
 
 .tl_right_nowrap {
@@ -1668,15 +1670,29 @@ table.tl_listing {
 	overflow: hidden;
 }
 
+[data-contao--limit-height-target] {
+	position: relative;
+}
+
+[data-contao--limit-height-target][style*="max-height"] .limit_toggler {
+	background: linear-gradient(transparent, var(--content-bg) 60%);
+}
+
+[data-contao--limit-height-target][style*="max-height"]:hover .limit_toggler {
+	background: linear-gradient(transparent, var(--hover-row) 60%);
+}
+
 .limit_toggler {
 	width: 100%;
 	position: absolute;
 	bottom: 0;
 	left: 0;
-	z-index: 1;
-	background: var(--content-bg);
+	height: 40px;
 	line-height: 11px;
-	text-align: center;
+	z-index: 1;
+	display: flex;
+	justify-content: center;
+	align-items: end;
 }
 
 .limit_toggler button {
@@ -2774,6 +2790,19 @@ fieldset.tl_tbox > legend, fieldset.tl_box > legend {
 	cursor: pointer;
 }
 
+fieldset:is(.tl_tbox,.tl_box) > legend {
+	width: 100%;
+}
+
+fieldset:is(.tl_tbox,.tl_box) > legend > button {
+	text-align: initial;
+	border: 0 none;
+	width: 100%;
+	line-height: inherit;
+	padding: 0;
+	background: transparent;
+}
+
 fieldset.collapsed {
 	margin-bottom: 0;
 	padding-bottom: 5px;
@@ -3173,10 +3202,6 @@ fieldset.collapsed > legend {
 
 	#tl_maintenance_cache tr th:last-child, #tl_maintenance_cache tr td:last-child {
 		display: none;
-	}
-
-	.tl_file_list .ellipsis {
-		padding-right: 10px;
 	}
 
 	.tl_undo_header {

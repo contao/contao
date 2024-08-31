@@ -34,11 +34,14 @@ use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
 use Imagine\Image\ImagineInterface;
 use Psr\Container\ContainerInterface;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
 class PreviewFactoryTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     protected function tearDown(): void
     {
         parent::tearDown();
@@ -340,8 +343,13 @@ class PreviewFactoryTest extends TestCase
         $factory->createPreviewPictures($sourcePath, [200, 200, 'box']);
     }
 
+    /**
+     * @group legacy
+     */
     public function testCreatePreviewFigureBuilder(): void
     {
+        $this->expectDeprecation('Since contao/image 1.2: Passing NULL as $rootDir is deprecated and will no longer work in version 2.0.%s');
+
         $sourcePath = Path::join($this->getTempDir(), 'sources/foo.pdf');
         $factory = $this->createFactoryWithExampleProvider();
         $figureBuilder = $factory->createPreviewFigureBuilder($sourcePath);
