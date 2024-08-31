@@ -1,16 +1,16 @@
 <?php
 
-$this->htmlAttributes = $this
+$this->rootAttributes = $this
     ->attr()
     ->set('lang', $this->language)
     ->set('data-controller', 'contao--scroll-offset')
     ->set('data-action', 'store-scroll-offset@window->contao--scroll-offset#store contao--tinymce:editor-loaded->contao--scroll-offset#scrollToWidgetError')
-    ->mergeWith($this->htmlAttributes)
+    ->mergeWith($this->rootAttributes)
 ;
 
 ?>
 <!DOCTYPE html>
-<html<?= $this->htmlAttributes ?>>
+<html<?= $this->rootAttributes ?>>
 <head>
 
   <?php $this->block('head'); ?>

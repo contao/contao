@@ -264,7 +264,7 @@ class BackendMain extends Backend
 
 		if ($responseContext?->has(HtmlAttributes::class))
 		{
-			$data['htmlAttributes'] = $responseContext->get(HtmlAttributes::class);
+			$data['rootAttributes'] = $responseContext->get(HtmlAttributes::class);
 		}
 
 		return $data;
