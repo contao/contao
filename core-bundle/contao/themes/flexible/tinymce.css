@@ -1,0 +1,31 @@
+/*!**********************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].oneOf[1].use[1]!./core-bundle/contao/themes/flexible/styles/tinymce.css ***!
+  \**********************************************************************************************************************************************/
+body {
+	background: #fff;
+}
+
+body, th, td {
+	font-family: -apple-system, system-ui, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+	font-weight: 400;
+	font-size: .875rem;
+	line-height: 1.2;
+	color: #222;
+}
+
+h1, h2, h3, h4, h5, h6, strong, b, th {
+	font-weight: 600;
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+	body, th, td {
+		font-weight: 300;
+	}
+
+	h1, h2, h3, h4, h5, h6, strong, b, th {
+		font-weight: 500;
+	}
+}
+
+
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoidGlueW1jZS5jc3MiLCJtYXBwaW5ncyI6Ijs7O0FBQUE7Q0FDQyxnQkFBZ0I7QUFDakI7O0FBRUE7Q0FDQyx1SEFBdUg7Q0FDdkgsZ0JBQWdCO0NBQ2hCLGtCQUFrQjtDQUNsQixnQkFBZ0I7Q0FDaEIsV0FBVztBQUNaOztBQUVBO0NBQ0MsZ0JBQWdCO0FBQ2pCOztBQUVBO0NBQ0M7RUFDQyxnQkFBZ0I7Q0FDakI7O0NBRUE7RUFDQyxnQkFBZ0I7Q0FDakI7QUFDRCIsInNvdXJjZXMiOlsid2VicGFjazovLy8uL2NvcmUtYnVuZGxlL2NvbnRhby90aGVtZXMvZmxleGlibGUvc3R5bGVzL3RpbnltY2UuY3NzIl0sInNvdXJjZXNDb250ZW50IjpbImJvZHkge1xyXG5cdGJhY2tncm91bmQ6ICNmZmY7XHJcbn1cclxuXHJcbmJvZHksIHRoLCB0ZCB7XHJcblx0Zm9udC1mYW1pbHk6IC1hcHBsZS1zeXN0ZW0sIHN5c3RlbS11aSwgXCJTZWdvZSBVSVwiLCBSb2JvdG8sIE94eWdlbi1TYW5zLCBVYnVudHUsIENhbnRhcmVsbCwgXCJIZWx2ZXRpY2EgTmV1ZVwiLCBzYW5zLXNlcmlmO1xyXG5cdGZvbnQtd2VpZ2h0OiA0MDA7XHJcblx0Zm9udC1zaXplOiAuODc1cmVtO1xyXG5cdGxpbmUtaGVpZ2h0OiAxLjI7XHJcblx0Y29sb3I6ICMyMjI7XHJcbn1cclxuXHJcbmgxLCBoMiwgaDMsIGg0LCBoNSwgaDYsIHN0cm9uZywgYiwgdGgge1xyXG5cdGZvbnQtd2VpZ2h0OiA2MDA7XHJcbn1cclxuXHJcbkBtZWRpYSAoLXdlYmtpdC1taW4tZGV2aWNlLXBpeGVsLXJhdGlvOiAyKSwgKG1pbi1yZXNvbHV0aW9uOiAxOTJkcGkpIHtcclxuXHRib2R5LCB0aCwgdGQge1xyXG5cdFx0Zm9udC13ZWlnaHQ6IDMwMDtcclxuXHR9XHJcblxyXG5cdGgxLCBoMiwgaDMsIGg0LCBoNSwgaDYsIHN0cm9uZywgYiwgdGgge1xyXG5cdFx0Zm9udC13ZWlnaHQ6IDUwMDtcclxuXHR9XHJcbn1cclxuIl0sIm5hbWVzIjpbXSwic291cmNlUm9vdCI6IiJ9*/
