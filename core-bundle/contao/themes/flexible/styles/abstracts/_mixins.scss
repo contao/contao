@@ -1,0 +1,9 @@
+@use "functions";
+
+$iconPath: 'icons/';
+
+@mixin generate-icon-properties($list, $suffix: '', $ext: '.svg') {
+  @each $name, $property in $list {
+    --icon-#{$name}: #{functions.resolve-path($iconPath + $property + $suffix + $ext)}
+  }
+}
