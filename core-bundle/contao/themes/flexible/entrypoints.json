@@ -2,47 +2,47 @@
   "entrypoints": {
     "backend": {
       "css": [
-        "/system/themes/flexible/backend.css"
+        "/system/themes/flexible/backend.b2863fc2.css"
       ]
     },
     "confirm": {
       "css": [
-        "/system/themes/flexible/confirm.css"
+        "/system/themes/flexible/confirm.67f09c62.css"
       ]
     },
     "conflict": {
       "css": [
-        "/system/themes/flexible/conflict.css"
+        "/system/themes/flexible/conflict.04336829.css"
       ]
     },
     "diff": {
       "css": [
-        "/system/themes/flexible/diff.css"
+        "/system/themes/flexible/diff.748892b3.css"
       ]
     },
     "help": {
       "css": [
-        "/system/themes/flexible/help.css"
+        "/system/themes/flexible/help.f45afe37.css"
       ]
     },
     "login": {
       "css": [
-        "/system/themes/flexible/login.css"
+        "/system/themes/flexible/login.215be0c5.css"
       ]
     },
     "popup": {
       "css": [
-        "/system/themes/flexible/popup.css"
+        "/system/themes/flexible/popup.957706fc.css"
       ]
     },
     "tinymce": {
       "css": [
-        "/system/themes/flexible/tinymce.css"
+        "/system/themes/flexible/tinymce.3c7bc5e0.css"
       ]
     },
     "tinymce-dark": {
       "css": [
-        "/system/themes/flexible/tinymce-dark.css"
+        "/system/themes/flexible/tinymce-dark.c3737507.css"
       ]
     }
   }

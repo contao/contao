@@ -29,7 +29,7 @@ Encore
         config.url = false;
     })
     .enableSassLoader()
-    .addStyleEntry('backend', './core-bundle/contao/themes/flexible/styles/layout/_main.scss')
+    .addStyleEntry('backend', './core-bundle/contao/themes/flexible/styles/_main.scss')
     .addStyleEntry('confirm', './core-bundle/contao/themes/flexible/styles/pages/_confirm.scss')
     .addStyleEntry('conflict', './core-bundle/contao/themes/flexible/styles/pages/_conflict.scss')
     .addStyleEntry('diff', './core-bundle/contao/themes/flexible/styles/pages/_diff.scss')
