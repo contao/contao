@@ -1,8 +1,9 @@
+@use "../abstracts/functions";
 @use "../base";
 
 /* Body */
 body {
-	background: var(--body-bg) url("icons/contao.svg") center 4.5em no-repeat;
+	background: var(--body-bg) functions.resolve-path("icons/contao.svg") center 4.5em no-repeat;
 }
 
 /* Container */
@@ -76,7 +77,7 @@ label[for="username"] {
 	position: absolute;
 	top: 9px;
 	right: 6px;
-	background: url("icons/person.svg") left top no-repeat;
+	background: functions.resolve-path("icons/person.svg") left top no-repeat;
 	background-size: 16px;
 	width: 16px;
 	height: 16px;
@@ -88,7 +89,7 @@ label[for="password"], label[for="password_confirm"] {
 	position: absolute;
 	top: 10px;
 	right: 7px;
-	background: url("icons/lock-locked.svg") left top no-repeat;
+	background: functions.resolve-path("icons/lock-locked.svg") left top no-repeat;
 	background-size: 14px;
 	width: 14px;
 	height: 14px;
@@ -104,7 +105,7 @@ label[for="verify"] {
 	position: absolute;
 	top: 9px;
 	right: 6px;
-	background: url("icons/shield.svg") left top no-repeat;
+	background: functions.resolve-path("icons/shield.svg") left top no-repeat;
 	background-size: 16px;
 	width: 16px;
 	height: 16px;
