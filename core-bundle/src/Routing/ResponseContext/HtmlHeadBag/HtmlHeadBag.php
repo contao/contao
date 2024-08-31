@@ -26,7 +26,9 @@ final class HtmlHeadBag
 
     private array $keepParamsForCanonical = [];
 
-    /** @var array<string, string> */
+    /**
+     * @var array<string, string>
+     */
     private array $metaTags = [];
 
     public function getTitle(): string

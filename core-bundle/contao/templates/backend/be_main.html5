@@ -1,26 +1,11 @@
 <?php
 
 $this->htmlAttributes = $this
-  ->attr()
-  ->set('lang', $this->language)
-  ->mergeWith($this->htmlAttributes)
-;
-
-// Merge Stimulus controllers and actions
-$controllers = 'contao--scroll-offset';
-$actions = 'store-scroll-offset@window->contao--scroll-offset#store contao--tinymce:editor-loaded->contao--scroll-offset#scrollToWidgetError';
-
-if (isset($this->htmlAttributes['data-controller'])) {
-  $controllers .= ' '.$this->htmlAttributes['data-controller'];
-}
-
-if (isset($this->htmlAttributes['data-action'])) {
-  $actions .= ' '.$this->htmlAttributes['data-action'];
-}
-
-$this->htmlAttributes
-  ->set('data-controller', $controllers)
-  ->set('data-action', $actions)
+    ->attr()
+    ->set('lang', $this->language)
+    ->set('data-controller', 'contao--scroll-offset')
+    ->set('data-action', 'store-scroll-offset@window->contao--scroll-offset#store contao--tinymce:editor-loaded->contao--scroll-offset#scrollToWidgetError')
+    ->mergeWith($this->htmlAttributes)
 ;
 
 ?>
@@ -37,7 +22,7 @@ $this->htmlAttributes
       <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
       <meta name="referrer" content="origin">
       <?php foreach ($this->metaTags ?? [] as $name => $content): ?>
-        <meta name="<?= Contao\StringUtil::specialcharsAttribute($name) ?>" content="<?= Contao\StringUtil::specialcharsAttribute($content) ?>">
+        <meta name="<?= $name ?>" content="<?= $content ?>">
       <?php endforeach; ?>
     <?php $this->endblock(); ?>
 

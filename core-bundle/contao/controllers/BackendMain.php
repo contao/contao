@@ -147,19 +147,6 @@ class BackendMain extends Backend
 			$this->Template->title = $this->Template->headline;
 		}
 
-		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
-
-		if ($responseContext?->has(HtmlHeadBag::class))
-		{
-			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
-			$this->Template->metaTags = $htmlHeadBag->getMetaTags();
-		}
-
-		if ($responseContext?->has(HtmlAttributes::class))
-		{
-			$this->Template->htmlAttributes = $responseContext->get(HtmlAttributes::class);
-		}
-
 		// Set the status code to 422 if a widget did not validate, so that
 		// Turbo can handle form errors.
 		$response = $this->output();
@@ -263,6 +250,22 @@ class BackendMain extends Backend
 
 		$data['menu'] = $twig->render('@ContaoCore/Backend/be_menu.html.twig');
 		$data['headerMenu'] = $twig->render('@ContaoCore/Backend/be_header_menu.html.twig');
+
+		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
+
+		if ($responseContext?->has(HtmlHeadBag::class))
+		{
+			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
+			$data['metaTags'] = array_combine(
+				array_map('Contao\StringUtil::specialcharsAttribute', array_keys($htmlHeadBag->getMetaTags())),
+				array_map('Contao\StringUtil::specialcharsAttribute', array_values($htmlHeadBag->getMetaTags()))
+			);
+		}
+
+		if ($responseContext?->has(HtmlAttributes::class))
+		{
+			$data['htmlAttributes'] = $responseContext->get(HtmlAttributes::class);
+		}
 
 		return $data;
 	}
