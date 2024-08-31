@@ -4,8 +4,8 @@
 @font-face {
 	font-family: "Architects Daughter";
 	src: local("Architects Daughter"),
-		functions.resolve-path("fonts/architects-daughter-v6-latin-regular.woff2") format("woff2"),
-		functions.resolve-path("fonts/architects-daughter-v6-latin-regular.woff") format("woff");
+		#{functions.resolve-path("fonts/architects-daughter-v6-latin-regular.woff2")} format("woff2"),
+		#{functions.resolve-path("fonts/architects-daughter-v6-latin-regular.woff")} format("woff");
 	font-weight: normal;
 	font-style: normal;
 }
