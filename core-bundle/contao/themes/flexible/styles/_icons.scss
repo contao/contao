@@ -1,42 +1,40 @@
-@use "abstracts/functions";
-
 /* Icons */
 
 :root {
   --row-padding: 9px;
-  --icon-logo: #{functions.resolve-path("icons/logo.svg")};
-  --icon-profile: #{functions.resolve-path("icons/profile_small.svg")};
-  --icon-security: #{functions.resolve-path("icons/shield_small.svg")};
-  --icon-favorites: #{functions.resolve-path("icons/favorites_small.svg")};
-  --icon-logout: #{functions.resolve-path("icons/exit.svg")};
-  --icon-toggle-all: #{functions.resolve-path("icons/chevron-right.svg")};
-  --icon-alert: #{functions.resolve-path("icons/alert.svg")};
-  --icon-favorite: #{functions.resolve-path("icons/favorite.svg")};
-  --icon-favorite--active: #{functions.resolve-path("icons/favorite_active.svg")};
-  --icon-manual: #{functions.resolve-path("icons/manual.svg")};
-  --icon-color-scheme: #{functions.resolve-path("icons/color_scheme.svg")};
-  --icon-arrow-left: #{functions.resolve-path("icons/arrow_left.svg")};
-  --icon-arrow-right: #{functions.resolve-path("icons/arrow_right.svg")};
-  --icon-visible: #{functions.resolve-path("icons/visible.svg")};
-  --icon-invisible: #{functions.resolve-path("icons/invisible.svg")};
-  --icon-loading: #{functions.resolve-path("icons/loading.svg")};
+  --icon-logo: url("icons/logo.svg");
+  --icon-profile: url("icons/profile_small.svg");
+  --icon-security: url("icons/shield_small.svg");
+  --icon-favorites: url("icons/favorites_small.svg");
+  --icon-logout: url("icons/exit.svg");
+  --icon-toggle-all: url("icons/chevron-right.svg");
+  --icon-alert: url("icons/alert.svg");
+  --icon-favorite: url("icons/favorite.svg");
+  --icon-favorite--active: url("icons/favorite_active.svg");
+  --icon-manual: url("icons/manual.svg");
+  --icon-color-scheme: url("icons/color_scheme.svg");
+  --icon-arrow-left: url("icons/arrow_left.svg");
+  --icon-arrow-right: url("icons/arrow_right.svg");
+  --icon-visible: url("icons/visible.svg");
+  --icon-invisible: url("icons/invisible.svg");
+  --icon-loading: url("icons/loading.svg");
 }
 
 html[data-color-scheme="dark"] {
-  --icon-logo: #{functions.resolve-path("icons/logo--dark.svg")};
-  --icon-profile: #{functions.resolve-path("icons/profile_small--dark.svg")};
-  --icon-security: #{functions.resolve-path("icons/shield_small--dark.svg")};
-  --icon-favorites: #{functions.resolve-path("icons/favorites_small--dark.svg")};
-  --icon-logout: #{functions.resolve-path("icons/exit--dark.svg")};
-  --icon-toggle-all: #{functions.resolve-path("icons/chevron-right--dark.svg")};
-  --icon-alert: #{functions.resolve-path("icons/alert--dark.svg")};
-  --icon-favorite: #{functions.resolve-path("icons/favorite--dark.svg")};
-  --icon-favorite--active: #{functions.resolve-path("icons/favorite_active--dark.svg")};
-  --icon-manual: #{functions.resolve-path("icons/manual--dark.svg")};
-  --icon-color-scheme: #{functions.resolve-path("icons/color_scheme--dark.svg")};
-  --icon-arrow-left: #{functions.resolve-path("icons/arrow_left--dark.svg")};
-  --icon-arrow-right: #{functions.resolve-path("icons/arrow_right--dark.svg")};
-  --icon-visible: #{functions.resolve-path("icons/visible--dark.svg")};
-  --icon-invisible: #{functions.resolve-path("icons/invisible--dark.svg")};
-  --icon-loading: #{functions.resolve-path("icons/loading--dark.svg")};
+  --icon-logo: url("icons/logo--dark.svg");
+  --icon-profile: url("icons/profile_small--dark.svg");
+  --icon-security: url("icons/shield_small--dark.svg");
+  --icon-favorites: url("icons/favorites_small--dark.svg");
+  --icon-logout: url("icons/exit--dark.svg");
+  --icon-toggle-all: url("icons/chevron-right--dark.svg");
+  --icon-alert: url("icons/alert--dark.svg");
+  --icon-favorite: url("icons/favorite--dark.svg");
+  --icon-favorite--active: url("icons/favorite_active--dark.svg");
+  --icon-manual: url("icons/manual--dark.svg");
+  --icon-color-scheme: url("icons/color_scheme--dark.svg");
+  --icon-arrow-left: url("icons/arrow_left--dark.svg");
+  --icon-arrow-right: url("icons/arrow_right--dark.svg");
+  --icon-visible: url("icons/visible--dark.svg");
+  --icon-invisible: url("icons/invisible--dark.svg");
+  --icon-loading: url("icons/loading--dark.svg");
 }

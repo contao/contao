@@ -1,4 +1,4 @@
-@use "abstracts/functions";
+@use "fonts";
 @use "base";
 @use "icons";
 
@@ -104,7 +104,7 @@ body.popup {
 	font-weight: 400;
 	border: none;
 	padding-right: 26px;
-	background: #{functions.resolve-path("icons/chevron-down.svg")} right 9px top 14px no-repeat;
+	background: url("icons/chevron-down.svg") right 9px top 14px no-repeat;
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
@@ -343,23 +343,23 @@ body.popup {
 }
 
 #tl_navigation .group-favorites {
-	background: #{functions.resolve-path("icons/favorites_group.svg")} 3px 2px no-repeat;
+	background: url("icons/favorites_group.svg") 3px 2px no-repeat;
 }
 
 #tl_navigation .group-content {
-	background: #{functions.resolve-path("icons/content.svg")} 3px 2px no-repeat;
+	background: url("icons/content.svg") 3px 2px no-repeat;
 }
 
 #tl_navigation .group-design {
-	background: #{functions.resolve-path("icons/monitor.svg")} 3px 2px no-repeat;
+	background: url("icons/monitor.svg") 3px 2px no-repeat;
 }
 
 #tl_navigation .group-accounts {
-	background: #{functions.resolve-path("icons/person.svg")} 3px 2px no-repeat;
+	background: url("icons/person.svg") 3px 2px no-repeat;
 }
 
 #tl_navigation .group-system {
-	background: #{functions.resolve-path("icons/wrench.svg")} 3px 2px no-repeat;
+	background: url("icons/wrench.svg") 3px 2px no-repeat;
 }
 
 #tl_navigation .menu_level_1 {
@@ -516,7 +516,7 @@ h2.sub_headline {
 .tl_gerror {
 	margin: 12px;
 	padding: 3px 0 3px 22px;
-	background: #{functions.resolve-path("icons/error.svg")} no-repeat left center;
+	background: url("icons/error.svg") no-repeat left center;
 }
 
 .tl_error, .tl_confirm, .tl_info, .tl_new {
@@ -526,19 +526,19 @@ h2.sub_headline {
 }
 
 .tl_error {
-	background: var(--error-bg) #{functions.resolve-path("icons/error.svg")} no-repeat 11px 12px;
+	background: var(--error-bg) url("icons/error.svg") no-repeat 11px 12px;
 }
 
 .tl_confirm {
-	background: var(--confirm-bg) #{functions.resolve-path("icons/ok.svg")} no-repeat 11px 12px;
+	background: var(--confirm-bg) url("icons/ok.svg") no-repeat 11px 12px;
 }
 
 .tl_info {
-	background: var(--info-bg) #{functions.resolve-path("icons/show.svg")} no-repeat 11px 12px;
+	background: var(--info-bg) url("icons/show.svg") no-repeat 11px 12px;
 }
 
 .tl_new {
-	background: var(--new-bg) #{functions.resolve-path("icons/featured.svg")} no-repeat 11px 12px;
+	background: var(--new-bg) url("icons/featured.svg") no-repeat 11px 12px;
 }
 
 .tl_gerror, .tl_gerror a, .tl_error, .tl_error a {
@@ -613,11 +613,11 @@ h2.sub_headline {
 }
 
 .filter_apply {
-	background: #{functions.resolve-path("icons/filter-apply.svg")} center center no-repeat;
+	background: url("icons/filter-apply.svg") center center no-repeat;
 }
 
 .filter_reset {
-	background: #{functions.resolve-path("icons/filter-reset.svg")} center center no-repeat;
+	background: url("icons/filter-reset.svg") center center no-repeat;
 }
 
 .tl_subpanel {
@@ -1485,7 +1485,7 @@ table.tl_listing {
 
 .cte_type.icon-protected {
 	padding-left: 27px;
-	background: var(--table-header) #{functions.resolve-path("icons/protected.svg")} 8px 8px no-repeat;
+	background: var(--table-header) url("icons/protected.svg") 8px 8px no-repeat;
 }
 
 .cte_type .visibility {
@@ -2479,7 +2479,7 @@ ul.sortable button[disabled]:hover {
 
 #picker-menu a {
 	padding: 3px 12px 3px 32px;
-	background: #{functions.resolve-path("icons/mover.svg")} 12px center no-repeat;
+	background: url("icons/mover.svg") 12px center no-repeat;
 }
 
 #picker-menu a:hover {
@@ -2487,22 +2487,22 @@ ul.sortable button[disabled]:hover {
 }
 
 #picker-menu a.pagePicker {
-	background-image: #{functions.resolve-path("icons/pagemounts.svg")};
+	background-image: url("icons/pagemounts.svg");
 	background-size: 16px;
 }
 
 #picker-menu a.filePicker {
-	background-image: #{functions.resolve-path("icons/filemounts.svg")};
+	background-image: url("icons/filemounts.svg");
 	background-size: 14px;
 }
 
 #picker-menu a.articlePicker {
-	background-image: #{functions.resolve-path("icons/articles.svg")};
+	background-image: url("icons/articles.svg");
 	background-size: 16px;
 }
 
 #picker-menu a.close {
-	background-image: #{functions.resolve-path("icons/back.svg")};
+	background-image: url("icons/back.svg");
 }
 
 .ace_editor {
@@ -2604,39 +2604,39 @@ time[title] {
 
 /* Header icons */
 .header_clipboard {
-	background-image: #{functions.resolve-path("icons/clipboard.svg")};
+	background-image: url("icons/clipboard.svg");
 }
 
 .header_back {
-	background-image: #{functions.resolve-path("icons/back.svg")};
+	background-image: url("icons/back.svg");
 }
 
 .header_new {
-	background-image: #{functions.resolve-path("icons/new.svg")};
+	background-image: url("icons/new.svg");
 }
 
 .header_rss {
-	background-image: #{functions.resolve-path("icons/rss.svg")};
+	background-image: url("icons/rss.svg");
 }
 
 .header_edit_all {
-	background-image: #{functions.resolve-path("icons/all.svg")};
+	background-image: url("icons/all.svg");
 }
 
 .header_new_folder {
-	background-image: #{functions.resolve-path("icons/newfolder.svg")};
+	background-image: url("icons/newfolder.svg");
 }
 
 .header_css_import {
-	background-image: #{functions.resolve-path("icons/cssimport.svg")};
+	background-image: url("icons/cssimport.svg");
 }
 
 .header_theme_import {
-	background-image: #{functions.resolve-path("icons/theme_import.svg")};
+	background-image: url("icons/theme_import.svg");
 }
 
 .header_store {
-	background-image: #{functions.resolve-path("icons/store.svg")};
+	background-image: url("icons/store.svg");
 }
 
 .header_toggle {
@@ -2645,12 +2645,12 @@ time[title] {
 }
 
 .header_sync {
-	background-image: #{functions.resolve-path("icons/sync.svg")};
+	background-image: url("icons/sync.svg");
 }
 
 /* Visual hint for TRBL fields - thanks to Eugene Rybyakov */
 .tl_text_trbl, .tl_imageSize_0, .tl_imageSize_1, #ctrl_playerSize input {
-	background: var(--form-bg) #{functions.resolve-path("icons/hints.svg")} no-repeat right 1px top 2px;
+	background: var(--form-bg) url("icons/hints.svg") no-repeat right 1px top 2px;
 }
 
 #ctrl_playerSize_1, .tl_imageSize_1 {
@@ -2724,7 +2724,7 @@ label.error, legend.error, .tl_checkbox_container.error legend {
 .broken-image {
 	display: inline-block;
 	padding: 12px 12px 12px 30px;
-	background: var(--error-bg) #{functions.resolve-path("icons/error.svg")} no-repeat 9px center;
+	background: var(--error-bg) url("icons/error.svg") no-repeat 9px center;
 	color: var(--red);
 	text-indent: 0;
 }
@@ -2747,7 +2747,7 @@ fieldset.tl_tbox > legend, fieldset.tl_box > legend {
 	box-sizing: border-box;
 	color: var(--legend);
 	padding: 9px 12px 9px 28px;
-	background: #{functions.resolve-path("icons/navcol.svg")} 13px 10px no-repeat;
+	background: url("icons/navcol.svg") 13px 10px no-repeat;
 	cursor: pointer;
 }
 
@@ -2774,7 +2774,7 @@ fieldset.collapsed div {
 }
 
 fieldset.collapsed > legend {
-	background: #{functions.resolve-path("icons/navexp.svg")} 13px 10px no-repeat;
+	background: url("icons/navexp.svg") 13px 10px no-repeat;
 }
 
 /* Maintenance */
@@ -3028,11 +3028,11 @@ fieldset.collapsed > legend {
 	}
 
 	#tmenu .icon-debug {
-		background: #{functions.resolve-path("icons/debug.svg")} center center no-repeat;
+		background: url("icons/debug.svg") center center no-repeat;
 	}
 
 	#tmenu .icon-preview {
-		background: #{functions.resolve-path("icons/preview.svg")} center center no-repeat;
+		background: url("icons/preview.svg") center center no-repeat;
 	}
 
 	#tmenu .profile button {
@@ -3042,7 +3042,7 @@ fieldset.collapsed > legend {
 		overflow: hidden;
 		white-space: nowrap;
 		text-indent: 28px; /* 16px width + 12px padding */
-		background: #{functions.resolve-path("icons/profile.svg")} center center no-repeat;
+		background: url("icons/profile.svg") center center no-repeat;
 		background-size: 18px;
 	}
 

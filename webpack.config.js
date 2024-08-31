@@ -28,7 +28,9 @@ Encore
     .configureCssLoader(config => {
         config.url = false;
     })
-    .enableSassLoader()
+    .enableSassLoader(config => {
+        config.sassOptions.resolveUrlLoader = false;
+    })
     .addStyleEntry('backend', './core-bundle/contao/themes/flexible/styles/_main.scss')
     .addStyleEntry('confirm', './core-bundle/contao/themes/flexible/styles/pages/_confirm.scss')
     .addStyleEntry('conflict', './core-bundle/contao/themes/flexible/styles/pages/_conflict.scss')

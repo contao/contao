@@ -1,9 +1,9 @@
-@use "../abstracts/functions";
+@use "../fonts";
 @use "../base";
 
 /* Body */
 body {
-	background: var(--body-bg) #{functions.resolve-path("icons/stop.svg")} center 3em no-repeat;
+	background: var(--body-bg) url("icons/stop.svg") center 3em no-repeat;
 }
 
 /* Container */
