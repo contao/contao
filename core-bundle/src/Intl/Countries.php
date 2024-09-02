@@ -31,7 +31,7 @@ class Countries
         array $configCountries,
         private readonly string $defaultLocale,
     ) {
-        $this->countries = ArrayUtil::filterValuesToIgnore($defaultCountries, $configCountries);
+        $this->countries = ArrayUtil::alterListByConfig($defaultCountries, $configCountries);
     }
 
     /**

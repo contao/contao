@@ -401,7 +401,7 @@ class Configuration implements ConfigurationInterface
                             static function (array $extensions): array {
                                 $default = ['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp', 'avif'];
 
-                                return ArrayUtil::filterValuesToIgnore($default, $extensions);
+                                return ArrayUtil::alterListByConfig($default, $extensions);
                             },
                         )
                     ->end()

@@ -53,7 +53,7 @@ abstract class AbstractConfig
     public function withTablesToIgnore(array $tablesToIgnore): static
     {
         $new = clone $this;
-        $new->tablesToIgnore = ArrayUtil::filterValuesToIgnore($new->tablesToIgnore, $tablesToIgnore);
+        $new->tablesToIgnore = ArrayUtil::alterListByConfig($new->tablesToIgnore, $tablesToIgnore);
 
         return $new;
     }

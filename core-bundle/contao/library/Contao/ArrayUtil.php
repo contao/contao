@@ -153,32 +153,32 @@ class ArrayUtil
 	/**
 	 * Add, remove or replace values from the current array based on your configuration.
 	 */
-	public static function filterValuesToIgnore(array $current, array $filter): array
+	public static function alterListByConfig(array $list, array $config): array
 	{
-		$newList = array_filter($filter, static fn ($newValue) => !\in_array($newValue[0], array('-', '+'), true));
+		$newList = array_filter($config, static fn ($newValue) => !\in_array($newValue[0], array('-', '+'), true));
 
 		if ($newList)
 		{
-			$current = $newList;
+			$list = $newList;
 		}
 
-		foreach ($filter as $newValue)
+		foreach ($config as $newValue)
 		{
 			$prefix = $newValue[0];
 			$value = substr($newValue, 1);
 
-			if ('-' === $prefix && \in_array($value, $current, true))
+			if ('-' === $prefix && \in_array($value, $list, true))
 			{
-				unset($current[array_search($value, $current, true)]);
+				unset($list[array_search($value, $list, true)]);
 			}
-			elseif ('+' === $prefix && !\in_array($value, $current, true))
+			elseif ('+' === $prefix && !\in_array($value, $list, true))
 			{
-				$current[] = $value;
+				$list[] = $value;
 			}
 		}
 
-		sort($current);
+		sort($list);
 
-		return $current;
+		return $list;
 	}
 }
