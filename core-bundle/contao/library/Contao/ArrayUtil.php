@@ -43,7 +43,7 @@ class ArrayUtil
 	}
 
 	/**
-	 * Recursively sort an array by key
+	 * Recursively sort an array by key.
 	 */
 	public static function recursiveKeySort(array &$array): void
 	{
@@ -153,7 +153,7 @@ class ArrayUtil
 	/**
 	 * Add, remove or replace values from the current array based on your configuration.
 	 */
-	public static function filterValuesToIgnore(array $current, array $filter, string|null $default = null): array
+	public static function filterValuesToIgnore(array $current, array $filter): array
 	{
 		$newList = array_filter($filter, static fn ($newValue) => !\in_array($newValue[0], array('-', '+'), true));
 
@@ -178,16 +178,6 @@ class ArrayUtil
 		}
 
 		sort($current);
-
-		// Make sure the default is the first element (see contao/core#6533)
-		if (null !== $default)
-		{
-			if (\in_array($default, $current, true))
-			{
-				unset($current[array_search($default, $current, true)]);
-			}
-			array_unshift($current, $default);
-		}
 
 		return $current;
 	}
