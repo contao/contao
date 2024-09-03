@@ -214,6 +214,7 @@ class ContaoExtensionTest extends TestCase
         );
 
         $node = new ModuleNode(
+            /** @phpstan-ignore argument.type */
             new FilterExpression(
                 new TextNode('text', 1),
                 new ConstantExpression('escape', 1),

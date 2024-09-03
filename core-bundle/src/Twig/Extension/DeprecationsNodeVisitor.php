@@ -72,6 +72,7 @@ class DeprecationsNodeVisitor implements NodeVisitorInterface
     {
         $line = $node->getTemplateLine();
 
+        /** @phpstan-ignore arguments.count */
         $deprecatedNode = new DeprecatedNode(
             new ConstantExpression("Since contao/core-bundle 4.13: $message", $line),
             $line,
