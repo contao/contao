@@ -41,10 +41,8 @@ const mooDomready = () => {
 document.documentElement.addEventListener('turbo:render', mooDomready);
 document.documentElement.addEventListener('turbo:frame-render', mooDomready);
 
-// Always break out of a missing frame in case of errors (#7501)
+// Always break out of a missing frame (#7501)
 document.documentElement.addEventListener('turbo:frame-missing', (e) => {
-    if (e.detail.response.status >= 400) {
-        e.preventDefault();
-        e.detail.visit(e.detail.response);
-    }
+    e.preventDefault();
+    e.detail.visit(e.detail.response);
 });
