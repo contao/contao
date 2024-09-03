@@ -43,6 +43,10 @@ document.documentElement.addEventListener('turbo:frame-render', mooDomready);
 
 // Always break out of a missing frame (#7501)
 document.documentElement.addEventListener('turbo:frame-missing', (e) => {
+    if (window.console) {
+        console.warn('Turbo frame #'+e.target.id+' is missing.');
+    }
+
     e.preventDefault();
     e.detail.visit(e.detail.response);
 });
