@@ -328,11 +328,9 @@ class tl_image_size extends Backend
 			$formats = StringUtil::deserialize($dc->value, true);
 		}
 
-		$imageExtensions = System::getContainer()->getParameter('contao.image.valid_extensions');
-
 		foreach ($this->getSupportedFormats() as $format => $isSupported)
 		{
-			if (!in_array($format, $imageExtensions))
+			if (!in_array($format, System::getContainer()->getParameter('contao.image.valid_extensions')))
 			{
 				continue;
 			}
