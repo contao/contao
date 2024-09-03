@@ -46,9 +46,9 @@ input, select {
 }
 
 @each $color in (gray, green, red, blue, orange) {
-  .tl_#{$color} {
-    color: var(--#{$color});
-  }
+	.tl_#{$color} {
+		color: var(--#{$color});
+	}
 }
 
 span.mandatory {
@@ -65,7 +65,7 @@ a {
 	text-decoration: none;
 
 	&:hover,
-  &:active {
+	&:active {
 		color: var(--contao);
 	}
 }
