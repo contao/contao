@@ -153,7 +153,7 @@
         "terminal42/service-annotation-bundle": "^1.1",
         "toflar/cronjob-supervisor": "^2.0",
         "twig/string-extra": "^3.0",
-        "twig/twig": "^3.10.2",
+        "twig/twig": "^3.12",
         "ua-parser/uap-php": "^3.9",
         "webignition/robots-txt-file": "^3.0",
         "wikimedia/less.php": "^1.7"
