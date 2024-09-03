@@ -2,9 +2,9 @@
 @font-face {
 	font-family: "Architects Daughter";
 	src: local("Architects Daughter"),
-    // Relative paths in font face are not ignored https://github.com/symfony/webpack-encore/issues/88
-		url("/system/themes/flexible/fonts/architects-daughter-v6-latin-regular.woff2") format("woff2"),
-		url("/system/themes/flexible/fonts/architects-daughter-v6-latin-regular.woff") format("woff");
+		// Relative paths in font face are not ignored https://github.com/symfony/webpack-encore/issues/88
+	url("/system/themes/flexible/fonts/architects-daughter-v6-latin-regular.woff2") format("woff2"),
+	url("/system/themes/flexible/fonts/architects-daughter-v6-latin-regular.woff") format("woff");
 	font-weight: normal;
 	font-style: normal;
 }

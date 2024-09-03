@@ -128,7 +128,7 @@ body.popup {
 	margin-top: 5px;
 	background: var(--content-bg);
 	border: 1px solid var(--content-border);
-	box-shadow: 0 1px 6px rgba(0,0,0,.2);
+	box-shadow: 0 1px 6px rgba(0, 0, 0, .2);
 	z-index: 4; /* Above .jump-targets */
 	color: var(--text);
 	text-align: left;
@@ -903,7 +903,7 @@ h2.sub_headline {
 
 #tl_crawl .progress-bar.running {
 	background-color: var(--progress-running);
-	background-image: linear-gradient(45deg, rgba(255,255,255,.15) 25%, transparent 25%, transparent 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.15) 75%, transparent 75%, transparent);
+	background-image: linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
 	animation: crawl-progress-bar-stripes 1s linear infinite;
 }
 
@@ -2443,7 +2443,7 @@ ul.sortable button[disabled] {
 }
 
 ul.sortable button[disabled]:hover {
-	background: rgba(255,255,255,.7);
+	background: rgba(255, 255, 255, .7);
 }
 
 #picker-menu {
