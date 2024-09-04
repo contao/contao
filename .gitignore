@@ -3,8 +3,7 @@
 /vendor/
 
 # Composer bin
-/tools/*/vendor
-/tools/monorepo/composer.lock
+/vendor-bin/*/vendor/
 
 # Monorepo Tools
 /.monorepo-split-cache/
@@ -15,6 +14,3 @@
 # PhpUnit
 /.phpunit.result.cache
 /phpunit.xml
-
-# CS fixer
-/.php_cs.cache
