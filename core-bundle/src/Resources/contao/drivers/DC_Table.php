@@ -3783,7 +3783,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			else
 			{
 				// Make sure we use the topmost root IDs only from all the visible root trail IDs and also ensure correct sorting
-				$topMostRootIds = $this->Database->prepare("SELECT id FROM $table WHERE (pid=0 OR pid IS NULL) AND id IN (".implode(',', array_merge($this->visibleRootTrails, $this->root)).")".($this->Database->fieldExists('sorting', $table) ? ' ORDER BY sorting, id' : ''))
+				$topMostRootIds = $this->Database->prepare("SELECT id FROM $table WHERE (pid=0 OR pid IS NULL) AND id IN (" . implode(',', array_merge($this->visibleRootTrails, $this->root)) . ")" . ($this->Database->fieldExists('sorting', $table) ? ' ORDER BY sorting, id' : ''))
 												 ->execute()
 												 ->fetchEach('id')
 				;
