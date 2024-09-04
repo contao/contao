@@ -3,7 +3,9 @@
         "@hotwired/stimulus": "^3.2.2",
         "@hotwired/stimulus-webpack-helpers": "^1.0.1",
         "@hotwired/turbo": "^8.0.4",
-        "@symfony/webpack-encore": "^4.6.1"
+        "@symfony/webpack-encore": "^4.6.1",
+        "sass": "^1.77.8",
+        "sass-loader": "^14.0.0"
     },
     "scripts": {
         "dev-server": "encore dev-server",
