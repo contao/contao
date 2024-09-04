@@ -41,6 +41,7 @@ use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\CoreExtension;
 use Twig\Extension\EscaperExtension;
+use Twig\Node\BodyNode;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FilterExpression;
 use Twig\Node\ModuleNode;
@@ -220,16 +221,18 @@ class ContaoExtensionTest extends TestCase
         );
 
         $node = new ModuleNode(
-            new FilterExpression(
-                new TextNode('text', 1),
-                new ConstantExpression('escape', 1),
-                new Node([
-                    new ConstantExpression('html', 1),
-                    new ConstantExpression(null, 1),
-                    new ConstantExpression(true, 1),
-                ]),
-                1,
-            ),
+            new BodyNode([
+                new FilterExpression(
+                    new TextNode('text', 1),
+                    new ConstantExpression('escape', 1),
+                    new Node([
+                        new ConstantExpression('html', 1),
+                        new ConstantExpression(null, 1),
+                        new ConstantExpression(true, 1),
+                    ]),
+                    1,
+                ),
+            ]),
             null,
             new Node(),
             new Node(),
