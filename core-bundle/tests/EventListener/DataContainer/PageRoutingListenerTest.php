@@ -207,7 +207,7 @@ class PageRoutingListenerTest extends TestCase
 
         $pageRegistry = $this->createMock(PageRegistry::class);
         $pageRegistry
-            ->expects($this->exactly(3))
+            ->expects($this->exactly(4))
             ->method('isRoutable')
             ->willReturn(true)
         ;
@@ -312,8 +312,14 @@ class PageRoutingListenerTest extends TestCase
 
         $pageRegistry = $this->createMock(PageRegistry::class);
         $pageRegistry
+            ->expects($this->once())
+            ->method('isRoutable')
+            ->willReturn(true)
+        ;
+
+        $pageRegistry
             ->expects($this->never())
-            ->method($this->anything())
+            ->method('getRoute')
         ;
 
         $twig = $this->createMock(Environment::class);
@@ -374,10 +380,9 @@ class PageRoutingListenerTest extends TestCase
 
         $pageRegistry = $this->createMock(PageRegistry::class);
         $pageRegistry
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('isRoutable')
-            ->with($aliasPage)
-            ->willReturn(false)
+            ->willReturnOnConsecutiveCalls(true, false)
         ;
 
         $pageRegistry
@@ -445,8 +450,9 @@ class PageRoutingListenerTest extends TestCase
 
         $pageRegistry = $this->createMock(PageRegistry::class);
         $pageRegistry
-            ->expects($this->never())
+            ->expects($this->once())
             ->method('isRoutable')
+            ->willReturn(true)
         ;
 
         $pageRegistry
@@ -514,7 +520,7 @@ class PageRoutingListenerTest extends TestCase
 
         $pageRegistry = $this->createMock(PageRegistry::class);
         $pageRegistry
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('isRoutable')
             ->willReturn(true)
         ;

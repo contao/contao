@@ -54,6 +54,10 @@ class PageRoutingListener
             return '';
         }
 
+        if (!$this->pageRegistry->isRoutable($currentPage)) {
+            return '';
+        }
+
         if (!$aliasPages = $pageAdapter->findSimilarByAlias($currentPage)) {
             return '';
         }
