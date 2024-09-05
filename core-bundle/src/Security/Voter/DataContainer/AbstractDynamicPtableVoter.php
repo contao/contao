@@ -61,8 +61,10 @@ abstract class AbstractDynamicPtableVoter extends AbstractDataContainerVoter imp
             return true;
         }
 
+        [$table, $id] = [$record['ptable'], (int) $record['pid']];
+
         if ($record['ptable'] === $this->getTable()) {
-            [$table, $id] = $this->getParentTableAndId((int) $record['pid']);
+            [$table, $id] = $this->getParentTableAndId($id);
         }
 
         return $this->hasAccessToRecord($token, $table, $id);
@@ -91,7 +93,7 @@ abstract class AbstractDynamicPtableVoter extends AbstractDataContainerVoter imp
         );
 
         if (!$records) {
-            throw new \RuntimeException(sprintf('Parent record of %s.%s not found', $table, $id));
+            throw new \RuntimeException(\sprintf('Parent record of %s.%s not found', $table, $id));
         }
 
         $record = end($records);
@@ -116,7 +118,7 @@ abstract class AbstractDynamicPtableVoter extends AbstractDataContainerVoter imp
         );
 
         if (!$record) {
-            throw new \RuntimeException(sprintf('Parent record of %s.%s not found', $table, $id));
+            throw new \RuntimeException(\sprintf('Parent record of %s.%s not found', $table, $id));
         }
 
         return $this->parents[$id] = [$record['ptable'], (int) $record['pid']];
