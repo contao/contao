@@ -78,8 +78,8 @@ abstract class AbstractDynamicPtableVoter extends AbstractDataContainerVoter imp
 
         // Limit to a nesting level of 10
         $records = $this->connection->fetchAllAssociative(
-            "SELECT id, @pid:=pid AS pid, ptable FROM $table WHERE id=?".str_repeat(" UNION SELECT id, @pid:=pid AS pid, ptable FROM $table WHERE id=@pid AND ptable=?", 9),
-            [$id, ...array_fill(0, 9, $table)],
+            "SELECT id, @pid:=pid AS pid, ptable FROM $table WHERE id=:id".str_repeat(" UNION SELECT id, @pid:=pid AS pid, ptable FROM $table WHERE id=@pid AND ptable=:ptable", 9),
+            ['id' => $id, 'ptable' => $table],
         );
 
         if (!$records) {

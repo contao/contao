@@ -64,8 +64,8 @@ class ArticleContentVoterTest extends TestCase
 
         foreach ($parentRecords as $id => $records) {
             $fetchAllAssociativeMap[] = [
-                'SELECT id, @pid:=pid AS pid, ptable FROM tl_content WHERE id=?'.str_repeat(' UNION SELECT id, @pid:=pid AS pid, ptable FROM tl_content WHERE id=@pid AND ptable=?', 9),
-                [$id, ...array_fill(0, 9, 'tl_content')],
+                'SELECT id, @pid:=pid AS pid, ptable FROM tl_content WHERE id=:id'.str_repeat(' UNION SELECT id, @pid:=pid AS pid, ptable FROM tl_content WHERE id=@pid AND ptable=:ptable', 9),
+                ['id' => $id, 'ptable' => 'tl_content'],
                 [],
                 $records,
             ];
