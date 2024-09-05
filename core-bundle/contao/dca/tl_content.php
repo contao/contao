@@ -153,7 +153,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'filter'                  => true,
 			'inputType'               => 'select',
-			'options_callback'        => array('tl_content', 'getContentElements'),
+			'options'                 => $GLOBALS['TL_CTE'],
 			'reference'               => &$GLOBALS['TL_LANG']['CTE'],
 			'eval'                    => array('helpwizard'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50'),
 			'sql'                     => array('name'=>'type', 'type'=>'string', 'length'=>64, 'default'=>'text', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
@@ -859,13 +859,17 @@ class tl_content extends Backend
 	/**
 	 * Set default element type based on user access.
 	 */
-	public function setDefaultElementType()
+	public function setDefaultElementType(DataContainer $dc)
 	{
-		$user = BackendUser::getInstance();
+		$options = $this->getContentElements($dc);
 
-		if (!$user->isAdmin && !in_array($GLOBALS['TL_DCA']['tl_content']['fields']['type']['sql']['default'] ?? null, $user->elements))
+		$GLOBALS['TL_DCA']['tl_content']['fields']['type']['options'] = $options;
+
+		$types = array_merge(...array_values($options));
+
+		if ($types && !in_array($GLOBALS['TL_DCA']['tl_content']['fields']['type']['sql']['default'] ?? null, $types))
 		{
-			$GLOBALS['TL_DCA']['tl_content']['fields']['type']['default'] = $user->elements[0] ?? '';
+			$GLOBALS['TL_DCA']['tl_content']['fields']['type']['default'] = $types[0] ?? '';
 		}
 	}
 
