@@ -83,7 +83,7 @@ abstract class AbstractDynamicPtableVoter extends AbstractDataContainerVoter imp
         );
 
         if (!$records) {
-            throw new \RuntimeException(sprintf('Parent record of %s.%s not found', $table, $id));
+            throw new \RuntimeException(\sprintf('Parent record of %s.%s not found', $table, $id));
         }
 
         $last = end($records);
