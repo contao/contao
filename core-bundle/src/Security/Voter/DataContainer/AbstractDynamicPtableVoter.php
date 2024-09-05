@@ -78,16 +78,33 @@ abstract class AbstractDynamicPtableVoter extends AbstractDataContainerVoter imp
 
         // Limit to a nesting level of 10
         $records = $this->connection->fetchAllAssociative(
-            "SELECT id, @pid:=pid AS pid, ptable FROM $table WHERE id=?".str_repeat(" UNION SELECT id, @pid:=pid AS pid, ptable FROM $table WHERE id=@pid", 9),
-            [$id],
+            "SELECT id, @pid:=pid AS pid, ptable FROM $table WHERE id=?".str_repeat(" UNION SELECT id, @pid:=pid AS pid, ptable FROM $table WHERE id=@pid AND ptable=?", 9),
+            [$id, ...array_fill(0, 9, $table)],
         );
+
+        if (!$records) {
+            throw new \RuntimeException(sprintf('Parent record of %s.%s not found', $table, $id));
+        }
+
+        $last = end($records);
+
+        // If the given $id is the child of a record where ptable!=$table (e.g. only one
+        // element nested), $records will only have one result, and we can directly use it.
+        if ($last['ptable'] !== $table) {
+            return $this->parents[$id] = $last;
+        }
 
         // Trigger recursion in case our query returned exactly 10 records in which case
         // we might have higher parent records
         if (10 === \count($records)) {
-            $records = array_merge($records, $this->getParentTableAndId((int) end($records)['pid']));
+            return $this->getParentTableAndId((int) $last['pid']);
         }
 
-        return $this->parents[$id] = end($records);
+        // If we have more than 1 but less than 10 results, the last result in our array
+        // must be the first nested element, and its parent is what we are looking for.
+        return $this->parents[$id] = $this->connection->fetchAssociative(
+            "SELECT id, pid, ptable FROM $table WHERE id=?",
+            [$last['pid']],
+        );
     }
 }
