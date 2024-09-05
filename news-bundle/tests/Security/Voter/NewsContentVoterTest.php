@@ -66,6 +66,7 @@ class NewsContentVoterTest extends TestCase
         foreach ($parentRecords as $id => &$records) {
             if (\count($records) > 1 && 'tl_content' !== end($records)['ptable']) {
                 $parent = array_pop($records);
+
                 $fetchAssociativeMap[] = [
                     'SELECT id, pid, ptable FROM tl_content WHERE id=?',
                     [(int) end($records)['pid']],
