@@ -42,7 +42,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			array('tl_content', 'adjustDcaByType'),
 			array('tl_content', 'showJsLibraryHint'),
-			array('tl_content', 'setDefaultElementType'),
 		),
 		'sql' => array
 		(
@@ -775,31 +774,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 class tl_content extends Backend
 {
 	/**
-	 * Return all content elements as array
-	 *
-	 * @return array
-	 */
-	public function getContentElements(DataContainer $dc)
-	{
-		$security = System::getContainer()->get('security.helper');
-		$groups = array();
-
-		foreach ($GLOBALS['TL_CTE'] as $k=>$v)
-		{
-			foreach (array_keys($v) as $kk)
-			{
-				// Check if an element of this type can be created in the current context (e.g. nested fragments)
-				if ($security->isGranted(ContaoCorePermissions::DC_PREFIX . 'tl_content', new CreateAction('tl_content', array('ptable' => $dc->parentTable, 'pid' => $dc->currentPid, 'type' => $kk))))
-				{
-					$groups[$k][] = $kk;
-				}
-			}
-		}
-
-		return $groups;
-	}
-
-	/**
 	 * Return the group of a content element
 	 *
 	 * @param string $element
@@ -853,23 +827,6 @@ class tl_content extends Backend
 		if (System::getContainer()->get('contao.fragment.compositor')->supportsNesting('contao.content_element.' . $objCte->type))
 		{
 			$GLOBALS['TL_DCA']['tl_content']['config']['switchToEdit'] = true;
-		}
-	}
-
-	/**
-	 * Set default element type based on user access.
-	 */
-	public function setDefaultElementType(DataContainer $dc)
-	{
-		$options = $this->getContentElements($dc);
-
-		$GLOBALS['TL_DCA']['tl_content']['fields']['type']['options'] = $options;
-
-		$types = array_merge(...array_values($options));
-
-		if ($types && !in_array($GLOBALS['TL_DCA']['tl_content']['fields']['type']['sql']['default'] ?? null, $types))
-		{
-			$GLOBALS['TL_DCA']['tl_content']['fields']['type']['default'] = $types[0] ?? '';
 		}
 	}
 
