@@ -19,7 +19,7 @@
     {% set headline = headline|default(_context) %}
     {% set tag_name = headline.tag_name|default('h1') %}
 
-    <{{ tag_name }}{% block headline_attributes %}{{ headline.attributes|default }}{% endblock %}>
+    <{{ tag_name }}{% block headline_attributes %}{{ headline_attributes|default }}{% endblock %}>
     {%- block headline_inner -%}
         {{ headline.text|insert_tag_raw }}
     {%- endblock -%}
