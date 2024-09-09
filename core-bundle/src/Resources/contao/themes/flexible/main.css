@@ -1726,11 +1726,10 @@ ul.sgallery li {
 
 /* Misc */
 .ce_gallery ul {
-	overflow:hidden;
 	display:flex;
-	flex-wrap: wrap;
-	gap: 6px;
-	margin-bottom: 6px;
+	flex-wrap:wrap;
+	gap:6px;
+	margin-bottom:6px;
 }
 .drag-handle {
 	cursor:move;
