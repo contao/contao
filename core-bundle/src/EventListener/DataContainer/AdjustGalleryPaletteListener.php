@@ -17,7 +17,7 @@ use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 
 /**
- * Adjusts the palette for the "gallery" content element, if the legacy version is
+ * Adjusts the palette for the "gallery" content element when the legacy version is
  * in use.
  */
 #[AsCallback('tl_content', 'config.onload')]
