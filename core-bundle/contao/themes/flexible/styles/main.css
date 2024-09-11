@@ -2767,24 +2767,21 @@ fieldset.tl_tbox.nolegend, fieldset.tl_box.nolegend {
 	border-top: 0;
 }
 
-fieldset.tl_tbox > legend, fieldset.tl_box > legend {
+fieldset:is(.tl_tbox,.tl_box) > legend {
 	box-sizing: border-box;
 	color: var(--legend);
 	padding: 9px 12px 9px 28px;
 	background: url("icons/navcol.svg") 13px 10px no-repeat;
+	width: 100%;
 }
 
-fieldset.tl_tbox > legend[onclick], fieldset.tl_box > legend[onclick] {
+fieldset:is(.tl_tbox,.tl_box) > legend[onclick] {
 	cursor: pointer;
 }
 
-fieldset.tl_tbox > legend:has(> button), fieldset.tl_box > legend:has(> button) {
+fieldset:is(.tl_tbox,.tl_box) > legend:has(> button) {
 	padding: 0;
 	background: none;
-}
-
-fieldset:is(.tl_tbox,.tl_box) > legend {
-	width: 100%;
 }
 
 fieldset:is(.tl_tbox,.tl_box) > legend > button {
