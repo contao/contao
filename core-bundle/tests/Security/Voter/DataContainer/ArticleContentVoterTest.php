@@ -49,8 +49,8 @@ class ArticleContentVoterTest extends TestCase
         $accessDecisionMap = [[$token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'article', true]];
 
         foreach ($articleParents as $pageId) {
-            $accessDecisionMap[] = [$token, [ContaoCorePermissions::USER_CAN_ACCESS_PAGE], $pageId, true];
-            $accessDecisionMap[] = [$token, [ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], $pageId, true];
+            $accessDecisionMap[] = [$token, [ContaoCorePermissions::USER_CAN_ACCESS_PAGE], (int) $pageId, true];
+            $accessDecisionMap[] = [$token, [ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], (int) $pageId, true];
         }
 
         $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
@@ -197,6 +197,12 @@ class ArticleContentVoterTest extends TestCase
             new DeleteAction('tl_content', ['ptable' => 'tl_content', 'pid' => 3]),
             [3 => [['ptable' => 'tl_content', 'pid' => 2], ['ptable' => 'tl_article', 'pid' => 1]]],
             [1 => 1],
+        ];
+
+        yield 'Check argument handling if database returns a string instead of int' => [
+            new CreateAction('tl_content', ['ptable' => 'tl_article', 'pid' => 1]),
+            [],
+            ['1' => '1'],
         ];
     }
 
