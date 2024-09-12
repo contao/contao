@@ -2,6 +2,18 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.48] (2024-09-12)
+
+**Fixed issues:**
+
+- [#7497] Use `flex` for the back end gallery layout ([fritzmg])
+- [#7517] Fix the TinyMCE overflow on mobile devices ([zoglo])
+- [#7466] Do not show the template warnings if a user only has group permissions ([leofeyer])
+- [#7512] Allow the `name` attribute for the `<details>` element ([ausi])
+- [#7506] Only get valid image extensions once ([zoglo])
+- [#7483] Fix the description list markup for `template` templates ([fritzmg])
+- [#7481] Fix a PHP8 error if a user has no groups ([aschempp])
+
 ## [4.13.47] (2024-08-23)
 
 **Fixed issues:**
@@ -1048,6 +1060,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.48]: https://github.com/contao/contao/releases/tag/4.13.48
 [4.13.47]: https://github.com/contao/contao/releases/tag/4.13.47
 [4.13.46]: https://github.com/contao/contao/releases/tag/4.13.46
 [4.13.45]: https://github.com/contao/contao/releases/tag/4.13.45
@@ -1911,3 +1924,10 @@ This project adheres to [Semantic Versioning].
 [#7433]: https://github.com/contao/contao/pull/7433
 [#7459]: https://github.com/contao/contao/pull/7459
 [#7462]: https://github.com/contao/contao/pull/7462
+[#7466]: https://github.com/contao/contao/pull/7466
+[#7481]: https://github.com/contao/contao/pull/7481
+[#7483]: https://github.com/contao/contao/pull/7483
+[#7497]: https://github.com/contao/contao/pull/7497
+[#7506]: https://github.com/contao/contao/pull/7506
+[#7512]: https://github.com/contao/contao/pull/7512
+[#7517]: https://github.com/contao/contao/pull/7517
