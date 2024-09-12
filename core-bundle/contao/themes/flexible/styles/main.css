@@ -2803,15 +2803,8 @@ fieldset.collapsed div {
 	display: none !important;
 }
 
-fieldset.collapsed > legend {
-	background-image: url("icons/navexp.svg");
-}
-
-fieldset.collapsed > legend:has(> button) {
-	background-image: none;
-}
-
-fieldset.collapsed > legend > button {
+fieldset.collapsed > legend > button,
+fieldset.collapsed > legend:not(:has(> button)) {
 	background-image: url("icons/navexp.svg");
 }
 
