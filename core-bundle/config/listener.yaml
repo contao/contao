@@ -134,6 +134,9 @@ services:
         arguments:
             - '@database_connection'
 
+    contao.listener.data_container.legacy_gallery_palette:
+        class: Contao\CoreBundle\EventListener\DataContainer\LegacyGalleryPaletteListener
+
     contao.listener.data_container.logout_page_redirect:
         class: Contao\CoreBundle\EventListener\DataContainer\LogoutPageRedirectListener
 
