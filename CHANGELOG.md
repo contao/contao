@@ -2,6 +2,20 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.14] (2024-09-12)
+
+**Fixed issues:**
+
+- [#7509] Handle string IDs in the article content voter ([aschempp])
+- [#7525] Only add the `galleryTpl` field to the legacy gallery element ([fritzmg])
+- [#7467] Correctly handle news feed URLs in the page routing listener ([leofeyer])
+- [#7513] Fix the parent record loading in the dynamic parent table voter ([aschempp])
+- [#7489] Fix the description list markup for `template` templates ([fritzmg])
+- [#7484] Fix type error in `downloads` content element ([fritzmg])
+- [#7485] Fix the name of symlinked filesystem adapters ([fritzmg])
+- [#7477] Fix the line height of the ellipsis containers ([leofeyer])
+- [#7472] Consider subfolders and Twig templates within the theme export ([zoglo])
+
 ## [5.3.13] (2024-08-23)
 
 **Fixed issues:**
@@ -405,6 +419,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.14]: https://github.com/contao/contao/releases/tag/5.3.14
 [5.3.13]: https://github.com/contao/contao/releases/tag/5.3.13
 [5.3.12]: https://github.com/contao/contao/releases/tag/5.3.12
 [5.3.11]: https://github.com/contao/contao/releases/tag/5.3.11
@@ -737,3 +752,12 @@ This project adheres to [Semantic Versioning].
 [#7440]: https://github.com/contao/contao/pull/7440
 [#7443]: https://github.com/contao/contao/pull/7443
 [#7465]: https://github.com/contao/contao/pull/7465
+[#7467]: https://github.com/contao/contao/pull/7467
+[#7472]: https://github.com/contao/contao/pull/7472
+[#7477]: https://github.com/contao/contao/pull/7477
+[#7484]: https://github.com/contao/contao/pull/7484
+[#7485]: https://github.com/contao/contao/pull/7485
+[#7489]: https://github.com/contao/contao/pull/7489
+[#7509]: https://github.com/contao/contao/pull/7509
+[#7513]: https://github.com/contao/contao/pull/7513
+[#7525]: https://github.com/contao/contao/pull/7525
