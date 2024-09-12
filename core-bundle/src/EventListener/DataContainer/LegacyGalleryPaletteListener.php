@@ -21,7 +21,7 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
  * is in use.
  */
 #[AsCallback('tl_content', 'config.onload')]
-class AdjustGalleryPaletteListener
+class LegacyGalleryPaletteListener
 {
     public function __invoke(): void
     {

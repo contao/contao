@@ -61,7 +61,7 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\AccordionListener
 
     contao.listener.data_container.adjust_gallery_palette:
-        class: Contao\CoreBundle\EventListener\DataContainer\AdjustGalleryPaletteListener
+        class: Contao\CoreBundle\EventListener\DataContainer\LegacyGalleryPaletteListener
 
     contao.listener.data_container.backend_favorites:
         class: Contao\CoreBundle\EventListener\DataContainer\BackendFavoritesListener

@@ -14,10 +14,10 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\ContentGallery;
 use Contao\ContentProxy;
-use Contao\CoreBundle\EventListener\DataContainer\AdjustGalleryPaletteListener;
+use Contao\CoreBundle\EventListener\DataContainer\LegacyGalleryPaletteListener;
 use Contao\CoreBundle\Tests\TestCase;
 
-class AdjustGalleryPaletteListenerTest extends TestCase
+class LegacyGalleryPaletteListenerTest extends TestCase
 {
     protected function setUp(): void
     {
@@ -37,7 +37,7 @@ class AdjustGalleryPaletteListenerTest extends TestCase
     {
         $GLOBALS['TL_CTE']['media']['gallery'] = ContentGallery::class;
 
-        (new AdjustGalleryPaletteListener())();
+        (new LegacyGalleryPaletteListener())();
 
         $this->assertSame('galleryTpl,customTpl', $GLOBALS['TL_DCA']['tl_content']['palettes']['gallery']);
     }
@@ -46,7 +46,7 @@ class AdjustGalleryPaletteListenerTest extends TestCase
     {
         $GLOBALS['TL_CTE']['media']['gallery'] = ContentProxy::class;
 
-        (new AdjustGalleryPaletteListener())();
+        (new LegacyGalleryPaletteListener())();
 
         $this->assertSame('customTpl', $GLOBALS['TL_DCA']['tl_content']['palettes']['gallery']);
     }
