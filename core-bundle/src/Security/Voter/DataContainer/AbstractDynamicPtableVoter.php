@@ -61,13 +61,23 @@ abstract class AbstractDynamicPtableVoter extends AbstractDataContainerVoter imp
             return true;
         }
 
+        [$table, $id] = [$record['ptable'], (int) $record['pid']];
+
         if ($record['ptable'] === $this->getTable()) {
-            $record = $this->getParentTableAndId((int) $record['pid']);
+            [$table, $id] = $this->getParentTableAndId($id);
         }
 
-        return $this->hasAccessToRecord($token, $record['ptable'], (int) $record['pid']);
+        return $this->hasAccessToRecord($token, $table, $id);
     }
 
+    /**
+     * Recursively finds the ptable and pid of a nested record in the current table.
+     * - for articles, it returns `tl_article` and the ID of the current article.
+     * - for news, it returns `tl_news` and the ID of the current news.
+     * - for calendars, it returns `tl_calendar_events` and the ID of the current event.
+     *
+     * @return array{0: string, 1: int}
+     */
     private function getParentTableAndId(int $id): array
     {
         if (isset($this->parents[$id])) {
@@ -78,16 +88,39 @@ abstract class AbstractDynamicPtableVoter extends AbstractDataContainerVoter imp
 
         // Limit to a nesting level of 10
         $records = $this->connection->fetchAllAssociative(
-            "SELECT id, @pid:=pid AS pid, ptable FROM $table WHERE id=?".str_repeat(" UNION SELECT id, @pid:=pid AS pid, ptable FROM $table WHERE id=@pid", 9),
-            [$id],
+            "SELECT id, @pid:=pid AS pid, ptable FROM $table WHERE id=:id".str_repeat(" UNION SELECT id, @pid:=pid AS pid, ptable FROM $table WHERE id=@pid AND ptable=:ptable", 9),
+            ['id' => $id, 'ptable' => $table],
         );
+
+        if (!$records) {
+            throw new \RuntimeException(\sprintf('Parent record of %s.%s not found', $table, $id));
+        }
+
+        $record = end($records);
+
+        // If the given $id is the child of a record where ptable!=$table (e.g. only one
+        // element nested), $records will only have one result, and we can directly use it.
+        if ($record['ptable'] !== $table) {
+            return $this->parents[$id] = [$record['ptable'], (int) $record['pid']];
+        }
 
         // Trigger recursion in case our query returned exactly 10 records in which case
         // we might have higher parent records
         if (10 === \count($records)) {
-            $records = array_merge($records, $this->getParentTableAndId((int) end($records)['pid']));
+            return $this->getParentTableAndId((int) $record['pid']);
         }
 
-        return $this->parents[$id] = end($records);
+        // If we have more than 1 but less than 10 results, the last result in our array
+        // must be the first nested element, and its parent is what we are looking for.
+        $record = $this->connection->fetchAssociative(
+            "SELECT id, pid, ptable FROM $table WHERE id=?",
+            [$record['pid']],
+        );
+
+        if (!$record) {
+            throw new \RuntimeException(\sprintf('Parent record of %s.%s not found', $table, $id));
+        }
+
+        return $this->parents[$id] = [$record['ptable'], (int) $record['pid']];
     }
 }
