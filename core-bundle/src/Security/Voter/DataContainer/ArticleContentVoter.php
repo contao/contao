@@ -64,7 +64,7 @@ class ArticleContentVoter extends AbstractDynamicPtableVoter
     {
         if (!array_key_exists($articleId, $this->pageIds)) {
             $pid = $this->connection->fetchOne('SELECT pid FROM tl_article WHERE id=?', [$articleId]);
-            $this->pageIds[$articleId] = $pid ? (int) $pid : null;
+            $this->pageIds[$articleId] = false !== $pid ? (int) $pid : null;
         }
 
         return $this->pageIds[$articleId];
