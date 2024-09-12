@@ -62,10 +62,11 @@ class ArticleContentVoter extends AbstractDynamicPtableVoter
 
     private function getPageId(int $articleId): int|null
     {
-        if (!isset($this->pageIds[$articleId])) {
-            $this->pageIds[$articleId] = $this->connection->fetchOne('SELECT pid FROM tl_article WHERE id=?', [$articleId]);
+        if (!\array_key_exists($articleId, $this->pageIds)) {
+            $pid = $this->connection->fetchOne('SELECT pid FROM tl_article WHERE id=?', [$articleId]);
+            $this->pageIds[$articleId] = false !== $pid ? (int) $pid : null;
         }
 
-        return $this->pageIds[$articleId] ?: null;
+        return $this->pageIds[$articleId];
     }
 }
