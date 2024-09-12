@@ -2,6 +2,15 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.4.2] (2024-09-12)
+
+**Fixed issues:**
+
+- [#7503] Always break out of Turbo frames when missing ([fritzmg])
+- [#7500] Switch to a stable ALTCHA version ([leofeyer])
+- [#7499] Disable Turbo for the 2FA backup codes form ([leofeyer])
+- [#7493] Fix the loading time of the code editor ([leofeyer])
+
 ## [5.4.1] (2024-08-23)
 
 **Fixed issues:**
@@ -85,6 +94,7 @@ This project adheres to [Semantic Versioning].
 - [#7229] Fix the `.nogrid` backwards compatibility layer ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.4.2]: https://github.com/contao/contao/releases/tag/5.4.2
 [5.4.1]: https://github.com/contao/contao/releases/tag/5.4.1
 [5.4.0]: https://github.com/contao/contao/releases/tag/5.4.0
 [5.4.0-RC4]: https://github.com/contao/contao/releases/tag/5.4.0-RC4
@@ -151,3 +161,7 @@ This project adheres to [Semantic Versioning].
 [#7456]: https://github.com/contao/contao/pull/7456
 [#7458]: https://github.com/contao/contao/pull/7458
 [#7471]: https://github.com/contao/contao/pull/7471
+[#7493]: https://github.com/contao/contao/pull/7493
+[#7499]: https://github.com/contao/contao/pull/7499
+[#7500]: https://github.com/contao/contao/pull/7500
+[#7503]: https://github.com/contao/contao/pull/7503
