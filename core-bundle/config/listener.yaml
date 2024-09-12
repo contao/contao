@@ -60,9 +60,6 @@ services:
     contao.listener.data_container.accordion:
         class: Contao\CoreBundle\EventListener\DataContainer\AccordionListener
 
-    contao.listener.data_container.adjust_gallery_palette:
-        class: Contao\CoreBundle\EventListener\DataContainer\LegacyGalleryPaletteListener
-
     contao.listener.data_container.backend_favorites:
         class: Contao\CoreBundle\EventListener\DataContainer\BackendFavoritesListener
         arguments:
@@ -136,6 +133,9 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\LayoutOptionsListener
         arguments:
             - '@database_connection'
+
+    contao.listener.data_container.legacy_gallery_palette:
+        class: Contao\CoreBundle\EventListener\DataContainer\LegacyGalleryPaletteListener
 
     contao.listener.data_container.logout_page_redirect:
         class: Contao\CoreBundle\EventListener\DataContainer\LogoutPageRedirectListener
