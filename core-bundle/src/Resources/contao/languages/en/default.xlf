@@ -1029,7 +1029,7 @@
         <source>Fit the box</source>
       </trans-unit>
       <trans-unit id="MSC.box.1">
-        <source>Both sides of the image are adjusted to the given dimensions without exceeding them, and the image is resized proportionally.</source>
+        <source>The image will be resized proportionally so that both sides do not exceed the given dimensions.</source>
       </trans-unit>
       <trans-unit id="MSC.exact.0">
         <source>Exact dimensions</source>
