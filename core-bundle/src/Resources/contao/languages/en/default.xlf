@@ -1029,7 +1029,7 @@
         <source>Fit the box</source>
       </trans-unit>
       <trans-unit id="MSC.box.1">
-        <source>The image will be resized proportionally so that both sides do not exceed the given dimensions. Same as &lt;em&gt;contain&lt;/em&gt; in CSS.</source>
+        <source>The image will be resized proportionally so that both sides do not exceed the given dimensions. Same as &lt;code&gt;contain&lt;/code&gt; in CSS.</source>
       </trans-unit>
       <trans-unit id="MSC.exact.0">
         <source>Exact dimensions</source>
