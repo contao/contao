@@ -1041,7 +1041,7 @@
         <source>Important part</source>
       </trans-unit>
       <trans-unit id="MSC.crop.1">
-        <source>Preserves the important part of an image as specified in the file manager. If necessary, the image will be cropped. Same as &lt;em&gt;cover&lt;/em&gt; in CSS.</source>
+        <source>Preserves the important part of an image as specified in the file manager. The image will be resized to the exact dimensions given and cropped if necessary, preserving the important part. This is similar to the &lt;em&gt;cover&lt;/em&gt; property in CSS.</source>
       </trans-unit>
       <trans-unit id="MSC.left_top.0">
         <source>Left | Top</source>
