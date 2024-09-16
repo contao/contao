@@ -31,7 +31,7 @@ class PageError404 extends Frontend
 		global $objPage;
 
 		$obj404 = $this->prepare($page);
-		$objPage = $obj404->loadDetails();
+		$objPage = $obj404->loadDetails(); // FIXME: global object is overwritten
 
 		// Reset inherited cache timeouts (see #231)
 		if (!$objPage->includeCache)

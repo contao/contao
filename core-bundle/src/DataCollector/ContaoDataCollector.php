@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\DataCollector;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\LayoutModel;
 use Contao\Model\Registry;
@@ -31,8 +32,10 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
 {
     use FrameworkAwareTrait;
 
-    public function __construct(private readonly TokenChecker $tokenChecker)
-    {
+    public function __construct(
+        private readonly TokenChecker $tokenChecker,
+        private readonly PageFinder $pageFinder,
+    ) {
     }
 
     public function collect(Request $request, Response $response, \Throwable|null $exception = null): void
@@ -116,11 +119,6 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         return 'contao';
     }
 
-    public function reset(): void
-    {
-        $this->data = [];
-    }
-
     /**
      * @return array<string, string|bool>
      */
@@ -143,11 +141,13 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
             $modelCount = Registry::getInstance()->count();
         }
 
+        $pageModel = $this->pageFinder->getCurrentPage();
+
         $this->data['summary'] = [
             'version' => $this->getContaoVersion(),
             'framework' => $framework,
             'models' => $modelCount,
-            'frontend' => isset($GLOBALS['objPage']),
+            'frontend' => $pageModel instanceof PageModel,
             'preview' => $this->tokenChecker->isPreviewMode(),
             'layout' => $this->getLayoutName(),
             'template' => $this->getTemplateName(),
@@ -174,17 +174,14 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
 
     private function getLayout(): LayoutModel|null
     {
-        if (!isset($GLOBALS['objPage'])) {
+        if (!$pageModel = $this->pageFinder->getCurrentPage()) {
             return null;
         }
 
-        /** @var PageModel $objPage */
-        $objPage = $GLOBALS['objPage'];
-
-        if (!$objPage->layoutId) {
+        if (!$pageModel->layoutId) {
             return null;
         }
 
-        return $this->framework->getAdapter(LayoutModel::class)->findById($objPage->layoutId);
+        return $this->framework->getAdapter(LayoutModel::class)->findById($pageModel->layoutId);
     }
 }

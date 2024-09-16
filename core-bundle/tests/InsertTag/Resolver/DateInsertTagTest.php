@@ -7,6 +7,7 @@ namespace Contao\CoreBundle\Tests\InsertTag\Resolver;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\InsertTag\ResolvedParameters;
 use Contao\CoreBundle\InsertTag\Resolver\DateInsertTag;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\Date;
 use Contao\TestCase\ContaoTestCase;
 
@@ -23,7 +24,10 @@ class DateInsertTagTest extends ContaoTestCase
             ->willReturn('parsed')
         ;
 
-        $insertTag = new DateInsertTag($this->mockContaoFramework([Date::class => $dateAdapter]));
+        $insertTag = new DateInsertTag(
+            $this->mockContaoFramework([Date::class => $dateAdapter]),
+            $this->createMock(PageFinder::class),
+        );
 
         foreach ($formats as $format) {
             $result = $insertTag(new ResolvedInsertTag('date', new ResolvedParameters([$format]), []));

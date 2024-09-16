@@ -19,6 +19,7 @@ use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
@@ -46,6 +47,7 @@ class TemplateTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class)));
+        $container->set('contao.routing.page_finder', $this->createMock(PageFinder::class));
 
         System::setContainer($container);
     }
@@ -338,11 +340,6 @@ class TemplateTest extends TestCase
      */
     public function testCompileReplacesLiteralInsertTags(string $buffer, string $expectedOutput): void
     {
-        $page = new \stdClass();
-        $page->minifyMarkup = false;
-
-        $GLOBALS['objPage'] = $page;
-
         $template = new class($buffer) extends FrontendTemplate {
             public function __construct(private readonly string|null $testBuffer)
             {
@@ -368,8 +365,6 @@ class TemplateTest extends TestCase
         };
 
         $this->assertSame($expectedOutput, $template->testCompile());
-
-        unset($GLOBALS['objPage']);
     }
 
     public static function provideBuffer(): iterable

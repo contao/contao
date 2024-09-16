@@ -135,8 +135,7 @@ class ContentDownloads extends ContentDownload
 				}
 				else
 				{
-					global $objPage;
-
+					$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 					$arrMeta = $this->getMetaData($objFiles->meta, $objPage->language);
 
 					if (empty($arrMeta))
@@ -226,8 +225,7 @@ class ContentDownloads extends ContentDownload
 					}
 					else
 					{
-						global $objPage;
-
+						$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 						$arrMeta = $this->getMetaData($objSubfiles->meta, $objPage->language);
 
 						if (empty($arrMeta))

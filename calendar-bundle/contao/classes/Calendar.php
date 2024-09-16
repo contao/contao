@@ -231,6 +231,7 @@ class Calendar extends Frontend
 					}
 
 					// Override the global page object (#2946)
+					// FIXME: global object is overwritten
 					$GLOBALS['objPage'] = $this->getPageWithDetails(CalendarModel::findById($event['pid'])->jumpTo);
 
 					// Override the assets and files context (#6563)
@@ -340,8 +341,7 @@ class Calendar extends Frontend
 		$intKey = date('Ymd', $intStart);
 		$span = self::calculateSpan($intStart, $intEnd);
 		$format = $objEvent->addTime ? 'datimFormat' : 'dateFormat';
-
-		global $objPage;
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		if ($objPage instanceof PageModel)
 		{

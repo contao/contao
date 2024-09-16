@@ -67,8 +67,6 @@ class ModuleQuicklink extends Module
 	 */
 	protected function compile()
 	{
-		global $objPage;
-
 		// Get all active pages
 		$objPages = PageModel::findPublishedRegularByIds($this->pages);
 
@@ -82,6 +80,7 @@ class ModuleQuicklink extends Module
 		$container = System::getContainer();
 		$security = $container->get('security.helper');
 		$urlGenerator = $container->get('contao.routing.content_url_generator');
+		$objPage = $container->get('contao.routing.page_finder')->getCurrentPage();
 
 		foreach ($objPages as $objSubpage)
 		{

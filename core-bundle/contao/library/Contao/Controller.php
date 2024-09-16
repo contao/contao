@@ -64,7 +64,7 @@ abstract class Controller extends System
 		// Check for a theme folder
 		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request))
 		{
-			global $objPage;
+			$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 			if ($objPage->templateGroup ?? null)
 			{
@@ -289,7 +289,7 @@ abstract class Controller extends System
 			return '';
 		}
 
-		global $objPage;
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		// Articles
 		if (!\is_object($intId) && $intId == 0)
@@ -439,8 +439,6 @@ abstract class Controller extends System
 	 */
 	public static function getArticle($varId, $blnMultiMode=false, $blnIsInsertTag=false, $strColumn='main')
 	{
-		global $objPage;
-
 		if (\is_object($varId))
 		{
 			$objRow = $varId;
@@ -452,6 +450,7 @@ abstract class Controller extends System
 				return '';
 			}
 
+			$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 			$objRow = ArticleModel::findByIdOrAliasAndPid($varId, !$blnIsInsertTag ? $objPage->id : null);
 
 			if ($objRow === null)
@@ -815,8 +814,7 @@ abstract class Controller extends System
 			$strScripts .= implode('', array_unique($GLOBALS['TL_BODY']));
 		}
 
-		global $objPage;
-
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 		$objLayout = ($objPage !== null) ? LayoutModel::findById($objPage->layoutId) : null;
 		$blnCombineScripts = $objLayout !== null && $objLayout->combineScripts;
 
@@ -1414,9 +1412,8 @@ abstract class Controller extends System
 			$objFiles->reset();
 		}
 
-		global $objPage;
-
 		$arrEnclosures = array();
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 		$allowedDownload = StringUtil::trimsplit(',', strtolower(Config::get('allowedDownload')));
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 

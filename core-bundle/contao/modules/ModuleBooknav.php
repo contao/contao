@@ -50,7 +50,7 @@ class ModuleBooknav extends Module
 			return $objTemplate->parse();
 		}
 
-		global $objPage;
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		if (!$this->rootPage || !\in_array($this->rootPage, $objPage->trail))
 		{
@@ -83,7 +83,7 @@ class ModuleBooknav extends Module
 		$this->arrPages[$objTarget->id] = $objTarget;
 		$this->getBookPages($objTarget->id, $groups, time());
 
-		global $objPage;
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		// Upper page
 		if ($objPage->id != $objTarget->id)

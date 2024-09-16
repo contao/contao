@@ -32,7 +32,7 @@ class FrontendIndex extends Frontend
 	{
 		global $objPage;
 
-		$objPage = $pageModel;
+		$objPage = $pageModel; // FIXME: global object is overwritten
 
 		// Inherit the settings from the parent pages
 		$objPage->loadDetails();

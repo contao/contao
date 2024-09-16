@@ -22,6 +22,7 @@ use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\InsertTag\Resolver\FragmentInsertTag;
 use Contao\CoreBundle\InsertTag\Resolver\IfLanguageInsertTag;
 use Contao\CoreBundle\InsertTag\Resolver\LegacyInsertTag;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\InsertTags;
@@ -55,7 +56,7 @@ class InsertTagParserTest extends TestCase
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_MIME'], $GLOBALS['TL_HOOKS'], $GLOBALS['objPage']);
+        unset($GLOBALS['TL_MIME'], $GLOBALS['TL_HOOKS']);
 
         $this->resetStaticProperties([InsertTags::class, System::class, Config::class]);
 
@@ -217,6 +218,7 @@ class InsertTagParserTest extends TestCase
         $parser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'br', null, true, false));
         $parser->addBlockSubscription(new InsertTagSubscription(new IfLanguageInsertTag($this->createMock(TranslatorInterface::class)), '__invoke', 'ifnlng', 'ifnlng', true, false));
         System::getContainer()->set('contao.insert_tag.parser', $parser);
+        System::getContainer()->set('contao.routing.page_finder', $this->createMock(PageFinder::class));
 
         $this->assertSame($expected, $parser->replaceInline($source));
     }

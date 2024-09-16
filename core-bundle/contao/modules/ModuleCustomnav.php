@@ -63,8 +63,6 @@ class ModuleCustomnav extends Module
 	 */
 	protected function compile()
 	{
-		global $objPage;
-
 		$items = array();
 
 		// Get all active pages and also include root pages if the language is added to the URL (see #72)
@@ -85,6 +83,7 @@ class ModuleCustomnav extends Module
 		$container = System::getContainer();
 		$security = $container->get('security.helper');
 		$urlGenerator = $container->get('contao.routing.content_url_generator');
+		$objPage = $container->get('contao.routing.page_finder')->getCurrentPage();
 
 		foreach ($objPages as $objModel)
 		{

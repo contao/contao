@@ -191,7 +191,7 @@ abstract class Events extends Module
 	 */
 	protected function addEvent($objEvents, $intStart, $intEnd, $intBegin, $intLimit, $intCalendar)
 	{
-		global $objPage;
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		$intDate = $intStart;
 		$intKey = date('Ymd', $intStart);

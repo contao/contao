@@ -54,12 +54,12 @@ class ModuleArticleList extends Module
 	 */
 	protected function compile()
 	{
-		global $objPage;
-
 		if (!$this->inColumn)
 		{
 			$this->inColumn = 'main';
 		}
+
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		$id = $objPage->id;
 		$objTarget = null;

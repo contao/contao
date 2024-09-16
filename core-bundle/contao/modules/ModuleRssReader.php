@@ -91,7 +91,7 @@ class ModuleRssReader extends Module
 	 */
 	protected function compile()
 	{
-		global $objPage;
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		if ($this->rss_template != 'rss_default')
 		{

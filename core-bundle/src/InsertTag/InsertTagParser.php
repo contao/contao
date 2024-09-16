@@ -448,15 +448,18 @@ class InsertTagParser implements ResetInterface
     private function getFragmentForTag(InsertTag $tag): InsertTagResult
     {
         $attributes = ['insertTag' => $tag->serialize()];
+        $request = $this->requestStack->getCurrentRequest();
 
-        if ($scope = $this->requestStack->getCurrentRequest()?->attributes->get('_scope')) {
+        if ($scope = $request?->attributes->get('_scope')) {
             $attributes['_scope'] = $scope;
         }
 
+        $pageModel = $request?->attributes->get('pageModel');
+
         $query = [
-            'clientCache' => $GLOBALS['objPage']->clientCache ?? 0,
-            'pageId' => $GLOBALS['objPage']->id ?? null,
-            'request' => $this->requestStack->getCurrentRequest()?->getRequestUri(),
+            'clientCache' => $pageModel->clientCache ?? 0,
+            'pageId' => $pageModel->id ?? null,
+            'request' => $request?->getRequestUri(),
         ];
 
         $esiTag = $this->fragmentHandler->render(

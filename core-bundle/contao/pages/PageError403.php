@@ -31,7 +31,7 @@ class PageError403 extends Frontend
 		global $objPage;
 
 		$obj403 = $this->prepare($objRootPage);
-		$objPage = $obj403->loadDetails();
+		$objPage = $obj403->loadDetails(); // FIXME: global object is overwritten
 
 		// Reset inherited cache timeouts (see #231)
 		if (!$objPage->includeCache)
