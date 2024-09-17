@@ -362,6 +362,11 @@ class FileSelector extends Widget
 	 */
 	protected function renderFiletree($path, $intMargin, $mount=false, $blnProtected=true, $arrFound=array())
 	{
+		if (!$this->isMounted($path))
+		{
+			throw new \RuntimeException('Folder "' . $path . '" is not mounted or cannot be found.');
+		}
+
 		// Invalid path
 		if (!is_dir($path))
 		{
@@ -664,6 +669,38 @@ class FileSelector extends Widget
 		while ($path != '.');
 
 		return true;
+	}
+
+	protected function isMounted($path)
+	{
+		if (Validator::isInsecurePath($path))
+		{
+			throw new \RuntimeException('Insecure path ' . $path);
+		}
+
+		$this->import(BackendUser::class, 'User');
+
+		$path = StringUtil::stripRootDir($path);
+		$filemounts = array();
+
+		if ($this->User->isAdmin)
+		{
+			$filemounts[] = System::getContainer()->getParameter('contao.upload_path');
+		}
+		elseif (\is_array($this->User->filemounts))
+		{
+			$filemounts = $this->User->filemounts;
+		}
+
+		foreach ($filemounts as $filemount)
+		{
+			if (Path::isBasePath($filemount, $path))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 }
 
