@@ -2,6 +2,14 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.49] (2024-09-17)
+
+**Security fixes:**
+
+- [CVE-2024-45604]: Directory traversal in the FileSelector widget
+- [CVE-2024-45398]: Remote command execution through file uploads
+- [CVE-2024-45612]: Insert tag injection via canonical URLs
+
 ## [4.13.48] (2024-09-12)
 
 **Fixed issues:**
@@ -1060,6 +1068,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.49]: https://github.com/contao/contao/releases/tag/4.13.49
 [4.13.48]: https://github.com/contao/contao/releases/tag/4.13.48
 [4.13.47]: https://github.com/contao/contao/releases/tag/4.13.47
 [4.13.46]: https://github.com/contao/contao/releases/tag/4.13.46
@@ -1120,6 +1129,9 @@ This project adheres to [Semantic Versioning].
 [CVE-2023-36806]: https://github.com/contao/contao/security/advisories/GHSA-4gpr-p634-922x
 [CVE-2023-29200]: https://github.com/contao/contao/security/advisories/GHSA-fp7q-xhhw-6rj3
 [CVE-2022-24899]: https://github.com/contao/contao/security/advisories/GHSA-m8x6-6r63-qvj2
+[CVE-2024-45604]: https://github.com/contao/contao/security/advisories/GHSA-4p75-5p53-65m9
+[CVE-2024-45398]: https://github.com/contao/contao/security/advisories/GHSA-vm6r-j788-hjh5
+[CVE-2024-45612]: https://github.com/contao/contao/security/advisories/GHSA-2xpq-xp6c-5mgj
 [a-v-l]: https://github.com/a-v-l
 [agonyz]: https://github.com/agonyz
 [AlexanderWillner]: https://github.com/AlexanderWillner
