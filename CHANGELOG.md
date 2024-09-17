@@ -2,6 +2,13 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.4.3] (2024-09-17)
+
+**Security fixes:**
+
+- [CVE-2024-45398]: Remote command execution through file uploads
+- [CVE-2024-45612]: Insert tag injection via canonical URLs
+
 ## [5.4.2] (2024-09-12)
 
 **Fixed issues:**
@@ -94,6 +101,7 @@ This project adheres to [Semantic Versioning].
 - [#7229] Fix the `.nogrid` backwards compatibility layer ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.4.3]: https://github.com/contao/contao/releases/tag/5.4.3
 [5.4.2]: https://github.com/contao/contao/releases/tag/5.4.2
 [5.4.1]: https://github.com/contao/contao/releases/tag/5.4.1
 [5.4.0]: https://github.com/contao/contao/releases/tag/5.4.0
@@ -101,6 +109,8 @@ This project adheres to [Semantic Versioning].
 [5.4.0-RC3]: https://github.com/contao/contao/releases/tag/5.4.0-RC3
 [5.4.0-RC2]: https://github.com/contao/contao/releases/tag/5.4.0-RC2
 [5.4.0-RC1]: https://github.com/contao/contao/releases/tag/5.4.0-RC1
+[CVE-2024-45398]: https://github.com/contao/contao/security/advisories/GHSA-vm6r-j788-hjh5
+[CVE-2024-45612]: https://github.com/contao/contao/security/advisories/GHSA-2xpq-xp6c-5mgj
 [ausi]: https://github.com/ausi
 [bytehead]: https://github.com/bytehead
 [fritzmg]: https://github.com/fritzmg
