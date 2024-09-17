@@ -197,7 +197,8 @@ class Statement
 	{
 		if ($intRows <= 0)
 		{
-			$intRows = 30;
+			// Ensure offset works if > 0 and limit is set to 0
+			$intRows = PHP_INT_MAX;
 		}
 
 		if ($intOffset < 0)
