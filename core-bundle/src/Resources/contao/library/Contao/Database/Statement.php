@@ -198,7 +198,7 @@ class Statement
 		if ($intRows <= 0)
 		{
 			// Ensure offset works if > 0 and limit is set to 0
-			$intRows = PHP_INT_MAX;
+			$intRows = '18446744073709551615';
 		}
 
 		if ($intOffset < 0)
