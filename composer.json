@@ -281,7 +281,7 @@
     "extra": {
         "bamarni-bin": {
             "bin-links": false,
-            "target-directory": "tools"
+            "forward-command": true
         },
         "contao-manager-plugin": {
             "contao/calendar-bundle": "Contao\\CalendarBundle\\ContaoManager\\Plugin",
@@ -310,14 +310,14 @@
             "@ecs-legacy",
             "@ecs-templates"
         ],
-        "ecs": "@php tools/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests test-case/src tools/*/src --config tools/ecs/config/default.php --fix --ansi",
-        "ecs-legacy": "@php tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao --config tools/ecs/config/legacy.php --fix --ansi",
-        "ecs-templates": "@php tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config tools/ecs/config/template.php --fix --ansi",
+        "ecs": "@php vendor-bin/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests test-case/src vendor-bin/*/src --config vendor-bin/ecs/config/default.php --fix --ansi",
+        "ecs-legacy": "@php vendor-bin/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao --config vendor-bin/ecs/config/legacy.php --fix --ansi",
+        "ecs-templates": "@php vendor-bin/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config vendor-bin/ecs/config/template.php --fix --ansi",
         "functional-tests": "@php vendor/bin/phpunit --testsuite=functional --colors=always",
-        "monorepo-tools": "@php tools/monorepo/vendor/bin/monorepo-tools composer-json --validate --ansi",
-        "phpstan": "@php tools/phpstan/vendor/bin/phpstan analyze --ansi",
-        "require-checker": "@php tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config.json composer.json",
-        "service-linter": "@php tools/service-linter/bin/lint-service-ids --ansi",
+        "monorepo-tools": "@php vendor-bin/monorepo-tools/vendor/bin/monorepo-tools composer-json --validate --ansi",
+        "phpstan": "@php vendor-bin/phpstan/vendor/bin/phpstan analyze --ansi",
+        "require-checker": "@php vendor-bin/require-checker/vendor/bin/composer-require-checker check --config-file=vendor-bin/require-checker/config.json composer.json",
+        "service-linter": "@php vendor-bin/service-linter/bin/lint-service-ids --ansi",
         "unit-tests": "@php vendor/bin/phpunit --colors=always"
     }
 }
