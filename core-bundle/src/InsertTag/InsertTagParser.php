@@ -17,6 +17,7 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTagFlag;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Environment;
 use Contao\InsertTags;
+use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Psr\Log\LoggerInterface;
@@ -447,16 +448,27 @@ class InsertTagParser implements ResetInterface
 
     private function getFragmentForTag(InsertTag $tag): InsertTagResult
     {
+        $clientCache = 0;
+        $pageId = null;
+
+        $request = $this->requestStack->getCurrentRequest();
+        $pageModel = $request?->attributes->get('pageModel');
+
+        if ($pageModel instanceof PageModel) {
+            $clientCache = $pageModel->clientCache;
+            $pageId = $pageModel->id;
+        }
+
         $attributes = ['insertTag' => $tag->serialize()];
 
-        if ($scope = $this->requestStack->getCurrentRequest()?->attributes->get('_scope')) {
+        if ($scope = $request?->attributes->get('_scope')) {
             $attributes['_scope'] = $scope;
         }
 
         $query = [
-            'clientCache' => $GLOBALS['objPage']->clientCache ?? 0,
-            'pageId' => $GLOBALS['objPage']->id ?? null,
-            'request' => $this->requestStack->getCurrentRequest()?->getRequestUri(),
+            'clientCache' => $clientCache,
+            'pageId' => $pageId,
+            'request' => $request?->getRequestUri(),
         ];
 
         $esiTag = $this->fragmentHandler->render(
