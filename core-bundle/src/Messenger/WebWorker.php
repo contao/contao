@@ -156,8 +156,10 @@ class WebWorker
         // anyway - we're using NullOutput.
         $columnsBefore = (string) getenv('COLUMNS');
         $linesBefore = (string) getenv('LINES');
-        putenv('COLUMNS=80');
-        putenv('LINES=50');
+        if ((int) $columnsBefore < 1 || (int) $linesBefore < 1) {
+            putenv('COLUMNS=80');
+            putenv('LINES=50');
+        }
 
         // No need to log anything because this is done by the messenger:consume command
         // already and would only cause log duplication.
