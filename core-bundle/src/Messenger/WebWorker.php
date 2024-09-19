@@ -146,13 +146,14 @@ class WebWorker
 
         $input = new ArrayInput($inputParameters);
 
-        // The ConsumeMessagesCommand uses SymfonyStyle() which itself tries to automatically
-        // detect the optimal width and height of the terminal to adjust its output.
-        // For this, it uses the "stty" command and only does this, if the proc_open() function
-        // exists. So if the PHP setup is configured to support proc_open() but the "stty" process
-        // call fails for permission issues, the WebWorker will report PHP errors.
-        // We can prevent this from happening by defining the dimensions for the terminal directly
-        // as it is irrelevant for us anyway - we're using NullOutput.
+        // The ConsumeMessagesCommand uses SymfonyStyle() which itself tries to
+        // automatically detect the optimal width and height of the terminal to adjust
+        // its output. For this, it uses the "stty" command and only does this, if the
+        // proc_open() function exists. So if the PHP setup is configured to support
+        // proc_open() but the "stty" process call fails for permission issues, the
+        // WebWorker will report PHP errors. We can prevent this from happening by
+        // defining the dimensions for the terminal directly as it is irrelevant for us
+        // anyway - we're using NullOutput.
         $columnsBefore = (string) getenv('COLUMNS');
         $linesBefore = (string) getenv('LINES');
         putenv('COLUMNS=80');
@@ -163,8 +164,8 @@ class WebWorker
         $this->consumeMessagesCommand->run($input, new NullOutput());
 
         // Do not leak for SAPIs that run on long-running workers
-        putenv('COLUMNS=' . $columnsBefore);
-        putenv('LINES=' . $linesBefore);
+        putenv('COLUMNS='.$columnsBefore);
+        putenv('LINES='.$linesBefore);
 
         $this->webWorkerRunning = false;
     }
