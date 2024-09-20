@@ -132,7 +132,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
             $matches,
         );
 
-        return new Source(implode("\n", $matches[1] ?? []), $templateName, $path);
+        return new Source(implode("\n", $matches[1]), $templateName, $path);
     }
 
     /**
