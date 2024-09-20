@@ -197,7 +197,7 @@ class Statement
 	{
 		if ($intRows <= 0)
 		{
-			// Ensure offset works if > 0 and limit is set to 0
+			// 2^64-1 is the maximum of unsigned BIGINT, the biggest limit possible
 			$intRows = '18446744073709551615';
 		}
 
