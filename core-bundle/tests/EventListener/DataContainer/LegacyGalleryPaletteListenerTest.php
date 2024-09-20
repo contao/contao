@@ -50,4 +50,13 @@ class LegacyGalleryPaletteListenerTest extends TestCase
 
         $this->assertSame('customTpl', $GLOBALS['TL_DCA']['tl_content']['palettes']['gallery']);
     }
+
+    public function testDoesNothingIfElementIsNotDefined(): void
+    {
+        $GLOBALS['TL_CTE']['media'] = null;
+
+        (new LegacyGalleryPaletteListener())();
+
+        $this->assertSame('customTpl', $GLOBALS['TL_DCA']['tl_content']['palettes']['gallery']);
+    }
 }
