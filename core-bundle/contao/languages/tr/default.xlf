@@ -387,6 +387,7 @@
       </trans-unit>
       <trans-unit id="ERR.personalDataPassword">
         <source>There is at least one &quot;personal data&quot; module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the &quot;change password&quot; module instead.</source>
+        <target>Parolanın değiştirilmesine izin veren en az bir &quot;kişisel veri&quot; modülü var. Bu bir güvenlik riski oluşturduğundan Contao 6 üzerinde çalışmayacak. Bunun yerine &quot;parolayı değiştir&quot; modülünü kullanın.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>

@@ -2,6 +2,22 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.4.3] (2024-09-17)
+
+**Security fixes:**
+
+- [CVE-2024-45398]: Remote command execution through file uploads
+- [CVE-2024-45612]: Insert tag injection via canonical URLs
+
+## [5.4.2] (2024-09-12)
+
+**Fixed issues:**
+
+- [#7503] Always break out of Turbo frames when missing ([fritzmg])
+- [#7500] Switch to a stable ALTCHA version ([leofeyer])
+- [#7499] Disable Turbo for the 2FA backup codes form ([leofeyer])
+- [#7493] Fix the loading time of the code editor ([leofeyer])
+
 ## [5.4.1] (2024-08-23)
 
 **Fixed issues:**
@@ -85,12 +101,16 @@ This project adheres to [Semantic Versioning].
 - [#7229] Fix the `.nogrid` backwards compatibility layer ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.4.3]: https://github.com/contao/contao/releases/tag/5.4.3
+[5.4.2]: https://github.com/contao/contao/releases/tag/5.4.2
 [5.4.1]: https://github.com/contao/contao/releases/tag/5.4.1
 [5.4.0]: https://github.com/contao/contao/releases/tag/5.4.0
 [5.4.0-RC4]: https://github.com/contao/contao/releases/tag/5.4.0-RC4
 [5.4.0-RC3]: https://github.com/contao/contao/releases/tag/5.4.0-RC3
 [5.4.0-RC2]: https://github.com/contao/contao/releases/tag/5.4.0-RC2
 [5.4.0-RC1]: https://github.com/contao/contao/releases/tag/5.4.0-RC1
+[CVE-2024-45398]: https://github.com/contao/contao/security/advisories/GHSA-vm6r-j788-hjh5
+[CVE-2024-45612]: https://github.com/contao/contao/security/advisories/GHSA-2xpq-xp6c-5mgj
 [ausi]: https://github.com/ausi
 [bytehead]: https://github.com/bytehead
 [fritzmg]: https://github.com/fritzmg
@@ -151,3 +171,7 @@ This project adheres to [Semantic Versioning].
 [#7456]: https://github.com/contao/contao/pull/7456
 [#7458]: https://github.com/contao/contao/pull/7458
 [#7471]: https://github.com/contao/contao/pull/7471
+[#7493]: https://github.com/contao/contao/pull/7493
+[#7499]: https://github.com/contao/contao/pull/7499
+[#7500]: https://github.com/contao/contao/pull/7500
+[#7503]: https://github.com/contao/contao/pull/7503
