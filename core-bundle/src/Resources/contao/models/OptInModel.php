@@ -228,4 +228,11 @@ class OptInModel extends Model
 			}
 		}
 	}
+
+	public static function deleteByTableAndEmail($strTable, $strEmail)
+	{
+		$t = static::$strTable;
+		Database::getInstance()->prepare("DELETE FROM $t WHERE $t.email = ? AND $t.id IN (SELECT pid FROM tl_opt_in_related WHERE relTable=?)")
+			->execute($strEmail, $strTable);
+	}
 }
