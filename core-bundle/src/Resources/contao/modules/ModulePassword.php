@@ -260,10 +260,7 @@ class ModulePassword extends Module
 				$objMember->save();
 
 				System::getContainer()->get('contao.repository.remember_me')->deleteByUsername($objMember->username);
-
-				/** @var OptInModel $optInAdapter */
-				$optInAdapter = System::getContainer()->get('contao.framework')->getAdapter(OptInModel::class);
-				$optInAdapter::deleteByTableAndEmail('tl_member', $objMember->email);
+				OptInModel::deleteByTableAndEmail('tl_member', $objMember->email);
 
 				$optInToken->confirm();
 
