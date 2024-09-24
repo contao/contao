@@ -51,7 +51,7 @@ class ContentElementTypeListener implements ResetInterface
 
     /**
      * Return elements that can be created in the current context (e.g. nested fragments).
-    */
+     */
     private function getAllowedElements(string $ptable, int $pid): array
     {
         $cacheKey = $ptable.'.'.$pid;
@@ -60,7 +60,7 @@ class ContentElementTypeListener implements ResetInterface
             return $this->cache[$cacheKey];
         }
 
-        $groups = array();
+        $groups = [];
 
         foreach ($GLOBALS['TL_CTE'] as $k => $v) {
             foreach (array_keys($v) as $kk) {
