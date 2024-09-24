@@ -431,7 +431,7 @@ class tl_user_group extends Backend
 		// Get all excluded fields
 		foreach ($GLOBALS['TL_DCA'] as $k=>$v)
 		{
-			if (array_key_exists('fields', $v) && is_array($v['fields']))
+			if (is_array($v['fields'] ?? null))
 			{
 				foreach ($v['fields'] as $kk=>$vv)
 				{
