@@ -76,6 +76,17 @@ class ContaoEscaperNodeVisitorTest extends TestCase
         $this->assertSame('<h1>&amp; will look like &amp;</h1><p>This is <i>raw HTML</i>.</p>', $output);
     }
 
+    public function testDoesDoubleEncodeJson(): void
+    {
+        $templateContent = '<div data-json="{{ data|json_encode }}">{{ data }}</div>';
+
+        $output = $this->getEnvironment($templateContent)->render('legacy.html.twig', [
+            'data' => 'foo &quot; bar &quot; baz',
+        ]);
+
+        $this->assertSame('<div data-json="&quot;foo &amp;quot; bar &amp;quot; baz&quot;">foo &quot; bar &quot; baz</div>', $output);
+    }
+
     public function testHandlesFiltersAndFunctions(): void
     {
         $templateContent = '{{ heart() }} {{ target|trim }}';
