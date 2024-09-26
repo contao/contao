@@ -110,6 +110,12 @@ final class ContaoEscaperNodeVisitor implements NodeVisitorInterface
             return false;
         }
 
+        // Do not use the Contao escaper after the `json_encode` filter to prevent issues
+        // with `double_encode: false`
+        if ($node->getNode('node') instanceof FilterExpression && 'json_encode' === $node->getNode('node')->getNode('filter')->getAttribute('value')) {
+            return false;
+        }
+
         $type = $argument->getAttribute('value');
 
         return true;
