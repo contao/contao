@@ -100,7 +100,7 @@ class TemplateLocatorTest extends TestCase
         $paths = [
             'foo' => Path::join($projectDir, 'system/modules/foo/templates'),
             'BarBundle' => Path::join($projectDir, 'vendor-bundles/BarBundle/contao/templates'),
-            'CoreBundle' =>Path::join($projectDir, 'vendor-bundles/CoreBundle/Resources/contao/templates'),
+            'CoreBundle' => Path::join($projectDir, 'vendor-bundles/CoreBundle/Resources/contao/templates'),
             'App' => Path::join($projectDir, 'contao/templates'),
         ];
 
