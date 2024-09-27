@@ -250,13 +250,13 @@ abstract class ContentElementTestCase extends TestCase
 
     protected function getContaoFilesystemLoader(): ContaoFilesystemLoader
     {
-        $resourceBasePath = Path::canonicalize(__DIR__.'/../../../templates');
+        $resourceBasePath = Path::canonicalize(__DIR__.'/../../../');
 
         $resourceFinder = $this->createMock(ResourceFinder::class);
         $resourceFinder
             ->method('getExistingSubpaths')
             ->with('templates')
-            ->willReturn(['ContaoCore' => $resourceBasePath])
+            ->willReturn(['ContaoCore' => $resourceBasePath.'/contao/templates'])
         ;
 
         $templateLocator = new TemplateLocator(

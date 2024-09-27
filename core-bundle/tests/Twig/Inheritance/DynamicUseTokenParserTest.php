@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Inheritance;
 
+use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
@@ -40,10 +41,16 @@ class DynamicUseTokenParserTest extends TestCase
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/use');
 
+        $resourceFinder = $this->createMock(ResourceFinder::class);
+        $resourceFinder
+            ->method('getExistingSubpaths')
+            ->with('templates')
+            ->willReturn(['FooBundle' => Path::join($projectDir, 'bundle/contao/templates'), 'App' => Path::join($projectDir, 'templates')]);
+        ;
+
         $templateLocator = new TemplateLocator(
             $projectDir,
-            ['FooBundle' => ContaoModuleBundle::class],
-            ['FooBundle' => ['path' => Path::join($projectDir, 'bundle')]],
+            $resourceFinder,
             $themeNamespace = new ThemeNamespace(),
             $this->createMock(Connection::class),
         );
