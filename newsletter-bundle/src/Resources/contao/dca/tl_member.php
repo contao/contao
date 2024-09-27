@@ -29,5 +29,6 @@ $GLOBALS['TL_DCA']['tl_member']['fields']['newsletter'] = array
 	(
 		array('Newsletter', 'synchronize')
 	),
-	'sql'                     => "blob NULL"
+	'sql'                     => "blob NULL",
+	'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 );
