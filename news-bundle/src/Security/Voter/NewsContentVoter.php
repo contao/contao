@@ -56,8 +56,8 @@ class NewsContentVoter extends AbstractDynamicPtableVoter
 
         $archiveId = $this->getArchiveId($id);
 
-        return ($archiveId
-            && $this->accessDecisionManager->decide($token, [ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE], $archiveId));
+        return $archiveId
+            && $this->accessDecisionManager->decide($token, [ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE], $archiveId);
     }
 
     private function getArchiveId(int $newsId): int
