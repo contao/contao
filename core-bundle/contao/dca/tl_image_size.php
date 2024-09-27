@@ -155,7 +155,8 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'inputType'               => 'checkboxWizard',
 			'options_callback'        => array('tl_image_size', 'getFormats'),
 			'eval'                    => array('multiple'=>true),
-			'sql'                     => "varchar(1024) NOT NULL default ''"
+			'sql'                     => "varchar(1024) NOT NULL default ''",
+			'relation'                => array('table'=>'tl_image_size', 'type'=>'hasMany', 'load'=>'lazy')
 		),
 		'preserveMetadata' => array
 		(
