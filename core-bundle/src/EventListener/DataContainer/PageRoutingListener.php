@@ -54,14 +54,17 @@ class PageRoutingListener
             return '';
         }
 
-        $aliasPages = $pageAdapter->findSimilarByAlias($currentPage);
+        if (!$this->pageRegistry->isRoutable($currentPage)) {
+            return '';
+        }
 
-        if (null === $aliasPages) {
+        if (!$aliasPages = $pageAdapter->findSimilarByAlias($currentPage)) {
             return '';
         }
 
         $conflicts = [];
-        $currentUrl = $this->buildUrl($currentPage->alias, $currentPage->urlPrefix, $currentPage->urlSuffix);
+        $currentRoute = $this->pageRegistry->getRoute($currentPage);
+        $currentUrl = $currentRoute->compile()->getStaticPrefix().$currentRoute->getUrlSuffix();
         $backendAdapter = $this->framework->getAdapter(Backend::class);
 
         foreach ($aliasPages as $aliasPage) {
@@ -71,15 +74,20 @@ class PageRoutingListener
                 continue;
             }
 
-            $aliasUrl = $this->buildUrl($aliasPage->alias, $aliasPage->urlPrefix, $aliasPage->urlSuffix);
+            if (!$this->pageRegistry->isRoutable($aliasPage)) {
+                continue;
+            }
 
-            if ($currentUrl !== $aliasUrl || !$this->pageRegistry->isRoutable($aliasPage)) {
+            $aliasRoute = $this->pageRegistry->getRoute($aliasPage);
+            $aliasUrl = $aliasRoute->compile()->getStaticPrefix().$aliasRoute->getUrlSuffix();
+
+            if ($currentUrl !== $aliasUrl) {
                 continue;
             }
 
             $conflicts[] = [
                 'page' => $aliasPage,
-                'path' => $this->getPathWithParameters($this->pageRegistry->getRoute($aliasPage)),
+                'path' => $this->getPathWithParameters($aliasRoute),
                 'editUrl' => $backendAdapter->addToUrl(\sprintf('act=edit&id=%s&popup=1&nb=1', $aliasPage->id)),
             ];
         }
@@ -91,22 +99,6 @@ class PageRoutingListener
         return $this->twig->render('@ContaoCore/Backend/be_route_conflicts.html.twig', [
             'conflicts' => $conflicts,
         ]);
-    }
-
-    /**
-     * Builds the URL from prefix, alias and suffix. We cannot use the router for this,
-     * since pages might have non-optional parameters. This value is only used to compare
-     * two pages and see if they _might_ conflict based on the alias itself.
-     */
-    private function buildUrl(string $alias, string $urlPrefix, string $urlSuffix): string
-    {
-        $url = '/'.$alias.$urlSuffix;
-
-        if ($urlPrefix) {
-            $url = '/'.$urlPrefix.$url;
-        }
-
-        return $url;
     }
 
     private function getPathWithParameters(PageRoute $route): string
