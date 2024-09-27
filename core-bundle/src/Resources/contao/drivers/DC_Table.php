@@ -3724,18 +3724,24 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </div>';
 
 		$tree = '';
+		$blnHasSorting = $this->Database->fieldExists('sorting', $table);
 		$arrFound = array();
 
 		if (!empty($this->procedure))
 		{
-			if ($blnModeTreeExtended)
+			if (!$blnModeTreeExtended)
 			{
-				$objFound = $this->Database->prepare("SELECT pid AS id, (SELECT sorting FROM " . $table . " WHERE " . $this->strTable . ".pid=" . $table . ".id) AS psort FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . " GROUP BY id ORDER BY psort, id")
+				$objFound = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . ' ORDER BY sorting, id')
+					->execute($this->values);
+			}
+			elseif ($blnHasSorting)
+			{
+				$objFound = $this->Database->prepare("SELECT pid AS id, (SELECT sorting FROM " . $table . " WHERE " . $this->strTable . ".pid=" . $table . ".id) AS psort FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . " GROUP BY pid ORDER BY psort, pid")
 					->execute($this->values);
 			}
 			else
 			{
-				$objFound = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . ' ORDER BY sorting, id')
+				$objFound = $this->Database->prepare("SELECT pid AS id FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . " GROUP BY pid")
 					->execute($this->values);
 			}
 
@@ -3786,7 +3792,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			for ($i=0, $c=\count($topMostRootIds); $i<$c; $i++)
 			{
-				$tree .= $this->generateTree($table, $topMostRootIds[$i], array('p'=>($topMostRootIds[($i-1)] ?? null), 'n'=>($topMostRootIds[($i+1)] ?? null)), true, -20, ($blnClipboard ? $arrClipboard : false), (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && $blnClipboard && $topMostRootIds[$i] == $arrClipboard['id']), false, false, $arrFound);
+				$tree .= $this->generateTree($table, $topMostRootIds[$i], array('p'=>($topMostRootIds[($i-1)] ?? null), 'n'=>($topMostRootIds[($i+1)] ?? null)), $blnHasSorting, -20, ($blnClipboard ? $arrClipboard : false), (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && $blnClipboard && $topMostRootIds[$i] == $arrClipboard['id']), false, false, $arrFound);
 			}
 		}
 
