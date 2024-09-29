@@ -31,7 +31,7 @@ class PageTypeOptionsListener
     private Security $security;
     private ?EventDispatcherInterface $eventDispatcher;
 
-    public function __construct(PageRegistry $pageRegistry, Security $security, EventDispatcherInterface $eventDispatcher = null)
+    public function __construct(PageRegistry $pageRegistry, Security $security, ?EventDispatcherInterface $eventDispatcher = null)
     {
         $this->pageRegistry = $pageRegistry;
         $this->security = $security;

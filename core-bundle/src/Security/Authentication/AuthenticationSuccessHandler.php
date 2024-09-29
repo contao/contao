@@ -45,7 +45,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
     /**
      * @internal
      */
-    public function __construct(ContaoFramework $framework, TrustedDeviceManagerInterface $trustedDeviceManager, FirewallMap $firewallMap, LoggerInterface $logger = null)
+    public function __construct(ContaoFramework $framework, TrustedDeviceManagerInterface $trustedDeviceManager, FirewallMap $firewallMap, ?LoggerInterface $logger = null)
     {
         $this->framework = $framework;
         $this->trustedDeviceManager = $trustedDeviceManager;

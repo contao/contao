@@ -80,7 +80,7 @@ class EventPickerProvider extends AbstractInsertTagPickerProvider implements Dca
         return sprintf($this->getInsertTag($config), $value);
     }
 
-    protected function getRouteParameters(PickerConfig $config = null): array
+    protected function getRouteParameters(?PickerConfig $config = null): array
     {
         $params = ['do' => 'calendar'];
 

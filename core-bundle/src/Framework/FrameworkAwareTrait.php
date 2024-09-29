@@ -16,7 +16,7 @@ trait FrameworkAwareTrait
 {
     protected ?ContaoFramework $framework = null;
 
-    public function setFramework(ContaoFramework $framework = null): void
+    public function setFramework(?ContaoFramework $framework = null): void
     {
         $this->framework = $framework;
     }

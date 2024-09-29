@@ -210,7 +210,7 @@ class TemplateOptionsListenerTest extends TestCase
         );
     }
 
-    private function getDefaultTemplateOptionsListener(string $legacyTemplatePrefix, string $legacyProxyClass, RequestStack $requestStack = null, Connection $connection = null): TemplateOptionsListener
+    private function getDefaultTemplateOptionsListener(string $legacyTemplatePrefix, string $legacyProxyClass, ?RequestStack $requestStack = null, ?Connection $connection = null): TemplateOptionsListener
     {
         $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
         $filesystemLoader
@@ -238,7 +238,7 @@ class TemplateOptionsListenerTest extends TestCase
         return $listener;
     }
 
-    private function getTemplateOptionsListener(string $legacyTemplatePrefix, string $legacyProxyClass, ContaoFramework $framework = null, RequestStack $requestStack = null, Connection $connection = null, ContaoFilesystemLoader $filesystemLoader = null): TemplateOptionsListener
+    private function getTemplateOptionsListener(string $legacyTemplatePrefix, string $legacyProxyClass, ?ContaoFramework $framework = null, ?RequestStack $requestStack = null, ?Connection $connection = null, ?ContaoFilesystemLoader $filesystemLoader = null): TemplateOptionsListener
     {
         $filesystemLoader = $filesystemLoader ?? $this->createMock(ContaoFilesystemLoader::class);
         $connection = $connection ?? $this->createMock(Connection::class);

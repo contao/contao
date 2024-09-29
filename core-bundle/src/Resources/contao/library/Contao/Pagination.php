@@ -127,7 +127,7 @@ class Pagination
 	 * @param Template $objTemplate      The template object
 	 * @param boolean  $blnForceParam    Force the URL parameter
 	 */
-	public function __construct($intRows, $intPerPage, $intNumberOfLinks=7, $strParameter='page', Template $objTemplate=null, $blnForceParam=false)
+	public function __construct($intRows, $intPerPage, $intNumberOfLinks=7, $strParameter='page', ?Template $objTemplate=null, $blnForceParam=false)
 	{
 		$this->intPage = 1;
 		$this->intRows = (int) $intRows;

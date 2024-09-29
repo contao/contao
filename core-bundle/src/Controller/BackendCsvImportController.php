@@ -99,7 +99,7 @@ class BackendCsvImportController
         );
     }
 
-    private function importFromTemplate(callable $callback, string $table, string $field, int $id, string $submitLabel = null, bool $allowLinebreak = false): Response
+    private function importFromTemplate(callable $callback, string $table, string $field, int $id, ?string $submitLabel = null, bool $allowLinebreak = false): Response
     {
         $request = $this->requestStack->getCurrentRequest();
 

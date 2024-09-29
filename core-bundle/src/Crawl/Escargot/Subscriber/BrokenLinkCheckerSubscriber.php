@@ -115,7 +115,7 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
         // noop
     }
 
-    public function getResult(SubscriberResult $previousResult = null): SubscriberResult
+    public function getResult(?SubscriberResult $previousResult = null): SubscriberResult
     {
         $stats = $this->stats;
 

@@ -59,7 +59,7 @@ class ThemeTemplatesListenerTest extends TestCase
         $listener('<bad-path>');
     }
 
-    private function getListener(ContaoFilesystemLoader $filesystemLoader = null, ThemeNamespace $themeNamespace = null, TranslatorInterface $translator = null): ThemeTemplatesListener
+    private function getListener(?ContaoFilesystemLoader $filesystemLoader = null, ?ThemeNamespace $themeNamespace = null, ?TranslatorInterface $translator = null): ThemeTemplatesListener
     {
         return new ThemeTemplatesListener(
             $filesystemLoader ?? $this->createMock(ContaoFilesystemLoader::class),

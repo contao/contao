@@ -17,7 +17,7 @@ final class TransportConfig
     private string $name;
     private ?string $from;
 
-    public function __construct(string $name, string $from = null)
+    public function __construct(string $name, ?string $from = null)
     {
         $this->name = $name;
         $this->from = $from;

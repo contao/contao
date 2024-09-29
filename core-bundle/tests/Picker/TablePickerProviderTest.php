@@ -472,7 +472,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider->getUrl($config);
     }
 
-    private function createTableProvider(ContaoFramework $framework = null, RouterInterface $router = null, Connection $connection = null): TablePickerProvider
+    private function createTableProvider(?ContaoFramework $framework = null, ?RouterInterface $router = null, ?Connection $connection = null): TablePickerProvider
     {
         return new TablePickerProvider(
             $framework ?: $this->createMock(ContaoFramework::class),
@@ -483,7 +483,7 @@ class TablePickerProviderTest extends ContaoTestCase
         );
     }
 
-    private function createMenuTableProvider(array $modules, string $current, ItemInterface $menu = null): TablePickerProvider
+    private function createMenuTableProvider(array $modules, string $current, ?ItemInterface $menu = null): TablePickerProvider
     {
         $expectedItems = [];
         $expectedParams = [];
@@ -532,7 +532,7 @@ class TablePickerProviderTest extends ContaoTestCase
     /**
      * @return PickerConfig&MockObject
      */
-    private function mockPickerConfig(string $table = '', string $value = '', string $current = '', array $expectedCurrent = null): PickerConfig
+    private function mockPickerConfig(string $table = '', string $value = '', string $current = '', ?array $expectedCurrent = null): PickerConfig
     {
         if (!$expectedCurrent && '' !== $current) {
             $expectedCurrent = [[$current]];

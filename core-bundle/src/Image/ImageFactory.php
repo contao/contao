@@ -46,7 +46,7 @@ class ImageFactory implements ImageFactoryInterface
     /**
      * @internal
      */
-    public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFramework $framework, bool $bypassCache, array $imagineOptions, array $validExtensions, string $uploadDir, LoggerInterface $logger = null)
+    public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFramework $framework, bool $bypassCache, array $imagineOptions, array $validExtensions, string $uploadDir, ?LoggerInterface $logger = null)
     {
         $this->resizer = $resizer;
         $this->imagine = $imagine;

@@ -58,7 +58,7 @@ class ImageResult
      *
      * @internal Use the Contao\CoreBundle\Image\Studio\Studio factory to get an instance of this class
      */
-    public function __construct(ContainerInterface $locator, string $projectDir, $filePathOrImage, $sizeConfiguration = null, ResizeOptions $resizeOptions = null)
+    public function __construct(ContainerInterface $locator, string $projectDir, $filePathOrImage, $sizeConfiguration = null, ?ResizeOptions $resizeOptions = null)
     {
         $this->locator = $locator;
         $this->projectDir = $projectDir;

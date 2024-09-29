@@ -257,7 +257,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $this->assertFalse($authenticator->removeFrontendAuthentication());
     }
 
-    private function getAuthenticator(Security $security = null, TokenStorageInterface $tokenStorage = null, TokenChecker $tokenChecker = null, SessionInterface $session = null, UserProviderInterface $userProvider = null, LoggerInterface $logger = null): FrontendPreviewAuthenticator
+    private function getAuthenticator(?Security $security = null, ?TokenStorageInterface $tokenStorage = null, ?TokenChecker $tokenChecker = null, ?SessionInterface $session = null, ?UserProviderInterface $userProvider = null, ?LoggerInterface $logger = null): FrontendPreviewAuthenticator
     {
         if (null === $session) {
             $session = $this->createMock(SessionInterface::class);

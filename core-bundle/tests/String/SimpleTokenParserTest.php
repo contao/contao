@@ -661,7 +661,7 @@ class SimpleTokenParserTest extends TestCase
         );
     }
 
-    private function getParser(SimpleTokenExpressionLanguage $expressionLanguage = null): SimpleTokenParser
+    private function getParser(?SimpleTokenExpressionLanguage $expressionLanguage = null): SimpleTokenParser
     {
         return new SimpleTokenParser($expressionLanguage ?? new SimpleTokenExpressionLanguage());
     }

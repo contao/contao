@@ -37,7 +37,7 @@ class TwoFactorController extends AbstractFrontendModuleController
 {
     protected ?PageModel $pageModel = null;
 
-    public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null, PageModel $pageModel = null): Response
+    public function __invoke(Request $request, ModuleModel $model, string $section, ?array $classes = null, ?PageModel $pageModel = null): Response
     {
         if (!$this->container->get('security.helper')->isGranted('IS_AUTHENTICATED_FULLY')) {
             // TODO: front end users should be able to re-authenticate after REMEMBERME

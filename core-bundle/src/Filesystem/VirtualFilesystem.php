@@ -272,7 +272,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         $this->dbafsManager->setExtraMetadata($this->resolve($location), $metadata);
     }
 
-    public function generatePublicUri($location, OptionsInterface $options = null): ?UriInterface
+    public function generatePublicUri($location, ?OptionsInterface $options = null): ?UriInterface
     {
         $path = $this->resolve($location);
 
