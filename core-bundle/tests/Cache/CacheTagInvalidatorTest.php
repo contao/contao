@@ -32,7 +32,7 @@ class CacheTagInvalidatorTest extends TestCase
                     $this->assertSame($tags, $event->getTags());
 
                     return true;
-                }
+                },
             ))
         ;
 
