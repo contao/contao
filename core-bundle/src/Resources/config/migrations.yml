@@ -5,7 +5,7 @@ services:
     contao.migration.collection:
         class: Contao\CoreBundle\Migration\MigrationCollection
         arguments:
-            - ~
+            - []
 
     contao.migration.version_400.version_400_update:
         class: Contao\CoreBundle\Migration\Version400\Version400Update

@@ -147,8 +147,7 @@ services:
     contao.doctrine.backup.retention_policy:
         class: Contao\CoreBundle\Doctrine\Backup\RetentionPolicy
         arguments:
-            - ~
-            - ~
+            - 0
 
     contao.doctrine.backup_manager:
         class: Contao\CoreBundle\Doctrine\Backup\BackupManager
@@ -156,7 +155,7 @@ services:
             - '@database_connection'
             - '@contao.doctrine.backup.dumper'
             - '@contao.filesystem.virtual.backups'
-            - ~
+            - []
             - '@contao.doctrine.backup.retention_policy'
 
     contao.doctrine.dca_schema_provider:
@@ -393,7 +392,7 @@ services:
             - '@translator'
             - '@request_stack'
             - '@contao.framework'
-            - ~
+            - []
             - '%contao.intl.countries%'
             - '%kernel.default_locale%'
 
@@ -404,8 +403,8 @@ services:
             - '@translator'
             - '@request_stack'
             - '@contao.framework'
-            - ~
-            - ~
+            - []
+            - []
             - '%contao.intl.locales%'
             - '%contao.intl.enabled_locales%'
             - '%kernel.default_locale%'
@@ -835,7 +834,7 @@ services:
             - '@security.token_storage'
             - '@session'
             - '@security.authentication.trust_resolver'
-            - ~
+            - '@security.access.simple_role_voter'
             - '@database_connection'
 
     contao.security.two_factor.authenticator:
