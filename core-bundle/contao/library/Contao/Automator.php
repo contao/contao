@@ -315,12 +315,7 @@ class Automator extends System
 	{
 		$container = System::getContainer();
 
-		if (!$container->has('fos_http_cache.cache_manager'))
-		{
-			return;
-		}
-
-		$cacheManager = $container->get('fos_http_cache.cache_manager');
+		$cacheTagInvalidator = $container->get('contao.cache.tag_invalidator');
 		$tag = 'contao.sitemap';
 
 		if ($intId > 0)
@@ -328,7 +323,7 @@ class Automator extends System
 			$tag .= '.' . $intId;
 		}
 
-		$cacheManager->invalidateTags(array($tag));
+		$cacheTagInvalidator->invalidateTags(array($tag));
 	}
 
 	/**
