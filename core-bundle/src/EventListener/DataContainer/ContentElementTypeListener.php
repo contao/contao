@@ -33,8 +33,12 @@ class ContentElementTypeListener implements ResetInterface
         $defaultType = $GLOBALS['TL_DCA']['tl_content']['fields']['type']['sql']['default'] ?? null;
         $allowedTypes = array_merge(...array_values($this->getAllowedElements($dc->parentTable, $dc->currentPid)));
 
-        if ($allowedTypes && !\in_array($defaultType, $allowedTypes, true)) {
+        if (!\in_array($defaultType, $allowedTypes, true)) {
             $GLOBALS['TL_DCA']['tl_content']['fields']['type']['default'] = $allowedTypes[0] ?? '';
+        }
+
+        if (empty($allowedTypes)) {
+            $GLOBALS['TL_DCA']['tl_content']['config']['notCreatable'] = true;
         }
     }
 
