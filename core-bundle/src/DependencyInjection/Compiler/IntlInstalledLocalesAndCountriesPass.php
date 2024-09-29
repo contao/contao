@@ -28,6 +28,7 @@ class IntlInstalledLocalesAndCountriesPass implements CompilerPassInterface
             $definition = $container->findDefinition('contao.intl.locales');
 
             // Backwards compatibility for the deprecated contao.locales parameter
+            /** @var array<int, string> $enabledLocales */
             $enabledLocales = $container->getParameter('contao.locales') ?: $this->getEnabledLocales($container);
             $locales = array_values(array_unique(array_merge($enabledLocales, \ResourceBundle::getLocales(''))));
 
