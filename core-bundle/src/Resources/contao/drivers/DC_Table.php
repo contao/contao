@@ -16,9 +16,11 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Doctrine\DBAL\Exception\DriverException;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\String\UnicodeString;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Provide methods to modify the database.
@@ -1147,10 +1149,24 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		if (isset($arrClipboard[$this->strTable]) && \is_array($arrClipboard[$this->strTable]['id']))
 		{
+			/** @var TranslatorInterface $translator */
+			$translator = System::getContainer()->get('translator');
+
 			foreach ($arrClipboard[$this->strTable]['id'] as $id)
 			{
 				$this->intId = $id;
-				$id = $this->copy(true);
+
+				try
+				{
+					$id = $this->copy(true);
+				}
+				catch (UniqueConstraintViolationException $e)
+				{
+					Message::addError(sprintf($translator->trans('ERR.copyAllUnique', array(), 'contao_default'), (int) $id));
+
+					continue;
+				}
+
 				Input::setGet('pid', $id);
 				Input::setGet('mode', 1);
 			}

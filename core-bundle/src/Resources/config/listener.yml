@@ -102,6 +102,12 @@ services:
             - '@database_connection'
             - '@translator'
 
+    contao.listener.data_container.newsletter_recipients_copy:
+        class: Contao\CoreBundle\EventListener\DataContainer\NewsletterRecipientsCopyListener
+        arguments:
+            - '@request_stack'
+            - '@database_connection'
+
     contao.listener.data_container.page_routing:
         class: Contao\CoreBundle\EventListener\DataContainer\PageRoutingListener
         public: true
