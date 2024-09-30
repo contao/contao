@@ -140,12 +140,12 @@ class Inspector
                     $i,
                     null,
                     [
-                            new BlockInformation(
-                                $hierarchy[$i]->getTemplateName(),
-                                $hierarchy[$i]->getBlockName(),
-                                BlockType::origin,
-                                $hierarchy[$i]->isPrototype()),
-                        ],
+                        new BlockInformation(
+                            $hierarchy[$i]->getTemplateName(),
+                            $hierarchy[$i]->getBlockName(),
+                            BlockType::origin,
+                            $hierarchy[$i]->isPrototype()),
+                    ],
                 );
 
                 break;
