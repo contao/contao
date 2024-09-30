@@ -126,7 +126,7 @@ class PlayerController extends AbstractContentElementController
         ];
     }
 
-    /**t
+    /**
      * @param list<FilesystemItem> $sourceFiles
      *
      * @return array<string, array<string, string|HtmlAttributes|list<HtmlAttributes>>|string>
