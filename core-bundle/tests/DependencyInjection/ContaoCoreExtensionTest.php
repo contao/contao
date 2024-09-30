@@ -612,9 +612,13 @@ class ContaoCoreExtensionTest extends TestCase
         ;
 
         $config
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(3))
             ->method('mountLocalAdapter')
-            ->withConsecutive(['upload/path', 'upload/path', 'files'], ['var/backups', 'backups', 'backups'])
+            ->withConsecutive(
+                ['upload/path', 'upload/path', 'files'],
+                ['var/backups', 'backups', 'backups'],
+                ['templates', 'user_templates', 'user_templates'],
+            )
         ;
 
         $dbafsDefinition = $this->createMock(Definition::class);
