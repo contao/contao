@@ -4,8 +4,64 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9a7c3e1a42fc07f726c105e38a1f7bee",
+    "content-hash": "7a65b76d9346e2bf87922976e2b299d1",
     "packages": [
+        {
+            "name": "nikic/php-parser",
+            "version": "v4.19.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nikic/PHP-Parser.git",
+                "reference": "715f4d25e225bc47b293a8b997fe6ce99bf987d2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/715f4d25e225bc47b293a8b997fe6ce99bf987d2",
+                "reference": "715f4d25e225bc47b293a8b997fe6ce99bf987d2",
+                "shasum": ""
+            },
+            "require": {
+                "ext-tokenizer": "*",
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "ircmaxell/php-yacc": "^0.0.7",
+                "phpunit/phpunit": "^7.0 || ^8.0 || ^9.0"
+            },
+            "bin": [
+                "bin/php-parse"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.9-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PhpParser\\": "lib/PhpParser"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Nikita Popov"
+                }
+            ],
+            "description": "A PHP parser written in PHP",
+            "keywords": [
+                "parser",
+                "php"
+            ],
+            "support": {
+                "issues": "https://github.com/nikic/PHP-Parser/issues",
+                "source": "https://github.com/nikic/PHP-Parser/tree/v4.19.4"
+            },
+            "time": "2024-09-29T15:01:53+00:00"
+        },
         {
             "name": "phpstan/phpstan",
             "version": "1.12.5",
@@ -190,29 +246,32 @@
         },
         {
             "name": "slam/phpstan-extensions",
-            "version": "v6.5.0",
+            "version": "v6.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Slamdunk/phpstan-extensions.git",
-                "reference": "dd0d6fd86a714ea533382d2b2ddaf44472669e5c"
+                "reference": "ddc65c09426b6a9d752c200f33d676caab53ca6d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Slamdunk/phpstan-extensions/zipball/dd0d6fd86a714ea533382d2b2ddaf44472669e5c",
-                "reference": "dd0d6fd86a714ea533382d2b2ddaf44472669e5c",
+                "url": "https://api.github.com/repos/Slamdunk/phpstan-extensions/zipball/ddc65c09426b6a9d752c200f33d676caab53ca6d",
+                "reference": "ddc65c09426b6a9d752c200f33d676caab53ca6d",
                 "shasum": ""
             },
             "require": {
-                "php": "~8.3.0 || ~8.4.0",
-                "phpstan/phpstan": "^1.12.4"
+                "nikic/php-parser": "^v4.13.1",
+                "php": ">=8.0",
+                "phpstan/phpstan": "^1.1.1"
             },
             "require-dev": {
-                "nette/di": "^3.2.2",
-                "nette/neon": "^3.4.3",
-                "nikic/php-parser": "^4.19.2 || ^5.2.0",
-                "phpstan/phpstan-phpunit": "^1.4.0",
-                "phpunit/phpunit": "^11.3.6",
-                "slam/php-cs-fixer-extensions": "^3.12.0"
+                "malukenho/mcbumpface": "^1.1.5",
+                "nette/di": "^v3.0.11",
+                "nette/neon": "^v3.3.1",
+                "phpstan/phpstan-php-parser": "^1.0.0",
+                "phpstan/phpstan-phpunit": "^1.0.0",
+                "phpunit/phpunit": "^9.5.10",
+                "slam/php-cs-fixer-extensions": "^v3.1.0",
+                "slam/php-debug-r": "^v1.7.0"
             },
             "type": "phpstan-extension",
             "extra": {
@@ -241,7 +300,7 @@
             "description": "Slam extension of phpstan",
             "support": {
                 "issues": "https://github.com/Slamdunk/phpstan-extensions/issues",
-                "source": "https://github.com/Slamdunk/phpstan-extensions/tree/v6.5.0"
+                "source": "https://github.com/Slamdunk/phpstan-extensions/tree/v6.0.0"
             },
             "funding": [
                 {
@@ -253,7 +312,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-09-25T06:39:09+00:00"
+            "time": "2021-11-09T11:27:16+00:00"
         },
         {
             "name": "thecodingmachine/phpstan-strict-rules",
@@ -319,5 +378,8 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
+    "platform-overrides": {
+        "php": "8.1"
+    },
     "plugin-api-version": "2.6.0"
 }
