@@ -17,7 +17,7 @@ class InvalidateCacheTagsEvent
     /**
      * @param list<string> $tags
      */
-    public function __construct(private array $tags)
+    public function __construct(private readonly array $tags)
     {
     }
 

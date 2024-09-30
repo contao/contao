@@ -11,7 +11,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class CacheTagInvalidator
 {
     public function __construct(
-        private EventDispatcherInterface $eventDispatcher,
+        private readonly EventDispatcherInterface $eventDispatcher,
         private readonly CacheInvalidator|null $cacheInvalidator = null,
     ) {
     }

@@ -313,9 +313,6 @@ class Automator extends System
 	 */
 	public function generateSitemap($intId=0)
 	{
-		$container = System::getContainer();
-
-		$cacheTagInvalidator = $container->get('contao.cache.tag_invalidator');
 		$tag = 'contao.sitemap';
 
 		if ($intId > 0)
@@ -323,6 +320,7 @@ class Automator extends System
 			$tag .= '.' . $intId;
 		}
 
+		$cacheTagInvalidator = System::getContainer()->get('contao.cache.tag_invalidator');
 		$cacheTagInvalidator->invalidateTags(array($tag));
 	}
 
