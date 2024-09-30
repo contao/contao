@@ -67,7 +67,7 @@ class DbafsManagerTest extends TestCase
         }
     }
 
-    public function provideInvalidConfigurations(): \Generator
+    public function provideInvalidConfigurations(): iterable
     {
         yield 'more specific one which does not support last modified should be reported' => [
             [
@@ -382,11 +382,11 @@ class DbafsManagerTest extends TestCase
                 'foo/bar',
                 'foo/baz',
             ],
-            array_map('strval', iterator_to_array($listing)),
+            array_map(\strval(...), iterator_to_array($listing)),
         );
     }
 
-    public function provideListModes(): \Generator
+    public static function provideListModes(): iterable
     {
         yield 'shallow' => [false];
         yield 'deep' => [true];

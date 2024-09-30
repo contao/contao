@@ -116,7 +116,7 @@ class Password extends Widget
 
 		if (mb_strlen($varInput) < $intLength)
 		{
-			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['passwordLength'], $intLength));
+			$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['passwordLength'], $intLength));
 		}
 
 		if (isset($GLOBALS['TL_USERNAME']) && $varInput == $GLOBALS['TL_USERNAME'])
@@ -145,8 +145,8 @@ class Password extends Widget
 	 */
 	public function generate()
 	{
-		return sprintf(
-			'<input type="password" name="%s" id="ctrl_%s" class="tl_text tl_password%s" value="" placeholder="%s" autocomplete="new-password"%s onfocus="Backend.getScrollOffset()">%s%s',
+		return \sprintf(
+			'<input type="password" name="%s" id="ctrl_%s" class="tl_text tl_password%s" value="" placeholder="%s" autocomplete="new-password"%s data-action="focus->contao--scroll-offset#store">%s%s',
 			$this->strName,
 			$this->strId,
 			$this->strClass ? ' ' . $this->strClass : '',

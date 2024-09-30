@@ -18,11 +18,19 @@ class Image
 {
 	private static array $deprecated = array
 	(
-		'folPlus',
+		'alias',
+		'copychilds',
+		'copychilds_',
+		'filemanager',
 		'folMinus',
+		'folPlus',
 		'header',
 		'header_',
+		'important',
+		'manager',
+		'pickfile',
 		'settings',
+		'unpublished',
 	);
 
 	private static array $disabled = array
@@ -32,11 +40,10 @@ class Image
 		'article_',
 		'children_',
 		'copy_',
-		'copychilds_',
 		'cut_',
 		'delete_',
-		'diffTemplate_',
 		'diff_',
+		'diffTemplate_',
 		'edit_',
 		'editor_',
 		'featured_',
@@ -58,6 +65,8 @@ class Image
 		'visible_',
 	);
 
+	private static array $htmlTemplateCache = array();
+
 	/**
 	 * Get the relative path to an image
 	 *
@@ -74,28 +83,13 @@ class Image
 
 		$src = rawurldecode($src);
 
-		if (strpos($src, '/') !== false)
+		if (str_contains($src, '/'))
 		{
 			return $src;
 		}
 
-		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-
-		if (strncmp($src, 'icon', 4) === 0)
+		if (str_starts_with($src, 'icon'))
 		{
-			if (pathinfo($src, PATHINFO_EXTENSION) == 'svg')
-			{
-				return 'assets/contao/images/' . $src;
-			}
-
-			$filename = pathinfo($src, PATHINFO_FILENAME);
-
-			// Prefer SVG icons
-			if (file_exists($projectDir . '/assets/contao/images/' . $filename . '.svg'))
-			{
-				return 'assets/contao/images/' . $filename . '.svg';
-			}
-
 			return 'assets/contao/images/' . $src;
 		}
 
@@ -110,6 +104,8 @@ class Image
 		{
 			trigger_deprecation('contao/core-bundle', '5.2', 'Using the "%s" icon has been deprecated and will no longer work in Contao 6. Use the "%s--disabled" icon instead.', $filename, substr($filename, 0, -1));
 		}
+
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Prefer SVG icons
 		if (file_exists($projectDir . '/system/themes/' . $theme . '/icons/' . $filename . '.svg'))
@@ -152,11 +148,56 @@ class Image
 	 */
 	public static function getHtml($src, $alt='', $attributes='')
 	{
+		$template = self::getHtmlTemplate($src);
+
+		$search = array('{alt}', '{attributes}');
+		$replace = array(StringUtil::specialchars($alt), $attributes ? ' ' . $attributes : '');
+
+		if (str_contains($template, '{darkAttributes}'))
+		{
+			$darkAttributes = new HtmlAttributes($attributes);
+
+			foreach (array('data-icon', 'data-icon-disabled') as $icon)
+			{
+				if (isset($darkAttributes[$icon]))
+				{
+					$pathinfo = pathinfo($darkAttributes[$icon]);
+					$darkAttributes[$icon] = $pathinfo['filename'] . '--dark.' . $pathinfo['extension'];
+				}
+			}
+
+			$search[] = '{darkAttributes}';
+			$replace[] = $darkAttributes->mergeWith(array('class' => 'color-scheme--dark', 'loading' => 'lazy'))->toString();
+		}
+
+		if (str_contains($template, '{lightAttributes}'))
+		{
+			$search[] = '{lightAttributes}';
+			$replace[] = (new HtmlAttributes($attributes))->mergeWith(array('class' => 'color-scheme--light', 'loading' => 'lazy'))->toString();
+		}
+
+		return str_replace($search, $replace, $template);
+	}
+
+	private static function getHtmlTemplate($src): string
+	{
+		if (!$src)
+		{
+			return '';
+		}
+
+		$cacheKey = $src;
+
+		if (isset(self::$htmlTemplateCache[$cacheKey]))
+		{
+			return self::$htmlTemplateCache[$cacheKey];
+		}
+
 		$src = static::getPath($src);
 
 		if (!$src)
 		{
-			return '';
+			return self::$htmlTemplateCache[$cacheKey] = '';
 		}
 
 		$container = System::getContainer();
@@ -181,7 +222,7 @@ class Image
 			}
 			elseif (!$deferredImage instanceof DeferredImageInterface)
 			{
-				return '';
+				return self::$htmlTemplateCache[$cacheKey] = '';
 			}
 		}
 
@@ -204,15 +245,9 @@ class Image
 				$darkSrc = substr($darkSrc, \strlen($webDir) + 1);
 			}
 
-			$darkAttributes = new HtmlAttributes($attributes);
-			$darkAttributes->mergeWith(array('class' => 'color-scheme--dark', 'loading' => 'lazy'));
-
-			$lightAttributes = new HtmlAttributes($attributes);
-			$lightAttributes->mergeWith(array('class' => 'color-scheme--light', 'loading' => 'lazy'));
-
-			return '<img src="' . self::getUrl($darkSrc) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '"' . $darkAttributes . '><img src="' . self::getUrl($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '"' . $lightAttributes . '>';
+			return self::$htmlTemplateCache[$cacheKey] = '<img src="' . self::getUrl($darkSrc) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="{alt}"{darkAttributes}><img src="' . self::getUrl($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="{alt}"{lightAttributes}>';
 		}
 
-		return '<img src="' . self::getUrl($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '"' . ($attributes ? ' ' . $attributes : '') . '>';
+		return self::$htmlTemplateCache[$cacheKey] = '<img src="' . self::getUrl($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="{alt}"{attributes}>';
 	}
 }

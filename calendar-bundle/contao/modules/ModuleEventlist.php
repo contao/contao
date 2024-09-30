@@ -90,7 +90,6 @@ class ModuleEventlist extends Events
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$blnClearInput = false;
@@ -202,7 +201,7 @@ class ModuleEventlist extends Events
 				foreach ($events as $event)
 				{
 					// Use repeatEnd if > 0 (see #8447)
-					if ($event['startTime'] > $intEnd || ($event['repeatEnd'] ?: $event['endTime']) < $intStart)
+					if ($event['startTime'] > $intEnd || ($event['repeatEnd'] ?: $event['effectiveEndTime']) < $intStart)
 					{
 						continue;
 					}
@@ -220,7 +219,7 @@ class ModuleEventlist extends Events
 					}
 
 					// Hide running non-recurring events (see #30)
-					if ($this->cal_hideRunning && !$event['recurring'] && $event['startTime'] < time())
+					if ($this->cal_hideRunning && !$event['recurring'] && $event['startTime'] < time() && $event['effectiveEndTime'] > time())
 					{
 						continue;
 					}
@@ -342,7 +341,7 @@ class ModuleEventlist extends Events
 			// Add the template variables
 			$objTemplate->classList = $event['class'] . ' cal_' . $event['parent'];
 			$objTemplate->classUpcoming = $event['class'] . ' cal_' . $event['parent'];
-			$objTemplate->readMore = StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $event['title']));
+			$objTemplate->readMore = StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $event['title']));
 			$objTemplate->more = $event['linkText'] ?: $GLOBALS['TL_LANG']['MSC']['more'];
 			$objTemplate->locationLabel = $GLOBALS['TL_LANG']['MSC']['location'];
 
@@ -364,8 +363,7 @@ class ModuleEventlist extends Events
 			// Add an image
 			if ($event['addImage'])
 			{
-				/** @var CalendarEventsModel $eventModel */
-				$eventModel = CalendarEventsModel::findByPk($event['id']);
+				$eventModel = CalendarEventsModel::findById($event['id']);
 				$imgSize = $eventModel->size ?: null;
 
 				// Override the default image size
@@ -412,7 +410,7 @@ class ModuleEventlist extends Events
 			}
 
 			// schema.org information
-			$objTemplate->getSchemaOrgData = static function () use ($objTemplate, $event): array {
+			$objTemplate->getSchemaOrgData = static function () use ($event, $objTemplate): array {
 				$jsonLd = Events::getSchemaOrgData((new CalendarEventsModel())->setRow($event));
 
 				if ($objTemplate->addImage && $objTemplate->figure)

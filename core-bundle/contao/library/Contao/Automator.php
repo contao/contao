@@ -11,7 +11,6 @@
 namespace Contao;
 
 use FOS\HttpCache\CacheInvalidator;
-use FOS\HttpCacheBundle\CacheManager;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Filesystem\Path;
@@ -112,7 +111,7 @@ class Automator extends System
 		// Walk through the subfolders
 		foreach (Folder::scan($strRootDir . '/' . $strTargetPath) as $dir)
 		{
-			if (strncmp($dir, '.', 1) !== 0)
+			if (!str_starts_with($dir, '.'))
 			{
 				$objFolder = new Folder($strTargetPath . '/' . $dir);
 				$objFolder->purge();
@@ -137,7 +136,7 @@ class Automator extends System
 		// Walk through the subfolders
 		foreach (Folder::scan($strRootDir . '/' . $strTargetPath) as $dir)
 		{
-			if (strncmp($dir, '.', 1) !== 0)
+			if (!str_starts_with($dir, '.'))
 			{
 				$objFolder = new Folder($strTargetPath . '/' . $dir);
 				$objFolder->purge();
@@ -183,7 +182,6 @@ class Automator extends System
 			return;
 		}
 
-		/** @var CacheManager $cacheManager */
 		$cacheManager = $container->get('fos_http_cache.cache_manager');
 
 		if (!$cacheManager->supports(CacheInvalidator::CLEAR))
@@ -226,8 +224,8 @@ class Automator extends System
 	/**
 	 * Purge registrations that have not been activated within 24 hours
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
-	 *             Use MemberModel::findExpiredRegistrations() instead.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6;
+	 *             use MemberModel::findExpiredRegistrations() instead.
 	 */
 	public function purgeRegistrations()
 	{
@@ -251,8 +249,8 @@ class Automator extends System
 	/**
 	 * Purge opt-in tokens
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
-	 *             Use the "contao.opt_in" service instead.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6;
+	 *             use the "contao.opt_in" service instead.
 	 */
 	public function purgeOptInTokens()
 	{
@@ -322,7 +320,6 @@ class Automator extends System
 			return;
 		}
 
-		/** @var CacheManager $cacheManager */
 		$cacheManager = $container->get('fos_http_cache.cache_manager');
 		$tag = 'contao.sitemap';
 

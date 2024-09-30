@@ -18,7 +18,7 @@ use Symfony\Contracts\Service\ResetInterface;
 
 class PageRegistry implements ResetInterface
 {
-    private const DISABLE_CONTENT_COMPOSITION = ['redirect', 'forward', 'logout'];
+    private const DISABLE_CONTENT_COMPOSITION = ['forward', 'logout'];
 
     private array|null $urlPrefixes = null;
 
@@ -46,8 +46,8 @@ class PageRegistry implements ResetInterface
     /**
      * Returns the route for a page.
      *
-     * If no path is configured (is null), the route will accept
-     * any parameters after the page alias (e.g. "en/page-alias/foo/bar.html").
+     * If no path is configured (is null), the route will accept any parameters after
+     * the page alias (e.g. "en/page-alias/foo/bar.html").
      *
      * A route enhancer might enhance the route for a specific page.
      */
@@ -162,7 +162,7 @@ class PageRegistry implements ResetInterface
         unset(
             $this->routeConfigs[$type],
             $this->routeEnhancers[$type],
-            $this->contentComposition[$type]
+            $this->contentComposition[$type],
         );
 
         $this->urlPrefixes = $this->urlSuffixes = null;
@@ -245,10 +245,6 @@ class PageRegistry implements ResetInterface
 
     private function isParameterless(PageModel $pageModel): bool
     {
-        if ('redirect' === $pageModel->type) {
-            return true;
-        }
-
         return 'forward' === $pageModel->type && !$pageModel->alwaysForward;
     }
 }

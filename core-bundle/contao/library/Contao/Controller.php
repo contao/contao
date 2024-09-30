@@ -18,7 +18,7 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Util\UrlUtil;
 use Contao\Database\Result;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\Glob;
@@ -64,7 +64,6 @@ abstract class Controller extends System
 		// Check for a theme folder
 		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request))
 		{
-			/** @var PageModel|null $objPage */
 			global $objPage;
 
 			if ($objPage->templateGroup ?? null)
@@ -94,7 +93,7 @@ abstract class Controller extends System
 	{
 		if (str_contains($strPrefix, '/') || str_contains($strDefaultTemplate, '/'))
 		{
-			throw new \InvalidArgumentException(sprintf('Using %s() with modern fragment templates is not supported. Use the "contao.twig.finder_factory" service instead.', __METHOD__));
+			throw new \InvalidArgumentException(\sprintf('Using %s() with modern fragment templates is not supported. Use the "contao.twig.finder_factory" service instead.', __METHOD__));
 		}
 
 		$arrTemplates = array();
@@ -122,9 +121,8 @@ abstract class Controller extends System
 		$arrMapper['mod'][] = 'article';
 		$arrMapper['mod'][] = 'message';
 
-		/** @var TemplateHierarchyInterface $templateHierarchy */
 		$templateHierarchy = System::getContainer()->get('contao.twig.filesystem_loader');
-		$identifierPattern = sprintf('/^%s%s/', preg_quote($strPrefix, '/'), substr($strPrefix, -1) !== '_' ? '($|_)' : '');
+		$identifierPattern = \sprintf('/^%s%s/', preg_quote($strPrefix, '/'), !str_ends_with($strPrefix, '_') ? '($|_)' : '');
 
 		$prefixedFiles = array_merge(
 			array_filter(
@@ -166,11 +164,6 @@ abstract class Controller extends System
 			{
 				$strTemplate = basename($strFile, strrchr($strFile, '.'));
 
-				if (strpos($strTemplate, '-') !== false)
-				{
-					throw new \RuntimeException(sprintf('Using hyphens in the template name "%s" is not allowed, use snake_case instead.', $strTemplate));
-				}
-
 				// Ignore bundle templates, e.g. mod_article and mod_article_list
 				if (\in_array($strTemplate, $arrBundleTemplates))
 				{
@@ -183,7 +176,7 @@ abstract class Controller extends System
 				{
 					foreach ($arrBundleTemplates as $strKey)
 					{
-						if (strpos($strTemplate, $strKey . '_') === 0)
+						if (str_starts_with($strTemplate, $strKey . '_'))
 						{
 							continue 2;
 						}
@@ -296,7 +289,6 @@ abstract class Controller extends System
 			return '';
 		}
 
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Articles
@@ -374,7 +366,7 @@ abstract class Controller extends System
 		}
 		else
 		{
-			$objRow = ModuleModel::findByPk($intId);
+			$objRow = ModuleModel::findById($intId);
 
 			if ($objRow === null)
 			{
@@ -388,6 +380,7 @@ abstract class Controller extends System
 			return '';
 		}
 
+		/** @var class-string<Module> $strClass */
 		$strClass = Module::findClass($objRow->type);
 
 		// Return if the class does not exist
@@ -408,7 +401,6 @@ abstract class Controller extends System
 
 		$objRow->typePrefix = 'mod_';
 
-		/** @var Module $objModule */
 		$objModule = new $strClass($objRow, $strColumn);
 		$strBuffer = $objModule->generate();
 
@@ -447,7 +439,6 @@ abstract class Controller extends System
 	 */
 	public static function getArticle($varId, $blnMultiMode=false, $blnIsInsertTag=false, $strColumn='main')
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		if (\is_object($varId))
@@ -547,7 +538,7 @@ abstract class Controller extends System
 				return '';
 			}
 
-			$objRow = ContentModel::findByPk($intId);
+			$objRow = ContentModel::findById($intId);
 
 			if ($objRow === null)
 			{
@@ -561,6 +552,7 @@ abstract class Controller extends System
 			return '';
 		}
 
+		/** @var class-string<ContentElement> $strClass */
 		$strClass = ContentElement::findClass($objRow->type);
 
 		// Return if the class does not exist
@@ -571,6 +563,7 @@ abstract class Controller extends System
 			return '';
 		}
 
+		$objRow = $objRow->cloneDetached();
 		$objRow->typePrefix = 'ce_';
 		$strStopWatchId = 'contao.content_element.' . $objRow->type . ' (ID ' . $objRow->id . ')';
 
@@ -592,12 +585,16 @@ abstract class Controller extends System
 			$objElement = new $strClass(
 				$objRow,
 				$strColumn,
-				$compositor->getNestedFragments(ContentElementReference::TAG_NAME . '.' . $objRow->type, $objRow->id)
+				$compositor->getNestedFragments(ContentElementReference::TAG_NAME . '.' . $objRow->type, $objRow->origId ?: $objRow->id)
 			);
 		}
 		else
 		{
-			/** @var ContentElement $objElement */
+			if (\is_array($contentElementReference?->attributes['classes'] ?? null))
+			{
+				$objRow->classes = array_merge($objRow->classes ?? array(), $contentElementReference->attributes['classes']);
+			}
+
 			$objElement = new $strClass($objRow, $strColumn);
 		}
 
@@ -656,6 +653,7 @@ abstract class Controller extends System
 			}
 		}
 
+		/** @var class-string<Form> $strClass */
 		$strClass = $blnModule ? Module::findClass('form') : ContentElement::findClass('form');
 
 		if (!class_exists($strClass))
@@ -668,7 +666,6 @@ abstract class Controller extends System
 		$objRow->typePrefix = $blnModule ? 'mod_' : 'ce_';
 		$objRow->form = $objRow->id;
 
-		/** @var Form $objElement */
 		$objElement = new $strClass($objRow, $strColumn);
 		$strBuffer = $objElement->generate();
 
@@ -818,14 +815,19 @@ abstract class Controller extends System
 			$strScripts .= implode('', array_unique($GLOBALS['TL_BODY']));
 		}
 
-		/** @var PageModel|null $objPage */
 		global $objPage;
 
-		$objLayout = ($objPage !== null) ? LayoutModel::findByPk($objPage->layoutId) : null;
+		$objLayout = ($objPage !== null) ? LayoutModel::findById($objPage->layoutId) : null;
 		$blnCombineScripts = $objLayout !== null && $objLayout->combineScripts;
 
 		$arrReplace["[[TL_BODY_$nonce]]"] = $strScripts;
 		$strScripts = '';
+
+		// Add the component style sheets
+		if (!empty($GLOBALS['TL_STYLE_SHEETS']) && \is_array($GLOBALS['TL_STYLE_SHEETS']))
+		{
+			$strScripts .= implode('', array_unique($GLOBALS['TL_STYLE_SHEETS']));
+		}
 
 		$objCombiner = new Combiner();
 
@@ -967,7 +969,7 @@ abstract class Controller extends System
 			{
 				if ($blnCombineScripts)
 				{
-					$strScripts = Template::generateScriptTag($objCombinerDefer->getCombinedFile(), true) . $strScripts;
+					$strScripts = Template::generateScriptTag($objCombinerDefer->getCombinedFile(), defer: true) . $strScripts;
 				}
 				else
 				{
@@ -1059,7 +1061,7 @@ abstract class Controller extends System
 	/**
 	 * Reload the current page
 	 */
-	public static function reload()
+	public static function reload(): never
 	{
 		static::redirect(Environment::get('uri'));
 	}
@@ -1070,7 +1072,7 @@ abstract class Controller extends System
 	 * @param string  $strLocation The target URL
 	 * @param integer $intStatus   The HTTP status code (defaults to 303)
 	 */
-	public static function redirect($strLocation, $intStatus=303)
+	public static function redirect($strLocation, $intStatus=303): never
 	{
 		$strLocation = str_replace('&amp;', '&', $strLocation);
 
@@ -1130,7 +1132,7 @@ abstract class Controller extends System
 
 			if (!preg_match('@^(?:[a-z0-9]+:|#|{{)@i', $strUrl))
 			{
-				$strUrl = $strBase . (($strUrl != '/') ? $strUrl : '');
+				$strUrl = UrlUtil::makeAbsolute($strUrl, $strBase);
 			}
 
 			$strContent .= $strAttribute . '="' . $strUrl . '"';
@@ -1175,7 +1177,7 @@ abstract class Controller extends System
 		// Check whether the file type is allowed to be downloaded
 		if (!\in_array($objFile->extension, $arrAllowedTypes))
 		{
-			throw new AccessDeniedException(sprintf('File type "%s" is not allowed', $objFile->extension));
+			throw new AccessDeniedException(\sprintf('File type "%s" is not allowed', $objFile->extension));
 		}
 
 		// HOOK: post download callback
@@ -1222,12 +1224,12 @@ abstract class Controller extends System
 	 *
 	 * @return string The URL of the target page
 	 *
-	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6.0.
-	 *             Use "PageModel::getAbsoluteUrl()" and the contao_backend_preview route instead.
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 *             use the contao_backend_preview route instead.
 	 */
 	protected function redirectToFrontendPage($intPage, $strArticle=null, $blnReturn=false)
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use "PageModel::getAbsoluteUrl()" and the contao_backend_preview route instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the contao_backend_preview route instead.', __METHOD__);
 
 		if (($intPage = (int) $intPage) <= 0)
 		{
@@ -1270,55 +1272,41 @@ abstract class Controller extends System
 	 */
 	protected function getParentEntries($strTable, $intId)
 	{
-		// No parent table
-		if (empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']))
-		{
-			return '';
-		}
+		$getParentEntry = function ($table, $id) {
+			$this->loadDataContainer($table);
 
-		$db = Database::getInstance();
-		$arrParent = array();
-		$strParentTable = $strTable;
-		$intLastId = null;
-		$strLastParentTable = null;
+			$columns = 'pid';
+			$ptable = $GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null;
 
-		do
-		{
-			// Get the pid
-			$objParent = $db
-				->prepare("SELECT pid FROM " . $strParentTable . " WHERE id=?")
+			if ($GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? null)
+			{
+				$columns .= ', ptable';
+			}
+			elseif (!$ptable)
+			{
+				return null;
+			}
+
+			$objParent = Database::getInstance()
+				->prepare("SELECT $columns FROM $table WHERE id=?")
 				->limit(1)
-				->execute($intId);
+				->execute($id);
 
 			if ($objParent->numRows < 1)
 			{
-				break;
+				return null;
 			}
 
-			// Store the parent table information
-			$strParentTable = $GLOBALS['TL_DCA'][$strParentTable]['config']['ptable'];
-			$intId = $objParent->pid;
+			return array($objParent->ptable ?? $ptable, $objParent->pid);
+		};
 
-			// If both the parent table and the ID remain the same, we found the
-			// topmost record (usually the case with nested content elements).
-			if ($strParentTable == $strLastParentTable && $intId == $intLastId)
-			{
-				break;
-			}
+		$arrParent = array();
 
-			// Add the log entry
-			$arrParent[] = $strParentTable . '.id=' . $intId;
-
-			// Load the data container of the parent table
-			if ($strParentTable != $strLastParentTable)
-			{
-				$this->loadDataContainer($strParentTable);
-			}
-
-			$intLastId = $intId;
-			$strLastParentTable = $strParentTable;
+		while ($parentEntry = $getParentEntry($strTable, $intId))
+		{
+			list($strTable, $intId) = $parentEntry;
+			$arrParent[] = "$strTable.id=$intId";
 		}
-		while ($intId && !empty($GLOBALS['TL_DCA'][$strParentTable]['config']['ptable']));
 
 		if (empty($arrParent))
 		{
@@ -1426,7 +1414,6 @@ abstract class Controller extends System
 			$objFiles->reset();
 		}
 
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$arrEnclosures = array();
@@ -1452,7 +1439,7 @@ abstract class Controller extends System
 					$strHref = preg_replace('/(&(amp;)?|\?)file=[^&]+/', '', $strHref);
 				}
 
-				$strHref .= ((strpos($strHref, '?') !== false) ? '&amp;' : '?') . 'file=' . System::urlEncode($objFiles->path);
+				$strHref .= ((str_contains($strHref, '?')) ? '&amp;' : '?') . 'file=' . System::urlEncode($objFiles->path);
 
 				$arrMeta = Frontend::getMetaData($objFiles->meta, $objPage->language);
 
@@ -1472,7 +1459,7 @@ abstract class Controller extends System
 					'id'        => $objFiles->id,
 					'uuid'      => $objFiles->uuid,
 					'name'      => $objFile->basename,
-					'title'     => StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename)),
+					'title'     => StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename)),
 					'link'      => $arrMeta['title'],
 					'caption'   => $arrMeta['caption'] ?? null,
 					'href'      => $strHref,
@@ -1497,7 +1484,7 @@ abstract class Controller extends System
 	 *
 	 * @return string The script path with the static URL
 	 */
-	public static function addStaticUrlTo($script, ContaoContext $context = null)
+	public static function addStaticUrlTo($script, ContaoContext|null $context = null)
 	{
 		// Absolute URLs
 		if (preg_match('@^https?://@', $script))
@@ -1552,7 +1539,7 @@ abstract class Controller extends System
 	protected static function braceGlob($pattern)
 	{
 		// Use glob() if possible
-		if (false === strpos($pattern, '/**/') && (\defined('GLOB_BRACE') || false === strpos($pattern, '{')))
+		if (!str_contains($pattern, '/**/') && (\defined('GLOB_BRACE') || !str_contains($pattern, '{')))
 		{
 			return glob($pattern, \defined('GLOB_BRACE') ? GLOB_BRACE : 0);
 		}

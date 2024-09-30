@@ -62,6 +62,8 @@ class NewsFeedControllerTest extends ContaoTestCase
             'title' => 'Latest News',
             'alias' => 'latest-news',
             'feedFormat' => $format,
+            'urlPrefix' => '',
+            'urlSuffix' => '',
         ]);
 
         $route = new PageRoute($pageModel);
@@ -79,6 +81,8 @@ class NewsFeedControllerTest extends ContaoTestCase
             'title' => 'Latest News',
             'alias' => 'latest-news',
             'feedFormat' => 'foo',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
         ]);
 
         $route = new PageRoute($pageModel);
@@ -196,13 +200,13 @@ class NewsFeedControllerTest extends ContaoTestCase
         $this->assertSame($contentType, $response->headers->get('content-type'));
     }
 
-    public function getXMLFeedFormats(): \Generator
+    public static function getXMLFeedFormats(): iterable
     {
         yield 'RSS' => ['rss', '.xml', 'https://example.org/latest-news.xml', 'application/rss+xml'];
         yield 'Atom' => ['atom', '.xml', 'https://example.org/latest-news.xml', 'application/atom+xml'];
     }
 
-    public function getJSONFeedFormats(): \Generator
+    public static function getJSONFeedFormats(): iterable
     {
         yield 'JSON' => ['json', '.json', 'https://example.org/latest-news.json', 'application/feed+json'];
     }

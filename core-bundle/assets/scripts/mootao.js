@@ -338,6 +338,8 @@ Contao.SerpPreview = new Class(
 	},
 
 	initialize: function() {
+		Turbo.cache.exemptPageFromCache();
+
 		this.options = Object.merge.apply(null, [{}, this.options].append(arguments));
 
 		var serpTitle = $('serp_title_' + this.options.id),

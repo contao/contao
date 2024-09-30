@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Crawl\Monolog;
 
 use Monolog\Handler\StreamHandler;
+use Monolog\LogRecord;
 use Terminal42\Escargot\CrawlUri;
 
 class CrawlCsvLogHandler extends StreamHandler
@@ -33,20 +34,20 @@ class CrawlCsvLogHandler extends StreamHandler
         return $this;
     }
 
-    protected function streamWrite($stream, array $record): void
+    protected function streamWrite($stream, LogRecord $record): void
     {
-        if (!isset($record['context']['source'])) {
+        if (!isset($record->context['source'])) {
             return;
         }
 
-        if ($this->filterSource && $this->filterSource !== $record['context']['source']) {
+        if ($this->filterSource && $this->filterSource !== $record->context['source']) {
             return;
         }
 
         $crawlUri = null;
 
-        if (($record['context']['crawlUri'] ?? null) instanceof CrawlUri) {
-            $crawlUri = $record['context']['crawlUri'];
+        if (($record->context['crawlUri'] ?? null) instanceof CrawlUri) {
+            $crawlUri = $record->context['crawlUri'];
         }
 
         $stat = fstat($stream);
@@ -57,13 +58,13 @@ class CrawlCsvLogHandler extends StreamHandler
         }
 
         $columns = [
-            $record['datetime']->format(self::DATETIME_FORMAT),
-            $record['context']['source'],
+            $record->datetime->format(self::DATETIME_FORMAT),
+            $record->context['source'],
             !$crawlUri ? '---' : (string) $crawlUri->getUri(),
             !$crawlUri ? '---' : (string) $crawlUri->getFoundOn(),
             !$crawlUri ? '---' : $crawlUri->getLevel(),
             !$crawlUri ? '---' : implode(', ', $crawlUri->getTags()),
-            preg_replace('/\r\n|\n|\r/', ' ', $record['message']),
+            preg_replace('/\r\n|\n|\r/', ' ', $record->message),
         ];
 
         fputcsv($stream, $columns);

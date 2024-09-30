@@ -59,7 +59,7 @@ class FormHidden extends Widget
 	 */
 	public function generate()
 	{
-		return sprintf(
+		return \sprintf(
 			'<input type="hidden" name="%s" value="%s"%s',
 			$this->strName,
 			StringUtil::specialchars($this->varValue),

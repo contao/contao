@@ -19,13 +19,16 @@ use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Global\ContaoVariable;
+use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\InsertTags;
 use Contao\System;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Twig\Environment;
@@ -39,7 +42,7 @@ class ContaoEscaperNodeVisitorTest extends TestCase
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_MIME']);
+        unset($GLOBALS['TL_MIME'], $GLOBALS['objPage']);
 
         $this->resetStaticProperties([InsertTags::class, System::class, Config::class]);
 
@@ -97,7 +100,7 @@ class ContaoEscaperNodeVisitorTest extends TestCase
             'content' => '&quot;a&quot; &amp; &lt;b&gt;',
         ]);
 
-        $this->assertSame('&quot;A&quot; &amp; &lt;B&gt;', $output);
+        $this->assertSame('&QUOT;A&QUOT; &AMP; &LT;B&GT;', $output);
     }
 
     /**
@@ -143,8 +146,10 @@ class ContaoEscaperNodeVisitorTest extends TestCase
 
         $contaoExtension = new ContaoExtension(
             $environment,
-            $this->createMock(TemplateHierarchyInterface::class),
+            $this->createMock(ContaoFilesystemLoader::class),
             $this->createMock(ContaoCsrfTokenManager::class),
+            $this->createMock(ContaoVariable::class),
+            new InspectorNodeVisitor(new NullAdapter()),
         );
 
         $contaoExtension->addContaoEscaperRule('/legacy\.html\.twig/');

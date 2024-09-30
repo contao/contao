@@ -53,8 +53,8 @@ class ImagesController extends AbstractContentElementController
         $template->set('sort_mode', $sortMode);
         $template->set('randomize_order', $randomize = 'random' === $model->sortBy);
 
-        // Limit elements; use client-side logic for only displaying the first
-        // $limit elements in case we are dealing with a random order
+        // Limit elements; use client-side logic for only displaying the first $limit
+        // elements in case we are dealing with a random order
         if ($model->numberOfItems > 0 && !$randomize) {
             $filesystemItems = $filesystemItems->limit($model->numberOfItems);
         }
@@ -73,12 +73,12 @@ class ImagesController extends AbstractContentElementController
             $figureBuilder->setOverwriteMetadata($model->getOverwriteMetadata());
         }
 
-        $imageList = array_map(
-            fn (FilesystemItem $filesystemItem): Figure => $figureBuilder
+        $imageList = array_filter(array_map(
+            fn (FilesystemItem $filesystemItem): Figure|null => $figureBuilder
                 ->fromStorage($this->filesStorage, $filesystemItem->getPath())
-                ->build(),
+                ->buildIfResourceExists(),
             iterator_to_array($filesystemItems),
-        );
+        ));
 
         if (!$imageList) {
             return new Response();

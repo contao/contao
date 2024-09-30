@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\EventListener\Widget;
 use Contao\CoreBundle\EventListener\Widget\RootPageDependentSelectListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
+use Contao\Image;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
@@ -28,7 +29,7 @@ class RootPageDependentSelectListenerTest extends TestCase
     {
         unset($GLOBALS['TL_DCA']);
 
-        $this->resetStaticProperties([System::class]);
+        $this->resetStaticProperties([System::class, Image::class]);
 
         parent::tearDown();
     }

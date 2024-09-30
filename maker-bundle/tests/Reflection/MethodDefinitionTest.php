@@ -29,7 +29,7 @@ class MethodDefinitionTest extends TestCase
         $this->assertSame($body, $hookDefinition->getBody());
     }
 
-    public function getReturnValues(): \Generator
+    public static function getReturnValues(): iterable
     {
         yield ['string', "return '';"];
         yield ['?string', 'return null;'];

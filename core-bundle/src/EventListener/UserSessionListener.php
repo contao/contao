@@ -16,6 +16,7 @@ use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\User;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
@@ -26,6 +27,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 /**
  * @internal
  */
+#[AsEventListener]
 class UserSessionListener
 {
     public function __construct(
@@ -41,7 +43,7 @@ class UserSessionListener
      */
     public function __invoke(RequestEvent $event): void
     {
-        if (!$this->scopeMatcher->isContaoMainRequest($event)) {
+        if (!$this->scopeMatcher->isContaoMainRequest($event) || $event->getRequest()->query->has('popup')) {
             return;
         }
 
@@ -104,6 +106,6 @@ class UserSessionListener
             return $bag;
         }
 
-        throw new \RuntimeException(sprintf('Expected an attribute bag, got %s.', get_debug_type($bag)));
+        throw new \RuntimeException(\sprintf('Expected an attribute bag, got %s.', get_debug_type($bag)));
     }
 }

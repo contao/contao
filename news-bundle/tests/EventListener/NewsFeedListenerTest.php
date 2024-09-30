@@ -17,12 +17,12 @@ use Contao\Controller;
 use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\Environment;
 use Contao\Files;
 use Contao\FilesModel;
 use Contao\Image\ImageInterface;
 use Contao\Model\Collection;
-use Contao\News;
 use Contao\NewsBundle\Event\FetchArticlesForFeedEvent;
 use Contao\NewsBundle\Event\TransformArticleForFeedEvent;
 use Contao\NewsBundle\EventListener\NewsFeedListener;
@@ -37,6 +37,7 @@ use Imagine\Image\Box;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class NewsFeedListenerTest extends ContaoTestCase
 {
@@ -75,6 +76,7 @@ class NewsFeedListenerTest extends ContaoTestCase
         $framework = $this->mockContaoFramework([NewsModel::class => $newsAdapter]);
         $feed = $this->createMock(Feed::class);
         $request = $this->createMock(Request::class);
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
 
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
             'newsArchives' => serialize([1]),
@@ -84,7 +86,7 @@ class NewsFeedListenerTest extends ContaoTestCase
 
         $event = new FetchArticlesForFeedEvent($feed, $request, $pageModel);
 
-        $listener = new NewsFeedListener($framework, $imageFactory, $insertTags, $this->getTempDir(), $cacheTags, 'UTF-8');
+        $listener = new NewsFeedListener($framework, $imageFactory, $urlGenerator, $insertTags, $this->getTempDir(), $cacheTags, 'UTF-8');
         $listener->onFetchArticlesForFeed($event);
 
         $this->assertSame([$newsModel], $event->getArticles());
@@ -168,21 +170,6 @@ class NewsFeedListenerTest extends ContaoTestCase
             'addEnclosure' => serialize(['binary_uuid2']),
         ]);
 
-        $article
-            ->expects($this->once())
-            ->method('getRelated')
-            ->with('author')
-            ->willReturn($this->mockClassWithProperties(UserModel::class, ['name' => 'Jane Doe']))
-        ;
-
-        $news = $this->mockAdapter(['generateNewsUrl']);
-        $news
-            ->expects($this->once())
-            ->method('generateNewsUrl')
-            ->with($article, false, true)
-            ->willReturn('https://example.org/news/example-title')
-        ;
-
         $environment = $this->mockAdapter(['set', 'get']);
 
         $controller = $this->mockAdapter(['getContentElement', 'convertRelativeUrls']);
@@ -206,21 +193,31 @@ class NewsFeedListenerTest extends ContaoTestCase
             )
         ;
 
+        $userModel = $this->mockClassWithProperties(UserModel::class, ['name' => 'Jane Doe']);
+
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         System::setContainer($container);
 
         $framework = $this->mockContaoFramework([
-            News::class => $news,
             Environment::class => $environment,
             Controller::class => $controller,
             ContentModel::class => $contentModel,
             FilesModel::class => $filesModel,
+            UserModel::class => $this->mockConfiguredAdapter(['findById' => $userModel]),
         ]);
 
         $framework->setContainer($container);
 
         $feed = $this->createMock(Feed::class);
         $cacheTags = $this->createMock(EntityCacheTags::class);
+
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->expects($this->once())
+            ->method('generate')
+            ->with($article, [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('https://example.org/news/example-title')
+        ;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
             'feedSource' => $feedSource,
@@ -231,7 +228,7 @@ class NewsFeedListenerTest extends ContaoTestCase
         $baseUrl = 'example.org';
         $event = new TransformArticleForFeedEvent($article, $feed, $pageModel, $request, $baseUrl);
 
-        $listener = new NewsFeedListener($framework, $imageFactory, $insertTags, $this->getTempDir(), $cacheTags, 'UTF-8');
+        $listener = new NewsFeedListener($framework, $imageFactory, $urlGenerator, $insertTags, $this->getTempDir(), $cacheTags, 'UTF-8');
         $listener->onTransformArticleForFeed($event);
 
         $item = $event->getItem();
@@ -247,14 +244,14 @@ class NewsFeedListenerTest extends ContaoTestCase
         $fs->remove($imageDir);
     }
 
-    public function featured(): \Generator
+    public static function featured(): iterable
     {
         yield 'All items' => ['all_items', null];
         yield 'Only featured' => ['featured', true];
         yield 'Only unfeatured items' => ['unfeatured', false];
     }
 
-    public function getFeedSource(): \Generator
+    public static function getFeedSource(): iterable
     {
         yield 'Teaser' => [
             'source_teaser',

@@ -16,10 +16,7 @@ use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\DC_Table;
-use Contao\Environment;
 use Contao\FaqCategoryModel;
-use Contao\FaqModel;
-use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 
@@ -36,7 +33,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		'markAsCopy'                  => 'question',
 		'onload_callback' => array
 		(
-			array('tl_faq', 'adjustDca'),
 			array('tl_faq', 'removeMetaFields')
 		),
 		'sql' => array
@@ -44,7 +40,8 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
-				'pid,published' => 'index'
+				'pid,published' => 'index',
+				'tstamp' => 'index'
 			)
 		)
 	),
@@ -58,7 +55,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'fields'                  => array('sorting'),
 			'panelLayout'             => 'filter;search,limit',
 			'defaultSearchField'      => 'question',
-			'headerFields'            => array('title', 'headline', 'jumpTo', 'tstamp', 'allowComments'),
+			'headerFields'            => array('title', 'headline', 'jumpTo', 'tstamp'),
 			'child_record_callback'   => array('tl_faq', 'listQuestions'),
 			'renderAsGrid'            => true,
 			'limitHeight'             => 160
@@ -69,7 +66,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('addImage', 'addEnclosure', 'overwriteMeta'),
-		'default'                     => '{title_legend},question,alias,author;{meta_legend},pageTitle,robots,description,serpPreview;{answer_legend},answer;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},noComments;{publish_legend},published'
+		'default'                     => '{title_legend},question,alias,author;{meta_legend},pageTitle,robots,description,serpPreview;{answer_legend},answer;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{publish_legend},published'
 	),
 
 	// Sub-palettes
@@ -166,7 +163,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'inputType'               => 'serpPreview',
-			'eval'                    => array('url_callback'=>array('tl_faq', 'getSerpUrl'), 'titleFields'=>array('pageTitle', 'question'), 'descriptionFields'=>array('description', 'answer')),
+			'eval'                    => array('titleFields'=>array('pageTitle', 'question'), 'descriptionFields'=>array('description', 'answer')),
 			'sql'                     => null
 		),
 		'addImage' => array
@@ -262,12 +259,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'isDownloads'=>true, 'extensions'=>Config::get('allowedDownload'), 'mandatory'=>true, 'isSortable'=>true),
 			'sql'                     => "blob NULL"
 		),
-		'noComments' => array
-		(
-			'filter'                  => true,
-			'inputType'               => 'checkbox',
-			'sql'                     => array('type' => 'boolean', 'default' => false)
-		),
 		'published' => array
 		(
 			'toggle'                  => true,
@@ -287,21 +278,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
  */
 class tl_faq extends Backend
 {
-	/**
-	 * Unset the "allowComments" field if the comments bundle is not available.
-	 */
-	public function adjustDca()
-	{
-		$bundles = System::getContainer()->getParameter('kernel.bundles');
-
-		// HOOK: comments extension required
-		if (!isset($bundles['ContaoCommentsBundle']))
-		{
-			$key = array_search('allowComments', $GLOBALS['TL_DCA']['tl_faq']['list']['sorting']['headerFields'] ?? array());
-			unset($GLOBALS['TL_DCA']['tl_faq']['list']['sorting']['headerFields'][$key], $GLOBALS['TL_DCA']['tl_faq']['fields']['noComments']);
-		}
-	}
-
 	/**
 	 * Remove the meta fields if the FAQ category does not have a jumpTo page
 	 *
@@ -344,7 +320,7 @@ class tl_faq extends Backend
 		// Generate alias if there is none
 		if (!$varValue)
 		{
-			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->question, FaqCategoryModel::findByPk($dc->activeRecord->pid)->jumpTo, $aliasExists);
+			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->question, FaqCategoryModel::findById($dc->activeRecord->pid)->jumpTo, $aliasExists);
 		}
 		elseif (preg_match('/^[1-9]\d*$/', $varValue))
 		{
@@ -356,39 +332,6 @@ class tl_faq extends Backend
 		}
 
 		return $varValue;
-	}
-
-	/**
-	 * Return the SERP URL
-	 *
-	 * @param FaqModel $objFaq
-	 *
-	 * @return string
-	 */
-	public function getSerpUrl(FaqModel $objFaq)
-	{
-		/** @var FaqCategoryModel $objCategory */
-		$objCategory = $objFaq->getRelated('pid');
-
-		if ($objCategory === null)
-		{
-			throw new Exception('Invalid FAQ category');
-		}
-
-		$jumpTo = $objCategory->jumpTo;
-
-		// A jumpTo page is not mandatory for FAQ categories (see #6226) but required for the FAQ list module
-		if ($jumpTo < 1)
-		{
-			throw new Exception('FAQ categories without redirect page cannot be used in an FAQ list');
-		}
-
-		if (!$objTarget = PageModel::findByPk($jumpTo))
-		{
-			return StringUtil::ampersand(Environment::get('request'));
-		}
-
-		return StringUtil::ampersand($objTarget->getAbsoluteUrl('/' . ($objFaq->alias ?: $objFaq->id)));
 	}
 
 	/**

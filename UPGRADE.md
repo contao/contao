@@ -189,20 +189,15 @@ use Contao\CoreBundle\Routing\ScopeMatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class Test {
-    private $requestStack;
-    private $scopeMatcher;
-
-    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher) {
-        $this->requestStack = $requestStack;
-        $this->scopeMatcher = $scopeMatcher;
+    public function __construct(private ScopeMatcher $scopeMatcher) {
     }
 
     public function isBackend() {
-        return $this->scopeMatcher->isBackendRequest($this->requestStack->getCurrentRequest());
+        return $this->scopeMatcher->isBackendRequest();
     }
 
     public function isFrontend() {
-        return $this->scopeMatcher->isFrontendRequest($this->requestStack->getCurrentRequest());
+        return $this->scopeMatcher->isFrontendRequest();
     }
 }
 ```
@@ -366,7 +361,7 @@ instead.
 
 ### Template changes
 
-The items in the `ce_list` and `ce_table` templates no longer consist of an associative array containing the item‘s CSS
+The items in the `ce_list` and `ce_table` templates no longer consist of an associative array containing the item's CSS
 class and content. Instead, it will only be the content.
 
 ```php

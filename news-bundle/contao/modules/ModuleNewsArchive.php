@@ -85,7 +85,6 @@ class ModuleNewsArchive extends ModuleNews
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$limit = null;

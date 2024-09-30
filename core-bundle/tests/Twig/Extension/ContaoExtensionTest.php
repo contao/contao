@@ -20,16 +20,20 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Extension\DeprecationsNodeVisitor;
+use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicUseTokenParser;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
+use Contao\CoreBundle\Twig\Slots\SlotTokenParser;
 use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -37,12 +41,14 @@ use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\CoreExtension;
 use Twig\Extension\EscaperExtension;
+use Twig\Node\BodyNode;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FilterExpression;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\Node\TextNode;
 use Twig\NodeTraverser;
+use Twig\Runtime\EscaperRuntime;
 use Twig\Source;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -62,23 +68,25 @@ class ContaoExtensionTest extends TestCase
     {
         $nodeVisitors = $this->getContaoExtension()->getNodeVisitors();
 
-        $this->assertCount(3, $nodeVisitors);
+        $this->assertCount(4, $nodeVisitors);
 
         $this->assertInstanceOf(ContaoEscaperNodeVisitor::class, $nodeVisitors[0]);
-        $this->assertInstanceOf(PhpTemplateProxyNodeVisitor::class, $nodeVisitors[1]);
-        $this->assertInstanceOf(DeprecationsNodeVisitor::class, $nodeVisitors[2]);
+        $this->assertInstanceOf(InspectorNodeVisitor::class, $nodeVisitors[1]);
+        $this->assertInstanceOf(PhpTemplateProxyNodeVisitor::class, $nodeVisitors[2]);
+        $this->assertInstanceOf(DeprecationsNodeVisitor::class, $nodeVisitors[3]);
     }
 
     public function testAddsTheTokenParsers(): void
     {
         $tokenParsers = $this->getContaoExtension()->getTokenParsers();
 
-        $this->assertCount(4, $tokenParsers);
+        $this->assertCount(5, $tokenParsers);
 
         $this->assertInstanceOf(DynamicExtendsTokenParser::class, $tokenParsers[0]);
         $this->assertInstanceOf(DynamicIncludeTokenParser::class, $tokenParsers[1]);
         $this->assertInstanceOf(DynamicUseTokenParser::class, $tokenParsers[2]);
         $this->assertInstanceOf(AddTokenParser::class, $tokenParsers[3]);
+        $this->assertInstanceOf(SlotTokenParser::class, $tokenParsers[4]);
     }
 
     public function testAddsTheFunctions(): void
@@ -96,6 +104,10 @@ class ContaoExtensionTest extends TestCase
             'prefix_url' => [],
             'frontend_module' => ['html'],
             'content_element' => ['html'],
+            'csp_nonce' => [],
+            'csp_source' => [],
+            'csp_hash' => [],
+            'content_url' => [],
         ];
 
         $functions = $this->getContaoExtension()->getFunctions();
@@ -126,6 +138,10 @@ class ContaoExtensionTest extends TestCase
             'highlight_auto',
             'format_bytes',
             'sanitize_html',
+            'csp_unsafe_inline_style',
+            'csp_inline_styles',
+            'encode_email',
+            'deserialize',
         ];
 
         $this->assertCount(\count($expectedFilters), $filters);
@@ -148,14 +164,14 @@ class ContaoExtensionTest extends TestCase
             ->willThrowException($methodCalledException)
         ;
 
-        $hierarchy = $this->createMock(TemplateHierarchyInterface::class);
-        $hierarchy
+        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader
             ->method('getFirst')
             ->with('foo')
             ->willReturn('@Contao_Bar/foo.html.twig')
         ;
 
-        $includeFunction = $this->getContaoExtension($environment, $hierarchy)->getFunctions()[0];
+        $includeFunction = $this->getContaoExtension($environment, $filesystemLoader)->getFunctions()[0];
         $args = [$environment, [], '@Contao/foo'];
 
         $this->expectExceptionObject($methodCalledException);
@@ -167,6 +183,11 @@ class ContaoExtensionTest extends TestCase
     {
         $environment = $this->createMock(Environment::class);
         $environment
+            ->method('getRuntime')
+            ->willReturn(new EscaperRuntime())
+        ;
+
+        $environment
             ->method('getExtension')
             ->willReturnMap([
                 [EscaperExtension::class, new EscaperExtension()],
@@ -177,8 +198,10 @@ class ContaoExtensionTest extends TestCase
 
         $extension = new ContaoExtension(
             $environment,
-            $this->createMock(TemplateHierarchyInterface::class),
+            $this->createMock(ContaoFilesystemLoader::class),
             $this->createMock(ContaoCsrfTokenManager::class),
+            $this->createMock(ContaoVariable::class),
+            new InspectorNodeVisitor(new NullAdapter()),
         );
 
         $this->expectException(\RuntimeException::class);
@@ -198,16 +221,18 @@ class ContaoExtensionTest extends TestCase
         );
 
         $node = new ModuleNode(
-            new FilterExpression(
-                new TextNode('text', 1),
-                new ConstantExpression('escape', 1),
-                new Node([
-                    new ConstantExpression('html', 1),
-                    new ConstantExpression(null, 1),
-                    new ConstantExpression(true, 1),
-                ]),
-                1,
-            ),
+            new BodyNode([
+                new FilterExpression(
+                    new TextNode('text', 1),
+                    new ConstantExpression('escape', 1),
+                    new Node([
+                        new ConstantExpression('html', 1),
+                        new ConstantExpression(null, 1),
+                        new ConstantExpression(true, 1),
+                    ]),
+                    1,
+                ),
+            ]),
             null,
             new Node(),
             new Node(),
@@ -348,10 +373,10 @@ class ContaoExtensionTest extends TestCase
             }
         }
 
-        $this->fail(sprintf('No escaper rule matched template "%s".', $templateName));
+        $this->fail(\sprintf('No escaper rule matched template "%s".', $templateName));
     }
 
-    public function provideTemplateNames(): \Generator
+    public static function provideTemplateNames(): iterable
     {
         yield '@Contao namespace' => ['@Contao/foo.html.twig'];
         yield '@Contao namespace with folder' => ['@Contao/foo/bar.html.twig'];
@@ -361,56 +386,17 @@ class ContaoExtensionTest extends TestCase
     }
 
     /**
-     * We need to adjust some of Twig's core functions (e.g. the escape filter)
-     * but still delegate to the original implementation for maximum compatibility.
-     * This test makes sure the function's signatures remains the same and changes
-     * to the original codebase do not stay unnoticed.
-     *
-     * @dataProvider provideTwigFunctionSignatures
-     */
-    public function testContaoUsesCorrectTwigFunctionSignatures(string $function, array $expectedParameters): void
-    {
-        // Make sure the functions outside the class scope are loaded
-        new \ReflectionClass(EscaperExtension::class);
-
-        $parameters = array_map(
-            static fn (\ReflectionParameter $parameter): array => [
-                ($type = $parameter->getType()) instanceof \ReflectionNamedType ? $type->getName() : null,
-                $parameter->getName(),
-            ],
-            (new \ReflectionFunction($function))->getParameters(),
-        );
-        $this->assertSame($parameters, $expectedParameters);
-    }
-
-    public function provideTwigFunctionSignatures(): \Generator
-    {
-        yield [
-            'twig_escape_filter',
-            [
-                [Environment::class, 'env'],
-                [null, 'string'],
-                [null, 'strategy'],
-                [null, 'charset'],
-                [null, 'autoescape'],
-            ],
-        ];
-
-        yield [
-            'twig_escape_filter_is_safe',
-            [
-                [Node::class, 'filterArgs'],
-            ],
-        ];
-    }
-
-    /**
      * @param Environment&MockObject $environment
      */
-    private function getContaoExtension(Environment|null $environment = null, TemplateHierarchyInterface|null $hierarchy = null): ContaoExtension
+    private function getContaoExtension(Environment|null $environment = null, ContaoFilesystemLoader|null $filesystemLoader = null): ContaoExtension
     {
         $environment ??= $this->createMock(Environment::class);
-        $hierarchy ??= $this->createMock(TemplateHierarchyInterface::class);
+        $filesystemLoader ??= $this->createMock(ContaoFilesystemLoader::class);
+
+        $environment
+            ->method('getRuntime')
+            ->willReturn(new EscaperRuntime())
+        ;
 
         $environment
             ->method('getExtension')
@@ -420,6 +406,12 @@ class ContaoExtensionTest extends TestCase
             ])
         ;
 
-        return new ContaoExtension($environment, $hierarchy, $this->createMock(ContaoCsrfTokenManager::class));
+        return new ContaoExtension(
+            $environment,
+            $filesystemLoader,
+            $this->createMock(ContaoCsrfTokenManager::class),
+            $this->createMock(ContaoVariable::class),
+            new InspectorNodeVisitor(new NullAdapter()),
+        );
     }
 }

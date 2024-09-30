@@ -14,10 +14,16 @@ namespace Contao\CoreBundle\Tests\Crawl\Escargot;
 
 use Contao\CoreBundle\Crawl\Escargot\Factory;
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\EscargotSubscriberInterface;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use Nyholm\Psr7\Uri;
+use Symfony\Component\HttpClient\MockHttpClient;
+use Symfony\Component\HttpClient\Response\MockResponse;
+use Symfony\Component\HttpClient\ScopingHttpClient;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Terminal42\Escargot\BaseUriCollection;
 use Terminal42\Escargot\Queue\InMemoryQueue;
 
@@ -37,7 +43,7 @@ class FactoryTest extends TestCase
             ->willReturn('subscriber-2')
         ;
 
-        $factory = new Factory($this->createMock(Connection::class), $this->mockContaoFramework());
+        $factory = new Factory($this->createMock(Connection::class), $this->mockContaoFramework(), $this->createMock(ContentUrlGenerator::class), new RequestStack());
         $factory->addSubscriber($subscriber1);
         $factory->addSubscriber($subscriber2);
 
@@ -51,10 +57,6 @@ class FactoryTest extends TestCase
     public function testBuildsUriCollectionsCorrectly(): void
     {
         $rootPage = $this->createMock(PageModel::class);
-        $rootPage
-            ->method('getAbsoluteUrl')
-            ->willReturn('https://contao.org')
-        ;
 
         $pageModelAdapter = $this->mockAdapter(['findPublishedRootPages']);
         $pageModelAdapter
@@ -62,9 +64,18 @@ class FactoryTest extends TestCase
             ->willReturn([$rootPage])
         ;
 
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->method('generate')
+            ->with($rootPage, [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('https://contao.org')
+        ;
+
         $factory = new Factory(
             $this->createMock(Connection::class),
             $this->mockContaoFramework([PageModel::class => $pageModelAdapter]),
+            $urlGenerator,
+            new RequestStack(),
             ['https://example.com'],
         );
 
@@ -87,7 +98,7 @@ class FactoryTest extends TestCase
             ->willReturn('subscriber-1')
         ;
 
-        $factory = new Factory($this->createMock(Connection::class), $this->mockContaoFramework());
+        $factory = new Factory($this->createMock(Connection::class), $this->mockContaoFramework(), $this->createMock(ContentUrlGenerator::class), new RequestStack());
         $factory->addSubscriber($subscriber1);
 
         $uriCollection = new BaseUriCollection([new Uri('https://contao.org')]);
@@ -110,7 +121,7 @@ class FactoryTest extends TestCase
             ->willReturn('subscriber-1')
         ;
 
-        $factory = new Factory($this->createMock(Connection::class), $this->mockContaoFramework());
+        $factory = new Factory($this->createMock(Connection::class), $this->mockContaoFramework(), $this->createMock(ContentUrlGenerator::class), new RequestStack());
         $factory->addSubscriber($subscriber1);
 
         $queue = new InMemoryQueue();
@@ -125,5 +136,82 @@ class FactoryTest extends TestCase
 
         $escargot = $factory->createFromJobId($jobId, $queue, ['subscriber-8']);
         $this->assertSame(Factory::USER_AGENT, $escargot->getUserAgent());
+    }
+
+    public function testScopesConfidentialHeadersAutomatically(): void
+    {
+        $expectedRequests = [
+            function (string $method, string $url, array $options): MockResponse {
+                $this->assertSame('GET', $method);
+                $this->assertSame('https://contao.org/robots.txt', $url);
+                $this->assertContains('Cookie: Confidential', $options['headers']);
+                $this->assertContains('Authorization: Basic dXNlcm5hbWU6cGFzc3dvcmQ=', $options['headers']);
+
+                return new MockResponse();
+            },
+            function (string $method, string $url, array $options): MockResponse {
+                $this->assertSame('GET', $method);
+                $this->assertSame('https://contao.de/robots.txt', $url);
+                $this->assertContains('Cookie: Confidential', $options['headers']);
+                $this->assertContains('Authorization: Basic dXNlcm5hbWU6cGFzc3dvcmQ=', $options['headers']);
+
+                return new MockResponse();
+            },
+            function (string $method, string $url, array $options): MockResponse {
+                $this->assertSame('GET', $method);
+                $this->assertSame('https://www.foreign-domain.com/robots.txt', $url);
+                $this->assertNotContains('Cookie: Confidential', $options['headers']);
+                $this->assertNotContains('Authorization: Basic dXNlcm5hbWU6cGFzc3dvcmQ=', $options['headers']);
+
+                return new MockResponse();
+            },
+        ];
+
+        $mockClient = new MockHttpClient($expectedRequests);
+        $clientFactory = static fn (array $defaultOptions) => $mockClient;
+
+        $rootPage1 = $this->mockClassWithProperties(PageModel::class, ['dns' => 'contao.org']);
+        $rootPage2 = $this->mockClassWithProperties(PageModel::class, ['dns' => 'contao.de']);
+
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->method('generate')
+            ->willReturnCallback(static fn (PageModel $rootPage) => 'https://'.$rootPage->dns)
+        ;
+
+        $pageModelAdapter = $this->mockAdapter(['findPublishedRootPages']);
+        $pageModelAdapter
+            ->method('findPublishedRootPages')
+            ->willReturn([$rootPage1, $rootPage2])
+        ;
+
+        $subscriber1 = $this->createMock(EscargotSubscriberInterface::class);
+        $subscriber1
+            ->method('getName')
+            ->willReturn('subscriber-1')
+        ;
+
+        $factory = new Factory(
+            $this->createMock(Connection::class),
+            $this->mockContaoFramework([PageModel::class => $pageModelAdapter]),
+            $urlGenerator,
+            new RequestStack(),
+            ['https://www.foreign-domain.com'],
+            [
+                'headers' => [
+                    'Cookie' => 'Confidential',
+                ],
+                'auth_basic' => 'username:password',
+            ],
+            $clientFactory,
+        );
+
+        $factory->addSubscriber($subscriber1);
+
+        $escargot = $factory->create($factory->getCrawlUriCollection(), new InMemoryQueue(), ['subscriber-1']);
+        $escargot->crawl();
+
+        $this->assertSame(3, $mockClient->getRequestsCount());
+        $this->assertInstanceOf(ScopingHttpClient::class, $escargot->getClient());
     }
 }

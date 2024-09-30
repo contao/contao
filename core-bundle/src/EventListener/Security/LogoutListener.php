@@ -19,12 +19,14 @@ use Contao\User;
 use Psr\Log\LoggerInterface;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
 use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
+#[AsEventListener]
 class LogoutListener
 {
     use TargetPathTrait;
@@ -89,7 +91,7 @@ class LogoutListener
             }
 
             $this->logger?->info(
-                sprintf('User "%s" has logged out', $user->username),
+                \sprintf('User "%s" has logged out', $user->username),
                 ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, $user->username)],
             );
         }

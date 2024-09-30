@@ -12,8 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Picker;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
 use Contao\DC_Table;
 
+#[AsPickerProvider]
 class TablePickerProvider extends AbstractTablePickerProvider
 {
     public function getName(): string

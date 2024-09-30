@@ -13,18 +13,19 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Twig\Inheritance;
 
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
+use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inheritance\DynamicUseTokenParser;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
-use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Cache\Adapter\NullAdapter;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
 
@@ -32,7 +33,7 @@ class DynamicUseTokenParserTest extends TestCase
 {
     public function testGetTag(): void
     {
-        $tokenParser = new DynamicUseTokenParser($this->createMock(TemplateHierarchyInterface::class));
+        $tokenParser = new DynamicUseTokenParser($this->createMock(ContaoFilesystemLoader::class));
 
         $this->assertSame('use', $tokenParser->getTag());
     }
@@ -49,33 +50,29 @@ class DynamicUseTokenParserTest extends TestCase
             $this->createMock(Connection::class),
         );
 
-        $loader = new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $themeNamespace, $projectDir);
-
-        $warmer = new ContaoFilesystemLoaderWarmer(
-            $loader,
+        $filesystemLoader = new ContaoFilesystemLoader(
+            new NullAdapter(),
             $templateLocator,
+            $themeNamespace,
+            $this->createMock(ContaoFramework::class),
+            $this->createMock(PageFinder::class),
             $projectDir,
-            'cache',
-            'prod',
-            $this->createMock(Filesystem::class),
         );
 
-        $warmer->warmUp('');
-
-        $environment = new Environment($loader);
-
+        $environment = new Environment($filesystemLoader);
         $environment->addExtension(
             new ContaoExtension(
                 $environment,
-                $loader,
+                $filesystemLoader,
                 $this->createMock(ContaoCsrfTokenManager::class),
+                $this->createMock(ContaoVariable::class),
+                new InspectorNodeVisitor(new NullAdapter()),
             ),
         );
 
-        // A component is adjusted by overwriting the component's template
-        // (here by adding the item "ice" and turning apples into pineapples).
-        // The changes should be visible wherever the component is used like in
-        // this element template:
+        // A component is adjusted by overwriting the component's template (here by
+        // adding the item "ice" and turning apples into pineapples). The changes should
+        // be visible wherever the component is used like in this element template:
         $this->assertSame(
             <<<'HTML'
                 <h1>Summer menu</h1>
@@ -90,11 +87,10 @@ class DynamicUseTokenParserTest extends TestCase
             trim($environment->render('@Contao/element/menu.html.twig')),
         );
 
-        // The rendered template overwrites blocks of a component used by the
-        // extended base template and another component used within this
-        // component. The adjustments (adding the item "secret sauce" and
-        // adding "from a tin" to the inner component's "apple" block) should
-        // be output, but only in this template:
+        // The rendered template overwrites blocks of a component used by the extended
+        // base template and another component used within this component. The
+        // adjustments (adding the item "secret sauce" and adding "from a tin" to the
+        // inner component's "apple" block) should be output, but only in this template:
         $this->assertSame(
             <<<'HTML'
                 <h1>How to make a fruit shake</h1>

@@ -49,6 +49,11 @@ class BackendConfirm extends Backend
 	{
 		$objSession = System::getContainer()->get('request_stack')->getSession();
 
+		if (!$objSession->has('INVALID_TOKEN_URL'))
+		{
+			$this->redirect(System::getContainer()->get('router')->generate('contao_backend'));
+		}
+
 		// Redirect to the back end home page
 		if (Input::post('FORM_SUBMIT') == 'invalid_token_url')
 		{
@@ -60,7 +65,7 @@ class BackendConfirm extends Backend
 
 		// Prepare the URL
 		$url = preg_replace('/[?&]rt=[^&]*/', '', $objSession->get('INVALID_TOKEN_URL'));
-		$objTemplate->href = StringUtil::ampersand($url . ((strpos($url, '?') !== false) ? '&rt=' : '?rt=') . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()));
+		$objTemplate->href = StringUtil::ampersand($url . (str_contains($url, '?') ? '&rt=' : '?rt=') . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5));
 
 		$vars = array();
 		list(, $request) = explode('?', $url, 2);
@@ -143,9 +148,9 @@ class BackendConfirm extends Backend
 		}
 
 		// Replace the ID wildcard
-		if (strpos($arrInfo['act'], '%s') !== false)
+		if (str_contains($arrInfo['act'], '%s'))
 		{
-			$arrInfo['act'] = sprintf($arrInfo['act'], $vars['id']);
+			$arrInfo['act'] = \sprintf($arrInfo['act'], $vars['id']);
 		}
 
 		unset($arrInfo['pid'], $arrInfo['clipboard'], $arrInfo['ref'], $arrInfo['mode']);

@@ -21,6 +21,10 @@ services:
                 - { name: container.service_subscriber, id: contao.csrf.token_manager }
 
     # We explicitly allow autowiring and FQCN service IDs in controllers
+    Contao\CoreBundle\Controller\AltchaController:
+        arguments:
+            - '@contao.altcha'
+
     Contao\CoreBundle\Controller\BackendController: ~
 
     Contao\CoreBundle\Controller\BackendCsvImportController:
@@ -71,6 +75,8 @@ services:
             - '@contao.framework'
 
     Contao\CoreBundle\Controller\ContentElement\CodeController: ~
+
+    Contao\CoreBundle\Controller\ContentElement\DescriptionListController: ~
 
     Contao\CoreBundle\Controller\ContentElement\DownloadsController:
         arguments:
@@ -128,6 +134,13 @@ services:
         arguments:
             - '@contao.image.studio'
 
+    Contao\CoreBundle\Controller\CspReporterController:
+        arguments:
+            - '@contao.framework'
+            - '@?nelmio_security.csp_reporter_controller'
+        tags:
+            - controller.service_arguments
+
     Contao\CoreBundle\Controller\FaviconController:
         arguments:
             - '@contao.framework'
@@ -178,6 +191,10 @@ services:
         arguments:
             - '@contao.framework'
 
+    Contao\CoreBundle\Controller\Page\RedirectPageController:
+        arguments:
+            - '@contao.routing.content_url_generator'
+
     Contao\CoreBundle\Controller\Page\RootPageController:
         arguments:
             - '@?logger'
@@ -208,5 +225,6 @@ services:
         arguments:
             - '@contao.routing.page_registry'
             - '@contao.routing.page_finder'
+            - '@contao.routing.content_url_generator'
         tags:
             - controller.service_arguments

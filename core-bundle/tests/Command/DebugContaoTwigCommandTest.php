@@ -14,10 +14,9 @@ namespace Contao\CoreBundle\Tests\Command;
 
 use Contao\CoreBundle\Command\DebugContaoTwigCommand;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Inspector\TemplateInformation;
-use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Terminal;
@@ -45,15 +44,16 @@ class DebugContaoTwigCommandTest extends TestCase
         $this->assertTrue($command->getDefinition()->hasArgument('filter'));
     }
 
-    public function testRefreshesLoader(): void
+    public function testRefreshesTemplateHierarchy(): void
     {
-        $cacheWarmer = $this->createMock(ContaoFilesystemLoaderWarmer::class);
-        $cacheWarmer
+        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader
             ->expects($this->once())
-            ->method('refresh')
+            ->method('warmUp')
+            ->with(true)
         ;
 
-        $command = $this->getCommand(null, $cacheWarmer);
+        $command = $this->getCommand($filesystemLoader);
 
         $tester = new CommandTester($command);
         $tester->execute([]);
@@ -66,8 +66,8 @@ class DebugContaoTwigCommandTest extends TestCase
      */
     public function testOutputsHierarchy(array $input, string $expectedOutput): void
     {
-        $hierarchy = $this->createMock(TemplateHierarchyInterface::class);
-        $hierarchy
+        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader
             ->expects($this->once())
             ->method('getInheritanceChains')
             ->willReturn([
@@ -84,7 +84,7 @@ class DebugContaoTwigCommandTest extends TestCase
             ])
         ;
 
-        $command = $this->getCommand($hierarchy);
+        $command = $this->getCommand($filesystemLoader);
 
         $tester = new CommandTester($command);
         $tester->execute($input);
@@ -95,7 +95,7 @@ class DebugContaoTwigCommandTest extends TestCase
         $this->assertSame(0, $tester->getStatusCode());
     }
 
-    public function provideInput(): \Generator
+    public static function provideInput(): iterable
     {
         yield 'no filter' => [
             [],
@@ -110,12 +110,14 @@ class DebugContaoTwigCommandTest extends TestCase
                   @Contao name    @Contao/foo.html.twig
                   Path            /path1/foo.html.twig
                   Blocks          @A/foo.html.twig_block1, @A/foo.html.twig_block2
+                  Slots           @A/foo.html.twig_slot1, @A/foo.html.twig_slot2
                   Preview         … code of @A/foo.html.twig …
                  --------------- --------------------------------------------------
                   Original name   @B/foo.html5
                   @Contao name    @Contao/foo.html.twig
                   Path            /path2/foo.html5
                   Blocks          @B/foo.html5_block1, @B/foo.html5_block2
+                  Slots           @B/foo.html5_slot1, @B/foo.html5_slot2
                  --------------- --------------------------------------------------
                 bar
                 ===
@@ -126,6 +128,7 @@ class DebugContaoTwigCommandTest extends TestCase
                   @Contao name    @Contao/bar.html.twig
                   Path            /path/bar.html.twig
                   Blocks          @C/bar.html.twig_block1, @C/bar.html.twig_block2
+                  Slots           @C/bar.html.twig_slot1, @C/bar.html.twig_slot2
                   Preview         … code of @C/bar.html.twig …
                  --------------- --------------------------------------------------
                 baz
@@ -137,6 +140,7 @@ class DebugContaoTwigCommandTest extends TestCase
                   @Contao name    @Contao/baz.html.twig
                   Path            /path/baz.html5
                   Blocks          @D/baz.html5_block1, @D/baz.html5_block2
+                  Slots           @D/baz.html5_slot1, @D/baz.html5_slot2
                  --------------- ------------------------------------------
 
                 OUTPUT,
@@ -155,12 +159,14 @@ class DebugContaoTwigCommandTest extends TestCase
                   @Contao name    @Contao/foo.html.twig
                   Path            /path1/foo.html.twig
                   Blocks          @A/foo.html.twig_block1, @A/foo.html.twig_block2
+                  Slots           @A/foo.html.twig_slot1, @A/foo.html.twig_slot2
                   Preview         … code of @A/foo.html.twig …
                  --------------- --------------------------------------------------
                   Original name   @B/foo.html5
                   @Contao name    @Contao/foo.html.twig
                   Path            /path2/foo.html5
                   Blocks          @B/foo.html5_block1, @B/foo.html5_block2
+                  Slots           @B/foo.html5_slot1, @B/foo.html5_slot2
                  --------------- --------------------------------------------------
 
                 OUTPUT,
@@ -179,6 +185,7 @@ class DebugContaoTwigCommandTest extends TestCase
                   @Contao name    @Contao/bar.html.twig
                   Path            /path/bar.html.twig
                   Blocks          @C/bar.html.twig_block1, @C/bar.html.twig_block2
+                  Slots           @C/bar.html.twig_slot1, @C/bar.html.twig_slot2
                   Preview         … code of @C/bar.html.twig …
                  --------------- --------------------------------------------------
                 baz
@@ -190,6 +197,7 @@ class DebugContaoTwigCommandTest extends TestCase
                   @Contao name    @Contao/baz.html.twig
                   Path            /path/baz.html5
                   Blocks          @D/baz.html5_block1, @D/baz.html5_block2
+                  Slots           @D/baz.html5_slot1, @D/baz.html5_slot2
                  --------------- ------------------------------------------
 
                 OUTPUT,
@@ -198,8 +206,8 @@ class DebugContaoTwigCommandTest extends TestCase
 
     public function testOutputsHierarchyAsATree(): void
     {
-        $hierarchy = $this->createMock(TemplateHierarchyInterface::class);
-        $hierarchy
+        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader
             ->expects($this->once())
             ->method('getInheritanceChains')
             ->willReturn([
@@ -216,7 +224,7 @@ class DebugContaoTwigCommandTest extends TestCase
             ])
         ;
 
-        $command = $this->getCommand($hierarchy);
+        $command = $this->getCommand($filesystemLoader);
 
         $tester = new CommandTester($command);
         $tester->execute(['--tree' => true]);
@@ -248,15 +256,15 @@ class DebugContaoTwigCommandTest extends TestCase
      */
     public function testIncludesThemeTemplates(array $input, string|null $expectedThemeSlug): void
     {
-        $hierarchy = $this->createMock(TemplateHierarchyInterface::class);
-        $hierarchy
+        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader
             ->expects($this->once())
             ->method('getInheritanceChains')
             ->with($expectedThemeSlug)
             ->willReturn([])
         ;
 
-        $command = $this->getCommand($hierarchy);
+        $command = $this->getCommand($filesystemLoader);
 
         $tester = new CommandTester($command);
         $tester->execute($input);
@@ -264,7 +272,7 @@ class DebugContaoTwigCommandTest extends TestCase
         $this->assertSame(0, $tester->getStatusCode());
     }
 
-    public function provideThemeOptions(): \Generator
+    public static function provideThemeOptions(): iterable
     {
         yield 'no theme' => [
             [],
@@ -287,7 +295,7 @@ class DebugContaoTwigCommandTest extends TestCase
         ];
     }
 
-    private function getCommand(TemplateHierarchyInterface|null $hierarchy = null, ContaoFilesystemLoaderWarmer|null $cacheWarmer = null): DebugContaoTwigCommand
+    private function getCommand(ContaoFilesystemLoader|null $filesystemLoader = null): DebugContaoTwigCommand
     {
         $inspector = $this->createMock(Inspector::class);
         $inspector
@@ -296,13 +304,13 @@ class DebugContaoTwigCommandTest extends TestCase
                 static fn (string $name): TemplateInformation => new TemplateInformation(
                     new Source("… code of $name …", $name),
                     ["{$name}_block1", "{$name}_block2"],
+                    ["{$name}_slot1", "{$name}_slot2"],
                 ),
             )
         ;
 
         return new DebugContaoTwigCommand(
-            $hierarchy ?? $this->createMock(TemplateHierarchyInterface::class),
-            $cacheWarmer ?? $this->createMock(ContaoFilesystemLoaderWarmer::class),
+            $filesystemLoader ?? $this->createMock(ContaoFilesystemLoader::class),
             new ThemeNamespace(),
             Path::canonicalize(__DIR__.'/../Fixtures/Twig/inheritance'),
             $inspector,

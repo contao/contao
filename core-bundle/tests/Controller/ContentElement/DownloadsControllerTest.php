@@ -41,7 +41,7 @@ class DownloadsControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<'HTML'
-            <div class="download-element ext-jpg content-download">
+            <div class="content-download download-element ext-jpg">
                 <a href="https://example.com/files/image1.jpg" title="translated(contao_default:MSC.download[image1 title])" type="image/jpg">image1 title</a>
             </div>
             HTML;
@@ -60,8 +60,8 @@ class DownloadsControllerTest extends ContentElementTestCase
                 'numberOfItems' => '0',
                 'showPreview' => '',
                 'overwriteLink' => '1',
-                'linkTitle' => 'Download the file',
-                'titleText' => 'The file',
+                'linkTitle' => 'The file',
+                'titleText' => 'Download the file',
                 'inline' => false,
                 'fullsize' => false,
             ],
@@ -72,7 +72,7 @@ class DownloadsControllerTest extends ContentElementTestCase
         );
 
         $expectedOutput = <<<'HTML'
-            <div class="download-element ext-jpg content-download">
+            <div class="content-download download-element ext-jpg">
                 <a href="https://example.com/files/image1.jpg" title="translated(contao_default:MSC.download[Download the file])" type="image/jpg">The file</a>
             </div>
             HTML;
@@ -157,7 +157,6 @@ class DownloadsControllerTest extends ContentElementTestCase
     {
         $container = new ContainerBuilder();
         $container->set('contao.filesystem.file_download_helper', $this->createMock(FileDownloadHelper::class));
-        $container->setParameter('contao.downloadable_files', ['jpg', 'txt']);
 
         return $container;
     }

@@ -25,6 +25,7 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
+				'tstamp' => 'index',
 				'id,published,expiresAt' => 'index'
 			)
 		)

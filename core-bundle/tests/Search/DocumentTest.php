@@ -54,7 +54,7 @@ class DocumentTest extends TestCase
         }
     }
 
-    public function canonicalUriProvider(): \Generator
+    public static function canonicalUriProvider(): iterable
     {
         yield 'Test no data available' => [
             '',
@@ -93,7 +93,7 @@ class DocumentTest extends TestCase
         $this->assertSame($expectedJsonLds, $document->extractJsonLdScripts($context));
     }
 
-    public function documentProvider(): \Generator
+    public static function documentProvider(): iterable
     {
         yield 'Test with empty body' => [
             '',

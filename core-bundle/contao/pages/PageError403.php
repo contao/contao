@@ -26,9 +26,8 @@ class PageError403 extends Frontend
 	 *
 	 * @return Response
 	 */
-	public function getResponse(PageModel $objRootPage=null)
+	public function getResponse(PageModel|null $objRootPage=null)
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$obj403 = $this->prepare($objRootPage);
@@ -56,7 +55,7 @@ class PageError403 extends Frontend
 	 *
 	 * @throws AccessDeniedException
 	 */
-	private function prepare(PageModel $objRootPage=null)
+	private function prepare(PageModel|null $objRootPage=null)
 	{
 		// Use the given root page object if available (thanks to Andreas Schempp)
 		if ($objRootPage === null)

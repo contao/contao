@@ -49,7 +49,7 @@ class StatementTest extends TestCase
         $statement->set(['foo' => 'bar']);
     }
 
-    public function getDeprecatedSetQueries(): \Generator
+    public static function getDeprecatedSetQueries(): iterable
     {
         yield [''];
         yield ['SELECT * FROM %s'];
@@ -135,7 +135,7 @@ class StatementTest extends TestCase
         $statement->execute(...($params ?? []));
     }
 
-    public function getQueriesWithParametersAndSets(): \Generator
+    public static function getQueriesWithParametersAndSets(): iterable
     {
         yield [
             'SELECT id FROM tl_content',

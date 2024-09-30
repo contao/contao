@@ -281,6 +281,18 @@
       <trans-unit id="ERR.noAdminEmail">
         <source>There is no administrator e-mail address set, please contact the site administrator.</source>
       </trans-unit>
+      <trans-unit id="ERR.altchaVerificationFailed">
+        <source>ALTCHA antispam verification failed. Are you a human or a robot?</source>
+      </trans-unit>
+      <trans-unit id="ERR.altchaWidgetError">
+        <source>Verification failed. Try again later.</source>
+      </trans-unit>
+      <trans-unit id="ERR.altchaInsecureConnection">
+        <source>ALTCHA is not available without a secure HTTPS connection. If your production website does not use HTTPS (not recommended), please use the security question instead.</source>
+      </trans-unit>
+      <trans-unit id="ERR.personalDataPassword">
+        <source>There is at least one "personal data" module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the "change password" module instead.</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
       </trans-unit>
@@ -325,6 +337,12 @@
       </trans-unit>
       <trans-unit id="CTE.list.1">
         <source>Generates an ordered or unordered list.</source>
+      </trans-unit>
+      <trans-unit id="CTE.description_list.0">
+        <source>Description list</source>
+      </trans-unit>
+      <trans-unit id="CTE.description_list.1">
+        <source>Generates a description list with terms and details.</source>
       </trans-unit>
       <trans-unit id="CTE.table.0">
         <source>Table</source>
@@ -577,6 +595,12 @@
       </trans-unit>
       <trans-unit id="FFL.hidden.1">
         <source>A single-line input field that is not visible in the form.</source>
+      </trans-unit>
+      <trans-unit id="FFL.altcha.0">
+        <source>ALTCHA antispam</source>
+      </trans-unit>
+      <trans-unit id="FFL.altcha.1">
+        <source>Provides an ALTCHA antispam form field to verify that the form is submitted by a human (CAPTCHA).</source>
       </trans-unit>
       <trans-unit id="FFL.captcha.0">
         <source>Security question</source>
@@ -1763,6 +1787,9 @@
       <trans-unit id="MSC.quicklink">
         <source>Quick link</source>
       </trans-unit>
+      <trans-unit id="MSC.lostPassword">
+        <source>Forgot your password?</source>
+      </trans-unit>
       <trans-unit id="MSC.username">
         <source>Username</source>
       </trans-unit>
@@ -1777,6 +1804,12 @@
       </trans-unit>
       <trans-unit id="MSC.emptyField">
         <source>Please enter your username and password!</source>
+      </trans-unit>
+      <trans-unit id="MSC.reauthenticate">
+        <source>Please enter your password to verify your identity.</source>
+      </trans-unit>
+      <trans-unit id="MSC.verify">
+        <source>Verify</source>
       </trans-unit>
       <trans-unit id="MSC.confirmation">
         <source>Confirmation</source>
@@ -1863,7 +1896,7 @@
         <source>Share on Facebook</source>
       </trans-unit>
       <trans-unit id="MSC.twitterShare">
-        <source>Share on Twitter</source>
+        <source>Share on X (formerly Twitter)</source>
       </trans-unit>
       <trans-unit id="MSC.pleaseWait">
         <source>Please wait</source>
@@ -1950,16 +1983,16 @@
         <source>You have to add a website root page to enter file metadata.</source>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
-        <source>Breadcrumb menu</source>
+        <source>Breadcrumb</source>
       </trans-unit>
       <trans-unit id="MSC.mainNavigation">
-        <source>Main navigation</source>
+        <source>Main</source>
       </trans-unit>
       <trans-unit id="MSC.headerNavigation">
-        <source>Header navigation</source>
+        <source>Header</source>
       </trans-unit>
       <trans-unit id="MSC.pagination">
-        <source>Pagination menu</source>
+        <source>Pagination</source>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.unicodeLowercase">
         <source>Unicode numbers and lowercase letters</source>
@@ -2140,6 +2173,21 @@
       </trans-unit>
       <trans-unit id="MSC.lightMode">
         <source>Light mode</source>
+      </trans-unit>
+      <trans-unit id="MSC.altchaFooter">
+        <source>Protected by &lt;a href="https://altcha.org/" target="_blank"&gt;ALTCHA&lt;/a&gt;</source>
+      </trans-unit>
+      <trans-unit id="MSC.altchaLabel">
+        <source>I'm not a robot</source>
+      </trans-unit>
+      <trans-unit id="MSC.altchaVerified">
+        <source>I'm human</source>
+      </trans-unit>
+      <trans-unit id="MSC.altchaVerifying">
+        <source>Verifying …</source>
+      </trans-unit>
+      <trans-unit id="MSC.altchaWaitAlert">
+        <source>Verifying … please wait.</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

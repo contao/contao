@@ -33,8 +33,8 @@ abstract class AbstractBasicEntitiesMigration extends AbstractMigration
     {
         $schemaManager = $this->connection->createSchemaManager();
 
-        // This migration is very intrusive thus we try to run it only if the
-        // database schema was not yet updated to Contao 5
+        // This migration is very intrusive thus we try to run it only if the database
+        // schema was not yet updated to Contao 5
         if (
             !$schemaManager->tablesExist(['tl_article'])
             || !isset($schemaManager->listTableColumns('tl_article')['keywords'])
@@ -98,17 +98,15 @@ abstract class AbstractBasicEntitiesMigration extends AbstractMigration
     }
 
     /**
-     * Returns an array of arrays with the first element being the database
-     * table name and the second being the column name.
+     * Returns an array of arrays with the first element being the database table name
+     * and the second being the column name.
      *
      * For example:
      *
-     * ```php
-     * return [
-     *     ['tl_news', 'title'],
-     *     ['tl_news', 'description'],
-     * ];
-     * ```
+     *     return [
+     *         ['tl_news', 'title'],
+     *         ['tl_news', 'description'],
+     *     ];
      *
      * @return list<array{0:string, 1:string}>
      */

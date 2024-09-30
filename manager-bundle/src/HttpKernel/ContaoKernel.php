@@ -229,7 +229,8 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         if ($trustedProxies = $_SERVER['TRUSTED_PROXIES'] ?? null) {
             $trustedHeaderSet = Request::HEADER_X_FORWARDED_FOR | Request::HEADER_X_FORWARDED_PORT | Request::HEADER_X_FORWARDED_PROTO;
 
-            // If we have a limited list of trusted hosts, we can safely use the X-Forwarded-Host header
+            // If we have a limited list of trusted hosts, we can safely use the
+            // X-Forwarded-Host header
             if ($trustedHosts) {
                 $trustedHeaderSet |= Request::HEADER_X_FORWARDED_HOST;
             }
@@ -361,14 +362,16 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
     private static function loadEnv(string $projectDir, string $defaultEnv = 'prod'): void
     {
-        // Load cached env vars if the .env.local.php file exists
-        // See https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/4.2/config/bootstrap.php
+        // Load cached env vars if the .env.local.php file exists.
+        // https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/4.4/config/bootstrap.php
         if (\is_array($env = @include Path::join($projectDir, '.env.local.php'))) {
-            foreach ($env as $k => $v) {
-                $_ENV[$k] ??= isset($_SERVER[$k]) && !str_starts_with($k, 'HTTP_') ? $_SERVER[$k] : $v;
+            (new Dotenv())->populate($env);
+
+            if ('jwt' === ($_SERVER['APP_ENV'] ?? $_ENV['APP_ENV'] ?? null)) {
+                $_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = $defaultEnv;
             }
         } elseif (file_exists($filePath = Path::join($projectDir, '.env'))) {
-            (new Dotenv())->usePutenv(false)->loadEnv($filePath, 'APP_ENV', $defaultEnv);
+            (new Dotenv())->loadEnv($filePath, 'APP_ENV', $defaultEnv);
         }
 
         $_SERVER += $_ENV;

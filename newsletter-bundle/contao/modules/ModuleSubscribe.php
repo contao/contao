@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\Routing\Exception\ExceptionInterface;
+
 /**
  * Front end module "newsletter subscribe".
  *
@@ -75,7 +77,7 @@ class ModuleSubscribe extends Module
 		$this->Template->captcha = '';
 
 		// Activate e-mail address
-		if (strncmp(Input::get('token'), 'nl-', 3) === 0)
+		if (str_starts_with(Input::get('token'), 'nl-'))
 		{
 			$this->activateRecipient();
 
@@ -174,61 +176,56 @@ class ModuleSubscribe extends Module
 			return;
 		}
 
-		if ($optInToken->isConfirmed())
+		if (!$optInToken->isConfirmed())
 		{
-			$this->Template->mclass = 'error';
-			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['tokenConfirmed'];
+			$arrRecipients = array();
 
-			return;
-		}
-
-		$arrRecipients = array();
-
-		// Validate the token
-		foreach ($arrIds as $intId)
-		{
-			if (!$objRecipient = NewsletterRecipientsModel::findByPk($intId))
+			// Validate the token
+			foreach ($arrIds as $intId)
 			{
-				$this->Template->mclass = 'error';
-				$this->Template->message = $GLOBALS['TL_LANG']['MSC']['invalidToken'];
+				if (!$objRecipient = NewsletterRecipientsModel::findById($intId))
+				{
+					$this->Template->mclass = 'error';
+					$this->Template->message = $GLOBALS['TL_LANG']['MSC']['invalidToken'];
 
-				return;
+					return;
+				}
+
+				if ($optInToken->getEmail() != $objRecipient->email)
+				{
+					$this->Template->mclass = 'error';
+					$this->Template->message = $GLOBALS['TL_LANG']['MSC']['tokenEmailMismatch'];
+
+					return;
+				}
+
+				$arrRecipients[] = $objRecipient;
 			}
 
-			if ($optInToken->getEmail() != $objRecipient->email)
-			{
-				$this->Template->mclass = 'error';
-				$this->Template->message = $GLOBALS['TL_LANG']['MSC']['tokenEmailMismatch'];
+			$time = time();
+			$arrAdd = array();
+			$arrCids = array();
 
-				return;
+			// Activate the subscriptions
+			foreach ($arrRecipients as $objRecipient)
+			{
+				$arrAdd[] = $objRecipient->id;
+				$arrCids[] = $objRecipient->pid;
+
+				$objRecipient->tstamp = $time;
+				$objRecipient->active = true;
+				$objRecipient->save();
 			}
 
-			$arrRecipients[] = $objRecipient;
-		}
+			$optInToken->confirm();
 
-		$time = time();
-		$arrAdd = array();
-		$arrCids = array();
-
-		// Activate the subscriptions
-		foreach ($arrRecipients as $objRecipient)
-		{
-			$arrAdd[] = $objRecipient->id;
-			$arrCids[] = $objRecipient->pid;
-
-			$objRecipient->tstamp = $time;
-			$objRecipient->active = true;
-			$objRecipient->save();
-		}
-
-		$optInToken->confirm();
-
-		// HOOK: post activation callback
-		if (isset($GLOBALS['TL_HOOKS']['activateRecipient']) && \is_array($GLOBALS['TL_HOOKS']['activateRecipient']))
-		{
-			foreach ($GLOBALS['TL_HOOKS']['activateRecipient'] as $callback)
+			// HOOK: post activation callback
+			if (isset($GLOBALS['TL_HOOKS']['activateRecipient']) && \is_array($GLOBALS['TL_HOOKS']['activateRecipient']))
 			{
-				System::importStatic($callback[0])->{$callback[1]}($optInToken->getEmail(), $arrAdd, $arrCids, $this);
+				foreach ($GLOBALS['TL_HOOKS']['activateRecipient'] as $callback)
+				{
+					System::importStatic($callback[0])->{$callback[1]}($optInToken->getEmail(), $arrAdd, $arrCids, $this);
+				}
 			}
 		}
 
@@ -244,7 +241,7 @@ class ModuleSubscribe extends Module
 	 *
 	 * @return array|bool
 	 */
-	protected function validateForm(Widget $objWidget=null)
+	protected function validateForm(Widget|null $objWidget=null)
 	{
 		// Validate the e-mail address
 		$varInput = Idna::encodeEmail(Input::post('email', true));
@@ -364,20 +361,26 @@ class ModuleSubscribe extends Module
 		$arrData = array();
 		$arrData['token'] = $optInToken->getIdentifier();
 		$arrData['domain'] = Idna::decode(Environment::get('host'));
-		$arrData['link'] = Idna::decode(Environment::get('url')) . Environment::get('requestUri') . ((strpos(Environment::get('requestUri'), '?') !== false) ? '&' : '?') . 'token=' . $optInToken->getIdentifier();
+		$arrData['link'] = Idna::decode(Environment::get('url')) . Environment::get('requestUri') . ((str_contains(Environment::get('requestUri'), '?')) ? '&' : '?') . 'token=' . $optInToken->getIdentifier();
 		$arrData['channel'] = $arrData['channels'] = implode("\n", $objChannel->fetchEach('title'));
 
 		// Send the token
 		$optInToken->send(
-			sprintf($GLOBALS['TL_LANG']['MSC']['nl_subject'], Idna::decode(Environment::get('host'))),
+			\sprintf($GLOBALS['TL_LANG']['MSC']['nl_subject'], Idna::decode(Environment::get('host'))),
 			System::getContainer()->get('contao.string.simple_token_parser')->parse($this->nl_subscribe, $arrData)
 		);
 
 		// Redirect to the jumpTo page
-		if (($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
+		if ($objTarget = PageModel::findById($this->objModel->jumpTo))
 		{
-			/** @var PageModel $objTarget */
-			$this->redirect($objTarget->getFrontendUrl());
+			try
+			{
+				$this->redirect(System::getContainer()->get('contao.routing.content_url_generator')->generate($objTarget));
+			}
+			catch (ExceptionInterface)
+			{
+				// Ignore if target URL cannot be generated and reload the page
+			}
 		}
 
 		System::getContainer()->get('request_stack')->getSession()->getFlashBag()->set('nl_confirm', $GLOBALS['TL_LANG']['MSC']['nl_confirm']);

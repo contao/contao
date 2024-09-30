@@ -48,7 +48,7 @@ class ScopeMatcherTest extends TestCase
         $this->assertSame($isFrontend, $this->matcher->isFrontendRequest($request));
     }
 
-    public function mainRequestProvider(): \Generator
+    public static function mainRequestProvider(): iterable
     {
         yield [
             ContaoCoreBundle::SCOPE_BACKEND,

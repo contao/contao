@@ -14,7 +14,6 @@ use Contao\Controller;
 use Contao\Database;
 use Contao\DcaExtractor;
 use Contao\System;
-use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * Compares the existing database structure with the DCA table settings and
@@ -171,7 +170,6 @@ class Installer extends Controller
 		$return = array();
 		$processed = array();
 
-		/** @var SplFileInfo[] $files */
 		$files = System::getContainer()->get('contao.resource_finder')->findIn('dca')->depth(0)->files()->name('*.php');
 
 		foreach ($files as $file)
@@ -282,7 +280,7 @@ class Installer extends Controller
 						', ',
 						array_map(
 							static function ($item) use ($quote) {
-								if (strpos($item, '(') === false)
+								if (!str_contains($item, '('))
 								{
 									return $quote($item);
 								}

@@ -127,7 +127,7 @@ class VirtualFilesystemTest extends TestCase
         $filesystem->read($this->defaultUuid);
     }
 
-    public function provideInvalidPaths(): \Generator
+    public static function provideInvalidPaths(): iterable
     {
         yield 'relative path up' => [
             '../other/resource',
@@ -174,7 +174,7 @@ class VirtualFilesystemTest extends TestCase
         $this->assertSame($resourceExists, $filesystem->has($uuid));
     }
 
-    public function provideResourceExistsResults(): \Generator
+    public static function provideResourceExistsResults(): iterable
     {
         yield 'resource found' => [true];
         yield 'resource not found' => [false];
@@ -228,7 +228,7 @@ class VirtualFilesystemTest extends TestCase
         $filesystem->directoryExists(Uuid::v1(), $invalidAccessFlags);
     }
 
-    public function provideInvalidAccessFlags(): \Generator
+    public static function provideInvalidAccessFlags(): iterable
     {
         yield 'bypass DBAFS' => [VirtualFilesystemInterface::BYPASS_DBAFS];
         yield 'bypass DBAFS, but still sync' => [VirtualFilesystemInterface::FORCE_SYNC | VirtualFilesystemInterface::BYPASS_DBAFS];
@@ -249,7 +249,8 @@ class VirtualFilesystemTest extends TestCase
         ;
 
         $mountManager
-            // Called once each for directoryExists() and once each for has() if resource does not exist
+            // Called once each for directoryExists() and once each for has() if resource
+            // does not exist
             ->expects($this->exactly($resourceExists ? 2 : 4))
             ->method('directoryExists')
             ->with('prefix/path')
@@ -543,7 +544,7 @@ class VirtualFilesystemTest extends TestCase
         $this->assertSame(2048, $fileA->getFileSize());
         $this->assertSame('text/csv', $fileA->getMimeType());
 
-        /** @phpstan-ignore-next-line */
+        /** @phpstan-ignore method.impossibleType */
         $this->assertSame(3, $handlerInvocationCount);
 
         // Read from the DbafsManager
@@ -559,6 +560,7 @@ class VirtualFilesystemTest extends TestCase
         $this->assertInstanceOf(FilesystemItem::class, $fileB);
         $this->assertTrue($fileB->isFile());
 
+        /** @phpstan-ignore method.impossibleType */
         $this->assertSame(3, $handlerInvocationCount);
 
         $this->assertSame(12345, $fileB->getLastModified());
@@ -566,6 +568,7 @@ class VirtualFilesystemTest extends TestCase
         $this->assertSame('image/png', $fileB->getMimeType());
         $this->assertSame(['extra' => 'data'], $fileB->getExtraMetadata());
 
+        /** @phpstan-ignore method.impossibleType */
         $this->assertSame(7, $handlerInvocationCount);
     }
 
@@ -601,7 +604,7 @@ class VirtualFilesystemTest extends TestCase
 
         // Normalize listing for comparison
         $listing = array_map(
-            static fn (FilesystemItem $i): string => sprintf('%s (%s)', $i->getPath(), $i->isFile() ? 'file' : 'dir'),
+            static fn (FilesystemItem $i): string => \sprintf('%s (%s)', $i->getPath(), $i->isFile() ? 'file' : 'dir'),
             $listedContents,
         );
 
@@ -610,7 +613,7 @@ class VirtualFilesystemTest extends TestCase
         $this->assertSame($expected, $listing);
     }
 
-    public function provideMountManagerListings(): \Generator
+    public static function provideMountManagerListings(): iterable
     {
         yield 'shallow' => [
             false,
@@ -683,7 +686,7 @@ class VirtualFilesystemTest extends TestCase
 
         // Normalize listing for comparison
         $listing = array_map(
-            static fn (FilesystemItem $i): string => sprintf('%s (%s)', $i->getPath(), $i->isFile() ? 'file' : 'dir'),
+            static fn (FilesystemItem $i): string => \sprintf('%s (%s)', $i->getPath(), $i->isFile() ? 'file' : 'dir'),
             $listedContents,
         );
 
@@ -692,7 +695,7 @@ class VirtualFilesystemTest extends TestCase
         $this->assertSame($expected, $listing);
     }
 
-    public function provideDbafsManagerListings(): \Generator
+    public static function provideDbafsManagerListings(): iterable
     {
         yield 'shallow' => [
             false,
@@ -828,7 +831,7 @@ class VirtualFilesystemTest extends TestCase
         $this->assertSame($expected, $filesystem->getExtraMetadata($this->defaultUuid, $accessFlags));
     }
 
-    public function provideAccessFlags(): \Generator
+    public static function provideAccessFlags(): iterable
     {
         yield 'use DBAFS' => [
             VirtualFilesystemInterface::NONE, false, true,
@@ -893,7 +896,7 @@ class VirtualFilesystemTest extends TestCase
         $readOnlyFilesystem->$method(...$arguments);
     }
 
-    public function provideReadOnlyMethods(): \Generator
+    public static function provideReadOnlyMethods(): iterable
     {
         yield 'write' => [
             'write', 'foo/bar', 'content',
@@ -930,9 +933,8 @@ class VirtualFilesystemTest extends TestCase
 
     public function testFailsWithNonUtf8Paths(): void
     {
-        // Set a compatible codepage under Windows, so that dirname() calls
-        // used in the InMemoryFilesystemAdapter implementation do not alter
-        // our non-UTF-8 test paths.
+        // Set a compatible codepage under Windows, so that dirname() calls used in the
+        // InMemoryFilesystemAdapter implementation do not alter our non-UTF-8 test paths.
         if (\function_exists('sapi_windows_cp_set')) {
             sapi_windows_cp_set(1252);
         }
@@ -952,7 +954,7 @@ class VirtualFilesystemTest extends TestCase
 
     private function doTestGetMetadata(string $property, mixed $value, int $accessFlags, bool $shouldSync, bool $shouldReadFromDbafs): void
     {
-        $method = sprintf('get%s', ucfirst($property));
+        $method = \sprintf('get%s', ucfirst($property));
 
         $mountManager = $this->createMock(MountManager::class);
         $mountManager

@@ -199,6 +199,14 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     public function getExtensionConfig($extensionName, array $extensionConfigs, PluginContainerBuilder $container): array
     {
         switch ($extensionName) {
+            case 'contao':
+                if (!$container->hasParameter('contao.dns_mapping')) {
+                    $container->setParameter('env(DNS_MAPPING)', '[]');
+                    $container->setParameter('contao.dns_mapping', '%env(json:DNS_MAPPING)%');
+                }
+
+                return $extensionConfigs;
+
             case 'framework':
                 $extensionConfigs = $this->checkMailerTransport($extensionConfigs, $container);
                 $extensionConfigs = $this->addDefaultMailer($extensionConfigs);
@@ -308,8 +316,8 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             return $extensionConfigs;
         }
 
-        // Skip if a mapping with the name or alias "App" already exists or any
-        // mapping already targets "%kernel.project_dir%/src/Entity".
+        // Skip if a mapping with the name or alias "App" already exists or any mapping
+        // already targets "%kernel.project_dir%/src/Entity".
         foreach (array_replace(...$mappings) as $name => $values) {
             if (
                 'App' === $name
@@ -432,8 +440,8 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * Dynamically adds a default mailer to the config, if no mailer is defined.
      *
-     * We cannot add a default mailer configuration to the skeleton config.yaml,
-     * since different types of configurations are not allowed.
+     * We cannot add a default mailer configuration to the skeleton config.yaml, since
+     * different types of configurations are not allowed.
      *
      * For example, if the Manager Bundle defined
      *
@@ -448,10 +456,10 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
      *             transports:
      *                 foobar: 'smtps://smtp.example.com'
      *
-     * to their config.yaml, the merged configuration will lead to an error, since
-     * you cannot use "framework.mailer.dsn" together with "framework.mailer.transports".
-     * Thus, the default mailer configuration needs to be added dynamically if
-     * not already present.
+     * to their config.yaml, the merged configuration will lead to an error, since you
+     * cannot use "framework.mailer.dsn" together with "framework.mailer.transports".
+     * Thus, the default mailer configuration needs to be added dynamically if not
+     * already present.
      *
      * @return array<string, array<string, array<string, array<string, mixed>>>>
      */
@@ -563,7 +571,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $dbName .= '?serverVersion='.$this->encodeUrlParameter((string) $version);
         }
 
-        return sprintf(
+        return \sprintf(
             '%s://%s%s:%s%s',
             str_replace('_', '-', $driver),
             $userPassword,
@@ -601,7 +609,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $portSuffix = ':'.$port;
         }
 
-        return sprintf(
+        return \sprintf(
             '%s://%s%s%s',
             $transport,
             $credentials,

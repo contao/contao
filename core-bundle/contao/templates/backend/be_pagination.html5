@@ -1,5 +1,5 @@
 
-<nav class="pagination <?= $this->class ?>" aria-label="<?= $this->pagination ?>">
+<nav class="pagination <?= $this->class ?>" aria-label="<?= $this->trans('MSC.pagination') ?>">
 
   <p><?= $this->total ?></p>
 

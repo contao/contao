@@ -169,12 +169,12 @@ class Input
 				}
 			}
 
-			return array_map(strval(...), array_values($keys));
+			return array_map(\strval(...), array_values($keys));
 		}
 
 		trigger_deprecation('contao/core-bundle', '5.0', 'Getting data from $_GET with the "%s" class has been deprecated and will no longer work in Contao 6. Make sure the request_stack has a request instead.', __CLASS__);
 
-		return array_map(strval(...), array_keys($_GET ?? array()));
+		return array_map(\strval(...), array_keys($_GET ?? array()));
 	}
 
 	/**
@@ -494,7 +494,7 @@ class Input
 	 *
 	 * @return mixed The clean name or array of names
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
 	 */
 	public static function cleanKey($varValue)
 	{
@@ -639,7 +639,7 @@ class Input
 		// Match every single starting and closing tag or special characters outside of tags
 		return preg_replace_callback(
 			'@</?([^\s<>/]*)([^<>]*)>?|-->|[>"\'=]+@',
-			static function ($matches) use ($strAllowedTags, $arrAllowedAttributes, &$blnCommentOpen, &$strOpenRawtext) {
+			static function ($matches) use (&$strOpenRawtext, &$blnCommentOpen, $strAllowedTags, $arrAllowedAttributes) {
 				$strTagName = strtolower($matches[1] ?? '');
 
 				if ($strOpenRawtext === $strTagName && '/' === $matches[0][1])
@@ -658,16 +658,16 @@ class Input
 					return str_replace('&#35;', '#', self::encodeInput($strText, InputEncodingMode::encodeAll, false));
 				};
 
-				if ($blnCommentOpen && substr($matches[0], -3) === '-->')
+				if ($blnCommentOpen && str_ends_with($matches[0], '-->'))
 				{
 					$blnCommentOpen = false;
 
 					return $encode(substr($matches[0], 0, -3)) . '-->';
 				}
 
-				if (!$blnCommentOpen && 0 === strncmp($matches[0], '<!--', 4))
+				if (!$blnCommentOpen && str_starts_with($matches[0], '<!--'))
 				{
-					if (substr($matches[0], -3) === '-->')
+					if (str_ends_with($matches[0], '-->'))
 					{
 						return '<!--' . $encode(substr($matches[0], 4, -3)) . '-->';
 					}
@@ -700,7 +700,7 @@ class Input
 				// Only keep allowed attributes
 				$arrAttributes = array_filter(
 					$arrAttributes,
-					static function ($strAttribute) use ($strTagName, $arrAllowedAttributes) {
+					static function ($strAttribute) use ($arrAllowedAttributes, $strTagName) {
 						// Skip if all attributes are allowed
 						if (\in_array('*', $arrAllowedAttributes[$strTagName] ?? array(), true))
 						{
@@ -769,7 +769,7 @@ class Input
 			$strAttribute = strtolower($arrMatch[1]);
 
 			// Skip attributes that end with dashes or use a double dash
-			if (substr($strAttribute, -1) === '-' || false !== strpos($strAttribute, '--'))
+			if (str_ends_with($strAttribute, '-') || str_contains($strAttribute, '--'))
 			{
 				continue;
 			}
@@ -779,8 +779,8 @@ class Input
 
 			// Remove the quotes if matched by the regular expression
 			if (
-				(strpos($strValue, '"') === 0 && substr($strValue, -1) === '"')
-				|| (strpos($strValue, "'") === 0 && substr($strValue, -1) === "'")
+				(str_starts_with($strValue, '"') && str_ends_with($strValue, '"'))
+				|| (str_starts_with($strValue, "'") && str_ends_with($strValue, "'"))
 			) {
 				$strValue = substr($strValue, 1, -1);
 			}
@@ -809,7 +809,7 @@ class Input
 	 *
 	 * @return mixed The cleaned string or array
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
 	 */
 	public static function xssClean($varValue, $blnStrictMode=false)
 	{
@@ -928,7 +928,7 @@ class Input
 	 *
 	 * @return mixed The decoded string or array
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
 	 */
 	public static function decodeEntities($varValue)
 	{
@@ -952,7 +952,7 @@ class Input
 
 		// Preserve basic entities
 		$varValue = static::preserveBasicEntities($varValue);
-		$varValue = html_entity_decode($varValue, ENT_QUOTES, System::getContainer()->getParameter('kernel.charset'));
+		$varValue = html_entity_decode($varValue, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, System::getContainer()->getParameter('kernel.charset'));
 
 		return $varValue;
 	}
@@ -964,7 +964,7 @@ class Input
 	 *
 	 * @return mixed The string or array with the converted entities
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
 	 */
 	public static function preserveBasicEntities($varValue)
 	{
@@ -1003,7 +1003,7 @@ class Input
 	 *
 	 * @return mixed The encoded string or array
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
 	 */
 	public static function encodeSpecialChars($varValue)
 	{
@@ -1059,7 +1059,10 @@ class Input
 			return $varValue;
 		}
 
-		return str_replace(array('{{', '}}'), array('&#123;&#123;', '&#125;&#125;'), (string) $varValue);
+		$varValue = str_replace(array('{{', '}}'), array('&#123;&#123;', '&#125;&#125;'), (string) $varValue);
+
+		// Encode single curly braces at the beginning and end of the string
+		return preg_replace(array('/^(\s*)\{|\{(\s*)$/', '/^(\s*)\}|\}(\s*)$/'), array('$1&#123;$2', '$1&#125;$2'), $varValue);
 	}
 
 	/**

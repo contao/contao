@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing\Candidates;
 
 use Contao\CoreBundle\Routing\Page\PageRegistry;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Symfony\Component\HttpFoundation\Request;
@@ -91,7 +92,7 @@ class PageCandidates extends AbstractCandidates
         );
 
         preg_match_all(
-            '#^('.implode('|', $prefixes).')('.implode('|', $paths).')('.implode('|', array_map('preg_quote', $this->urlSuffixes)).')$#sD',
+            '#^('.implode('|', $prefixes).')('.implode('|', $paths).')('.implode('|', array_map(preg_quote(...), $this->urlSuffixes)).')$#sD',
             $pathInfo,
             $matches,
         );
@@ -104,14 +105,15 @@ class PageCandidates extends AbstractCandidates
 
         $queryBuilder
             ->orWhere('type IN (:types)')
-            ->setParameter('types', $types, Connection::PARAM_STR_ARRAY)
+            ->setParameter('types', $types, ArrayParameterType::STRING)
         ;
 
         return true;
     }
 
     /**
-     * Lazy-initialize because we do not want to query the database when creating the service.
+     * Lazy-initialize because we do not want to query the database when
+     * creating the service.
      */
     private function initialize(): void
     {

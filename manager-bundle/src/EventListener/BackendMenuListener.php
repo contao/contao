@@ -16,6 +16,7 @@ use Contao\CoreBundle\Event\MenuEvent;
 use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Knp\Menu\Util\MenuManipulator;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -23,6 +24,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * @internal
  */
+#[AsEventListener]
 class BackendMenuListener
 {
     public function __construct(
@@ -84,6 +86,7 @@ class BackendMenuListener
             ->setUri($this->router->generate('contao_backend', $params))
             ->setLinkAttribute('class', $class)
             ->setLinkAttribute('title', $this->translator->trans('debug_mode', [], 'ContaoManagerBundle'))
+            ->setLinkAttribute('data-turbo-prefetch', 'false')
             ->setExtra('translation_domain', 'ContaoManagerBundle')
         ;
 

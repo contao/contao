@@ -17,7 +17,6 @@ use Contao\DC_Table;
 use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 $GLOBALS['TL_DCA']['tl_form'] = array
 (
@@ -46,6 +45,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
+				'tstamp' => 'index',
 				'alias' => 'index'
 			)
 		)
@@ -166,7 +166,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		(
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'storeValues' => array
@@ -204,7 +204,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		'novalidate' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'attributes' => array
@@ -305,7 +305,6 @@ class tl_form extends Backend
 			return;
 		}
 
-		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 		$arrNew = $objSessionBag->get('new_records');
 

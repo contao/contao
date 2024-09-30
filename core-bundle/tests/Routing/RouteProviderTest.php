@@ -39,19 +39,21 @@ class RouteProviderTest extends TestCase
 
     public function testGetsARouteByName(): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class);
-        $page->id = 17;
-        $page->rootId = 1;
-        $page->urlPrefix = '';
-        $page->language = 'en';
-        $page->rootLanguage = 'en';
+        $page = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 17,
+            'rootId' => 1,
+            'language' => 'en',
+            'rootLanguage' => 'en',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
+        ]);
 
         $route = new PageRoute($page);
 
-        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->with(17)
             ->willReturn($page)
         ;
@@ -88,10 +90,10 @@ class RouteProviderTest extends TestCase
 
     public function testThrowsAnExceptionIfThePageIdIsInvalid(): void
     {
-        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->with(17)
         ;
 
@@ -152,18 +154,20 @@ class RouteProviderTest extends TestCase
 
     public function testHandlesRoutesWithDomain(): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class);
-        $page->id = 17;
-        $page->rootId = 1;
-        $page->domain = 'example.org';
-        $page->urlPrefix = '';
-        $page->language = 'en';
-        $page->rootLanguage = 'en';
+        $page = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 17,
+            'rootId' => 1,
+            'domain' => 'example.org',
+            'language' => 'en',
+            'rootLanguage' => 'en',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
+        ]);
 
-        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->with(17)
             ->willReturn($page)
         ;
@@ -192,18 +196,20 @@ class RouteProviderTest extends TestCase
 
     public function testHandlesRoutesWithDomainAndPort(): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class);
-        $page->id = 17;
-        $page->rootId = 1;
-        $page->domain = 'example.org:8080';
-        $page->urlPrefix = '';
-        $page->language = 'en';
-        $page->rootLanguage = 'en';
+        $page = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 17,
+            'rootId' => 1,
+            'domain' => 'example.org:8080',
+            'language' => 'en',
+            'rootLanguage' => 'en',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
+        ]);
 
-        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->with(17)
             ->willReturn($page)
         ;
@@ -333,7 +339,7 @@ class RouteProviderTest extends TestCase
             $this->assertSame(
                 $pages[$i],
                 $routedPage,
-                sprintf(
+                \sprintf(
                     'Position %s should be %s/%s but is %s/%s',
                     $i,
                     $pages[$i]->rootLanguage,
@@ -347,7 +353,7 @@ class RouteProviderTest extends TestCase
         }
     }
 
-    public function getRoutes(): \Generator
+    public function getRoutes(): iterable
     {
         yield 'Sorts host first (1)' => [
             [
@@ -547,7 +553,7 @@ class RouteProviderTest extends TestCase
             $this->assertSame(
                 $page,
                 $routedPage,
-                sprintf(
+                \sprintf(
                     'Position %s should be %s/%s but is %s/%s',
                     $i,
                     $page->rootLanguage,
@@ -561,7 +567,7 @@ class RouteProviderTest extends TestCase
         }
     }
 
-    public function getRootRoutes(): \Generator
+    public function getRootRoutes(): iterable
     {
         $pages = [
             2 => $this->mockRootPage('en', 'english-root'),
@@ -631,7 +637,7 @@ class RouteProviderTest extends TestCase
         $request = $this->mockRequestWithPath(($prependLocale ? '/'.$language : '').'/foo/bar'.$urlSuffix);
 
         $route = new PageRoute($pageModel);
-        $route->setPath(sprintf('/%s{parameters}', $pageModel->alias ?: $pageModel->id));
+        $route->setPath(\sprintf('/%s{parameters}', $pageModel->alias ?: $pageModel->id));
         $route->setDefault('parameters', '/foo/bar');
         $route->setRequirement('parameters', $pageModel->requireItem ? '/.+' : '(/.+)?');
 
@@ -660,26 +666,30 @@ class RouteProviderTest extends TestCase
 
     public function testDoesNotAddRouteForUnroutablePage(): void
     {
-        $routablePage = $this->mockClassWithProperties(PageModel::class);
-        $routablePage->id = 17;
-        $routablePage->rootId = 1;
-        $routablePage->urlPrefix = '';
-        $routablePage->language = 'en';
-        $routablePage->rootLanguage = 'en';
+        $routablePage = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 17,
+            'rootId' => 1,
+            'language' => 'en',
+            'rootLanguage' => 'en',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
+        ]);
 
-        $unroutablePage = $this->mockClassWithProperties(PageModel::class);
-        $unroutablePage->id = 18;
-        $unroutablePage->rootId = 1;
-        $unroutablePage->urlPrefix = '';
-        $unroutablePage->language = 'en';
-        $unroutablePage->rootLanguage = 'en';
+        $unroutablePage = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 18,
+            'rootId' => 1,
+            'language' => 'en',
+            'rootLanguage' => 'en',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
+        ]);
 
         $route = new PageRoute($routablePage);
 
-        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->exactly(2))
-            ->method('findByPk')
+            ->method('findById')
             ->withConsecutive([17], [18])
             ->willReturnOnConsecutiveCalls($routablePage, $unroutablePage)
         ;
@@ -708,7 +718,7 @@ class RouteProviderTest extends TestCase
         $this->getRouteProvider($framework, $pageRegistry)->getRouteByName('tl_page.18');
     }
 
-    public function getPageRoutes(): \Generator
+    public static function getPageRoutes(): iterable
     {
         foreach (['foo', 'foo/bar'] as $alias) {
             foreach (['en', 'de'] as $language) {

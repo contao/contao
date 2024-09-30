@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Finder;
 
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Translation\TranslatorBagInterface;
@@ -45,7 +45,7 @@ final class Finder implements \IteratorAggregate, \Countable
      * @internal
      */
     public function __construct(
-        private readonly TemplateHierarchyInterface $hierarchy,
+        private readonly ContaoFilesystemLoader $filesystem,
         private readonly ThemeNamespace $themeNamespace,
         private readonly TranslatorBagInterface|TranslatorInterface $translator,
     ) {
@@ -85,8 +85,8 @@ final class Finder implements \IteratorAggregate, \Countable
 
     /**
      * Also includes variant templates, e.g: "content_element/text/special" when
-     * filtering for "content_element/text". If $exclusive is set to true, only
-     * the variants will be output.
+     * filtering for "content_element/text". If $exclusive is set to true, only the
+     * variants will be output.
      */
     public function withVariants(bool $exclusive = false): self
     {
@@ -97,8 +97,7 @@ final class Finder implements \IteratorAggregate, \Countable
     }
 
     /**
-     * Also includes templates of a certain theme. Only one theme at a time can
-     * be queried.
+     * Also includes templates of a certain theme. Only one theme at a time can be queried.
      */
     public function withTheme(string $themeSlug): self
     {
@@ -131,7 +130,7 @@ final class Finder implements \IteratorAggregate, \Countable
                 return null;
             }
 
-            return sprintf(
+            return \sprintf(
                 '%s [%s • %s]',
                 $this->translator->trans($identifier, [], 'templates'),
                 $identifier,
@@ -139,7 +138,7 @@ final class Finder implements \IteratorAggregate, \Countable
             );
         };
 
-        $getLabel = static fn (string $identifier, array $sourceLabels): string => sprintf(
+        $getLabel = static fn (string $identifier, array $sourceLabels): string => \sprintf(
             '%s [%s]',
             $identifier,
             implode(', ', $sourceLabels),
@@ -167,7 +166,7 @@ final class Finder implements \IteratorAggregate, \Countable
     {
         // Only include chains that contain at least one non-legacy template
         $chains = array_filter(
-            $this->hierarchy->getInheritanceChains($this->themeSlug),
+            $this->filesystem->getInheritanceChains($this->themeSlug),
             static function (array $chain) {
                 foreach (array_keys($chain) as $path) {
                     if ('html5' !== Path::getExtension($path, true)) {
@@ -198,8 +197,8 @@ final class Finder implements \IteratorAggregate, \Countable
                 continue;
             }
 
-            // The loader makes sure that all files grouped under one
-            // identifier have the same extension
+            // The loader makes sure that all files grouped under one identifier have the
+            // same extension
             $extension = ContaoTwigUtil::getExtension(array_key_first($chain));
 
             if (null !== $this->extension && $this->extension !== $extension) {

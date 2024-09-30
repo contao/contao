@@ -94,7 +94,7 @@ class FigureRendererTest extends TestCase
         $this->assertSame('<result>', $figureRenderer->render('resource', null, [$key => [Metadata::VALUE_ALT => 'foo']]));
     }
 
-    public function provideMetadataKeys(): \Generator
+    public static function provideMetadataKeys(): iterable
     {
         yield ['metadata'];
         yield ['setMetadata'];
@@ -185,7 +185,7 @@ class FigureRendererTest extends TestCase
         $figureRenderer->render(1, null, [], $invalidTemplate);
     }
 
-    public function provideInvalidTemplates(): \Generator
+    public static function provideInvalidTemplates(): iterable
     {
         yield 'not treated as Twig template, has extension' => [
             'foo.twig',

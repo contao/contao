@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\Routing\Exception\ExceptionInterface;
+
 /**
  * Front end module "newsletter list".
  *
@@ -22,12 +24,6 @@ class ModuleNewsletterList extends Module
 	 * @var string
 	 */
 	protected $strTemplate = 'mod_newsletterlist';
-
-	/**
-	 * Page cache array
-	 * @var array
-	 */
-	private static $arrPageCache = array();
 
 	/**
 	 * Display a wildcard in the back end
@@ -74,7 +70,6 @@ class ModuleNewsletterList extends Module
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$arrNewsletter = array();
@@ -89,26 +84,11 @@ class ModuleNewsletterList extends Module
 
 			while ($objNewsletter->next())
 			{
-				/** @var NewsletterChannelModel $objTarget */
-				if (!($objTarget = $objNewsletter->getRelated('pid')) instanceof NewsletterChannelModel)
+				try
 				{
-					continue;
+					$strUrl = System::getContainer()->get('contao.routing.content_url_generator')->generate($objNewsletter->current());
 				}
-
-				$jumpTo = $objTarget->jumpTo;
-
-				// Skip channels without a jumpTo page (see #6521 and #494)
-				if ($jumpTo < 1)
-				{
-					continue;
-				}
-
-				if (($objJumpTo = $this->getPageWithDetails($jumpTo)) instanceof PageModel)
-				{
-					/** @var PageModel $objJumpTo */
-					$strUrl = $objJumpTo->getFrontendUrl('/' . ($objNewsletter->alias ?: $objNewsletter->id));
-				}
-				else
+				catch (ExceptionInterface)
 				{
 					$strUrl = $strRequest;
 				}
@@ -136,22 +116,5 @@ class ModuleNewsletterList extends Module
 		}
 
 		$this->Template->newsletters = $arrNewsletter;
-	}
-
-	/**
-	 * Return the page object with loaded details for the given page ID
-	 *
-	 * @param integer $intPageId
-	 *
-	 * @return PageModel|null
-	 */
-	private function getPageWithDetails($intPageId)
-	{
-		if (!\array_key_exists($intPageId, self::$arrPageCache))
-		{
-			self::$arrPageCache[$intPageId] = PageModel::findWithDetails($intPageId);
-		}
-
-		return self::$arrPageCache[$intPageId];
 	}
 }

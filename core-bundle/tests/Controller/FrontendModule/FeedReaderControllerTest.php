@@ -39,6 +39,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment as TwigEnvironment;
 use Twig\Loader\LoaderInterface;
 
@@ -301,7 +302,7 @@ class FeedReaderControllerTest extends TestCase
 
     private function getController(FeedIo $feedIo, CacheInterface $cache, RequestStack $requestStack, LoggerInterface|null $logger = null, ContainerInterface|null $container = null): FeedReaderController
     {
-        $logger = $logger ?? $this->createMock(LoggerInterface::class);
+        $logger ??= $this->createMock(LoggerInterface::class);
 
         $controller = new FeedReaderController($feedIo, $logger, $cache);
         $controller->setFragmentOptions(['template' => 'frontend_module/feed_reader']);
@@ -363,6 +364,7 @@ class FeedReaderControllerTest extends TestCase
         $this->container->set('contao.framework', $framework);
         $this->container->set('contao.routing.scope_matcher', $this->mockScopeMatcher());
         $this->container->set('cache.system', $this->createMock(CacheInterface::class));
+        $this->container->set('translator', $this->createMock(TranslatorInterface::class));
 
         if ($requestStack instanceof RequestStack) {
             $this->container->set('request_stack', $requestStack);

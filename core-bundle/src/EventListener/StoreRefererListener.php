@@ -15,12 +15,14 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\User;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 /**
  * @internal
  */
+#[AsEventListener]
 class StoreRefererListener
 {
     public function __construct(
@@ -89,7 +91,8 @@ class StoreRefererListener
             && !$request->query->has('token')
             && !$request->query->has('state')
             && 'feRedirect' !== $request->query->get('do')
-            && 'contao_backend' === $request->attributes->get('_route')
+            && 'backend' === $request->attributes->get('_scope')
+            && false !== $request->attributes->get('_store_referrer')
             && !$request->isXmlHttpRequest();
     }
 

@@ -2,6 +2,7 @@
     'use strict';
 
     const initializedRows = new WeakMap();
+    const saveScrollOffsetEvent = new Event('store-scroll-offset');
 
     const init = (row) => {
         // Check if this row has already been initialized
@@ -9,8 +10,9 @@
             return;
         }
 
-        // Check if this row has all necessary elements
-        if (7 !== row.querySelectorAll('input, select, button').length) {
+        // Check if the row has all necessary elements to prevent the mutation observer
+        // from initializing the incomplete widget.
+        if (!row.querySelector('button.drag-handle')) {
             return;
         }
 
@@ -43,7 +45,7 @@
                 switch (command) {
                     case 'copy':
                         bt.addEventListener('click', () => {
-                            Backend.getScrollOffset();
+                            window.dispatchEvent(saveScrollOffsetEvent);
                             const ntr = tr.cloneNode(true);
                             const selects = tr.querySelectorAll('select');
                             const nselects = ntr.querySelectorAll('select');
@@ -58,7 +60,7 @@
 
                     case 'delete':
                         bt.addEventListener('click', () => {
-                            Backend.getScrollOffset();
+                            window.dispatchEvent(saveScrollOffsetEvent);
                             if (tbody.children.length > 1) {
                                 tr.remove();
                             } else {

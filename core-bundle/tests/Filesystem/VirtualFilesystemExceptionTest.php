@@ -27,7 +27,7 @@ class VirtualFilesystemExceptionTest extends TestCase
         $this->assertSame('previous', $e->getPrevious()->getMessage());
     }
 
-    public function provideVariants(): \Generator
+    public static function provideVariants(): iterable
     {
         $previous = new \RuntimeException('previous');
 

@@ -38,6 +38,7 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
+				'tstamp' => 'index',
 				'token' => 'unique',
 				'removeOn' => 'index'
 			)
@@ -185,7 +186,7 @@ class tl_opt_in extends Backend
 	 */
 	public function resendToken(DataContainer $dc)
 	{
-		$model = OptInModel::findByPk($dc->id);
+		$model = OptInModel::findById($dc->id);
 
 		System::getContainer()->get('contao.opt_in')->find($model->token)->send();
 		Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['MSC']['resendToken'], $model->email));

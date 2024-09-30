@@ -41,7 +41,7 @@ class ContaoSetupCommand extends Command
     private readonly \Closure $createProcessHandler;
 
     /**
-     * @param (\Closure(array<string>):Process)|null $createProcessHandler
+     * @param (\Closure(array<string>): Process)|null $createProcessHandler
      */
     public function __construct(
         private readonly string $projectDir,
@@ -78,7 +78,7 @@ class ContaoSetupCommand extends Command
             $io->info('An APP_SECRET was generated and written to your .env.local file.');
 
             if (!$filesystem->exists($envPath = Path::join($this->projectDir, '.env'))) {
-                $filesystem->touch($envPath);
+                $filesystem->dumpFile($envPath, "#DATABASE_URL='mysql://username:password@localhost/database_name'\n#MAILER_DSN=");
 
                 $io->info('An empty .env file was created.');
             }
@@ -139,7 +139,7 @@ class ContaoSetupCommand extends Command
         );
 
         if (!$process->isSuccessful()) {
-            throw new \RuntimeException(sprintf('An error occurred while executing the "%s" command: %s', implode(' ', $command), $process->getErrorOutput()));
+            throw new \RuntimeException(\sprintf('An error occurred while executing the "%s" command: %s', implode(' ', $command), $process->getErrorOutput()));
         }
     }
 

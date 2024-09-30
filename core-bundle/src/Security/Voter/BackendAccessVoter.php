@@ -35,6 +35,8 @@ class BackendAccessVoter extends Voter implements ResetInterface
 
     private array $pagePermissionsCache = [];
 
+    private array $pagemountsCache = [];
+
     public function __construct(private readonly ContaoFramework $framework)
     {
     }
@@ -42,6 +44,7 @@ class BackendAccessVoter extends Voter implements ResetInterface
     public function reset(): void
     {
         $this->pagePermissionsCache = [];
+        $this->pagemountsCache = [];
     }
 
     protected function supports(string $attribute, mixed $subject): bool
@@ -118,10 +121,12 @@ class BackendAccessVoter extends Voter implements ResetInterface
 
         // Additionally check the child pages of the mounted pages
         if ('pagemounts' === $field) {
-            $database = $this->framework->createInstance(Database::class);
-            $childIds = $database->getChildRecords($user->pagemounts, 'tl_page');
+            if (!isset($this->pagemountsCache[$user->id]) || (!empty($this->pagemountsCache[$user->id]) && !array_intersect($subject, $this->pagemountsCache[$user->id]))) {
+                $database = $this->framework->createInstance(Database::class);
+                $this->pagemountsCache[$user->id] = $database->getChildRecords($user->pagemounts, 'tl_page');
+            }
 
-            return !empty($childIds) && array_intersect($subject, $childIds);
+            return !empty($this->pagemountsCache[$user->id]) && array_intersect($subject, $this->pagemountsCache[$user->id]);
         }
 
         return false;
@@ -137,7 +142,7 @@ class BackendAccessVoter extends Voter implements ResetInterface
         }
 
         if (!\is_array($subject)) {
-            $page = $this->framework->getAdapter(PageModel::class)->findByPk($subject);
+            $page = $this->framework->getAdapter(PageModel::class)->findById($subject);
 
             if (!$page instanceof PageModel) {
                 return false;
@@ -162,7 +167,8 @@ class BackendAccessVoter extends Voter implements ResetInterface
     }
 
     /**
-     * Checks if the user has access to any field of a table (against tl_user(_group).alexf).
+     * Checks if the user has access to any field of a table (against
+     * tl_user(_group).alexf).
      */
     private function canEditFieldsOf(mixed $table, BackendUser $user): bool
     {

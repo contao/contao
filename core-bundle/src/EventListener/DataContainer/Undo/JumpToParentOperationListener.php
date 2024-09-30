@@ -64,7 +64,7 @@ class JumpToParentOperationListener
             return;
         }
 
-        $newTitle = sprintf(
+        $newTitle = \sprintf(
             $this->translator->trans('tl_undo.parent_modal', [], 'contao_tl_undo'),
             $table,
             $originalRow['id'],
@@ -98,8 +98,8 @@ class JumpToParentOperationListener
             // Limit tree to right parent node
             $params['pn'] = $parent['id'];
         } elseif ($module['tables'][0] !== $table) {
-            // If $table is the main table of a module, we just go to do=$module,
-            // else we append the right table and ID
+            // If $table is the main table of a module, we just go to do=$module, else we
+            // append the right table and ID
             $params['table'] = $table;
             $params['id'] = $parent['id'];
         }

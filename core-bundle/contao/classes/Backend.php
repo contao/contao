@@ -17,7 +17,6 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 /**
  * Provide methods to manage back end controllers.
@@ -66,7 +65,7 @@ abstract class Backend extends Controller
 
 		foreach ($arrThemes as $strTheme)
 		{
-			if (strncmp($strTheme, '.', 1) === 0 || !is_dir($projectDir . '/system/themes/' . $strTheme))
+			if (str_starts_with($strTheme, '.') || !is_dir($projectDir . '/system/themes/' . $strTheme))
 			{
 				continue;
 			}
@@ -211,7 +210,7 @@ abstract class Backend extends Controller
 	 *
 	 * @throws AccessDeniedException
 	 */
-	protected function getBackendModule($module, PickerInterface $picker = null)
+	protected function getBackendModule($module, PickerInterface|null $picker = null)
 	{
 		$arrModule = array();
 
@@ -287,9 +286,8 @@ abstract class Backend extends Controller
 				trigger_error('Could not create a data container object', E_USER_ERROR);
 			}
 
+			/** @var class-string<DataContainer> $dataContainer */
 			$dataContainer = DataContainer::getDriverForTable($strTable);
-
-			/** @var DataContainer $dc */
 			$dc = new $dataContainer($strTable, $arrModule);
 
 			if ($picker !== null && $dc instanceof DataContainer)
@@ -355,7 +353,7 @@ abstract class Backend extends Controller
 			// Add the name of the submodule
 			if (isset($GLOBALS['TL_LANG'][$strTable][Input::get('key')][1]))
 			{
-				$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][Input::get('key')][1] ?? '%s', Input::get('id')) . '</span>';
+				$this->Template->headline .= ' <span>' . \sprintf($GLOBALS['TL_LANG'][$strTable][Input::get('key')][1] ?? '%s', Input::get('id')) . '</span>';
 			}
 			else
 			{
@@ -448,7 +446,7 @@ abstract class Backend extends Controller
 								'ref' => $request->attributes->get('_contao_referer_id'),
 							));
 
-							$trail[] = sprintf(' <span><a href="%s">%s</a></span>', $strUrl, $linkLabel);
+							$trail[] = \sprintf(' <span><a href="%s">%s</a></span>', $strUrl, $linkLabel);
 						}
 					}
 
@@ -498,7 +496,7 @@ abstract class Backend extends Controller
 				if ($do == 'files' || $do == 'tpl_editor')
 				{
 					// Handle new folders (see #7980)
-					if (strpos(Input::get('id'), '__new__') !== false)
+					if (str_contains(Input::get('id'), '__new__'))
 					{
 						$this->Template->headline .= ' <span>' . \dirname(Input::get('id')) . '</span> <span>' . $GLOBALS['TL_LANG'][$strTable]['new'][1] . '</span>';
 					}
@@ -511,11 +509,11 @@ abstract class Backend extends Controller
 				{
 					if (\is_array($GLOBALS['TL_LANG'][$strTable][$act]))
 					{
-						$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], Input::get('id')) . '</span>';
+						$this->Template->headline .= ' <span>' . \sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], Input::get('id')) . '</span>';
 					}
 					else
 					{
-						$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act], Input::get('id')) . '</span>';
+						$this->Template->headline .= ' <span>' . \sprintf($GLOBALS['TL_LANG'][$strTable][$act], Input::get('id')) . '</span>';
 					}
 				}
 			}
@@ -536,11 +534,11 @@ abstract class Backend extends Controller
 				{
 					if (\is_array($GLOBALS['TL_LANG'][$strTable][$act]))
 					{
-						$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], Input::get('pid')) . '</span>';
+						$this->Template->headline .= ' <span>' . \sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], Input::get('pid')) . '</span>';
 					}
 					else
 					{
-						$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act], Input::get('pid')) . '</span>';
+						$this->Template->headline .= ' <span>' . \sprintf($GLOBALS['TL_LANG'][$strTable][$act], Input::get('pid')) . '</span>';
 					}
 				}
 			}
@@ -561,7 +559,6 @@ abstract class Backend extends Controller
 	 */
 	public static function addPagesBreadcrumb($strKey='tl_page_node')
 	{
-		/** @var AttributeBagInterface $objSession */
 		$objSession = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		// Set a new node
@@ -646,7 +643,7 @@ abstract class Backend extends Controller
 
 		// Limit tree and disable root trails
 		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = array($intNode);
-		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['showRootTrails'] = false;
+		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['visibleRoot'] = $intNode;
 
 		// Add root link
 		$arrLinks[] = Image::getHtml('pagemounts.svg') . ' <a href="' . self::addToUrl('pn=0') . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']) . '">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
@@ -675,7 +672,7 @@ abstract class Backend extends Controller
 	 *
 	 * @return string
 	 */
-	public static function addPageIcon($row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false, $isVisibleRootTrailPage=false)
+	public static function addPageIcon($row, $label, DataContainer|null $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false, $isVisibleRootTrailPage=false)
 	{
 		if ($blnProtected)
 		{
@@ -759,7 +756,6 @@ abstract class Backend extends Controller
 	 */
 	public static function addFilesBreadcrumb($strKey='tl_files_node')
 	{
-		/** @var AttributeBagInterface $objSession */
 		$objSession = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		// Set a new node
@@ -958,7 +954,7 @@ abstract class Backend extends Controller
 	{
 		$host = Environment::get('host');
 
-		if (strpos($host, 'xn--') !== false)
+		if (str_contains($host, 'xn--'))
 		{
 			$host = Idna::decode($host);
 		}
@@ -1083,7 +1079,7 @@ abstract class Backend extends Controller
 			}
 			else
 			{
-				$strOptions .= sprintf('<option value="{{link_url::%s}}"%s>%s%s</option>', $objPages->id, ('{{link_url::' . $objPages->id . '}}' == Input::get('value')) ? ' selected="selected"' : '', str_repeat(' &nbsp; &nbsp; ', $level), StringUtil::specialchars($objPages->title));
+				$strOptions .= \sprintf('<option value="{{link_url::%s}}"%s>%s%s</option>', $objPages->id, ('{{link_url::' . $objPages->id . '}}' == Input::get('value')) ? ' selected="selected"' : '', str_repeat(' &nbsp; &nbsp; ', $level), StringUtil::specialchars($objPages->title));
 				$strOptions .= $this->doCreatePageList($objPages->id, $level);
 			}
 		}
@@ -1165,7 +1161,7 @@ abstract class Backend extends Controller
 		// Recursively list all files and folders
 		foreach ($arrPages as $strFile)
 		{
-			if (strncmp($strFile, '.', 1) === 0)
+			if (str_starts_with($strFile, '.'))
 			{
 				continue;
 			}
@@ -1185,7 +1181,7 @@ abstract class Backend extends Controller
 					continue;
 				}
 
-				$strFiles .= sprintf('<option value="%s"%s>%s</option>', $strFolder . '/' . $strFile, ($strFolder . '/' . $strFile == Input::get('value')) ? ' selected="selected"' : '', StringUtil::specialchars($strFile));
+				$strFiles .= \sprintf('<option value="%s"%s>%s</option>', $strFolder . '/' . $strFile, ($strFolder . '/' . $strFile == Input::get('value')) ? ' selected="selected"' : '', StringUtil::specialchars($strFile));
 			}
 		}
 

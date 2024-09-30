@@ -15,6 +15,7 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Util\UrlUtil;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Front end module "newsreader".
@@ -77,9 +78,11 @@ class ModuleNewsReader extends ModuleNews
 	{
 		$this->Template->articles = '';
 
-		if ($this->overviewPage)
+		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
+
+		if ($this->overviewPage && ($overviewPage = PageModel::findById($this->overviewPage)))
 		{
-			$this->Template->referer = PageModel::findById($this->overviewPage)->getFrontendUrl();
+			$this->Template->referer = $urlGenerator->generate($overviewPage);
 			$this->Template->back = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['newsOverview'];
 		}
 
@@ -96,31 +99,9 @@ class ModuleNewsReader extends ModuleNews
 		switch ($objArticle->source)
 		{
 			case 'internal':
-				if ($page = PageModel::findPublishedById($objArticle->jumpTo))
-				{
-					throw new RedirectResponseException($page->getAbsoluteUrl(), 301);
-				}
-
-				throw new InternalServerErrorException('Invalid "jumpTo" value or target page not public');
-
 			case 'article':
-				if (($article = ArticleModel::findByPk($objArticle->articleId)) && ($page = PageModel::findPublishedById($article->pid)))
-				{
-					throw new RedirectResponseException($page->getAbsoluteUrl('/articles/' . ($article->alias ?: $article->id)), 301);
-				}
-
-				throw new InternalServerErrorException('Invalid "articleId" value or target page not public');
-
 			case 'external':
-				if ($objArticle->url)
-				{
-					$url = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objArticle->url);
-					$url = UrlUtil::makeAbsolute($url, Environment::get('base'));
-
-					throw new RedirectResponseException($url, 301);
-				}
-
-				throw new InternalServerErrorException('Empty target URL');
+				throw new RedirectResponseException(System::getContainer()->get('contao.routing.content_url_generator')->generate($objArticle, array(), UrlGeneratorInterface::ABSOLUTE_URL), 301);
 		}
 
 		// Set the default template
@@ -129,15 +110,11 @@ class ModuleNewsReader extends ModuleNews
 			$this->news_template = 'news_full';
 		}
 
-		$arrArticle = $this->parseArticle($objArticle);
-		$this->Template->articles = $arrArticle;
-
 		// Overwrite the page metadata (see #2853, #4955 and #87)
 		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
-		if ($responseContext && $responseContext->has(HtmlHeadBag::class))
+		if ($responseContext?->has(HtmlHeadBag::class))
 		{
-			/** @var HtmlHeadBag $htmlHeadBag */
 			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
 			$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 
@@ -163,7 +140,32 @@ class ModuleNewsReader extends ModuleNews
 			{
 				$htmlHeadBag->setMetaRobots($objArticle->robots);
 			}
+
+			if ($objArticle->canonicalLink)
+			{
+				$url = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objArticle->canonicalLink);
+
+				// Ensure absolute links
+				if (!preg_match('#^https?://#', $url))
+				{
+					if (!$request = System::getContainer()->get('request_stack')->getCurrentRequest())
+					{
+						throw new \RuntimeException('The request stack did not contain a request');
+					}
+
+					$url = UrlUtil::makeAbsolute($url, $request->getUri());
+				}
+
+				$htmlHeadBag->setCanonicalUri($url);
+			}
+			elseif (!$this->news_keepCanonical)
+			{
+				$htmlHeadBag->setCanonicalUri($urlGenerator->generate($objArticle, array(), UrlGeneratorInterface::ABSOLUTE_URL));
+			}
 		}
+
+		$arrArticle = $this->parseArticle($objArticle);
+		$this->Template->articles = $arrArticle;
 
 		$bundles = System::getContainer()->getParameter('kernel.bundles');
 
@@ -175,8 +177,11 @@ class ModuleNewsReader extends ModuleNews
 			return;
 		}
 
-		/** @var NewsArchiveModel $objArchive */
-		$objArchive = $objArticle->getRelated('pid');
+		if (!$objArchive = NewsArchiveModel::findById($objArticle->pid))
+		{
+			return;
+		}
+
 		$this->Template->allowComments = $objArchive->allowComments;
 
 		// Comments are not allowed
@@ -197,8 +202,7 @@ class ModuleNewsReader extends ModuleNews
 			$arrNotifies[] = $GLOBALS['TL_ADMIN_EMAIL'];
 		}
 
-		/** @var UserModel $objAuthor */
-		if ($objArchive->notify != 'notify_admin' && ($objAuthor = $objArticle->getRelated('author')) instanceof UserModel && $objAuthor->email)
+		if ($objArchive->notify != 'notify_admin' && ($objAuthor = UserModel::findById($objArticle->author)) && $objAuthor->email)
 		{
 			$arrNotifies[] = $objAuthor->email;
 		}

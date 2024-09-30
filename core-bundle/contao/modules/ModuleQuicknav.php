@@ -58,7 +58,6 @@ class ModuleQuicknav extends Module
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$host = null;
@@ -99,7 +98,6 @@ class ModuleQuicknav extends Module
 	 */
 	protected function getQuicknavPages($pid, $level=1, $host=null)
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$arrPages = array();
@@ -116,6 +114,7 @@ class ModuleQuicknav extends Module
 
 		$container = System::getContainer();
 		$security = $container->get('security.helper');
+		$urlGenerator = $container->get('contao.routing.content_url_generator');
 		$db = Database::getInstance();
 
 		foreach ($objSubpages as $objSubpage)
@@ -138,7 +137,7 @@ class ModuleQuicknav extends Module
 				{
 					try
 					{
-						$href = $objSubpage->getFrontendUrl();
+						$href = $urlGenerator->generate($objSubpage);
 					}
 					catch (ExceptionInterface $exception)
 					{

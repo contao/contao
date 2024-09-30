@@ -128,7 +128,7 @@ class ContaoFramework implements ResetInterface
      *
      * @param class-string<T> $class
      *
-     * @return Adapter<T>&T
+     * @return Adapter&T
      *
      * @phpstan-return Adapter<T>
      */

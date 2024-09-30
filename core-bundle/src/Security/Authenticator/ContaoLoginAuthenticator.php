@@ -12,22 +12,21 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Authenticator;
 
-use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\ResponseException;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\PageModel;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Scheb\TwoFactorBundle\Security\Http\Authenticator\Passport\Credentials\TwoFactorCodeCredentials;
 use Scheb\TwoFactorBundle\Security\Http\Authenticator\TwoFactorAuthenticator;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -50,6 +49,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordC
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 use Symfony\Component\Security\Http\ParameterBagUtils;
+use Symfony\Component\Security\Http\SecurityRequestAttributes;
 
 class ContaoLoginAuthenticator extends AbstractAuthenticator implements AuthenticationEntryPointInterface, InteractiveAuthenticatorInterface
 {
@@ -65,7 +65,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         private readonly ScopeMatcher $scopeMatcher,
         private readonly RouterInterface $router,
         private readonly UriSigner $uriSigner,
-        private readonly ContaoFramework $framework,
+        private readonly PageFinder $pageFinder,
         private readonly TokenStorageInterface $tokenStorage,
         private readonly PageRegistry $pageRegistry,
         private readonly HttpKernelInterface $httpKernel,
@@ -91,10 +91,16 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
             return $this->redirectToBackend($request);
         }
 
-        $this->framework->initialize();
+        $errorPage = $this->pageFinder->findFirstPageOfTypeForRequest($request, 'error_401');
 
-        $page = $this->getPageForRequest($request);
-        $route = $this->pageRegistry->getRoute($page);
+        if (!$errorPage) {
+            throw new UnauthorizedHttpException('', 'No error_401 page found.', $authException);
+        }
+
+        $errorPage->loadDetails();
+        $errorPage->protected = false;
+
+        $route = $this->pageRegistry->getRoute($errorPage);
         $subRequest = $request->duplicate(null, null, $route->getDefaults());
 
         try {
@@ -108,13 +114,14 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
     {
         return $request->isMethod('POST')
             && $request->request->has('FORM_SUBMIT')
-            && preg_match('/^tl_login(_\d+)?$/', (string) $request->request->get('FORM_SUBMIT'));
+            && \is_string($request->request->get('FORM_SUBMIT'))
+            && preg_match('/^tl_login(_\d+)?$/', $request->request->get('FORM_SUBMIT'));
     }
 
     public function authenticate(Request $request): Passport
     {
-        // When the firewall is lazy, the token is not initialized in the "supports" stage, so this check does only work
-        // within the "authenticate" stage.
+        // When the firewall is lazy, the token is not initialized in the "supports"
+        // stage, so this check does only work within the "authenticate" stage.
         $currentToken = $this->tokenStorage->getToken();
 
         if ($currentToken instanceof TwoFactorTokenInterface) {
@@ -190,7 +197,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         ];
 
         if (!\is_string($credentials['username']) && (!\is_object($credentials['username']) || !method_exists($credentials['username'], '__toString'))) {
-            throw new BadRequestHttpException(sprintf('The key "%s" must be a string, "%s" given.', $this->options['username_parameter'], \gettype($credentials['username'])));
+            throw new BadRequestHttpException(\sprintf('The key "%s" must be a string, "%s" given.', $this->options['username_parameter'], \gettype($credentials['username'])));
         }
 
         $credentials['username'] = trim($credentials['username']);
@@ -199,7 +206,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
             throw new BadCredentialsException('Invalid username.');
         }
 
-        $request->getSession()->set(Security::LAST_USERNAME, $credentials['username']);
+        $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $credentials['username']);
 
         return $credentials;
     }
@@ -213,29 +220,5 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         );
 
         return new RedirectResponse($this->uriSigner->sign($url));
-    }
-
-    private function getPageForRequest(Request $request): PageModel
-    {
-        $page = $request->attributes->get('pageModel');
-        $page->loadDetails();
-
-        $page->protected = false;
-
-        if (!$this->tokenStorage->getToken()) {
-            $pageAdapter = $this->framework->getAdapter(PageModel::class);
-            $errorPage = $pageAdapter->findFirstPublishedByTypeAndPid('error_401', $page->rootId);
-
-            if (!$errorPage) {
-                throw new PageNotFoundException('No error page found.');
-            }
-
-            $errorPage->loadDetails();
-            $errorPage->protected = false;
-
-            return $errorPage;
-        }
-
-        return $page;
     }
 }

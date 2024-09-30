@@ -31,15 +31,13 @@ class FilesystemUtilTest extends TestCase
         $storage
             ->method('get')
             ->willReturnCallback(
-                static function (Uuid $uuid): FilesystemItem|null {
-                    return match ($uuid->toRfc4122()) {
-                        'd22b1ea8-dcab-4162-b690-30cb9206f694' => new FilesystemItem(true, 'file1'),
-                        'b1817d6d-188a-4c99-9204-b1e33733d5a9' => new FilesystemItem(true, 'file2'),
-                        '0af407bc-ced3-4688-9971-f30dca7005b6' => new FilesystemItem(true, 'directory/file3'),
-                        'f0f4bde3-2e1f-48cb-9182-ba804868d93b' => new FilesystemItem(true, 'directory/file4'),
-                        '1fc6c283-c0c8-420e-b1c7-712d388a6b3a' => new FilesystemItem(false, 'directory'),
-                        default => null,
-                    };
+                static fn (Uuid $uuid): FilesystemItem|null => match ($uuid->toRfc4122()) {
+                    'd22b1ea8-dcab-4162-b690-30cb9206f694' => new FilesystemItem(true, 'file1'),
+                    'b1817d6d-188a-4c99-9204-b1e33733d5a9' => new FilesystemItem(true, 'file2'),
+                    '0af407bc-ced3-4688-9971-f30dca7005b6' => new FilesystemItem(true, 'directory/file3'),
+                    'f0f4bde3-2e1f-48cb-9182-ba804868d93b' => new FilesystemItem(true, 'directory/file4'),
+                    '1fc6c283-c0c8-420e-b1c7-712d388a6b3a' => new FilesystemItem(false, 'directory'),
+                    default => null,
                 },
             )
         ;
@@ -68,7 +66,7 @@ class FilesystemUtilTest extends TestCase
         $this->assertSame($expectedPaths, $paths);
     }
 
-    public function provideResources(): \Generator
+    public static function provideResources(): iterable
     {
         $file1 = new Uuid('d22b1ea8-dcab-4162-b690-30cb9206f694');
         $file2 = new Uuid('b1817d6d-188a-4c99-9204-b1e33733d5a9');
@@ -143,7 +141,7 @@ class FilesystemUtilTest extends TestCase
         FilesystemUtil::assertIsResource($argument);
     }
 
-    public function provideInvalidArguments(): \Generator
+    public static function provideInvalidArguments(): iterable
     {
         yield 'no resource' => [
             new \stdClass(),

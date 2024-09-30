@@ -21,7 +21,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -109,7 +108,7 @@ class UserCreateCommand extends Command
             }
 
             if (mb_strlen($value) < $minLength) {
-                throw new \RuntimeException(sprintf('Please use at least %d characters.', $minLength));
+                throw new \RuntimeException(\sprintf('Please use at least %d characters.', $minLength));
             }
 
             if ($value === $username) {
@@ -178,7 +177,7 @@ class UserCreateCommand extends Command
             $input->getOption('change-password'),
         );
 
-        $io->success(sprintf('User %s%s created.', $username, $isAdmin ? ' with admin permissions' : ''));
+        $io->success(\sprintf('User %s%s created.', $username, $isAdmin ? ' with admin permissions' : ''));
 
         return Command::SUCCESS;
     }
@@ -189,7 +188,6 @@ class UserCreateCommand extends Command
         $question->setMaxAttempts(3);
         $question->setValidator($callback);
 
-        /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
 
         return $helper->ask($input, $output, $question);
@@ -202,7 +200,6 @@ class UserCreateCommand extends Command
         $question->setMaxAttempts(3);
         $question->setValidator($callback);
 
-        /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
 
         return $helper->ask($input, $output, $question);
@@ -213,7 +210,6 @@ class UserCreateCommand extends Command
         $question = new ChoiceQuestion($label, $options);
         $question->setAutocompleterValues($options);
 
-        /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
 
         return $helper->ask($input, $output, $question);
@@ -225,7 +221,6 @@ class UserCreateCommand extends Command
         $question->setAutocompleterValues($options);
         $question->setMultiselect(true);
 
-        /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
 
         return $helper->ask($input, $output, $question);
@@ -255,7 +250,7 @@ class UserCreateCommand extends Command
         ];
 
         if (!$isAdmin && $groups) {
-            $data[$this->connection->quoteIdentifier('groups')] = serialize(array_map('strval', $groups));
+            $data[$this->connection->quoteIdentifier('groups')] = serialize(array_map(\strval(...), $groups));
         }
 
         $this->connection->insert('tl_user', $data, ['admin' => Types::BOOLEAN, 'pwChange' => Types::BOOLEAN]);

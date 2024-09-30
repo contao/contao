@@ -49,7 +49,7 @@ export default class extends Controller {
             this.collapseToggler(el);
             this.updateState(el, id, 0);
         } else {
-            this.fetchChild(el, id, level, folder)
+            this.fetchChild(el, id, level, folder);
         }
 
         this.updateOperation();
@@ -108,7 +108,7 @@ export default class extends Controller {
             li.id = id;
             li.classList.add('parent');
             li.style.display = 'inline';
-            li.setAttribute(`data-${this.identifier}-target`, level === 0 ? 'child rootChild' : 'child')
+            li.setAttribute(`data-${this.identifier}-target`, level === 0 ? 'child rootChild' : 'child');
 
             const ul = document.createElement('ul');
             ul.classList.add('level_' + level);
@@ -140,8 +140,8 @@ export default class extends Controller {
             window.dispatchEvent(new CustomEvent('structure'));
             this.expandToggler(el);
 
-            // HOOK
-            window.dispatchEvent(new CustomEvent('ajax_change'));
+            // HOOK (see #6752)
+            window.fireEvent('ajax_change');
         }
 
         this.loadToggler(el, false);
@@ -179,7 +179,7 @@ export default class extends Controller {
     }
 
     keypress (event) {
-        this.updateOperation(event)
+        this.updateOperation(event);
     }
 
     async updateState (el, id, state) {

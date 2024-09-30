@@ -35,11 +35,10 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Uid\Uuid;
 
 /**
- * Use the FigureBuilder class to create Figure result objects. The class
- * has a fluent interface to configure the desired output. When you are ready,
- * call build() to get a Figure. If you need another instance with similar
- * settings, you can alter values and call build() again - it will not affect
- * your first instance.
+ * Use the FigureBuilder class to create Figure result objects. The class has a fluent
+ * interface to configure the desired output. When you are ready, call build() to get a
+ * Figure. If you need another instance with similar settings, you can alter values and
+ * call build() again - it will not affect your first instance.
  */
 class FigureBuilder
 {
@@ -155,7 +154,7 @@ class FigureBuilder
         $this->lastException = null;
 
         if ('file' !== $filesModel->type) {
-            $this->lastException = new InvalidResourceException(sprintf('DBAFS item "%s" is not a file.', $filesModel->path));
+            $this->lastException = new InvalidResourceException(\sprintf('DBAFS item "%s" is not a file.', $filesModel->path));
 
             return $this;
         }
@@ -164,7 +163,7 @@ class FigureBuilder
         $this->filesModel = $filesModel;
 
         if (!$this->filesystem->exists($this->filePath)) {
-            $this->lastException = new InvalidResourceException(sprintf('No resource could be located at path "%s".', $this->filePath));
+            $this->lastException = new InvalidResourceException(\sprintf('No resource could be located at path "%s".', $this->filePath));
         }
 
         return $this;
@@ -178,7 +177,7 @@ class FigureBuilder
         $this->lastException = null;
 
         if (!$filesModel = $this->getFilesModelAdapter()->findByUuid($uuid)) {
-            $this->lastException = new InvalidResourceException(sprintf('DBAFS item with UUID "%s" could not be found.', $uuid));
+            $this->lastException = new InvalidResourceException(\sprintf('DBAFS item with UUID "%s" could not be found.', $uuid));
 
             return $this;
         }
@@ -193,8 +192,8 @@ class FigureBuilder
     {
         $this->lastException = null;
 
-        if (!$filesModel = $this->getFilesModelAdapter()->findByPk($id)) {
-            $this->lastException = new InvalidResourceException(sprintf('DBAFS item with ID "%s" could not be found.', $id));
+        if (!$filesModel = $this->getFilesModelAdapter()->findById($id)) {
+            $this->lastException = new InvalidResourceException(\sprintf('DBAFS item with ID "%s" could not be found.', $id));
 
             return $this;
         }
@@ -239,7 +238,7 @@ class FigureBuilder
         $this->filesModel = null;
 
         if (!$this->filesystem->exists($this->filePath)) {
-            $this->lastException = new InvalidResourceException(sprintf('No resource could be located at path "%s".', $this->filePath));
+            $this->lastException = new InvalidResourceException(\sprintf('No resource could be located at path "%s".', $this->filePath));
         }
 
         return $this;
@@ -268,7 +267,7 @@ class FigureBuilder
 
         if (null === $path) {
             if ('' !== $uri->getHost()) {
-                $this->lastException = new InvalidResourceException(sprintf('Resource URL "%s" outside of base URLs "%s".', $url, implode('", "', $baseUrls)));
+                $this->lastException = new InvalidResourceException(\sprintf('Resource URL "%s" outside of base URLs "%s".', $url, implode('", "', $baseUrls)));
 
                 return $this;
             }
@@ -277,7 +276,7 @@ class FigureBuilder
         }
 
         if (preg_match('/%2f|%5c/i', $path)) {
-            $this->lastException = new InvalidResourceException(sprintf('Resource URL path "%s" contains invalid percent encoding.', $path));
+            $this->lastException = new InvalidResourceException(\sprintf('Resource URL path "%s" contains invalid percent encoding.', $path));
 
             return $this;
         }
@@ -331,22 +330,33 @@ class FigureBuilder
      */
     public function fromStorage(VirtualFilesystemInterface $storage, Uuid|string $location): self
     {
+        // TODO: After contao/image supports a virtual storage, remove this workaround
+        // and replace it with something that can use $storage->generatePublicUri(). This
+        // workaround is currently required to support paths to symlinked folders inside
+        // the files directory.
+        if ($storage === $this->locator->get('contao.filesystem.virtual.files')) {
+            $path = Path::join($this->webDir, $this->uploadPath, $storage->get($location)->getPath());
+
+            if ($this->filesystem->exists($path)) {
+                return $this->fromPath($path);
+            }
+        }
+
         try {
             $stream = $storage->readStream($location);
         } catch (VirtualFilesystemException|UnableToResolveUuidException $e) {
-            $this->lastException = new InvalidResourceException(sprintf('Could not read resource from storage: %s', $e->getMessage()), previous: $e);
+            $this->lastException = new InvalidResourceException(\sprintf('Could not read resource from storage: %s', $e->getMessage()), previous: $e);
 
             return $this;
         }
 
-        // TODO: After stream support is added to contao/image, remove this
-        // workaround and type restriction and directly pass on the stream to
-        // the resizer.
+        // TODO: After stream support is added to contao/image, remove this workaround
+        // and type restriction and directly pass on the stream to the resizer.
         $metadata = stream_get_meta_data($stream);
         $uri = $metadata['uri'];
 
         if ('STDIO' !== $metadata['stream_type'] || 'plainfile' !== $metadata['wrapper_type'] || !Path::isAbsolute($uri)) {
-            $this->lastException = new InvalidResourceException(sprintf('Only streams of type STDIO/plainfile pointing to an absolute path are currently supported when reading an image from a storage, got "%s/%s" with URI "%s".', $metadata['stream_type'], $metadata['wrapper_type'], $uri));
+            $this->lastException = new InvalidResourceException(\sprintf('Only streams of type STDIO/plainfile pointing to an absolute path are currently supported when reading an image from a storage, got "%s/%s" with URI "%s".', $metadata['stream_type'], $metadata['wrapper_type'], $uri));
 
             return $this;
         }
@@ -369,8 +379,8 @@ class FigureBuilder
     /**
      * Sets resize options.
      *
-     * By default, or if the argument is set to null, resize options are derived
-     * from predefined image sizes.
+     * By default, or if the argument is set to null, resize options are derived from
+     * predefined image sizes.
      */
     public function setResizeOptions(ResizeOptions|null $resizeOptions): self
     {
@@ -382,8 +392,8 @@ class FigureBuilder
     /**
      * Sets custom metadata.
      *
-     * By default, or if the argument is set to null, metadata is trying to be
-     * pulled from the FilesModel.
+     * By default, or if the argument is set to null, metadata is trying to be pulled
+     * from the FilesModel.
      */
     public function setMetadata(Metadata|null $metadata): self
     {
@@ -417,8 +427,8 @@ class FigureBuilder
     /**
      * Sets a custom locale.
      *
-     * By default, or if the argument is set to null, the locale is determined
-     * from the request context and/or system settings.
+     * By default, or if the argument is set to null, the locale is determined from
+     * the request context and/or system settings.
      */
     public function setLocale(string|null $locale): self
     {
@@ -447,9 +457,8 @@ class FigureBuilder
     /**
      * Sets all custom link attributes as an associative array.
      *
-     * This will overwrite previously set attributes. If you want to explicitly
-     * remove an auto-generated value from the results, set the respective
-     * attribute to null.
+     * This will overwrite previously set attributes. If you want to explicitly remove
+     * an auto-generated value from the results, set the respective attribute to null.
      */
     public function setLinkAttributes(HtmlAttributes|array $attributes): self
     {
@@ -461,7 +470,7 @@ class FigureBuilder
 
         foreach ($attributes as $key => $value) {
             if (!\is_string($key) || !\is_string($value)) {
-                throw new \InvalidArgumentException('Link attributes must be an array of type <string, string>.');
+                throw new \InvalidArgumentException(\sprintf('Link attributes must be an array of type <string, string>, <%s, %s> given.', get_debug_type($key), get_debug_type($value)));
             }
         }
 
@@ -486,9 +495,9 @@ class FigureBuilder
      * Sets a custom lightbox resource (file path or ImageInterface) or URL.
      *
      * By default, or if the argument is set to null, the image/target will be
-     * automatically determined from the metadata or base resource. For this
-     * setting to take effect, make sure you have enabled the creation of a
-     * lightbox by calling enableLightbox().
+     * automatically determined from the metadata or base resource. For this setting
+     * to take effect, make sure you have enabled the creation of a lightbox by
+     * calling enableLightbox().
      */
     public function setLightboxResourceOrUrl(ImageInterface|string|null $resourceOrUrl): self
     {
@@ -500,8 +509,8 @@ class FigureBuilder
     /**
      * Sets a size configuration that will be applied to the lightbox image.
      *
-     * For this setting to take effect, make sure you have enabled the creation
-     * of a lightbox by calling enableLightbox().
+     * For this setting to take effect, make sure you have enabled the creation of a
+     * lightbox by calling enableLightbox().
      *
      * @param int|string|array|PictureConfiguration|null $size A picture size configuration or reference
      */
@@ -515,8 +524,8 @@ class FigureBuilder
     /**
      * Sets resize options for the lightbox image.
      *
-     * By default, or if the argument is set to null, resize options are derived
-     * from predefined image sizes.
+     * By default, or if the argument is set to null, resize options are derived from
+     * predefined image sizes.
      */
     public function setLightboxResizeOptions(ResizeOptions|null $resizeOptions): self
     {
@@ -528,9 +537,9 @@ class FigureBuilder
     /**
      * Sets a custom lightbox group ID.
      *
-     * By default, or if the argument is set to null, the ID will be empty. For
-     * this setting to take effect, make sure you have enabled the creation of
-     * a lightbox by calling enableLightbox().
+     * By default, or if the argument is set to null, the ID will be empty. For this
+     * setting to take effect, make sure you have enabled the creation of a lightbox
+     * by calling enableLightbox().
      */
     public function setLightboxGroupIdentifier(string|null $identifier): self
     {
@@ -540,8 +549,8 @@ class FigureBuilder
     }
 
     /**
-     * Enables the creation of a lightbox image (if possible) and/or
-     * outputting the respective link attributes.
+     * Enables the creation of a lightbox image (if possible) and/or outputting the
+     * respective link attributes.
      *
      * This setting is disabled by default.
      */
@@ -572,8 +581,18 @@ class FigureBuilder
     }
 
     /**
-     * Creates a result object with the current settings, throws an exception
-     * if the currently defined resource is invalid.
+     * @internal
+     */
+    public function setLastException(InvalidResourceException $exception): self
+    {
+        $this->lastException = $exception;
+
+        return $this;
+    }
+
+    /**
+     * Creates a result object with the current settings, throws an exception if the
+     * currently defined resource is invalid.
      *
      * @throws InvalidResourceException
      */
@@ -602,7 +621,7 @@ class FigureBuilder
             // Make sure the resource can be processed
             $figure->getImage()->getOriginalDimensions();
         } catch (\Throwable $e) {
-            $this->lastException = new InvalidResourceException(sprintf('The file "%s" could not be opened as an image.', $this->filePath), 0, $e);
+            $this->lastException = new InvalidResourceException(\sprintf('The file "%s" could not be opened as an image.', $this->filePath), 0, $e);
 
             return null;
         }
@@ -694,8 +713,8 @@ class FigureBuilder
             ;
         }
 
-        // If no metadata can be obtained from the model, we create a container
-        // from the default meta fields with empty values instead
+        // If no metadata can be obtained from the model, we create a container from the
+        // default meta fields with empty values instead
         $metaFields = $this->getFilesModelAdapter()->getMetaFields();
 
         $data = [
@@ -768,7 +787,8 @@ class FigureBuilder
             return [$filePath, null];
         };
 
-        // Use explicitly set href (1) or lightbox resource (2), fall back to using metadata (3) or use the base resource (4) if empty
+        // Use explicitly set href (1) or lightbox resource (2), fall back to using
+        // metadata (3) or use the base resource (4) if empty
         $lightboxResourceOrUrl = $this->additionalLinkAttributes['href'] ?? $this->lightboxResourceOrUrl ?? $getMetadataUrl() ?? $this->filePath;
 
         [$filePathOrImage, $url] = $getResourceOrUrl($lightboxResourceOrUrl);
@@ -790,9 +810,7 @@ class FigureBuilder
     }
 
     /**
-     * @return FilesModel
-     *
-     * @phpstan-return Adapter<FilesModel>
+     * @return Adapter<FilesModel>
      */
     private function getFilesModelAdapter(): Adapter
     {
@@ -803,9 +821,7 @@ class FigureBuilder
     }
 
     /**
-     * @return Validator
-     *
-     * @phpstan-return Adapter<Validator>
+     * @return Adapter<Validator>
      */
     private function getValidatorAdapter(): Adapter
     {
@@ -822,7 +838,7 @@ class FigureBuilder
      */
     private function getFallbackLocaleList(): array
     {
-        $page = $GLOBALS['objPage'] ?? null;
+        $page = $this->locator->get('contao.routing.page_finder')->getCurrentPage();
 
         if (!$page instanceof PageModel) {
             return [];

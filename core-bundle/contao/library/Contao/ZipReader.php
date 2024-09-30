@@ -505,7 +505,7 @@ class ZipReader
 			$arrFile['file_comment']              = $arrFile['file_comment_length'][1] ? @fread($this->resFile, $arrFile['file_comment_length'][1]) : '';
 
 			// Skip directories
-			if (substr($arrFile['file_name'], -1) == '/')
+			if (str_ends_with($arrFile['file_name'], '/'))
 			{
 				$strSignature = @fread($this->resFile, 4);
 				continue;

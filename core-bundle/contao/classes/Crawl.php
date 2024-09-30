@@ -14,7 +14,6 @@ use Contao\CoreBundle\Crawl\Escargot\Factory;
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\SubscriberResult;
 use Contao\CoreBundle\Crawl\Monolog\CrawlCsvLogHandler;
 use Contao\CoreBundle\Exception\ResponseException;
-use Contao\CoreBundle\Security\AccessTokenHandler;
 use Monolog\Handler\GroupHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
@@ -115,26 +114,34 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 			throw new ResponseException($response);
 		}
 
-		$baseUris = $factory->getCrawlUriCollection();
+		$objAuthenticator = System::getContainer()->get('contao.security.frontend_preview_authenticator');
 
-		/** @var AccessTokenHandler $accessTokenHandler */
-		$accessTokenHandler = System::getContainer()->get('contao.security.access_token_handler');
-		$clientOptions = array();
-
-		if ($memberWidget && $memberWidget->value)
+		if ($memberWidget?->value)
 		{
 			$objMember = Database::getInstance()->prepare('SELECT username FROM tl_member WHERE id=?')
-				->execute((int) $memberWidget->value);
+												->execute((int) $memberWidget->value);
 
-			$clientOptions = array(
-				'headers' => array(
-					'Cookie' => $accessTokenHandler->getAuthenticatedFrontendSessionCookie($baseUris->all(), $objMember->username),
-				),
-			);
+			if (!$objAuthenticator->authenticateFrontendUser($objMember->username, false))
+			{
+				$objAuthenticator->removeFrontendAuthentication();
+				$clientOptions = array();
+			}
+			else
+			{
+				// TODO: we need a way to authenticate with a token instead of our own cookie
+				$session = System::getContainer()->get('request_stack')->getSession();
+				$clientOptions = array('headers' => array('Cookie' => \sprintf('%s=%s', $session->getName(), $session->getId())));
+			}
+		}
+		else
+		{
+			$objAuthenticator->removeFrontendAuthentication();
+			$clientOptions = array();
 		}
 
 		if (!$jobId)
 		{
+			$baseUris = $factory->getCrawlUriCollection();
 			$escargot = $factory->create($baseUris, $queue, $activeSubscribers, $clientOptions);
 
 			Controller::redirect(Controller::addToUrl('&jobId=' . $escargot->getJobId()));
@@ -190,7 +197,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 			->withMaxDurationInSeconds(20)
 			->withLogger($this->createLogger($factory, $activeSubscribers, $jobId, $debugLogPath));
 
-		$template->hint = sprintf($GLOBALS['TL_LANG']['tl_maintenance']['crawlHint'], $concurrency, 'contao.backend.crawl_concurrency');
+		$template->hint = \sprintf($GLOBALS['TL_LANG']['tl_maintenance']['crawlHint'], $concurrency, 'contao.backend.crawl_concurrency', 'https://to.contao.org/docs/crawler');
 
 		if (Environment::get('isAjaxRequest'))
 		{
@@ -300,7 +307,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 			return $this->logDir;
 		}
 
-		$this->logDir = sprintf('%s/%s/contao-crawl', sys_get_temp_dir(), md5(System::getContainer()->getParameter('kernel.project_dir')));
+		$this->logDir = \sprintf('%s/%s/contao-crawl', sys_get_temp_dir(), md5(System::getContainer()->getParameter('kernel.project_dir')));
 
 		if (!is_dir($this->logDir))
 		{

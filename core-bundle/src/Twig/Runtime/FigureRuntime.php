@@ -31,9 +31,8 @@ final class FigureRuntime implements RuntimeExtensionInterface
     /**
      * Renders a figure.
      *
-     * The provided configuration array is used to configure a FigureBuilder
-     * object. If not explicitly set, the default figure template will be used
-     * to render the results.
+     * The provided configuration array is used to configure a FigureBuilder object. If not
+     * explicitly set, the default figure template will be used to render the results.
      *
      * Returns null if the resource is invalid.
      *
@@ -41,7 +40,7 @@ final class FigureRuntime implements RuntimeExtensionInterface
      * @param int|string|array|PictureConfiguration|null $size          A picture size configuration or reference
      * @param array<string, mixed>                       $configuration Configuration for the FigureBuilder
      *
-     * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
+     * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
      */
     public function renderFigure(FilesModel|ImageInterface|int|string $from, PictureConfiguration|array|int|string|null $size, array $configuration = [], string $template = '@ContaoCore/Image/Studio/figure.html.twig'): string|null
     {
@@ -53,8 +52,7 @@ final class FigureRuntime implements RuntimeExtensionInterface
     /**
      * Builds a figure.
      *
-     * The provided configuration array is used to configure a FigureBuilder
-     * object.
+     * The provided configuration array is used to configure a FigureBuilder object.
      *
      * Returns null if the resource is invalid.
      *

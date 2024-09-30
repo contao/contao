@@ -34,7 +34,8 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
-				'pid' => 'index'
+				'pid' => 'index',
+				'tstamp' => 'index'
 			)
 		)
 	),
@@ -74,7 +75,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			(
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"'
+				'attributes'          => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false"'
 			),
 			'show' => array
 			(
@@ -93,7 +94,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('addFile'),
-		'default'                     => '{title_legend},subject,alias;{html_legend},content;{text_legend:hide},text;{attachment_legend},addFile;{template_legend:hide},template;{sender_legend:hide},sender,senderName,mailerTransport;{expert_legend:hide},sendText,externalImages'
+		'default'                     => '{title_legend},subject,alias;{html_legend},preheader,content;{text_legend:hide},text;{attachment_legend},addFile;{template_legend:hide},template;{sender_legend:hide},sender,senderName,mailerTransport;{expert_legend:hide},sendText,externalImages'
 	),
 
 	// Sub-palettes
@@ -138,6 +139,13 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 				array('tl_newsletter', 'generateAlias')
 			),
 			'sql'                     => "varchar(255) BINARY NOT NULL default ''"
+		),
+		'preheader' => array
+		(
+			'search'                  => true,
+			'inputType'               => 'text',
+			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255),
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'content' => array
 		(
@@ -317,7 +325,7 @@ class tl_newsletter extends Backend
 		// Generate alias if there is none
 		if (!$varValue)
 		{
-			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->subject, NewsletterChannelModel::findByPk($dc->activeRecord->pid)->jumpTo, $aliasExists);
+			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->subject, NewsletterChannelModel::findById($dc->activeRecord->pid)->jumpTo, $aliasExists);
 		}
 		elseif (preg_match('/^[1-9]\d*$/', $varValue))
 		{
@@ -341,7 +349,7 @@ class tl_newsletter extends Backend
 	 */
 	public function addSenderPlaceholder($varValue, DataContainer $dc)
 	{
-		if ($dc->activeRecord && $dc->activeRecord->pid)
+		if ($dc->activeRecord?->pid)
 		{
 			$objChannel = Database::getInstance()
 				->prepare("SELECT sender FROM tl_newsletter_channel WHERE id=?")
@@ -363,7 +371,7 @@ class tl_newsletter extends Backend
 	 */
 	public function addSenderNamePlaceholder($varValue, DataContainer $dc)
 	{
-		if ($dc->activeRecord && $dc->activeRecord->pid)
+		if ($dc->activeRecord?->pid)
 		{
 			$objChannel = Database::getInstance()
 				->prepare("SELECT senderName FROM tl_newsletter_channel WHERE id=?")

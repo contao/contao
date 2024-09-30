@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\UriSigner;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\LoginLink\LoginLinkHandlerInterface;
 
 /**
@@ -31,7 +31,7 @@ use Symfony\Component\Security\Http\LoginLink\LoginLinkHandlerInterface;
  * requested front end page while ensuring that the /preview.php entry point is
  * used. When requested, the front end user gets authenticated.
  */
-#[Route('%contao.backend.route_prefix%', defaults: ['_scope' => 'backend', '_allow_preview' => true])]
+#[Route('%contao.backend.route_prefix%/preview', name: 'contao_backend_preview', defaults: ['_scope' => 'backend', '_allow_preview' => true, '_store_referrer' => false])]
 class BackendPreviewController
 {
     public function __construct(
@@ -44,11 +44,10 @@ class BackendPreviewController
     ) {
     }
 
-    #[Route('/preview', name: 'contao_backend_preview')]
     public function __invoke(Request $request): Response
     {
-        // Skip the redirect if there is no preview script, otherwise we will
-        // end up in an endless loop (see #1511)
+        // Skip the redirect if there is no preview script, otherwise we will end up in
+        // an endless loop (see #1511)
         if ($this->previewScript && substr($request->getScriptName(), \strlen($request->getBasePath())) !== $this->previewScript) {
             $qs = $request->getQueryString();
 
@@ -80,7 +79,7 @@ class BackendPreviewController
 
         $targetUri = new Uri($targetUrl);
 
-        if ($request->getHost() === $targetUri->getHost() || !($user = $this->security->getUser())) {
+        if (!$targetUri->getHost() || $request->getHost() === $targetUri->getHost() || !($user = $this->security->getUser())) {
             return new RedirectResponse($targetUrl);
         }
 

@@ -32,7 +32,7 @@ class GlobalsMapListenerTest extends TestCase
         unset($GLOBALS['TL_CTE']);
     }
 
-    public function getValuesData(): \Generator
+    public static function getValuesData(): iterable
     {
         yield 'add single' => [
             [],
@@ -49,7 +49,7 @@ class GlobalsMapListenerTest extends TestCase
         yield 'add to existing group' => [
             ['texts' => ['text' => 'LegacyText']],
             ['texts' => ['headline' => 'HeadlineFragment']],
-            ['texts' => ['headline' => 'HeadlineFragment', 'text' => 'LegacyText']],
+            ['texts' => ['text' => 'LegacyText', 'headline' => 'HeadlineFragment']],
         ];
 
         yield 'prefer existing entries' => [

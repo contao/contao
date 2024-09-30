@@ -558,7 +558,7 @@ window.Backend =
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
 		});
 		M.show({
-			'title': opt.title,
+			'title': opt.title?.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;'),
 			'contents': '<img src="' + opt.url + '" alt="">'
 		});
 	},
@@ -583,7 +583,7 @@ window.Backend =
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
 		});
 		M.show({
-			'title': opt.title,
+			'title': opt.title?.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;'),
 			'contents': '<iframe src="' + opt.url + '" width="100%" height="' + opt.height + '" frameborder="0"></iframe>',
 			'model': 'modal'
 		});
@@ -648,7 +648,7 @@ window.Backend =
 			this.hide();
 		});
 		M.show({
-			'title': opt.title,
+			'title': opt.title?.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;'),
 			'contents': '<iframe src="' + opt.url + '" name="simple-modal-iframe" width="100%" height="' + opt.height + '" frameborder="0"></iframe>',
 			'model': 'modal'
 		});
@@ -675,79 +675,12 @@ window.Backend =
 	},
 
 	/**
-	 * Store the current scroll offset in sessionStorage
-	 */
-	getScrollOffset: function() {
-		window.sessionStorage.setItem('contao_backend_offset', window.getScroll().y);
-	},
-
-	/**
-	 * Scroll to the current offset if
-	 * it was defined and add the "down" CSS class to the header.
-	 */
-	initScrollOffset: function() {
-		// Add events to the submit buttons, so they can reset the offset
-		// (except for "save", which always stays on the same page)
-		$$('.tl_submit_container button[name][name!="save"]').each(function(button) {
-			button.addEvent('click', function() {
-				window.sessionStorage.removeItem('contao_backend_offset');
-			});
-		});
-
-		var offset = window.sessionStorage.getItem('contao_backend_offset');
-		window.sessionStorage.removeItem('contao_backend_offset');
-
-		if (!offset) return;
-
-		var additionalOffset = 0;
-
-		$$('[data-add-to-scroll-offset]').each(function(el) {
-			var offset = el.get('data-add-to-scroll-offset'),
-				scrollSize = el.getScrollSize().y,
-				negative = false,
-				percent = false;
-
-			// No specific offset desired, take scrollSize
-			if (!offset) {
-				additionalOffset += scrollSize;
-				return;
-			}
-
-			// Negative
-			if (offset.charAt(0) === '-') {
-				negative = true;
-				offset = offset.substring(1);
-			}
-
-			// Percent
-			if (offset.charAt(offset.length - 1) === '%') {
-				percent = true;
-				offset = offset.substring(0, offset.length - 1);
-			}
-
-			offset = parseInt(offset, 10);
-
-			if (percent) {
-				offset = Math.round(scrollSize * offset / 100);
-			}
-
-			if (negative) {
-				offset = offset * -1;
-			}
-
-			additionalOffset += offset;
-		});
-
-		this.vScrollTo(parseInt(offset, 10) + additionalOffset);
-	},
-
-	/**
 	 * Automatically submit a form
 	 *
 	 * @param {object} el The DOM element
 	 */
 	autoSubmit: function(el) {
-		Backend.getScrollOffset();
+		window.dispatchEvent(new Event('store-scroll-offset'));
 
 		var hidden = new Element('input', {
 			'type': 'hidden',
@@ -766,6 +699,10 @@ window.Backend =
 	 * @param {int} offset The offset to scroll to
 	 */
 	vScrollTo: function(offset) {
+		if (window.console) {
+			console.warn('Backend.vScrollTo() is deprecated. Please use the Stimulus controller instead.');
+		}
+
 		window.addEvent('load', function() {
 			window.scrollTo(null, parseInt(offset));
 		});
@@ -813,7 +750,7 @@ window.Backend =
 			});
 		}
 
-		Backend.getScrollOffset();
+		window.dispatchEvent(new Event('store-scroll-offset'));
 	},
 
 	/**
@@ -831,7 +768,7 @@ window.Backend =
 			}
 		});
 
-		Backend.getScrollOffset();
+		window.dispatchEvent(new Event('store-scroll-offset'));
 	},
 
 	/**
@@ -1085,7 +1022,7 @@ window.Backend =
 						return;
 					}
 
-					Backend.getScrollOffset();
+					window.dispatchEvent(new Event('store-scroll-offset'));
 					document.location.href = options.url + '&id=' + encodeURIComponent(id) + '&pid=' + encodeURIComponent(pid);
 				},
 				onLeave: function(element, droppable) {
@@ -1140,17 +1077,18 @@ window.Backend =
 					switch (command) {
 						case 'copy':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								clone = li.clone(true).inject(li, 'before');
 								if (input = li.getFirst('input')) {
 									clone.getFirst('input').value = input.value;
 								}
 								addEventsTo(clone);
+								input.select();
 							});
 							break;
 						case 'delete':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								if (ul.getChildren().length > 1) {
 									li.destroy();
 								}
@@ -1230,7 +1168,7 @@ window.Backend =
 					switch (command) {
 						case 'rcopy':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								ntr = new Element('tr');
 								children = tr.getChildren();
 								for (i=0; i<children.length; i++) {
@@ -1242,11 +1180,12 @@ window.Backend =
 								ntr.inject(tr, 'after');
 								addEventsTo(ntr);
 								makeSortable(tbody);
+								ntr.getFirst('td').getFirst('textarea').select();
 							});
 							break;
 						case 'rdelete':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								if (tbody.getChildren().length > 1) {
 									tr.destroy();
 								}
@@ -1255,7 +1194,7 @@ window.Backend =
 							break;
 						case 'ccopy':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								index = getIndex(bt);
 								children = tbody.getChildren();
 								for (i=0; i<children.length; i++) {
@@ -1270,11 +1209,12 @@ window.Backend =
 								next = headFirst.clone(true).inject(head.getLast('td'), 'before');
 								addEventsTo(next);
 								makeSortable(tbody);
+								children[0].getChildren()[index + 1].getFirst('textarea').select();
 							});
 							break;
 						case 'cmovel':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								index = getIndex(bt);
 								children = tbody.getChildren();
 								if (index > 0) {
@@ -1293,7 +1233,7 @@ window.Backend =
 							break;
 						case 'cmover':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								index = getIndex(bt);
 								children = tbody.getChildren();
 								if (index < (tr.getChildren().length - 2)) {
@@ -1312,7 +1252,7 @@ window.Backend =
 							break;
 						case 'cdelete':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								index = getIndex(bt);
 								children = tbody.getChildren();
 								if (tr.getChildren().length > 2) {
@@ -1458,7 +1398,7 @@ window.Backend =
 					switch (command) {
 						case 'copy':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								ntr = new Element('tr');
 								children = tr.getChildren();
 								for (i=0; i<children.length; i++) {
@@ -1473,11 +1413,12 @@ window.Backend =
 								ntr.inject(tr, 'after');
 								addEventsTo(ntr);
 								makeSortable(tbody);
+								ntr.getFirst('td').getFirst('input').select();
 							});
 							break;
 						case 'delete':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								if (tbody.getChildren().length > 1) {
 									tr.destroy();
 								}
@@ -1557,7 +1498,7 @@ window.Backend =
 					switch (command) {
 						case 'copy':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								ntr = new Element('tr');
 								children = tr.getChildren();
 								for (i=0; i<children.length; i++) {
@@ -1569,11 +1510,12 @@ window.Backend =
 								ntr.inject(tr, 'after');
 								addEventsTo(ntr);
 								makeSortable(tbody);
+								ntr.getFirst('td').getFirst('input').select();
 							});
 							break;
 						case 'delete':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								if (tbody.getChildren().length > 1) {
 									tr.destroy();
 								}
@@ -1993,7 +1935,7 @@ window.Backend =
 			}
 
 			dzElement.addClass('dropzone-filetree-enabled');
-			Backend.getScrollOffset();
+			window.dispatchEvent(new Event('store-scroll-offset'));
 		});
 
 		dz.on('dragleave', function() {
@@ -2351,11 +2293,6 @@ window.addEvent('domready', function() {
 	Backend.enableImageSizeWidgets();
 	Backend.enableToggleSelect();
 
-	// Chosen
-	if (Elements.chosen != undefined) {
-		$$('select.tl_chosen').chosen();
-	}
-
 	Theme.stopClickPropagation();
 	Theme.setupCtrlClick();
 	Theme.setupTextareaResizing();
@@ -2373,13 +2310,6 @@ window.addEvent('resize', function() {
 window.addEvent('ajax_change', function() {
 	Backend.enableImageSizeWidgets();
 	Backend.enableToggleSelect();
-
-	// Chosen
-	if (Elements.chosen != undefined) {
-		$$('select.tl_chosen').filter(function(el) {
-			return el.getStyle('display') != 'none';
-		}).chosen();
-	}
 
 	Theme.stopClickPropagation();
 	Theme.setupCtrlClick();

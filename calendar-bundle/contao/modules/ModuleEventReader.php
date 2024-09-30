@@ -15,6 +15,7 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Util\UrlUtil;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Front end module "event reader".
@@ -76,14 +77,15 @@ class ModuleEventReader extends Events
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$this->Template->event = '';
 
-		if ($this->overviewPage)
+		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
+
+		if ($this->overviewPage && ($overviewPage = PageModel::findById($this->overviewPage)))
 		{
-			$this->Template->referer = PageModel::findById($this->overviewPage)->getFrontendUrl();
+			$this->Template->referer = $urlGenerator->generate($overviewPage);
 			$this->Template->back = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['eventOverview'];
 		}
 
@@ -100,39 +102,16 @@ class ModuleEventReader extends Events
 		switch ($objEvent->source)
 		{
 			case 'internal':
-				if ($page = PageModel::findPublishedById($objEvent->jumpTo))
-				{
-					throw new RedirectResponseException($page->getAbsoluteUrl(), 301);
-				}
-
-				throw new InternalServerErrorException('Invalid "jumpTo" value or target page not public');
-
 			case 'article':
-				if (($article = ArticleModel::findByPk($objEvent->articleId)) && ($page = PageModel::findPublishedById($article->pid)))
-				{
-					throw new RedirectResponseException($page->getAbsoluteUrl('/articles/' . ($article->alias ?: $article->id)), 301);
-				}
-
-				throw new InternalServerErrorException('Invalid "articleId" value or target page not public');
-
 			case 'external':
-				if ($objEvent->url)
-				{
-					$url = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objEvent->url);
-					$url = UrlUtil::makeAbsolute($url, Environment::get('base'));
-
-					throw new RedirectResponseException($url, 301);
-				}
-
-				throw new InternalServerErrorException('Empty target URL');
+				throw new RedirectResponseException($urlGenerator->generate($objEvent, array(), UrlGeneratorInterface::ABSOLUTE_URL), 301);
 		}
 
 		// Overwrite the page metadata (see #2853, #4955 and #87)
 		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
-		if ($responseContext && $responseContext->has(HtmlHeadBag::class))
+		if ($responseContext?->has(HtmlHeadBag::class))
 		{
-			/** @var HtmlHeadBag $htmlHeadBag */
 			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
 			$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 
@@ -157,6 +136,28 @@ class ModuleEventReader extends Events
 			if ($objEvent->robots)
 			{
 				$htmlHeadBag->setMetaRobots($objEvent->robots);
+			}
+
+			if ($objEvent->canonicalLink)
+			{
+				$url = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objEvent->canonicalLink);
+
+				// Ensure absolute links
+				if (!preg_match('#^https?://#', $url))
+				{
+					if (!$request = System::getContainer()->get('request_stack')->getCurrentRequest())
+					{
+						throw new \RuntimeException('The request stack did not contain a request');
+					}
+
+					$url = UrlUtil::makeAbsolute($url, $request->getUri());
+				}
+
+				$htmlHeadBag->setCanonicalUri($url);
+			}
+			elseif (!$this->cal_keepCanonical)
+			{
+				$htmlHeadBag->setCanonicalUri($urlGenerator->generate($objEvent, array(), UrlGeneratorInterface::ABSOLUTE_URL));
 			}
 		}
 
@@ -212,25 +213,25 @@ class ModuleEventReader extends Events
 				}
 				else
 				{
-					$repeat = sprintf($GLOBALS['TL_LANG']['MSC']['cal_multiple_' . $arrRange['unit']], $arrRange['value']);
+					$repeat = \sprintf($GLOBALS['TL_LANG']['MSC']['cal_multiple_' . $arrRange['unit']], $arrRange['value']);
 				}
 
 				if ($objEvent->recurrences > 0)
 				{
-					$until = ' ' . sprintf($GLOBALS['TL_LANG']['MSC']['cal_until'], Date::parse($objPage->dateFormat, $objEvent->repeatEnd));
+					$until = ' ' . \sprintf($GLOBALS['TL_LANG']['MSC']['cal_until'], Date::parse($objPage->dateFormat, $objEvent->repeatEnd));
 				}
 
 				if ($objEvent->recurrences > 0 && $intEndTime <= time())
 				{
-					$recurring = sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat_ended'], $repeat, $until);
+					$recurring = \sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat_ended'], $repeat, $until);
 				}
 				elseif ($objEvent->addTime)
 				{
-					$recurring = sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat'], $repeat, $until, date('Y-m-d\TH:i:sP', $intStartTime), $strDate . ($strTime ? ' ' . $strTime : ''));
+					$recurring = \sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat'], $repeat, $until, date('Y-m-d\TH:i:sP', $intStartTime), $strDate . ($strTime ? ' ' . $strTime : ''));
 				}
 				else
 				{
-					$recurring = sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat'], $repeat, $until, date('Y-m-d', $intStartTime), $strDate);
+					$recurring = \sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat'], $repeat, $until, date('Y-m-d', $intStartTime), $strDate);
 				}
 			}
 		}
@@ -246,7 +247,7 @@ class ModuleEventReader extends Events
 		$objTemplate->recurring = $recurring;
 		$objTemplate->until = $until;
 		$objTemplate->locationLabel = $GLOBALS['TL_LANG']['MSC']['location'];
-		$objTemplate->calendar = $objEvent->getRelated('pid');
+		$objTemplate->calendar = CalendarModel::findById($objEvent->pid);
 		$objTemplate->count = 0; // see #74
 		$objTemplate->details = '';
 		$objTemplate->hasTeaser = false;
@@ -271,7 +272,7 @@ class ModuleEventReader extends Events
 		{
 			$id = $objEvent->id;
 
-			$objTemplate->details = function () use ($id) {
+			$objTemplate->details = Template::once(function () use ($id) {
 				$strDetails = '';
 				$objElement = ContentModel::findPublishedByPidAndTable($id, 'tl_calendar_events');
 
@@ -284,11 +285,11 @@ class ModuleEventReader extends Events
 				}
 
 				return $strDetails;
-			};
+			});
 
-			$objTemplate->hasDetails = static function () use ($id) {
+			$objTemplate->hasDetails = Template::once(static function () use ($id) {
 				return ContentModel::countPublishedByPidAndTable($id, 'tl_calendar_events') > 0;
-			};
+			});
 		}
 
 		$objTemplate->addImage = false;
@@ -331,7 +332,7 @@ class ModuleEventReader extends Events
 		}
 
 		// Add a function to retrieve upcoming dates (see #175)
-		$objTemplate->getUpcomingDates = function ($recurrences) use ($objEvent, $objPage, $intStartTime, $intEndTime, $arrRange, $span) {
+		$objTemplate->getUpcomingDates = function ($recurrences) use ($objEvent, $arrRange, $intStartTime, $intEndTime, $objPage, $span) {
 			if (!$objEvent->recurring || !isset($arrRange['unit'], $arrRange['value']))
 			{
 				return array();
@@ -368,7 +369,7 @@ class ModuleEventReader extends Events
 		};
 
 		// Add a function to retrieve past dates (see #175)
-		$objTemplate->getPastDates = function ($recurrences) use ($objEvent, $objPage, $intStartTime, $intEndTime, $arrRange, $span) {
+		$objTemplate->getPastDates = function ($recurrences) use ($objEvent, $arrRange, $intStartTime, $intEndTime, $objPage, $span) {
 			if (!$objEvent->recurring || !isset($arrRange['unit'], $arrRange['value']))
 			{
 				return array();
@@ -405,7 +406,7 @@ class ModuleEventReader extends Events
 		};
 
 		// schema.org information
-		$objTemplate->getSchemaOrgData = static function () use ($objTemplate, $objEvent): array {
+		$objTemplate->getSchemaOrgData = static function () use ($objEvent, $objTemplate): array {
 			$jsonLd = Events::getSchemaOrgData($objEvent);
 
 			if ($objTemplate->addImage && $objTemplate->figure)
@@ -435,8 +436,11 @@ class ModuleEventReader extends Events
 			return;
 		}
 
-		/** @var CalendarModel $objCalendar */
-		$objCalendar = $objEvent->getRelated('pid');
+		if (!$objCalendar = CalendarModel::findById($objEvent->pid))
+		{
+			return;
+		}
+
 		$this->Template->allowComments = $objCalendar->allowComments;
 
 		// Comments are not allowed
@@ -457,8 +461,7 @@ class ModuleEventReader extends Events
 			$arrNotifies[] = $GLOBALS['TL_ADMIN_EMAIL'];
 		}
 
-		/** @var UserModel $objAuthor */
-		if ($objCalendar->notify != 'notify_admin' && ($objAuthor = $objEvent->getRelated('author')) instanceof UserModel && $objAuthor->email)
+		if ($objCalendar->notify != 'notify_admin' && ($objAuthor = UserModel::findById($objEvent->author)) && $objAuthor->email)
 		{
 			$arrNotifies[] = $objAuthor->email;
 		}

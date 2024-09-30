@@ -13,6 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DependencyInjection;
 
 use Contao\Config;
+use Contao\CoreBundle\Altcha\Config\Algorithm;
+use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
 use Contao\CoreBundle\Doctrine\Backup\RetentionPolicy;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Image\Metadata\ExifFormat;
@@ -27,10 +29,6 @@ use Symfony\Component\Filesystem\Path;
 
 class Configuration implements ConfigurationInterface
 {
-    public function __construct(private readonly string $projectDir)
-    {
-    }
-
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('contao');
@@ -98,15 +96,6 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('editable_files')
                     ->defaultValue('css,csv,html,ini,js,json,less,md,scss,svg,svgz,ts,txt,xliff,xml,yml,yaml')
                 ->end()
-                ->scalarNode('web_dir')
-                    ->info('Absolute path to the web directory. Defaults to %kernel.project_dir%/public.')
-                    ->setDeprecated('contao/core-bundle', '4.13', 'Setting the web directory in a config file is deprecated. Use the "extra.public-dir" config key in your root composer.json instead.')
-                    ->cannotBeEmpty()
-                    ->defaultValue('public')
-                    ->validate()
-                        ->always(static fn (string $value): string => Path::canonicalize($value))
-                    ->end()
-                ->end()
                 ->scalarNode('console_path')
                     ->info('The path to the Symfony console. Defaults to %kernel.project_dir%/bin/console.')
                     ->cannotBeEmpty()
@@ -123,6 +112,8 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addBackupNode())
                 ->append($this->addSanitizerNode())
                 ->append($this->addCronNode())
+                ->append($this->addCspNode())
+                ->append($this->addAltchaNode())
             ->end()
         ;
 
@@ -136,6 +127,34 @@ class Configuration implements ConfigurationInterface
             ->addDefaultsIfNotSet()
             ->info('Allows to define Symfony Messenger workers (messenger:consume). Workers are started every minute using the Contao cron job framework.')
             ->children()
+                ->arrayNode('web_worker')
+                    ->addDefaultsIfNotSet()
+                    ->info('Contao provides a way to work on Messenger transports in the web process (kernel.terminate) if there is no real "messenger:consume" worker. You can configure its behavior here.')
+                    ->children()
+                        ->arrayNode('transports')
+                            ->info('The transports to apply the web worker logic to.')
+                            ->scalarPrototype()->end()
+                            ->defaultValue([])
+                        ->end()
+                        ->scalarNode('grace_period')
+                            ->defaultValue('PT10M')
+                            ->validate()
+                                ->ifTrue(
+                                    static function (string $period) {
+                                        try {
+                                            new \DateInterval($period);
+                                        } catch (\Exception) {
+                                            return true;
+                                        }
+
+                                        return false;
+                                    },
+                                )
+                                ->thenInvalid('Must be a valid string for \DateInterval(). %s given.')
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
                 ->arrayNode('workers')
                     ->performNoDeepMerging()
                     ->arrayPrototype()
@@ -226,15 +245,15 @@ class Configuration implements ConfigurationInterface
 
                                 foreach (array_keys($value) as $name) {
                                     if (preg_match('/^\d+$/', (string) $name)) {
-                                        throw new \InvalidArgumentException(sprintf('The image size name "%s" cannot contain only digits', $name));
+                                        throw new \InvalidArgumentException(\sprintf('The image size name "%s" cannot contain only digits', $name));
                                     }
 
                                     if (\in_array($name, $reservedImageSizeNames, true)) {
-                                        throw new \InvalidArgumentException(sprintf('"%s" is a reserved image size name (reserved names: %s)', $name, implode(', ', $reservedImageSizeNames)));
+                                        throw new \InvalidArgumentException(\sprintf('"%s" is a reserved image size name (reserved names: %s)', $name, implode(', ', $reservedImageSizeNames)));
                                     }
 
                                     if (preg_match('/[^a-z0-9_]/', (string) $name)) {
-                                        throw new \InvalidArgumentException(sprintf('The image size name "%s" must consist of lowercase letters, digits and underscores only', $name));
+                                        throw new \InvalidArgumentException(\sprintf('The image size name "%s" must consist of lowercase letters, digits and underscores only', $name));
                                     }
                                 }
 
@@ -348,7 +367,7 @@ class Configuration implements ConfigurationInterface
                     ->info('The target directory for the cached images processed by Contao.')
                     ->example('%kernel.project_dir%/assets/images')
                     ->cannotBeEmpty()
-                    ->defaultValue(Path::join($this->projectDir, 'assets/images'))
+                    ->defaultValue('%kernel.project_dir%/assets/images')
                     ->validate()
                         ->always(static fn (string $value): string => Path::canonicalize($value))
                     ->end()
@@ -368,7 +387,7 @@ class Configuration implements ConfigurationInterface
                             ->info('The target directory for the cached previews.')
                             ->example('%kernel.project_dir%/assets/previews')
                             ->cannotBeEmpty()
-                            ->defaultValue(Path::join($this->projectDir, 'assets/previews'))
+                            ->defaultValue('%kernel.project_dir%/assets/previews')
                             ->validate()
                                 ->always(static fn (string $value): string => Path::canonicalize($value))
                             ->end()
@@ -685,7 +704,7 @@ class Configuration implements ConfigurationInterface
                         static function (array $attributes): array {
                             foreach (array_keys($attributes) as $name) {
                                 if (preg_match('/[^a-z0-9\-.:_]/', (string) $name)) {
-                                    throw new \InvalidArgumentException(sprintf('The attribute name "%s" must be a valid HTML attribute name.', $name));
+                                    throw new \InvalidArgumentException(\sprintf('The attribute name "%s" must be a valid HTML attribute name.', $name));
                                 }
                             }
 
@@ -801,7 +820,7 @@ class Configuration implements ConfigurationInterface
                             static function (array $protocols): array {
                                 foreach ($protocols as $protocol) {
                                     if (!preg_match('/^[a-z][a-z0-9\-+.]*$/i', (string) $protocol)) {
-                                        throw new \InvalidArgumentException(sprintf('The protocol name "%s" must be a valid URI scheme.', $protocol));
+                                        throw new \InvalidArgumentException(\sprintf('The protocol name "%s" must be a valid URI scheme.', $protocol));
                                     }
                                 }
 
@@ -824,6 +843,83 @@ class Configuration implements ConfigurationInterface
                     ->info('Allows to enable or disable the kernel.terminate listener that executes cron jobs within the web process. "auto" will auto-disable it if a CLI cron is running.')
                     ->values(['auto', true, false])
                     ->defaultValue('auto')
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addCspNode(): NodeDefinition
+    {
+        return (new TreeBuilder('csp'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('allowed_inline_styles')
+                    ->info('Contao provides an "csp_inline_styles" Twig filter which is able to automatically generate CSP hashes for inline style attributes of WYSIWYG editors. For security reasons, the supported properties and their regex value have to be specified here.')
+                    ->useAttributeAsKey('property')
+                    ->prototype('scalar')->end()
+                    ->normalizeKeys(false)
+                    ->defaultValue([
+                        'text-align' => 'left|center|right|justify',
+                        'text-decoration' => 'underline',
+                        'background-color' => 'rgb\(\d{1,3},\s?\d{1,3},\s?\d{1,3}\)|#([0-9a-f]{3}){1,2}',
+                        'color' => 'rgb\(\d{1,3},\s?\d{1,3},\s?\d{1,3}\)|#([0-9a-f]{3}){1,2}',
+                        'font-family' => '((\'[a-z0-9 _-]+\'|[a-z0-9 _-]+)(,\s*|$))+',
+                        'font-size' => '[0-3]?\dpt',
+                        'line-height' => '[0-3](\.\d+)?',
+                        'padding-left' => '\d{1,3}px',
+                        'border-collapse' => 'collapse',
+                        'margin-right' => '0px|auto',
+                        'margin-left' => '0px|auto',
+                        'border-color' => 'rgb\(\d{1,3},\s?\d{1,3},\s?\d{1,3}\)|#([0-9a-f]{3}){1,2}',
+                        'vertical-align' => 'top|middle|bottom',
+                    ])
+                    ->validate()
+                        ->always(
+                            static function (array $allowedProperties): array {
+                                foreach ($allowedProperties as $property => $regex) {
+                                    if (false === @preg_match(WysiwygStyleProcessor::prepareRegex($regex), '')) {
+                                        throw new \InvalidArgumentException(\sprintf('The regex "%s" for property "%s" is invalid.', $regex, $property));
+                                    }
+
+                                    if (str_contains($regex, '.*')) {
+                                        throw new \InvalidArgumentException(\sprintf('The regex "%s" for property "%s" contains ".*" which is not allowed due to security reasons.', $regex, $property));
+                                    }
+                                }
+
+                                return $allowedProperties;
+                            },
+                        )
+                    ->end()
+                ->end()
+                ->integerNode('max_header_size')
+                    ->info('Do not increase this value beyond the allowed response header size of your web server, as this will result in a 500 server error.')
+                    ->defaultValue(3072)
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addAltchaNode(): NodeDefinition
+    {
+        return (new TreeBuilder('altcha'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->enumNode('algorithm')
+                    ->info('The algorithm used to generate the challenges. Select between "SHA-256", "SHA-384" or "SHA-512".')
+                    ->values(Algorithm::values())
+                    ->defaultValue(Algorithm::sha256->value)
+                ->end()
+                ->integerNode('range_max')
+                    ->info('A higher value increases the complexity/security but may significantly increase the computational load on client devices, potentially impacting the user experience.')
+                    ->max(1_000_000)
+                    ->defaultValue(100_000)
+                ->end()
+                ->integerNode('challenge_expiry')
+                    ->info('The time period in seconds for which a challenge is valid.')
+                    ->min(3600)
+                    ->defaultValue(86400)
                 ->end()
             ->end()
         ;

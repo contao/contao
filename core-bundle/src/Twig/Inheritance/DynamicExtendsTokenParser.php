@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Inheritance;
 
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Twig\Error\SyntaxError;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConstantExpression;
@@ -22,8 +23,8 @@ use Twig\TokenParser\AbstractTokenParser;
 use Twig\TokenParser\ExtendsTokenParser;
 
 /**
- * This parser is a drop in replacement for the ExtendsTokenParser
- * that adds support for the Contao template hierarchy.
+ * This parser is a drop in replacement for the ExtendsTokenParser that adds
+ * support for the Contao template hierarchy.
  *
  * @see ExtendsTokenParser
  *
@@ -31,7 +32,7 @@ use Twig\TokenParser\ExtendsTokenParser;
  */
 final class DynamicExtendsTokenParser extends AbstractTokenParser
 {
-    public function __construct(private readonly TemplateHierarchyInterface $hierarchy)
+    public function __construct(private readonly ContaoFilesystemLoader $filesystemLoader)
     {
     }
 
@@ -76,8 +77,8 @@ final class DynamicExtendsTokenParser extends AbstractTokenParser
                 try {
                     $this->traverseAndAdjustTemplateNames($sourcePath, $child);
                 } catch (\LogicException $e) {
-                    // Allow missing templates if they are listed in an array
-                    // like "{% extends ['@Contao/missing', '@Contao/existing'] %}"
+                    // Allow missing templates if they are listed in an array like "{% extends
+                    // ['@Contao/missing', '@Contao/existing'] %}"
                     if (!$node instanceof ArrayExpression) {
                         throw $e;
                     }
@@ -93,7 +94,7 @@ final class DynamicExtendsTokenParser extends AbstractTokenParser
             return;
         }
 
-        $parentName = $this->hierarchy->getDynamicParent($parts[1] ?? '', $sourcePath);
+        $parentName = $this->filesystemLoader->getDynamicParent($parts[1] ?? '', $sourcePath);
 
         // Adjust parent template according to the template hierarchy
         $node->setAttribute('value', $parentName);

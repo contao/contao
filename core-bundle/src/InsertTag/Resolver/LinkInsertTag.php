@@ -18,17 +18,20 @@ use Contao\CoreBundle\InsertTag\Exception\InvalidInsertTagException;
 use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\FrontendUser;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class LinkInsertTag
 {
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly TokenChecker $tokenChecker,
+        private readonly ContentUrlGenerator $urlGenerator,
     ) {
     }
 
@@ -81,43 +84,31 @@ class LinkInsertTag
 
             // Do not generate URL for insert tags that don't need it
             if (\in_array($insertTag->getName(), ['link', 'link_open', 'link_url'], true)) {
-                switch ($objNextPage->type) {
-                    case 'redirect':
-                        $strUrl = $objNextPage->url;
+                try {
+                    $blnAbsolute = \in_array('absolute', \array_slice($insertTag->getParameters()->all(), 1), true);
+                    $strUrl = $this->urlGenerator->generate($objNextPage, [], $blnAbsolute ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH);
 
-                        if (0 === strncasecmp($strUrl, 'mailto:', 7)) {
-                            $strUrl = StringUtil::encodeEmail($strUrl);
-                        }
-                        break;
-
-                    case 'forward':
-                        if ($objNextPage->jumpTo) {
-                            $objNext = $this->framework->getAdapter(PageModel::class)->findPublishedById($objNextPage->jumpTo);
-                        } else {
-                            $objNext = $this->framework->getAdapter(PageModel::class)->findFirstPublishedRegularByPid($objNextPage->id);
-                        }
-
-                        if ($objNext instanceof PageModel) {
-                            try {
-                                $strUrl = \in_array('absolute', \array_slice($insertTag->getParameters()->all(), 1), true) ? $objNext->getAbsoluteUrl() : $objNext->getFrontendUrl();
-                            } catch (ExceptionInterface) {
-                            }
-                            break;
-                        }
-                        // no break
-
-                    default:
-                        try {
-                            $strUrl = \in_array('absolute', \array_slice($insertTag->getParameters()->all(), 1), true) ? $objNextPage->getAbsoluteUrl() : $objNextPage->getFrontendUrl();
-                        } catch (ExceptionInterface) {
-                        }
-                        break;
+                    if (0 === strncasecmp($strUrl, 'mailto:', 7)) {
+                        $strUrl = StringUtil::encodeEmail($strUrl);
+                    }
+                } catch (ExceptionInterface) {
+                    // Replace with empty string (#7250)
+                    switch ($insertTag->getName()) {
+                        case 'link':
+                        case 'link_open':
+                        case 'link_url': return new InsertTagResult('');
+                    }
                 }
+            }
+
+            // Use "/" for the index page (#2394)
+            if ('' === $strUrl) {
+                $strUrl = '/';
             }
 
             $strName = $objNextPage->title;
             $strTarget = $objNextPage->target ? ' target="_blank" rel="noreferrer noopener"' : '';
-            $strClass = $objNextPage->cssClass ? sprintf(' class="%s"', $objNextPage->cssClass) : '';
+            $strClass = $objNextPage->cssClass ? \sprintf(' class="%s"', $objNextPage->cssClass) : '';
             $strTitle = $objNextPage->pageTitle ?: $objNextPage->title;
         }
 
@@ -126,9 +117,9 @@ class LinkInsertTag
         }
 
         return match ($insertTag->getName()) {
-            'link' => new InsertTagResult(sprintf('<a href="%s" title="%s"%s%s>%s</a>', $strUrl ?: './', StringUtil::specialcharsAttribute($strTitle), $strClass, $strTarget, $strName), OutputType::html),
-            'link_open' => new InsertTagResult(sprintf('<a href="%s" title="%s"%s%s>', $strUrl ?: './', StringUtil::specialcharsAttribute($strTitle), $strClass, $strTarget), OutputType::html),
-            'link_url' => new InsertTagResult($strUrl ?: './', OutputType::url),
+            'link' => new InsertTagResult(\sprintf('<a href="%s" title="%s"%s%s>%s</a>', $strUrl, StringUtil::specialcharsAttribute($strTitle), $strClass, $strTarget, $strName), OutputType::html),
+            'link_open' => new InsertTagResult(\sprintf('<a href="%s" title="%s"%s%s>', $strUrl, StringUtil::specialcharsAttribute($strTitle), $strClass, $strTarget), OutputType::html),
+            'link_url' => new InsertTagResult($strUrl, OutputType::url),
             'link_title' => new InsertTagResult(StringUtil::specialcharsAttribute($strTitle), OutputType::html),
             'link_name' => new InsertTagResult(StringUtil::specialcharsAttribute($strName), OutputType::html),
             default => throw new InvalidInsertTagException(),

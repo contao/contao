@@ -17,7 +17,6 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\ResizeConfiguration;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\Definition\ArrayNode;
-use Symfony\Component\Config\Definition\BaseNode;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\Definition\PrototypedArrayNode;
@@ -32,7 +31,7 @@ class ConfigurationTest extends TestCase
     {
         parent::setUp();
 
-        $this->configuration = new Configuration($this->getTempDir());
+        $this->configuration = new Configuration();
     }
 
     public function testAddsTheImagineService(): void
@@ -56,17 +55,12 @@ class ConfigurationTest extends TestCase
     }
 
     /**
-     * @group legacy
-     *
      * @dataProvider getPaths
      */
     public function testResolvesThePaths(string $unix, string $windows): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 4.13: Setting the web directory in a config file is deprecated. Use the "extra.public-dir" config key in your root composer.json instead.');
-
         $params = [
             [
-                'web_dir' => $unix,
                 'image' => [
                     'target_dir' => $windows,
                 ],
@@ -75,11 +69,10 @@ class ConfigurationTest extends TestCase
 
         $configuration = (new Processor())->processConfiguration($this->configuration, $params);
 
-        $this->assertSame('/tmp/contao', $configuration['web_dir']);
         $this->assertSame('C:/Temp/contao', $configuration['image']['target_dir']);
     }
 
-    public function getPaths(): \Generator
+    public static function getPaths(): iterable
     {
         yield ['/tmp/contao', 'C:\Temp\contao'];
         yield ['/tmp/foo/../contao', 'C:\Temp\foo\..\contao'];
@@ -107,7 +100,7 @@ class ConfigurationTest extends TestCase
         (new Processor())->processConfiguration($this->configuration, $params);
     }
 
-    public function getInvalidUploadPaths(): \Generator
+    public static function getInvalidUploadPaths(): iterable
     {
         yield [''];
         yield ['app'];
@@ -164,7 +157,7 @@ class ConfigurationTest extends TestCase
         (new Processor())->processConfiguration($this->configuration, $params);
     }
 
-    public function getReservedImageSizeNames(): \Generator
+    public static function getReservedImageSizeNames(): iterable
     {
         yield [ResizeConfiguration::MODE_BOX];
         yield [ResizeConfiguration::MODE_PROPORTIONAL];
@@ -198,7 +191,6 @@ class ConfigurationTest extends TestCase
 
     public function testAllowsOnlySnakeCaseKeys(): void
     {
-        /** @var ArrayNode $tree */
         $tree = $this->configuration->getConfigTreeBuilder()->buildTree();
 
         $this->assertInstanceOf(ArrayNode::class, $tree);
@@ -245,8 +237,8 @@ class ConfigurationTest extends TestCase
     public function testMessengerConfiguration(): void
     {
         $params = [
-            // This first configuration should be overridden by the latter (no deep merging), in order to control all the
-            // workers in your app.
+            // This first configuration should be overridden by the latter (no deep merging),
+            // in order to control all the workers in your app.
             [
                 'messenger' => [
                     'workers' => [
@@ -318,6 +310,10 @@ class ConfigurationTest extends TestCase
                         ],
                     ],
                 ],
+                'web_worker' => [
+                    'transports' => [],
+                    'grace_period' => 'PT10M',
+                ],
             ],
             $configuration['messenger'],
         );
@@ -370,6 +366,58 @@ class ConfigurationTest extends TestCase
         }
     }
 
+    public function testFailsOnInvalidWebWorkerGracePeriod(): void
+    {
+        $params = [
+            [
+                'messenger' => [
+                    'web_worker' => [
+                        'grace_period' => 'nonsense',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('Invalid configuration for path "contao.messenger.web_worker.grace_period": Must be a valid string for \DateInterval(). "nonsense" given.');
+
+        (new Processor())->processConfiguration($this->configuration, $params);
+    }
+
+    /**
+     * @dataProvider invalidAllowedInlineStylesRegexProvider
+     */
+    public function testFailsOnInvalidAllowedInlineStylesRegex(string $regex, string $exceptionMessage): void
+    {
+        $params = [
+            [
+                'csp' => [
+                    'allowed_inline_styles' => [
+                        'text-decoration' => $regex,
+                    ],
+                ],
+            ],
+        ];
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage($exceptionMessage);
+
+        (new Processor())->processConfiguration($this->configuration, $params);
+    }
+
+    public static function invalidAllowedInlineStylesRegexProvider(): iterable
+    {
+        yield [
+            'te(st',
+            'Invalid configuration for path "contao.csp.allowed_inline_styles": The regex "te(st" for property "text-decoration" is invalid.',
+        ];
+
+        yield [
+            'te.*st',
+            'Invalid configuration for path "contao.csp.allowed_inline_styles": The regex "te.*st" for property "text-decoration" contains ".*" which is not allowed due to security reasons.',
+        ];
+    }
+
     /**
      * @dataProvider cronConfigurationProvider
      */
@@ -396,7 +444,7 @@ class ConfigurationTest extends TestCase
         (new Processor())->processConfiguration($this->configuration, $params);
     }
 
-    public function cronConfigurationProvider(): \Generator
+    public static function cronConfigurationProvider(): iterable
     {
         yield 'Default value' => [
             [], 'auto',
@@ -421,7 +469,6 @@ class ConfigurationTest extends TestCase
      */
     private function checkKeys(array $configuration): void
     {
-        /** @var BaseNode $value */
         foreach ($configuration as $key => $value) {
             if ($value instanceof ArrayNode) {
                 $this->checkKeys($value->getChildren());

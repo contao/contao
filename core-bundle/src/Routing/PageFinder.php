@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Routing;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Exception\ExceptionInterface as RoutingExceptionInterface;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 
@@ -23,12 +24,28 @@ class PageFinder
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly RequestMatcherInterface $requestMatcher,
+        private readonly RequestStack $requestStack,
     ) {
     }
 
     /**
-     * Finds the root page matching the request host and optionally an Accept-Language header.
-     * If $acceptLanguage is not given, it will always return the fallback root page.
+     * Returns the current page model from the given request or the current request.
+     */
+    public function getCurrentPage(Request|null $request = null): PageModel|null
+    {
+        $pageModel = ($request ?? $this->requestStack->getCurrentRequest())?->attributes->get('pageModel');
+
+        if ($pageModel instanceof PageModel) {
+            return $pageModel;
+        }
+
+        return null;
+    }
+
+    /**
+     * Finds the root page matching the request host and optionally an Accept-Language
+     * header. If $acceptLanguage is not given, it will always return the fallback
+     * root page.
      */
     public function findRootPageForHostAndLanguage(string $hostname, string|null $acceptLanguage = null): PageModel|null
     {
@@ -59,8 +76,9 @@ class PageFinder
     }
 
     /**
-     * Finds all root pages matching the given host name. It will first look for a matching
-     * root page through routing and then find all root pages with the same tl_page.dns value.
+     * Finds all root pages matching the given host name. It will first look for a
+     * matching root page through routing and then find all root pages with the same
+     * tl_page.dns value.
      *
      * @return array<PageModel>
      */
@@ -80,9 +98,9 @@ class PageFinder
     }
 
     /**
-     * Finds the first sub-page of a given type for a request host and Accept-Language. This
-     * is mainly useful to retrieve an error page for the current host, or any other page type
-     * that only exists once per root page.
+     * Finds the first sub-page of a given type for a request host and
+     * Accept-Language. This is mainly useful to retrieve an error page for the
+     * current host, or any other page type that only exists once per root page.
      */
     public function findFirstPageOfTypeForRequest(Request $request, string $type): PageModel|null
     {

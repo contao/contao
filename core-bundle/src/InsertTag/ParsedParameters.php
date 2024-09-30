@@ -25,7 +25,7 @@ final class ParsedParameters extends InsertTagParameters
     {
         foreach ($parameters as $parameter) {
             if (!$parameter instanceof ParsedSequence) {
-                throw new \TypeError(sprintf('%s(): Argument #1 ($parameters) must be of type list<%s>, list<%s> given', __METHOD__, ParsedSequence::class, get_debug_type($parameter)));
+                throw new \TypeError(\sprintf('%s(): Argument #1 ($parameters) must be of type list<%s>, list<%s> given', __METHOD__, ParsedSequence::class, get_debug_type($parameter)));
             }
         }
 

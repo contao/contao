@@ -10,12 +10,9 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
-use Contao\Image\ImageInterface;
-use Contao\Image\PictureConfiguration;
+use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use MatthiasMullie\Minify\CSS;
 use MatthiasMullie\Minify\JS;
-use Spatie\SchemaOrg\Graph;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\VarDumper\VarDumper;
 
@@ -63,12 +60,13 @@ use Symfony\Component\VarDumper\VarDumper;
  * @property array        $trustedDevices
  * @property string       $currentDevice
  *
- * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0;
+ * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6;
  *             use Twig templates instead
  */
 abstract class Template extends Controller
 {
 	use TemplateInheritance;
+	use TemplateTrait;
 
 	/**
 	 * Output buffer
@@ -159,7 +157,7 @@ abstract class Template extends Controller
 
 		if ($strKey === 'requestToken' && !\array_key_exists($strKey, $this->arrData))
 		{
-			return htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue());
+			return htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
 		}
 
 		return parent::__get($strKey);
@@ -195,6 +193,34 @@ abstract class Template extends Controller
 	public function __isset($strKey)
 	{
 		return isset($this->arrData[$strKey]) || ($strKey === 'requestToken' && !\array_key_exists($strKey, $this->arrData));
+	}
+
+	/**
+	 * Adds a function to a template which is evaluated only once. This is helpful for
+	 * lazy-evaluating data where we can use functions without arguments. Let's say
+	 * you wanted to lazy-evaluate a variable like this:
+	 *
+	 *     $template->hasText = function () use ($article) {
+	 *         return ContentModel::countPublishedByPidAndTable($article->id, 'tl_news') > 0;
+	 *     };
+	 *
+	 * This would cause a query everytime $template->hasText is accessed in the
+	 * template. You can improve this by turning it into this:
+	 *
+	 *     $template->hasText = Template::once(function () use ($article) {
+	 *         return ContentModel::countPublishedByPidAndTable($article->id, 'tl_news') > 0;
+	 *     });
+	 */
+	public static function once(callable $callback)
+	{
+		return static function () use (&$callback) {
+			if (\is_callable($callback))
+			{
+				$callback = $callback();
+			}
+
+			return $callback;
+		};
 	}
 
 	/**
@@ -306,188 +332,6 @@ abstract class Template extends Controller
 		$response->setCharset(System::getContainer()->getParameter('kernel.charset'));
 
 		return $response;
-	}
-
-	/**
-	 * Generate a URL for the given route
-	 *
-	 * @param string $strName   The route name
-	 * @param array  $arrParams The route parameters
-	 *
-	 * @return string The route
-	 */
-	public function route($strName, $arrParams=array())
-	{
-		return StringUtil::ampersand(System::getContainer()->get('router')->generate($strName, $arrParams));
-	}
-
-	/**
-	 * Return the preview route
-	 *
-	 * @param string $strName   The route name
-	 * @param array  $arrParams The route parameters
-	 *
-	 * @return string The route
-	 */
-	public function previewRoute($strName, $arrParams=array())
-	{
-		$container = System::getContainer();
-
-		if (!$previewScript = $container->getParameter('contao.preview_script'))
-		{
-			return $this->route($strName, $arrParams);
-		}
-
-		$router = $container->get('router');
-
-		$context = $router->getContext();
-		$context->setBaseUrl($previewScript);
-
-		$strUrl = $router->generate($strName, $arrParams);
-
-		$context->setBaseUrl('');
-
-		return StringUtil::ampersand($strUrl);
-	}
-
-	/**
-	 * Returns a translated message
-	 *
-	 * @param string $strId
-	 * @param array  $arrParams
-	 * @param string $strDomain
-	 * @param string $locale
-	 *
-	 * @return string
-	 */
-	public function trans($strId, array $arrParams=array(), $strDomain='contao_default', $locale=null)
-	{
-		return System::getContainer()->get('translator')->trans($strId, $arrParams, $strDomain, $locale);
-	}
-
-	/**
-	 * Helper method to allow quick access in the Contao templates for safe raw (unencoded) output.
-	 * It replaces (or optionally removes) Contao insert tags and removes all HTML.
-	 *
-	 * Be careful when using this. It must NOT be used within regular HTML when $value
-	 * is uncontrolled user input. It's useful to ensure raw values within e.g. <code> examples
-	 * or JSON-LD arrays.
-	 */
-	public function rawPlainText(string $value, bool $removeInsertTags = false): string
-	{
-		return System::getContainer()->get('contao.string.html_decoder')->inputEncodedToPlainText($value, $removeInsertTags);
-	}
-
-	/**
-	 * Helper method to allow quick access in the Contao templates for safe raw (unencoded) output.
-	 *
-	 * Compared to $this->rawPlainText() it adds new lines before and after block level HTML elements
-	 * and only then removes the rest of the HTML tags.
-	 *
-	 * Be careful when using this. It must NOT be used within regular HTML when $value
-	 * is uncontrolled user input. It's useful to ensure raw values within e.g. <code> examples
-	 * or JSON-LD arrays.
-	 */
-	public function rawHtmlToPlainText(string $value, bool $removeInsertTags = false): string
-	{
-		return System::getContainer()->get('contao.string.html_decoder')->htmlToPlainText($value, $removeInsertTags);
-	}
-
-	/**
-	 * Adds schema.org JSON-LD data to the current response context
-	 */
-	public function addSchemaOrg(array $jsonLd): void
-	{
-		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
-
-		if (!$responseContext || !$responseContext->has(JsonLdManager::class))
-		{
-			return;
-		}
-
-		/** @var JsonLdManager $jsonLdManager */
-		$jsonLdManager = $responseContext->get(JsonLdManager::class);
-		$type = $jsonLdManager->createSchemaOrgTypeFromArray($jsonLd);
-
-		$jsonLdManager
-			->getGraphForSchema(JsonLdManager::SCHEMA_ORG)
-			->set($type, $jsonLd['identifier'] ?? Graph::IDENTIFIER_DEFAULT)
-		;
-	}
-
-	/**
-	 * Render a figure
-	 *
-	 * The provided configuration array is used to configure a FigureBuilder.
-	 * If not explicitly set, the default template "image.html5" will be used
-	 * to render the results. To use the core's default Twig template, pass
-	 * "@ContaoCore/Image/Studio/figure.html.twig" as $template argument.
-	 *
-	 * @param int|string|FilesModel|ImageInterface       $from          Can be a FilesModel, an ImageInterface, a tl_files UUID/ID/path or a file system path
-	 * @param int|string|array|PictureConfiguration|null $size          A picture size configuration or reference
-	 * @param array<string, mixed>                       $configuration Configuration for the FigureBuilder
-	 * @param string                                     $template      A Contao or Twig template
-	 *
-	 * @return string|null Returns null if the resource is invalid
-	 */
-	public function figure($from, $size, $configuration = array(), $template = 'image')
-	{
-		return System::getContainer()->get('contao.image.studio.figure_renderer')->render($from, $size, $configuration, $template);
-	}
-
-	/**
-	 * Returns an asset path
-	 *
-	 * @param string      $path
-	 * @param string|null $packageName
-	 *
-	 * @return string
-	 */
-	public function asset($path, $packageName = null)
-	{
-		return System::getContainer()->get('assets.packages')->getUrl($path, $packageName);
-	}
-
-	/**
-	 * Returns an asset version
-	 *
-	 * @param string      $path
-	 * @param string|null $packageName
-	 *
-	 * @return string
-	 */
-	public function assetVersion($path, $packageName = null)
-	{
-		return System::getContainer()->get('assets.packages')->getVersion($path, $packageName);
-	}
-
-	/**
-	 * Returns a container parameter
-	 *
-	 * @param string $strKey
-	 *
-	 * @return mixed
-	 */
-	public function param($strKey)
-	{
-		return System::getContainer()->getParameter($strKey);
-	}
-
-	/**
-	 * Prefixes a relative URL
-	 *
-	 * @param string $url
-	 *
-	 * @return string
-	 */
-	public function prefixUrl($url)
-	{
-		if (!Validator::isRelativeUrl($url))
-		{
-			return $url;
-		}
-
-		return Environment::get('path') . '/' . $url;
 	}
 
 	/**
@@ -638,7 +482,16 @@ abstract class Template extends Controller
 	 */
 	public static function generateInlineStyle($script)
 	{
-		return '<style>' . $script . '</style>';
+		$nonce = null;
+		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
+
+		if ($responseContext?->has(CspHandler::class))
+		{
+			$csp = $responseContext->get(CspHandler::class);
+			$nonce = $csp->getNonce('style-src');
+		}
+
+		return '<style' . ($nonce ? ' nonce="' . $nonce . '"' : '') . '>' . $script . '</style>';
 	}
 
 	/**
@@ -695,7 +548,16 @@ abstract class Template extends Controller
 	 */
 	public static function generateInlineScript($script)
 	{
-		return '<script>' . $script . '</script>';
+		$nonce = null;
+		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
+
+		if ($responseContext?->has(CspHandler::class))
+		{
+			$csp = $responseContext->get(CspHandler::class);
+			$nonce = $csp->getNonce('script-src');
+		}
+
+		return '<script' . ($nonce ? ' nonce="' . $nonce . '"' : '') . '>' . $script . '</script>';
 	}
 
 	/**

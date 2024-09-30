@@ -44,7 +44,8 @@ class DefaultGlobalOperationsListener
 
         $operations = [];
 
-        // If none of the defined operations are name-only, we append the operations to the defaults.
+        // If none of the defined operations are name-only, we append the operations to
+        // the defaults.
         if (!array_filter($dca, static fn ($v, $k) => isset($defaults[$k]) || (\is_string($v) && isset($defaults[$v])), ARRAY_FILTER_USE_BOTH)) {
             $operations = $defaults;
         }
@@ -79,6 +80,7 @@ class DefaultGlobalOperationsListener
 
         $canEdit = !($GLOBALS['TL_DCA'][$table]['config']['notEditable'] ?? false);
         $canCopy = !($GLOBALS['TL_DCA'][$table]['config']['closed'] ?? false) && !($GLOBALS['TL_DCA'][$table]['config']['notCopyable'] ?? false);
+        $canDelete = !($GLOBALS['TL_DCA'][$table]['config']['notDeletable'] ?? false);
 
         if ($isDcFolder || $isTreeMode || $isExtendedTreeMode) {
             $operations += [
@@ -98,12 +100,12 @@ class DefaultGlobalOperationsListener
             ];
         }
 
-        if ($canEdit || $canCopy) {
+        if ($canEdit || $canCopy || $canDelete) {
             $operations += [
                 'all' => [
                     'href' => 'act=select',
                     'class' => 'header_edit_all',
-                    'attributes' => 'onclick="Backend.getScrollOffset()" accesskey="e"',
+                    'attributes' => 'accesskey="e"',
                 ],
             ];
         }

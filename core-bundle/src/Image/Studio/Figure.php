@@ -19,9 +19,9 @@ use Contao\StringUtil;
 use Contao\Template;
 
 /**
- * A Figure object holds image and metadata ready to be applied to a
- * template's context. If you are using the legacy PHP templates, you can still
- * use the provided legacy helper methods to manually apply the data to them.
+ * A Figure object holds image and metadata ready to be applied to a template's
+ * context. If you are using the legacy PHP templates, you can still use the
+ * provided legacy helper methods to manually apply the data to them.
  *
  * Wherever possible, the actual data is only requested/built on demand.
  */
@@ -30,8 +30,8 @@ final class Figure
     /**
      * Creates a figure container.
      *
-     * All arguments but the main image result can also be set via a Closure
-     * that only returns the value on demand.
+     * All arguments but the main image result can also be set via a Closure that only
+     * returns the value on demand.
      *
      * @param Metadata|(\Closure(self):Metadata|null)|null                                $metadata       Metadata container
      * @param array<string, string|null>|(\Closure(self):array<string, string|null>)|null $linkAttributes Link attributes
@@ -123,8 +123,7 @@ final class Figure
     }
 
     /**
-     * Returns a key-value list of all link attributes. This excludes "href" by
-     * default.
+     * Returns a key-value list of all link attributes. This excludes "href" by default.
      */
     public function getLinkAttributes(bool $includeHref = false): HtmlAttributes
     {
@@ -204,8 +203,8 @@ final class Figure
      */
     public function getLegacyTemplateData(array|string|null $margin = null, string|null $floating = null, bool $includeFullMetadata = true): array
     {
-        // Create a key-value list of the metadata and apply some renaming and
-        // formatting transformations to fit the legacy templates.
+        // Create a key-value list of the metadata and apply some renaming and formatting
+        // transformations to fit the legacy templates.
         $createLegacyMetadataMapping = static function (Metadata $metadata): array {
             if ($metadata->empty()) {
                 return [];
@@ -251,7 +250,7 @@ final class Figure
             'width' => $originalSize->getWidth(),
             'height' => $originalSize->getHeight(),
             'arrSize' => $fileInfoImageSize,
-            'imgSize' => !empty($fileInfoImageSize) ? sprintf(' width="%d" height="%d"', $fileInfoImageSize[0], $fileInfoImageSize[1]) : '',
+            'imgSize' => !empty($fileInfoImageSize) ? \sprintf(' width="%d" height="%d"', $fileInfoImageSize[0], $fileInfoImageSize[1]) : '',
             'singleSRC' => $image->getFilePath(),
             'src' => $image->getImageSrc(),
             'fullsize' => ('_blank' === ($linkAttributes['target'] ?? null)) || $this->hasLightbox(),
@@ -265,7 +264,8 @@ final class Figure
             $templateData['href'] = $href;
             $templateData['attributes'] = ''; // always define attributes key if href is set
 
-            // Use link "title" attribute for "linkTitle" as it is already output explicitly in image.html5 (see #3385)
+            // Use link "title" attribute for "linkTitle" as it is already output explicitly
+            // in image.html5 (see #3385)
             if (\array_key_exists('title', $linkAttributes)) {
                 $templateData['linkTitle'] = $linkAttributes['title'];
                 unset($linkAttributes['title']);
@@ -280,7 +280,7 @@ final class Figure
 
         if ($linkAttributes) {
             $htmlAttributes = array_map(
-                static fn (string $attribute, string $value) => sprintf('%s="%s"', $attribute, $value),
+                static fn (string $attribute, string $value) => \sprintf('%s="%s"', $attribute, $value),
                 array_keys($linkAttributes),
                 $linkAttributes,
             );
@@ -316,9 +316,8 @@ final class Figure
     }
 
     /**
-     * Applies the legacy template data to an existing template. This will
-     * prevent overriding the "href" property if already present and use
-     * "imageHref" instead.
+     * Applies the legacy template data to an existing template. This will prevent
+     * overriding the "href" property if already present and use "imageHref" instead.
      *
      * Note: Do not use this method when building new templates from scratch or
      *       when using Twig templates! Instead, add this object to your

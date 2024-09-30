@@ -27,6 +27,9 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
  * @Attributes({
  *     @Attribute("priority", type="int"),
  * })
+ *
+ * @deprecated Deprecated since Contao 5.4, to be removed in Contao 6;
+ *             use the #[AsPickerProvider] attribute instead
  */
 final class PickerProvider implements ServiceTagInterface
 {
@@ -34,6 +37,8 @@ final class PickerProvider implements ServiceTagInterface
 
     public function getName(): string
     {
+        trigger_deprecation('contao/core-bundle', '5.4', 'Using the @PickerProvider annotation has been deprecated and will no longer work in Contao 6. Use the #[AsPickerProvider] attribute instead.');
+
         return 'contao.picker_provider';
     }
 

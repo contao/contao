@@ -103,7 +103,6 @@ class ModuleArticle extends Module
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$id = 'article-' . $this->id;
@@ -142,7 +141,7 @@ class ModuleArticle extends Module
 			$this->Template->headline = $this->headline;
 			$this->Template->href = $objPage->getFrontendUrl('/articles/' . ($this->alias ?: $this->id));
 			$this->Template->teaser = $this->teaser ?? '';
-			$this->Template->readMore = StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $this->headline), true);
+			$this->Template->readMore = StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $this->headline), true);
 			$this->Template->more = $GLOBALS['TL_LANG']['MSC']['more'];
 
 			return;
@@ -156,11 +155,10 @@ class ModuleArticle extends Module
 		{
 			$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
-			if ($responseContext && $responseContext->has(HtmlHeadBag::class))
+			if ($responseContext?->has(HtmlHeadBag::class))
 			{
 				$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 
-				/** @var HtmlHeadBag $htmlHeadBag */
 				$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
 				$htmlHeadBag->setTitle($htmlDecoder->inputEncodedToPlainText($this->title));
 
@@ -227,7 +225,7 @@ class ModuleArticle extends Module
 			$this->Template->print = '#';
 			$this->Template->encUrl = Environment::get('uri');
 			$this->Template->encTitle = $objPage->pageTitle;
-			$this->Template->href = $request . ((strpos($request, '?') !== false) ? '&amp;' : '?') . 'pdf=' . $this->id;
+			$this->Template->href = $request . (str_contains($request, '?') ? '&amp;' : '?') . 'pdf=' . $this->id;
 
 			$this->Template->printTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['printPage']);
 			$this->Template->pdfTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['printAsPdf']);

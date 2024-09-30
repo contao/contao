@@ -103,6 +103,7 @@ use Doctrine\DBAL\Types\Types;
 abstract class Widget extends Controller
 {
 	use TemplateInheritance;
+	use TemplateTrait;
 
 	/**
 	 * Id
@@ -241,7 +242,7 @@ abstract class Widget extends Controller
 				break;
 
 			case 'class':
-				if ($varValue && strpos($this->strClass ?? '', $varValue) === false)
+				if ($varValue && !str_contains($this->strClass ?? '', $varValue))
 				{
 					$this->strClass = trim($this->strClass . ' ' . $varValue);
 				}
@@ -333,8 +334,8 @@ abstract class Widget extends Controller
 				$this->objDca = $varValue;
 				break;
 
-			case strncmp($strKey, 'ng-', 3) === 0:
-			case strncmp($strKey, 'data-', 5) === 0:
+			case str_starts_with($strKey, 'ng-'):
+			case str_starts_with($strKey, 'data-'):
 				$this->arrAttributes[$strKey] = $varValue;
 				break;
 
@@ -486,6 +487,8 @@ abstract class Widget extends Controller
 	{
 		$this->class = 'error';
 		$this->arrErrors[] = $strError;
+
+		System::getContainer()->get('request_stack')?->getMainRequest()->attributes->set('_contao_widget_error', true);
 	}
 
 	/**
@@ -549,7 +552,7 @@ abstract class Widget extends Controller
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 		$isBackend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
 
-		return $this->hasErrors() ? sprintf('<p class="%s">%s</p>', $isBackend ? 'tl_error tl_tip' : 'error', $this->arrErrors[$intIndex]) : '';
+		return $this->hasErrors() ? \sprintf('<p class="%s">%s</p>', $isBackend ? 'tl_error tl_tip' : 'error', $this->arrErrors[$intIndex]) : '';
 	}
 
 	/**
@@ -617,7 +620,7 @@ abstract class Widget extends Controller
 			return '';
 		}
 
-		return sprintf(
+		return \sprintf(
 			'<label%s%s>%s%s%s</label>',
 			$this->blnForAttribute ? ' for="ctrl_' . $this->strId . '"' : '',
 			$this->strClass ? ' class="' . $this->strClass . '"' : '',
@@ -713,7 +716,7 @@ abstract class Widget extends Controller
 	 *
 	 * @return $this The widget object
 	 */
-	public function setInputCallback(callable $callback=null)
+	public function setInputCallback(callable|null $callback=null)
 	{
 		$this->inputCallback = $callback;
 
@@ -817,40 +820,40 @@ abstract class Widget extends Controller
 			}
 			else
 			{
-				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['mandatory'], $this->strLabel));
+				$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['mandatory'], $this->strLabel));
 			}
 		}
 
 		if ($this->minlength && $varInput && mb_strlen($varInput) < $this->minlength)
 		{
-			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['minlength'], $this->strLabel, $this->minlength));
+			$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['minlength'], $this->strLabel, $this->minlength));
 		}
 
 		if ($this->maxlength && $varInput && mb_strlen($varInput) > $this->maxlength)
 		{
-			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['maxlength'], $this->strLabel, $this->maxlength));
+			$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['maxlength'], $this->strLabel, $this->maxlength));
 		}
 
 		if ($this->minval && is_numeric($varInput) && $varInput < $this->minval)
 		{
-			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['minval'], $this->strLabel, $this->minval));
+			$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['minval'], $this->strLabel, $this->minval));
 		}
 
 		if ($this->maxval && is_numeric($varInput) && $varInput > $this->maxval)
 		{
-			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['maxval'], $this->strLabel, $this->maxval));
+			$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['maxval'], $this->strLabel, $this->maxval));
 		}
 
 		if ($this->rgxp)
 		{
 			switch ($this->rgxp)
 			{
-				case strncmp($this->rgxp, 'digit_', 6) === 0:
+				case str_starts_with($this->rgxp, 'digit_'):
 					// Special validation rule for style sheets
 					$textual = explode('_', $this->rgxp);
 					array_shift($textual);
 
-					if (\in_array($varInput, $textual) || strncmp($varInput, '$', 1) === 0)
+					if (\in_array($varInput, $textual) || str_starts_with($varInput, '$'))
 					{
 						break;
 					}
@@ -858,49 +861,49 @@ abstract class Widget extends Controller
 
 				case 'digit':
 					// Support decimal commas and convert them automatically (see #3488)
-					if (substr_count($varInput, ',') == 1 && strpos($varInput, '.') === false)
+					if (substr_count($varInput, ',') == 1 && !str_contains($varInput, '.'))
 					{
 						$varInput = str_replace(',', '.', $varInput);
 					}
 
 					if (!Validator::isNumeric($varInput))
 					{
-						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['digit'], $this->strLabel));
+						$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['digit'], $this->strLabel));
 					}
 					break;
 
 				case 'natural':
 					if (!Validator::isNatural($varInput))
 					{
-						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['natural'], $this->strLabel));
+						$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['natural'], $this->strLabel));
 					}
 					break;
 
 				case 'alpha':
 					if (!Validator::isAlphabetic($varInput))
 					{
-						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['alpha'], $this->strLabel));
+						$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['alpha'], $this->strLabel));
 					}
 					break;
 
 				case 'alnum':
 					if (!Validator::isAlphanumeric($varInput))
 					{
-						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['alnum'], $this->strLabel));
+						$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['alnum'], $this->strLabel));
 					}
 					break;
 
 				case 'extnd':
-					if (!Validator::isExtendedAlphanumeric(html_entity_decode($varInput)))
+					if (!Validator::isExtendedAlphanumeric(html_entity_decode($varInput, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5)))
 					{
-						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['extnd'], $this->strLabel));
+						$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['extnd'], $this->strLabel));
 					}
 					break;
 
 				case 'date':
 					if (!Validator::isDate($varInput))
 					{
-						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['date'], Date::getInputFormat(Date::getNumericDateFormat())));
+						$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['date'], Date::getInputFormat(Date::getNumericDateFormat())));
 					}
 					else
 					{
@@ -911,7 +914,7 @@ abstract class Widget extends Controller
 						}
 						catch (\OutOfBoundsException $e)
 						{
-							$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['invalidDate'], $varInput));
+							$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['invalidDate'], $varInput));
 						}
 					}
 					break;
@@ -919,14 +922,14 @@ abstract class Widget extends Controller
 				case 'time':
 					if (!Validator::isTime($varInput))
 					{
-						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['time'], Date::getInputFormat(Date::getNumericTimeFormat())));
+						$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['time'], Date::getInputFormat(Date::getNumericTimeFormat())));
 					}
 					break;
 
 				case 'datim':
 					if (!Validator::isDatim($varInput))
 					{
-						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['dateTime'], Date::getInputFormat(Date::getNumericDatimFormat())));
+						$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['dateTime'], Date::getInputFormat(Date::getNumericDatimFormat())));
 					}
 					else
 					{
@@ -937,7 +940,7 @@ abstract class Widget extends Controller
 						}
 						catch (\OutOfBoundsException $e)
 						{
-							$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['invalidDate'], $varInput));
+							$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['invalidDate'], $varInput));
 						}
 					}
 					break;
@@ -949,7 +952,7 @@ abstract class Widget extends Controller
 				case 'email':
 					if (!Validator::isEmail($varInput))
 					{
-						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['email'], $this->strLabel));
+						$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['email'], $this->strLabel));
 					}
 
 					if ($this->rgxp == 'friendly' && !empty($strName))
@@ -968,7 +971,7 @@ abstract class Widget extends Controller
 
 						if (!Validator::isEmail($strEmail))
 						{
-							$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['emails'], $this->strLabel));
+							$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['emails'], $this->strLabel));
 							break;
 						}
 					}
@@ -984,56 +987,56 @@ abstract class Widget extends Controller
 
 					if (!Validator::isUrl($varInput))
 					{
-						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['url'], $this->strLabel));
+						$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['url'], $this->strLabel));
 					}
 					break;
 
 				case 'alias':
 					if (!Validator::isAlias($varInput))
 					{
-						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['alias'], $this->strLabel));
+						$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['alias'], $this->strLabel));
 					}
 					break;
 
 				case 'folderalias':
 					if (!Validator::isFolderAlias($varInput))
 					{
-						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['folderalias'], $this->strLabel));
+						$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['folderalias'], $this->strLabel));
 					}
 					break;
 
 				case 'phone':
-					if (!Validator::isPhone(html_entity_decode($varInput)))
+					if (!Validator::isPhone(html_entity_decode($varInput, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5)))
 					{
-						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['phone'], $this->strLabel));
+						$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['phone'], $this->strLabel));
 					}
 					break;
 
 				case 'prcnt':
 					if (!Validator::isPercent($varInput))
 					{
-						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['prcnt'], $this->strLabel));
+						$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['prcnt'], $this->strLabel));
 					}
 					break;
 
 				case 'locale':
 					if (!Validator::isLocale($varInput))
 					{
-						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['locale'], $this->strLabel));
+						$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['locale'], $this->strLabel));
 					}
 					break;
 
 				case 'language':
 					if (!Validator::isLanguage($varInput))
 					{
-						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['language'], $this->strLabel));
+						$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['language'], $this->strLabel));
 					}
 					break;
 
 				case 'fieldname':
 					if (!Validator::isFieldName($varInput))
 					{
-						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['invalidFieldName'], $this->strLabel));
+						$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['invalidFieldName'], $this->strLabel));
 					}
 					break;
 
@@ -1053,14 +1056,14 @@ abstract class Widget extends Controller
 			}
 		}
 
-		if ($this->isHexColor && $varInput && strncmp($varInput, '$', 1) !== 0)
+		if ($this->isHexColor && $varInput && !str_starts_with($varInput, '$'))
 		{
 			$varInput = preg_replace('/[^a-f0-9]+/i', '', $varInput);
 		}
 
 		if ($this->nospace && preg_match('/[\t ]+/', $varInput))
 		{
-			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['noSpace'], $this->strLabel));
+			$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['noSpace'], $this->strLabel));
 		}
 
 		if ($this->spaceToUnderscore)
@@ -1285,7 +1288,7 @@ abstract class Widget extends Controller
 		if (!isset($arrAttributes['allowHtml']))
 		{
 			$rte = $arrData['eval']['rte'] ?? '';
-			$arrAttributes['allowHtml'] = 'ace|html' === $rte || 0 === strpos($rte, 'tiny');
+			$arrAttributes['allowHtml'] = 'ace|html' === $rte || str_starts_with($rte, 'tiny');
 		}
 
 		// Decode entities if HTML is allowed
@@ -1315,7 +1318,9 @@ abstract class Widget extends Controller
 		elseif (isset($arrData['foreignKey']))
 		{
 			$arrKey = explode('.', $arrData['foreignKey'], 2);
-			$objOptions = Database::getInstance()->query("SELECT id, " . $arrKey[1] . " AS value FROM " . $arrKey[0] . " WHERE tstamp>0 ORDER BY value");
+			$strField = Database::quoteIdentifier($arrData['relation']['field'] ?? 'id');
+			$objOptions = Database::getInstance()->query("SELECT $strField as id, " . $arrKey[1] . " AS value FROM " . $arrKey[0] . " WHERE tstamp>0 ORDER BY value");
+
 			$arrData['options'] = array();
 
 			while ($objOptions->next())

@@ -18,7 +18,6 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\Filesystem\Path;
-use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
@@ -152,14 +151,14 @@ abstract class System
 			{
 				$this->arrObjects[$strKey] = static::$arrSingletons[$strClass];
 			}
-			elseif ($container->has($strClass) && (strpos($strClass, '\\') !== false || !class_exists($strClass)))
+			elseif ($container->has($strClass) && (str_contains($strClass, '\\') || !class_exists($strClass)))
 			{
 				$this->arrObjects[$strKey] = $container->get($strClass);
 			}
 			elseif (($container->getParameter('kernel.debug') || !class_exists($strClass)) && self::isServiceInlined($strClass))
 			{
 				// In debug mode, we check for inlined services before trying to create a new instance of the class
-				throw new ServiceNotFoundException($strClass, null, null, array(), sprintf('The "%s" service or alias has been removed or inlined when the container was compiled. You should either make it public, or stop using the container directly and use dependency injection instead.', $strClass));
+				throw new ServiceNotFoundException($strClass, null, null, array(), \sprintf('The "%s" service or alias has been removed or inlined when the container was compiled. You should either make it public, or stop using the container directly and use dependency injection instead.', $strClass));
 			}
 			elseif (!class_exists($strClass))
 			{
@@ -179,7 +178,7 @@ abstract class System
 				{
 					if (!$container->getParameter('kernel.debug') && self::isServiceInlined($strClass))
 					{
-						throw new ServiceNotFoundException($strClass, null, null, array(), sprintf('The "%s" service or alias has been removed or inlined when the container was compiled. You should either make it public, or stop using the container directly and use dependency injection instead.', $strClass));
+						throw new ServiceNotFoundException($strClass, null, null, array(), \sprintf('The "%s" service or alias has been removed or inlined when the container was compiled. You should either make it public, or stop using the container directly and use dependency injection instead.', $strClass));
 					}
 
 					throw $t;
@@ -225,14 +224,14 @@ abstract class System
 			{
 				static::$arrStaticObjects[$strKey] = static::$arrSingletons[$strClass];
 			}
-			elseif ($container->has($strClass) && (strpos($strClass, '\\') !== false || !class_exists($strClass)))
+			elseif ($container->has($strClass) && (str_contains($strClass, '\\') || !class_exists($strClass)))
 			{
 				static::$arrStaticObjects[$strKey] = $container->get($strClass);
 			}
 			elseif (($container->getParameter('kernel.debug') || !class_exists($strClass)) && self::isServiceInlined($strClass))
 			{
 				// In debug mode, we check for inlined services before trying to create a new instance of the class
-				throw new ServiceNotFoundException($strClass, null, null, array(), sprintf('The "%s" service or alias has been removed or inlined when the container was compiled. You should either make it public, or stop using the container directly and use dependency injection instead.', $strClass));
+				throw new ServiceNotFoundException($strClass, null, null, array(), \sprintf('The "%s" service or alias has been removed or inlined when the container was compiled. You should either make it public, or stop using the container directly and use dependency injection instead.', $strClass));
 			}
 			elseif (!class_exists($strClass))
 			{
@@ -252,7 +251,7 @@ abstract class System
 				{
 					if (!$container->getParameter('kernel.debug') && self::isServiceInlined($strClass))
 					{
-						throw new ServiceNotFoundException($strClass, null, null, array(), sprintf('The "%s" service or alias has been removed or inlined when the container was compiled. You should either make it public, or stop using the container directly and use dependency injection instead.', $strClass));
+						throw new ServiceNotFoundException($strClass, null, null, array(), \sprintf('The "%s" service or alias has been removed or inlined when the container was compiled. You should either make it public, or stop using the container directly and use dependency injection instead.', $strClass));
 					}
 
 					throw $t;
@@ -339,7 +338,7 @@ abstract class System
 
 			// Remove parameters helper
 			$cleanUrl = static function ($url, $params = array('rt', 'ref', 'revise')) {
-				if (!$url || strpos($url, '?') === false)
+				if (!$url || !str_contains($url, '?'))
 				{
 					return $url;
 				}
@@ -413,7 +412,7 @@ abstract class System
 
 		if (1 !== preg_match('/^[a-z0-9_-]+$/i', $strName))
 		{
-			throw new \InvalidArgumentException(sprintf('Invalid language file name "%s"', $strName));
+			throw new \InvalidArgumentException(\sprintf('Invalid language file name "%s"', $strName));
 		}
 
 		// Return if the language file has been loaded already
@@ -481,7 +480,6 @@ abstract class System
 				// Find the given filename either as .php or .xlf file
 				$finder = $container->get('contao.resource_finder')->findIn('languages/' . $strCreateLang)->name('/^' . $strName . '\.(php|xlf)$/');
 
-				/** @var SplFileInfo $file */
 				foreach ($finder as $file)
 				{
 					switch ($file->getExtension())
@@ -495,7 +493,7 @@ abstract class System
 							break;
 
 						default:
-							throw new \RuntimeException(sprintf('Invalid language file extension: %s', $file->getExtension()));
+							throw new \RuntimeException(\sprintf('Invalid language file extension: %s', $file->getExtension()));
 					}
 				}
 
@@ -679,7 +677,7 @@ abstract class System
 		}
 
 		// IPv6
-		if (strpos($strIp, ':') !== false)
+		if (str_contains($strIp, ':'))
 		{
 			return substr_replace($strIp, ':0000', strrpos($strIp, ':'));
 		}

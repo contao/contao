@@ -156,7 +156,7 @@ class Form extends Hybrid
 
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-		if ($request && $request->hasPreviousSession())
+		if ($request?->hasPreviousSession())
 		{
 			$flashBag = $request->getSession()->getFlashBag();
 
@@ -175,7 +175,7 @@ class Form extends Hybrid
 		$arrLabels = array();
 		$arrFiles = array();
 
-		// Get all form fields
+		/** @var array<FormFieldModel> $arrFields */
 		$arrFields = array();
 		$objFields = FormFieldModel::findPublishedByPid($this->id);
 
@@ -211,7 +211,7 @@ class Form extends Hybrid
 		{
 			foreach ($arrFields as $objField)
 			{
-				/** @var FormFieldModel $objField */
+				/** @var class-string<Widget> $strClass */
 				$strClass = $GLOBALS['TL_FFL'][$objField->type] ?? null;
 
 				// Continue if the class is not defined
@@ -237,7 +237,6 @@ class Form extends Hybrid
 					$arrData['value'] = '';
 				}
 
-				/** @var Widget $objWidget */
 				$objWidget = new $strClass($arrData);
 				$objWidget->required = $objField->mandatory ? true : false;
 
@@ -330,7 +329,6 @@ class Form extends Hybrid
 			&& ($responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext())
 			&& $responseContext->has(HtmlHeadBag::class)
 		) {
-			/** @var HtmlHeadBag $htmlHeadBag */
 			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
 			$htmlHeadBag->setTitle($GLOBALS['TL_LANG']['ERR']['form'] . ' - ' . $htmlHeadBag->getTitle());
 		}
@@ -357,10 +355,9 @@ class Form extends Hybrid
 		$this->Template->ajax = $this->isAjaxEnabled();
 
 		// Get the target URL
-		if ($this->method == 'GET' && ($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
+		if ($this->method == 'GET' && ($objTarget = PageModel::findById($this->objModel->jumpTo)))
 		{
-			/** @var PageModel $objTarget */
-			$this->Template->action = $objTarget->getFrontendUrl();
+			$this->Template->action = System::getContainer()->get('contao.routing.content_url_generator')->generate($objTarget);
 		}
 	}
 
@@ -495,7 +492,7 @@ class Form extends Hybrid
 			// Fallback to default subject
 			if (!$email->subject)
 			{
-				$email->subject = html_entity_decode(System::getContainer()->get('contao.insert_tag.parser')->replaceInline($this->subject), ENT_QUOTES, 'UTF-8');
+				$email->subject = html_entity_decode(System::getContainer()->get('contao.insert_tag.parser')->replaceInline($this->subject), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
 			}
 
 			// Send copy to sender
@@ -508,7 +505,7 @@ class Form extends Hybrid
 			if ($this->format == 'xml')
 			{
 				// Encode the values (see #6053)
-				array_walk_recursive($fields, static function (&$value) { $value = htmlspecialchars($value, ENT_QUOTES|ENT_SUBSTITUTE|ENT_XML1); });
+				array_walk_recursive($fields, static function (&$value) { $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_XML1); });
 
 				$objTemplate = new FrontendTemplate('form_xml');
 				$objTemplate->fields = $fields;
@@ -535,7 +532,7 @@ class Form extends Hybrid
 				foreach ($arrFiles as $file)
 				{
 					// Add a link to the uploaded file
-					if (isset($file['uploaded']))
+					if ($file['uploaded'] ?? null)
 					{
 						$uploaded .= "\n" . Environment::get('base') . StringUtil::stripRootDir(\dirname($file['tmp_name'])) . '/' . rawurlencode($file['name']);
 						continue;
@@ -578,7 +575,7 @@ class Form extends Hybrid
 					$arrSet[$k] = $v;
 
 					// Convert date formats into timestamps (see #6827)
-					if ($arrSet[$k] && \in_array($arrFields[$k]->rgxp, array('date', 'time', 'datim')))
+					if ($arrSet[$k] && isset($arrFields[$k]) && \in_array($arrFields[$k]->rgxp, array('date', 'time', 'datim')))
 					{
 						$objDate = new Date($arrSet[$k], Date::getFormatFromRgxp($arrFields[$k]->rgxp));
 						$arrSet[$k] = $objDate->tstamp;
@@ -650,7 +647,7 @@ class Form extends Hybrid
 		$targetPageData = null;
 
 		// Check whether there is a jumpTo page
-		if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
+		if ($objJumpTo = PageModel::findById($this->objModel->jumpTo))
 		{
 			$targetPageData = $objJumpTo->row();
 		}
@@ -659,14 +656,14 @@ class Form extends Hybrid
 		if ($this->objModel->confirmation)
 		{
 			$message = $this->objModel->confirmation;
-			$message = System::getContainer()->get('contao.string.simple_token_parser')->parse($message, array_map(StringUtil::specialchars(...), $arrSubmitted));
+			$message = System::getContainer()->get('contao.string.simple_token_parser')->parse($message, ArrayUtil::mapRecursive(StringUtil::specialchars(...), $arrSubmitted));
 			$message = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($message);
 
 			$requestStack = System::getContainer()->get('request_stack');
 			$request = $requestStack->getCurrentRequest();
 
 			// Throw the response exception if it's an AJAX request
-			if ($request && $targetPageData === null && $this->isAjaxEnabled() && $request->isXmlHttpRequest() && $request->headers->get('X-Contao-Ajax-Form') === $this->getFormId())
+			if ($targetPageData === null && $this->isAjaxEnabled() && $request?->isXmlHttpRequest() && $request->headers->get('X-Contao-Ajax-Form') === $this->getFormId())
 			{
 				$confirmationTemplate = new FrontendTemplate('form_message');
 				$confirmationTemplate->setData($this->Template->getData());

@@ -13,10 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\EventListener\ExceptionConverterListener;
-use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
 use Contao\CoreBundle\Exception\InsecureInstallationException;
-use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Exception\InternalServerErrorHttpException;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Exception\NoActivePageFoundException;
@@ -29,29 +27,14 @@ use Contao\UnusedArgumentsException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class ExceptionConverterListenerTest extends TestCase
 {
-    public function testConvertsAccessDeniedExceptions(): void
-    {
-        $event = $this->getResponseEvent(new AccessDeniedException());
-
-        $listener = new ExceptionConverterListener();
-        $listener($event);
-
-        $exception = $event->getThrowable();
-
-        $this->assertInstanceOf(AccessDeniedHttpException::class, $exception);
-        $this->assertInstanceOf(AccessDeniedException::class, $exception->getPrevious());
-    }
-
     public function testConvertsForwardPageNotFoundExceptions(): void
     {
         $event = $this->getResponseEvent(new ForwardPageNotFoundException());
@@ -76,19 +59,6 @@ class ExceptionConverterListenerTest extends TestCase
 
         $this->assertInstanceOf(InternalServerErrorHttpException::class, $exception);
         $this->assertInstanceOf(InsecureInstallationException::class, $exception->getPrevious());
-    }
-
-    public function testConvertsInsufficientAuthenticationExceptions(): void
-    {
-        $event = $this->getResponseEvent(new InsufficientAuthenticationException());
-
-        $listener = new ExceptionConverterListener();
-        $listener($event);
-
-        $exception = $event->getThrowable();
-
-        $this->assertInstanceOf(UnauthorizedHttpException::class, $exception);
-        $this->assertInstanceOf(InsufficientAuthenticationException::class, $exception->getPrevious());
     }
 
     public function testConvertsInvalidRequestTokenExceptions(): void

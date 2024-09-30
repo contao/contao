@@ -17,9 +17,6 @@ use FOS\HttpCache\SymfonyCache\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @internal
- */
 class StripQueryParametersSubscriber implements EventSubscriberInterface
 {
     private const DENY_LIST = [
@@ -103,5 +100,9 @@ class StripQueryParametersSubscriber implements EventSubscriberInterface
         foreach ($removeParams as $name) {
             $request->query->remove($name);
         }
+
+        // We also need to adjust the ServerBag, otherwise the cache storage will use the
+        // wrong URI (see #6908)
+        $request->server->set('QUERY_STRING', http_build_query($request->query->all()));
     }
 }

@@ -12,11 +12,12 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\Util\UrlUtil;
 use Contao\Database\Result;
 use Contao\NewsletterBundle\Event\SendNewsletterEvent;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Mailer\Exception\TransportException;
 use Symfony\Component\Mime\Exception\RfcComplianceException;
+use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
 
 /**
  * Provide methods to handle newsletters.
@@ -104,7 +105,6 @@ class Newsletter extends Backend
 		// Convert relative URLs
 		$html = $this->convertRelativeUrls($html);
 
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();
 		$token = Input::get('token');
 
@@ -130,7 +130,7 @@ class Newsletter extends Backend
 
 				if ($this->sendNewsletter($objEmail, $objNewsletter, $arrRecipient, $text, $html))
 				{
-					Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['confirm'], 1));
+					Message::addConfirmation(\sprintf($GLOBALS['TL_LANG']['tl_newsletter']['confirm'], 1));
 				}
 
 				$this->redirect($referer);
@@ -158,7 +158,7 @@ class Newsletter extends Backend
 
 			// Get recipients
 			$objRecipients = $db
-				->prepare("SELECT *, r.id AS recipient, r.email FROM tl_newsletter_recipients r LEFT JOIN tl_member m ON(r.email=m.email) WHERE r.pid=? AND r.active=1 ORDER BY r.email")
+				->prepare("SELECT *, r.id AS recipient, r.email FROM tl_newsletter_recipients r LEFT JOIN tl_member m ON r.email=m.email WHERE r.pid=? AND r.active=1 ORDER BY r.email")
 				->limit($intPages, $intStart)
 				->execute($objNewsletter->pid);
 
@@ -219,7 +219,7 @@ class Newsletter extends Backend
 				{
 					$intRejected = \count($arrRejected);
 
-					Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['rejected'], $intRejected));
+					Message::addInfo(\sprintf($GLOBALS['TL_LANG']['tl_newsletter']['rejected'], $intRejected));
 					$intTotal -= $intRejected;
 
 					foreach ($arrRejected as $strRecipient)
@@ -235,15 +235,15 @@ class Newsletter extends Backend
 				if ($intSkipped = \count($objSession->get('skipped_recipients', array())))
 				{
 					$intTotal -= $intSkipped;
-					Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['skipped'], $intSkipped));
+					Message::addInfo(\sprintf($GLOBALS['TL_LANG']['tl_newsletter']['skipped'], $intSkipped));
 				}
 
 				$objSession->remove('rejected_recipients');
 				$objSession->remove('skipped_recipients');
 
-				Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['confirm'], $intTotal));
+				Message::addConfirmation(\sprintf($GLOBALS['TL_LANG']['tl_newsletter']['confirm'], $intTotal));
 
-				$href = Environment::get('base') . ltrim($referer, '/');
+				$href = UrlUtil::makeAbsolute($referer, Environment::get('base'));
 
 				echo '<script>setTimeout(\'window.location="' . $href . '"\',1000)</script>';
 				echo '<a href="' . $href . '">Please click here to proceed if you are not using JavaScript</a>';
@@ -253,7 +253,7 @@ class Newsletter extends Backend
 			else
 			{
 				$url = preg_replace('/&(amp;)?(start|mpc|recipient)=[^&]*/', '', Environment::get('requestUri')) . '&start=' . ($intStart + $intPages) . '&mpc=' . $intPages;
-				$href = Environment::get('base') . ltrim($url, '/');
+				$href = UrlUtil::makeAbsolute($url, Environment::get('base'));
 
 				echo '<script>setTimeout(\'window.location="' . $href . '"\',' . ($intTimeout * 1000) . ')</script>';
 				echo '<a href="' . $href . '">Please click here to proceed if you are not using JavaScript</a>';
@@ -282,7 +282,7 @@ class Newsletter extends Backend
 <table class="prev_header">
   <tr>
     <td>' . $GLOBALS['TL_LANG']['tl_newsletter']['from'] . '</td>
-    <td>' . sprintf($sprintf, Idna::decodeEmail($objNewsletter->sender)) . '</td>
+    <td>' . \sprintf($sprintf, Idna::decodeEmail($objNewsletter->sender)) . '</td>
   </tr>
   <tr>
     <td>' . $GLOBALS['TL_LANG']['tl_newsletter']['subject'][0] . '</td>
@@ -297,7 +297,8 @@ class Newsletter extends Backend
     <td>' . implode(', ', $arrAttachments) . '</td>
   </tr>' : '') . '
 </table>' . (!$objNewsletter->sendText ? '
-<div class="preview_html">
+<div class="preview_html">' . ($objNewsletter->preheader ? '
+<p class="preheader">' . $objNewsletter->preheader . '</p>' : '') . '
 ' . $html . '
 </div>' : '') . '
 <div class="preview_text">
@@ -307,22 +308,22 @@ class Newsletter extends Backend
 <fieldset class="tl_tbox nolegend">
 <div class="w50 widget">
   <h3><label for="ctrl_mpc">' . $GLOBALS['TL_LANG']['tl_newsletter']['mailsPerCycle'][0] . '</label></h3>
-  <input type="text" name="mpc" id="ctrl_mpc" value="10" class="tl_text" onfocus="Backend.getScrollOffset()">' . (($GLOBALS['TL_LANG']['tl_newsletter']['mailsPerCycle'][1] && Config::get('showHelp')) ? '
+  <input type="text" name="mpc" id="ctrl_mpc" value="10" class="tl_text" data-action="focus->contao--scroll-offset#store">' . (($GLOBALS['TL_LANG']['tl_newsletter']['mailsPerCycle'][1] && Config::get('showHelp')) ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_newsletter']['mailsPerCycle'][1] . '</p>' : '') . '
 </div>
 <div class="w50 widget">
   <h3><label for="ctrl_timeout">' . $GLOBALS['TL_LANG']['tl_newsletter']['timeout'][0] . '</label></h3>
-  <input type="text" name="timeout" id="ctrl_timeout" value="1" class="tl_text" onfocus="Backend.getScrollOffset()">' . (($GLOBALS['TL_LANG']['tl_newsletter']['timeout'][1] && Config::get('showHelp')) ? '
+  <input type="text" name="timeout" id="ctrl_timeout" value="1" class="tl_text" data-action="focus->contao--scroll-offset#store">' . (($GLOBALS['TL_LANG']['tl_newsletter']['timeout'][1] && Config::get('showHelp')) ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_newsletter']['timeout'][1] . '</p>' : '') . '
 </div>
 <div class="w50 widget">
   <h3><label for="ctrl_start">' . $GLOBALS['TL_LANG']['tl_newsletter']['start'][0] . '</label></h3>
-  <input type="text" name="start" id="ctrl_start" value="0" class="tl_text" onfocus="Backend.getScrollOffset()">' . (($GLOBALS['TL_LANG']['tl_newsletter']['start'][1] && Config::get('showHelp')) ? '
-  <p class="tl_help tl_tip">' . sprintf($GLOBALS['TL_LANG']['tl_newsletter']['start'][1], $objNewsletter->id) . '</p>' : '') . '
+  <input type="text" name="start" id="ctrl_start" value="0" class="tl_text" data-action="focus->contao--scroll-offset#store">' . (($GLOBALS['TL_LANG']['tl_newsletter']['start'][1] && Config::get('showHelp')) ? '
+  <p class="tl_help tl_tip">' . \sprintf($GLOBALS['TL_LANG']['tl_newsletter']['start'][1], $objNewsletter->id) . '</p>' : '') . '
 </div>
 <div class="w50 widget">
   <h3><label for="ctrl_recipient">' . $GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][0] . '</label></h3>
-  <input type="text" name="recipient" id="ctrl_recipient" value="' . Idna::decodeEmail(BackendUser::getInstance()->email) . '" class="tl_text" onfocus="Backend.getScrollOffset()">' . ($objSession->has('tl_preview_mail_error') ? '
+  <input type="text" name="recipient" id="ctrl_recipient" value="' . Idna::decodeEmail(BackendUser::getInstance()->email) . '" class="tl_text" data-action="focus->contao--scroll-offset#store">' . ($objSession->has('tl_preview_mail_error') ? '
   <div class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['email'] . '</div>' : (($GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][1] && Config::get('showHelp')) ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][1] . '</p>' : '')) . '
 </div>
@@ -402,6 +403,11 @@ class Newsletter extends Backend
 	 */
 	protected function sendNewsletter(Email $objEmail, Result $objNewsletter, $arrRecipient, $text, $html, $css=null)
 	{
+		if (\count(\func_get_args()) > 5)
+		{
+			trigger_deprecation('contao/newsletter-bundle', '5.3', 'Passing CSS to the Newsletter::sendNewsletter() method has been deprecated and will no longer work in Contao 6. Add the CSS in the template instead.');
+		}
+
 		$simpleTokenParser = System::getContainer()->get('contao.string.simple_token_parser');
 
 		// Newsletters with an unsubscribe header are less likely to be blocked (see #2174)
@@ -418,12 +424,13 @@ class Newsletter extends Backend
 			$objTemplate = new BackendTemplate($objNewsletter->template ?: 'mail_default');
 			$objTemplate->setData($objNewsletter->row());
 			$objTemplate->title = $objNewsletter->subject;
+			$objTemplate->preheader = $objNewsletter->preheader;
 			$objTemplate->body = $simpleTokenParser->parse($html, $arrRecipient);
 			$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 			$objTemplate->recipient = $arrRecipient['email'];
 
-			// Parse template
-			$objEmail->html = $objTemplate->parse();
+			// Parse the template
+			$objEmail->html = (new CssToInlineStyles())->convert($objTemplate->parse());
 			$objEmail->imageDir = System::getContainer()->getParameter('kernel.project_dir') . '/';
 		}
 
@@ -443,7 +450,6 @@ class Newsletter extends Backend
 		$objEmail->html = $event->isHtmlAllowed() ? $event->getHtml() : '';
 		$arrRecipient = array_merge($event->getRecipientData(), array('email' => $event->getRecipientAddress()));
 
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();
 		$arrRejected = $objSession->get('rejected_recipients', array());
 
@@ -455,7 +461,7 @@ class Newsletter extends Backend
 		catch (RfcComplianceException|TransportException $e)
 		{
 			$arrRejected[] = $arrRecipient['email'];
-			System::getContainer()->get('monolog.logger.contao.error')->error(sprintf('Invalid recipient address "%s": %s', Idna::decodeEmail($arrRecipient['email']), $e->getMessage()));
+			System::getContainer()->get('monolog.logger.contao.error')->error(\sprintf('Invalid recipient address "%s": %s', Idna::decodeEmail($arrRecipient['email']), $e->getMessage()));
 		}
 
 		// Rejected recipients
@@ -505,7 +511,7 @@ class Newsletter extends Backend
 
 				if ($objFile->extension != 'csv')
 				{
-					Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['filetype'], $objFile->extension));
+					Message::addError(\sprintf($GLOBALS['TL_LANG']['ERR']['filetype'], $objFile->extension));
 					continue;
 				}
 
@@ -583,11 +589,11 @@ class Newsletter extends Backend
 				}
 			}
 
-			Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_newsletter_recipients']['confirm'], $intTotal));
+			Message::addConfirmation(\sprintf($GLOBALS['TL_LANG']['tl_newsletter_recipients']['confirm'], $intTotal));
 
 			if ($intInvalid > 0)
 			{
-				Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_newsletter_recipients']['invalid'], $intInvalid));
+				Message::addInfo(\sprintf($GLOBALS['TL_LANG']['tl_newsletter_recipients']['invalid'], $intInvalid));
 			}
 
 			$this->reload();
@@ -602,13 +608,13 @@ class Newsletter extends Backend
 <form id="tl_recipients_import" class="tl_form tl_edit_form" method="post" enctype="multipart/form-data">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_recipients_import">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
 <input type="hidden" name="MAX_FILE_SIZE" value="' . Config::get('maxFileSize') . '">
 
 <fieldset class="tl_tbox nolegend">
   <div class="widget w50">
     <h3><label for="separator">' . $GLOBALS['TL_LANG']['MSC']['separator'][0] . '</label></h3>
-    <select name="separator" id="separator" class="tl_select" onfocus="Backend.getScrollOffset()">
+    <select name="separator" id="separator" class="tl_select" data-action="focus->contao--scroll-offset#store">
       <option value="comma">' . $GLOBALS['TL_LANG']['MSC']['comma'] . '</option>
       <option value="semicolon">' . $GLOBALS['TL_LANG']['MSC']['semicolon'] . '</option>
       <option value="tabulator">' . $GLOBALS['TL_LANG']['MSC']['tabulator'] . '</option>
@@ -973,8 +979,8 @@ class Newsletter extends Backend
 	/**
 	 * Purge subscriptions that have not been activated within 24 hours
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
-	 *             Use NewsletterRecipientsModel::findExpiredSubscriptions() instead.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6;
+	 *             use NewsletterRecipientsModel::findExpiredSubscriptions() instead.
 	 */
 	public function purgeSubscriptions()
 	{

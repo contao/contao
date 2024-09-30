@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * @internal
@@ -53,7 +53,8 @@ class FaviconController
             throw new NotFoundHttpException();
         }
 
-        // Cache the response for 1 year and tag it, so it is invalidated when the settings are edited
+        // Cache the response for 1 year and tag it, so it is invalidated when the
+        // settings are edited
         $response = new BinaryFileResponse(Path::join($this->projectDir, $faviconModel->path));
         $response->setSharedMaxAge(31556952);
 

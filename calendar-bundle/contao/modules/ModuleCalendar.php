@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * Front end module "calendar".
@@ -72,10 +73,16 @@ class ModuleCalendar extends Events
 		$this->strUrl = preg_replace('/\?.*$/', '', Environment::get('requestUri'));
 		$this->strLink = $this->strUrl;
 
-		if (($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
+		if ($objTarget = PageModel::findById($this->objModel->jumpTo))
 		{
-			/** @var PageModel $objTarget */
-			$this->strLink = $objTarget->getFrontendUrl();
+			try
+			{
+				$this->strLink = System::getContainer()->get('contao.routing.content_url_generator')->generate($objTarget);
+			}
+			catch (ExceptionInterface)
+			{
+				// Ignore if target URL cannot be generated and use the current request URL
+			}
 		}
 
 		// Tag the calendars (see #2137)
@@ -318,7 +325,7 @@ class ModuleCalendar extends Events
 			$arrDays[$intWeek][$i]['label'] = $intDay;
 			$arrDays[$intWeek][$i]['class'] = 'active' . $strClass;
 			$arrDays[$intWeek][$i]['href'] = $this->strLink . '?day=' . $intKey;
-			$arrDays[$intWeek][$i]['title'] = sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['cal_events']), \count($arrEvents));
+			$arrDays[$intWeek][$i]['title'] = \sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['cal_events']), \count($arrEvents));
 			$arrDays[$intWeek][$i]['events'] = $arrEvents;
 		}
 

@@ -36,7 +36,6 @@ class InstallCommand extends Command
     public function __construct(
         private readonly string $projectDir,
         private readonly string $uploadPath,
-        private readonly string $imageDir,
     ) {
         parent::__construct();
     }
@@ -65,8 +64,6 @@ class InstallCommand extends Command
     private function addEmptyDirs(): void
     {
         static $emptyDirs = [
-            'assets/css',
-            'assets/js',
             'system',
             'system/cache',
             'system/config',
@@ -79,10 +76,9 @@ class InstallCommand extends Command
         ];
 
         foreach ($emptyDirs as $path) {
-            $this->addEmptyDir(Path::join($this->projectDir, sprintf($path, $this->webDir)));
+            $this->addEmptyDir(Path::join($this->projectDir, \sprintf($path, $this->webDir)));
         }
 
-        $this->addEmptyDir($this->imageDir);
         $this->addEmptyDir(Path::join($this->projectDir, $this->uploadPath));
     }
 

@@ -106,7 +106,7 @@ class MountManagerTest extends TestCase
         $this->assertSame($return, $manager->$method('some/place', ...$arguments));
     }
 
-    public function provideCalls(): \Generator
+    public static function provideCalls(): iterable
     {
         yield 'fileExists' => [
             [
@@ -312,7 +312,7 @@ class MountManagerTest extends TestCase
         }
     }
 
-    public function provideCallsForFlysystemExceptions(): \Generator
+    public function provideCallsForFlysystemExceptions(): iterable
     {
         yield from $this->provideCalls();
 
@@ -396,7 +396,7 @@ class MountManagerTest extends TestCase
 
         // Normalize listing for comparison
         $listing = array_map(
-            static fn (FilesystemItem $i): string => sprintf('%s (%s)', $i->getPath(), $i->isFile() ? 'file' : 'dir'),
+            static fn (FilesystemItem $i): string => \sprintf('%s (%s)', $i->getPath(), $i->isFile() ? 'file' : 'dir'),
             [...$manager->listContents($path, $deep)],
         );
 
@@ -405,7 +405,7 @@ class MountManagerTest extends TestCase
         $this->assertSame($expectedListing, $listing);
     }
 
-    public function provideListings(): \Generator
+    public static function provideListings(): iterable
     {
         yield 'root, shallow' => [
             '', false,
@@ -454,9 +454,8 @@ class MountManagerTest extends TestCase
             [
                 'file1 (file)',
                 'files (dir)',
-                // Note: "files/media" must not be reported as a directory
-                // here, because it is virtual and implicit (i.e. only the
-                // explicitly mounted "files/media/extra" is included).
+                // Note: "files/media" must not be reported as a directory here, because it is virtual
+                // and implicit (i.e. only the explicitly mounted "files/media/extra" is included).
                 'files/media/extra (dir)',
                 'files/media/extra/cat.avif (file)',
                 'files/media/extra/videos (dir)',

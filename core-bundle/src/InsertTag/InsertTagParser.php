@@ -84,7 +84,7 @@ class InsertTagParser implements ResetInterface
         $this->allowedTagsRegex = '('.implode(
             '|',
             array_map(
-                static fn ($allowedTag) => '^'.implode('.+', array_map('preg_quote', explode('*', $allowedTag))).'$',
+                static fn ($allowedTag) => '^'.implode('.+', array_map(preg_quote(...), explode('*', $allowedTag))).'$',
                 $allowedTags ?: [''],
             ),
         ).')';
@@ -97,7 +97,7 @@ class InsertTagParser implements ResetInterface
         }
 
         if (isset($this->blockSubscriptions[$subscription->name])) {
-            throw new \InvalidArgumentException(sprintf('The insert tag "%s" is already registered as a block insert tag.', $subscription->name));
+            throw new \InvalidArgumentException(\sprintf('The insert tag "%s" is already registered as a block insert tag.', $subscription->name));
         }
 
         $this->subscriptions[$subscription->name] = $subscription;
@@ -110,7 +110,7 @@ class InsertTagParser implements ResetInterface
         }
 
         if (isset($this->subscriptions[$subscription->name])) {
-            throw new \InvalidArgumentException(sprintf('The block insert tag "%s" is already registered as a regular insert tag.', $subscription->name));
+            throw new \InvalidArgumentException(\sprintf('The block insert tag "%s" is already registered as a regular insert tag.', $subscription->name));
         }
 
         $this->blockSubscriptions[$subscription->name] = $subscription;
@@ -166,11 +166,12 @@ class InsertTagParser implements ResetInterface
     }
 
     /**
-     * @deprecated Deprecated since Contao 5.1 to be removed in Contao 6. Use renderTag() instead.
+     * @deprecated Deprecated since Contao 5.1, to be removed in Contao 6;
+     *             use renderTag() instead.
      */
     public function render(string $input): string
     {
-        trigger_deprecation('contao/core-bundle', '5.1', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use "%s::renderTag()" instead.', __METHOD__, __CLASS__);
+        trigger_deprecation('contao/core-bundle', '5.1', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use "%s::renderTag()" instead.', __METHOD__, self::class);
 
         return $this->renderTag($input)->getValue();
     }
@@ -247,7 +248,7 @@ class InsertTagParser implements ResetInterface
         $name = array_shift($parameters);
 
         if (!preg_match('/^[a-z\x80-\xFF][a-z0-9_\x80-\xFF]*$/i', $name)) {
-            throw new \InvalidArgumentException(sprintf('Invalid insert tag name "%s"', $name));
+            throw new \InvalidArgumentException(\sprintf('Invalid insert tag name "%s"', $name));
         }
 
         if ($parameters) {
@@ -255,7 +256,7 @@ class InsertTagParser implements ResetInterface
 
             foreach ($parameterMatches[0] ?? [''] as $index => $parameterMatch) {
                 if (!str_starts_with($parameterMatch, '::')) {
-                    throw new \InvalidArgumentException(sprintf('Invalid insert tag parameter syntax "%s"', $parameters[0]));
+                    throw new \InvalidArgumentException(\sprintf('Invalid insert tag parameter syntax "%s"', $parameters[0]));
                 }
 
                 $parameterMatches[0][$index] = substr($parameterMatch, 2);
@@ -360,8 +361,8 @@ class InsertTagParser implements ResetInterface
                 $wrapStart = null;
                 $wrapContent = [];
 
-                // Reprocess non-empty end tags to enable chaining block insert tags
-                // E.g. `{{iflng::de}}…{{iflng::en}}…{{iflng}}`
+                // Reprocess non-empty end tags to enable chaining block insert tags, e.g.
+                // `{{iflng::de}}…{{iflng::en}}…{{iflng}}`
                 if (!$item->getParameters()->all()) {
                     continue;
                 }
@@ -481,7 +482,7 @@ class InsertTagParser implements ResetInterface
             );
         }
 
-        throw new \InvalidArgumentException(sprintf('Unsupported insert tag class "%s"', $tag::class));
+        throw new \InvalidArgumentException(\sprintf('Unsupported insert tag class "%s"', $tag::class));
     }
 
     private function unresolveTag(InsertTag $tag): ParsedInsertTag
@@ -498,7 +499,7 @@ class InsertTagParser implements ResetInterface
             );
         }
 
-        throw new \InvalidArgumentException(sprintf('Unsupported insert tag class "%s"', $tag::class));
+        throw new \InvalidArgumentException(\sprintf('Unsupported insert tag class "%s"', $tag::class));
     }
 
     private function resolveParameters(ParsedParameters $parameters): ResolvedParameters

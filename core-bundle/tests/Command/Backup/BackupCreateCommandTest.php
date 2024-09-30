@@ -46,7 +46,7 @@ class BackupCreateCommandTest extends TestCase
         $this->assertSame(0, $code);
     }
 
-    public function successfulCommandRunProvider(): \Generator
+    public function successfulCommandRunProvider(): iterable
     {
         yield 'Default arguments' => [
             [],
@@ -75,6 +75,7 @@ class BackupCreateCommandTest extends TestCase
             function (CreateConfig $config) {
                 $this->assertSame([], $config->getTablesToIgnore());
                 $this->assertSame('file__20211101141254.sql', $config->getBackup()->getFilename());
+                $this->assertFalse($config->isGzCompressionEnabled());
 
                 return true;
             },
@@ -115,7 +116,7 @@ class BackupCreateCommandTest extends TestCase
         $this->assertSame(1, $code);
     }
 
-    public function unsuccessfulCommandRunProvider(): \Generator
+    public static function unsuccessfulCommandRunProvider(): iterable
     {
         yield 'Text format' => [
             [],

@@ -34,9 +34,9 @@ class FailTolerantProxyCacheWarmer implements CacheWarmerInterface
      */
     public function warmUp(string $cacheDir, string|null $buildDir = null): array
     {
-        // If there are no DB credentials yet and the server_version was not
-        // configured, we have to skip the ORM warmup to prevent a DBAL
-        // exception during the automatic version detection
+        // If there are no DB credentials yet and the server_version was not configured,
+        // we have to skip the ORM warmup to prevent a DBAL exception during the
+        // automatic version detection
         try {
             $this->connection->getDatabasePlatform();
         } catch (DoctrineDbalException|\mysqli_sql_exception) {
