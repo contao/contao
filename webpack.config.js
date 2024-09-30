@@ -12,9 +12,11 @@ Encore
     .enablePostCssLoader(config => {
         config.postcssOptions = {
             plugins: [
-                ['postcss-preset-env', {
-                    stage: 2,
-                }],
+                [
+                    'postcss-preset-env', {
+                       stage: 2,
+                    }
+                ],
             ],
         };
     })
