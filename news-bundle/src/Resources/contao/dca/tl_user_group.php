@@ -25,7 +25,8 @@ $GLOBALS['TL_DCA']['tl_user_group']['fields']['news'] = array
 	'inputType'               => 'checkbox',
 	'foreignKey'              => 'tl_news_archive.title',
 	'eval'                    => array('multiple'=>true),
-	'sql'                     => "blob NULL"
+	'sql'                     => "blob NULL",
+	'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 );
 
 $GLOBALS['TL_DCA']['tl_user_group']['fields']['newp'] = array
@@ -46,7 +47,8 @@ $GLOBALS['TL_DCA']['tl_user_group']['fields']['newsfeeds'] = array
 	'inputType'               => 'checkbox',
 	'foreignKey'              => 'tl_news_feed.title',
 	'eval'                    => array('multiple'=>true),
-	'sql'                     => "blob NULL"
+	'sql'                     => "blob NULL",
+	'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 );
 
 $GLOBALS['TL_DCA']['tl_user_group']['fields']['newsfeedp'] = array

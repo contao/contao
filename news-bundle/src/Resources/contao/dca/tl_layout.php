@@ -25,4 +25,5 @@ $GLOBALS['TL_DCA']['tl_layout']['fields']['newsfeeds'] = array
 	'foreignKey'      => 'tl_news_feed.title',
 	'eval'            => array('multiple'=>true),
 	'sql'             => "blob NULL",
+	'relation'        => array('type'=>'hasMany', 'load'=>'lazy')
 );

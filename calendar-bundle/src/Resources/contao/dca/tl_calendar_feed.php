@@ -166,7 +166,8 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 			'inputType'               => 'checkbox',
 			'options_callback'        => array('tl_calendar_feed', 'getAllowedCalendars'),
 			'eval'                    => array('multiple'=>true, 'mandatory'=>true),
-			'sql'                     => "blob NULL"
+			'sql'                     => "blob NULL",
+			'relation'                => array('table'=>'tl_calendar_feed', 'type'=>'hasMany', 'load'=>'lazy')
 		),
 		'format' => array
 		(

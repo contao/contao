@@ -205,7 +205,8 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'options_callback'        => array('tl_image_size', 'getFormats'),
 			'exclude'                 => true,
 			'eval'                    => array('multiple'=>true),
-			'sql'                     => "varchar(1024) NOT NULL default ''"
+			'sql'                     => "varchar(1024) NOT NULL default ''",
+			'relation'                => array('table'=>'tl_image_size', 'type'=>'hasMany', 'load'=>'lazy')
 		),
 		'skipIfDimensionsMatch' => array
 		(
