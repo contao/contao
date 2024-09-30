@@ -45,7 +45,14 @@ services:
         public: true
         arguments:
             - '@doctrine.orm.default_entity_manager'
+            - '@contao.cache.tag_invalidator'
             - '@?fos_http_cache.http.symfony_response_tagger'
+
+    contao.cache.tag_invalidator:
+        class: Contao\CoreBundle\Cache\CacheTagInvalidator
+        public: true
+        arguments:
+            - '@event_dispatcher'
             - '@?fos_http_cache.cache_manager'
 
     contao.cache.warmer:
