@@ -70,13 +70,7 @@ class Inspector
         sort($blockNames);
         sort($slots);
 
-        return new TemplateInformation(
-            $source,
-            $blockNames,
-            $slots,
-            $data['parent'],
-            $data['uses'],
-        );
+        return new TemplateInformation($source, $blockNames, $slots, $data['parent'], $data['uses']);
     }
 
     /**

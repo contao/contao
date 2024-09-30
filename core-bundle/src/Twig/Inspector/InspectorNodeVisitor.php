@@ -46,7 +46,6 @@ final class InspectorNodeVisitor implements NodeVisitorInterface
         if ($node instanceof SlotNode) {
             $this->slots[] = $node->getAttribute('name');
         } elseif ($node instanceof BlockNode) {
-            // todo: contexts (embed & co)
             $this->blocks[$node->getAttribute('name')] = [false, $this->isPrototype($node)];
         } elseif ($node instanceof PrintNode && $node->getNode('expr') instanceof ParentExpression) {
             $this->blocks[array_key_last($this->blocks)][0] = true;
