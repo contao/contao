@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\Widget;
 
 use Contao\CoreBundle\ServiceAnnotation\Hook;
+use Contao\StringUtil;
 use Contao\Widget;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -43,7 +44,7 @@ class CustomRgxpListener
             return true;
         }
 
-        if (!preg_match($widget->customRgxp, $input)) {
+        if (!preg_match(StringUtil::decodeEntities($widget->customRgxp), StringUtil::decodeEntities($input))) {
             $widget->addError($widget->errorMsg ?: $this->translator->trans('ERR.customRgxp', [$widget->customRgxp], 'contao_default'));
         }
 
