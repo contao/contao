@@ -223,11 +223,6 @@ class TemplateLocatorTest extends TestCase
             ->willReturn($paths)
         ;
 
-        return new TemplateLocator(
-            $projectDir,
-            $resourceFinder,
-            new ThemeNamespace(),
-            $connection,
-        );
+        return new TemplateLocator($projectDir, $resourceFinder, new ThemeNamespace(), $connection);
     }
 }
