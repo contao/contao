@@ -571,8 +571,9 @@ class Dbafs implements DbafsInterface, ResetInterface
 
             // Backwards compatibility
             if ('tl_files' === $this->table) {
-                $dataToInsert['name'] = basename($itemToCreate->getPath());
                 $extension = Path::getExtension($itemToCreate->getPath(), true);
+
+                $dataToInsert['name'] = basename($itemToCreate->getPath());
                 $dataToInsert['extension'] = $itemToCreate->isFile() && \strlen($extension) <= 16 ? $extension : '';
                 $dataToInsert['tstamp'] = $currentTime;
             }
