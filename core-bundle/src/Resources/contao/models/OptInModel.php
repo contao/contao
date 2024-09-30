@@ -242,7 +242,7 @@ class OptInModel extends Model
 		$t = static::$strTable;
 
 		return Database::getInstance()
-			->prepare("DELETE FROM $t WHERE $t.id = ? AND $t.id IN (SELECT pid FROM tl_opt_in_related WHERE relTable=?)")
+			->prepare("DELETE FROM $t WHERE $t.id = ? $t.confirmedOn = 0 AND $t.id IN (SELECT pid FROM tl_opt_in_related WHERE relTable=?)")
 			->execute($intId, $strTable)
 			->affectedRows
 		;
