@@ -201,7 +201,7 @@ class ContaoExtensionTest extends TestCase
             $this->createMock(ContaoFilesystemLoader::class),
             $this->createMock(ContaoCsrfTokenManager::class),
             $this->createMock(ContaoVariable::class),
-            new InspectorNodeVisitor(new NullAdapter()),
+            new InspectorNodeVisitor(new NullAdapter(), $environment),
         );
 
         $this->expectException(\RuntimeException::class);
@@ -411,7 +411,7 @@ class ContaoExtensionTest extends TestCase
             $filesystemLoader,
             $this->createMock(ContaoCsrfTokenManager::class),
             $this->createMock(ContaoVariable::class),
-            new InspectorNodeVisitor(new NullAdapter()),
+            new InspectorNodeVisitor(new NullAdapter(), $environment),
         );
     }
 }
