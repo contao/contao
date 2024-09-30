@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Event;
 class InvalidateCacheTagsEvent
 {
     /**
-     * @param array<string> $tags
+     * @param list<string> $tags
      */
     public function __construct(private array $tags)
     {
