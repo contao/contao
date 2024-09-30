@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection;
 
+use Contao\ArrayUtil;
 use Contao\Config;
 use Contao\CoreBundle\Altcha\Config\Algorithm;
 use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
@@ -377,8 +378,33 @@ class Configuration implements ConfigurationInterface
                     ->defaultNull()
                 ->end()
                 ->arrayNode('valid_extensions')
+                    ->info('Adds, removes or overwrites the list of enabled image extensions that can be used.')
                     ->prototype('scalar')->end()
                     ->defaultValue(['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp', 'avif'])
+                    ->example(['+heic', '-svgz'])
+                    ->validate()
+                        ->ifTrue(
+                            static function (array $extensions): bool {
+                                foreach ($extensions as $extension) {
+                                    if (!preg_match('/^[+-]?[a-z0-9]+$/', $extension)) {
+                                        return true;
+                                    }
+                                }
+
+                                return false;
+                            },
+                        )
+                        ->thenInvalid('Make sure your provided image extensions are valid and optionally start with +/- to add/remove the extension to/from the default list.')
+                    ->end()
+                    ->validate()
+                        ->always(
+                            static function (array $extensions): array {
+                                $default = ['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp', 'avif'];
+
+                                return ArrayUtil::alterListByConfig($default, $extensions);
+                            },
+                        )
+                    ->end()
                 ->end()
                 ->arrayNode('preview')
                     ->addDefaultsIfNotSet()

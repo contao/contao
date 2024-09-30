@@ -53,7 +53,8 @@ class DateInsertTag implements InsertTagResolverNestedResolvedInterface
     private function getExpireAtFromFormat(string $format): \DateTimeImmutable|null
     {
         preg_match_all('/[A-Za-z]/', $format, $matches);
-        $usedFormatChars = array_unique($matches[0] ?? []);
+
+        $usedFormatChars = array_unique($matches[0]);
 
         // Match textual or leading zero representations
         $mapped = [];
