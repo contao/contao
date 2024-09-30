@@ -26,7 +26,7 @@ class WysiwygStyleProcessor
     {
         preg_match_all('/ style="([^\"]+)"/i', $htmlFragment, $matches);
 
-        if (!isset($matches[1]) || !\is_array($matches[1])) {
+        if (!\is_array($matches[1])) {
             return [];
         }
 
