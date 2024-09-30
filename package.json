@@ -4,8 +4,9 @@
         "@hotwired/stimulus-webpack-helpers": "^1.0.1",
         "@hotwired/turbo": "^8.0.4",
         "@symfony/webpack-encore": "^4.7.0",
+        "postcss": "^8.4.47",
         "postcss-loader": "^8.1.1",
-        "postcss-nested": "^6.2.0"
+        "postcss-preset-env": "^10.0.5"
     },
     "scripts": {
         "dev-server": "encore dev-server",
