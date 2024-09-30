@@ -38,7 +38,7 @@ class EntityCacheTags
      */
     private array $classMetadata = [];
 
-    public function __construct(EntityManagerInterface $entityManager, ResponseTagger $responseTagger = null, CacheInvalidator $cacheInvalidator = null)
+    public function __construct(EntityManagerInterface $entityManager, ?ResponseTagger $responseTagger = null, ?CacheInvalidator $cacheInvalidator = null)
     {
         $this->entityManager = $entityManager;
         $this->responseTagger = $responseTagger;

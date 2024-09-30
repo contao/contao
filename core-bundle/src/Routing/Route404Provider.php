@@ -247,7 +247,7 @@ class Route404Provider extends AbstractPageRouteProvider
      * 2. Then sort by hostname, so the ones with empty host are only taken if no hostname matches
      * 3. Lastly pages must be sorted by accept language and fallback, so the best language matches first
      */
-    private function sortRoutes(array &$routes, array $languages = null): void
+    private function sortRoutes(array &$routes, ?array $languages = null): void
     {
         // Convert languages array so key is language and value is priority
         if (null !== $languages) {

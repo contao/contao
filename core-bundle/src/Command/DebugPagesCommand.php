@@ -57,7 +57,7 @@ class DebugPagesCommand extends Command
     /**
      * @param ContentCompositionInterface|bool $contentComposition
      */
-    public function add(string $type, RouteConfig $config, DynamicRouteInterface $routeEnhancer = null, $contentComposition = true): void
+    public function add(string $type, RouteConfig $config, ?DynamicRouteInterface $routeEnhancer = null, $contentComposition = true): void
     {
         $this->routeConfigs[$type] = $config;
 

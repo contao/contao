@@ -22,7 +22,7 @@ class PictureFactoryWithRandomArgumentStub implements PictureFactoryInterface
         throw new \RuntimeException('not implemented');
     }
 
-    public function create($path, $size = null, array $options = null): PictureInterface
+    public function create($path, $size = null, ?array $options = null): PictureInterface
     {
         throw new \RuntimeException('not implemented');
     }

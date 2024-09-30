@@ -86,7 +86,7 @@ class CountriesTest extends TestCase
         $translator
             ->method('trans')
             ->willReturnCallback(
-                function (string $label, array $parameters, string $domain, string $locale = null) {
+                function (string $label, array $parameters, string $domain, ?string $locale = null) {
                     $this->assertSame('contao_countries', $domain);
                     $this->assertSame('de', $locale);
 
@@ -220,7 +220,7 @@ class CountriesTest extends TestCase
         ];
     }
 
-    private function getCountriesService(Translator $translator = null, array $configCountries = []): Countries
+    private function getCountriesService(?Translator $translator = null, array $configCountries = []): Countries
     {
         if (null === $translator) {
             $translator = $this->createMock(Translator::class);

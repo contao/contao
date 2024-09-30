@@ -281,7 +281,7 @@
     "extra": {
         "bamarni-bin": {
             "bin-links": false,
-            "forward-command": true
+            "forward-command": false
         },
         "contao-manager-plugin": {
             "contao/calendar-bundle": "Contao\\CalendarBundle\\ContaoManager\\Plugin",

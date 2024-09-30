@@ -166,7 +166,7 @@ class Picture
 	 *
 	 * @return $this The picture object
 	 */
-	public function setImportantPart(array $importantPart = null)
+	public function setImportantPart(?array $importantPart = null)
 	{
 		$this->image->setImportantPart($importantPart);
 

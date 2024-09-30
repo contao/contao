@@ -120,7 +120,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
     /**
      * @param string|array $cssID
      */
-    protected function addCssAttributesToTemplate(Template $template, string $templateName, $cssID, array $classes = null): void
+    protected function addCssAttributesToTemplate(Template $template, string $templateName, $cssID, ?array $classes = null): void
     {
         $data = StringUtil::deserialize($cssID, true);
         $template->class = trim($templateName.' '.($data[1] ?? ''));
@@ -161,7 +161,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
         return Container::underscore($className);
     }
 
-    protected function render(string $view, array $parameters = [], Response $response = null): Response
+    protected function render(string $view, array $parameters = [], ?Response $response = null): Response
     {
         if (null === $response) {
             $response = new Response();

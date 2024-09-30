@@ -32,7 +32,7 @@ class ContaoContext
     private ?string $browser;
     private ?string $source;
 
-    public function __construct(string $func, string $action = null, string $username = null, string $ip = null, string $browser = null, string $source = null)
+    public function __construct(string $func, ?string $action = null, ?string $username = null, ?string $ip = null, ?string $browser = null, ?string $source = null)
     {
         if ('' === $func) {
             throw new \InvalidArgumentException('The function name in the Contao context must not be empty');
