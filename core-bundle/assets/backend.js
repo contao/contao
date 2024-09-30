@@ -50,3 +50,6 @@ document.documentElement.addEventListener('turbo:frame-missing', (e) => {
     e.preventDefault();
     e.detail.visit(e.detail.response);
 });
+
+/* Styles */
+import './styles/backend.pcss';
