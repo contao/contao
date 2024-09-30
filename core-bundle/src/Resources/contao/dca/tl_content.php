@@ -806,7 +806,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_form.title',
 			'options_callback'        => array('tl_content', 'getForms'),
-			'eval'                    => array('mandatory'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50 wizard'),
+			'eval'                    => array('mandatory'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50 wizard', 'includeBlankOption' => true),
 			'wizard' => array
 			(
 				array('tl_content', 'editForm')
@@ -819,7 +819,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_module.name',
 			'options_callback'        => array('tl_content', 'getModules'),
-			'eval'                    => array('mandatory'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50 wizard'),
+			'eval'                    => array('mandatory'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50 wizard', 'includeBlankOption' => true),
 			'wizard' => array
 			(
 				array('tl_content', 'editModule')
