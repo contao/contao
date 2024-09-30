@@ -93,6 +93,7 @@ class PlayerController extends AbstractContentElementController
             ->setIfExists('width', $size[0] ?? null)
             ->setIfExists('height', $size[1] ?? null)
             ->setIfExists('preload', $model->playerPreload)
+            ->setIfExists('title', $model->playerTitle)
         ;
 
         $range = $model->playerStart || $model->playerStop
@@ -125,7 +126,7 @@ class PlayerController extends AbstractContentElementController
         ];
     }
 
-    /**
+    /**t
      * @param list<FilesystemItem> $sourceFiles
      *
      * @return array<string, array<string, string|HtmlAttributes|list<HtmlAttributes>>|string>
@@ -137,6 +138,7 @@ class PlayerController extends AbstractContentElementController
         $attributes = $this
             ->parsePlayerOptions($model)
             ->setIfExists('preload', $model->playerPreload)
+            ->setIfExists('title', $model->playerTitle)
         ;
 
         $captions = [$model->playerCaption];
