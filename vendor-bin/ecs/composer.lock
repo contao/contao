@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dfbce4e9ae46a0d37dd10d37b3deb4a2",
+    "content-hash": "b7c4b0d21a789598bbf5eee8df31fbf7",
     "packages": [
         {
             "name": "contao/easy-coding-standard",
@@ -391,5 +391,8 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
+    "platform-overrides": {
+        "php": "8.1"
+    },
     "plugin-api-version": "2.6.0"
 }
