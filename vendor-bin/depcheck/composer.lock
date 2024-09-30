@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e1e0fd3c00989d97b22734144a3bd3ce",
+    "content-hash": "d5081b0ce03b7d7de01ff87e41508ef8",
     "packages": [
         {
             "name": "shipmonk/composer-dependency-analyser",
@@ -81,5 +81,8 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
+    "platform-overrides": {
+        "php": "8.1"
+    },
     "plugin-api-version": "2.6.0"
 }
