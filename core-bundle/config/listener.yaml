@@ -482,6 +482,9 @@ services:
             - '@contao.routing.content_url_generator'
             - '@security.token_storage'
             - '%scheb_two_factor.security_tokens%'
+    
+    contao.listener.security.webauthn_backend_route:
+        class: Contao\CoreBundle\EventListener\Security\WebauthnBackendRouteListener
 
     contao.listener.service_unavailable:
         class: Contao\CoreBundle\EventListener\ServiceUnavailableListener

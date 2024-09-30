@@ -110,6 +110,7 @@ class BackendIndex extends Backend
 		$objTemplate->default = $GLOBALS['TL_LANG']['MSC']['default'];
 		$objTemplate->jsDisabled = $GLOBALS['TL_LANG']['MSC']['jsDisabled'];
 		$objTemplate->targetPath = StringUtil::specialchars(base64_encode($targetPath));
+		$objTemplate->webauthnSuccessUrl = StringUtil::specialchars($targetPath);
 
 		return $objTemplate->getResponse();
 	}
