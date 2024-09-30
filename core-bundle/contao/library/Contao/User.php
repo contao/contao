@@ -369,7 +369,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 
 		if (!\is_string($this->username))
 		{
-			throw new \RuntimeException(sprintf('Invalid type "%s" for username', \gettype($this->username)));
+			throw new \RuntimeException(\sprintf('Invalid type "%s" for username', \gettype($this->username)));
 		}
 
 		return $this->username;
@@ -416,7 +416,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	/**
 	 * {@inheritdoc}
 	 */
-	public function eraseCredentials()
+	public function eraseCredentials(): void
 	{
 	}
 

@@ -68,7 +68,7 @@ class RobotsTxtListenerTest extends TestCase
         $this->assertSame($expectedRobotsTxt, (string) $event->getFile());
     }
 
-    public function disallowProvider(): \Generator
+    public static function disallowProvider(): iterable
     {
         yield 'Empty robots.txt content in root page' => [
             '',
@@ -205,7 +205,7 @@ class RobotsTxtListenerTest extends TestCase
         $listener($event);
     }
 
-    public function routePrefixProvider(): \Generator
+    public static function routePrefixProvider(): iterable
     {
         yield ['/contao'];
         yield ['/admin'];

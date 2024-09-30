@@ -42,10 +42,10 @@ class StripQueryParametersSubscriberTest extends TestCase
         $subscriber->preHandle($event);
 
         $this->assertSame($expectedParameters, $request->query->all());
-        $this->assertSame(array_map('strval', $expectedParameters), HeaderUtils::parseQuery($request->server->get('QUERY_STRING')));
+        $this->assertSame(array_map(\strval(...), $expectedParameters), HeaderUtils::parseQuery($request->server->get('QUERY_STRING')));
     }
 
-    public function queryParametersProvider(): \Generator
+    public static function queryParametersProvider(): iterable
     {
         yield [
             ['page' => 42, 'query' => 'foobar'],

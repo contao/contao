@@ -24,7 +24,7 @@ class InvalidThemePathException extends \InvalidArgumentException
         $this->invalidCharacters = array_unique($invalidCharacters);
 
         parent::__construct(
-            sprintf(
+            \sprintf(
                 'The theme path "%s" contains one or more invalid characters: "%s"',
                 $path,
                 implode('", "', $this->invalidCharacters),

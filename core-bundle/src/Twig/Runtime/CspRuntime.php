@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Twig\Runtime;
 use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Nelmio\SecurityBundle\Twig\CSPRuntime as NelmioCSPRuntime;
 use Twig\Extension\RuntimeExtensionInterface;
 
@@ -30,16 +31,58 @@ final class CspRuntime implements RuntimeExtensionInterface
     ) {
     }
 
-    public function inlineStyles(string $htmlFragment): string
+    /**
+     * Adds a CSP hash for a given inline style or attributes object and also adds the
+     * 'unsafe-hashes' source to the directive automatically.
+     *
+     * ATTENTION: Only pass trusted styles to this filter!
+     */
+    public function unsafeInlineStyle(HtmlAttributes|string $styleAttribute): HtmlAttributes|string
+    {
+        if ($styleAttribute instanceof HtmlAttributes) {
+            $style = $styleAttribute['style'] ?? '';
+        } else {
+            $style = $styleAttribute;
+        }
+
+        if ('' === $style) {
+            return $styleAttribute;
+        }
+
+        $responseContext = $this->responseContextAccessor->getResponseContext();
+
+        if ($responseContext?->has(CspHandler::class)) {
+            $csp = $responseContext->get(CspHandler::class);
+            $csp
+                ->addHash('style-src', $style)
+                ->addSource('style-src', "'unsafe-hashes'")
+            ;
+        }
+
+        return $styleAttribute;
+    }
+
+    /**
+     * Extracts all inline CSS style attributes of a given HTML string or attributes object
+     * and automatically adds CSP hashes for those to the current response context. The list
+     * of allowed styles can be configured in contao.csp.allowed_inline_styles.
+     */
+    public function inlineStyles(HtmlAttributes|string $htmlOrAttributes): HtmlAttributes|string
     {
         $responseContext = $this->responseContextAccessor->getResponseContext();
 
         if (!$responseContext?->has(CspHandler::class)) {
-            return $htmlFragment;
+            return $htmlOrAttributes;
+        }
+
+        if ($htmlOrAttributes instanceof HtmlAttributes) {
+            $htmlFragment = "<div$htmlOrAttributes></div>";
+        } else {
+            $htmlFragment = $htmlOrAttributes;
         }
 
         if (!$styles = $this->wysiwygProcessor->extractStyles($htmlFragment)) {
-            return $htmlFragment;
+            return $htmlOrAttributes;
         }
 
         $csp = $responseContext->get(CspHandler::class);
@@ -48,9 +91,9 @@ final class CspRuntime implements RuntimeExtensionInterface
             $csp->addHash('style-src', $style);
         }
 
-        $csp->addSource('style-src', 'unsafe-hashes');
+        $csp->addSource('style-src', "'unsafe-hashes'");
 
-        return $htmlFragment;
+        return $htmlOrAttributes;
     }
 
     public function getNonce(string $directive): string|null

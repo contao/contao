@@ -40,6 +40,7 @@ use Contao\CoreBundle\Tests\Image\Studio\ImageResultStub;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
+use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
@@ -115,7 +116,7 @@ class ContentElementTestCase extends TestCase
     /**
      * @param array<string, mixed> $modelData
      *
-     * @param-out array<string, array<int|string, string>> $responseContextData
+     * @param-out array $responseContextData
      */
     protected function renderWithModelData(AbstractContentElementController $controller, array $modelData, string|null $template = null, bool $asEditorView = false, array|null &$responseContextData = null, ContainerBuilder|null $adjustedContainer = null, array $nestedFragments = []): Response
     {
@@ -201,11 +202,12 @@ class ContentElementTestCase extends TestCase
         // Record response context data
         $responseContextData = array_filter([
             DocumentLocation::head->value => $GLOBALS['TL_HEAD'] ?? [],
+            DocumentLocation::stylesheets->value => $GLOBALS['TL_STYLE_SHEETS'] ?? [],
             DocumentLocation::endOfBody->value => $GLOBALS['TL_BODY'] ?? [],
         ]);
 
         // Reset state
-        unset($GLOBALS['TL_HEAD'], $GLOBALS['TL_BODY']);
+        unset($GLOBALS['TL_HEAD'], $GLOBALS['TL_STYLE_SHEETS'], $GLOBALS['TL_BODY']);
 
         $this->resetStaticProperties([Highlighter::class]);
 
@@ -276,7 +278,7 @@ class ContentElementTestCase extends TestCase
         $translator
             ->method('trans')
             ->willReturnCallback(
-                static fn (string $id, array $parameters = [], string|null $domain = null, string|null $locale = null): string => sprintf(
+                static fn (string $id, array $parameters = [], string|null $domain = null, string|null $locale = null): string => \sprintf(
                     'translated(%s%s%s)',
                     null !== $domain ? "$domain:" : '',
                     $id,
@@ -301,6 +303,7 @@ class ContentElementTestCase extends TestCase
                 $contaoFilesystemLoader,
                 $this->createMock(ContaoCsrfTokenManager::class),
                 $this->createMock(ContaoVariable::class),
+                new InspectorNodeVisitor(new NullAdapter()),
             ),
         );
 

@@ -65,7 +65,7 @@ class Route404Provider extends AbstractPageRouteProvider
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
 
         if (!$page = $pageAdapter->findById($ids[0])) {
-            throw new RouteNotFoundException(sprintf('Page ID "%s" not found', $ids[0]));
+            throw new RouteNotFoundException(\sprintf('Page ID "%s" not found', $ids[0]));
         }
 
         $routes = [];
@@ -151,7 +151,6 @@ class Route404Provider extends AbstractPageRouteProvider
         }
 
         $defaults = [
-            '_token_check' => true,
             '_controller' => 'Contao\FrontendIndex::renderPage',
             '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
             '_locale' => LocaleUtil::formatAsLocale($page->rootLanguage ?? ''),

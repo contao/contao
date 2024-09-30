@@ -19,6 +19,7 @@ use Contao\CoreBundle\InsertTag\CommonMarkExtension;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\FilesModel;
 use Contao\Input;
+use Contao\StringUtil;
 use Contao\Template;
 use League\CommonMark\ConverterInterface;
 use League\CommonMark\Environment\Environment;
@@ -63,15 +64,17 @@ class MarkdownController extends AbstractContentElementController
         $input = $this->getContaoAdapter(Input::class);
         $html = $this->createConverter($model, $request)->convert($markdown)->getContent();
 
-        $template->content = $input->stripTags($html, $config->get('allowedTags'), $config->get('allowedAttributes'));
+        $template->content = StringUtil::encodeEmail(
+            $input->stripTags($html, $config->get('allowedTags'), $config->get('allowedAttributes')),
+        );
 
         return $template->getResponse();
     }
 
     /**
-     * Hint: This is protected on purpose, so you can override it for your app specific requirements.
-     * If you want to provide an extension with additional logic, consider providing your own special
-     * content element for that.
+     * Hint: This is protected on purpose, so you can override it for your app
+     * specific requirements. If you want to provide an extension with additional
+     * logic, consider providing your own special content element for that.
      */
     protected function createConverter(ContentModel $model, Request $request): ConverterInterface
     {

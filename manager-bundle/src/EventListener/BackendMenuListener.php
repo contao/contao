@@ -86,6 +86,7 @@ class BackendMenuListener
             ->setUri($this->router->generate('contao_backend', $params))
             ->setLinkAttribute('class', $class)
             ->setLinkAttribute('title', $this->translator->trans('debug_mode', [], 'ContaoManagerBundle'))
+            ->setLinkAttribute('data-turbo-prefetch', 'false')
             ->setExtra('translation_domain', 'ContaoManagerBundle')
         ;
 

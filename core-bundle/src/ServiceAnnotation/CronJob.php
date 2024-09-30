@@ -27,6 +27,9 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
  * @Attributes({
  *     @Attribute("value", type="string", required=true)
  * })
+ *
+ * @deprecated Deprecated since Contao 5.4, to be removed in Contao 6;
+ *             use the #[AsCronJob] attribute instead
  */
 final class CronJob implements ServiceTagInterface
 {
@@ -34,6 +37,8 @@ final class CronJob implements ServiceTagInterface
 
     public function getName(): string
     {
+        trigger_deprecation('contao/core-bundle', '5.4', 'Using the @CronJob annotation has been deprecated and will no longer work in Contao 6. Use the #[AsCronJob] attribute instead.');
+
         return 'contao.cronjob';
     }
 

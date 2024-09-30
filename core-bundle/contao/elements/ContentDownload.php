@@ -118,7 +118,7 @@ class ContentDownload extends ContentElement
 
 		if (!$this->titleText || !$this->overwriteLink)
 		{
-			$this->titleText = sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename);
+			$this->titleText = \sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename);
 		}
 
 		$strHref = Environment::get('requestUri');

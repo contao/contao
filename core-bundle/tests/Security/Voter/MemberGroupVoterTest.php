@@ -16,6 +16,7 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\Voter\MemberGroupVoter;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
+use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -115,5 +116,19 @@ class MemberGroupVoterTest extends TestCase
         ;
 
         $this->assertSame(VoterInterface::ACCESS_GRANTED, $this->voter->vote($token, $ids, [ContaoCorePermissions::MEMBER_IN_GROUPS]));
+    }
+
+    public function testDeniesAccessIfTheTokenIsTwoFactor(): void
+    {
+        $user = $this->createMock(FrontendUser::class);
+
+        $token = $this->createMock(TwoFactorTokenInterface::class);
+        $token
+            ->expects($this->once())
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
+        $this->assertSame(VoterInterface::ACCESS_DENIED, $this->voter->vote($token, '1', [ContaoCorePermissions::MEMBER_IN_GROUPS]));
     }
 }

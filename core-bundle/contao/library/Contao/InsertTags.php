@@ -72,7 +72,7 @@ class InsertTags extends Controller
 
 		if (self::$intRecursionCount > self::MAX_NESTING_LEVEL)
 		{
-			throw new \RuntimeException(sprintf('Maximum insert tag nesting level of %s reached', self::MAX_NESTING_LEVEL));
+			throw new \RuntimeException(\sprintf('Maximum insert tag nesting level of %s reached', self::MAX_NESTING_LEVEL));
 		}
 
 		++self::$intRecursionCount;
@@ -121,7 +121,7 @@ class InsertTags extends Controller
 
 		if ($tags === false)
 		{
-			throw new \RuntimeException(sprintf('PCRE: %s', preg_last_error_msg()), preg_last_error());
+			throw new \RuntimeException(\sprintf('PCRE: %s', preg_last_error_msg()), preg_last_error());
 		}
 
 		if (\count($tags) < 2)

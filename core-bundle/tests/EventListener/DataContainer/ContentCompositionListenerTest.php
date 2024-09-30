@@ -831,7 +831,7 @@ class ContentCompositionListenerTest extends TestCase
         ClockMock::withClockMock(false);
     }
 
-    public function moduleConfigProvider(): \Generator
+    public static function moduleConfigProvider(): iterable
     {
         yield [
             [

@@ -29,7 +29,7 @@ class TwigTest extends FunctionalTestCase
         );
     }
 
-    public function getSanitizeHtmlFilter(): \Generator
+    public static function getSanitizeHtmlFilter(): iterable
     {
         yield [
             'foo',

@@ -67,7 +67,6 @@ class RegisterFragmentsPass implements CompilerPassInterface
         $templates = [];
         $registry = $container->findDefinition('contao.fragment.registry');
         $compositor = $container->findDefinition('contao.fragment.compositor');
-        $command = $container->hasDefinition('contao.command.debug_fragments') ? $container->findDefinition('contao.command.debug_fragments') : null;
 
         foreach ($this->findAndSortTaggedServices($tag, $container) as $reference) {
             // If a controller has multiple methods for different fragment types (e.g. a
@@ -86,7 +85,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
                 $attributes['type'] = $this->getFragmentType($definition, $attributes);
                 $attributes['debugController'] = $this->getControllerName(new Reference($definition->getClass()), $attributes);
 
-                $identifier = sprintf('%s.%s', $tag, $attributes['type']);
+                $identifier = \sprintf('%s.%s', $tag, $attributes['type']);
                 $serviceId = 'contao.fragment._'.$identifier;
 
                 $childDefinition = new ChildDefinition((string) $reference);
@@ -110,7 +109,6 @@ class RegisterFragmentsPass implements CompilerPassInterface
                 }
 
                 $registry->addMethodCall('add', [$identifier, $config]);
-                $command?->addMethodCall('add', [$identifier, $config, $attributes]);
 
                 if (isset($attributes['nestedFragments'])) {
                     $compositor->addMethodCall('add', [$identifier, $attributes['nestedFragments']]);
@@ -121,7 +119,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
 
                 if ($this->globalsKey && $this->proxyClass) {
                     if (!isset($attributes['category'])) {
-                        throw new InvalidConfigurationException(sprintf('Missing category for "%s" fragment on service ID "%s"', $tag, $reference));
+                        throw new InvalidConfigurationException(\sprintf('Missing category for "%s" fragment on service ID "%s"', $tag, $reference));
                     }
 
                     $globals[$this->globalsKey][$attributes['category']][$attributes['type']] = $this->proxyClass;

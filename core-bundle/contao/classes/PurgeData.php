@@ -79,13 +79,13 @@ class PurgeData extends Backend implements MaintenanceModuleInterface
 			foreach ($config['affected'] as $table)
 			{
 				$objCount = $db->execute("SELECT COUNT(*) AS count FROM " . $table);
-				$arrJobs[$key]['affected'] .= '<br>' . $table . ': <span>' . sprintf($GLOBALS['TL_LANG']['MSC']['entries'], $objCount->count) . ', ' . $this->getReadableSize($db->getSizeOf($table), 0) . '</span>';
+				$arrJobs[$key]['affected'] .= '<br>' . $table . ': <span>' . \sprintf($GLOBALS['TL_LANG']['MSC']['entries'], $objCount->count) . ', ' . $this->getReadableSize($db->getSizeOf($table), 0) . '</span>';
 			}
 		}
 
 		$container = System::getContainer();
 		$projectDir = $container->getParameter('kernel.project_dir');
-		$strCachePath = StringUtil::stripRootDir($container->getParameter('kernel.cache_dir'));
+		$parameterBag = $container->getParameterBag();
 
 		// Folders
 		foreach ($GLOBALS['TL_PURGE']['folders'] as $key=>$config)
@@ -102,8 +102,12 @@ class PurgeData extends Backend implements MaintenanceModuleInterface
 			// Get the current folder size
 			foreach ($config['affected'] as $folder)
 			{
+				if (str_contains($folder, '%'))
+				{
+					$folder = StringUtil::stripRootDir($parameterBag->resolveValue($folder));
+				}
+
 				$total = 0;
-				$folder = sprintf($folder, $strCachePath);
 
 				// Only check existing folders
 				if (is_dir($projectDir . '/' . $folder))
@@ -119,7 +123,7 @@ class PurgeData extends Backend implements MaintenanceModuleInterface
 					$total = iterator_count($objFiles);
 				}
 
-				$arrJobs[$key]['affected'] .= '<br>' . $folder . ': <span>' . sprintf($GLOBALS['TL_LANG']['MSC']['files'], $total) . '</span>';
+				$arrJobs[$key]['affected'] .= '<br>' . $folder . ': <span>' . \sprintf($GLOBALS['TL_LANG']['MSC']['files'], $total) . '</span>';
 			}
 		}
 

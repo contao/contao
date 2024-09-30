@@ -57,7 +57,7 @@ class NewsletterResolverTest extends ContaoTestCase
         $this->assertSame($expected, $resolver->getParametersForContent($content, $pageModel));
     }
 
-    public function getParametersForContentProvider(): \Generator
+    public function getParametersForContentProvider(): iterable
     {
         yield 'Uses the newsletter alias' => [
             $this->mockClassWithProperties(NewsletterModel::class, ['id' => 42, 'alias' => 'foobar']),

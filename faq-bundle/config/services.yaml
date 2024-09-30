@@ -7,8 +7,8 @@ services:
             calls:
                 - [setFramework, ['@contao.framework']]
 
-    contao_faq.listener.insert_tags:
-        class: Contao\FaqBundle\EventListener\InsertTagsListener
+    contao_faq.insert_tag.faq:
+        class: Contao\FaqBundle\InsertTag\FaqInsertTag
         arguments:
             - '@contao.framework'
             - '@contao.routing.content_url_generator'

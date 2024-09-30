@@ -62,7 +62,7 @@ class InputEnhancerTest extends TestCase
         $enhancer->enhance($defaults, $request);
     }
 
-    public function getLocales(): \Generator
+    public static function getLocales(): iterable
     {
         yield ['', 'en'];
         yield ['', 'de'];
@@ -105,7 +105,7 @@ class InputEnhancerTest extends TestCase
         $enhancer->enhance($defaults, $request);
     }
 
-    public function getParameters(): \Generator
+    public static function getParameters(): iterable
     {
         yield ['/foo/bar', ['foo', 'bar']];
         yield ['/foo/bar/bar/baz', ['foo', 'bar'], ['bar', 'baz']];

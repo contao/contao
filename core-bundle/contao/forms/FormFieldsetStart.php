@@ -58,7 +58,7 @@ class FormFieldsetStart extends Widget
 	 */
 	public function generate()
 	{
-		return sprintf(
+		return \sprintf(
 			'<fieldset%s>%s',
 			$this->strClass ? ' class="' . $this->strClass . '"' : '',
 			$this->label ? '<legend>' . $this->label . '</legend>' : ''

@@ -318,7 +318,7 @@ class tl_image_size extends Backend
 	 *
 	 * @return array
 	 */
-	public function getFormats(DataContainer $dc=null)
+	public function getFormats(DataContainer|null $dc=null)
 	{
 		$formats = array();
 		$missingSupport = array();
@@ -328,9 +328,11 @@ class tl_image_size extends Backend
 			$formats = StringUtil::deserialize($dc->value, true);
 		}
 
+		$imageExtensions = System::getContainer()->getParameter('contao.image.valid_extensions');
+
 		foreach ($this->getSupportedFormats() as $format => $isSupported)
 		{
-			if (!in_array($format, System::getContainer()->getParameter('contao.image.valid_extensions')))
+			if (!in_array($format, $imageExtensions))
 			{
 				continue;
 			}
@@ -380,7 +382,7 @@ class tl_image_size extends Backend
 	 *
 	 * @return array
 	 */
-	public function getMetadataFields(DataContainer $dc=null)
+	public function getMetadataFields(DataContainer|null $dc=null)
 	{
 		$options = array();
 

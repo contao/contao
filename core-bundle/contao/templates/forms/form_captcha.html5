@@ -18,7 +18,7 @@
   <input type="hidden" name="<?= $this->name ?>_hash<?= $this->hasErrors() ? 1 + $this->sum ** 2 : '' ?>" value="<?= $this->hasErrors() ? $this->getHash() : '' ?>">
 
   <?php if (!$this->hasErrors()): ?>
-    <div style="<?= $this->cspInlineStyle('display:none') ?>">
+    <div style="<?= $this->cspUnsafeInlineStyle('display:none') ?>">
       <label for="ctrl_<?= $this->id ?>_hp">Do not fill in this field</label>
       <input type="text" name="<?= $this->name ?>_name" id="ctrl_<?= $this->id ?>_hp" value="">
     </div>

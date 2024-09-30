@@ -17,24 +17,24 @@ use Twig\Node\DeprecatedNode;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
 use Twig\Node\PrintNode;
-use Twig\NodeVisitor\AbstractNodeVisitor;
+use Twig\NodeVisitor\NodeVisitorInterface;
 
 /**
  * @internal
  */
-class DeprecationsNodeVisitor extends AbstractNodeVisitor
+class DeprecationsNodeVisitor implements NodeVisitorInterface
 {
     public function getPriority(): int
     {
         return 10;
     }
 
-    protected function doEnterNode(Node $node, Environment $env): Node
+    public function enterNode(Node $node, Environment $env): Node
     {
         return $node;
     }
 
-    protected function doLeaveNode(Node $node, Environment $env): Node
+    public function leaveNode(Node $node, Environment $env): Node
     {
         return $this->handleDeprecatedInsertTagUsage($node);
     }
@@ -59,7 +59,7 @@ class DeprecationsNodeVisitor extends AbstractNodeVisitor
             return $node;
         }
 
-        $suggestedTransformation = sprintf('"{{ \'{{%1$s}}\' }}" -> "{{ insert_tag(\'%1$s\') }}".', $matches[1]);
+        $suggestedTransformation = \sprintf('"{{ \'{{%1$s}}\' }}" -> "{{ insert_tag(\'%1$s\') }}".', $matches[1]);
 
         $message = 'You should not rely on insert tags being replaced in the rendered HTML. '
             .'This behavior will gradually be phased out in Contao 5 and will no longer work in Contao 6. '
@@ -75,7 +75,6 @@ class DeprecationsNodeVisitor extends AbstractNodeVisitor
         $deprecatedNode = new DeprecatedNode(
             new ConstantExpression("Since contao/core-bundle 4.13: $message", $line),
             $line,
-            $node->getNodeTag(),
         );
 
         // Set the source context, so that the template name can be inserted when

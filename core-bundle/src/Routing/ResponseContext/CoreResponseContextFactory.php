@@ -101,7 +101,7 @@ class CoreResponseContextFactory
         }
 
         if ($pageModel->enableCanonical && $pageModel->canonicalKeepParams) {
-            $htmlHeadBag->setKeepParamsForCanonical(array_map('trim', explode(',', $pageModel->canonicalKeepParams)));
+            $htmlHeadBag->setKeepParamsForCanonical(array_map(trim(...), explode(',', $pageModel->canonicalKeepParams)));
         }
 
         $jsonLdManager = $context->get(JsonLdManager::class);
@@ -113,7 +113,7 @@ class CoreResponseContextFactory
                     $pageModel->id,
                     $pageModel->noSearch,
                     $pageModel->protected,
-                    array_map('intval', array_filter((array) $pageModel->groups)),
+                    array_map(\intval(...), array_filter((array) $pageModel->groups)),
                     $this->tokenChecker->isPreviewMode(),
                 ),
             )

@@ -156,7 +156,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'toggle'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'alias' => array
@@ -403,7 +403,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'source' => array
 		(
-			'filter'                  => true,
 			'inputType'               => 'radio',
 			'options_callback'        => array('tl_calendar_events', 'getSourceOptions'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_calendar_events'],
@@ -445,7 +444,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['target'],
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'cssClass' => array

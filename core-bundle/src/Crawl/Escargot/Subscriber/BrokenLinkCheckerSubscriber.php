@@ -146,6 +146,6 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
     {
         ++$this->stats['error'];
 
-        $this->logWithCrawlUri($crawlUri, LogLevel::ERROR, sprintf('Broken link! %s.', $message));
+        $this->logWithCrawlUri($crawlUri, LogLevel::ERROR, \sprintf('Broken link! %s.', $message));
     }
 }

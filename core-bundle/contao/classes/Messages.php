@@ -53,7 +53,7 @@ class Messages extends Backend
 			}
 			else
 			{
-				$arrReturn[] = '<p class="tl_error">' . sprintf($GLOBALS['TL_LANG']['ERR']['noFallbackDns'], $k) . '</p>';
+				$arrReturn[] = '<p class="tl_error">' . \sprintf($GLOBALS['TL_LANG']['ERR']['noFallbackDns'], $k) . '</p>';
 			}
 		}
 

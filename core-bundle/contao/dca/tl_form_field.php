@@ -121,6 +121,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		'hidden'                      => '{type_legend},type,name,value;{fconfig_legend},mandatory,rgxp;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'hiddencustom'                => '{type_legend},type,name,value;{fconfig_legend},mandatory,rgxp,customRgxp;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'captcha'                     => '{type_legend},type,label;{fconfig_legend},placeholder;{expert_legend:hide},class,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'altcha'                      => '{type_legend},type,name,label;{fconfig_legend},altchaAuto,altchaHideLogo,altchaHideFooter;{expert_legend:hide},class;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'submit'                      => '{type_legend},type,slabel;{image_legend:hide},imageSubmit;{expert_legend:hide},class,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible'
 	),
 
@@ -379,6 +380,25 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'inputType'               => 'fileTree',
 			'eval'                    => array('fieldType'=>'radio', 'filesOnly'=>true, 'mandatory'=>true, 'tl_class'=>'clr'),
 			'sql'                     => "binary(16) NULL"
+		),
+		'altchaAuto' => array
+		(
+			'inputType'               => 'select',
+			'options'                 => array('onfocus', 'onsubmit'),
+			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(12) NOT NULL default ''"
+		),
+		'altchaHideLogo' => array
+		(
+			'inputType'               => 'checkbox',
+			'eval'                    => array('tl_class'=>'w25'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
+		),
+		'altchaHideFooter' => array
+		(
+			'inputType'               => 'checkbox',
+			'eval'                    => array('tl_class'=>'w25'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'invisible' => array
 		(

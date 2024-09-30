@@ -17,8 +17,8 @@ use Twig\Loader\FilesystemLoader;
 
 /**
  * The FailTolerantFilesystemLoader is a drop in replacement for Twig's
- * FilesystemLoader that does not care about paths that do not exist at
- * the time they are added/prepended.
+ * FilesystemLoader that does not care about paths that do not exist at the time
+ * they are added/prepended.
  */
 class FailTolerantFilesystemLoader extends FilesystemLoader
 {

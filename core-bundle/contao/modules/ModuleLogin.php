@@ -139,13 +139,13 @@ class ModuleLogin extends Module
 			$this->Template->logout = true;
 			$this->Template->formId = 'tl_logout_' . $this->id;
 			$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['logout']);
-			$this->Template->loggedInAs = sprintf($GLOBALS['TL_LANG']['MSC']['loggedInAs'], $user->getUserIdentifier());
+			$this->Template->loggedInAs = \sprintf($GLOBALS['TL_LANG']['MSC']['loggedInAs'], $user->getUserIdentifier());
 			$this->Template->action = $container->get('security.logout_url_generator')->getLogoutPath();
 			$this->Template->targetPath = StringUtil::specialchars($strRedirect);
 
 			if ($user->lastLogin > 0)
 			{
-				$this->Template->lastLogin = sprintf($GLOBALS['TL_LANG']['MSC']['lastLogin'][1], Date::parse($objPage->datimFormat, $user->lastLogin));
+				$this->Template->lastLogin = \sprintf($GLOBALS['TL_LANG']['MSC']['lastLogin'][1], Date::parse($objPage->datimFormat, $user->lastLogin));
 			}
 
 			return;
@@ -238,7 +238,7 @@ class ModuleLogin extends Module
 		if ($isRemembered)
 		{
 			$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['verify']);
-			$this->Template->loggedInAs = sprintf($GLOBALS['TL_LANG']['MSC']['loggedInAs'], $user->getUserIdentifier());
+			$this->Template->loggedInAs = \sprintf($GLOBALS['TL_LANG']['MSC']['loggedInAs'], $user->getUserIdentifier());
 			$this->Template->reauthenticate = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['reauthenticate']);
 			$this->Template->value = Input::encodeInsertTags(StringUtil::specialchars($user->getUserIdentifier()));
 			$this->Template->remembered = true;

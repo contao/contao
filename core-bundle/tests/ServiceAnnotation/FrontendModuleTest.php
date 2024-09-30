@@ -15,11 +15,19 @@ namespace Contao\CoreBundle\Tests\ServiceAnnotation;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\ServiceAnnotation\FrontendModule;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class FrontendModuleTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
+    /**
+     * @group legacy
+     */
     public function testReturnsTheTagName(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.4: %s Use the #[AsFrontendModule] attribute instead.');
+
         $annotation = new FrontendModule(['category' => 'foobar']);
 
         $this->assertSame(FrontendModuleReference::TAG_NAME, $annotation->getName());

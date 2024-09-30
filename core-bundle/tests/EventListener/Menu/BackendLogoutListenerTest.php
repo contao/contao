@@ -106,12 +106,13 @@ class BackendLogoutListenerTest extends ContaoTestCase
             [
                 'class' => 'icon-logout',
                 'accesskey' => 'q',
+                'data-turbo-prefetch' => 'false',
             ],
             $children['logout']->getLinkAttributes(),
         );
     }
 
-    public function getLogoutData(): \Generator
+    public function getLogoutData(): iterable
     {
         $switchUserToken = $this->createMock(SwitchUserToken::class);
         $switchUserToken

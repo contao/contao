@@ -28,7 +28,7 @@ class RetentionPolicyTest extends ContaoTestCase
         new RetentionPolicy(0, $intervals);
     }
 
-    public function invalidIntervalFormatProvider(): \Generator
+    public static function invalidIntervalFormatProvider(): iterable
     {
         yield [['foobar']];
         yield [[1]];
@@ -54,7 +54,7 @@ class RetentionPolicyTest extends ContaoTestCase
         $this->assertSame($expectedBackupFilePathsToKeep, $toKeep);
     }
 
-    public function policyProvider(): \Generator
+    public function policyProvider(): iterable
     {
         yield 'Test should delete oldest when only keepMax is configured' => [
             5,
@@ -147,6 +147,6 @@ class RetentionPolicyTest extends ContaoTestCase
     {
         $dt = \DateTime::createFromFormat(\DateTimeInterface::ATOM, $atomDateTime);
 
-        return new Backup(sprintf('backup__%s.sql.gz', $dt->format(Backup::DATETIME_FORMAT)));
+        return new Backup(\sprintf('backup__%s.sql.gz', $dt->format(Backup::DATETIME_FORMAT)));
     }
 }

@@ -166,7 +166,7 @@ class Dbafs implements DbafsInterface, ResetInterface
     public function setExtraMetadata(string $path, array $metadata): void
     {
         if (!$this->getRecord($path)) {
-            throw new \InvalidArgumentException(sprintf('Record for path "%s" does not exist.', $path));
+            throw new \InvalidArgumentException(\sprintf('Record for path "%s" does not exist.', $path));
         }
 
         $row = [
@@ -210,6 +210,12 @@ class Dbafs implements DbafsInterface, ResetInterface
         $this->applyChangeSet($changeSet, $allUuidsByPath);
 
         // Update previously cached items
+        foreach ($changeSet->getItemsToCreate() as $itemToCreate) {
+            if (\array_key_exists($path = $itemToCreate->getPath(), $this->records)) {
+                unset($this->records[$path]);
+            }
+        }
+
         foreach ($changeSet->getItemsToUpdate() as $itemToUpdate) {
             $path = $itemToUpdate->getExistingPath();
 
@@ -236,8 +242,8 @@ class Dbafs implements DbafsInterface, ResetInterface
     }
 
     /**
-     * Computes the current change set. @See DbafsInterface::sync() for more
-     * details on the $paths parameter.
+     * Computes the current change set. @See DbafsInterface::sync() for more details
+     * on the $paths parameter.
      */
     public function computeChangeSet(string ...$paths): ChangeSet
     {
@@ -325,7 +331,7 @@ class Dbafs implements DbafsInterface, ResetInterface
                 // In partial sync we need to manually add child hashes of items that we do not
                 // traverse but which still contribute to the directory hash
                 if ($isPartialSync && !$this->inPath($path, $searchPaths, false)) {
-                    $directChildrenPattern = sprintf('@^%s/[^/]+[/]?$@', preg_quote($path, '@'));
+                    $directChildrenPattern = \sprintf('@^%s/[^/]+[/]?$@', preg_quote($path, '@'));
 
                     foreach ($allDbHashesByPath as $childPath => $childHash) {
                         $childName = basename((string) $childPath);
@@ -441,7 +447,7 @@ class Dbafs implements DbafsInterface, ResetInterface
     private function loadRecordByUuid(string $uuid): void
     {
         $row = $this->connection->fetchAssociative(
-            sprintf('SELECT * FROM %s WHERE uuid=?', $this->connection->quoteIdentifier($this->table)),
+            \sprintf('SELECT * FROM %s WHERE uuid=?', $this->connection->quoteIdentifier($this->table)),
             [$uuid],
         );
 
@@ -457,7 +463,7 @@ class Dbafs implements DbafsInterface, ResetInterface
     private function loadRecordById(int $id): void
     {
         $row = $this->connection->fetchAssociative(
-            sprintf('SELECT * FROM %s WHERE id=?', $this->connection->quoteIdentifier($this->table)),
+            \sprintf('SELECT * FROM %s WHERE id=?', $this->connection->quoteIdentifier($this->table)),
             [$id],
         );
 
@@ -473,7 +479,7 @@ class Dbafs implements DbafsInterface, ResetInterface
     private function loadRecordByPath(string $path): void
     {
         $row = $this->connection->fetchAssociative(
-            sprintf('SELECT * FROM %s WHERE path=?', $this->connection->quoteIdentifier($this->table)),
+            \sprintf('SELECT * FROM %s WHERE path=?', $this->connection->quoteIdentifier($this->table)),
             [$this->convertToDatabasePath($path)],
         );
 
@@ -514,8 +520,8 @@ class Dbafs implements DbafsInterface, ResetInterface
     }
 
     /**
-     * Updates the database from a given change set. We're using chunked inserts
-     * for better performance.
+     * Updates the database from a given change set. We're using chunked inserts for
+     * better performance.
      *
      * @param array<string|int, string> $allUuidsByPath
      */
@@ -579,18 +585,18 @@ class Dbafs implements DbafsInterface, ResetInterface
 
         if ($inserts) {
             $table = $this->connection->quoteIdentifier($this->table);
-            $columns = sprintf('`%s`', implode('`, `', array_keys($inserts[0]))); // "uuid", "pid", …
-            $placeholders = sprintf('(%s)', implode(', ', array_fill(0, \count($inserts[0]), '?'))); // (?, ?, …, ?)
+            $columns = \sprintf('`%s`', implode('`, `', array_keys($inserts[0]))); // "uuid", "pid", …
+            $placeholders = \sprintf('(%s)', implode(', ', array_fill(0, \count($inserts[0]), '?'))); // (?, ?, …, ?)
 
             foreach (array_chunk($inserts, $this->bulkInsertSize) as $chunk) {
                 $this->connection->executeQuery(
-                    sprintf(
+                    \sprintf(
                         'INSERT INTO %s (%s) VALUES %s',
                         $table,
                         $columns,
                         implode(', ', array_fill(0, \count($chunk), $placeholders)),
                     ),
-                    array_merge(...array_map('array_values', $chunk)),
+                    array_merge(...array_map(array_values(...), $chunk)),
                 );
             }
         }
@@ -673,7 +679,7 @@ class Dbafs implements DbafsInterface, ResetInterface
         $allUuidsByPath = [];
 
         $items = $this->connection->fetchAllNumeric(
-            sprintf(
+            \sprintf(
                 "SELECT path, uuid, hash, IF(type='folder', 1, 0), %s FROM %s",
                 $this->useLastModified ? 'lastModified' : 'NULL',
                 $this->connection->quoteIdentifier($this->table),
@@ -700,8 +706,8 @@ class Dbafs implements DbafsInterface, ResetInterface
     }
 
     /**
-     * Traverses the filesystem and returns file and directory paths that can
-     * be synchronized.
+     * Traverses the filesystem and returns file and directory paths that can be
+     * synchronized.
      *
      * Items will always be listed before the directories they reside in (most
      * specific path first).
@@ -808,12 +814,11 @@ class Dbafs implements DbafsInterface, ResetInterface
     /**
      * Returns true if a path is inside any of the given base paths.
      *
-     * All provided paths are expected to be normalized and may contain a
-     * double slash (//) as suffix.
+     * All provided paths are expected to be normalized and may contain a double slash
+     * (//) as suffix.
      *
-     * If $considerShallowDirectories is set to false, paths that are directly
-     * inside shallow directories (e.g. "foo/bar" in "foo") do NOT yield a
-     * truthy result.
+     * If $considerShallowDirectories is set to false, paths that are directly inside
+     * shallow directories (e.g. "foo/bar" in "foo") do NOT yield a truthy result.
      *
      * @param array<string> $basePaths
      */
@@ -851,10 +856,10 @@ class Dbafs implements DbafsInterface, ResetInterface
     }
 
     /**
-     * Returns a normalized list of paths with redundant paths stripped as well
-     * as a list of all parent paths that are not covered by the arguments. To
-     * denote directories of which only the direct children should be read, we
-     * append a double slash (//) as an internal marker.
+     * Returns a normalized list of paths with redundant paths stripped as well as a
+     * list of all parent paths that are not covered by the arguments. To denote
+     * directories of which only the direct children should be read, we append a
+     * double slash (//) as an internal marker.
      *
      * @see DbafsTest::testNormalizesSearchPaths()
      *
@@ -867,11 +872,11 @@ class Dbafs implements DbafsInterface, ResetInterface
                 $path = trim(Path::canonicalize($path));
 
                 if (Path::isAbsolute($path)) {
-                    throw new \InvalidArgumentException(sprintf('Absolute path "%s" is not allowed when synchronizing.', $path));
+                    throw new \InvalidArgumentException(\sprintf('Absolute path "%s" is not allowed when synchronizing.', $path));
                 }
 
                 if (str_starts_with($path, '.')) {
-                    throw new \InvalidArgumentException(sprintf('Dot path "%s" is not allowed when synchronizing.', $path));
+                    throw new \InvalidArgumentException(\sprintf('Dot path "%s" is not allowed when synchronizing.', $path));
                 }
 
                 return $path;

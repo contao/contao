@@ -29,6 +29,9 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
  *     @Attribute("target", type="string", required=true),
  *     @Attribute("priority", type="int"),
  * })
+ *
+ * @deprecated Deprecated since Contao 5.4, to be removed in Contao 6;
+ *             use the #[AsCallback] attribute instead
  */
 final class Callback implements ServiceTagInterface
 {
@@ -40,6 +43,8 @@ final class Callback implements ServiceTagInterface
 
     public function getName(): string
     {
+        trigger_deprecation('contao/core-bundle', '5.4', 'Using the @Callback annotation has been deprecated and will no longer work in Contao 6. Use the #[AsCallback] attribute instead.');
+
         return 'contao.callback';
     }
 

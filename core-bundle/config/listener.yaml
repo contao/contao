@@ -17,6 +17,11 @@ services:
             - '@security.helper'
             - '@translator'
 
+    contao.listener.backend_noindex:
+        class: Contao\CoreBundle\EventListener\BackendNoindexListener
+        arguments:
+            - '@contao.routing.scope_matcher'
+
     contao.listener.backend_preview_redirect:
         class: Contao\CoreBundle\EventListener\BackendPreviewRedirectListener
         arguments:
@@ -129,6 +134,9 @@ services:
         arguments:
             - '@database_connection'
 
+    contao.listener.data_container.legacy_gallery_palette:
+        class: Contao\CoreBundle\EventListener\DataContainer\LegacyGalleryPaletteListener
+
     contao.listener.data_container.logout_page_redirect:
         class: Contao\CoreBundle\EventListener\DataContainer\LogoutPageRedirectListener
 
@@ -178,6 +186,13 @@ services:
         arguments:
             - '@request_stack'
 
+    contao.listener.data_container.personal_data_password:
+        class: Contao\CoreBundle\EventListener\DataContainer\PersonalDataPasswordListener
+        arguments:
+            - '@database_connection'
+            - '@translator'
+            - '@security.helper'
+
     contao.listener.data_container.preview_link:
         class: Contao\CoreBundle\EventListener\DataContainer\PreviewLinkListener
         arguments:
@@ -215,6 +230,11 @@ services:
             - '@request_stack'
             - '@contao.twig.filesystem_loader'
 
+    contao.listener.data_container.theme_operations:
+        class: Contao\CoreBundle\EventListener\DataContainer\ThemeOperationsListener
+        arguments:
+            - '@security.helper'
+
     contao.listener.data_container.theme_templates:
         class: Contao\CoreBundle\EventListener\DataContainer\ThemeTemplatesListener
         arguments:
@@ -238,6 +258,11 @@ services:
 
     contao.listener.data_container.undo_operation:
         class: Contao\CoreBundle\EventListener\DataContainer\Undo\UndoOperationListener
+        arguments:
+            - '@security.helper'
+
+    contao.listener.data_container.user_admin_field:
+        class: Contao\CoreBundle\EventListener\DataContainer\UserAdminFieldListener
         arguments:
             - '@security.helper'
 
@@ -509,11 +534,6 @@ services:
         class: Contao\CoreBundle\Messenger\EventListener\MessageListener
         arguments:
             - '@monolog.logger.contao.error'
-
-    contao.messenger.worker_listener:
-        class: Contao\CoreBundle\Messenger\EventListener\WorkerListener
-        arguments:
-            - '@contao.messenger.auto_fallback_notifier'
 
     contao.twig.loader.auto_refresh_template_hierarchy_listener:
         class: Contao\CoreBundle\Twig\Loader\AutoRefreshTemplateHierarchyListener

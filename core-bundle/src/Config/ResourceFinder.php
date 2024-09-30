@@ -51,7 +51,7 @@ class ResourceFinder implements ResourceFinderInterface
         }
 
         if (!$paths) {
-            throw new \InvalidArgumentException(sprintf('The subpath "%s" does not exists.', $subpath));
+            throw new \InvalidArgumentException(\sprintf('The subpath "%s" does not exists.', $subpath));
         }
 
         return $paths;

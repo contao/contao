@@ -32,7 +32,7 @@ class MessageListener
         $exception = $event->getThrowable();
 
         $this->logger->error(
-            sprintf('Message "%s" failed: "%s"', $event->getEnvelope()->getMessage()::class, $exception->getMessage()),
+            \sprintf('Message "%s" failed: "%s"', $event->getEnvelope()->getMessage()::class, $exception->getMessage()),
             ['exception' => $exception],
         );
     }

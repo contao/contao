@@ -421,7 +421,7 @@ class DbafsTest extends TestCase
         $this->assertSame($expectedParentPaths, $parentPaths, 'parent paths');
     }
 
-    public function provideSearchPaths(): \Generator
+    public static function provideSearchPaths(): iterable
     {
         yield 'single file' => [
             ['foo/bar/baz/cat.jpg'],
@@ -487,7 +487,7 @@ class DbafsTest extends TestCase
         $dbafs->computeChangeSet(...$paths);
     }
 
-    public function provideInvalidSearchPaths(): \Generator
+    public static function provideInvalidSearchPaths(): iterable
     {
         yield 'absolute path to file' => [
             ['foo', '/path/to/foo'],
@@ -561,7 +561,7 @@ class DbafsTest extends TestCase
         $this->assertSameChangeSet($expected, $changeSet);
     }
 
-    public function provideFilesystemsAndExpectedChangeSets(): \Generator
+    public function provideFilesystemsAndExpectedChangeSets(): iterable
     {
         $getFilesystem = function (): VirtualFilesystemInterface {
             $filesystem = new VirtualFilesystem(
@@ -1419,7 +1419,7 @@ class DbafsTest extends TestCase
     {
         $hash = md5((string) $index);
 
-        $uuid = sprintf(
+        $uuid = \sprintf(
             '%08s-%04s-1%03s-8000-000000000000',
             substr($hash, -8),
             substr($hash, -12, 4),

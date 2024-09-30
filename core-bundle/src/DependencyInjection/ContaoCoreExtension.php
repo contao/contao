@@ -42,12 +42,13 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException;
+use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Toflar\CronjobSupervisor\Supervisor;
 
 class ContaoCoreExtension extends Extension implements PrependExtensionInterface, ConfigureFilesystemInterface
 {
@@ -58,12 +59,12 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
     public function getConfiguration(array $config, ContainerBuilder $container): Configuration
     {
-        return new Configuration((string) $container->getParameter('kernel.project_dir'));
+        return new Configuration();
     }
 
     public function prepend(ContainerBuilder $container): void
     {
-        $configuration = new Configuration((string) $container->getParameter('kernel.project_dir'));
+        $configuration = new Configuration();
 
         $config = $container->getExtensionConfig($this->getAlias());
         $config = $container->getParameterBag()->resolveValue($config);
@@ -93,12 +94,12 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
     public function load(array $configs, ContainerBuilder $container): void
     {
         if ('UTF-8' !== $container->getParameter('kernel.charset')) {
-            throw new RuntimeException(sprintf('Using the charset "%s" is not supported, use "UTF-8" instead', $container->getParameter('kernel.charset')));
+            throw new RuntimeException(\sprintf('Using the charset "%s" is not supported, use "UTF-8" instead', $container->getParameter('kernel.charset')));
         }
 
         $projectDir = (string) $container->getParameter('kernel.project_dir');
 
-        $configuration = new Configuration($projectDir);
+        $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../../config'));
@@ -108,10 +109,9 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $loader->load('migrations.yaml');
         $loader->load('services.yaml');
 
-        $container->setParameter('contao.web_dir', Path::join($projectDir, $this->getComposerExtraConfig($projectDir, 'public-dir') ?? 'public'));
+        $container->setParameter('contao.web_dir', $this->getComposerPublicDir($projectDir) ?? Path::join($projectDir, 'public'));
         $container->setParameter('contao.console_path', $config['console_path']);
         $container->setParameter('contao.upload_path', $config['upload_path']);
-        $container->setParameter('contao.component_dir', $this->getComposerExtraConfig($projectDir, 'contao-component-dir') ?? 'assets');
         $container->setParameter('contao.editable_files', $config['editable_files']);
         $container->setParameter('contao.preview_script', $config['preview_script']);
         $container->setParameter('contao.csrf_cookie_prefix', $config['csrf_cookie_prefix']);
@@ -153,6 +153,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleCronConfig($config, $container);
         $this->handleSecurityConfig($config, $container);
         $this->handleCspConfig($config, $container);
+        $this->handleAltcha($config, $container);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -202,7 +203,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
                     if ($reflector instanceof \ReflectionMethod) {
                         if (isset($tagAttributes['method'])) {
-                            throw new LogicException(sprintf('%s attribute cannot declare a method on "%s::%s()".', $attributeClass, $reflector->getDeclaringClass()->getName(), $reflector->getName()));
+                            throw new LogicException(\sprintf('%s attribute cannot declare a method on "%s::%s()".', $attributeClass, $reflector->getDeclaringClass()->getName(), $reflector->getName()));
                         }
 
                         $tagAttributes['method'] = $reflector->getName();
@@ -211,10 +212,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
                     $definition->addTag($tag, $tagAttributes);
                 },
             );
-        }
-
-        if ($container->hasParameter('kernel.debug') && $container->getParameter('kernel.debug')) {
-            $loader->load('services_debug.yaml');
         }
     }
 
@@ -247,6 +244,19 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
     private function handleMessengerConfig(array $config, ContainerBuilder $container): void
     {
+        if ($container->hasDefinition('contao.messenger.web_worker')) {
+            $definition = $container->getDefinition('contao.messenger.web_worker');
+
+            // Remove the entire service and all its listeners if there are no web worker
+            // transports configured
+            if ([] === $config['messenger']['web_worker']['transports']) {
+                $container->removeDefinition('contao.messenger.web_worker');
+            } else {
+                $definition->setArgument(2, $config['messenger']['web_worker']['transports']);
+                $definition->setArgument(3, $config['messenger']['web_worker']['grace_period']);
+            }
+        }
+
         if (
             !$container->hasDefinition('contao.cron.supervise_workers')
             || !$container->hasDefinition('contao.command.supervise_workers')
@@ -254,16 +264,24 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             return;
         }
 
+        // Disable workers completely if supervision is not supported
+        if (!Supervisor::canSuperviseWithProviders(Supervisor::getDefaultProviders())) {
+            $config['messenger']['workers'] = [];
+        } else {
+            $supervisor = new Definition(Supervisor::class);
+            $supervisor->setFactory([Supervisor::class, 'withDefaultProviders']);
+            $supervisor->addArgument('%kernel.cache_dir%/worker-supervisor');
+
+            $command = $container->getDefinition('contao.command.supervise_workers');
+            $command->setArgument(2, $supervisor);
+            $command->setArgument(3, $config['messenger']['workers']);
+        }
+
         // No workers defined -> remove our cron job and the command
         if (0 === \count($config['messenger']['workers'])) {
             $container->removeDefinition('contao.cron.supervise_workers');
             $container->removeDefinition('contao.command.supervise_workers');
-
-            return;
         }
-
-        $command = $container->getDefinition('contao.command.supervise_workers');
-        $command->setArgument(3, $config['messenger']['workers']);
     }
 
     private function handleSearchConfig(array $config, ContainerBuilder $container): void
@@ -318,8 +336,8 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         }
 
         $factory = $container->getDefinition('contao.crawl.escargot.factory');
-        $factory->setArgument(3, $config['crawl']['additional_uris']);
-        $factory->setArgument(4, $config['crawl']['default_http_client_options']);
+        $factory->setArgument(4, $config['crawl']['additional_uris']);
+        $factory->setArgument(5, $config['crawl']['default_http_client_options']);
     }
 
     /**
@@ -510,7 +528,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         }
     }
 
-    private function getComposerExtraConfig(string $projectDir, string $extra): string|null
+    private function getComposerPublicDir(string $projectDir): string|null
     {
         $fs = new Filesystem();
 
@@ -520,7 +538,11 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
         $composerConfig = json_decode(file_get_contents($composerJsonFilePath), true, 512, JSON_THROW_ON_ERROR);
 
-        return $composerConfig['extra'][$extra] ?? null;
+        if (null === ($publicDir = $composerConfig['extra']['public-dir'] ?? null)) {
+            return null;
+        }
+
+        return Path::join($projectDir, $publicDir);
     }
 
     private function handleSecurityConfig(array $config, ContainerBuilder $container): void
@@ -550,5 +572,17 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             $processor = $container->getDefinition('contao.csp.wysiwyg_style_processor');
             $processor->setArgument(0, $config['csp']['allowed_inline_styles']);
         }
+    }
+
+    private function handleAltcha(array $config, ContainerBuilder $container): void
+    {
+        if (!$container->hasDefinition('contao.altcha')) {
+            return;
+        }
+
+        $altcha = $container->getDefinition('contao.altcha');
+        $altcha->setArgument(3, $config['altcha']['algorithm']);
+        $altcha->setArgument(4, $config['altcha']['range_max']);
+        $altcha->setArgument(5, $config['altcha']['challenge_expiry']);
     }
 }

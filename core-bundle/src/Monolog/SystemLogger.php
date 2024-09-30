@@ -22,46 +22,74 @@ final class SystemLogger implements LoggerInterface
     ) {
     }
 
+    /**
+     * @param string $message
+     */
     public function emergency($message, array $context = []): void
     {
         $this->inner->emergency($message, $this->addContaoContext($context));
     }
 
+    /**
+     * @param string $message
+     */
     public function alert($message, array $context = []): void
     {
         $this->inner->alert($message, $this->addContaoContext($context));
     }
 
+    /**
+     * @param string $message
+     */
     public function critical($message, array $context = []): void
     {
         $this->inner->critical($message, $this->addContaoContext($context));
     }
 
+    /**
+     * @param string $message
+     */
     public function error($message, array $context = []): void
     {
         $this->inner->error($message, $this->addContaoContext($context));
     }
 
+    /**
+     * @param string $message
+     */
     public function warning($message, array $context = []): void
     {
         $this->inner->warning($message, $this->addContaoContext($context));
     }
 
+    /**
+     * @param string $message
+     */
     public function notice($message, array $context = []): void
     {
         $this->inner->notice($message, $this->addContaoContext($context));
     }
 
+    /**
+     * @param string $message
+     */
     public function info($message, array $context = []): void
     {
         $this->inner->info($message, $this->addContaoContext($context));
     }
 
+    /**
+     * @param string $message
+     */
     public function debug($message, array $context = []): void
     {
         $this->inner->debug($message, $this->addContaoContext($context));
     }
 
+    /**
+     * @param string $level
+     * @param string $message
+     */
     public function log($level, $message, array $context = []): void
     {
         $this->inner->log($level, $message, $this->addContaoContext($context));

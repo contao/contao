@@ -51,7 +51,7 @@ class SectionWizard extends Widget
 			// Check for duplicate section titles
 			if (\in_array($arrSection['title'], $arrTitles))
 			{
-				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['duplicateSectionTitle'], $arrSection['title']));
+				$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['duplicateSectionTitle'], $arrSection['title']));
 			}
 
 			$arrSection['id'] = StringUtil::standardize($arrSection['id'], true);
@@ -65,7 +65,7 @@ class SectionWizard extends Widget
 			// Check for duplicate section IDs
 			if (\in_array($arrSection['id'], $arrIds))
 			{
-				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['duplicateSectionId'], $arrSection['id']));
+				$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['duplicateSectionId'], $arrSection['id']));
 			}
 
 			$arrTitles[] = $arrSection['title'];
@@ -133,7 +133,7 @@ class SectionWizard extends Widget
 
 			$return .= '
     <td><select name="' . $this->strId . '[' . $i . '][position]" class="tl_select" data-action="focus->contao--scroll-offset#store">' . $options . '</select></td>
-    <td>';
+    <td class="tl_right">';
 
 			// Add the buttons
 			foreach ($arrButtons as $button)

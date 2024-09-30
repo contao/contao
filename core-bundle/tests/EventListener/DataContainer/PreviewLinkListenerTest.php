@@ -153,7 +153,7 @@ class PreviewLinkListenerTest extends TestCase
         ClockMock::withClockMock(false);
     }
 
-    public function defaultDcaValueProvider(): \Generator
+    public static function defaultDcaValueProvider(): iterable
     {
         yield [
             '/preview.php/foo/bar',
