@@ -8,6 +8,8 @@ import './scripts/limit-height.js';
 import './scripts/modulewizard.js';
 import './scripts/sectionwizard.js';
 
+import './styles/backend.pcss';
+
 // Start the Stimulus application
 const application = Application.start();
 application.debug = process.env.NODE_ENV === 'development';
