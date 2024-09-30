@@ -268,7 +268,7 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
     /**
      * @return RememberMe&MockObject
      */
-    private function mockEntity(string $value, \DateTime $expires = null, \DateTime $lastUsed = null): RememberMe
+    private function mockEntity(string $value, ?\DateTime $expires = null, ?\DateTime $lastUsed = null): RememberMe
     {
         $entity = $this->createMock(RememberMe::class);
         $entity

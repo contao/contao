@@ -25,7 +25,7 @@ class LogoutHandler implements LogoutHandlerInterface
     /**
      * @internal
      */
-    public function __construct(JwtManager $jwtManager = null)
+    public function __construct(?JwtManager $jwtManager = null)
     {
         $this->jwtManager = $jwtManager;
     }

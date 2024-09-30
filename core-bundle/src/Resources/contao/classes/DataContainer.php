@@ -1683,7 +1683,7 @@ abstract class DataContainer extends Backend
 	 *
 	 * @return string|array<string>
 	 */
-	public function generateRecordLabel(array $row, string $table = null, bool $protected = false, bool $isVisibleRootTrailPage = false)
+	public function generateRecordLabel(array $row, ?string $table = null, bool $protected = false, bool $isVisibleRootTrailPage = false)
 	{
 		$table = $table ?? $this->strTable;
 		$labelConfig = &$GLOBALS['TL_DCA'][$table]['list']['label'];

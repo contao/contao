@@ -277,7 +277,7 @@ class ContaoUserProviderTest extends TestCase
         // Dummy method to test the postAuthenticate hook
     }
 
-    private function getProvider(ContaoFramework $framework = null, string $userClass = BackendUser::class): ContaoUserProvider
+    private function getProvider(?ContaoFramework $framework = null, string $userClass = BackendUser::class): ContaoUserProvider
     {
         $framework ??= $this->mockContaoFramework();
         $session = $this->createMock(SessionInterface::class);

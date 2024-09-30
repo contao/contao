@@ -143,7 +143,7 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
         $listener($this->getRequestEvent($request));
     }
 
-    private function createListener(AuthenticationManagerInterface $authenticationManager, TokenStorageInterface $tokenStorage = null): ContaoLoginAuthenticationListener
+    private function createListener(AuthenticationManagerInterface $authenticationManager, ?TokenStorageInterface $tokenStorage = null): ContaoLoginAuthenticationListener
     {
         $failureHandler = $this->createMock(AuthenticationFailureHandlerInterface::class);
         $failureHandler
@@ -170,7 +170,7 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
     /**
      * @return Request&MockObject
      */
-    private function mockRequest(bool $isPost = true, SessionInterface $session = null): Request
+    private function mockRequest(bool $isPost = true, ?SessionInterface $session = null): Request
     {
         $session ??= $this->createMock(SessionInterface::class);
 
@@ -210,7 +210,7 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
     /**
      * @return AuthenticationManagerInterface&MockObject
      */
-    private function mockAuthenticationManager(?string $username, string $password = null): AuthenticationManagerInterface
+    private function mockAuthenticationManager(?string $username, ?string $password = null): AuthenticationManagerInterface
     {
         $authenticationManager = $this->createMock(AuthenticationManagerInterface::class);
         $authenticationManager

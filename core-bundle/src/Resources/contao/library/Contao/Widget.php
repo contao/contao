@@ -728,7 +728,7 @@ abstract class Widget extends Controller
 	 *
 	 * @return $this The widget object
 	 */
-	public function setInputCallback(callable $callback=null)
+	public function setInputCallback(?callable $callback=null)
 	{
 		$this->inputCallback = $callback;
 

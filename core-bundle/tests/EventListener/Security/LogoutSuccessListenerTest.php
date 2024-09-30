@@ -414,7 +414,7 @@ class LogoutSuccessListenerTest extends TestCase
         $listener($event);
     }
 
-    private function mockLogoutSuccessListener(HttpUtils $httpUtils = null, ScopeMatcher $scopeMatcher = null, ContaoFramework $framework = null, Security $security = null, LoggerInterface $logger = null): LogoutSuccessListener
+    private function mockLogoutSuccessListener(?HttpUtils $httpUtils = null, ?ScopeMatcher $scopeMatcher = null, ?ContaoFramework $framework = null, ?Security $security = null, ?LoggerInterface $logger = null): LogoutSuccessListener
     {
         if (null === $httpUtils) {
             $httpUtils = $this->createMock(HttpUtils::class);

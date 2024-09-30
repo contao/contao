@@ -807,7 +807,7 @@ class SitemapControllerTest extends TestCase
     /**
      * @return ContaoFramework&MockObject
      */
-    private function mockFrameworkWithPages(array $pages, array $articles, array $hooks = null): ContaoFramework
+    private function mockFrameworkWithPages(array $pages, array $articles, ?array $hooks = null): ContaoFramework
     {
         /** @var PageModel $rootPage1 */
         $rootPage1 = $this->mockClassWithProperties(PageModel::class);
@@ -891,7 +891,7 @@ class SitemapControllerTest extends TestCase
     /**
      * @param array<int> $allowedPageIds
      */
-    private function getContainer(ContaoFramework $framework, array $allowedPageIds = null, string $baseUrl = 'https://www.foobar.com'): ContainerBuilder
+    private function getContainer(ContaoFramework $framework, ?array $allowedPageIds = null, string $baseUrl = 'https://www.foobar.com'): ContainerBuilder
     {
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $eventDispatcher
@@ -947,7 +947,7 @@ class SitemapControllerTest extends TestCase
         return $container;
     }
 
-    private function mockPage(array $data, array $absoluteUrls = null): PageModel
+    private function mockPage(array $data, ?array $absoluteUrls = null): PageModel
     {
         $page = $this->mockClassWithProperties(PageModel::class, $data);
         $page

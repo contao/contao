@@ -39,7 +39,7 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
     /**
      * @internal
      */
-    public function __construct(RememberMeRepository $repository, iterable $userProviders, string $secret, string $providerKey, array $options = [], LoggerInterface $logger = null)
+    public function __construct(RememberMeRepository $repository, iterable $userProviders, string $secret, string $providerKey, array $options = [], ?LoggerInterface $logger = null)
     {
         parent::__construct($userProviders, $secret, $providerKey, $options, $logger);
 

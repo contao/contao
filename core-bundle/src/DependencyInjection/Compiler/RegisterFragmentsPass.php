@@ -41,7 +41,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
     private ?string $proxyClass;
     private ?string $templateOptionsListener;
 
-    public function __construct(string $tag = null, string $globalsKey = null, string $proxyClass = null, string $templateOptionsListener = null)
+    public function __construct(?string $tag = null, ?string $globalsKey = null, ?string $proxyClass = null, ?string $templateOptionsListener = null)
     {
         if (null === $tag) {
             trigger_deprecation('contao/core-bundle', '4.9', 'Initializing "Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass" objects without passing the tag name as argument has been deprecated and will no longer work in Contao 5.0.');
