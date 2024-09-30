@@ -12,12 +12,18 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Controller;
 
+use Contao\BackendMain;
 use Contao\CoreBundle\Controller\BackendController;
 use Contao\CoreBundle\Picker\PickerBuilderInterface;
 use Contao\CoreBundle\Picker\PickerInterface;
+use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -143,5 +149,36 @@ class BackendControllerTest extends TestCase
         $this->expectExceptionMessage('Unsupported picker context');
 
         $controller->pickerAction($request);
+    }
+
+    public function testCreatesBackendResponseContext(): void
+    {
+        $responseContext = new ResponseContext();
+
+        $responseContextFactory = $this->createMock(CoreResponseContextFactory::class);
+        $responseContextFactory
+            ->expects($this->once())
+            ->method('createResponseContext')
+            ->willReturn($responseContext)
+        ;
+
+        $backendMain = $this->createMock(BackendMain::class);
+        $backendMain
+            ->expects($this->once())
+            ->method('run')
+            ->willReturn(new Response())
+        ;
+
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('contao.routing.response_context_factory', $responseContextFactory);
+        $container->set('contao.framework', $this->mockContaoFramework([], [BackendMain::class => $backendMain]));
+
+        $controller = new BackendController();
+        $controller->setContainer($container);
+
+        $controller->mainAction();
+
+        $this->assertTrue($responseContext->has(HtmlHeadBag::class));
+        $this->assertTrue($responseContext->has(HtmlAttributes::class));
     }
 }

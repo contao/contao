@@ -39,7 +39,9 @@ class BackendController extends AbstractController
     {
         $this->initializeContaoFramework();
 
-        $controller = new BackendMain();
+        $this->createBackendResponseContext();
+
+        $controller = $this->container->get('contao.framework')->createInstance(BackendMain::class);
 
         return $controller->run();
     }

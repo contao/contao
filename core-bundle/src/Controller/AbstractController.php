@@ -18,6 +18,10 @@ use Contao\CoreBundle\EventListener\MakeResponsePrivateListener;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
+use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\PageModel;
 use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
 use Psr\Log\LoggerInterface;
@@ -39,6 +43,7 @@ abstract class AbstractController extends SymfonyAbstractController
         $services['fos_http_cache.http.symfony_response_tagger'] = '?'.SymfonyResponseTagger::class;
         $services['contao.csrf.token_manager'] = ContaoCsrfTokenManager::class;
         $services['contao.cache.entity_tags'] = EntityCacheTags::class;
+        $services['contao.routing.response_context_factory'] = CoreResponseContextFactory::class;
 
         return $services;
     }
@@ -139,5 +144,13 @@ abstract class AbstractController extends SymfonyAbstractController
         }
 
         return $this->container->get('parameter_bag')->has($name);
+    }
+
+    protected function createBackendResponseContext(): ResponseContext
+    {
+        return $this->container->get('contao.routing.response_context_factory')->createResponseContext()
+            ->addLazy(HtmlHeadBag::class)
+            ->addLazy(HtmlAttributes::class, static fn () => new HtmlAttributes())
+        ;
     }
 }
