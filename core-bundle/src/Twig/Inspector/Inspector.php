@@ -138,13 +138,14 @@ class Inspector
                 array_splice(
                     $hierarchy,
                     $i,
-                    null, [
+                    null,
+                    [
                             new BlockInformation(
                                 $hierarchy[$i]->getTemplateName(),
                                 $hierarchy[$i]->getBlockName(),
                                 BlockType::origin,
                                 $hierarchy[$i]->isPrototype()),
-                    ],
+                        ],
                 );
 
                 break;
