@@ -179,7 +179,7 @@ class ModuleChangePassword extends Module
 			$objMember->save();
 
 			System::getContainer()->get('contao.repository.remember_me')->deleteByUsername($objMember->username);
-			OptInModel::deleteByTableAndEmail('tl_member', $objMember->email);
+			OptInModel::deleteByTableAndId('tl_member', $objMember->id);
 
 			// Create a new version
 			if ($GLOBALS['TL_DCA'][$strTable]['config']['enableVersioning'] ?? null)

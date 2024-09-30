@@ -229,10 +229,22 @@ class OptInModel extends Model
 		}
 	}
 
-	public static function deleteByTableAndEmail($strTable, $strEmail)
+	/**
+	 * Delete opt-in tokens by their table and ID
+	 *
+	 * @param string $strTable
+	 * @param int $intId
+	 *
+	 * @return integer The number of affected rows
+	 */
+	public static function deleteByTableAndId($strTable, $intId)
 	{
 		$t = static::$strTable;
-		Database::getInstance()->prepare("DELETE FROM $t WHERE $t.email = ? AND $t.id IN (SELECT pid FROM tl_opt_in_related WHERE relTable=?)")
-			->execute($strEmail, $strTable);
+
+		return Database::getInstance()
+			->prepare("DELETE FROM $t WHERE $t.id = ? AND $t.id IN (SELECT pid FROM tl_opt_in_related WHERE relTable=?)")
+			->execute($intId, $strTable)
+			->affectedRows
+		;
 	}
 }
