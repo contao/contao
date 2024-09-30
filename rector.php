@@ -41,7 +41,6 @@ return RectorConfig::configure()
         __DIR__.'/newsletter-bundle/tests',
         __DIR__.'/test-case/src',
         __DIR__.'/vendor-bin/ecs/config',
-        __DIR__.'/vendor-bin/isolated-tests/src',
         __DIR__.'/vendor-bin/phpstan/src',
         __DIR__.'/vendor-bin/service-linter/src',
     ])
