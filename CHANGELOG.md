@@ -2,6 +2,13 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.15] (2024-09-17)
+
+**Security fixes:**
+
+- [CVE-2024-45398]: Remote command execution through file uploads
+- [CVE-2024-45612]: Insert tag injection via canonical URLs
+
 ## [5.3.14] (2024-09-12)
 
 **Fixed issues:**
@@ -419,6 +426,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.15]: https://github.com/contao/contao/releases/tag/5.3.15
 [5.3.14]: https://github.com/contao/contao/releases/tag/5.3.14
 [5.3.13]: https://github.com/contao/contao/releases/tag/5.3.13
 [5.3.12]: https://github.com/contao/contao/releases/tag/5.3.12
@@ -442,6 +450,8 @@ This project adheres to [Semantic Versioning].
 [CVE-2024-28190]: https://github.com/contao/contao/security/advisories/GHSA-v24p-7p4j-qvvf
 [CVE-2024-28191]: https://github.com/contao/contao/security/advisories/GHSA-747v-52c4-8vj8
 [CVE-2024-28234]: https://github.com/contao/contao/security/advisories/GHSA-j55w-hjpj-825g
+[CVE-2024-45398]: https://github.com/contao/contao/security/advisories/GHSA-vm6r-j788-hjh5
+[CVE-2024-45612]: https://github.com/contao/contao/security/advisories/GHSA-2xpq-xp6c-5mgj
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
 [bennyborn]: https://github.com/bennyborn

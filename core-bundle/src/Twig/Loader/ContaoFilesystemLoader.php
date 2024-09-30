@@ -131,7 +131,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
 
         preg_match_all('/\$this\s*->\s*block\s*\(\s*[\'"]([a-z0-9_-]+)[\'"]\s*\)/i', (string) file_get_contents($path), $matches);
 
-        return new Source(implode("\n", $matches[1] ?? []), $templateName, $path);
+        return new Source(implode("\n", $matches[1]), $templateName, $path);
     }
 
     /**
