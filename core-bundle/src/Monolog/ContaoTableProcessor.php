@@ -72,7 +72,7 @@ class ContaoTableProcessor implements ProcessorInterface
         }
     }
 
-    private function updateBrowser(ContaoContext $context, Request $request = null): void
+    private function updateBrowser(ContaoContext $context, ?Request $request = null): void
     {
         if (null !== $context->getBrowser()) {
             return;
@@ -92,7 +92,7 @@ class ContaoTableProcessor implements ProcessorInterface
         $context->setUsername(null === $token ? 'N/A' : $token->getUserIdentifier());
     }
 
-    private function updateSource(ContaoContext $context, Request $request = null): void
+    private function updateSource(ContaoContext $context, ?Request $request = null): void
     {
         if (null !== $context->getSource()) {
             return;

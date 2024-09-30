@@ -40,7 +40,7 @@ class BackupManager
         $this->retentionPolicy = $retentionPolicy;
     }
 
-    public function createNewBackup(\DateTime $dateTime = null): Backup
+    public function createNewBackup(?\DateTime $dateTime = null): Backup
     {
         $now = $dateTime ?? new \DateTime('now');
         $now->setTimezone(new \DateTimeZone('UTC'));

@@ -37,7 +37,7 @@ interface PickerBuilderInterface
      *
      * @return bool
      */
-    public function supportsContext(/*string */$context, array $allowed = null)/*: bool*/;
+    public function supportsContext(/*string */$context, ?array $allowed = null)/*: bool*/;
 
     /**
      * Returns the picker URL for the given context and configuration.

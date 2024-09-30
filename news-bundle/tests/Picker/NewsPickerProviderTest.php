@@ -212,7 +212,7 @@ class NewsPickerProviderTest extends ContaoTestCase
         $this->assertArrayNotHasKey('id', $params);
     }
 
-    private function getPicker(bool $accessGranted = null): NewsPickerProvider
+    private function getPicker(?bool $accessGranted = null): NewsPickerProvider
     {
         $security = $this->createMock(Security::class);
         $security

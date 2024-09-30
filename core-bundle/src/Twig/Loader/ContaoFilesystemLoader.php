@@ -212,7 +212,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
     /**
      * Finds the next template in the hierarchy and returns the logical name.
      */
-    public function getDynamicParent(string $shortNameOrIdentifier, string $sourcePath, string $themeSlug = null): string
+    public function getDynamicParent(string $shortNameOrIdentifier, string $sourcePath, ?string $themeSlug = null): string
     {
         $hierarchy = $this->getInheritanceChains($themeSlug);
         $identifier = ContaoTwigUtil::getIdentifier($shortNameOrIdentifier);
@@ -235,7 +235,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
     /**
      * Finds the first template in the hierarchy and returns the logical name.
      */
-    public function getFirst(string $shortNameOrIdentifier, string $themeSlug = null): string
+    public function getFirst(string $shortNameOrIdentifier, ?string $themeSlug = null): string
     {
         $identifier = ContaoTwigUtil::getIdentifier($shortNameOrIdentifier);
         $hierarchy = $this->getInheritanceChains($themeSlug);
@@ -266,7 +266,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
      *
      * @return array<string, array<string, string>>
      */
-    public function getInheritanceChains(string $themeSlug = null): array
+    public function getInheritanceChains(?string $themeSlug = null): array
     {
         $this->ensureHierarchyIsBuilt();
 

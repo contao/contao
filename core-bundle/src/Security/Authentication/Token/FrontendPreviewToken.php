@@ -20,7 +20,7 @@ class FrontendPreviewToken extends AbstractToken
     private bool $showUnpublished;
     private ?int $previewLinkId;
 
-    public function __construct(?FrontendUser $user, bool $showUnpublished, int $previewLinkId = null)
+    public function __construct(?FrontendUser $user, bool $showUnpublished, ?int $previewLinkId = null)
     {
         if (null === $user) {
             parent::__construct();

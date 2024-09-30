@@ -192,7 +192,7 @@ class UserCreateCommand extends Command
         return 0;
     }
 
-    private function ask(string $label, InputInterface $input, OutputInterface $output, callable $callback = null): string
+    private function ask(string $label, InputInterface $input, OutputInterface $output, ?callable $callback = null): string
     {
         $question = new Question($label);
         $question->setMaxAttempts(3);
@@ -245,7 +245,7 @@ class UserCreateCommand extends Command
         return $this->connection->fetchAllKeyValue('SELECT id, name FROM tl_user_group');
     }
 
-    private function persistUser(string $username, string $name, string $email, string $password, string $language, bool $isAdmin = false, array $groups = null, bool $pwChange = false): void
+    private function persistUser(string $username, string $name, string $email, string $password, string $language, bool $isAdmin = false, ?array $groups = null, bool $pwChange = false): void
     {
         $time = time();
         $hash = $this->passwordHasherFactory->getPasswordHasher(BackendUser::class)->hash($password);

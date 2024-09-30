@@ -514,7 +514,7 @@ class InstallerTest extends TestCase
         $this->assertSame($expected, $commands[$key]);
     }
 
-    private function getInstaller(Schema $fromSchema = null, Schema $toSchema = null, array $tables = [], string $filePerTable = 'ON'): Installer
+    private function getInstaller(?Schema $fromSchema = null, ?Schema $toSchema = null, array $tables = [], string $filePerTable = 'ON'): Installer
     {
         $platform = new MySQLPlatform();
         $comparator = (new MySQLSchemaManager($this->createMock(Connection::class), $platform))->createComparator();

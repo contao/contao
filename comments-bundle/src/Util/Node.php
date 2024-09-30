@@ -47,7 +47,7 @@ final class Node
      */
     public $children = [];
 
-    public function __construct(self $parent = null, int $type = self::TYPE_ROOT)
+    public function __construct(?self $parent = null, int $type = self::TYPE_ROOT)
     {
         $this->parent = $parent;
         $this->type = $type;

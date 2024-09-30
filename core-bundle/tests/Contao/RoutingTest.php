@@ -593,7 +593,7 @@ class RoutingTest extends TestCase
      *
      * @return ContaoFramework&MockObject
      */
-    private function mockFrameworkWithPageAdapter(Adapter $pageAdapter = null): ContaoFramework
+    private function mockFrameworkWithPageAdapter(?Adapter $pageAdapter = null): ContaoFramework
     {
         if (null === $pageAdapter) {
             $pageAdapter = $this->mockAdapter(['findByAliases']);

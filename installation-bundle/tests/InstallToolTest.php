@@ -90,7 +90,7 @@ class InstallToolTest extends TestCase
         ];
     }
 
-    private function getInstallTool(string $sqlMode, AbstractMySQLDriver $driver = null): InstallTool
+    private function getInstallTool(string $sqlMode, ?AbstractMySQLDriver $driver = null): InstallTool
     {
         $connection = $this->createMock(Connection::class);
         $connection
