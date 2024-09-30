@@ -23,6 +23,8 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\TranslatorBagInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DcaUrlAnalyzer
 {
@@ -31,6 +33,7 @@ class DcaUrlAnalyzer
         private readonly RequestStack $requestStack,
         private readonly Security $securityHelper,
         private readonly RouterInterface $router,
+        private readonly TranslatorBagInterface&TranslatorInterface $translator,
     ) {
     }
 
@@ -84,9 +87,15 @@ class DcaUrlAnalyzer
             ];
         }
 
+        // Add table name
+        if (isset($GLOBALS['TL_LANG']['MOD'][$table]))
+        {
+            $trail[] = ' <span>' . $GLOBALS['TL_LANG']['MOD'][$table] . '</span>';
+        }
+
         $links[] = [
             'url' => $this->router->generate('contao_backend', ['do' => $do, 'table' => $table]),
-            'label' => '??? root',
+            'label' => $this->translator->trans("MOD.$do.0", [], 'contao_modules'),
         ];
 
         return array_reverse($links);
@@ -101,7 +110,10 @@ class DcaUrlAnalyzer
         $mode = $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? DataContainer::MODE_SORTED;
 
         if (DataContainer::MODE_PARENT === $mode && ($GLOBALS['TL_DCA'][$table]['list']['sorting']['child_record_callback'] ?? null)) {
-            return '??? '.$table.'.'.$row['id'];
+            $messageDomain = "contao_tl_$table";
+            $labelKey = $this->translator->getCatalogue()->has("$table.edit", $messageDomain) ? "$table.edit" : 'DCA.edit';
+
+            return $this->translator->trans($labelKey, [$row['id']], $messageDomain);
         }
 
         $label = trim(strip_tags($dc->generateRecordLabel($row, $table)));
