@@ -35,18 +35,22 @@ class InspectorTest extends TestCase
         $cacheData = [
             'path/to/foo.html.twig' => [
                 'slots' => ['main', 'aside'],
+                'blocks' => ['bar', 'foo'],
                 'parent' => 'bar.html.twig',
+                'uses' => [],
             ],
             'path/to/bar.html.twig' => [
                 'slots' => ['header'],
+                'blocks' => ['bar', 'foo'],
                 'parent' => null,
+                'uses' => [],
             ],
         ];
 
         $information = $this->getInspector($templates, $cacheData)->inspectTemplate('foo.html.twig');
 
         $this->assertSame('foo.html.twig', $information->getName());
-        $this->assertSame(['bar', 'foo'], $information->getBlocks());
+        $this->assertSame(['bar', 'foo'], $information->getBlockNames());
         $this->assertSame('{% block foo %}{% block bar %}[…]{% endblock %}{% endblock %}', $information->getCode());
         $this->assertSame(['aside', 'header', 'main'], $information->getSlots());
     }
@@ -84,7 +88,9 @@ class InspectorTest extends TestCase
         $cacheData = [
             'path/to/foo.html.twig' => [
                 'slots' => ['main', 'aside'],
+                'blocks' => [],
                 'parent' => null,
+                'uses' => [],
             ],
         ];
 
