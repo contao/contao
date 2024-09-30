@@ -14,6 +14,7 @@ use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\Node\PrintNode;
 use Twig\NodeVisitor\NodeVisitorInterface;
+use Twig\Source;
 use Twig\Token;
 
 /**
@@ -28,6 +29,9 @@ final class InspectorNodeVisitor implements NodeVisitorInterface
 
     private array $blocks = [];
 
+    /**
+     * @var \WeakMap<Source, list<string>>
+     */
     private \WeakMap $prototypeBlocks;
 
     public function __construct(
@@ -151,7 +155,10 @@ final class InspectorNodeVisitor implements NodeVisitorInterface
                 && $tokenStream->nextIf(Token::BLOCK_START_TYPE)
                 && $tokenStream->nextIf(Token::NAME_TYPE, 'endblock')
             ) {
-                $prototypeBlocks[] = $target->getValue();
+                /** @var string $value */
+                $value = $target->getValue();
+
+                $prototypeBlocks[] = $value;
             }
 
             $tokenStream->next();
