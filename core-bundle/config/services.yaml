@@ -1249,6 +1249,7 @@ services:
         class: Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor
         arguments:
             - '@cache.system'
+            - '@twig'
 
     contao.twig.interop.context_factory:
         class: Contao\CoreBundle\Twig\Interop\ContextFactory

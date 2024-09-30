@@ -181,7 +181,7 @@ class DebugContaoTwigCommand extends Command
                     ['', ''],
                 ];
 
-                if ($blocks = $templateInformation->getBlocks()) {
+                if ($blocks = $templateInformation->getBlockNames()) {
                     $rows = [
                         ...$rows,
                         ...$this->formatMultiline(

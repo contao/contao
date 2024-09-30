@@ -179,6 +179,7 @@
         "doctrine/annotations": "^2.0",
         "league/flysystem-memory": "^3.0",
         "sebastian/diff": "^4.0",
+        "shipmonk/composer-dependency-analyser": "^1.4",
         "symfony/browser-kit": "^6.4 || ^7.0",
         "symfony/phpunit-bridge": "^6.4 || ^7.0"
     },
@@ -290,7 +291,7 @@
     "extra": {
         "bamarni-bin": {
             "bin-links": false,
-            "forward-command": true
+            "forward-command": false
         },
         "contao-manager-plugin": {
             "contao/calendar-bundle": "Contao\\CalendarBundle\\ContaoManager\\Plugin",
@@ -320,7 +321,7 @@
             "@ecs-legacy",
             "@ecs-template"
         ],
-        "depcheck": "@php vendor-bin/depcheck/vendor/bin/composer-dependency-analyser --config=depcheck.php",
+        "depcheck": "@php vendor/bin/composer-dependency-analyser --config=depcheck.php",
         "ecs-default": "@php vendor-bin/ecs/vendor/bin/ecs check --fix",
         "ecs-legacy": "@php vendor-bin/ecs/vendor/bin/ecs check --config=vendor-bin/ecs/config/legacy.php --fix",
         "ecs-template": "@php vendor-bin/ecs/vendor/bin/ecs check --config=vendor-bin/ecs/config/template.php --fix",

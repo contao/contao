@@ -25,7 +25,7 @@ class LegacyGalleryPaletteListener
 {
     public function __invoke(): void
     {
-        if (!is_a($GLOBALS['TL_CTE']['media']['gallery'], ContentGallery::class, true)) {
+        if (!is_a($GLOBALS['TL_CTE']['media']['gallery'] ?? null, ContentGallery::class, true)) {
             return;
         }
 

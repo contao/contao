@@ -305,6 +305,8 @@ class DebugContaoTwigCommandTest extends TestCase
                     new Source("… code of $name …", $name),
                     ["{$name}_block1", "{$name}_block2"],
                     ["{$name}_slot1", "{$name}_slot2"],
+                    null,
+                    [],
                 ),
             )
         ;
