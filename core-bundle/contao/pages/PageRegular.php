@@ -221,7 +221,10 @@ class PageRegular extends Frontend
 		// Canonical
 		if ($objPage->enableCanonical)
 		{
-			$this->Template->canonical = htmlspecialchars($headBag->getCanonicalUriForRequest($request), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
+			$this->Template->canonical = htmlspecialchars(
+				str_replace(array('{', '}'), array('%7B', '%7D'), $headBag->getCanonicalUriForRequest($request)),
+				ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5
+			);
 		}
 
 		// Fall back to the default title tag

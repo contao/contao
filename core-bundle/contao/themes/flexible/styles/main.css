@@ -2433,12 +2433,10 @@ ul.sgallery li {
 
 /* Misc */
 .ce_gallery ul {
-	display: flow-root;
-}
-
-.ce_gallery li {
-	float: left;
-	margin: 0 6px 6px 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin-bottom: 6px;
 }
 
 .drag-handle {
@@ -2770,6 +2768,7 @@ label.error, legend.error, .tl_checkbox_container.error legend {
 
 /* Fieldsets */
 fieldset.tl_tbox, fieldset.tl_box {
+	min-width: 0;
 	margin-top: 5px;
 	padding-top: 0;
 	border-top: none;

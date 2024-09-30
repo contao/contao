@@ -48,7 +48,6 @@ class CountriesTest extends TestCase
         $countryNames = $this->getCountriesService()->getCountries('en');
 
         $this->assertNotEmpty($countryNames);
-        $this->assertFalse(array_is_list($countryNames));
 
         foreach ($countryNames as $countryCode => $countryName) {
             $this->assertMatchesRegularExpression('/^[A-Z]{2}$/', $countryCode);

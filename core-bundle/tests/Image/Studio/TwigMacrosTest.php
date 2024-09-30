@@ -590,7 +590,7 @@ class TwigMacrosTest extends TestCase
                 $this->createMock(ContaoFilesystemLoader::class),
                 $this->createMock(ContaoCsrfTokenManager::class),
                 $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor(new NullAdapter()),
+                new InspectorNodeVisitor(new NullAdapter(), $environment),
             ),
         ]);
 

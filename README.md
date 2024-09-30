@@ -75,9 +75,10 @@ from your application.
 
 ## Running scripts
 
-First install the code quality tools:
+First install the code quality tools in `vendor/contao/contao`:
 
 ```bash
+composer update
 composer bin all install
 ```
 
