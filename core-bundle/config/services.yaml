@@ -172,6 +172,7 @@ services:
             - '@security.helper'
             - '@router'
             - '@contao.translation.translator'
+            - '@event_dispatcher'
 
     contao.doctrine.backup.dumper:
         class: Contao\CoreBundle\Doctrine\Backup\Dumper
