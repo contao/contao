@@ -226,7 +226,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		'customRgxp' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50', 'mandatory'=>true),
+			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50 clr', 'mandatory'=>true),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'errorMsg' => array
@@ -399,6 +399,14 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w25'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
+		),
+		'autocomplete' => array
+		(
+			'search'                  => true,
+			'inputType'               => 'text',
+			'eval'                    => array('helpwizard'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'explanation'             => 'autocomplete',
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'invisible' => array
 		(
