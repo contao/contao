@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\EventListener\Widget;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\Widget;
+use Contao\StringUtil;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AsHook('addCustomRegexp')]
@@ -35,7 +36,7 @@ class CustomRgxpListener
             return true;
         }
 
-        if (!preg_match($widget->customRgxp, $input)) {
+        if (!preg_match($widget->customRgxp, StringUtil::decodeEntities($input))) {
             $widget->addError($widget->errorMsg ?: $this->translator->trans('ERR.customRgxp', [$widget->customRgxp], 'contao_default'));
         }
 

@@ -226,7 +226,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		'customRgxp' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50', 'mandatory'=>true),
+			'eval'                    => array('useRawRequestData'=>true, 'maxlength'=>255, 'tl_class'=>'w50', 'mandatory'=>true),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'errorMsg' => array
