@@ -106,13 +106,13 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		'fieldsetStart'               => '{type_legend},type;{fconfig_legend},label;{expert_legend:hide},class;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'fieldsetStop'                => '{type_legend},type;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'html'                        => '{type_legend},type;{text_legend},html;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'text'                        => '{type_legend},type,name,label;{fconfig_legend},mandatory,placeholder;{rgxp_legend},rgxp;{expert_legend:hide},class,value,minlength,maxlength,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'textdigit'                   => '{type_legend},type,name,label;{fconfig_legend},mandatory,placeholder;{rgxp_legend},rgxp;{expert_legend:hide},class,value,minval,maxval,step,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'textcustom'                  => '{type_legend},type,name,label;{fconfig_legend},mandatory,placeholder;{rgxp_legend},rgxp,customRgxp,errorMsg;{expert_legend:hide},class,value,minlength,maxlength,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'password'                    => '{type_legend},type,name,label;{fconfig_legend},mandatory,placeholder;{rgxp_legend},rgxp;{expert_legend:hide},class,value,minlength,maxlength,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'passwordcustom'              => '{type_legend},type,name,label;{fconfig_legend},mandatory,placeholder;{rgxp_legend},rgxp,customRgxp,errorMsg;{expert_legend:hide},class,value,minlength,maxlength,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'textarea'                    => '{type_legend},type,name,label;{fconfig_legend},mandatory,placeholder;{rgxp_legend},rgxp;{size_legend},size;{expert_legend:hide},class,value,minlength,maxlength,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'textareacustom'              => '{type_legend},type,name,label;{fconfig_legend},mandatory,placeholder;{rgxp_legend},rgxp,customRgxp,errorMsg;{size_legend},size;{expert_legend:hide},class,value,minlength,maxlength,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'text'                        => '{type_legend},type,name,label;{fconfig_legend},mandatory,autocomplete,placeholder;{rgxp_legend},rgxp;{expert_legend:hide},class,value,minlength,maxlength,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'textdigit'                   => '{type_legend},type,name,label;{fconfig_legend},mandatory,autocomplete,placeholder;{rgxp_legend},rgxp;{expert_legend:hide},class,value,minval,maxval,step,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'textcustom'                  => '{type_legend},type,name,label;{fconfig_legend},mandatory,autocomplete,placeholder;{rgxp_legend},rgxp,customRgxp,errorMsg;{expert_legend:hide},class,value,minlength,maxlength,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'password'                    => '{type_legend},type,name,label;{fconfig_legend},mandatory,autocomplete,placeholder;{rgxp_legend},rgxp;{expert_legend:hide},class,value,minlength,maxlength,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'passwordcustom'              => '{type_legend},type,name,label;{fconfig_legend},mandatory,autocomplete,placeholder;{rgxp_legend},rgxp,customRgxp,errorMsg;{expert_legend:hide},class,value,minlength,maxlength,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'textarea'                    => '{type_legend},type,name,label;{fconfig_legend},mandatory,autocomplete,placeholder;{rgxp_legend},rgxp;{size_legend},size;{expert_legend:hide},class,value,minlength,maxlength,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'textareacustom'              => '{type_legend},type,name,label;{fconfig_legend},mandatory,autocomplete,placeholder;{rgxp_legend},rgxp,customRgxp,errorMsg;{size_legend},size;{expert_legend:hide},class,value,minlength,maxlength,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'select'                      => '{type_legend},type,name,label;{fconfig_legend},mandatory,multiple;{options_legend},options;{expert_legend:hide},class,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'radio'                       => '{type_legend},type,name,label;{fconfig_legend},mandatory;{options_legend},options;{expert_legend:hide},class;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'checkbox'                    => '{type_legend},type,name,label;{fconfig_legend},mandatory;{options_legend},options;{expert_legend:hide},class;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
@@ -399,6 +399,14 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w25'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
+		),
+		'autocomplete' => array
+		(
+			'search'                  => true,
+			'inputType'               => 'text',
+			'eval'                    => array('helpwizard'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'explanation'             => 'autocomplete',
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'invisible' => array
 		(
