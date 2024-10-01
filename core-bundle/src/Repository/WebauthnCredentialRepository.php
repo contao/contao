@@ -29,7 +29,7 @@ final class WebauthnCredentialRepository extends DoctrineCredentialSourceReposit
     }
 
     /**
-     * @return list<User>
+     * @return list<PublicKeyCredentialSource>
      */
     public function getAllForUser(User $user): array
     {
@@ -113,5 +113,29 @@ final class WebauthnCredentialRepository extends DoctrineCredentialSourceReposit
     {
         $this->getEntityManager()->remove($publicKeyCredentialSource);
         $this->getEntityManager()->flush();
+    }
+
+    public function getLastForUser(User $user): PublicKeyCredentialSource
+    {
+        $credential = $this->getEntityManager()
+            ->createQueryBuilder()
+            ->select('c')
+            ->from($this->class, 'c')
+            ->where('c.userHandle = :user_handle')
+            ->setParameter(':user_handle', $user->id)
+            ->orderBy('c.createdAt', 'desc')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+
+        if ($credential instanceof WebauthnCredential) {
+            $credential->otherUI = null;
+            $credential->backupEligible = null;
+            $credential->backupStatus = null;
+            $credential->uvInitialized = null;
+        }
+
+        return $credential;
     }
 }

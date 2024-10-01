@@ -15,7 +15,9 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Repository\WebauthnCredentialRepository;
 use ParagonIE\ConstantTime\Base32;
+use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Back end module "two factor".
@@ -49,8 +51,12 @@ class ModuleTwoFactor extends BackendModule
 			Message::addInfo($GLOBALS['TL_LANG']['MSC']['twoFactorEnforced']);
 		}
 
-		$ref = $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
+		$request = $container->get('request_stack')->getCurrentRequest();
+		$ref = $request->attributes->get('_contao_referer_id');
 		$return = $container->get('router')->generate('contao_backend', array('do'=>'security', 'ref'=>$ref));
+		/** @var UriSigner $uriSigner */
+		$uriSigner = $container->get('uri_signer');
+		$passkeyReturn = $uriSigner->sign($container->get('router')->generate('contao_backend', array('do'=>'security', 'ref'=>$ref, 'edit_new_passkey'=>1), UrlGeneratorInterface::ABSOLUTE_URL));
 
 		$this->Template->href = $this->getReferer(true);
 		$this->Template->ref = $ref;
@@ -78,9 +84,10 @@ class ModuleTwoFactor extends BackendModule
 			$container->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
 		}
 
+		/** @var WebauthnCredentialRepository $credentialRepo */
 		$credentialRepo = $container->get('contao.repository.webauthn_credential');
 
-		if (Input::post('FORM_SUBMIT') == 'tl_passkeys_credentials')
+		if (Input::post('FORM_SUBMIT') === 'tl_passkeys_credentials_actions')
 		{
 			if ($deleteCredentialId = Input::post('delete_passkey'))
 			{
@@ -95,8 +102,7 @@ class ModuleTwoFactor extends BackendModule
 					$credentialRepo->remove($credential);
 				}
 			}
-
-			if ($editCredentialId = Input::post('edit_passkey'))
+			elseif ($editCredentialId = Input::post('edit_passkey'))
 			{
 				/** @var WebauthnCredential $credential */
 				if ($credential = $credentialRepo->findOneById($editCredentialId))
@@ -106,8 +112,28 @@ class ModuleTwoFactor extends BackendModule
 						throw new AccessDeniedHttpException('Cannot edit credential ID ' . $editCredentialId);
 					}
 
-					$credential->name = Input::post('name');
+					$this->redirect($this->addToUrl('edit_passkey=' . $editCredentialId));
+				}
+			}
+
+			$this->reload();
+		}
+		elseif (Input::post('FORM_SUBMIT') === 'tl_passkeys_credentials_edit')
+		{
+			if ($saveCredentialId = Input::post('credential_id'))
+			{
+				/** @var WebauthnCredential $credential */
+				if ($credential = $credentialRepo->findOneById($saveCredentialId))
+				{
+					if ((int) $credential->userHandle !== $user->id)
+					{
+						throw new AccessDeniedHttpException('Cannot save credential ID ' . $saveCredentialId);
+					}
+
+					$credential->name = Input::post('passkey_name') ?? '';
 					$credentialRepo->saveCredentialSource($credential);
+
+					$this->redirect($this->addToUrl('', true, array('edit_passkey')));
 				}
 			}
 
@@ -116,8 +142,17 @@ class ModuleTwoFactor extends BackendModule
 
 		$this->Template->isEnabled = $user->useTwoFactor;
 		$this->Template->trustedDevices = $container->get('contao.security.two_factor.trusted_device_manager')->getTrustedDevices($user);
-		$this->Template->webauthnCreationSuccessRedirectUri = $return;
+		$this->Template->webauthnCreationSuccessRedirectUri = $passkeyReturn;
 		$this->Template->credentials = $credentialRepo->getAllForUser($user);
+		$this->Template->editPassKeyId = (string) Input::get('edit_passkey');
+
+		if (Input::get('edit_new_passkey') && $uriSigner->checkRequest($request))
+		{
+			if (($lastCredential = $credentialRepo->getLastForUser($user)) instanceof WebauthnCredential)
+			{
+				$this->Template->editPassKeyId = $lastCredential->getId();
+			}
+		}
 	}
 
 	/**

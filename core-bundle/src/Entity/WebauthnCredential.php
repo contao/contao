@@ -28,6 +28,9 @@ use Webauthn\TrustPath\TrustPath;
 #[Entity(repositoryClass: WebauthnCredentialRepository::class)]
 class WebauthnCredential extends PublicKeyCredentialSource
 {
+    #[Column(type: Types::STRING)]
+    public string $name;
+
     #[Column(type: Types::DATETIME_IMMUTABLE)]
     public readonly \DateTimeImmutable $createdAt;
 
@@ -36,14 +39,11 @@ class WebauthnCredential extends PublicKeyCredentialSource
     #[GeneratedValue(strategy: 'NONE')]
     private readonly string $id;
 
-    #[Column(type: Types::STRING)]
-    public readonly string $name;
-
     public function __construct(string $publicKeyCredentialId, string $type, array $transports, string $attestationType, TrustPath $trustPath, Uuid $aaguid, string $credentialPublicKey, string $userHandle, int $counter)
     {
         $this->id = Ulid::generate();
+        $this->name = '';
         $this->createdAt = new \DateTimeImmutable();
-
         parent::__construct($publicKeyCredentialId, $type, $transports, $attestationType, $trustPath, $aaguid, $credentialPublicKey, $userHandle, $counter);
     }
 

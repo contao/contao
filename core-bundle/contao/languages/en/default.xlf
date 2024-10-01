@@ -2192,6 +2192,15 @@
       <trans-unit id="MSC.passkeyLogin">
         <source>Sign in with a passkey</source>
       </trans-unit>
+      <trans-unit id="MSC.passkeyNameInput">
+        <source>Name this passkey …</source>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysName">
+        <source>Name/ID</source>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysCreatedAt">
+        <source>Created at</source>
+      </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
       </trans-unit>
