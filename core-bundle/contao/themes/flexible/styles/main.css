@@ -2027,10 +2027,6 @@ ul.sgallery li {
 }
 
 /* CHMOD table */
-.tl_chmod {
-	width: 100%;
-}
-
 .tl_chmod th {
 	height: 18px;
 	text-align: center;
@@ -2049,10 +2045,19 @@ ul.sgallery li {
 	background: var(--table-header);
 }
 
+.tl_chmod th[scope="row"] {
+	text-align: left;
+}
+
 .tl_chmod th, .tl_chmod td {
-	width: 14.2857%;
+	width: 100px;
 	padding: 6px;
 	border: 1px solid var(--content-bg);
+}
+
+.tl_chmod tr th:first-child, .tl_chmod tr td:first-child {
+	width: auto;
+	min-width: 100px;
 }
 
 /* Wizards */
