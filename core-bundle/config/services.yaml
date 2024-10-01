@@ -179,6 +179,14 @@ services:
     contao.csrf.token_storage:
         class: Contao\CoreBundle\Csrf\MemoryTokenStorage
 
+    contao.data_container.operations_builder:
+        class: Contao\CoreBundle\DataContainer\DataContainerOperationsBuilder
+        public: true
+        arguments:
+            - '@twig'
+            - '@security.helper'
+            - '@router'
+
     contao.data_collector:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
         arguments:
