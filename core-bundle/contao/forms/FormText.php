@@ -124,13 +124,9 @@ class FormText extends Widget
 				break;
 
 			case 'autocomplete':
-				if (true === $varValue)
+				if (\is_bool($varValue))
 				{
-					$varValue = 'on';
-				}
-				elseif (false === $varValue)
-				{
-					$varValue = 'off';
+					$varValue = $varValue ? 'on' : 'off';
 				}
 
 				$this->arrAttributes[$strKey] = $varValue;
