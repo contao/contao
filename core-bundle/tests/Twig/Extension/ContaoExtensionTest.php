@@ -108,6 +108,7 @@ class ContaoExtensionTest extends TestCase
             'csp_source' => [],
             'csp_hash' => [],
             'content_url' => [],
+            'backend_icon' => ['html'],
         ];
 
         $functions = $this->getContaoExtension()->getFunctions();

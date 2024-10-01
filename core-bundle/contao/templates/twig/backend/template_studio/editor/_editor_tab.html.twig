@@ -1,0 +1,8 @@
+{% embed "@Contao/backend/component/tabs/_panel.html.twig" with {
+    label: identifier,
+    panel_id: 'template-studio--tab_'~ identifier,
+} %}
+    {% block content %}
+        <i>TODO: This tab will contain editors for the identifier "{{ identifier }}".</i>
+    {% endblock %}
+{% endembed %}

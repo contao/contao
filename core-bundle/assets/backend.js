@@ -49,6 +49,11 @@ document.documentElement.addEventListener('turbo:frame-missing', (e) => {
         console.warn('Turbo frame #'+e.target.id+' is missing.');
     }
 
+    // Do not break out of frames that load their content via src
+    if (e.target.hasAttribute('src')) {
+        return;
+    }
+
     e.preventDefault();
     e.detail.visit(e.detail.response);
 });
