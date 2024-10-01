@@ -610,11 +610,42 @@ h2.sub_headline {
 }
 
 /* Filter */
-.tl_panel, .tl_version_panel {
-	padding: 4px 12px;
+.tl_panel,
+.tl_version_panel {
+	padding: 8px 15px;
 	background: var(--panel-bg);
 	border-bottom: 1px solid var(--content-border);
 	text-align: right;
+	flex-wrap: wrap;
+}
+
+.tl_subpanel,
+.tl_panel {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	gap: 4px;
+}
+
+/* Limit, search and submit */
+.tl_panel:last-of-type {
+	column-gap: 15px;
+	min-width: 100px;
+}
+
+.tl_subpanel :is(select, input, button) {
+	height: 30px;
+}
+
+.tl_filter {
+	flex-wrap: wrap;
+	gap: 6px 4px;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.tl_filter > * {
+	margin: 0;
 }
 
 .tl_version_panel {
@@ -637,31 +668,61 @@ h2.sub_headline {
 	position: relative;
 }
 
+.tl_limit {
+	width: 50%;
+	max-width: 180px;
+}
+
+.tl_search {
+	gap: 0;
+}
+
+.tl_search > strong:first-of-type {
+	padding-right: 4px;
+}
+
+.tl_search > .tl_select {
+	border-radius: 2px 0 0 2px;
+	max-width: 100px;
+}
+
+.tl_search > .tl_text {
+	border-left-width: 0;
+	border-radius: 0 2px 2px 0;
+}
+
 .tl_img_submit {
-	width: 16px;
-	height: 16px;
-	border: 0;
-	margin: 0;
-	padding: 0;
-	text-indent: 16px; /* 16px width */
 	white-space: nowrap;
-	overflow: hidden;
-	position: relative;
-	top: 9px;
-	cursor: pointer;
+	background-color: var(--form-button);
+	background-position: 8px center !important;
+	background-repeat: no-repeat;
+	margin: 0;
+	padding: 7px 12px 7px 30px;
+	border: 1px solid var(--form-border);
+	border-radius: 2px;
+	box-sizing: border-box;
+	transition: background .2s ease;
+}
+
+.tl_img_submit:hover {
+	background-color: var(--form-bg-hover);
 }
 
 .filter_apply {
-	background: url("icons/filter-apply.svg") center center no-repeat;
+	background-image: url("icons/filter-apply.svg");
 }
 
 .filter_reset {
-	background: url("icons/filter-reset.svg") center center no-repeat;
+	background-image: url("icons/filter-reset.svg");
+	margin-left: 6px;
 }
 
 .tl_subpanel {
-	float: right;
 	letter-spacing: -.31em;
+}
+
+.tl_subpanel > * {
+	margin: 0;
 }
 
 .tl_subpanel * {
@@ -674,64 +735,14 @@ h2.sub_headline {
 
 .tl_submit_panel {
 	min-width: 32px;
-	padding-left: 6px;
-	padding-right: 3px;
 }
 
 .tl_panel .active, .tl_panel_bottom .active, #search .active {
 	background-color: var(--active-bg);
 }
 
-.tl_submit_panel button + button {
-	margin-left: 1px;
-}
-
-.tl_filter {
-	width: 100%;
-}
-
-.tl_filter .tl_select {
-	max-width: 14.65%;
-	margin-left: 3px;
-}
-
-.tl_submit_panel + .tl_filter {
-	width: 86%;
-}
-
-.tl_limit {
-	width: 22%;
-}
-
-.tl_limit .tl_select {
-	width: 52%;
-	margin-left: 3px;
-}
-
-.tl_search {
-	width: 40%;
-}
-
-.tl_search .tl_select {
-	width: 38%;
-	margin-left: 3px;
-	margin-right: 1%;
-}
-
-.tl_search .tl_text {
-	width: 30%;
-	margin-left: 1%;
-	-webkit-appearance: textfield;
-	box-sizing: content-box;
-}
-
-.tl_sorting {
-	width: 26%;
-}
-
-.tl_sorting .tl_select {
-	width: 60%;
-	margin-left: 1%;
+.has-panels:has(.tl_panel .active) .filter_apply {
+	background-color: var(--filter-button-active);
 }
 
 /* Jump targets */
@@ -3118,47 +3129,47 @@ fieldset.collapsed > legend {
 		display: none;
 	}
 
-	.tl_filter {
+	/*.tl_filter {
 		box-sizing: border-box;
 		padding: 0 3px 0 7px;
-	}
+	}*/
 
 	.tl_filter strong {
 		display: none;
 	}
 
-	.tl_filter .tl_select {
+	/*.tl_filter .tl_select {
 		display: block;
 		max-width: 100%;
-	}
+	}*/
 
-	.tl_search {
+	/*.tl_search {
 		width: 76%;
 		max-width: 283px;
-	}
+	}*/
 
-	.tl_search .tl_select {
+	/*.tl_search .tl_select {
 		width: 36%;
-	}
+	}*/
 
-	.tl_search .tl_text {
+	/*.tl_search .tl_text {
 		width: 26%;
-	}
+	}*/
 
-	.tl_sorting {
+	/*.tl_sorting {
 		width: 60%;
 		max-width: 212px;
-	}
+	}*/
 
-	.tl_limit {
+	/*.tl_limit {
 		width: 50%;
 		max-width: 177px;
-	}
+	}*/
 
-	.tl_submit_panel {
+	/*.tl_submit_panel {
 		float: right;
 		z-index: 1;
-	}
+	}*/
 
 	input.tl_submit {
 		margin-top: 3px;
@@ -3225,10 +3236,24 @@ fieldset.collapsed > legend {
 	.tl_metawizard .tl_text {
 		width: 100%;
 	}
+
+	.tl_img_submit {
+		width: 30px;
+		padding-left: 20px;
+		text-indent: 20px;
+		overflow: hidden;
+	}
 }
 
 @media (max-width: 479px) {
 	.tl_modulewizard td:first-child .tl_select {
 		max-width: 48vw;
+	}
+}
+
+@media (min-width: 768px) {
+	.tl_filter > * {
+		flex: 1 1 0;
+		max-width: 16%;
 	}
 }
