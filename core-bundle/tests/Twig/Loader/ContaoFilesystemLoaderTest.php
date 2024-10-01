@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Loader;
 
+use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Exception\InvalidThemePathException;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
@@ -211,7 +211,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $this->assertSame($isFresh, $loader->isFresh('@Contao/text.html.twig', $cacheTime));
     }
 
-    public function provideTemplateFilemtimeSamples(): \Generator
+    public static function provideTemplateFilemtimeSamples(): iterable
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
         $cacheTime = 1623924000;
@@ -285,7 +285,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $loader->getDynamicParent($identifier, $sourcePath);
     }
 
-    public function provideInvalidDynamicParentQueries(): \Generator
+    public static function provideInvalidDynamicParentQueries(): iterable
     {
         yield 'invalid chain' => [
             'random',
@@ -326,7 +326,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $this->assertSame($expectedChains, $loader->getInheritanceChains($themeSlug));
     }
 
-    public function provideThemeSlugs(): \Generator
+    public static function provideThemeSlugs(): iterable
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
 
@@ -335,8 +335,9 @@ class ContaoFilesystemLoaderTest extends TestCase
                 Path::join($projectDir, 'templates/text.html.twig') => '@Contao_Global/text.html.twig',
                 Path::join($projectDir, 'contao/templates/some/random/text.html.twig') => '@Contao_App/text.html.twig',
             ],
+            'my/theme/text' => [Path::join($projectDir, 'templates/my/theme/text.html.twig') => '@Contao_Global/my/theme/text.html.twig'],
+            'bar' => [Path::join($projectDir, 'contao/templates/bar.html.twig') => '@Contao_App/bar.html.twig'],
             'nested-dir/foo' => [Path::join($projectDir, 'contao/templates/other/nested-dir/foo.html.twig') => '@Contao_App/nested-dir/foo.html.twig'],
-            'bar' => [Path::join($projectDir, 'src/Resources/contao/templates/bar.html.twig') => '@Contao_App/bar.html.twig'],
         ];
 
         yield 'no theme slug' => [
@@ -357,8 +358,9 @@ class ContaoFilesystemLoaderTest extends TestCase
                     Path::join($projectDir, 'templates/text.html.twig') => '@Contao_Global/text.html.twig',
                     Path::join($projectDir, 'contao/templates/some/random/text.html.twig') => '@Contao_App/text.html.twig',
                 ],
+                'my/theme/text' => [Path::join($projectDir, 'templates/my/theme/text.html.twig') => '@Contao_Global/my/theme/text.html.twig'],
+                'bar' => [Path::join($projectDir, 'contao/templates/bar.html.twig') => '@Contao_App/bar.html.twig'],
                 'nested-dir/foo' => [Path::join($projectDir, 'contao/templates/other/nested-dir/foo.html.twig') => '@Contao_App/nested-dir/foo.html.twig'],
-                'bar' => [Path::join($projectDir, 'src/Resources/contao/templates/bar.html.twig') => '@Contao_App/bar.html.twig'],
             ],
         ];
     }
@@ -388,19 +390,17 @@ class ContaoFilesystemLoaderTest extends TestCase
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
 
-        $bundles = [
-            'CoreBundle' => 'class',
-            'FooBundle' => ContaoModuleBundle::class,
-            'BarBundle' => 'class',
-            'App' => 'class',
-        ];
-
-        $bundlesMetadata = [
-            'App' => ['path' => Path::join($projectDir, 'contao')],
-            'FooBundle' => ['path' => Path::join($projectDir, 'vendor-bundles/FooBundle')],
-            'CoreBundle' => ['path' => Path::join($projectDir, 'vendor-bundles/CoreBundle')],
-            'BarBundle' => ['path' => Path::join($projectDir, 'vendor-bundles/BarBundle')],
-        ];
+        $resourceFinder = $this->createMock(ResourceFinder::class);
+        $resourceFinder
+            ->method('getExistingSubpaths')
+            ->with('templates')
+            ->willReturn([
+                'CoreBundle' => Path::join($projectDir, 'vendor-bundles/CoreBundle/Resources/contao/templates'),
+                'foo' => Path::join($projectDir, 'system/modules/foo/templates'),
+                'BarBundle' => Path::join($projectDir, 'vendor-bundles/BarBundle/contao/templates'),
+                'App' => Path::join($projectDir, 'contao/templates'),
+            ])
+        ;
 
         $themePaths = [
             'templates/my/theme',
@@ -414,8 +414,7 @@ class ContaoFilesystemLoaderTest extends TestCase
 
         $templateLocator = new TemplateLocator(
             $projectDir,
-            $bundles,
-            $bundlesMetadata,
+            $resourceFinder,
             new ThemeNamespace(),
             $connection,
         );
@@ -434,11 +433,12 @@ class ContaoFilesystemLoaderTest extends TestCase
                 $globalPath = Path::join($projectDir, 'templates/text.html.twig') => '@Contao_Global/text.html.twig',
                 $appPath = Path::join($projectDir, 'contao/templates/some/random/text.html.twig') => '@Contao_App/text.html.twig',
                 $barPath = Path::join($projectDir, 'vendor-bundles/BarBundle/contao/templates/text.html.twig') => '@Contao_BarBundle/text.html.twig',
-                $fooPath = Path::join($projectDir, 'vendor-bundles/FooBundle/templates/any/text.html.twig') => '@Contao_FooBundle/text.html.twig',
+                $fooPath = Path::join($projectDir, 'system/modules/foo/templates/any/text.html.twig') => '@Contao_foo/text.html.twig',
                 $corePath = Path::join($projectDir, 'vendor-bundles/CoreBundle/Resources/contao/templates/text.html.twig') => '@Contao_CoreBundle/text.html.twig',
             ],
+            'my/theme/text' => [Path::join($projectDir, 'templates/my/theme/text.html.twig') => '@Contao_Global/my/theme/text.html.twig'],
+            'bar' => [Path::join($projectDir, 'contao/templates/bar.html.twig') => '@Contao_App/bar.html.twig'],
             'nested-dir/foo' => [Path::join($projectDir, 'contao/templates/other/nested-dir/foo.html.twig') => '@Contao_App/nested-dir/foo.html.twig'],
-            'bar' => [Path::join($projectDir, 'src/Resources/contao/templates/bar.html.twig') => '@Contao_App/bar.html.twig'],
         ];
 
         // Full hierarchy
@@ -494,7 +494,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         );
 
         $this->assertSame(
-            '@Contao_FooBundle/text.html.twig',
+            '@Contao_foo/text.html.twig',
             $loader->getDynamicParent('text.html.twig', $barPath),
             'chain: bar bundle -> foo bundle',
         );
@@ -630,10 +630,14 @@ class ContaoFilesystemLoaderTest extends TestCase
     {
         $projectDir ??= Path::canonicalize(__DIR__.'/../../Fixtures/Twig/default-project');
 
-        $bundles = array_map(
-            static fn (int $key, string $path): string => "Test{$key}Bundle",
-            array_keys($additionalPaths), array_values($additionalPaths),
-        );
+        $paths = array_combine(array_map(
+            static fn (int $key): string => "Test{$key}Bundle",
+            array_keys($additionalPaths),
+        ), $additionalPaths);
+
+        if (is_dir(Path::join($projectDir, 'contao/templates'))) {
+            $paths['App'] = Path::join($projectDir, 'contao/templates');
+        }
 
         $connection = $this->createMock(Connection::class);
         $connection
@@ -641,19 +645,16 @@ class ContaoFilesystemLoaderTest extends TestCase
             ->willReturn($themePaths)
         ;
 
+        $resourceFinder = $this->createMock(ResourceFinder::class);
+        $resourceFinder
+            ->method('getExistingSubpaths')
+            ->with('templates')
+            ->willReturn($paths)
+        ;
+
         $templateLocator = new TemplateLocator(
             $projectDir,
-            array_combine(
-                $bundles,
-                array_fill(0, \count($additionalPaths), ContaoModuleBundle::class),
-            ),
-            array_combine(
-                $bundles,
-                array_map(
-                    static fn (string $path): array => ['path' => $path],
-                    $additionalPaths,
-                ),
-            ),
+            $resourceFinder,
             new ThemeNamespace(),
             $connection,
         );
@@ -675,7 +676,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $namespaces = ['Contao\CoreBundle\Twig\Loader', 'Twig\Loader'];
 
         foreach ($namespaces as $namespace) {
-            $mock = sprintf(
+            $mock = \sprintf(
                 <<<'EOPHP'
                     namespace %s;
 

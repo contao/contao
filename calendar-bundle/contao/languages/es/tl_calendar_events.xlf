@@ -275,6 +275,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.start.1">
         <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Si desea evitar que el evento se muestre en el sitio web antes de una fecha/hora determinada, puede ingresarlo aquí. De lo contrario, deje el campo en blanco.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.0">
         <source>Show until</source>
@@ -282,6 +283,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.1">
         <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Si desea evitar que el evento se muestre en el sitio web después de una fecha/hora determinada, puede ingresarlo aquí. De lo contrario, deje el campo en blanco.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.tstamp.0">
         <source>Revision date</source>
@@ -389,9 +391,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.toggle.1">
         <source>Unpublish event ID %s</source>
+        <target>Despublicar evento ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.toggle.2">
         <source>Publish event ID %s</source>
+        <target>Publicar evento ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature.0">
         <source>Feature/unfeature event ID %s</source>
@@ -399,9 +403,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature.1">
         <source>Unfeature event ID %s</source>
+        <target>ID %s de evento no destacado</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature.2">
         <source>Feature event ID %s</source>
+        <target>ID %s de evento de función</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>

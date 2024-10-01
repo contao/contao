@@ -89,7 +89,7 @@ class VideoControllerTest extends ContentElementTestCase
                 <figure>
                 <button data-splash-screen>
                     <img src="files/image1.jpg" alt>
-                    <p>translated(contao_default:MSC.splashScreen) translated(contao_default:MSC.dataTransmission[Vimeo])</p>
+                    <span>translated(contao_default:MSC.splashScreen) translated(contao_default:MSC.dataTransmission[Vimeo])</span>
                     <template>
                         <iframe
                             width="1600"
@@ -107,6 +107,8 @@ class VideoControllerTest extends ContentElementTestCase
         $additionalBodyCode = $responseContextData[DocumentLocation::endOfBody->value];
 
         $this->assertCount(1, $additionalBodyCode);
+        $this->assertArrayHasKey('splash_screen_script', $additionalBodyCode);
+
         $this->assertMatchesRegularExpression(
             '/<script>[^<]+button\.insertAdjacentHTML[^<]+<\/script>/',
             $additionalBodyCode['splash_screen_script'],

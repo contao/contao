@@ -37,7 +37,7 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
      */
     protected function findCandidatePages(Request $request): array
     {
-        $candidates = array_map('strval', $this->candidates->getCandidates($request));
+        $candidates = array_map(\strval(...), $this->candidates->getCandidates($request));
 
         if (!$candidates) {
             return [];

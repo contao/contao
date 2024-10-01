@@ -31,7 +31,7 @@ class DateInsertTagTest extends ContaoTestCase
         }
     }
 
-    public function expiresAtProvider(): \Generator
+    public static function expiresAtProvider(): iterable
     {
         yield 'Null when using only using uncacheable format characters' => [
             ['H:i:s', 's', 'H:i'],

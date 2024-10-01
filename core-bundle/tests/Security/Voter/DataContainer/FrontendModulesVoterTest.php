@@ -137,7 +137,7 @@ class FrontendModulesVoterTest extends TestCase
         );
     }
 
-    public function userDataProvider(): \Generator
+    public static function userDataProvider(): iterable
     {
         yield 'Admin user has unlimited access' => [
             ['isAdmin' => true],

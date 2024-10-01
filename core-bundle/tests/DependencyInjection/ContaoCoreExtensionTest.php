@@ -44,7 +44,6 @@ use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
 use Symfony\Component\HttpKernel\EventListener\ErrorListener;
 use Symfony\Component\HttpKernel\EventListener\LocaleListener as BaseLocaleListener;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
-use Symfony\Component\Security\Core\Authorization\TraceableAccessDecisionManager;
 use Symfony\Component\Security\Http\Firewall;
 
 class ContaoCoreExtensionTest extends TestCase
@@ -84,7 +83,7 @@ class ContaoCoreExtensionTest extends TestCase
         $container = $this->getContainerBuilder();
 
         $makeResponsePrivateDefinition = $container->getDefinition('contao.listener.make_response_private');
-        $attribute = (new \ReflectionClass($makeResponsePrivateDefinition->getClass()))->getAttributes()[0];
+        $attribute = (new \ReflectionClass($makeResponsePrivateDefinition->getClass()))->getMethod('makeResponsePrivate')->getAttributes()[0];
         $makeResponsePrivatePriority = $attribute->getArguments()['priority'];
 
         $mergeHeadersListenerDefinition = $container->getDefinition('contao.listener.merge_http_headers');
@@ -278,8 +277,8 @@ class ContaoCoreExtensionTest extends TestCase
 
         $definition = $container->getDefinition('contao.crawl.escargot.factory');
 
-        $this->assertSame(['https://example.com'], $definition->getArgument(3));
-        $this->assertSame(['proxy' => 'http://localhost:7080', 'headers' => ['Foo' => 'Bar']], $definition->getArgument(4));
+        $this->assertSame(['https://example.com'], $definition->getArgument(4));
+        $this->assertSame(['proxy' => 'http://localhost:7080', 'headers' => ['Foo' => 'Bar']], $definition->getArgument(5));
     }
 
     public function testConfiguresTheBackupManagerCorrectly(): void
@@ -445,6 +444,27 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertFalse($container->hasDefinition('contao.search.default_indexer'));
     }
 
+    public function testRemovesWebWorkerIfNoTransportsAreConfigured(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $extension = new ContaoCoreExtension();
+        $extension->load(
+            [
+                'contao' => [
+                    'messenger' => [
+                        'web_worker' => [
+                            'transports' => [],
+                        ],
+                    ],
+                ],
+            ],
+            $container,
+        );
+
+        $this->assertFalse($container->hasDefinition('contao.messenger.web_worker'));
+    }
+
     public function testSetsTheCorrectFeatureFlagOnTheSearchIndexListener(): void
     {
         $container = $this->getContainerBuilder();
@@ -532,7 +552,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(Path::join($this->getTempDir(), $expectedWebDir), $container->getParameter('contao.web_dir'));
     }
 
-    public function provideComposerJsonContent(): \Generator
+    public static function provideComposerJsonContent(): iterable
     {
         yield 'extra.public-dir key not present' => [
             [],
@@ -631,26 +651,6 @@ class ContaoCoreExtensionTest extends TestCase
         (new ContaoCoreExtension())->configureFilesystem($config);
     }
 
-    public function testRegistersTraceableAccessDecisionMangerInDebug(): void
-    {
-        $container = new ContainerBuilder(
-            new ParameterBag([
-                'kernel.debug' => true,
-                'kernel.charset' => 'UTF-8',
-                'kernel.project_dir' => Path::normalize($this->getTempDir()),
-            ]),
-        );
-
-        $extension = new ContaoCoreExtension();
-        $extension->load([], $container);
-
-        $this->assertTrue($container->hasDefinition('contao.debug.security.access.decision_manager'));
-
-        $definition = $container->findDefinition('contao.debug.security.access.decision_manager');
-        $this->assertSame(TraceableAccessDecisionManager::class, $definition->getClass());
-        $this->assertSame('security.access.decision_manager', $definition->getDecoratedService()[0]);
-    }
-
     public function testHstsSecurityConfiguration(): void
     {
         $container = $this->getContainerBuilder();
@@ -741,6 +741,7 @@ class ContaoCoreExtensionTest extends TestCase
     {
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
+
         $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
 
         $this->assertArrayHasKey(AsContentElement::class, $autoConfiguredAttributes);
@@ -769,9 +770,11 @@ class ContaoCoreExtensionTest extends TestCase
             $definition,
             new AsContentElement(...[
                 'type' => 'content_element/text',
+                'category' => 'miscellaneous',
                 'template' => 'a_template',
                 'method' => 'aMethod',
                 'renderer' => 'inline',
+                'nestedFragments' => false,
                 'foo' => 'bar',
                 'baz' => 42,
             ]),
@@ -1009,7 +1012,7 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
-    public function provideAttributesForMethods(): \Generator
+    public static function provideAttributesForMethods(): iterable
     {
         yield 'cronjob' => [AsCronJob::class];
         yield 'hook' => [AsHook::class];

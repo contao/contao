@@ -17,6 +17,11 @@ services:
             - '@security.helper'
             - '@translator'
 
+    contao.listener.backend_noindex:
+        class: Contao\CoreBundle\EventListener\BackendNoindexListener
+        arguments:
+            - '@contao.routing.scope_matcher'
+
     contao.listener.backend_preview_redirect:
         class: Contao\CoreBundle\EventListener\BackendPreviewRedirectListener
         arguments:
@@ -129,6 +134,9 @@ services:
         arguments:
             - '@database_connection'
 
+    contao.listener.data_container.legacy_gallery_palette:
+        class: Contao\CoreBundle\EventListener\DataContainer\LegacyGalleryPaletteListener
+
     contao.listener.data_container.logout_page_redirect:
         class: Contao\CoreBundle\EventListener\DataContainer\LogoutPageRedirectListener
 
@@ -177,6 +185,13 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\PageUseSslDefaultListener
         arguments:
             - '@request_stack'
+
+    contao.listener.data_container.personal_data_password:
+        class: Contao\CoreBundle\EventListener\DataContainer\PersonalDataPasswordListener
+        arguments:
+            - '@database_connection'
+            - '@translator'
+            - '@security.helper'
 
     contao.listener.data_container.preview_link:
         class: Contao\CoreBundle\EventListener\DataContainer\PreviewLinkListener
@@ -284,22 +299,6 @@ services:
         arguments:
             - '%kernel.secret%'
             - '%contao.web_dir%'
-
-    contao.listener.insert_tags.asset:
-        class: Contao\CoreBundle\EventListener\InsertTags\AssetListener
-        arguments:
-            - '@assets.packages'
-
-    contao.listener.insert_tags.date:
-        class: Contao\CoreBundle\EventListener\InsertTags\DateListener
-        arguments:
-            - '@contao.framework'
-            - '@request_stack'
-
-    contao.listener.insert_tags.translation:
-        class: Contao\CoreBundle\EventListener\InsertTags\TranslationListener
-        arguments:
-            - '@translator'
 
     contao.listener.interest_cohort:
         class: Contao\CoreBundle\EventListener\InterestCohortListener
@@ -524,11 +523,6 @@ services:
         class: Contao\CoreBundle\Messenger\EventListener\MessageListener
         arguments:
             - '@monolog.logger.contao.error'
-
-    contao.messenger.worker_listener:
-        class: Contao\CoreBundle\Messenger\EventListener\WorkerListener
-        arguments:
-            - '@contao.messenger.auto_fallback_notifier'
 
     contao.twig.loader.auto_refresh_template_hierarchy_listener:
         class: Contao\CoreBundle\Twig\Loader\AutoRefreshTemplateHierarchyListener

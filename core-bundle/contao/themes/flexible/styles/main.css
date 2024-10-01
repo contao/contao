@@ -1172,18 +1172,19 @@ table.tl_listing {
 }
 
 .tl_file, .tl_file_list {
-	position: relative;
 	padding: 5px 6px;
 	border-bottom: 1px solid var(--border);
 	background: var(--content-bg);
 }
 
 .tl_file_list .ellipsis {
-	height: 16px;
-	text-overflow: ellipsis;
 	overflow: hidden;
-	padding-right: 18px;
 	word-break: break-all;
+	display: -webkit-box;
+	-webkit-line-clamp: 1;
+	-webkit-box-orient: vertical;
+	line-height: normal;
+	margin-top: -1px;
 }
 
 .tl_right_nowrap {
@@ -1657,14 +1658,29 @@ table.tl_listing {
 	overflow: hidden;
 }
 
+[data-contao--limit-height-target] {
+	position: relative;
+}
+
+[data-contao--limit-height-target][style*="max-height"] .limit_toggler {
+	background: linear-gradient(transparent, var(--content-bg) 60%);
+}
+
+[data-contao--limit-height-target][style*="max-height"]:hover .limit_toggler {
+	background: linear-gradient(transparent, var(--hover-row) 60%);
+}
+
 .limit_toggler {
 	width: 100%;
 	position: absolute;
 	bottom: 0;
 	left: 0;
-	background: var(--content-bg);
+	height: 40px;
 	line-height: 11px;
-	text-align: center;
+	z-index: 1;
+	display: flex;
+	justify-content: center;
+	align-items: end;
 }
 
 .limit_toggler button {
@@ -1894,14 +1910,17 @@ label.tl_change_selected {
 }
 
 ul.sgallery {
-	display: flow-root;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, 100px);
+	grid-auto-rows: 75px;
+	gap: 4px;
+	padding: 2px 0;
 }
 
 ul.sgallery li {
 	min-width: 100px;
 	min-height: 75px;
-	float: left;
-	margin: 2px 4px 2px 0;
+	margin: 0;
 	padding: 0;
 	background: var(--form-button);
 	display: -webkit-flex;
@@ -2398,12 +2417,10 @@ ul.sgallery li {
 
 /* Misc */
 .ce_gallery ul {
-	display: flow-root;
-}
-
-.ce_gallery li {
-	float: left;
-	margin: 0 6px 6px 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin-bottom: 6px;
 }
 
 .drag-handle {
@@ -2736,6 +2753,7 @@ label.error, legend.error, .tl_checkbox_container.error legend {
 
 /* Fieldsets */
 fieldset.tl_tbox, fieldset.tl_box {
+	min-width: 0;
 	margin-top: 5px;
 	padding-top: 0;
 	border-top: none;
@@ -2748,11 +2766,31 @@ fieldset.tl_tbox.nolegend, fieldset.tl_box.nolegend {
 	border-top: 0;
 }
 
-fieldset.tl_tbox > legend, fieldset.tl_box > legend {
+fieldset:is(.tl_tbox,.tl_box) > legend {
 	box-sizing: border-box;
 	color: var(--legend);
 	padding: 9px 12px 9px 28px;
 	background: url("icons/navcol.svg") 13px 10px no-repeat;
+	width: 100%;
+}
+
+fieldset:is(.tl_tbox,.tl_box) > legend[onclick] {
+	cursor: pointer;
+}
+
+fieldset:is(.tl_tbox,.tl_box) > legend:has(> button) {
+	padding: 0;
+	background: none;
+}
+
+fieldset:is(.tl_tbox,.tl_box) > legend > button {
+	text-align: initial;
+	border: 0 none;
+	width: 100%;
+	line-height: inherit;
+	box-sizing: border-box;
+	padding: 9px 12px 9px 28px;
+	background: transparent url("icons/navcol.svg") 13px 10px no-repeat;
 	cursor: pointer;
 }
 
@@ -2765,8 +2803,9 @@ fieldset.collapsed div {
 	display: none !important;
 }
 
-fieldset.collapsed > legend {
-	background: url("icons/navexp.svg") 13px 10px no-repeat;
+fieldset.collapsed > legend > button,
+fieldset.collapsed > legend:not(:has(> button)) {
+	background-image: url("icons/navexp.svg");
 }
 
 /* Maintenance */
@@ -3037,7 +3076,7 @@ fieldset.collapsed > legend {
 	}
 
 	#main .content {
-		margin: 15px 10px;
+		margin: 0 10px 10px;
 	}
 
 	#main_headline {
@@ -3153,10 +3192,6 @@ fieldset.collapsed > legend {
 
 	#tl_maintenance_cache tr th:last-child, #tl_maintenance_cache tr td:last-child {
 		display: none;
-	}
-
-	.tl_file_list .ellipsis {
-		padding-right: 10px;
 	}
 
 	.tl_undo_header {

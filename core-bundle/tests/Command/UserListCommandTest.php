@@ -75,7 +75,7 @@ class UserListCommandTest extends TestCase
         $this->assertSame($expected, $output);
     }
 
-    public function listsUsersProvider(): \Generator
+    public static function listsUsersProvider(): iterable
     {
         yield 'Returns empty result' => [
             [],

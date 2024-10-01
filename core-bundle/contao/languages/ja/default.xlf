@@ -373,6 +373,10 @@
         <source>There is no administrator e-mail address set, please contact the site administrator.</source>
         <target>管理者の電子メールアドレスが設定されていません、サイトの管理者に連絡してください。</target>
       </trans-unit>
+      <trans-unit id="ERR.personalDataPassword">
+        <source>There is at least one &quot;personal data&quot; module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the &quot;change password&quot; module instead.</source>
+        <target>パスワードを変更できるモジュールに少なくとも「個人データ」があります。これはセキュリティ上の弱点で、Contao 6では動作しなくなります。代わりに「パスワード変更」モジュールを使用してください。</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>%dと%dを加算してください。</target>
@@ -2502,8 +2506,8 @@
         <target>Facebookで共有</target>
       </trans-unit>
       <trans-unit id="MSC.twitterShare">
-        <source>Share on Twitter</source>
-        <target>Twitterで共有</target>
+        <source>Share on X (formerly Twitter)</source>
+        <target>X(かつてのTwitter)で共有</target>
       </trans-unit>
       <trans-unit id="MSC.pleaseWait">
         <source>Please wait</source>

@@ -78,11 +78,11 @@ class ImageFactory implements ImageFactoryInterface
             }
 
             if (!\in_array($fileExtension, $this->validExtensions, true)) {
-                throw new \InvalidArgumentException(sprintf('Image type "%s" was not allowed to be processed', $fileExtension));
+                throw new \InvalidArgumentException(\sprintf('Image type "%s" was not allowed to be processed', $fileExtension));
             }
 
             if (!Path::isAbsolute($path)) {
-                throw new \InvalidArgumentException(sprintf('Image path "%s" must be absolute', $path));
+                throw new \InvalidArgumentException(\sprintf('Image path "%s" must be absolute', $path));
             }
 
             if (
@@ -113,7 +113,7 @@ class ImageFactory implements ImageFactoryInterface
                 try {
                     $importantPart = $this->createImportantPart($image);
                 } catch (CoordinatesOutOfBoundsException $exception) {
-                    throw new CoordinatesOutOfBoundsException(sprintf('%s for file "%s"', $exception->getMessage(), $path), $exception->getCode(), $exception);
+                    throw new CoordinatesOutOfBoundsException(\sprintf('%s for file "%s"', $exception->getMessage(), $path), $exception->getCode(), $exception);
                 }
             }
 
@@ -148,7 +148,7 @@ class ImageFactory implements ImageFactoryInterface
     public function getImportantPartFromLegacyMode(ImageInterface $image, string $mode): ImportantPart
     {
         if (1 !== substr_count($mode, '_')) {
-            throw new \InvalidArgumentException(sprintf('"%s" is not a legacy resize mode', $mode));
+            throw new \InvalidArgumentException(\sprintf('"%s" is not a legacy resize mode', $mode));
         }
 
         $importantPart = [0, 0, 1, 1];

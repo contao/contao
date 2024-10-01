@@ -80,7 +80,7 @@ class UserSessionListenerTest extends TestCase
         $this->assertSame($sessionValues, $bag->all());
     }
 
-    public function scopeBagProvider(): \Generator
+    public static function scopeBagProvider(): iterable
     {
         yield [ContaoCoreBundle::SCOPE_BACKEND, BackendUser::class, 'contao_backend'];
         yield [ContaoCoreBundle::SCOPE_FRONTEND, FrontendUser::class, 'contao_frontend'];
@@ -120,7 +120,7 @@ class UserSessionListenerTest extends TestCase
         $listener->write($this->getResponseEvent($request));
     }
 
-    public function scopeTableProvider(): \Generator
+    public static function scopeTableProvider(): iterable
     {
         yield [ContaoCoreBundle::SCOPE_BACKEND, BackendUser::class, 'tl_user'];
         yield [ContaoCoreBundle::SCOPE_FRONTEND, FrontendUser::class, 'tl_member'];

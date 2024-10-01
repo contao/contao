@@ -157,7 +157,7 @@ abstract class Template extends Controller
 
 		if ($strKey === 'requestToken' && !\array_key_exists($strKey, $this->arrData))
 		{
-			return htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue());
+			return htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
 		}
 
 		return parent::__get($strKey);
@@ -193,6 +193,34 @@ abstract class Template extends Controller
 	public function __isset($strKey)
 	{
 		return isset($this->arrData[$strKey]) || ($strKey === 'requestToken' && !\array_key_exists($strKey, $this->arrData));
+	}
+
+	/**
+	 * Adds a function to a template which is evaluated only once. This is helpful for
+	 * lazy-evaluating data where we can use functions without arguments. Let's say
+	 * you wanted to lazy-evaluate a variable like this:
+	 *
+	 *     $template->hasText = function () use ($article) {
+	 *         return ContentModel::countPublishedByPidAndTable($article->id, 'tl_news') > 0;
+	 *     };
+	 *
+	 * This would cause a query everytime $template->hasText is accessed in the
+	 * template. You can improve this by turning it into this:
+	 *
+	 *     $template->hasText = Template::once(function () use ($article) {
+	 *         return ContentModel::countPublishedByPidAndTable($article->id, 'tl_news') > 0;
+	 *     });
+	 */
+	public static function once(callable $callback)
+	{
+		return static function () use (&$callback) {
+			if (\is_callable($callback))
+			{
+				$callback = $callback();
+			}
+
+			return $callback;
+		};
 	}
 
 	/**

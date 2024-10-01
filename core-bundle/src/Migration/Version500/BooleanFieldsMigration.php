@@ -84,12 +84,11 @@ class BooleanFieldsMigration extends AbstractMigration
 
             foreach ($GLOBALS['TL_DCA'][$tableName]['fields'] ?? [] as $fieldName => $fieldConfig) {
                 $fieldName = strtolower($fieldName);
+                $field = $columns[$fieldName] ?? $columns["`$fieldName`"] ?? null;
 
-                if (!isset($columns[$fieldName]) || Types::BOOLEAN !== ($fieldConfig['sql']['type'] ?? null)) {
+                if (null === $field || Types::BOOLEAN !== ($fieldConfig['sql']['type'] ?? null)) {
                     continue;
                 }
-
-                $field = $columns[$fieldName];
 
                 if ($field->getType() instanceof StringType) {
                     $targets[] = [$tableName, $fieldName];

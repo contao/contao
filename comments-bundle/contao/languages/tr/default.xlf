@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="MSC.commentCount">
         <source>(comments: %s)</source>
-        <target>(yorum: %s)</target>
+        <target>(yorumlar: %s)</target>
       </trans-unit>
       <trans-unit id="MSC.com_name">
         <source>Name</source>
@@ -200,7 +200,7 @@ Click here to cancel your subscription:
 </source>
         <target>Merhaba %s,
 
-Abonesi olduğun bir sayfadaki bir yoruma yeni bir yanıt verildi:
+Abonesi olduğunuz bir sayfadaki bir yoruma yeni bir yanıt verildi:
 
 ---
 

@@ -105,7 +105,7 @@ class PreviewLinkListener
                     $createdBy = (int) $this->connection->fetchOne('SELECT createdBy FROM tl_preview_link WHERE id=?', [$dc->id]);
 
                     if ($createdBy !== $userId) {
-                        throw new AccessDeniedException(sprintf('Preview link ID %s was not created by user ID %s', $dc->id, $userId));
+                        throw new AccessDeniedException(\sprintf('Preview link ID %s was not created by user ID %s', $dc->id, $userId));
                     }
                     break;
             }
@@ -145,7 +145,7 @@ class PreviewLinkListener
         } elseif (0 === (int) $row['tstamp']) {
             $message->addNew($this->translator->trans('tl_preview_link.hintSave', [], 'contao_tl_preview_link'));
         } else {
-            $message->addInfo(sprintf(
+            $message->addInfo(\sprintf(
                 '%s: %s',
                 $this->translator->trans('tl_preview_link.hintEdit', [], 'contao_tl_preview_link'),
                 $this->generateClipboardLink((int) $row['id']),
@@ -158,7 +158,7 @@ class PreviewLinkListener
     {
         if ($row['expiresAt'] < time()) {
             foreach ($args as &$arg) {
-                $arg = sprintf('<span class="tl_gray">%s</span>', $arg);
+                $arg = \sprintf('<span class="tl_gray">%s</span>', $arg);
             }
 
             unset($arg);
@@ -184,7 +184,7 @@ class PreviewLinkListener
 
         $title ??= $this->translator->trans('tl_preview_link.share.0', [], 'contao_tl_preview_link');
 
-        return sprintf(
+        return \sprintf(
             '<a href="%s" target="_blank" title="%s" data-controller="contao--clipboard" data-contao--clipboard-content-value="%s" data-action="contao--clipboard#write:prevent">%s</a> ',
             StringUtil::specialcharsUrl($url),
             StringUtil::specialchars($title),

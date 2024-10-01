@@ -77,7 +77,7 @@ final class ResponseContext
     public function get(string $serviceId)
     {
         if (!$this->has($serviceId)) {
-            throw new \InvalidArgumentException(sprintf('Service "%s" does not exist.', $serviceId));
+            throw new \InvalidArgumentException(\sprintf('Service "%s" does not exist.', $serviceId));
         }
 
         $serviceId = $this->current[$serviceId];
@@ -96,9 +96,6 @@ final class ResponseContext
         return $this->headerBag ??= new PartialResponseHeaderBag();
     }
 
-    /**
-     * @param \Closure|object $objectOrFactory
-     */
     private function registerService(string $serviceId, object $objectOrFactory): void
     {
         $this->services[$serviceId] = $objectOrFactory;

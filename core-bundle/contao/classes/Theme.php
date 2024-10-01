@@ -72,7 +72,7 @@ class Theme extends Backend
 					// Skip folders
 					if (is_dir($this->strRootDir . '/' . $strFile))
 					{
-						Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['importFolder'], basename($strFile)));
+						Message::addError(\sprintf($GLOBALS['TL_LANG']['ERR']['importFolder'], basename($strFile)));
 						continue;
 					}
 
@@ -81,7 +81,7 @@ class Theme extends Backend
 					// Skip anything but .cto, .sql and .zip files
 					if ($objFile->extension != 'cto' && $objFile->extension != 'sql' && $objFile->extension != 'zip')
 					{
-						Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['filetype'], $objFile->extension));
+						Message::addError(\sprintf($GLOBALS['TL_LANG']['ERR']['filetype'], $objFile->extension));
 						continue;
 					}
 
@@ -134,7 +134,7 @@ class Theme extends Backend
 <form id="tl_theme_import" class="tl_form tl_edit_form" method="post" enctype="multipart/form-data">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_theme_import">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
 <input type="hidden" name="MAX_FILE_SIZE" value="' . Config::get('maxFileSize') . '">
 
 <div class="tl_tbox">
@@ -173,7 +173,7 @@ class Theme extends Backend
 <form id="tl_theme_import" class="tl_form tl_edit_form" method="post">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_theme_import">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
 <input type="hidden" name="confirm" value="1">';
 
 		$count = 0;
@@ -203,7 +203,7 @@ class Theme extends Backend
 			// Continue if there is no XML file
 			if ($objArchive->getFile('theme.xml') === false)
 			{
-				$return .= "\n  " . '<p class="tl_red" style="margin:0">' . sprintf($GLOBALS['TL_LANG']['tl_theme']['missing_xml'], basename($strFile)) . "</p>\n</div>";
+				$return .= "\n  " . '<p class="tl_red" style="margin:0">' . \sprintf($GLOBALS['TL_LANG']['tl_theme']['missing_xml'], basename($strFile)) . "</p>\n</div>";
 				continue;
 			}
 
@@ -250,7 +250,7 @@ class Theme extends Backend
 					if (!\in_array($name, $arrDbFields[$table]))
 					{
 						$blnHasError = true;
-						$return .= "\n  " . '<p class="tl_red" style="margin:0">' . sprintf($GLOBALS['TL_LANG']['tl_theme']['missing_field'], $table . '.' . $name) . '</p>';
+						$return .= "\n  " . '<p class="tl_red" style="margin:0">' . \sprintf($GLOBALS['TL_LANG']['tl_theme']['missing_field'], $table . '.' . $name) . '</p>';
 					}
 				}
 			}
@@ -284,7 +284,7 @@ class Theme extends Backend
 				if (file_exists($this->strRootDir . '/' . $objArchive->file_name))
 				{
 					$blnTplExists = true;
-					$return .= "\n  " . '<p class="tl_red" style="margin:0">' . sprintf($GLOBALS['TL_LANG']['tl_theme']['template_exists'], $objArchive->file_name) . '</p>';
+					$return .= "\n  " . '<p class="tl_red" style="margin:0">' . \sprintf($GLOBALS['TL_LANG']['tl_theme']['template_exists'], $objArchive->file_name) . '</p>';
 				}
 			}
 
@@ -320,7 +320,7 @@ class Theme extends Backend
 
 			foreach ($exampleWebsites as $exampleWebsite)
 			{
-				$return .= '<option value="' . htmlspecialchars($exampleWebsite) . '">' . htmlspecialchars($exampleWebsite) . '</option>';
+				$return .= '<option value="' . htmlspecialchars($exampleWebsite, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">' . htmlspecialchars($exampleWebsite, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '</option>';
 			}
 
 			$return .= '</select>
@@ -413,7 +413,7 @@ class Theme extends Backend
 			// Continue if there is no XML file
 			if (!$xml instanceof \DOMDocument)
 			{
-				Message::addError(sprintf($GLOBALS['TL_LANG']['tl_theme']['missing_xml'], basename($strZipFile)));
+				Message::addError(\sprintf($GLOBALS['TL_LANG']['tl_theme']['missing_xml'], basename($strZipFile)));
 				continue;
 			}
 
@@ -708,7 +708,7 @@ class Theme extends Backend
 			$db->unlockTables();
 
 			// Notify the user
-			Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_theme']['theme_imported'], basename($strZipFile)));
+			Message::addConfirmation(\sprintf($GLOBALS['TL_LANG']['tl_theme']['theme_imported'], basename($strZipFile)));
 
 			// HOOK: add custom logic
 			if (isset($GLOBALS['TL_HOOKS']['extractThemeFiles']) && \is_array($GLOBALS['TL_HOOKS']['extractThemeFiles']))
@@ -1193,11 +1193,31 @@ class Theme extends Backend
 		}
 
 		// Add all template files to the archive (see #7048)
-		foreach (Folder::scan($this->strRootDir . '/' . $strFolder) as $strFile)
+		$this->addTemplateFiles($objArchive, $strFolder);
+	}
+
+	/**
+	 * Add files to an archive
+	 *
+	 * @param ZipWriter $objArchive
+	 * @param string    $strFolder
+	 *
+	 * @throws \Exception
+	 */
+	protected function addTemplateFiles(ZipWriter $objArchive, $strFolder): void
+	{
+		$path = $this->strRootDir . '/' . $strFolder;
+
+		foreach (Folder::scan($path) as $item)
 		{
-			if (preg_match('/\.(html5|sql)$/', $strFile) && !str_starts_with($strFile, 'be_') && !str_starts_with($strFile, 'nl_'))
+			// Add subfolders recursively (see #7472)
+			if (is_dir($path . '/' . $item))
 			{
-				$objArchive->addFile($strFolder . '/' . $strFile);
+				$this->addTemplateFiles($objArchive, $strFolder . '/' . $item);
+			}
+			elseif (preg_match('/\.(html5|sql|twig)$/', $item) && !str_starts_with($item, 'be_') && !str_starts_with($item, 'nl_'))
+			{
+				$objArchive->addFile($strFolder . '/' . $item);
 			}
 		}
 	}

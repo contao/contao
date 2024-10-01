@@ -156,7 +156,7 @@ class ModuleUnsubscribe extends Module
 	 *
 	 * @return array|bool
 	 */
-	protected function validateForm(Widget $objWidget=null)
+	protected function validateForm(Widget|null $objWidget=null)
 	{
 		// Validate the e-mail address
 		$varInput = Idna::encodeEmail(Input::post('email', true));
@@ -276,7 +276,7 @@ class ModuleUnsubscribe extends Module
 		$objEmail = new Email();
 		$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'] ?? null;
 		$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'] ?? null;
-		$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['nl_subject'], Idna::decode(Environment::get('host')));
+		$objEmail->subject = \sprintf($GLOBALS['TL_LANG']['MSC']['nl_subject'], Idna::decode(Environment::get('host')));
 		$objEmail->text = System::getContainer()->get('contao.string.simple_token_parser')->parse($this->nl_unsubscribe, $arrData);
 		$objEmail->sendTo($strEmail);
 

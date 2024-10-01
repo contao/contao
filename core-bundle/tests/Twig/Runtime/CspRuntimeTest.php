@@ -16,6 +16,7 @@ use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Runtime\CspRuntime;
 use Nelmio\SecurityBundle\ContentSecurityPolicy\DirectiveSet;
@@ -115,7 +116,38 @@ class CspRuntimeTest extends TestCase
 
         $expectedHash = base64_encode(hash($algorithm, $script, true));
 
-        $this->assertSame(sprintf("script-src 'self' '%s-%s'", $algorithm, $expectedHash), $response->headers->get('Content-Security-Policy'));
+        $this->assertSame(\sprintf("script-src 'self' '%s-%s'", $algorithm, $expectedHash), $response->headers->get('Content-Security-Policy'));
+    }
+
+    public function testAddsCspHashFromUnsafeInlineStyle(): void
+    {
+        $directives = new DirectiveSet(new PolicyManager());
+        $directives->setDirective('style-src', "'self'");
+
+        $cspHandler = new CspHandler($directives);
+        $responseContext = (new ResponseContext())->add($cspHandler);
+
+        $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
+        $responseContextAccessor
+            ->expects($this->exactly(2))
+            ->method('getResponseContext')
+            ->willReturn($responseContext)
+        ;
+
+        $runtime = new CspRuntime($responseContextAccessor, new WysiwygStyleProcessor([]));
+        $this->assertSame('foobar', $runtime->unsafeInlineStyle('foobar'));
+
+        $attrs = new HtmlAttributes('style="color:red"');
+        $runtime = new CspRuntime($responseContextAccessor, new WysiwygStyleProcessor([]));
+        $this->assertSame($attrs, $runtime->unsafeInlineStyle($attrs));
+
+        $response = new Response();
+        $cspHandler->applyHeaders($response);
+
+        $this->assertSame(
+            "style-src 'self' 'unsafe-hashes' 'unsafe-inline' 'sha256-w6uP8Tcg6K2QR905Rms8iXTlksL6OD1KOWBxTK7wxPI=' 'sha256-ZBTj5RHLnrF+IxdRZM2RuLfjTJQXNSi7fLQHr09onfY='",
+            $response->headers->get('Content-Security-Policy'),
+        );
     }
 
     public function testCallsWysiwygProcessor(): void
@@ -128,7 +160,7 @@ class CspRuntimeTest extends TestCase
 
         $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
         $responseContextAccessor
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('getResponseContext')
             ->willReturn($responseContext)
         ;
@@ -138,9 +170,30 @@ class CspRuntimeTest extends TestCase
             ->expects($this->once())
             ->method('extractStyles')
             ->with('foobar')
+            ->willReturn(['foobarstyle'])
         ;
 
         $runtime = new CspRuntime($responseContextAccessor, $wysiwygProcessor);
-        $runtime->inlineStyles('foobar');
+        $this->assertSame('foobar', $runtime->inlineStyles('foobar'));
+
+        $wysiwygProcessor = $this->createMock(WysiwygStyleProcessor::class);
+        $wysiwygProcessor
+            ->expects($this->once())
+            ->method('extractStyles')
+            ->with('<div style="color: red;"></div>')
+            ->willReturn(['color: red;'])
+        ;
+
+        $attrs = new HtmlAttributes('style="color:red"');
+        $runtime = new CspRuntime($responseContextAccessor, $wysiwygProcessor);
+        $this->assertSame($attrs, $runtime->inlineStyles($attrs));
+
+        $response = new Response();
+        $cspHandler->applyHeaders($response);
+
+        $this->assertSame(
+            "style-src 'self' 'unsafe-hashes' 'unsafe-inline' 'sha256-G9KEe21cICJs7ADRF9jwf63CdC5OJI1mO2LVlv63cUY=' 'sha256-ZBTj5RHLnrF+IxdRZM2RuLfjTJQXNSi7fLQHr09onfY='",
+            $response->headers->get('Content-Security-Policy'),
+        );
     }
 }

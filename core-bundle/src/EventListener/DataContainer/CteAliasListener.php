@@ -50,13 +50,13 @@ class CteAliasListener implements ResetInterface
         $id = $request->query->get('id');
 
         if ($id && 'delete' === $request->query->get('act') && isset($aliasRefs[$id])) {
-            throw new InternalServerErrorException(sprintf('Content element ID %s is used in an alias element and can therefore not be deleted.', $id));
+            throw new InternalServerErrorException(\sprintf('Content element ID %s is used in an alias element and can therefore not be deleted.', $id));
         }
 
         if ('deleteAll' === $request->query->get('act')) {
             $session = $request->getSession();
             $sessionData = $session->all();
-            $sessionData['CURRENT']['IDS'] = array_diff($sessionData['CURRENT']['IDS'], array_map('intval', array_keys($aliasRefs)));
+            $sessionData['CURRENT']['IDS'] = array_diff($sessionData['CURRENT']['IDS'], array_map(\intval(...), array_keys($aliasRefs)));
             $session->replace($sessionData);
         }
     }

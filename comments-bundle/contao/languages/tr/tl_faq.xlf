@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.noComments.1">
         <source>Do not allow comments for this particular FAQ.</source>
-        <target>Bu seçenek etkinleştirildiğinde, bu SSS ögesine yorum yapılamaz.</target>
+        <target>Bu SSS ögesine yorum yapılmasını engeller.</target>
       </trans-unit>
       <trans-unit id="tl_faq.expert_legend">
         <source>Expert settings</source>

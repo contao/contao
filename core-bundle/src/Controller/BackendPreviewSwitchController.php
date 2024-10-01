@@ -32,12 +32,12 @@ use Twig\Error\Error as TwigError;
 /**
  * This controller serves for the back end preview toolbar by providing the
  * following ajax endpoints:
- * a) Return the toolbar HTML (dispatched in an ajax request to allow lazy
- *    loading and force back end scope)
- * b) Provide the member usernames for the datalist
- * c) Process the switch action (i.e. log in a specific front end user).
+ *
+ * - Return the toolbar HTML (dispatched in an Ajax request to allow lazy loading and force back end scope)
+ * - Provide the member usernames for the datalist
+ * - Process the switch action (i.e. log in a specific front end user)
  */
-#[Route('%contao.backend.route_prefix%', defaults: ['_scope' => 'backend', '_allow_preview' => true])]
+#[Route('%contao.backend.route_prefix%/preview_switch', name: 'contao_backend_switch', defaults: ['_scope' => 'backend', '_allow_preview' => true, '_store_referrer' => false])]
 class BackendPreviewSwitchController
 {
     public function __construct(
@@ -54,7 +54,6 @@ class BackendPreviewSwitchController
     ) {
     }
 
-    #[Route('/preview_switch', name: 'contao_backend_switch')]
     public function __invoke(Request $request): Response
     {
         $user = $this->security->getUser();

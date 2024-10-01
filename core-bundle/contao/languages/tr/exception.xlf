@@ -35,7 +35,7 @@
       </trans-unit>
       <trans-unit id="XPT.requestToken">
         <source>Invalid request token</source>
-        <target>İstek kimliği geçersiz</target>
+        <target>İstek kodu geçersiz</target>
       </trans-unit>
       <trans-unit id="XPT.invalidToken">
         <source>The request token could not be verified.</source>

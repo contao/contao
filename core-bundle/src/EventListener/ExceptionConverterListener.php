@@ -31,7 +31,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 /**
- * The priority must be higher than the one of the response exception listener (defaults to 64).
+ * The priority must be higher than the one of the response exception listener
+ * (defaults to 64).
  *
  * @internal
  */

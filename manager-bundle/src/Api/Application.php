@@ -101,7 +101,7 @@ class Application extends BaseApplication
         foreach ($this->getPluginLoader()->getInstancesOf(ApiPluginInterface::class) as $plugin) {
             foreach ($plugin->getApiCommands() as $class) {
                 if (!is_a($class, Command::class, true)) {
-                    throw new \RuntimeException(sprintf('"%s" is not a console command.', $class));
+                    throw new \RuntimeException(\sprintf('"%s" is not a console command.', $class));
                 }
 
                 $commands[] = new $class($this);

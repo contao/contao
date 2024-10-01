@@ -105,16 +105,16 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
         return $filesystemItemIterator->filter(
             static fn (FilesystemItem $item): bool => \in_array(
                 Path::getExtension($item->getPath(), true),
-                array_map('strtolower', $allowedDownload),
+                array_map(strtolower(...), $allowedDownload),
                 true,
             ),
         );
     }
 
     /**
-     * If the content should be displayed inline or if the resource does not
-     * have a public URI, a URL pointing to this controller's download action
-     * will be generated, otherwise the direct download URL will be returned.
+     * If the content should be displayed inline or if the resource does not have a
+     * public URI, a URL pointing to this controller's download action will be
+     * generated, otherwise the direct download URL will be returned.
      */
     protected function generateDownloadUrl(FilesystemItem $filesystemItem, ContentModel $model, Request $request): string
     {
@@ -137,7 +137,8 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
     }
 
     /**
-     * Generate file preview images on the fly for a content model (default Contao controller behaviour).
+     * Generate file preview images on the fly for a content model (default Contao
+     * controller behaviour).
      *
      * @return \Generator<Figure>
      */
@@ -148,7 +149,7 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
             ->setSize($size = $model->size)
             ->enableLightbox($fullsize = $model->fullsize)
             ->disableMetadata()
-            ->setLightboxGroupIdentifier(sprintf('dl_%s_%s', $model->id, md5($filesystemItem->getPath())))
+            ->setLightboxGroupIdentifier(\sprintf('dl_%s_%s', $model->id, md5($filesystemItem->getPath())))
         ;
 
         $getLightboxSize = function (): string|null {

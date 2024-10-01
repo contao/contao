@@ -103,9 +103,11 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.toggle.1">
         <source>Deactivate recipient ID %s</source>
+        <target>Desactivar ID %s de destinatario</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.toggle.2">
         <source>Activate recipient ID %s</source>
+        <target>Activar ID %s de destinatario</target>
       </trans-unit>
     </body>
   </file>

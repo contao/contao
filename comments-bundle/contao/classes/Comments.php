@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CommentsBundle\Util\BbCode;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Util\UrlUtil;
@@ -360,14 +361,14 @@ class Comments extends Frontend
 			$objEmail = new Email();
 			$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'] ?? null;
 			$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'] ?? null;
-			$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['com_subject'], Idna::decode(Environment::get('host')));
+			$objEmail->subject = \sprintf($GLOBALS['TL_LANG']['MSC']['com_subject'], Idna::decode(Environment::get('host')));
 
 			// Convert the comment to plain text
 			$strComment = strip_tags($strComment);
 			$strComment = StringUtil::decodeEntities($strComment);
 
 			// Add the comment details
-			$objEmail->text = sprintf(
+			$objEmail->text = \sprintf(
 				$GLOBALS['TL_LANG']['MSC']['com_message'],
 				$arrSet['name'] . ' (' . $arrSet['email'] . ')',
 				$strComment,
@@ -408,70 +409,13 @@ class Comments extends Frontend
 	/**
 	 * Replace bbcode and return the HTML string
 	 *
-	 * Supports the following tags:
-	 *
-	 * * [b][/b] bold
-	 * * [i][/i] italic
-	 * * [u][/u] underline
-	 * * [img][/img]
-	 * * [code][/code]
-	 * * [color=#ff0000][/color]
-	 * * [quote][/quote]
-	 * * [quote=tim][/quote]
-	 * * [url][/url]
-	 * * [url=http://][/url]
-	 * * [email][/email]
-	 * * [email=name@example.com][/email]
-	 *
 	 * @param string $strComment
 	 *
 	 * @return string
 	 */
 	public function parseBbCode($strComment)
 	{
-		$arrSearch = array
-		(
-			'@\[b\](.*)\[/b\]@Uis',
-			'@\[i\](.*)\[/i\]@Uis',
-			'@\[u\](.*)\[/u\]@Uis',
-			'@\s*\[code\](.*)\[/code\]\s*@Uis',
-			'@\[color=([^\]" ]+)\](.*)\[/color\]@Uis',
-			'@\s*\[quote\](.*)\[/quote\]\s*@Uis',
-			'@\s*\[quote=([^\]]+)\](.*)\[/quote\]\s*@Uis',
-			'@\[img\]\s*([^\[" ]+\.(jpe?g|png|gif|bmp|tiff?|ico))\s*\[/img\]@i',
-			'@\[url\]\s*([^\[" ]+)\s*\[/url\]@i',
-			'@\[url=([^\]" ]+)\](.*)\[/url\]@Uis',
-			'@\[email\]\s*([^\[" ]+)\s*\[/email\]@i',
-			'@\[email=([^\]" ]+)\](.*)\[/email\]@Uis',
-			'@href="(([a-z0-9]+\.)*[a-z0-9]+\.([a-z]{2}|asia|biz|com|info|name|net|org|tel)(/|"))@i'
-		);
-
-		$arrReplace = array
-		(
-			'<strong>$1</strong>',
-			'<em>$1</em>',
-			'<span style="text-decoration:underline">$1</span>',
-			"\n\n" . '<div class="code"><p>' . $GLOBALS['TL_LANG']['MSC']['com_code'] . '</p><pre>$1</pre></div>' . "\n\n",
-			'<span style="color:$1">$2</span>',
-			"\n\n" . '<blockquote>$1</blockquote>' . "\n\n",
-			"\n\n" . '<blockquote><p>' . sprintf($GLOBALS['TL_LANG']['MSC']['com_quote'], '$1') . '</p>$2</blockquote>' . "\n\n",
-			'<img src="$1" alt="" />',
-			'<a href="$1">$1</a>',
-			'<a href="$1">$2</a>',
-			'<a href="mailto:$1">$1</a>',
-			'<a href="mailto:$1">$2</a>',
-			'href="http://$1'
-		);
-
-		$strComment = preg_replace($arrSearch, $arrReplace, $strComment);
-
-		// Encode e-mail addresses
-		if (str_contains($strComment, 'mailto:'))
-		{
-			$strComment = StringUtil::encodeEmail($strComment);
-		}
-
-		return $strComment;
+		return (new BbCode())->toHtml($strComment);
 	}
 
 	/**
@@ -572,7 +516,7 @@ class Comments extends Frontend
 		$optInToken = $optIn->create('com', $objComment->email, array('tl_comments_notify'=>array($objNotify->id)));
 
 		// Send the token
-		$optInToken->send(sprintf($GLOBALS['TL_LANG']['MSC']['com_optInSubject'], Idna::decode(Environment::get('host'))), sprintf($GLOBALS['TL_LANG']['MSC']['com_optInMessage'], $objComment->name, $strUrl, $strUrl . $strConnector . 'token=' . $optInToken->getIdentifier(), $strUrl . $strConnector . 'token=' . $objNotify->tokenRemove));
+		$optInToken->send(\sprintf($GLOBALS['TL_LANG']['MSC']['com_optInSubject'], Idna::decode(Environment::get('host'))), \sprintf($GLOBALS['TL_LANG']['MSC']['com_optInMessage'], $objComment->name, $strUrl, $strUrl . $strConnector . 'token=' . $optInToken->getIdentifier(), $strUrl . $strConnector . 'token=' . $objNotify->tokenRemove));
 	}
 
 	/**
@@ -594,13 +538,6 @@ class Comments extends Frontend
 				return;
 			}
 
-			if ($optInToken->isConfirmed())
-			{
-				$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['tokenConfirmed'];
-
-				return;
-			}
-
 			if ($optInToken->getEmail() != $objNotify->email)
 			{
 				$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['tokenEmailMismatch'];
@@ -608,10 +545,13 @@ class Comments extends Frontend
 				return;
 			}
 
-			$objNotify->active = true;
-			$objNotify->save();
+			if (!$optInToken->isConfirmed())
+			{
+				$objNotify->active = true;
+				$objNotify->save();
 
-			$optInToken->confirm();
+				$optInToken->confirm();
+			}
 
 			$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['com_optInConfirm'];
 		}
@@ -673,8 +613,8 @@ class Comments extends Frontend
 				$objEmail = new Email();
 				$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'] ?? null;
 				$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'] ?? null;
-				$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['com_notifySubject'], Idna::decode(Environment::get('host')));
-				$objEmail->text = sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyMessage'], $objNotify->name, $strUrl . '#c' . $objComment->id, $strUrl . '?token=' . $objNotify->tokenRemove);
+				$objEmail->subject = \sprintf($GLOBALS['TL_LANG']['MSC']['com_notifySubject'], Idna::decode(Environment::get('host')));
+				$objEmail->text = \sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyMessage'], $objNotify->name, $strUrl . '#c' . $objComment->id, $strUrl . '?token=' . $objNotify->tokenRemove);
 				$objEmail->sendTo($objNotify->email);
 			}
 		}

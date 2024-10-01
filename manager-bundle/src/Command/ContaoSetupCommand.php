@@ -41,7 +41,7 @@ class ContaoSetupCommand extends Command
     private readonly \Closure $createProcessHandler;
 
     /**
-     * @param (\Closure(array<string>):Process)|null $createProcessHandler
+     * @param (\Closure(array<string>): Process)|null $createProcessHandler
      */
     public function __construct(
         private readonly string $projectDir,
@@ -139,7 +139,7 @@ class ContaoSetupCommand extends Command
         );
 
         if (!$process->isSuccessful()) {
-            throw new \RuntimeException(sprintf('An error occurred while executing the "%s" command: %s', implode(' ', $command), $process->getErrorOutput()));
+            throw new \RuntimeException(\sprintf('An error occurred while executing the "%s" command: %s', implode(' ', $command), $process->getErrorOutput()));
         }
     }
 

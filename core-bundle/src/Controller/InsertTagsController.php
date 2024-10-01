@@ -23,9 +23,9 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 /**
  * @internal Do not use this controller in your code
  *
- * It is supposed to be used within ESI requests that are protected by the
- * Symfony fragment URI signer. If you use it directly, make sure to add a
- * permission check, because insert tags can contain arbitrary data!
+ * It is supposed to be used within ESI requests that are protected by the Symfony
+ * fragment URI signer. If you use it directly, make sure to add a permission
+ * check, because insert tags can contain arbitrary data!
  */
 class InsertTagsController
 {
@@ -38,7 +38,7 @@ class InsertTagsController
     public function renderAction(Request $request, string $insertTag): Response
     {
         if (!str_starts_with($insertTag, '{{') || !str_ends_with($insertTag, '}}')) {
-            throw new BadRequestHttpException(sprintf('Invalid insert tag "%s"', $insertTag));
+            throw new BadRequestHttpException(\sprintf('Invalid insert tag "%s"', $insertTag));
         }
 
         $result = $this->insertTagParser->renderTag(substr($insertTag, 2, -2));

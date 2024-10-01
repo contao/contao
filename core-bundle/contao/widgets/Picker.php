@@ -46,7 +46,7 @@ class Picker extends Widget
 		{
 			if ($this->mandatory)
 			{
-				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['mandatory'], $this->strLabel));
+				$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['mandatory'], $this->strLabel));
 			}
 
 			return '';

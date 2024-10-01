@@ -106,7 +106,7 @@ class DefaultOperationsListener
             if (DataContainer::MODE_TREE_EXTENDED !== ($GLOBALS['TL_DCA'][$ctable]['list']['sorting']['mode'] ?? null)) {
                 $operations += [
                     'children' => [
-                        'href' => 'table='.$ctable,
+                        'href' => 'table='.$ctable.($ctable === $table ? '&amp;ptable='.$table : ''),
                         'icon' => 'children.svg',
                         'button_callback' => $this->accessChildrenCallback($ctable, $table),
                     ],
@@ -198,7 +198,11 @@ class DefaultOperationsListener
             $subject = new ReadAction($ctable, $data);
 
             if (!$this->security->isGranted(ContaoCorePermissions::DC_PREFIX.$ctable, $subject)) {
-                $operation->disable();
+                if ($ctable === $table) {
+                    $operation->setHtml('');
+                } else {
+                    $operation->disable();
+                }
             }
         };
     }
@@ -237,7 +241,8 @@ class DefaultOperationsListener
     }
 
     /**
-     * Finds the one and only toggle field in a DCA. Returns null if multiple fields can be toggled.
+     * Finds the one and only toggle field in a DCA. Returns null if multiple fields
+     * can be toggled.
      */
     private function getToggleField(string $table): string|null
     {
@@ -265,7 +270,7 @@ class DefaultOperationsListener
             CreateAction::class => new CreateAction($table, array_replace($operation->getRecord(), (array) $new)),
             UpdateAction::class => new UpdateAction($table, $operation->getRecord(), $new),
             DeleteAction::class => new DeleteAction($table, $operation->getRecord()),
-            default => throw new \InvalidArgumentException(sprintf('Invalid action class "%s".', $actionClass)),
+            default => throw new \InvalidArgumentException(\sprintf('Invalid action class "%s".', $actionClass)),
         };
 
         return $this->security->isGranted(ContaoCorePermissions::DC_PREFIX.$table, $subject);

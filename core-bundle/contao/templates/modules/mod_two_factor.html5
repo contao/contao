@@ -20,7 +20,7 @@
         </div>
         <div class="widget">
           <p><?= $this->trans('MSC.twoFactorTextCode') ?></p>
-          <code style="<?= $this->cspInlineStyle('word-break:break-all') ?>"><?= $this->secret ?></code>
+          <code style="<?= $this->cspUnsafeInlineStyle('word-break:break-all') ?>"><?= $this->secret ?></code>
         </div>
         <div class="widget widget-text">
           <label for="verify"><?= $this->trans('MSC.twoFactorVerification') ?></label>
