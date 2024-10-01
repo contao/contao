@@ -1,13 +1,23 @@
 {% extends "@Contao/content_element/_base.html.twig" %}
 {% use "@Contao/component/_stylesheet.html.twig" %}
 
+{#
+    The "slider_settings" variable contains the settings for the content slider.
+    You can use the merge function to customise the settings.
+
+    Example:
+        {% set slider_settings = slider_settings|merge({
+            effect: 'fade',
+            fadeEffect: {
+                crossFade: true
+            },
+        }) %}
+#}
+
 {% block content %}
     {% set slider_attributes = attrs()
         .addClass('swiper')
-        .set('data-delay', delay)
-        .set('data-speed', speed)
-        .set('data-offset', offset)
-        .set('data-loop', loop)
+        .set('data-settings', slider_settings|json_encode)
         .mergeWith(slider_attributes|default)
     %}
     <div{{ slider_attributes }}>
@@ -65,16 +75,7 @@
             (function() {
                 const swiper = document.querySelectorAll('.swiper');
                 swiper.forEach (el => {
-                    let opts = {
-                        speed: el.getAttribute('data-speed'),
-                        initialSlide: el.getAttribute('data-offset'),
-                        loop: el.hasAttribute('data-loop'),
-                    };
-
-                    let delay = el.getAttribute('data-delay');
-                    if (delay > 0) {
-                        opts['autoplay'] = { delay: delay };
-                    }
+                    let opts = JSON.parse(el.getAttribute('data-settings') ?? '{}');
 
                     new Swiper(el, Object.assign({
                         {% block init_options %}

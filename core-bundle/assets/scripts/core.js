@@ -258,7 +258,7 @@ window.AjaxRequest =
 			onSuccess: function(txt, json) {
 				var div = new Element('div', {
 					'id': id,
-					'class': 'subpal cf',
+					'class': 'subpal widget-group',
 					'html': txt,
 					'styles': {
 						'display': 'block'

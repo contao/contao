@@ -2610,7 +2610,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 								if (\count($arrAjax) > 1)
 								{
-									$current = "\n" . '<div id="' . $thisId . '" class="subpal cf">' . $arrAjax[$thisId] . '</div>';
+									$current = "\n" . '<div id="' . $thisId . '" class="subpal widget-group">' . $arrAjax[$thisId] . '</div>';
 									unset($arrAjax[$thisId]);
 									end($arrAjax);
 									$thisId = key($arrAjax);

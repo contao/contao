@@ -1524,11 +1524,6 @@ abstract class DataContainer extends Backend
 	 */
 	public function invalidateCacheTags()
 	{
-		if (!System::getContainer()->has('fos_http_cache.cache_manager'))
-		{
-			return;
-		}
-
 		$tags = array('contao.db.' . $this->table . '.' . $this->id);
 
 		$this->addPtableTags($this->table, $this->id, $tags);
@@ -1552,7 +1547,7 @@ abstract class DataContainer extends Backend
 		// Make sure tags are unique and empty ones are removed
 		$tags = array_filter(array_unique($tags));
 
-		System::getContainer()->get('fos_http_cache.cache_manager')->invalidateTags($tags);
+		System::getContainer()->get('contao.cache.tag_invalidator')->invalidateTags($tags);
 	}
 
 	public function addPtableTags($strTable, $intId, &$tags)

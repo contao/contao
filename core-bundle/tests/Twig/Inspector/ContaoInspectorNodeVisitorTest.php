@@ -28,7 +28,12 @@ class ContaoInspectorNodeVisitorTest extends TestCase
 {
     public function testHashLowPriority(): void
     {
-        $this->assertSame(128, (new InspectorNodeVisitor(new NullAdapter()))->getPriority());
+        $inspectorNodeVisitor = new InspectorNodeVisitor(
+            new NullAdapter(),
+            $this->createMock(Environment::class),
+        );
+
+        $this->assertSame(128, $inspectorNodeVisitor->getPriority());
     }
 
     public function testAnalyzesSlots(): void
@@ -45,7 +50,7 @@ class ContaoInspectorNodeVisitorTest extends TestCase
                 $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class),
                 $this->createMock(ContaoCsrfTokenManager::class),
                 $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor($cache),
+                new InspectorNodeVisitor($cache, $environment),
             ),
         );
 
