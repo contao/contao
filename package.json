@@ -8,6 +8,9 @@
         "postcss-loader": "^8.1.1",
         "postcss-preset-env": "^10.0.5"
     },
+    "browserslist": [
+        "defaults"
+    ],
     "scripts": {
         "dev-server": "encore dev-server",
         "dev": "encore dev",
