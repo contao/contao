@@ -22,8 +22,8 @@ security:
                     enabled: true
                     profile: contao_backend
                     routes:
-                        options_path: '/_contao/login/webauthn/options'
-                        result_path: '/_contao/login/webauthn/result'
+                        options_path: /_contao/login/webauthn/options
+                        result_path: /_contao/login/webauthn/result
 
             login_link:
                 check_route: contao_backend_login_link
