@@ -190,29 +190,29 @@
         },
         {
             "name": "slam/phpstan-extensions",
-            "version": "v6.5.0",
+            "version": "v6.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Slamdunk/phpstan-extensions.git",
-                "reference": "dd0d6fd86a714ea533382d2b2ddaf44472669e5c"
+                "reference": "389ac3a952b64386dda56becf376c16c493edccb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Slamdunk/phpstan-extensions/zipball/dd0d6fd86a714ea533382d2b2ddaf44472669e5c",
-                "reference": "dd0d6fd86a714ea533382d2b2ddaf44472669e5c",
+                "url": "https://api.github.com/repos/Slamdunk/phpstan-extensions/zipball/389ac3a952b64386dda56becf376c16c493edccb",
+                "reference": "389ac3a952b64386dda56becf376c16c493edccb",
                 "shasum": ""
             },
             "require": {
-                "php": "~8.3.0 || ~8.4.0",
-                "phpstan/phpstan": "^1.12.4"
+                "php": "~8.2.0 || ~8.3.0",
+                "phpstan/phpstan": "^1.11.8"
             },
             "require-dev": {
                 "nette/di": "^3.2.2",
                 "nette/neon": "^3.4.3",
-                "nikic/php-parser": "^4.19.2 || ^5.2.0",
+                "nikic/php-parser": "^4.19.1 || ^5.0.2",
                 "phpstan/phpstan-phpunit": "^1.4.0",
-                "phpunit/phpunit": "^11.3.6",
-                "slam/php-cs-fixer-extensions": "^3.12.0"
+                "phpunit/phpunit": "^11.2.9",
+                "slam/php-cs-fixer-extensions": "^3.11.1"
             },
             "type": "phpstan-extension",
             "extra": {
@@ -241,7 +241,7 @@
             "description": "Slam extension of phpstan",
             "support": {
                 "issues": "https://github.com/Slamdunk/phpstan-extensions/issues",
-                "source": "https://github.com/Slamdunk/phpstan-extensions/tree/v6.5.0"
+                "source": "https://github.com/Slamdunk/phpstan-extensions/tree/v6.4.1"
             },
             "funding": [
                 {
@@ -253,7 +253,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-09-25T06:39:09+00:00"
+            "time": "2024-08-01T13:49:19+00:00"
         },
         {
             "name": "thecodingmachine/phpstan-strict-rules",
