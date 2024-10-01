@@ -83,6 +83,7 @@ use Contao\Model\MetadataTrait;
  * @property string            $playerCaption
  * @property string            $playerAspect
  * @property boolean           $splashImage
+ * @property string            $playerTitle
  * @property string            $playerPreload
  * @property string            $playerColor
  * @property string|array|null $youtubeOptions
@@ -178,6 +179,7 @@ use Contao\Model\MetadataTrait;
  * @method static ContentModel|null findOneByPlayerCaption($val, array $opt=array())
  * @method static ContentModel|null findOneByPlayerAspect($val, array $opt=array())
  * @method static ContentModel|null findOneBySplashImage($val, array $opt=array())
+ * @method static ContentModel|null findOneByPlayerTitle($val, array $opt=array())
  * @method static ContentModel|null findOneByPlayerPreload($val, array $opt=array())
  * @method static ContentModel|null findOneByPlayerColor($val, array $opt=array())
  * @method static ContentModel|null findOneByYoutubeOptions($val, array $opt=array())
@@ -266,6 +268,7 @@ use Contao\Model\MetadataTrait;
  * @method static Collection<ContentModel>|ContentModel[]|null findByPlayerCaption($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByPlayerAspect($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findBySplashImage($val, array $opt=array())
+ * @method static Collection<ContentModel>|ContentModel[]|null findByPlayerTitle($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByPlayerPreload($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByPlayerColor($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByYoutubeOptions($val, array $opt=array())
@@ -358,6 +361,7 @@ use Contao\Model\MetadataTrait;
  * @method static integer countByPlayerCaption($val, array $opt=array())
  * @method static integer countByPlayerAspect($val, array $opt=array())
  * @method static integer countBySplashImage($val, array $opt=array())
+ * @method static integer countByPlayerTitle($val, array $opt=array())
  * @method static integer countByPlayerPreload($val, array $opt=array())
  * @method static integer countByPlayerColor($val, array $opt=array())
  * @method static integer countByYoutubeOptions($val, array $opt=array())
