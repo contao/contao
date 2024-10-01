@@ -323,6 +323,9 @@
       <trans-unit id="tl_form_field.size_legend">
         <source>Rows and columns</source>
       </trans-unit>
+      <trans-unit id="tl_form_field.rgxp_legend">
+        <source>Validation settings</source>
+      </trans-unit>
       <trans-unit id="tl_form_field.template_legend">
         <source>Template settings</source>
       </trans-unit>
