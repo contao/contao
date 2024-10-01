@@ -32,4 +32,10 @@ export default class extends Controller {
         this.editors.get(el).destroy();
         this.editors.delete(el);
     }
+
+    colorChange(event) {
+        this.editors.forEach(editor => {
+            editor.setColorScheme(event.detail.mode);
+        })
+    }
 }
