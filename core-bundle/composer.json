@@ -175,7 +175,7 @@
         "symfony/cache": "^6.4 || ^7.0",
         "symfony/monolog-bundle": "^3.1",
         "symfony/phpunit-bridge": "^6.4 || ^7.0",
-        "symfony/web-profiler-bundle": "^6.4 || ^7.0",
+        "symfony/web-profiler-bundle": "^6.4 || ^7.0"
     },
     "conflict": {
         "contao-community-alliance/composer-plugin": "<3.0",

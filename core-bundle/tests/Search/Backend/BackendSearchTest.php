@@ -21,8 +21,10 @@ use Contao\CoreBundle\Search\Backend\Query;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use PHPUnit\Framework\TestCase;
 use Schranz\Search\SEAL\Adapter\Memory\MemoryAdapter;
+use Schranz\Search\SEAL\Adapter\Memory\MemoryStorage;
 use Schranz\Search\SEAL\Engine;
 use Schranz\Search\SEAL\EngineInterface;
+use Schranz\Search\SEAL\Schema\Index;
 use Symfony\Bundle\SecurityBundle\Security;
 
 class BackendSearchTest extends TestCase
@@ -126,6 +128,6 @@ class BackendSearchTest extends TestCase
         $this->assertSame($hit, $result->getHits()[0]);
 
         // Cleanup memory
-        $engine->deleteDocument($indexName, 'foobarType.42');
+        MemoryStorage::dropIndex(new Index($indexName, []));
     }
 }
