@@ -1150,7 +1150,7 @@ services:
             - '@contao.framework'
             - '@contao.resource_finder'
 
-    contao.twig.backend_helper:
+    contao.twig.backend_helper_runtime:
         class: Contao\CoreBundle\Twig\Runtime\BackendHelperRuntime
         arguments:
             - '@contao.framework'
