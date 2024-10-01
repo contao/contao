@@ -686,8 +686,8 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertFalse($container->hasDefinition(BackendSearchController::class));
         $this->assertFalse($container->hasDefinition('contao.search_backend.adapter_factory'));
-        $this->assertFalse($container->hasDefinition('contao.search_backend.search'));
-        $this->assertFalse($container->hasDefinition('contao.search_backend.provider.files_provider'));
+        $this->assertFalse($container->hasDefinition('contao.search.backend'));
+        $this->assertFalse($container->hasDefinition('contao.search.backend.files_provider'));
     }
 
     public function testRegistersTheBackendSearchRelatedServicesCorrectly(): void
@@ -710,8 +710,8 @@ class ContaoCoreExtensionTest extends TestCase
         $adapter = $container->getDefinition('contao.search_backend.adapter');
         $this->assertSame('whatever://search-adapter-you-like', $adapter->getArgument(0));
 
-        $this->assertTrue($container->hasDefinition('contao.search_backend.search'));
-        $backendSearch = $container->getDefinition('contao.search_backend.search');
+        $this->assertTrue($container->hasDefinition('contao.search.backend'));
+        $backendSearch = $container->getDefinition('contao.search.backend');
         $this->assertSame('my_backend_search_index', $backendSearch->getArgument(3));
     }
 

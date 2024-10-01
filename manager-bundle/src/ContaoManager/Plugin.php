@@ -208,9 +208,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                     $container->setParameter('contao.dns_mapping', '%env(json:DNS_MAPPING)%');
                 }
 
-                $extensionConfigs = $this->addDefaultBackendSearchProvider($extensionConfigs);
-
-                return $extensionConfigs;
+                return $this->addDefaultBackendSearchProvider($extensionConfigs);
 
             case 'framework':
                 $extensionConfigs = $this->checkMailerTransport($extensionConfigs, $container);

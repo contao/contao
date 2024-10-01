@@ -10,10 +10,10 @@ namespace Contao\CoreBundle\Search\Backend;
 class Query
 {
     public function __construct(
-        private int $perPage,
-        private string|null $keywords = null,
-        private string|null $type = null,
-        private string|null $tag = null,
+        private readonly int $perPage,
+        private readonly string|null $keywords = null,
+        private readonly string|null $type = null,
+        private readonly string|null $tag = null,
     ) {
     }
 

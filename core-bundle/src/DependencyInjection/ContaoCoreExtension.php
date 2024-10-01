@@ -363,7 +363,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             ->setArgument(0, $indexName),
         );
 
-        $factory = $container->getDefinition('contao.search_backend.search');
+        $factory = $container->getDefinition('contao.search.backend');
         $factory->setArgument(3, $indexName);
     }
 

@@ -26,10 +26,10 @@ class BackendSearch
      * @param iterable<ProviderInterface> $providers
      */
     public function __construct(
-        private iterable $providers,
-        private Security $security,
-        private EngineInterface $engine,
-        private string $indexName,
+        private readonly iterable $providers,
+        private readonly Security $security,
+        private readonly EngineInterface $engine,
+        private readonly string $indexName,
     ) {
     }
 
@@ -69,7 +69,7 @@ class BackendSearch
             foreach ($sb->offset($offset)->limit($limit)->getResult() as $document) {
                 $hit = $this->convertSearchDocumentToProviderHit($document);
 
-                if (null === $hit) {
+                if (!$hit) {
                     continue;
                 }
 
@@ -126,11 +126,11 @@ class BackendSearch
     {
         $fileProvider = $this->getProviderForType($document['type'] ?? '');
 
-        if (null === $fileProvider) {
+        if (!$fileProvider) {
             return null;
         }
 
-        $document = Document::fromArray(json_decode($document['document'], true));
+        $document = Document::fromArray(json_decode($document['document'], true, 512, JSON_THROW_ON_ERROR));
 
         if (!$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_BACKEND_SEARCH_DOCUMENT, $document)) {
             return null;
@@ -159,7 +159,7 @@ class BackendSearch
             'type' => $document->getType(),
             'searchableContent' => $document->getSearchableContent(),
             'tags' => $document->getTags(),
-            'document' => json_encode($document->toArray()),
+            'document' => json_encode($document->toArray(), JSON_THROW_ON_ERROR),
         ];
     }
 }

@@ -27,7 +27,7 @@ class IndexCommandTest extends TestCase
         $backendSearch
             ->expects($this->once())
             ->method('triggerUpdate')
-            ->with($this->callback(static fn (IndexUpdateConfigInterface $config): bool => null === $config->getUpdateSince()))
+            ->with($this->callback(static fn (IndexUpdateConfigInterface $config): bool => !$config->getUpdateSince()))
         ;
 
         $command = new IndexCommand($backendSearch);

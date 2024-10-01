@@ -20,7 +20,7 @@ class Result
     /**
      * @param array<Hit> $hits
      */
-    public function __construct(private array $hits)
+    public function __construct(private readonly array $hits)
     {
     }
 

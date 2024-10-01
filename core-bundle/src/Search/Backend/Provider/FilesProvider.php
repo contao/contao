@@ -30,7 +30,7 @@ class FilesProvider implements ProviderInterface
     public const TYPE = 'file';
 
     public function __construct(
-        private Connection $connection,
+        private readonly Connection $connection,
         private readonly AccessDecisionManagerInterface $accessDecisionManager,
     ) {
     }

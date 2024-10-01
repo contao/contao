@@ -27,7 +27,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 #[AsCommand(name: 'contao:backend-search:index', description: '')]
 class IndexCommand extends Command
 {
-    public function __construct(private BackendSearch $backendSearch)
+    public function __construct(private readonly BackendSearch $backendSearch)
     {
         parent::__construct();
     }

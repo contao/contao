@@ -26,7 +26,7 @@ class ProviderDelegatingVoter extends Voter
     /**
      * @param iterable<ProviderInterface> $providers
      */
-    public function __construct(private iterable $providers)
+    public function __construct(private readonly iterable $providers)
     {
     }
 

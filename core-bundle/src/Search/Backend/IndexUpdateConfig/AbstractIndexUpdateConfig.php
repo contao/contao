@@ -9,7 +9,7 @@ namespace Contao\CoreBundle\Search\Backend\IndexUpdateConfig;
  */
 abstract class AbstractIndexUpdateConfig implements IndexUpdateConfigInterface
 {
-    public function __construct(private \DateTimeInterface|null $updateSince = null)
+    public function __construct(private readonly \DateTimeInterface|null $updateSince = null)
     {
     }
 
