@@ -24,6 +24,7 @@ use Contao\ContentSliderStart;
 use Contao\ContentSliderStop;
 use Contao\CoreBundle\Controller\BackendCsvImportController;
 use Contao\Crawl;
+use Contao\CudTable;
 use Contao\FilesModel;
 use Contao\FileTree;
 use Contao\Form;
@@ -300,6 +301,7 @@ $GLOBALS['BE_FFL'] = array
 	'inputUnit'               => InputUnit::class,
 	'trbl'                    => TrblField::class,
 	'chmod'                   => ChmodTable::class,
+	'cud'                     => CudTable::class,
 	'picker'                  => Picker::class,
 	'pageTree'                => PageTree::class,
 	'fileTree'                => FileTree::class,

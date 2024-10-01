@@ -64,7 +64,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},name;{modules_legend},modules,themes,frontendModules;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{alexf_legend:hide},alexf;{account_legend},disable,start,stop',
+		'default'                     => '{title_legend},name;{modules_legend},modules,themes,frontendModules;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{cud_legend},cud;{alexf_legend:hide},alexf;{account_legend},disable,start,stop',
 	),
 
 	// Fields
@@ -201,6 +201,12 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'inputType'               => 'checkbox',
 			'foreignKey'              => 'tl_member_group.name',
 			'eval'                    => array('multiple'=>true),
+			'sql'                     => "blob NULL"
+		),
+		'cud' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['cud'],
+			'inputType'               => 'cud',
 			'sql'                     => "blob NULL"
 		),
 		'alexf' => array
