@@ -80,6 +80,7 @@ return (new Configuration())
     // template_skeleton.html.twig template.
     ->ignoreErrorsOnPackage('twig/string-extra', [ErrorType::UNUSED_DEPENDENCY])
 
-    // This package provides the default search adapter for Loupe
+    // These packages are required for the search integration
+    ->ignoreErrorsOnPackage('schranz-search/symfony-bundle', [ErrorType::UNUSED_DEPENDENCY])
     ->ignoreErrorsOnPackage('schranz-search/seal-loupe-adapter', [ErrorType::UNUSED_DEPENDENCY])
 ;
