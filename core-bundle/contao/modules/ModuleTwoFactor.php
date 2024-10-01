@@ -103,10 +103,11 @@ class ModuleTwoFactor extends BackendModule
 				{
 					if ((int) $credential->userHandle !== $user->id)
 					{
-						throw new AccessDeniedHttpException('Cannot delete credential ID ' . $editCredentialId);
+						throw new AccessDeniedHttpException('Cannot edit credential ID ' . $editCredentialId);
 					}
 
 					$credential->name = Input::post('name');
+					$credentialRepo->saveCredentialSource($credential);
 				}
 			}
 

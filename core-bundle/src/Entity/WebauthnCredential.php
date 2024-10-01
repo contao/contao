@@ -36,6 +36,9 @@ class WebauthnCredential extends PublicKeyCredentialSource
     #[GeneratedValue(strategy: 'NONE')]
     private readonly string $id;
 
+    #[Column(type: Types::STRING)]
+    public readonly string $name;
+
     public function __construct(string $publicKeyCredentialId, string $type, array $transports, string $attestationType, TrustPath $trustPath, Uuid $aaguid, string $credentialPublicKey, string $userHandle, int $counter)
     {
         $this->id = Ulid::generate();
