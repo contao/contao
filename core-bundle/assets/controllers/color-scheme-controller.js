@@ -64,7 +64,6 @@ export default class extends Controller {
                 detail: {
                     mode: isDark ? 'dark' : 'light'
                 },
-                bubbles: true,
             }
         );
 
