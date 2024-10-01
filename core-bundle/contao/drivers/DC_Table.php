@@ -5647,6 +5647,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <select name="tl_field" class="tl_select' . ($active ? ' active' : '') . '" data-controller="contao--chosen">
 ' . implode("\n", $options_sorter) . '
 </select>
+<span>=</span>
 <input type="search" name="tl_value" class="tl_text' . ($active ? ' active' : '') . '" value="' . StringUtil::specialchars($session['search'][$this->strTable]['value'] ?? '') . '">
 </div>';
 	}

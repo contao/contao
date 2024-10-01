@@ -1450,7 +1450,7 @@ abstract class DataContainer extends Backend
 				// Add the panel if it is not empty
 				if ($panel)
 				{
-					$panels = $panels . $panel;
+					$panels .= $panel;
 				}
 			}
 

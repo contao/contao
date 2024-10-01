@@ -682,13 +682,7 @@ h2.sub_headline {
 }
 
 .tl_search > .tl_select {
-	border-radius: 2px 0 0 2px;
 	max-width: 100px;
-}
-
-.tl_search > .tl_text {
-	border-left-width: 0;
-	border-radius: 0 2px 2px 0;
 }
 
 .tl_img_submit {
@@ -3134,47 +3128,9 @@ fieldset.collapsed > legend {
 		display: none;
 	}
 
-	/*.tl_filter {
-		box-sizing: border-box;
-		padding: 0 3px 0 7px;
-	}*/
-
 	.tl_filter strong {
 		display: none;
 	}
-
-	/*.tl_filter .tl_select {
-		display: block;
-		max-width: 100%;
-	}*/
-
-	/*.tl_search {
-		width: 76%;
-		max-width: 283px;
-	}*/
-
-	/*.tl_search .tl_select {
-		width: 36%;
-	}*/
-
-	/*.tl_search .tl_text {
-		width: 26%;
-	}*/
-
-	/*.tl_sorting {
-		width: 60%;
-		max-width: 212px;
-	}*/
-
-	/*.tl_limit {
-		width: 50%;
-		max-width: 177px;
-	}*/
-
-	/*.tl_submit_panel {
-		float: right;
-		z-index: 1;
-	}*/
 
 	input.tl_submit {
 		margin-top: 3px;
