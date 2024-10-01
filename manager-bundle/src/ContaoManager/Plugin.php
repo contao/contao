@@ -131,7 +131,9 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel): RouteCollection|null
     {
         $collections = [
-            $resolver->resolve('@WebauthnBundle/Resources/config/routing.php')->load('@WebauthnBundle/Resources/config/routing.php'),
+            $resolver
+                ->resolve('@WebauthnBundle/Resources/config/routing.php')
+                ->load('@WebauthnBundle/Resources/config/routing.php'),
         ];
 
         if ('dev' === $kernel->getEnvironment()) {

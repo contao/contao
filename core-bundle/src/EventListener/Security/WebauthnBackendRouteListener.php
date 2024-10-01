@@ -26,7 +26,10 @@ class WebauthnBackendRouteListener
         $request = $event->getRequest();
         $controller = $request->attributes->get('_controller');
 
-        if (str_starts_with($controller, 'webauthn.controller.security.contao_backend.') || 'webauthn.controller.creation.request.contao_backend_add_authenticator' === $controller) {
+        if (
+            str_starts_with($controller, 'webauthn.controller.security.contao_backend.')
+            || 'webauthn.controller.creation.request.contao_backend_add_authenticator' === $controller
+        ) {
             $request->attributes->set('_scope', 'backend');
         }
     }

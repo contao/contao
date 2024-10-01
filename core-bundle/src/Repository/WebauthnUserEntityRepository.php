@@ -39,10 +39,6 @@ final class WebauthnUserEntityRepository implements PublicKeyCredentialUserEntit
             return null;
         }
 
-        return new PublicKeyCredentialUserEntity(
-            $user->username,
-            (string) $user->id,
-            $user->name,
-        );
+        return new PublicKeyCredentialUserEntity($user->username, (string) $user->id, $user->name);
     }
 }

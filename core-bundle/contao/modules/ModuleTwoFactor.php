@@ -78,7 +78,6 @@ class ModuleTwoFactor extends BackendModule
 			$container->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
 		}
 
-		/** @var WebauthnCredentialRepository $credentialRepo */
 		$credentialRepo = $container->get('contao.repository.webauthn_credential');
 
 		if (Input::post('FORM_SUBMIT') == 'tl_passkeys_credentials')
@@ -88,7 +87,7 @@ class ModuleTwoFactor extends BackendModule
 				/** @var WebauthnCredential $credential */
 				if ($credential = $credentialRepo->findOneById($deleteCredentialId))
 				{
-					if ((int) $credential->userHandle !== (int) $user->id)
+					if ((int) $credential->userHandle !== $user->id)
 					{
 						throw new AccessDeniedHttpException('Cannot delete credential ID ' . $deleteCredentialId);
 					}
@@ -102,7 +101,7 @@ class ModuleTwoFactor extends BackendModule
 				/** @var WebauthnCredential $credential */
 				if ($credential = $credentialRepo->findOneById($editCredentialId))
 				{
-					if ((int) $credential->userHandle !== (int) $user->id)
+					if ((int) $credential->userHandle !== $user->id)
 					{
 						throw new AccessDeniedHttpException('Cannot delete credential ID ' . $editCredentialId);
 					}

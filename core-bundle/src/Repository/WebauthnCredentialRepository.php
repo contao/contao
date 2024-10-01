@@ -33,11 +33,9 @@ final class WebauthnCredentialRepository extends DoctrineCredentialSourceReposit
      */
     public function getAllForUser(User $user): array
     {
-        $qb = $this->getEntityManager()
+        return $this->getEntityManager()
             ->createQueryBuilder()
-        ;
-
-        return $qb->select('c')
+            ->select('c')
             ->from($this->class, 'c')
             ->where('c.userHandle = :user_handle')
             ->setParameter(':user_handle', $user->id)
