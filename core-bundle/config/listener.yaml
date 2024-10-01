@@ -486,7 +486,7 @@ services:
     contao.listener.security.webauthn_backend_route:
         class: Contao\CoreBundle\EventListener\Security\WebauthnBackendRouteListener
         arguments:
-            - 
+            -
                 - webauthn.controller.creation.request.contao_backend_add_authenticator
                 - webauthn.controller.creation.response.contao_backend_add_authenticator
                 - webauthn.controller.security.contao_backend.request.options
