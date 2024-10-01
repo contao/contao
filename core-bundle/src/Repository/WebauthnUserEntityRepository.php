@@ -28,24 +28,23 @@ class WebauthnUserEntityRepository implements PublicKeyCredentialUserEntityRepos
 {
     public function __construct(
         private readonly ContaoUserProvider $userProvider,
-        private readonly ContaoFramework $framework
-    )
-    {
+        private readonly ContaoFramework $framework,
+    ) {
     }
 
-    public function findOneByUsername(string $username): ?PublicKeyCredentialUserEntity
+    public function findOneByUsername(string $username): PublicKeyCredentialUserEntity|null
     {
         return $this->getUserEntity($this->userProvider->loadUserByIdentifier($username));
     }
 
-    public function findOneByUserHandle(string $userHandle): ?PublicKeyCredentialUserEntity
+    public function findOneByUserHandle(string $userHandle): PublicKeyCredentialUserEntity|null
     {
         return $this->getUserEntity($this->userProvider->loadUserById((int) $userHandle));
     }
 
-    private function getUserEntity(null|User $user): ?PublicKeyCredentialUserEntity
+    private function getUserEntity(User|null $user): PublicKeyCredentialUserEntity|null
     {
-        if ($user === null) {
+        if (!$user) {
             return null;
         }
 

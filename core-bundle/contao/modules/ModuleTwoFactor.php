@@ -90,7 +90,7 @@ class ModuleTwoFactor extends BackendModule
 				{
 					if ((int) $credential->userHandle !== (int) $user->id)
 					{
-						throw new AccessDeniedHttpException('Cannot delete credential ID '.$deleteCredentialId);
+						throw new AccessDeniedHttpException('Cannot delete credential ID ' . $deleteCredentialId);
 					}
 
 					$credentialRepo->remove($credential);
@@ -104,7 +104,7 @@ class ModuleTwoFactor extends BackendModule
 				{
 					if ((int) $credential->userHandle !== (int) $user->id)
 					{
-						throw new AccessDeniedHttpException('Cannot delete credential ID '.$editCredentialId);
+						throw new AccessDeniedHttpException('Cannot delete credential ID ' . $editCredentialId);
 					}
 
 					$credential->name = Input::post('name');

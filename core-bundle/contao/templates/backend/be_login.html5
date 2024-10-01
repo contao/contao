@@ -51,7 +51,7 @@
             <div class="submit_container cf">
               <button type="submit" name="login" id="login" class="tl_submit"><?= $this->loginButton ?></button>
               <button type="button" class="tl_submit" data-action="contao--webauthn#signin">Login with Passkey</button>
-              <a href="/" class="footer_preview"><?= $this->feLink ?> ›</a>         
+              <a href="/" class="footer_preview"><?= $this->feLink ?> ›</a>
             </div>
           </div>
         </form>

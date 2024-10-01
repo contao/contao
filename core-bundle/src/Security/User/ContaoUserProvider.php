@@ -68,7 +68,7 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
             return $user;
         }
 
-        throw new UserNotFoundException(sprintf('Could not find user "%s"', $id));
+        throw new UserNotFoundException(\sprintf('Could not find user "%s"', $id));
     }
 
     public function refreshUser(UserInterface $user): User

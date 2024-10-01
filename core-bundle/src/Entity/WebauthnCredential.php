@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Entity;
 
 use Contao\CoreBundle\Repository\WebauthnCredentialRepository;
@@ -18,25 +28,15 @@ use Webauthn\TrustPath\TrustPath;
 #[Entity(repositoryClass: WebauthnCredentialRepository::class)]
 class WebauthnCredential extends PublicKeyCredentialSource
 {
+    #[Column(type: Types::DATETIME_IMMUTABLE)]
+    public readonly \DateTimeImmutable $createdAt;
+
     #[Id]
     #[Column(unique: true)]
     #[GeneratedValue(strategy: 'NONE')]
     private string $id;
 
-    #[Column(type: Types::DATETIME_IMMUTABLE)]
-    public readonly \DateTimeImmutable $createdAt;
-
-    public function __construct(
-        string $publicKeyCredentialId,
-        string $type,
-        array $transports,
-        string $attestationType,
-        TrustPath $trustPath,
-        AbstractUid $aaguid,
-        string $credentialPublicKey,
-        string $userHandle,
-        int $counter,
-    )
+    public function __construct(string $publicKeyCredentialId, string $type, array $transports, string $attestationType, TrustPath $trustPath, AbstractUid $aaguid, string $credentialPublicKey, string $userHandle, int $counter,)
     {
         $this->id = Ulid::generate();
         $this->createdAt = new \DateTimeImmutable();

@@ -13,11 +13,11 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Repository;
 
 use Contao\CoreBundle\Entity\WebauthnCredential;
+use Contao\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Webauthn\Bundle\Repository\DoctrineCredentialSourceRepository;
 use Webauthn\PublicKeyCredentialSource;
-use Contao\User;
 
 /**
  * @template-extends ServiceEntityRepository<WebauthnCredential>
@@ -61,14 +61,14 @@ class WebauthnCredentialRepository extends DoctrineCredentialSourceRepository
                 $publicKeyCredentialSource->aaguid,
                 $publicKeyCredentialSource->credentialPublicKey,
                 $publicKeyCredentialSource->userHandle,
-                $publicKeyCredentialSource->counter
+                $publicKeyCredentialSource->counter,
             );
         }
 
         parent::saveCredentialSource($publicKeyCredentialSource);
     }
 
-    public function findOneByCredentialId(string $publicKeyCredentialId): ?PublicKeyCredentialSource
+    public function findOneByCredentialId(string $publicKeyCredentialId): PublicKeyCredentialSource|null
     {
         $credential = $this->getEntityManager()
             ->createQueryBuilder()
@@ -91,7 +91,7 @@ class WebauthnCredentialRepository extends DoctrineCredentialSourceRepository
         return $credential;
     }
 
-    public function findOneById(string $id): ?PublicKeyCredentialSource
+    public function findOneById(string $id): PublicKeyCredentialSource|null
     {
         $credential = $this->getEntityManager()
             ->createQueryBuilder()
