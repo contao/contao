@@ -86,7 +86,7 @@
 
         // Close tooltip when touching anywhere else
         document.addEventListener('touchend', (e) => {
-            if (e.originalTarget.contains(el)) {
+            if (el.contains(e.target)) {
                 return;
             }
 
