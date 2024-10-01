@@ -124,5 +124,8 @@ class BackendSearchTest extends TestCase
         $result = $backendSearch->search(new Query(20, 'search me'));
 
         $this->assertSame($hit, $result->getHits()[0]);
+
+        // Cleanup memory
+        $engine->deleteDocument($indexName, 'foobarType.42');
     }
 }
