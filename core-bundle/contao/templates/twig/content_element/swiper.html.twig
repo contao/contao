@@ -2,9 +2,9 @@
 {% use "@Contao/component/_stylesheet.html.twig" %}
 
 {#
-    The "slider_settings" variable contains the settings for the content slider. 
+    The "slider_settings" variable contains the settings for the content slider.
     You can use the merge function to customise the settings.
-    
+
     Example:
         {% set slider_settings = slider_settings|merge({
             effect: 'fade',
@@ -12,17 +12,12 @@
                 crossFade: true
             },
         }) %}
-        
 #}
 
 {% block content %}
     {% set slider_attributes = attrs()
         .addClass('swiper')
         .set('data-settings', slider_settings|json_encode)
-        .set('data-delay', delay)
-        .set('data-speed', speed)
-        .set('data-offset', offset)
-        .set('data-loop', loop)
         .mergeWith(slider_attributes|default)
     %}
     <div{{ slider_attributes }}>
