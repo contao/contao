@@ -386,6 +386,12 @@
       <trans-unit id="tl_content.playerStop.1">
         <source>Stop playing the video at the given number of seconds. Set to 0 to disable.</source>
       </trans-unit>
+      <trans-unit id="tl_content.playerTitle.0">
+        <source>Title</source>
+      </trans-unit>
+      <trans-unit id="tl_content.playerTitle.1">
+        <source>Here you can enter a title.</source>
+      </trans-unit>
       <trans-unit id="tl_content.playerCaption.0">
         <source>Caption</source>
       </trans-unit>

@@ -1,0 +1,36 @@
+@import "tree.pcss";
+
+.chrome {
+    height: calc(100vh - 7rem);
+    overflow: hidden;
+
+    display: grid;
+    grid-template-areas: "tree tabs info";
+    grid-template-columns: auto 1fr min-content;
+    position: relative;
+
+    #template-studio--tree {
+        grid-area: tree;
+        border-right: 1px solid var(--border);
+        overflow: auto;
+        resize: horizontal;
+        min-width: 100px;
+        max-width: max-content;
+    }
+
+    #template-studio--tabs {
+        grid-area: tabs;
+        position: relative;
+        overflow-y: auto;
+    }
+
+    #template-studio--info {
+        grid-area: info;
+        border-left: 1px solid var(--border);
+        overflow-y: auto;
+
+        &:empty {
+            display: none;
+        }
+    }
+}

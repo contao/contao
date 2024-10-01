@@ -1,0 +1,22 @@
+{% trans_default_domain "contao_default" %}
+
+{% set tabs_container_attributes = attrs()
+    .set('data-controller', 'contao--tabs')
+    .set('data-contao--tabs-close-label-value', 'MSC.close'|trans)
+    .mergeWith(tabs_container_attributes|default)
+%}
+<div{{ tabs_container_attributes }}>
+    <ul data-contao--tabs-target="navigation"></ul>
+
+    {# Tab panels can be managed by streaming 'backend/component/tabs/_panel.html.twig'
+        elements into the below container, that is identified by '#<panels_container_id>'. #}
+    {% set tab_panels_attributes = attrs()
+        .addClass('tab-panels')
+        .set('id', panels_container_id)
+    %}
+    <div{{ tab_panels_attributes }}></div>
+
+    <div class="initial">
+        {% block initial_content %}{% endblock %}
+    </div>
+</div>
