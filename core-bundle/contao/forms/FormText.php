@@ -124,9 +124,12 @@ class FormText extends Widget
 				break;
 
 			case 'autocomplete':
-				if (true === $varValue) {
+				if (true === $varValue)
+				{
 					$varValue = 'on';
-				} elseif (false === $varValue) {
+				}
+				elseif (false === $varValue)
+				{
 					$varValue = 'off';
 				}
 
