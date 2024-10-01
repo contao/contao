@@ -50,7 +50,7 @@ class FallbackRecordLabelListener
         $mode = $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? DataContainer::MODE_SORTED;
 
         if (DataContainer::MODE_PARENT === $mode && ($GLOBALS['TL_DCA'][$table]['list']['sorting']['child_record_callback'] ?? null)) {
-            $messageDomain = "contao_tl_$table";
+            $messageDomain = "contao_$table";
             $labelKey = $this->translator->getCatalogue()->has("$table.edit", $messageDomain) ? "$table.edit" : 'DCA.edit';
 
             $event->setLabel($this->translator->trans($labelKey, [$event->getData()['id']], $messageDomain));
