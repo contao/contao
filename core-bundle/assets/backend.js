@@ -8,6 +8,8 @@ import './scripts/limit-height.js';
 import './scripts/modulewizard.js';
 import './scripts/sectionwizard.js';
 
+import './styles/backend.pcss';
+
 // Start the Stimulus application
 const application = Application.start();
 application.debug = process.env.NODE_ENV === 'development';
@@ -40,3 +42,13 @@ const mooDomready = () => {
 
 document.documentElement.addEventListener('turbo:render', mooDomready);
 document.documentElement.addEventListener('turbo:frame-render', mooDomready);
+
+// Always break out of a missing frame (#7501)
+document.documentElement.addEventListener('turbo:frame-missing', (e) => {
+    if (window.console) {
+        console.warn('Turbo frame #'+e.target.id+' is missing.');
+    }
+
+    e.preventDefault();
+    e.detail.visit(e.detail.response);
+});

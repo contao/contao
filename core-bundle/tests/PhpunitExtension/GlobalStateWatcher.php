@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\PhpunitExtension;
 
+use PhpParser\Lexer;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Runner\AfterTestHook;
 use PHPUnit\Runner\BeforeTestHook;
@@ -123,6 +124,9 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
 
     private function buildConstants(): string
     {
+        // Preload forward compatible PHP constants
+        class_exists(Lexer::class);
+
         return print_r(get_defined_constants(), true);
     }
 

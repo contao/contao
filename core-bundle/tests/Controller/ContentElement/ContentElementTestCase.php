@@ -303,7 +303,7 @@ class ContentElementTestCase extends TestCase
                 $contaoFilesystemLoader,
                 $this->createMock(ContaoCsrfTokenManager::class),
                 $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor(new NullAdapter()),
+                new InspectorNodeVisitor(new NullAdapter(), $environment),
             ),
         );
 

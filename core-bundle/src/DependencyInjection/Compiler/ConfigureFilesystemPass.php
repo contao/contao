@@ -82,7 +82,7 @@ class ConfigureFilesystemPass implements CompilerPassInterface
             // Mount a local adapter in place of the symlink and register it in the default
             // public URI provider
             $mountPath = Path::join($uploadDir, $item->getRelativePathname());
-            $name ??= str_replace(['.', '/', '-'], '_', Container::underscore($mountPath));
+            $name = str_replace(['.', '/', '-'], '_', Container::underscore($mountPath));
             $adapterId = "contao.filesystem.adapter.$name";
 
             $config->mountLocalAdapter($target, $mountPath, $name);

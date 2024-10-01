@@ -49,8 +49,8 @@ class ArticleContentVoterTest extends TestCase
         $accessDecisionMap = [[$token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'article', true]];
 
         foreach ($articleParents as $pageId) {
-            $accessDecisionMap[] = [$token, [ContaoCorePermissions::USER_CAN_ACCESS_PAGE], $pageId, true];
-            $accessDecisionMap[] = [$token, [ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], $pageId, true];
+            $accessDecisionMap[] = [$token, [ContaoCorePermissions::USER_CAN_ACCESS_PAGE], (int) $pageId, true];
+            $accessDecisionMap[] = [$token, [ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], (int) $pageId, true];
         }
 
         $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
@@ -61,11 +61,23 @@ class ArticleContentVoterTest extends TestCase
         ;
 
         $fetchAllAssociativeMap = [];
+        $fetchAssociativeMap = [];
 
-        foreach ($parentRecords as $id => $records) {
+        foreach ($parentRecords as $id => &$records) {
+            if (\count($records) > 1 && 'tl_content' !== end($records)['ptable']) {
+                $parent = array_pop($records);
+
+                $fetchAssociativeMap[] = [
+                    'SELECT id, pid, ptable FROM tl_content WHERE id=?',
+                    [(int) end($records)['pid']],
+                    [],
+                    $parent,
+                ];
+            }
+
             $fetchAllAssociativeMap[] = [
-                'SELECT id, @pid:=pid AS pid, ptable FROM tl_content WHERE id=?'.str_repeat(' UNION SELECT id, @pid:=pid AS pid, ptable FROM tl_content WHERE id=@pid', 9),
-                [$id],
+                'SELECT id, @pid:=pid AS pid, ptable FROM tl_content WHERE id=:id'.str_repeat(' UNION SELECT id, @pid:=pid AS pid, ptable FROM tl_content WHERE id=@pid AND ptable=:ptable', 9),
+                ['id' => $id, 'ptable' => 'tl_content'],
                 [],
                 $records,
             ];
@@ -87,6 +99,12 @@ class ArticleContentVoterTest extends TestCase
             ->expects($this->exactly(\count($parentRecords)))
             ->method('fetchAllAssociative')
             ->willReturnMap($fetchAllAssociativeMap)
+        ;
+
+        $connection
+            ->expects($this->exactly(\count($fetchAssociativeMap)))
+            ->method('fetchAssociative')
+            ->willReturnMap($fetchAssociativeMap)
         ;
 
         $connection
@@ -179,6 +197,12 @@ class ArticleContentVoterTest extends TestCase
             new DeleteAction('tl_content', ['ptable' => 'tl_content', 'pid' => 3]),
             [3 => [['ptable' => 'tl_content', 'pid' => 2], ['ptable' => 'tl_article', 'pid' => 1]]],
             [1 => 1],
+        ];
+
+        yield 'Check argument handling if database returns a string instead of int' => [
+            new CreateAction('tl_content', ['ptable' => 'tl_article', 'pid' => 1]),
+            [],
+            ['1' => '1'],
         ];
     }
 

@@ -66,7 +66,7 @@ class DynamicUseTokenParserTest extends TestCase
                 $filesystemLoader,
                 $this->createMock(ContaoCsrfTokenManager::class),
                 $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor(new NullAdapter()),
+                new InspectorNodeVisitor(new NullAdapter(), $environment),
             ),
         );
 

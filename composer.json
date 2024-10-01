@@ -42,7 +42,7 @@
         "ausi/slug-generator": "^1.1",
         "bacon/bacon-qr-code": "^2.0",
         "contao-components/ace": "^1.8",
-        "contao-components/altcha": "^0.6.2 || ^0.7 || ^0.8 || ^0.9",
+        "contao-components/altcha": "^1.0",
         "contao-components/chosen": "^2.0",
         "contao-components/colorbox": "^1.6",
         "contao-components/colorpicker": "^1.5",
@@ -167,7 +167,7 @@
         "toflar/psr6-symfony-http-cache-store": "^4.0",
         "twig/extra-bundle": "^3.0",
         "twig/string-extra": "^3.0",
-        "twig/twig": "^3.10.2",
+        "twig/twig": "^3.12",
         "ua-parser/uap-php": "^3.9",
         "webignition/robots-txt-file": "^3.0",
         "wikimedia/less.php": "^1.7"
@@ -179,6 +179,7 @@
         "doctrine/annotations": "^2.0",
         "league/flysystem-memory": "^3.0",
         "sebastian/diff": "^4.0",
+        "shipmonk/composer-dependency-analyser": "^1.4",
         "symfony/browser-kit": "^6.4 || ^7.0",
         "symfony/phpunit-bridge": "^6.4 || ^7.0"
     },
@@ -290,7 +291,7 @@
     "extra": {
         "bamarni-bin": {
             "bin-links": false,
-            "forward-command": true
+            "forward-command": false
         },
         "contao-manager-plugin": {
             "contao/calendar-bundle": "Contao\\CalendarBundle\\ContaoManager\\Plugin",
@@ -320,7 +321,7 @@
             "@ecs-legacy",
             "@ecs-template"
         ],
-        "depcheck": "@php vendor-bin/depcheck/vendor/bin/composer-dependency-analyser --config=depcheck.php",
+        "depcheck": "@php vendor/bin/composer-dependency-analyser --config=depcheck.php",
         "ecs-default": "@php vendor-bin/ecs/vendor/bin/ecs check --fix",
         "ecs-legacy": "@php vendor-bin/ecs/vendor/bin/ecs check --config=vendor-bin/ecs/config/legacy.php --fix",
         "ecs-template": "@php vendor-bin/ecs/vendor/bin/ecs check --config=vendor-bin/ecs/config/template.php --fix",
