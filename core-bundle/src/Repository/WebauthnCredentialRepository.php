@@ -14,17 +14,14 @@ namespace Contao\CoreBundle\Repository;
 
 use Contao\CoreBundle\Entity\WebauthnCredential;
 use Contao\User;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Webauthn\Bundle\Repository\DoctrineCredentialSourceRepository;
 use Webauthn\PublicKeyCredentialSource;
 
 /**
- * @template-extends ServiceEntityRepository<WebauthnCredential>
- *
- * @internal
+ * @template-extends DoctrineCredentialSourceRepository<WebauthnCredential>
  */
-class WebauthnCredentialRepository extends DoctrineCredentialSourceRepository
+final class WebauthnCredentialRepository extends DoctrineCredentialSourceRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

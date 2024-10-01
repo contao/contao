@@ -19,8 +19,8 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
-use Symfony\Component\Uid\AbstractUid;
 use Symfony\Component\Uid\Ulid;
+use Symfony\Component\Uid\Uuid;
 use Webauthn\PublicKeyCredentialSource;
 use Webauthn\TrustPath\TrustPath;
 
@@ -34,9 +34,9 @@ class WebauthnCredential extends PublicKeyCredentialSource
     #[Id]
     #[Column(unique: true)]
     #[GeneratedValue(strategy: 'NONE')]
-    private string $id;
+    private readonly string $id;
 
-    public function __construct(string $publicKeyCredentialId, string $type, array $transports, string $attestationType, TrustPath $trustPath, AbstractUid $aaguid, string $credentialPublicKey, string $userHandle, int $counter)
+    public function __construct(string $publicKeyCredentialId, string $type, array $transports, string $attestationType, TrustPath $trustPath, Uuid $aaguid, string $credentialPublicKey, string $userHandle, int $counter)
     {
         $this->id = Ulid::generate();
         $this->createdAt = new \DateTimeImmutable();

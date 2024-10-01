@@ -669,17 +669,16 @@ services:
         arguments:
             - '@doctrine'
 
-    contao.repository.webauthn_user_entity:
-        class: Contao\CoreBundle\Repository\WebauthnUserEntityRepository
-        arguments:
-            - '@contao.security.backend_user_provider'
-            - '@contao.framework'
-
     contao.repository.webauthn_credential:
         class: Contao\CoreBundle\Repository\WebauthnCredentialRepository
         public: true
         arguments:
             - '@doctrine'
+
+    contao.repository.webauthn_user_entity:
+        class: Contao\CoreBundle\Repository\WebauthnUserEntityRepository
+        arguments:
+            - '@contao.security.backend_user_provider'
 
     contao.resource_finder:
         class: Contao\CoreBundle\Config\ResourceFinder

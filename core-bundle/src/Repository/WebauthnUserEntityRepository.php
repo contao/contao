@@ -12,24 +12,15 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Repository;
 
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\User;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Webauthn\Bundle\Repository\PublicKeyCredentialUserEntityRepositoryInterface;
 use Webauthn\PublicKeyCredentialUserEntity;
 
-/**
- * @template-extends ServiceEntityRepository<PublicKeyCredentialUserEntity>
- *
- * @internal
- */
-class WebauthnUserEntityRepository implements PublicKeyCredentialUserEntityRepositoryInterface
+final class WebauthnUserEntityRepository implements PublicKeyCredentialUserEntityRepositoryInterface
 {
-    public function __construct(
-        private readonly ContaoUserProvider $userProvider,
-        private readonly ContaoFramework $framework,
-    ) {
+    public function __construct(private readonly ContaoUserProvider $userProvider)
+    {
     }
 
     public function findOneByUsername(string $username): PublicKeyCredentialUserEntity|null
