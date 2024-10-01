@@ -117,8 +117,8 @@
 </div>
 
 <div class="two-factor passkeys">
-  <h2 class="sub_headline">Passkeys</h2>
-  <p>Here you can add and manage your passkeys with which you can log into the back end. Passkeys allow you to sign in safely and easily, without requiring a password and two-factor authentication.</p>
+  <h2 class="sub_headline"><?= $this->trans('MSC.passkeys') ?></h2>
+  <p><?= $this->trans('MSC.passkeysDescription') ?></p>
   <div class="tl_listing_container">
     <turbo-frame id="passkeys">
       <?php if ($this->credentials): ?>
@@ -150,7 +150,7 @@
                   <form method="post">
                     <input type="hidden" name="FORM_SUBMIT" value="tl_passkeys_credentials_actions">
                     <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
-                    <?php if ($this->editPassKeyId === $credential->getId()): ?><button type="submit" name="save_passkey" form="form-edit-passkey-<?= $credential->getId() ?>" value="<?= $credential->getId() ?>"><?= Contao\Image::getHtml('save.svg', $this->trans('MSC.edit')) ?></button><?php else: ?><button type="submit" name="edit_passkey" value="<?= $credential->getId() ?>"><?= Contao\Image::getHtml('edit.svg', $this->trans('MSC.edit')) ?></button><?php endif; ?> <button type="submit" name="delete_passkey" value="<?= $credential->getId() ?>" onclick="if(!confirm('<?= $this->trans('MSC.deleteConfirm', [$credential->getId()]) ?>'))return false"><?= Contao\Image::getHtml('delete.svg', $this->trans('MSC.delete')) ?></button>
+                    <?php if ($this->editPassKeyId === $credential->getId()): ?><button type="submit" name="save_passkey" form="form-edit-passkey-<?= $credential->getId() ?>" value="<?= $credential->getId() ?>"><?= Contao\Image::getHtml('save.svg', $this->trans('MSC.edit')) ?></button><?php else: ?><button type="submit" name="edit_passkey" value="<?= $credential->getId() ?>"><?= Contao\Image::getHtml('edit.svg', $this->trans('MSC.edit')) ?></button><?php endif; ?> <button type="submit" name="delete_passkey" value="<?= $credential->getId() ?>" onclick="if(!confirm('<?= $this->trans('MSC.deleteConfirm', [$credential->name ?: $credential->getId()]) ?>'))return false"><?= Contao\Image::getHtml('delete.svg', $this->trans('MSC.delete')) ?></button>
                   </form>
                 </td>
               </tr>
@@ -163,7 +163,7 @@
   <form method="post" data-controller="contao--webauthn" data-contao--webauthn-creation-result-url-value="<?= $this->route('webauthn.controller.creation.response.contao_backend_add_authenticator') ?>" data-contao--webauthn-creation-options-url-value="<?= $this->route('webauthn.controller.creation.request.contao_backend_add_authenticator') ?>" data-contao--webauthn-creation-success-redirect-uri-value="<?= $this->webauthnCreationSuccessRedirectUri ?>">
     <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
     <div class="tl_submit_container">
-      <button class="tl_submit" type="submit" data-action="contao--webauthn#signup">Add Passkey</button>
+      <button class="tl_submit" type="submit" data-action="contao--webauthn#signup"><?= $this->trans('MSC.addPasskey') ?></button>
     </div>
   </form>
 </div>

@@ -2189,17 +2189,26 @@
       <trans-unit id="MSC.altchaWaitAlert">
         <source>Verifying … please wait.</source>
       </trans-unit>
+      <trans-unit id="MSC.passkeys">
+        <source>Passkeys</source>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysDescription">
+        <source>Here you can add and manage your passkeys with which you can log into the back end. Passkeys allow you to sign in safely and easily, without requiring a password and two-factor authentication.</source>
+      </trans-unit>
       <trans-unit id="MSC.passkeyLogin">
         <source>Sign in with a passkey</source>
-      </trans-unit>
-      <trans-unit id="MSC.passkeyNameInput">
-        <source>Name this passkey …</source>
       </trans-unit>
       <trans-unit id="MSC.passkeysName">
         <source>Name/ID</source>
       </trans-unit>
+      <trans-unit id="MSC.passkeyNameInput">
+        <source>Name this passkey …</source>
+      </trans-unit>
       <trans-unit id="MSC.passkeysCreatedAt">
         <source>Created at</source>
+      </trans-unit>
+      <trans-unit id="MSC.addPasskey">
+        <source>Add Passkey</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

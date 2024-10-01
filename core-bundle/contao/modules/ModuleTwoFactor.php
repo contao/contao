@@ -116,13 +116,12 @@ class ModuleTwoFactor extends BackendModule
 				}
 			}
 
-			$this->reload();
+			$this->redirect($this->addToUrl('', true, array('edit_passkey', 'edit_new_passkey')));
 		}
 		elseif (Input::post('FORM_SUBMIT') === 'tl_passkeys_credentials_edit')
 		{
 			if ($saveCredentialId = Input::post('credential_id'))
 			{
-				/** @var WebauthnCredential $credential */
 				if ($credential = $credentialRepo->findOneById($saveCredentialId))
 				{
 					if ((int) $credential->userHandle !== $user->id)
@@ -132,12 +131,10 @@ class ModuleTwoFactor extends BackendModule
 
 					$credential->name = Input::post('passkey_name') ?? '';
 					$credentialRepo->saveCredentialSource($credential);
-
-					$this->redirect($this->addToUrl('', true, array('edit_passkey')));
 				}
 			}
 
-			$this->reload();
+			$this->redirect($this->addToUrl('', true, array('edit_passkey', 'edit_new_passkey')));
 		}
 
 		$this->Template->isEnabled = $user->useTwoFactor;

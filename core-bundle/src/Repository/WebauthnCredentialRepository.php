@@ -29,7 +29,7 @@ final class WebauthnCredentialRepository extends DoctrineCredentialSourceReposit
     }
 
     /**
-     * @return list<PublicKeyCredentialSource>
+     * @return list<WebauthnCredential>
      */
     public function getAllForUser(User $user): array
     {
@@ -63,9 +63,9 @@ final class WebauthnCredentialRepository extends DoctrineCredentialSourceReposit
         parent::saveCredentialSource($publicKeyCredentialSource);
     }
 
-    public function findOneByCredentialId(string $publicKeyCredentialId): PublicKeyCredentialSource|null
+    public function findOneByCredentialId(string $publicKeyCredentialId): WebauthnCredential|null
     {
-        $credential = $this->getEntityManager()
+        return $this->getEntityManager()
             ->createQueryBuilder()
             ->from($this->class, 'c')
             ->select('c')
@@ -75,20 +75,11 @@ final class WebauthnCredentialRepository extends DoctrineCredentialSourceReposit
             ->getQuery()
             ->getOneOrNullResult()
         ;
-
-        if ($credential instanceof WebauthnCredential) {
-            $credential->otherUI = null;
-            $credential->backupEligible = null;
-            $credential->backupStatus = null;
-            $credential->uvInitialized = null;
-        }
-
-        return $credential;
     }
 
-    public function findOneById(string $id): PublicKeyCredentialSource|null
+    public function findOneById(string $id): WebauthnCredential|null
     {
-        $credential = $this->getEntityManager()
+        return $this->getEntityManager()
             ->createQueryBuilder()
             ->from($this->class, 'c')
             ->select('c')
@@ -98,15 +89,6 @@ final class WebauthnCredentialRepository extends DoctrineCredentialSourceReposit
             ->getQuery()
             ->getOneOrNullResult()
         ;
-
-        if ($credential instanceof WebauthnCredential) {
-            $credential->otherUI = null;
-            $credential->backupEligible = null;
-            $credential->backupStatus = null;
-            $credential->uvInitialized = null;
-        }
-
-        return $credential;
     }
 
     public function remove(PublicKeyCredentialSource $publicKeyCredentialSource): void
@@ -115,9 +97,9 @@ final class WebauthnCredentialRepository extends DoctrineCredentialSourceReposit
         $this->getEntityManager()->flush();
     }
 
-    public function getLastForUser(User $user): PublicKeyCredentialSource
+    public function getLastForUser(User $user): WebauthnCredential|null
     {
-        $credential = $this->getEntityManager()
+        return $this->getEntityManager()
             ->createQueryBuilder()
             ->select('c')
             ->from($this->class, 'c')
@@ -128,14 +110,5 @@ final class WebauthnCredentialRepository extends DoctrineCredentialSourceReposit
             ->getQuery()
             ->getOneOrNullResult()
         ;
-
-        if ($credential instanceof WebauthnCredential) {
-            $credential->otherUI = null;
-            $credential->backupEligible = null;
-            $credential->backupStatus = null;
-            $credential->uvInitialized = null;
-        }
-
-        return $credential;
     }
 }
