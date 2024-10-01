@@ -26,6 +26,7 @@ use FOS\HttpCacheBundle\FOSHttpCacheBundle;
 use League\FlysystemBundle\FlysystemBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Nelmio\SecurityBundle\NelmioSecurityBundle;
+use Schranz\Search\Integration\Symfony\SearchBundle;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
@@ -83,7 +84,7 @@ class PluginTest extends ContaoTestCase
         $plugin = new Plugin();
         $bundles = $plugin->getBundles(new DelegatingParser());
 
-        $this->assertCount(13, $bundles);
+        $this->assertCount(14, $bundles);
 
         $this->assertSame(FrameworkBundle::class, $bundles[0]->getName());
         $this->assertSame([], $bundles[0]->getReplace());
@@ -121,24 +122,28 @@ class PluginTest extends ContaoTestCase
         $this->assertSame([], $bundles[8]->getReplace());
         $this->assertSame([], $bundles[8]->getLoadAfter());
 
-        $this->assertSame(ContaoManagerBundle::class, $bundles[9]->getName());
+        $this->assertSame(SearchBundle::class, $bundles[9]->getName());
         $this->assertSame([], $bundles[9]->getReplace());
-        $this->assertSame([ContaoCoreBundle::class], $bundles[9]->getLoadAfter());
+        $this->assertSame([], $bundles[9]->getLoadAfter());
 
-        $this->assertSame(DebugBundle::class, $bundles[10]->getName());
+        $this->assertSame(ContaoManagerBundle::class, $bundles[10]->getName());
         $this->assertSame([], $bundles[10]->getReplace());
-        $this->assertSame([], $bundles[10]->getLoadAfter());
-        $this->assertFalse($bundles[10]->loadInProduction());
+        $this->assertSame([ContaoCoreBundle::class], $bundles[10]->getLoadAfter());
 
-        $this->assertSame(WebProfilerBundle::class, $bundles[11]->getName());
+        $this->assertSame(DebugBundle::class, $bundles[11]->getName());
         $this->assertSame([], $bundles[11]->getReplace());
         $this->assertSame([], $bundles[11]->getLoadAfter());
         $this->assertFalse($bundles[11]->loadInProduction());
 
-        $this->assertSame(FlysystemBundle::class, $bundles[12]->getName());
+        $this->assertSame(WebProfilerBundle::class, $bundles[12]->getName());
         $this->assertSame([], $bundles[12]->getReplace());
-        $this->assertSame([ContaoCoreBundle::class], $bundles[12]->getLoadAfter());
-        $this->assertTrue($bundles[12]->loadInProduction());
+        $this->assertSame([], $bundles[12]->getLoadAfter());
+        $this->assertFalse($bundles[12]->loadInProduction());
+
+        $this->assertSame(FlysystemBundle::class, $bundles[13]->getName());
+        $this->assertSame([], $bundles[13]->getReplace());
+        $this->assertSame([ContaoCoreBundle::class], $bundles[13]->getLoadAfter());
+        $this->assertTrue($bundles[13]->loadInProduction());
     }
 
     public function testRegistersModuleBundles(): void
@@ -159,7 +164,7 @@ class PluginTest extends ContaoTestCase
         $plugin = new Plugin();
         $configs = $plugin->getBundles($parser);
 
-        $this->assertCount(15, $configs);
+        $this->assertCount(16, $configs);
         $this->assertContains('foo1', $configs);
         $this->assertContains('foo2', $configs);
         $this->assertNotContains('foo3', $configs);
