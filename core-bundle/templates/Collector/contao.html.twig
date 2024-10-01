@@ -9,9 +9,19 @@
         {% if collector.summary.frontend %}
             <div class="sf-toolbar-info-group">
                 <div class="sf-toolbar-info-piece">
-                    <b>Page layout</b>
-                    <span>{{ collector.summary.layout }}</span>
+                    <b>Page</b>
+                    <span><a href="{{ collector.summary.page_url }}">{{ collector.summary.page }}</a></span>
                 </div>
+                <div class="sf-toolbar-info-piece">
+                    <b>Page layout</b>
+                    <span><a href="{{ collector.summary.layout_url }}">{{ collector.summary.layout }}</a></span>
+                </div>
+                {% for article in collector.summary.articles %}
+                    <div class="sf-toolbar-info-piece">
+                        <b>Article</b>
+                        <span><a href="{{ article.url }}">{{ article.label }}</a></span>
+                    </div>
+                {% endfor %}
                 <div class="sf-toolbar-info-piece">
                     <b>Template</b>
                     <span>{{ collector.summary.template|default('n/a') }}</span>
@@ -55,10 +65,12 @@
             <span class="label">Contao version</span>
         </div>
 
-        <div class="metric">
-            <span class="value">{{ collector.summary.models }}</span>
-            <span class="label">Registered models</span>
-        </div>
+        {% if collector.summary.page %}
+            <div class="metric">
+                <span class="value">{{ collector.summary.page }}</span>
+                <span class="label">Page</span>
+            </div>
+        {% endif %}
 
         {% if collector.summary.layout %}
             <div class="metric">
@@ -68,55 +80,38 @@
         {% endif %}
     </div>
 
-    <h2>Classes set</h2>
+    <h2>Image resizing and previews</h2>
+    <p>
+        Imagine service currently in use: <code>{{ collector.imageChecks.imagine_service }}</code><br>
+        This can be changed in the <code>contao.image.imagine_service</code> configuration.
+    </p>
+    <p>The following image formats are supported on your system.</p>
     <table>
         <thead>
-            <tr>
-                <th>Class name</th>
-            </tr>
+        <tr>
+            <th colspan="3">
+                Image formats
+            </th>
+        </tr>
         </thead>
         <tbody>
-            {% for class in collector.classesset %}
-                <tr>
-                    <td><code>{{ class }}</code></td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <h2>Classes aliased</h2>
-    <table>
-        <thead>
+        {% for format in collector.imageChecks.formats %}
             <tr>
-                <th>Alias name</th>
-                <th>Original name</th>
+                <td>
+                    {% if format.supported %}
+                        ✅
+                    {% else %}
+                        🚨
+                    {% endif %}
+                </td>
+                <td>
+                    {{ format.label|upper }}
+                </td>
+                <td>
+                    <code>{{ format.error }}</code>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            {% for alias, original in collector.classesaliased %}
-                <tr>
-                    <td><code>{{ alias }}</code></td>
-                    <td><code>{{ original }}</code></td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <h2>Classes composerized</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Alias name</th>
-                <th>Original name</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for alias, original in collector.classescomposerized %}
-                <tr>
-                    <td><code>{{ alias }}</code></td>
-                    <td><code>{{ original }}</code></td>
-                </tr>
-            {% endfor %}
+        {% endfor %}
         </tbody>
     </table>
 
