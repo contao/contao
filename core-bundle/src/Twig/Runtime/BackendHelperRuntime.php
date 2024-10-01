@@ -19,6 +19,6 @@ class BackendHelperRuntime implements RuntimeExtensionInterface
     {
         $image = $this->framework->getAdapter(Image::class);
 
-        return $image->getHtml($src, $alt, $attributes ? $attributes->toString(false)) : '';
+        return $image->getHtml($src, $alt, $attributes ? $attributes->toString(false)) : '');
     }
 }
