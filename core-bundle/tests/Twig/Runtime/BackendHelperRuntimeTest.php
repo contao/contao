@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Runtime;
 
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Runtime\BackendHelperRuntime;
+use Contao\Image;
 
 class BackendHelperRuntimeTest extends TestCase
 {
@@ -29,11 +29,7 @@ class BackendHelperRuntimeTest extends TestCase
             ->willReturn('icon HTML')
         ;
 
-        $framework = $this->createMock(ContaoFramework::class);
-        $framework
-            ->method('getAdapter')
-            ->willReturn($imageAdapter)
-        ;
+        $framework = $this->mockContaoFramework([Image::class => $imageAdapter]);
 
         $this->assertSame('icon HTML', (new BackendHelperRuntime($framework))->icon(
             'icon.svg', 'alt', (new HtmlAttributes())->set('foo', 'bar'),

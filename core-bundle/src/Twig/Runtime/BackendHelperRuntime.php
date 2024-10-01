@@ -15,12 +15,8 @@ class BackendHelperRuntime implements RuntimeExtensionInterface
     {
     }
 
-    /**
-     * @internal
-     */
     public function icon(string $src, string $alt = '', HtmlAttributes|null $attributes = null): string
     {
-        /** @var Image $image */
         $image = $this->framework->getAdapter(Image::class);
 
         return $image->getHtml($src, $alt, !$attributes ? '' : $attributes->toString(false));

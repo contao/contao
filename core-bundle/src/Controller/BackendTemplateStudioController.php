@@ -108,16 +108,7 @@ class BackendTemplateStudioController extends AbstractBackendController
                 return;
             }
 
-            uksort(
-                $node,
-                static function ($a, $b) {
-                    if (\is_array($a)) {
-                        return -1;
-                    }
-
-                    return $a <=> $b;
-                },
-            );
+            ksort($node);
 
             foreach ($node as &$child) {
                 $sortRecursive($child);
