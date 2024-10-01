@@ -256,7 +256,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
 
         foreach ($models as $article) {
             $articles[] = [
-                'url' => $this->router->generate('contao_backend', ['do' => 'article', 'act' => 'edit', 'id' => $article->id]),
+                'url' => $this->router->generate('contao_backend', ['do' => 'article', 'table' => 'tl_content', 'id' => $article->id]),
                 'label' => \sprintf('%s (ID %s)', StringUtil::decodeEntities($article->title), $article->id),
             ];
         }
