@@ -25,7 +25,7 @@ class DataContainerRecordLabelEventTest extends TestCase
         $this->assertSame(['id' => 123], $event->getData());
         $this->assertNull($event->getLabel());
 
-        $event->setLabel('Foo');
+        $this->assertSame($event, $event->setLabel('Foo'));
         $this->assertSame('Foo', $event->getLabel());
 
         $event->setLabel(null);
