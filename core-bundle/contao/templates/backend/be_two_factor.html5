@@ -138,7 +138,7 @@
                 <tr class="hover-row">
                   <td><?= $credential->getId() ?></td>
                   <td><?= $credential->createdAt->format('j. F Y, H:i') ?></td>
-                  <td class="actions"><button type="submit" name="delete_passkey" value="<?= $credential->getId() ?>" onclick="if(!confirm('<?= $this->trans('MSC.deleteConfirm', [$credential->getId()]) ?>'))return false"><?= Contao\Image::getHtml('delete.svg', $this->trans('MSC.delete')) ?></button></td>
+                  <td class="actions"><button type="submit" name="edit_passkey" value="<?= $credential->getId() ?>"><?= Contao\Image::getHtml('delete.svg', $this->trans('MSC.delete')) ?></button><button type="submit" name="delete_passkey" value="<?= $credential->getId() ?>" onclick="if(!confirm('<?= $this->trans('MSC.deleteConfirm', [$credential->getId()]) ?>'))return false"><?= Contao\Image::getHtml('delete.svg', $this->trans('MSC.delete')) ?></button></td>
                 </tr>
               <?php endforeach; ?>
             </tbody>

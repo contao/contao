@@ -54,11 +54,9 @@
             </div>
           </div>
         </form>
-        <form class="tl_passkey_form" data-controller="contao--webauthn" data-contao--webauthn-request-result-url-value="<?= $this->route('webauthn.controller.security.contao_backend.request.result') ?>" data-contao--webauthn-request-options-url-value="<?= $this->route('webauthn.controller.security.contao_backend.request.options') ?>" data-contao--webauthn-request-success-redirect-uri-value="<?= $this->webauthnSuccessUrl ?>">
-          <div class="formbody">
-            <button type="button" class="tl_submit" data-action="contao--webauthn#signin"><?= $this->passkeyLogin ?></button>
-          </div>
-        </form>
+        <div class="passkey_login" data-controller="contao--webauthn" data-contao--webauthn-request-result-url-value="<?= $this->route('webauthn.controller.security.contao_backend.request.result') ?>" data-contao--webauthn-request-options-url-value="<?= $this->route('webauthn.controller.security.contao_backend.request.options') ?>" data-contao--webauthn-request-success-redirect-uri-value="<?= $this->webauthnSuccessUrl ?>">
+          <button type="button" class="tl_submit" data-action="contao--webauthn#signin"><?= $this->passkeyLogin ?></button>
+        </div>
       </main>
       <?= $this->messages ?>
     </div>

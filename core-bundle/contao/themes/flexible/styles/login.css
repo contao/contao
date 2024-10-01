@@ -43,12 +43,13 @@ body {
 }
 
 .formbody {
-	padding: 45px;
+	padding: 35px 45px;
 }
 
-.tl_passkey_form > .formbody {
+.passkey_login {
 	display: flex;
 	justify-content: center;
+	padding: 35px 45px;
 }
 
 .widget {
@@ -152,8 +153,4 @@ label[for="verify"] {
 
 .tl_confirm {
 	color: var(--green);
-}
-
-.tl_passkey_login {
-
 }
