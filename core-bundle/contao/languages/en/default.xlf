@@ -2190,7 +2190,7 @@
         <source>Verifying … please wait.</source>
       </trans-unit>
       <trans-unit id="MSC.passkeyLogin">
-        <source>Login with Passkey</source>
+        <source>Sign in with a passkey</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
