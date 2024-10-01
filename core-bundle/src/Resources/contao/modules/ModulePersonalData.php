@@ -307,6 +307,7 @@ class ModulePersonalData extends Module
 						if ($objWidget instanceof FormPassword)
 						{
 							System::getContainer()->get('contao.repository.remember_me')->deleteByUsername($objMember->username);
+							OptInModel::deleteByTableAndId('tl_member', $objMember->id);
 						}
 					}
 				}
