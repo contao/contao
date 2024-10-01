@@ -28,6 +28,7 @@ use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
 use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
+use Contao\CoreBundle\Twig\Runtime\BackendHelperRuntime;
 use Contao\CoreBundle\Twig\Runtime\ContentUrlRuntime;
 use Contao\CoreBundle\Twig\Runtime\CspRuntime;
 use Contao\CoreBundle\Twig\Runtime\FigureRuntime;
@@ -239,6 +240,12 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             new TwigFunction(
                 'content_url',
                 [ContentUrlRuntime::class, 'generate'],
+            ),
+            // Backend functions
+            new TwigFunction(
+                'backend_icon',
+                [BackendHelperRuntime::class, 'icon'],
+                ['is_safe' => ['html']],
             ),
         ];
     }

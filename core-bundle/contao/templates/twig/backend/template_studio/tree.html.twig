@@ -1,0 +1,34 @@
+{% macro tree_node(tree) %}
+<ol>
+    {% for name, node in tree %}
+        <li>
+            {% if node is iterable %}
+                {% if node|length > 1 or node|first is iterable %}
+                    <span class="node">{{ name }}</span>
+                    {{ _self.tree_node(node) }}
+                {% else %}
+                    {% with {node: node|first} %}{{ block('navigate_button') }}{% endwith %}
+                {% endif %}
+            {% else %}
+                {# Leaf #}
+                {% block navigate_button %}
+                    {% with {identifier: node.identifier} %}
+                        {% embed('@Contao/backend/template_studio/_template_identifier_button.html.twig') %}
+                            {% block inner %}
+                                {{ backend_icon('code.svg') }}
+                                <span{{ attrs().addClass('user', node.hasUserTemplate) }}>{{ identifier }}</span>
+                            {% endblock %}
+                        {% endembed %}
+                    {% endwith %}
+                {% endblock %}
+            {% endif %}
+        </li>
+    {% endfor %}
+</ol>
+{% endmacro %}
+
+<turbo-frame id="template-studio--tree">
+    <nav>
+        {{ _self.tree_node(tree) }}
+    </nav>
+</turbo-frame>

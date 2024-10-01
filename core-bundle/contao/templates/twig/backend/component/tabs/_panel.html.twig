@@ -1,0 +1,9 @@
+{% set panel_attributes = attrs()
+    .set('data-contao--tabs-target', 'panel')
+    .set('data-label', label)
+    .set('id', panel_id)
+    .mergeWith(panel_attributes|default)
+%}
+<div{{ panel_attributes }}>
+    {% block content %}{% endblock %}
+</div>
