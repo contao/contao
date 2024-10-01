@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
+use Contao\Config;
 use Contao\CoreBundle\Event\DataContainerRecordLabelEvent;
 use Contao\CoreBundle\EventListener\DataContainer\FallbackRecordLabelListener;
 use Contao\CoreBundle\Tests\Fixtures\TranslatorStub;
@@ -26,6 +27,8 @@ class FallbackRecordLabelListenerTest extends TestCase
     protected function tearDown(): void
     {
         (new \ReflectionClass(DcaLoader::class))->setStaticPropertyValue('arrLoaded', []);
+        unset($GLOBALS['TL_DCA'], $GLOBALS['TL_MIME']);
+        $this->resetStaticProperties([System::class, Config::class]);
 
         parent::tearDown();
     }
