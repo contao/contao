@@ -1104,7 +1104,6 @@ h2.sub_headline {
 }
 
 .passkeys .credential-list td.actions button {
-	outline: 0;
 	border: 0;
 	padding: 0;
 	background-color: transparent;

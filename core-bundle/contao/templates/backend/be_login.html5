@@ -30,7 +30,7 @@
   <?php $this->block('container'); ?>
     <div id="container">
       <main id="main">
-        <form class="tl_login_form" method="post" data-controller="contao--webauthn" data-contao--webauthn-request-result-url-value="<?= $this->route('webauthn.controller.security.contao_backend.request.result') ?>" data-contao--webauthn-request-options-url-value="<?= $this->route('webauthn.controller.security.contao_backend.request.options') ?>" data-contao--webauthn-request-success-redirect-uri-value="<?= $this->webauthnSuccessUrl ?>">
+        <form class="tl_login_form" method="post">
           <div class="formbody">
             <input type="hidden" name="FORM_SUBMIT" value="tl_login">
             <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
@@ -42,17 +42,21 @@
             <h1><?= $this->headline ?></h1>
             <div class="widget widget-text">
               <label for="username"><?= $this->username ?></label>
-              <input type="text" name="username" id="username" class="tl_text" value="<?= $this->curUsername ?>" autocapitalize="off" autocomplete="username" placeholder="<?= $this->username ?>">
+              <input type="text" name="username" id="username" class="tl_text" value="<?= $this->curUsername ?>" autocapitalize="off" autocomplete="username" placeholder="<?= $this->username ?>" required>
             </div>
             <div class="widget widget-password">
               <label for="password"><?= $this->password ?></label>
-              <input type="password" name="password" id="password" class="tl_text" value="" autocomplete="current-password" placeholder="<?= $this->password ?>">
+              <input type="password" name="password" id="password" class="tl_text" value="" autocomplete="current-password" placeholder="<?= $this->password ?>" required>
             </div>
             <div class="submit_container cf">
               <button type="submit" name="login" id="login" class="tl_submit"><?= $this->loginButton ?></button>
-              <button type="button" class="tl_submit" data-action="contao--webauthn#signin">Login with Passkey</button>
               <a href="/" class="footer_preview"><?= $this->feLink ?> ›</a>
             </div>
+          </div>
+        </form>
+        <form class="tl_passkey_form" data-controller="contao--webauthn" data-contao--webauthn-request-result-url-value="<?= $this->route('webauthn.controller.security.contao_backend.request.result') ?>" data-contao--webauthn-request-options-url-value="<?= $this->route('webauthn.controller.security.contao_backend.request.options') ?>" data-contao--webauthn-request-success-redirect-uri-value="<?= $this->webauthnSuccessUrl ?>">
+          <div class="formbody">
+            <button type="button" class="tl_submit" data-action="contao--webauthn#signin"><?= $this->passkeyLogin ?></button>
           </div>
         </form>
       </main>

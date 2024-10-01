@@ -14,8 +14,6 @@ body {
 #main {
 	max-width: 350px;
 	margin: 0 auto;
-	background: var(--content-bg);
-	border-radius: 2px;
 }
 
 /* Headlines */
@@ -39,8 +37,18 @@ body {
 }
 
 /* Login form */
+.tl_login_form {
+	background: var(--content-bg);
+	border-radius: 2px;
+}
+
 .formbody {
 	padding: 45px;
+}
+
+.tl_passkey_form > .formbody {
+	display: flex;
+	justify-content: center;
 }
 
 .widget {
@@ -144,4 +152,8 @@ label[for="verify"] {
 
 .tl_confirm {
 	color: var(--green);
+}
+
+.tl_passkey_login {
+
 }
