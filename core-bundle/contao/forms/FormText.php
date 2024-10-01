@@ -123,15 +123,6 @@ class FormText extends Widget
 				$this->arrAttributes[$strKey] = $varValue;
 				break;
 
-			case 'autocomplete':
-				if (\is_bool($varValue))
-				{
-					$varValue = $varValue ? 'on' : 'off';
-				}
-
-				$this->arrAttributes[$strKey] = $varValue;
-				break;
-
 			default:
 				parent::__set($strKey, $varValue);
 				break;
