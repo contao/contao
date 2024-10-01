@@ -37,6 +37,11 @@ services:
         arguments:
             - '@contao.crawl.escargot.factory'
             - '@filesystem'
+            - '@request_stack'
+            - '@contao.security.frontend_user_provider'
+            - '@security.authenticator.login_link_handler.contao_frontend'
+            - '@http_client'
+            - '@uri_signer'
 
     contao.command.cron:
         class: Contao\CoreBundle\Command\CronCommand

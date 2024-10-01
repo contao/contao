@@ -47,7 +47,7 @@ services:
             - '@contao.security.frontend_preview_authenticator'
             - '@event_dispatcher'
             - '@security.helper'
-            - '@security.authenticator.firewall_aware_login_link_handler'
+            - '@security.authenticator.login_link_handler.contao_backend'
             - '@uri_signer'
         tags:
             - controller.service_arguments
