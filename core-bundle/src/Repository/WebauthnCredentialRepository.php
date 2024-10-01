@@ -12,9 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Repository;
 
+use Contao\BackendUser;
 use Contao\CoreBundle\Entity\WebauthnCredential;
+use Contao\FrontendUser;
 use Contao\User;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Webauthn\Bundle\Repository\DoctrineCredentialSourceRepository;
 use Webauthn\PublicKeyCredentialSource;
 
@@ -23,8 +27,10 @@ use Webauthn\PublicKeyCredentialSource;
  */
 final class WebauthnCredentialRepository extends DoctrineCredentialSourceRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
+    public function __construct(
+        ManagerRegistry $registry,
+        private readonly TokenStorageInterface $tokenStorage,
+    ) {
         parent::__construct($registry, WebauthnCredential::class);
     }
 
@@ -38,7 +44,9 @@ final class WebauthnCredentialRepository extends DoctrineCredentialSourceReposit
             ->select('c')
             ->from($this->class, 'c')
             ->where('c.userHandle = :user_handle')
+            ->andWhere('c.userType = :user_type')
             ->setParameter(':user_handle', $user->id)
+            ->setParameter(':user_type', $this->getUserType($user))
             ->getQuery()
             ->execute()
         ;
@@ -57,6 +65,7 @@ final class WebauthnCredentialRepository extends DoctrineCredentialSourceReposit
                 $publicKeyCredentialSource->credentialPublicKey,
                 $publicKeyCredentialSource->userHandle,
                 $publicKeyCredentialSource->counter,
+                $this->getUserType($this->tokenStorage->getToken()->getUser()),
             );
         }
 
@@ -104,11 +113,22 @@ final class WebauthnCredentialRepository extends DoctrineCredentialSourceReposit
             ->select('c')
             ->from($this->class, 'c')
             ->where('c.userHandle = :user_handle')
+            ->andWhere('c.userType = :user_type')
             ->setParameter(':user_handle', $user->id)
+            ->setParameter(':user_type', $this->getUserType($user))
             ->orderBy('c.createdAt', 'desc')
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult()
         ;
+    }
+
+    private function getUserType(UserInterface $user): string
+    {
+        return match ($user::class) {
+            FrontendUser::class => 'frontend',
+            BackendUser::class => 'backend',
+            default => throw new \RuntimeException('User instance not supported.'),
+        };
     }
 }

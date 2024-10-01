@@ -31,6 +31,9 @@ class WebauthnCredential extends PublicKeyCredentialSource
     #[Column(type: Types::STRING)]
     public string $name;
 
+    #[Column(type: Types::STRING)]
+    public string $userType;
+
     #[Column(type: Types::DATETIME_IMMUTABLE)]
     public readonly \DateTimeImmutable $createdAt;
 
@@ -39,11 +42,12 @@ class WebauthnCredential extends PublicKeyCredentialSource
     #[GeneratedValue(strategy: 'NONE')]
     private readonly string $id;
 
-    public function __construct(string $publicKeyCredentialId, string $type, array $transports, string $attestationType, TrustPath $trustPath, Uuid $aaguid, string $credentialPublicKey, string $userHandle, int $counter)
+    public function __construct(string $publicKeyCredentialId, string $type, array $transports, string $attestationType, TrustPath $trustPath, Uuid $aaguid, string $credentialPublicKey, string $userHandle, int $counter, string $userType)
     {
         $this->id = Ulid::generate();
         $this->name = '';
         $this->createdAt = new \DateTimeImmutable();
+        $this->userType = $userType;
         parent::__construct($publicKeyCredentialId, $type, $transports, $attestationType, $trustPath, $aaguid, $credentialPublicKey, $userHandle, $counter);
     }
 

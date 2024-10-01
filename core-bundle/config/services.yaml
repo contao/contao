@@ -678,6 +678,7 @@ services:
         public: true
         arguments:
             - '@doctrine'
+            - '@security.token_storage'
 
     contao.repository.webauthn_user_entity:
         class: Contao\CoreBundle\Repository\WebauthnUserEntityRepository

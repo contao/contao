@@ -21,15 +21,19 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 #[AsEventListener(priority: 10)]
 class WebauthnBackendRouteListener
 {
+    /**
+     * @param list<string> $routes
+     */
+    public function __construct(private readonly array $routes)
+    {
+    }
+
     public function __invoke(RequestEvent $event): void
     {
         $request = $event->getRequest();
-        $controller = $request->attributes->get('_controller');
+        $controller = $request->attributes->get('_route');
 
-        if (
-            str_starts_with($controller, 'webauthn.controller.security.contao_backend.')
-            || 'webauthn.controller.creation.request.contao_backend_add_authenticator' === $controller
-        ) {
+        if (\in_array($controller, $this->routes, true)) {
             $request->attributes->set('_scope', 'backend');
         }
     }
