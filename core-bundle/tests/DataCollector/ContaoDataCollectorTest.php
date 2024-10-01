@@ -47,6 +47,7 @@ class ContaoDataCollectorTest extends TestCase
             $this->createMock(RouterInterface::class),
             $this->createMock(PageFinder::class),
         );
+
         $collector->setFramework($this->createMock(ContaoFramework::class));
         $collector->collect(new Request(), new Response());
 
@@ -102,6 +103,7 @@ class ContaoDataCollectorTest extends TestCase
             $this->createMock(RouterInterface::class),
             $pageFinder,
         );
+
         $collector->setFramework($framework);
         $collector->collect(new Request(), new Response());
 
@@ -162,6 +164,7 @@ class ContaoDataCollectorTest extends TestCase
             $this->createMock(RouterInterface::class),
             $pageFinder,
         );
+
         $collector->setFramework($framework);
         $collector->collect(new Request(), new Response());
 
@@ -193,6 +196,7 @@ class ContaoDataCollectorTest extends TestCase
             $this->createMock(RouterInterface::class),
             $this->createMock(PageFinder::class),
         );
+
         $method = new \ReflectionMethod($collector, 'getData');
 
         $this->assertSame([], $method->invokeArgs($collector, ['foo']));

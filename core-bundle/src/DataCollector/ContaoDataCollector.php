@@ -142,9 +142,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
             $this->data['image_checks']['formats'][$imageFormat] = $this->checkImageFormat($imageFormat);
         }
 
-        foreach (['pdf'] as $previewFormat) {
-            $this->data['image_checks']['formats'][$previewFormat] = $this->checkPreviewFormat($previewFormat);
-        }
+        $this->data['image_checks']['formats']['pdf'] = $this->checkPreviewFormat('pdf');
     }
 
     private function checkImageFormat(string $format): array
