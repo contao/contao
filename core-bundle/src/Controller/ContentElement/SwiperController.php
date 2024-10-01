@@ -25,8 +25,8 @@ class SwiperController extends AbstractContentElementController
     {
         $sliderSettings = [
             'speed' => (float) $model->sliderSpeed,
-            'offset' => (int) $model->sliderStartSlide,
-            'loop' => (bool) $model->sliderContinuous,
+            'offset' => $model->sliderStartSlide,
+            'loop' => $model->sliderContinuous,
         ];
 
         if ($model->sliderDelay) {
@@ -35,7 +35,7 @@ class SwiperController extends AbstractContentElementController
 
         $template->set('slider_settings', $sliderSettings);
 
-        // Keep old variables for BC
+        // Backwards compatibility
         $template->set('delay', $model->sliderDelay);
         $template->set('speed', $model->sliderSpeed);
         $template->set('offset', $model->sliderStartSlide);
