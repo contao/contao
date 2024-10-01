@@ -167,46 +167,25 @@ class OptInModel extends Model
 	}
 
 	/**
-	 * Find unconfirmed opt-in tokens by their related table, id and prefix
+	 * Count unconfirmed password reset opt-in tokens by their ID
 	 *
-	 * @param string $strTable
 	 * @param array $arrIds
-	 * @param string $strPrefix
 	 *
-	 * @return Collection|OptInModel[]|OptInModel|null
+	 * @return int
 	 *
 	 * @throws \Exception
 	 */
-	public static function findUnconfirmedByRelatedTableAndIdsAndPrefix($strTable, array $arrIds, $strPrefix)
+	public static function countUnconfirmedPasswordResetTokensByIds(array $arrIds)
 	{
 		$t = static::$strTable;
 		$objDatabase = Database::getInstance();
+		$oneDayAgo = new \DateTime('1 day ago');
 
-		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE $t.confirmedOn = 0 AND $t.id IN (SELECT pid FROM tl_opt_in_related WHERE relTable=? AND relId IN(" . implode(',', array_map('\intval', $arrIds)) . ")) AND $t.token LIKE ? ORDER BY $t.createdOn DESC")
-			->execute($strTable, $strPrefix . "-%", $arrIds);
+		$objResult = $objDatabase
+			->prepare("SELECT * FROM $t WHERE $t.confirmedOn = 0 AND $t.createdOn > ? AND $t.id IN (SELECT pid FROM tl_opt_in_related WHERE relTable='tl_member' AND relId IN(" . implode(',', array_map('\intval', $arrIds)) . ")) AND $t.token LIKE 'pw-%' ORDER BY $t.createdOn DESC")
+			->execute((int) $oneDayAgo->format('U'), $arrIds);
 
-		if ($objResult->numRows < 1)
-		{
-			return null;
-		}
-
-		$arrModels = array();
-		$objRegistry = Registry::getInstance();
-
-		while ($objResult->next())
-		{
-			/** @var OptInModel|Model $objOptIn */
-			if ($objOptIn = $objRegistry->fetch($t, $objResult->id))
-			{
-				$arrModels[] = $objOptIn;
-			}
-			else
-			{
-				$arrModels[] = new static($objResult->row());
-			}
-		}
-
-		return static::createCollection($arrModels, $t);
+		return $objResult->numRows;
 	}
 
 	/**

@@ -312,10 +312,8 @@ class ModulePassword extends Module
 	 */
 	protected function sendPasswordLink($objMember)
 	{
-		$optIns = OptInModel::findUnconfirmedByRelatedTableAndIdsAndPrefix('tl_member', array($objMember->id), 'pw');
-
-		// Skip, if there is already 3 unconfirmed attempts
-		if ($optIns && $optIns->count() > 2) {
+		// Skip, if there is already 3 unconfirmed attempts in the last 24 hours
+		if (OptInModel::countUnconfirmedPasswordResetTokensByIds(array($objMember->id)) > 2) {
 
 			$this->strTemplate = 'mod_message';
 
