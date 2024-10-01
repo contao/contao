@@ -183,6 +183,10 @@ services:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
         arguments:
             - '@contao.security.token_checker'
+            - '@request_stack'
+            - '@contao.image.imagine'
+            - '@router'
+            - '@contao.routing.page_finder'
         tags:
             - { name: data_collector, template: '@ContaoCore/Collector/contao.html.twig', id: contao }
 
