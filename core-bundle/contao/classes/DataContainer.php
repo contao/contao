@@ -1450,7 +1450,7 @@ abstract class DataContainer extends Backend
 				// Add the panel if it is not empty
 				if ($panel)
 				{
-					$panels = $panel . $panels;
+					$panels = $panels . $panel;
 				}
 			}
 
@@ -1500,13 +1500,13 @@ abstract class DataContainer extends Backend
 			}
 
 			$return .= '
-<div class="tl_panel cf">
-  ' . $submit . $arrPanels[$i] . '
+<div class="tl_panel">
+  ' . $arrPanels[$i] . $submit. '
 </div>';
 		}
 
 		$return = '
-<form class="tl_form" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']) . '">
+<form class="tl_form has-panels" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']) . '">
 <div class="tl_formbody">
   <input type="hidden" name="FORM_SUBMIT" value="tl_filters">
   <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
