@@ -42,20 +42,27 @@ class CudTable extends Widget
       <th scope="col">Delete</th>
     </tr>';
 
-		$tables = System::getContainer()->get('database_connection')->createSchemaManager()->listTables();
+		$tables = array();
+
+		foreach ($this->options as $option)
+		{
+			$tables[] = $option['value'];
+		}
+
+		sort($tables);
 
 		// Build rows for user, group and world
 		foreach ($tables as $table)
 		{
 			$return .= '
     <tr>
-      <th scope="row">' . $table->getName() . '</th>';
+      <th scope="row">' . $table . '</th>';
 
 			// Add checkboxes
 			for ($j = 1; $j <= 3; ++$j)
 			{
 				$return .= '
-      <td><input type="checkbox" name="' . $table->getName() . '[]" value="' . self::specialcharsValue($table->getName() . $j) . '"' . $this->getAttributes() . static::optionChecked($table->getName() . $j, $this->varValue) . ' data-action="focus->contao--scroll-offset#store"></td>';
+      <td><input type="checkbox" name="' . $table . '[]" value="' . self::specialcharsValue($table . $j) . '"' . $this->getAttributes() . static::optionChecked($table . $j, $this->varValue) . ' data-action="focus->contao--scroll-offset#store"></td>';
 			}
 
 			$return .= '
