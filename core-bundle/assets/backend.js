@@ -50,7 +50,7 @@ document.documentElement.addEventListener('turbo:frame-missing', (e) => {
     }
 
     // Do not break out of frames that load their content via src
-    if(e.target.hasAttribute('src')) {
+    if (e.target.hasAttribute('src')) {
         return;
     }
 

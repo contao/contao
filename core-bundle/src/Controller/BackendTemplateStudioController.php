@@ -121,7 +121,7 @@ class BackendTemplateStudioController extends AbstractBackendController
         unset($prefixTree['backend']);
 
         // Apply opinionated ordering
-        $prefixTree = array_merge(['content_element' => [], 'frontend_module' => [], 'component' => []], $prefixTree);
+        $prefixTree = ['content_element' => [], 'frontend_module' => [], 'component' => [], ...$prefixTree];
 
         return $this->render('@Contao/backend/template_studio/tree.html.twig', [
             'tree' => $prefixTree,
