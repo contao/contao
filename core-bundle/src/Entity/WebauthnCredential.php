@@ -36,7 +36,7 @@ class WebauthnCredential extends PublicKeyCredentialSource
     #[GeneratedValue(strategy: 'NONE')]
     private string $id;
 
-    public function __construct(string $publicKeyCredentialId, string $type, array $transports, string $attestationType, TrustPath $trustPath, AbstractUid $aaguid, string $credentialPublicKey, string $userHandle, int $counter,)
+    public function __construct(string $publicKeyCredentialId, string $type, array $transports, string $attestationType, TrustPath $trustPath, AbstractUid $aaguid, string $credentialPublicKey, string $userHandle, int $counter)
     {
         $this->id = Ulid::generate();
         $this->createdAt = new \DateTimeImmutable();

@@ -79,4 +79,7 @@ return (new Configuration())
     // This package provides the "u" Twig filter which is e.g. used in the
     // template_skeleton.html.twig template.
     ->ignoreErrorsOnPackage('twig/string-extra', [ErrorType::UNUSED_DEPENDENCY])
+
+    // We only use the assets from the web-auth/webauthn-stimulus package
+    ->ignoreErrorsOnPackage('web-auth/webauthn-stimulus', [ErrorType::UNUSED_DEPENDENCY])
 ;
