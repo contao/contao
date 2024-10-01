@@ -54,6 +54,72 @@ class ConfigurationTest extends TestCase
         $this->assertSame('my_super_service', $configuration['image']['imagine_service']);
     }
 
+    public function testInvalidImageExtension(): void
+    {
+        $params = [
+            'contao' => [
+                'image' => [
+                    'valid_extensions' => ['', '+', '-'],
+                ],
+            ],
+        ];
+
+        $this->expectException(InvalidConfigurationException::class);
+
+        (new Processor())->processConfiguration($this->configuration, $params);
+    }
+
+    public function testReplacesAllImageExtensions(): void
+    {
+        $extensions = ['jpeg', 'jpg', 'png'];
+
+        $params = [
+            'contao' => [
+                'image' => [
+                    'valid_extensions' => $extensions,
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertSame($extensions, $configuration['image']['valid_extensions']);
+    }
+
+    public function testAddsImageExtension(): void
+    {
+        $extensions = ['avif', 'bmp', 'gif', 'heic', 'jpeg', 'jpg', 'png', 'svg', 'svgz', 'tif', 'tiff', 'webp'];
+
+        $params = [
+            'contao' => [
+                'image' => [
+                    'valid_extensions' => ['+heic'],
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertSame($extensions, $configuration['image']['valid_extensions']);
+    }
+
+    public function testRemovesImageExtension(): void
+    {
+        $extensions = ['avif', 'bmp', 'gif', 'jpeg', 'jpg', 'png', 'tif', 'tiff', 'webp'];
+
+        $params = [
+            'contao' => [
+                'image' => [
+                    'valid_extensions' => ['-svg', '-svgz'],
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertSame($extensions, $configuration['image']['valid_extensions']);
+    }
+
     /**
      * @dataProvider getPaths
      */

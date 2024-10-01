@@ -45,7 +45,14 @@ services:
         public: true
         arguments:
             - '@doctrine.orm.default_entity_manager'
+            - '@contao.cache.tag_invalidator'
             - '@?fos_http_cache.http.symfony_response_tagger'
+
+    contao.cache.tag_invalidator:
+        class: Contao\CoreBundle\Cache\CacheTagInvalidator
+        public: true
+        arguments:
+            - '@event_dispatcher'
             - '@?fos_http_cache.cache_manager'
 
     contao.cache.warmer:
@@ -176,6 +183,10 @@ services:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
         arguments:
             - '@contao.security.token_checker'
+            - '@request_stack'
+            - '@contao.image.imagine'
+            - '@router'
+            - '@contao.routing.page_finder'
         tags:
             - { name: data_collector, template: '@ContaoCore/Collector/contao.html.twig', id: contao }
 
@@ -1143,6 +1154,11 @@ services:
             - '@contao.framework'
             - '@contao.resource_finder'
 
+    contao.twig.backend_helper_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\BackendHelperRuntime
+        arguments:
+            - '@contao.framework'
+
     contao.twig.content_url_runtime:
         class: Contao\CoreBundle\Twig\Runtime\ContentUrlRuntime
         arguments:
@@ -1242,6 +1258,7 @@ services:
         class: Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor
         arguments:
             - '@cache.system'
+            - '@twig'
 
     contao.twig.interop.context_factory:
         class: Contao\CoreBundle\Twig\Interop\ContextFactory

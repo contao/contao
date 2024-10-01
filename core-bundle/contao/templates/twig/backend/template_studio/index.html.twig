@@ -1,0 +1,26 @@
+{% extends '@Contao/be_main.html5' %}
+
+{% block main %}
+    <main id="main"
+          aria-labelledby="main_headline"
+          data-controller="contao--template-studio"
+    >
+        {# Headline #}
+        <h1 id="main_headline">{{ headline }}</h1>
+
+        <section id="template-studio" class="content chrome">
+            {# Browser #}
+            <turbo-frame id="template-studio--tree" src="{{ path('_contao_template_studio_tree') }}"></turbo-frame>
+
+            {# Main editor section with multiple tabs #}
+            {% embed "@Contao/backend/component/tabs/_container.html.twig" with {
+                tabs_container_attributes: attrs().set('id', 'template-studio--tabs'),
+                panels_container_id: 'template-studio--tab-panels',
+            } %}
+            {% endembed %}
+
+            {# Info panel #}
+            <div id="template-studio--info"></div>
+        </section>
+    </main>
+{% endblock %}

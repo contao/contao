@@ -17,7 +17,7 @@
   can remain compatible with future changes to the base
   template as well as adjustments made by extensions.{% endverbatim %}
 
-{%- if template.blocks %}
+{%- if template.block_names %}
 {% set help_text_blocks %}{% verbatim %}
   Currently available blocks:
     ":blocks:"
@@ -30,8 +30,8 @@
 {%- endset %}
 
 {{ help_text_blocks|replace({
-    ':blocks:': template.blocks|raw|join('", "')|u.wordwrap(50, "\n    "),
-    ':demo_block:': template.blocks|first
+    ':blocks:': template.block_names|raw|join('", "')|u.wordwrap(50, "\n    "),
+    ':demo_block:': template.block_names|first
 })|raw }}
 {%- endif %}
 

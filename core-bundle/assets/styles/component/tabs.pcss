@@ -1,0 +1,81 @@
+*[data-controller="contao--tabs"] {
+    /* Panel */
+    *[data-contao--tabs-target="panel"] {
+        border-top: 1px solid var(--content-border);
+        padding: 12px;
+    }
+
+    /* Navigation */
+    *[data-contao--tabs-target="navigation"] {
+        display: flex;
+        flex-wrap: wrap;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        > li {
+            display: flex;
+            align-items: center;
+            font-size: .75rem;
+            padding: 4px 8px;
+            gap: 4px;
+            background: var(--body-bg);
+
+            border-right: 1px solid var(--content-border);
+            border-top: 1px solid var(--content-border);
+            border-bottom: 1px solid var(--content-border);
+            overflow: hidden;
+            margin-top: -1px;
+            margin-bottom: -1px;
+
+            button {
+                display: grid;
+                background: none;
+                border: none;
+
+                &.select {
+                    padding: 5px 0;
+                }
+
+                &.close {
+                    place-items: center;
+                    aspect-ratio: 1;
+                    border-radius: 50%;
+                    padding: 0;
+                    width: 14px;
+                    opacity: .5;
+                    font-family: -apple-system, system-ui, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+
+                    &:hover {
+                        opacity: 1;
+                        background: var(--gray);
+                    }
+                }
+            }
+
+            &[data-active] {
+                background: var(--panel-bg);
+            }
+        }
+    }
+
+    /* Initial content */
+    .initial {
+        display: none;
+    }
+
+    .tab-panels:not(:has(*)) {
+        height: 100%;
+        position: relative;
+        background-color: var(--chosen-bg);
+
+        &+.initial {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+        }
+    }
+}

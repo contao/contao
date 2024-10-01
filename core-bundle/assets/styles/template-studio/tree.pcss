@@ -1,0 +1,70 @@
+#template-studio--tree nav {
+    white-space: nowrap;
+    padding: 4px;
+    --tree-line: #ddd;
+
+    ol {
+        padding: 0;
+        margin: 0;
+    }
+
+    > ol > li {
+        > ol {
+            li {
+                margin-left: .75em;
+                border-left: thin solid var(--tree-line);
+
+                &:before {
+                    content: '';
+                    width: 0.5em;
+                    height: 0.75em;
+                    vertical-align: top;
+                    border-bottom: thin solid var(--tree-line);
+                    display: inline-block;
+                }
+
+                &:last-child {
+                    border-left: none;
+
+                    &:before {
+                        border-left: thin solid var(--tree-line);
+                    }
+                }
+
+                > :not(ol) {
+                    display: inline-flex;
+                    align-items: center;
+                }
+            }
+        }
+
+        > .node {
+            margin-left: 4px;
+        }
+    }
+
+
+    .node {
+        font-size: .75rem;
+        padding: 4px 0 2px 0;
+        color: var(--green);
+    }
+
+    button {
+        display: inline-flex;
+        gap: 2px;
+        background: none;
+        border: none;
+        padding: 2px 0;
+        color: var(--text);
+
+        .user {
+            color: var(--blue);
+        }
+
+        &:hover, .user:hover {
+            color: var(--green);
+            opacity: 1;
+        }
+    }
+}
