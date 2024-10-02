@@ -158,8 +158,8 @@ class BackendTemplateStudioController extends AbstractBackendController
             'name' => $logicalName,
             'short_name' => $shortName ?? '?',
             'namespace' => $namespace ?? '?',
-            'identifier' => ContaoTwigUtil::getIdentifier($shortName) ?? '?',
-            'extension' => ContaoTwigUtil::getExtension($shortName) ?? '?',
+            'identifier' => ContaoTwigUtil::getIdentifier($shortName) ?: '?',
+            'extension' => ContaoTwigUtil::getExtension($shortName) ?: '?',
         ];
     }
 }
