@@ -906,8 +906,8 @@ abstract class DataContainer extends Backend
 				if (\is_array($config['button_callback'] ?? null)) {
 					$callback = System::importStatic($config['button_callback'][0]);
 					$config->setHtml($callback->{$config['button_callback'][1]}($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this));
-				} elseif (\is_callable($v['button_callback'] ?? null)) {
-					$config->setHtml($v['button_callback']($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this));
+				} elseif (\is_callable($config['button_callback'] ?? null)) {
+					$config->setHtml($config['button_callback']($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this));
 				}
 			}
 		);
