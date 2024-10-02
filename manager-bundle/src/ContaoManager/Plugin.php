@@ -33,8 +33,10 @@ use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use FOS\HttpCacheBundle\FOSHttpCacheBundle;
 use League\FlysystemBundle\FlysystemBundle;
+use Loupe\Loupe\LoupeFactory;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Nelmio\SecurityBundle\NelmioSecurityBundle;
+use Schranz\Search\Integration\Symfony\SearchBundle;
 use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
@@ -83,6 +85,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             BundleConfig::create(NelmioCorsBundle::class),
             BundleConfig::create(NelmioSecurityBundle::class),
             BundleConfig::create(FOSHttpCacheBundle::class),
+            BundleConfig::create(SearchBundle::class),
             BundleConfig::create(ContaoManagerBundle::class)->setLoadAfter([ContaoCoreBundle::class]),
             BundleConfig::create(DebugBundle::class)->setLoadInProduction(false),
             BundleConfig::create(WebProfilerBundle::class)->setLoadInProduction(false),
@@ -205,7 +208,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                     $container->setParameter('contao.dns_mapping', '%env(json:DNS_MAPPING)%');
                 }
 
-                return $extensionConfigs;
+                return $this->addDefaultBackendSearchProvider($extensionConfigs);
 
             case 'framework':
                 $extensionConfigs = $this->checkMailerTransport($extensionConfigs, $container);
@@ -474,6 +477,38 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $extensionConfigs[] = [
             'mailer' => [
                 'dsn' => '%env(MAILER_DSN)%',
+            ],
+        ];
+
+        return $extensionConfigs;
+    }
+
+    /**
+     * Dynamically configures the back end search adapter if none was configured and
+     * the system supports it.
+     */
+    private function addDefaultBackendSearchProvider(array $extensionConfigs): array
+    {
+        foreach ($extensionConfigs as $config) {
+            // Configured a custom adapter (e.g. MeiliSearch or whatever)
+            if (isset($config['backend_search']['dsn'])) {
+                return $extensionConfigs;
+            }
+        }
+
+        if (!class_exists(LoupeFactory::class)) {
+            return $extensionConfigs;
+        }
+
+        $loupeFactory = new LoupeFactory();
+
+        if (!$loupeFactory->isSupported()) {
+            return $extensionConfigs;
+        }
+
+        $extensionConfigs[] = [
+            'backend_search' => [
+                'dsn' => 'loupe://%kernel.project_dir%/var/backend_search',
             ],
         ];
 

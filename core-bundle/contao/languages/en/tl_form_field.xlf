@@ -296,6 +296,12 @@
       <trans-unit id="tl_form_field.altchaHideFooter.1">
         <source>Hide the footer (ALTCHA link).</source>
       </trans-unit>
+      <trans-unit id="tl_form_field.autocomplete.0">
+        <source>Autocomplete attributes</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.autocomplete.1">
+        <source>Here you can enter autocomplete attributes so that the browser knows how to pre-populate the form field with user-preferred values.</source>
+      </trans-unit>
       <trans-unit id="tl_form_field.invisible.0">
         <source>Invisible</source>
       </trans-unit>

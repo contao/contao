@@ -71,6 +71,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
             [$phpPath, ...$phpFlags, $consolePath, 'cache:clear', '--no-warmup', '--env=prod', ...$flags],
             [$phpPath, ...$phpFlags, $consolePath, 'cache:clear', '--no-warmup', '--env=dev', ...$flags],
             [$phpPath, ...$phpFlags, $consolePath, 'cache:warmup', '--env=prod', ...$flags],
+            [$phpPath, ...$phpFlags, $consolePath, 'schranz:search:index-create', '--env=prod', ...$flags],
         ];
 
         $memoryLimit = ini_set('memory_limit', '1G');
@@ -79,7 +80,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
 
         (new CommandTester($command))->execute([], $options);
 
-        $this->assertSame(7, $invocationCount);
+        $this->assertSame(8, $invocationCount);
 
         ini_set('memory_limit', $memoryLimit);
     }
@@ -270,7 +271,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
     {
         $processes = [];
 
-        for ($i = 1; $i <= 7; ++$i) {
+        for ($i = 1; $i <= 8; ++$i) {
             $process = $this->createMock(Process::class);
             $process
                 ->method('isSuccessful')

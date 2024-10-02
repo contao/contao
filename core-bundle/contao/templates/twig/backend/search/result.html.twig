@@ -1,0 +1,19 @@
+{% for hit in hits %}
+    <div class="tl_search_hit">
+        <h3>{{ hit.title }}</h3>
+
+        {% if hit.context %}
+            <p class="context">{{ hit.context }}</p>
+        {% endif %}
+
+        {% if hit.image %}
+            <p>TODO: use the image studio and the figure component to render the image with a predefined image size that is optimal for the UI integration</p>
+        {% endif %}
+
+        <a href="{{ hit.viewUrl }}">View this item</a>
+
+        {% if hit.editUrl %}
+            <a href="{{ hit.editUrl }}">Edit this item</a>
+        {% endif %}
+    </div>
+{% endfor %}

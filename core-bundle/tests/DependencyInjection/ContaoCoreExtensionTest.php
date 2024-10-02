@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\DependencyInjection;
 
+use Contao\CoreBundle\Controller\BackendSearchController;
 use Contao\CoreBundle\Cron\CronJob;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
@@ -676,6 +677,42 @@ class ContaoCoreExtensionTest extends TestCase
         );
 
         $this->assertFalse($container->hasDefinition('contao.listener.transport_security_header'));
+    }
+
+    public function testDoesNotRegisterAnyBackendSearchRelatedServicesIfNotEnabled(): void
+    {
+        $container = $this->getContainerBuilder();
+        (new ContaoCoreExtension())->load([], $container);
+
+        $this->assertFalse($container->hasDefinition(BackendSearchController::class));
+        $this->assertFalse($container->hasDefinition('contao.search_backend.adapter_factory'));
+        $this->assertFalse($container->hasDefinition('contao.search.backend'));
+        $this->assertFalse($container->hasDefinition('contao.search.backend.files_provider'));
+    }
+
+    public function testRegistersTheBackendSearchRelatedServicesCorrectly(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        (new ContaoCoreExtension())->load(
+            [
+                'contao' => [
+                    'backend_search' => [
+                        'dsn' => 'whatever://search-adapter-you-like',
+                        'index_name' => 'my_backend_search_index',
+                    ],
+                ],
+            ],
+            $container,
+        );
+
+        $this->assertTrue($container->hasDefinition('contao.search_backend.adapter'));
+        $adapter = $container->getDefinition('contao.search_backend.adapter');
+        $this->assertSame('whatever://search-adapter-you-like', $adapter->getArgument(0));
+
+        $this->assertTrue($container->hasDefinition('contao.search.backend'));
+        $backendSearch = $container->getDefinition('contao.search.backend');
+        $this->assertSame('my_backend_search_index', $backendSearch->getArgument(3));
     }
 
     public function testCspConfiguration(): void
