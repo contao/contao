@@ -11,3 +11,23 @@ services:
         arguments:
             - '@contao.twig.filesystem_loader'
             - '@contao.twig.finder_factory'
+            - '@contao.twig.inspector'
+            - !tagged_iterator { tag: contao.operation.template_studio_element, index_by: name }
+
+    contao.twig.studio.template_skeleton_factory:
+        class: Contao\CoreBundle\Twig\Studio\TemplateSkeletonFactory
+        arguments:
+            - '@twig'
+            - '@contao.twig.inspector'
+
+    contao.twig.studio.operation.create:
+        class: Contao\CoreBundle\Twig\Studio\Operation\CreateOperation
+
+    contao.twig.studio.operation.save:
+        class: Contao\CoreBundle\Twig\Studio\Operation\SaveOperation
+
+    contao.twig.studio.operation.delete:
+        class: Contao\CoreBundle\Twig\Studio\Operation\DeleteOperation
+
+    # Autowiring aliases
+    Contao\CoreBundle\Twig\Studio\TemplateSkeletonFactory: '@contao.twig.studio.template_skeleton_factory'
