@@ -27,9 +27,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[AsEventListener(priority: -1)]
 class FallbackRecordLabelListener
 {
-    public function __construct(
-        private readonly TranslatorInterface&TranslatorBagInterface $translator,
-    ) {
+    public function __construct(private readonly TranslatorInterface&TranslatorBagInterface $translator)
+    {
     }
 
     public function __invoke(DataContainerRecordLabelEvent $event): void

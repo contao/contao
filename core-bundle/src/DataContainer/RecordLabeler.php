@@ -17,9 +17,8 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class RecordLabeler
 {
-    public function __construct(
-        private readonly EventDispatcherInterface $eventDispatcher,
-    ) {
+    public function __construct(private readonly EventDispatcherInterface $eventDispatcher)
+    {
     }
 
     public function getLabel(string $identifier, array $data): string
