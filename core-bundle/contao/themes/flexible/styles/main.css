@@ -711,6 +711,11 @@ h2.sub_headline {
 	margin-left: 6px;
 }
 
+.filter_reset[disabled] {
+	opacity: .6;
+	cursor: not-allowed;
+}
+
 .tl_subpanel {
 	letter-spacing: -.31em;
 }
@@ -733,10 +738,6 @@ h2.sub_headline {
 
 .tl_panel .active, .tl_panel_bottom .active, #search .active {
 	background-color: var(--active-bg);
-}
-
-.has-panels:has(.tl_panel .active) .filter_apply {
-	background-color: var(--filter-button-active);
 }
 
 /* Jump targets */
