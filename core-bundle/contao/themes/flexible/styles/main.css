@@ -675,6 +675,7 @@ h2.sub_headline {
 
 .tl_search {
 	gap: 0;
+	width: 100%;
 }
 
 .tl_search > strong:first-of-type {
@@ -682,7 +683,11 @@ h2.sub_headline {
 }
 
 .tl_search > .tl_select {
-	max-width: 100px;
+	width: 38%;
+}
+
+.tl_search > .tl_text {
+	width: 38%;
 }
 
 .tl_img_submit {
@@ -3216,6 +3221,11 @@ fieldset.collapsed > legend {
 @media (min-width: 768px) {
 	.tl_filter > * {
 		flex: 1 1 0;
-		max-width: 16%;
+		min-width: 15%;
+		max-width: 15%;
+	}
+
+	.tl_search {
+		width: 40%;
 	}
 }
