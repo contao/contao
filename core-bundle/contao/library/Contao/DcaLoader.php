@@ -10,6 +10,11 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Config\Dumper\CombinedFileDumper;
+use Contao\CoreBundle\Config\Loader\PhpFileLoader;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
+
 /**
  * Loads a set of DCA files
  *
@@ -87,6 +92,11 @@ class DcaLoader extends Controller
 
 			throw $e;
 		}
+		finally
+		{
+			// TODO: We should probably make reloading optional or request dependent
+			static::$arrLoaded['dcaFiles'][$this->strTable] = false;
+		}
 
 		if (!isset($GLOBALS['TL_DCA'][$this->strTable]))
 		{
@@ -99,12 +109,16 @@ class DcaLoader extends Controller
 	 */
 	private function loadDcaFiles()
 	{
+		unset($GLOBALS['TL_DCA'][$this->strTable]);
+
+		$filesystem = new Filesystem();
 		$strCacheDir = System::getContainer()->getParameter('kernel.cache_dir');
+		$strCachePath = $strCacheDir . '/contao/dca/' . $this->strTable . '.php';
 
 		// Try to load from cache
-		if (file_exists($strCacheDir . '/contao/dca/' . $this->strTable . '.php'))
+		if (file_exists($strCachePath))
 		{
-			include $strCacheDir . '/contao/dca/' . $this->strTable . '.php';
+			include $strCachePath;
 		}
 		else
 		{
@@ -117,9 +131,20 @@ class DcaLoader extends Controller
 				$files = array();
 			}
 
-			foreach ($files as $file)
+			if ($files)
 			{
-				include $file;
+				$dumper = new CombinedFileDumper($filesystem, new PhpFileLoader(), Path::join($strCacheDir, 'contao/dca'));
+				$dumper->dump($files, $this->strTable . '.php', array('type' => 'namespaced'));
+
+				try
+				{
+					include $strCachePath;
+				}
+				finally
+				{
+					// TODO: instead of removing the cache file again we should probably check for %kernel.debug%
+					$filesystem->remove($strCachePath);
+				}
 			}
 		}
 
