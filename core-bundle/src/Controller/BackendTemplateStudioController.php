@@ -12,10 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
+use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Finder\FinderFactory;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Twig\Source;
 
 class BackendTemplateStudioController extends AbstractBackendController
 {
@@ -55,10 +57,30 @@ class BackendTemplateStudioController extends AbstractBackendController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        // TODO: validate identifier and add editors and actions
+        if (!($this->loader->getInheritanceChains()[$identifier] ?? false)) {
+            return new Response(\sprintf('Invalid identifier "%s"', $identifier), Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $sources = array_map(
+            fn (string $name): Source => $this->loader->getSourceContext($name),
+            $this->loader->getInheritanceChains()[$identifier] ?? [],
+        );
 
         return $this->render('@Contao/backend/template_studio/editor/add_editor_tab.stream.html.twig', [
             'identifier' => $identifier,
+            'templates' => array_map(
+                function (Source $source): array {
+                    $templateNameInformation = $this->getTemplateNameInformation($source->getName());
+
+                    return [
+                        ...$templateNameInformation,
+                        'path' => $source->getPath(),
+                        'code' => $source->getCode(),
+                    ];
+                },
+                $sources,
+            ),
+            'can_edit' => false,
         ]);
     }
 
@@ -126,5 +148,18 @@ class BackendTemplateStudioController extends AbstractBackendController
         return $this->render('@Contao/backend/template_studio/tree.html.twig', [
             'tree' => $prefixTree,
         ]);
+    }
+
+    private function getTemplateNameInformation(string $logicalName): array
+    {
+        [$namespace, $shortName] = ContaoTwigUtil::parseContaoName($logicalName);
+
+        return [
+            'name' => $logicalName,
+            'short_name' => $shortName ?? '?',
+            'namespace' => $namespace ?? '?',
+            'identifier' => ContaoTwigUtil::getIdentifier($shortName) ?: '?',
+            'extension' => ContaoTwigUtil::getExtension($shortName) ?: '?',
+        ];
     }
 }

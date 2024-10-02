@@ -32,10 +32,13 @@ use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
 use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
+use Contao\CoreBundle\Search\Backend\BackendSearch;
+use Contao\CoreBundle\Search\Backend\Provider\ProviderInterface;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Imagine\Exception\RuntimeException as ImagineRuntimeException;
 use Imagine\Gd\Imagine;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -143,6 +146,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
         $this->handleMessengerConfig($config, $container);
         $this->handleSearchConfig($config, $container);
+        $this->handleBackendSearchConfig($config, $container, $loader);
         $this->handleCrawlConfig($config, $container);
         $this->setPredefinedImageSizes($config, $container);
         $this->setPreserveMetadataFields($config, $container);
@@ -328,6 +332,42 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             // Configure the search index listener
             $container->getDefinition('contao.listener.search_index')->setArgument(2, $features);
         }
+    }
+
+    private function handleBackendSearchConfig(array $config, ContainerBuilder $container, LoaderInterface $loader): void
+    {
+        // Used to display/hide the search box in the back end
+        $container->setParameter('contao.backend_search.enabled', $config['backend_search']['enabled']);
+
+        if (!$config['backend_search']['enabled']) {
+            return;
+        }
+
+        $container->registerForAutoconfiguration(ProviderInterface::class)->addTag('contao.backend_search_provider');
+        $loader->load('backend_search.yaml');
+
+        if (
+            !$container->hasDefinition('contao.search_backend.adapter')
+            || !$container->hasDefinition('contao.search_backend.engine')
+        ) {
+            return;
+        }
+
+        $indexName = $config['backend_search']['index_name'];
+
+        $adapter = $container->getDefinition('contao.search_backend.adapter');
+        $adapter->setArgument(0, $config['backend_search']['dsn']);
+
+        $engine = $container->getDefinition('contao.search_backend.engine');
+        $engine
+            ->setArgument(1, (new Definition(BackendSearch::class))
+                ->setFactory([null, 'getSearchEngineSchema'])
+                ->setArgument(0, $indexName),
+            )
+        ;
+
+        $factory = $container->getDefinition('contao.search.backend');
+        $factory->setArgument(3, $indexName);
     }
 
     private function handleCrawlConfig(array $config, ContainerBuilder $container): void
