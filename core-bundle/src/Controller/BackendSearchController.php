@@ -22,11 +22,14 @@ use Symfony\Component\Routing\Attribute\Route;
 use Twig\Environment;
 
 /**
- * @internal
- *
  * @experimental
  */
-#[Route('%contao.backend.route_prefix%/search', name: 'contao_backend_search', methods: ['GET'], defaults: ['_scope' => 'backend', '_allow_preview' => true, '_store_referrer' => false])]
+#[Route(
+    '%contao.backend.route_prefix%/search',
+    name: 'contao_backend_search',
+    defaults: ['_scope' => 'backend', '_allow_preview' => true, '_store_referrer' => false],
+    methods: ['GET'],
+)]
 class BackendSearchController
 {
     public function __construct(

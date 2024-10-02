@@ -354,14 +354,17 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         }
 
         $indexName = $config['backend_search']['index_name'];
+
         $adapter = $container->getDefinition('contao.search_backend.adapter');
         $adapter->setArgument(0, $config['backend_search']['dsn']);
 
         $engine = $container->getDefinition('contao.search_backend.engine');
-        $engine->setArgument(1, (new Definition(BackendSearch::class))
-            ->setFactory([null, 'getSearchEngineSchema'])
-            ->setArgument(0, $indexName),
-        );
+        $engine
+            ->setArgument(1, (new Definition(BackendSearch::class))
+                ->setFactory([null, 'getSearchEngineSchema'])
+                ->setArgument(0, $indexName),
+            )
+        ;
 
         $factory = $container->getDefinition('contao.search.backend');
         $factory->setArgument(3, $indexName);

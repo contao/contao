@@ -90,20 +90,20 @@ class BackendSearch
     public static function getSearchEngineSchema(string $indexName): Schema
     {
         return new Schema([
-            $indexName => new Index($indexName,
-                [
-                    'id' => new IdentifierField('id'),
-                    'type' => new TextField('type', filterable: true),
-                    'searchableContent' => new TextField('type', searchable: true),
-                    'tags' => new TextField('tags', multiple: true, filterable: true),
-                    'document' => new TextField('document'),
-                ]),
+            $indexName => new Index($indexName, [
+                'id' => new IdentifierField('id'),
+                'type' => new TextField('type', filterable: true),
+                'searchableContent' => new TextField('type', searchable: true),
+                'tags' => new TextField('tags', multiple: true, filterable: true),
+                'document' => new TextField('document'),
+            ]),
         ]);
     }
 
     private function createSearchBuilder(Query $query): SearchBuilder
     {
-        $sb = $this->engine->createSearchBuilder()
+        $sb = $this->engine
+            ->createSearchBuilder()
             ->addIndex($this->indexName)
         ;
 

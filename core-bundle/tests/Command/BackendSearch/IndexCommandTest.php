@@ -32,6 +32,7 @@ class IndexCommandTest extends TestCase
 
         $command = new IndexCommand($backendSearch);
         $tester = new CommandTester($command);
+
         $this->assertSame(Command::SUCCESS, $tester->execute([]));
     }
 
@@ -45,6 +46,7 @@ class IndexCommandTest extends TestCase
         ;
 
         $command = new IndexCommand($backendSearch);
+
         $tester = new CommandTester($command);
         $tester->execute(['--update-since' => '01-01-2020']);
     }

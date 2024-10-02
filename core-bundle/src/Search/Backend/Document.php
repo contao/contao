@@ -28,9 +28,9 @@ final class Document
     private array $metadata = [];
 
     public function __construct(
-        private string $id,
-        private string $type,
-        private string $searchableContent,
+        private readonly string $id,
+        private readonly string $type,
+        private readonly string $searchableContent,
     ) {
     }
 

@@ -19,8 +19,8 @@ class Hit
     private FilesModel|ImageInterface|int|string|null $image = null;
 
     public function __construct(
-        private string $title,
-        private string $viewUrl,
+        private readonly string $title,
+        private readonly string $viewUrl,
     ) {
     }
 

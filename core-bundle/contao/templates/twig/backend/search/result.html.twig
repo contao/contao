@@ -1,8 +1,9 @@
 {% for hit in hits %}
     <div class="tl_search_hit">
         <h3>{{ hit.title }}</h3>
+
         {% if hit.context %}
-        <p class="context">{{ hit.context }}</p>
+            <p class="context">{{ hit.context }}</p>
         {% endif %}
 
         {% if hit.image %}

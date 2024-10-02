@@ -61,8 +61,10 @@ class FilesProviderTest extends TestCase
         );
 
         $documents = $provider->updateIndex(new UpdateAllProvidersConfig());
+
         /** @var Document $document */
         $document = iterator_to_array($documents)[0];
+
         $this->assertSame('42', $document->getId());
         $this->assertSame(FilesProvider::TYPE, $document->getType());
         $this->assertSame(['extension:jpg'], $document->getTags());
@@ -76,6 +78,7 @@ class FilesProviderTest extends TestCase
     {
         $dsnParser = new DsnParser();
         $connectionParams = $dsnParser->parse('pdo-sqlite:///:memory:');
+
         $connection = DriverManager::getConnection($connectionParams);
         $connection->connect();
 

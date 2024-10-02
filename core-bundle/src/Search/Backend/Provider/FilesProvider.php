@@ -22,8 +22,6 @@ use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface
 
 /**
  * @experimental
- *
- * @internal
  */
 class FilesProvider implements ProviderInterface
 {
@@ -49,7 +47,8 @@ class FilesProvider implements ProviderInterface
             return new \EmptyIterator();
         }
 
-        $qb = $this->connection->createQueryBuilder()
+        $qb = $this->connection
+            ->createQueryBuilder()
             ->select('*')
             ->from('tl_files')
         ;

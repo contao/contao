@@ -108,6 +108,7 @@ class BackendSearchTest extends TestCase
 
         $engine = new Engine(new MemoryAdapter(), BackendSearch::getSearchEngineSchema($indexName));
         $engine->createIndex($indexName);
+
         $engine->saveDocument($indexName, [
             'id' => 'foobarType.42',
             'type' => 'foobarType',
@@ -116,13 +117,7 @@ class BackendSearchTest extends TestCase
             'document' => '{"id":"42","type":"type","searchableContent":"search me","tags":[],"metadata":[]}',
         ]);
 
-        $backendSearch = new BackendSearch(
-            [$provider],
-            $security,
-            $engine,
-            $indexName,
-        );
-
+        $backendSearch = new BackendSearch([$provider], $security, $engine, $indexName);
         $result = $backendSearch->search(new Query(20, 'search me'));
 
         $this->assertSame($hit, $result->getHits()[0]);
