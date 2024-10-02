@@ -4,5 +4,6 @@
     .set('data-action', 'contao--template-studio#openTab')
     .set('aria-label', 'MSC.openTab'|trans)
     .set('data-url', path('_contao_template_studio_editor_tab', {identifier}))
+    .mergeWith(button_attributes|default)
 %}
 <button{{ button_attributes }}>{% block inner %}{{ identifier }}{% endblock %}</button>

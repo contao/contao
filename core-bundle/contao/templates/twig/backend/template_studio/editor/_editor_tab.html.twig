@@ -3,6 +3,48 @@
     panel_id: 'template-studio--tab_'~ identifier,
 } %}
     {% block content %}
-        <i>TODO: This tab will contain editors for the identifier "{{ identifier }}".</i>
+        {# Editor listing #}
+        {% for template in templates %}
+            {# Editor #}
+            {% set template_attributes = attrs()
+                .addClass('template')
+                .addClass('editable', can_edit and loop.first)
+            %}
+            <div{{ template_attributes }}>
+                {% set template_editor_id = 'template-studio--editor_' ~ loop.index %}
+
+                {# Label #}
+                <label for="{{ template_editor_id }}">
+                    {% include '@Contao/backend/template_studio/_template_name_structure.html.twig' with template only %}
+                </label>
+
+                {% include '@Contao/backend/template_studio/_template_badges.html.twig' with {
+                    badges: [
+                        template.namespace == 'Contao_Global' ? 'user' : null,
+                        loop.last ? 'origin' : null,
+                    ]|filter(e => e is not null)
+                } %}
+
+                {# Source #}
+                <div class="editor" data-contao--template-studio-target="editor">
+                    {% set template_editor_attributes = attrs()
+                        .set('id', template_editor_id)
+                        .set('data-name', template.name)
+                        .set('readonly', not (can_edit and loop.first))
+                    %}
+                    <textarea{{ template_editor_attributes }}>{{ template.code }}</textarea>
+                </div>
+
+                {# Filename #}
+                <p class="template--path tl_help tl_tip">{{ template.path }}</p>
+            </div>
+
+            {# Relation to next representation #}
+            {% if not loop.last %}
+                <div class="relation">
+                    {{ backend_icon('arrow-down') }}
+                </div>
+            {% endif %}
+        {% endfor %}
     {% endblock %}
 {% endembed %}
