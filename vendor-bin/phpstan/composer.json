@@ -10,5 +10,10 @@
         "psr-4": {
             "Contao\\Tools\\PHPStan\\": "src/"
         }
+    },
+    "config": {
+        "platform": {
+            "php": "8.1"
+        }
     }
 }

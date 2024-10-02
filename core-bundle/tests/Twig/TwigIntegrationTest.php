@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Twig;
 
 use Contao\Config;
+use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\ChunkedText;
@@ -138,8 +139,7 @@ class TwigIntegrationTest extends TestCase
 
         $templateLocator = new TemplateLocator(
             $this->getTempDir(),
-            [],
-            [],
+            $this->createMock(ResourceFinder::class),
             $themeNamespace = new ThemeNamespace(),
             $this->createMock(Connection::class),
         );
