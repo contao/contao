@@ -79,4 +79,8 @@ return (new Configuration())
     // This package provides the "u" Twig filter which is e.g. used in the
     // template_skeleton.html.twig template.
     ->ignoreErrorsOnPackage('twig/string-extra', [ErrorType::UNUSED_DEPENDENCY])
+
+    // These packages are required for the search integration
+    ->ignoreErrorsOnPackage('schranz-search/symfony-bundle', [ErrorType::UNUSED_DEPENDENCY])
+    ->ignoreErrorsOnPackage('schranz-search/seal-loupe-adapter', [ErrorType::UNUSED_DEPENDENCY])
 ;

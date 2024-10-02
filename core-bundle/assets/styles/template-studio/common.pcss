@@ -1,0 +1,38 @@
+#template-studio {
+    .template_name {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 2px 4px;
+
+        .structure {
+            display: inline-flex;
+            align-items: center;
+            gap: 1px;
+
+            button {
+                border: none;
+                padding: 0;
+                background: none;
+            }
+
+            .namespace {
+                color: var(--orange);
+            }
+
+            .identifier {
+                color: var(--blue);
+            }
+
+            .extension {
+                color: var(--green);
+            }
+        }
+
+        .namespace_info {
+            color: var(--gray);
+            font-size: .75rem;
+            margin: 0;
+        }
+    }
+}

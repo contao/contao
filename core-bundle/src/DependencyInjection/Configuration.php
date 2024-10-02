@@ -106,6 +106,7 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addImageNode())
                 ->append($this->addSecurityNode())
                 ->append($this->addSearchNode())
+                ->append($this->addBackendSearchNode())
                 ->append($this->addCrawlNode())
                 ->append($this->addMailerNode())
                 ->append($this->addBackendNode())
@@ -655,6 +656,24 @@ class Configuration implements ConfigurationInterface
                             ->defaultTrue()
                         ->end()
                     ->end()
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addBackendSearchNode(): NodeDefinition
+    {
+        return (new TreeBuilder('backend_search'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->canBeEnabled()
+            ->children()
+                ->scalarNode('dsn')
+                    ->info('The DSN of the search adapter.')
+                ->end()
+                ->scalarNode('index_name')
+                    ->info('The name of the search index')
+                    ->defaultValue('contao_backend')
                 ->end()
             ->end()
         ;
