@@ -1,0 +1,49 @@
+services:
+    _defaults:
+        autoconfigure: true
+
+    Contao\CoreBundle\Controller\BackendSearchController:
+        public: true
+        arguments:
+            - '@security.helper'
+            - '@contao.search.backend'
+            - '@twig'
+
+    contao.command.backend_search.index:
+        class: Contao\CoreBundle\Command\BackendSearch\IndexCommand
+        arguments:
+            - '@contao.search.backend'
+
+    contao.search.backend:
+        class: Contao\CoreBundle\Search\Backend\BackendSearch
+        arguments:
+            - !tagged_iterator contao.backend_search_provider
+            - '@security.helper'
+            - '@contao.search_backend.engine'
+
+    contao.search.backend.files_provider:
+        class: Contao\CoreBundle\Search\Backend\Provider\FilesProvider
+        arguments:
+            - '@database_connection'
+            - '@security.access.decision_manager'
+
+    contao.search_backend.adapter:
+        class: Schranz\Search\SEAL\Adapter\AdapterInterface
+        factory: ['@contao.search_backend.adapter_factory', createAdapter]
+
+    contao.search_backend.adapter_factory:
+        class: Schranz\Search\SEAL\Adapter\AdapterFactory
+        arguments:
+            - !tagged_iterator { tag: schranz_search.adapter_factory, default_index_method: getName }
+
+    contao.search_backend.engine:
+        class: Schranz\Search\SEAL\Engine
+        arguments:
+            - '@contao.search_backend.adapter'
+        tags:
+            - { name: schranz_search.engine, index_by: name }
+
+    contao.security.backend_search.provider_delegating_voter:
+        class: Contao\CoreBundle\Security\Voter\BackendSearch\ProviderDelegatingVoter
+        arguments:
+            - !tagged_iterator contao.backend_search_provider
