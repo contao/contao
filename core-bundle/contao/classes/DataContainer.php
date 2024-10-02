@@ -903,10 +903,13 @@ abstract class DataContainer extends Backend
 			function (DataContainerOperation $config) use ($arrRow, $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext) {
 				trigger_deprecation('contao/core-bundle', '5.5', 'Using button_callback without DataContainerOperation object is deprecated.');
 
-				if (\is_array($config['button_callback'] ?? null)) {
+				if (\is_array($config['button_callback'] ?? null))
+				{
 					$callback = System::importStatic($config['button_callback'][0]);
 					$config->setHtml($callback->{$config['button_callback'][1]}($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this));
-				} elseif (\is_callable($config['button_callback'] ?? null)) {
+				}
+				elseif (\is_callable($config['button_callback'] ?? null))
+				{
 					$config->setHtml($config['button_callback']($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this));
 				}
 			}
@@ -1014,11 +1017,13 @@ abstract class DataContainer extends Backend
 			function (DataContainerOperation $config) use ($arrRow, $strPtable) {
 				trigger_deprecation('contao/core-bundle', '5.5', 'Using button_callback without DataContainerOperation object is deprecated.');
 
-				if (\is_array($config['button_callback'] ?? null)) {
+				if (\is_array($config['button_callback'] ?? null))
+				{
 					$callback = System::importStatic($config['button_callback'][0]);
 					$config->setHtml($callback->{$config['button_callback'][1]}($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strPtable, array(), null, false, null, null, $this));
-
-				} elseif (\is_callable($config['button_callback'] ?? null)) {
+				}
+				elseif (\is_callable($config['button_callback'] ?? null))
+				{
 					$config->setHtml($config['button_callback']($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strPtable, array(), null, false, null, null, $this));
 				}
 			}

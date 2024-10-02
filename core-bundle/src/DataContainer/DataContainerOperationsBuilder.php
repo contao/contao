@@ -35,7 +35,7 @@ class DataContainerOperationsBuilder
     ) {
     }
 
-    public function generateButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): string|\Stringable
+    public function generateButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): \Stringable|string
     {
         if (!\is_array($GLOBALS['TL_DCA'][$table]['list']['operations'] ?? null)) {
             return '';
@@ -44,7 +44,7 @@ class DataContainerOperationsBuilder
         $operations = [];
 
         foreach ($GLOBALS['TL_DCA'][$table]['list']['operations'] as $k => $v) {
-            $v = \is_array($v) ? $v : array($v);
+            $v = \is_array($v) ? $v : [$v];
             $operation = $this->generateOperation($k, $v, $table, $record, $dataContainer, $legacyCallback);
 
             if ($operation) {
@@ -55,7 +55,7 @@ class DataContainerOperationsBuilder
         return $this->createBuilder($operations);
     }
 
-    public function generateHeaderButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): string|\Stringable
+    public function generateHeaderButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): \Stringable|string
     {
         if (!\is_array($GLOBALS['TL_DCA'][$table]['list']['operations'] ?? null)) {
             return '';
@@ -71,13 +71,13 @@ class DataContainerOperationsBuilder
                 continue;
             }
 
-            $v = \is_array($v) ? $v : array($v);
+            $v = \is_array($v) ? $v : [$v];
 
             // Add the parent table to the href
             if (isset($v['href'])) {
-                $v['href'] .= '&amp;table=' . $table;
+                $v['href'] .= '&amp;table='.$table;
             } else {
-                $v['href'] = 'table=' . $table;
+                $v['href'] = 'table='.$table;
             }
 
             $operation = $this->generateOperation($k, $v, $table, $record, $dataContainer, $legacyCallback);
@@ -99,7 +99,12 @@ class DataContainerOperationsBuilder
             $callback = System::importStatic($operation['button_callback'][0]);
             $ref = new \ReflectionMethod($callback, $operation['button_callback'][1]);
 
-            if ($ref->getNumberOfParameters() === 1 && ($type = $ref->getParameters()[0]->getType()) && $type->getName() === DataContainerOperation::class) {
+            if (
+                1 === $ref->getNumberOfParameters()
+                && ($type = $ref->getParameters()[0]->getType())
+                && $type instanceof \ReflectionNamedType
+                && DataContainerOperation::class === $type->getName()
+            ) {
                 $callback->{$operation['button_callback'][1]}($config);
             } else {
                 if (!$legacyCallback) {
@@ -111,7 +116,12 @@ class DataContainerOperationsBuilder
         } elseif (\is_callable($operation['button_callback'] ?? null)) {
             $ref = new \ReflectionFunction($operation['button_callback']);
 
-            if ($ref->getNumberOfParameters() === 1 && ($type = $ref->getParameters()[0]->getType()) && $type->getName() === DataContainerOperation::class) {
+            if (
+                1 === $ref->getNumberOfParameters()
+                && ($type = $ref->getParameters()[0]->getType())
+                && $type instanceof \ReflectionNamedType
+                && DataContainerOperation::class === $type->getName()
+            ) {
                 $operation['button_callback']($config);
             } else {
                 if (!$legacyCallback) {
@@ -158,7 +168,7 @@ class DataContainerOperationsBuilder
         }
 
         if (!empty($config['route'])) {
-            $params = array('id' => $record['id']);
+            $params = ['id' => $record['id']];
 
             if ($isPopup) {
                 $params['popup'] = '1';
@@ -182,7 +192,7 @@ class DataContainerOperationsBuilder
     /**
      * Returns true if this was a toggle operation (which is added to $operations).
      */
-    private function handleToggle(DataContainerOperation $config, string $table, array $record, array $operation, string|null $href): array|null|false
+    private function handleToggle(DataContainerOperation $config, string $table, array $record, array $operation, string|null $href): array|false|null
     {
         parse_str(StringUtil::decodeEntities($config['href'] ?? $operation['href'] ?? ''), $params);
 
@@ -225,14 +235,14 @@ class DataContainerOperationsBuilder
         if (isset($config['titleDisabled'])) {
             $titleDisabled = $config['titleDisabled'];
         } else {
-            $titleDisabled = (\is_array($operation['label']) && isset($operation['label'][2])) ? \sprintf($operation['label'][2], $record['id']) : $config['title'];
+            $titleDisabled = \is_array($operation['label']) && isset($operation['label'][2]) ? \sprintf($operation['label'][2], $record['id']) : $config['title'];
         }
 
         return [
             'href' => $href,
             'title' => $state ? $config['title'] : $titleDisabled,
             'label' => $config['label'],
-            'attributes' => ' data-title="'.StringUtil::specialchars($config['title']).'" data-title-disabled="'.StringUtil::specialchars($titleDisabled).'" data-action="contao--scroll-offset#store" onclick="return AjaxRequest.toggleField(this,'.($icon == 'visible.svg' ? 'true' : 'false').')"',
+            'attributes' => ' data-title="'.StringUtil::specialchars($config['title']).'" data-title-disabled="'.StringUtil::specialchars($titleDisabled).'" data-action="contao--scroll-offset#store" onclick="return AjaxRequest.toggleField(this,'.('visible.svg' === $icon ? 'true' : 'false').')"',
             'icon' => Image::getHtml($state ? $icon : $_icon, $config['label'], 'data-icon="'.$icon.'" data-icon-disabled="'.$_icon.'" data-state="'.$state.'"'),
             'primary' => (bool) ($config['primary'] ?? false),
         ];
@@ -240,9 +250,11 @@ class DataContainerOperationsBuilder
 
     private function createBuilder(array $operations): \Stringable
     {
-        return new class ($this->twig, $operations) {
-            public function __construct(private readonly Environment $twig, private array $operations)
-            {
+        return new class($this->twig, $operations) {
+            public function __construct(
+                private readonly Environment $twig,
+                private array $operations,
+            ) {
             }
 
             public function prepend(array $operation): self
