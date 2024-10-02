@@ -49,7 +49,7 @@ body {
 .passkey_login {
 	display: flex;
 	justify-content: center;
-	padding: 35px 45px;
+	margin: 35px 45px;
 }
 
 .widget {
@@ -141,6 +141,7 @@ label[for="verify"] {
 	padding: 3px 0;
 	line-height: 1.5;
 	font-size: 1rem;
+	margin: 0;
 }
 
 .tl_error {

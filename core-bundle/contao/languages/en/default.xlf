@@ -293,6 +293,15 @@
       <trans-unit id="ERR.personalDataPassword">
         <source>There is at least one "personal data" module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the "change password" module instead.</source>
       </trans-unit>
+      <trans-unit id="ERR.passkeysUnsupported">
+        <source>Passkeys are not supported on this device.</source>
+      </trans-unit>
+      <trans-unit id="ERR.passkeyAssertionFailure">
+        <source>Login with Passkey failed.</source>
+      </trans-unit>
+      <trans-unit id="ERR.passkeyAttestationFailure">
+        <source>Passkey could not be created.</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
       </trans-unit>
