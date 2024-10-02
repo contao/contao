@@ -190,6 +190,12 @@ services:
         tags:
             - { name: data_collector, template: '@ContaoCore/Collector/contao.html.twig', id: contao }
 
+    contao.data_container.record_labeler:
+        class: Contao\CoreBundle\DataContainer\RecordLabeler
+        public: true
+        arguments:
+            - '@event_dispatcher'
+
     contao.doctrine.backup.dumper:
         class: Contao\CoreBundle\Doctrine\Backup\Dumper
 
