@@ -342,8 +342,8 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         }
 
         $factory = $container->getDefinition('contao.crawl.escargot.factory');
-        $factory->setArgument(4, $config['crawl']['additional_uris']);
-        $factory->setArgument(5, $config['crawl']['default_http_client_options']);
+        $factory->setArgument(8, $config['crawl']['additional_uris']);
+        $factory->setArgument(9, $config['crawl']['default_http_client_options']);
     }
 
     /**

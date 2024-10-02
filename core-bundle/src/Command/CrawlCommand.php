@@ -18,11 +18,8 @@ use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\GroupHandler;
 use Monolog\Level;
 use Monolog\Logger;
-use Nyholm\Psr7\Uri;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Monolog\Handler\ConsoleHandler;
-use Symfony\Component\BrowserKit\Cookie;
-use Symfony\Component\BrowserKit\CookieJar;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
@@ -35,17 +32,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\UriSigner;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Http\LoginLink\LoginLinkHandlerInterface;
 use Symfony\Contracts\HttpClient\ChunkInterface;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 use Terminal42\Escargot\CrawlUri;
 use Terminal42\Escargot\Escargot;
@@ -67,11 +54,6 @@ class CrawlCommand extends Command
     public function __construct(
         private readonly Factory $escargotFactory,
         private readonly Filesystem $filesystem,
-        private readonly RequestStack $requestStack,
-        private readonly UserProviderInterface $userProvider,
-        private readonly LoginLinkHandlerInterface $loginLinkHandler,
-        private readonly HttpClientInterface $httpClient,
-        private readonly UriSigner $uriSigner,
     ) {
         parent::__construct();
     }
@@ -128,19 +110,9 @@ class CrawlCommand extends Command
 
         try {
             if ($jobId = $input->getArgument('job')) {
-                $this->escargot = $this->escargotFactory->createFromJobId($jobId, $queue, $subscribers);
+                $this->escargot = $this->escargotFactory->createFromJobId($jobId, $queue, $subscribers, [], $input->getOption('username'));
             } else {
-                $clientOptions = [];
-
-                if ($username = $input->getOption('username')) {
-                    $clientOptions = [
-                        'headers' => [
-                            'Cookie' => $this->getAuthenticatedCookie($baseUris->all(), $username),
-                        ],
-                    ];
-                }
-
-                $this->escargot = $this->escargotFactory->create($baseUris, $queue, $subscribers, $clientOptions);
+                $this->escargot = $this->escargotFactory->create($baseUris, $queue, $subscribers, [], $input->getOption('username'));
             }
         } catch (InvalidJobIdException) {
             $io->error('Could not find the given job ID.');
@@ -274,46 +246,5 @@ class CrawlCommand extends Command
                 $this->progressBar->display();
             }
         };
-    }
-
-    private function getAuthenticatedCookie(array $uris, string $username): ?Cookie
-    {
-        $cookieJar = new CookieJar();
-
-        foreach ($uris as $uri) {
-            $request = Request::create((string) $uri);
-            $this->requestStack->push($request);
-
-            $user = $this->userProvider->loadUserByIdentifier($username);
-
-            $loginLink = $this->loginLinkHandler->createLoginLink($user, $request);
-            $loginUri = new Uri($loginLink->getUrl());
-
-            parse_str($loginUri->getQuery(), $query);
-
-            $query['_target_path'] = base64_encode($request->getUri());
-
-            $url = $this->uriSigner->sign((string) $loginUri->withQuery(http_build_query($query)));
-
-            try {
-                $response = $this->httpClient->request('GET', $url);
-
-                if (200 !== $response->getStatusCode()) {
-                    continue;
-                }
-
-                $headers = $response->getHeaders();
-            } catch (TransportExceptionInterface|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface) {
-                continue;
-            }
-
-            if (\array_key_exists('set-cookie', $headers)) {
-                $cookieJar->updateFromSetCookie($headers['set-cookie']);
-
-                break;
-            }
-        }
-
-        return $cookieJar->get(session_name());
     }
 }
