@@ -1,0 +1,18 @@
+<div class="template_name">
+    <div class="structure">
+        <div class="namespace">@{{ namespace }}</div>
+        <div class="/">/</div>
+        {% with {button_attributes: attrs().addClass('identifier')} %}
+            {{ include('@Contao/backend/template_studio/_template_identifier_button.html.twig') }}
+        {% endwith %}
+        <div class="extension">.{{ extension }}</div>
+    </div>
+    {% if namespace starts with 'Contao_Global' %}
+        {% set namespace_info = 'User namespace (/templates)' %}
+    {% elseif namespace starts with 'Contao_App' %}
+        {% set namespace_info = 'App namespace (/contao/templates)' %}
+    {% else %}
+        {% set namespace_info = 'Bundle namespace (' ~ namespace[7:]  ~')' %}
+    {% endif %}
+    <p class="namespace_info">{{ namespace_info }}</p>
+</div>
