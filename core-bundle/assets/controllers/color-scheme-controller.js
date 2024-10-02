@@ -58,14 +58,11 @@ export default class extends Controller {
 
         setColorScheme();
 
-        this.dispatch(
-            'change',
-            {
-                detail: {
-                    mode: isDark ? 'dark' : 'light'
-                },
-            }
-        );
+        this.dispatch('change', {
+            detail: {
+                mode: isDark ? 'dark' : 'light'
+            },
+        });
 
         // Change the label after the dropdown is hidden
         setTimeout(this.setLabel, 300);

@@ -1,5 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-import { TwigEditor } from "../modules/twig-editor";
+import { TwigEditor } from '../modules/twig-editor';
 
 export default class extends Controller {
     editors = new Map();
@@ -15,7 +15,7 @@ export default class extends Controller {
         })
         .then(response => response.text())
         .then(html => {
-            Turbo.renderStreamMessage(html)
+            Turbo.renderStreamMessage(html);
         })
         .catch((e) => {
             if (e.name !== 'AbortError') {
