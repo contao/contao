@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-    static targets = ['messages'];
+    static targets = ['message'];
 
     static values = {
         unsupportedMessage: String,
@@ -10,15 +10,15 @@ export default class extends Controller {
     }
 
     handleUnsupported() {
-        this.messagesTarget.innerHTML = this.renderMessage(this.unsupportedMessageValue);
+        this.messageTarget.innerHTML = this.renderMessage(this.unsupportedMessageValue);
     }
 
     handleAssertionFailure(e) {
-        this.messagesTarget.innerHTML = this.renderMessage(this.assertionFailureMessageValue);
+        this.messageTarget.innerHTML = this.renderMessage(this.assertionFailureMessageValue);
     }
 
     handleAttestationFailure() {
-        this.messagesTarget.innerHTML = this.renderMessage(this.attestationFailureMessageValue);
+        this.messageTarget.innerHTML = this.renderMessage(this.attestationFailureMessageValue);
     }
 
     renderMessage(message, type) {

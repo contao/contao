@@ -160,7 +160,7 @@
       <?php endif; ?>
     </turbo-frame>
   </div>
-  <form method="post" 
+  <div class="add_passkey"
     data-controller="contao--webauthn contao--webauthn-error" 
     data-contao--webauthn-creation-result-url-value="<?= $this->route('webauthn.controller.creation.response.contao_backend_add_authenticator') ?>" 
     data-contao--webauthn-creation-options-url-value="<?= $this->route('webauthn.controller.creation.request.contao_backend_add_authenticator') ?>" 
@@ -172,10 +172,9 @@
         webauthn:attestation:failure->contao--webauthn-error#handleAttestationFailure
       "
   >
-    <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
     <div class="tl_submit_container">
       <button class="tl_submit" type="submit" data-action="contao--webauthn#signup"><?= $this->trans('MSC.addPasskey') ?></button>
     </div>
-    <div class="tl_message" data-contao--webauthn-error-target="messages"></div>
-  </form>
+    <div class="tl_message passkey_message" data-contao--webauthn-error-target="message"></div>
+  </div>
 </div>

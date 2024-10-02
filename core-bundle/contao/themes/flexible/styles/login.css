@@ -137,6 +137,10 @@ label[for="verify"] {
 	text-align: center;
 }
 
+.tl_message.passkey_message:not(:has(.tl_error, .tl_info, .tl_confirm)) {
+	display: none;
+}
+
 .tl_error, .tl_info, .tl_confirm {
 	padding: 3px 0;
 	line-height: 1.5;

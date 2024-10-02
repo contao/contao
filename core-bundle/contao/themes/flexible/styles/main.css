@@ -1128,6 +1128,10 @@ h2.sub_headline {
 	outline-offset: 4px;
 }
 
+.tl_message.passkey_message:not(:has(.tl_error, .tl_info, .tl_confirm)) {
+	display: none;
+}
+
 /* Picker search */
 #search {
 	margin: 18px 18px -9px;

@@ -70,7 +70,7 @@
       <div class="passkey_login">
         <button type="button" class="tl_submit" data-action="contao--webauthn#signin"><?= $this->passkeyLogin ?></button>
       </div>
-      <div class="tl_message" data-contao--webauthn-error-target="messages"></div>
+      <div class="tl_message passkey_message" data-contao--webauthn-error-target="message"></div>
     </div>
   <?php $this->endblock(); ?>
 
