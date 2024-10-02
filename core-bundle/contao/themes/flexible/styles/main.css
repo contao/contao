@@ -3225,6 +3225,10 @@ fieldset.collapsed > legend {
 		max-width: 15%;
 	}
 
+	.tl_filter > strong {
+		min-width: unset;
+	}
+
 	.tl_search {
 		width: 40%;
 	}
