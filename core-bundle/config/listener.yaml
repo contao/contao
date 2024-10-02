@@ -128,6 +128,11 @@ services:
         arguments:
             - '@translator'
 
+    contao.listener.data_container.fallback_record_label:
+        class: Contao\CoreBundle\EventListener\DataContainer\FallbackRecordLabelListener
+        arguments:
+            - '@translator'
+
     contao.listener.data_container.frontend_module_permissions:
         class: Contao\CoreBundle\EventListener\DataContainer\FrontendModulePermissionsListener
         arguments:

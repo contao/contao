@@ -39,8 +39,10 @@ class DataContainerRecordLabelEvent extends Event
         return $this->label;
     }
 
-    public function setLabel(string|null $label): void
+    public function setLabel(string|null $label): self
     {
         $this->label = $label;
+
+        return $this;
     }
 }

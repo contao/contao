@@ -174,6 +174,12 @@ services:
             - '@contao.translation.translator'
             - '@event_dispatcher'
 
+    contao.data_container.record_labeler:
+        class: Contao\CoreBundle\DataContainer\RecordLabeler
+        public: true
+        arguments:
+            - '@event_dispatcher'
+
     contao.doctrine.backup.dumper:
         class: Contao\CoreBundle\Doctrine\Backup\Dumper
 

@@ -23,9 +23,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[AsEventListener]
 class ContentRecordLabelListener
 {
-    public function __construct(
-        private readonly TranslatorInterface&TranslatorBagInterface $translator,
-    ) {
+    public function __construct(private readonly TranslatorInterface&TranslatorBagInterface $translator)
+    {
     }
 
     public function __invoke(DataContainerRecordLabelEvent $event): void
