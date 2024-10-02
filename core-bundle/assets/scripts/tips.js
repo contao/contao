@@ -85,7 +85,7 @@
         el.addEventListener('mouseleave', close);
 
         // Close tooltip when touching anywhere else
-        document.addEventListener('touchend', (e) => {
+        document.addEventListener('touchstart', (e) => {
             if (el.contains(e.target)) {
                 return;
             }
