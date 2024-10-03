@@ -51,7 +51,7 @@ class MigrateCommand extends Command
     private ?Installer $installer;
     private ?SymfonyStyle $io = null;
 
-    public function __construct(MigrationCollection $migrations, FileLocator $fileLocator, string $projectDir, ContaoFramework $framework, BackupManager $backupManager, SchemaProvider $schemaProvider, MysqlInnodbRowSizeCalculator $rowSizeCalculator, Connection $connection, Installer $installer = null)
+    public function __construct(MigrationCollection $migrations, FileLocator $fileLocator, string $projectDir, ContaoFramework $framework, BackupManager $backupManager, SchemaProvider $schemaProvider, MysqlInnodbRowSizeCalculator $rowSizeCalculator, Connection $connection, ?Installer $installer = null)
     {
         $this->migrations = $migrations;
         $this->fileLocator = $fileLocator;
@@ -251,7 +251,7 @@ class MigrateCommand extends Command
         return false;
     }
 
-    private function executeMigrations(bool &$dryRun, bool $asJson, string $specifiedHash = null): bool
+    private function executeMigrations(bool &$dryRun, bool $asJson, ?string $specifiedHash = null): bool
     {
         $loopControl = 19;
 
@@ -407,7 +407,7 @@ class MigrateCommand extends Command
         (new Filesystem())->remove($filePath);
     }
 
-    private function executeSchemaDiff(bool $dryRun, bool $asJson, bool $withDeletesOption, string $specifiedHash = null): bool
+    private function executeSchemaDiff(bool $dryRun, bool $asJson, bool $withDeletesOption, ?string $specifiedHash = null): bool
     {
         if (null === $this->installer) {
             $this->io->error('Service "contao_installation.database.installer" not found. The installation bundle needs to be installed in order to execute schema diff migrations.');

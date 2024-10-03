@@ -23,7 +23,7 @@ class PictureFactoryWithResizeOptionsStub implements PictureFactoryInterface
         throw new \RuntimeException('not implemented');
     }
 
-    public function create($path, $size = null, ResizeOptions $options = null): PictureInterface
+    public function create($path, $size = null, ?ResizeOptions $options = null): PictureInterface
     {
         throw new \RuntimeException('not implemented');
     }

@@ -48,7 +48,7 @@ class ContaoSetupCommand extends Command
     /**
      * @param (\Closure(array<string>):Process)|null $createProcessHandler
      */
-    public function __construct(string $projectDir, string $webDir, ?string $kernelSecret, \Closure $createProcessHandler = null)
+    public function __construct(string $projectDir, string $webDir, ?string $kernelSecret, ?\Closure $createProcessHandler = null)
     {
         $this->projectDir = $projectDir;
         $this->webDir = Path::makeRelative($webDir, $projectDir);

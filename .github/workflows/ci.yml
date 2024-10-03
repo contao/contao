@@ -33,10 +33,10 @@ jobs:
             - name: Install ECS
               uses: ramsey/composer-install@v3
               with:
-                  working-directory: tools/ecs
+                  working-directory: vendor-bin/ecs
 
             - name: Run ECS
-              run: tools/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests tools/*/src --config tools/ecs/config/default.php --no-progress-bar
+              run: vendor-bin/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests vendor-bin/*/src --config vendor-bin/ecs/config/default.php --no-progress-bar
 
     ecs-legacy:
         name: ECS legacy
@@ -60,12 +60,12 @@ jobs:
             - name: Install ECS
               uses: ramsey/composer-install@v3
               with:
-                  working-directory: tools/ecs
+                  working-directory: vendor-bin/ecs
 
             - name: Run ECS
               run: |
-                  tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao --config tools/ecs/config/legacy.php --no-progress-bar
-                  tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config tools/ecs/config/template.php --no-progress-bar
+                  vendor-bin/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao --config vendor-bin/ecs/config/legacy.php --no-progress-bar
+                  vendor-bin/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config vendor-bin/ecs/config/template.php --no-progress-bar
 
     phpstan:
         name: PHPStan
@@ -89,10 +89,10 @@ jobs:
             - name: Install PHPStan
               uses: ramsey/composer-install@v3
               with:
-                  working-directory: tools/phpstan
+                  working-directory: vendor-bin/phpstan
 
             - name: Run PHPStan
-              run: tools/phpstan/vendor/bin/phpstan analyse --no-progress
+              run: vendor-bin/phpstan/vendor/bin/phpstan analyse --no-progress
 
     yamllint:
         name: YAMLlint
@@ -128,10 +128,10 @@ jobs:
             - name: Install the service linter
               uses: ramsey/composer-install@v3
               with:
-                  working-directory: tools/service-linter
+                  working-directory: vendor-bin/service-linter
 
             - name: Run the service linter
-              run: tools/service-linter/bin/lint-service-ids
+              run: vendor-bin/service-linter/bin/lint-service-ids
 
     require-checker:
         name: Require checker
@@ -165,10 +165,10 @@ jobs:
                   composer bin require-checker install --no-interaction --no-progress
 
             - name: Check for unknown symbols (contao/contao)
-              run: tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config.json composer.json
+              run: vendor-bin/require-checker/vendor/bin/composer-require-checker check --config-file=vendor-bin/require-checker/config.json composer.json
 
             - name: Check for unknown symbols (contao/core-bundle)
-              run: tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config.json core-bundle/composer.json
+              run: vendor-bin/require-checker/vendor/bin/composer-require-checker check --config-file=vendor-bin/require-checker/config.json core-bundle/composer.json
 
     tests:
         name: PHP ${{ matrix.php }}
@@ -176,7 +176,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php: [7.4, 8.0, 8.1, 8.2]
+                php: [7.4, 8.0, 8.1, 8.2, 8.3]
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -234,14 +234,14 @@ jobs:
               run: vendor/bin/phpunit --order-by=reverse --extensions Contao\\CoreBundle\\Tests\\PhpunitExtension\\GlobalStateWatcher
 
     nightly:
-        name: PHP 8.3
+        name: PHP 8.4
         runs-on: ubuntu-latest
         continue-on-error: true
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.3
+                  php-version: 8.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
 
@@ -353,8 +353,8 @@ jobs:
                       cd ..
                   done
 
-    dependencies:
-        name: Dependencies
+    monorepo-check:
+        name: Monorepo check
         runs-on: ubuntu-latest
         steps:
             - name: Setup PHP
@@ -375,7 +375,7 @@ jobs:
             - name: Install the monorepo tools
               uses: ramsey/composer-install@v3
               with:
-                  working-directory: tools/monorepo
+                  working-directory: vendor-bin/monorepo-tools
 
             - name: Validate the composer.json files
-              run: tools/monorepo/vendor/bin/monorepo-tools composer-json --validate
+              run: vendor-bin/monorepo-tools/vendor/bin/monorepo-tools composer-json --validate

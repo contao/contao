@@ -22,7 +22,7 @@ class ParameterDumper
     private Filesystem $filesystem;
     private array $parameters = ['parameters' => []];
 
-    public function __construct(string $projectDir, Filesystem $filesystem = null)
+    public function __construct(string $projectDir, ?Filesystem $filesystem = null)
     {
         $this->configFile = Path::join($projectDir, 'config/parameters.yml');
         $this->filesystem = $filesystem ?: new Filesystem();

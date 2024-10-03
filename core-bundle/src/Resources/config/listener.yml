@@ -327,7 +327,7 @@ services:
             # The priority must be lower than the one of MergeHttpHeadersListener (defaults to 256)
             # and must be lower than the one of the ClearSessionDataListener listener (defaults to -768)
             # and must be lower than the one of the CsrfTokenCookieSubscriber listener (defaults to -1006)
-            - and must be higher than the one of the StreamedResponseListener listener (defaults to -1024)
+            # and must be higher than the one of the StreamedResponseListener listener (defaults to -1024)
             - { name: kernel.event_listener, method: makeResponsePrivate, priority: -1012 }
 
     contao.listener.menu.backend:

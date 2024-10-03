@@ -279,7 +279,7 @@ class MessageCatalogueTest extends TestCase
         ];
     }
 
-    private function createCatalogue(MessageCatalogueInterface $catalogue = null, ContaoFramework $framework = null, ResourceFinder $resourceFinder = null): MessageCatalogue
+    private function createCatalogue(?MessageCatalogueInterface $catalogue = null, ?ContaoFramework $framework = null, ?ResourceFinder $resourceFinder = null): MessageCatalogue
     {
         if (null === $catalogue) {
             $catalogue = $this->createMock(MessageCatalogueInterface::class);

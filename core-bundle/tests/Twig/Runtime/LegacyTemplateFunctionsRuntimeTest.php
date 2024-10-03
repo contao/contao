@@ -107,7 +107,7 @@ class LegacyTemplateFunctionsRuntimeTest extends TestCase
         $this->assertEmpty($this->getRuntime(null, 'frontend')->renderContaoBackendTemplate());
     }
 
-    private function getRuntime(ContaoFramework $framework = null, string $scope = 'backend'): LegacyTemplateFunctionsRuntime
+    private function getRuntime(?ContaoFramework $framework = null, string $scope = 'backend'): LegacyTemplateFunctionsRuntime
     {
         $request = new Request();
         $request->attributes->set('_scope', $scope);

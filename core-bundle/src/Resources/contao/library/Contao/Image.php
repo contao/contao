@@ -182,7 +182,7 @@ class Image
 	 *
 	 * @throws \InvalidArgumentException If the settings array is malformed
 	 */
-	public function setImportantPart(array $importantPart = null)
+	public function setImportantPart(?array $importantPart = null)
 	{
 		if ($importantPart !== null)
 		{

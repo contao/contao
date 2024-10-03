@@ -25,5 +25,10 @@
         "psr-4": {
             "Contao\\Tools\\ServiceLinter\\": "src/"
         }
+    },
+    "config": {
+        "platform": {
+            "php": "8.1"
+        }
     }
 }

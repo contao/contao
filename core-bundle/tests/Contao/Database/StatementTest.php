@@ -128,7 +128,7 @@ class StatementTest extends TestCase
      * @group legacy
      * @dataProvider getQueriesWithParametersAndSets
      */
-    public function testBackwardsCompatibleReplacesParametersAndSets(string $query, string $expected, array $params = null, array $set = null): void
+    public function testBackwardsCompatibleReplacesParametersAndSets(string $query, string $expected, ?array $params = null, ?array $set = null): void
     {
         $doctrineResult = $this->createMock(Result::class);
         $doctrineResult

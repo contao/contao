@@ -832,7 +832,7 @@ class ImageFactoryTest extends TestCase
     {
     }
 
-    private function getImageFactory(ResizerInterface $resizer = null, ImagineInterface $imagine = null, ImagineInterface $imagineSvg = null, Filesystem $filesystem = null, ContaoFramework $framework = null, bool $bypassCache = null, array $imagineOptions = null, array $validExtensions = null, string $uploadDir = null): ImageFactory
+    private function getImageFactory(?ResizerInterface $resizer = null, ?ImagineInterface $imagine = null, ?ImagineInterface $imagineSvg = null, ?Filesystem $filesystem = null, ?ContaoFramework $framework = null, ?bool $bypassCache = null, ?array $imagineOptions = null, ?array $validExtensions = null, ?string $uploadDir = null): ImageFactory
     {
         $resizer ??= $this->createMock(ResizerInterface::class);
         $imagine ??= $this->createMock(ImagineInterface::class);

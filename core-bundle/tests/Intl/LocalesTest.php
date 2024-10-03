@@ -190,7 +190,7 @@ class LocalesTest extends TestCase
         $translator
             ->method('trans')
             ->willReturnCallback(
-                function (string $label, array $parameters, string $domain, string $locale = null) {
+                function (string $label, array $parameters, string $domain, ?string $locale = null) {
                     $this->assertSame('contao_languages', $domain);
                     $this->assertSame('de', $locale);
 
@@ -493,7 +493,7 @@ class LocalesTest extends TestCase
         }
     }
 
-    private function getLocalesService(Translator $translator = null, RequestStack $requestStack = null, array $defaultEnabledLocales = null, array $configLocales = [], array $configEnabledLocales = [], string $defaultLocale = null): Locales
+    private function getLocalesService(?Translator $translator = null, ?RequestStack $requestStack = null, ?array $defaultEnabledLocales = null, array $configLocales = [], array $configEnabledLocales = [], ?string $defaultLocale = null): Locales
     {
         if (null === $translator) {
             $translator = $this->createMock(Translator::class);
