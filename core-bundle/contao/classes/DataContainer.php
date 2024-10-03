@@ -966,7 +966,7 @@ abstract class DataContainer extends Backend
 			}
 			elseif (isset($config['href']))
 			{
-				$href = $this->addToUrl($config['href'] . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : '') . ($isPopup ? '&amp;popup=1' : ''));
+				$href = $this->addToUrl($config['href'] . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : '') . ($isPopup ? '&amp;popup=1' : ''), addRequestToken: !($config['prefetch'] ?? false));
 			}
 
 			parse_str(StringUtil::decodeEntities($config['href'] ?? $v['href'] ?? ''), $params);
@@ -1109,7 +1109,7 @@ abstract class DataContainer extends Backend
 			}
 			else
 			{
-				$href = $this->addToUrl($v['href'] ?? '');
+				$href = $this->addToUrl($v['href'] ?? '', addRequestToken: !($v['prefetch'] ?? false));
 			}
 
 			$return .= '<a href="' . $href . '"' . (isset($v['class']) ? ' class="' . $v['class'] . '"' : '') . ' title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
@@ -1213,7 +1213,7 @@ abstract class DataContainer extends Backend
 			}
 			elseif (isset($config['href']))
 			{
-				$href = $this->addToUrl($config['href'] . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : '') . ($isPopup ? '&amp;popup=1' : ''));
+				$href = $this->addToUrl($config['href'] . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : '') . ($isPopup ? '&amp;popup=1' : ''), addRequestToken: !($v['prefetch'] ?? false));
 			}
 
 			parse_str(StringUtil::decodeEntities($config['href'] ?? $v['href'] ?? ''), $params);

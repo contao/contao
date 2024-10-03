@@ -77,16 +77,19 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 			'modules' => array
 			(
 				'href'                => 'table=tl_module',
+				'prefetch'            => true,
 				'icon'                => 'modules.svg',
 			),
 			'layout' => array
 			(
 				'href'                => 'table=tl_layout',
+				'prefetch'            => true,
 				'icon'                => 'layout.svg',
 			),
 			'imageSizes' => array
 			(
 				'href'                => 'table=tl_image_size',
+				'prefetch'            => true,
 				'icon'                => 'sizes.svg',
 			),
 			'show',

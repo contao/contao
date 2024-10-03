@@ -68,7 +68,9 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'edit' => array
 			(
 				'href'                => 'act=edit',
+				'prefetch'            => true,
 				'icon'                => 'edit.svg',
+				'attributes'          => 'data-contao--deeplink-target="primary"',
 				'button_callback'     => array('tl_form_field', 'disableButton')
 			),
 			'copy' => array
@@ -612,7 +614,7 @@ class tl_form_field extends Backend
 	 */
 	public function disableButton($row, $href, $label, $title, $icon, $attributes)
 	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FIELD_TYPE, $row['type']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FIELD_TYPE, $row['type']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id'], addRequestToken: false) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**

@@ -2675,7 +2675,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$blnIsOpen = true;
 			}
 
-			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFolder, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_folder click2edit toggle_select hover-div"><div class="tl_left" style="padding-left:' . ($intMargin + (($countFiles < 1) ? 16 : 0)) . 'px">';
+			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFolder, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_folder toggle_select hover-div" data-controller="contao--deeplink"><div class="tl_left" style="padding-left:' . ($intMargin + (($countFiles < 1) ? 16 : 0)) . 'px">';
 
 			// Add a toggle button if there are children
 			if ($countFiles > 0)
@@ -2789,7 +2789,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 
 			$currentEncoded = $this->urlEncode($currentFile);
-			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFile, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_file click2edit toggle_select hover-div"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing) . 'px">';
+			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFile, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_file toggle_select hover-div" data-controller="contao--deeplink"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing) . 'px">';
 			$thumbnail .= ' <span class="tl_gray">(' . $this->getReadableSize($objFile->filesize);
 
 			if ($objFile->width && $objFile->height)

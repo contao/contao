@@ -95,6 +95,8 @@ class DefaultOperationsListener
                 'edit' => [
                     'href' => 'act=edit',
                     'icon' => 'edit.svg',
+                    'prefetch' => true,
+                    'attributes' => 'data-contao--deeplink-target="primary"',
                     'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table),
                 ],
             ];
@@ -108,6 +110,8 @@ class DefaultOperationsListener
                     'children' => [
                         'href' => 'table='.$ctable.($ctable === $table ? '&amp;ptable='.$table : ''),
                         'icon' => 'children.svg',
+                        'prefetch' => true,
+                        'attributes' => 'data-contao--deeplink-target="secondary"',
                         'button_callback' => $this->accessChildrenCallback($ctable, $table),
                     ],
                 ];
