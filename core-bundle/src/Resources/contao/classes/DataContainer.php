@@ -1697,7 +1697,7 @@ abstract class DataContainer extends Backend
 				$row[$v] = Encryption::decrypt(StringUtil::deserialize($row[$v]));
 			}
 			$objDcaExtractor = DcaExtractor::getInstance($table);
-			$strRelationField = ($objDcaExtractor->getRelations()[$strField]['field'] ?? 'id');
+			$strRelationField = ($objDcaExtractor->getRelations()[$v]['field'] ?? 'id');
 			if (strpos($v, ':') !== false)
 			{
 				list($strKey, $strTable) = explode(':', $v, 2);
