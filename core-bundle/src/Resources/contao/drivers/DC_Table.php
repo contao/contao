@@ -380,8 +380,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				foreach ((array) $value as $v)
 				{
-					$strField = Database::quoteIdentifier($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['relation']['field'] ?? 'id');
-					$objKey = $this->Database->prepare("SELECT " . Database::quoteIdentifier($chunks[1]) . " AS value FROM " . $chunks[0] . " WHERE " .$strField ."=?")
+					$strRelationField = $objDcaExtractor->getRelations()[$i]['field'] ?? 'id';
+					$objKey = $this->Database->prepare("SELECT " . Database::quoteIdentifier($chunks[1]) . " AS value FROM " . $chunks[0] . " WHERE " .Database::quoteIdentifier($strRelationField) ."=?")
 											 ->limit(1)
 											 ->execute($v);
 
@@ -4425,9 +4425,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				elseif (isset($GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['foreignKey']))
 				{
 					$arrForeignKey = explode('.', $GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['foreignKey'], 2);
-					$strField = Database::quoteIdentifier($GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['relation']['field'] ?? 'id');
-
-					$objLabel = $this->Database->prepare("SELECT " . Database::quoteIdentifier($arrForeignKey[1]) . " AS value FROM " . $arrForeignKey[0] . " WHERE " .$strField ."=?")
+					$objDcaExtractor = DcaExtractor::getInstance($this->ptable);
+					$strRelationField = $objDcaExtractor->getRelations()[$v]['field'] ?? 'id';
+					$objLabel = $this->Database->prepare("SELECT " . Database::quoteIdentifier($arrForeignKey[1]) . " AS value FROM " . $arrForeignKey[0] . " WHERE " .Database::quoteIdentifier($strRelationField) ."=?")
 											   ->limit(1)
 											   ->execute($_v);
 
@@ -4530,8 +4530,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['foreignKey']))
 				{
 					$key = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['foreignKey'], 2);
-					$strField = Database::quoteIdentifier($GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['relation']['field'] ?? 'id');
-					$query = "SELECT *, (SELECT " . Database::quoteIdentifier($key[1]) . " FROM " . $key[0] . " WHERE " . $this->strTable . "." . Database::quoteIdentifier($firstOrderBy) . "=" . $key[0] . "." .$strField .") AS foreignKey FROM " . $this->strTable;
+					$objDcaExtractor = DcaExtractor::getInstance($this->strTable);
+					$strRelationField = $objDcaExtractor->getRelations()[$firstOrderBy]['field'] ?? 'id';
+					$query = "SELECT *, (SELECT " . Database::quoteIdentifier($key[1]) . " FROM " . $key[0] . " WHERE " . $this->strTable . "." . Database::quoteIdentifier($firstOrderBy) . "=" . $key[0] . "." .Database::quoteIdentifier($strRelationField) .") AS foreignKey FROM " . $this->strTable;
 					$orderBy[0] = 'foreignKey';
 				}
 			}
@@ -4905,9 +4906,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['foreignKey']))
 				{
-					$strField = Database::quoteIdentifier($GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['relation']['field'] ?? 'id');
+					$objDcaExtractor = DcaExtractor::getInstance($this->strTable);
+					$strRelationField = $objDcaExtractor->getRelations()[$key]['field'] ?? 'id';
 					$chunks = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['foreignKey'], 2);
-					$orderBy[$k] = "(SELECT " . Database::quoteIdentifier($chunks[1]) . " FROM " . $chunks[0] . " WHERE " . $chunks[0] . "." .$strField ."=" . $this->strTable . "." . $key . ")";
+					$orderBy[$k] = "(SELECT " . Database::quoteIdentifier($chunks[1]) . " FROM " . $chunks[0] . " WHERE " . $chunks[0] . "." .Database::quoteIdentifier($strRelationField) ."=" . $this->strTable . "." . $key . ")";
 				}
 
 				if (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC)))
@@ -5322,8 +5324,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']))
 			{
 				list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey'], 2);
-				$strField = Database::quoteIdentifier($GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['relation']['field'] ?? 'id');
-				$this->procedure[] = "(" . sprintf($strPattern, Database::quoteIdentifier($fld)) . " OR " . sprintf($strPattern, "(SELECT " . Database::quoteIdentifier($f) . " FROM $t WHERE $t." .$strField ."=" . $this->strTable . "." . Database::quoteIdentifier($fld) . ")") . ")";
+				$objDcaExtractor = DcaExtractor::getInstance($this->strTable);
+				$strRelationField = $objDcaExtractor->getRelations()[$fld]['field'] ?? 'id';
+				$this->procedure[] = "(" . sprintf($strPattern, Database::quoteIdentifier($fld)) . " OR " . sprintf($strPattern, "(SELECT " . Database::quoteIdentifier($f) . " FROM $t WHERE $t." .Database::quoteIdentifier($strRelationField) ."=" . $this->strTable . "." . Database::quoteIdentifier($fld) . ")") . ")";
 				$this->values[] = $searchValue;
 			}
 			else
@@ -5987,8 +5990,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					elseif (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['foreignKey']))
 					{
 						$key = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['foreignKey'], 2);
-						$strField = Database::quoteIdentifier($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['relation']['field'] ?? 'id');
-						$objParent = $this->Database->prepare("SELECT " . Database::quoteIdentifier($key[1]) . " AS value FROM " . $key[0] . " WHERE " .$strField ."=?")
+						
+						$objDcaExtractor = DcaExtractor::getInstance($this->strTable);
+						$strRelationField = $objDcaExtractor->getRelations()[$field]['field'] ?? 'id';
+						$objParent = $this->Database->prepare("SELECT " . Database::quoteIdentifier($key[1]) . " AS value FROM " . $key[0] . " WHERE " .Database::quoteIdentifier($strRelationField) ."=?")
 													->limit(1)
 													->execute($vv);
 
@@ -6156,8 +6161,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		elseif (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['foreignKey']))
 		{
 			$key = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['foreignKey'], 2);
-			$strField = Database::quoteIdentifier($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['relation']['field'] ?? 'id');
-			$objParent = $this->Database->prepare("SELECT " . Database::quoteIdentifier($key[1]) . " AS value FROM " . $key[0] . " WHERE " .$strField ."=?")
+			$objDcaExtractor = DcaExtractor::getInstance($this->strTable);
+			$strRelationField = $objDcaExtractor->getRelations()[$field]['field'] ?? 'id';
+			$objParent = $this->Database->prepare("SELECT " . Database::quoteIdentifier($key[1]) . " AS value FROM " . $key[0] . " WHERE " .Database::quoteIdentifier($strRelationField) ."=?")
 										->limit(1)
 										->execute($value);
 
