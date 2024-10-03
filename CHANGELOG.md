@@ -2,6 +2,26 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.49] (2024-09-17)
+
+**Security fixes:**
+
+- [CVE-2024-45604]: Directory traversal in the FileSelector widget
+- [CVE-2024-45398]: Remote command execution through file uploads
+- [CVE-2024-45612]: Insert tag injection via canonical URLs
+
+## [4.13.48] (2024-09-12)
+
+**Fixed issues:**
+
+- [#7497] Use `flex` for the back end gallery layout ([fritzmg])
+- [#7517] Fix the TinyMCE overflow on mobile devices ([zoglo])
+- [#7466] Do not show the template warnings if a user only has group permissions ([leofeyer])
+- [#7512] Allow the `name` attribute for the `<details>` element ([ausi])
+- [#7506] Only get valid image extensions once ([zoglo])
+- [#7483] Fix the description list markup for `template` templates ([fritzmg])
+- [#7481] Fix a PHP8 error if a user has no groups ([aschempp])
+
 ## [4.13.47] (2024-08-23)
 
 **Fixed issues:**
@@ -1048,6 +1068,8 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.49]: https://github.com/contao/contao/releases/tag/4.13.49
+[4.13.48]: https://github.com/contao/contao/releases/tag/4.13.48
 [4.13.47]: https://github.com/contao/contao/releases/tag/4.13.47
 [4.13.46]: https://github.com/contao/contao/releases/tag/4.13.46
 [4.13.45]: https://github.com/contao/contao/releases/tag/4.13.45
@@ -1107,6 +1129,9 @@ This project adheres to [Semantic Versioning].
 [CVE-2023-36806]: https://github.com/contao/contao/security/advisories/GHSA-4gpr-p634-922x
 [CVE-2023-29200]: https://github.com/contao/contao/security/advisories/GHSA-fp7q-xhhw-6rj3
 [CVE-2022-24899]: https://github.com/contao/contao/security/advisories/GHSA-m8x6-6r63-qvj2
+[CVE-2024-45604]: https://github.com/contao/contao/security/advisories/GHSA-4p75-5p53-65m9
+[CVE-2024-45398]: https://github.com/contao/contao/security/advisories/GHSA-vm6r-j788-hjh5
+[CVE-2024-45612]: https://github.com/contao/contao/security/advisories/GHSA-2xpq-xp6c-5mgj
 [a-v-l]: https://github.com/a-v-l
 [agonyz]: https://github.com/agonyz
 [AlexanderWillner]: https://github.com/AlexanderWillner
@@ -1911,3 +1936,10 @@ This project adheres to [Semantic Versioning].
 [#7433]: https://github.com/contao/contao/pull/7433
 [#7459]: https://github.com/contao/contao/pull/7459
 [#7462]: https://github.com/contao/contao/pull/7462
+[#7466]: https://github.com/contao/contao/pull/7466
+[#7481]: https://github.com/contao/contao/pull/7481
+[#7483]: https://github.com/contao/contao/pull/7483
+[#7497]: https://github.com/contao/contao/pull/7497
+[#7506]: https://github.com/contao/contao/pull/7506
+[#7512]: https://github.com/contao/contao/pull/7512
+[#7517]: https://github.com/contao/contao/pull/7517

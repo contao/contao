@@ -20,7 +20,7 @@ class ImageSizesEvent extends Event
     private array $imageSizes;
     private ?BackendUser $user;
 
-    public function __construct(array $imageSizes, BackendUser $user = null)
+    public function __construct(array $imageSizes, ?BackendUser $user = null)
     {
         $this->imageSizes = $imageSizes;
         $this->user = $user;

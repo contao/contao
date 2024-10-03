@@ -80,7 +80,7 @@ class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPi
         return sprintf($this->getInsertTag($config), $value);
     }
 
-    protected function getRouteParameters(PickerConfig $config = null): array
+    protected function getRouteParameters(?PickerConfig $config = null): array
     {
         $params = ['do' => 'faq'];
 

@@ -60,7 +60,7 @@ $GLOBALS['TL_CONFIG']['allowedAttributes'] = serialize(array(
 	array('key' => 'th', 'value' => 'rowspan,colspan,width,height'),
 	array('key' => 'style', 'value' => 'media'),
 	array('key' => 'time', 'value' => 'datetime'),
-	array('key' => 'details', 'value' => 'open'),
+	array('key' => 'details', 'value' => 'open,name'),
 ));
 $GLOBALS['TL_CONFIG']['disableRefererCheck']   = false;
 $GLOBALS['TL_CONFIG']['requestTokenWhitelist'] = array();

@@ -29,7 +29,7 @@ final class Context
     /**
      * @internal
      */
-    public function __construct(string $fallback = null, int $oldLastModified = null)
+    public function __construct(?string $fallback = null, ?int $oldLastModified = null)
     {
         $this->oldHash = $fallback;
         $this->oldLastModified = $this->newLastModified = $oldLastModified;

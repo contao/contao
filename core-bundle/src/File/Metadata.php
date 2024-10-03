@@ -48,7 +48,7 @@ class Metadata
      * @param array<string, mixed>      $values
      * @param array<string, array>|null $schemaOrgJsonLd
      */
-    public function __construct(array $values, array $schemaOrgJsonLd = null)
+    public function __construct(array $values, ?array $schemaOrgJsonLd = null)
     {
         $this->values = $values;
         $this->schemaOrgJsonLd = $schemaOrgJsonLd;
@@ -136,7 +136,7 @@ class Metadata
         return empty($this->values);
     }
 
-    public function getSchemaOrgData(string $type = null): array
+    public function getSchemaOrgData(?string $type = null): array
     {
         // Lazy initialize
         if (null === $this->schemaOrgJsonLd) {

@@ -576,7 +576,7 @@ class LegacyMatcherTest extends TestCase
      *
      * @return ContaoFramework&MockObject
      */
-    private function mockFrameworkWithAdapters(Adapter $configAdapter = null, string $language = null, array $hooks = []): ContaoFramework
+    private function mockFrameworkWithAdapters(?Adapter $configAdapter = null, ?string $language = null, array $hooks = []): ContaoFramework
     {
         $classes = [];
         $callbacks = [];
@@ -627,7 +627,7 @@ class LegacyMatcherTest extends TestCase
     /**
      * @return RequestMatcherInterface&MockObject
      */
-    private function mockRequestMatcher(string $pathInfo = null, array $match = []): RequestMatcherInterface
+    private function mockRequestMatcher(?string $pathInfo = null, array $match = []): RequestMatcherInterface
     {
         $expectCalls = null === $pathInfo ? 1 : 2;
 

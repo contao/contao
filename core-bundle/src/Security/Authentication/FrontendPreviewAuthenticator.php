@@ -36,7 +36,7 @@ class FrontendPreviewAuthenticator
     /**
      * @internal
      */
-    public function __construct(Security $security, TokenStorageInterface $tokenStorage, TokenChecker $tokenChecker, SessionInterface $session, UserProviderInterface $userProvider, LoggerInterface $logger = null)
+    public function __construct(Security $security, TokenStorageInterface $tokenStorage, TokenChecker $tokenChecker, SessionInterface $session, UserProviderInterface $userProvider, ?LoggerInterface $logger = null)
     {
         $this->security = $security;
         $this->tokenStorage = $tokenStorage;
@@ -61,7 +61,7 @@ class FrontendPreviewAuthenticator
         return true;
     }
 
-    public function authenticateFrontendGuest(bool $showUnpublished, int $previewLinkId = null): bool
+    public function authenticateFrontendGuest(bool $showUnpublished, ?int $previewLinkId = null): bool
     {
         $token = new FrontendPreviewToken(null, $showUnpublished, $previewLinkId);
 

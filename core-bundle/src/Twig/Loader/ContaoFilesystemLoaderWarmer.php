@@ -28,7 +28,7 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
     private string $environment;
     private ?Filesystem $filesystem;
 
-    public function __construct(ContaoFilesystemLoader $loader, string $cacheDir, string $environment, Filesystem $filesystem = null)
+    public function __construct(ContaoFilesystemLoader $loader, string $cacheDir, string $environment, ?Filesystem $filesystem = null)
     {
         $this->filesystem = $filesystem;
         $this->environment = $environment;
@@ -36,7 +36,7 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
         $this->loader = $loader;
     }
 
-    public function warmUp(string $cacheDir = null, string $buildDir = null): array
+    public function warmUp(?string $cacheDir = null, ?string $buildDir = null): array
     {
         $this->loader->warmUp();
 

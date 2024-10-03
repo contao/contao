@@ -384,7 +384,7 @@ class MountManager
         }
     }
 
-    public function generatePublicUri(string $path, OptionsInterface $options = null): ?UriInterface
+    public function generatePublicUri(string $path, ?OptionsInterface $options = null): ?UriInterface
     {
         /** @var FilesystemAdapter $adapter */
         [$adapter, $adapterPath] = $this->getAdapterAndPath($path);

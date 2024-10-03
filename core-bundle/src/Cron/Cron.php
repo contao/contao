@@ -45,7 +45,7 @@ class Cron
      * @param \Closure():CronJobRepository      $repository
      * @param \Closure():EntityManagerInterface $entityManager
      */
-    public function __construct(\Closure $repository, \Closure $entityManager, LoggerInterface $logger = null)
+    public function __construct(\Closure $repository, \Closure $entityManager, ?LoggerInterface $logger = null)
     {
         $this->repository = $repository;
         $this->entityManager = $entityManager;

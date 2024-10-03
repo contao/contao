@@ -2,8 +2,8 @@ extends: default
 
 ignore: |
     /node_modules/
-    /tools/
     /vendor/
+    /vendor-bin/
 
 rules:
     braces:

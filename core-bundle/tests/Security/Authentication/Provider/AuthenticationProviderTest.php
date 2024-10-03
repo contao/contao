@@ -531,7 +531,7 @@ class AuthenticationProviderTest extends TestCase
         return false;
     }
 
-    private function createUsernamePasswordProvider(ContaoFramework $framework = null, AuthenticationHandlerInterface $twoFactorHandler = null, TrustedDeviceManagerInterface $trustedDeviceManager = null): AuthenticationProvider
+    private function createUsernamePasswordProvider(?ContaoFramework $framework = null, ?AuthenticationHandlerInterface $twoFactorHandler = null, ?TrustedDeviceManagerInterface $trustedDeviceManager = null): AuthenticationProvider
     {
         $userProvider = $this->createMock(UserProviderInterface::class);
         $userChecker = $this->createMock(UserCheckerInterface::class);
@@ -569,7 +569,7 @@ class AuthenticationProviderTest extends TestCase
         );
     }
 
-    private function createTwoFactorProvider(AuthenticationProviderInterface $twoFactorAuthenticationProvider = null, UserCheckerInterface $userChecker = null): AuthenticationProvider
+    private function createTwoFactorProvider(?AuthenticationProviderInterface $twoFactorAuthenticationProvider = null, ?UserCheckerInterface $userChecker = null): AuthenticationProvider
     {
         $userProvider = $this->createMock(UserProviderInterface::class);
         $providerKey = 'contao_frontend';

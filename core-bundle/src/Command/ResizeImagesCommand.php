@@ -55,7 +55,7 @@ class ResizeImagesCommand extends Command
     private ?ConsoleSectionOutput $tableOutput = null;
     private ?Table $table = null;
 
-    public function __construct(ImageFactoryInterface $imageFactory, ResizerInterface $resizer, string $targetDir, DeferredImageStorageInterface $storage, Filesystem $filesystem = null)
+    public function __construct(ImageFactoryInterface $imageFactory, ResizerInterface $resizer, string $targetDir, DeferredImageStorageInterface $storage, ?Filesystem $filesystem = null)
     {
         $this->imageFactory = $imageFactory;
         $this->resizer = $resizer instanceof DeferredResizerInterface ? $resizer : null;

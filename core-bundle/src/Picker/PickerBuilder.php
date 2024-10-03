@@ -73,7 +73,7 @@ class PickerBuilder implements PickerBuilderInterface
         return $this->create($config);
     }
 
-    public function supportsContext($context, array $allowed = null): bool
+    public function supportsContext($context, ?array $allowed = null): bool
     {
         $providers = $this->providers;
 

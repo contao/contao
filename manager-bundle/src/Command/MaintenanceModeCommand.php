@@ -33,7 +33,7 @@ class MaintenanceModeCommand extends Command
     private Environment $twig;
     private Filesystem $filesystem;
 
-    public function __construct(string $maintenanceFilePath, Environment $twig, Filesystem $filesystem = null)
+    public function __construct(string $maintenanceFilePath, Environment $twig, ?Filesystem $filesystem = null)
     {
         $this->maintenanceFilePath = $maintenanceFilePath;
         $this->twig = $twig;

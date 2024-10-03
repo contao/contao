@@ -25,6 +25,7 @@ use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Validator;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 
 $GLOBALS['TL_DCA']['tl_files'] = array
@@ -496,7 +497,7 @@ class tl_files extends Backend
 		}
 
 		// Only show the important part fields for images
-		if ($blnIsFolder || !in_array(strtolower(substr($dc->id, strrpos($dc->id, '.') + 1)), System::getContainer()->getParameter('contao.image.valid_extensions')))
+		if ($blnIsFolder || !in_array(Path::getExtension($dc->id, true), System::getContainer()->getParameter('contao.image.valid_extensions')))
 		{
 			PaletteManipulator::create()
 				->removeField(array('importantPartX', 'importantPartY', 'importantPartWidth', 'importantPartHeight'))

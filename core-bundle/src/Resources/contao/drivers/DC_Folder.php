@@ -890,7 +890,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		{
 			$count = 1;
 			$new = $destination;
-			$ext = strtolower(substr($destination, strrpos($destination, '.') + 1));
+			$ext = Path::getExtension($destination, true);
 
 			// Add a suffix if the file exists
 			while (file_exists($this->strRootDir . '/' . $new) && $count < 12)
@@ -2302,6 +2302,14 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 						$varValue = $callback($varValue, $this);
 					}
 				}
+			}
+
+			// Check the full path to see if the file extension has changed, because if
+			// $this->strExtension is empty, a new extension could otherwise be added to
+			// $varValue and change the file type!
+			if (Path::getExtension($varValue . $this->strExtension) !== Path::getExtension($this->varValue . $this->strExtension))
+			{
+				throw new \Exception($GLOBALS['TL_LANG']['ERR']['invalidName']);
 			}
 
 			// The target exists
