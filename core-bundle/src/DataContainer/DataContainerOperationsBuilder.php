@@ -64,10 +64,12 @@ class DataContainerOperationsBuilder
         $operations = [];
 
         foreach ($GLOBALS['TL_DCA'][$table]['list']['operations'] as $k => $v) {
-            // Edit operation should be shown in header by default
-            $showInHeader = ($v['showInHeader'] ?? false) || ('edit' === $k && false !== ($v['showInHeader'] ?? true));
+            // Show edit operation in the header by default (backwards compatibility)
+            if ('edit' === $k && !isset($v['showInHeader'])) {
+                $v['showInHeader'] = true;
+            }
 
-            if (!$showInHeader || ('select' === Input::get('act') && !($v['showOnSelect'] ?? null))) {
+            if (empty($v['showInHeader']) || ('select' === Input::get('act') && !($v['showOnSelect'] ?? null))) {
                 continue;
             }
 
