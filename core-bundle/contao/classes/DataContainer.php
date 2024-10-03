@@ -901,7 +901,7 @@ abstract class DataContainer extends Backend
 			$arrRow,
 			$this,
 			function (DataContainerOperation $config) use ($arrRow, $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext) {
-				trigger_deprecation('contao/core-bundle', '5.5', 'Using button_callback without DataContainerOperation object is deprecated.');
+				trigger_deprecation('contao/core-bundle', '5.5', 'Using a button_callback without DataContainerOperation object is deprecated and will no longer work in Contao 6.');
 
 				if (\is_array($config['button_callback'] ?? null))
 				{
@@ -1015,7 +1015,7 @@ abstract class DataContainer extends Backend
 			$arrRow,
 			$this,
 			function (DataContainerOperation $config) use ($arrRow, $strPtable) {
-				trigger_deprecation('contao/core-bundle', '5.5', 'Using button_callback without DataContainerOperation object is deprecated.');
+				trigger_deprecation('contao/core-bundle', '5.5', 'Using a button_callback without DataContainerOperation object is deprecated and will no longer work in Contao 6.');
 
 				if (\is_array($config['button_callback'] ?? null))
 				{

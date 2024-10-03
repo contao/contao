@@ -9,7 +9,9 @@
         <a
             href="{{ operation.href }}"
             title="{{ operation.title }}"
-            {% if operation.popup|default %}onclick="Backend.openModalIframe({title:'{{ operation.label|replace({"'": "\'"}) }}', url:this.href});return false"{% endif%}
+            {% if operation.popup|default %}
+                onclick="Backend.openModalIframe({title:'{{ operation.label|replace({"'": "\'"}) }}', url:this.href});return false"
+            {% endif%}
             {{ operation.attributes|raw }}
         >{{ operation.icon|raw }}</a>
     {% elseif opration.icon|default %}
