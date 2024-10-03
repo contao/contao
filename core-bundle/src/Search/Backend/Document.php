@@ -74,7 +74,7 @@ final class Document
      * Metadata must be JSON encodable, thus, anything not UTF-8 encoded will be
      * stripped automatically.
      *
-     * @param array<string, string> $metadata
+     * @param array<string, mixed> $metadata
      */
     public function withMetadata(array $metadata): self
     {

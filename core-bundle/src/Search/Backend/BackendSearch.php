@@ -133,7 +133,7 @@ class BackendSearch
         $document = Document::fromArray(json_decode($document['document'], true, 512, JSON_THROW_ON_ERROR));
         $hit = $fileProvider->convertDocumentToHit($document);
 
-        if (null === $hit) {
+        if (!$hit) {
             // TODO: delete this document from the index
             return null;
         }
