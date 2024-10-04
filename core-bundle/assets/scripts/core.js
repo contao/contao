@@ -261,7 +261,7 @@ window.AjaxRequest =
 					'class': 'subpal widget-group',
 					'html': txt,
 					'styles': {
-						'display': 'block'
+						'display': 'grid'
 					}
 				}).inject($(el).getParent('div').getParent('div'), 'after');
 
