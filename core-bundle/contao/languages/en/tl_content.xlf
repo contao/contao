@@ -338,6 +338,30 @@
       <trans-unit id="tl_content.playerSRC.1">
         <source>Here you can add the video/audio file or multiple files if you are using different codecs.</source>
       </trans-unit>
+      <trans-unit id="tl_content.addSubtitles.0">
+        <source>Add subtitles</source>
+      </trans-unit>
+      <trans-unit id="tl_content.addSubtitles.1">
+        <source>Adds subtitles to a video element.</source>
+      </trans-unit>
+      <trans-unit id="tl_content.subtitleSRC.0">
+        <source>Subtitle</source>
+      </trans-unit>
+      <trans-unit id="tl_content.subtitleSRC.1">
+        <source>Here you can add the subtitle files for your video.</source>
+      </trans-unit>
+      <trans-unit id="tl_content.subtitleLanguages.0">
+        <source>Languages</source>
+      </trans-unit>
+      <trans-unit id="tl_content.subtitleLanguages.1">
+        <source>Please enter a comma separated list of subtitle languages according to the ISO-639 standard in the order of the subtitle files (e.g. "en,de" for english and german).</source>
+      </trans-unit>
+      <trans-unit id="tl_content.subtitleLabels.0">
+        <source>Labels</source>
+      </trans-unit>
+      <trans-unit id="tl_content.subtitleLabels.1">
+        <source>Please enter a comma separated list of subtitle labels that will appear in the video player in the order of the subtitle files (e.g. "English,Deutsch" for "en,de").</source>
+      </trans-unit>
       <trans-unit id="tl_content.youtube.0">
         <source>YouTube ID</source>
       </trans-unit>
@@ -580,6 +604,9 @@
       </trans-unit>
       <trans-unit id="tl_content.poster_legend">
         <source>Preview image</source>
+      </trans-unit>
+      <trans-unit id="tl_content.subtitle_legend">
+        <source>Subtitles</source>
       </trans-unit>
       <trans-unit id="tl_content.invisible_legend">
         <source>Visibility</source>

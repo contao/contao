@@ -59,9 +59,18 @@ class PlayerController extends AbstractContentElementController
             return new Response();
         }
 
+        $isVideo = $filesystemItems->first()?->isVideo() ?? false;
+        $subtitleFiles = [];
+
+        if ($model->addSubtitles && $isVideo)
+        {
+            $subtitleItems = FilesystemUtil::listContentsFromSerialized($this->filesStorage, $model->subtitleSRC ?: '');
+            $subtitleFiles = $this->getSourceFiles($subtitleItems);
+        }
+
         // Compile data
         $figureData = $filesystemItems->first()?->isVideo() ?? false
-            ? $this->buildVideoFigureData($model, $sourceFiles)
+            ? $this->buildVideoFigureData($model, $sourceFiles, $subtitleFiles)
             : $this->buildAudioFigureData($model, $sourceFiles);
 
         $template->set('figure', (object) $figureData);
@@ -72,12 +81,13 @@ class PlayerController extends AbstractContentElementController
 
     /**
      * @param list<FilesystemItem> $sourceFiles
+     * @param list<FilesystemItem> $subtitleFiles
      *
      * @return array<string, array<string, string|HtmlAttributes|list<HtmlAttributes>>|string>
      *
      * @phpstan-return FigureData
      */
-    private function buildVideoFigureData(ContentModel $model, array $sourceFiles): array
+    private function buildVideoFigureData(ContentModel $model, array $sourceFiles, array $subtitleFiles): array
     {
         $poster = null;
 
@@ -113,11 +123,38 @@ class PlayerController extends AbstractContentElementController
             $sourceFiles,
         );
 
+        $tracks = [];
+
+        if (!empty($subtitleFiles))
+        {
+            $labels = array_map('trim', explode(',', $model->subtitleLabels));
+            $languages = array_map('trim', explode(',', $model->subtitleLanguages));
+
+            foreach ($subtitleFiles as $subtitleFile)
+            {
+                $label = array_shift($labels);
+                $language = array_shift($languages);
+
+                if (!$label || !$language)
+                {
+                    break;
+                }
+
+                $tracks[] = (new HtmlAttributes())
+                    ->set('kind', 'subtitles')
+                    ->set('label', $label)
+                    ->set('srclang', $language)
+                    ->set('src', $this->publicUriByStoragePath[$subtitleFile->getPath()])
+                ;
+            }
+        }
+
         return [
             'media' => [
                 'type' => 'video',
                 'attributes' => $attributes,
                 'sources' => $sources,
+                'tracks' => $tracks,
             ],
             'metadata' => new Metadata([
                 Metadata::VALUE_CAPTION => array_filter($captions)[0] ?? '',
