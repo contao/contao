@@ -161,14 +161,14 @@
     </turbo-frame>
   </div>
   <div class="add_passkey"
-    data-controller="contao--webauthn contao--webauthn-error" 
-    data-contao--webauthn-creation-result-url-value="<?= $this->route('webauthn.controller.creation.response.contao_backend_add_authenticator') ?>" 
-    data-contao--webauthn-creation-options-url-value="<?= $this->route('webauthn.controller.creation.request.contao_backend_add_authenticator') ?>" 
+    data-controller="contao--webauthn contao--webauthn-error"
+    data-contao--webauthn-creation-result-url-value="<?= $this->route('webauthn.controller.creation.response.contao_backend_add_authenticator') ?>"
+    data-contao--webauthn-creation-options-url-value="<?= $this->route('webauthn.controller.creation.request.contao_backend_add_authenticator') ?>"
     data-contao--webauthn-creation-success-redirect-uri-value="<?= $this->webauthnCreationSuccessRedirectUri ?>"
     data-contao--webauthn-error-unsupported-message-value="<?= $this->trans('ERR.passkeysUnsupported') ?>"
-    data-contao--webauthn-error-attestation-failure-message-value="<?= $this->trans('ERR.passkeyAttestationFailure') ?>" 
+    data-contao--webauthn-error-attestation-failure-message-value="<?= $this->trans('ERR.passkeyAttestationFailure') ?>"
     data-action="
-        webauthn:unsupported->contao--webauthn-error#handleUnsupported 
+        webauthn:unsupported->contao--webauthn-error#handleUnsupported
         webauthn:attestation:failure->contao--webauthn-error#handleAttestationFailure
       "
   >

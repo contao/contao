@@ -515,6 +515,14 @@ services:
     contao.listener.unwrap_twig_exception:
         class: Contao\CoreBundle\EventListener\UnwrapTwigExceptionListener
 
+    contao.listener.user_session:
+        class: Contao\CoreBundle\EventListener\UserSessionListener
+        arguments:
+            - '@database_connection'
+            - '@security.helper'
+            - '@contao.routing.scope_matcher'
+            - '@event_dispatcher'
+
     contao.listener.webauthn_backend_route:
         class: Contao\CoreBundle\EventListener\WebauthnBackendRouteListener
         arguments:
@@ -523,14 +531,6 @@ services:
                 - webauthn.controller.creation.response.contao_backend_add_authenticator
                 - webauthn.controller.security.contao_backend.request.options
                 - webauthn.controller.security.contao_backend.request.result
-
-    contao.listener.user_session:
-        class: Contao\CoreBundle\EventListener\UserSessionListener
-        arguments:
-            - '@database_connection'
-            - '@security.helper'
-            - '@contao.routing.scope_matcher'
-            - '@event_dispatcher'
 
     contao.listener.widget.custom_rgxp:
         class: Contao\CoreBundle\EventListener\Widget\CustomRgxpListener

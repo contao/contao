@@ -297,7 +297,7 @@
         <source>Passkeys are not supported on this device.</source>
       </trans-unit>
       <trans-unit id="ERR.passkeyAssertionFailure">
-        <source>Login with Passkey failed.</source>
+        <source>Login with passkey failed.</source>
       </trans-unit>
       <trans-unit id="ERR.passkeyAttestationFailure">
         <source>Passkey could not be created.</source>
@@ -2220,7 +2220,7 @@
         <source>Created at</source>
       </trans-unit>
       <trans-unit id="MSC.addPasskey">
-        <source>Add Passkey</source>
+        <source>Add passkey</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
