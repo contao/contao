@@ -33,8 +33,7 @@ use Symfony\Component\HttpFoundation\Response;
  *      media: array{
  *          type: 'video'|'audio',
  *          attributes: HtmlAttributes,
- *          sources: list<HtmlAttributes>,
- *          tracks: list<HtmlAttributes>
+ *          sources: list<HtmlAttributes>
  *      },
  *      metadata: Metadata
  *  }
@@ -125,7 +124,7 @@ class PlayerController extends AbstractContentElementController
 
         $tracks = [];
 
-        if ($subtitleFiles !== []) {
+        if ([] !== $subtitleFiles) {
             $labels = array_map('trim', explode(',', $model->subtitleLabels));
             $languages = array_map('trim', explode(',', $model->subtitleLanguages));
 
