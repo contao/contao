@@ -89,4 +89,69 @@ class PlayerControllerTest extends ContentElementTestCase
 
         $this->assertSameHtml($expectedOutput, $response->getContent());
     }
+
+    public function testOutputsSubtitles(): void
+    {
+        $response = $this->renderWithModelData(
+            new PlayerController($this->getDefaultStorage()),
+            [
+                'type' => 'player',
+                'playerSRC' => serialize([
+                    self::FILE_VIDEO_MP4,
+                ]),
+                'addSubtitles' => true,
+                'subtitleSRC' => serialize([
+                    self::FILE_SUBTITLES_EN_VTT,
+                    self::FILE_SUBTITLES_DE_VTT,
+                ]),
+                'subtitleLanguages' => 'en,de',
+                'subtitleLabels' => 'English,Deutsch',
+            ],
+        );
+
+        $expectedOutput = <<<'HTML'
+            <div class="content-player">
+                <figure>
+                    <video controls>
+                        <source type="video/mp4" src="https://example.com/files/video.mp4">
+                        <track label="English" srclang="en" src="https://example.com/files/subtitles-en.vtt"/>
+                        <track label="Deutsch" srclang="de" src="https://example.com/files/subtitles-de.vtt"/>
+                    </video>
+                </figure>
+            </div>
+            HTML;
+
+        $this->assertSameHtml($expectedOutput, $response->getContent());
+    }
+
+    public function testEmptySubtitleLabelsOrLanguages(): void
+    {
+        $response = $this->renderWithModelData(
+            new PlayerController($this->getDefaultStorage()),
+            [
+                'type' => 'player',
+                'playerSRC' => serialize([
+                    self::FILE_VIDEO_MP4,
+                ]),
+                'addSubtitles' => true,
+                'subtitleSRC' => serialize([
+                    self::FILE_SUBTITLES_EN_VTT,
+                ]),
+                'subtitleLanguages' => '',
+                'subtitleLabels' => '',
+            ],
+        );
+
+        $expectedOutput = <<<'HTML'
+            <div class="content-player">
+                <figure>
+                    <video controls>
+                        <source type="video/mp4" src="https://example.com/files/video.mp4">
+                    </video>
+                </figure>
+            </div>
+            HTML;
+
+        $this->assertSameHtml($expectedOutput, $response->getContent());
+    }
 }
