@@ -34,6 +34,7 @@ use Symfony\Component\HttpFoundation\Response;
  *          type: 'video'|'audio',
  *          attributes: HtmlAttributes,
  *          sources: list<HtmlAttributes>,
+ *          tracks: list<HtmlAttributes>
  *      },
  *      metadata: Metadata
  *  }
@@ -62,8 +63,7 @@ class PlayerController extends AbstractContentElementController
         $isVideo = $filesystemItems->first()?->isVideo() ?? false;
         $subtitleFiles = [];
 
-        if ($model->addSubtitles && $isVideo)
-        {
+        if ($model->addSubtitles && $isVideo) {
             $subtitleItems = FilesystemUtil::listContentsFromSerialized($this->filesStorage, $model->subtitleSRC ?: '');
             $subtitleFiles = $this->getSourceFiles($subtitleItems);
         }
@@ -125,23 +125,20 @@ class PlayerController extends AbstractContentElementController
 
         $tracks = [];
 
-        if (!empty($subtitleFiles))
-        {
+        if ($subtitleFiles !== []) {
             $labels = array_map('trim', explode(',', $model->subtitleLabels));
             $languages = array_map('trim', explode(',', $model->subtitleLanguages));
 
-            foreach ($subtitleFiles as $subtitleFile)
-            {
+            foreach ($subtitleFiles as $subtitleFile) {
                 $label = array_shift($labels);
                 $language = array_shift($languages);
 
-                if (!$label || !$language)
-                {
+                if (!$label || !$language) {
                     break;
                 }
 
                 $tracks[] = (new HtmlAttributes())
-                    ->set('kind', 'subtitles')
+                    ->setIfExists('kind', $model->subtitleType)
                     ->set('label', $label)
                     ->set('srclang', $language)
                     ->set('src', $this->publicUriByStoragePath[$subtitleFile->getPath()])

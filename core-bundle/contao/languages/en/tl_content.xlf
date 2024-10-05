@@ -350,6 +350,12 @@
       <trans-unit id="tl_content.subtitleSRC.1">
         <source>Here you can add the subtitle files for your video.</source>
       </trans-unit>
+      <trans-unit id="tl_content.subtitleType.0">
+        <source>Subtitle kind</source>
+      </trans-unit>
+      <trans-unit id="tl_content.subtitleType.1">
+        <source>Here you can choose the type of subtitles. Defaults to subtitles.</source>
+      </trans-unit>
       <trans-unit id="tl_content.subtitleLanguages.0">
         <source>Languages</source>
       </trans-unit>
@@ -361,6 +367,12 @@
       </trans-unit>
       <trans-unit id="tl_content.subtitleLabels.1">
         <source>Please enter a comma separated list of subtitle labels that will appear in the video player in the order of the subtitle files (e.g. "English,Deutsch" for "en,de").</source>
+      </trans-unit>
+      <trans-unit id="tl_content.subtitles">
+        <source>Subtitles</source>
+      </trans-unit>
+      <trans-unit id="tl_content.captions">
+        <source>Closed captions</source>
       </trans-unit>
       <trans-unit id="tl_content.youtube.0">
         <source>YouTube ID</source>

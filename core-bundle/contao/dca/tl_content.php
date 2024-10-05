@@ -124,7 +124,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'markdownSource_sourceText'   => 'code',
 		'markdownSource_sourceFile'   => 'singleSRC',
 		'showPreview'                 => 'size,fullsize,numberOfItems',
-		'addSubtitles'                => 'subtitleSRC,subtitleLanguages,subtitleLabels'
+		'addSubtitles'                => 'subtitleSRC,subtitleType,subtitleLanguages,subtitleLabels'
 	),
 
 	// Fields
@@ -617,6 +617,14 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'inputType'               => 'fileTree',
 			'eval'                    => array('mandatory'=>true, 'multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'extensions'=>'vtt', 'isSortable'=>true),
 			'sql'                     => "blob NULL"
+		),
+		'subtitleType' => array
+		(
+			'inputType'               => 'radio',
+			'options'                 => array('subtitles', 'captions'),
+			'reference'               => &$GLOBALS['TL_LANG']['tl_content'],
+			'eval'                    => array('helpwizard'=>true),
+			'sql'                     => "varchar(12) COLLATE ascii_bin NOT NULL default 'subtitles'"
 		),
 		'subtitleLanguages' => array
 		(
