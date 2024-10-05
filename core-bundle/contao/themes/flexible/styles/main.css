@@ -1125,7 +1125,8 @@ h2.sub_headline {
 	height: 1em;
 	width: 100%;
 	display: block;
-	outline-offset: 4px;
+	margin: -5px;
+	padding: 5px;
 }
 
 .tl_message.passkey_message:not(:has(.tl_error, .tl_info, .tl_confirm)) {
