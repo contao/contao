@@ -22,9 +22,12 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
+use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
 {
+    use TargetPathTrait;
+
     private RouterInterface $router;
     private UriSigner $uriSigner;
     private ScopeMatcher $scopeMatcher;
@@ -50,13 +53,31 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
 
     private function redirectToBackend(Request $request): Response
     {
-        $url = $this->router->generate(
+        // No redirect parameter required if the 'contao_backend' route was requested
+        // without any parameters.
+        if ('contao_backend' === $request->attributes->get('_route') && [] === $request->query->all()) {
+            $loginParams = [];
+        } else {
+            $loginParams = ['redirect' => $request->getUri()];
+        }
+
+        $location = $this->router->generate(
             'contao_backend_login',
-            ['redirect' => $request->getUri()],
+            $loginParams,
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
-        $location = $this->uriSigner->sign($url);
+        // No URL signing required if we do not have any parameters
+        if ([] !== $loginParams) {
+            $location = $this->uriSigner->sign($location);
+        }
+
+        // Our back end login controller will redirect based on the 'redirect' parameter,
+        // ignoring Symfony's target path session value. Thus we remove the session variable
+        // here in order to not send an unnecessary session cookie.
+        if ($request->hasSession()) {
+            $this->removeTargetPath($request->getSession(), 'contao_backend');
+        }
 
         if ($request->isXmlHttpRequest()) {
             return new Response($location, 401, ['X-Ajax-Location' => $location]);

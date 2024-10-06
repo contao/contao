@@ -17,8 +17,10 @@ use Contao\CoreBundle\Security\Authentication\AuthenticationEntryPoint;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\UriSigner;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 class AuthenticationEntryPointTest extends TestCase
@@ -141,5 +143,45 @@ class AuthenticationEntryPointTest extends TestCase
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('http://localhost/contao/login?_hash=VmECH%2B5ZGFFG41uxiQVkwzSN%2F7YazPja98g5QNG4Zes%3D', $response->getTargetUrl());
+    }
+
+    public function testDoesNotAddRedirectParameterForContaoBackendRouteWithoutParameters(): void
+    {
+        $session = $this->createMock(SessionInterface::class);
+        $session
+            ->expects($this->once())
+            ->method('remove')
+            ->with('_security.contao_backend.target_path')
+        ;
+
+        $request = Request::create('http://localhost/contao');
+        $request->attributes->set('_route', 'contao_backend');
+        $request->setSession($session);
+
+        $router = $this->createMock(RouterInterface::class);
+        $router
+            ->expects($this->once())
+            ->method('generate')
+            ->with('contao_backend_login', [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('http://localhost/contao/login')
+        ;
+
+        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher
+            ->expects($this->once())
+            ->method('isBackendRequest')
+            ->willReturn(true)
+        ;
+
+        $entryPoint = new AuthenticationEntryPoint(
+            $router,
+            new UriSigner('secret'),
+            $scopeMatcher
+        );
+
+        $response = $entryPoint->start($request);
+
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertSame('http://localhost/contao/login', $response->getTargetUrl());
     }
 }
