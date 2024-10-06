@@ -53,7 +53,8 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
 
     private function redirectToBackend(Request $request): Response
     {
-        // No redirect parameter required if only the "/contao" route was requested
+        // No redirect parameter required if the 'contao_backend' route was requested
+        // without any parameters.
         if ('contao_backend' === $request->attributes->get('_route') && [] === $request->query->all()) {
             $loginParams = [];
         } else {
