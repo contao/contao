@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DataContainer;
 
 use Contao\Backend;
+use Contao\Controller;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\Image;
@@ -39,7 +40,7 @@ class DataContainerOperationsBuilder implements \Stringable
 
     public function __toString(): string
     {
-        if (null === $this->operations) {
+        if (empty($this->operations)) {
             return '';
         }
 
@@ -48,7 +49,7 @@ class DataContainerOperationsBuilder implements \Stringable
         ]);
     }
 
-    public function initializeButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): self
+    public function initializeEmpty(): self
     {
         if (null !== $this->operations) {
             throw new \RuntimeException(self::class.' has already been initialized.');
@@ -56,6 +57,13 @@ class DataContainerOperationsBuilder implements \Stringable
 
         $builder = clone $this;
         $builder->operations = [];
+
+        return $builder;
+    }
+
+    public function initializeButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): self
+    {
+        $builder = $this->initializeEmpty();
 
         if (!\is_array($GLOBALS['TL_DCA'][$table]['list']['operations'] ?? null)) {
             return $this;
@@ -75,12 +83,7 @@ class DataContainerOperationsBuilder implements \Stringable
 
     public function initializeHeaderButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): self
     {
-        if (null !== $this->operations) {
-            throw new \RuntimeException(self::class.' has already been initialized.');
-        }
-
-        $builder = clone $this;
-        $builder->operations = [];
+        $builder = $this->initializeEmpty();
 
         if (!\is_array($GLOBALS['TL_DCA'][$table]['list']['operations'] ?? null)) {
             return $this;
