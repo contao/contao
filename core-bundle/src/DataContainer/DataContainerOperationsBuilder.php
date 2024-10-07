@@ -59,7 +59,7 @@ class DataContainerOperationsBuilder implements \Stringable
         $builder->operations = [];
 
         if (!\is_array($GLOBALS['TL_DCA'][$table]['list']['operations'] ?? null)) {
-            return '';
+            return $this;
         }
 
         foreach ($GLOBALS['TL_DCA'][$table]['list']['operations'] as $k => $v) {
@@ -84,7 +84,7 @@ class DataContainerOperationsBuilder implements \Stringable
         $builder->operations = [];
 
         if (!\is_array($GLOBALS['TL_DCA'][$table]['list']['operations'] ?? null)) {
-            return '';
+            return $this;
         }
 
         foreach ($GLOBALS['TL_DCA'][$table]['list']['operations'] as $k => $v) {
