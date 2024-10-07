@@ -37,7 +37,19 @@ class DataContainerOperationsBuilder implements \Stringable
     ) {
     }
 
-    public function prepareButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): DataContainerOperationsBuilder
+    public function __toString(): string
+    {
+        if (null === $this->operations) {
+            return '';
+        }
+
+        return $this->twig->render('@Contao/backend/data_container/operations.html.twig', [
+            'operations' => $this->operations,
+        ]);
+    }
+
+
+    public function prepareButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): self
     {
         if (null !== $this->operations) {
             throw new \RuntimeException(self::class.' has already been prepared.');
@@ -62,7 +74,7 @@ class DataContainerOperationsBuilder implements \Stringable
         return $builder;
     }
 
-    public function prepareHeaderButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): DataContainerOperationsBuilder
+    public function prepareHeaderButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): self
     {
         if (null !== $this->operations) {
             throw new \RuntimeException(self::class.' has already been prepared.');
@@ -124,13 +136,6 @@ class DataContainerOperationsBuilder implements \Stringable
         $this->operations[] = $operation;
 
         return $this;
-    }
-
-    public function __toString(): string
-    {
-        return $this->twig->render('@Contao/backend/data_container/operations.html.twig', [
-            'operations' => $this->operations,
-        ]);
     }
 
     private function generateOperation(string $name, array $operation, string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): array|null
