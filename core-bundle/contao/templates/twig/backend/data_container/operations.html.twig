@@ -14,7 +14,7 @@
             {% endif%}
             {{ operation.attributes|raw }}
         >{{ operation.icon|raw }}</a>
-    {% elseif opration.icon|default %}
+    {% elseif operation.icon|default %}
         {{ operation.icon|raw }}
     {% endif %}
 {% endmacro %}
