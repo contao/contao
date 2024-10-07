@@ -1042,7 +1042,16 @@ abstract class DataContainer extends Backend
 	{
 		$provider = $picker->getCurrentProvider();
 
-		if (!$provider instanceof DcaPickerProviderInterface || $provider->getDcaTable($picker->getConfig()) != $this->strTable)
+		if (!$provider instanceof DcaPickerProviderInterface || $provider->getDcaTable($picker->getConfig()) != $this->strTable || Input::get('act') == 'select')
+		{
+			return null;
+		}
+
+		$objSession = System::getContainer()->get('request_stack')->getSession();
+		$arrClipboard = $objSession->get('CLIPBOARD');
+
+		// Hide picker if the clipboard is not empty
+		if (!empty($arrClipboard[$this->strTable]))
 		{
 			return null;
 		}
