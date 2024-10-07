@@ -892,11 +892,11 @@ abstract class DataContainer extends Backend
 	 * @param string  $strPrevious
 	 * @param string  $strNext
 	 *
-	 * @return string
+	 * @return DataContainerOperationsBuilder
 	 */
 	protected function generateButtons($arrRow, $strTable, $arrRootIds=array(), $blnCircularReference=false, $arrChildRecordIds=null, $strPrevious=null, $strNext=null)
 	{
-		return System::getContainer()->get('contao.data_container.operations_builder')->generateButtons(
+		return System::getContainer()->get('contao.data_container.operations_builder')->prepareButtons(
 			$strTable,
 			$arrRow,
 			$this,
@@ -1006,11 +1006,11 @@ abstract class DataContainer extends Backend
 	 * @param array  $arrRow
 	 * @param string $strPtable
 	 *
-	 * @return string
+	 * @return DataContainerOperationsBuilder
 	 */
 	protected function generateHeaderButtons($arrRow, $strPtable)
 	{
-		return System::getContainer()->get('contao.data_container.operations_builder')->generateHeaderButtons(
+		return System::getContainer()->get('contao.data_container.operations_builder')->prepareHeaderButtons(
 			$strPtable,
 			$arrRow,
 			$this,

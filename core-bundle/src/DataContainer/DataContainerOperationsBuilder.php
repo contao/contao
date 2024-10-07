@@ -26,8 +26,10 @@ use Twig\Environment;
 /**
  * @internal
  */
-class DataContainerOperationsBuilder
+class DataContainerOperationsBuilder implements \Stringable
 {
+    private array|null $operations = null;
+
     public function __construct(
         private readonly Environment $twig,
         private readonly Security $security,
@@ -35,33 +37,43 @@ class DataContainerOperationsBuilder
     ) {
     }
 
-    public function generateButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): \Stringable|string
+    public function prepareButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): DataContainerOperationsBuilder
     {
+        if (null !== $this->operations) {
+            throw new \RuntimeException(self::class.' has already been prepared.');
+        }
+
+        $builder = clone $this;
+        $builder->operations = [];
+
         if (!\is_array($GLOBALS['TL_DCA'][$table]['list']['operations'] ?? null)) {
             return '';
         }
-
-        $operations = [];
 
         foreach ($GLOBALS['TL_DCA'][$table]['list']['operations'] as $k => $v) {
             $v = \is_array($v) ? $v : [$v];
             $operation = $this->generateOperation($k, $v, $table, $record, $dataContainer, $legacyCallback);
 
             if ($operation) {
-                $operations[] = $operation;
+                $builder->operations[] = $operation;
             }
         }
 
-        return $this->createBuilder($operations);
+        return $builder;
     }
 
-    public function generateHeaderButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): \Stringable|string
+    public function prepareHeaderButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): DataContainerOperationsBuilder
     {
+        if (null !== $this->operations) {
+            throw new \RuntimeException(self::class.' has already been prepared.');
+        }
+
+        $builder = clone $this;
+        $builder->operations = [];
+
         if (!\is_array($GLOBALS['TL_DCA'][$table]['list']['operations'] ?? null)) {
             return '';
         }
-
-        $operations = [];
 
         foreach ($GLOBALS['TL_DCA'][$table]['list']['operations'] as $k => $v) {
             // Show edit operation in the header by default (backwards compatibility)
@@ -85,11 +97,40 @@ class DataContainerOperationsBuilder
             $operation = $this->generateOperation($k, $v, $table, $record, $dataContainer, $legacyCallback);
 
             if ($operation) {
-                $operations[] = $operation;
+                $builder->operations[] = $operation;
             }
         }
 
-        return $this->createBuilder($operations);
+        return $builder;
+    }
+
+    public function prepend(array $operation): self
+    {
+        if (null === $this->operations) {
+            throw new \RuntimeException(self::class.' has not been prepared.');
+        }
+
+        array_unshift($this->operations, $operation);
+
+        return $this;
+    }
+
+    public function append(array $operation): self
+    {
+        if (null === $this->operations) {
+            throw new \RuntimeException(self::class.' has not been prepared.');
+        }
+
+        $this->operations[] = $operation;
+
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->twig->render('@Contao/backend/data_container/operations.html.twig', [
+            'operations' => $this->operations,
+        ]);
     }
 
     private function generateOperation(string $name, array $operation, string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): array|null
@@ -248,37 +289,5 @@ class DataContainerOperationsBuilder
             'icon' => Image::getHtml($state ? $icon : $_icon, $config['label'], 'data-icon="'.$icon.'" data-icon-disabled="'.$_icon.'" data-state="'.$state.'"'),
             'primary' => (bool) ($config['primary'] ?? false),
         ];
-    }
-
-    private function createBuilder(array $operations): \Stringable
-    {
-        return new class($this->twig, $operations) {
-            public function __construct(
-                private readonly Environment $twig,
-                private array $operations,
-            ) {
-            }
-
-            public function prepend(array $operation): self
-            {
-                array_unshift($this->operations, $operation);
-
-                return $this;
-            }
-
-            public function append(array $operation): self
-            {
-                $this->operations[] = $operation;
-
-                return $this;
-            }
-
-            public function __toString(): string
-            {
-                return $this->twig->render('@Contao/backend/data_container/operations.html.twig', [
-                    'operations' => $this->operations,
-                ]);
-            }
-        };
     }
 }
