@@ -13,8 +13,10 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Search\Backend\Provider;
 
 use Contao\CoreBundle\Tests\TestCase;
+use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Schema\DefaultSchemaManagerFactory;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Tools\DsnParser;
 
@@ -28,10 +30,11 @@ abstract class AbstractProviderTestCase extends TestCase
     {
         $dsnParser = new DsnParser();
         $connectionParams = $dsnParser->parse('pdo-sqlite:///:memory:');
+        $configuration = new Configuration();
+        $configuration->setSchemaManagerFactory(new DefaultSchemaManagerFactory());
 
         try {
-            $connection = DriverManager::getConnection($connectionParams);
-            $connection->connect();
+            $connection = DriverManager::getConnection($connectionParams, $configuration);
 
             foreach ($tables as $table) {
                 $connection->createSchemaManager()->createTable($table);
