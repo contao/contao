@@ -48,10 +48,10 @@ class DataContainerOperationsBuilder implements \Stringable
         ]);
     }
 
-    public function prepareButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): self
+    public function initializeButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): self
     {
         if (null !== $this->operations) {
-            throw new \RuntimeException(self::class.' has already been prepared.');
+            throw new \RuntimeException(self::class.' has already been initialized.');
         }
 
         $builder = clone $this;
@@ -73,10 +73,10 @@ class DataContainerOperationsBuilder implements \Stringable
         return $builder;
     }
 
-    public function prepareHeaderButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): self
+    public function initializeHeaderButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): self
     {
         if (null !== $this->operations) {
-            throw new \RuntimeException(self::class.' has already been prepared.');
+            throw new \RuntimeException(self::class.' has already been initialized.');
         }
 
         $builder = clone $this;
@@ -118,7 +118,7 @@ class DataContainerOperationsBuilder implements \Stringable
     public function prepend(array $operation): self
     {
         if (null === $this->operations) {
-            throw new \RuntimeException(self::class.' has not been prepared.');
+            throw new \RuntimeException(self::class.' has not been initialized yet.');
         }
 
         array_unshift($this->operations, $operation);
@@ -129,7 +129,7 @@ class DataContainerOperationsBuilder implements \Stringable
     public function append(array $operation): self
     {
         if (null === $this->operations) {
-            throw new \RuntimeException(self::class.' has not been prepared.');
+            throw new \RuntimeException(self::class.' has not been initialized yet.');
         }
 
         $this->operations[] = $operation;

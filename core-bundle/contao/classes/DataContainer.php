@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\DataContainer\DataContainerOperation;
+use Contao\CoreBundle\DataContainer\DataContainerOperationsBuilder;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\DcaPickerProviderInterface;
@@ -896,7 +897,7 @@ abstract class DataContainer extends Backend
 	 */
 	protected function generateButtons($arrRow, $strTable, $arrRootIds=array(), $blnCircularReference=false, $arrChildRecordIds=null, $strPrevious=null, $strNext=null)
 	{
-		return System::getContainer()->get('contao.data_container.operations_builder')->prepareButtons(
+		return System::getContainer()->get('contao.data_container.operations_builder')->initializeButtons(
 			$strTable,
 			$arrRow,
 			$this,
@@ -1010,7 +1011,7 @@ abstract class DataContainer extends Backend
 	 */
 	protected function generateHeaderButtons($arrRow, $strPtable)
 	{
-		return System::getContainer()->get('contao.data_container.operations_builder')->prepareHeaderButtons(
+		return System::getContainer()->get('contao.data_container.operations_builder')->initializeHeaderButtons(
 			$strPtable,
 			$arrRow,
 			$this,
