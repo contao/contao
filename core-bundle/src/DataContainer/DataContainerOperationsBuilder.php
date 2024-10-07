@@ -48,7 +48,6 @@ class DataContainerOperationsBuilder implements \Stringable
         ]);
     }
 
-
     public function prepareButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): self
     {
         if (null !== $this->operations) {
