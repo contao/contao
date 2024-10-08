@@ -1042,21 +1042,26 @@ abstract class DataContainer extends Backend
 	{
 		$provider = $picker->getCurrentProvider();
 
-		if (!$provider instanceof DcaPickerProviderInterface || $provider->getDcaTable($picker->getConfig()) != $this->strTable || Input::get('act') == 'select')
+		if (!$provider instanceof DcaPickerProviderInterface || $provider->getDcaTable($picker->getConfig()) != $this->strTable)
 		{
 			return null;
+		}
+
+		$attributes = $provider->getDcaAttributes($picker->getConfig());
+
+		if (isset($attributes['value']))
+		{
+			$this->arrPickerValue = (array) $attributes['value'];
 		}
 
 		$objSession = System::getContainer()->get('request_stack')->getSession();
 		$arrClipboard = $objSession->get('CLIPBOARD');
 
 		// Hide picker if the clipboard is not empty
-		if (!empty($arrClipboard[$this->strTable]))
+		if (!empty($arrClipboard[$this->strTable]) || Input::get('act') == 'select')
 		{
 			return null;
 		}
-
-		$attributes = $provider->getDcaAttributes($picker->getConfig());
 
 		$this->objPicker = $picker;
 		$this->strPickerFieldType = $attributes['fieldType'];
@@ -1064,11 +1069,6 @@ abstract class DataContainer extends Backend
 		$this->objPickerCallback = static function ($value) use ($provider, $picker) {
 			return $provider->convertDcaValue($picker->getConfig(), $value);
 		};
-
-		if (isset($attributes['value']))
-		{
-			$this->arrPickerValue = (array) $attributes['value'];
-		}
 
 		return $attributes;
 	}
