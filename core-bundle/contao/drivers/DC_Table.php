@@ -4000,7 +4000,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Show paste button only if there are no root records specified
 		if ($blnClipboard && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && $this->rootPaste && Input::get('act') != 'select')
 		{
-			$operations = System::getContainer()->get('contao.data_container.operations_builder')->initializeEmpty();
+			$operations = System::getContainer()->get('contao.data_container.operations_builder')->initialize();
 
 			// Call paste_button_callback (&$dc, $row, $table, $cr, $children, $previous, $next)
 			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'] ?? null))
@@ -4406,7 +4406,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 			else
 			{
-				$operations = System::getContainer()->get('contao.data_container.operations_builder')->initializeEmpty();
+				$operations = System::getContainer()->get('contao.data_container.operations_builder')->initialize();
 			}
 
 			// Paste buttons (not for root trails)

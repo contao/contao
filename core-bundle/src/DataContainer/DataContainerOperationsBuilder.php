@@ -48,7 +48,7 @@ class DataContainerOperationsBuilder implements \Stringable
         ]);
     }
 
-    public function initializeEmpty(): self
+    public function initialize(): self
     {
         if (null !== $this->operations) {
             throw new \RuntimeException(self::class.' has already been initialized.');
@@ -60,9 +60,9 @@ class DataContainerOperationsBuilder implements \Stringable
         return $builder;
     }
 
-    public function initializeButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): self
+    public function initializeWithButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): self
     {
-        $builder = $this->initializeEmpty();
+        $builder = $this->initialize();
 
         if (!\is_array($GLOBALS['TL_DCA'][$table]['list']['operations'] ?? null)) {
             return $this;
@@ -80,9 +80,9 @@ class DataContainerOperationsBuilder implements \Stringable
         return $builder;
     }
 
-    public function initializeHeaderButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): self
+    public function initializeWithHeaderButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): self
     {
-        $builder = $this->initializeEmpty();
+        $builder = $this->initialize();
 
         if (!\is_array($GLOBALS['TL_DCA'][$table]['list']['operations'] ?? null)) {
             return $this;
