@@ -80,7 +80,7 @@
                     tip.style.willChange = 'auto';
                 }, 'mouseleave' === e.type ? 100 : 0)
             }
-        }
+        };
 
         el.addEventListener('mouseleave', close);
 
