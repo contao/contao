@@ -5326,8 +5326,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$buttons .= '
 <a href="' . ($this->ptable ? $this->addToUrl('act=create' . ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) < self::MODE_PARENT) ? '&amp;mode=2' : '') . '&amp;pid=' . $this->intId) : $this->addToUrl('act=create')) . '" class="header_new" title="' . StringUtil::specialchars($labelNew[1] ?? '') . '" accesskey="n" data-action="contao--scroll-offset#store">' . $labelNew[0] . '</a> ';
 		}
-		$buttons .= $this->generateGlobalButtons();
 
+		$buttons .= $this->generateGlobalButtons();
 		$return = Message::generate() . ($buttons ? '<div id="tl_buttons">' . $buttons . '</div>' : '');
 
 		// Return "no records found" message
