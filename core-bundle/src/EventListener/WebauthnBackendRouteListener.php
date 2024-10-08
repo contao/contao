@@ -31,9 +31,9 @@ class WebauthnBackendRouteListener
     public function __invoke(RequestEvent $event): void
     {
         $request = $event->getRequest();
-        $controller = $request->attributes->get('_route');
+        $route = $request->attributes->get('_route');
 
-        if (\in_array($controller, $this->routes, true)) {
+        if (\in_array($route, $this->routes, true)) {
             $request->attributes->set('_scope', 'backend');
         }
     }
