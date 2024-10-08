@@ -2700,7 +2700,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					$return .= Message::generateUnwrapped() . \sprintf('<fieldset data-controller="contao--toggle-fieldset" data-contao--toggle-fieldset-collapsed-class="collapsed" class="%s cf"><legend><button type="button" data-action="contao--toggle-fieldset#toggle">%s</button></legend>%s</fieldset>',
 						$class,
-						StringUtil::specialchars(System::getContainer()->get('contao.data_container.record_labeler')->getLabel('contao.db.' . $this->strTable . '.id', $currentRecord)),
+						StringUtil::specialchars(System::getContainer()->get('contao.data_container.record_labeler')->getLabel('contao.db.' . $this->strTable . '.' . $currentRecord['id'], $currentRecord)),
 						$box
 					);
 
