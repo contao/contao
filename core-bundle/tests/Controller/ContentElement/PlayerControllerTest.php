@@ -100,12 +100,14 @@ class PlayerControllerTest extends ContentElementTestCase
                     self::FILE_VIDEO_MP4,
                 ]),
                 'addSubtitles' => true,
-                'subtitleSRC' => serialize([
+                'subtitlesSRC' => serialize([
                     self::FILE_SUBTITLES_EN_VTT,
                     self::FILE_SUBTITLES_DE_VTT,
                 ]),
-                'subtitleLanguages' => 'en,de',
-                'subtitleLabels' => 'English,Deutsch',
+                'subtitlesLabels' => serialize([
+                    ['key' => 'en', 'value' => 'English'],
+                    ['key' => 'de', 'value' => 'Deutsch'],
+                ]),
             ],
         );
 
@@ -134,11 +136,10 @@ class PlayerControllerTest extends ContentElementTestCase
                     self::FILE_VIDEO_MP4,
                 ]),
                 'addSubtitles' => true,
-                'subtitleSRC' => serialize([
+                'subtitlesSRC' => serialize([
                     self::FILE_SUBTITLES_EN_VTT,
                 ]),
-                'subtitleLanguages' => '',
-                'subtitleLabels' => '',
+                'subtitlesLabels' => '',
             ],
         );
 

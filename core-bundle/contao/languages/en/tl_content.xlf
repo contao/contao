@@ -342,37 +342,25 @@
         <source>Add subtitles</source>
       </trans-unit>
       <trans-unit id="tl_content.addSubtitles.1">
-        <source>Adds subtitles to a video element.</source>
+        <source>Add subtitles or closed captions.</source>
       </trans-unit>
-      <trans-unit id="tl_content.subtitleSRC.0">
-        <source>Subtitle</source>
+      <trans-unit id="tl_content.subtitlesSRC.0">
+        <source>Subtitles files</source>
       </trans-unit>
-      <trans-unit id="tl_content.subtitleSRC.1">
-        <source>Here you can add the subtitle files for your video.</source>
+      <trans-unit id="tl_content.subtitlesSRC.1">
+        <source>Here you can add one or more .vtt files with subtitles.</source>
       </trans-unit>
-      <trans-unit id="tl_content.subtitleType.0">
-        <source>Subtitle kind</source>
+      <trans-unit id="tl_content.subtitlesType.0">
+        <source>Subtitles kind</source>
       </trans-unit>
-      <trans-unit id="tl_content.subtitleType.1">
-        <source>Here you can choose the type of subtitles. Defaults to subtitles.</source>
+      <trans-unit id="tl_content.subtitlesType.1">
+        <source>Here you can choose the type of subtitles.</source>
       </trans-unit>
-      <trans-unit id="tl_content.subtitleLanguages.0">
-        <source>Languages</source>
+      <trans-unit id="tl_content.subtitlesLabels.0">
+        <source>Subtitles labels</source>
       </trans-unit>
-      <trans-unit id="tl_content.subtitleLanguages.1">
-        <source>Please enter a comma separated list of subtitle languages according to the ISO-639 standard in the order of the subtitle files (e.g. "en,de" for english and german).</source>
-      </trans-unit>
-      <trans-unit id="tl_content.subtitleLabels.0">
-        <source>Labels</source>
-      </trans-unit>
-      <trans-unit id="tl_content.subtitleLabels.1">
-        <source>Please enter a comma separated list of subtitle labels that will appear in the video player in the order of the subtitle files (e.g. "English,Deutsch" for "en,de").</source>
-      </trans-unit>
-      <trans-unit id="tl_content.subtitles">
-        <source>Subtitles</source>
-      </trans-unit>
-      <trans-unit id="tl_content.captions">
-        <source>Closed captions</source>
+      <trans-unit id="tl_content.subtitlesLabels.1">
+        <source>Please enter the subtitles language according to the ISO-639 as key and the label as value.</source>
       </trans-unit>
       <trans-unit id="tl_content.youtube.0">
         <source>YouTube ID</source>
@@ -617,7 +605,7 @@
       <trans-unit id="tl_content.poster_legend">
         <source>Preview image</source>
       </trans-unit>
-      <trans-unit id="tl_content.subtitle_legend">
+      <trans-unit id="tl_content.subtitles_legend">
         <source>Subtitles</source>
       </trans-unit>
       <trans-unit id="tl_content.invisible_legend">
@@ -724,6 +712,12 @@
       </trans-unit>
       <trans-unit id="tl_content.vimeo_dnt">
         <source>Prevent session data tracking</source>
+      </trans-unit>
+      <trans-unit id="tl_content.subtitles">
+        <source>Subtitles</source>
+      </trans-unit>
+      <trans-unit id="tl_content.captions">
+        <source>Closed captions</source>
       </trans-unit>
       <trans-unit id="tl_content.new.0">
         <source>New</source>

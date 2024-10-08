@@ -63,7 +63,7 @@ class PlayerController extends AbstractContentElementController
         $subtitleFiles = [];
 
         if ($model->addSubtitles && $isVideo) {
-            $subtitleItems = FilesystemUtil::listContentsFromSerialized($this->filesStorage, $model->subtitleSRC ?: '');
+            $subtitleItems = FilesystemUtil::listContentsFromSerialized($this->filesStorage, $model->subtitlesSRC ?: '');
             $subtitleFiles = $this->getSourceFiles($subtitleItems);
         }
 
@@ -80,13 +80,13 @@ class PlayerController extends AbstractContentElementController
 
     /**
      * @param list<FilesystemItem> $sourceFiles
-     * @param list<FilesystemItem> $subtitleFiles
+     * @param list<FilesystemItem> $subtitlesFiles
      *
      * @return array<string, array<string, string|HtmlAttributes|list<HtmlAttributes>>|string>
      *
      * @phpstan-return FigureData
      */
-    private function buildVideoFigureData(ContentModel $model, array $sourceFiles, array $subtitleFiles): array
+    private function buildVideoFigureData(ContentModel $model, array $sourceFiles, array $subtitlesFiles): array
     {
         $poster = null;
 
@@ -124,23 +124,19 @@ class PlayerController extends AbstractContentElementController
 
         $tracks = [];
 
-        if ([] !== $subtitleFiles) {
-            $labels = array_map('trim', explode(',', $model->subtitleLabels));
-            $languages = array_map('trim', explode(',', $model->subtitleLanguages));
+        if ([] !== $subtitlesFiles) {
+            $labels = StringUtil::deserialize($model->subtitlesLabels, true);
 
-            foreach ($subtitleFiles as $subtitleFile) {
-                $label = array_shift($labels);
-                $language = array_shift($languages);
-
-                if (!$label || !$language) {
-                    break;
+            foreach ($subtitlesFiles as $i => $subtitlesFile) {
+                if (!isset($labels[$i])) {
+                    continue;
                 }
 
                 $tracks[] = (new HtmlAttributes())
-                    ->setIfExists('kind', $model->subtitleType)
-                    ->set('label', $label)
-                    ->set('srclang', $language)
-                    ->set('src', $this->publicUriByStoragePath[$subtitleFile->getPath()])
+                    ->setIfExists('kind', $model->subtitlesType)
+                    ->set('label', $labels[$i]['value'])
+                    ->set('srclang', $labels[$i]['key'])
+                    ->set('src', $this->publicUriByStoragePath[$subtitlesFile->getPath()])
                 ;
             }
         }
