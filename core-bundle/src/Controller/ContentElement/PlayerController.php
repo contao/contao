@@ -59,10 +59,9 @@ class PlayerController extends AbstractContentElementController
             return new Response();
         }
 
-        $isVideo = $filesystemItems->first()?->isVideo() ?? false;
         $subtitleFiles = [];
 
-        if ($model->addSubtitles && $isVideo) {
+        if ($model->addSubtitles && $filesystemItems->first()?->isVideo()) {
             $subtitleItems = FilesystemUtil::listContentsFromSerialized($this->filesStorage, $model->subtitlesSRC ?: '');
             $subtitleFiles = $this->getSourceFiles($subtitleItems);
         }
