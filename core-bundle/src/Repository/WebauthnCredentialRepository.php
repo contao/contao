@@ -24,6 +24,8 @@ use Webauthn\PublicKeyCredentialSource;
 
 /**
  * @template-extends DoctrineCredentialSourceRepository<WebauthnCredential>
+ *
+ * @internal
  */
 final class WebauthnCredentialRepository extends DoctrineCredentialSourceRepository
 {
