@@ -86,6 +86,7 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 				'label'               => &$GLOBALS['TL_LANG']['tl_files']['source'],
 				'href'                => 'act=source',
 				'icon'                => 'editor.svg',
+				'primary'             => true,
 				'button_callback'     => array('tl_templates', 'editSource')
 			),
 			'compare' => array
@@ -99,6 +100,7 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 				'label'               => &$GLOBALS['TL_LANG']['tl_files']['cut'],
 				'icon'                => 'drag.svg',
 				'attributes'          => 'class="drag-handle" aria-hidden="true"',
+				'primary'             => true,
 				'button_callback'     => array('tl_templates', 'dragFile')
 			)
 		)

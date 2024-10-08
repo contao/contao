@@ -50,7 +50,7 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 		),
 		'operations' => array
 		(
-			'delete',
+			'!delete',
 			'show'
 		)
 	),
