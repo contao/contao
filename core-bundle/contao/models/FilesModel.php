@@ -35,6 +35,8 @@ use Symfony\Component\Filesystem\Path;
  * @property float             $importantPartY
  * @property float             $importantPartWidth
  * @property float             $importantPartHeight
+ * @property string            $subtitlesLanguage
+ * @property string            $subtitlesType
  * @property string|array|null $meta
  *
  * @method static FilesModel|null findByIdOrAlias($val, array $opt=array())
@@ -50,6 +52,8 @@ use Symfony\Component\Filesystem\Path;
  * @method static FilesModel|null findOneByImportantPartY($val, array $opt=array())
  * @method static FilesModel|null findOneByImportantPartWidth($val, array $opt=array())
  * @method static FilesModel|null findOneByImportantPartHeight($val, array $opt=array())
+ * @method static FilesModel|null findOneBySubtitlesLanguage($val, array $opt=array())
+ * @method static FilesModel|null findOneBySubtitlesType($val, array $opt=array())
  * @method static FilesModel|null findOneByMeta($val, array $opt=array())
  *
  * @method static Collection<FilesModel>|FilesModel[]|null findByTstamp($val, array $opt=array())
@@ -62,6 +66,8 @@ use Symfony\Component\Filesystem\Path;
  * @method static Collection<FilesModel>|FilesModel[]|null findByImportantPartY($val, array $opt=array())
  * @method static Collection<FilesModel>|FilesModel[]|null findByImportantPartWidth($val, array $opt=array())
  * @method static Collection<FilesModel>|FilesModel[]|null findByImportantPartHeight($val, array $opt=array())
+ * @method static Collection<FilesModel>|FilesModel[]|null findBySubtitlesLanguage($val, array $opt=array())
+ * @method static Collection<FilesModel>|FilesModel[]|null findBySubtitlesType($val, array $opt=array())
  * @method static Collection<FilesModel>|FilesModel[]|null findByMeta($val, array $opt=array())
  * @method static Collection<FilesModel>|FilesModel[]|null findBy($col, $val, array $opt=array())
  * @method static Collection<FilesModel>|FilesModel[]|null findAll(array $opt=array())
@@ -80,6 +86,8 @@ use Symfony\Component\Filesystem\Path;
  * @method static integer countByImportantPartY($val, array $opt=array())
  * @method static integer countByImportantPartWidth($val, array $opt=array())
  * @method static integer countByImportantPartHeight($val, array $opt=array())
+ * @method static integer countBySubtitlesLanguage($val, array $opt=array())
+ * @method static integer countBySubtitlesType($val, array $opt=array())
  * @method static integer countByMeta($val, array $opt=array())
  */
 class FilesModel extends Model

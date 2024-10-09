@@ -90,8 +90,6 @@ use Contao\Model\MetadataTrait;
  * @property string|array|null $vimeoOptions
  * @property boolean           $addSubtitles
  * @property string|null       $subtitlesSRC
- * @property string            $subtitlesType
- * @property string|null       $subtitlesLabels
  * @property integer           $sliderDelay
  * @property integer           $sliderSpeed
  * @property integer           $sliderStartSlide
@@ -189,9 +187,7 @@ use Contao\Model\MetadataTrait;
  * @method static ContentModel|null findOneByYoutubeOptions($val, array $opt=array())
  * @method static ContentModel|null findOneByVimeoOptions($val, array $opt=array())
  * @method static ContentModel|null findOneByAddSubtitles($val, array $opt = array())
- * @method static ContentModel|null findOneBysubtitlesSRC($val, array $opt = array())
- * @method static ContentModel|null findOneBysubtitlesType($val, array $opt = array())
- * @method static ContentModel|null findOneBysubtitlesLabels($val, array $opt = array())
+ * @method static ContentModel|null findOneBySubtitlesSRC($val, array $opt = array())
  * @method static ContentModel|null findOneBySliderDelay($val, array $opt=array())
  * @method static ContentModel|null findOneBySliderSpeed($val, array $opt=array())
  * @method static ContentModel|null findOneBySliderStartSlide($val, array $opt=array())
@@ -282,9 +278,7 @@ use Contao\Model\MetadataTrait;
  * @method static Collection<ContentModel>|ContentModel[]|null findByYoutubeOptions($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByVimeoOptions($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByAddSubtitles($val, array $opt = array())
- * @method static Collection<ContentModel>|ContentModel[]|null findBysubtitlesSRC($val, array $opt = array())
- * @method static Collection<ContentModel>|ContentModel[]|null findBysubtitlesType($val, array $opt = array())
- * @method static Collection<ContentModel>|ContentModel[]|null findBysubtitlesLabels($val, array $opt = array())
+ * @method static Collection<ContentModel>|ContentModel[]|null findBySubtitlesSRC($val, array $opt = array())
  * @method static Collection<ContentModel>|ContentModel[]|null findBySliderDelay($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findBySliderSpeed($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findBySliderStartSlide($val, array $opt=array())
@@ -379,9 +373,7 @@ use Contao\Model\MetadataTrait;
  * @method static integer countByYoutubeOptions($val, array $opt=array())
  * @method static integer countByVimeoOptions($val, array $opt=array())
  * @method static integer countByAddSubtitles($val, array $opt = array())
- * @method static integer countBysubtitlesSRC($val, array $opt = array())
- * @method static integer countBysubtitlesType($val, array $opt = array())
- * @method static integer countBysubtitlesLabels($val, array $opt = array())
+ * @method static integer countBySubtitlesSRC($val, array $opt = array())
  * @method static integer countBySliderDelay($val, array $opt=array())
  * @method static integer countBySliderSpeed($val, array $opt=array())
  * @method static integer countBySliderStartSlide($val, array $opt=array())
