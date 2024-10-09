@@ -1,0 +1,20 @@
+{% for operation in operations %}
+    {{ _self.operation(operation) }}
+{% endfor %}
+
+{% macro operation(operation) %}
+    {% if operation.html|default %}
+        {{ operation.html|raw }}
+    {% elseif operation.href|default %}
+        <a
+            href="{{ operation.href }}"
+            title="{{ operation.title }}"
+            {% if operation.popup|default %}
+                onclick="Backend.openModalIframe({title:'{{ operation.label|replace({"'": "\'"}) }}', url:this.href});return false"
+            {% endif%}
+            {{ operation.attributes|raw }}
+        >{{ operation.icon|raw }}</a>
+    {% elseif operation.icon|default %}
+        {{ operation.icon|raw }}
+    {% endif %}
+{% endmacro %}

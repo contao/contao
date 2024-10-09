@@ -96,6 +96,7 @@ class DefaultOperationsListener
                     'href' => 'act=edit',
                     'icon' => 'edit.svg',
                     'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table),
+                    'showInHeader' => true,
                 ],
             ];
         }
