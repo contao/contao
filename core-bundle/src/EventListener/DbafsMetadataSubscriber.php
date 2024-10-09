@@ -58,7 +58,7 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
         }
 
         // Add subtitle information
-        if (!empty($language = $row['subtitlesLanguage'])) {
+        if (!empty($language = $row['subtitlesLanguage'] ?? null)) {
             $event->set('subtitles', [
                 'language' => $language,
                 'type' => $row['subtitlesType'] ?? null,
