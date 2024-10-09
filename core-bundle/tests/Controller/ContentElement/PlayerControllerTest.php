@@ -103,7 +103,7 @@ class PlayerControllerTest extends ContentElementTestCase
                 'subtitlesSRC' => serialize([
                     self::FILE_SUBTITLES_EN_VTT,
                     self::FILE_SUBTITLES_DE_VTT,
-                ])
+                ]),
             ],
         );
 
@@ -133,9 +133,8 @@ class PlayerControllerTest extends ContentElementTestCase
                 ]),
                 'addSubtitles' => true,
                 'subtitlesSRC' => serialize([
-                    self::FILE_SUBTITLES_EN_VTT,
+                    self::FILE_SUBTITLES_INVALID_VTT,
                 ]),
-                'subtitlesLabels' => '',
             ],
         );
 

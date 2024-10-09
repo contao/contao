@@ -92,6 +92,8 @@ class ContentElementTestCase extends TestCase
 
     final public const FILE_VIDEO_OGV = 'd950e33a-dacc-42ad-ba97-6387d05348c4';
 
+    final public const FILE_SUBTITLES_INVALID_VTT = '5234dfa3-d98f-42c7-ae36-ed8440478de2';
+
     final public const FILE_SUBTITLES_EN_VTT = 'a3c1e6d9-7d5b-4e3f-9e7d-6b9f2d3c841b';
 
     final public const FILE_SUBTITLES_DE_VTT = '1e48cbce-6354-4ca0-b133-6272aba46828';
@@ -363,6 +365,7 @@ class ContentElementTestCase extends TestCase
                         self::FILE_IMAGE_MISSING => new FilesystemItem(true, 'image_missing.jpg', null, null, 'image/jpeg'),
                         self::FILE_VIDEO_MP4 => new FilesystemItem(true, 'video.mp4', null, null, 'video/mp4'),
                         self::FILE_VIDEO_OGV => new FilesystemItem(true, 'video.ogv', null, null, 'video/ogg'),
+                        self::FILE_SUBTITLES_INVALID_VTT => new FilesystemItem(true, 'subtitles-incomplete.vtt', null, null, 'text/vtt'),
                         self::FILE_SUBTITLES_EN_VTT => new FilesystemItem(
                             true,
                             'subtitles-en.vtt',
@@ -414,6 +417,7 @@ class ContentElementTestCase extends TestCase
                         'image3.jpg' => new Uri('https://example.com/files/image3.jpg'),
                         'video.mp4' => new Uri('https://example.com/files/video.mp4'),
                         'video.ogv' => new Uri('https://example.com/files/video.ogv'),
+                        'subtitles-incomplete.vtt' => new Uri('https://example.com/files/subtitles-incomplete.vtt'),
                         'subtitles-en.vtt' => new Uri('https://example.com/files/subtitles-en.vtt'),
                         'subtitles-de.vtt' => new Uri('https://example.com/files/subtitles-de.vtt'),
                     ];
