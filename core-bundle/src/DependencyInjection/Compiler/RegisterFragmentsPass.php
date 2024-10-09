@@ -88,6 +88,11 @@ class RegisterFragmentsPass implements CompilerPassInterface
                 $identifier = \sprintf('%s.%s', $tag, $attributes['type']);
                 $serviceId = 'contao.fragment._'.$identifier;
 
+                // Skip redefinition of services that already exist
+                if ($container->has($serviceId)) {
+                    continue;
+                }
+
                 $childDefinition = new ChildDefinition((string) $reference);
                 $childDefinition->setPublic(true);
 
