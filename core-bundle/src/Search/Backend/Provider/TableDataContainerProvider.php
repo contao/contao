@@ -72,7 +72,7 @@ class TableDataContainerProvider implements ProviderInterface
                 continue;
             }
 
-            // We are intentionally not updating child classes of DC_Table here because they
+            // We intentionally do not update child classes of DC_Table here because they
             // could have different logic (like DC_Multilingual) or a different permission
             // concept etc.
             if (DC_Table::class !== $GLOBALS['TL_DCA'][$table]['config']['dataContainer']) {
