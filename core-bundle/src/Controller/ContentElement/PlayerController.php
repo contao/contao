@@ -123,20 +123,33 @@ class PlayerController extends AbstractContentElementController
 
         $tracks = [];
 
-        if ([] !== $subtitlesFiles) {
-            $labels = StringUtil::deserialize($model->subtitlesLabels, true);
+        $setDefault = false;
 
-            foreach ($subtitlesFiles as $i => $subtitlesFile) {
-                if (!isset($labels[$i])) {
+        if ([] !== $subtitlesFiles) {
+            foreach ($subtitlesFiles as $file) {
+                $data = $file->getExtraMetadata();
+
+                $label = ($data['metadata'] ?? null)?->getDefault()?->getTitle();
+                $subtitleData = $data['subtitles'] ?? [];
+
+                if (empty($label) || !isset($subtitleData['language'])) {
                     continue;
                 }
 
-                $tracks[] = (new HtmlAttributes())
-                    ->setIfExists('kind', $model->subtitlesType)
-                    ->set('label', $labels[$i]['value'])
-                    ->set('srclang', $labels[$i]['key'])
-                    ->set('src', $this->publicUriByStoragePath[$subtitlesFile->getPath()])
+                $trackAttributes = (new HtmlAttributes())
+                    ->setIfExists('kind', $subtitleData['type'] ?? null)
+                    ->set('label', $label)
+                    ->set('srclang', $subtitleData['language'])
+                    ->set('src', $this->publicUriByStoragePath[$file->getPath()])
                 ;
+
+                // Set the first file as the default track
+                if (!$setDefault) {
+                    $trackAttributes->set('default');
+                    $setDefault = true;
+                }
+
+                $tracks[] = $trackAttributes;
             }
         }
 
