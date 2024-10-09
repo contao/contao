@@ -80,7 +80,7 @@ class FilesProvider implements ProviderInterface
         $viewUrl = 'https://todo.com?view='.$document->getId();
         $editUrl = 'https://todo.com?edit='.$document->getId();
 
-        return (new Hit($document, $document->getMetadata()['name'], $viewUrl))
+        return (new Hit($document, $document->getMetadata()['name'] ?? '', $viewUrl))
             ->withEditUrl($editUrl)
             ->withContext($document->getSearchableContent())
             ->withImage($document->getMetadata()['path'] ?? null)
