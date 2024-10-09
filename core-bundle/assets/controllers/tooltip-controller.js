@@ -12,6 +12,14 @@ export default class extends Controller {
         if (this.observer) {
             this.observer.disconnect();
         }
+
+        Object.entries(this.selectors).forEach(([selector, options]) => {
+            document.querySelectorAll(selector).forEach(el => {
+                if (this.initialized.includes(el)) {
+                    document.removeEventListener('touchstart', el.globalTouchstartListener);
+                }
+            });
+        });
     }
 
     createTooltip() {
@@ -57,7 +65,7 @@ export default class extends Controller {
         el.addEventListener('mouseleave', () => this.hide(el));
 
         // Close tooltip when touching anywhere else
-        document.addEventListener('touchstart', (e) => {
+        document.addEventListener('touchstart', el.globalTouchstartListener = (e) => {
             if (el.contains(e.target)) {
                 return;
             }
