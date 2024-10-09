@@ -36,6 +36,7 @@
 
   <?php /* If the following hash changes, Turbo will reload the entire page instead of merging contents. */ ?>
   <meta data-turbo-track="reload" content="<?= md5($this->stylesheets."\0".$this->javascripts); ?>">
+  <meta name="turbo-root" content="<?= $this->turboRoot ?>">
 </head>
 <body id="top" class="be_main<?php if ($this->isPopup): ?> popup<?php endif; ?>"<?= $this->attributes ?> data-controller="contao--tooltip">
 
