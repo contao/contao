@@ -57,6 +57,14 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
             $event->set('importantPart', $importantPart);
         }
 
+        // Add subtitle information
+        if (!empty($language = $row['subtitlesLanguage'])) {
+            $event->set('subtitles', [
+                'language' => $language,
+                'type' => $row['subtitlesType'] ?? null,
+            ]);
+        }
+
         // Add file metadata
         $metadata = [];
 
