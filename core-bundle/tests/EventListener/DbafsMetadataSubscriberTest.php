@@ -179,6 +179,8 @@ class DbafsMetadataSubscriberTest extends TestCase
             'importantPartY' => 0.2,
             'importantPartWidth' => 0.3,
             'importantPartHeight' => 0.4,
+            'subtitlesLanguage' => 'de',
+            'subtitlesType' => 'captions',
             'meta' => serialize([
                 'de' => [Metadata::VALUE_TITLE => 'my title'],
             ]),
@@ -189,6 +191,10 @@ class DbafsMetadataSubscriberTest extends TestCase
     {
         return [
             'importantPart' => new ImportantPart(0.1, 0.2, 0.3, 0.4),
+            'subtitles' => [
+                'language' => 'de',
+                'type' => 'captions',
+            ],
             'metadata' => new MetadataBag([
                 'de' => new Metadata([
                     Metadata::VALUE_TITLE => 'my title',

@@ -83,6 +83,7 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
 
         $extraMetadata = $event->getExtraMetadata();
         $importantPart = $extraMetadata['importantPart'] ?? null;
+        $subtitles = $extraMetadata['subtitles'] ?? null;
         $fileMetadata = $extraMetadata['metadata'] ?? null;
 
         if ($importantPart instanceof ImportantPart) {
@@ -90,6 +91,11 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
             $event->set('importantPartY', $importantPart->getY());
             $event->set('importantPartWidth', $importantPart->getWidth());
             $event->set('importantPartHeight', $importantPart->getHeight());
+        }
+
+        if (!empty($subtitles)) {
+            $event->set('subtitlesLanguage', $subtitles['language']);
+            $event->set('subtitlesType', $subtitles['type']);
         }
 
         if ($fileMetadata instanceof MetadataBag) {
